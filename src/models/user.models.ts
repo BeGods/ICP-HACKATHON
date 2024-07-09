@@ -6,6 +6,7 @@ export interface IUser extends Document {
   isPremium?: boolean;
   role: "user" | "admin";
   directReferralCount: number;
+  tonAddress: string;
   premiumReferralCount: number;
   parentReferrerId?: mongoose.Types.ObjectId;
   referralCode: string;
@@ -20,8 +21,8 @@ export interface IUser extends Document {
 //* check if anyone part of it then only it is team
 
 const userSchema = new mongoose.Schema({
-  telegramId: { type: String, unique: true },
-  telegramUsername: { type: String, unique: true },
+  telegramId: { type: String, unique: true, sparse: true },
+  telegramUsername: { type: String, unique: true, sparse: true },
   isPremium: { type: Boolean },
   role: {
     type: String,
@@ -31,7 +32,7 @@ const userSchema = new mongoose.Schema({
   tonAddress: {
     type: String,
     unique: true,
-    required: false,
+    sparse: true,
   },
   directReferralCount: {
     type: Number,
@@ -50,6 +51,7 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: false,
+    sparse: true,
   },
   profile: {
     avatarUrl: { type: String },
