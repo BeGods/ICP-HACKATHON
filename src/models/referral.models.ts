@@ -11,19 +11,22 @@ interface ITeam extends Document {
   members: mongoose.Types.ObjectId[];
 }
 
-const referralSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "ref",
-    required: true,
+const referralSchema = new Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ref",
+      required: true,
+    },
+    directInvites: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+    },
   },
-  directInvites: {
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
-  },
-});
+  { timestamps: true }
+);
 
-const teamSchema = new mongoose.Schema({
+const teamSchema = new Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

@@ -64,10 +64,12 @@ export const login = async (req, res) => {
         isPremium,
       };
 
-      let existingReferrer;
+      let existingReferrer: any;
+
       //check referrer
       if (referralCode) {
         existingReferrer = await User.findOne({ referralCode });
+
         if (!existingReferrer) {
           return res.status(404).json({ message: "Invalid referral code." });
         }
@@ -77,6 +79,7 @@ export const login = async (req, res) => {
 
       // create new  user
       existingUser = await createUser(newUser);
+      await addTeamMember(existingUser, existingReferrer, referralCode);
       // response token
       const accessToken = await generateAuthToken(existingUser);
 
@@ -94,6 +97,7 @@ export const login = async (req, res) => {
   }
 };
 
+//test login
 export const testLogin = async (req, res) => {
   try {
     const { telegramId, telegramUsername, isPremium } = req.body;
