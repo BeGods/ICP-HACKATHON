@@ -18,3 +18,21 @@ export const validateBooster = (boosters) => {
     throw new Error("Error in validating booster.");
   }
 };
+
+export const calculateEnergy = (
+  tapSessionStartTime,
+  lastTapAcitivityTime,
+  currEnergy,
+  energyLimit
+) => {
+  const calculateRestoredEnergy =
+    (tapSessionStartTime - lastTapAcitivityTime) / energyLimit;
+
+  if (calculateRestoredEnergy < 0) return 0;
+
+  const restoredEnergy = Math.floor(
+    Math.min(currEnergy + calculateRestoredEnergy, energyLimit)
+  );
+
+  return restoredEnergy;
+};

@@ -12,6 +12,7 @@ export interface IMyth extends Document {
   tapSessionStartTime?: number;
   lastTapAcitivityTime: number;
   energy: number;
+  energyLimit: number;
   faith: number;
   boosters?: IBooster;
   claimedCards?: [];
