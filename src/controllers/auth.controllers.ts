@@ -2,7 +2,7 @@ import { validate, parse } from "@tma.js/init-data-node";
 import config from "../config/config";
 import User, { IUser } from "../models/user.models";
 import { ObjectId } from "mongodb";
-import { generateAuthToken } from "../utils/auth";
+import { generateAuthToken } from "../services/auth.services";
 import { addTeamMember, createUser } from "../services/user.services";
 
 export const login = async (req, res) => {
