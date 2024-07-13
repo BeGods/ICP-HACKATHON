@@ -2,7 +2,7 @@ import mongoose, { Schema, model, Document } from "mongoose";
 
 export interface IOrbsTransactions extends Document {
   userId: mongoose.Types.ObjectId;
-  orbs: number;
+  orbs: Object;
   source: string;
   date: Date;
 }
@@ -30,13 +30,13 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
   {
     ...baseTransactionSchema,
     orbs: {
-      type: Number,
+      type: Object,
       required: true,
       default: 0,
     },
     source: {
       type: String,
-      enum: ["conversion", "quests", "boosters"],
+      enum: ["conversion", "quests", "boosters", "share"],
       required: true,
     },
   },

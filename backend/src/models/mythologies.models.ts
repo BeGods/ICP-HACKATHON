@@ -1,5 +1,10 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 
+interface IBooster {
+  shardslvl: number;
+  shardsLastClaimedAt: Date;
+  isShardsClaimActive: boolean;
+}
 export interface IMyth extends Document {
   name: string;
   orbs: number;
@@ -8,10 +13,7 @@ export interface IMyth extends Document {
   lastTapAcitivityTime: number;
   energy: number;
   faith: number;
-  boosters?: {
-    shardslvl: number;
-    automata: boolean;
-  };
+  boosters?: IBooster;
   claimedCards?: [];
 }
 
@@ -50,6 +52,11 @@ const mythologySchema = new Schema({
     default: 1000,
     required: true,
   },
+  energyLimit: {
+    type: Number,
+    default: 1000,
+    required: true,
+  },
   faith: {
     type: Number,
     default: 0,
@@ -59,6 +66,14 @@ const mythologySchema = new Schema({
     shardslvl: {
       type: Number,
       default: 1,
+    },
+    shardsLastClaimedAt: {
+      type: Number,
+      default: 0,
+    },
+    isShardsClaimActive: {
+      type: Boolean,
+      default: true,
     },
   },
   // claimedCards: {

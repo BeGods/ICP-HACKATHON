@@ -1,10 +1,10 @@
-import User from "../models/user.models";
 import userMythologies, {
   IMyth,
   IUserMyths,
 } from "../models/mythologies.models";
 import { calculateEnergy } from "../utils/game.utils";
 import { ShardsTransactions } from "../models/transactions.models";
+import { validateBooster } from "../services/game.services";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -64,12 +64,15 @@ export const claimTapSession = async (req, res) => {
     const userMythology = (await userMythologies.findOne({
       userId: userId,
     })) as IUserMyths;
+
     if (!userMythology) {
       return res.status(404).json({ message: "User mythology not found." });
     }
+
     const mythData = userMythology.mythologies.find(
       (item) => item.name === mythologyName
     ) as IMyth;
+
     if (!mythData) {
       return res.status(404).json({ message: "Mythology not found." });
     }
@@ -89,7 +92,6 @@ export const claimTapSession = async (req, res) => {
     // check if numberOfTaps are valid
     if (restoredEnergy < taps) {
       taps = restoredEnergy;
-      console.log("taps during condition", taps);
     }
 
     // update energy after tapping, shards, lastTapActivityTime
@@ -128,18 +130,63 @@ export const claimTapSession = async (req, res) => {
   }
 };
 
-const getGameStats = async (req, res) => {
+export const getGameStats = async (req, res) => {
   try {
     const userId = req.user;
-    const profile = await User.findOne({ userId: userId });
-    const gameData = await userMythologies.findOne({ userId: userId });
+    const userMythologiesData = (await userMythologies.findOne({
+      userId: userId,
+    })) as IUserMyths;
+
+    // Calculate and update energy for each mythology
+    const updatedMythologies = userMythologiesData.mythologies.map(
+      (mythology) => {
+        const restoredEnergy = calculateEnergy(
+          Date.now(),
+          mythology.lastTapAcitivityTime,
+          mythology.energy
+        );
+
+        mythology.boosters = validateBooster(mythology.boosters);
+        mythology.energy = restoredEnergy;
+        mythology.lastTapAcitivityTime = Date.now();
+
+        return mythology;
+      }
+    );
+
+    await userMythologies.updateOne(
+      { userId: userId },
+      { $set: { mythologies: updatedMythologies } }
+    );
+
     res.status(200).json({
-      data: {
-        user: profile,
-        stats: gameData,
-      },
+      data: updatedMythologies,
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const claimShardsBooster = async (req, res) => {
+  try {
+    const userId = req.user;
+    const userMyth = req.userMyth;
+
+    userMyth.orbs -= 1;
+    userMyth.boosters.shardslvl += 1;
+    userMyth.boosters.isShardsClaimActive = false;
+    userMyth.boosters.shardsLastClaimedAt = Date.now();
+
+    await userMythologies.updateOne(
+      { userId, "mythologies.name": userMyth.name },
+      { $set: { "mythologies.$": userMyth } }
+    );
+
+    // maintain transaction
+
+    res.status(200).json({ message: "Booster claimed successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
