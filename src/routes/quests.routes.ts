@@ -4,6 +4,7 @@ import {
   claimOrbOnShare,
   claimQuest,
   createQuest,
+  unClaimedQuests,
 } from "../controllers/quests.controllers";
 import {
   verifyCompletedQuest,
@@ -11,6 +12,7 @@ import {
 } from "../middlewares/quests.middlewares";
 const router = express.Router();
 
+router.get("/quests/lost", authMiddleware, unClaimedQuests);
 router.post("/quests/create", authMiddleware, createQuest);
 router.post("/quests/claim", authMiddleware, verifyValidQuest, claimQuest);
 router.post(
