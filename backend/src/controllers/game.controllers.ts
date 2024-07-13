@@ -2,7 +2,10 @@ import userMythologies, {
   IMyth,
   IUserMyths,
 } from "../models/mythologies.models";
-import { ShardsTransactions } from "../models/transactions.models";
+import {
+  OrbsTransactions,
+  ShardsTransactions,
+} from "../models/transactions.models";
 import { validateBooster, calculateEnergy } from "../services/game.services";
 
 export const startTapSession = async (req, res) => {
@@ -143,7 +146,8 @@ export const getGameStats = async (req, res) => {
         const restoredEnergy = calculateEnergy(
           Date.now(),
           mythology.lastTapAcitivityTime,
-          mythology.energy
+          mythology.energy,
+          mythology.energyLimit
         );
 
         mythology.boosters = validateBooster(mythology.boosters);
@@ -183,8 +187,41 @@ export const claimShardsBooster = async (req, res) => {
     );
 
     // maintain transaction
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "boosters",
+      orbs: { [userMyth.name]: 1 },
+    });
+    await newOrbsTransaction.save();
 
     res.status(200).json({ message: "Booster claimed successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export const convertOrbs = async (req, res) => {
+  try {
+    const userId = req.user;
+    const userMyth = req.userMyth;
+
+    userMyth.orbs -= 2;
+
+    await userMythologies.updateOne(
+      { userId, "mythologies.name": userMyth.name },
+      { $set: { "mythologies.$": userMyth }, $inc: { multiColorOrbs: 1 } }
+    );
+
+    // maintain transaction
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "conversion",
+      orbs: { [userMyth.name]: 2 },
+    });
+    await newOrbsTransaction.save();
+
+    res.status(200).json({ message: "Orbs converted successfully!" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error." });
