@@ -102,3 +102,71 @@ export const claimOrbOnShare = async (req, res) => {
     console.log(error);
   }
 };
+
+export const unClaimedQuests = async (req, res) => {
+  try {
+    const userId = req.user;
+    const { mythologyName } = req.query;
+
+    const twentyFourHoursAgo = new Date(
+      new Date().getTime() - 24 * 60 * 60 * 1000
+    ).toISOString();
+
+    const pipeline = [
+      {
+        $match: {
+          mythology: mythologyName,
+          status: "Active",
+          createdAt: { $lt: new Date(twentyFourHoursAgo) },
+        },
+      },
+      {
+        $lookup: {
+          from: "milestones",
+          let: { questId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] },
+                    { $not: { $in: ["$$questId", "$claimedQuests.taskId"] } },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "userMilestones",
+        },
+      },
+      {
+        $match: {
+          userMilestones: { $size: 1 },
+        },
+      },
+      {
+        $sort: { createdAt: -1 as -1 },
+      },
+      {
+        $project: {
+          questName: 1,
+          description: 1,
+          type: 1,
+          link: 1,
+          mythology: 1,
+          status: 1,
+          requiredOrbs: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          __v: 1,
+        },
+      },
+    ];
+
+    const lostQuests = await quest.aggregate(pipeline).exec();
+
+    res.status(200).json({ lostQuest: lostQuests });
+  } catch (error) {
+    console.log(error);
+  }
+};

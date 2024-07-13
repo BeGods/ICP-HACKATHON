@@ -12,6 +12,6 @@ router.get("/ping", ping);
 router.get("/leaderboard", authMiddleware, getLeaderboard);
 
 // schedule cron job for leaderboard
-cron.schedule("*/30 * * * * *", updateRanks);
+// cron.schedule("*/30 * * * * *", updateRanks);
 
 export default router;
