@@ -2,9 +2,8 @@ import userMythologies, {
   IMyth,
   IUserMyths,
 } from "../models/mythologies.models";
-import { calculateEnergy } from "../utils/game.utils";
 import { ShardsTransactions } from "../models/transactions.models";
-import { validateBooster } from "../services/game.services";
+import { validateBooster, calculateEnergy } from "../services/game.services";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -86,7 +85,8 @@ export const claimTapSession = async (req, res) => {
     const restoredEnergy = calculateEnergy(
       mythData.tapSessionStartTime,
       mythData.lastTapAcitivityTime,
-      mythData.energy
+      mythData.energy,
+      mythData.energyLimit
     );
 
     // check if numberOfTaps are valid
