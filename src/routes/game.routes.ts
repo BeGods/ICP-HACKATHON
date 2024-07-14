@@ -5,9 +5,11 @@ import {
   getGameStats,
   claimShardsBooster,
   convertOrbs,
+  claimAutomata,
 } from "../controllers/game.controllers";
 import express from "express";
 import {
+  validAutomataReq,
   validShardsBoosterReq,
   validateOrbsConversion,
 } from "../middlewares/game.middlewares";
@@ -31,6 +33,12 @@ router.post(
   authMiddleware,
   validShardsBoosterReq,
   claimShardsBooster
+);
+router.post(
+  "/booster/claimAutomata",
+  authMiddleware,
+  validAutomataReq,
+  claimAutomata
 );
 
 export default router;

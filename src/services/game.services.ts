@@ -1,6 +1,6 @@
 export const validateBooster = (boosters) => {
   try {
-    const timeLapsed = 1721022695010 - boosters.shardsLastClaimedAt;
+    const timeLapsed = Date.now() - boosters.shardsLastClaimedAt;
 
     if (timeLapsed >= 86400000) {
       // 24 hours
@@ -19,6 +19,41 @@ export const validateBooster = (boosters) => {
   }
 };
 
+export const validateAutomata = (gameData) => {
+  try {
+    const timeLapsed = Date.now() - gameData.boosters.automataStartTime;
+    console.log(timeLapsed);
+
+    gameData.shards += calculateAutomataEarnings(
+      gameData.boosters.automataLastClaimedAt,
+      gameData.boosters.shardslvl
+    );
+
+    gameData.boosters.automataLastClaimedAt = Date.now();
+
+    if (timeLapsed >= 86400000) {
+      // 24 hours
+      gameData.boosters.isAutomataActive = false;
+      gameData.boosters.automataLastClaimedAt = 0;
+      gameData.boosters.automataStartTime = 0;
+    }
+
+    return gameData;
+  } catch (error) {
+    throw new Error("Error in validating booster.");
+  }
+};
+
+export const calculateAutomataEarnings = (automataLastClaimedAt, shardslvl) => {
+  const automataTimeElapsed = Math.floor(
+    (Date.now() - automataLastClaimedAt) / 1000
+  );
+
+  const automataEarnings = automataTimeElapsed * shardslvl;
+
+  return automataEarnings;
+};
+
 export const calculateEnergy = (
   tapSessionStartTime,
   lastTapAcitivityTime,
@@ -26,7 +61,7 @@ export const calculateEnergy = (
   energyLimit
 ) => {
   const calculateRestoredEnergy =
-    (tapSessionStartTime - lastTapAcitivityTime) / energyLimit;
+    (tapSessionStartTime - lastTapAcitivityTime) / 1000;
 
   if (calculateRestoredEnergy < 0) return 0;
 

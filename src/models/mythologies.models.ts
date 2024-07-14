@@ -2,8 +2,11 @@ import mongoose, { Schema, model, Document } from "mongoose";
 
 interface IBooster {
   shardslvl: number;
-  shardsLastClaimedAt: Date;
+  shardsLastClaimedAt: number;
   isShardsClaimActive: boolean;
+  isAutomataActive: boolean;
+  automataLastClaimedAt: number;
+  automataStartTime: number;
 }
 export interface IMyth extends Document {
   name: string;
@@ -75,6 +78,18 @@ const mythologySchema = new Schema({
     isShardsClaimActive: {
       type: Boolean,
       default: true,
+    },
+    automataLastClaimedAt: {
+      type: Number,
+      default: 0,
+    },
+    isAutomataActive: {
+      type: Boolean,
+      default: false,
+    },
+    automataStartTime: {
+      type: Number,
+      default: 0,
     },
   },
   // claimedCards: {
