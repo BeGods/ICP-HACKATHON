@@ -6,7 +6,11 @@ import {
   OrbsTransactions,
   ShardsTransactions,
 } from "../models/transactions.models";
-import { validateBooster, calculateEnergy } from "../services/game.services";
+import {
+  validateBooster,
+  calculateEnergy,
+  validateAutomata,
+} from "../services/game.services";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -150,7 +154,11 @@ export const getGameStats = async (req, res) => {
           mythology.energyLimit
         );
 
+        // validate boosters
         mythology.boosters = validateBooster(mythology.boosters);
+        if (mythology.boosters.isAutomataActive) {
+          mythology = validateAutomata(mythology);
+        }
         mythology.energy = restoredEnergy;
         mythology.lastTapAcitivityTime = Date.now();
 
@@ -195,6 +203,36 @@ export const claimShardsBooster = async (req, res) => {
     await newOrbsTransaction.save();
 
     res.status(200).json({ message: "Booster claimed successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export const claimAutomata = async (req, res) => {
+  try {
+    const userId = req.user;
+    const userMyth = req.userMyth;
+
+    userMyth.orbs -= 1;
+    userMyth.boosters.isAutomataActive = true;
+    userMyth.boosters.automataLastClaimedAt = Date.now();
+    userMyth.boosters.automataStartTime = Date.now();
+
+    await userMythologies.updateOne(
+      { userId, "mythologies.name": userMyth.name },
+      { $set: { "mythologies.$": userMyth } }
+    );
+
+    // maintain transaction
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "automata",
+      orbs: { [userMyth.name]: 1 },
+    });
+    await newOrbsTransaction.save();
+
+    res.status(200).json({ message: "Automata claimed successfully." });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error." });

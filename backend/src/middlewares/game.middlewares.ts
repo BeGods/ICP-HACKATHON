@@ -1,4 +1,4 @@
-import { validateBooster } from "../services/game.services";
+import { validateAutomata, validateBooster } from "../services/game.services";
 import userMythologies, {
   IMyth,
   IUserMyths,
@@ -44,9 +44,54 @@ export const validShardsBoosterReq = async (req, res, next) => {
 
     // Check sufficient orbs to claim booster
     if (requestedMyth.orbs < 1) {
+      throw new Error("Insufficient orbs to claim this booster.");
+    }
+
+    req.userMyth = requestedMyth;
+    next();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const validAutomataReq = async (req, res, next) => {
+  try {
+    const userId = req.user;
+    const { mythologyName } = req.query;
+
+    if (!mythologyName) {
+      throw new Error("Mythology name is required.");
+    }
+
+    const userMythologiesData = (await userMythologies.findOne({
+      userId,
+    })) as IUserMyths;
+
+    if (!userMythologiesData) {
+      throw new Error("Insufficient orbs to claim automata.");
+    }
+
+    let requestedMyth = userMythologiesData.mythologies.find(
+      (item) => item.name === mythologyName
+    ) as IMyth;
+
+    if (!requestedMyth) {
       return res
-        .status(400)
-        .json({ message: "Insufficient orbs to claim this booster." });
+        .status(404)
+        .json({ message: `Mythology ${mythologyName} not found.` });
+    }
+
+    if (requestedMyth.boosters.isAutomataActive) {
+      requestedMyth = validateAutomata(requestedMyth);
+
+      if (requestedMyth.boosters.isAutomataActive) {
+        throw new Error("Automata is already active. Try again later.");
+      }
+    }
+
+    // Check sufficient orbs to claim automata
+    if (requestedMyth.orbs < 1) {
+      throw new Error("Insufficient orbs to claim automata.");
     }
 
     req.userMyth = requestedMyth;
