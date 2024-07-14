@@ -1,3 +1,4 @@
+import { calculateEnergy } from "../utils/game";
 import userMythologies, {
   IMyth,
   IUserMyths,
@@ -6,11 +7,7 @@ import {
   OrbsTransactions,
   ShardsTransactions,
 } from "../models/transactions.models";
-import {
-  validateBooster,
-  calculateEnergy,
-  validateAutomata,
-} from "../services/game.services";
+import { validateBooster, validateAutomata } from "../services/game.services";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -56,8 +53,10 @@ export const startTapSession = async (req, res) => {
 
     res.status(200).json({ message: "Tap session has started." });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "An error occurred." });
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -132,8 +131,10 @@ export const claimTapSession = async (req, res) => {
 
     res.status(200).json({ message: "Tap session shards claimed." });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -175,7 +176,10 @@ export const getGameStats = async (req, res) => {
       data: updatedMythologies,
     });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -204,8 +208,10 @@ export const claimShardsBooster = async (req, res) => {
 
     res.status(200).json({ message: "Booster claimed successfully." });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -234,8 +240,10 @@ export const claimAutomata = async (req, res) => {
 
     res.status(200).json({ message: "Automata claimed successfully." });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -261,7 +269,9 @@ export const convertOrbs = async (req, res) => {
 
     res.status(200).json({ message: "Orbs converted successfully!" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };

@@ -11,6 +11,6 @@ export const generateAuthToken = async (user: any) => {
 
     return token;
   } catch (error) {
-    console.log(error);
+    throw Error(error);
   }
 };

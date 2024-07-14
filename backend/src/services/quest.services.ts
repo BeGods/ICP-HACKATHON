@@ -82,6 +82,6 @@ export const questAggregator = async (userId, questId) => {
 
     return validQuest;
   } catch (error) {
-    throw error;
+    throw Error(error);
   }
 };

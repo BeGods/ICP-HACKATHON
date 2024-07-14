@@ -29,7 +29,10 @@ export const authMiddleware = async (req, res, next) => {
         .status(401)
         .json({ error: "Not authorized to access this resource" });
     } else {
-      return res.status(500).json({ error: "Internal server error" });
+      res.status(500).json({
+        message: "Internal server error.",
+        error: error.message,
+      });
     }
   }
 };

@@ -1,4 +1,5 @@
 import routes from "./router";
+import helmet from "helmet";
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -11,6 +12,7 @@ app.use(
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
+app.use(helmet());
 
 app.use("/api/v1", routes);
 

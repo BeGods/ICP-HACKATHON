@@ -14,9 +14,8 @@ export interface IUser extends Document {
     avatarUrl: string;
     updateAt: Date;
   };
+  announcements: number;
   //TODO Profile image
-  //TODO team
-  //TODO myths
 }
 //* check if anyone part of it then only it is team
 
@@ -60,6 +59,10 @@ const userSchema = new Schema(
         type: Date,
         default: Date.now(),
       },
+    },
+    announcements: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }
