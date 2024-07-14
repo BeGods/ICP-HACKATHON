@@ -13,7 +13,10 @@ export const createQuest = async (req, res) => {
 
     res.status(200).json({ data: newQuestCreated });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -55,8 +58,10 @@ export const claimQuest = async (req, res) => {
 
     res.status(200).json({ message: "Quest claimed successfully." });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error." });
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -99,7 +104,10 @@ export const claimOrbOnShare = async (req, res) => {
 
     res.status(200).json({ message: "Orb claimed successfully!" });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
@@ -167,6 +175,9 @@ export const unClaimedQuests = async (req, res) => {
 
     res.status(200).json({ lostQuest: lostQuests });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
