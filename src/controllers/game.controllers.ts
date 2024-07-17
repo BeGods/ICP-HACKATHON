@@ -8,6 +8,8 @@ import {
   ShardsTransactions,
 } from "../models/transactions.models";
 import { validateBooster, validateAutomata } from "../services/game.services";
+import { defaultMythologies } from "../utils/defaultMyths";
+import mongoose from "mongoose";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -64,6 +66,15 @@ export const claimTapSession = async (req, res) => {
   try {
     const userId = req.user;
     let { taps, mythologyName } = req.body;
+
+    const pipeline = [
+      {
+        $match: new mongoose.Types.ObjectId(),
+      },
+      {
+        $unwind: "$claimedQuests",
+      },
+    ];
 
     // get mythDta
     const userMythology = (await userMythologies.findOne({
@@ -140,14 +151,74 @@ export const claimTapSession = async (req, res) => {
 
 export const getGameStats = async (req, res) => {
   try {
-    const userId = req.user;
-    const userMythologiesData = (await userMythologies.findOne({
-      userId: userId,
-    })) as IUserMyths;
+    const userId = req.user._id;
+
+    // Aggregate pipeline
+    const pipeline = [
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "usermythologies",
+          localField: "userId",
+          foreignField: "userId",
+          as: "userMythologies",
+        },
+      },
+      {
+        $lookup: {
+          from: "quests",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: "milestones",
+              },
+            },
+            {
+              $addFields: {
+                isCompleted: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$milestones" }, 0] },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+            { $sort: { createdAt: -1 as -1 } }, // Sort quests by createdAt in descending order
+            { $project: { milestones: 0, updatedAt: 0, createdAt: 0, __v: 0 } }, // Exclude specific fields
+          ],
+          as: "quests",
+        },
+      },
+    ];
+
+    // Execute the aggregation pipeline
+    const userGameStats = await userMythologies.aggregate(pipeline);
+
+    if (!userGameStats || userGameStats.length === 0) {
+      return res.status(404).json({ message: "User game stats not found" });
+    }
+
+    const userMythologiesData = userGameStats[0];
 
     // Calculate and update energy for each mythology
-    const updatedMythologies = userMythologiesData.mythologies.map(
-      (mythology) => {
+    const updatedMythologies =
+      userMythologiesData.userMythologies[0].mythologies.map((mythology) => {
         const restoredEnergy = calculateEnergy(
           Date.now(),
           mythology.lastTapAcitivityTime,
@@ -155,7 +226,7 @@ export const getGameStats = async (req, res) => {
           mythology.energyLimit
         );
 
-        // validate boosters
+        // Validate boosters
         mythology.boosters = validateBooster(mythology.boosters);
         if (mythology.boosters.isAutomataActive) {
           mythology = validateAutomata(mythology);
@@ -164,16 +235,42 @@ export const getGameStats = async (req, res) => {
         mythology.lastTapAcitivityTime = Date.now();
 
         return mythology;
-      }
+      });
+
+    // Add missing mythologies with default values
+    const existingNames = updatedMythologies.map((myth) => myth.name);
+    const missingMythologies = defaultMythologies.filter(
+      (defaultMyth) => !existingNames.includes(defaultMyth.name)
     );
+
+    const completeMythologies = [...updatedMythologies, ...missingMythologies];
+
+    // Remove id from each mythology
+    completeMythologies.forEach((mythology) => {
+      delete mythology._id;
+    });
 
     await userMythologies.updateOne(
-      { userId: userId },
-      { $set: { mythologies: updatedMythologies } }
+      { userId },
+      { $set: { mythologies: completeMythologies } }
     );
 
+    const userData = {
+      telegramUsername: req.user.telegramUsername,
+      profile: req.user.profile,
+      isPremium: req.user.isPremium,
+      directReferralCount: req.user.directReferralCount,
+      premiumReferralCount: req.user.premiumReferralCount,
+      referralCode: req.user.referralCode,
+    };
+
     res.status(200).json({
-      data: updatedMythologies,
+      user: userData,
+      stats: {
+        multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
+        updatedMythologies: completeMythologies,
+      },
+      quests: userMythologiesData.quests,
     });
   } catch (error) {
     res.status(500).json({

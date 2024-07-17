@@ -18,7 +18,7 @@ export const authMiddleware = async (req, res, next) => {
       throw new Error("Not authorized to access this resource");
     }
 
-    req.user = decodedUserData._id;
+    req.user = user;
 
     next();
   } catch (error) {

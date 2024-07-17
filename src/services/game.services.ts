@@ -1,4 +1,77 @@
+import mongoose from "mongoose";
 import { calculateAutomataEarnings } from "../utils/game";
+import userMythologies from "../models/mythologies.models";
+
+export const fetchUserStats = async (userId) => {
+  try {
+    // Aggregate pipeline
+    const pipeline = [
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "usermythologies",
+          localField: "userId",
+          foreignField: "userId",
+          as: "userMythologies",
+        },
+      },
+      {
+        $lookup: {
+          from: "quests",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                  { $project: { "claimedQuests.taskId": 1 } },
+                ],
+                as: "milestones",
+              },
+            },
+            {
+              $addFields: {
+                isCompleted: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$milestones" }, 0] },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+          ],
+          as: "quests",
+        },
+      },
+      {
+        $project: {
+          user: "$",
+          stats: "$userMythologies",
+          quests: "$quests",
+        },
+      },
+    ];
+
+    // Execute the aggregation pipeline
+    const userGameStats = await userMythologies.aggregate(pipeline);
+
+    return userGameStats;
+  } catch (error) {
+    throw new Error("There was a problem fetching user data.");
+  }
+};
 
 export const validateBooster = (boosters) => {
   try {
