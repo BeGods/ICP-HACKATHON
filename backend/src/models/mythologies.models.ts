@@ -125,6 +125,8 @@ const userMythologySchema = new Schema(
   { timestamps: true }
 );
 
+userMythologySchema.index({ userId: 1 }, { unique: true });
+
 // mythologySchema.pre("save", (next) => {
 //   if (this.isNew && this.energy === undefined) {
 //     this.energy = 1000;

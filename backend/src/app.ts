@@ -3,6 +3,7 @@ import helmet from "helmet";
 const express = require("express");
 const cors = require("cors");
 const app = express();
+import morgan from "morgan";
 
 app.use(express.json());
 
@@ -13,6 +14,7 @@ app.use(
   })
 );
 app.use(helmet());
+app.use(morgan("tiny"));
 
 app.use("/api/v1", routes);
 
