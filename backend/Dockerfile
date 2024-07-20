@@ -4,14 +4,16 @@ ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
-COPY COPY package*.json ./
+COPY package*.json ./
 
 RUN npm install --production
 
+RUN chown -R node:node /usr/src/app
+
 COPY . .
 
-RUN npm run build
-
 USER node
+
+RUN npm run build
 
 CMD ["npm", "start"]
