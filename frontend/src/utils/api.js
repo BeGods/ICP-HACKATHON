@@ -1,0 +1,77 @@
+import axios from "axios";
+
+export const authenticate = async (userData) => {
+  let url = `${import.meta.env.VITE_API_URL}/auth`;
+
+  try {
+    const response = await axios.post(url, userData);
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchGameStats = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/game/stats`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const convertOrbs = async (mythologyName, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/game/convertOrbs`;
+
+  try {
+    const response = await axios.post(url, mythologyName, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimShareReward = async (questData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/share`;
+
+  try {
+    const response = await axios.post(url, questData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimQuest = async (questData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/share`;
+
+  try {
+    const response = await axios.post(url, questData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
