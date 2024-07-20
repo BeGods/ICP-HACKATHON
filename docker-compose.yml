@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  react-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: react-app
+    ports:
+      - "8083:8083"
+    environment:
+      - VITE_API_URL=https://2r2cf484-3000.inc1.devtunnels.ms/api/v1
+    volumes:
+      - .:/src
