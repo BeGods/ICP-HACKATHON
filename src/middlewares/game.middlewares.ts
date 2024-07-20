@@ -104,7 +104,7 @@ export const validAutomataReq = async (req, res, next) => {
 export const validateOrbsConversion = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName } = req.query;
+    const { mythologyName } = req.body;
 
     const userMythologiesData = (await userMythologies.findOne({
       userId,

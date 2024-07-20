@@ -12,9 +12,13 @@
     "typescript": "^5.5.3"
   },
   "scripts": {
-    "start": "npm run dev",
+    "start": "node dist/server.js",
     "dev": "nodemon --watch src src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "prestart": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write ."
   },
   "author": "",
   "license": "ISC",
