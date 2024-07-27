@@ -14,9 +14,21 @@ const Home = (props) => {
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [activeMyth, setActiveMyth] = useState(0);
+  const [error, setError] = useState(null);
   const [section, setSection] = useState(() => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });
+
+  const sections = [
+    <Game
+      gameData={gameData?.mythologies}
+      multiColorOrbs={gameData?.multiColorOrbs}
+    />,
+    <Quests quests={questsData} />,
+    <Boosters gameData={gameData?.mythologies} />,
+    <Profile gameData={userData} />,
+  ];
 
   const getGameData = async (token) => {
     try {
@@ -27,6 +39,7 @@ const Home = (props) => {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setError(error);
     }
   };
 
@@ -49,7 +62,7 @@ const Home = (props) => {
   return (
     <>
       {!isLoading ? (
-        <div className="h-screen w-screen bg-red-400">
+        <div className="h-screen w-screen bg-red-400 select-none">
           <MyContext.Provider
             value={{
               gameData,
@@ -58,39 +71,23 @@ const Home = (props) => {
               setQuestsData,
               userData,
               setUserData,
+              section,
+              setSection,
+              activeMyth,
+              setActiveMyth,
             }}
           >
-            {section === 0 && (
-              <Game
-                gameData={gameData?.updatedMythologies}
-                multiColorOrbs={gameData?.multiColorOrbs}
-              />
-            )}
-            {section === 1 && <Quests quests={questsData} />}
-            {section === 2 && (
-              <Boosters gameData={gameData?.updatedMythologies} />
-            )}
-            {section === 3 && <Profile gameData={userData} />}
-            <div className="flex gap-4 bg-white">
-              <button
-                onClick={() => {
-                  setSection((prev) => (prev - 1 + 4) % 4);
-                }}
-              >
-                Prev
-              </button>
-              <button
-                onClick={() => {
-                  setSection((prev) => (prev - 1 + 4) % 4);
-                }}
-              >
-                Next
-              </button>
-            </div>
+            {[0, 1, 2, 3].map((item) => (
+              <div key={item}>{section === item && sections[item]}</div>
+            ))}
           </MyContext.Provider>
         </div>
       ) : (
-        <h1>Loading</h1>
+        <h1>
+          Loading
+          <br />
+          {error && JSON.stringify(error)}
+        </h1>
       )}
     </>
   );

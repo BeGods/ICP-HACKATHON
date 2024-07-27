@@ -1,3 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --game-text-color: #F09A43;
+    /* Celtic */
+    --celtic-color: #06B225;
+    --celtic-text-color: #01FF29;
+    --celtic-green-dark: #1A642F;
+    --celtic-green-medium: #1BD243;
+    --celtic-green-light: #00FF29;
+    /* Egyptian */
+    --egyptian-color: #CEBA02;
+    --egyptian-text-color: #FEEA4B;
+    --egyptian-green-dark: #9A9523;
+    --egyptian-green-medium: #D2CB1B;
+    --egyptian-green-light: #EBFF00;
+    /* Greek */
+    --greek-color: #CE0202;
+    --greek-text-color: #FF0000;
+    --greek-green-dark: #641A1A;
+    --greek-green-medium: #D21B1B;
+    --greek-green-light: #FF0000;
+    /* Norse */
+    --norse-color: #179FD1;
+    --norse-text-color: #007AFF;
+    --norse-green-dark: #1A4064;
+    --norse-green-medium: #1B85D2;
+    --norse-green-light: #0094FF;
+}
+
+/* Fonts */
+@font-face {
+    font-family: 'Celtic';
+    src: url('/fonts/celtic.woff2') format('woff2'),
+      url('/fonts/celtic.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+  font-family: 'Egyptian';
+  src: url('/fonts/egyptian.woff2') format('woff2'),
+    url('/fonts/egyptian.woff2') format('woff2');
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+    font-family: 'Greek';
+    src: url('/fonts/greek.woff2') format('woff2'),
+      url('/fonts/greek.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Norse';
+    src: url('/fonts/norse.woff2') format('woff2'),
+      url('/fonts/norse.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+  font-family: 'FOF';
+  src: url('/fonts/fof.woff2') format('woff2'),
+    url('/fonts/fof.woff2') format('woff2');
+  font-style: normal;
+  font-display: swap;
+}
+
+/* text glow */
+.glow-celtic {
+  font-family: 'Celtic';
+  font-size: 36px;
+    text-shadow: 
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color)
+}
+
+.glow-egyptian {
+    font-family: 'Egyptian';
+    font-size: 32px;
+    text-shadow: 
+    0 0 5px var(--egyptian-color),
+    0 0 5px var(--egyptian-color),
+    0 0 5px var(--egyptian-color)
+}
+
+.glow-greek {
+    font-family: 'Greek';
+    font-size: 36px;
+    text-shadow: 
+    0 0 5px var(--greek-color),
+    0 0 5px var(--greek-color),
+    0 0 5px var(--greek-color)
+}
+
+.glow-norse {
+    font-family: 'Norse';
+    font-size: 26px;
+    text-shadow: 
+    0 0 5px var(--norse-color),
+    0 0 5px var(--norse-color),
+    0 0 5px var(--norse-color)
+}
+
+
+.glow-icon-celtic {
+  text-shadow: 
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color);
+  filter: drop-shadow(0 0 5px var(--celtic-color));
+}
+
+.glow-icon-egyptian {
+  font-family: 'Egyptian';
+  font-size: 36px;
+  text-shadow: 
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color);
+  filter: drop-shadow(0 0 5px var(--egyptian-color));
+}
+
+.glow-icon-greek {
+  font-family: 'Greek';
+  font-size: 36px;
+  text-shadow: 
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color);
+  filter: drop-shadow(0 0 5px var(--greek-color));
+}
+
+.glow-icon-norse {
+  font-family: 'Norse';
+  font-size: 36px;
+  text-shadow: 
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color);
+  filter: drop-shadow(0 0 5px var(--norse-color));
+}
+
+
+/* Gradients */
+.gradient-multi {
+  background: linear-gradient(90deg, #001AFF 32.59%, #16FFD5 47.32%, #42FF00 60.71%, #CCFF00 74.78%, #FFB800 87.17%, #FF0000 99.55%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-celtic {
+  background: linear-gradient(90deg, var(--celtic-green-dark), var(--celtic-green-light), var(--celtic-text-color));
+}
+
+
+/* Glass Effects */
+.bg-glass-black {
+    background: rgba(0, 0, 0, 0.7); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+  }
+
+.bg-celtic {
+  background: var(--celtic-color);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+}
+
+.bg-egyptian {
+  background: var(--egyptian-color);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+}
+
+.bg-greek {
+  background: var(--greek-color);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+}
+
+.bg-norse {
+  background: var(--norse-color);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+}
+
+
+.fof-text-shadow {
+  -webkit-text-stroke: 1px black; 
+  color: var(--game-text-color); 
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+  }
+  
+
+.gray-overlay {
+  position: relative;
+  display: inline-block;
+}
+
+.gray-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.5); /* Gray with 50% opacity */
+  pointer-events: none;
+}
+
+.gray-overlay img,
+.gray-overlay p {
+  position: relative;
+  z-index: 1;
+}
+
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 75%;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  filter: blur(5px); /* Adjust blur amount as needed */
+}
+
+.circle {
+  content: "";
+  position: absolute;
+  width: 20%; /* Adjust the size of the circle */
+  height: 20%; /* Adjust the size of the circle */
+  border-radius: 50%;
+  box-shadow: 0 0 0 9999px white; /* Mask with large box shadow */
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* First Circle */
+.circle1 {
+  top: 10%;
+  left: 10%;
+  background-position: 10% 10%;
+}
+
+/* Second Circle */
+.circle2 {
+  top: 10%;
+  right: 10%;
+  background-position: 90% 10%;
+}
+
+/* Third Circle */
+.circle3 {
+  bottom: 10%;
+  left: 10%;
+  background-position: 10% 90%;
+}
+
+/* Fourth Circle */
+.circle4 {
+  bottom: 10%;
+  right: 10%;
+  background-position: 90% 90%;
+}
+
+
+
+
