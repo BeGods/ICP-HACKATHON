@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import userMythologies from "../models/mythologies.models";
 import { areObjectsEqual } from "../utils/compareObjects";
 import { questAggregator } from "../services/quest.services";
+import milestones from "../models/milestones.models";
 
 // 46ms
 // export const testValidQuest = async (req, res, next) => {
@@ -82,6 +83,32 @@ export const verifyCompletedQuest = async (req, res, next) => {
     // Check if reward already claimed
     if (validCompletedQuest.orbClaimed) {
       throw new Error("Reward already claimed.");
+    }
+
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const verifyValidShareClaim = async (req, res, next) => {
+  try {
+    const userId = req.user;
+    const { questId } = req.body;
+
+    const validShareReq = await milestones.findOne({ userId: userId });
+
+    // Check if task is not completed
+    // if (!validShareReq) {
+    //   throw new Error("Invalid request. Quest does not exist.");
+    // }
+    if (validShareReq) {
+      const sharedQuestExists = validShareReq?.sharedQuests.includes(questId);
+
+      // Check if reward already claimed
+      if (sharedQuestExists) {
+        throw new Error("Reward already claimed.");
+      }
     }
 
     next();

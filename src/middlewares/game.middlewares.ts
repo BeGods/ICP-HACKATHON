@@ -7,7 +7,7 @@ import userMythologies, {
 export const validShardsBoosterReq = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName } = req.query;
+    const { mythologyName } = req.body;
 
     if (!mythologyName) {
       throw new Error("Mythology name is required.");
@@ -57,7 +57,7 @@ export const validShardsBoosterReq = async (req, res, next) => {
 export const validAutomataReq = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName } = req.query;
+    const { mythologyName } = req.body;
 
     if (!mythologyName) {
       throw new Error("Mythology name is required.");

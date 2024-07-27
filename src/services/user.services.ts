@@ -1,3 +1,4 @@
+import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
 import User from "../models/user.models";
 
@@ -37,5 +38,17 @@ export const addTeamMember = async (user, existingReferrer, referralCode) => {
     }
   } catch (error) {
     throw new Error("Could not add team member");
+  }
+};
+
+export const createDefaultUserMyth = async (user) => {
+  try {
+    const newUserMyth = new userMythologies({
+      userId: user._id,
+    });
+
+    await newUserMyth.save();
+  } catch (error) {
+    throw new Error("Could create default myth");
   }
 };
