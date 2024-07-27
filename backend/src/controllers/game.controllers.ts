@@ -10,6 +10,7 @@ import {
 import { validateBooster, validateAutomata } from "../services/game.services";
 import { defaultMythologies } from "../utils/defaultMyths";
 import mongoose from "mongoose";
+import { Document } from "mongodb";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -199,12 +200,91 @@ export const getGameStats = async (req, res) => {
                 },
               },
             },
-            { $sort: { createdAt: -1 as -1 } }, // Sort quests by createdAt in descending order
-            { $project: { milestones: 0, updatedAt: 0, createdAt: 0, __v: 0 } }, // Exclude specific fields
+            {
+              $addFields: {
+                isOrbClaimed: {
+                  $cond: {
+                    if: {
+                      $gt: [
+                        {
+                          $size: {
+                            $filter: {
+                              input: "$milestones",
+                              as: "milestone",
+                              cond: { $eq: ["$$milestone.orbClaimed", true] },
+                            },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$sharedQuests"] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: "sharedMilestones",
+              },
+            },
+            {
+              $addFields: {
+                isShared: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$sharedMilestones" }, 0] },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+            { $sort: { createdAt: -1 as -1 } },
+            {
+              $project: {
+                milestones: 0,
+                sharedMilestones: 0,
+                updatedAt: 0,
+                createdAt: 0,
+                __v: 0,
+              },
+            },
           ],
-          as: "quests",
+          as: "allQuests",
         },
       },
+      {
+        $addFields: {
+          quests: {
+            $filter: {
+              input: "$allQuests",
+              as: "quest",
+              cond: {
+                $or: [
+                  { $eq: ["$$quest.status", "Active"] },
+                  { $eq: ["$$quest.isCompleted", true] },
+                ],
+              },
+            },
+          },
+        },
+      },
+      { $project: { allQuests: 0 } },
     ];
 
     // Execute the aggregation pipeline
@@ -268,11 +348,12 @@ export const getGameStats = async (req, res) => {
       user: userData,
       stats: {
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
-        updatedMythologies: completeMythologies,
+        mythologies: completeMythologies,
       },
       quests: userMythologiesData.quests,
     });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -283,6 +364,7 @@ export const getGameStats = async (req, res) => {
 export const claimShardsBooster = async (req, res) => {
   try {
     const userId = req.user;
+
     const userMyth = req.userMyth;
 
     userMyth.orbs -= 1;
@@ -290,10 +372,20 @@ export const claimShardsBooster = async (req, res) => {
     userMyth.boosters.isShardsClaimActive = false;
     userMyth.boosters.shardsLastClaimedAt = Date.now();
 
-    await userMythologies.updateOne(
-      { userId, "mythologies.name": userMyth.name },
-      { $set: { "mythologies.$": userMyth } }
+    const updatedMythData = (await userMythologies
+      .findOneAndUpdate(
+        { userId, "mythologies.name": userMyth.name },
+        { $set: { "mythologies.$": userMyth } },
+        { new: true }
+      )
+      .lean()) as Document;
+
+    const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
+    cleanedData.mythologies = cleanedData.mythologies.map(
+      ({ _id, ...rest }) => rest
     );
+
+    delete cleanedData.userId;
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
@@ -303,7 +395,10 @@ export const claimShardsBooster = async (req, res) => {
     });
     await newOrbsTransaction.save();
 
-    res.status(200).json({ message: "Booster claimed successfully." });
+    res.status(200).json({
+      message: "Booster claimed successfully.",
+      updatedMythologies: cleanedData,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",
@@ -322,10 +417,20 @@ export const claimAutomata = async (req, res) => {
     userMyth.boosters.automataLastClaimedAt = Date.now();
     userMyth.boosters.automataStartTime = Date.now();
 
-    await userMythologies.updateOne(
-      { userId, "mythologies.name": userMyth.name },
-      { $set: { "mythologies.$": userMyth } }
+    const updatedMythData = (await userMythologies
+      .findOneAndUpdate(
+        { userId, "mythologies.name": userMyth.name },
+        { $set: { "mythologies.$": userMyth } },
+        { new: true }
+      )
+      .lean()) as Document;
+
+    const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
+    cleanedData.mythologies = cleanedData.mythologies.map(
+      ({ _id, ...rest }) => rest
     );
+
+    delete cleanedData.userId;
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
@@ -335,7 +440,10 @@ export const claimAutomata = async (req, res) => {
     });
     await newOrbsTransaction.save();
 
-    res.status(200).json({ message: "Automata claimed successfully." });
+    res.status(200).json({
+      message: "Automata claimed successfully.",
+      updatedMythologies: cleanedData,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",

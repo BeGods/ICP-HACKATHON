@@ -9,6 +9,7 @@ interface IBooster {
   automataStartTime: number;
 }
 export interface IMyth extends Document {
+  _id?: string;
   name: string;
   orbs: number;
   shards: number;
@@ -108,6 +109,7 @@ const userMythologySchema = new Schema(
     mythologies: {
       type: [mythologySchema],
       sparse: true,
+      default: [],
       validate: {
         validator: (mythologies: IMyth[]) => {
           const names = mythologies.map((myth) => myth.name);

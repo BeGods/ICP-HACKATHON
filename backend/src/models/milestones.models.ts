@@ -24,6 +24,10 @@ const milestoneSchema = new Schema({
       },
     },
   ],
+  sharedQuests: {
+    type: [Schema.Types.ObjectId],
+    ref: "Quests",
+  },
   //   claimedCards: {
   //     type: [Schema.Types.ObjectId],
   //     ref: "NFTs",
