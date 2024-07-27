@@ -1,0 +1,46 @@
+import { CornerUpLeft, CornerUpRight } from "lucide-react";
+import React from "react";
+
+const mythSections = ["celtic", "egyptian", "greek", "norse"];
+
+const QuestButton = ({
+  handlePrev,
+  handleNext,
+  isCompleted,
+  activeMyth,
+  action,
+}) => {
+  return (
+    <>
+      <div className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 border border-black bg-glass-black text-white font-montserrat rounded-button">
+        <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
+          <CornerUpLeft
+            color="white"
+            className="h-[20px] w-[20px]"
+            onClick={handlePrev}
+          />
+        </div>
+        {isCompleted ? (
+          <div
+            className={`text-[16px] uppercase px-2 text-${mythSections[activeMyth]}-primary font-semibold`}
+          >
+            Completed
+          </div>
+        ) : (
+          <div onClick={action} className="text-[16px] uppercase">
+            Claim
+          </div>
+        )}
+        <div className="flex justify-center items-center w-1/4 border-l-[0.5px] border-borderGray h-full">
+          <CornerUpRight
+            color="white"
+            className="h-[20px] w-[20px]"
+            onClick={handleNext}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default QuestButton;

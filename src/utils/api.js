@@ -60,11 +60,59 @@ export const claimShareReward = async (questData, accessToken) => {
   }
 };
 
-export const claimQuest = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/share`;
+export const claimQuestOrbsReward = async (questData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/claim/share`;
 
   try {
     const response = await axios.post(url, questData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimQuest = async (questData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/claim`;
+
+  try {
+    const response = await axios.post(url, questData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimShardsBooster = async (mythologyName, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/booster/claimShards`;
+
+  try {
+    const response = await axios.post(url, mythologyName, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimAutomataBooster = async (mythologyName, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/booster/claimAutomata`;
+
+  try {
+    const response = await axios.post(url, mythologyName, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

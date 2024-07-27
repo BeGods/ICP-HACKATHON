@@ -33,6 +33,7 @@ const Auth = (props) => {
     try {
       const response = await authenticate(userData);
       tele.CloudStorage.setItem("accessToken", response.data.token);
+      localStorage.setItem("accessToken", response.data.token);
       navigate("/home");
     } catch (error) {
       console.error("Authentication Error: ", error);
