@@ -3,7 +3,11 @@ import config from "../config/config";
 import User, { IUser } from "../models/user.models";
 import { ObjectId } from "mongodb";
 import { generateAuthToken } from "../services/auth.services";
-import { addTeamMember, createUser } from "../services/user.services";
+import {
+  addTeamMember,
+  createDefaultUserMyth,
+  createUser,
+} from "../services/user.services";
 
 export const login = async (req, res) => {
   try {
@@ -80,6 +84,7 @@ export const login = async (req, res) => {
       // create new  user
       existingUser = await createUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
+      await createDefaultUserMyth(existingUser);
       // response token
       const accessToken = await generateAuthToken(existingUser);
 
@@ -157,6 +162,7 @@ export const testLogin = async (req, res) => {
       // create new  user
       existingUser = await createUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
+      await createDefaultUserMyth(existingUser);
       // response token
       const accessToken = await generateAuthToken(existingUser);
 

@@ -181,3 +181,68 @@ export const unClaimedQuests = async (req, res) => {
     });
   }
 };
+
+export const deactivateQuest = async (req, res) => {
+  try {
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+    await quest.updateMany(
+      {
+        status: "Active",
+        createdAt: { $lt: twentyFourHoursAgo },
+      },
+      {
+        status: "Inactive",
+      }
+    );
+
+    res.status(200).json({ message: "Task Deactivated Successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimQuestShare = async (req, res) => {
+  try {
+    const userId = req.user;
+    const { questId } = req.body;
+
+    // increment orb
+    await userMythologies.findOneAndUpdate(
+      { userId: userId },
+      {
+        $inc: {
+          multiColorOrbs: 1,
+        },
+      }
+    );
+
+    // update claim status
+    await milestones.updateOne(
+      { userId: userId },
+      {
+        $push: { sharedQuests: questId },
+      },
+      { new: true, upsert: true }
+    );
+
+    // maintain transaction
+    const newOrbTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "share",
+      orbs: { multiColorOrbs: 1 },
+    });
+    await newOrbTransaction.save();
+
+    res.status(200).json({ message: "Orb claimed successfully!" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
