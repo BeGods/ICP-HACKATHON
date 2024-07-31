@@ -4,8 +4,7 @@ import { MyContext } from "../context/context";
 const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
 
 const Footer = () => {
-  const { section, setSection, activeMyth, setActiveMyth } =
-    useContext(MyContext);
+  const { section, setSection, activeMyth } = useContext(MyContext);
   return (
     <div
       style={{
@@ -19,7 +18,6 @@ const Footer = () => {
       <div
         onClick={() => {
           setSection(0);
-          setActiveMyth(0);
         }}
         className={`flex flex-col items-center font-semibold ${
           section !== 0 && "opacity-40"
@@ -37,7 +35,6 @@ const Footer = () => {
       <div
         onClick={() => {
           setSection(1);
-          setActiveMyth(0);
         }}
         className={`flex flex-col items-center font-semibold ${
           section !== 1 && "opacity-40"
@@ -55,7 +52,6 @@ const Footer = () => {
       <div
         onClick={() => {
           setSection(2);
-          setActiveMyth(0);
         }}
         className={`flex flex-col items-center font-semibold ${
           section !== 2 && "opacity-40"
@@ -73,7 +69,6 @@ const Footer = () => {
       <div
         onClick={() => {
           setSection(3);
-          setActiveMyth(0);
         }}
         className={`flex flex-col items-center font-semibold ${
           section !== 3 && "opacity-40"

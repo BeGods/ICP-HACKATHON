@@ -12,6 +12,7 @@
     --celtic-green-dark: #1A642F;
     --celtic-green-medium: #1BD243;
     --celtic-green-light: #00FF29;
+    
     /* Egyptian */
     --egyptian-color: #CEBA02;
     --egyptian-text-color: #FEEA4B;
@@ -32,7 +33,41 @@
     --norse-green-light: #0094FF;
 }
 
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(93deg, #454231 3.06%, #1C1A13 97.78%);
+}
+
+/* Toasts */
+.custom-toast {
+  border-radius: 8px !important; /* Ensuring it applies */
+  background-color: white !important;
+  color: black !important;
+  width: 95%;
+  margin: 20px auto;
+}
+
+.ToastContainer--top-center {
+  width:  100%; /* Full width to ensure centering within the viewport */
+  display: flex;
+  justify-content: center !important; /* Center content horizontally */
+  padding: 0; /* Remove any default padding */
+}
+
 /* Fonts */
+
+@font-face {
+  font-family: 'Symbols';
+  src: url('/fonts/symbols.woff2') format('woff2'),
+    url('/fonts/symbols.woff2') format('woff2');
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
     font-family: 'Celtic';
     src: url('/fonts/celtic.woff2') format('woff2'),
@@ -76,7 +111,7 @@
 /* text glow */
 .glow-celtic {
   font-family: 'Celtic';
-  font-size: 36px;
+  font-size: 43px;
     text-shadow: 
     0 0 5px var(--celtic-color),
     0 0 5px var(--celtic-color),
@@ -85,7 +120,7 @@
 
 .glow-egyptian {
     font-family: 'Egyptian';
-    font-size: 32px;
+    font-size: 43px;
     text-shadow: 
     0 0 5px var(--egyptian-color),
     0 0 5px var(--egyptian-color),
@@ -94,7 +129,7 @@
 
 .glow-greek {
     font-family: 'Greek';
-    font-size: 36px;
+    font-size: 43px;
     text-shadow: 
     0 0 5px var(--greek-color),
     0 0 5px var(--greek-color),
@@ -103,7 +138,7 @@
 
 .glow-norse {
     font-family: 'Norse';
-    font-size: 26px;
+    font-size: 43px;
     text-shadow: 
     0 0 5px var(--norse-color),
     0 0 5px var(--norse-color),
@@ -120,8 +155,6 @@
 }
 
 .glow-icon-egyptian {
-  font-family: 'Egyptian';
-  font-size: 36px;
   text-shadow: 
   0 0 5px var(--egyptian-color),
   0 0 5px var(--egyptian-color),
@@ -130,8 +163,6 @@
 }
 
 .glow-icon-greek {
-  font-family: 'Greek';
-  font-size: 36px;
   text-shadow: 
   0 0 5px var(--greek-color),
   0 0 5px var(--greek-color),
@@ -140,8 +171,6 @@
 }
 
 .glow-icon-norse {
-  font-family: 'Norse';
-  font-size: 36px;
   text-shadow: 
   0 0 5px var(--norse-color),
   0 0 5px var(--norse-color),
@@ -160,7 +189,19 @@
 }
 
 .gradient-celtic {
-  background: linear-gradient(90deg, var(--celtic-green-dark), var(--celtic-green-light), var(--celtic-text-color));
+  background: linear-gradient(90deg, var(--celtic-green-dark), var(--celtic-green-medium), var(--celtic-green-light));
+}
+
+.gradient-egyptian {
+  background: linear-gradient(90deg, var(--egyptian-green-dark), var(--egyptian-green-medium), var(--egyptian-green-light));
+}
+
+.gradient-greek {
+  background: linear-gradient(90deg, var(--greek-green-dark), var(--greek-green-medium), var(--greek-green-light));
+}
+
+.gradient-norse {
+  background: linear-gradient(90deg, var(--norse-green-dark), var(--norse-green-medium), var(--norse-green-light));
 }
 
 
@@ -281,6 +322,21 @@
   background-position: 90% 90%;
 }
 
+/* Plus one aimation */
+.plus-one {
+  position: absolute;
+  font-size: 50px;
+  color: rgba(255, 247, 220, 1);
+  animation: moveAndFade 1s forwards;
+}
 
-
-
+@keyframes moveAndFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-200px);
+  }
+}

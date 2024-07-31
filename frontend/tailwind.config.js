@@ -7,10 +7,20 @@ export default {
     "border-greek-primary",
     "border-norse-primary",
 
+    "bg-celtic-primary",
+    "bg-egyptian-primary",
+    "bg-greek-primary",
+    "bg-norse-primary",
+
     "text-celtic-primary",
     "text-egyptian-primary",
     "text-greek-primary",
     "text-norse-primary",
+
+    "text-celtic-text",
+    "text-egyptian-text",
+    "text-greek-text",
+    "text-norse-text",
   ],
   theme: {
     extend: {
@@ -21,6 +31,7 @@ export default {
         norse: ["Norse", "sans-serif"],
         montserrat: ["Montserrat", "sans-serif"],
         fof: ["FOF", "sans-serif"],
+        symbols: ["Symbols", "sans-serif"],
       },
       colors: {
         fof: "var(--game-text-color)",
