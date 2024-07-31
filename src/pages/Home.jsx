@@ -5,6 +5,7 @@ import Quests from "./Quests";
 import Profile from "./Profile";
 import Boosters from "./Boosters";
 import { MyContext } from "../context/context";
+import Leaderboard from "./Leaderboard";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,13 +22,11 @@ const Home = (props) => {
   });
 
   const sections = [
-    <Game
-      gameData={gameData?.mythologies}
-      multiColorOrbs={gameData?.multiColorOrbs}
-    />,
-    <Quests quests={questsData} />,
-    <Boosters gameData={gameData?.mythologies} />,
-    <Profile gameData={userData} />,
+    <Game />,
+    <Quests />,
+    <Boosters />,
+    <Profile />,
+    <Leaderboard />,
   ];
 
   const getGameData = async (token) => {
@@ -62,7 +61,7 @@ const Home = (props) => {
   return (
     <>
       {!isLoading ? (
-        <div className="h-screen w-screen bg-red-400 select-none">
+        <div className="h-screen w-screen bg-white select-none">
           <MyContext.Provider
             value={{
               gameData,
@@ -77,17 +76,13 @@ const Home = (props) => {
               setActiveMyth,
             }}
           >
-            {[0, 1, 2, 3].map((item) => (
+            {[0, 1, 2, 3, 4].map((item) => (
               <div key={item}>{section === item && sections[item]}</div>
             ))}
           </MyContext.Provider>
         </div>
       ) : (
-        <h1>
-          Loading
-          <br />
-          {error && JSON.stringify(error)}
-        </h1>
+        <div className="bg-white h-screen w-screen">Loading</div>
       )}
     </>
   );

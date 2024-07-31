@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { authenticate } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import Captcha from "../components/Captcha";
 
 const tele = window.Telegram?.WebApp;
 
 const Auth = (props) => {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+  const [showCaptcha, setShowCaptcha] = useState(false);
+
   const getUserData = async () => {
     if (tele) {
       try {
@@ -17,7 +21,7 @@ const Auth = (props) => {
           const userData = {
             initData: tele?.initData,
           };
-          auth(userData);
+          setUserData(userData);
         } else {
           console.warn("No user found in Telegram data");
         }
@@ -29,7 +33,7 @@ const Auth = (props) => {
     }
   };
 
-  const auth = async (userData) => {
+  const auth = async () => {
     try {
       const response = await authenticate(userData);
       tele.CloudStorage.setItem("accessToken", response.data.token);
@@ -42,15 +46,65 @@ const Auth = (props) => {
   };
 
   useEffect(() => {
-    auth();
     getUserData();
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShowCaptcha(true);
+    }, 3000);
+  }, []);
+
   return (
-    <div className="h-screen w-screen flex justify-center items-center bg-red-400">
-      <div className="flex flex-col justify-center items-center p-4">
-        <h1>hi</h1>
-      </div>
+    <div
+      style={{
+        background: "url(/images/main.png)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        height: "100vh",
+        width: "100vw",
+        position: "fixed",
+        top: 0,
+        left: 0,
+      }}
+    >
+      {showCaptcha ? (
+        <Captcha auth={auth} />
+      ) : (
+        <div className="flex flex-col h-[100vh]">
+          <div className="flex justify-center items-center w-full leading-tight">
+            <div className="mt-2">
+              <h1
+                className="flex items-center gap-4 text-[38px] font-fof text-fof"
+                style={{ textShadow: "4px 4px 2px black" }}
+              >
+                FORGES
+              </h1>
+              <h1
+                className="flex items-center gap-4 text-[16px] font-fof text-fof ml-[50px] -mt-3"
+                style={{ textShadow: "3px 1px 2px black" }}
+              >
+                OF
+              </h1>
+              <h1
+                className="flex items-center gap-4 text-[38px] font-fof text-fof ml-[75px] -mt-3"
+                style={{ textShadow: "4px 4px 2px black" }}
+              >
+                FAITH
+              </h1>
+            </div>
+          </div>
+          <div className="flex flex-grow"></div>
+          <div className="flex justify-center items-center">
+            <img
+              src="/images/logo.png"
+              alt="logo"
+              className="w-[65px] h-[75px] mb-8"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

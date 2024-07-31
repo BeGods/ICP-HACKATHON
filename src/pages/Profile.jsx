@@ -1,20 +1,105 @@
-import { TonConnectButton } from "@tonconnect/ui-react";
-import { ChevronRight, ChevronsRight } from "lucide-react";
+import {
+  TonConnectButton,
+  useTonAddress,
+  useTonConnectModal,
+} from "@tonconnect/ui-react";
+import { ChevronsRight } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { toggleBackButton } from "../utils/teleBackButton";
 import ProfileCard from "../components/ProfileCard";
 import { MyContext } from "../context/context";
 
+import { connectTonWallet } from "../utils/api";
+import { toast } from "react-toastify";
+import ToastMesg from "../components/Toast/ToastMesg";
+
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
-  const { userData } = useContext(MyContext);
+  const { userData, setSection } = useContext(MyContext);
+  const userFriendlyAddress = useTonAddress();
+  const { state } = useTonConnectModal();
   const [activeTab, setActiveTab] = useState(true);
-  const [section, setSection] = useState(true);
+  const [activeSection, setActiveSection] = useState(true);
+
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(
+      `https://t.me/BeGods_bot/forgesoffaith?startapp=${referralCode}`
+    );
+
+    toast.success(
+      <ToastMesg
+        title={"Referral Link copied successfully!"}
+        img={"/icons/link.svg"}
+      />,
+      {
+        icon: false,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      }
+    );
+  };
+
+  const handleConnectTon = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      await connectTonWallet({ tonAddress: userFriendlyAddress }, accessToken);
+
+      toast.success(
+        <ToastMesg
+          title={"Wallet conencted successfully!"}
+          desc={"Ton wallet connected successfully."}
+          img={"/icons/success.svg"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        <ToastMesg
+          title={"There was a problem connecting your wallet."}
+          desc={error.message}
+          img={"/icons/fail.svg"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    }
+  };
 
   useEffect(() => {
-    toggleBackButton(tele);
+    toggleBackButton(tele, () => {
+      setSection(0);
+    });
   }, []);
+
+  // useEffect(() => {
+  //   if (state.status) {
+  //     handleConnectTon();
+  //   }
+  // }, [state.status]);
 
   return (
     <div className="flex flex-col items-center w-full font-montserrat text-[10px] text-white bg-[#121212] h-screen overflow-auto px-[15px] py-2">
@@ -60,27 +145,27 @@ const Profile = (props) => {
           <div className="flex w-full text-[14px] mt-6">
             <div
               onClick={() => {
-                setSection(true);
+                setActiveSection(true);
               }}
               className={`w-full text-center ${
-                section ? "border-b-2 text-white" : "text-[#414141]"
+                activeSection ? "border-b-2 text-white" : "text-[#414141]"
               }  py-1`}
             >
               DETAILS
             </div>
             <div
               onClick={() => {
-                setSection(false);
+                setActiveSection(false);
               }}
               className={`w-full text-center ${
-                !section ? "border-b-2 text-white" : "text-[#414141]"
+                !activeSection ? "border-b-2 text-white" : "text-[#414141]"
               }  py-1`}
             >
               NOTIFICATIONS
             </div>
           </div>
           {/* DETAILS */}
-          {section ? (
+          {activeSection ? (
             <div className="flex gap-2 flex-col items-center justify-center w-full">
               {/* STATS */}
               <div className="text-center bg-black w-full p-[15px] mt-2 rounded-button">
@@ -94,7 +179,7 @@ const Profile = (props) => {
                     />
                     <div className="text-left">
                       <h3 className="text-[10px]">Game Rank</h3>
-                      <h2 className="text-[14px]">#1</h2>
+                      <h2 className="text-[14px]">#{userData.overallRank}</h2>
                     </div>
                   </div>
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
@@ -105,9 +190,19 @@ const Profile = (props) => {
                     />
                     <div className="text-left">
                       <h3 className="text-[10px]">Squad Rank</h3>
-                      <h2 className="text-[14px]">#1</h2>
+                      <h2 className="text-[14px]">
+                        #{userData.squadRank === 0 ? 1 : userData.squadRank}
+                      </h2>
                     </div>
                   </div>
+                </div>
+                <div
+                  onClick={() => {
+                    setSection(4);
+                  }}
+                  className="w-full text-center text-[12px] pt-3"
+                >
+                  LEADERBOARD {">"}
                 </div>
               </div>
               {/* INVITE */}
@@ -120,7 +215,7 @@ const Profile = (props) => {
                       Share link to earn $ORB(S)
                     </p>
                   </div>
-                  <ChevronsRight />
+                  <ChevronsRight onClick={handleCopyLink} />
                 </div>
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
@@ -158,20 +253,6 @@ const Profile = (props) => {
                   Lorem ipsum dolor sit amet consectetur. Faucibus vivamus odio
                   varius nibh risus sed pulvinar curabitur.
                 </p>
-                <div className="flex items-center w-full text-left my-2">
-                  <div className="flex items-center gap-[20px] px-[10px] w-full">
-                    <img
-                      src="/icons/telegram.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
-                    <div className="text-left">
-                      <h3 className="text-[14px]">Create New Sqaud</h3>
-                      <h2 className="text-[10px]">#+2 $ORB(S)</h2>
-                    </div>
-                  </div>
-                  <ChevronRight />
-                </div>
                 <div className="flex gap-[8px] mt-[10px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
@@ -181,7 +262,7 @@ const Profile = (props) => {
                     />
                     <div className="text-left">
                       <h3 className="text-[10px]">Total Member</h3>
-                      <h2 className="text-[14px]">#1</h2>
+                      <h2 className="text-[14px]">#{userData.squadCount}</h2>
                     </div>
                   </div>
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
@@ -192,37 +273,15 @@ const Profile = (props) => {
                     />
                     <div className="text-left">
                       <h3 className="text-[10px]">Total Orbs</h3>
-                      <h2 className="text-[14px]">#1</h2>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-[8px] mt-[10px]">
-                  <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
-                    <img
-                      src="/icons/telegram.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
-                    <div className="text-left">
-                      <h3 className="text-[10px]">Total Member</h3>
-                      <h2 className="text-[14px]">#1</h2>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
-                    <img
-                      src="/icons/telegram.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
-                    <div className="text-left">
-                      <h3 className="text-[10px]">Total Orbs</h3>
-                      <h2 className="text-[14px]">#1</h2>
+                      <h2 className="text-[14px]">
+                        #{userData.squadTotalOrbs}
+                      </h2>
                     </div>
                   </div>
                 </div>
               </div>
               {/* GUIDE */}
-              <div className="text-center bg-black w-full p-[15px] rounded-button">
+              {/* <div className="text-center bg-black w-full p-[15px] rounded-button">
                 <h1 className="text-[16px]">GUIDES</h1>
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-button w-full">
@@ -237,7 +296,7 @@ const Profile = (props) => {
                   </div>
                   <ChevronRight />
                 </div>
-              </div>
+              </div> */}
             </div>
           ) : (
             <div className="flex gap-2 flex-col items-center justify-center w-full mt-2">

@@ -1,28 +1,66 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { convertOrbs } from "../utils/api";
 import { MyContext } from "../context/context";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import Footer from "../components/Footer";
 import ConvertButton from "../components/Buttons/ConvertButton";
 import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
+import ProgressBar from "../components/ProgressBar";
+
+const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
+const mythologies = ["Celtic", "Egyptian", "Greek", "Norse", "Other"];
 
 const Convert = () => {
   const [showInfo, setShowInfo] = useState(false);
-  const { setActiveMyth, gameData } = useContext(MyContext);
+  const { setActiveMyth, setGameData, gameData } = useContext(MyContext);
+  const [myth, setMyth] = useState(4);
+  const mythData = gameData.mythologies;
 
   // convert orbs to multicolor
   const handleOrbsConversion = async () => {
-    const token = localStorage.getItem("accessToken");
-    const mythologyName = {
-      mythologyName: gameData[activeMyth].name,
-    };
-    try {
-      await convertOrbs(mythologyName, token);
-      console.log("Converted Successfully");
-    } catch (error) {
-      console.log(error);
+    if (myth < 4) {
+      const token = localStorage.getItem("accessToken");
+      const mythologyName = {
+        mythologyName: mythData[myth].name,
+      };
+      try {
+        await convertOrbs(mythologyName, token);
+
+        const updatedGameData = {
+          ...gameData,
+          mythologies: gameData.mythologies.map((myth) => {
+            if (myth.name === mythologies[myth]) {
+              return {
+                ...myth,
+
+                orbs: myth.orbs - 2,
+              };
+            }
+
+            return {
+              ...myth,
+              orbs: myth.orbs - 2,
+            };
+          }),
+        };
+        setGameData(updatedGameData);
+
+        console.log("Converted Successfully");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
+
+  const handlePrev = () => {
+    setMyth((prev) => (prev - 1 + 5) % 5);
+  };
+
+  const handleNext = () => {
+    setMyth((prev) => (prev + 1) % 5);
+  };
+
+  useEffect(() => {}, [gameData]);
 
   return (
     <div
@@ -49,26 +87,48 @@ const Convert = () => {
         }}
         className="flex h-[18.5%] w-full"
       >
-        <div className="flex flex-col flex-grow justify-center items-start text-white pb-1">
-          <div className="w-full text-center flex justify-center">
-            <h1 className="flex items-center gap-4 text-[43px] font-fof text-fof drop-shadow-2xl">
-              FORGES <span className="text-[20px]">OF</span> FAITH
-            </h1>
-          </div>
-          <div className="flex w-full justify-between items-center px-8 ">
-            <div className="text-right font-medium font-montserrat mt-1 text-[22px]">
-              {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-              <span className="gradient-multi">$ORB(S)</span>
+        {myth === 4 ? (
+          <div className="flex flex-col flex-grow justify-center items-start text-white pb-1">
+            <div className="w-full text-center flex justify-center">
+              <h1 className="flex items-center gap-4 text-[43px] font-fof text-fof drop-shadow-2xl">
+                FORGES <span className="text-[20px]">OF</span> FAITH
+              </h1>
             </div>
-            <div
-              onClick={() => {
-                setShowInfo(true);
-              }}
-            >
-              <img src="/icons/info.svg" alt="info" className="w-8 h-8" />
+            <div className="flex w-full justify-between items-center px-8 ">
+              <div className="text-right font-medium font-montserrat mt-1 text-[22px]">
+                {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
+                <span className="gradient-multi">$ORB(S)</span>
+              </div>
+              <div
+                onClick={() => {
+                  setShowInfo(true);
+                }}
+              >
+                <img src="/icons/info.svg" alt="info" className="w-8 h-8" />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-col flex-grow justify-center text-white pb-1">
+            <div className="w-full text-center flex justify-center">
+              <h1 className="flex items-center gap-4 text-[36px] font-montserrat text-white drop-shadow-2xl">
+                FORGES OF FAITH
+              </h1>
+            </div>
+            <div className="w-[80%] mx-auto">
+              <ProgressBar
+                value={mythData[myth].orbs}
+                max={2}
+                activeMyth={myth}
+              />
+            </div>
+
+            <div className="w-[80%] mx-auto font-medium font-montserrat text-[22px] mt-0.5">
+              {formatOrbsWithLeadingZeros(mythData[myth].orbs)}{" "}
+              <span className={`text-${mythSections[myth]}-text`}>$ORB(S)</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-grow justify-center items-center">
@@ -77,6 +137,7 @@ const Convert = () => {
             <ChevronsLeft
               onClick={() => {
                 setActiveMyth((prev) => (prev - 1 + 5) % 5);
+                setMyth(4);
               }}
               color="white"
               className="h-[30px] w-[30px]"
@@ -84,14 +145,24 @@ const Convert = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center w-full">
-          <img src="/themes/elements/wheel.png" alt="wheel" />
-          <ConvertButton />
+          <img
+            src="/themes/elements/wheel.png"
+            alt="wheel"
+            className="w-full"
+          />
+          <ConvertButton
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+            myth={myth}
+            action={handleOrbsConversion}
+          />
         </div>
         <div className="flex justify-center items-center w-[20%]">
           <div className="bg-glass-black p-1 rounded-full cursor-pointer">
             <ChevronsRight
               onClick={() => {
                 setActiveMyth((prev) => (prev + 1) % 5);
+                setMyth(4);
               }}
               color="white"
               className="h-[30px] w-[30px]"
