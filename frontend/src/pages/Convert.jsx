@@ -88,13 +88,11 @@ const Convert = () => {
         className="flex h-[18.5%] w-full"
       >
         {myth === 4 ? (
-          <div className="flex flex-col flex-grow justify-center items-start text-white pb-1">
-            <div className="w-full text-center flex justify-center -mt-2">
-              <h1 className="flex items-center gap-4 text-[43px] font-fof text-fof drop-shadow-2xl">
-                FORGES <span className="text-[20px]">OF</span> FAITH
-              </h1>
-            </div>
-            <div className="flex w-full justify-between items-center px-8 -mt-1">
+          <div className="flex flex-col flex-grow justify-center items-start text-white pl-5">
+            <h1 className="flex items-center gap-4 text-[43px] font-fof text-fof drop-shadow-2xl -mt-4">
+              FORGES <span className="text-[20px]">OF</span> FAITH
+            </h1>
+            <div className="flex w-full justify-between items-center -mt-1.5">
               <div className="text-right font-medium font-montserrat text-[22px]">
                 {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
                 <span className="gradient-multi">$ORB(S)</span>
@@ -104,19 +102,21 @@ const Convert = () => {
                   setShowInfo(true);
                 }}
               >
-                <img src="/icons/info.svg" alt="info" className="w-8 h-8" />
+                <img
+                  src="/icons/info.svg"
+                  alt="info"
+                  className="w-8 h-8 mr-4"
+                />
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col flex-grow justify-center text-white pb-1">
-            <div className="w-full text-center flex justify-center">
-              <h1 className="flex items-center gap-4 text-[36px] font-montserrat text-white drop-shadow-2xl">
-                FORGES OF FAITH
-              </h1>
-            </div>
+          <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 -mt-4">
+            <h1 className="flex items-center gap-4 text-[36px] font-montserrat text-white drop-shadow-2xl">
+              FORGES OF FAITH
+            </h1>
 
-            <div className="w-[80%] mx-auto font-medium font-montserrat text-[22px] mt-0.5">
+            <div className="text-right font-medium font-montserrat text-[22px] -mt-1.5">
               {formatOrbsWithLeadingZeros(mythData[myth].orbs)}{" "}
               <span className={`text-${mythSections[myth]}-text`}>$ORB(S)</span>
             </div>
@@ -130,7 +130,7 @@ const Convert = () => {
             <ChevronsLeft
               onClick={() => {
                 setActiveMyth((prev) => (prev - 1 + 5) % 5);
-                setMyth(4);
+                setMyth();
               }}
               color="white"
               className="h-[30px] w-[30px]"

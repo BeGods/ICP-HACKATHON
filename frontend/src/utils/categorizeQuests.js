@@ -19,7 +19,5 @@ export const categorizeQuestsByMythology = (quests) => {
       return { [mythology]: categorizedQuests[mythology] };
     });
 
-  console.log(categorizedQuestsArray);
-
   return categorizedQuestsArray;
 };

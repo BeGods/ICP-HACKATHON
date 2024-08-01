@@ -77,19 +77,19 @@ const Auth = (props) => {
             <div className="mt-2">
               <h1
                 className="flex items-center gap-4 text-[38px] font-fof text-fof"
-                style={{ textShadow: "4px 4px 2px black" }}
+                style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
               >
                 FORGES
               </h1>
               <h1
                 className="flex items-center gap-4 text-[16px] font-fof text-fof ml-[50px] -mt-3"
-                style={{ textShadow: "3px 1px 2px black" }}
+                style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
               >
                 OF
               </h1>
               <h1
                 className="flex items-center gap-4 text-[38px] font-fof text-fof ml-[75px] -mt-3"
-                style={{ textShadow: "4px 4px 2px black" }}
+                style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
               >
                 FAITH
               </h1>
