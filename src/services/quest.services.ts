@@ -85,3 +85,62 @@ export const questAggregator = async (userId, questId) => {
     throw Error(error);
   }
 };
+
+export const unClaimedQuests = async (userId) => {
+  try {
+    const pipeline = [
+      {
+        $match: {
+          status: "Inactive",
+        },
+      },
+      {
+        $lookup: {
+          from: "milestones",
+          let: { questId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$userId", new mongoose.Types.ObjectId(userId)] },
+                    { $not: { $in: ["$$questId", "$claimedQuests.taskId"] } },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "userMilestones",
+        },
+      },
+      {
+        $match: {
+          userMilestones: { $size: 0 },
+        },
+      },
+      {
+        $sort: { createdAt: -1 as -1 },
+      },
+      {
+        $project: {
+          questName: 1,
+          description: 1,
+          type: 1,
+          link: 1,
+          mythology: 1,
+          status: 1,
+          requiredOrbs: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          __v: 1,
+        },
+      },
+    ];
+
+    const lostQuests = await quest.aggregate(pipeline).exec();
+
+    return lostQuests;
+  } catch (error) {
+    throw new Error("There was a problem fetching lost quests.");
+  }
+};

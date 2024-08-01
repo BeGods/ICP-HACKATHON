@@ -8,6 +8,7 @@ interface ITeam extends Document {
   owner: mongoose.Types.ObjectId;
   teamName: string;
   teamCode: string;
+  totalOrbs: number;
   members: mongoose.Types.ObjectId[];
 }
 
@@ -31,6 +32,10 @@ const teamSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+  totalOrbs: {
+    type: Number,
+    default: 0,
   },
   teamName: {
     type: String,
