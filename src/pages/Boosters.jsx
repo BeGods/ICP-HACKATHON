@@ -10,7 +10,7 @@ import {
   claimShardsBooster,
   fetchLostQuests,
 } from "../utils/api";
-import QuestButton from "../components/Buttons/QuestButton";
+
 import OrbClaimCard from "../components/QuestCards/OrbClaimCard";
 import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
@@ -417,22 +417,27 @@ const Boosters = () => {
             }   rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white hover:glow-icon-celtic`}
           >
             <div>
+              {/* //! Uncomment image and remove -ml-20 for text for svg */}
               {mythData.isShardsClaimActive ? (
-                <img
-                  src="/icons/shard.svg"
-                  alt="Boosters shards"
-                  className="h-[65px] w-[65px]"
-                />
+                // <img
+                //   src="/icons/shard.svg"
+                //   alt="Boosters shards"
+                //   className="h-[65px] w-[65px]"
+                // />
+                <h1 className="font-symbols text-[85px] p-0 -mt-[30px] -ml-2">
+                  S
+                </h1>
               ) : (
-                <img
-                  src="/icons/shard-lock.svg"
-                  alt="Boosters shards"
-                  className="h-[65px] w-[65px]"
-                />
+                // <img
+                //   src="/icons/shard-lock.svg"
+                //   alt="Boosters shards"
+                //   className="h-[65px] w-[65px]"
+                // />
+                <h1 className="font-symbols text-[80px] p-0 -mt-10 -ml-2">S</h1>
               )}
             </div>
             <div
-              className={`flex flex-col flex-grow justify-center ${
+              className={`flex flex-col flex-grow justify-center -ml-[10px] ${
                 !mythData.isShardsClaimActive && "text-cardsGray"
               }`}
             >
@@ -457,11 +462,12 @@ const Boosters = () => {
             className={`flex gap-4 border border-${mythSections[activeMyth]}-primary rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
           >
             <div>
-              <img
+              {/* <img
                 src="/icons/lost.svg"
                 alt="Boosters shards"
                 className="h-[65px] w-[65px]"
-              />
+              /> */}
+              <h1 className="font-symbols text-[75px] p-0 -mt-6 -ml-2">Q</h1>
             </div>
             <div className={`flex flex-col flex-grow justify-center `}>
               <h1 className="tetx-[18px]">LOST QUESTS</h1>
@@ -477,17 +483,18 @@ const Boosters = () => {
                 border-${mythSections[activeMyth]}-primary rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
           >
             <div>
-              <img
+              {/* <img
                 src="/icons/automata-bot.svg"
                 alt="Boosters shards"
                 className="h-[65px] w-[65px]"
-              />
+              /> */}
+              <h1 className="font-symbols text-[80px] p-0 -mt-6 -ml-1">b</h1>{" "}
             </div>
-            <div className={`flex flex-col flex-grow justify-center`}>
+            <div className={`flex flex-col flex-grow justify-center -ml-1.5`}>
               <h1 className="tetx-[18px]">AUTOMATA</h1>
               <h2 className="tetx-[14px]">Auto tap</h2>
             </div>
-            <div className="flex justify-center items-center w-[10%]">
+            <div className="flex justify-center items-center w-[10%] ">
               <ChevronRight
                 onClick={() => {
                   setShowCard(true);

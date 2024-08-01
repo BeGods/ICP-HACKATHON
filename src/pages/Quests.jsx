@@ -372,7 +372,6 @@ const Quests = () => {
                       <div className="w-full h-full backdrop-blur-sm rounded-lg grayscale"></div>
                     </div>
                   </div>
-
                   <div
                     onClick={handleClaimQuest}
                     className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
