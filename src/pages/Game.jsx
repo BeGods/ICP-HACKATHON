@@ -218,7 +218,7 @@ const Game = () => {
       {activeMyth < 4 ? (
         <div
           style={{
-            backgroundImage: `url(/themes/background/celtic.png)`,
+            backgroundImage: `url(/themes/background/game/${mythSections[activeMyth]}.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -302,7 +302,7 @@ const Game = () => {
                 onMouseDown={handleStartSession}
                 onTouchStart={handleStartSession}
                 onTouchEnd={handleTap}
-                className="flex justify-center items-center bg-red-400 h-[200px] w-[200px] rounded-full"
+                className="flex justify-center items-center h-[400px] w-full rounded-full"
               >
                 Click
               </div>

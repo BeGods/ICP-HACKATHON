@@ -8,11 +8,9 @@ import {
   claimQuest,
   claimQuestOrbsReward,
   claimShardsBooster,
-  claimShareReward,
   fetchLostQuests,
 } from "../utils/api";
 import QuestButton from "../components/Buttons/QuestButton";
-import InfoCard from "../components/QuestCards/InfoCard";
 import OrbClaimCard from "../components/QuestCards/OrbClaimCard";
 import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
@@ -34,61 +32,11 @@ const Boosters = () => {
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
 
-  // quest share reward
-  const handleClaimShareReward = async () => {
-    const token = localStorage.getItem("accessToken");
-    const questData = {
-      questId: lostQuest[quest]._id,
-    };
-    try {
-      await claimShareReward(questData, token);
+  const timeElapsedInSeconds = (Date.now() - mythData.automataStartTime) / 1000;
 
-      lostQuest[quest].isShared = true;
-
-      toast.success(
-        <ToastMesg
-          title={"Link Copied Successfully!"}
-          desc={"Share it on X to earn an extra $ORB"}
-          img={"/icons/success.svg"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-
-      const updatedGameData = {
-        ...gameData,
-        multiColorOrbs: gameData.multiColorOrbs + 1,
-      };
-      setGameData(updatedGameData);
-    } catch (error) {
-      console.log(error.message);
-      toast.error(
-        <ToastMesg
-          title={"Failed to share quest."}
-          desc={error.message}
-          img={"/icons/fail.svg"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-    }
-  };
+  const hours = Math.floor(timeElapsedInSeconds / 3600);
+  const minutes = Math.floor((timeElapsedInSeconds % 3600) / 60);
+  const seconds = Math.floor(timeElapsedInSeconds % 60);
 
   // quest share reward after completing quest
   const handleOrbClaimReward = async () => {
@@ -466,7 +414,7 @@ const Boosters = () => {
               mythData.isShardsClaimActive
                 ? `border-${mythSections[activeMyth]}-primary`
                 : "border-cardsGray"
-            }   rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            }   rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white hover:glow-icon-celtic`}
           >
             <div>
               {mythData.isShardsClaimActive ? (
@@ -525,46 +473,27 @@ const Boosters = () => {
           </div>
           {/* AUTOMATA BOOSTER */}
           <div
-            className={`flex gap-4 border ${
-              !mythData.isAutomataActive
-                ? `border-${mythSections[activeMyth]}-primary`
-                : "border-cardsGray"
-            }   rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            className={`flex gap-4 border 
+                border-${mythSections[activeMyth]}-primary rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
           >
             <div>
-              {!mythData.isAutomataActive ? (
-                <img
-                  src="/icons/automata.svg"
-                  alt="Boosters shards"
-                  className="h-[65px] w-[65px]"
-                />
-              ) : (
-                <img
-                  src="/icons/automata-lock.svg"
-                  alt="Boosters shards"
-                  className="h-[65px] w-[65px]"
-                />
-              )}
+              <img
+                src="/icons/automata-bot.svg"
+                alt="Boosters shards"
+                className="h-[65px] w-[65px]"
+              />
             </div>
-            <div
-              className={`flex flex-col flex-grow justify-center ${
-                mythData.isAutomataActive && "text-cardsGray"
-              }`}
-            >
+            <div className={`flex flex-col flex-grow justify-center`}>
               <h1 className="tetx-[18px]">AUTOMATA</h1>
               <h2 className="tetx-[14px]">Auto tap</h2>
             </div>
             <div className="flex justify-center items-center w-[10%]">
-              {!mythData.isAutomataActive ? (
-                <ChevronRight
-                  onClick={() => {
-                    setShowCard(true);
-                    setActiveCard("automata");
-                  }}
-                />
-              ) : (
-                <img src="/icons/lock.svg" alt="lock" />
-              )}
+              <ChevronRight
+                onClick={() => {
+                  setShowCard(true);
+                  setActiveCard("automata");
+                }}
+              />
             </div>
           </div>
         </div>
@@ -601,20 +530,33 @@ const Boosters = () => {
                 }}
               />
             </div>
-            <div
-              onClick={handleClaimBooster}
-              className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2   bg-glass-black text-white font-montserrat rounded-button"
-            >
-              <div className="flex justify-center items-center w-1/4  border-borderGray h-full">
-                <img
-                  src={`/images/orb.png`}
-                  alt="orb"
-                  className="w-[32px] h-[32px]"
-                />
+
+            {activeCard === "automata" && mythData?.isAutomataActive ? (
+              <div
+                className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
+              >
+                <div className="flex justify-center items-center w-1/4 h-full"></div>
+                <div className="text-[16px] uppercase">
+                  {hours}:{minutes}:{seconds}
+                </div>
+                <div className="flex justify-center items-center w-1/4  h-full"></div>
               </div>
-              <div className="text-[16px] uppercase">PAY</div>
-              <div className="flex justify-center items-center w-1/4  border-borderGray h-full"></div>
-            </div>
+            ) : (
+              <div
+                onClick={handleClaimBooster}
+                className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2   bg-glass-black text-white font-montserrat rounded-button"
+              >
+                <div className="flex justify-center items-center w-1/4  border-borderGray h-full">
+                  <img
+                    src={`/images/orb.png`}
+                    alt="orb"
+                    className="w-[32px] h-[32px]"
+                  />
+                </div>
+                <div className="text-[16px] uppercase">PAY</div>
+                <div className="flex justify-center items-center w-1/4  border-borderGray h-full"></div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -622,73 +564,37 @@ const Boosters = () => {
       {/* lost quests card */}
       {showQuest && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
-          {!showPay ? (
-            <div className="relative  w-[72%] rounded-lg shadow-lg mt-10">
-              <img
-                src={`/cards/${lostQuest[quest]?.type}_${
-                  lostQuest[quest]?.isCompleted ? "on" : "off"
-                }.png`}
-                alt="card"
-                className="w-full h-[75%]"
-              />
-              <div
-                onClick={() => {
-                  setShowInfo((prev) => !prev);
-                  setShowQuest(false);
-                  setActiveCard(lostQuest[quest]?.type);
-                }}
-                className="absolute top-0 right-0 h-10 w-10"
-              ></div>
-              <QuestButton
-                handlePrev={handlePrev}
-                handleNext={handleNext}
-                isCompleted={lostQuest[quest]?.isCompleted}
-                activeMyth={activeMyth}
-                action={() => {
-                  setShowPay(true);
-                  window.open(lostQuest[quest]?.link, "_blank");
-                }}
-              />
-            </div>
-          ) : (
-            <div className="relative  w-[72%] rounded-lg shadow-lg mt-10">
+          <div className="w-[72%] rounded-lg shadow-lg mt-10">
+            <div className="relative">
               <img
                 src={`/cards/${lostQuest[quest]?.type}_off.png`}
                 alt="card"
-                className="w-full h-[75%] blur-sm"
+                className="w-full h-[75%]"
               />
-              <div
-                onClick={() => {
-                  setShowInfo((prev) => !prev);
-                  setActiveCard(lostQuest[quest]?.type);
-                }}
-                className="absolute top-0 right-0 h-10 w-10"
-              ></div>
-              <div
-                onClick={handleClaimQuest}
-                className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
-              >
-                <div className="flex justify-center items-center w-1/4 h-full"></div>
-                <div className="text-[16px] uppercase">PAY</div>
-                <div className="flex justify-center items-center w-1/4  h-full"></div>
+              <div className="absolute top-0 right-0 h-10 w-10 cursor-pointer">
+                <img
+                  src="/icons/close.svg"
+                  alt="close"
+                  className="w-[38px] h-[38px] mt-1"
+                  onClick={() => {
+                    setShowQuest(false);
+                  }}
+                />
               </div>
             </div>
-          )}
+
+            <div
+              onClick={handleClaimQuest}
+              className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
+            >
+              <div className="flex justify-center items-center w-1/4 h-full"></div>
+              <div className="text-[16px] uppercase">PAY</div>
+              <div className="flex justify-center items-center w-1/4  h-full"></div>
+            </div>
+          </div>
         </div>
       )}
 
-      {showInfo && (
-        <InfoCard
-          activeCard={activeCard}
-          isShared={lostQuest[0]?.isShared}
-          handleClaimShareReward={handleClaimShareReward}
-          handleShowInfo={() => {
-            setShowInfo((prev) => !prev);
-            setShowQuest(true);
-          }}
-          activeMyth={activeMyth}
-        />
-      )}
       {showClaim && (
         <OrbClaimCard
           activeCard={activeCard}

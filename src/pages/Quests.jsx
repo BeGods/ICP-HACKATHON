@@ -321,7 +321,7 @@ const Quests = () => {
         <div className="flex items-center justify-center w-full">
           {currQuest < quests.length ? (
             <>
-              {showPay ? (
+              {!showPay ? (
                 <div className="relative">
                   <img
                     src={`/cards/${quest?.type}_${
@@ -349,39 +349,27 @@ const Quests = () => {
                   />
                 </div>
               ) : (
-                <div className="relative">
-                  <img
-                    src={`/cards/${quest?.type}_${
-                      quest?.isCompleted ? "on" : "off"
-                    }.png`}
-                    alt="card"
-                    className="w-full h-[75%] blur-[2px]"
-                  />
-                  <div className="absolute top-0 left-0 w-full">
-                    <div className="flex gap-x-[0.0625rem] w-full mt-[1.1875rem] ml-[0.7375rem] font-symbols text-white text-[2rem]">
-                      {Object.entries(quest.requiredOrbs).map(
-                        ([key, value]) => (
-                          <div className="flex" key={key}>
-                            {Array.from({ length: value }, (_, index) => (
-                              <div
-                                key={index}
-                                className={`flex text-center justify-center items-center w-[2.2rem] h-[2.2rem] bg-${key.toLowerCase()}-primary glow-icon-${key.toLowerCase()} rounded-full`}
-                              >
-                                <span
-                                  className={`${
-                                    key.toLowerCase() === "egyptian" &&
-                                    "ml-[2px]"
-                                  } ${
-                                    key.toLowerCase() === "greek" && "ml-[5px]"
-                                  }`}
-                                >
-                                  {symbols[key.toLowerCase()]}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        )
-                      )}
+                <div>
+                  <div className="relative">
+                    <img
+                      src={`/cards/${quest?.type}_${
+                        quest?.isCompleted ? "on" : "off"
+                      }.png`}
+                      alt="card"
+                      className="w-full h-[75%]"
+                    />
+                    <div className="absolute top-0 right-0 h-10 w-10 cursor-pointer">
+                      <img
+                        src="/icons/close.svg"
+                        alt="close"
+                        className="w-[38px] h-[38px] mt-1"
+                        onClick={() => {
+                          setShowPay(false);
+                        }}
+                      />
+                    </div>
+                    <div className="absolute inset-0 h-[85%] mt-auto">
+                      <div className="w-full h-full backdrop-blur-sm rounded-lg grayscale"></div>
                     </div>
                   </div>
 
@@ -398,7 +386,7 @@ const Quests = () => {
             </>
           ) : (
             <div className="relative">
-              <div className="bg-red-400">
+              <div>
                 <JigsawImage
                   imageUrl={`/cards/${mythSections[activeMyth]}.quest.C07_on.png`}
                   faith={4}
