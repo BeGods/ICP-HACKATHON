@@ -11,11 +11,18 @@ import { validateBooster, validateAutomata } from "../services/game.services";
 import { defaultMythologies } from "../utils/defaultMyths";
 import mongoose from "mongoose";
 import { Document } from "mongodb";
+import ranks from "../models/ranks.models";
+import { Team } from "../models/referral.models";
+import { unClaimedQuests } from "../services/quest.services";
 
 export const startTapSession = async (req, res) => {
   try {
     const userId = req.user;
-    const { mythologyName } = req.query as { mythologyName?: string | null };
+    const { mythologyName } = req.body;
+
+    if (!mythologyName) {
+      res.status(404).json({ message: "Invalid Mythology." });
+    }
 
     const updatedMyth = {
       tapSessionStartTime: Date.now(),
@@ -67,15 +74,6 @@ export const claimTapSession = async (req, res) => {
   try {
     const userId = req.user;
     let { taps, mythologyName } = req.body;
-
-    const pipeline = [
-      {
-        $match: new mongoose.Types.ObjectId(),
-      },
-      {
-        $unwind: "$claimedQuests",
-      },
-    ];
 
     // get mythDta
     const userMythology = (await userMythologies.findOne({
@@ -153,6 +151,7 @@ export const claimTapSession = async (req, res) => {
 export const getGameStats = async (req, res) => {
   try {
     const userId = req.user._id;
+    const user = req.user;
 
     // Aggregate pipeline
     const pipeline = [
@@ -314,6 +313,11 @@ export const getGameStats = async (req, res) => {
         mythology.energy = restoredEnergy;
         mythology.lastTapAcitivityTime = Date.now();
 
+        if (mythology.shards >= 1000) {
+          mythology.orbs += Math.floor(mythology.shards / 1000);
+          mythology.shards = mythology.shards % 1000;
+        }
+
         return mythology;
       });
 
@@ -335,14 +339,31 @@ export const getGameStats = async (req, res) => {
       { $set: { mythologies: completeMythologies } }
     );
 
-    const userData = {
-      telegramUsername: req.user.telegramUsername,
-      profile: req.user.profile,
-      isPremium: req.user.isPremium,
-      directReferralCount: req.user.directReferralCount,
-      premiumReferralCount: req.user.premiumReferralCount,
-      referralCode: req.user.referralCode,
+    // get ranks
+    const userRank = await ranks.findOne({ userId: req.user._id });
+
+    // get totalMembers
+    const squadOwner = user.squadOwner ? user.squadOwner : user._id;
+    const members = await Team.findOne({ owner: squadOwner });
+    const memberData = {
+      overallRank: userRank?.overallRank ?? 0,
+      squadRank: userRank?.squadRank ?? 0,
+      totalOrbs: userRank?.totalOrbs ?? 0,
+      squadCount: members?.members.length ?? 0,
+      squadTotalOrbs: members?.totalOrbs ?? 0,
     };
+
+    const userData = {
+      telegramUsername: user.telegramUsername,
+      profile: user.profile,
+      isPremium: user.isPremium,
+      directReferralCount: user.directReferralCount,
+      premiumReferralCount: user.premiumReferralCount,
+      referralCode: user.referralCode,
+      ...memberData,
+    };
+
+    // const lostQuests = await unClaimedQuests(userId);
 
     res.status(200).json({
       user: userData,
@@ -351,6 +372,7 @@ export const getGameStats = async (req, res) => {
         mythologies: completeMythologies,
       },
       quests: userMythologiesData.quests,
+      // lostQuests: lostQuests,
     });
   } catch (error) {
     console.log(error.message);
