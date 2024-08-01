@@ -30,7 +30,7 @@ const Footer = () => {
             section === 0 && `glow-icon-${mythSections[activeMyth]}`
           }`}
         />
-        <p>FORGE</p>
+        <p>FORGES</p>
       </div>
       <div
         onClick={() => {
@@ -47,7 +47,7 @@ const Footer = () => {
             section === 1 && `glow-icon-${mythSections[activeMyth]}`
           }`}
         />
-        <p>QUEST</p>
+        <p>QUESTS</p>
       </div>
       <div
         onClick={() => {
@@ -64,7 +64,7 @@ const Footer = () => {
             section === 2 && `glow-icon-${mythSections[activeMyth]}`
           }`}
         />
-        <p>BOOSTER</p>
+        <p>BOOSTERS</p>
       </div>
       <div
         onClick={() => {

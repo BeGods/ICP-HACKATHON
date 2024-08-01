@@ -89,13 +89,13 @@ const Convert = () => {
       >
         {myth === 4 ? (
           <div className="flex flex-col flex-grow justify-center items-start text-white pb-1">
-            <div className="w-full text-center flex justify-center">
+            <div className="w-full text-center flex justify-center -mt-2">
               <h1 className="flex items-center gap-4 text-[43px] font-fof text-fof drop-shadow-2xl">
                 FORGES <span className="text-[20px]">OF</span> FAITH
               </h1>
             </div>
-            <div className="flex w-full justify-between items-center px-8 ">
-              <div className="text-right font-medium font-montserrat mt-1 text-[22px]">
+            <div className="flex w-full justify-between items-center px-8 -mt-1">
+              <div className="text-right font-medium font-montserrat text-[22px]">
                 {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
                 <span className="gradient-multi">$ORB(S)</span>
               </div>
@@ -114,13 +114,6 @@ const Convert = () => {
               <h1 className="flex items-center gap-4 text-[36px] font-montserrat text-white drop-shadow-2xl">
                 FORGES OF FAITH
               </h1>
-            </div>
-            <div className="w-[80%] mx-auto">
-              <ProgressBar
-                value={mythData[myth].orbs}
-                max={2}
-                activeMyth={myth}
-              />
             </div>
 
             <div className="w-[80%] mx-auto font-medium font-montserrat text-[22px] mt-0.5">

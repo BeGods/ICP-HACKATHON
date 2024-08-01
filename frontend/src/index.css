@@ -179,6 +179,7 @@ body {
 }
 
 
+
 /* Gradients */
 .gradient-multi {
   background: linear-gradient(90deg, #001AFF 32.59%, #16FFD5 47.32%, #42FF00 60.71%, #CCFF00 74.78%, #FFB800 87.17%, #FF0000 99.55%);
@@ -325,7 +326,7 @@ body {
 /* Plus one aimation */
 .plus-one {
   position: absolute;
-  font-size: 50px;
+  font-size: 55px;
   color: rgba(255, 247, 220, 1);
   animation: moveAndFade 1s forwards;
 }
