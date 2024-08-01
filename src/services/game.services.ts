@@ -64,7 +64,6 @@ export const fetchUserStats = async (userId) => {
       },
     ];
 
-    // Execute the aggregation pipeline
     const userGameStats = await userMythologies.aggregate(pipeline);
 
     return userGameStats;

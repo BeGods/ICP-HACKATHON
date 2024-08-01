@@ -33,6 +33,10 @@ export const addTeamMember = async (user, existingReferrer, referralCode) => {
         { upsert: true }
       );
 
+      if (existingReferrer.parentReferrerId) {
+        existingReferrer.squadOwner = existingReferrer.parentReferrerId;
+      }
+
       existingReferrer.directReferralCount += 1;
       existingReferrer.save();
     }
@@ -52,3 +56,15 @@ export const createDefaultUserMyth = async (user) => {
     throw new Error("Could create default myth");
   }
 };
+
+// export const createDefaultMilestones = async (user) => {
+//   try {
+//     const newUserMyth = new userMythologies({
+//       userId: user._id,
+//     });
+
+//     await newUserMyth.save();
+//   } catch (error) {
+//     throw new Error("Could create default myth");
+//   }
+// };
