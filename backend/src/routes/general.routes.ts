@@ -15,7 +15,7 @@ router.get("/leaderboard", authMiddleware, getLeaderboard);
 router.post("/announcements", authMiddleware, updateAnnouncement);
 
 // schedule cron job for leaderboard
-// cron.schedule("*/30 * * * * *", updateRanks);
+// cron.schedule("*/10 * * * * *", updateRanks);
 
 // deactivate quest
 // cron.schedule("0 * * * *", deactivateQuest);

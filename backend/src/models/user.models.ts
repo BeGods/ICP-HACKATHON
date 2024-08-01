@@ -4,22 +4,21 @@ export interface IUser extends Document {
   telegramId?: string;
   telegramUsername?: string;
   isPremium?: boolean;
-  role: "user" | "admin";
+  role: "user" | "admin" | "partner";
   directReferralCount: number;
   tonAddress: string;
   premiumReferralCount: number;
   parentReferrerId?: mongoose.Types.ObjectId;
+  squadOwner: mongoose.Types.ObjectId;
   referralCode: string;
   profile?: {
     avatarUrl: string;
     updateAt: Date;
   };
   announcements: number;
-  //TODO Profile image
 }
-//* check if anyone part of it then only it is team
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
     telegramId: { type: String, unique: true, sparse: true },
     telegramUsername: { type: String, unique: true, sparse: true },
@@ -53,6 +52,12 @@ const userSchema = new Schema(
       required: false,
       sparse: true,
     },
+    squadOwner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+      sparse: true,
+    },
     profile: {
       avatarUrl: { type: String },
       updateAt: {
@@ -68,6 +73,14 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+userSchema.pre<IUser>("save", function (next) {
+  if (!this.squadOwner) {
+    this.squadOwner = this._id as mongoose.Types.ObjectId;
+  }
+  next();
+});
+
 const User = model<IUser>("User", userSchema);
 
 export default User;
+``;

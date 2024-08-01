@@ -18,7 +18,7 @@ const router = express.Router();
 router.get("/game/stats", authMiddleware, getGameStats);
 
 // tapping session
-router.get("/game/startTapSession", authMiddleware, startTapSession);
+router.post("/game/startTapSession", authMiddleware, startTapSession);
 router.post("/game/claimTapSession", authMiddleware, claimTapSession);
 router.post(
   "/game/convertOrbs",

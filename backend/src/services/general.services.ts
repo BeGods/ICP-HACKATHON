@@ -33,22 +33,23 @@ export const getLeaderboardSnapshot = async () => {
         $sort: { totalOrbs: -1 as -1 },
       },
       {
-        $limit: 100,
-      },
-      {
         $project: {
           userId: "$_id",
           telegramUsername: "$userDetails.telegramUsername",
           profileImage: "$userDetails.profile.avatarUrl",
           totalOrbs: 1,
+          parentReferrerId: "$userDetails.parentReferrerId",
         },
       },
     ];
 
-    const leaderboard = await userMythologies.aggregate(pipeline).exec();
+    const leaderboard = await userMythologies
+      .aggregate(pipeline)
+      .allowDiskUse(true)
+      .exec();
 
     return leaderboard;
   } catch (error) {
-    throw Error(error);
+    throw new Error(error);
   }
 };
