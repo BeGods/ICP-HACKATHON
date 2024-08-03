@@ -8,7 +8,12 @@ import {
 } from "../utils/api";
 import ProgressBar from "../components/ProgressBar";
 import QuestButton from "../components/Buttons/QuestButton";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+  ChevronsLeft,
+  ChevronsRight,
+  CornerUpLeft,
+  CornerUpRight,
+} from "lucide-react";
 import Footer from "../components/Footer";
 import JigsawImage from "../components/Pieces";
 import InfoCard from "../components/QuestCards/InfoCard";
@@ -216,12 +221,15 @@ const Quests = () => {
         }
       );
     } catch (error) {
-      console.log(error.message);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "An unexpected error occurred";
 
       toast.error(
         <ToastMesg
           title={"Failed claim to claim quest."}
-          desc={error.message}
+          desc={errorMessage}
           img={"/icons/fail.svg"}
         />,
         {
@@ -255,28 +263,59 @@ const Quests = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(/themes/background/celtic.png)`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        height: "100vh",
-        width: "100vw",
         position: "fixed",
         top: 0,
         left: 0,
+        height: "100vh",
+        width: "100vw",
       }}
       className="flex flex-col h-screen overflow-hidden m-0"
     >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1, // Ensures the background is behind the content
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
+          style={{
+            backgroundImage: `url(/themes/background/main.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
       {/* Header */}
       <div
         style={{
-          backgroundImage: `url(/themes/header/${mythSections[activeMyth]}.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
+          position: "relative",
+          height: "18.5%",
+          width: "100%",
         }}
-        className="flex h-[18.5%] w-full"
+        className="flex"
       >
+        <div
+          style={{
+            backgroundImage: `url(/images/head.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "100%",
+            width: "100%",
+            zIndex: -1,
+          }}
+          className={`filter-paper-${mythSections[activeMyth]} -mt-1`}
+        />
         <div className="h-full -ml-[16%] mr-auto mt-1">
           <img
             src={`/themes/symbols/${mythSections[activeMyth]}.png`}
@@ -307,8 +346,8 @@ const Quests = () => {
         <div className="flex justify-center items-center w-[20%]">
           <div
             onClick={() => {
-              setActiveMyth((prev) => (prev - 1 + 4) % 4);
               setCurrQuest(0);
+              setActiveMyth((prev) => (prev - 1 + 4) % 4);
               setShowPay(false);
               setShowInfo(false);
               setShowClaim(false);
@@ -385,38 +424,40 @@ const Quests = () => {
             </>
           ) : (
             <div className="relative">
-              <div>
+              <div className="h-full -mt-[45px]">
                 <JigsawImage
                   imageUrl={`/cards/${mythSections[activeMyth]}.quest.C07_on.png`}
                   faith={4}
                 />
               </div>
-
               <div
-                onClick={() => {
-                  setShowInfo((prev) => !prev);
-                  setActiveCard(quest?.type);
-                }}
-                className="absolute top-0 right-0 h-10 w-10"
-              ></div>
-              <QuestButton
-                handlePrev={handlePrev}
-                handleNext={handleNext}
-                isCompleted={quest?.isCompleted}
-                activeMyth={activeMyth}
-                action={() => {
-                  setShowPay(true);
-                  window.open(quest?.link, "_blank");
-                }}
-              />
+                className="flex items-center justify-between h-[54px] w-[192px] mx-auto mt-[20px] border border-black bg-glass-black text-white font-montserrat rounded-button z-50 absolute top-0 left-0 right-0"
+                style={{ top: "100%", transform: "translateY(-50%)" }} // Adjust vertical positioning if needed
+              >
+                <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
+                  <CornerUpLeft
+                    color="white"
+                    className="h-[20px] w-[20px]"
+                    onClick={handlePrev}
+                  />
+                </div>
+                <div className="text-[16px] uppercase px-2">Complete</div>
+                <div className="flex justify-center items-center w-1/4 border-l-[0.5px] border-borderGray h-full">
+                  <CornerUpRight
+                    color="white"
+                    className="h-[20px] w-[20px]"
+                    onClick={handleNext}
+                  />
+                </div>
+              </div>
             </div>
           )}
         </div>
         <div className="flex justify-center items-center w-[20%]">
           <div
             onClick={() => {
-              setActiveMyth((prev) => (prev + 1) % 4);
               setCurrQuest(0);
+              setActiveMyth((prev) => (prev + 1) % 4);
               setShowPay(false);
               setShowInfo(false);
               setShowClaim(false);

@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
 import {
   claimAutomataBooster,
+  claimLostQuest,
   claimQuest,
   claimQuestOrbsReward,
   claimShardsBooster,
@@ -26,17 +27,19 @@ const Boosters = () => {
   const [quest, setQuest] = useState(0);
   const [showQuest, setShowQuest] = useState(false);
   const [showPay, setShowPay] = useState(false);
+  const [isGlowing, setIsGlowing] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
   const { gameData, setGameData, activeMyth, setActiveMyth } =
     useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
+  const hoursInMs = 24 * 60 * 60 * 1000;
+  const timeLeftInMs = mythData.automataStartTime + hoursInMs - Date.now();
 
-  const timeElapsedInSeconds = (Date.now() - mythData.automataStartTime) / 1000;
-
-  const hours = Math.floor(timeElapsedInSeconds / 3600);
-  const minutes = Math.floor((timeElapsedInSeconds % 3600) / 60);
-  const seconds = Math.floor(timeElapsedInSeconds % 60);
+  const hoursLeft = Math.floor(timeLeftInMs / (1000 * 60 * 60));
+  const minutesLeft = Math.floor(
+    (timeLeftInMs % (1000 * 60 * 60)) / (1000 * 60)
+  );
 
   // quest share reward after completing quest
   const handleOrbClaimReward = async () => {
@@ -110,7 +113,7 @@ const Boosters = () => {
       questId: lostQuest[quest]._id,
     };
     try {
-      await claimQuest(questData, token);
+      await claimLostQuest(questData, token);
       setActiveCard(lostQuest[quest]?.type);
       setShowClaim(true);
       setShowPay(false);
@@ -159,11 +162,15 @@ const Boosters = () => {
         }
       );
     } catch (error) {
-      console.log(error.message);
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "An unexpected error occurred";
+
       toast.error(
         <ToastMesg
           title={"Failed claim to claim quest."}
-          desc={error.message}
+          desc={errorMessage}
           img={"/icons/fail.svg"}
         />,
         {
@@ -234,16 +241,12 @@ const Boosters = () => {
     }
   };
 
-  const handlePrev = () => {
-    if (quest > 0) {
-      setQuest((prev) => prev - 1);
-    }
+  const handleClick = (num) => {
+    setIsGlowing(num);
   };
 
-  const handleNext = () => {
-    if (quest < lostQuest.length - 1) {
-      setQuest((prev) => prev + 1);
-    }
+  const handleRemoveClick = () => {
+    setIsGlowing(0);
   };
 
   const handleClaimBooster = (e) => {
@@ -361,28 +364,59 @@ const Boosters = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(/themes/background/celtic.png)`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        height: "100vh",
-        width: "100vw",
         position: "fixed",
         top: 0,
         left: 0,
+        height: "100vh",
+        width: "100vw",
       }}
       className="flex flex-col h-screen overflow-hidden m-0"
     >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1, // Ensures the background is behind the content
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
+          style={{
+            backgroundImage: `url(/themes/background/main.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
       {/* Header */}
       <div
         style={{
-          backgroundImage: `url(/themes/header/${mythSections[activeMyth]}.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
+          position: "relative",
+          height: "18.5%",
+          width: "100%",
         }}
-        className="flex h-[18.5%] w-full"
+        className="flex"
       >
+        <div
+          style={{
+            backgroundImage: `url(/images/head.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "100%",
+            width: "100%",
+            zIndex: -1,
+          }}
+          className={`filter-paper-${mythSections[activeMyth]} -mt-1`}
+        />
         <div className="flex flex-col flex-grow justify-center items-center text-white">
           <h1 className={`glow-${mythSections[activeMyth]} uppercase`}>
             Boosters
@@ -414,7 +448,15 @@ const Boosters = () => {
               mythData.isShardsClaimActive
                 ? `border-${mythSections[activeMyth]}-primary`
                 : "border-cardsGray"
-            }   rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white hover:glow-icon-celtic`}
+            } ${
+              isGlowing === 1 ? `glow-button-${mythSections[activeMyth]}` : ""
+            }  rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white hover:glow-icon-celtic`}
+            onMouseDown={() => handleClick(1)}
+            onMouseUp={handleRemoveClick}
+            onMouseLeave={handleRemoveClick}
+            onTouchStart={() => handleClick(1)}
+            onTouchEnd={handleRemoveClick}
+            onTouchCancel={handleRemoveClick}
           >
             <div>
               {/* //! Uncomment image and remove -ml-20 for text for svg */}
@@ -459,7 +501,17 @@ const Boosters = () => {
           </div>
           {/* LOST QUESTS BOOSTER */}
           <div
-            className={`flex gap-4 border border-${mythSections[activeMyth]}-primary rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            className={`flex gap-4 border border-${
+              mythSections[activeMyth]
+            }-primary ${
+              isGlowing === 2 ? `glow-button-${mythSections[activeMyth]}` : ""
+            } rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            onMouseDown={() => handleClick(2)}
+            onMouseUp={handleRemoveClick}
+            onMouseLeave={handleRemoveClick}
+            onTouchStart={() => handleClick(2)}
+            onTouchEnd={handleRemoveClick}
+            onTouchCancel={handleRemoveClick}
           >
             <div>
               {/* <img
@@ -480,7 +532,15 @@ const Boosters = () => {
           {/* AUTOMATA BOOSTER */}
           <div
             className={`flex gap-4 border 
-                border-${mythSections[activeMyth]}-primary rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+                border-${mythSections[activeMyth]}-primary ${
+              isGlowing === 3 ? `glow-button-${mythSections[activeMyth]}` : ""
+            } rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            onMouseDown={() => handleClick(3)}
+            onMouseUp={handleRemoveClick}
+            onMouseLeave={handleRemoveClick}
+            onTouchStart={() => handleClick(3)}
+            onTouchEnd={handleRemoveClick}
+            onTouchCancel={handleRemoveClick}
           >
             <div>
               {/* <img
@@ -544,7 +604,7 @@ const Boosters = () => {
               >
                 <div className="flex justify-center items-center w-1/4 h-full"></div>
                 <div className="text-[16px] uppercase">
-                  {hours}:{minutes}:{seconds}
+                  {hoursLeft}:{minutesLeft}
                 </div>
                 <div className="flex justify-center items-center w-1/4  h-full"></div>
               </div>
@@ -553,13 +613,25 @@ const Boosters = () => {
                 onClick={handleClaimBooster}
                 className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2   bg-glass-black text-white font-montserrat rounded-button"
               >
-                <div className="flex justify-center items-center w-1/4  border-borderGray h-full">
-                  <img
-                    src={`/images/orb.png`}
-                    alt="orb"
-                    className="w-[32px] h-[32px]"
-                  />
+                <div
+                  className={`flex justify-center items-center w-1/4 border-borderGray h-full`}
+                >
+                  <div className={`filter-orbs-${mythSections[activeMyth]}`}>
+                    <img
+                      src={`/themes/orb.png`}
+                      alt="orb"
+                      className="w-[40px] h-[40px]"
+                    />
+                  </div>
+                  <div className="absolute bottom-0">
+                    <img
+                      src="/icons/up.svg"
+                      alt="upward"
+                      className="mb-3 z-1"
+                    />
+                  </div>
                 </div>
+
                 <div className="text-[16px] uppercase">PAY</div>
                 <div className="flex justify-center items-center w-1/4  border-borderGray h-full"></div>
               </div>
@@ -594,7 +666,13 @@ const Boosters = () => {
               onClick={handleClaimQuest}
               className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
             >
-              <div className="flex justify-center items-center w-1/4 h-full"></div>
+              <div className="flex justify-center items-center w-1/4 h-full">
+                <img
+                  src={`/images/multi-pay.png`}
+                  alt="orb"
+                  className="w-[32px] h-[32px]"
+                />
+              </div>
               <div className="text-[16px] uppercase">PAY</div>
               <div className="flex justify-center items-center w-1/4  h-full"></div>
             </div>

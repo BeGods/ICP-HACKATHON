@@ -191,27 +191,31 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    const automataTimeleft =
-      (Date.now() -
-        gameData.mythologies[activeMyth].boosters.automataLastClaimedAt) /
-      1000;
-    let interval;
-    if (mythStates[activeMyth].isAutomataActive && automataTimeleft > 0) {
-      interval = setInterval(() => {
-        setMythStates((prevState) => {
-          const newState = [...prevState];
-          newState[activeMyth] = {
-            ...newState[activeMyth],
-            shards:
-              newState[activeMyth].shards + newState[activeMyth].shardslvl,
-          };
-          return newState;
-        });
-      }, 1000);
-    }
+    const automataIntervals = [];
 
-    return () => clearInterval(interval);
-  }, []);
+    gameData.mythologies.forEach((myth, index) => {
+      const automataTimeleft =
+        (Date.now() - myth.boosters.automataLastClaimedAt) / 1000;
+
+      if (myth.boosters.isAutomataActive && automataTimeleft > 0) {
+        const interval = setInterval(() => {
+          setMythStates((prevState) => {
+            const newState = [...prevState];
+            newState[index] = {
+              ...newState[index],
+              shards: newState[index].shards + newState[index].shardslvl,
+            };
+            return newState;
+          });
+        }, 1000);
+        automataIntervals.push(interval);
+      }
+    });
+
+    return () => {
+      automataIntervals.forEach((interval) => clearInterval(interval));
+    };
+  }, [gameData.mythologies]);
 
   return (
     <>
@@ -228,28 +232,36 @@ const Game = () => {
             top: 0,
             left: 0,
           }}
-          className="flex flex-col h-screen overflow-hidden m-0"
+          className="flex flex-col h-screen overflow-hidden"
         >
           {/* Header */}
           <div
             style={{
-              backgroundImage: `url(/themes/header/${mythSections[activeMyth]}.png)`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
+              position: "relative",
+              height: "18.5%",
+              width: "100%",
             }}
-            className="flex h-[18.5%] w-full"
+            className="flex -mt-1"
           >
-            <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 pr-10 -mt-1">
+            <div
+              style={{
+                backgroundImage: `url(/images/head.png)`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center center",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                height: "100%",
+                width: "100%",
+                zIndex: -1,
+              }}
+              className={`filter-paper-${mythSections[activeMyth]}`}
+            />
+            <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 pr-10 -mt-1.5">
               <h1 className={`glow-${mythSections[activeMyth]}`}>
                 {mythSections[activeMyth].toUpperCase()}
               </h1>
-              {/* <ProgressBar
-                value={energy}
-                max={gameData.mythologies[activeMyth].energyLimit}
-                activeMyth={activeMyth}
-              /> */}
-
               <div className="text-right font-medium font-montserrat text-[22px] -mt-3">
                 {formatOrbsWithLeadingZeros(orbs)}{" "}
                 <span className={`text-${mythSections[activeMyth]}-text`}>
@@ -272,7 +284,15 @@ const Game = () => {
             </div>
           </div>
 
-          <div className="flex flex-grow justify-center items-center">
+          {/* Main */}
+          <div className="flex relative flex-grow justify-center items-center">
+            {mythStates[activeMyth].isAutomataActive && (
+              <div className="absolute top-0 left-0">
+                <h1 className="font-symbols text-[50px] p-0 ml-2 -mt-2 text-white">
+                  B
+                </h1>
+              </div>
+            )}
             <div className="flex justify-center items-center w-[20%]">
               <div
                 onClick={() => {
@@ -318,6 +338,7 @@ const Game = () => {
               </div>
             </div>
           </div>
+
           {/* Footer */}
           <Footer />
         </div>

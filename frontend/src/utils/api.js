@@ -221,3 +221,19 @@ export const fetchLostQuests = async (mythologyName, accessToken) => {
     throw error;
   }
 };
+
+export const claimLostQuest = async (questData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/claimLostQuest`;
+
+  try {
+    const response = await axios.post(url, questData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};

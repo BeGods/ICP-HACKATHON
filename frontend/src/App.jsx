@@ -5,6 +5,7 @@ import Quests from "./pages/Quests";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import Leaderboard from "./pages/Leaderboard";
 import JigsawImage from "./components/Pieces";
+import Test from "./pages/Test";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Auth />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/test" element={<JigsawImage />} />
+            <Route path="/test" element={<Test />} />
           </Routes>
         </Router>
       </TonConnectUIProvider>
