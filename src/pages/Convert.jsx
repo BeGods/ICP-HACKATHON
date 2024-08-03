@@ -65,28 +65,59 @@ const Convert = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(/themes/background/celtic.png)`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        height: "100vh",
-        width: "100vw",
         position: "fixed",
         top: 0,
         left: 0,
+        height: "100vh",
+        width: "100vw",
       }}
       className="flex flex-col h-screen overflow-hidden m-0"
     >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1, // Ensures the background is behind the content
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-other`}
+          style={{
+            backgroundImage: `url(/themes/background/main.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
       {/* Header */}
       <div
         style={{
-          backgroundImage: `url(/themes/header/other.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
+          position: "relative",
+          height: "18.5%",
+          width: "100%",
         }}
-        className="flex h-[18.5%] w-full"
+        className="flex"
       >
+        <div
+          style={{
+            backgroundImage: `url(/images/head.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            height: "100%",
+            width: "100%",
+            zIndex: -1,
+          }}
+          className={`filter-paper-other -mt-1`}
+        />
         {myth === 4 ? (
           <div className="flex flex-col flex-grow justify-center items-start text-white pl-5">
             <h1 className="flex items-center gap-4 text-[43px] font-fof text-fof drop-shadow-2xl -mt-4">

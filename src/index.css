@@ -178,6 +178,48 @@ body {
   filter: drop-shadow(0 0 5px var(--norse-color));
 }
 
+/* Button Effect */
+
+.glow-button-celtic {
+  box-shadow: 
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 10px var(--celtic-color); /* More spread out, increasing blur */
+  filter: drop-shadow(0 0 5px var(--celtic-color)); /* Slightly larger drop shadow */
+  opacity: 0.9; /* Slightly reduce opacity to make it less dark */
+}
+
+
+.glow-button-egyptian {
+  box-shadow: 
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color);
+  filter: drop-shadow(0 0 5px var(--egyptian-color));
+  opacity: 0.9; /* Slightly reduce opacity to make it less dark */
+}
+
+.glow-button-greek {
+  box-shadow: 
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color);
+  filter: drop-shadow(0 0 5px var(--greek-color));
+}
+
+.glow-button-norse {
+  box-shadow: 
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color);
+  filter: drop-shadow(0 0 5px var(--norse-color));
+}
+
 
 
 /* Gradients */
@@ -341,3 +383,85 @@ body {
     transform: translateY(-200px);
   }
 }
+
+.jigsaw::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  border-radius: inherit; /* Ensures the gradient follows the border radius of the parent */
+  pointer-events: none; /* Ensures the overlay doesn't affect interactions */
+  z-index: 1; /* Places the gradient on top of the background image */
+}
+
+/* Backgrounds */
+.filter-celtic {
+  filter: brightness(100%) invert(5%) sepia(12%) saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
+}
+
+.filter-norse{
+  filter: brightness(100%)  invert(10%) sepia(15%) saturate(1237%) hue-rotate(171deg) brightness(90%) contrast(104%);
+}
+
+.filter-egyptian{
+  filter: brightness(100%)  invert(5%) sepia(22%) saturate(600%) hue-rotate(6deg) brightness(90%) contrast(104%);
+}
+
+.filter-greek{
+  filter: brightness(100%)  invert(5%) sepia(23%) saturate(700%) hue-rotate(-14deg) brightness(90%) contrast(104%);
+}
+
+.filter-other{
+  filter: brightness(110%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
+}
+
+/* Orbs */
+
+.filter-orbs-celtic {
+  filter: brightness(100%) invert(5%) sepia(12%) saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
+}
+
+.filter-orbs-egyptian{
+  filter:
+  brightness(150%)  invert(20%) sepia(20%) saturate(2000%) hue-rotate(16deg) contrast(104%);
+}
+
+.filter-orbs-greek{
+  filter:
+  brightness(100%)  invert(5%) sepia(13%) saturate(1537%) hue-rotate(-65deg) brightness(90%) contrast(104%);
+}
+
+.filter-orbs-norse{
+  filter: brightness(100%)  invert(10%) sepia(15%) saturate(1237%) hue-rotate(171deg) brightness(90%) contrast(104%);
+}
+
+.filter-orbs-white{
+  filter:
+  brightness(100%) invert(5%)  saturate(237%) brightness(220%) contrast(104%);
+}
+
+/* Header-Footers */
+
+.filter-paper-celtic {
+  filter: brightness(100%) invert(5%) sepia(12%) saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
+}
+
+.filter-paper-egyptian{
+  filter: brightness(100%)  invert(5%) sepia(22%) saturate(600%) hue-rotate(6deg) brightness(90%) contrast(104%);
+}
+
+.filter-paper-norse{
+  filter: brightness(60%)  invert(10%) sepia(15%) saturate(1037%) hue-rotate(171deg) brightness(90%) contrast(104%);
+}
+
+.filter-paper-greek{
+  filter: brightness(100%)  invert(5%) sepia(20%) saturate(700%) hue-rotate(-50deg) brightness(90%) contrast(104%);
+}
+
+.filter-paper-other{
+  filter: brightness(75%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
+}
+

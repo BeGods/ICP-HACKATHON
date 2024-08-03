@@ -32,12 +32,24 @@ function OrbClaimCard({
             <img src={`/icons/x.png`} alt="orb" className="w-[32px] h-[32px]" />
           </div>
           <div className="text-[16px] uppercase">SHARE</div>
-          <div className="flex justify-center items-center w-1/4  h-full">
-            <img
-              src={`/images/orb.png`}
-              alt="orb"
-              className="w-[32px] h-[32px]"
-            />
+
+          <div
+            className={`flex justify-center items-center w-1/4 border-borderGray h-full`}
+          >
+            <div className="absolute top-0 z-10">
+              <img
+                src="/icons/down.svg"
+                alt="upward"
+                className="z-10 mt-3 mr-0.5"
+              />
+            </div>
+            <div className={`filter-orbs-${mythSections[activeMyth]}`}>
+              <img
+                src={`/themes/orb.png`}
+                alt="orb"
+                className="w-[40px] h-[40px]"
+              />
+            </div>
           </div>
         </div>
       </div>

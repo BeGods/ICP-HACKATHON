@@ -44,8 +44,8 @@ const Footer = () => {
             section === 0 && `glow-icon-${mythSections[activeMyth]}`
           }`}
         />
-        <p>FORGES</p>
-         */}
+        <p>FORGES</p> */}
+
         <h1
           className={`font-symbols text-[42px] -mt-2.5 ${
             section === 0 && `glow-icon-${mythSections[activeMyth]}`
@@ -70,8 +70,8 @@ const Footer = () => {
             section === 1 && `glow-icon-${mythSections[activeMyth]}`
           }`}
         />
-        <p>QUESTS</p>
-        */}
+        <p>QUESTS</p> */}
+
         <h1
           className={`font-symbols text-[42px] -mt-2.5 ${
             section === 1 && `glow-icon-${mythSections[activeMyth]}`
@@ -96,8 +96,8 @@ const Footer = () => {
             section === 2 && `glow-icon-${mythSections[activeMyth]}`
           }`}
         />
-        <p>BOOSTERS</p>
-         */}
+        <p>BOOSTERS</p> */}
+
         <h1
           className={`font-symbols text-[42px] -mt-2.5 ${
             section === 2 && `glow-icon-${mythSections[activeMyth]}`

@@ -34,6 +34,7 @@ export default {
         symbols: ["Symbols", "sans-serif"],
       },
       colors: {
+        card: "#53371E",
         fof: "var(--game-text-color)",
         borderGray: "#FFFFFF33",
         cardsGray: "#979797",
