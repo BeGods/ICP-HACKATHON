@@ -1,29 +1,18 @@
 import { useState } from 'react';
-import { BeGod_backend } from 'declarations/BeGod_backend';
+import { BeGod_backend } from '../../declarations/BeGod_backend';
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
+import Admin from './Admin/Admin';
 
 function App() {
-  const [greeting, setGreeting] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    BeGod_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
+    <main >
+    <Router>
+    <Routes>
+      <Route  path='/Admin/*' element={<Admin/>}/>
+    </Routes>
+    </Router>
     </main>
   );
 }
