@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "BeGod_backend": {
+      "main": "src/BeGod_backend/main.mo",
+      "type": "motoko"
+    },
+    "BeGod_frontend": {
+      "dependencies": [
+        "BeGod_backend"
+      ],
+      "source": [
+        "src/BeGod_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "BeGod_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
