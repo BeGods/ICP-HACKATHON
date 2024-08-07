@@ -5,6 +5,7 @@ import User from "../models/user.models";
 export const createUser = async (userData) => {
   try {
     userData.referralCode = `FDG${userData.telegramId}`;
+    userData.squadOwner = userData.parentReferrerId;
 
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
@@ -27,14 +28,21 @@ export const addTeamMember = async (user, existingReferrer, referralCode) => {
       await Team.findOneAndUpdate(
         { owner: user.parentReferrerId },
         {
+          $set: { teamName: referralCode },
           $push: { members: user._id },
-          teamName: referralCode,
         },
         { upsert: true }
       );
 
-      if (existingReferrer.parentReferrerId) {
-        existingReferrer.squadOwner = existingReferrer.parentReferrerId;
+      await userMythologies.findOneAndUpdate(
+        {
+          userId: existingReferrer._id,
+        },
+        { $inc: { multiColorOrbs: 3 } }
+      );
+
+      if (!existingReferrer.parentReferrerId) {
+        existingReferrer.squadOwner = existingReferrer._id;
       }
 
       existingReferrer.directReferralCount += 1;

@@ -47,7 +47,7 @@ export const getLeaderboard = async (req, res) => {
     const squadOwner = user?.squadOwner ? user?.squadOwner : user._id;
 
     const squadLeaderboard = await ranks
-      .find({ parentReferrerId: squadOwner })
+      .find({ squadOwner: squadOwner })
       .sort({ totalOrbs: -1 })
       .limit(100)
       .select("-__v -createdAt -updatedAt");
@@ -72,7 +72,7 @@ export const updateRanks = async (req, res) => {
     const squadPipeline = [
       {
         $group: {
-          _id: "$parentReferrerId",
+          _id: "$squadOwner",
           totalOrbs: { $sum: "$totalOrbs" },
         },
       },
@@ -103,8 +103,8 @@ export const updateRanks = async (req, res) => {
     const usersBySquad = {};
 
     sortedUsers.forEach((user) => {
-      if (user.parentReferrerId) {
-        const parentId = user.parentReferrerId.toString();
+      if (user.squadOwner) {
+        const parentId = user.squadOwner.toString();
         if (!usersBySquad[parentId]) {
           usersBySquad[parentId] = [];
         }
@@ -124,8 +124,8 @@ export const updateRanks = async (req, res) => {
     // Prepare bulk operations for updating ranks
     const bulkOps = sortedUsers.map((user) => {
       let squadRank = 0;
-      if (user.parentReferrerId) {
-        const parentId = user.parentReferrerId.toString();
+      if (user.squadOwner) {
+        const parentId = user.squadOwner.toString();
         squadRank = usersBySquad[parentId]
           ? usersBySquad[parentId].find(
               (u) => u.userId.toString() === user.userId.toString()
@@ -142,7 +142,7 @@ export const updateRanks = async (req, res) => {
               telegramUsername: user.telegramUsername,
               profileImage: user.profileImage,
               totalOrbs: user.totalOrbs,
-              parentReferrerId: user.parentReferrerId,
+              squadOwner: user.squadOwner,
               overallRank: user.overallRank,
               squadRank: squadRank,
             },

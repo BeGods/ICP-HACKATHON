@@ -38,7 +38,7 @@ export const getLeaderboardSnapshot = async () => {
           telegramUsername: "$userDetails.telegramUsername",
           profileImage: "$userDetails.profile.avatarUrl",
           totalOrbs: 1,
-          parentReferrerId: "$userDetails.parentReferrerId",
+          squadOwner: "$userDetails.squadOwner",
         },
       },
     ];
