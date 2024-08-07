@@ -24,8 +24,76 @@ export const claimQuest = async (req, res) => {
   try {
     const userId = req.user;
     const quest = req.quest;
+    const requiredOrbs = quest.requiredOrbs;
 
-    // add to claim quest
+    console.log("userId", userId._id);
+    console.log("quest", quest.taskId);
+
+    // Add to claimed quests
+    await milestones.findOneAndUpdate(
+      { userId: userId._id, "claimedQuests.taskId": quest.taskId },
+      {
+        $set: { "claimedQuests.$.questClaimed": true },
+      },
+      {
+        new: true,
+      }
+    );
+
+    // deduct required orbs
+    const updateOperations = Object.entries(requiredOrbs).map(
+      ([mythologyName, orbsToDeduct]) => ({
+        updateOne: {
+          filter: { userId: userId, "mythologies.name": mythologyName },
+          update: {
+            $inc: {
+              "mythologies.$.orbs": -orbsToDeduct,
+            } as any,
+          },
+        },
+      })
+    );
+
+    // update rewards
+    updateOperations.push({
+      updateOne: {
+        filter: { userId: userId, "mythologies.name": quest.mythology },
+        update: {
+          $inc: {
+            "mythologies.$.faith": 1,
+            "mythologies.$.energyLimit": 1000,
+          } as any,
+        },
+      },
+    });
+
+    // Execute all updates in bulk
+    if (updateOperations.length > 0) {
+      await userMythologies.bulkWrite(updateOperations);
+    }
+
+    const newOrbTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "quests",
+      orbs: quest.requiredOrbs,
+    });
+    await newOrbTransaction.save();
+
+    res.status(200).json({ message: "Quest claimed successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const completeQuest = async (req, res) => {
+  try {
+    const userId = req.user;
+    const quest = req.quest;
+
+    // Add to claimed quests
     await milestones.findOneAndUpdate(
       { userId: userId },
       {
@@ -36,19 +104,65 @@ export const claimQuest = async (req, res) => {
       { upsert: true }
     );
 
-    // increase faith and increase energy limit
-    await userMythologies.findOneAndUpdate(
-      { userId: userId, "mythologies.name": quest.mythology },
+    res.status(200).json({ message: "Quest Completed" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimLostQuest = async (req, res) => {
+  try {
+    const userId = req.user;
+    const quest = req.quest;
+    const requiredOrbs = quest.requiredOrbs;
+
+    // Add to claimed quests
+    await milestones.findOneAndUpdate(
+      { userId: userId },
       {
-        $inc: {
-          "mythologies.$.faith": 1,
-          "mythologies.$.energyLimit": 1000,
+        $push: {
+          claimedQuests: { taskId: new mongoose.Types.ObjectId(quest.taskId) },
         },
       },
-      { new: true }
+      { upsert: true }
     );
 
-    // maintain transaction
+    // deduct required orbs
+    const updateOperations = Object.entries(requiredOrbs).map(
+      ([mythologyName, orbsToDeduct]) => ({
+        updateOne: {
+          filter: { userId: userId, "mythologies.name": mythologyName },
+          update: {
+            $inc: {
+              "mythologies.$.orbs": -orbsToDeduct,
+            } as any,
+          },
+        },
+      })
+    );
+
+    // update rewards
+    updateOperations.push({
+      updateOne: {
+        filter: { userId: userId, "mythologies.name": quest.mythology },
+        update: {
+          $inc: {
+            multiColorOrbs: -1,
+            "mythologies.$.faith": 1,
+            "mythologies.$.energyLimit": 1000,
+          } as any,
+        },
+      },
+    });
+
+    // Execute all updates in bulk
+    if (updateOperations.length > 0) {
+      await userMythologies.bulkWrite(updateOperations);
+    }
+
     const newOrbTransaction = new OrbsTransactions({
       userId: userId,
       source: "quests",

@@ -21,10 +21,7 @@ export const questAggregator = async (userId, questId) => {
                   $and: [
                     { $eq: ["$userId", "$$userId"] },
                     {
-                      $in: [
-                        new mongoose.Types.ObjectId(questId),
-                        "$claimedQuests.taskId",
-                      ],
+                      $in: ["$$questId", "$claimedQuests.taskId"],
                     },
                   ],
                 },
@@ -32,28 +29,32 @@ export const questAggregator = async (userId, questId) => {
             },
             {
               $addFields: {
-                orbClaimed: {
-                  $reduce: {
+                questDetails: {
+                  $filter: {
                     input: "$claimedQuests",
-                    initialValue: false,
-                    in: {
-                      $cond: [
-                        {
-                          $and: [
-                            {
-                              $eq: [
-                                "$$this.taskId",
-                                new mongoose.Types.ObjectId(questId),
-                              ],
-                            },
-                            "$$this.orbClaimed",
-                          ],
-                        },
-                        true,
-                        "$$value",
-                      ],
+                    as: "task",
+                    cond: {
+                      $eq: ["$$task.taskId", "$$questId"],
                     },
                   },
+                },
+              },
+            },
+            {
+              $addFields: {
+                orbClaimed: {
+                  $cond: [
+                    { $gt: [{ $size: "$questDetails" }, 0] },
+                    { $arrayElemAt: ["$questDetails.orbClaimed", 0] },
+                    false,
+                  ],
+                },
+                questClaimed: {
+                  $cond: [
+                    { $gt: [{ $size: "$questDetails" }, 0] },
+                    { $arrayElemAt: ["$questDetails.questClaimed", 0] },
+                    false,
+                  ],
                 },
               },
             },
@@ -63,7 +64,8 @@ export const questAggregator = async (userId, questId) => {
       },
       {
         $addFields: {
-          isClaimed: { $gt: [{ $size: "$claimed" }, 0] },
+          isCompleted: { $gt: [{ $size: "$claimed" }, 0] },
+          isClaimed: { $arrayElemAt: ["$claimed.questClaimed", 0] },
         },
       },
       {
@@ -71,6 +73,7 @@ export const questAggregator = async (userId, questId) => {
           taskId: "$_id",
           mythology: 1,
           requiredOrbs: 1,
+          isCompleted: 1,
           isClaimed: 1,
           orbClaimed: { $arrayElemAt: ["$claimed.orbClaimed", 0] },
           _id: 0,

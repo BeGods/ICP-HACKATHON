@@ -123,6 +123,16 @@ const userMythologySchema = new Schema(
       default: 0,
       required: true,
     },
+    blackOrbs: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    whiteOrbs: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
   },
   { timestamps: true }
 );
