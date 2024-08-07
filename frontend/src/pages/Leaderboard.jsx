@@ -38,7 +38,7 @@ const Leaderboard = (props) => {
         {/* Background with filter */}
         <div
           style={{
-            backgroundImage: `url(/themes/header.png)`,
+            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",

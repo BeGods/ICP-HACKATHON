@@ -33,7 +33,7 @@ const Profile = (props) => {
         desc={
           "Your referral link has been copied to the clipboard. Share it with your friends!"
         }
-        img={"/icons/link.svg"}
+        img={"/assets/icons/toast.link.svg"}
       />,
       {
         icon: false,
@@ -57,7 +57,7 @@ const Profile = (props) => {
         <ToastMesg
           title={"Wallet conencted successfully!"}
           desc={"Ton wallet connected successfully."}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -76,7 +76,7 @@ const Profile = (props) => {
         <ToastMesg
           title={"There was a problem connecting your wallet."}
           desc={error.message}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -176,7 +176,7 @@ const Profile = (props) => {
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/icons/telegram.png"
+                      src="/assets/icons/telegram.svg"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -189,7 +189,7 @@ const Profile = (props) => {
                   </div>
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/icons/telegram.png"
+                      src="/assets/icons/telegram.svg"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -225,7 +225,7 @@ const Profile = (props) => {
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/icons/telegram.png"
+                      src="/assets/icons/telegram.svg"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -238,7 +238,7 @@ const Profile = (props) => {
                   </div>
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/icons/telegram.png"
+                      src="/assets/icons/telegram.svg"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -261,7 +261,7 @@ const Profile = (props) => {
                 <div className="flex gap-[8px] mt-[10px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/icons/telegram.png"
+                      src="/assets/icons/telegram.svg"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -272,7 +272,7 @@ const Profile = (props) => {
                   </div>
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/icons/telegram.png"
+                      src="/assets/icons/telegram.svg"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const mythSections = ["celtic", "egyptian", "greek", "norse"];
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
@@ -11,6 +11,17 @@ const InfoCard = ({
   handleShowInfo,
   activeMyth,
 }) => {
+  const [isButtonGlowing, setIsButtonGlowing] = useState(0);
+
+  const handleButtonClick = (num) => {
+    setIsButtonGlowing(num);
+
+    setTimeout(() => {
+      setIsButtonGlowing(0);
+      handleShowInfo();
+    }, 100);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
       <div className="relative w-[72%] rounded-lg shadow-lg mt-10">
@@ -21,7 +32,7 @@ const InfoCard = ({
         /> */}
         <div className="relative h-full w-full">
           <img
-            src={`/cards/quests_info_background_raw.png`}
+            src={`/assets/cards/info_background_tiny.png`}
             alt="card"
             className="w-full h-full mx-auto"
           />
@@ -37,10 +48,16 @@ const InfoCard = ({
               </div>
               <div className="flex absolute w-full justify-end">
                 <img
-                  src="/icons/close.svg"
+                  src="/assets/assets/icons/close.svg"
                   alt="info"
-                  className="w-[55px] h-[55px] ml-auto -mt-6 -mr-6"
-                  onClick={handleShowInfo}
+                  className={`w-[55px] h-[55px] ml-auto rounded-full -mt-6 -mr-6 ${
+                    isButtonGlowing == 1
+                      ? `glow-button-${mythSections[activeMyth]}`
+                      : ""
+                  }`}
+                  onClick={() => {
+                    handleButtonClick(1);
+                  }}
                 />
               </div>
             </div>
@@ -64,15 +81,22 @@ const InfoCard = ({
           >
             <div className="flex justify-center items-center w-1/4 h-full">
               <img
-                src={`/icons/x.png`}
+                src={`/assets/icons/x.svg`}
                 alt="orb"
                 className="w-[32px] h-[32px]"
               />
             </div>
             <div className="text-[16px] uppercase">SHARE</div>
             <div className="flex justify-center items-center w-1/4  h-full">
+              <div className="absolute top-0 z-10">
+                <img
+                  src="/assets/icons/arrow.down.svg"
+                  alt="upward"
+                  className="z-10 mt-3"
+                />
+              </div>
               <img
-                src={`/images/multiorb.png`}
+                src={`/assets/myths-orbs/orb.multicolor-tiny.png`}
                 alt="orb"
                 className="w-[32px] h-[32px]"
               />

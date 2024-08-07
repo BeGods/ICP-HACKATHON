@@ -103,7 +103,7 @@ const Auth = (props) => {
           <div className="flex flex-grow"></div>
           <div className="flex justify-center items-center">
             <img
-              src="/images/logo.png"
+              src="/assets/logos/battle.gods.black.svg"
               alt="logo"
               className="w-[65px] h-[75px] mb-8"
             />

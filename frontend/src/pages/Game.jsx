@@ -46,6 +46,15 @@ const Game = () => {
   const timeoutRef = useRef(null);
   const mythStatesRef = useRef(mythStates);
 
+  const handleCloseButtonClick = (num) => {
+    setIsButtonGlowing(num);
+
+    setTimeout(() => {
+      setIsButtonGlowing(0);
+      setShowCard((prev) => !prev);
+    }, 100);
+  };
+
   const handleButtonClick = (num) => {
     setIsButtonGlowing(num);
 
@@ -282,7 +291,7 @@ const Game = () => {
       {activeMyth < 4 ? (
         <div
           style={{
-            backgroundImage: `url(/themes/background/game/${mythSections[activeMyth]}.png)`,
+            backgroundImage: `url(/assets/uxui/fof.forge.${mythSections[activeMyth]}_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -305,7 +314,7 @@ const Game = () => {
           >
             <div
               style={{
-                backgroundImage: `url(/themes/header.png)`,
+                backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
@@ -444,11 +453,15 @@ const Game = () => {
             />
             <div className="absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer">
               <img
-                src="/icons/close.svg"
+                src="/assets/icons/close.svg"
                 alt="close"
-                className="h-full w-full ml-auto -mt-6 -mr-6"
+                className={`h-full w-full ml-auto -mt-6 -mr-6 rounded-full ${
+                  isButtonGlowing === 3
+                    ? `glow-button-${mythSections[activeMyth]}`
+                    : ""
+                }`}
                 onClick={() => {
-                  setShowCard((prev) => !prev);
+                  handleCloseButtonClick(3);
                 }}
               />
             </div>

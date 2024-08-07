@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image as KonvaImage, Rect } from "react-konva";
 import useImage from "use-image";
 
-const JigsawImage = ({ imageUrl, faith }) => {
+const JigsawImage = ({ imageUrl, activeParts }) => {
   const [image] = useImage(imageUrl);
   const divRef = useRef(null);
   const [dimensions, setDimensions] = useState({
@@ -28,9 +28,6 @@ const JigsawImage = ({ imageUrl, faith }) => {
   const cellHeight = (dimensions.height - (numRows - 1) * gap) / numRows;
 
   const pieces = Array.from({ length: numRows * numCols });
-
-  // Predefined active parts (indices you want to render as active)
-  const activeParts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example indices that are active
 
   const getPieceProps = (index) => {
     const row = Math.floor(index / numCols);

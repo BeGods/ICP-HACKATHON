@@ -9,7 +9,7 @@ const QuestSymbol = ({ myth }) => {
         <img src={`/themes/orb.png`} alt="orb" className="w-[80%] h-[80%]" />
       </div>
       <img
-        src={`/symbols/mythology.${myth}.base.svg`}
+        src={`/assets/myths-orbs/mythology.${myth}.base.svg`}
         alt="symbol"
         className="h-[100%] w-[100%] absolute z-20"
       />
