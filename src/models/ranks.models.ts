@@ -22,7 +22,7 @@ const rankSchema = new Schema(
       required: true,
       default: 1,
     },
-    parentReferrerId: {
+    squadOwner: {
       type: mongoose.Schema.Types.ObjectId,
     },
     squadRank: {

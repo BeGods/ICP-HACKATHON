@@ -200,30 +200,6 @@ export const getGameStats = async (req, res) => {
               },
             },
             {
-              $addFields: {
-                isOrbClaimed: {
-                  $cond: {
-                    if: {
-                      $gt: [
-                        {
-                          $size: {
-                            $filter: {
-                              input: "$milestones",
-                              as: "milestone",
-                              cond: { $eq: ["$$milestone.orbClaimed", true] },
-                            },
-                          },
-                        },
-                        0,
-                      ],
-                    },
-                    then: true,
-                    else: false,
-                  },
-                },
-              },
-            },
-            {
               $lookup: {
                 from: "milestones",
                 let: { questId: "$_id", userId: "$$userId" },
@@ -253,11 +229,50 @@ export const getGameStats = async (req, res) => {
                 },
               },
             },
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $unwind: "$claimedQuests",
+                  },
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $eq: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      orbClaimed: "$claimedQuests.orbClaimed",
+                      questClaimed: "$claimedQuests.questClaimed",
+                    },
+                  },
+                ],
+                as: "claimedQuestData",
+              },
+            },
+            {
+              $addFields: {
+                isOrbClaimed: {
+                  $arrayElemAt: ["$claimedQuestData.orbClaimed", 0],
+                },
+                isQuestClaimed: {
+                  $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
+                },
+              },
+            },
             { $sort: { createdAt: -1 as -1 } },
             {
               $project: {
                 milestones: 0,
                 sharedMilestones: 0,
+                claimedQuestData: 0,
                 updatedAt: 0,
                 createdAt: 0,
                 __v: 0,
@@ -276,7 +291,7 @@ export const getGameStats = async (req, res) => {
               cond: {
                 $or: [
                   { $eq: ["$$quest.status", "Active"] },
-                  { $eq: ["$$quest.isCompleted", true] },
+                  { $eq: ["$$quest.isQuestClaimed", true] },
                 ],
               },
             },
@@ -389,7 +404,6 @@ export const claimShardsBooster = async (req, res) => {
 
     const userMyth = req.userMyth;
 
-    userMyth.orbs -= 1;
     userMyth.boosters.shardslvl += 1;
     userMyth.boosters.isShardsClaimActive = false;
     userMyth.boosters.shardsLastClaimedAt = Date.now();
@@ -397,7 +411,7 @@ export const claimShardsBooster = async (req, res) => {
     const updatedMythData = (await userMythologies
       .findOneAndUpdate(
         { userId, "mythologies.name": userMyth.name },
-        { $set: { "mythologies.$": userMyth } },
+        { $inc: { multiColorOrbs: -1 }, $set: { "mythologies.$": userMyth } },
         { new: true }
       )
       .lean()) as Document;
@@ -442,7 +456,7 @@ export const claimAutomata = async (req, res) => {
     const updatedMythData = (await userMythologies
       .findOneAndUpdate(
         { userId, "mythologies.name": userMyth.name },
-        { $set: { "mythologies.$": userMyth } },
+        { $inc: { multiColorOrbs: -1 }, $set: { "mythologies.$": userMyth } },
         { new: true }
       )
       .lean()) as Document;

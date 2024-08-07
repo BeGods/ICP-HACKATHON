@@ -18,6 +18,10 @@ const milestoneSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Quests",
       },
+      questClaimed: {
+        type: Boolean,
+        default: false,
+      },
       orbClaimed: {
         type: Boolean,
         default: false,

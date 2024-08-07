@@ -73,12 +73,12 @@ const userSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-userSchema.pre<IUser>("save", function (next) {
-  if (!this.squadOwner) {
-    this.squadOwner = this._id as mongoose.Types.ObjectId;
-  }
-  next();
-});
+// userSchema.pre<IUser>("save", function (next) {
+//   if (!this.squadOwner) {
+//     this.squadOwner = this._id as mongoose.Types.ObjectId;
+//   }
+//   next();
+// });
 
 const User = model<IUser>("User", userSchema);
 

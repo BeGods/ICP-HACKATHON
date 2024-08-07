@@ -37,14 +37,14 @@ export const validShardsBoosterReq = async (req, res, next) => {
 
       if (!requestedMyth.boosters.isShardsClaimActive) {
         throw new Error(
-          "You cannot claim shards right now. Please try again later."
+          "Booster activation failed. Please try to multiply your shards tapping power later."
         );
       }
     }
 
     // Check sufficient orbs to claim booster
-    if (requestedMyth.orbs < 1) {
-      throw new Error("Insufficient orbs to claim this booster.");
+    if (userMythologiesData.multiColorOrbs < 1) {
+      throw new Error("Insufficient multiColorOrbs to claim this booster.");
     }
 
     req.userMyth = requestedMyth;
@@ -90,8 +90,8 @@ export const validAutomataReq = async (req, res, next) => {
     }
 
     // Check sufficient orbs to claim automata
-    if (requestedMyth.orbs < 1) {
-      throw new Error("Insufficient orbs to claim automata.");
+    if (userMythologiesData.multiColorOrbs < 1) {
+      throw new Error("Insufficient multiColorOrbs to claim this automata.");
     }
 
     req.userMyth = requestedMyth;
