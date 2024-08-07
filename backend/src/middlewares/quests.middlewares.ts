@@ -36,7 +36,79 @@ export const verifyValidQuest = async (req, res, next) => {
     }
 
     const validQuest = await questAggregator(userId, questId);
+
+    // Check if the questId exists
+    if (!validQuest) {
+      return res.status(404).json({ message: "Quest not found." });
+    }
+
+    // Check if user has already claimed this quest
+    if (validQuest.isCompleted) {
+      throw new Error("Quest already completed.");
+    }
+
+    req.quest = validQuest;
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const verifyQuestClaim = async (req, res, next) => {
+  try {
+    const { questId } = req.body;
+    const userId = req.user;
+
+    // Check if the questId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(questId)) {
+      throw new Error("Invalid quest Id.");
+    }
+
+    const validQuest = await questAggregator(userId, questId);
+
     console.log(validQuest);
+
+    // Check if the questId exists
+    if (!validQuest) {
+      return res.status(404).json({ message: "Please complete the quest" });
+    }
+
+    // Check if user has already claimed this quest
+    if (validQuest.isClaimed) {
+      throw new Error("Quest already claimed.");
+    }
+
+    // Check if user has enough orbs
+    const orbValues = {};
+
+    const userOrbsData = await userMythologies.findOne({ userId: userId });
+
+    userOrbsData.mythologies.forEach((mythology) => {
+      orbValues[mythology.name] = mythology.orbs;
+    });
+
+    if (!areObjectsEqual(orbValues, validQuest.requiredOrbs)) {
+      throw new Error("Insufficient orbs to claim this quest.");
+    }
+
+    req.quest = validQuest;
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const verifyValidLostQuest = async (req, res, next) => {
+  try {
+    const { questId } = req.body;
+    const userId = req.user;
+
+    // Check if the questId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(questId)) {
+      throw new Error("Invalid quest Id.");
+    }
+
+    const validQuest = await questAggregator(userId, questId);
 
     // Check if the questId exists
     if (!validQuest) {
@@ -52,6 +124,10 @@ export const verifyValidQuest = async (req, res, next) => {
     const orbValues = {};
 
     const userOrbsData = await userMythologies.findOne({ userId: userId });
+
+    if (userOrbsData.multiColorOrbs < 1) {
+      throw new Error("Insufficient multiColorOrbs to claim this booster.");
+    }
 
     userOrbsData.mythologies.forEach((mythology) => {
       orbValues[mythology.name] = mythology.orbs;
