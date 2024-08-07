@@ -3,7 +3,7 @@ import React from "react";
 
 const ConvertButton = ({ handleNext, handlePrev, action }) => {
   return (
-    <div className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 border border-yellow-500 bg-glass-black text-white font-montserrat rounded-button">
+    <div className="flex items-center justify-between h-[45px] w-[192px] mx-auto border border-yellow-500 bg-glass-black text-white font-montserrat rounded-button">
       <div
         onClick={handlePrev}
         className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full"

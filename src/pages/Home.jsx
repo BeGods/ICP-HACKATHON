@@ -6,6 +6,7 @@ import Profile from "./Profile";
 import Boosters from "./Boosters";
 import { MyContext } from "../context/context";
 import Leaderboard from "./Leaderboard";
+import { toggleBackButton } from "../utils/teleBackButton";
 
 const tele = window.Telegram?.WebApp;
 
@@ -56,6 +57,16 @@ const Home = (props) => {
         console.log("You are not authenticated.");
       }
     })();
+  }, []);
+
+  useEffect(() => {
+    toggleBackButton(
+      tele,
+      () => {
+        setSection(0);
+      },
+      section === 3 || section === 4
+    );
   }, []);
 
   return (

@@ -8,6 +8,7 @@ const tele = window.Telegram?.WebApp;
 const Auth = (props) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
+  const [referralCode, setReferralCode] = useState(null);
   const [showCaptcha, setShowCaptcha] = useState(false);
 
   const getUserData = async () => {
@@ -16,12 +17,16 @@ const Auth = (props) => {
         await tele.ready();
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
+        tele.setHeaderColor("#000000");
 
         if (user) {
           const userData = {
             initData: tele?.initData,
           };
+          const referCode = tele.initDataUnsafe?.start_param;
+
           setUserData(userData);
+          setReferralCode(referCode);
         } else {
           console.warn("No user found in Telegram data");
         }
@@ -35,8 +40,8 @@ const Auth = (props) => {
 
   const auth = async () => {
     try {
-      const response = await authenticate(userData);
-      tele.CloudStorage.setItem("accessToken", response.data.token);
+      const response = await authenticate(userData, referralCode);
+      // tele.CloudStorage.setItem("accessToken", response.data.token);
       localStorage.setItem("accessToken", response.data.token);
       navigate("/home");
     } catch (error) {
@@ -76,19 +81,19 @@ const Auth = (props) => {
           <div className="flex justify-center items-center w-full leading-tight">
             <div className="mt-2">
               <h1
-                className="flex items-center gap-4 text-[38px] font-fof text-fof"
+                className="flex items-center gap-4 text-[50px] font-fof text-fof"
                 style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
               >
                 FORGES
               </h1>
               <h1
-                className="flex items-center gap-4 text-[16px] font-fof text-fof ml-[50px] -mt-3"
+                className="flex items-center gap-4 text-[24px] font-fof text-fof ml-[80px] -mt-3"
                 style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
               >
                 OF
               </h1>
               <h1
-                className="flex items-center gap-4 text-[38px] font-fof text-fof ml-[75px] -mt-3"
+                className="flex items-center gap-4 text-[50px] font-fof text-fof ml-[110px] -mt-3"
                 style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
               >
                 FAITH

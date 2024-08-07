@@ -1,16 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
-import Quests from "./pages/Quests";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import Leaderboard from "./pages/Leaderboard";
-import JigsawImage from "./components/Pieces";
 import Test from "./pages/Test";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <>
-      <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/mappasaurus/mappa-manifest/main/tonconnect-manifest.json">
+      <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
         <Router>
           <Routes>
             <Route path="/" element={<Auth />} />

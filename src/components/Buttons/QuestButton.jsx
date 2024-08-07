@@ -9,10 +9,14 @@ const QuestButton = ({
   isCompleted,
   activeMyth,
   action,
+  message,
 }) => {
   return (
-    <>
-      <div className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 border border-black bg-glass-black text-white font-montserrat rounded-button">
+    <div>
+      <div className="absolute flex justify-center items-center w-full -mt-2">
+        <div className="bg-black  h-[60px] w-[60px] rounded-full z-1"></div>
+      </div>
+      <div className="flex items-center justify-between h-[45px] w-[192px] mx-auto border border-black bg-glass-black text-white font-montserrat rounded-button z-10">
         <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
           <CornerUpLeft
             color="white"
@@ -28,7 +32,7 @@ const QuestButton = ({
           </div>
         ) : (
           <div onClick={action} className="text-[16px] uppercase">
-            Claim
+            {message}
           </div>
         )}
         <div className="flex justify-center items-center w-1/4 border-l-[0.5px] border-borderGray h-full">
@@ -39,7 +43,7 @@ const QuestButton = ({
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

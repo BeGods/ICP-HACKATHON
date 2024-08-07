@@ -16,33 +16,38 @@ const Leaderboard = (props) => {
     const accessToken = localStorage.getItem("accessToken");
     try {
       const response = await fetchLeaderboard(accessToken);
-      setLeaderboard([...response.leaderboard, ...response.leaderboard]);
+      setLeaderboard(response.leaderboard);
       setSquad(response.squad);
+      console.log(response.squad);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(userData);
-
   useEffect(() => {
-    toggleBackButton(tele);
+    toggleBackButton(tele, () => {
+      setSection(0);
+    });
     (async () => getLeaderboardData())();
   }, []);
 
   return (
     <div className="flex flex-col gap-2 h-screen overflow-auto items-center w-full font-montserrat text-[10px] text-white bg-[#121212]">
       {/* HEADER */}
-      <div
-        style={{
-          backgroundImage: `url(/themes/header/other.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-        }}
-        className="flex-shrink-0 h-[140px] w-full"
-      >
-        <div className="flex flex-col p-[20px] w-full h-full justify-end">
+      <div className="relative h-[140px] w-full flex-shrink-0">
+        {/* Background with filter */}
+        <div
+          style={{
+            backgroundImage: `url(/themes/header.png)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+          className="absolute inset-0 z-0 filter-paper-other"
+        ></div>
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col p-[20px] w-full h-full justify-end">
           <h1 className="text-[36px]">LEADERBOARD</h1>
           <h3 className="text-[20px]">#11 Daniel</h3>
         </div>

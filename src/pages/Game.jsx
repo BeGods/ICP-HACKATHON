@@ -9,9 +9,14 @@ import {
   formatShardsWithLeadingZeros,
 } from "../utils/gameManipulations";
 import { startTapSession, updateGameData } from "../utils/api";
+import { hideBackButton, tapHaptick } from "../utils/teleBackButton";
+import Symbol from "../components/Symbol";
+import { calculateRemainingTime } from "../utils/getBoosterCard";
 
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
 const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
+
+const tele = window.Telegram?.WebApp;
 
 const Game = () => {
   const { activeMyth, setActiveMyth, gameData, setGameData } =
@@ -23,17 +28,31 @@ const Game = () => {
     energyLimit: myth.energyLimit,
     currShards: 0,
     shardslvl: myth.boosters.shardslvl,
+    isShardsClaimActive: myth.isShardsClaimActive,
+    isAutomataActive: myth.isAutomataActive,
     isAutomataActive: myth.boosters.isAutomataActive,
+    shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
   }));
 
+  const [showCard, setShowCard] = useState(false);
+  const [activeCard, setActiveCard] = useState(null);
   const [mythStates, setMythStates] = useState(initialState);
   const [sessionActive, setSessionActive] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [isButtonGlowing, setIsButtonGlowing] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const { orbs, shards, energy } = mythStates[activeMyth >= 4 ? 0 : activeMyth];
   const [plusOnes, setPlusOnes] = useState([]);
   const timeoutRef = useRef(null);
   const mythStatesRef = useRef(mythStates);
+
+  const handleButtonClick = (num) => {
+    setIsButtonGlowing(num);
+
+    setTimeout(() => {
+      setIsButtonGlowing(0);
+    }, 100);
+  };
 
   const handleUpdateTapData = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -79,6 +98,8 @@ const Game = () => {
     const { energy, shardslvl } = mythStates[activeMyth];
 
     if (energy > 0) {
+      window.navigator.vibrate(25);
+
       const x = e.clientX || e.touches[0].clientX;
       const y = e.clientY || e.touches[0].clientY;
       const newPlusOne = { x, y, id: Date.now() };
@@ -195,20 +216,55 @@ const Game = () => {
 
     gameData.mythologies.forEach((myth, index) => {
       const automataTimeleft =
-        (Date.now() - myth.boosters.automataLastClaimedAt) / 1000;
+        (Date.now() - new Date(myth.boosters.automataLastClaimedAt).getTime()) /
+        1000;
 
-      if (myth.boosters.isAutomataActive && automataTimeleft > 0) {
+      if (myth.boosters.isAutomataActive) {
         const interval = setInterval(() => {
           setMythStates((prevState) => {
             const newState = [...prevState];
+            let newShards = newState[index].shards + newState[index].shardslvl;
+            let newOrbs = newState[index].orbs;
+
+            // Logic to convert shards to orbs
+            if (newShards >= 1000) {
+              newOrbs += Math.floor(newShards / 1000);
+              newShards = newShards % 1000;
+            }
+
             newState[index] = {
               ...newState[index],
-              shards: newState[index].shards + newState[index].shardslvl,
+              shards: newShards,
+              orbs: newOrbs,
             };
+
             return newState;
           });
         }, 1000);
+
         automataIntervals.push(interval);
+
+        // If automataTimeleft is positive and less than the interval time, immediately update shards and orbs.
+        if (automataTimeleft > 0 && automataTimeleft < 1000) {
+          setMythStates((prevState) => {
+            const newState = [...prevState];
+            let newShards = newState[index].shards + newState[index].shardslvl;
+            let newOrbs = newState[index].orbs;
+
+            if (newShards >= 1000) {
+              newOrbs += Math.floor(newShards / 1000);
+              newShards = newShards % 1000;
+            }
+
+            newState[index] = {
+              ...newState[index],
+              shards: newShards,
+              orbs: newOrbs,
+            };
+
+            return newState;
+          });
+        }
       }
     });
 
@@ -216,6 +272,10 @@ const Game = () => {
       automataIntervals.forEach((interval) => clearInterval(interval));
     };
   }, [gameData.mythologies]);
+
+  useEffect(() => {
+    hideBackButton(tele);
+  }, []);
 
   return (
     <>
@@ -245,7 +305,7 @@ const Game = () => {
           >
             <div
               style={{
-                backgroundImage: `url(/images/head.png)`,
+                backgroundImage: `url(/themes/header.png)`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
@@ -275,30 +335,54 @@ const Game = () => {
                 </span>
               </div>
             </div>
-            <div className="h-full -mr-[16%] ml-auto mt-1">
-              <img
-                src={`/themes/symbols/${mythSections[activeMyth]}.png`}
-                alt="symbol"
-                className="h-full w-full"
-              />
+            <div
+              className="h-full ml-auto -mr-2 mt-1"
+              style={{ width: "18.5%" }}
+            >
+              <Symbol myth={mythSections[activeMyth]} />
             </div>
           </div>
 
           {/* Main */}
           <div className="flex relative flex-grow justify-center items-center">
-            {mythStates[activeMyth].isAutomataActive && (
-              <div className="absolute top-0 left-0">
-                <h1 className="font-symbols text-[50px] p-0 ml-2 -mt-2 text-white">
+            <div className="flex flex-col absolute top-0 left-0 mt-2">
+              {mythStates[activeMyth].isAutomataActive && (
+                <h1
+                  onClick={() => {
+                    setShowCard(true);
+                    setActiveCard("automata");
+                  }}
+                  className="font-symbols text-[50px] p-0 ml-2  text-white"
+                >
                   B
                 </h1>
-              </div>
-            )}
+              )}
+              {mythStates[activeMyth].shardsLastClaimedAt !== 0 && (
+                <h1
+                  onClick={() => {
+                    setShowCard(true);
+                    setActiveCard("shard");
+                  }}
+                  className={`font-symbols text-[50px] p-0 ml-2 text-white ${
+                    mythStates[activeMyth].isAutomataActive && "-mt-6"
+                  }`}
+                >
+                  H
+                </h1>
+              )}
+            </div>
             <div className="flex justify-center items-center w-[20%]">
               <div
                 onClick={() => {
+                  handleButtonClick(1);
+
                   setActiveMyth((prev) => (prev - 1 + 5) % 5);
                 }}
-                className="bg-glass-black p-1 rounded-full cursor-pointer"
+                className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
+                  isButtonGlowing === 1
+                    ? `glow-button-${mythSections[activeMyth]}`
+                    : ""
+                }`}
               >
                 <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
               </div>
@@ -322,17 +406,21 @@ const Game = () => {
                 onMouseDown={handleStartSession}
                 onTouchStart={handleStartSession}
                 onTouchEnd={handleTap}
-                className="flex justify-center items-center h-[400px] w-full rounded-full"
-              >
-                Click
-              </div>
+                className="flex justify-center items-center h-[450px] w-full rounded-full"
+              ></div>
             </div>
             <div className="flex justify-center items-center w-[20%]">
               <div
                 onClick={() => {
+                  handleButtonClick(2);
+
                   setActiveMyth((prev) => (prev + 1) % 5);
                 }}
-                className="bg-glass-black p-1 rounded-full cursor-pointer"
+                className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
+                  isButtonGlowing === 2
+                    ? `glow-button-${mythSections[activeMyth]}`
+                    : ""
+                }`}
               >
                 <ChevronsRight color="white" className="h-[30px] w-[30px]" />
               </div>
@@ -344,6 +432,52 @@ const Game = () => {
         </div>
       ) : (
         <Convert />
+      )}
+      {/* Booster card */}
+      {showCard && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="relative w-[72%] rounded-lg shadow-lg mt-12">
+            <img
+              src={`/cards/${activeCard + "." + mythSections[activeMyth]}.png`}
+              alt="card"
+              className="w-full h-full mx-auto"
+            />
+            <div className="absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer">
+              <img
+                src="/icons/close.svg"
+                alt="close"
+                className="h-full w-full ml-auto -mt-6 -mr-6"
+                onClick={() => {
+                  setShowCard((prev) => !prev);
+                }}
+              />
+            </div>
+
+            {activeCard === "automata" && mythStates?.isAutomataActive ? (
+              <div
+                className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
+              >
+                <div className="flex justify-center items-center w-1/4 h-full"></div>
+                <div className="text-[16px] uppercase">
+                  {calculateRemainingTime(
+                    mythStates[activeMyth].automataStartTime
+                  )}
+                </div>
+                <div className="flex justify-center items-center w-1/4  h-full"></div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2   bg-glass-black text-white font-montserrat rounded-button">
+                <div className="flex justify-center items-center w-1/4 h-full"></div>
+                <div className="text-[16px] uppercase">
+                  {calculateRemainingTime(
+                    mythStates[activeMyth].shardsLastClaimedAt
+                  )}
+                </div>
+                <div className="flex justify-center items-center w-1/4  h-full"></div>
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </>
   );

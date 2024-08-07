@@ -1,22 +1,36 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image as KonvaImage, Rect } from "react-konva";
 import useImage from "use-image";
 
 const JigsawImage = ({ imageUrl, faith }) => {
   const [image] = useImage(imageUrl);
+  const divRef = useRef(null);
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const gap = 1;
+
+  // We cant set the h & w on Stage to 100% it only takes px values so we have to
+  // find the parent container's w and h and then manually set those !
+  useEffect(() => {
+    if (divRef.current?.offsetHeight && divRef.current?.offsetWidth) {
+      setDimensions({
+        width: divRef.current.offsetWidth,
+        height: divRef.current.offsetHeight,
+      });
+    }
+  }, []);
 
   const numCols = 3;
   const numRows = 4;
-  const gap = 1; // Gap between pieces
-  const gridWidth = 295;
-  const gridHeight = 410;
-  const cellWidth = (gridWidth - (numCols - 1) * gap) / numCols;
-  const cellHeight = (gridHeight - (numRows - 1) * gap) / numRows;
+  const cellWidth = (dimensions.width - (numCols - 1) * gap) / numCols;
+  const cellHeight = (dimensions.height - (numRows - 1) * gap) / numRows;
 
   const pieces = Array.from({ length: numRows * numCols });
 
   // Predefined active parts (indices you want to render as active)
-  const activeParts = [0, 1, 2, 3, 4, 5, 6, 7]; // Example indices that are active
+  const activeParts = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example indices that are active
 
   const getPieceProps = (index) => {
     const row = Math.floor(index / numCols);
@@ -35,21 +49,22 @@ const JigsawImage = ({ imageUrl, faith }) => {
 
   return (
     <div
+      ref={divRef}
       style={{
         position: "relative",
-        width: gridWidth,
-        height: gridHeight,
+        width: "71vw",
+        height: "54vh",
         overflow: "hidden",
         borderRadius: "16px",
         backgroundSize: "cover",
         backgroundPosition: "center center",
-        backgroundImage: "url(/cards/celtic.quest.A06_on.png)",
+        backgroundImage: `url(${imageUrl})`,
       }}
       className="jigsaw"
     >
       <Stage
-        width={gridWidth}
-        height={gridHeight}
+        width={dimensions.width}
+        height={dimensions.height}
         style={{
           position: "absolute",
           top: 0,

@@ -4,6 +4,7 @@ const mythSections = ["celtic", "egyptian", "greek", "norse"];
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
 
 const InfoCard = ({
+  quest,
   activeCard,
   isShared,
   handleClaimShareReward,
@@ -20,7 +21,7 @@ const InfoCard = ({
         /> */}
         <div className="relative h-full w-full">
           <img
-            src={`/themes/card.png`}
+            src={`/cards/quests_info_background_raw.png`}
             alt="card"
             className="w-full h-full mx-auto"
           />
@@ -29,14 +30,16 @@ const InfoCard = ({
               <div className="flex flex-col leading-tight justify-center items-center flex-grow font-montserrat text-card pt-4">
                 <div className="text-left pl-8">
                   <h1 className="text-[22px] font-bold">DISCOVER</h1>
-                  <h2 className="-mt-1 uppercase">{mythologies[activeMyth]}</h2>
+                  <h2 className="-mt-1 font-medium uppercase">
+                    {mythologies[activeMyth]}
+                  </h2>
                 </div>
               </div>
-              <div className="flex justify-end">
+              <div className="flex absolute w-full justify-end">
                 <img
                   src="/icons/close.svg"
-                  alt="close"
-                  className="w-[38px] h-[38px] ml-auto mt-1 mr-1"
+                  alt="info"
+                  className="w-[55px] h-[55px] ml-auto -mt-6 -mr-6"
                   onClick={handleShowInfo}
                 />
               </div>
@@ -48,10 +51,8 @@ const InfoCard = ({
                 className="w-full h-full mx-auto"
               />
             </div>
-            <div className="leading-[15px] text-[13px] text-left w-[80%] mx-auto pt-2.5">
-              “The Death of Viriatus, Chief of the Lusitanians”, ca 1807, is a
-              painting by Jose de Madrazo y Agudo, a Spanish neoclassical
-              painter. Visit the original in Museo del Prado, Madrid - Spain.
+            <div className="leading-[15px] text-[13px] text-left w-[85%] mx-auto pt-1.5 text-card font-medium">
+              {quest.description}
             </div>
           </div>
         </div>
