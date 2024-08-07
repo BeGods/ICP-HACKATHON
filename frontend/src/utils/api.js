@@ -1,7 +1,10 @@
 import axios from "axios";
 
-export const authenticate = async (userData) => {
+export const authenticate = async (userData, referralCode) => {
   let url = `${import.meta.env.VITE_API_URL}/auth`;
+  if (referralCode) {
+    url += `?referralCode=${referralCode}`;
+  }
 
   try {
     const response = await axios.post(url, userData);
@@ -94,6 +97,22 @@ export const claimQuestOrbsReward = async (questData, accessToken) => {
 
 export const claimQuest = async (questData, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/quests/claim`;
+
+  try {
+    const response = await axios.post(url, questData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const completeQuest = async (questData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/complete`;
 
   try {
     const response = await axios.post(url, questData, {

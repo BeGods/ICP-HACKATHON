@@ -33,6 +33,11 @@
     --norse-green-light: #0094FF;
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   position: fixed;
   top: 0;
@@ -65,7 +70,7 @@ body {
   src: url('/fonts/symbols.woff2') format('woff2'),
     url('/fonts/symbols.woff2') format('woff2');
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
@@ -145,6 +150,51 @@ body {
     0 0 5px var(--norse-color)
 }
 
+.glow-black {
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white
+}
+
+/* Cards text glow */
+
+.glow-card-celtic {
+  font-family: 'Celtic';
+  font-size: 18px;
+    text-shadow: 
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color)
+}
+
+.glow-card-egyptian {
+    font-family: 'Egyptian';
+    font-size: 22px;
+    text-shadow: 
+    0 0 5px var(--egyptian-color),
+    0 0 5px var(--egyptian-color),
+    0 0 5px var(--egyptian-color)
+}
+
+.glow-card-greek {
+    font-family: 'Greek';
+    font-size: 24px;
+    text-shadow: 
+    0 0 5px var(--greek-color),
+    0 0 5px var(--greek-color),
+    0 0 5px var(--greek-color)
+}
+
+.glow-card-norse {
+    font-family: 'Norse';
+    font-size: 24px;
+    text-shadow: 
+    0 0 5px var(--norse-color),
+    0 0 5px var(--norse-color),
+    0 0 5px var(--norse-color)
+}
+
 
 .glow-icon-celtic {
   text-shadow: 
@@ -177,6 +227,23 @@ body {
   0 0 5px var(--norse-color);
   filter: drop-shadow(0 0 5px var(--norse-color));
 }
+
+.glow-icon-black {
+  text-shadow: 
+  0 0 5px rgba(0, 0, 0, 0.637),
+  0 0 5px rgba(0, 0, 0, 0.637),
+  0 0 5px rgba(0, 0, 0, 0.637);
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.637));
+}
+
+.glow-icon-white {
+  text-shadow: 
+  0 0 5px white,
+  0 0 5px white,
+  0 0 5px white;
+  filter: drop-shadow(0 0 5px white);
+}
+
 
 /* Button Effect */
 
@@ -218,6 +285,14 @@ body {
   0 0 5px var(--norse-color),
   0 0 5px var(--norse-color);
   filter: drop-shadow(0 0 5px var(--norse-color));
+}
+
+.glow-button-other {
+  box-shadow: 
+  0 0 5px white,
+  0 0 5px white,
+  0 0 5px white;
+  filter: drop-shadow(0 0 5px white);
 }
 
 
@@ -440,7 +515,7 @@ body {
 
 .filter-orbs-white{
   filter:
-  brightness(100%) invert(5%)  saturate(237%) brightness(220%) contrast(104%);
+  brightness(100%) invert(5%)  saturate(137%) brightness(220%) contrast(104%);
 }
 
 /* Header-Footers */
@@ -464,4 +539,39 @@ body {
 .filter-paper-other{
   filter: brightness(75%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
 }
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 200px;
+  height: 100px; /* Adjust according to the height of the pieces */
+  position: relative;
+}
+
+.piece {
+  width: 50px; /* Adjust according to the desired width of each piece */
+  height: 50px; /* Adjust according to the desired height of each piece */
+  border-radius: 999px 999px 0 0;
+  background: radial-gradient(50% 100% at bottom, #0000 80%, red 80.5%);
+  position: absolute;
+}
+
+.piece-1 { top: 0; left: 0; }
+.piece-2 { top: 0; left: 50px; }
+.piece-3 { top: 50px; left: 0; }
+.piece-4 { top: 50px; left: 50px; }
+
+.container::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 999px 999px 0 0;
+  background: radial-gradient(50% 100% at bottom, #0000 80%, red 80.5%);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+}
+
 

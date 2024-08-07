@@ -24,12 +24,15 @@ const Profile = (props) => {
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(
-      `https://t.me/BeGods_bot/forgesoffaith?startapp=${referralCode}`
+      `https://t.me/BeGods_bot/forgesoffaith?startapp=${userData.referralCode}`
     );
 
     toast.success(
       <ToastMesg
-        title={"Referral Link copied successfully!"}
+        title={"Referral Link Copied!"}
+        desc={
+          "Your referral link has been copied to the clipboard. Share it with your friends!"
+        }
         img={"/icons/link.svg"}
       />,
       {
@@ -179,7 +182,9 @@ const Profile = (props) => {
                     />
                     <div className="text-left">
                       <h3 className="text-[10px]">Game Rank</h3>
-                      <h2 className="text-[14px]">#{userData.overallRank}</h2>
+                      <h2 className="text-[14px]">
+                        #{userData.overallRank === 0 ? 1 : userData.overallRank}
+                      </h2>
                     </div>
                   </div>
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
@@ -209,13 +214,13 @@ const Profile = (props) => {
               <div className="text-center bg-black w-full p-[15px] rounded-button">
                 <h1 className="text-[16px]">INVITE</h1>
                 <div className="flex items-center w-full text-left mt-1">
-                  <div className="w-full">
+                  <div className="w-full" onClick={handleCopyLink}>
                     <h2 className="text-[14px]">Invite Your friends</h2>
                     <p className="text-[10px] -mt-1">
                       Share link to earn $ORB(S)
                     </p>
                   </div>
-                  <ChevronsRight onClick={handleCopyLink} />
+                  <ChevronsRight />
                 </div>
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
@@ -247,7 +252,7 @@ const Profile = (props) => {
                 </div>
               </div>
               {/* SQUAD */}
-              <div className="text-center bg-black w-full p-[15px] rounded-button">
+              {/* <div className="text-center bg-black w-full p-[15px] rounded-button">
                 <h1 className="text-[16px]">SQUAD</h1>
                 <p>
                   Lorem ipsum dolor sit amet consectetur. Faucibus vivamus odio
@@ -279,7 +284,7 @@ const Profile = (props) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* GUIDE */}
               {/* <div className="text-center bg-black w-full p-[15px] rounded-button">
                 <h1 className="text-[16px]">GUIDES</h1>

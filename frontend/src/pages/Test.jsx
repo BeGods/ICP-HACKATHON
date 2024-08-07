@@ -1,10 +1,11 @@
 import React from "react";
-import Footer from "../components/Footer";
+import ProgressBarArc from "../components/Progressbars/ProgressBarArc";
+import ConvertInfo from "../components/ConvertInfo";
 
 const Test = ({ value }) => {
   return (
-    <div className="flex h-screen w-screen">
-      <Footer />
+    <div className="flex h-screen w-screen justify-center items-center">
+      <ProgressBarArc />
     </div>
   );
 };
