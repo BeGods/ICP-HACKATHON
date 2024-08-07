@@ -31,7 +31,12 @@ const QuestButton = ({
             Completed
           </div>
         ) : (
-          <div onClick={action} className="text-[16px] uppercase">
+          <div
+            onClick={action}
+            className={`text-[16px] uppercase ${
+              message === "Complete" && "px-2"
+            } `}
+          >
             {message}
           </div>
         )}

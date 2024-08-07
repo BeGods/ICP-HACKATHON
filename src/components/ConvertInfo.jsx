@@ -11,7 +11,7 @@ const ConvertInfo = () => {
   return (
     <div className="relative w-full h-full font-montserrat text-card">
       <img
-        src="/cards/quests_info_background_raw.png"
+        src="/assets/cards/info_background_tiny.png"
         alt="card"
         className="w-full h-full object-cover"
       />
@@ -27,7 +27,7 @@ const ConvertInfo = () => {
                   className={`flex relative text-center justify-center items-center w-[45px] rounded-full glow-icon-${key}`}
                 >
                   <img
-                    src="/themes/orb.png"
+                    src="/assets/myths-orbs/orb.base-tiny.png"
                     alt={`${key} orb`}
                     className={`filter-orbs-${key}`}
                   />
@@ -49,7 +49,7 @@ const ConvertInfo = () => {
                   className={`flex relative text-center justify-center items-center w-[45px] rounded-full glow-icon-${key}`}
                 >
                   <img
-                    src="/themes/orb.png"
+                    src="/assets/myths-orbs/orb.base-tiny.png"
                     alt={`${key} orb`}
                     className={`filter-orbs-${key}`}
                   />
@@ -65,9 +65,12 @@ const ConvertInfo = () => {
                 </div>
                 <h1 className="text-[30px] font-medium">=</h1>
                 <div
-                  className={`flex relative text-center justify-center items-center w-[35px] -mt-1 rounded-full`}
+                  className={`flex relative text-center justify-center items-center w-[40px] -mt-1 rounded-full`}
                 >
-                  <img src="/themes/multiorb.png" alt="multi orb" />
+                  <img
+                    src="/assets/myths-orbs/orb.multicolor-tiny.png"
+                    alt="multi orb"
+                  />
                 </div>
               </div>
             </React.Fragment>

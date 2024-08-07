@@ -22,10 +22,7 @@ import OrbClaimCard from "../components/QuestCards/OrbClaimCard";
 import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import Symbol from "../components/Symbol";
-import {
-  formatOrbsWithLeadingZeros,
-  formatShardsWithLeadingZeros,
-} from "../utils/gameManipulations";
+import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
 import QuestSymbol from "../components/QuestCards/QuestSymbol";
 
 const tele = window.Telegram?.WebApp;
@@ -59,6 +56,8 @@ const Quests = () => {
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ].sort((a, b) => a.isQuestClaimed - b.isQuestClaimed);
+  const completedQuests = quests.filter((item) => item.isQuestClaimed === true);
+
   const quest = quests[currQuest];
 
   const handleButtonClick = (num) => {
@@ -81,7 +80,7 @@ const Quests = () => {
         <ToastMesg
           title={"Link Copied Successfully!"}
           desc={"Share it on X to earn an extra $ORB"}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -113,7 +112,7 @@ const Quests = () => {
         <ToastMesg
           title={"Failed to share quest."}
           desc={error.message}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -162,7 +161,7 @@ const Quests = () => {
         <ToastMesg
           title={"Congratulations ypu earned an extra orb!"}
           desc={"Orb credited to your account."}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -185,7 +184,7 @@ const Quests = () => {
         <ToastMesg
           title={"Failed to claim orbs."}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -229,7 +228,7 @@ const Quests = () => {
           <ToastMesg
             title={"Failed claim to claim quest."}
             desc={errorMessage}
-            img={"/icons/fail.svg"}
+            img={"/assets/icons/toast.fail.svg"}
           />,
           {
             icon: false,
@@ -295,7 +294,7 @@ const Quests = () => {
         <ToastMesg
           title={"Quest claimed successfuly!"}
           desc={"Enerbar bla blab bla"}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -319,7 +318,7 @@ const Quests = () => {
         <ToastMesg
           title={"Failed claim to claim quest."}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -345,6 +344,15 @@ const Quests = () => {
     if (currQuest < quests.length) {
       setCurrQuest((prev) => prev + 1);
     }
+  };
+
+  const handleActiveParts = (faith) => {
+    const activeParts = [];
+    for (let i = 0; i < faith; i++) {
+      activeParts.push(i);
+    }
+
+    return activeParts;
   };
 
   useEffect(() => {}, [questsData, showClaim, showPay]);
@@ -374,7 +382,7 @@ const Quests = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/themes/background/main.png)`,
+            backgroundImage: `url(/assets/uxui/base.background_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -392,7 +400,7 @@ const Quests = () => {
       >
         <div
           style={{
-            backgroundImage: `url(/themes/header.png)`,
+            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -419,7 +427,7 @@ const Quests = () => {
             </span>
           </div>
           <div className="text-right font-medium font-montserrat -mt-1 text-[14px]">
-            {formatOrbsWithLeadingZeros(2)}/12{" "}
+            {formatOrbsWithLeadingZeros(completedQuests.length)}/12{" "}
             <span className={`text-${mythSections[activeMyth]}-text`}>
               QUESTS
             </span>
@@ -473,7 +481,7 @@ const Quests = () => {
                                       className={`flex relative text-center justify-center items-center w-[45px] -ml-1.5 rounded-full glow-icon-${key.toLowerCase()}`}
                                     >
                                       <img
-                                        src="/themes/orb.png"
+                                        src="/assets/myths-orbs/orb.base-tiny.png"
                                         alt="orb"
                                         className={`filter-orbs-${key.toLowerCase()} }`}
                                       />
@@ -497,10 +505,15 @@ const Quests = () => {
                         </div>
                         <div className="flex absolute w-full justify-end">
                           <img
-                            src="/icons/info_card.svg"
+                            src="/assets/icons/info.svg"
                             alt="info"
-                            className="w-[55px] h-[55px] ml-auto -mt-6 -mr-6"
+                            className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 rounded-full  ${
+                              isButtonGlowing === 3
+                                ? `glow-button-${mythSections[activeMyth]}`
+                                : ""
+                            }`}
                             onClick={() => {
+                              handleButtonClick(3);
                               setShowInfo((prev) => !prev);
                               setActiveCard(quest?.type);
                             }}
@@ -512,7 +525,7 @@ const Quests = () => {
                       >
                         <div
                           style={{
-                            backgroundImage: `url(/themes/footer.png)`,
+                            backgroundImage: `url(/assets/uxui/footer.paper_tiny.png)`,
                             backgroundRepeat: "no-repeat",
                             backgroundSize: "cover",
                             backgroundPosition: "center center",
@@ -531,36 +544,6 @@ const Quests = () => {
                           </div>
                         </div>
                       </div>
-                      {/* {!quest?.isQuestClaimed ? (
-                        <div
-                          className={`flex relative items-center h-[19%] uppercase glow-card-${mythSections[activeMyth]} text-white`}
-                        >
-                          <div
-                            style={{
-                              backgroundImage: `url(/themes/footer.png)`,
-                              backgroundRepeat: "no-repeat",
-                              backgroundSize: "cover",
-                              backgroundPosition: "center center",
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              height: "100%",
-                              width: "100%",
-                            }}
-                            className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
-                          />
-                          <div className="flex justify-center items-center px-3 z-10">
-                            <div>{quest?.questName}</div>
-                            <div></div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          className={`flex justify-start items-center px-3 h-[18%] uppercase glow-card-${mythSections[activeMyth]} text-white`}
-                        >
-                          {quest?.questName}
-                        </div>
-                      )} */}
                     </div>
                   </div>
                   {quest.isCompleted || showComplete ? (
@@ -607,7 +590,7 @@ const Quests = () => {
                                       className={`flex relative text-center justify-center items-center w-[45px] -ml-1.5 rounded-full glow-icon-${key.toLowerCase()}`}
                                     >
                                       <img
-                                        src="/themes/orb.png"
+                                        src="/assets/myths-orbs/orb.base-tiny.png"
                                         alt="orb"
                                         className={`filter-orbs-${key.toLowerCase()} }`}
                                       />
@@ -631,10 +614,15 @@ const Quests = () => {
                         </div>
                         <div className="flex absolute w-full justify-end">
                           <img
-                            src="/icons/info_card.svg"
+                            src="/assets/icons/close.svg"
                             alt="info"
-                            className="w-[55px] h-[55px] ml-auto -mt-6 -mr-6"
+                            className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 ${
+                              isButtonGlowing === 3
+                                ? `glow-button-${mythSections[activeMyth]}`
+                                : ""
+                            }`}
                             onClick={() => {
+                              handleButtonClick(3);
                               setShowPay(false);
                             }}
                           />
@@ -663,19 +651,25 @@ const Quests = () => {
               <div className="h-full relative -mt-12">
                 <JigsawImage
                   imageUrl={`/cards/${mythSections[activeMyth]}.quest.C07_raw.png`}
-                  faith={4}
+                  activeParts={handleActiveParts(
+                    gameData.mythologies[activeMyth].faith
+                  )}
                 />
-                <div className="flex absolute  top-0 right-0 z-20 mr-1">
+                <div className="flex absolute w-full top-0 z-10 justify-end">
                   <img
-                    src="/icons/info_card.svg"
+                    src="/assets/icons/info.svg"
                     alt="info"
-                    className="w-[55px] h-[55px] ml-auto -mt-6 -mr-6"
+                    className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 rounded-full  ${
+                      isButtonGlowing === 5
+                        ? `glow-button-${mythSections[activeMyth]}`
+                        : ""
+                    }`}
                   />
                 </div>
               </div>
               <div
-                className="flex items-center justify-between h-[54px] w-[192px] mx-auto mt-[20px] border border-black bg-glass-black text-white font-montserrat rounded-button z-50 absolute top-0 left-0 right-0"
-                style={{ top: "100%", transform: "translateY(-50%)" }} // Adjust vertical positioning if needed
+                className="flex items-center justify-between h-[45px] w-[192px] mx-auto mt-[23px] border border-black bg-glass-black text-white font-montserrat rounded-button z-50 absolute top-0 left-0 right-0"
+                style={{ top: "100%", transform: "translateY(-50%)" }}
               >
                 <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
                   <CornerUpLeft
@@ -695,101 +689,6 @@ const Quests = () => {
               </div>
             </div>
           )}
-
-          {/* {currQuest < quests.length ? (
-            <>
-              {!showPay ? (
-                <div className="relative">
-                  <img
-                    src={`/cards/${quest?.type}_${
-                      quest?.isCompleted ? "on" : "off"
-                    }.png`}
-                    alt="card"
-                    className="w-full h-[75%]"
-                  />
-                  <div
-                    onClick={() => {
-                      setShowInfo((prev) => !prev);
-                      setActiveCard(quest?.type);
-                    }}
-                    className="absolute top-0 right-0 h-10 w-10"
-                  ></div>
-                  <QuestButton
-                    handlePrev={handlePrev}
-                    handleNext={handleNext}
-                    isCompleted={quest?.isCompleted}
-                    activeMyth={activeMyth}
-                    action={() => {
-                      setShowPay(true);
-                      window.open(quest?.link, "_blank");
-                    }}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <div className="relative">
-                    <img
-                      src={`/cards/${quest?.type}_${
-                        quest?.isCompleted ? "on" : "off"
-                      }.png`}
-                      alt="card"
-                      className="w-full h-[75%]"
-                    />
-                    <div className="absolute top-0 right-0 h-10 w-10 cursor-pointer">
-                      <img
-                        src="/icons/close.svg"
-                        alt="close"
-                        className="w-[38px] h-[38px] mt-1"
-                        onClick={() => {
-                          setShowPay(false);
-                        }}
-                      />
-                    </div>
-                    <div className="absolute inset-0 h-[85%] mt-auto">
-                      <div className="w-full h-full backdrop-blur-sm rounded-lg grayscale"></div>
-                    </div>
-                  </div>
-                  <div
-                    onClick={handleClaimQuest}
-                    className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
-                  >
-                    <div className="flex justify-center items-center w-1/4 h-full"></div>
-                    <div className="text-[16px] uppercase">PAY</div>
-                    <div className="flex justify-center items-center w-1/4  h-full"></div>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="relative">
-              <div className="h-full -mt-[45px]">
-                <JigsawImage
-                  imageUrl={`/cards/${mythSections[activeMyth]}.quest.C07_on.png`}
-                  faith={4}
-                />
-              </div>
-              <div
-                className="flex items-center justify-between h-[54px] w-[192px] mx-auto mt-[20px] border border-black bg-glass-black text-white font-montserrat rounded-button z-50 absolute top-0 left-0 right-0"
-                style={{ top: "100%", transform: "translateY(-50%)" }} // Adjust vertical positioning if needed
-              >
-                <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
-                  <CornerUpLeft
-                    color="white"
-                    className="h-[20px] w-[20px]"
-                    onClick={handlePrev}
-                  />
-                </div>
-                <div className="text-[16px] uppercase px-2">Complete</div>
-                <div className="flex justify-center items-center w-1/4 border-l-[0.5px] border-borderGray h-full">
-                  <CornerUpRight
-                    color="white"
-                    className="h-[20px] w-[20px]"
-                    onClick={handleNext}
-                  />
-                </div>
-              </div>
-            </div>
-          )} */}
         </div>
         <div className="flex justify-center items-center w-[20%]">
           <div
@@ -823,6 +722,7 @@ const Quests = () => {
             setShowInfo((prev) => !prev);
           }}
           activeMyth={activeMyth}
+          isButtonGlowing={isButtonGlowing}
         />
       )}
       {showClaim && (

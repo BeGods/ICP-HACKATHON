@@ -45,6 +45,24 @@ const Boosters = () => {
     }, 100);
   };
 
+  const handleCloseButtonClick = (num) => {
+    setIsButtonGlowing(num);
+
+    setTimeout(() => {
+      setIsButtonGlowing(0);
+      setShowCard((prev) => !prev);
+    }, 100);
+  };
+
+  const handleCloseQuestButtonClick = (num) => {
+    setIsButtonGlowing(num);
+
+    setTimeout(() => {
+      setIsButtonGlowing(0);
+      setShowQuest(false);
+    }, 100);
+  };
+
   // quest share reward after completing quest
   const handleOrbClaimReward = async () => {
     const token = localStorage.getItem("accessToken");
@@ -76,7 +94,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Congratulations ypu earned an extra orb!"}
           desc={"Orb credited to your account."}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -98,7 +116,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Failed to claim orb."}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -155,7 +173,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Quest claimed successfuly!"}
           desc={"Enerbar bla blab bla"}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -178,7 +196,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Failed claim to claim quest."}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -211,7 +229,7 @@ const Boosters = () => {
           <ToastMesg
             title={"Currently there are no lost quests."}
             desc={"Comeback tomorrow!"}
-            img={"/icons/fail.svg"}
+            img={"/assets/icons/toast.fail.svg"}
           />,
           {
             icon: false,
@@ -235,7 +253,7 @@ const Boosters = () => {
         <ToastMesg
           title={"There was a problem in loading quests."}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -284,7 +302,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Booster Activated Successfully!"}
           desc={"Shards Booster claimed! Now multiply your tapping power."}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -307,7 +325,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Booster Claim Unsuccessful"}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -338,7 +356,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Booster Activated Successfully!"}
           desc={"Your automata is now active and running!"}
-          img={"/icons/success.svg"}
+          img={"/assets/icons/toast.success.svg"}
         />,
         {
           icon: false,
@@ -361,7 +379,7 @@ const Boosters = () => {
         <ToastMesg
           title={"Booster Claim Unsuccessful."}
           desc={errorMessage}
-          img={"/icons/fail.svg"}
+          img={"/assets/icons/toast.fail.svg"}
         />,
         {
           icon: false,
@@ -404,7 +422,7 @@ const Boosters = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/themes/background/main.png)`,
+            backgroundImage: `url(/assets/uxui/base.background_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -422,7 +440,7 @@ const Boosters = () => {
       >
         <div
           style={{
-            backgroundImage: `url(/themes/header.png)`,
+            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -505,7 +523,7 @@ const Boosters = () => {
                   className="h-[50px]"
                 />
               ) : (
-                <img src="/icons/lock.svg" alt="lock" />
+                <img src="/assets/icons/lock.svg" alt="lock" />
               )}
             </div>
           </div>
@@ -530,7 +548,7 @@ const Boosters = () => {
               <h2 className="text-[14px]">Energy 200%</h2>
             </div>
             <div className="flex justify-center items-center w-[8%]">
-              <img src="/icons/lock.svg" alt="lock" />
+              <img src="/assets/icons/lock.svg" alt="lock" />
             </div>
           </div>
           {/* SHARDS BOOSTER */}
@@ -567,7 +585,7 @@ const Boosters = () => {
                   className="h-[50px]"
                 />
               ) : (
-                <img src="/icons/lock.svg" alt="lock" />
+                <img src="/assets/icons/lock.svg" alt="lock" />
               )}
             </div>
           </div>
@@ -625,13 +643,19 @@ const Boosters = () => {
               alt="card"
               className="w-full h-full mx-auto"
             />
-            <div className="absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer">
+            <div
+              className={`absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer `}
+            >
               <img
-                src="/icons/close.svg"
+                src="/assets/icons/close.svg"
                 alt="close"
-                className="h-full w-full ml-auto -mt-6 -mr-6"
+                className={`h-full w-full ml-auto -mt-6 -mr-6 rounded-full ${
+                  isButtonGlowing === 4
+                    ? `glow-button-${mythSections[activeMyth]}`
+                    : ""
+                }`}
                 onClick={() => {
-                  setShowCard((prev) => !prev);
+                  handleCloseButtonClick(4);
                 }}
               />
             </div>
@@ -661,10 +685,17 @@ const Boosters = () => {
               >
                 <div className="flex justify-center items-center w-1/4 h-full">
                   <img
-                    src={`/images/multi-pay.png`}
+                    src={`/assets/myths-orbs/orb.multicolor-tiny.png`}
                     alt="orb"
                     className="w-[32px] h-[32px]"
                   />
+                  <div className="absolute mt-auto z-10">
+                    <img
+                      src="/assets/icons/arrow.up.svg"
+                      alt="upward"
+                      className="z-10 mt-3"
+                    />
+                  </div>
                 </div>
 
                 <div className="text-[16px] uppercase">Buy</div>
@@ -687,11 +718,15 @@ const Boosters = () => {
               />
               <div className="absolute top-0 right-0 h-10 w-10 cursor-pointer">
                 <img
-                  src="/icons/close.svg"
+                  src="/assets/icons/close.svg"
                   alt="close"
-                  className="w-[38px] h-[38px] mt-1"
+                  className={`w-[38px] h-[38px] mt-1 ${
+                    isButtonGlowing === 5
+                      ? `glow-button-${mythSections[activeMyth]}`
+                      : ""
+                  }`}
                   onClick={() => {
-                    setShowQuest(false);
+                    handleCloseQuestButtonClick(5);
                   }}
                 />
               </div>

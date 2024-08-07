@@ -6,7 +6,7 @@ const ProfileCard = (props) => {
     <div className="flex gap-[8px] text-center items-center bg-black w-full p-[15px] rounded-button">
       <div className="flex items-center gap-[20px] rounded-button w-full">
         <img
-          src="/icons/telegram.png"
+          src="/assets/icons/telegram.svg"
           alt="telegram"
           className="w-[32px] h-[32px]"
         />

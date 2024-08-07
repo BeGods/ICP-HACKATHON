@@ -67,48 +67,48 @@ body {
 
 @font-face {
   font-family: 'Symbols';
-  src: url('/fonts/symbols.woff2') format('woff2'),
-    url('/fonts/symbols.woff2') format('woff2');
+  src: url('/assets/fonts/begods-dingbats.woff2') format('woff2'),
+    url('/assets/fonts/begods-dingbats.woff2') format('woff2');
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
     font-family: 'Celtic';
-    src: url('/fonts/celtic.woff2') format('woff2'),
-      url('/fonts/celtic.woff2') format('woff2');
+    src: url('/assets/fonts/begods-celtic.woff2') format('woff2'),
+      url('/assets/fonts/begods-celtic.woff2') format('woff2');
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
   font-family: 'Egyptian';
-  src: url('/fonts/egyptian.woff2') format('woff2'),
-    url('/fonts/egyptian.woff2') format('woff2');
+  src: url('/assets/fonts/begods-egyptian.woff2') format('woff2'),
+    url('/assets/fonts/begods-egyptian.woff2') format('woff2');
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
     font-family: 'Greek';
-    src: url('/fonts/greek.woff2') format('woff2'),
-      url('/fonts/greek.woff2') format('woff2');
+    src: url('/assets/fonts/begods-greek.woff2') format('woff2'),
+      url('/assets/fonts/begods-greek.woff2') format('woff2');
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Norse';
-    src: url('/fonts/norse.woff2') format('woff2'),
-      url('/fonts/norse.woff2') format('woff2');
+    src: url('/assets/fonts/begods-norse.woff2') format('woff2'),
+      url('/assets/fonts/begods-norse.woff2') format('woff2');
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
   font-family: 'FOF';
-  src: url('/fonts/fof.woff2') format('woff2'),
-    url('/fonts/fof.woff2') format('woff2');
+  src: url('/assets/fonts/begods-forges.of.faith.woff2') format('woff2'),
+    url('/assets/fonts/begods-forges.of.faith.woff2') format('woff2');
   font-style: normal;
   font-display: swap;
 }

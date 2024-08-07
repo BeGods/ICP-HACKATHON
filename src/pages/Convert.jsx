@@ -5,7 +5,6 @@ import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import Footer from "../components/Footer";
 import ConvertButton from "../components/Buttons/ConvertButton";
 import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
-import ProgressBar from "../components/ProgressBar";
 import ConvertInfo from "../components/ConvertInfo";
 
 const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
@@ -19,6 +18,15 @@ const Convert = () => {
   const { setActiveMyth, setGameData, gameData } = useContext(MyContext);
   const [myth, setMyth] = useState(4);
   const mythData = gameData.mythologies;
+
+  const handleCloseButtonClick = (num) => {
+    setIsButtonGlowing(num);
+
+    setTimeout(() => {
+      setIsButtonGlowing(0);
+      setShowInfo((prev) => !prev);
+    }, 100);
+  };
 
   const handleButtonClick = (num) => {
     setIsButtonGlowing(num);
@@ -68,7 +76,7 @@ const Convert = () => {
           <ToastMesg
             title={"Orbs Successfully Converted!"}
             desc={"Well done! Keep the momentum going!"}
-            img={"/icons/success.svg"}
+            img={"/assets/icons/toast.success.svg"}
           />,
           {
             icon: false,
@@ -91,7 +99,7 @@ const Convert = () => {
           <ToastMesg
             title={"Failed to convert orbs."}
             desc={errorMessage}
-            img={"/icons/fail.svg"}
+            img={"/assets/icons/toast.fail.svg"}
           />,
           {
             icon: false,
@@ -139,11 +147,12 @@ const Convert = () => {
           zIndex: -1,
         }}
         className="background-wrapper"
+        ƒ
       >
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/themes/background/main.png)`,
+            backgroundImage: `url(/assets/uxui/base.background_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -161,7 +170,7 @@ const Convert = () => {
       >
         <div
           style={{
-            backgroundImage: `url(/themes/header.png)`,
+            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -235,7 +244,7 @@ const Convert = () => {
           //       }}
           //     >
           //       <img
-          //         src="/icons/info.svg"
+          //         src="/assets/icons/info.svg"
           //         alt="info"
           //         className="w-8 h-8 mr-4"
           //       />
@@ -249,13 +258,16 @@ const Convert = () => {
         <div
           className="absolute flex w-full pr-5 justify-end top-0"
           onClick={() => {
+            handleButtonClick(3);
             setShowInfo(true);
           }}
         >
           <img
-            src="/icons/info_card.svg"
+            src="/assets/icons/info.svg"
             alt="info"
-            className="w-[55px] h-[55px] mr-[15px] mt-7"
+            className={`w-[55px] h-[55px] rounded-full mr-[15px] mt-7 ${
+              isButtonGlowing === 3 ? `glow-button-other` : ""
+            }`}
           />
         </div>
         <div className="flex justify-center items-center w-[20%]">
@@ -275,7 +287,7 @@ const Convert = () => {
         </div>
         <div className="flex flex-col items-center justify-center w-full">
           <img
-            src="/themes/elements/wheel.png"
+            src="/assets/logos/forges.of.faith-480px.png"
             alt="wheel"
             className="w-full h-full"
           />
@@ -310,11 +322,13 @@ const Convert = () => {
             <ConvertInfo />
             <div className="absolute top-0 right-0 w-[55px] h-[55px]  cursor-pointer">
               <img
-                src="/icons/close.svg"
+                src="/assets/icons/close.svg"
                 alt="info"
-                className="w-full h-full ml-auto -mt-6 -mr-6"
+                className={`w-full h-full ml-auto -mt-6 -mr-6 rounded-full ${
+                  isButtonGlowing === 4 ? `glow-button-other` : ""
+                }`}
                 onClick={() => {
-                  setShowInfo((prev) => !prev);
+                  handleCloseButtonClick(4);
                 }}
               />
             </div>

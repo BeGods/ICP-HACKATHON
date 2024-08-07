@@ -29,7 +29,7 @@ const Footer = () => {
     >
       <div
         style={{
-          backgroundImage: `url(/themes/footer.png)`,
+          backgroundImage: `url(/assets/uxui/footer.paper_tiny.png)`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center center",
@@ -161,7 +161,7 @@ export default Footer;
 
 // <div
 //   style={{
-//     backgroundImage: `url(/themes/footer.png)`,
+//     backgroundImage: `url(/assets/uxui/footer.paper_tiny.png)`,
 //     backgroundRepeat: "no-repeat",
 //     backgroundSize: "cover",
 //     backgroundPosition: "center center",
