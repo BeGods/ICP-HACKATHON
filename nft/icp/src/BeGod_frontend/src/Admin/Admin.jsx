@@ -23,6 +23,7 @@ function Admin() {
       <SideBar/>
       <div className="flex-1 mx-auto">
         <Routes>
+          <Route path='/' element={<DashBoard/>} />
           <Route path='/dashboard' element={<DashBoard />} />
           <Route path='/collection' element={<Collection />} />
           <Route path='/collection/create' element={<CreateCollection />} />

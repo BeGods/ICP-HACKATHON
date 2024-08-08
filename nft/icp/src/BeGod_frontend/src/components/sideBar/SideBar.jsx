@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   IconButton,
@@ -7,17 +7,16 @@ import {
   Flex,
   Icon,
   useColorModeValue,
-  Text,
   Drawer,
   DrawerContent,
   useDisclosure,
 } from '@chakra-ui/react';
-import { MdOutlineDashboard } from 'react-icons/md';
+import { MdOutlineDashboard, MdLogout } from 'react-icons/md';
 import { LuCopyPlus } from 'react-icons/lu';
 import { CiUser } from 'react-icons/ci';
 import { FiMenu } from 'react-icons/fi';
-import { MdLogout } from 'react-icons/md';
 import { CopyIcon } from '@chakra-ui/icons';
+import { useLocation } from 'react-router-dom';
 
 const sideBarData = [
   {
@@ -39,6 +38,7 @@ const sideBarData = [
 
 export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
   return (
     <Box h={{ base: "fit-content", md: "100vh" }} bg={useColorModeValue('#161618', '#29292C')}>
       <SidebarContent onClose={onClose} display={{ base: 'none', md: 'block' }} />
@@ -53,7 +53,6 @@ export default function SimpleSidebar() {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
       <MobileNav display={{ base: 'flex', md: 'none' }} onOpen={onOpen} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {/* Content */}
@@ -63,6 +62,9 @@ export default function SimpleSidebar() {
 }
 
 function SidebarContent({ onClose, ...rest }) {
+  const loc = useLocation();
+  const location = loc.pathname;
+  const[hovered,setHovered]=useState(false);
   return (
     <Box
       bg={useColorModeValue('#29292C', 'gray.900')}
@@ -73,11 +75,13 @@ function SidebarContent({ onClose, ...rest }) {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <CloseButton display={{ base: 'flex', md: 'none' }} color="white" onClick={onClose} />
       </Flex>
-      {sideBarData.map((link) => (
-        <NavItem key={link.text} icon={link.icon} href={link.Link}>
-          {link.text}
-        </NavItem>
-      ))}
+      <div onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}>
+        {sideBarData.map((link) => (
+          <NavItem key={link.text} icon={link.icon} href={link.Link} isActive={location.includes(link.Link)} hovered={hovered}>
+            {link.text}
+          </NavItem>
+        ))}
+      </div>
       <div className='flex items-center justify-start gap-x-8 px-4 text-white mt-[50vh]'>
         <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
         <div className='space-y-2'>
@@ -101,13 +105,15 @@ SidebarContent.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function NavItem({ icon, children, href, ...rest }) {
+function NavItem({ icon, children, href, isActive,hovered, ...rest }) {
   return (
     <Box
       as="a"
       href={href}
       style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}>
+      _focus={{ boxShadow: 'none' }}
+      {...rest}
+    >
       <Flex
         align="center"
         p="4"
@@ -116,11 +122,11 @@ function NavItem({ icon, children, href, ...rest }) {
         role="group"
         color="white"
         cursor="pointer"
+        bg={isActive && !hovered ? '#FCD37B' : ''}
         _hover={{
           bg: '#FCD37B',
           color: 'black',
-        }}
-        {...rest}>
+        }}>
         {icon && (
           <Icon
             mr="4"
@@ -133,7 +139,6 @@ function NavItem({ icon, children, href, ...rest }) {
         )}
         {children}
       </Flex>
-
     </Box>
   );
 }
@@ -142,6 +147,7 @@ NavItem.propTypes = {
   icon: PropTypes.elementType.isRequired,
   children: PropTypes.node.isRequired,
   href: PropTypes.string.isRequired,
+  isActive: PropTypes.bool.isRequired,
 };
 
 function MobileNav({ onOpen, ...rest }) {

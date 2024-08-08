@@ -20,7 +20,7 @@ function Users() {
       <Box mt='5%' mx={{ base: '4%', md: '10%' }}>
         <Input
           placeholder='Search'
-          w={{ base: '50%', sm:'90%', md: '948px' }}
+          w={{ base: '50%', sm: '90%', md: '948px' }}
           h='35px'
           border='1px'
           borderColor='white'
@@ -28,7 +28,7 @@ function Users() {
           p='4'
         />
       </Box>
-      <Box w={{ base: '45%',sm:'83%', md: '948px' }} mx={{ base: '4%', md: '10%' }} mt='5%'>
+      <Box w={{ base: '45%', sm: '83%', md: '948px' }} mx={{ base: '4%', md: '10%' }} mt='5%'>
         <TableContainer>
           <Table variant='simple'>
             <Thead bg='#FCD37B'>
@@ -119,14 +119,15 @@ function Users() {
             </Tbody>
           </Table>
         </TableContainer>
+        <Box mt='5%' style={{ display: "flex", flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+          <Button mr='2'>&lt;</Button>
+          <Button bg='#FCD37B' color='black' border='1px' borderColor='black'>
+            1
+          </Button>
+          <Button ml='2'>&gt;</Button>
+        </Box>
       </Box>
-      <Box mt='5%' marginLeft={{base:"-50%",sm:'0%',md:"0"}} display='flex' justifyContent='center'>
-        <Button mr='2'>&lt;</Button>
-        <Button bg='#FCD37B' color='black' border='1px' borderColor='black'>
-          1
-        </Button>
-        <Button ml='2'>&gt;</Button>
-      </Box>
+
     </Box>
   );
 }

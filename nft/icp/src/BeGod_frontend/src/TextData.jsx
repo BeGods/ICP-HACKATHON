@@ -97,7 +97,4 @@ export const collection = {
             text2: "Collection",
         },
     ],
-
-
-
 }
