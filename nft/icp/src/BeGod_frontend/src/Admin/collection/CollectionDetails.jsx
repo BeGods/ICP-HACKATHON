@@ -14,19 +14,18 @@ function CollectionDetails() {
   }
   const navigate = useNavigate();
   const { heading, img, detail, collectionId, heading2, NftList } = filteredCollection.CollectionDetails
-  const [hoveredIndex, setHoveredIndex] = useState(null)
   return (
     <div className=' h-screen overflow-y-scroll m-auto md:custome_max_width'>
       <div className=' space-y-4'>
         <div className='flex justify-start w-[35%] md:w-11/12 pt-9 hover:cursor-pointer'>
           <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
         </div>
-        <div className='flex justify-end w-[35%] sm:w-[80%] md:w-11/12'>
+        <div className='flex justify-end w-[95%] sm:w-[90%] md:w-11/12'>
           <YellowButton>
             Remove Collection
           </YellowButton>
         </div>
-        <div className='flex flex-col md:flex-row gap-x-8 items-center bg-[#414141] w-[35%] sm:w-[80%] md:w-11/12 px-8 py-4 text-[#FFFFFF] justify-center'>
+        <div className='flex flex-col md:flex-row gap-x-8 items-center bg-[#414141] w-[95%] sm:w-[90%] md:w-11/12 px-8 py-4 text-[#FFFFFF] justify-center rounded-md'>
           <img className='w-32 h-32' src={img} alt="" />
           <div className='space-y-4'>
             <div className='flex justify-between'>
@@ -38,11 +37,12 @@ function CollectionDetails() {
           </div>
         </div>
         {/* flipping card */}
-        <div className='w-[35%] md:w-11/12 text-white pb-12'>
-          <h1>{heading2}</h1>
-          <div className='w-[35%] sm:w-full md:w-full flex justify-between'>
+        <div className='w-full md:w-11/12 text-white pb-12'>
+          <h1 className='text-xl'>{heading2}</h1>
+          <div className='flex flex-row overflow-x-auto sm:flex-wrap justify-center gap-4 -ml-8 sm:ml-0'>
             {NftList.map((list, index) => (
-              <NftCard id={id} list={list} img2={img} key={index} />))}
+              <NftCard id={id} list={list} img2={img} key={index} />
+            ))}
           </div>
         </div>
       </div>

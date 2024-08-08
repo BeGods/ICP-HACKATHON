@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import ReactCardFlip from 'react-card-flip';
 
-const NftCard = ({ id, list, img2 }) => {
-    const [hovered, setHovered] = useState(false);
+const NftCard = ({ list, img2 }) => {
+    const [flip, setFlip] = useState(false);
 
     return (
-        <div className="nft-card">
-            <Link 
-                to={`/Admin/collection/collectionDetails/${id}/nft/${list.License_No}`}
-                onMouseEnter={() => setHovered(true)}
-                onMouseLeave={() => setHovered(false)}
+        <ReactCardFlip isFlipped={flip} flipDirection="vertical">
+            {/* Front Side */}
+            <div 
+                className='w-full h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] m-4 rounded-lg flex items-center justify-center cursor-pointer transition-transform duration-500'
+                onMouseEnter={() => setFlip(true)}
             >
-                <div className={`image-container ${hovered ? 'flipped' : ''}`}>
-                    <img src={list.img} alt="NFT" className="image front" />
-                    <img src={img2} alt="NFT Hover" className="image back" />
-                </div>
-            </Link>
-        </div>
+                <img 
+                    src={list.img} 
+                    alt="NFT Front" 
+                    className='w-[80%] h-[80%] object-cover rounded-lg'
+                />
+            </div>
+
+            {/* Back Side */}
+            <div 
+                className='w-full h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px]  m-4 rounded-lg flex items-center justify-center cursor-pointer transition-transform duration-500'
+                onMouseLeave={() => setFlip(false)}
+            >
+                <img 
+                    src={img2} 
+                    alt="NFT Back" 
+                    className='w-[80%] h-[80%] object-cover rounded-lg'
+                />
+            </div>
+        </ReactCardFlip>
     );
 };
 

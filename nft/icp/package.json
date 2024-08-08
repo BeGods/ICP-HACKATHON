@@ -14,5 +14,8 @@
   "type": "module",
   "workspaces": [
     "src/BeGod_frontend"
-  ]
+  ],
+  "dependencies": {
+    "react-card-flip": "^1.2.3"
+  }
 }
