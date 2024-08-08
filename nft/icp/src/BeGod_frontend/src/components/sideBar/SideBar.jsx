@@ -82,7 +82,7 @@ function SidebarContent({ onClose, ...rest }) {
           </NavItem>
         ))}
       </div>
-      <div className='flex items-center justify-start gap-x-8 px-4 text-white mt-[50vh]'>
+      <div className='flex items-center justify-start gap-x-8 px-2 text-white mt-[50vh]'>
         <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
         <div className='space-y-2'>
           <div className='flex gap-x-2'>
@@ -91,7 +91,7 @@ function SidebarContent({ onClose, ...rest }) {
               <Icon as={MdLogout} />
             </button>
           </div>
-          <div className='flex gap-x-2 items-center'>
+          <div className='flex items-center gap-2'>
             <p className='text-sm'>rfrnuv-fvfjuv-vnuvn</p>
             <CopyIcon />
           </div>
