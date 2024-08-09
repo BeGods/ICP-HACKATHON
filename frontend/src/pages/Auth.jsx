@@ -10,6 +10,8 @@ const Auth = (props) => {
   const [userData, setUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [showCaptcha, setShowCaptcha] = useState(false);
+  const [platform, setPlatform] = useState(null);
+  const [disableDesktop, setDisableDestop] = useState(false);
 
   const getUserData = async () => {
     if (tele) {
@@ -17,6 +19,7 @@ const Auth = (props) => {
         await tele.ready();
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
+        setPlatform(tele.platform);
         tele.setHeaderColor("#000000");
 
         if (user) {
@@ -60,57 +63,92 @@ const Auth = (props) => {
     }, 3000);
   }, []);
 
+  useEffect(() => {
+    if (
+      platform === "macos" ||
+      platform === "windows" ||
+      platform === "tdesktop" ||
+      platform === "web" ||
+      platform === "weba"
+    ) {
+      setShowCaptcha(false);
+      setDisableDestop(true);
+    } else {
+      setDisableDestop(false);
+    }
+  }, [platform]);
+
   return (
-    <div
-      style={{
-        background: "url(/images/main.png)",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        height: "100vh",
-        width: "100vw",
-        position: "fixed",
-        top: 0,
-        left: 0,
-      }}
-    >
-      {showCaptcha ? (
-        <Captcha auth={auth} />
+    <>
+      {disableDesktop ? (
+        <div
+          style={{
+            background: "url(/assets/uxui/begods.telegram.qrcode.jpg)",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            backgroundAttachment: "fixed",
+            height: "100vh",
+            width: "100vw",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            overflow: "hidden",
+          }}
+        ></div>
       ) : (
-        <div className="flex flex-col h-[100vh]">
-          <div className="flex justify-center items-center w-full leading-tight">
-            <div className="mt-2">
-              <h1
-                className="flex items-center gap-4 text-[50px] font-fof text-fof"
-                style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
-              >
-                FORGES
-              </h1>
-              <h1
-                className="flex items-center gap-4 text-[24px] font-fof text-fof ml-[80px] -mt-3"
-                style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
-              >
-                OF
-              </h1>
-              <h1
-                className="flex items-center gap-4 text-[50px] font-fof text-fof ml-[110px] -mt-3"
-                style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
-              >
-                FAITH
-              </h1>
+        <div
+          style={{
+            background: "url(/assets/uxui/fof.game.jpg)",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            height: "100vh",
+            width: "100vw",
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          {showCaptcha ? (
+            <Captcha auth={auth} />
+          ) : (
+            <div className="flex flex-col h-[100vh]">
+              <div className="flex justify-center items-center w-full leading-tight">
+                <div className="mt-2">
+                  <h1
+                    className="flex items-center gap-4 text-[50px] font-fof text-fof"
+                    style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
+                  >
+                    FORGES
+                  </h1>
+                  <h1
+                    className="flex items-center gap-4 text-[24px] font-fof text-fof ml-[80px] -mt-3"
+                    style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
+                  >
+                    OF
+                  </h1>
+                  <h1
+                    className="flex items-center gap-4 text-[50px] font-fof text-fof ml-[110px] -mt-3"
+                    style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
+                  >
+                    FAITH
+                  </h1>
+                </div>
+              </div>
+              <div className="flex flex-grow"></div>
+              <div className="flex justify-center items-center">
+                <img
+                  src="/assets/logos/battle.gods.black.svg"
+                  alt="logo"
+                  className="w-[65px] h-[75px] mb-8"
+                />
+              </div>
             </div>
-          </div>
-          <div className="flex flex-grow"></div>
-          <div className="flex justify-center items-center">
-            <img
-              src="/assets/logos/battle.gods.black.svg"
-              alt="logo"
-              className="w-[65px] h-[75px] mb-8"
-            />
-          </div>
+          )}
         </div>
       )}
-    </div>
+    </>
   );
 };
 

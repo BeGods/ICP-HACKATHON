@@ -7,7 +7,6 @@ import {
   claimShareReward,
   completeQuest,
 } from "../utils/api";
-import ProgressBar from "../components/ProgressBar";
 import QuestButton from "../components/Buttons/QuestButton";
 import {
   ChevronsLeft,
@@ -25,8 +24,6 @@ import Symbol from "../components/Symbol";
 import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
 import QuestSymbol from "../components/QuestCards/QuestSymbol";
 
-const tele = window.Telegram?.WebApp;
-
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
 const mythSections = ["celtic", "egyptian", "greek", "norse"];
 const symbols = {
@@ -43,6 +40,7 @@ const Quests = () => {
   const [isButtonGlowing, setIsButtonGlowing] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
+  const [secretInfo, setSecretInfo] = useState(null);
   const [currQuest, setCurrQuest] = useState(0);
   const {
     questsData,
@@ -53,12 +51,18 @@ const Quests = () => {
     setActiveMyth,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
-  const quests = categorizeQuestsByMythology(questsData)[activeMyth][
-    mythologies[activeMyth]
-  ].sort((a, b) => a.isQuestClaimed - b.isQuestClaimed);
+  const quests = categorizeQuestsByMythology(questsData)
+    [activeMyth][mythologies[activeMyth]].filter(
+      (item) => item?.secret !== true
+    )
+    .sort((a, b) => a.isQuestClaimed - b.isQuestClaimed);
   const completedQuests = quests.filter((item) => item.isQuestClaimed === true);
 
   const quest = quests[currQuest];
+
+  const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
+    mythologies[activeMyth]
+  ].filter((item) => item?.secret === true);
 
   const handleButtonClick = (num) => {
     setIsButtonGlowing(num);
@@ -68,10 +72,10 @@ const Quests = () => {
     }, 100);
   };
 
-  const handleClaimShareReward = async () => {
+  const handleClaimShareReward = async (id) => {
     const token = localStorage.getItem("accessToken");
     const questData = {
-      questId: quest._id,
+      questId: id,
     };
     try {
       await claimShareReward(questData, token);
@@ -96,7 +100,7 @@ const Quests = () => {
 
       // update quest data
       const updatedQuestData = questsData.map((item) =>
-        item._id === quest._id ? { ...item, isShared: true } : item
+        item._id === id ? { ...item, isShared: true } : item
       );
 
       // update game data
@@ -107,11 +111,15 @@ const Quests = () => {
       setQuestsData(updatedQuestData);
       setGameData(updatedGameData);
     } catch (error) {
-      console.log(error.message);
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
       toast.error(
         <ToastMesg
           title={"Failed to share quest."}
-          desc={error.message}
+          desc={errorMessage}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -382,7 +390,7 @@ const Quests = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/base.background_tiny.png)`,
+            backgroundImage: `url(/assets/uxui/base.background_tiny.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -462,7 +470,7 @@ const Quests = () => {
                 <div className="relative">
                   <div className="relative">
                     <img
-                      src={`/cards/${quest?.type}_raw.png`}
+                      src={`/assets/cards/320px-${quest?.type}_tiny.png`}
                       alt="card"
                       className={`w-full h-[75%] ${
                         !quest.isQuestClaimed && "grayscale"
@@ -573,7 +581,7 @@ const Quests = () => {
                 <div className="relative">
                   <div className="relative">
                     <img
-                      src={`/cards/${quest?.type}_raw.png`}
+                      src={`/assets/cards/320px-${quest?.type}_tiny.png`}
                       alt="card"
                       className={`w-full h-[75%] grayscale blur-sm`}
                     />
@@ -650,7 +658,7 @@ const Quests = () => {
             <div className="relative">
               <div className="h-full relative -mt-12">
                 <JigsawImage
-                  imageUrl={`/cards/${mythSections[activeMyth]}.quest.C07_raw.png`}
+                  imageUrl={`/assets/cards/320px-${secretQuests[0].type}_tiny.png`}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith
                   )}
@@ -664,11 +672,19 @@ const Quests = () => {
                         ? `glow-button-${mythSections[activeMyth]}`
                         : ""
                     }`}
+                    onClick={() => {
+                      handleButtonClick(5);
+                      setSecretInfo((prev) => !prev);
+                      setActiveCard(secretQuests[0].type);
+                    }}
                   />
                 </div>
               </div>
+              <div className="absolute flex justify-center items-center w-full -mt-2">
+                <div className="bg-black  h-[60px] w-[60px] rounded-full z-1"></div>
+              </div>
               <div
-                className="flex items-center justify-between h-[45px] w-[192px] mx-auto mt-[23px] border border-black bg-glass-black text-white font-montserrat rounded-button z-50 absolute top-0 left-0 right-0"
+                className="flex items-center justify-between h-[45px] w-[192px] mx-auto mt-[23px] border border-black bg-glass-black text-white font-montserrat rounded-button  absolute top-0 left-0 right-0"
                 style={{ top: "100%", transform: "translateY(-50%)" }}
               >
                 <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
@@ -712,12 +728,27 @@ const Quests = () => {
       </div>
       {/* Footer */}
       <Footer />
+      {secretInfo && (
+        <InfoCard
+          activeCard={activeCard}
+          isShared={secretQuests[0]?.isShared}
+          quest={secretQuests[0]}
+          handleClaimShareReward={() =>
+            handleClaimShareReward(secretQuests[0]._id)
+          }
+          handleShowInfo={() => {
+            setSecretInfo((prev) => !prev);
+          }}
+          activeMyth={activeMyth}
+          isButtonGlowing={isButtonGlowing}
+        />
+      )}
       {showInfo && (
         <InfoCard
           activeCard={activeCard}
           isShared={quest?.isShared}
           quest={quest}
-          handleClaimShareReward={handleClaimShareReward}
+          handleClaimShareReward={() => handleClaimShareReward(quest._id)}
           handleShowInfo={() => {
             setShowInfo((prev) => !prev);
           }}

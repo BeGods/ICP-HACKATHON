@@ -15,11 +15,18 @@ import OrbClaimCard from "../components/QuestCards/OrbClaimCard";
 import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import { calculateRemainingTime } from "../utils/getBoosterCard";
+import QuestSymbol from "../components/QuestCards/QuestSymbol";
+
+const symbols = {
+  greek: 4,
+  celtic: 2,
+  norse: 5,
+  egyptian: 1,
+};
 
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
 const mythSections = ["celtic", "egyptian", "greek", "norse"];
-
-const tele = window.Telegram?.WebApp;
+const boosterCards = ["earth", "air", "fire", "water"];
 
 const Boosters = () => {
   const [showCard, setShowCard] = useState(false);
@@ -109,7 +116,8 @@ const Boosters = () => {
       );
     } catch (error) {
       const errorMessage =
-        error.response?.data?.error ||
+        error.response.data.error ||
+        error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
       toast.error(
@@ -135,14 +143,13 @@ const Boosters = () => {
   const handleClaimQuest = async () => {
     const token = localStorage.getItem("accessToken");
     const questData = {
-      questId: lostQuest[quest]._id,
+      questId: lostQuest._id,
     };
     try {
       await claimLostQuest(questData, token);
+      setShowQuest(false);
       setActiveCard(lostQuest[quest]?.type);
       setShowClaim(true);
-      setShowPay(false);
-      setShowQuest(false);
 
       // update game data
       const updatedGameData = {
@@ -166,7 +173,7 @@ const Boosters = () => {
           };
         }),
       };
-      setShowQuest(false);
+
       setGameData(updatedGameData);
 
       toast.success(
@@ -222,8 +229,7 @@ const Boosters = () => {
       );
       if (response.lostQuests.length !== 0) {
         setShowQuest(true);
-        setLostQuest(response.lostQuests);
-        console.log(response.lostQuests);
+        setLostQuest(response.lostQuests[0]);
       } else {
         toast.success(
           <ToastMesg
@@ -245,7 +251,8 @@ const Boosters = () => {
       }
     } catch (error) {
       const errorMessage =
-        error.response?.data?.error ||
+        error.response.data.error ||
+        error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
 
@@ -317,7 +324,8 @@ const Boosters = () => {
       );
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message ||
+        error.response.data.error ||
+        error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
 
@@ -422,7 +430,7 @@ const Boosters = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/base.background_tiny.png)`,
+            backgroundImage: `url(/assets/uxui/base.background_tiny.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -483,6 +491,7 @@ const Boosters = () => {
             <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
           </div>
         </div>
+        {/* BOOSTER CARDS */}
         <div className="flex flex-col items-center justify-center w-full gap-[15px]">
           {/* AUTOMATA BOOSTER */}
           <div
@@ -502,11 +511,6 @@ const Boosters = () => {
             onTouchCancel={handleRemoveClick}
           >
             <div>
-              {/* <img
-                src="/icons/automata-bot.svg"
-                alt="Boosters shards"
-                className="h-[65px] w-[65px]"
-              /> */}
               <h1 className={`font-symbols text-[80px] p-0 -mt-7 -ml-2 `}>b</h1>{" "}
             </div>
             <div className={`flex flex-col flex-grow justify-center -ml-1 `}>
@@ -527,8 +531,38 @@ const Boosters = () => {
               )}
             </div>
           </div>
-
-          {/* LOST QUESTS BOOSTER */}
+          {/* ACTIVE LOST QUESTS BOOSTER */}
+          {/*
+          <div
+            className={`flex gap-1 border border-${
+              mythSections[activeMyth]
+            }-primary ${
+              isGlowing === 2 ? `glow-button-${mythSections[activeMyth]}` : ""
+            } rounded-button h-[90px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            onMouseDown={() => handleClick(2)}
+            onMouseUp={handleRemoveClick}
+            onMouseLeave={handleRemoveClick}
+            onTouchStart={() => handleClick(2)}
+            onTouchEnd={handleRemoveClick}
+            onTouchCancel={handleRemoveClick}
+          >
+            <div>
+              <h1 className="font-symbols text-[75px] p-0 -mt-6 -ml-2">Q</h1>
+            </div>
+            <div className={`flex flex-col flex-grow justify-center`}>
+              <h1 className="text-[18px]">LOST QUESTS</h1>
+              <h2 className="text-[14px]">Energy 200%</h2>
+            </div>
+            <div className="flex justify-center items-center w-[8%]">
+              <ChevronRight
+                onClick={() => {
+                  handleLostQuest();
+                }}
+                className="h-[50px]"
+              />
+            </div>
+          </div> */}
+          {/* DISABLED LOST QUESTS BOOSTER */}
           <div
             className={`flex gap-1 border border-cardsGray ${
               isGlowing === 2 ? `glow-button-${mythSections[activeMyth]}` : ""
@@ -589,30 +623,6 @@ const Boosters = () => {
               )}
             </div>
           </div>
-          {/* <div
-            className={`flex gap-1 border border-${
-              mythSections[activeMyth]
-            }-primary ${
-              isGlowing === 2 ? `glow-button-${mythSections[activeMyth]}` : ""
-            } rounded-button h-[100px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
-            onMouseDown={() => handleClick(2)}
-            onMouseUp={handleRemoveClick}
-            onMouseLeave={handleRemoveClick}
-            onTouchStart={() => handleClick(2)}
-            onTouchEnd={handleRemoveClick}
-            onTouchCancel={handleRemoveClick}
-          >
-            <div>
-              <h1 className="font-symbols text-[75px] p-0 -mt-6 -ml-2">Q</h1>
-            </div>
-            <div className={`flex flex-col flex-grow justify-center`}>
-              <h1 className="text-[18px]">LOST QUESTS</h1>
-              <h2 className="text-[14px]">Energy 200%</h2>
-            </div>
-            <div className="flex justify-center items-center w-[8%]">
-              <ChevronRight onClick={handleLostQuest} className="h-[50px]" />
-            </div>
-          </div> */}
         </div>
         <div className="flex justify-center items-center w-[20%]">
           <div
@@ -639,10 +649,13 @@ const Boosters = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="relative w-[72%] rounded-lg shadow-lg mt-12">
             <img
-              src={`/cards/${activeCard + "." + mythSections[activeMyth]}.png`}
+              src={`/assets/cards/320px-${
+                activeCard + "." + boosterCards[activeMyth]
+              }1_tiny.png`}
               alt="card"
               className="w-full h-full mx-auto"
             />
+
             <div
               className={`absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer `}
             >
@@ -709,45 +722,139 @@ const Boosters = () => {
       {/* lost quests card */}
       {showQuest && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
-          <div className="w-[72%] rounded-lg shadow-lg mt-10">
+          <div>
             <div className="relative">
               <img
-                src={`/cards/${lostQuest[quest]?.type}_off.png`}
+                src={`/assets/cards/320px-${lostQuest.type}_tiny.png`}
                 alt="card"
-                className="w-full h-[75%]"
+                className={`w-full h-[75%] grayscale blur-sm`}
               />
-              <div className="absolute top-0 right-0 h-10 w-10 cursor-pointer">
-                <img
-                  src="/assets/icons/close.svg"
-                  alt="close"
-                  className={`w-[38px] h-[38px] mt-1 ${
-                    isButtonGlowing === 5
-                      ? `glow-button-${mythSections[activeMyth]}`
-                      : ""
-                  }`}
-                  onClick={() => {
-                    handleCloseQuestButtonClick(5);
-                  }}
-                />
+              <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
+                <div className="flex w-full">
+                  <div className="flex flex-grow">
+                    <div className="flex w-full mt-2 ml-[0.7375rem] font-symbols text-white text-[2rem]">
+                      {Object.entries(lostQuest.requiredOrbs).map(
+                        ([key, value]) => (
+                          <div className="flex" key={key}>
+                            {Array.from({ length: value }, (_, index) => (
+                              <div
+                                key={index}
+                                className={`flex relative text-center justify-center items-center w-[45px] -ml-1.5 rounded-full glow-icon-${key.toLowerCase()}`}
+                              >
+                                <img
+                                  src="/assets/myths-orbs/orb.base-tiny.png"
+                                  alt="orb"
+                                  className={`filter-orbs-${key.toLowerCase()} }`}
+                                />
+                                <span
+                                  className={`absolute z-1 text-[25px] ${
+                                    key.toLowerCase() === "egyptian" &&
+                                    "ml-[2px]"
+                                  } ${
+                                    key.toLowerCase() === "greek" && "ml-[5px]"
+                                  }`}
+                                >
+                                  {symbols[key.toLowerCase()]}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex absolute w-full justify-end">
+                    <img
+                      src="/assets/icons/close.svg"
+                      alt="info"
+                      className={`w-[55px] h-[55px] ml-auto -mt-6 rounded-full -mr-6 ${
+                        isButtonGlowing === 3
+                          ? `glow-button-${mythSections[activeMyth]}`
+                          : ""
+                      }`}
+                      onClick={() => {
+                        handleButtonClick(3);
+                        setShowQuest(false);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div
+                  className={`flex relative items-center h-[19%] uppercase glow-card-${mythSections[activeMyth]} text-white`}
+                >
+                  <div
+                    style={{
+                      backgroundImage: `url(/assets/uxui/footer.paper_tiny.png)`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center center",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      height: "100%",
+                      width: "100%",
+                    }}
+                    className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
+                  />
+                  <div className="flex justify-between w-full h-full items-center px-3 z-10">
+                    <div>{lostQuest?.questName}</div>
+                    <div className="">
+                      <QuestSymbol myth={mythSections[activeMyth]} />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-
             <div
               onClick={handleClaimQuest}
               className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black z-50 text-white font-montserrat rounded-button`}
             >
-              <div className="flex justify-center items-center w-1/4 h-full">
-                <img
-                  src={`/images/multi-pay.png`}
-                  alt="orb"
-                  className="w-[32px] h-[32px]"
-                />
-              </div>
+              <div className="flex justify-center items-center w-1/4 h-full"></div>
               <div className="text-[16px] uppercase">Buy</div>
               <div className="flex justify-center items-center w-1/4  h-full"></div>
             </div>
           </div>
         </div>
+        // <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+        //   <div className="w-[72%] rounded-lg shadow-lg mt-10">
+        //     <div className="relative">
+        //       <img
+        //         src={`/cards/${lostQuest[quest]?.type}_off.png`}
+        //         alt="card"
+        //         className="w-full h-[75%]"
+        //       />
+        //       <div className="absolute top-0 right-0 h-10 w-10 cursor-pointer">
+        //         <img
+        //           src="/assets/icons/close.svg"
+        //           alt="close"
+        //           className={`w-[38px] h-[38px] mt-1 ${
+        //             isButtonGlowing === 5
+        //               ? `glow-button-${mythSections[activeMyth]}`
+        //               : ""
+        //           }`}
+        //           onClick={() => {
+        //             handleCloseQuestButtonClick(5);
+        //           }}
+        //         />
+        //       </div>
+        //     </div>
+
+        //     <div
+        //       onClick={handleClaimQuest}
+        //       className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black z-50 text-white font-montserrat rounded-button`}
+        //     >
+        //       <div className="flex justify-center items-center w-1/4 h-full">
+        //         <img
+        //           src={`/images/multi-pay.png`}
+        //           alt="orb"
+        //           className="w-[32px] h-[32px]"
+        //         />
+        //       </div>
+        //       <div className="text-[16px] uppercase">Buy</div>
+        //       <div className="flex justify-center items-center w-1/4  h-full"></div>
+        //     </div>
+        //   </div>
+        // </div>
       )}
 
       {showClaim && (
@@ -765,3 +872,6 @@ const Boosters = () => {
 };
 
 export default Boosters;
+// onClick={() => {
+//   handleCloseQuestButtonClick(5);
+// }}

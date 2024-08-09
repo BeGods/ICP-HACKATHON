@@ -6,7 +6,11 @@ const Symbol = ({ myth }) => {
       <div
         className={`flex justify-center items-center absolute z-10 filter-orbs-${myth}`}
       >
-        <img src={`/themes/orb.png`} alt="orb" className="w-[80%] h-[80%]" />
+        <img
+          src={`/assets/myths-orbs/orb.base-tiny.png`}
+          alt="orb"
+          className="w-[80%] h-[80%]"
+        />
       </div>
       <img
         src={`/assets/myths-orbs/mythology.${myth}.base.svg`}

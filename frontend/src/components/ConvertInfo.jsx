@@ -11,7 +11,7 @@ const ConvertInfo = () => {
   return (
     <div className="relative w-full h-full font-montserrat text-card">
       <img
-        src="/assets/cards/info_background_tiny.png"
+        src="/assets/cards/320px-info_background_tiny.png"
         alt="card"
         className="w-full h-full object-cover"
       />

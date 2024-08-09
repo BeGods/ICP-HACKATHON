@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Convert from "./Convert";
 import { MyContext } from "../context/context";
 import ProgressBar from "../components/ProgressBar";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ChevronDown, ChevronsLeft, ChevronsRight } from "lucide-react";
 import Footer from "../components/Footer";
 import {
   formatOrbsWithLeadingZeros,
@@ -12,9 +12,11 @@ import { startTapSession, updateGameData } from "../utils/api";
 import { hideBackButton, tapHaptick } from "../utils/teleBackButton";
 import Symbol from "../components/Symbol";
 import { calculateRemainingTime } from "../utils/getBoosterCard";
+import ProgressBarSVG from "../components/Progressbars/ProgressBarArc";
 
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
 const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
+const boosterCards = ["earth", "air", "fire", "water"];
 
 const tele = window.Telegram?.WebApp;
 
@@ -28,12 +30,13 @@ const Game = () => {
     energyLimit: myth.energyLimit,
     currShards: 0,
     shardslvl: myth.boosters.shardslvl,
-    isShardsClaimActive: myth.isShardsClaimActive,
-    isAutomataActive: myth.isAutomataActive,
+    isShardsClaimActive: myth.boosters.isShardsClaimActive,
+    automataStartTime: myth.boosters.automataStartTime,
     isAutomataActive: myth.boosters.isAutomataActive,
     shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
   }));
 
+  const [blackOrbs, setBlackOrbs] = useState(0);
   const [showCard, setShowCard] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const [mythStates, setMythStates] = useState(initialState);
@@ -44,6 +47,7 @@ const Game = () => {
   const { orbs, shards, energy } = mythStates[activeMyth >= 4 ? 0 : activeMyth];
   const [plusOnes, setPlusOnes] = useState([]);
   const timeoutRef = useRef(null);
+  const audioRef = useRef(null);
   const mythStatesRef = useRef(mythStates);
 
   const handleCloseButtonClick = (num) => {
@@ -107,8 +111,6 @@ const Game = () => {
     const { energy, shardslvl } = mythStates[activeMyth];
 
     if (energy > 0) {
-      window.navigator.vibrate(25);
-
       const x = e.clientX || e.touches[0].clientX;
       const y = e.clientY || e.touches[0].clientY;
       const newPlusOne = { x, y, id: Date.now() };
@@ -122,6 +124,11 @@ const Game = () => {
             if (newShards >= 1000) {
               newOrbs += Math.floor(newShards / 1000);
               newShards = newShards % 1000;
+            }
+
+            if (newOrbs >= 1000) {
+              setBlackOrbs((prev) => prev + Math.floor(newOrbs / 1000));
+              newOrbs = newOrbs % 1000;
             }
 
             return {
@@ -215,7 +222,11 @@ const Game = () => {
           shards: mythStatesRef.current[index].shards,
           energy: mythStatesRef.current[index].energy,
         }));
-        return { ...prevData, mythologies: newMythologies };
+        return {
+          ...prevData,
+          mythologies: newMythologies,
+          blackOrbs: prevData.blackOrbs + blackOrbs,
+        };
       });
     };
   }, []);
@@ -286,6 +297,31 @@ const Game = () => {
     hideBackButton(tele);
   }, []);
 
+  // useEffect(() => {
+  //   const audio = audioRef.current;
+  //   // `/assets/audio/sound.background.pulsing.ogg`;
+
+  //   if (audio) {
+  //     audio.src = `/assets/audio/sound.background.pulsing.ogg`;
+
+  //     audio.play();
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
   return (
     <>
       {activeMyth < 4 ? (
@@ -327,7 +363,7 @@ const Game = () => {
               }}
               className={`filter-paper-${mythSections[activeMyth]}`}
             />
-            <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 pr-10 -mt-1.5">
+            <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 pr-10 ">
               <h1 className={`glow-${mythSections[activeMyth]}`}>
                 {mythSections[activeMyth].toUpperCase()}
               </h1>
@@ -345,10 +381,17 @@ const Game = () => {
               </div>
             </div>
             <div
-              className="h-full ml-auto -mr-2 mt-1"
+              className="h-full relative ml-auto -mr-2 mt-1 pt-2"
               style={{ width: "18.5%" }}
             >
               <Symbol myth={mythSections[activeMyth]} />
+              <div className="absolute -mt-[150px] -ml-[46px]">
+                <ProgressBarSVG
+                  value={energy}
+                  max={gameData.mythologies[activeMyth].energyLimit}
+                  activeMyth={activeMyth}
+                />
+              </div>
             </div>
           </div>
 
@@ -447,7 +490,9 @@ const Game = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="relative w-[72%] rounded-lg shadow-lg mt-12">
             <img
-              src={`/cards/${activeCard + "." + mythSections[activeMyth]}.png`}
+              src={`/assets/cards/320px-${
+                activeCard + "." + boosterCards[activeMyth]
+              }1_tiny.png`}
               alt="card"
               className="w-full h-full mx-auto"
             />
@@ -466,7 +511,7 @@ const Game = () => {
               />
             </div>
 
-            {activeCard === "automata" && mythStates?.isAutomataActive ? (
+            {activeCard === "automata" && !mythStates?.isAutomataActive ? (
               <div
                 className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
               >
@@ -492,7 +537,198 @@ const Game = () => {
           </div>
         </div>
       )}
+      <audio ref={audioRef} loop />
     </>
+    // <>
+    //   {activeMyth < 4 ? (
+    //     <div
+    //       style={{
+    //         backgroundImage: `url(/assets/uxui/fof.forge.${mythSections[activeMyth]}_tiny.png)`,
+    //         backgroundRepeat: "no-repeat",
+    //         backgroundSize: "cover",
+    //         backgroundPosition: "center center",
+    //         height: "100vh",
+    //         width: "100vw",
+    //         position: "fixed",
+    //         top: 0,
+    //         left: 0,
+    //       }}
+    //       className="flex flex-col h-screen overflow-hidden"
+    //     >
+    //       {/* Header */}
+    //       <div className="relative flex justify-center">
+    //         <ProgressBar
+    //           value={energy}
+    //           max={gameData.mythologies[activeMyth].energyLimit}
+    //           activeMyth={activeMyth}
+    //         />
+    //         <div className="absolute bg-white rounded-full p-1 mt-1.5">
+    //           <ChevronDown className="" />
+    //         </div>
+    //       </div>
+    //       <div className="flex justify-between mt-5">
+    //         <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 ">
+    //           <div className="text-right font-medium font-montserrat text-[22px]">
+    //             {formatOrbsWithLeadingZeros(orbs)}{" "}
+    //             <span className={`text-${mythSections[activeMyth]}-text`}>
+    //               $ORB(S)
+    //             </span>
+    //           </div>
+    //           <div className="text-right font-medium font-montserrat -mt-1 text-[14px]">
+    //             {formatShardsWithLeadingZeros(shards)}{" "}
+    //             <span className={`text-${mythSections[activeMyth]}-text`}>
+    //               SHARDS
+    //             </span>
+    //           </div>
+    //         </div>
+    //         <div className="flex flex-col absolute top-0 right-0 mt-2">
+    //           {mythStates[activeMyth].isAutomataActive && (
+    //             <h1
+    //               onClick={() => {
+    //                 setShowCard(true);
+    //                 setActiveCard("automata");
+    //               }}
+    //               className="font-symbols text-[50px] p-0 ml-2  text-white"
+    //             >
+    //               B
+    //             </h1>
+    //           )}
+    //           {mythStates[activeMyth].shardsLastClaimedAt !== 0 && (
+    //             <h1
+    //               onClick={() => {
+    //                 setShowCard(true);
+    //                 setActiveCard("shard");
+    //               }}
+    //               className={`font-symbols text-[50px] p-0 ml-2 text-white ${
+    //                 mythStates[activeMyth].isAutomataActive && "-mt-6"
+    //               }`}
+    //             >
+    //               H
+    //             </h1>
+    //           )}
+    //         </div>
+    //       </div>
+
+    //       {/* Main */}
+    //       <div className="flex relative flex-grow justify-center items-center">
+    //         <div className="flex justify-center items-center w-[20%]">
+    //           <div
+    //             onClick={() => {
+    //               handleButtonClick(1);
+
+    //               setActiveMyth((prev) => (prev - 1 + 5) % 5);
+    //             }}
+    //             className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
+    //               isButtonGlowing === 1
+    //                 ? `glow-button-${mythSections[activeMyth]}`
+    //                 : ""
+    //             }`}
+    //           >
+    //             <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
+    //           </div>
+    //         </div>
+    //         <div className="flex flex-col items-center justify-center w-full">
+    //           {plusOnes.map((plusOne) => (
+    //             <span
+    //               key={plusOne.id}
+    //               className={`plus-one glow-${mythSections[activeMyth]}`}
+    //               style={{
+    //                 top: `${plusOne.y}px`,
+    //                 left: `${plusOne.x}px`,
+    //                 position: "absolute",
+    //                 zIndex: 99,
+    //               }}
+    //             >
+    //               +{mythStates[activeMyth].shardslvl}
+    //             </span>
+    //           ))}
+    //           <div
+    //             onMouseDown={handleStartSession}
+    //             onTouchStart={handleStartSession}
+    //             onTouchEnd={(e) => {
+    //               handleTap(e);
+    //             }}
+    //             className="flex justify-center items-center h-[450px] w-full rounded-full"
+    //           ></div>
+    //         </div>
+    //         <div className="flex justify-center items-center w-[20%]">
+    //           <div
+    //             onClick={() => {
+    //               handleButtonClick(2);
+
+    //               setActiveMyth((prev) => (prev + 1) % 5);
+    //             }}
+    //             className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
+    //               isButtonGlowing === 2
+    //                 ? `glow-button-${mythSections[activeMyth]}`
+    //                 : ""
+    //             }`}
+    //           >
+    //             <ChevronsRight color="white" className="h-[30px] w-[30px]" />
+    //           </div>
+    //         </div>
+    //       </div>
+
+    //       {/* Footer */}
+    //       {/* <Footer /> */}
+    //     </div>
+    //   ) : (
+    //     <Convert />
+    //   )}
+    //   {/* Booster card */}
+    //   {showCard && (
+    //     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    //       <div className="relative w-[72%] rounded-lg shadow-lg mt-12">
+    //         <img
+    //           src={`/assets/cards/320px-${
+    //             activeCard + "." + boosterCards[activeMyth]
+    //           }1_tiny.png`}
+    //           alt="card"
+    //           className="w-full h-full mx-auto"
+    //         />
+    //         <div className="absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer">
+    //           <img
+    //             src="/assets/icons/close.svg"
+    //             alt="close"
+    //             className={`h-full w-full ml-auto -mt-6 -mr-6 rounded-full ${
+    //               isButtonGlowing === 3
+    //                 ? `glow-button-${mythSections[activeMyth]}`
+    //                 : ""
+    //             }`}
+    //             onClick={() => {
+    //               handleCloseButtonClick(3);
+    //             }}
+    //           />
+    //         </div>
+
+    //         {activeCard === "automata" && mythStates?.isAutomataActive ? (
+    //           <div
+    //             className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
+    //           >
+    //             <div className="flex justify-center items-center w-1/4 h-full"></div>
+    //             <div className="text-[16px] uppercase">
+    //               {calculateRemainingTime(
+    //                 mythStates[activeMyth].automataStartTime
+    //               )}
+    //             </div>
+    //             <div className="flex justify-center items-center w-1/4  h-full"></div>
+    //           </div>
+    //         ) : (
+    //           <div className="flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2   bg-glass-black text-white font-montserrat rounded-button">
+    //             <div className="flex justify-center items-center w-1/4 h-full"></div>
+    //             <div className="text-[16px] uppercase">
+    //               {calculateRemainingTime(
+    //                 mythStates[activeMyth].shardsLastClaimedAt
+    //               )}
+    //             </div>
+    //             <div className="flex justify-center items-center w-1/4  h-full"></div>
+    //           </div>
+    //         )}
+    //       </div>
+    //     </div>
+    //   )}
+    //   <audio ref={audioRef} loop />
+    // </>
   );
 };
 
