@@ -17,7 +17,10 @@ import { CiUser } from 'react-icons/ci';
 import { FiMenu } from 'react-icons/fi';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import {logoutUser } from '../../redux/authSlice';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useSelector } from 'react-redux';
 const sideBarData = [
   {
     text: "Dashboard",
@@ -38,7 +41,7 @@ const sideBarData = [
 
 export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+
   return (
     <Box h={{ base: "fit-content", md: "100vh" }} bg={useColorModeValue('#161618', '#29292C')}>
       <SidebarContent onClose={onClose} display={{ base: 'none', md: 'block' }} />
@@ -64,7 +67,17 @@ export default function SimpleSidebar() {
 function SidebarContent({ onClose, ...rest }) {
   const loc = useLocation();
   const location = loc.pathname;
-  const[hovered,setHovered]=useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [Copied, setCopied] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const logoutHandler = () => {
+    dispatch(logoutUser())
+  }
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
   return (
     <Box
       bg={useColorModeValue('#29292C', 'gray.900')}
@@ -75,25 +88,30 @@ function SidebarContent({ onClose, ...rest }) {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <CloseButton display={{ base: 'flex', md: 'none' }} color="white" onClick={onClose} />
       </Flex>
-      <div onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}>
+      <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
         {sideBarData.map((link) => (
           <NavItem key={link.text} icon={link.icon} href={link.Link} isActive={location.includes(link.Link)} hovered={hovered}>
             {link.text}
           </NavItem>
         ))}
       </div>
-      <div className='flex items-center justify-start gap-x-8 px-2 text-white mt-[50vh]'>
+      <div className='flex items-center justify-start gap-x-4 px-2 text-white mt-[50vh]'>
         <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
         <div className='space-y-2'>
           <div className='flex gap-x-2'>
             <p className='text-base'>Admin</p>
-            <button>
+            <button onClick={() => logoutHandler()}>
               <Icon as={MdLogout} />
             </button>
           </div>
-          <div className='flex items-center gap-2'>
-            <p className='text-sm'>rfrnuv-fvfjuv-vnuvn</p>
-            <CopyIcon />
+          <div className='flex flex-col'>
+            <div>
+              <input value={`${user}`} readOnly className='text-white w-[90%] bg-inherit' />
+              <CopyToClipboard text={`${user}`} onCopy={handleCopy}>
+                <button><CopyIcon /></button>
+              </CopyToClipboard>
+            </div>
+            {Copied && <p>Copied!</p>}
           </div>
         </div>
       </div>
@@ -105,7 +123,7 @@ SidebarContent.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function NavItem({ icon, children, href, isActive,hovered, ...rest }) {
+function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
   return (
     <Box
       as="a"

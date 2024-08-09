@@ -16,6 +16,11 @@
     "src/BeGod_frontend"
   ],
   "dependencies": {
-    "react-card-flip": "^1.2.3"
+    "@reduxjs/toolkit": "^2.2.7",
+    "ic-auth": "^0.9.1",
+    "js-cookie": "^3.0.5",
+    "react-card-flip": "^1.2.3",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-redux": "^9.1.2"
   }
 }

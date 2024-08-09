@@ -1,5 +1,6 @@
+
 actor {
-  public query func greet(name : Text) : async Text {
-    return "Hello, " # name # "!";
+  public func icrc1_name() : async Text {
+    return "My ICRC1 Token";
   };
 };

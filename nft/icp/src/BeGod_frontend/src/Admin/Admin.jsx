@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import SideBar from '../components/sideBar/SideBar';
 import DashBoard from './DashBoard';
 import Collection from './collection/Collection';
@@ -8,27 +9,34 @@ import CollectionDetails from './collection/CollectionDetails';
 import NftDetails from './collection/NftDetails';
 import CreateCollection from './collection/CreateCollection';
 import UserDetails from './UserDetails';
-import { Icon } from '@chakra-ui/react';
-import { MdMenu } from "react-icons/md";
 
 function Admin() {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Access the authentication state
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  // Toggle sidebar visibility
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  // Conditional rendering based on isAuthenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />; // Redirect to the login page if not authenticated
+  }
+
   return (
     <div className='flex min-h-screen'>
-      <SideBar/>
+      <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />
       <div className="flex-1 mx-auto">
         <Routes>
-          <Route path='/' element={<DashBoard/>} />
+          <Route path='/' element={<DashBoard />} />
           <Route path='/dashboard' element={<DashBoard />} />
           <Route path='/collection' element={<Collection />} />
           <Route path='/collection/create' element={<CreateCollection />} />
           <Route path='/collection/collectionDetails/:id' element={<CollectionDetails />} />
-          <Route path='/collection/collectionDetails/:id/nft/:id' element={<NftDetails />} />
+          <Route path='/collection/collectionDetails/:collectionId/nft/:nftId' element={<NftDetails />} />
           <Route path='/users/' element={<Users />} />
           <Route path='/users/:id' element={<UserDetails />} />
         </Routes>
