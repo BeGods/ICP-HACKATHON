@@ -5,7 +5,7 @@ import ConvertInfo from "../components/ConvertInfo";
 const Test = ({ value }) => {
   return (
     <div className="flex h-screen w-screen justify-center items-center">
-      <ProgressBarArc />
+      <ProgressBarArc progress={22} />
     </div>
   );
 };

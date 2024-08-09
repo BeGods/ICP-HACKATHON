@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import ConvertButton from "../components/Buttons/ConvertButton";
 import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
 import ConvertInfo from "../components/ConvertInfo";
+import { toast } from "react-toastify";
+import ToastMesg from "../components/Toast/ToastMesg";
 
 const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse", "Other"];
@@ -91,7 +93,8 @@ const Convert = () => {
         );
       } catch (error) {
         const errorMessage =
-          error.response?.data?.error ||
+          error.response.data.error ||
+          error.response.data.message ||
           error.message ||
           "An unexpected error occurred";
 
@@ -152,7 +155,7 @@ const Convert = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/assets/uxui/base.background_tiny.png)`,
+            backgroundImage: `url(/assets/uxui/base.background_tiny.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",

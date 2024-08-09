@@ -32,7 +32,7 @@ const InfoCard = ({
         /> */}
         <div className="relative h-full w-full">
           <img
-            src={`/assets/cards/info_background_tiny.png`}
+            src={`/assets/cards/320px-info_background_tiny.png`}
             alt="card"
             className="w-full h-full mx-auto"
           />
@@ -48,7 +48,7 @@ const InfoCard = ({
               </div>
               <div className="flex absolute w-full justify-end">
                 <img
-                  src="/assets/assets/icons/close.svg"
+                  src="/assets/icons/close.svg"
                   alt="info"
                   className={`w-[55px] h-[55px] ml-auto rounded-full -mt-6 -mr-6 ${
                     isButtonGlowing == 1
@@ -61,10 +61,11 @@ const InfoCard = ({
                 />
               </div>
             </div>
-            <div className="flex mx-auto w-[75%] py-6">
+            <div className="flex mx-auto w-[55%] py-6">
               <img
-                src={`/images/frame.png`}
-                alt="card"
+                //320px-norse.quest.A02_info_painting_tiny.png
+                src={`/assets/cards/320px-${quest?.type}_info_painting_tiny.png`}
+                alt="info_painting"
                 className="w-full h-full mx-auto"
               />
             </div>

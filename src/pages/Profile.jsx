@@ -8,17 +8,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { toggleBackButton } from "../utils/teleBackButton";
 import ProfileCard from "../components/ProfileCard";
 import { MyContext } from "../context/context";
-
 import { connectTonWallet } from "../utils/api";
 import { toast } from "react-toastify";
 import ToastMesg from "../components/Toast/ToastMesg";
+import Avatar from "../components/Avatar";
 
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
   const { userData, setSection } = useContext(MyContext);
   const userFriendlyAddress = useTonAddress();
-  const { state } = useTonConnectModal();
+  const [isAddressSent, setIsAddressSent] = useState(false); // New state to track if the address was sent
   const [activeTab, setActiveTab] = useState(true);
   const [activeSection, setActiveSection] = useState(true);
 
@@ -48,61 +48,83 @@ const Profile = (props) => {
     );
   };
 
-  const handleConnectTon = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      await connectTonWallet({ tonAddress: userFriendlyAddress }, accessToken);
+  // const handleConnectTon = async () => {
+  //   const accessToken = localStorage.getItem("accessToken");
+  //   try {
+  //     await connectTonWallet({ tonAddress: userFriendlyAddress }, accessToken);
+  //     localStorage.setItem("tonnconnected", true);
+  //     setIsAddressSent(true); // Update the state after successful connection
+  //     localStorage.setItem("isAddressSent", "true"); // Persist state in localStorage
 
-      toast.success(
-        <ToastMesg
-          title={"Wallet conencted successfully!"}
-          desc={"Ton wallet connected successfully."}
-          img={"/assets/icons/toast.success.svg"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-    } catch (error) {
-      console.log(error);
-      toast.error(
-        <ToastMesg
-          title={"There was a problem connecting your wallet."}
-          desc={error.message}
-          img={"/assets/icons/toast.fail.svg"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-    }
-  };
-
-  useEffect(() => {
-    toggleBackButton(tele, () => {
-      setSection(0);
-    });
-  }, []);
+  //     toast.success(
+  //       <ToastMesg
+  //         title={"Wallet connected successfully!"}
+  //         desc={"Ton wallet connected successfully."}
+  //         img={"/assets/icons/toast.success.svg"}
+  //       />,
+  //       {
+  //         icon: false,
+  //         autoClose: 2000,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "colored",
+  //       }
+  //     );
+  //   } catch (error) {
+  //     const errorMessage =
+  //       error.response.data.error ||
+  //       error.response.data.message ||
+  //       error.message ||
+  //       "An unexpected error occurred";
+  //     toast.error(
+  //       <ToastMesg
+  //         title={"There was a problem connecting your wallet."}
+  //         desc={errorMessage}
+  //         img={"/assets/icons/toast.fail.svg"}
+  //       />,
+  //       {
+  //         icon: false,
+  //         autoClose: 2000,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: true,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "colored",
+  //       }
+  //     );
+  //   }
+  // };
 
   // useEffect(() => {
-  //   if (state.status) {
-  //     handleConnectTon();
+  //   toggleBackButton(tele, () => {
+  //     setSection(0);
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   const isAddressSentFlag = localStorage.getItem("isAddressSent");
+
+  //   if (userFriendlyAddress && !isAddressSent && !isAddressSentFlag) {
+  //     handleConnectTon(); // Only connect if the address hasn't been sent before
   //   }
-  // }, [state.status]);
+  // }, [userFriendlyAddress, isAddressSent]);
+
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+  ];
+
+  const getRandomColor = () => {
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
 
   return (
     <div className="flex flex-col items-center w-full font-montserrat text-[10px] text-white bg-[#121212] h-screen overflow-auto px-[15px] py-2">
@@ -133,11 +155,14 @@ const Profile = (props) => {
         <>
           {/* PROFILE DETAILS */}
           <div className="flex justify-center items-center flex-col">
-            <img
+            {/* <img
               src="/images/profile.png"
               alt="profile"
-              className="h-[100px] w-[100px] mt-4"
-            />
+              className="h-[100px] w-[100px] mt-4  rounded-full"
+            /> */}
+            <div className="w-[100px] h-[100px] mt-4">
+              <Avatar name={"daniel"} profile={1} />
+            </div>
             <h1 className="text-[14px] mt-2">
               {userData.telegramUsername.toUpperCase()}
             </h1>

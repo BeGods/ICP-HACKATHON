@@ -1,4 +1,5 @@
 import React from "react";
+import Avatar from "./Avatar";
 
 const LeaderboardItem = ({ rank, name, totalOrbs }) => {
   return (
@@ -7,11 +8,14 @@ const LeaderboardItem = ({ rank, name, totalOrbs }) => {
         #{rank}
       </div>
       <div className="flex gap-4 items-center  w-full">
-        <img
+        {/* <img
           src="/images/profile.png"
           alt="profile"
           className="h-[35px] w-[35px]"
-        />
+        /> */}
+        <div className="h-[35px] w-[35px]">
+          <Avatar name={name} className="h-full w-full" profile={0} />
+        </div>
         <h1>{name}</h1>
       </div>
       <div className="flex flex-col justify-center items-center text-[14px] w-2/5 h-full">

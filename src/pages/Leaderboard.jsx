@@ -3,6 +3,7 @@ import { toggleBackButton } from "../utils/teleBackButton";
 import LeaderboardItem from "../components/LeaderboardItem";
 import { fetchLeaderboard } from "../utils/api";
 import { MyContext } from "../context/context";
+import Avatar from "../components/Avatar";
 
 const tele = window.Telegram?.WebApp;
 
@@ -11,6 +12,10 @@ const Leaderboard = (props) => {
   const [activeTab, setActiveTab] = useState(true);
   const [leaderboard, setLeaderboard] = useState([]);
   const [squad, setSquad] = useState([]);
+
+  const getRandomColor = () => {
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
 
   const getLeaderboardData = async () => {
     const accessToken = localStorage.getItem("accessToken");
@@ -106,11 +111,13 @@ const Leaderboard = (props) => {
           #{userData.overallRank}
         </div>
         <div className="flex items-center gap-4 w-full">
-          <img
-            src="/images/profile.png"
-            alt="profile"
-            className="h-[35px] w-[35px]"
-          />
+          <div className="h-[35px] w-[35px]">
+            <Avatar
+              name={userData.telegramUsername}
+              className="h-full w-full"
+              profile={0}
+            />
+          </div>
           <h1>{userData.telegramUsername}</h1>
         </div>
         <div className="flex flex-col justify-center items-center text-[14px] w-2/5 h-full">
