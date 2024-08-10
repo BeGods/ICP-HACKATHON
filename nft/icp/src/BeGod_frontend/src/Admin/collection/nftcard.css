@@ -1,0 +1,64 @@
+/* Container for the card */
+.maincontainer {
+    position: relative;
+    background: none;
+    margin: 20px auto;
+    perspective: 1000px; /* Add perspective to enable 3D effect */
+  }
+  
+  /* The card itself */
+  .thecard {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+  }
+  
+  /* Front and back faces of the card */
+  .thefront, .theback {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  /* The back face is rotated 180 degrees */
+  .theback {
+    transform: rotateY(180deg);
+  }
+  
+  /* Flip effect on hover */
+  .nftcard-container:hover .thecard {
+    transform: rotateY(180deg);
+  }
+  
+  /* Styles for front and back face contents */
+  .thefront img, .theback img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .thefront {
+    background: #ffc728; /* Front face background color */
+    color: #000; /* Front face text color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .theback {
+    background: #fafafa; /* Back face background color */
+    color: #333; /* Back face text color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
