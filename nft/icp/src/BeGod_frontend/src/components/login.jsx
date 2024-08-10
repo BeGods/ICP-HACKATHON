@@ -27,8 +27,7 @@ const Login = () => {
       } else if (provider === "Identity") {
         userObject = await IdentityLogin();
       }
-
-      if (userObject.agent._isAgent) {
+      if (userObject.agent._isAgent || userObject.agent.agent._isAgent ) {
         console.log("user details",userObject.principal)
         dispatch(setUserAndStore(userObject.principal));
         navigate('/admin');

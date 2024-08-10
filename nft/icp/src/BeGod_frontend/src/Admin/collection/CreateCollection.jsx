@@ -12,7 +12,7 @@ const CreateCollection = () => {
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
                 <h1 className='text-2xl text-white -mt-2'>Create Collection</h1>
             </div>
-            <form className='ml-[10%] sm:ml-[10%] md:ml-[85px] w-9/12 space-y-4'>
+            <form className='ml-[10%] sm:ml-[10%] md:ml-[85px] w-9/12 space-y-4 mt-4'>
                 <div className='flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]'>
                     <label htmlFor="" className='w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                         Collection Name:

@@ -106,9 +106,9 @@ function SidebarContent({ onClose, ...rest }) {
           </div>
           <div className='flex flex-col'>
             <div>
-              <input value={`${user}`} readOnly className='text-white w-[90%] bg-inherit' />
-              <CopyToClipboard text={`${user}`} onCopy={handleCopy}>
-                <button><CopyIcon /></button>
+              <input value={`${user.slice(0, 5)}......${user.slice(user.length - 6)}`} readOnly className='text-white w-[70%] bg-inherit' />
+              <CopyToClipboard text={`${user.slice(0, 5)}.....${user.slice(user.length - 6)}`} onCopy={handleCopy}>
+                <button className=''><CopyIcon /></button>
               </CopyToClipboard>
             </div>
             {Copied && <p>Copied!</p>}

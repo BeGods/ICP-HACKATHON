@@ -121,11 +121,11 @@ function Users() {
             </Table>
           </TableContainer>
           <Box mt='5%' style={{ display: "flex", flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <Button mr='2'>&lt;</Button>
+            <Button mr='2' bg='#29292C' color='white'>&lt;</Button>
             <Button bg='#FCD37B' color='black' border='1px' borderColor='black'>
               1
             </Button>
-            <Button ml='2'>&gt;</Button>
+            <Button ml='2' bg='#29292C' color='white'>&gt;</Button>
           </Box>
         </Box>
       </Box>
