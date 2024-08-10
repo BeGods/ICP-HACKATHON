@@ -39,7 +39,7 @@ function CollectionDetails() {
         {/* flipping card */}
         <div className='w-full md:w-11/12 text-white pb-12'>
           <h1 className='text-xl'>{heading2}</h1>
-          <div className='flex flex-row overflow-x-auto overflow-y-hidden sm:flex-wrap justify-center'>
+          <div className='flex flex-row overflow-x-auto overflow-y-hidden sm:flex-wrap justify-center gap-4'>
             {NftList.map((list, index) => (
               <NftCard id={id} list={list} img2={img} key={index} />
             ))}

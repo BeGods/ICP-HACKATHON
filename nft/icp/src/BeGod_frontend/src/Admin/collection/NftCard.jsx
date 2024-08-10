@@ -7,7 +7,7 @@ const NftCard = ({ id, list }) => {
     const [flip, setFlip] = useState(false);
 
     return (
-        <div className="nftcard-container sm:mt-12 md:mt-4">
+        <div className="nftcard-container sm:mt-12 md:mt-4 w-[20%] h-[30%]">
             <ReactCardFlip isFlipped={flip} flipDirection="horizontal">
                 {/* Front Side */}
                 <div
@@ -16,7 +16,7 @@ const NftCard = ({ id, list }) => {
                 >
                     <Link
                         to={`/Admin/collection/collectionDetails/${id}/nft/252739454`}
-                        className='sm:w-[60%] sm:h-[40%] md:w-[80%] md:h-[60%] flex items-center justify-center cursor-pointer'
+                        className='sm:w-[100%] sm:h-[60%] flex items-center justify-center cursor-pointer'
                     >
                         <img
                             src={list.img}
@@ -33,7 +33,7 @@ const NftCard = ({ id, list }) => {
                 >
                     <Link
                         to={`/Admin/collection/collectionDetails/${id}/nft/252739454`}
-                        className='sm:w-[60%] sm:h-[40%] md:w-[80%] md:h-[60%] flex items-center justify-center cursor-pointer'
+                        className='sm:w-[100%] sm:h-[60%] flex items-center justify-center cursor-pointer'
                     >
                         <img
                             src={list.img}
