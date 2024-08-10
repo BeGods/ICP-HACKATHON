@@ -18,7 +18,7 @@ import { FiMenu } from 'react-icons/fi';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {logoutUser } from '../../redux/authSlice';
+import {logoutUser, logoutUserAndClear } from '../../redux/authSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 const sideBarData = [
@@ -72,7 +72,7 @@ function SidebarContent({ onClose, ...rest }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const logoutHandler = () => {
-    dispatch(logoutUser())
+    dispatch(logoutUserAndClear());
   }
   const handleCopy = () => {
     setCopied(true);

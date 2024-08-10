@@ -2,10 +2,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from 'ic-auth';
 import { useNavigate } from "react-router-dom";
-import { setUser } from '../redux/authSlice';
+import {  setUserAndStore } from '../redux/authSlice';
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch=useDispatch()
   const navigate = useNavigate();
   const canisterID = "avqkn-guaaa-aaaaa-qaaea-cai";
   const whitelist = [canisterID];
@@ -29,7 +29,8 @@ const Login = () => {
       }
 
       if (userObject.agent._isAgent) {
-        dispatch(setUser(userObject.principal));
+        console.log("user details",userObject.principal)
+        dispatch(setUserAndStore(userObject.principal));
         navigate('/admin');
       }
 

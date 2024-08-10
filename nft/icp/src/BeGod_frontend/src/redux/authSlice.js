@@ -32,6 +32,8 @@ const authSlice = createSlice({
 export const { setUser, logoutUser } = authSlice.actions;
 
 export const setUserAndStore = (user) => (dispatch) => {
+  console.log("in set user and store")
+  console.log(user)
   dispatch(setUser(user));
   localStorage.setItem('auth', JSON.stringify({ isAuthenticated: true, user }));
 };
