@@ -73,21 +73,21 @@ const Login = () => {
             onClick={() => handleLogin("Plug")}
             className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#3a86ff] hover:text-[#3a86ff] border-[2px] border-transparent hover:shadow-neon"
           >
-            <img src="/plug2-removebg-preview.png" alt="Plug Wallet" className="w-[40%] h-[90%]" />
+            <img src="/plug2-removebg-preview.png" alt="Plug Wallet" className="w-[30%] h-[60%]" />
             <h1 className="text-[18px] font-semibold ml-4">Plug</h1>
           </button>
           <button
             onClick={() => handleLogin("Stoic")}
             className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#ffbe0b] hover:text-[#ffbe0b] border-[2px] border-transparent hover:shadow-neon"
           >
-            <img src="/stoic-removebg-preview.png" alt="Stoic Wallet" className="w-[30%] h-[70%]" />
+            <img src="/stoic-removebg-preview.png" alt="Stoic Wallet" className="w-[25%] h-[50%]" />
             <h1 className="text-[18px] font-semibold ml-4">Stoic</h1>
           </button>
           <button
             onClick={() => handleLogin("NFID")}
             className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#ff006e] hover:text-[#ff006e] border-[2px] border-transparent hover:shadow-neon"
           >
-            <img src="/nfid-removebg-preview.png" alt="NFID Wallet" className="w-[30%] h-[100%]" />
+            <img src="/nfid-removebg-preview.png" alt="NFID Wallet" className="w-[25%] h-[80%]" />
             <h1 className="text-[18px] font-semibold ml-4">NFID</h1>
           </button>
           <button
