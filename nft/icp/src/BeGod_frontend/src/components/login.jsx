@@ -45,8 +45,8 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-row items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
-      <div className="w-[40%] md:w-[30%] h-[60vh] md:h-[90vh] bg-black/60 backdrop-blur-lg shadow-lg rounded-l-md p-8">
+    <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+      <div className="w-[80%] sm:w-[30%] h-[60vh] md:h-[90vh] bg-black/60 backdrop-blur-lg shadow-lg rounded-l-md p-8 hidden sm:flex sm:flex-col">
         <h1 className="text-[36px] text-white font-bold md:pt-[10vh]">Get Started</h1>
         <h2 className="text-[22px] text-gray-400 font-semibold mt-4">Connect your wallet</h2>
         <p className="text-[18px] text-gray-500 mt-4 leading-relaxed">
@@ -71,28 +71,28 @@ const Login = () => {
         >
           <button
             onClick={() => handleLogin("Plug")}
-            className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#3a86ff] hover:text-[#3a86ff] border-[2px] border-transparent hover:shadow-neon"
+            className="w-[40%] sm:w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#3a86ff] hover:text-[#3a86ff] border-[2px] border-transparent hover:shadow-neon"
           >
             <img src="/plug2-removebg-preview.png" alt="Plug Wallet" className="w-[30%] h-[60%]" />
             <h1 className="text-[18px] font-semibold ml-4">Plug</h1>
           </button>
           <button
             onClick={() => handleLogin("Stoic")}
-            className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#ffbe0b] hover:text-[#ffbe0b] border-[2px] border-transparent hover:shadow-neon"
+            className="w-[40%] sm:w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#ffbe0b] hover:text-[#ffbe0b] border-[2px] border-transparent hover:shadow-neon"
           >
             <img src="/stoic-removebg-preview.png" alt="Stoic Wallet" className="w-[25%] h-[50%]" />
             <h1 className="text-[18px] font-semibold ml-4">Stoic</h1>
           </button>
           <button
             onClick={() => handleLogin("NFID")}
-            className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#ff006e] hover:text-[#ff006e] border-[2px] border-transparent hover:shadow-neon"
+            className="w-[40%] sm:w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#ff006e] hover:text-[#ff006e] border-[2px] border-transparent hover:shadow-neon"
           >
             <img src="/nfid-removebg-preview.png" alt="NFID Wallet" className="w-[25%] h-[80%]" />
             <h1 className="text-[18px] font-semibold ml-4">NFID</h1>
           </button>
           <button
             onClick={() => handleLogin("Identity")}
-            className="w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#8338ec] hover:text-[#8338ec] border-[2px] border-transparent hover:shadow-neon"
+            className="w-[40%] sm:w-[35%] h-[10vh] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 hover:border-[#8338ec] hover:text-[#8338ec] border-[2px] border-transparent hover:shadow-neon"
           >
             <img src="/favicon.ico" alt="Identity Wallet" className="w-[30%] h-[70%]" />
             <h1 className="text-[18px] font-semibold ml-4">Identity</h1>
