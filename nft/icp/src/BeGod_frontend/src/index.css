@@ -4,8 +4,10 @@
 
 :root{
    --background-color: #161618;
-
-
+}
+@font-face {
+   font-family: 'MyCustomFont';
+   src: url('/BeGods-all-Fonts/BeGods-Celtic.otf') format('truetype');
 }
 body{
    background-color: var(--background-color) !important;
@@ -57,5 +59,44 @@ body{
  
  .theback {
    transform: rotateY(180deg);
+ }
+ /* Global stylesheet or inline style */
+.hide-scrollbar::-webkit-scrollbar {
+   display: none;
+ }
+ 
+ .hide-scrollbar {
+   -ms-overflow-style: none;  /* IE and Edge */
+   scrollbar-width: none;  /* Firefox */
+ }
+ 
+
+ /* collection animation */
+ @keyframes fadeIn {
+   0% {
+     opacity: 0;
+   }
+   100% {
+     opacity: 1;
+   }
+ }
+ 
+ @keyframes slideInLeft {
+   0% {
+     transform: translateX(-50%);
+     opacity: 0;
+   }
+   100% {
+     transform: translateX(0);
+     opacity: 1;
+   }
+ }
+ 
+ .animate-fadeIn {
+   animation: fadeIn 1.2s ease-in-out;
+ }
+ 
+ .animate-slideInLeft {
+   animation: slideInLeft 1s ease-out;
  }
  
