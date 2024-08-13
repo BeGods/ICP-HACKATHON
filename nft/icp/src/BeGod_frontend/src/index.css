@@ -180,3 +180,91 @@ body{
     font-size: 14px; /* Adjust button font size for mobile */
   }
 }
+
+
+/* Image stacking of hero section */
+
+.stacked-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+  transform-origin: bottom left;
+}
+
+.stacked-image:nth-child(1) {
+  z-index: 4;
+}
+.stacked-image:nth-child(2) {
+  z-index: 3;
+}
+.stacked-image:nth-child(3) {
+  z-index: 2;
+}
+.stacked-image:nth-child(4) {
+  z-index: 1;
+}
+
+.image-stack:hover .stacked-image:nth-child(1) {
+  transform: rotate(40deg) translateX(-5%) translateY(-5%);
+}
+.image-stack:hover .stacked-image:nth-child(2) {
+  transform: rotate(30deg) translateX(-10%) translateY(-10%);
+}
+.image-stack:hover .stacked-image:nth-child(3) {
+  transform: rotate(20deg) translateX(-15%) translateY(-15%);
+}
+.image-stack:hover .stacked-image:nth-child(4) {
+  transform: rotate(10deg) translateX(-20%) translateY(-20%);
+}
+
+/* Background image on button background */
+.explore-button {
+  position: relative;
+  overflow: hidden;
+   /* Ensure the text color contrasts with the background */
+  transition: background-color 0.3s ease;
+}
+
+.explore-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/image/BGRoadmapTwo (1).png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -1; /* Ensure the background is behind the text */
+}
+
+.explore-button:hover::before {
+  opacity: 1;
+  z-index: 1; /* Bring the background image into view */
+}
+
+.explore-button:hover {
+  background-color: rgba(252, 211, 123, 0.8); /* Adjust background color if needed */
+}
+
+.explore-button span {
+  position: relative;
+  z-index: 2; /* Ensure the text is always on top */
+}
+
+/* svg rotation */
+.rotate-svg {
+  animation: rotate-animation 2s infinite linear; /* Continuous rotation */
+}
+
+@keyframes rotate-animation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -4,6 +4,8 @@ import YellowButton from './button/YellowButton'
 import TopSelling from './Landing Page Components/TopSelling'
 import Collections from './Landing Page Components/Collections'
 import Footer from './Footer'
+import Circle from './Landing Page Components/Circle'
+import CollectionTypes from './Landing Page Components/CollectionTypes'
 
 const Home = () => {
     return (
@@ -17,38 +19,28 @@ const Home = () => {
                     <h2 style={{ fontFamily: "QuickSand" }} className='w-[90vw] sm:w-[40vw] text-[15px] sm:text-[24px] font-[400] text-[#FFFFFF]'>
                         Dive into the Mythical World of Legendary Characters
                     </h2>
-                    <button className='w-[50vw] sm:w-[15vw] h-[4vh] bg-[#FCD37B] mt-4'>Explore Collection</button>
+                    <button className='w-[50vw] sm:w-[15vw] h-[4vh] bg-[#FCD37B] hover:text-white mt-4 explore-button'>
+                        <span>Explore Collection</span>
+                    </button>
                 </div>
                 <div className='w-[100%] sm:w-1/2 h-[40vh]'>
                     <div className='relative w-full h-[60vh] sm:h-[60vh] sm:w-[25vw] -mt-[60vh] sm:mt-8'>
                         <img src="/image/Group.png" alt="" className='h-full w-full' />
                     </div>
-                    <div className='hidden sm:flex absolute w-[15vw] h-[40vh] ml-[5%] -mt-[25%]'>
-                        <img src="/image/nft.png" alt="" className=' h-full w-full ' />
+                    <div className='relative'>
+                        <div className='hidden sm:flex absolute w-[15vw] h-[40vh] ml-[5%] -mt-[50%] image-stack'>
+                            <img src="/image/Component 27.png" alt="" className='stacked-image' />
+                            <img src="/image/Component 43.png" alt="" className='stacked-image' />
+                            <img src="/image/Component 45.png" alt="" className='stacked-image' />
+                            <img src="/image/Component 28.png" alt="" className='stacked-image' />
+                        </div>
                     </div>
                 </div>
             </div>
+            <Circle />
             <TopSelling />
             <Collections />
-            <div style={{ fontFamily: "QuickSand" }} className="flex mt-12 relative">
-                <div className="h-[500px] w-full sm:w-1/2 flex items-end">
-                    <img src="/image/Norse.png" alt="" className="h-full w-full" />
-                </div>
-                <div className="absolute bg-white bg-opacity-20 sm:bg-inherit w-[80%] sm:w-1/2 right-0 bottom-8 sm:bottom-40 sm:mr-32 p-4 flex flex-col text-white items-end sm:items-start gap-4">
-                    <h1 className="text-[20px] sm:text-[30px] font-[400] leading-[40px] text-right">
-                        Lorem ipsum
-                    </h1>
-                    <p className="w-[100%] sm:w-[57%] text-[15px] font-[400] leading-[20px] text-right sm:text-start">
-                        Lorem ipsum dolor sit amet consectetur. Suspendisse pretium vel elit
-                        pellentesque. Mattis varius urna scelerisque cum mattis vel.
-                    </p>
-                    <button className="w-[40vw] sm:w-[10vw] h-[4vh] bg-[#000000] flex items-center justify-center border-[1px] border-[#FFFFFF]">
-                        Norse Collection
-                    </button>
-                </div>
-            </div>
-
-
+            <CollectionTypes />
             <div className='flex flex-col sm:flex-row h-[80vh] sm:h-[48vh] bg-cover bg-center bg-no-repeat ' style={{ backgroundImage: `url("/image/background3.gif")` }}>
                 <h1 className='flex sm:hidden text-[30px] sm:text-[35px] font-[700] text-[#FFFFFF] ml-[30%] sm:ml-0'>About Artist</h1>
                 <div className='relative w-[80%] sm:w-1/2 flex items-center justify-center ml-[5%] sm:ml-0  sm:mt-0'>
