@@ -13,11 +13,11 @@ const TopSelling = () => {
   ];
 
   return (
-    <div style={{ fontFamily: "QuickSand" }} className="h-[45vh] w-full mt-[23vh] -mt-60 sm:-mt-60">
+    <div style={{ fontFamily: "QuickSand" }} className="h-[45vh] w-full mt-[23vh] -mt-60 sm:-mt-52 md:-mt-60">
       <h1 className="text-white text-2xl font-medium h-[5vh] w-full flex items-center justify-center mt-4">
         Top Selling
       </h1>
-      <div className="flex items-center sm:pl-[30%] sm:justify-center gap-4 overflow-x-auto px-4 mt-4 hide-scrollbar">
+      <div className="flex items-center md:pl-[30%] md:justify-center gap-4 overflow-x-auto px-4 mt-4 hide-scrollbar">
         {images.map((img, index) => (
           <div className="flip-card" key={index}>
             <div className="flip-card-inner">

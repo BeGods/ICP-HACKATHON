@@ -22,7 +22,7 @@ const Navbar = () => {
                 </button>
 
                 {/* Logo */}
-                <h1 className='sm:hidden text-2xl font-bold'>Logo</h1>
+                <h1 className='md:hidden text-2xl font-bold'>Logo</h1>
             </div>
 
             {/* Search Icon */}
@@ -45,7 +45,7 @@ const Navbar = () => {
             </div>
 
             {/* Desktop Menu */}
-            <div className='w-full h-[10vh] hidden sm:flex items-center justify-between text-white'>
+            <div className='w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
                 <div className='flex gap-[20vw] ml-[8vw] pt-8'>
                     <div style={{ fontFamily: 'MyCustomFont' }} className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF]'>
                         Logo

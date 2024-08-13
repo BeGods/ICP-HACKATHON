@@ -12,11 +12,11 @@ const Home = () => {
         <div>
             <Navbar />
             <div className='sm:flex'>
-                <div className='w-screen sm:w-1/2 h-[50vh] ml-[5vw] sm:ml-[8vw] mt-[10vh] sm:mt-[17vh]'>
-                    <h1 style={{ fontFamily: 'MyCustomFont' }} className='w-[80%] sm:w-[35vw] text-[30px] sm:text-[40px] font-[500] text-[#FFFFFF]'>
+                <div className='w-screen sm:w-1/2 h-[50vh] ml-[5vw] sm:ml-[8vw] mt-[10vh] md:mt-[17vh]'>
+                    <h1 style={{ fontFamily: 'MyCustomFont' }} className='w-[80%] sm:w-[100%] md:w-[35vw] text-[30px] sm:text-[40px] font-[500] text-[#FFFFFF]'>
                         Unleash the Divine: Collect and Own NFT Cards of the Gods!
                     </h1>
-                    <h2 style={{ fontFamily: "QuickSand" }} className='w-[90vw] sm:w-[40vw] text-[15px] sm:text-[24px] font-[400] text-[#FFFFFF]'>
+                    <h2 style={{ fontFamily: "QuickSand" }} className='w-[90vw] sm:w-[100%] md:w-[40vw] text-[15px] sm:text-[24px] font-[400] text-[#FFFFFF]'>
                         Dive into the Mythical World of Legendary Characters
                     </h2>
                     <button className='w-[50vw] sm:w-[15vw] h-[4vh] bg-[#FCD37B] hover:text-white mt-4 explore-button'>
@@ -24,11 +24,11 @@ const Home = () => {
                     </button>
                 </div>
                 <div className='w-[100%] sm:w-1/2 h-[40vh]'>
-                    <div className='relative w-full h-[60vh] sm:h-[60vh] sm:w-[25vw] -mt-[60vh] sm:mt-8'>
+                    <div className='relative w-full h-[60vh] sm:h-[60vh] md:w-[25vw] -mt-[60vh] sm:mt-8'>
                         <img src="/image/Group.png" alt="" className='h-full w-full' />
                     </div>
                     <div className='relative'>
-                        <div className='hidden sm:flex absolute w-[15vw] h-[40vh] ml-[5%] -mt-[50%] image-stack'>
+                        <div className='hidden sm:flex absolute w-[15vw] sm:w-[30vw] md:w-[15vw] h-[40vh] ml-[5%] sm:ml-[12%] md:ml-[5%] sm:-mt-[120%] md:-mt-[50%] -mt-[50%] image-stack'>
                             <img src="/image/Component 27.png" alt="" className='stacked-image' />
                             <img src="/image/Component 43.png" alt="" className='stacked-image' />
                             <img src="/image/Component 45.png" alt="" className='stacked-image' />
