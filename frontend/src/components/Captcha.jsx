@@ -6,7 +6,10 @@ const Captcha = ({ auth }) => {
   return (
     <div className="flex items-center select-none justify-center  h-full backdrop-blur-sm z-50">
       <div className="captchaBg h-[340px] w-fit py-3 px-3">
-        <Verify onSuccess={auth} imgUrl={"/assets/uxui/frogdog-captcha.png"} />
+        <Verify
+          onSuccess={auth}
+          imgUrl={"/assets/uxui/320px-frogdog.captcha_tiny.png"}
+        />
       </div>
     </div>
   );

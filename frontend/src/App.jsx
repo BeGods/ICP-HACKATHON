@@ -3,7 +3,6 @@ import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import Test from "./pages/Test";
-import Profile from "./pages/Profile";
 
 function App() {
   return (

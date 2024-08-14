@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300&family=Martel:wght@700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -157,7 +156,115 @@ body {
   0 0 1px white
 }
 
+.glow-white {
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black;
+}
+
+.glow-booster {
+  color: white; /* Text color */
+  text-shadow: 
+    /* Black outline */
+    2px 2px 0 black, /* Bottom-right */
+    -2px -2px 0 black, /* Top-left */
+    2px -2px 0 black, /* Bottom-left */
+    -2px 2px 0 black, /* Top-right */
+    /* Glowing effect */
+    0 0 20px var(--celtic-color),
+    0 0 30px var(--celtic-color),
+    0 0 40px var(--celtic-color);
+}
+
+.orb-glow{
+  text-shadow: 
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black;
+  filter: drop-shadow(0 0 1px black);
+}
+
+.fof-glow{
+  filter: drop-shadow(1px 1px 0px #DEAC80);
+}
+
+.footer-glow{
+  filter: drop-shadow(3px 3px 0px black);
+}
+
+.glow-black {
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white
+}
+
+
+.fof-white{
+  filter: drop-shadow(1px 1px 0px #DEAC80);
+}
+
+.glow-contour {
+  color: white; /* Text color */
+  text-shadow: 
+    1px 1px 0 black, 
+    -1px -1px 0 black, 
+    1px -1px 0 black, 
+    -1px 1px 0 black, 
+    2px 2px 0 black, 
+    -2px -2px 0 black, 
+    2px -2px 0 black, 
+    -2px 2px 0 black, 
+    4px 4px 0 black, 
+    -4px -4px 0 black, 
+    4px -4px 0 black, 
+    -4px 4px 0 black,
+    0 0 20px var(--celtic-color),
+    0 0 30px var(--celtic-color),
+    0 0 40px var(--celtic-color);
+}
+
+.glow-quest-celtic {
+  font-family: 'Celtic';
+  font-size: 18px;
+    text-shadow: 
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black
+}
+
+.glow-quest-egyptian {
+  font-family: 'Egyptian';
+  font-size: 22px;
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.glow-quest-greek {
+  font-family: 'Greek';
+  font-size: 24px;
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.glow-quest-norse {
+  font-family: 'Norse';
+  font-size: 24px;
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+
 /* Cards text glow */
+
+
 
 .glow-card-celtic {
   font-family: 'Celtic';
@@ -196,12 +303,40 @@ body {
 }
 
 
+
+/* .glow-orb-celtic {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  outline: 1px solid var(--celtic-color); 
+  box-shadow: 0 0 20px var(--celtic-color),
+              0 0 40px var(--celtic-color),
+              0 0 60px var(--celtic-color);
+} */
+
+.orb{
+  outline: 0px solid var(--celtic-color); 
+}
+
+.glow-card {
+  filter: drop-shadow(0 0 8px white);
+}
+
+.glow-orb-celtic {
+  filter: drop-shadow(0 0 10px var(--celtic-green-light));
+}
+
+.glow-orb-black {
+  filter: drop-shadow(0 0 10px black);
+}
+
 .glow-icon-celtic {
+  /* filter: drop-shadow(2px 2px 0px var(--celtic-color)); */
   text-shadow: 
     0 0 5px var(--celtic-color),
     0 0 5px var(--celtic-color),
     0 0 5px var(--celtic-color);
-  filter: drop-shadow(0 0 5px var(--celtic-color));
+  filter:  drop-shadow(0 0 5px var(--celtic-color));
 }
 
 .glow-icon-egyptian {
@@ -256,7 +391,6 @@ body {
   filter: drop-shadow(0 0 5px var(--celtic-color)); /* Slightly larger drop shadow */
   opacity: 0.9; /* Slightly reduce opacity to make it less dark */
 }
-
 
 .glow-button-egyptian {
   box-shadow: 
@@ -493,6 +627,11 @@ body {
   filter: brightness(110%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
 }
 
+.filter-card{
+  /* filter: brightness(98%) contrast(150%) grayscale(100%) saturate(122%); */
+  filter: brightness(66%) contrast(172%) grayscale(100%) saturate(151%);
+}
+
 /* Orbs */
 
 .filter-orbs-celtic {
@@ -539,39 +678,4 @@ body {
 .filter-paper-other{
   filter: brightness(75%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
 }
-
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  width: 200px;
-  height: 100px; /* Adjust according to the height of the pieces */
-  position: relative;
-}
-
-.piece {
-  width: 50px; /* Adjust according to the desired width of each piece */
-  height: 50px; /* Adjust according to the desired height of each piece */
-  border-radius: 999px 999px 0 0;
-  background: radial-gradient(50% 100% at bottom, #0000 80%, red 80.5%);
-  position: absolute;
-}
-
-.piece-1 { top: 0; left: 0; }
-.piece-2 { top: 0; left: 50px; }
-.piece-3 { top: 50px; left: 0; }
-.piece-4 { top: 50px; left: 50px; }
-
-.container::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 999px 999px 0 0;
-  background: radial-gradient(50% 100% at bottom, #0000 80%, red 80.5%);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
-}
-
 

@@ -12,7 +12,9 @@ const Auth = (props) => {
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [platform, setPlatform] = useState(null);
   const [disableDesktop, setDisableDestop] = useState(false);
+  const [lang, setLang] = useState(null);
 
+  // configure tma.auth
   const getUserData = async () => {
     if (tele) {
       try {
@@ -28,6 +30,7 @@ const Auth = (props) => {
           };
           const referCode = tele.initDataUnsafe?.start_param;
 
+          // configureDefaultLanguage(tele.initDataUnsafe.user.language_code);
           setUserData(userData);
           setReferralCode(referCode);
         } else {
@@ -41,6 +44,7 @@ const Auth = (props) => {
     }
   };
 
+  // authenticate
   const auth = async () => {
     try {
       const response = await authenticate(userData, referralCode);
@@ -53,16 +57,20 @@ const Auth = (props) => {
     }
   };
 
-  useEffect(() => {
-    getUserData();
-  }, []);
+  // detect default language
+  // const configureDefaultLanguage = (lang) => {
+  //   i18next.changeLanguage(lang);
+  // };
 
   useEffect(() => {
+    (async () => getUserData())();
+    // delay to show captcha
     setTimeout(() => {
       setShowCaptcha(true);
     }, 3000);
   }, []);
 
+  // detect device
   useEffect(() => {
     if (
       platform === "macos" ||
@@ -79,27 +87,25 @@ const Auth = (props) => {
   }, [platform]);
 
   return (
-    <>
+    <div className="bg-white flex h-screen w-screen text-wrap">
       {disableDesktop ? (
-        <div
-          style={{
-            background: "url(/assets/uxui/begods.telegram.qrcode.jpg)",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-            backgroundAttachment: "fixed",
-            height: "100vh",
-            width: "100vw",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            overflow: "hidden",
-          }}
-        ></div>
+        // TMA desktop view
+        <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
+          <img
+            src="/assets/uxui/320px-begods.telegram.qrcode.png"
+            alt="qr"
+            className="rounded-3xl h-1/2 fof-glow"
+          />
+          <h1 className="text-white w-2/3 font-medium mt-4 text-center">
+            We designed the BeGods app to be fully optimized for mobile use.
+            Simply scan the QR code or use Telegram to start playing!
+          </h1>
+        </div>
       ) : (
+        // TMA mobile view
         <div
           style={{
-            background: "url(/assets/uxui/fof.game.jpg)",
+            background: "url(/assets/uxui/480px-fof.game_tiny.png)",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -113,27 +119,14 @@ const Auth = (props) => {
           {showCaptcha ? (
             <Captcha auth={auth} />
           ) : (
-            <div className="flex flex-col h-[100vh]">
+            <div className="flex flex-col h-screen">
               <div className="flex justify-center items-center w-full leading-tight">
-                <div className="mt-2">
-                  <h1
-                    className="flex items-center gap-4 text-[50px] font-fof text-fof"
-                    style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
-                  >
-                    FORGES
-                  </h1>
-                  <h1
-                    className="flex items-center gap-4 text-[24px] font-fof text-fof ml-[80px] -mt-3"
-                    style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
-                  >
-                    OF
-                  </h1>
-                  <h1
-                    className="flex items-center gap-4 text-[50px] font-fof text-fof ml-[110px] -mt-3"
-                    style={{ textShadow: "-2px 4px 2px rgba(0, 0, 0, 1)" }}
-                  >
-                    FAITH
-                  </h1>
+                <div className="relative">
+                  <img
+                    src="/assets/uxui/forgesoffaith.svg"
+                    alt="fof"
+                    className="w-[200px] mt-4 fof-glow"
+                  />
                 </div>
               </div>
               <div className="flex flex-grow"></div>
@@ -141,14 +134,14 @@ const Auth = (props) => {
                 <img
                   src="/assets/logos/battle.gods.black.svg"
                   alt="logo"
-                  className="w-[65px] h-[75px] mb-8"
+                  className="w-[65px] h-[75px] mb-4"
                 />
               </div>
             </div>
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -17,12 +17,14 @@ import {
 import Footer from "../components/Footer";
 import JigsawImage from "../components/Pieces";
 import InfoCard from "../components/QuestCards/InfoCard";
+import PayCard from "../components/QuestCards/PayCard";
 import OrbClaimCard from "../components/QuestCards/OrbClaimCard";
 import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import Symbol from "../components/Symbol";
 import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
 import QuestSymbol from "../components/QuestCards/QuestSymbol";
+import { useTranslation } from "react-i18next";
 
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
 const mythSections = ["celtic", "egyptian", "greek", "norse"];
@@ -34,6 +36,7 @@ const symbols = {
 };
 
 const Quests = () => {
+  const { t } = useTranslation();
   const [showClaim, setShowClaim] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showPay, setShowPay] = useState(false);
@@ -56,10 +59,9 @@ const Quests = () => {
       (item) => item?.secret !== true
     )
     .sort((a, b) => a.isQuestClaimed - b.isQuestClaimed);
+
   const completedQuests = quests.filter((item) => item.isQuestClaimed === true);
-
   const quest = quests[currQuest];
-
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ].filter((item) => item?.secret === true);
@@ -72,6 +74,27 @@ const Quests = () => {
     }, 100);
   };
 
+  const handlePrev = () => {
+    if (currQuest > 0) {
+      setCurrQuest((prev) => prev - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currQuest < quests.length) {
+      setCurrQuest((prev) => prev + 1);
+    }
+  };
+
+  const handleActiveParts = (faith) => {
+    const activeParts = [];
+    for (let i = 0; i < faith; i++) {
+      activeParts.push(i);
+    }
+
+    return activeParts;
+  };
+
   const handleClaimShareReward = async (id) => {
     const token = localStorage.getItem("accessToken");
     const questData = {
@@ -82,8 +105,8 @@ const Quests = () => {
 
       toast.success(
         <ToastMesg
-          title={"Link Copied Successfully!"}
-          desc={"Share it on X to earn an extra $ORB"}
+          title={t("toasts.Quest_share.success.title")}
+          desc={t("toasts.Quest_share.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -118,8 +141,8 @@ const Quests = () => {
         "An unexpected error occurred";
       toast.error(
         <ToastMesg
-          title={"Failed to share quest."}
-          desc={errorMessage}
+          title={t("toasts.Quest_share.success.error")}
+          desc={t("toasts.Quest_share.success.error")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -167,8 +190,8 @@ const Quests = () => {
 
       toast.success(
         <ToastMesg
-          title={"Congratulations ypu earned an extra orb!"}
-          desc={"Orb credited to your account."}
+          title={t("toasts.Quest_orb_claim.success.title")}
+          desc={t("toasts.Quest_orb_claim.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -190,8 +213,8 @@ const Quests = () => {
 
       toast.error(
         <ToastMesg
-          title={"Failed to claim orbs."}
-          desc={errorMessage}
+          title={t("toasts.Quest_orb_claim.error.title")}
+          desc={t("toasts.Quest_orb_claim.error.desc")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -234,8 +257,8 @@ const Quests = () => {
 
         toast.error(
           <ToastMesg
-            title={"Failed claim to claim quest."}
-            desc={errorMessage}
+            title={t("toasts.Quest_complete.error.title")}
+            desc={t("toasts.Quest_complete.error.desc")}
             img={"/assets/icons/toast.fail.svg"}
           />,
           {
@@ -300,8 +323,8 @@ const Quests = () => {
 
       toast.success(
         <ToastMesg
-          title={"Quest claimed successfuly!"}
-          desc={"Enerbar bla blab bla"}
+          title={t("toasts.Quest_claim.success.title")}
+          desc={t("toasts.Quest_claim.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -324,8 +347,8 @@ const Quests = () => {
 
       toast.error(
         <ToastMesg
-          title={"Failed claim to claim quest."}
-          desc={errorMessage}
+          title={t("toasts.Quest_claim_InsufficientOrbs.error.title")}
+          desc={t("toasts.Quest_claim_InsufficientOrbs.error.desc")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -340,27 +363,6 @@ const Quests = () => {
         }
       );
     }
-  };
-
-  const handlePrev = () => {
-    if (currQuest > 0) {
-      setCurrQuest((prev) => prev - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currQuest < quests.length) {
-      setCurrQuest((prev) => prev + 1);
-    }
-  };
-
-  const handleActiveParts = (faith) => {
-    const activeParts = [];
-    for (let i = 0; i < faith; i++) {
-      activeParts.push(i);
-    }
-
-    return activeParts;
   };
 
   useEffect(() => {}, [questsData, showClaim, showPay]);
@@ -390,7 +392,7 @@ const Quests = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/base.background_tiny.jpg)`,
+            backgroundImage: `url(/assets/uxui/fof.base.background_tiny.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -408,7 +410,7 @@ const Quests = () => {
       >
         <div
           style={{
-            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
+            backgroundImage: `url(/assets/uxui/fof.header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -425,24 +427,23 @@ const Quests = () => {
           <Symbol myth={mythSections[activeMyth]} />
         </div>
         <div className="flex flex-col flex-grow justify-center items-end text-white  pr-5 -mt-1.5">
-          <h1 className={`glow-${mythSections[activeMyth]}`}>
-            {mythSections[activeMyth].toUpperCase()}
+          <h1 className={`glow-${mythSections[activeMyth]} uppercase`}>
+            {t(`mythologies.${mythSections[activeMyth]}`)}
           </h1>
-          <div className="text-right font-medium font-montserrat text-[22px] -mt-3">
+          <div className="text-right font-medium  text-[22px] -mt-3">
             {formatOrbsWithLeadingZeros(mythData[activeMyth].faith)}{" "}
-            <span className={`text-${mythSections[activeMyth]}-text`}>
-              FAITH
+            <span className={`text-${mythSections[activeMyth]}-text uppercase`}>
+              ${t(`keywords.faith`)}
             </span>
           </div>
-          <div className="text-right font-medium font-montserrat -mt-1 text-[14px]">
+          <div className="text-right font-medium  -mt-1 text-[14px]">
             {formatOrbsWithLeadingZeros(completedQuests.length)}/12{" "}
-            <span className={`text-${mythSections[activeMyth]}-text`}>
-              QUESTS
+            <span className={`text-${mythSections[activeMyth]}-text uppercase`}>
+              {t(`sections.quests`)}
             </span>
           </div>
         </div>
       </div>
-
       <div className="flex flex-grow justify-center items-center">
         <div className="flex justify-center items-center w-[20%]">
           <div
@@ -465,200 +466,129 @@ const Quests = () => {
         </div>
         <div className="flex items-center justify-center w-full">
           {currQuest < quests.length ? (
-            <>
-              {!showPay ? (
-                <div className="relative">
-                  <div className="relative">
-                    <img
-                      src={`/assets/cards/320px-${quest?.type}_tiny.png`}
-                      alt="card"
-                      className={`w-full h-[75%] ${
-                        !quest.isQuestClaimed && "grayscale"
-                      }`}
-                    />
-                    <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
-                      <div className="flex w-full">
-                        <div className="flex flex-grow">
-                          <div className="flex w-full mt-2 ml-[0.7375rem] font-symbols text-white text-[2rem]">
-                            {Object.entries(quest.requiredOrbs).map(
-                              ([key, value]) => (
-                                <div className="flex" key={key}>
-                                  {Array.from({ length: value }, (_, index) => (
-                                    <div
-                                      key={index}
-                                      className={`flex relative text-center justify-center items-center w-[45px] -ml-1.5 rounded-full glow-icon-${key.toLowerCase()}`}
+            <div className="relative">
+              <div className="relative">
+                <img
+                  src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}_tiny.png`}
+                  alt="card"
+                  className={`w-full h-[75%] ${
+                    !quest.isQuestClaimed && "grayscale"
+                  }`}
+                />
+                <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
+                  <div className="flex w-full">
+                    <div className="flex flex-grow">
+                      <div className="w-full  pl-2 mt-2">
+                        <div className="flex w-full">
+                          {Object.entries(quest.requiredOrbs).map(
+                            ([key, value]) => (
+                              <div className="flex " key={key}>
+                                {Array.from({ length: value }, (_, index) => (
+                                  <div
+                                    key={index}
+                                    className={`flex relative text-center justify-center items-center glow-icon-${key.toLowerCase()} max-w-[10vw]`}
+                                  >
+                                    <img
+                                      src="/assets/uxui/240px-orb.base-tiny.png"
+                                      alt="orb"
+                                      className={`filter-orbs-${key.toLowerCase()} `}
+                                    />
+                                    <span
+                                      className={`absolute z-1 opacity-50 orb-glow font-symbols text-white text-[2.3rem] mt-1 ${
+                                        key.toLowerCase() === "egyptian" &&
+                                        "ml-[2px]"
+                                      } ${
+                                        key.toLowerCase() === "greek" &&
+                                        "ml-[5px]"
+                                      }`}
                                     >
-                                      <img
-                                        src="/assets/myths-orbs/orb.base-tiny.png"
-                                        alt="orb"
-                                        className={`filter-orbs-${key.toLowerCase()} }`}
-                                      />
-                                      <span
-                                        className={`absolute z-1 text-[25px] ${
-                                          key.toLowerCase() === "egyptian" &&
-                                          "ml-[2px]"
-                                        } ${
-                                          key.toLowerCase() === "greek" &&
-                                          "ml-[5px]"
-                                        }`}
-                                      >
-                                        {symbols[key.toLowerCase()]}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex absolute w-full justify-end">
-                          <img
-                            src="/assets/icons/info.svg"
-                            alt="info"
-                            className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 rounded-full  ${
-                              isButtonGlowing === 3
-                                ? `glow-button-${mythSections[activeMyth]}`
-                                : ""
-                            }`}
-                            onClick={() => {
-                              handleButtonClick(3);
-                              setShowInfo((prev) => !prev);
-                              setActiveCard(quest?.type);
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div
-                        className={`flex relative items-center h-[19%] uppercase glow-card-${mythSections[activeMyth]} text-white`}
-                      >
-                        <div
-                          style={{
-                            backgroundImage: `url(/assets/uxui/footer.paper_tiny.png)`,
-                            backgroundRepeat: "no-repeat",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center center",
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            height: "100%",
-                            width: "100%",
-                          }}
-                          className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
-                        />
-                        <div className="flex justify-between w-full h-full items-center px-3 z-10">
-                          <div>{quest?.questName}</div>
-                          <div className="">
-                            <QuestSymbol myth={mythSections[activeMyth]} />
-                          </div>
+                                      {symbols[key.toLowerCase()]}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
                     </div>
-                  </div>
-                  {quest.isCompleted || showComplete ? (
-                    <QuestButton
-                      handlePrev={handlePrev}
-                      handleNext={handleNext}
-                      message={"Complete"}
-                      isCompleted={quest?.isQuestClaimed}
-                      activeMyth={activeMyth}
-                      action={handleCompleteQuest}
-                    />
-                  ) : (
-                    <QuestButton
-                      handlePrev={handlePrev}
-                      handleNext={handleNext}
-                      message={"Claim"}
-                      isCompleted={quest?.isQuestClaimed}
-                      activeMyth={activeMyth}
-                      action={() => {
-                        setShowComplete(true);
-                        window.open(quest?.link, "_blank");
-                      }}
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="relative">
-                  <div className="relative">
-                    <img
-                      src={`/assets/cards/320px-${quest?.type}_tiny.png`}
-                      alt="card"
-                      className={`w-full h-[75%] grayscale blur-sm`}
-                    />
-                    <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
-                      <div className="flex w-full">
-                        <div className="flex flex-grow">
-                          <div className="flex w-full mt-2 ml-[0.7375rem] font-symbols text-white text-[2rem]">
-                            {Object.entries(quest.requiredOrbs).map(
-                              ([key, value]) => (
-                                <div className="flex" key={key}>
-                                  {Array.from({ length: value }, (_, index) => (
-                                    <div
-                                      key={index}
-                                      className={`flex relative text-center justify-center items-center w-[45px] -ml-1.5 rounded-full glow-icon-${key.toLowerCase()}`}
-                                    >
-                                      <img
-                                        src="/assets/myths-orbs/orb.base-tiny.png"
-                                        alt="orb"
-                                        className={`filter-orbs-${key.toLowerCase()} }`}
-                                      />
-                                      <span
-                                        className={`absolute z-1 text-[25px] ${
-                                          key.toLowerCase() === "egyptian" &&
-                                          "ml-[2px]"
-                                        } ${
-                                          key.toLowerCase() === "greek" &&
-                                          "ml-[5px]"
-                                        }`}
-                                      >
-                                        {symbols[key.toLowerCase()]}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex absolute w-full justify-end">
-                          <img
-                            src="/assets/icons/close.svg"
-                            alt="info"
-                            className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 ${
-                              isButtonGlowing === 3
-                                ? `glow-button-${mythSections[activeMyth]}`
-                                : ""
-                            }`}
-                            onClick={() => {
-                              handleButtonClick(3);
-                              setShowPay(false);
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div
-                        className={`flex justify-start items-center px-3 h-[18%] uppercase glow-card-${mythSections[activeMyth]} text-white`}
-                      >
-                        {quest?.questName}
-                      </div>
+                    <div className="flex absolute w-full justify-end">
+                      <img
+                        src="/assets/icons/info.svg"
+                        alt="info"
+                        className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 rounded-full  ${
+                          isButtonGlowing === 3
+                            ? `glow-button-${mythSections[activeMyth]}`
+                            : ""
+                        }`}
+                        onClick={() => {
+                          handleButtonClick(3);
+                          setShowInfo((prev) => !prev);
+                          setActiveCard(quest?.type);
+                        }}
+                      />
                     </div>
                   </div>
                   <div
-                    onClick={handleClaimQuest}
-                    className={`flex items-center justify-between h-[54px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white font-montserrat rounded-button`}
+                    className={`flex relative items-center h-[19%] uppercase glow-quest-${mythSections[activeMyth]} text-white`}
                   >
-                    <div className="flex justify-center items-center w-1/4 h-full"></div>
-                    <div className="text-[16px] uppercase">Pay</div>
-                    <div className="flex justify-center items-center w-1/4  h-full"></div>
+                    <div
+                      style={{
+                        backgroundImage: `url(/assets/uxui/fof.footer.paper_tiny.png)`,
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center center",
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        height: "100%",
+                        width: "100%",
+                      }}
+                      className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
+                    />
+                    <div className="flex justify-between w-full h-full items-center px-3 z-10">
+                      <div>
+                        {t(
+                          `quests.${mythSections[activeMyth]}.${quest.type}.QuestName`
+                        )}
+                      </div>
+                      <div className="">
+                        <QuestSymbol myth={mythSections[activeMyth]} />
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </div>
+              {quest.isCompleted || showComplete ? (
+                <QuestButton
+                  handlePrev={handlePrev}
+                  handleNext={handleNext}
+                  message={t("buttons.complete")}
+                  isCompleted={quest?.isQuestClaimed}
+                  activeMyth={activeMyth}
+                  action={handleCompleteQuest}
+                  t={t}
+                />
+              ) : (
+                <QuestButton
+                  handlePrev={handlePrev}
+                  handleNext={handleNext}
+                  message={t("buttons.claim")}
+                  isCompleted={quest?.isQuestClaimed}
+                  t={t}
+                  activeMyth={activeMyth}
+                  action={() => {
+                    setShowComplete(true);
+                    window.open(quest?.link, "_blank");
+                  }}
+                />
               )}
-            </>
+            </div>
           ) : (
             <div className="relative">
               <div className="h-full relative -mt-12">
                 <JigsawImage
-                  imageUrl={`/assets/cards/320px-${secretQuests[0].type}_tiny.png`}
+                  imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${secretQuests[0]?.type}_tiny.png`}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith
                   )}
@@ -680,11 +610,9 @@ const Quests = () => {
                   />
                 </div>
               </div>
-              <div className="absolute flex justify-center items-center w-full -mt-2">
-                <div className="bg-black  h-[60px] w-[60px] rounded-full z-1"></div>
-              </div>
+
               <div
-                className="flex items-center justify-between h-[45px] w-[192px] mx-auto mt-[23px] border border-black bg-glass-black text-white font-montserrat rounded-button  absolute top-0 left-0 right-0"
+                className={`flex items-center justify-between h-[60px] w-[192px] mx-auto mt-[30px] border border-${mythSections[activeMyth]}-primary bg-glass-black text-white  rounded-button  absolute top-0 left-0 right-0`}
                 style={{ top: "100%", transform: "translateY(-50%)" }}
               >
                 <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
@@ -694,7 +622,9 @@ const Quests = () => {
                     onClick={handlePrev}
                   />
                 </div>
-                <div className="text-[16px] uppercase px-2">Complete</div>
+                <div className="text-[18px] uppercase px-2">
+                  {t("buttons.complete")}
+                </div>
                 <div className="flex justify-center items-center w-1/4 border-l-[0.5px] border-borderGray h-full">
                   <CornerUpRight
                     color="white"
@@ -728,8 +658,22 @@ const Quests = () => {
       </div>
       {/* Footer */}
       <Footer />
+
+      {showPay && (
+        <PayCard
+          t={t}
+          quest={quest}
+          activeCard={activeCard}
+          handlePay={handleClaimQuest}
+          handleShowPay={() => {
+            setShowPay((prev) => !prev);
+          }}
+          activeMyth={activeMyth}
+        />
+      )}
       {secretInfo && (
         <InfoCard
+          t={t}
           activeCard={activeCard}
           isShared={secretQuests[0]?.isShared}
           quest={secretQuests[0]}
@@ -745,6 +689,7 @@ const Quests = () => {
       )}
       {showInfo && (
         <InfoCard
+          t={t}
           activeCard={activeCard}
           isShared={quest?.isShared}
           quest={quest}
@@ -758,6 +703,8 @@ const Quests = () => {
       )}
       {showClaim && (
         <OrbClaimCard
+          t={t}
+          quest={quest}
           activeCard={activeCard}
           handleOrbClaimReward={handleOrbClaimReward}
           handleShowClaim={() => {
@@ -771,3 +718,101 @@ const Quests = () => {
 };
 
 export default Quests;
+
+{
+  /* <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-sm bg-opacity-60 z-10">
+<div className="relative">
+  <img
+    src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}_tiny.png`}
+    alt="card"
+    className={`w-full h-[75%] grayscale blur-sm`}
+  />
+  <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
+    <div className="flex w-full">
+      <div className="flex flex-grow">
+        <div className="flex w-full mt-2 ml-[0.7375rem] font-symbols text-white text-[2rem]">
+          {Object.entries(quest.requiredOrbs).map(([key, value]) => (
+            <div className="flex" key={key}>
+              {Array.from({ length: value }, (_, index) => (
+                <div
+                  key={index}
+                  className={`flex relative text-center justify-center items-center w-[40px] rounded-full glow-icon-${key.toLowerCase()}`}
+                >
+                  <img
+                    src="/assets/uxui/240px-orb.base-tiny.png"
+                    alt="orb"
+                    className={`filter-orbs-${key.toLowerCase()} }`}
+                  />
+                  <span
+                    className={`absolute z-1 text-[25px] ${
+                      key.toLowerCase() === "egyptian" && "ml-[2px]"
+                    } ${key.toLowerCase() === "greek" && "ml-[5px]"}`}
+                  >
+                    {symbols[key.toLowerCase()]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex absolute w-full justify-end">
+        <img
+          src="/assets/icons/close.svg"
+          alt="info"
+          className={`w-[55px] h-[55px] ml-auto -mt-6 -mr-6 ${
+            isButtonGlowing === 3
+              ? `glow-button-${mythSections[activeMyth]}`
+              : ""
+          }`}
+          onClick={() => {
+            handleButtonClick(3);
+            setShowPay(false);
+          }}
+        />
+      </div>
+    </div>
+    <div
+      className={`flex relative items-center h-[19%] uppercase grayscale glow-card-${mythSections[activeMyth]} text-white`}
+    >
+      <div
+        style={{
+          backgroundImage: `url(/assets/uxui/footer.paper_tiny.png)`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+        }}
+        className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
+      />
+      <div className="flex justify-between w-full h-full items-center px-3 z-10">
+        <div>
+          {" "}
+          {t(
+            `quests.${mythSections[activeMyth]}.${quest.type}.QuestName`
+          )}
+        </div>
+        <div className="">
+          <QuestSymbol myth={mythSections[activeMyth]} />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div className="absolute flex justify-center items-center w-full z-0">
+  <div className="bg-black h-[60px] w-[60px] rounded-full -mt-2"></div>
+</div>
+<div
+  onClick={handleClaimQuest}
+  className={`flex items-center justify-between h-[45px] w-[192px] mx-auto border border-${mythSections[activeMyth]}-primary bg-glass-black z-50 text-white  rounded-button`}
+>
+  <div className="flex justify-center items-center w-1/4 h-full"></div>
+  <div className="text-[16px] uppercase">{t("buttons.pay")}</div>
+  <div className="flex justify-center items-center w-1/4  h-full"></div>
+</div>
+</div> */
+}

@@ -8,13 +8,13 @@ import { formatOrbsWithLeadingZeros } from "../utils/gameManipulations";
 import ConvertInfo from "../components/ConvertInfo";
 import { toast } from "react-toastify";
 import ToastMesg from "../components/Toast/ToastMesg";
+import { useTranslation } from "react-i18next";
 
 const mythSections = ["celtic", "egyptian", "greek", "norse", "other"];
 const mythologies = ["Celtic", "Egyptian", "Greek", "Norse", "Other"];
 
-const tele = window.Telegram?.WebApp;
-
 const Convert = () => {
+  const { t } = useTranslation();
   const [showInfo, setShowInfo] = useState(false);
   const [isButtonGlowing, setIsButtonGlowing] = useState(0);
   const { setActiveMyth, setGameData, gameData } = useContext(MyContext);
@@ -76,8 +76,8 @@ const Convert = () => {
 
         toast.success(
           <ToastMesg
-            title={"Orbs Successfully Converted!"}
-            desc={"Well done! Keep the momentum going!"}
+            title={t("toasts.Convert.success.title")}
+            desc={t("toasts.Convert.success.desc")}
             img={"/assets/icons/toast.success.svg"}
           />,
           {
@@ -100,8 +100,8 @@ const Convert = () => {
 
         toast.error(
           <ToastMesg
-            title={"Failed to convert orbs."}
-            desc={errorMessage}
+            title={t("toasts.Convert.error.title")}
+            desc={t("toasts.Convert.error.desc")}
             img={"/assets/icons/toast.fail.svg"}
           />,
           {
@@ -155,7 +155,7 @@ const Convert = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/assets/uxui/base.background_tiny.jpg)`,
+            backgroundImage: `url(/assets/uxui/fof.base.background_tiny.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -173,7 +173,7 @@ const Convert = () => {
       >
         <div
           style={{
-            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
+            backgroundImage: `url(/assets/uxui/fof.header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -187,73 +187,60 @@ const Convert = () => {
           className={`filter-paper-other relative -mt-1`}
         />
         {myth === 4 ? (
-          <div className="flex  flex-col flex-grow justify-center items-start text-white pl-5 -mt-1.5">
-            <h1 className="flex items-center gap-4 text-[10.24vw] font-fof text-fof drop-shadow-2xl -mt-0.5">
-              FORGES <span className="text-[20px]">OF</span> FAITH
-            </h1>
-            <div className="flex  w-full justify-between items-center -mt-2.5">
-              <div className="text-left">
-                <div className="text-right font-medium font-montserrat text-[22px]">
-                  {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-                  <span className="text-black glow-black">$ORB(S)</span>
+          <div className="flex  flex-col flex-grow justify-center items-center text-white  -mt-1.5">
+            {/* <h1 className="flex items-center gap-4 text-[43px] glow-white font-fof text-fof drop-shadow-2xl -mt-0.5"></h1> */}
+            {/* FORGES <span className="text-[20px]">OF</span> FAITH */}
+            {/* {t("main.fof")} */}
+            <div className="mt-2">
+              <img
+                src="/assets/uxui/forgesoffaith1.svg"
+                alt="fof"
+                className="w-full fof-glow"
+              />
+            </div>
+            <div className="flex  w-full justify-center items-center mt-2">
+              <div className="text-center">
+                <div className="text-right font-medium  text-[22px]">
+                  {formatOrbsWithLeadingZeros(gameData.blackOrbs)}{" "}
+                  <span className="text-black fof-glow">
+                    {t(`keywords.orbs`)}
+                  </span>
                 </div>
-                <div className="font-medium font-montserrat text-[14px] -mt-1">
+                <div className="font-medium  text-[14px] -mt-1">
                   {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-                  <span className="gradient-multi">$ORB(S)</span>
+                  <span className="gradient-multi">{t(`keywords.orbs`)}</span>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 -mt-1.5">
-            <h1 className="flex items-center gap-4 text-[10.24vw] font-fof text-fof drop-shadow-2xl -mt-0.5">
-              FORGES <span className="text-[20px]">OF</span> FAITH
-            </h1>
-            <div className="flex  w-full justify-between items-center -mt-2.5">
-              <div className="text-left">
-                <div className="text-right font-medium font-montserrat text-[22px]">
+          <div className="flex flex-col flex-grow justify-center items-center text-white  -mt-1.5">
+            {/* <h1 className="flex items-center gap-4 text-[43px] glow-white font-fof text-fof drop-shadow-2xl -mt-0.5">
+            </h1> */}
+            {/* FORGES <span className="text-[20px]">OF</span> FAITH  */}
+            {/* {t("main.fof")} */}
+            <div className="mt-2">
+              <img
+                src="/assets/uxui/forgesoffaith1.svg"
+                alt="fof"
+                className="w-full fof-glow"
+              />
+            </div>
+            <div className="flex  w-full justify-center items-center mt-2">
+              <div className="text-center">
+                <div className="text-right font-medium  text-[22px]">
                   {formatOrbsWithLeadingZeros(mythData[myth].orbs)}{" "}
                   <span className={`text-${mythSections[myth]}-text`}>
-                    $ORB(S)
+                    {t(`keywords.orbs`)}
                   </span>
                 </div>
-                <div className="font-medium font-montserrat text-[14px] -mt-1">
+                <div className="font-medium  text-[14px] -mt-1">
                   {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-                  <span className="gradient-multi">$ORB(S)</span>
+                  <span className="gradient-multi">{t(`keywords.orbs`)}</span>
                 </div>
               </div>
             </div>
           </div>
-          // <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 -mt-1.5">
-          //   <h1 className="flex items-center gap-4 text-[10.24vw] font-fof text-fof drop-shadow-2xl">
-          //     FORGES <span className="text-[20px]">OF</span> FAITH
-          //   </h1>
-          //   <div className="flex w-full justify-between items-center -mt-3">
-          //     <div className="text-left">
-          //       <div className="text-right font-medium font-montserrat text-[22px]">
-          //         {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-          //         <span className={`text-${mythSections[myth]}-text`}>
-          //           $ORB(S)
-          //         </span>
-          //       </div>
-          //       <div className="font-medium font-montserrat text-[14px] -mt-1">
-          //         {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-          //         <span className="gradient-multi">$ORB(S)</span>
-          //       </div>
-          //     </div>
-          //     <div
-          //       onClick={() => {
-          //         setShowInfo(true);
-          //       }}
-          //     >
-          //       <img
-          //         src="/assets/icons/info.svg"
-          //         alt="info"
-          //         className="w-8 h-8 mr-4"
-          //       />
-          //     </div>
-          //   </div>
-          // </div>
         )}
       </div>
 
@@ -275,7 +262,7 @@ const Convert = () => {
         </div>
         <div className="flex justify-center items-center w-[20%]">
           <div
-            className={`bg-glass-black p-[6px] ${
+            className={`bg-glass-black p-[6px] z-50 ${
               isButtonGlowing === 1 ? `glow-button-other` : ""
             } rounded-full cursor-pointer`}
           >
@@ -290,20 +277,23 @@ const Convert = () => {
         </div>
         <div className="flex flex-col items-center justify-center w-full">
           <img
-            src="/assets/logos/forges.of.faith-480px.png"
+            src="/assets/uxui/480px-forges.of.faith.tower.png"
             alt="wheel"
-            className="w-full h-full"
+            className="w-[90%] absolute"
           />
-          <ConvertButton
-            handleNext={handleNext}
-            handlePrev={handlePrev}
-            myth={myth}
-            action={handleOrbsConversion}
-          />
+          <div className="absolute h-full  flex justify-center items-end bottom-[5%]">
+            <ConvertButton
+              t={t}
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              myth={myth}
+              action={handleOrbsConversion}
+            />
+          </div>
         </div>
         <div className="flex justify-center items-center w-[20%]">
           <div
-            className={`bg-glass-black p-[6px] ${
+            className={`bg-glass-black p-[6px] z-50 ${
               isButtonGlowing === 2 ? `glow-button-other` : ""
             } rounded-full cursor-pointer`}
           >
@@ -322,7 +312,7 @@ const Convert = () => {
       {showInfo && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
           <div className="relative w-[72%] rounded-lg shadow-lg mt-10">
-            <ConvertInfo />
+            <ConvertInfo t={t} />
             <div className="absolute top-0 right-0 w-[55px] h-[55px]  cursor-pointer">
               <img
                 src="/assets/icons/close.svg"

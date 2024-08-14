@@ -7,13 +7,13 @@ const QuestSymbol = ({ myth }) => {
         className={`flex justify-center items-center absolute z-10 filter-orbs-${myth}`}
       >
         <img
-          src={`/assets/myths-orbs/orb.base-tiny.png`}
+          src={`/assets/uxui/240px-orb.base-tiny.png`}
           alt="orb"
-          className="w-[80%] h-[80%]"
+          className="w-[65%] h-[65%]"
         />
       </div>
       <img
-        src={`/assets/myths-orbs/mythology.${myth}.base.svg`}
+        src={`/assets/myth/mythology.${myth}.base.svg`}
         alt="symbol"
         className="h-[100%] w-[100%] absolute z-20"
       />

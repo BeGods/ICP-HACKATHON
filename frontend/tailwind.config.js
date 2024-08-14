@@ -32,6 +32,9 @@ export default {
         montserrat: ["Montserrat", "sans-serif"],
         fof: ["FOF", "sans-serif"],
         symbols: ["Symbols", "sans-serif"],
+        martel: ["Martel", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
+        hindi: ["Inknut Antiqua", "sans-serif"],
       },
       colors: {
         card: "#53371E",

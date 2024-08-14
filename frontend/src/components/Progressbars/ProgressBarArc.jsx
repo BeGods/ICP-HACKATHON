@@ -6,14 +6,11 @@ const ProgressBarSVG = ({ value, max }) => {
     const segmentEnd = pathIndex * (max / 4);
 
     if (value >= segmentEnd) {
-      // Full color for completed segments
-      return `rgba(76, 175, 80, 1)`; // Green
+      return `rgba(76, 175, 80, 1)`;
     } else if (value > segmentStart) {
-      // Calculate the opacity based on how much of the segment is filled
       const segmentProgress = (value - segmentStart) / (max / 4);
       return `rgba(76, 175, 80, ${segmentProgress})`;
     } else {
-      // Fade color for segments not yet reached
       return `rgba(76, 175, 80, 0.2)`;
     }
   };

@@ -7,12 +7,12 @@ const ProgressBar = ({ value, max, activeMyth }) => {
 
   return (
     <div className="w-full rounded-full -mt-1">
-      <div className="bg-gray-500/25 h-[15px] rounded-full">
+      <div className="bg-gray-500/25 h-[9px] ">
         <div
           style={{
             width: `${width}%`,
           }}
-          className={`gradient-${mythSections[activeMyth]} h-[15px] rounded-full transition-all duration-300`}
+          className={`gradient-${mythSections[activeMyth]} h-[9px]  transition-all duration-300`}
         ></div>
       </div>
     </div>

@@ -1,17 +1,17 @@
 import { RotateCcw, RotateCw } from "lucide-react";
 import React from "react";
 
-const ConvertButton = ({ handleNext, handlePrev, action }) => {
+const ConvertButton = ({ handleNext, handlePrev, action, t }) => {
   return (
-    <div className="flex items-center justify-between h-[45px] w-[192px] mx-auto border border-yellow-500 bg-glass-black text-white font-montserrat rounded-button">
+    <div className="flex items-center justify-between h-[60px] w-[192px] mx-auto border  bg-glass-black text-white rounded-button">
       <div
         onClick={handlePrev}
         className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full"
       >
         <RotateCcw color="white" className="h-[20px] w-[20px]" />
       </div>
-      <div onClick={action} className="text-[16px] uppercase">
-        CONVERT
+      <div onClick={action} className="text-[18px] uppercase">
+        {t(`buttons.convert`)}
       </div>
       <div
         onClick={handleNext}
