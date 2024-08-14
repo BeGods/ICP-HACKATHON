@@ -257,7 +257,7 @@ body{
 
 /* svg rotation */
 .rotate-svg {
-  animation: rotate-animation 2s infinite linear; /* Continuous rotation */
+  animation: rotate-animation 5s infinite linear; /* Continuous rotation */
 }
 
 @keyframes rotate-animation {

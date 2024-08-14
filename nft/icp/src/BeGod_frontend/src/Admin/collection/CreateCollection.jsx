@@ -29,7 +29,7 @@ const CreateCollection = () => {
                 </label>
                 <label htmlFor="" className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     Logo IMG:
-                    <input type="text" className='w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
+                    <input type="file" className='w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
                 </label>
                 <label htmlFor="" className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     No. of NFT's:
@@ -49,15 +49,15 @@ const CreateCollection = () => {
                         NFT's DESCRIPTION:
                         <input type="text" className='w-[100%] h-[47px] bg-[#29292C] rounded-md' />
                     </label>
-                    <div className='w-[20%] sm:w-[8%] h-[43px] rounded-full bg-[#FCD37B] ml-20 sm:-ml-2 md:-ml-3 sm:mt-[25px] md:mt-[42px] font-bold text-xl flex items-center justify-center'>
-                    <AddIcon/>
+                    <div className='w-[20%] sm:w-[8%] md:w-[43px] h-[43px] rounded-full bg-[#FCD37B] ml-20 sm:-ml-2 md:-ml-3 sm:mt-[25px] md:mt-[42px] font-bold text-xl flex items-center justify-center'>
+                        <AddIcon />
                     </div>
                 </div>
                 <div className='flex justify-start sm:justify-end md:justify-end gap-4 w-[100%] mt-[10px] pb-8 sm:mb-0'>
-                    <button onClick={() => navigate(-1)} className='w-[30%] sm:w-[25%] md:w-[15%] h-[33px] bg-black text-[#FFFFFF] rounded-md'>
+                    <button onClick={() => navigate(-1)} className='w-[30%] sm:w-[25%] md:w-[15%] h-[43px] bg-black text-[#FFFFFF] rounded-md'>
                         Cancel
                     </button>
-                    <button className='w-[60%] sm:w-[25%] md:w-[15%] h-[33px] bg-[#FCD37B] text-[#000000] rounded-md'>
+                    <button className='w-[60%] sm:w-[25%] md:w-[15%] h-[43px] bg-[#FCD37B] text-[#000000] rounded-md'>
                         Create Collection
                     </button>
                 </div>

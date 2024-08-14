@@ -18,7 +18,7 @@ import { FiMenu } from 'react-icons/fi';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {logoutUser, logoutUserAndClear } from '../../redux/authSlice';
+import { logoutUser, logoutUserAndClear } from '../../redux/authSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 const sideBarData = [
@@ -84,34 +84,39 @@ function SidebarContent({ onClose, ...rest }) {
       w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
+      display={{ md: "flex" }}
+      flexDirection={{ md: "row" }}
+      justifyContent={{ md: "space-evenly" }}
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <CloseButton display={{ base: 'flex', md: 'none' }} color="white" onClick={onClose} />
       </Flex>
-      <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-        {sideBarData.map((link) => (
-          <NavItem key={link.text} icon={link.icon} href={link.Link} isActive={location.includes(link.Link)} hovered={hovered}>
-            {link.text}
-          </NavItem>
-        ))}
-      </div>
-      <div className='flex items-center justify-start gap-x-4 px-2 text-white mt-[50vh]'>
-        <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
-        <div className='space-y-2'>
-          <div className='flex gap-x-2'>
-            <p className='text-base'>Admin</p>
-            <button onClick={() => logoutHandler()}>
-              <Icon as={MdLogout} />
-            </button>
-          </div>
-          <div className='flex flex-col'>
-            <div>
-              <input value={`${user.slice(0, 5)}......${user.slice(user.length - 6)}`} readOnly className='text-white w-[70%] bg-inherit' />
-              <CopyToClipboard text={`${user.slice(0, 5)}.....${user.slice(user.length - 6)}`} onCopy={handleCopy}>
-                <button className=''><CopyIcon /></button>
-              </CopyToClipboard>
+      <div className='flex flex-col justify-between gap-[60vh] md:gap-[55vh] lg:gap-[55vh]'>
+        <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+          {sideBarData.map((link) => (
+            <NavItem key={link.text} icon={link.icon} href={link.Link} isActive={location.toLowerCase().includes(link.Link.toLowerCase())} hovered={hovered}>
+              {link.text}
+            </NavItem>
+          ))}
+        </div>
+        <div className='flex items-center justify-start gap-x-4 px-2 text-white'>
+          <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
+          <div className='space-y-2'>
+            <div className='flex gap-x-2'>
+              <p className='text-base'>Admin</p>
+              <button onClick={() => logoutHandler()}>
+                <Icon as={MdLogout} />
+              </button>
             </div>
-            {Copied && <p>Copied!</p>}
+            <div className='flex flex-col'>
+              <div>
+                <input value={`${user.slice(0, 5)}......${user.slice(user.length - 6)}`} readOnly className='text-white w-[70%] bg-inherit' />
+                <CopyToClipboard text={`${user.slice(0, 5)}.....${user.slice(user.length - 6)}`} onCopy={handleCopy}>
+                  <button className=''><CopyIcon /></button>
+                </CopyToClipboard>
+              </div>
+              {Copied && <p>Copied!</p>}
+            </div>
           </div>
         </div>
       </div>
@@ -124,6 +129,7 @@ SidebarContent.propTypes = {
 };
 
 function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
+  const location = useLocation();
   return (
     <Box
       as="a"
@@ -138,7 +144,7 @@ function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
         mx="4"
         borderRadius="lg"
         role="group"
-        color="white"
+        color={isActive && !hovered?"black":"white"}
         cursor="pointer"
         bg={isActive && !hovered ? '#FCD37B' : ''}
         _hover={{
