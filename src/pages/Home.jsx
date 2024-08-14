@@ -7,6 +7,8 @@ import Boosters from "./Boosters";
 import { MyContext } from "../context/context";
 import Leaderboard from "./Leaderboard";
 import { toggleBackButton } from "../utils/teleBackButton";
+import Lottie, { LottiePlayer } from "lottie-react";
+import animationData from "../../public/assets/uxui/loader.json";
 
 const tele = window.Telegram?.WebApp;
 
@@ -22,6 +24,15 @@ const Home = (props) => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });
 
+  const colors = [
+    "bg-red-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-purple-500",
+    "bg-pink-500",
+  ];
+
   const sections = [
     <Game />,
     <Quests />,
@@ -36,14 +47,22 @@ const Home = (props) => {
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setUserData(response?.user);
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     } catch (error) {
       console.log(error);
       setError(error);
     }
   };
 
+  const getRandomColor = () => {
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
   useEffect(() => {
+    localStorage.setItem("avatarColor", getRandomColor());
+
     const token = localStorage.getItem("accessToken");
     const currSection = localStorage.getItem("section");
     if (!currSection) {
@@ -72,7 +91,7 @@ const Home = (props) => {
   return (
     <>
       {!isLoading ? (
-        <div className="h-screen w-screen bg-white select-none">
+        <div className="h-screen w-screen bg-white select-none font-fof">
           <MyContext.Provider
             value={{
               gameData,
@@ -93,7 +112,23 @@ const Home = (props) => {
           </MyContext.Provider>
         </div>
       ) : (
-        <div className="bg-white h-screen w-screen">Loading</div>
+        <div className="bg-black flex flex-col justify-center items-center h-screen w-screen">
+          <div className="w-[80%] flex flex-col justify-between h-full mb-4">
+            <img
+              src="/assets/logos/battle.gods.white.svg"
+              alt="black-gods"
+              className="h-full w-full"
+            />
+            <div>
+              <Lottie
+                autoplay
+                loop
+                animationData={animationData}
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

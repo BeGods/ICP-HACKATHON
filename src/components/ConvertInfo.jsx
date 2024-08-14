@@ -7,16 +7,16 @@ const symbols = {
   norse: 5,
 };
 
-const ConvertInfo = () => {
+const ConvertInfo = ({ t }) => {
   return (
-    <div className="relative w-full h-full font-montserrat text-card">
+    <div className="relative w-full h-full  text-card">
       <img
         src="/assets/cards/320px-info_background_tiny.png"
         alt="card"
         className="w-full h-full object-cover"
       />
-      <div className="absolute top-0 w-full text-center text-[22px] font-bold mt-2">
-        CONVERSION
+      <div className="absolute top-0 w-full text-center text-[22px] font-bold mt-2 uppercase">
+        ${t(`keywords.conversion`)}
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <div className="flex flex-col -mt-4">
@@ -27,7 +27,7 @@ const ConvertInfo = () => {
                   className={`flex relative text-center justify-center items-center w-[45px] rounded-full glow-icon-${key}`}
                 >
                   <img
-                    src="/assets/myths-orbs/orb.base-tiny.png"
+                    src="/assets/uxui/240px-orb.base-tiny.png"
                     alt={`${key} orb`}
                     className={`filter-orbs-${key}`}
                   />
@@ -49,7 +49,7 @@ const ConvertInfo = () => {
                   className={`flex relative text-center justify-center items-center w-[45px] rounded-full glow-icon-${key}`}
                 >
                   <img
-                    src="/assets/myths-orbs/orb.base-tiny.png"
+                    src="/assets/uxui/240px-orb.base-tiny.png"
                     alt={`${key} orb`}
                     className={`filter-orbs-${key}`}
                   />
@@ -68,7 +68,7 @@ const ConvertInfo = () => {
                   className={`flex relative text-center justify-center items-center w-[40px] -mt-1 rounded-full`}
                 >
                   <img
-                    src="/assets/myths-orbs/orb.multicolor-tiny.png"
+                    src="/assets/uxui/240px-orb.multicolor-tiny.png"
                     alt="multi orb"
                   />
                 </div>

@@ -16,6 +16,7 @@ import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import { calculateRemainingTime } from "../utils/getBoosterCard";
 import QuestSymbol from "../components/QuestCards/QuestSymbol";
+import { useTranslation } from "react-i18next";
 
 const symbols = {
   greek: 4,
@@ -29,6 +30,7 @@ const mythSections = ["celtic", "egyptian", "greek", "norse"];
 const boosterCards = ["earth", "air", "fire", "water"];
 
 const Boosters = () => {
+  const { t } = useTranslation();
   const [showCard, setShowCard] = useState(false);
   const [lostQuest, setLostQuest] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
@@ -70,7 +72,7 @@ const Boosters = () => {
     }, 100);
   };
 
-  // quest share reward after completing quest
+  // Quests Functions
   const handleOrbClaimReward = async () => {
     const token = localStorage.getItem("accessToken");
     const questData = {
@@ -99,8 +101,8 @@ const Boosters = () => {
 
       toast.success(
         <ToastMesg
-          title={"Congratulations ypu earned an extra orb!"}
-          desc={"Orb credited to your account."}
+          title={t("toasts.Quest_orb_claim.success.title")}
+          desc={t("toasts.Quest_orb_claim.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -122,8 +124,8 @@ const Boosters = () => {
         "An unexpected error occurred";
       toast.error(
         <ToastMesg
-          title={"Failed to claim orb."}
-          desc={errorMessage}
+          title={t("toasts.Quest_orb_claim.error.title")}
+          desc={t("toasts.Quest_orb_claim.error.desc")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -178,8 +180,8 @@ const Boosters = () => {
 
       toast.success(
         <ToastMesg
-          title={"Quest claimed successfuly!"}
-          desc={"Enerbar bla blab bla"}
+          title={t("toasts.Quest_claim.success.title")}
+          desc={t("toasts.Quest_claim.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -201,8 +203,8 @@ const Boosters = () => {
 
       toast.error(
         <ToastMesg
-          title={"Failed claim to claim quest."}
-          desc={errorMessage}
+          title={t("toasts.Quest_claim_InsufficientOrbs.error.title")}
+          desc={t("toasts.Quest_claim_InsufficientOrbs.error.desc")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -219,6 +221,7 @@ const Boosters = () => {
     }
   };
 
+  // Boosters functions
   const handleLostQuest = async () => {
     const accessToken = localStorage.getItem("accessToken");
 
@@ -233,8 +236,8 @@ const Boosters = () => {
       } else {
         toast.success(
           <ToastMesg
-            title={"Currently there are no lost quests."}
-            desc={"Comeback tomorrow!"}
+            title={t("toasts.Booster_Lost_Not_Available.error.title")}
+            desc={t("toasts.Booster_Lost_Not_Available.error.title")}
             img={"/assets/icons/toast.fail.svg"}
           />,
           {
@@ -307,8 +310,8 @@ const Boosters = () => {
       console.log("claimed succesfully");
       toast.success(
         <ToastMesg
-          title={"Booster Activated Successfully!"}
-          desc={"Shards Booster claimed! Now multiply your tapping power."}
+          title={t("toasts.Booster_ShardsClaim.success.title")}
+          desc={t("toasts.Booster_ShardsClaim.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -331,8 +334,8 @@ const Boosters = () => {
 
       toast.error(
         <ToastMesg
-          title={"Booster Claim Unsuccessful"}
-          desc={errorMessage}
+          title={t("toasts.Booster_InsufficientOrbs.error.title")}
+          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -362,8 +365,8 @@ const Boosters = () => {
 
       toast.success(
         <ToastMesg
-          title={"Booster Activated Successfully!"}
-          desc={"Your automata is now active and running!"}
+          title={t("toasts.Booster_AutomataClaim.success.title")}
+          desc={t("toasts.Booster_AutomataClaim.success.desc")}
           img={"/assets/icons/toast.success.svg"}
         />,
         {
@@ -385,8 +388,8 @@ const Boosters = () => {
 
       toast.error(
         <ToastMesg
-          title={"Booster Claim Unsuccessful."}
-          desc={errorMessage}
+          title={t("toasts.Booster_InsufficientOrbs.error.title")}
+          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
           img={"/assets/icons/toast.fail.svg"}
         />,
         {
@@ -430,7 +433,7 @@ const Boosters = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/base.background_tiny.jpg)`,
+            backgroundImage: `url(/assets/uxui/fof.base.background_tiny.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -448,7 +451,7 @@ const Boosters = () => {
       >
         <div
           style={{
-            backgroundImage: `url(/assets/uxui/header.paper_tiny.png)`,
+            backgroundImage: `url(/assets/uxui/fof.header.paper_tiny.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -463,12 +466,18 @@ const Boosters = () => {
         />
         <div className="flex flex-col flex-grow justify-center items-center text-white pb-[20px]">
           <h1 className={`glow-${mythSections[activeMyth]} uppercase`}>
-            Boosters
+            {t(`sections.boosters`)}
           </h1>
 
-          <div className="text-right -mt-[12px] font-medium font-montserrat  text-[22px]">
+          <div className="text-right -mt-[12px] font-medium   text-[22px]">
             {formatOrbsWithLeadingZeros(multiColorOrbs)}{" "}
-            <span className="gradient-multi">$ORBS</span>
+            <span className="gradient-multi">{t(`keywords.orbs`)}</span>
+          </div>
+          <div className="text-right font-medium  -mt-1 text-[14px]">
+            {formatOrbsWithLeadingZeros(gameData.mythologies[activeMyth].orbs)}{" "}
+            <span className={`text-${mythSections[activeMyth]}-text`}>
+              {t(`keywords.orbs`)}
+            </span>
           </div>
         </div>
       </div>
@@ -502,7 +511,7 @@ const Boosters = () => {
                 : "border-cardsGray text-cardsGray"
             } ${
               isGlowing === 3 ? `glow-button-${mythSections[activeMyth]}` : ""
-            } rounded-button h-[90px] w-full bg-glass-black p-[15px] font-montserrat`}
+            } rounded-button h-[90px] w-full bg-glass-black p-[15px] `}
             onMouseDown={() => handleClick(3)}
             onMouseUp={handleRemoveClick}
             onMouseLeave={handleRemoveClick}
@@ -514,8 +523,8 @@ const Boosters = () => {
               <h1 className={`font-symbols text-[80px] p-0 -mt-7 -ml-2 `}>b</h1>{" "}
             </div>
             <div className={`flex flex-col flex-grow justify-center -ml-1 `}>
-              <h1 className="text-[18px]">AUTOMATA</h1>
-              <h2 className="text-[14px]">Auto tap</h2>
+              <h1 className="text-[18px] uppercase">{t(`boosters.0.title`)}</h1>
+              <h2 className="text-[14px]">{t(`boosters.0.desc`)}</h2>
             </div>
             <div className="flex justify-center items-center w-[8%] ">
               {!mythData.isAutomataActive ? (
@@ -538,7 +547,7 @@ const Boosters = () => {
               mythSections[activeMyth]
             }-primary ${
               isGlowing === 2 ? `glow-button-${mythSections[activeMyth]}` : ""
-            } rounded-button h-[90px] w-full bg-glass-black p-[15px] font-montserrat text-white`}
+            } rounded-button h-[90px] w-full bg-glass-black p-[15px]  text-white`}
             onMouseDown={() => handleClick(2)}
             onMouseUp={handleRemoveClick}
             onMouseLeave={handleRemoveClick}
@@ -566,7 +575,7 @@ const Boosters = () => {
           <div
             className={`flex gap-1 border border-cardsGray ${
               isGlowing === 2 ? `glow-button-${mythSections[activeMyth]}` : ""
-            } rounded-button h-[90px] w-full bg-glass-black p-[15px] font-montserrat text-cardsGray`}
+            } rounded-button h-[90px] w-full bg-glass-black p-[15px]  text-cardsGray`}
             onMouseDown={() => handleClick(2)}
             onMouseUp={handleRemoveClick}
             onMouseLeave={handleRemoveClick}
@@ -578,8 +587,8 @@ const Boosters = () => {
               <h1 className="font-symbols text-[75px] p-0 -mt-6 -ml-2">Q</h1>
             </div>
             <div className={`flex flex-col flex-grow justify-center`}>
-              <h1 className="text-[18px]">LOST QUESTS</h1>
-              <h2 className="text-[14px]">Energy 200%</h2>
+              <h1 className="text-[18px] uppercase">{t(`boosters.1.title`)}</h1>
+              <h2 className="text-[14px]">{t(`boosters.1.desc`)}</h2>
             </div>
             <div className="flex justify-center items-center w-[8%]">
               <img src="/assets/icons/lock.svg" alt="lock" />
@@ -593,7 +602,7 @@ const Boosters = () => {
                 : "border-cardsGray text-cardsGray"
             } ${
               isGlowing === 1 ? `glow-button-${mythSections[activeMyth]}` : ""
-            }  rounded-button h-[90px] w-full bg-glass-black p-[15px] font-montserrat hover:glow-icon-celtic`}
+            }  rounded-button h-[90px] w-full bg-glass-black p-[15px]  hover:glow-icon-celtic`}
             onMouseDown={() => handleClick(1)}
             onMouseUp={handleRemoveClick}
             onMouseLeave={handleRemoveClick}
@@ -601,13 +610,11 @@ const Boosters = () => {
             onTouchEnd={handleRemoveClick}
             onTouchCancel={handleRemoveClick}
           >
-            <h1 className="font-symbols text-[85px] p-0 -mt-[30px] -ml-2">A</h1>
+            <h1 className="font-symbols text-[65px] p-0 -mt-4 -ml-1">A</h1>
 
-            <div
-              className={`flex flex-col flex-grow justify-center -ml-[10px]`}
-            >
-              <h1 className="text-[18px]">ANVIL</h1>
-              <h2 className="text-[14px]">Double tap</h2>
+            <div className={`flex flex-col flex-grow justify-center ml-2`}>
+              <h1 className="text-[18px] uppercase">{t(`boosters.2.title`)}</h1>
+              <h2 className="text-[14px]">{t(`boosters.2.desc`)}</h2>
             </div>
             <div className="flex justify-center items-center w-[8%]">
               {mythData.isShardsClaimActive ? (
@@ -672,49 +679,61 @@ const Boosters = () => {
                 }}
               />
             </div>
-
-            {activeCard === "automata" && mythData?.isAutomataActive ? (
-              <div
-                className={`flex items-center justify-between h-[45px] w-[192px] mx-auto  bg-glass-black z-50 text-white font-montserrat rounded-button`}
-              >
-                <div className="flex justify-center items-center w-1/4 h-full"></div>
-                <div className="text-[16px] uppercase">
-                  {calculateRemainingTime(mythData.automataStartTime)}
-                </div>
-                <div className="flex justify-center items-center w-1/4  h-full"></div>
-              </div>
-            ) : activeCard === "shard" && !mythData?.isShardsClaimActive ? (
-              <div className="flex items-center justify-between h-[45px] w-[192px] mx-auto   bg-glass-black text-white font-montserrat rounded-button">
-                <div className="flex justify-center items-center w-1/4 h-full"></div>
-                <div className="text-[16px] uppercase">
-                  {calculateRemainingTime(mythData.shardsLastClaimedAt)}
-                </div>
-                <div className="flex justify-center items-center w-1/4  h-full"></div>
-              </div>
-            ) : (
-              <div
-                onClick={handleClaimBooster}
-                className="flex items-center justify-between h-[45px] w-[192px] mx-auto  bg-glass-black text-white font-montserrat rounded-button"
-              >
-                <div className="flex justify-center items-center w-1/4 h-full">
-                  <img
-                    src={`/assets/myths-orbs/orb.multicolor-tiny.png`}
-                    alt="orb"
-                    className="w-[32px] h-[32px]"
-                  />
-                  <div className="absolute mt-auto z-10">
-                    <img
-                      src="/assets/icons/arrow.up.svg"
-                      alt="upward"
-                      className="z-10 mt-3"
-                    />
+            <div className="relative">
+              {/* <div className="absolute flex justify-center items-center w-full z-0">
+                <div className="bg-black  h-[60px] w-[60px] rounded-full -mt-2"></div>
+              </div> */}
+              <div className="relative z-50">
+                {activeCard === "automata" && mythData?.isAutomataActive ? (
+                  <div
+                    className={`flex items-center justify-between h-[60px] w-[192px] border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-button`}
+                  >
+                    <div className="flex justify-center items-center w-1/4 h-full"></div>
+                    <div className="text-[16px] uppercase">
+                      {calculateRemainingTime(mythData.automataStartTime)}
+                    </div>
+                    <div className="flex justify-center items-center w-1/4  h-full"></div>
                   </div>
-                </div>
+                ) : activeCard === "shard" && !mythData?.isShardsClaimActive ? (
+                  <div className="flex items-center justify-between h-[60px] w-[192px] mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-button">
+                    <div className="flex justify-center items-center w-1/4 h-full"></div>
+                    <div className="text-[16px] uppercase">
+                      {calculateRemainingTime(mythData.shardsLastClaimedAt)}
+                    </div>
+                    <div className="flex justify-center items-center w-1/4  h-full"></div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={handleClaimBooster}
+                    className={`flex items-center justify-between h-[60px] w-[192px] mx-auto border border-${mythSections[activeMyth]}-primary  bg-glass-black z-50 text-white  rounded-button`}
+                  >
+                    <div className="flex justify-center items-center w-[30%]  h-full  border-r border-borderGray">
+                      <h1 className="text-xl  text-white rounded-full  w-full flex justify-center items-center">
+                        2x
+                      </h1>
+                    </div>
 
-                <div className="text-[16px] uppercase">Buy</div>
-                <div className="flex justify-center items-center w-1/4  border-borderGray h-full"></div>
+                    <div className="text-[16px] uppercase">
+                      {t(`buttons.buy`)}
+                    </div>
+                    <div className="flex justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
+                      <img
+                        src={`/assets/uxui/240px-orb.multicolor-tiny.png`}
+                        alt="orb"
+                        className="p-1.5"
+                      />
+                      {/* <div className="absolute mt-auto z-10">
+                        <img
+                          src="/assets/icons/arrow.up.svg"
+                          alt="upward"
+                          className="z-10 mt-6"
+                        />
+                      </div> */}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}
@@ -742,7 +761,7 @@ const Boosters = () => {
                                 className={`flex relative text-center justify-center items-center w-[45px] -ml-1.5 rounded-full glow-icon-${key.toLowerCase()}`}
                               >
                                 <img
-                                  src="/assets/myths-orbs/orb.base-tiny.png"
+                                  src="/assets/uxui/240px-orb.base-tiny.png"
                                   alt="orb"
                                   className={`filter-orbs-${key.toLowerCase()} }`}
                                 />
@@ -805,9 +824,10 @@ const Boosters = () => {
                 </div>
               </div>
             </div>
+
             <div
               onClick={handleClaimQuest}
-              className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black z-50 text-white font-montserrat rounded-button`}
+              className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black border border-${mythSections[activeMyth]}-primary z-50 text-white  rounded-button`}
             >
               <div className="flex justify-center items-center w-1/4 h-full"></div>
               <div className="text-[16px] uppercase">Buy</div>
@@ -841,7 +861,7 @@ const Boosters = () => {
 
         //     <div
         //       onClick={handleClaimQuest}
-        //       className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black z-50 text-white font-montserrat rounded-button`}
+        //       className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black z-50 text-white  rounded-button`}
         //     >
         //       <div className="flex justify-center items-center w-1/4 h-full">
         //         <img

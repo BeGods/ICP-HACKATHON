@@ -12,13 +12,16 @@ import { connectTonWallet } from "../utils/api";
 import { toast } from "react-toastify";
 import ToastMesg from "../components/Toast/ToastMesg";
 import Avatar from "../components/Avatar";
+import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
+  const { t, i18n } = useTranslation();
   const { userData, setSection } = useContext(MyContext);
+  const avatarColor = localStorage.getItem("avatarColor");
   const userFriendlyAddress = useTonAddress();
-  const [isAddressSent, setIsAddressSent] = useState(false); // New state to track if the address was sent
+  const [isAddressSent, setIsAddressSent] = useState(false);
   const [activeTab, setActiveTab] = useState(true);
   const [activeSection, setActiveSection] = useState(true);
 
@@ -29,10 +32,8 @@ const Profile = (props) => {
 
     toast.success(
       <ToastMesg
-        title={"Referral Link Copied!"}
-        desc={
-          "Your referral link has been copied to the clipboard. Share it with your friends!"
-        }
+        title={t("toasts.ReferralCopy.success.title")}
+        desc={t("toasts.ReferralCopy.success.desc")}
         img={"/assets/icons/toast.link.svg"}
       />,
       {
@@ -46,6 +47,14 @@ const Profile = (props) => {
         theme: "colored",
       }
     );
+  };
+
+  const handleLanuageChange = () => {
+    if (i18n.language === "en") {
+      i18n.changeLanguage("hi");
+    } else {
+      i18n.changeLanguage("en");
+    }
   };
 
   // const handleConnectTon = async () => {
@@ -99,11 +108,11 @@ const Profile = (props) => {
   //   }
   // };
 
-  // useEffect(() => {
-  //   toggleBackButton(tele, () => {
-  //     setSection(0);
-  //   });
-  // }, []);
+  useEffect(() => {
+    toggleBackButton(tele, () => {
+      setSection(0);
+    });
+  }, []);
 
   // useEffect(() => {
   //   const isAddressSentFlag = localStorage.getItem("isAddressSent");
@@ -122,14 +131,10 @@ const Profile = (props) => {
     "bg-pink-500",
   ];
 
-  const getRandomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-
   return (
-    <div className="flex flex-col items-center w-full font-montserrat text-[10px] text-white bg-[#121212] h-screen overflow-auto px-[15px] py-2">
+    <div className="flex flex-col items-center w-full  text-[10px] text-white bg-[#121212] h-screen overflow-auto px-[15px] py-2">
       {/* Tab */}
-      <div className="flex border border-[#414141] w-full p-1 rounded-full h-[44px]">
+      <div className="flex border border-[#414141] w-full p-1 rounded-full h-[44px] uppercase">
         <div
           onClick={() => {
             setActiveTab(true);
@@ -138,7 +143,7 @@ const Profile = (props) => {
             activeTab && "bg-borderGray"
           } h-full rounded-full w-1/2 text-[16px] py-1.5`}
         >
-          PROFILE
+          {t(`profile.profile`)}
         </div>
         <div
           onClick={() => {
@@ -148,11 +153,22 @@ const Profile = (props) => {
             !activeTab && "bg-borderGray"
           } h-full rounded-full w-1/2 text-[16px] py-1.5`}
         >
-          TASKS
+          {t(`profile.tasks`)}
         </div>
       </div>
       {activeTab ? (
-        <>
+        <div className="relative w-full">
+          <div
+            className=" right-0 mt-4 mr-2 absolute"
+            onClick={handleLanuageChange}
+          >
+            <img
+              src="/assets/icons/lang.white.svg"
+              alt="language"
+              className="w-8 h-8"
+            />
+          </div>
+
           {/* PROFILE DETAILS */}
           <div className="flex justify-center items-center flex-col">
             {/* <img
@@ -161,12 +177,18 @@ const Profile = (props) => {
               className="h-[100px] w-[100px] mt-4  rounded-full"
             /> */}
             <div className="w-[100px] h-[100px] mt-4">
-              <Avatar name={"daniel"} profile={1} />
+              <Avatar
+                name={userData.telegramUsername}
+                profile={1}
+                color={avatarColor}
+              />
             </div>
             <h1 className="text-[14px] mt-2">
               {userData.telegramUsername.toUpperCase()}
             </h1>
-            <h2 className="text-[10px] text-[#707579] -mt-1">FROGDOG GAMES</h2>
+            <h2 className="text-[10px] text-[#707579] -mt-1">
+              {t(`main.fdg`)}
+            </h2>
             <TonConnectButton className="mt-2" />
           </div>
           {/* SECTIONS */}
@@ -179,7 +201,7 @@ const Profile = (props) => {
                 activeSection ? "border-b-2 text-white" : "text-[#414141]"
               }  py-1`}
             >
-              DETAILS
+              {t(`profile.details`)}
             </div>
             <div
               onClick={() => {
@@ -189,7 +211,7 @@ const Profile = (props) => {
                 !activeSection ? "border-b-2 text-white" : "text-[#414141]"
               }  py-1`}
             >
-              NOTIFICATIONS
+              {t(`profile.notifications`)}
             </div>
           </div>
           {/* DETAILS */}
@@ -197,7 +219,7 @@ const Profile = (props) => {
             <div className="flex gap-2 flex-col items-center justify-center w-full">
               {/* STATS */}
               <div className="text-center bg-black w-full p-[15px] mt-2 rounded-button">
-                <h1 className="text-[16px]">STATS</h1>
+                <h1 className="text-[16px] uppercase">{t(`profile.stats`)}</h1>
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-button bg-[#1D1D1D] w-full p-[10px]">
                     <img
@@ -206,7 +228,7 @@ const Profile = (props) => {
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-[10px]">Game Rank</h3>
+                      <h3 className="text-[10px]">{t(`profile.gameRank`)}</h3>
                       <h2 className="text-[14px]">
                         #{userData.overallRank === 0 ? 1 : userData.overallRank}
                       </h2>
@@ -219,7 +241,7 @@ const Profile = (props) => {
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-[10px]">Squad Rank</h3>
+                      <h3 className="text-[10px]">{t(`profile.squadRank`)}</h3>
                       <h2 className="text-[14px]">
                         #{userData.squadRank === 0 ? 1 : userData.squadRank}
                       </h2>
@@ -230,19 +252,21 @@ const Profile = (props) => {
                   onClick={() => {
                     setSection(4);
                   }}
-                  className="w-full text-center text-[12px] pt-3"
+                  className="w-full text-center text-[12px] pt-3 uppercase"
                 >
-                  LEADERBOARD {">"}
+                  {t(`profile.leaderboard`)} {">"}
                 </div>
               </div>
               {/* INVITE */}
               <div className="text-center bg-black w-full p-[15px] rounded-button">
-                <h1 className="text-[16px]">INVITE</h1>
+                <h1 className="text-[16px] uppercase">{t(`profile.invite`)}</h1>
                 <div className="flex items-center w-full text-left mt-1">
                   <div className="w-full" onClick={handleCopyLink}>
-                    <h2 className="text-[14px]">Invite Your friends</h2>
+                    <h2 className="text-[14px]">
+                      {t(`profile.inviteYourFriends`)}
+                    </h2>
                     <p className="text-[10px] -mt-1">
-                      Share link to earn $ORB(S)
+                      {t(`profile.shareLinkToEarnOrbs`)}
                     </p>
                   </div>
                   <ChevronsRight />
@@ -255,7 +279,7 @@ const Profile = (props) => {
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-[10px]">Direct</h3>
+                      <h3 className="text-[10px]">{t(`profile.direct`)}</h3>
                       <h2 className="text-[14px]">
                         {userData.directReferralCount}
                       </h2>
@@ -268,7 +292,7 @@ const Profile = (props) => {
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-[10px]">Premium</h3>
+                      <h3 className="text-[10px]">{t(`profile.premium`)}</h3>
                       <h2 className="text-[14px]">
                         {userData.premiumReferralCount}
                       </h2>
@@ -334,7 +358,7 @@ const Profile = (props) => {
               <ProfileCard />
             </div>
           )}
-        </>
+        </div>
       ) : (
         <div className="flex gap-2 flex-col items-center justify-center w-full mt-2">
           <ProfileCard />

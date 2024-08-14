@@ -13,9 +13,9 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const Avatar = ({ name, profile }) => {
+const Avatar = ({ name, profile, color }) => {
   const firstLetter = name.charAt(0).toUpperCase();
-  const avatarColor = getRandomColor();
+  const avatarColor = color ? color : getRandomColor();
 
   return (
     <div

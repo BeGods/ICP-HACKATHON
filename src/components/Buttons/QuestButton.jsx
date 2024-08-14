@@ -10,13 +10,16 @@ const QuestButton = ({
   activeMyth,
   action,
   message,
+  t,
 }) => {
   return (
     <div>
-      <div className="absolute flex justify-center items-center w-full -mt-2">
+      {/* <div className="absolute flex justify-center items-center w-full -mt-2">
         <div className="bg-black  h-[60px] w-[60px] rounded-full z-1"></div>
-      </div>
-      <div className="flex items-center justify-between h-[45px] w-[192px] mx-auto border border-black bg-glass-black text-white font-montserrat rounded-button z-10">
+      </div> */}
+      <div
+        className={`flex items-center justify-between h-[60px] w-[192px] mx-auto border border-${mythSections[activeMyth]}-primary bg-glass-black text-white  rounded-button z-10`}
+      >
         <div className="flex justify-center items-center w-1/4 border-r-[0.5px] border-borderGray h-full">
           <CornerUpLeft
             color="white"
@@ -26,14 +29,14 @@ const QuestButton = ({
         </div>
         {isCompleted ? (
           <div
-            className={`text-[16px] uppercase px-2 text-${mythSections[activeMyth]}-primary font-semibold`}
+            className={`text-[18px] uppercase px-2 text-${mythSections[activeMyth]}-primary font-semibold`}
           >
-            Completed
+            {t("buttons.completed")}
           </div>
         ) : (
           <div
             onClick={action}
-            className={`text-[16px] uppercase ${
+            className={`text-[18px] uppercase ${
               message === "Complete" && "px-2"
             } `}
           >

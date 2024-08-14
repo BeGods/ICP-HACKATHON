@@ -1,0 +1,401 @@
+{
+    "name": "hello",
+    "main": { 
+        "fdg": "FrogdogGames",
+        "fof": "Forges of faith"
+      },
+    "mythologies" : {
+        "celtic": "Celtic",
+        "egyptian": "Egyptian",
+        "greek": "Greek",
+        "norse": "Norse"
+    },
+    "keywords":{
+        "orbs": "ORB(S)",
+        "shards": "Shards",
+        "faith": "Faith",
+        "conversion": "Conversion",
+        "discover": "Discover"
+    },
+    "buttons": {
+        "convert": "Convert",
+        "claim": "Claim",
+        "complete": "Complete",
+        "completed": "Completed",
+        "buy": "Buy",
+        "pay": "Pay",
+        "share": "Share",
+        "shared": "Shared"
+    },
+    "sections":{
+        "forges": "Forges",
+        "boosters": "Boosters",
+        "quests": "Quests",
+        "profile": "Profile",
+        "leaderboard": "Leaderboard"
+    },
+    "boosters": [
+        { "title": "Automata", "desc": "Auto tap" },
+        {"title": "Lost Quests", "desc": "Energy 200%"},  
+        { "title": "Shards", "desc": "Double tap" }
+    ],
+    "profile": {
+        "profile": "Profile",
+        "tasks": "Tasks",
+        "details": "Details",
+        "notifications": "Notifications",
+        "stats": "Stats",
+        "gameRank": "Game Rank",
+        "squadRank": "Squad Rank",
+        "leaderboard": "Leaderboard",
+        "direct": "Direct",
+        "premium": "Premium",
+        "invite": "Invite",
+        "inviteYourFriends": "Invite Your friends",
+        "shareLinkToEarnOrbs": "Share link to earn ORB(S)",
+        "squad": "Squad",
+        "totalMembers": "Total Members",
+        "totalOrbs": "Total Orbs"
+    },
+    "quests": {
+          "celtic": {
+            "A01": {
+              "QuestName": "Heptu's Escape",
+              "desc": "'Heptu Bidding Farewell to The City of Obb', ca 1909, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
+            },
+            "A02": {
+              "QuestName": "Viriato's Betrayal",
+              "desc": "'The Death of Viriatus, Chief of the Lusitanians', ca 1807, is a painting by Jose de Madrazo y Agudo, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
+            },
+            "A03": {
+              "QuestName": "Tristan & Iseult",
+              "desc": "'Tristan and Isolde', ca 1912, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
+            },
+            "A04": {
+              "QuestName": "The Sad Princess",
+              "desc": "'Isolde: The Celt Princess', ca 1912, is a painting by Gaston Gaston Bussiere, a French symbolist painter. Visit the original in Musee des Ursulines, Macon - France."
+            },
+            "A05": {
+              "QuestName": "Brigid's Imbolc",
+              "desc": "'The Saint Bride', ca 1913, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in National Gallery, Edinburgh - Scotland."
+            },
+            "A06": {
+              "QuestName": "Summer Fantasy",
+              "desc": "'Fantasy in Twilight', ca 1911, is a painting by Edward Robert Hughes, a British symbolist painter. Visit the original in Artchiv Gallery, Prague - Czech Republic."
+            },
+            "A07": {
+              "QuestName": "Lir Clann",
+              "desc": "'Children of Lir', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
+            },
+            "A08": {
+              "QuestName": "Aengus' Lover",
+              "desc": "'The Threatened Swan', ca 1650, is a painting by Jan Asselijn, a Dutch golden age painter. Visit the original in Rijksmuseum Amsterdam, Amsterdam - Netherlands."
+            },
+            "A09": {
+              "QuestName": "SLEEPING BEAUTY",
+              "desc": "'The Sleeping Princess', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Perth Art Gallery, Perth - Scotland."
+            },
+            "A10": {
+              "QuestName": "Leanan Sidhe",
+              "desc": "'La Belle Dame sans Merci', ca 1913, is a painting by Frank Bernard Dicksee, a British victorian Painter. Visit the original in Bristol City Museum, Bristol - England."
+            },
+            "A11": {
+              "QuestName": "Sidhe Riders",
+              "desc": "'Riders of the Sidhe', ca 1911, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
+            },
+            "A12": {
+              "QuestName": "Vercingetorix",
+              "desc": "'Vercingetorix before Caesar', ca 1899, is a painting by Lionel Royer, a French historical painter. Visit the original in Musee Crozatier, Auvergne - France."
+            },
+            "C07": {
+              "QuestName": "Tuath Danann",
+              "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
+            }
+          },
+          "egyptian": {
+            "A01": {
+                "QuestName": "Bird Whisperer",
+                "desc": "'The Egyptian Dove Seller', ca 1864, is a painting by Eugene Pierre Francois Giraud, a French painter. Visit the original in Museo de Bellas Artes, Valencia - Spain."
+            },
+            "A02": {
+                "QuestName": "Hathor's Charm",
+                "desc": "'The Harpist', ca 1890, is a painting by Arthur Drummond, a British painter. Visit the original in Sothebys, London - England."
+            },
+            "A03": {
+                "QuestName": "NILE'S MIRACLE",
+                "desc": "'The Finding of Moses', ca 1904, is a painting by Lawrence Alma-Tadema, a Dutch victorian painter. Visit the original in Sothebys, London - England."
+            },
+            "A04": {
+                "QuestName": "ISIS PROCESSION",
+                "desc": "'The Flight into Egypt', ca 1883, is a painting by Edwin Longsden Long, a British biblical painter. Visit the original in Russell-Cotes Museum, Bournemouth - England."
+            },
+            "A05": {
+                "QuestName": "Shezmus' Perfume",
+                "desc": "'Cleopatra testing poisons on condemned prisoners', ca 1887, is a painting by Alexandre Cabanel, a French classical painter. Visit the original in Royal Museum, Antwerp - Belgium."
+            },
+            "A06": {
+                "QuestName": "Cleopatra's Tomb",
+                "desc": "'The Death of Cleopatra', ca 1890, is a painting by John Collier, a British Pre-Raphaelite painter. Visit the original in Art Gallery, Oldham - England."
+            },
+            "A07": {
+                "QuestName": "Sekhmet's Blood I",
+                "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
+            },
+            "A08": {
+                "QuestName": "Bastet's Cult",
+                "desc": "'The Gods and Their Makers', ca 1878, is a painting by the English biblical painter Edwin Long. Visit the original in Towneley Hall Art Gallery, Burnley - England."
+            },
+            "A09": {
+                "QuestName": "Sekhmet's Blood II",
+                "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
+            },
+            "A10": {
+                "QuestName": "Maahes' Cult",
+                "desc": "'The Obsequies of an Egyptian Cat', ca 1886, is a painting by John Weguelin, a British classical painter. Visit the original in Auckland Art Gallery, Auckland - New Zealand."
+            },
+            "A11": {
+                "QuestName": "Pharao's Dream",
+                "desc": "'Joseph Interpreting Pharaoh's Dream', ca 1894, is a painting by Reginald Arthur, a British historical painter. Visit the original in Sotheby's, London - England."
+            },
+            "A12": {
+                "QuestName": "Foreign Threat",
+                "desc": "'The Meeting of Antony and Cleopatra', ca 1885, is a painting Lawrence Alma-Tadema, a Dutch victorian painter. Visit the original in Sotheby's, London - England."
+            },
+            "C08": {
+                "QuestName": "Bull Apis Cult",
+                "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
+            }
+        },
+        "greek": {
+            "A01": {
+                "QuestName": "Narcyssus & Echo",
+                "desc": "'Echo and Narcissus', ca 1903, is a painting by John William Waterhouse, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England."
+            },
+            "A02": {
+                "QuestName": "WATER NYMPHS",
+                "desc": "'Hylas and the Water Nymphs', ca 1909, is a painting by Henrietta Rae, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England."
+            },
+            "A03": {
+                "QuestName": "Achilles' Fury",
+                "desc": "'Fury of Achilles', ca 1737, is a painting by Charles-Antoine Coypel, a French classical painter. Visit the original in Walker Art Gallery, Saint Petersburg - Russia."
+            },
+            "A04": {
+                "QuestName": "PHAETON'S FALL",
+                "desc": "'The Fall of Phaeton', ca 1737, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
+            },
+            "A05": {
+                "QuestName": "Icarus & Daedalus",
+                "desc": "'The Sun or the Fall of Icarus', ca 1819, is a painting by Merry Joseph Blondel, a French neoclassical painter. Visit the original in Louvre Museum, Paris - France."
+            },
+            "A06": {
+                "QuestName": "PROMETHEUS' GIFT",
+                "desc": "'Prometheus', ca 1620, is a painting by Theodoor Rombouts, a Flemish caravaggesque painter. Visit the original in Royal Museums of Fine Arts, Antwerp - Belgium."
+            },
+            "A07": {
+                "QuestName": "Oracle Of Delphi",
+                "desc": "'Pythia: Oracle and High Priestess of Delphi', ca 1880, is a painting by Camillo Miola, an Italian historical painter. Visit the original in J. Paul Getty Center, Los Angeles - USA."
+            },
+            "A08": {
+                "QuestName": "Hephaestus' Fate",
+                "desc": "'The Last Day of Pompeii', ca 1833, is a painting by Karl Pavlovich Bryullov, a Russian neoclassical painter. Visit the original in State Russian Museum, Saint Petersburg - Russia."
+            },
+            "A09": {
+                "QuestName": "GOLDEN FLEECE",
+                "desc": "'The Golden Fleece', ca 1904, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Cartwright Hall, Bradford - England."
+            },
+            "A10": {
+                "QuestName": "Odysseus' Sirens",
+                "desc": "'Ulysses and the Sirens', ca 1909, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Ferens Art Gallery, Hull - England."
+            },
+            "A11": {
+                "QuestName": "EMPIRE'S RISE",
+                "desc": "'The Consummation The Course of the Empire', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
+            },
+            "A12": {
+                "QuestName": "EMPIRE'S FALL",
+                "desc": "'The Course of Empire Destruction', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
+            },
+            "C06": {
+                "QuestName": "Titanomachia",
+                "desc": "'Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
+            }
+        },
+        "norse": {
+            "A01": {
+                "QuestName": "A New Dawn",
+                "desc": "'Dagr (Day)', ca 1874, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
+            },
+            "A02": {
+                "QuestName": "Twilight",
+                "desc": "'Nott (Night)', ca 1887, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
+            },
+            "A03": {
+                "QuestName": "A Valkyrie Prison",
+                "desc": "'The Valkyrie's Vigil', ca 1915, is a painting by Edward Robert Hughes, a British watercolor painter. Visit the original in Museum and Art Gallery, Birmingham - England."
+            },
+            "A04": {
+                "QuestName": "Valkyries' Touch",
+                "desc": "'Hervor's Death', ca 1892, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
+            },
+            "A05": {
+                "QuestName": "Vinland (America)",
+                "desc": "'Leiv Eirikson descing America', ca 1893, is a painting by Christian Krohg, a Norwegian naturalist painter. Visit the original in National Museum, Oslo - Norway."
+            },
+            "A06": {
+                "QuestName": "Iceland descy",
+                "desc": "'The Norseman land in Iceland', ca 1877, is a painting by Oscar Arnold Wergeland, a Norwegian historical painter. Visit the original in National Museum, Oslo - Norway."
+            },
+            "A07": {
+                "QuestName": "A Vikings Raid",
+                "desc": "'A Viking Raid', ca 1901, is a painting by Ferdinand Leek, a German modernist painter. Visit the original in Schloss Art Gallery, Ahlden - Germany."
+            },
+            "A08": {
+                "QuestName": "Vikings Funeral",
+                "desc": "'The Funeral of a Viking', ca 1893, is a painting by Frank Bernard Dicksee, a British Victorian painter. Visit the original in Art Gallery, Manchester - England."
+            },
+            "A09": {
+                "QuestName": "The King's Ding",
+                "desc": "'Hakon the Good', ca 1876, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
+            },
+            "A10": {
+                "QuestName": "SVOLD'S BATTLE I",
+                "desc": "'Battle of Svolder', ca 1883, is a painting by Peter Otto Sinding, a Norwegian historical painter. Visit the original in Private Collection, Stockholm - Sweden."
+            },
+            "A11": {
+                "QuestName": "Vikings vs Celts",
+                "desc": "'Battle of Stamford Bridge', ca 1870, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in Nordnorsk Kunstmuseum, Tromso - Norway."
+            },
+            "A12": {
+                "QuestName": "SVOLD'S BATTLE II",
+                "desc": "'Battle of Svolder', ca 1883, is a painting by the Norwegian historical painter Peter Otto Sinding. Visit the original in Private Collection, Stockholm - Sweden."
+            },
+            "C07": {
+                "QuestName": "Asgardsreien I",
+                "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
+            }
+        }
+    },
+    "toasts": {
+        "default": {
+            "error": {
+                "title": "Unable to Connect to Server",
+                "desc": "Something went wrong. Please refresh or try again in a few moments."
+            }
+        },
+        "Convert": {
+            "success": {
+                "title": "Orbs Successfully Converted!",
+                "desc": "Well done! Keep the momentum going!"
+            },
+            "error": {
+                "title": "Insufficient Orbs",
+                "desc": "You need more orbs to complete this transaction."
+            }
+        },
+        "Booster_AutomataClaim": {
+            "success": {
+                "title": "Booster Activated Successfully!",
+                "desc": "Your automata is now active and running!"
+            }
+        },
+        "Booster_ShardsClaim": {
+            "success": {
+                "title": "Booster Activated Successfully!",
+                "desc": "Shards Booster claimed! Now multiply your tapping power."
+            }
+        },
+        "Booster_InsufficientOrbs": {
+            "error": {
+                "title": "Booster Claim Unsuccessful",
+                "desc": "Insufficient MultiColor Orbs to activate the booster."
+            }
+        },
+        "Booster_AutomataAlreadyClaim": {
+            "error": {
+                "title": "Booster Claim Unsuccessful",
+                "desc": "Booster activation failed. Please try to claim automata later."
+            }
+        },
+        "Booster_ShardsAlreadyClaim": {
+            "error": {
+                "title": "Booster Claim Unsuccessful",
+                "desc": "Booster activation failed. Please try to multiply your shards tapping power later."
+            }
+        },
+        "Booster_Lost_Not_Available": {
+            "error": {
+                "title": "Quest Not Available",
+                "desc": "Comeback Tomorrow!"
+            }
+        },
+        "Quest_complete": {
+            "success": {
+                "title": "Congratulations! Quest Completed!",
+                "desc": "Congratulations! You've completed the quest."
+            },
+            "error": {
+                "title": "Quest Completion Failed",
+                "desc": "There was an issue completing the quest. Please ensure the quest is fully completed and try again later."
+            }
+        },
+        "Quest_claim": {
+            "success": {
+                "title": "Quest Successfully Claimed!",
+                "desc": "You've successfully claimed the quest.  Keep going to unlock more rewards!"
+            },
+            "error": {
+                "title": "Insufficient Orbs for Quest Claim",
+                "desc": "You don’t have enough orbs to claim this quest. Please collect more and try again."
+            }
+        },
+        "Quest_claim_InsufficientOrbs": {
+            "error": {
+                "title": "Insufficient Orbs for Quest Claim",
+                "desc": "You don’t have enough orbs to claim this quest. Please collect more and try again."
+            }
+        },
+        "Quest_claim_AlreadyClaimed": {
+            "error": {
+                "title": "Quest Already Claimed",
+                "desc": "You’ve already claimed this quest. Check your active quests for details."
+            }
+        },
+        "Quest_orb_claim": {
+            "success": {
+                "title": "Orbs Successfully Claimed!",
+                "desc": "You've successfully claimed your orbs. Enjoy your rewards and keep progressing!"
+            },
+            "error": {
+                "title": "Orbs Claim Failed",
+                "desc": "There was an issue claiming your orbs. Please try again later."
+            }
+        },
+        "Quest_share": {
+            "success": {
+                "title": "Quest Successfully Shared!",
+                "desc": "Congratulations! You've successfully shared your quest and earned an extra orb."
+            },
+            "error": {
+                "title": "Quest Share Failed",
+                "desc": "There was an issue sharing your quest. Please try again later."
+            }
+        },
+        "ReferralCopy": {
+            "success": {
+                "title": "Referral Link Copied!",
+                "desc": "Your referral link has been copied to the clipboard. Share it with your friends!"
+            }
+        },
+        "Ton wallet connect": {
+            "success": {
+                "title": "Wallet Connected Successfully!",
+                "desc": "Your TON wallet has been connected."
+            },
+            "error": {
+                "title": "Wallet Connection Failed",
+                "desc": "There was an issue connecting to your TON wallet. Please try again later."
+            }
+        }
+    }
+    
+}
