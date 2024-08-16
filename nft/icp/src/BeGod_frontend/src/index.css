@@ -133,13 +133,13 @@ body{
 .flip-card {
   background-color: transparent;
   perspective: 1000px;
-  width: 190px; /* Width for desktop */
-  height: 254px; /* Height for desktop */
+  width: 250px; /* Width for desktop */
+  height: 324px; /* Height for desktop */
   flex-shrink: 0;
 }
 
 .flip-card-inner {
-  position: relative;
+  /* position: relative; */
   width: 100%;
   height: 100%;
   text-align: center;
@@ -189,7 +189,7 @@ body{
   width: 100%;
   height: 100%;
   transition: transform 0.3s ease;
-  transform-origin: bottom left;
+  transform-origin: bottom center;
 }
 
 .stacked-image:nth-child(1) {
@@ -206,17 +206,17 @@ body{
 }
 
 .image-stack:hover .stacked-image:nth-child(1) {
-  transform: rotate(40deg) translateX(-5%) translateY(-5%);
+  transform: rotate(30deg) translateX(-5%) translateY(-5%);
 }
 .image-stack:hover .stacked-image:nth-child(2) {
-  transform: rotate(30deg) translateX(-10%) translateY(-10%);
+  transform: rotate(20deg) translateX(-10%) translateY(-10%);
 }
 .image-stack:hover .stacked-image:nth-child(3) {
-  transform: rotate(20deg) translateX(-15%) translateY(-15%);
+  transform: rotate(15deg) translateX(-15%) translateY(-15%);
 }
-.image-stack:hover .stacked-image:nth-child(4) {
+/* .image-stack:hover .stacked-image:nth-child(4) {
   transform: rotate(10deg) translateX(-20%) translateY(-20%);
-}
+} */
 
 /* Background image on button background */
 .explore-button {

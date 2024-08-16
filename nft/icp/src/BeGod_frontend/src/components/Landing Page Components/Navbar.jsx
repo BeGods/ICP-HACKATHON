@@ -46,11 +46,11 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className='w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
-                <div className='flex gap-[20vw] ml-[8vw] pt-8'>
-                    <div style={{ fontFamily: 'MyCustomFont' }} className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF]'>
+                <div className='flex gap-[20vw] pt-8'>
+                    <div style={{ fontFamily: 'MyCustomFont' }} className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF] pl-20'>
                         Logo
                     </div>
-                    <div className='flex items-center gap-[5vw]'>
+                    <div className='flex items-center gap-[5vw] -ml-40'>
                         <div style={{ fontFamily: 'MyCustomFont' }} className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF]'>
                             Home
                         </div>
@@ -60,8 +60,8 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className='flex gap-8 mr-12 pt-8'>
-                    <input type="text" placeholder='Search' className='w-[13vw] h-[4vh] pl-4 text-white bg-inherit border-[2px] border-gray-200' />
-                    <button style={{ fontFamily: 'MyCustomFont' }} className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[13vw] h-[4vh]'>Connect Wallet</button>
+                    <input type="text" placeholder='Search' className='w-[20vw] h-[5vh] pl-4 text-white bg-inherit border-[2px] border-gray-200' />
+                    <button style={{ fontFamily: 'MyCustomFont' }} className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[20vw] h-[5vh]'>Connect Wallet</button>
                 </div>
             </div>
 

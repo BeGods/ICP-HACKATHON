@@ -46,7 +46,7 @@ const CollectionTypes = () => {
             <div className="h-[80%] w-full md:w-1/2 flex items-end">
                 <img src={images[currentIndex].img} alt="" className="h-full w-full object-cover" />
             </div>
-            <div className="absolute bg-white bg-opacity-20 sm:bg-inherit w-[80%] sm:w-1/2 right-0 bottom-8 sm:bottom-40 sm:mr-32 p-4 flex flex-col text-white items-end sm:items-start gap-4">
+            <div className="absolute top-0 right-0 bottom-0 flex flex-col justify-center items-end sm:items-start sm:right-32 sm:bottom-40 p-4 w-[80%] sm:w-1/2 bg-white bg-opacity-20 sm:bg-inherit text-white">
                 <h1 className="text-[20px] sm:text-[30px] font-[400] leading-[40px] text-right sm:text-left">
                     {images[currentIndex].h}
                 </h1>
