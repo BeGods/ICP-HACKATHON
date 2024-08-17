@@ -54,7 +54,7 @@ export const getLeaderboard = async (req, res) => {
 
     res.status(200).json({
       leaderboard: overallLeaderboard,
-      squad: squadLeaderboard,
+      squad: squadLeaderboard.sort((a, b) => a.squadRank - b.squadRank),
     });
   } catch (error) {
     res.status(500).json({
@@ -199,5 +199,17 @@ export const updateAnnouncement = async (req, res) => {
       message: "Internal server error.",
       error: error.message,
     });
+  }
+};
+
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({
+      telegramUsername: { $regex: /^AVATAR\w*/ },
+    });
+
+    res.status(200).json({ userData: users });
+  } catch (error) {
+    console.log(error);
   }
 };

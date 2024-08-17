@@ -26,9 +26,6 @@ export const claimQuest = async (req, res) => {
     const quest = req.quest;
     const requiredOrbs = quest.requiredOrbs;
 
-    console.log("userId", userId._id);
-    console.log("quest", quest.taskId);
-
     // Add to claimed quests
     await milestones.findOneAndUpdate(
       { userId: userId._id, "claimedQuests.taskId": quest.taskId },
