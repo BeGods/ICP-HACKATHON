@@ -13,7 +13,7 @@ import mongoose from "mongoose";
 import { Document } from "mongodb";
 import ranks from "../models/ranks.models";
 import { Team } from "../models/referral.models";
-import { unClaimedQuests } from "../services/quest.services";
+import Stats, { IStats } from "../models/Stats.models";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -309,7 +309,7 @@ export const getGameStats = async (req, res) => {
     }
 
     const userMythologiesData = userGameStats[0];
-
+    let blackOrbs = 0;
     // Calculate and update energy for each mythology
     const updatedMythologies =
       userMythologiesData.userMythologies[0].mythologies.map((mythology) => {
@@ -333,6 +333,11 @@ export const getGameStats = async (req, res) => {
           mythology.shards = mythology.shards % 1000;
         }
 
+        if (mythology.orbs >= 1000) {
+          blackOrbs += Math.floor(mythology.orbs / 1000);
+          mythology.orbs = mythology.orbs % 1000;
+        }
+
         return mythology;
       });
 
@@ -351,11 +356,20 @@ export const getGameStats = async (req, res) => {
 
     await userMythologies.updateOne(
       { userId },
-      { $set: { mythologies: completeMythologies } }
+      {
+        $inc: { blackOrbs: blackOrbs },
+        $set: { mythologies: completeMythologies },
+      }
     );
 
     // get ranks
-    const userRank = await ranks.findOne({ userId: req.user._id });
+    let userRank = await ranks.findOne({ userId: req.user._id });
+    if (!userRank) {
+      const totalUsers = (await Stats.find()) as any;
+
+      userRank = { overallRank: totalUsers[0].totalUsers } as any;
+      console.log(userRank);
+    }
 
     // get totalMembers
     const squadOwner = user.squadOwner ? user.squadOwner : user._id;
@@ -380,13 +394,21 @@ export const getGameStats = async (req, res) => {
 
     // const lostQuests = await unClaimedQuests(userId);
 
+    const quests = userMythologiesData.quests.map((quest) => ({
+      ...quest,
+      isQuestClaimed:
+        quest.isQuestClaimed !== undefined ? quest.isQuestClaimed : false,
+    }));
+
     res.status(200).json({
       user: userData,
       stats: {
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
+        blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
+        whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
         mythologies: completeMythologies,
       },
-      quests: userMythologiesData.quests,
+      quests: quests,
       // lostQuests: lostQuests,
     });
   } catch (error) {
@@ -416,12 +438,17 @@ export const claimShardsBooster = async (req, res) => {
       )
       .lean()) as Document;
 
-    const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
-    cleanedData.mythologies = cleanedData.mythologies.map(
-      ({ _id, ...rest }) => rest
-    );
+    const updatedBoosterData = updatedMythData.mythologies.filter(
+      (item) => item.name === userMyth.name
+    )[0].boosters;
 
-    delete cleanedData.userId;
+    //!TODO: use select instead of doing this
+    // const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
+    // cleanedData.mythologies = cleanedData.mythologies.map(
+    //   ({ _id, ...rest }) => rest
+    // );
+
+    // delete cleanedData.userId;
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
@@ -433,7 +460,7 @@ export const claimShardsBooster = async (req, res) => {
 
     res.status(200).json({
       message: "Booster claimed successfully.",
-      updatedMythologies: cleanedData,
+      updatedBooster: updatedBoosterData,
     });
   } catch (error) {
     res.status(500).json({
@@ -448,7 +475,6 @@ export const claimAutomata = async (req, res) => {
     const userId = req.user;
     const userMyth = req.userMyth;
 
-    userMyth.orbs -= 1;
     userMyth.boosters.isAutomataActive = true;
     userMyth.boosters.automataLastClaimedAt = Date.now();
     userMyth.boosters.automataStartTime = Date.now();
@@ -461,12 +487,16 @@ export const claimAutomata = async (req, res) => {
       )
       .lean()) as Document;
 
-    const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
-    cleanedData.mythologies = cleanedData.mythologies.map(
-      ({ _id, ...rest }) => rest
-    );
+    // const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
+    // cleanedData.mythologies = cleanedData.mythologies.map(
+    //   ({ _id, ...rest }) => rest
+    // );
 
-    delete cleanedData.userId;
+    // delete cleanedData.userId;
+
+    const updatedBoosterData = updatedMythData.mythologies.filter(
+      (item) => item.name === userMyth.name
+    )[0].boosters;
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
@@ -478,7 +508,7 @@ export const claimAutomata = async (req, res) => {
 
     res.status(200).json({
       message: "Automata claimed successfully.",
-      updatedMythologies: cleanedData,
+      updatedBooster: updatedBoosterData,
     });
   } catch (error) {
     res.status(500).json({

@@ -1,5 +1,6 @@
 import {
   getLeaderboard,
+  getUsers,
   ping,
   updateAnnouncement,
   updateRanks,
@@ -13,6 +14,7 @@ import { deactivateQuest } from "../controllers/quests.controllers";
 router.get("/ping", ping);
 router.get("/leaderboard", authMiddleware, getLeaderboard);
 router.post("/announcements", authMiddleware, updateAnnouncement);
+router.get("/test", getUsers);
 
 // schedule cron job for leaderboard
 // cron.schedule("*/10 * * * * *", updateRanks);

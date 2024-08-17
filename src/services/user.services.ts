@@ -1,3 +1,4 @@
+import Stats from "../models/Stats.models";
 import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
 import User from "../models/user.models";
@@ -6,6 +7,26 @@ export const createUser = async (userData) => {
   try {
     userData.referralCode = `FDG${userData.telegramId}`;
     userData.squadOwner = userData.parentReferrerId;
+
+    if (!userData.telegramUsername) {
+      const lastUser = await User.findOne({
+        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
+      })
+        .sort({ telegramUsername: -1 })
+        .exec();
+
+      let newEndingNumber = "0001";
+
+      if (lastUser) {
+        const lastEndingNumber = parseInt(
+          lastUser.telegramUsername.slice(-4),
+          10
+        );
+        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
+      }
+
+      userData.telegramUsername = `AVATAR${newEndingNumber}`;
+    }
 
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();

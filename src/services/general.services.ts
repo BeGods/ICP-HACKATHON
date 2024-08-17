@@ -4,18 +4,41 @@ export const getLeaderboardSnapshot = async () => {
   try {
     const pipeline = [
       {
-        $unwind: "$mythologies",
+        $unwind: {
+          path: "$mythologies",
+          preserveNullAndEmptyArrays: true, // This ensures that if a user has no mythologies, they still get included in the aggregation
+        },
       },
       {
         $group: {
           _id: "$userId",
-          totalOrbs: { $sum: "$mythologies.orbs" },
-          multiColorOrbs: { $first: "$multiColorOrbs" },
+          totalOrbs: {
+            $sum: {
+              $ifNull: ["$mythologies.orbs", 0],
+            },
+          },
+          multiColorOrbs: {
+            $first: {
+              $ifNull: ["$multiColorOrbs", 0],
+            },
+          },
+          blackOrbs: {
+            $first: {
+              $ifNull: ["$blackOrbs", 0],
+            },
+          },
+          whiteOrbs: {
+            $first: {
+              $ifNull: ["$whiteOrbs", 0],
+            },
+          },
         },
       },
       {
         $addFields: {
-          totalOrbs: { $add: ["$totalOrbs", "$multiColorOrbs"] },
+          totalOrbs: {
+            $add: ["$totalOrbs", "$multiColorOrbs", "$blackOrbs", "$whiteOrbs"],
+          },
         },
       },
       {

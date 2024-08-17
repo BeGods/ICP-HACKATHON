@@ -152,7 +152,7 @@ export const verifyCompletedQuest = async (req, res, next) => {
     const validCompletedQuest = await questAggregator(userId, questId);
 
     // Check if task is not completed
-    if (!validCompletedQuest) {
+    if (!validCompletedQuest.isClaimed) {
       throw new Error("Please complete the quest to claim reward.");
     }
 

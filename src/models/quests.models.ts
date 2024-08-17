@@ -30,8 +30,11 @@ const questSchema = new Schema(
     },
     mythology: {
       type: String,
-      enum: ["Celtic", "Egyptian", "Greek", "Norse"],
+      enum: ["Celtic", "Egyptian", "Greek", "Norse", "Other"],
       required: true,
+    },
+    secret: {
+      type: Boolean,
     },
     status: {
       type: String,
