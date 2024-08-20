@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { ThemeToggle } from './ThemeToggle';
-
+import "./i18n.js"
 // export function ThemeToggle() {
 //   // Use `useColorModeValue` to get the background color based on the color mode
 // 

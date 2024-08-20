@@ -2,14 +2,14 @@ import React from 'react';
 
 const TopSelling = () => {
   const images = [
-    { img1: "/image/nft.png",name:"TANNGIOST",sold:"50",ICP:"0.56"},
-    { img1: "/image/Component 25.png",name:"POSIDONE",sold:"50",ICP:"0.56" },
-    { img1: "/image/Component 27.png",name:"SET",sold:"50",ICP:"0.56" },
-    { img1: "/image/Component 28.png",name:"KARNAYAM",sold:"50",ICP:"0.56" },
-    { img1: "/image/Component 22.png",name:"MIDGARD",sold:"50",ICP:"0.56" },
-    { img1: "/image/Front.png",name:"CERBERVES",sold:"50",ICP:"0.56" },
-    { img1: "/image/Component 43.png",name:"RA",sold:"50",ICP:"0.56" },
-    { img1: "/image/Component 45.png",name:"DANU",sold:"50",ICP:"0.56" },
+    { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
+    { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
+    { img1: "/image/Component 27.png", name: "SET", sold: "50", ICP: "0.56" },
+    { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
+    { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
+    { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
+    { img1: "/image/Component 43.png", name: "RA", sold: "50", ICP: "0.56" },
+    { img1: "/image/Component 45.png", name: "DANU", sold: "50", ICP: "0.56" },
   ];
 
   return (
