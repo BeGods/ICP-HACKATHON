@@ -21,6 +21,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser, logoutUserAndClear } from '../../redux/authSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
+import {Link} from "react-router-dom"
 const sideBarData = [
   {
     text: "Dashboard",
@@ -129,11 +130,10 @@ SidebarContent.propTypes = {
 };
 
 function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
-  const location = useLocation();
   return (
     <Box
-      as="a"
-      href={href}
+      as={Link}
+      to={href}
       style={{ textDecoration: 'none' }}
       _focus={{ boxShadow: 'none' }}
       {...rest}

@@ -3,6 +3,7 @@ import { AddIcon, ArrowBackIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 import YellowButton from '../../components/button/YellowButton';
 import { Button } from '@chakra-ui/react';
+import DropzoneWithUrlInput from '../components/DropzoneWithUrlInput';
 
 const CreateCollection = () => {
     const navigate = useNavigate();
@@ -27,13 +28,9 @@ const CreateCollection = () => {
                     Description:
                     <input type="text" className='w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
                 </label>
-                <label htmlFor="" className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
-                    Logo IMG:
-                    <input
-                        id="logo-upload"
-                        type="file"
-                        className="w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md mb-2"
-                    />
+                <label htmlFor="" className='mt-[20px] w-[100%] h-[150px] md:h-[180px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
+                    Logo
+                    <DropzoneWithUrlInput/>
                 </label>
                 <label htmlFor="" className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     No. of NFT's:
