@@ -18,7 +18,7 @@ function Users() {
   return (
     <div className='w-[80vw]'>
       <Box color='white'>
-        <Box mt={{base:'20%',md:'5%'}} w={{base:'80%',sm:'100%'}} mx={{ base: '4%',sm:'8%', md: '10%' }}>
+        <Box mt={{base:'20%',md:'5%',xl:'10%','2xl':'10%'}} w={{base:'80%',sm:'100%'}} mx={{ base: '4%',sm:'8%', md: '10%','2xl':'20%' }}>
           <Input
             placeholder='Search'
             w={{ base: '100%', sm: '90%', md: '948px' }}
@@ -29,7 +29,7 @@ function Users() {
             p='4'
           />
         </Box>
-        <Box w={{ base: '90%', sm: '100%', md: '948px' }} mx={{ base: '0', sm: '4%', md: '10%' }} mt='5%'>
+        <Box w={{ base: '90%', sm: '100%', md: '948px' }} mx={{ base: '0', sm: '4%', md: '10%','2xl':'20%  '}} mt='5%'>
           <TableContainer w={'100%'}>
             <Table variant='simple'>
               <Thead bg='#FCD37B'>

@@ -4,7 +4,7 @@ import { collection } from '../../TextData'
 import { Link } from 'react-router-dom'
 function Collection() {
     return (
-        <div className='custome_max_width overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll'>
+        <div className='custome_max_width overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:pt-32 2xl:ml-[10vw]'>
             <div className=' '>
                 <div className='flex justify-end gap-x-6 -ml-12 md:ml-0'>
                     <YellowButton>

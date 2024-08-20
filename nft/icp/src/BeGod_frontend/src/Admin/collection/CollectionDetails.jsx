@@ -15,7 +15,7 @@ function CollectionDetails() {
   const navigate = useNavigate();
   const { heading, img, detail, collectionId, heading2, NftList } = filteredCollection.CollectionDetails
   return (
-    <div className=' h-screen overflow-y-scroll m-auto md:custome_max_width'>
+    <div className=' h-screen overflow-y-scroll m-auto md:custome_max_width 2xl:ml-[8%]'>
       <div className=' space-y-4'>
         <div className='flex justify-start w-[35%] md:w-11/12 pt-9 hover:cursor-pointer'>
           <ArrowBackIcon onClick={() => navigate(-1)} color='white' />

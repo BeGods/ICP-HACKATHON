@@ -4,7 +4,7 @@ const UserDetails = () => {
     const filteredNft = collection.collections[0].CollectionDetails.NftList[0];
     console.log(filteredNft.img)
     return (
-        <div className='text-white mt-[20%] md:mt-0'>
+        <div className='text-white mt-[20%] md:mt-0 2xl:ml-[10%]'>
             <div className='md:ml-[10%] mt-[5%]'>
                 <input type="text"
                     placeholder='Search'

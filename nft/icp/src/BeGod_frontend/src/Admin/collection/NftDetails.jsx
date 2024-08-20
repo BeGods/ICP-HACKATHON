@@ -11,11 +11,11 @@ const NftDetails = () => {
     // const filteredNft = collection.collections[0].CollectionDetails.NftList.find((nft)=>nft.License_No===id);
     console.log(filteredNft);
     return (
-        <div>
-            <div className=' flex justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer'>
+        <div className='2xl:mt-[10vh]'>
+            <div className=' flex justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer 2xl:ml-[13%]'>
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
             </div>
-            <div className='flex flex-col sm:flex-row md:flex-row sm:mt-[20%] md:mt-0 md:ml-[100px]'>
+            <div className='flex flex-col sm:flex-row md:flex-row sm:mt-[20%] md:mt-0 md:ml-[100px] 2xl:ml-[20%]'>
                 <div className='h-64 w-[200px] md:h-[387.2px] md:w-[277px] ml-12 mt-2 sm:mt-[3%] md:mt-[53px]'>
                     <img src={filteredNft.img} alt="" />
                 </div>

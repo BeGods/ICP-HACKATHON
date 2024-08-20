@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   IconButton,
@@ -81,7 +81,7 @@ function SidebarContent({ onClose, ...rest }) {
   return (
     <Box
       bg={useColorModeValue('#29292C', 'gray.900')}
-      w={{ base: 'full', md: 60 }}
+      w={{ base: 'full', md: 60,'2xl':80}}
       pos="fixed"
       h="full"
       display={{ md: "flex" }}

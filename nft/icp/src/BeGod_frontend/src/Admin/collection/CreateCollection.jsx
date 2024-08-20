@@ -8,11 +8,11 @@ const CreateCollection = () => {
     const navigate = useNavigate();
     return (
         <div>
-            <div className='flex flex-row gap-4 justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer'>
+            <div className='flex flex-row gap-4 justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer 2xl:pt-[5vh] 2xl:ml-[10%]'>
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
                 <h1 className='text-2xl text-white -mt-2'>Create Collection</h1>
             </div>
-            <form className='ml-[10%] sm:ml-[10%] md:ml-[85px] w-9/12 space-y-4 mt-4'>
+            <form className='ml-[10%] sm:ml-[10%] md:ml-[85px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
                 <div className='flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]'>
                     <label htmlFor="" className='w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                         Collection Name:
@@ -29,7 +29,11 @@ const CreateCollection = () => {
                 </label>
                 <label htmlFor="" className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     Logo IMG:
-                    <input type="file" className='w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
+                    <input
+                        id="logo-upload"
+                        type="file"
+                        className="w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md mb-2"
+                    />
                 </label>
                 <label htmlFor="" className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     No. of NFT's:
