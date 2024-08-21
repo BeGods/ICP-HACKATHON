@@ -2,6 +2,7 @@ import { Box, Button, ChakraProvider, useColorMode, useColorModeValue } from "@c
 import App from "./App";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { BrowserRouter } from "react-router-dom";
 
 export function ThemeToggle() {
   // Use `useColorModeValue` to get the background color based on the color mode
@@ -9,9 +10,11 @@ export function ThemeToggle() {
 
   return (
     <ChakraProvider bgColor='#000'>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <BrowserRouter>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </BrowserRouter>
     </ChakraProvider>
   );
 }

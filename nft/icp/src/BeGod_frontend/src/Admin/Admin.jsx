@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import SideBar from '../components/sideBar/SideBar';
+import SideBar from './SideBar';
 import DashBoard from './DashBoard';
 import Collection from './collection/Collection';
 import Users from './Users';

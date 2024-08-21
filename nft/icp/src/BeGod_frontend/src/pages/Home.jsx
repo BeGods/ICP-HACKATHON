@@ -1,42 +1,42 @@
 import React from 'react'
-import Navbar from './Landing Page Components/Navbar'
-import YellowButton from './button/YellowButton'
-import TopSelling from './Landing Page Components/TopSelling'
-import Collections from './Landing Page Components/Collections'
-import Footer from './Footer'
-import Circle from './Landing Page Components/Circle'
-import CollectionTypes from './Landing Page Components/CollectionTypes'
+import Navbar from '../components/Landing Page Components/Navbar'
+import YellowButton from '../components/button/YellowButton'
+import TopSelling from '../components/Landing Page Components/TopSelling'
+import Collections from '../components/Landing Page Components/Collections'
+import Footer from '../components/Footer'
+import Circle from '../components/Landing Page Components/Circle'
+import CollectionTypes from '../components/Landing Page Components/CollectionTypes'
 import { useTranslation } from 'react-i18next'
 
 const Home = () => {
     const { t } = useTranslation();
     const { heading, description, button } = t("home")
-    const url = 'https://google-translate1.p.rapidapi.com/language/translate/v2/detect';
-    const data = new FormData();
-    data.append('q', 'English is hard, but detectably so');
+    // const url = 'https://google-translate1.p.rapidapi.com/language/translate/v2/detect';
+    // const data = new FormData();
+    // data.append('q', 'English is hard, but detectably so');
 
-    const options = {
-        method: 'POST',
-        headers: {
-            'x-rapidapi-key': 'a9b9a5ad21msh094f2dc7648ab52p1f0271jsne4f74809ce94',
-            'x-rapidapi-host': 'google-translate1.p.rapidapi.com',
-            'Accept-Encoding': 'application/gzip'
-        },
-        body: data
-    };
+    // const options = {
+    //     method: 'POST',
+    //     headers: {
+    //         'x-rapidapi-key': 'a9b9a5ad21msh094f2dc7648ab52p1f0271jsne4f74809ce94',
+    //         'x-rapidapi-host': 'google-translate1.p.rapidapi.com',
+    //         'Accept-Encoding': 'application/gzip'
+    //     },
+    //     body: data
+    // };
 
-    const translate = async () => {
-        try {
-            const response = await fetch(url, options);
-            const result = await response.text();
-            console.log(result);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    translate();
+    // const translate = async () => {
+    //     try {
+    //         const response = await fetch(url, options);
+    //         const result = await response.text();
+    //         console.log(result);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
+    // translate();
     return (
-        <div>
+        <div className="md:w-[130vw] lg:w-auto">
             <Navbar />
             <div className='lg:flex'>
                 <div className='w-screen lg:w-1/2 h-[50vh] ml-[5vw] sm:ml-[8vw] md:ml-[22vw] lg:ml-32 mt-[10vh] md:mt-[23vh]'>

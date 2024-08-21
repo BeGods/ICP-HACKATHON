@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaBars, FaTimes, FaSearch } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ const Navbar = () => {
     }, [lang, i18n]);
 
     return (
-        <div className='w-full h-[10vh] flex items-center justify-between text-white px-4 md:px-8'>
+        <div className='w-full h-[10vh] flex items-center justify-between text-white'>
             <div className='flex items-center gap-4'>
                 <button onClick={toggleMenu} className='md:hidden'>
                     {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -57,15 +58,9 @@ const Navbar = () => {
                 </div>
                 <div className='flex gap-8 mr-12 pt-8'>
                     <input type="text" placeholder={t('input')} className='w-[20vw] h-[5vh] pl-4 text-white bg-inherit border-[2px] border-gray-200' />
-                    <button className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[20vw] h-[5vh]'>{t('button')}</button>
+                    <Link to="/profile" className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[20vw] h-[5vh]'>{t('button')}</Link>
                 </div>
-                <select onChange={(e) => setLang(e.target.value)} className='bg-inherit flex items-center justify-center text-lg border-[2px] border-gray-200 w-[5vw] h-[5vh] mt-8'>
-                    <option value="en">English</option>
-                    <option value="hi">Hindi</option>
-                    <option value="fr">French</option>
-                    <option value="ar">Arabic</option>
-                    <option value="es">Spanish</option>
-                </select>
+                
             </div>
             {isOpen && (
                 <div className='absolute top-[10vh] left-0 w-full h-screen bg-black bg-opacity-70 backdrop-blur-lg text-white flex flex-col items-center gap-8 py-8 md:hidden z-10'>

@@ -18,7 +18,7 @@ import { FiMenu } from 'react-icons/fi';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logoutUser, logoutUserAndClear } from '../../redux/authSlice';
+import { logoutUser, logoutUserAndClear } from '../redux/authSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useSelector } from 'react-redux';
 import {Link} from "react-router-dom"
