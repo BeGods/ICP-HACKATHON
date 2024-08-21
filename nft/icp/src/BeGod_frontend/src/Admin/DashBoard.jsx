@@ -16,9 +16,6 @@ function DashBoard() {
             <h3>Total Users</h3>
             <p>1</p>
           </div>
-
-
-
       </div>
 
     </div>

@@ -7,7 +7,7 @@ const NftCard = ({ id, list }) => {
     const [flip, setFlip] = useState(false);
 
     return (
-        <div className="nftcard-container sm:mt-12 md:mt-4 w-[20%] h-[30%]">
+        <div className="nftcard-container sm:mt-12 md:mt-4 w-[30%] h-[30%]">
             <ReactCardFlip isFlipped={flip} flipDirection="horizontal">
                 {/* Front Side */}
                 <div

@@ -29,7 +29,7 @@ function Admin() {
   return (
     <div className='flex min-h-screen'>
       <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-      <div className="flex-1 mx-auto">
+      <div className="max-w-[1920px] mx-auto  flex-1 mx-auto">
         <Routes>
           <Route path='/' element={<DashBoard />} />
           <Route path='/dashboard' element={<DashBoard />} />

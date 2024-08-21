@@ -58,7 +58,7 @@ const CreateCollection = () => {
                     <button onClick={() => navigate(-1)} className='w-[30%] sm:w-[25%] md:w-[15%] h-[43px] bg-black text-[#FFFFFF] rounded-md'>
                         Cancel
                     </button>
-                    <button className='w-[60%] sm:w-[25%] md:w-[15%] h-[43px] bg-[#FCD37B] text-[#000000] rounded-md'>
+                    <button className='w-[60%] sm:w-[30%] md:w-[30%] lg:w-[25%]  2xl:w-[15%] h-[43px] bg-[#FCD37B] text-[#000000] rounded-md'>
                         Create Collection
                     </button>
                 </div>

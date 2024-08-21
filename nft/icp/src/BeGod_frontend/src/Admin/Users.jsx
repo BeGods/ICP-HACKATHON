@@ -18,10 +18,10 @@ function Users() {
   return (
     <div className='w-[80vw] overflow-hidden'>
       <Box color='white'>
-        <Box mt={{base:'20%',md:'5%',xl:'10%','2xl':'10%'}} w={{base:'80%',sm:'100%'}} mx={{ base: '4%',sm:'8%', md: '10%','2xl':'20%' }}>
+        <Box mt={{ base: '20%', md: '15%', xl: '10%', '2xl': '10%' }} w={{ base: '80%', sm: '100%' }} mx={{ base: '4%', sm: '8%', md: '7%', lg: '7%', '2xl': '20%' }}>
           <Input
             placeholder='Search'
-            w={{ base: '100%', sm: '90%', md: '948px','2xl':'75%' }}
+            w={{ base: '100%', sm: '90%', md: '85%', '2xl': '75%' }}
             h='35px'
             border='1px'
             borderColor='white'
@@ -29,7 +29,7 @@ function Users() {
             p='4'
           />
         </Box>
-        <Box w={{ base: '90%', sm: '100%', md: '948px' ,'2xl':'60vw' }} mx={{ base: '0', sm: '4%', md: '10%','2xl':'20%  '}} mt='5%'>
+        <Box w={{ base: '90%', sm: '100%', md: '85%', '2xl': '60vw' }} mx={{ base: '4%', sm: '8%', md: '7%', lg: '7%', '2xl': '20%' }} mt='5%'>
           <TableContainer w={'100%'}>
             <Table variant='simple'>
               <Thead bg='#FCD37B'>
@@ -42,7 +42,9 @@ function Users() {
               </Thead>
               <Tbody bg='#29292C'>
                 <Tr>
-                  <Td textAlign='center'>Barry</Td>
+                  <Td textAlign='center'><div className='flex gap-4'>
+                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+                    Barry</div></Td>
                   <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
                   <Td textAlign='center'>1951982</Td>
                   <Td textAlign='center'>
@@ -61,7 +63,9 @@ function Users() {
                   </Td>
                 </Tr>
                 <Tr>
-                  <Td textAlign='center'>Barry</Td>
+                  <Td textAlign='center'><div className='flex gap-4'>
+                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+                    Barry</div></Td>
                   <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
                   <Td textAlign='center'>1951982</Td>
                   <Td textAlign='center'>
@@ -80,8 +84,9 @@ function Users() {
                   </Td>
                 </Tr>
                 <Tr>
-                  <Td textAlign='center'>Barry</Td>
-                  <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
+                  <Td textAlign='center'><div className='flex gap-4'>
+                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+                    Barry</div></Td>                  <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
                   <Td textAlign='center'>1951982</Td>
                   <Td textAlign='center'>
                     <Link to={`/Admin/users/${id}`}>
@@ -99,7 +104,9 @@ function Users() {
                   </Td>
                 </Tr>
                 <Tr>
-                  <Td textAlign='center'>Barry</Td>
+                  <Td textAlign='center'><div className='flex gap-4'>
+                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
+                    Barry</div></Td>
                   <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
                   <Td textAlign='center'>1951982</Td>
                   <Td textAlign='center'>
@@ -129,7 +136,7 @@ function Users() {
           </Box>
         </Box>
       </Box>
-    </div>
+    </div >
   );
 }
 

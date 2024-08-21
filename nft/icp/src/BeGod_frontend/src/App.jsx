@@ -6,7 +6,7 @@ import Home from './components/Home';
 
 function App() {
   return (
-    <main className='max-w-[1920px] mx-auto'>
+    <main className=''>
       <Router>
         <Routes>
           <Route path='/' element={<Home/>}></Route>

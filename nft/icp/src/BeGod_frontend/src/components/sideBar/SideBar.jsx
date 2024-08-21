@@ -44,7 +44,7 @@ export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box h={{ base: "fit-content", md: "100vh" }} bg={useColorModeValue('#161618', '#29292C')}>
+    <Box h={{ base: "fit-content", md: "screen" }} bg={useColorModeValue('#161618', '#29292C')}>
       <SidebarContent onClose={onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         isOpen={isOpen}
@@ -92,7 +92,7 @@ function SidebarContent({ onClose, ...rest }) {
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <CloseButton display={{ base: 'flex', md: 'none' }} color="white" onClick={onClose} />
       </Flex>
-      <div className='flex flex-col justify-between gap-[60vh] md:gap-[55vh] lg:gap-[55vh]'>
+      <div className='h-[90%] flex flex-col justify-between'>
         <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
           {sideBarData.map((link) => (
             <NavItem key={link.text} icon={link.icon} href={link.Link} isActive={location.toLowerCase().includes(link.Link.toLowerCase())} hovered={hovered}>
@@ -100,7 +100,7 @@ function SidebarContent({ onClose, ...rest }) {
             </NavItem>
           ))}
         </div>
-        <div className='flex items-center justify-start gap-x-4 px-2 text-white'>
+        <div className='flex items-center justify-start gap-x-4 px-8 text-white'>
           <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
           <div className='space-y-2'>
             <div className='flex gap-x-2'>
@@ -140,13 +140,14 @@ function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
     >
       <Flex
         align="center"
+        font="bold"
         p="4"
         mx="4"
         borderRadius="lg"
         role="group"
         color={isActive && !hovered?"black":"white"}
         cursor="pointer"
-        bg={isActive && !hovered ? '#FCD37B' : ''}
+        bg={isActive?'#FCD37B':''}
         _hover={{
           bg: '#FCD37B',
           color: 'black',
