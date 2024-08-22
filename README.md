@@ -1,30 +1,19 @@
-# React + TypeScript + Vite
+# TODO
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- telegram, X icons and see what icons we can remove
+- black filter
+- handle if bonus increembnst daily shards 2x thens hould not be more than 7
+- clinetX
+- music --> landing -> gacha -> loader -> ....
+- flash in white -> then black
+- fix tower section -------- done
+- shard glow -------- done
+- automata 2x 3x handle and test automata
+- white flash -> white -> icon + button ( claim )
+- flash faster
+- deduct pay effect and scale symbol insdie orb and number --- done
+- outline
+- booster icons on forges
+- sounds --functionality
+- cleaning
+- components

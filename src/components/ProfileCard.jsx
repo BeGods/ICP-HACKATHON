@@ -3,8 +3,8 @@ import React from "react";
 
 const ProfileCard = (props) => {
   return (
-    <div className="flex gap-[8px] text-center items-center bg-black w-full p-[15px] rounded-button">
-      <div className="flex items-center gap-[20px] rounded-button w-full">
+    <div className="flex gap-[8px] text-center items-center bg-black w-full p-[15px] rounded-primary">
+      <div className="flex items-center gap-[20px] rounded-primary w-full">
         <img
           src="/assets/icons/telegram.svg"
           alt="telegram"

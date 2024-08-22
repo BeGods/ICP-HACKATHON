@@ -1,0 +1,59 @@
+import React, { useState } from "react";
+import IconButton from "../Common/IconButton";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
+
+const languages = [
+  { name: "Select", code: "" },
+  { name: "English", code: "en" },
+  { name: "हिन्दी", code: "hi" },
+  { name: "Русский", code: "ru" },
+  { name: "แบบไทย", code: "th" },
+  { name: "Português", code: "pt" },
+  { name: "Español", code: "es" },
+  { name: "Filipino", code: "fil" },
+];
+
+const Language = ({ close }) => {
+  const { t } = useTranslation();
+  const [lang, setLang] = useState(false);
+  const handleLanuageChange = (e) => {
+    if (e.target.value == "") {
+      i18next.changeLanguage("en");
+    } else {
+      i18next.changeLanguage(e.target.value);
+    }
+  };
+
+  const handleApply = () => {
+    close();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex flex-col justify-start items-center z-50">
+      <div className="flex relative w-[76%] bg-black rounded-primary justify-center items-center flex-col mt-[52px] glow-card p-6">
+        <IconButton align={0} handleClick={close} activeMyth={4} />
+        <h1 className="text-primary mb-4">{t(`profile.lang`)}</h1>
+        <select
+          value={lang}
+          onChange={handleLanuageChange}
+          className="bg-gray-800 text-white p-2 rounded w-full h-[40px] text-tertiary"
+        >
+          {languages.map((language) => (
+            <option key={language.code} value={language.code}>
+              {language.name === "Select" ? t("profile.select") : language.name}
+            </option>
+          ))}
+        </select>
+        <div
+          onClick={handleApply}
+          className="w-full bg-white text-black text-center text-xl rounded-md py-2 mt-6"
+        >
+          {t(`profile.apply`)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Language;

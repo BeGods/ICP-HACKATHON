@@ -1,0 +1,375 @@
+
+/* symbols glow */
+.glow-symbol-celtic {
+    filter: drop-shadow(0 0 6px var(--celtic-green-light));
+}
+
+.glow-symbol-egyptian {
+    filter: drop-shadow(0 0 6px var(--egyptian-yellow-light));
+}
+
+.glow-symbol-greek {
+    filter: drop-shadow(0 0 6px var(--greek-red-light));
+}
+
+.glow-symbol-norse {
+    filter: drop-shadow(0 0 6px var(--norse-blue-light));
+}
+
+.glow-symbol-black {
+  filter: drop-shadow(0 0 6px black);
+}
+
+.glow-quest{
+  font-family: 'FOF';
+  font-size: 18px;
+    text-shadow: 
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black
+}
+
+/* Glow quest text */
+.glow-quest-celtic {
+  font-family: 'FOF';
+  font-size: 18px;
+    text-shadow: 
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black
+}
+
+.glow-quest-egyptian {
+  font-family: 'Egyptian';
+  font-size: 22px;
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.glow-quest-greek {
+  font-family: 'Greek';
+  font-size: 24px;
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.glow-quest-norse {
+  font-family: 'Norse';
+  font-size: 24px;
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.glow-quest-other{
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+  
+/* text glow */
+.glow-text-celtic {
+    font-family: 'Celtic';
+    font-size: 15vw;
+      text-shadow: 
+      0 0 5px var(--celtic-color),
+      0 0 5px var(--celtic-color),
+      0 0 5px var(--celtic-color)
+  }
+  
+  .glow-text-egyptian {
+      font-family: 'Egyptian';
+      font-size: 15vw;
+      text-shadow: 
+      0 0 5px var(--egyptian-color),
+      0 0 5px var(--egyptian-color),
+      0 0 5px var(--egyptian-color)
+  }
+  
+  .glow-text-greek {
+      font-family: 'Greek';
+      font-size: 15vw;
+      text-shadow: 
+      0 0 5px var(--greek-color),
+      0 0 5px var(--greek-color),
+      0 0 5px var(--greek-color)
+  }
+
+.glow-text-norse {
+    font-family: 'Norse';
+    font-size: 15vw;
+    text-shadow: 
+    0 0 5px var(--norse-color),
+    0 0 5px var(--norse-color),
+    0 0 5px var(--norse-color)
+}
+
+.glow-text-small-celtic {
+    text-shadow: 
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color)
+}
+
+.glow-text-small-egyptian {
+    text-shadow: 
+    0 0 5px var(--egyptian-color),
+    0 0 5px var(--egyptian-color),
+    0 0 5px var(--egyptian-color)
+}
+
+.glow-text-small-greek {
+    text-shadow: 
+    0 0 5px var(--greek-color),
+    0 0 5px var(--greek-color),
+    0 0 5px var(--greek-color)
+}
+
+.glow-text-small-norse {
+
+  text-shadow: 
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color)
+}
+
+.glow-text-black {
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white
+}
+
+.glow-text-white {
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black;
+}
+
+.orb-glow{
+  text-shadow: 
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black;
+  filter: drop-shadow(0 0 1px black);
+}
+
+.fof-text-shadow{
+  filter: drop-shadow(1px 1px 0px #DEAC80);
+}
+
+.fof-shadow{
+  text-shadow: 0.5px 0.5px 0px #DEAC80;
+}
+
+.footer-shadow{
+  filter: drop-shadow(3px 3px 0px black);
+}
+
+.fof-white{
+  filter: drop-shadow(1px 1px 0px #DEAC80);
+}
+
+/* Orbs and footer icons glow */
+
+.glow-icon-celtic {
+  /* filter: drop-shadow(2px 2px 0px var(--celtic-color)); */
+  text-shadow: 
+    0 0 5px var(--celtic-green-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color);
+  filter:  drop-shadow(0 0 5px var(--celtic-color));
+}
+
+.glow-icon-egyptian {
+  text-shadow: 
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color);
+  filter: drop-shadow(0 0 5px var(--egyptian-color));
+}
+
+.glow-icon-greek {
+  text-shadow: 
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color);
+  filter: drop-shadow(0 0 5px var(--greek-color));
+}
+
+.glow-icon-norse {
+  text-shadow: 
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color);
+  filter: drop-shadow(0 0 5px var(--norse-color));
+}
+
+
+.glow-icon-black {
+  text-shadow: 
+  0 0 5px rgba(0, 0, 0, 0.637),
+  0 0 5px rgba(0, 0, 0, 0.637),
+  0 0 5px rgba(0, 0, 0, 0.637);
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.637));
+}
+
+.glow-icon-white {
+  text-shadow: 
+  0 0 5px white,
+  0 0 5px white,
+  0 0 5px white;
+  filter: drop-shadow(0 0 5px white);
+}
+
+/* shard glow */
+
+.glow-shard-celtic {
+  filter:  drop-shadow(0 0 20px var(--celtic-color));
+}
+
+.glow-shard-egyptian {
+  filter: drop-shadow(0 0 20px var(--egyptian-color));
+}
+
+.glow-shard-greek {
+  filter: drop-shadow(0 0 20px var(--greek-color));
+}
+
+.glow-shard-norse {
+  filter: drop-shadow(0 0 20px var(--norse-color));
+}
+
+
+/* Orb Tapping glow */
+
+.glow-tap-celtic {
+  /* filter: drop-shadow(2px 2px 0px var(--celtic-color)); */
+  filter:  drop-shadow(0 0 40px var(--celtic-color));
+}
+
+.glow-tap-egyptian {
+  filter: drop-shadow(0 0 40px var(--egyptian-color));
+}
+
+.glow-tap-greek {
+  filter: drop-shadow(0 0 40px var(--greek-color));
+}
+
+.glow-tap-norse {
+  filter: drop-shadow(0 0 40px var(--norse-color));
+}
+
+
+/* Button Effect */
+.glow-button-celtic {
+  box-shadow: 
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 5px var(--celtic-color),
+    0 0 10px var(--celtic-color); 
+  filter: drop-shadow(0 0 5px var(--celtic-color)); 
+  opacity: 0.9;
+}
+
+.glow-button-egyptian {
+  box-shadow: 
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color),
+  0 0 5px var(--egyptian-color);
+  filter: drop-shadow(0 0 5px var(--egyptian-color));
+  opacity: 0.9; 
+}
+
+.glow-button-greek {
+  box-shadow: 
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color),
+  0 0 5px var(--greek-color);
+  filter: drop-shadow(0 0 5px var(--greek-color));
+}
+
+.glow-button-norse {
+  box-shadow: 
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color),
+  0 0 5px var(--norse-color);
+  filter: drop-shadow(0 0 5px var(--norse-color));
+}
+
+.glow-button-other {
+  box-shadow: 
+  0 0 5px white,
+  0 0 5px white,
+  0 0 5px white;
+  filter: drop-shadow(0 0 5px white);
+}
+
+/* OrbCard glow */
+.orb{
+  outline: 0px solid var(--celtic-color); 
+}
+
+/* other */
+.glow-card {
+  filter: drop-shadow(0 0 8px white);
+}
+
+.glow-loader-card {
+  filter: drop-shadow(0 0 20px white);
+}
+
+
+/* .glow-orb-celtic {
+  position: relative;
+  display: inline-block;
+  border-radius: 50%;
+  outline: 1px solid var(--celtic-color); 
+  box-shadow: 0 0 20px var(--celtic-color),
+              0 0 40px var(--celtic-color),
+              0 0 60px var(--celtic-color);
+} */
+
+/* .glow-text-footer {
+  color: white;
+  text-shadow: 
+    2px 2px 0 black,
+    -2px -2px 0 black, 
+    2px -2px 0 black, 
+    -2px 2px 0 black, 
+    0 0 20px var(--celtic-color),
+    0 0 30px var(--celtic-color),
+    0 0 40px var(--celtic-color);
+} */
+
+
+/* .glow-contour {
+  color: white; 
+  text-shadow: 
+    1px 1px 0 black, 
+    -1px -1px 0 black, 
+    1px -1px 0 black, 
+    -1px 1px 0 black, 
+    2px 2px 0 black, 
+    -2px -2px 0 black, 
+    2px -2px 0 black, 
+    -2px 2px 0 black, 
+    4px 4px 0 black, 
+    -4px -4px 0 black, 
+    4px -4px 0 black, 
+    -4px 4px 0 black,
+    0 0 20px var(--celtic-color),
+    0 0 30px var(--celtic-color),
+    0 0 40px var(--celtic-color);
+} */

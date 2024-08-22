@@ -29,7 +29,7 @@
     },
     "sections":{
         "forges": "Forges",
-        "boosters": "Boosters",
+        "boosters": "Booster",
         "quests": "Quests",
         "profile": "Profile",
         "leaderboard": "Leaderboard"
@@ -55,7 +55,19 @@
         "shareLinkToEarnOrbs": "Share link to earn ORB(S)",
         "squad": "Squad",
         "totalMembers": "Total Members",
-        "totalOrbs": "Total Orbs"
+        "totalOrbs": "Total Orbs",
+        "player": "Player",
+        "name": "Name",
+        "apply": "Apply",
+        "select": "Select",
+        "lang": "Language"
+    },
+    "elements": {
+        "earth": "Earth",
+        "air": "Air",
+        "fire": "Fire",
+        "water": "Water",
+        "aether": "Aether"
     },
     "quests": {
           "celtic": {
@@ -83,27 +95,27 @@
               "QuestName": "Summer Fantasy",
               "desc": "'Fantasy in Twilight', ca 1911, is a painting by Edward Robert Hughes, a British symbolist painter. Visit the original in Artchiv Gallery, Prague - Czech Republic."
             },
-            "A07": {
+            "B01": {
               "QuestName": "Lir Clann",
               "desc": "'Children of Lir', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
             },
-            "A08": {
+            "B02": {
               "QuestName": "Aengus' Lover",
               "desc": "'The Threatened Swan', ca 1650, is a painting by Jan Asselijn, a Dutch golden age painter. Visit the original in Rijksmuseum Amsterdam, Amsterdam - Netherlands."
             },
-            "A09": {
+            "B03": {
               "QuestName": "SLEEPING BEAUTY",
               "desc": "'The Sleeping Princess', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Perth Art Gallery, Perth - Scotland."
             },
-            "A10": {
+            "B04": {
               "QuestName": "Leanan Sidhe",
               "desc": "'La Belle Dame sans Merci', ca 1913, is a painting by Frank Bernard Dicksee, a British victorian Painter. Visit the original in Bristol City Museum, Bristol - England."
             },
-            "A11": {
+            "B05": {
               "QuestName": "Sidhe Riders",
               "desc": "'Riders of the Sidhe', ca 1911, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
             },
-            "A12": {
+            "B06": {
               "QuestName": "Vercingetorix",
               "desc": "'Vercingetorix before Caesar', ca 1899, is a painting by Lionel Royer, a French historical painter. Visit the original in Musee Crozatier, Auvergne - France."
             },
@@ -137,27 +149,27 @@
                 "QuestName": "Cleopatra's Tomb",
                 "desc": "'The Death of Cleopatra', ca 1890, is a painting by John Collier, a British Pre-Raphaelite painter. Visit the original in Art Gallery, Oldham - England."
             },
-            "A07": {
+            "B01": {
                 "QuestName": "Sekhmet's Blood I",
                 "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
             },
-            "A08": {
+            "B02": {
                 "QuestName": "Bastet's Cult",
                 "desc": "'The Gods and Their Makers', ca 1878, is a painting by the English biblical painter Edwin Long. Visit the original in Towneley Hall Art Gallery, Burnley - England."
             },
-            "A09": {
+            "B03": {
                 "QuestName": "Sekhmet's Blood II",
                 "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
             },
-            "A10": {
+            "B04": {
                 "QuestName": "Maahes' Cult",
                 "desc": "'The Obsequies of an Egyptian Cat', ca 1886, is a painting by John Weguelin, a British classical painter. Visit the original in Auckland Art Gallery, Auckland - New Zealand."
             },
-            "A11": {
+            "B05": {
                 "QuestName": "Pharao's Dream",
                 "desc": "'Joseph Interpreting Pharaoh's Dream', ca 1894, is a painting by Reginald Arthur, a British historical painter. Visit the original in Sotheby's, London - England."
             },
-            "A12": {
+            "B06": {
                 "QuestName": "Foreign Threat",
                 "desc": "'The Meeting of Antony and Cleopatra', ca 1885, is a painting Lawrence Alma-Tadema, a Dutch victorian painter. Visit the original in Sotheby's, London - England."
             },
@@ -191,27 +203,27 @@
                 "QuestName": "PROMETHEUS' GIFT",
                 "desc": "'Prometheus', ca 1620, is a painting by Theodoor Rombouts, a Flemish caravaggesque painter. Visit the original in Royal Museums of Fine Arts, Antwerp - Belgium."
             },
-            "A07": {
+            "B01": {
                 "QuestName": "Oracle Of Delphi",
                 "desc": "'Pythia: Oracle and High Priestess of Delphi', ca 1880, is a painting by Camillo Miola, an Italian historical painter. Visit the original in J. Paul Getty Center, Los Angeles - USA."
             },
-            "A08": {
+            "B02": {
                 "QuestName": "Hephaestus' Fate",
                 "desc": "'The Last Day of Pompeii', ca 1833, is a painting by Karl Pavlovich Bryullov, a Russian neoclassical painter. Visit the original in State Russian Museum, Saint Petersburg - Russia."
             },
-            "A09": {
+            "B03": {
                 "QuestName": "GOLDEN FLEECE",
                 "desc": "'The Golden Fleece', ca 1904, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Cartwright Hall, Bradford - England."
             },
-            "A10": {
+            "B04": {
                 "QuestName": "Odysseus' Sirens",
                 "desc": "'Ulysses and the Sirens', ca 1909, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Ferens Art Gallery, Hull - England."
             },
-            "A11": {
+            "B05": {
                 "QuestName": "EMPIRE'S RISE",
                 "desc": "'The Consummation The Course of the Empire', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
             },
-            "A12": {
+            "B06": {
                 "QuestName": "EMPIRE'S FALL",
                 "desc": "'The Course of Empire Destruction', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
             },
@@ -245,27 +257,27 @@
                 "QuestName": "Iceland descy",
                 "desc": "'The Norseman land in Iceland', ca 1877, is a painting by Oscar Arnold Wergeland, a Norwegian historical painter. Visit the original in National Museum, Oslo - Norway."
             },
-            "A07": {
+            "B01": {
                 "QuestName": "A Vikings Raid",
                 "desc": "'A Viking Raid', ca 1901, is a painting by Ferdinand Leek, a German modernist painter. Visit the original in Schloss Art Gallery, Ahlden - Germany."
             },
-            "A08": {
+            "B02": {
                 "QuestName": "Vikings Funeral",
                 "desc": "'The Funeral of a Viking', ca 1893, is a painting by Frank Bernard Dicksee, a British Victorian painter. Visit the original in Art Gallery, Manchester - England."
             },
-            "A09": {
+            "B03": {
                 "QuestName": "The King's Ding",
                 "desc": "'Hakon the Good', ca 1876, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
             },
-            "A10": {
+            "B04": {
                 "QuestName": "SVOLD'S BATTLE I",
                 "desc": "'Battle of Svolder', ca 1883, is a painting by Peter Otto Sinding, a Norwegian historical painter. Visit the original in Private Collection, Stockholm - Sweden."
             },
-            "A11": {
+            "B05": {
                 "QuestName": "Vikings vs Celts",
                 "desc": "'Battle of Stamford Bridge', ca 1870, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in Nordnorsk Kunstmuseum, Tromso - Norway."
             },
-            "A12": {
+            "B06": {
                 "QuestName": "SVOLD'S BATTLE II",
                 "desc": "'Battle of Svolder', ca 1883, is a painting by the Norwegian historical painter Peter Otto Sinding. Visit the original in Private Collection, Stockholm - Sweden."
             },
