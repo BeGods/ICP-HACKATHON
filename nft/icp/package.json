@@ -16,7 +16,9 @@
     "src/BeGod_frontend"
   ],
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@reduxjs/toolkit": "^2.2.7",
+    "framer-motion": "^11.3.29",
     "i18next": "^23.13.0",
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.5.2",

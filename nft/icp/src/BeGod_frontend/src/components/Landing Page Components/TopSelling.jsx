@@ -23,9 +23,8 @@ const TopSelling = () => {
             className="flip-card border rounded-lg"
             key={index}
             style={{
-              backgroundImage: `url('/image/goldbg.png')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+              border: '5px solid transparent',
+              borderImage: `url('/image/goldbg.png') 30 round`, // Adjust the number and method as per your requirements
             }}
           >
             <div className="flip-card-inner ">

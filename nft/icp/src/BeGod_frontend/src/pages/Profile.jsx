@@ -87,7 +87,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className='w-[1319px] ml-[8%] mt-[3%] grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6  gap-y-8'>
+      <div className='ml-[8%] mt-[3%] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-8 gap-y-8'>
         {
           images.map((img, index) => (
             <NftCard img={img} key={index} />
