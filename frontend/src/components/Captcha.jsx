@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../Verify/style.scss";
-import Verify from "../Verify/index";
+import "../Captcha/style.scss";
+import Verify from "../Captcha/index";
 
 const Captcha = ({ auth }) => {
   return (
@@ -8,7 +8,7 @@ const Captcha = ({ auth }) => {
       <div className="captchaBg h-[340px] w-fit py-3 px-3">
         <Verify
           onSuccess={auth}
-          imgUrl={"/assets/uxui/320px-frogdog.captcha_tiny.png"}
+          imgUrl={"/assets/uxui/320px-frogdog.captcha.png"}
         />
       </div>
     </div>

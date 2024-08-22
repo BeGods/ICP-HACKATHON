@@ -3,7 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Variables */
 :root {
+   /* Forges Of Faith */
     --game-text-color: #F09A43;
     /* Celtic */
     --celtic-color: #06B225;
@@ -15,55 +18,24 @@
     /* Egyptian */
     --egyptian-color: #CEBA02;
     --egyptian-text-color: #FEEA4B;
-    --egyptian-green-dark: #9A9523;
-    --egyptian-green-medium: #D2CB1B;
-    --egyptian-green-light: #EBFF00;
+    --egyptian-yellow-dark: #9A9523;
+    --egyptian-yellow-medium: #D2CB1B;
+    --egyptian-yellow-light: #EBFF00;
     /* Greek */
     --greek-color: #CE0202;
     --greek-text-color: #FF0000;
-    --greek-green-dark: #641A1A;
-    --greek-green-medium: #D21B1B;
-    --greek-green-light: #FF0000;
+    --greek-red-dark: #641A1A;
+    --greek-red-medium: #D21B1B;
+    --greek-red-light: #FF0000;
     /* Norse */
     --norse-color: #179FD1;
     --norse-text-color: #007AFF;
-    --norse-green-dark: #1A4064;
-    --norse-green-medium: #1B85D2;
-    --norse-green-light: #0094FF;
-}
-
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(93deg, #454231 3.06%, #1C1A13 97.78%);
-}
-
-/* Toasts */
-.custom-toast {
-  border-radius: 8px !important; /* Ensuring it applies */
-  background-color: white !important;
-  color: black !important;
-  width: 95%;
-  margin: 20px auto;
-}
-
-.ToastContainer--top-center {
-  width:  100%; /* Full width to ensure centering within the viewport */
-  display: flex;
-  justify-content: center !important; /* Center content horizontally */
-  padding: 0; /* Remove any default padding */
+    --norse-blue-dark: #1A4064;
+    --norse-blue-medium: #1B85D2;
+    --norse-blue-light: #0094FF;
 }
 
 /* Fonts */
-
 @font-face {
   font-family: 'Symbols';
   src: url('/assets/fonts/begods-dingbats.woff2') format('woff2'),
@@ -112,321 +84,18 @@ body {
   font-display: swap;
 }
 
-/* text glow */
-.glow-celtic {
-  font-family: 'Celtic';
-  font-size: 43px;
-    text-shadow: 
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color)
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.glow-egyptian {
-    font-family: 'Egyptian';
-    font-size: 43px;
-    text-shadow: 
-    0 0 5px var(--egyptian-color),
-    0 0 5px var(--egyptian-color),
-    0 0 5px var(--egyptian-color)
-}
-
-.glow-greek {
-    font-family: 'Greek';
-    font-size: 43px;
-    text-shadow: 
-    0 0 5px var(--greek-color),
-    0 0 5px var(--greek-color),
-    0 0 5px var(--greek-color)
-}
-
-.glow-norse {
-    font-family: 'Norse';
-    font-size: 43px;
-    text-shadow: 
-    0 0 5px var(--norse-color),
-    0 0 5px var(--norse-color),
-    0 0 5px var(--norse-color)
-}
-
-.glow-black {
-  text-shadow: 
-  0 0 1px white,
-  0 0 1px white,
-  0 0 1px white
-}
-
-.glow-white {
-  text-shadow: 
-  0 0 5px black,
-  0 0 5px black,
-  0 0 5px black;
-}
-
-.glow-booster {
-  color: white; /* Text color */
-  text-shadow: 
-    /* Black outline */
-    2px 2px 0 black, /* Bottom-right */
-    -2px -2px 0 black, /* Top-left */
-    2px -2px 0 black, /* Bottom-left */
-    -2px 2px 0 black, /* Top-right */
-    /* Glowing effect */
-    0 0 20px var(--celtic-color),
-    0 0 30px var(--celtic-color),
-    0 0 40px var(--celtic-color);
-}
-
-.orb-glow{
-  text-shadow: 
-  0 0 1px black,
-  0 0 1px black,
-  0 0 1px black;
-  filter: drop-shadow(0 0 1px black);
-}
-
-.fof-glow{
-  filter: drop-shadow(1px 1px 0px #DEAC80);
-}
-
-.footer-glow{
-  filter: drop-shadow(3px 3px 0px black);
-}
-
-.glow-black {
-  text-shadow: 
-  0 0 1px white,
-  0 0 1px white,
-  0 0 1px white
-}
-
-
-.fof-white{
-  filter: drop-shadow(1px 1px 0px #DEAC80);
-}
-
-.glow-contour {
-  color: white; /* Text color */
-  text-shadow: 
-    1px 1px 0 black, 
-    -1px -1px 0 black, 
-    1px -1px 0 black, 
-    -1px 1px 0 black, 
-    2px 2px 0 black, 
-    -2px -2px 0 black, 
-    2px -2px 0 black, 
-    -2px 2px 0 black, 
-    4px 4px 0 black, 
-    -4px -4px 0 black, 
-    4px -4px 0 black, 
-    -4px 4px 0 black,
-    0 0 20px var(--celtic-color),
-    0 0 30px var(--celtic-color),
-    0 0 40px var(--celtic-color);
-}
-
-.glow-quest-celtic {
-  font-family: 'Celtic';
-  font-size: 18px;
-    text-shadow: 
-    0 0 5px black,
-    0 0 5px black,
-    0 0 5px black
-}
-
-.glow-quest-egyptian {
-  font-family: 'Egyptian';
-  font-size: 22px;
-  text-shadow: 
-  0 0 5px black,
-  0 0 5px black,
-  0 0 5px black
-}
-
-.glow-quest-greek {
-  font-family: 'Greek';
-  font-size: 24px;
-  text-shadow: 
-  0 0 5px black,
-  0 0 5px black,
-  0 0 5px black
-}
-
-.glow-quest-norse {
-  font-family: 'Norse';
-  font-size: 24px;
-  text-shadow: 
-  0 0 5px black,
-  0 0 5px black,
-  0 0 5px black
-}
-
-
-/* Cards text glow */
-
-
-
-.glow-card-celtic {
-  font-family: 'Celtic';
-  font-size: 18px;
-    text-shadow: 
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color)
-}
-
-.glow-card-egyptian {
-    font-family: 'Egyptian';
-    font-size: 22px;
-    text-shadow: 
-    0 0 5px var(--egyptian-color),
-    0 0 5px var(--egyptian-color),
-    0 0 5px var(--egyptian-color)
-}
-
-.glow-card-greek {
-    font-family: 'Greek';
-    font-size: 24px;
-    text-shadow: 
-    0 0 5px var(--greek-color),
-    0 0 5px var(--greek-color),
-    0 0 5px var(--greek-color)
-}
-
-.glow-card-norse {
-    font-family: 'Norse';
-    font-size: 24px;
-    text-shadow: 
-    0 0 5px var(--norse-color),
-    0 0 5px var(--norse-color),
-    0 0 5px var(--norse-color)
-}
-
-
-
-/* .glow-orb-celtic {
-  position: relative;
-  display: inline-block;
-  border-radius: 50%;
-  outline: 1px solid var(--celtic-color); 
-  box-shadow: 0 0 20px var(--celtic-color),
-              0 0 40px var(--celtic-color),
-              0 0 60px var(--celtic-color);
-} */
-
-.orb{
-  outline: 0px solid var(--celtic-color); 
-}
-
-.glow-card {
-  filter: drop-shadow(0 0 8px white);
-}
-
-.glow-orb-celtic {
-  filter: drop-shadow(0 0 10px var(--celtic-green-light));
-}
-
-.glow-orb-black {
-  filter: drop-shadow(0 0 10px black);
-}
-
-.glow-icon-celtic {
-  /* filter: drop-shadow(2px 2px 0px var(--celtic-color)); */
-  text-shadow: 
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color);
-  filter:  drop-shadow(0 0 5px var(--celtic-color));
-}
-
-.glow-icon-egyptian {
-  text-shadow: 
-  0 0 5px var(--egyptian-color),
-  0 0 5px var(--egyptian-color),
-  0 0 5px var(--egyptian-color);
-  filter: drop-shadow(0 0 5px var(--egyptian-color));
-}
-
-.glow-icon-greek {
-  text-shadow: 
-  0 0 5px var(--greek-color),
-  0 0 5px var(--greek-color),
-  0 0 5px var(--greek-color);
-  filter: drop-shadow(0 0 5px var(--greek-color));
-}
-
-.glow-icon-norse {
-  text-shadow: 
-  0 0 5px var(--norse-color),
-  0 0 5px var(--norse-color),
-  0 0 5px var(--norse-color);
-  filter: drop-shadow(0 0 5px var(--norse-color));
-}
-
-.glow-icon-black {
-  text-shadow: 
-  0 0 5px rgba(0, 0, 0, 0.637),
-  0 0 5px rgba(0, 0, 0, 0.637),
-  0 0 5px rgba(0, 0, 0, 0.637);
-  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.637));
-}
-
-.glow-icon-white {
-  text-shadow: 
-  0 0 5px white,
-  0 0 5px white,
-  0 0 5px white;
-  filter: drop-shadow(0 0 5px white);
-}
-
-
-/* Button Effect */
-
-.glow-button-celtic {
-  box-shadow: 
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color),
-    0 0 5px var(--celtic-color),
-    0 0 10px var(--celtic-color); /* More spread out, increasing blur */
-  filter: drop-shadow(0 0 5px var(--celtic-color)); /* Slightly larger drop shadow */
-  opacity: 0.9; /* Slightly reduce opacity to make it less dark */
-}
-
-.glow-button-egyptian {
-  box-shadow: 
-  0 0 5px var(--egyptian-color),
-  0 0 5px var(--egyptian-color),
-  0 0 5px var(--egyptian-color),
-  0 0 5px var(--egyptian-color),
-  0 0 5px var(--egyptian-color);
-  filter: drop-shadow(0 0 5px var(--egyptian-color));
-  opacity: 0.9; /* Slightly reduce opacity to make it less dark */
-}
-
-.glow-button-greek {
-  box-shadow: 
-  0 0 5px var(--greek-color),
-  0 0 5px var(--greek-color),
-  0 0 5px var(--greek-color),
-  0 0 5px var(--greek-color);
-  filter: drop-shadow(0 0 5px var(--greek-color));
-}
-
-.glow-button-norse {
-  box-shadow: 
-  0 0 5px var(--norse-color),
-  0 0 5px var(--norse-color),
-  0 0 5px var(--norse-color),
-  0 0 5px var(--norse-color);
-  filter: drop-shadow(0 0 5px var(--norse-color));
-}
-
-.glow-button-other {
-  box-shadow: 
-  0 0 5px white,
-  0 0 5px white,
-  0 0 5px white;
-  filter: drop-shadow(0 0 5px white);
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(93deg, #454231 3.06%, #1C1A13 97.78%);
 }
 
 
@@ -445,15 +114,15 @@ body {
 }
 
 .gradient-egyptian {
-  background: linear-gradient(90deg, var(--egyptian-green-dark), var(--egyptian-green-medium), var(--egyptian-green-light));
+  background: linear-gradient(90deg, var(--egyptian-yellow-dark), var(--egyptian-yellow-medium), var(--egyptian-yellow-light));
 }
 
 .gradient-greek {
-  background: linear-gradient(90deg, var(--greek-green-dark), var(--greek-green-medium), var(--greek-green-light));
+  background: linear-gradient(90deg, var(--greek-red-dark), var(--greek-red-medium), var(--greek-red-light));
 }
 
 .gradient-norse {
-  background: linear-gradient(90deg, var(--norse-green-dark), var(--norse-green-medium), var(--norse-green-light));
+  background: linear-gradient(90deg, var(--norse-blue-dark), var(--norse-blue-medium), var(--norse-blue-light));
 }
 
 
@@ -585,11 +254,11 @@ body {
 @keyframes moveAndFade {
   0% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(-200px);
   }
   100% {
     opacity: 0;
-    transform: translateY(-200px);
+    transform: translateY(-500px);
   }
 }
 
@@ -601,81 +270,40 @@ body {
   width: 100%;
   height: 100%;
   background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-  border-radius: inherit; /* Ensures the gradient follows the border radius of the parent */
-  pointer-events: none; /* Ensures the overlay doesn't affect interactions */
-  z-index: 1; /* Places the gradient on top of the background image */
+  border-radius: inherit;
+  pointer-events: none; 
+  z-index: 1;
 }
 
-/* Backgrounds */
-.filter-celtic {
-  filter: brightness(100%) invert(5%) sepia(12%) saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
+.flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1000;
 }
 
-.filter-norse{
-  filter: brightness(100%)  invert(10%) sepia(15%) saturate(1237%) hue-rotate(171deg) brightness(90%) contrast(104%);
+.flash-overlay.show {
+  animation: fadeBody 0.5s ease-in-out forwards;
 }
 
-.filter-egyptian{
-  filter: brightness(100%)  invert(5%) sepia(22%) saturate(600%) hue-rotate(6deg) brightness(90%) contrast(104%);
-}
-
-.filter-greek{
-  filter: brightness(100%)  invert(5%) sepia(23%) saturate(700%) hue-rotate(-14deg) brightness(90%) contrast(104%);
-}
-
-.filter-other{
-  filter: brightness(110%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
-}
-
-.filter-card{
-  /* filter: brightness(98%) contrast(150%) grayscale(100%) saturate(122%); */
-  filter: brightness(66%) contrast(172%) grayscale(100%) saturate(151%);
-}
-
-/* Orbs */
-
-.filter-orbs-celtic {
-  filter: brightness(100%) invert(5%) sepia(12%) saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
-}
-
-.filter-orbs-egyptian{
-  filter:
-  brightness(150%)  invert(20%) sepia(20%) saturate(2000%) hue-rotate(16deg) contrast(104%);
-}
-
-.filter-orbs-greek{
-  filter:
-  brightness(100%)  invert(5%) sepia(13%) saturate(1537%) hue-rotate(-65deg) brightness(90%) contrast(104%);
-}
-
-.filter-orbs-norse{
-  filter: brightness(100%)  invert(10%) sepia(15%) saturate(1237%) hue-rotate(171deg) brightness(90%) contrast(104%);
-}
-
-.filter-orbs-white{
-  filter:
-  brightness(100%) invert(5%)  saturate(137%) brightness(220%) contrast(104%);
-}
-
-/* Header-Footers */
-
-.filter-paper-celtic {
-  filter: brightness(100%) invert(5%) sepia(12%) saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
-}
-
-.filter-paper-egyptian{
-  filter: brightness(100%)  invert(5%) sepia(22%) saturate(600%) hue-rotate(6deg) brightness(90%) contrast(104%);
-}
-
-.filter-paper-norse{
-  filter: brightness(60%)  invert(10%) sepia(15%) saturate(1037%) hue-rotate(171deg) brightness(90%) contrast(104%);
-}
-
-.filter-paper-greek{
-  filter: brightness(100%)  invert(5%) sepia(20%) saturate(700%) hue-rotate(-50deg) brightness(90%) contrast(104%);
-}
-
-.filter-paper-other{
-  filter: brightness(75%) invert(5%) sepia(6%) saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
+@keyframes fadeBody {
+  0% {
+    opacity: 0;
+  }
+  33% {
+    opacity: 0.5;
+  }
+  66% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 

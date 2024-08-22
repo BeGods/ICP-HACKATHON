@@ -256,3 +256,35 @@ export const claimLostQuest = async (questData, accessToken) => {
     throw error;
   }
 };
+
+export const fetchBonusStatus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/bonus/status`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchDailyBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/bonus/claim`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};

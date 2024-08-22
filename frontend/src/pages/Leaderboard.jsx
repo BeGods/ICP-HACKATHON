@@ -4,10 +4,12 @@ import LeaderboardItem from "../components/LeaderboardItem";
 import { fetchLeaderboard } from "../utils/api";
 import { MyContext } from "../context/context";
 import Avatar from "../components/Avatar";
+import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
 const Leaderboard = (props) => {
+  const { t } = useTranslation();
   const { userData } = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const avatarColor = localStorage.getItem("avatarColor");
@@ -20,7 +22,6 @@ const Leaderboard = (props) => {
       const response = await fetchLeaderboard(accessToken);
       setLeaderboard(response.leaderboard);
       setSquad(response.squad);
-      console.log(response.squad);
     } catch (error) {
       console.log(error);
     }
@@ -36,28 +37,9 @@ const Leaderboard = (props) => {
   return (
     <div className="flex flex-col gap-2 h-screen overflow-auto items-center w-full  text-[10px] text-white bg-[#121212]">
       {/* HEADER */}
-      <div className="relative h-[140px] w-full flex-shrink-0">
-        {/* Background with filter */}
-        <div
-          style={{
-            backgroundImage: `url(/assets/uxui/fof.header.paper_tiny.png)`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-          }}
-          className="absolute inset-0 z-0 filter-paper-other"
-        ></div>
-
-        {/* Content */}
-        <div className="relative z-10 flex flex-col p-[20px] w-full h-full justify-end">
-          <h1 className="text-[36px]">LEADERBOARD</h1>
-          {/* <h3 className="text-[20px]">#11 Daniel</h3> */}
-        </div>
-      </div>
-
-      <div className="flex flex-col w-full flex-grow px-1.5 mb-[80px]">
+      <div className="flex flex-col w-full flex-grow px-1.5 mt-2">
         {/* TABS */}
-        <div className="flex border border-[#414141] w-full p-1 rounded-full h-[44px]">
+        <div className="flex border border-borderDark w-full p-1 rounded-full h-[44px]">
           <div
             onClick={() => {
               setActiveTab(true);
@@ -66,7 +48,7 @@ const Leaderboard = (props) => {
               activeTab && "bg-borderGray"
             } h-full rounded-full w-1/2 text-[16px] py-1.5`}
           >
-            PROFILE
+            {t(`profile.player`)}
           </div>
           <div
             onClick={() => {
@@ -76,25 +58,32 @@ const Leaderboard = (props) => {
               !activeTab && "bg-borderGray"
             } h-full rounded-full w-1/2 text-[16px] py-1.5`}
           >
-            SQUAD
+            {t(`profile.squad`)}
           </div>
         </div>
 
         {/* LEADERBOARD */}
-        <div className="flex flex-col w-full flex-grow  bg-black rounded-button my-2 py-[15px] gap-[10px]">
+        <div className="flex flex-col w-full flex-grow  bg-black rounded-primary my-2 pt-[15px] pb-[30px] gap-[10px]">
+          <div className="flex justify-between text-secondary text-cardsGray items-center w-[90%] mx-auto">
+            <h1>{t(`profile.name`)}</h1>
+            <h1>{t(`keywords.orbs`)}</h1>
+          </div>
           {activeTab
             ? leaderboard.map((item, index) => (
-                <LeaderboardItem
-                  key={index}
-                  rank={item.overallRank}
-                  name={item.telegramUsername}
-                  totalOrbs={item.totalOrbs}
-                />
+                <div>
+                  <div className="border-t border-borderDark w-[90%] mx-auto"></div>
+                  <LeaderboardItem
+                    key={index}
+                    rank={index + 1}
+                    name={item.telegramUsername}
+                    totalOrbs={item.totalOrbs}
+                  />
+                </div>
               ))
             : squad.map((item, index) => (
                 <LeaderboardItem
                   key={index}
-                  rank={item.squadRank}
+                  rank={index + 1}
                   name={item.telegramUsername}
                   totalOrbs={item.totalOrbs}
                 />
@@ -103,9 +92,9 @@ const Leaderboard = (props) => {
       </div>
 
       {/* FOOTER */}
-      <div className="flex items-center justify-between h-[80px] w-[95%] mx-auto mb-1 text-[16px]  border border-yellow-500 bg-glass-black text-white  rounded-button fixed bottom-0 left-0 right-0 box-border">
+      <div className="flex items-center justify-between h-[80px] w-[95%] mx-auto mb-1 text-tertiary  border border-borderDark bg-glass-black text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
         <div className="flex justify-center items-center w-2/5 h-full">
-          #{userData.overallRank}
+          {userData.overallRank}
         </div>
         <div className="flex items-center gap-4 w-full">
           <div className="h-[35px] w-[35px]">
@@ -118,9 +107,8 @@ const Leaderboard = (props) => {
           </div>
           <h1>{userData.telegramUsername}</h1>
         </div>
-        <div className="flex flex-col justify-center items-center text-[14px] w-2/5 h-full">
+        <div className="flex flex-col justify-center items-center text-tertiary w-2/5 h-full">
           <h1>{userData.totalOrbs}</h1>
-          <h1 className="-mt-1.5">ORBS</h1>
         </div>
       </div>
     </div>

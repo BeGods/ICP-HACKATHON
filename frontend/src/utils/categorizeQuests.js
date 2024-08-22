@@ -1,4 +1,4 @@
-const mythologies = ["Celtic", "Egyptian", "Greek", "Norse"];
+import { mythologies } from "./variables";
 
 export const categorizeQuestsByMythology = (quests) => {
   const categorizedQuests = mythologies.reduce((acc, mythology) => {
@@ -13,11 +13,11 @@ export const categorizeQuestsByMythology = (quests) => {
     }
   });
 
-  const categorizedQuestsArray = Object.keys(categorizedQuests)
-    .sort()
-    .map((mythology) => {
+  const categorizedQuestsArray = Object.keys(categorizedQuests).map(
+    (mythology) => {
       return { [mythology]: categorizedQuests[mythology] };
-    });
+    }
+  );
 
   return categorizedQuestsArray;
 };
