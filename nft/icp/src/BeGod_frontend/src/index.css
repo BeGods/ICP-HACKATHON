@@ -189,7 +189,7 @@ body{
   width: 100%;
   height: 100%;
   transition: transform 0.3s ease;
-  transform-origin: bottom center;
+  transform-origin: bottom left;
 }
 
 .stacked-image:nth-child(1) {
@@ -206,13 +206,13 @@ body{
 }
 
 .image-stack:hover .stacked-image:nth-child(1) {
-  transform: rotate(30deg) translateX(-5%) translateY(-5%);
+  transform: rotate(30deg) translateX(15%) translateY(-20%);
 }
 .image-stack:hover .stacked-image:nth-child(2) {
-  transform: rotate(20deg) translateX(-10%) translateY(-10%);
+  transform: rotate(20deg) translateX(10%) translateY(-15%);
 }
 .image-stack:hover .stacked-image:nth-child(3) {
-  transform: rotate(15deg) translateX(-15%) translateY(-15%);
+  transform: rotate(15deg) translateX(5%) translateY(-10%);
 }
 /* .image-stack:hover .stacked-image:nth-child(4) {
   transform: rotate(10deg) translateX(-20%) translateY(-20%);
@@ -268,3 +268,42 @@ body{
     transform: rotate(360deg);
   }
 }
+
+
+/* animate collection */
+@keyframes smokeMove {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -60%) scale(1.5);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translate(-50%, -70%) scale(2);
+    opacity: 0;
+  }
+}
+
+.smoke {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0; /* Initially hidden */
+  pointer-events: none; /* Doesn't interfere with user interaction */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.group:hover .smoke {
+  opacity: 1; /* Show smoke on hover */
+  animation: smokeMove 6s infinite ease-in-out;
+}
+
+/* spreading the cards in collection details page */
+
+

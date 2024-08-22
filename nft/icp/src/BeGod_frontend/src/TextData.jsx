@@ -77,6 +77,34 @@ export const collection = {
                             Listed: "Yes",
                         },
                     },
+                    {
+                        img: "/image/nft.png",
+                        NFTName: "Tanngiost",
+                        Sold: 50 / 100,
+                        License_No: 252739454,
+                        NFTDetails: {
+                            NFTName: "Tanngiost",
+                            Collection: "Norse",
+                            NFTID: "dvrgrbrf",
+                            Owner: "86e9fe-fcfhtn6u68",
+                            Price: "10 ICP",
+                            Listed: "Yes",
+                        },
+                    },
+                    {
+                        img: "/image/nft.png",
+                        NFTName: "Tanngiost",
+                        Sold: 50 / 100,
+                        License_No: 252739454,
+                        NFTDetails: {
+                            NFTName: "Tanngiost",
+                            Collection: "Norse",
+                            NFTID: "dvrgrbrf",
+                            Owner: "86e9fe-fcfhtn6u68",
+                            Price: "10 ICP",
+                            Listed: "Yes",
+                        },
+                    },
                 ]
             }
 

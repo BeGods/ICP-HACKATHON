@@ -100,7 +100,7 @@ function SidebarContent({ onClose, ...rest }) {
             </NavItem>
           ))}
         </div>
-        <div className='flex items-center justify-start gap-x-4 px-8 text-white'>
+        <div className='flex items-center justify-start gap-x-4 px-8 text-white mb-4'>
           <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
           <div className='space-y-2'>
             <div className='flex gap-x-2'>
@@ -145,7 +145,7 @@ function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
         mx="4"
         borderRadius="lg"
         role="group"
-        color={isActive && !hovered?"black":"white"}
+        color={isActive?"black":"white"}
         cursor="pointer"
         bg={isActive?'#FCD37B':''}
         _hover={{

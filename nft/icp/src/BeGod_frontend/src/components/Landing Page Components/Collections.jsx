@@ -21,9 +21,10 @@ const Collections = () => {
             to={`/collection/${collection.name}`}
             className='group relative w-[42%] sm:w-[25%] lg:w-[18%] h-[8vh] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent hover:bg-transparent'
           >
-            <div className='absolute inset-0 rounded-lg group-hover:bg-[rgba(50,50,50,0.6)] transition-all duration-500 ease-in-out'></div>
+            <div className='smoke'></div> {/* Smoke effect */}
+            <div className='absolute inset-0 rounded-lg group-hover:bg-[rgba(50,50,50,0.6)] transition-all duration-500 ease-in-out animate'></div>
             <div
-              className={`absolute inset-0 bg-[rgba(0,0,0,0.3)] rounded-lg group-hover:blur-md transition-all duration-500 ease-in-out`}
+              className={`absolute inset-0 bg-[rgba(0,0,0,0.3)] rounded-lg `}
               style={{ boxShadow: `0 0 30px 10px ${collection.shadowColor}` }}
             ></div>
             <img src={collection.imgSrc} alt={collection.name} className='h-[80%] z-10' />
