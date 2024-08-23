@@ -25,8 +25,7 @@ const DropzoneWithUrlInput = () => {
     });
 
     return (
-        <div className="w-full h-[130px] md:h-[150px] rounded-md flex flex-col items-center justify-center p-4 bg-[#29292C] text-white">
-            {inputType !== 'url' && (
+        <div className="w-full h-[130px] md:h-auto rounded-md flex flex-col items-center justify-center p-4 bg-[#29292C] text-white">
                 <div
                     {...getRootProps()}
                     className={`w-full h-full flex items-center justify-center ${isDragActive ? 'bg-gray-700' : ''}`}
@@ -38,7 +37,6 @@ const DropzoneWithUrlInput = () => {
                             : 'Drag & drop an image here, or click to select one'}
                     </p>
                 </div>
-            )}
             <p className="text-center my-2">OR</p>
             <input
                 type="text"

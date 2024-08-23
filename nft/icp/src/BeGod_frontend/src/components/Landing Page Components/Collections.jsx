@@ -10,7 +10,7 @@ const collections = [
 
 const Collections = () => {
   return (
-    <div className='w-[100%] sm:w-[80%] sm:ml-[10%] mt-8 sm:mt-32 md:mt-48'>
+    <div className='w-full sm:w-4/5 sm:ml-[10%] mt-8 sm:mt-32 md:mt-48'>
       <h1 style={{ fontFamily: "QuickSand" }} className="text-white text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-medium h-[5vh] w-full flex items-center justify-center">
         Collections
       </h1>
@@ -19,21 +19,25 @@ const Collections = () => {
           <Link
             key={index}
             to={`/collection/${collection.name}`}
-            className='group relative w-[42%] sm:w-[25%] lg:w-[18%] h-[8vh] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent hover:bg-transparent'
+            className='z-100 group relative w-[42%] sm:w-[25%] lg:w-[18%] h-[8vh] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
+            style={{ position: 'relative' }} // Ensure parent is positioned
           >
-            <div className='smoke'></div> {/* Smoke effect */}
-            <div className='absolute inset-0 rounded-lg group-hover:bg-[rgba(50,50,50,0.6)] transition-all duration-500 ease-in-out animate'></div>
+            {/* Smoke Effect on Hover */}
             <div
-              className={`absolute inset-0 bg-[rgba(0,0,0,0.3)] rounded-lg `}
-              style={{ boxShadow: `0 0 30px 10px ${collection.shadowColor}` }}
+              className='w-[90%] h-[90%] absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 smoke-shift group-hover:animate-[smoke_2s_infinite_alternate]'
+              style={{
+                boxShadow: `0 0 30px 10px ${collection.shadowColor}`,
+              }}
             ></div>
+            {/* Collection Image */}
             <img src={collection.imgSrc} alt={collection.name} className='h-[80%] z-10' />
-            <h1 className='text-lg font-[400] text-[#FFFFFF] z-10'>{collection.name}</h1>
+            {/* Collection Name */}
+            <h1 className='text-lg font-[400] text-white z-10'>{collection.name}</h1>
           </Link>
         ))}
       </div>
     </div>
   );
-}
+};
 
 export default Collections;
