@@ -46,7 +46,7 @@ const Profile = () => {
   const images = getCategoryData();
 
   return (
-    <div style={{ fontFamily: "QuickSand" }}>
+    <div className='max-w-[1920px] mx-auto' style={{ fontFamily: "QuickSand" }}>
       <Navbar />
       <div className='ml-[4%] mt-[3%]'>
         <h1 className='text-[#FFFFFF] text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
@@ -87,7 +87,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className='ml-[8%] mt-[3%] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-8 gap-y-8'>
+      <div className='ml-[8%] mt-[3%] grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-8 gap-y-8'>
         {
           images.map((img, index) => (
             <NftCard img={img} key={index} />
