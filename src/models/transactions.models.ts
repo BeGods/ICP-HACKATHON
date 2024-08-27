@@ -36,7 +36,7 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
     },
     source: {
       type: String,
-      enum: ["conversion", "quests", "boosters", "share", "automata"],
+      enum: ["conversion", "quests", "boosters", "share", "automata", "bonus"],
       required: true,
     },
   },
