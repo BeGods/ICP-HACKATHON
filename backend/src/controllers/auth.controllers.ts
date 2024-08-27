@@ -47,7 +47,11 @@ export const login = async (req, res) => {
         existingUser.isPremium = isPremium;
         isUpdated = true;
       }
-      if (telegramUsername && telegramUsername !== telegramUsername) {
+
+      if (
+        telegramUsername &&
+        telegramUsername !== existingUser.telegramUsername
+      ) {
         existingUser.telegramUsername = telegramUsername;
         isUpdated = true;
       }
@@ -106,9 +110,7 @@ export const login = async (req, res) => {
 //test login
 export const testLogin = async (req, res) => {
   try {
-    const { telegramId, telegramUsername, isPremium } = req.body;
-
-    const { referralCode } = req.query as { referralCode?: string | null };
+    const { telegramId, telegramUsername, isPremium, referralCode } = req.body;
 
     let isUpdated = false;
 
@@ -127,7 +129,10 @@ export const testLogin = async (req, res) => {
         existingUser.isPremium = isPremium;
         isUpdated = true;
       }
-      if (telegramUsername && telegramUsername !== telegramUsername) {
+      if (
+        telegramUsername &&
+        telegramUsername !== existingUser.telegramUsername
+      ) {
         existingUser.telegramUsername = telegramUsername;
         isUpdated = true;
       }

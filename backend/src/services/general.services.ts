@@ -1,21 +1,48 @@
+import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
+import { OrbsTransactions } from "../models/transactions.models";
+import mongoose from "mongoose";
+import quest from "../models/quests.models";
 
 export const getLeaderboardSnapshot = async () => {
   try {
     const pipeline = [
       {
-        $unwind: "$mythologies",
+        $unwind: {
+          path: "$mythologies",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $group: {
           _id: "$userId",
-          totalOrbs: { $sum: "$mythologies.orbs" },
-          multiColorOrbs: { $first: "$multiColorOrbs" },
+          // totalOrbs: {
+          //   $sum: {
+          //     $ifNull: ["$mythologies.orbs", 0],
+          //   },
+          // },
+          // multiColorOrbs: {
+          //   $first: {
+          //     $ifNull: ["$multiColorOrbs", 0],
+          //   },
+          // },
+          blackOrbs: {
+            $first: {
+              $ifNull: ["$blackOrbs", 0],
+            },
+          },
+          // whiteOrbs: {
+          //   $first: {
+          //     $ifNull: ["$whiteOrbs", 0],
+          //   },
+          // },
         },
       },
       {
         $addFields: {
-          totalOrbs: { $add: ["$totalOrbs", "$multiColorOrbs"] },
+          totalOrbs: {
+            $add: ["$blackOrbs"],
+          },
         },
       },
       {
@@ -53,3 +80,395 @@ export const getLeaderboardSnapshot = async () => {
     throw new Error(error);
   }
 };
+
+export const getRandomValue = () => {
+  const valuesWithProbabilities = [
+    { value: "blackOrb", probability: 0.125 },
+    { value: "quest", probability: 0.125 },
+    { value: "booster", probability: 0.25 },
+    { value: "mythOrb", probability: 0.5 },
+  ];
+  const random = Math.random();
+  let cumulativeProbability = 0;
+
+  for (const item of valuesWithProbabilities) {
+    cumulativeProbability += item.probability;
+
+    if (random < cumulativeProbability) {
+      return item.value;
+    }
+  }
+
+  // fallback
+  return valuesWithProbabilities[valuesWithProbabilities.length - 1].value;
+};
+
+// Bonus rewards
+
+export const claimBonusOrb = async (reward, userId) => {
+  try {
+    if (reward === "blackOrb") {
+      await userMythologies.findOneAndUpdate(
+        { userId: userId },
+        {
+          $inc: { blackOrbs: 1 },
+        },
+        { new: true }
+      );
+
+      const newOrbsTransaction = new OrbsTransactions({
+        userId: userId,
+        source: "bonus",
+        orbs: { black: 1 },
+      });
+      await newOrbsTransaction.save();
+      const result = {
+        type: "blackOrb",
+      };
+
+      return result;
+    } else {
+      const mythologies = ["Greek", "Celtic", "Norse", "Egyptian"];
+      const randomMythOrb = mythologies[Math.floor(Math.random() * 4)];
+
+      await userMythologies.findOneAndUpdate(
+        { userId: userId, "mythologies.name": randomMythOrb },
+        {
+          $inc: { "mythologies.$.orbs": 1 },
+        },
+        { new: true }
+      );
+
+      const newOrbsTransaction = new OrbsTransactions({
+        userId: userId,
+        source: "bonus",
+        orbs: { randomMythOrb: 1 },
+      });
+      await newOrbsTransaction.save();
+
+      const result = {
+        type: "mythOrb",
+        mythology: randomMythOrb,
+      };
+
+      return result;
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const claimBonusBooster = async (userId) => {
+  try {
+    const boosters = ["automata", "shards"];
+    const mythologies = ["Greek", "Celtic", "Norse", "Egyptian"];
+    const randomMyth = mythologies[Math.floor(Math.random() * 4)];
+    const randomBooster = boosters[Math.floor(Math.random() * 2)];
+    let boosterUpdatedData;
+
+    if (randomBooster === "shards") {
+      const result = await userMythologies.findOneAndUpdate(
+        { userId, "mythologies.name": randomMyth },
+        {
+          $inc: { "mythologies.$.boosters.shardslvl": 1 },
+          $set: {
+            "mythologies.$.boosters.isShardsClaimActive": false,
+            "mythologies.$.boosters.shardsLastClaimedAt": Date.now(),
+          },
+        },
+        { new: true }
+      );
+      boosterUpdatedData = result.mythologies.filter(
+        (item) => item.name === randomMyth
+      )[0].boosters;
+    } else {
+      const result = await userMythologies.findOneAndUpdate(
+        { userId, "mythologies.name": randomMyth },
+        {
+          $inc: { "mythologies.$.boosters.automatalvl": 1 },
+          $set: {
+            "mythologies.$.boosters.isAutomataActive": true,
+            "mythologies.$.boosters.automataLastClaimedAt": Date.now(),
+            "mythologies.$.boosters.automataStartTime": Date.now(),
+          },
+        },
+        { new: true }
+      );
+      boosterUpdatedData = result.mythologies.filter(
+        (item) => item.name === randomMyth
+      )[0].boosters;
+    }
+
+    return {
+      type: randomBooster,
+      mythology: randomMyth,
+      boosterUpdatedData: boosterUpdatedData,
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const claimBonusQuest = async (userId) => {
+  try {
+    const pipeline = [
+      {
+        $lookup: {
+          from: "quests",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: "milestones",
+              },
+            },
+            {
+              $addFields: {
+                isCompleted: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$milestones" }, 0] },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$sharedQuests"] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: "sharedMilestones",
+              },
+            },
+            {
+              $addFields: {
+                isShared: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$sharedMilestones" }, 0] },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $unwind: "$claimedQuests",
+                  },
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $eq: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      orbClaimed: "$claimedQuests.orbClaimed",
+                      questClaimed: "$claimedQuests.questClaimed",
+                    },
+                  },
+                ],
+                as: "claimedQuestData",
+              },
+            },
+            {
+              $addFields: {
+                isQuestClaimed: {
+                  $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
+                },
+              },
+            },
+            {
+              $project: {
+                milestones: 0,
+                sharedMilestones: 0,
+                claimedQuestData: 0,
+                updatedAt: 0,
+                createdAt: 0,
+                __v: 0,
+              },
+            },
+          ],
+          as: "allQuests",
+        },
+      },
+      {
+        $addFields: {
+          quests: {
+            $filter: {
+              input: "$allQuests",
+              as: "quest",
+              cond: {
+                $and: [
+                  { $eq: ["$$quest.status", "Active"] },
+                  {
+                    $eq: [{ $ifNull: ["$$quest.isQuestClaimed", null] }, null],
+                  },
+                  { $eq: [{ $ifNull: ["$$quest.secret", null] }, null] },
+                ],
+              },
+            },
+          },
+        },
+      },
+      { $project: { allQuests: 0 } },
+    ];
+
+    const quests = await milestones.aggregate(pipeline).exec();
+    console.log(quests);
+
+    const unClaimedActiveQuests = quests[0].quests;
+
+    const randomQuest =
+      unClaimedActiveQuests[
+        Math.floor(Math.random() * unClaimedActiveQuests.length)
+      ];
+
+    if (randomQuest) {
+      await userMythologies.findOneAndUpdate(
+        { userId: userId, "mythologies.name": randomQuest.mythology },
+        {
+          $inc: { "mythologies.$.faith": 1, "mythologies.$.energyLimit": 1000 },
+        }
+      );
+
+      await milestones.findOneAndUpdate(
+        { userId: userId },
+        {
+          $push: {
+            claimedQuests: {
+              taskId: new mongoose.Types.ObjectId(randomQuest._id),
+            },
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      await milestones.findOneAndUpdate(
+        {
+          userId: userId,
+          "claimedQuests.taskId": new mongoose.Types.ObjectId(randomQuest._id),
+        },
+        {
+          $set: {
+            "claimedQuests.$.questClaimed": true,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      randomQuest.isQuestClaimed = true;
+
+      const result = {
+        type: "quest",
+        quest: randomQuest,
+      };
+      return result;
+    } else {
+      const result = await claimBonusOrb("mythOrb", userId);
+      return result;
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const checkBonus = async (user) => {
+  try {
+    const dailyBonusClaimed = user.dailyBonusClaimedAt;
+    const nowUtc = new Date();
+
+    const startOfTodayUtc = new Date(
+      Date.UTC(
+        nowUtc.getUTCFullYear(),
+        nowUtc.getUTCMonth(),
+        nowUtc.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+
+    const endOfTodayUtc = new Date(
+      Date.UTC(
+        nowUtc.getUTCFullYear(),
+        nowUtc.getUTCMonth(),
+        nowUtc.getUTCDate(),
+        23,
+        59,
+        59
+      )
+    );
+    const validClaim =
+      dailyBonusClaimed >= startOfTodayUtc &&
+      dailyBonusClaimed <= endOfTodayUtc;
+
+    if (validClaim) {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// export const testRandomValues = () => {
+//   const trials = 100000;
+//   const results = { A: 0, B: 0, C: 0, D: 0 };
+
+//   for (let i = 0; i < trials; i++) {
+//     const selectedValue = getRandomValue([
+//       { value: "A", probability: 0.125 },
+//       { value: "B", probability: 0.125 },
+//       { value: "C", probability: 0.25 },
+//       { value: "D", probability: 0.5 },
+//     ]);
+
+//     results[selectedValue]++;
+//   }
+
+//   console.log("Results after " + trials + " trials:");
+//   console.log("A: " + (results["A"] / trials) * 100 + "%");
+//   console.log("B: " + (results["B"] / trials) * 100 + "%");
+//   console.log("C: " + (results["C"] / trials) * 100 + "%");
+//   console.log("D: " + (results["D"] / trials) * 100 + "%");
+// };

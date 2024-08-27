@@ -1,7 +1,9 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 
+//? rethink on active status
 interface IBooster {
   shardslvl: number;
+  automatalvl: number;
   shardsLastClaimedAt: number;
   isShardsClaimActive: boolean;
   isAutomataActive: boolean;
@@ -30,7 +32,7 @@ export interface IUserMyths extends Document {
 const mythologySchema = new Schema({
   name: {
     type: String,
-    enum: ["Celtic", "Egyptian", "Greek", "Norse"],
+    enum: ["Greek", "Celtic", "Norse", "Egyptian"],
     required: true,
   },
   orbs: {
@@ -68,6 +70,10 @@ const mythologySchema = new Schema({
     required: true,
   },
   boosters: {
+    automatalvl: {
+      type: Number,
+      default: 1,
+    },
     shardslvl: {
       type: Number,
       default: 1,

@@ -15,6 +15,7 @@ export interface IUser extends Document {
     avatarUrl: string;
     updateAt: Date;
   };
+  dailyBonusClaimedAt: Date;
   announcements: number;
 }
 
@@ -65,6 +66,10 @@ const userSchema = new Schema<IUser>(
         default: Date.now(),
       },
     },
+    dailyBonusClaimedAt: {
+      type: Date,
+      default: 0,
+    },
     announcements: {
       type: Number,
       default: 0,
@@ -83,4 +88,3 @@ const userSchema = new Schema<IUser>(
 const User = model<IUser>("User", userSchema);
 
 export default User;
-``;

@@ -32,11 +32,6 @@ const milestoneSchema = new Schema({
     type: [Schema.Types.ObjectId],
     ref: "Quests",
   },
-  //   claimedCards: {
-  //     type: [Schema.Types.ObjectId],
-  //     ref: "NFTs",
-  //     default: [],
-  //   },
 });
 
 const milestones = model("Milestones", milestoneSchema);
