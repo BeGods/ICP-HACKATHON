@@ -15,7 +15,9 @@
         "shards": "Piraso",
         "faith": "Pananampalataya",
         "conversion": "Pagko-convert",
-        "discover": "Tuklasin"
+        "discover": "Tuklasin",
+        "whitelist": "Whitelist"
+
     },
     "buttons": {
         "convert": "I-convert",
@@ -122,6 +124,10 @@
             "C07": {
               "QuestName": "Tuath Danann",
               "desc": "'Ang Alitan nina Oberon at Titania', ca 1849, ay isang pinta ni Joseph Noel Paton, isang Scottish historical na pintor. Bisitahin ang orihinal sa National Gallery, Edinburgh - Scotland."
+            },
+            "whitelist": {
+              "QuestName": "Whitelist",
+              "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
             }
           },
           "egyptian": {
@@ -176,7 +182,11 @@
             "C08": {
               "QuestName": "Kulto ng Bull Apis",
               "desc": "'Ang Prosisyon ng Bull Apis', ca 1879, ay isang pinta ni Frederick Arthur Bridgman, isang American orientalist na pintor. Bisitahin ang orihinal sa Private Collection, USA."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
           },
           "greek": {
             "A01": {
@@ -230,7 +240,11 @@
             "C06": {
               "QuestName": "Titanomachia",
               "desc": "'Olympus: Ang Pagbagsak ng mga Higante', ca 1764, ay isang pinta ni Francisco Bayeu y Subías, isang Spanish neoclassical na pintor. Bisitahin ang orihinal sa Museo del Prado, Madrid - Spain."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
           },
           "norse": {
             "A01": {
@@ -284,7 +298,11 @@
             "C07": {
               "QuestName": "Asgardsreien",
               "desc": "'Ang Wild Hunt', ca 1856, ay isang pinta ni Johann Wilhelm Cordes, isang German landscape na pintor. Bisitahin ang orihinal sa Behnhaus, Lübeck - Germany."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
           }
     },
     "toasts": {

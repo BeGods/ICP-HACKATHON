@@ -6,18 +6,20 @@ import Boosters from "./pages/Boosters";
 import { MyContext } from "./context/context";
 import Leaderboard from "./pages/Leaderboard";
 import { getRandomColor } from "./utils/randomColor";
-import Loader from "./components/Loader";
+import Loader from "./components/Common/Loader";
 import Forges from "./pages/Forges";
+import Gacha from "./pages/Gacha";
+import Convert from "./pages/Convert";
 
 const tele = window.Telegram?.WebApp;
 
 const Home = (props) => {
-  const [accessToken, setAccessToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
+  const [showBonus, setShowBonus] = useState(false);
   const [section, setSection] = useState(() => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });
@@ -28,6 +30,8 @@ const Home = (props) => {
     <Boosters />,
     <Profile />,
     <Leaderboard />,
+    <Gacha />,
+    <Convert />,
   ];
 
   // fetch all game data
@@ -37,6 +41,9 @@ const Home = (props) => {
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setUserData(response?.user);
+      if (response?.user.isEligibleToClaim) {
+        setSection(5);
+      }
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
@@ -84,7 +91,7 @@ const Home = (props) => {
               setActiveMyth,
             }}
           >
-            {[0, 1, 2, 3, 4].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6].map((item) => (
               <div key={item}>{section === item && sections[item]}</div>
             ))}
           </MyContext.Provider>

@@ -1,17 +1,12 @@
-import {
-  TonConnectButton,
-  useTonAddress,
-  useTonConnectModal,
-} from "@tonconnect/ui-react";
-import { ChevronsRight, Languages, Volume, VolumeX } from "lucide-react";
+import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
+import { Award, ChevronsRight, Globe, Settings, Trophy } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { toggleBackButton } from "../utils/teleBackButton";
-import ProfileCard from "../components/ProfileCard";
+import ProfileCard from "../components/Cards/ProfileCard";
 import { MyContext } from "../context/context";
-import { connectTonWallet } from "../utils/api";
 import { toast } from "react-toastify";
 import ToastMesg from "../components/Toast/ToastMesg";
-import Avatar from "../components/Avatar";
+import Avatar from "../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
 import Language from "../components/Modals/Language";
 
@@ -40,7 +35,7 @@ const Profile = (props) => {
       <ToastMesg
         title={t("toasts.ReferralCopy.success.title")}
         desc={t("toasts.ReferralCopy.success.desc")}
-        img={"/assets/icons/toast.link.svg"}
+        status={"other"}
       />,
       {
         icon: false,
@@ -128,14 +123,10 @@ const Profile = (props) => {
           <div
             className="h-icon-primary w-icon-primary flex justify-center items-center left-0 mt-4 ml-2 absolute border rounded-full p-3.5"
             onClick={() => {
-              setToggleSound((prev) => {
-                const newValue = !prev;
-                localStorage.setItem("sound", JSON.stringify(newValue));
-                return newValue;
-              });
+              setSection(4);
             }}
           >
-            {toggleSound ? <VolumeX size={"30px"} /> : <Volume size={"30px"} />}
+            <Trophy />
           </div>
 
           <div
@@ -144,7 +135,7 @@ const Profile = (props) => {
               setShowLang(true);
             }}
           >
-            <Languages size={"30px"} />
+            <Settings size={"30px"} />
           </div>
           {/* PROFILE DETAILS */}
           <div className="flex justify-center items-center flex-col">
@@ -200,7 +191,7 @@ const Profile = (props) => {
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
                     <img
-                      src="/assets/icons/telegram.svg"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -215,7 +206,7 @@ const Profile = (props) => {
                   </div>
                   <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
                     <img
-                      src="/assets/icons/telegram.svg"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -229,14 +220,14 @@ const Profile = (props) => {
                     </div>
                   </div>
                 </div>
-                <div
+                {/* <div
                   onClick={() => {
                     setSection(4);
                   }}
                   className="w-full text-center text-[12px] pt-3 uppercase"
                 >
                   {t(`profile.leaderboard`)} {">"}
-                </div>
+                </div> */}
               </div>
               {/* INVITE */}
               <div className="text-center bg-black w-full p-[15px] rounded-primary">
@@ -257,7 +248,7 @@ const Profile = (props) => {
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
                     <img
-                      src="/assets/icons/telegram.svg"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -270,7 +261,7 @@ const Profile = (props) => {
                   </div>
                   <div className="flex items-center gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/assets/icons/telegram.svg"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -347,7 +338,7 @@ export default Profile;
                 <div className="flex gap-[8px] mt-[10px]">
                   <div className="flex items-center gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/assets/icons/telegram.svg"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
@@ -358,7 +349,7 @@ export default Profile;
                   </div>
                   <div className="flex items-center gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
                     <img
-                      src="/assets/icons/telegram.svg"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />

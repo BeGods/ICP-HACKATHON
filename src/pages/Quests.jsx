@@ -7,37 +7,38 @@ import {
   claimShareReward,
   completeQuest,
 } from "../utils/api";
-import Footer from "../components/Footer";
+import Footer from "../components/Common/Footer";
 import JigsawImage from "../components/Pieces";
-import InfoCard from "../components/QuestCards/InfoCard";
-import PayCard from "../components/QuestCards/PayCard";
-import OrbClaimCard from "../components/QuestCards/OrbClaimCard";
+import InfoCard from "../components/Cards/QuestCards/InfoCard";
+import PayCard from "../components/Cards/QuestCards/PayCard";
+import OrbClaimCard from "../components/Cards/QuestCards/OrbClaimCard";
 import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import Symbol from "../components/Common/Symbol";
 import { useTranslation } from "react-i18next";
 import { mythologies, mythSections } from "../utils/variables";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
-import QuestCard from "../components/QuestCards/QuestCard";
+import QuestCard from "../components/Cards/QuestCards/QuestCard";
 import Header from "../components/Headers/Header";
 import JigsawButton from "../components/Buttons/JigsawButton";
-import IconButton from "../components/Common/IconButton";
+import IconButton from "../components/Buttons/IconButton";
 import QuestButton from "../components/Buttons/QuestButton";
-import MilestoneCard from "../components/MilestoneCard";
+import MilestoneCard from "../components/Cards/MilestoneCard";
 import Button from "../components/Buttons/Button";
+import SecretCard from "../components/Cards/QuestCards/SecretCard";
 
 const HeaderContent = ({ activeMyth, mythData, t }) => {
   return (
     <>
       <div className="flex flex-col flex-grow justify-start items-start text-white pl-5">
-        <div className="text-left  gap-1 flex font-medium text-primary">
+        <div className="text-left  gap-1 flex font-medium text-head">
           {/* <span>{mythData[activeMyth].faith}</span> */}
           <span className={`text-${mythSections[activeMyth]}-text uppercase`}>
             {t(`sections.quests`)}
           </span>
         </div>
         <h1
-          className={`glow-text-${mythSections[activeMyth]} uppercase -mt-4 -ml-2`}
+          className={`glow-text-${mythSections[activeMyth]} glow-test-contour uppercase -mt-4 -ml-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
@@ -119,7 +120,7 @@ const Quests = () => {
         <ToastMesg
           title={t("toasts.Quest_share.success.title")}
           desc={t("toasts.Quest_share.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -155,7 +156,7 @@ const Quests = () => {
         <ToastMesg
           title={t("toasts.Quest_share.success.error")}
           desc={t("toasts.Quest_share.success.error")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -205,7 +206,7 @@ const Quests = () => {
         <ToastMesg
           title={t("toasts.Quest_orb_claim.success.title")}
           desc={t("toasts.Quest_orb_claim.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -228,7 +229,7 @@ const Quests = () => {
         <ToastMesg
           title={t("toasts.Quest_orb_claim.error.title")}
           desc={t("toasts.Quest_orb_claim.error.desc")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -272,7 +273,7 @@ const Quests = () => {
           <ToastMesg
             title={t("toasts.Quest_complete.error.title")}
             desc={t("toasts.Quest_complete.error.desc")}
-            img={"/assets/icons/toast.fail.svg"}
+            status={"fail"}
           />,
           {
             icon: false,
@@ -337,7 +338,7 @@ const Quests = () => {
         <ToastMesg
           title={t("toasts.Quest_claim.success.title")}
           desc={t("toasts.Quest_claim.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -361,7 +362,7 @@ const Quests = () => {
         <ToastMesg
           title={t("toasts.Quest_claim_InsufficientOrbs.error.title")}
           desc={t("toasts.Quest_claim_InsufficientOrbs.error.desc")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -486,7 +487,7 @@ const Quests = () => {
             <div className="relative">
               <div className="h-full relative -mt-[42px]">
                 <JigsawImage
-                  imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${secretQuests[0]?.type}.png`}
+                  imageUrl={`/assets/cards/whitelist.fof.${mythSections[activeMyth]}.jpg`}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith
                   )}
@@ -578,7 +579,7 @@ const Quests = () => {
       )}
       {/* get info about secret quest */}
       {secretInfo && (
-        <InfoCard
+        <SecretCard
           t={t}
           isShared={secretQuests[0]?.isShared}
           quest={secretQuests[0]}

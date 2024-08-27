@@ -14,7 +14,9 @@
         "shards": "टुकड़े",
         "faith": "विश्वास",
         "conversion": "रूपांतरण",
-        "discover": "खोजें"
+        "discover": "खोजें",
+        "whitelist": "Whitelist"
+
     },
     "buttons": {
         "convert": "रूपांतरित करें",
@@ -121,7 +123,11 @@
           "C07": {
             "QuestName": "टूआथ डानन",
             "desc": "ओबेरॉन और टाइटानिया की झगड़ा', लगभग 1849, एक पेंटिंग है जिसे जोसेफ नोएल पटो, एक स्कॉटिश ऐतिहासिक पेंटर ने बनाया था। मूल पेंटिंग को स्कॉटलैंड के एडिनबर्ग में राष्ट्रीय गैलरी पर देखें।"
-          }
+          },
+          "whitelist": {
+              "QuestName": "Whitelist",
+              "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+            }
         },
         "egyptian": {
             "A01": {
@@ -175,7 +181,11 @@
             "C08": {
               "QuestName": "बैल एपीस का पंथ",
               "desc": "बैल एपीस का जुलूस', लगभग 1879, एक पेंटिंग है जिसे फ्रेडरिक आर्थर ब्रिजमैन, एक अमेरिकी ओरिएंटलिस्ट पेंटर ने बनाया था। मूल पेंटिंग को यूएसए में एक निजी संग्रह में देखें।"
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
           },
           "greek": {
             "A01": {
@@ -229,7 +239,11 @@
             "C06": {
                 "QuestName": "टाइटनॉमाचीया",
                 "desc": "ओलंपस: द फॉल ऑफ द जायंट्स', लगभग 1764, एक पेंटिंग है जिसे फ्रांसिस्को बेयू य सुइबियास, एक स्पेनिश नवशास्त्रीय पेंटर ने बनाया था। मूल पेंटिंग को म्यूज़ो डेल प्राडो, मैड्रिड - स्पेन में देखें।"
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
         },
         "norse": {
             "A01": {
@@ -283,7 +297,11 @@
             "C07": {
                 "QuestName": "आस्गार्ड्सरेन I",
                 "desc": "'जंगली शिकार', लगभग 1856, एक पेंटिंग है जिसे जर्मन लैंडस्केप पेंटर जोहान विल्हेल्म कॉर्डेस ने बनाया था। मूल पेंटिंग को बेहनहाउस, ल्यूबेक - जर्मनी में देखें।"
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
         }
       },
       "toasts": {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { authenticate } from "../utils/api";
 import { useNavigate } from "react-router-dom";
-import Captcha from "../components/Captcha";
 import ReactHowler from "react-howler";
+import Captcha from "../components/Common/Captcha";
 
 const tele = window.Telegram?.WebApp;
 
@@ -133,7 +133,7 @@ const Auth = (props) => {
             >
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
-                alt="web"
+                alt="telegram"
                 className="h-[11w] w-[11vw]"
               />
             </div>
@@ -143,8 +143,7 @@ const Auth = (props) => {
               }}
             >
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/X_logo_2023.svg/200px-X_logo_2023.svg.png"
-                style={{ filter: "invert(100%)" }}
+                src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png"
                 alt="telegram"
                 className="h-[8vw] w-[8vw] mt-2"
               />
@@ -177,29 +176,25 @@ const Auth = (props) => {
             left: 0,
           }}
         >
-          {showCaptcha ? (
-            <Captcha auth={auth} />
-          ) : (
-            <div className="flex flex-col h-screen">
-              <div className="flex justify-center items-center w-full leading-tight">
-                <div className="relative">
-                  <img
-                    src="/assets/logos/forgesoffaith.svg"
-                    alt="fof"
-                    className="w-[200px] mt-4 fof-text-shadow"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-grow"></div>
-              <div className="flex justify-center items-center">
+          <div className="flex flex-col h-screen">
+            <div className="flex justify-center items-center w-full leading-tight">
+              <div className="relative">
                 <img
-                  src="/assets/logos/battle.gods.black.svg"
-                  alt="logo"
-                  className="w-[65px] h-[75px] mb-4"
+                  src="/assets/logos/forgesoffaith.svg"
+                  alt="fof"
+                  className="w-[200px] mt-4 fof-text-shadow"
                 />
               </div>
             </div>
-          )}
+            <div className="flex flex-grow"></div>
+            <div className="flex justify-center items-center">
+              <img
+                src="/assets/logos/battle.gods.black.svg"
+                alt="logo"
+                className="w-[65px] h-[75px] mb-4"
+              />
+            </div>
+          </div>
         </div>
       )}
       <ReactHowler
@@ -208,6 +203,11 @@ const Auth = (props) => {
         preload={true}
         loop
       />
+      {showCaptcha && (
+        <div className="absolute h-screen w-screen z-50">
+          <Captcha auth={auth} />
+        </div>
+      )}
     </div>
   );
 };

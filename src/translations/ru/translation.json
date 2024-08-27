@@ -15,7 +15,9 @@
         "shards": "Осколки",
         "faith": "Вера",
         "conversion": "Преобразование",
-        "discover": "Открытие"
+        "discover": "Открытие",
+        "whitelist": "Whitelist"
+
     },
     "buttons": {
         "convert": "Преобразовать",
@@ -120,7 +122,11 @@
             "C07": {
               "QuestName": "Туата Де Дананн",
               "desc": "'Ссора Оберона и Титании', ок. 1849 года, - картина Жозефа Ноэля Пато, шотландского исторического художника. Посетите оригинал в Национальной галерее, Эдинбург - Шотландия."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
           },
 
             "egyptian": {
@@ -175,7 +181,11 @@
               "C08": {
                 "QuestName": "Культ быка Аписа",
                 "desc": "'Процессия быка Аписа', ок. 1879 года, - картина Фредерика Артура Бриджмана, американского ориенталистского художника. Посетите оригинал в Частной коллекции, США."
-              }
+              },
+              "whitelist": {
+                  "QuestName": "Whitelist",
+                  "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                }
             },
     
             "greek": {
@@ -230,7 +240,11 @@
               "C06": {
                 "QuestName": "Титаномахия",
                 "desc": "'Олимп: Падение гигантов', ок. 1764 года, - картина Франсиско Байю и Субиаса, испанского неоклассического художника. Посетите оригинал в Музее Прадо, Мадрид - Испания."
-              }
+              },
+              "whitelist": {
+                  "QuestName": "Whitelist",
+                  "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                }
             },
             "norse": {
               "A01": {
@@ -284,7 +298,11 @@
               "C07": {
                 "QuestName": "Асгардрейен",
                 "desc": "'Дикая охота', ок. 1856 года, - картина Иоганна Вильгельма Кордеса, немецкого пейзажного художника. Посетите оригинал в Бенхаусе, Любек - Германия."
-              }
+              },
+              "whitelist": {
+                  "QuestName": "Whitelist",
+                  "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                }
             }
           
     },

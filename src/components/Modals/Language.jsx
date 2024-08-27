@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import IconButton from "../Common/IconButton";
+import IconButton from "../Buttons/IconButton";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
+import ToggleSwitch from "../Common/ToggleSwitch";
 
 const languages = [
-  { name: "Select", code: "" },
+  { name: "Language", code: "" },
   { name: "English", code: "en" },
   { name: "हिन्दी", code: "hi" },
   { name: "Русский", code: "ru" },
@@ -33,7 +34,7 @@ const Language = ({ close }) => {
     <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex flex-col justify-start items-center z-50">
       <div className="flex relative w-[76%] bg-black rounded-primary justify-center items-center flex-col mt-[52px] glow-card p-6">
         <IconButton align={0} handleClick={close} activeMyth={4} />
-        <h1 className="text-primary mb-4">{t(`profile.lang`)}</h1>
+        <h1 className="text-primary mb-4">Settings</h1>
         <select
           value={lang}
           onChange={handleLanuageChange}
@@ -45,6 +46,10 @@ const Language = ({ close }) => {
             </option>
           ))}
         </select>
+        <div className="flex text-tertiary text-left justify-between w-full mt-4">
+          <div>Sound</div>
+          <ToggleSwitch />
+        </div>
         <div
           onClick={handleApply}
           className="w-full bg-white text-black text-center text-xl rounded-md py-2 mt-6"

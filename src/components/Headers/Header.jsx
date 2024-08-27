@@ -8,7 +8,7 @@ const Header = ({ children }) => {
     <div
       style={{
         position: "relative",
-        height: "18.5%",
+        height: "19%",
         width: "100%",
       }}
       className="flex"

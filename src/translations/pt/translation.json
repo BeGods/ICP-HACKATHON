@@ -15,7 +15,9 @@
         "shards": "fragmentos",
         "faith": "fé",
         "conversion": "Conversão",
-        "discover": "Descobrir"
+        "discover": "Descobrir",
+        "whitelist": "Whitelist"
+
     },
     "buttons": {
         "convert": "Converter",
@@ -120,7 +122,11 @@
               "C07": {
                 "QuestName": "Tuatha Dé Danann",
                 "desc": "'A Disputa de Oberon e Titania', ca 1849, é uma pintura de Joseph Noel Paton, um pintor histórico escocês. Visite o original na National Gallery, Edimburgo - Escócia."
-              }
+              },
+              "whitelist": {
+                  "QuestName": "Whitelist",
+                  "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                }
             },
           
                 "egyptian": {
@@ -175,7 +181,11 @@
                   "C08": {
                     "QuestName": "Culto do Touro Apis",
                     "desc": "'A Procissão do Touro Apis', ca 1879, é uma pintura de Frederick Arthur Bridgman, um pintor orientalista americano. Visite o original em uma Coleção Privada, EUA."
-                  }
+                  },
+                  "whitelist": {
+                      "QuestName": "Whitelist",
+                      "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                    }
                 },
             
                     "greek": {
@@ -230,7 +240,11 @@
                       "C06": {
                         "QuestName": "Titanomaquia",
                         "desc": "'Órion: A Queda dos Gigantes', ca 1764, é uma pintura de Francisco Bayeu y Subías, um pintor neoclássico espanhol. Visite o original no Museo del Prado, Madrid - Espanha."
-                      }
+                      },
+                      "whitelist": {
+                          "QuestName": "Whitelist",
+                          "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                        }
                     },
                 
                         "norse": {
@@ -285,9 +299,12 @@
                           "C07": {
                             "QuestName": "Asgardsreien",
                             "desc": "'A Caça Selvagem', ca 1856, é uma pintura de Johann Wilhelm Cordes, um pintor paisagista alemão. Visite o original na Behnhaus, Lübeck - Alemanha."
-                          }
-                        }
-                      
+                          },
+                          "whitelist": {
+                              "QuestName": "Whitelist",
+                              "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                            }
+                        }             
     },
 
         "toasts": {

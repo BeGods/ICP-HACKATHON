@@ -1,73 +1,140 @@
 import Lottie from "lottie-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import animationData from "../../public/assets/fx/gacha.json";
 import { fetchDailyBonus } from "../utils/api";
-import QuestCard from "../components/QuestCards/QuestCard";
-import { mythologies } from "../utils/variables";
-import { useNavigate } from "react-router-dom";
-import MilestoneCard from "../components/MilestoneCard";
-import AutomataCard from "../components/Cards/Boosters/AutomataCard";
+import {
+  defaultIcons,
+  mythElementNames,
+  mythologies,
+} from "../utils/variables";
 import Confetti from "react-confetti";
-import { Crown } from "lucide-react";
+import { Crown, HandHelping, LoaderPinwheel } from "lucide-react";
+import { MyContext } from "../context/context";
 
-const BonusClaimButton = ({ action, message }) => {
-  return (
-    <div
-      onClick={action}
-      className="w-button-primary flex justify-between mx-auto mt-[10px] items-center h-button-primary border border-gold rounded-primary cursor-pointer"
-    >
-      <div className="flex justify-center items-center w-1/4 h-full"></div>
-      <div className="text-[16px] uppercase text-gold">{message}</div>
-      <div className="flex justify-center items-center w-1/4  h-full"></div>
-    </div>
-  );
-};
+const tele = window.Telegram?.WebApp;
 
-const FlashScreen = ({ showFlash }) => {
+const FlashScreen = ({ reward }) => {
+  const { setSection, setActiveMyth } = useContext(MyContext);
   const [runConfetti, setRunConfetti] = useState(false);
+  const [showScale, setShowScale] = useState(0);
+  const [showYouScale, setShowYouScale] = useState(0);
+  const [showWon, setShowWon] = useState(false);
+  const [showHand, setShowHand] = useState(false);
 
-  useEffect(() => {
+  const playConfetti = () => {
     setRunConfetti(true);
     setTimeout(() => {
       setRunConfetti(false);
     }, 5000);
+  };
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (reward.type === "mythOrb") {
+      setSection(0);
+      setActiveMyth(mythologies.indexOf(reward.mythology));
+    } else if (reward.type === "quest") {
+      setSection(1);
+      setActiveMyth(mythologies.indexOf(reward.quest.mythology));
+    } else if (reward.type === "automata" || reward.type === "shards") {
+      setSection(2);
+      setActiveMyth(mythologies.indexOf(reward.mythology));
+    } else if (reward.type === "blackOrb") {
+      setSection(6);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowYouScale(150);
+      setTimeout(() => {
+        setShowYouScale(100);
+        setShowWon(true);
+        playConfetti();
+      }, 1000);
+    }, 100);
   }, []);
 
+  useEffect(() => {
+    if (showWon) {
+      setTimeout(() => {
+        setShowScale(150);
+        setTimeout(() => {
+          setShowScale(100);
+          setShowHand(true);
+        }, 1000);
+      }, 500);
+    }
+  }, [showWon]);
+
   return (
-    <div
-      className={`fixed flex flex-col  items-center  h-screen w-screen flash-overlay ${
-        showFlash ? "show" : ""
-      }`}
-    >
-      <div className="w-full flex flex-col justify-center bg-glass-black h-screen gap-10">
-        <h1 className="w-full text-center mt-10 text-gold text-[9vw]">
-          CONGRATULATIONS!
+    <div className="w-screen h-screen relative">
+      {/* Background Paper */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          filter: "grayscale(100%) contrast(100%)",
+          background:
+            "url(https://upload.wikimedia.org/wikipedia/commons/6/6f/War_flag_of_the_Imperial_Japanese_Army_%281868%E2%80%931945%29.svg) no-repeat center center / cover",
+        }}
+      ></div>
+      {/* Content */}
+      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold glow-test-contour  uppercase z-20">
+        <h1
+          className={`scale-${showYouScale} text-[22vw] mt-4 transition-transform duration-1000`}
+        >
+          YOU
         </h1>
-        <div className="w-full flex flex-col flex-grow justify-start gap-12">
-          <div className="w-[80vw] h-[80vw] relative rounded-full bg-black mx-auto flex items-center justify-center">
-            <div className="w-[90%] h-[90%] rounded-full  flex flex-col items-center justify-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <div className="text-white font-symbols text-[70vw] mx-auto">
-                q
-              </div>
-            </div>
-            <div className="absolute bottom-0 text-white text-[9vw]">
-              AUTOMATA
-            </div>
-          </div>
-          <div className="w-button-primary flex justify-between mx-auto bg-black items-center h-button-primary border border-gold rounded-primary cursor-pointer">
-            <div className="flex justify-center items-center w-1/4 h-full"></div>
-            <div className="text-[16px] uppercase text-gold">Claim</div>
-            <div className="flex justify-center items-center w-1/4  h-full"></div>
-          </div>
+        {showWon && (
+          <h1 className="text-[14.2vw] transition-opacity duration-500">
+            WON!
+          </h1>
+        )}
+      </div>
+      <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl">
+        <div
+          onClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+
+            setSection(0);
+          }}
+          className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[85vw]  mx-auto glow-icon-contour`}
+        >
+          {reward.type === "mythOrb"
+            ? defaultIcons[reward.mythology]
+            : defaultIcons[reward.type]}
         </div>
       </div>
+      <div className="flex flex-col justify-between items-center w-full h-1/4 absolute bottom-0  text-[9vw] text-white uppercase z-20">
+        <h1 className={`glow-test-contour mt-10 scale-${showScale}`}>
+          {reward.type === "mythOrb"
+            ? `${mythElementNames[reward.mythology]} Orb`
+            : reward.type === "blackOrb"
+            ? "BLACK ORB"
+            : reward.type === "quest"
+            ? "COMPLETED QUEST"
+            : `${reward.type.toUpperCase()} BOOSTER`}
+        </h1>
+        {showHand && (
+          <HandHelping
+            onClick={() => {
+              tele.HapticFeedback.notificationOccurred("success");
 
+              setSection(0);
+            }}
+            size={"120px"}
+            color="#FFD660"
+            className="mx-auto drop-shadow-xl scale-more"
+          />
+        )}
+      </div>
+      {/* Confetti */}
       {runConfetti && (
         <Confetti
           width={window.innerWidth}
           height={window.innerHeight}
-          style={{ zIndex: 50, position: "fixed", top: 0, left: 0 }}
+          style={{ zIndex: 10, position: "fixed", top: 0, left: 0 }}
         />
       )}
     </div>
@@ -75,14 +142,98 @@ const FlashScreen = ({ showFlash }) => {
 };
 
 const Gacha = (props) => {
-  const navigate = useNavigate();
+  const { gameData, setQuestsData, questsData, setGameData } =
+    useContext(MyContext);
   const { t } = useTranslation();
   const lottieRef = useRef(null);
   const [reward, setReward] = useState(null);
   const [showSpin, setShowSpin] = useState(true);
   const [showFlash, setShowFlash] = useState(false);
+  const [showScale, setShowScale] = useState(false);
+  const [changeText, setChangeText] = useState("Win");
+
+  const handleUpdateData = (rewardType, rewardValue, data) => {
+    if (rewardType === "blackOrb") {
+      setGameData((prev) => ({
+        ...prev,
+        blackOrbs: prev.blackOrbs + 1,
+      }));
+    } else if (rewardType === "mythOrb") {
+      const updatedGameData = {
+        ...gameData,
+        mythologies: gameData.mythologies.map((myth) =>
+          myth.name === rewardValue
+            ? {
+                ...myth,
+                orbs: myth.orbs + 1,
+              }
+            : myth
+        ),
+      };
+      setGameData(updatedGameData);
+    } else if (rewardType === "shards") {
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === rewardValue
+              ? {
+                  ...item,
+                  boosters: data,
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+    } else if (rewardType === "automata") {
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === rewardValue
+              ? {
+                  ...item,
+                  boosters: data,
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+    } else if (rewardType === "quest") {
+      const updatedQuestData = questsData.map((item) =>
+        item._id === data._id
+          ? { ...item, isQuestClaimed: true, isCompleted: true }
+          : item
+      );
+      const updatedGameData = {
+        ...gameData,
+        mythologies: gameData.mythologies.map((myth) => {
+          if (myth.name === data.mythology) {
+            return {
+              ...myth,
+              faith: myth.faith + 1,
+              energyLimit: myth.energyLimit + 1000,
+            };
+          }
+
+          return {
+            ...myth,
+          };
+        }),
+      };
+      setGameData(updatedGameData);
+      setQuestsData(updatedQuestData);
+    }
+  };
 
   const claimDailyBonus = async () => {
+    tele.HapticFeedback.notificationOccurred("success");
+
+    setShowScale(true);
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No access token found");
@@ -91,6 +242,13 @@ const Gacha = (props) => {
     try {
       const response = await fetchDailyBonus(token);
       if (response && response.reward) {
+        handleUpdateData(
+          response.reward.type,
+          response.reward.mythology,
+          response.reward?.boosterUpdatedData
+            ? response.reward?.boosterUpdatedData
+            : response.reward?.quest
+        );
         handlePlay();
         setTimeout(() => {
           setShowSpin(false);
@@ -112,94 +270,88 @@ const Gacha = (props) => {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => (prevText === "Win" ? "Daily" : "Win"));
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-col h-screen w-screen justify-center font-fof items-center bg-black ">
-      <div className="flex flex-col h-full items-center justify-start mt-5">
-        <div className="flex flex-col justify-center items-center  w-full ">
-          {/* <img src="/assets/uxui/bonus.svg" alt="bonus" className="w-[20vw]" /> */}
-          <Crown color="white" size={"30vw"} />
-          <h1 className="uppercase text-gold text-[60px] -mt-4">Win</h1>
+      <div className="flex flex-col w-full h-full items-center py-2">
+        {/* Heading */}
+        <div className="flex flex-col items-center justify-center w-full h-1/5">
+          {!showScale && (
+            <>
+              <Crown color="#FFD660" size={"20vw"} />
+              <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero glow-test-contour">
+                {changeText}
+              </h1>
+            </>
+          )}
         </div>
-        <div className="flex relative items-center">
-          <img src="/assets/uxui/box.png" alt="box" className="w-full h-fit" />
-          {showSpin && (
-            <div className="absolute">
+        {/* Main */}
+        <div
+          onClick={claimDailyBonus}
+          className="flex flex-grow justify-center items-center relative w-full h-full"
+        >
+          <img
+            src="/assets/uxui/280px-pandora.png"
+            alt="pandora"
+            className={`w-fit h-fit transition-transform duration-1000 ${
+              showScale ? "glow-box" : "glow-box scale-more -mt-10"
+            }`}
+          />
+          <div className="absolute -mt-10">
+            {showSpin && (
               <Lottie
                 lottieRef={lottieRef}
                 autoplay={false}
                 loop
                 animationData={animationData}
-                className="w-full h-full"
+                className={`w-[90vw] ${showScale && "scale-125"}`}
               />
-            </div>
+            )}
+          </div>
+        </div>
+        {/* Bottom */}
+        <div className="flex items-center justify-center w-full h-1/5">
+          {!showScale && (
+            <LoaderPinwheel
+              color="#FFD660"
+              onClick={claimDailyBonus}
+              size={"20vw"}
+              className="animate-spin-slow"
+            />
           )}
         </div>
-        <BonusClaimButton
-          action={claimDailyBonus}
-          message={t(`buttons.spin`)}
-        />
+        {showFlash && (
+          <div
+            className={`fixed flex flex-col items-center h-screen w-screen flash-overlay ${
+              showFlash ? "show" : ""
+            }`}
+          >
+            <FlashScreen showFlash={showFlash} reward={reward} />{" "}
+          </div>
+        )}
       </div>
-      {showFlash && <FlashScreen showFlash={showFlash} />}
-      {/* {reward?.type === "quest" && (
-        <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-sm bg-opacity-60 z-50">
-          <QuestCard
-            quest={reward?.quest}
-            activeMyth={mythologies.indexOf(reward?.quest.mythology)}
-            curr={0}
-            t={t}
-            Button={
-              <BonusClaimButton
-                message={t(`buttons.claim`)}
-                action={() => {
-                  navigate("/home");
-                }}
-              />
-            }
-          />
-        </div>
-      )} */}
-      {/* {(reward?.type === "shards" ||
-        reward?.type === "mythOrb" ||
-        reward?.type === "blackOrb") && (
-        <MilestoneCard
-          activeCard={reward?.type}
-          isOrb={reward?.type === "mythOrb" || reward?.type === "blackOrb"}
-          isBlack={reward?.type === "blackOrb"}
-          activeMyth={mythologies.indexOf(reward?.mythology)}
-          closeCard={() => {
-            navigate("/home");
-          }}
-          booster={reward?.type === "shards" && 5}
-          t={t}
-          Button={
-            <BonusClaimButton
-              message={t(`buttons.claim`)}
-              action={() => {
-                navigate("/home");
-              }}
-            />
-          }
-        />
-      )} */}
-      {/* {reward?.type === "automata" && (
-        <AutomataCard
-          activeCard={reward?.type}
-          activeMyth={mythologies.indexOf(reward?.mythology)}
-          closeCard={() => {
-            navigate("/home");
-          }}
-          Button={
-            <BonusClaimButton
-              message={t(`buttons.claim`)}
-              action={() => {
-                navigate("/home");
-              }}
-            />
-          }
-        />
-      )} */}
     </div>
   );
 };
 
 export default Gacha;
+
+// const BonusClaimButton = ({ action, message }) => {
+//   return (
+//     <div
+//       onClick={action}
+//       className="w-button-primary flex justify-between mx-auto mt-[10px] items-center h-button-primary border border-gold rounded-primary cursor-pointer"
+//     >
+//       <div className="flex justify-center items-center w-1/4 h-full"></div>
+//       <div className="text-[16px] uppercase text-gold">{message}</div>
+//       <div className="flex justify-center items-center w-1/4  h-full"></div>
+//     </div>
+//   );
+// };

@@ -1,20 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Convert from "./Convert";
 import { MyContext } from "../context/context";
-import Footer from "../components/Footer";
+import Footer from "../components/Common/Footer";
 import { startTapSession, updateGameData } from "../utils/api";
 import { hideBackButton } from "../utils/teleBackButton";
 import { useTranslation } from "react-i18next";
 import {
-  elements,
+  elementNames,
   mythologies,
   mythSections,
   mythSymbols,
 } from "../utils/variables";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
-import MilestoneCard from "../components/MilestoneCard";
-import BoosterButtom from "../components/Buttons/BoosterButtom";
-import AutomataCard from "../components/Cards/Boosters/AutomataCard";
+import MilestoneCard from "../components/Cards/MilestoneCard";
 import Button from "../components/Buttons/Button";
 import Header from "../components/Headers/Header";
 import GameHeader from "../components/Headers/Game";
@@ -24,66 +22,68 @@ const tele = window.Telegram?.WebApp;
 
 const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
   return (
-    <div className="flex relative flex-col flex-grow justify-center items-center text-white ">
-      {/* <div className=" h-full z-20">
-        <h1 className={`text-primary uppercase`}>
-          {elements[activeMyth]} Forge
-        </h1>
-      </div> */}
-      <div
-        className={`flex text-center  justify-center outline outline-[0.5px] outline-green-400 h-[160px] -mt-10 absolute items-center rounded-full transition-all duration-1000 ${
-          orbGlow
-            ? `glow-tap-${mythSections[activeMyth]} `
-            : `glow-icon-${mythSections[activeMyth]}`
-        }`}
-      >
-        <img
-          src="/assets/uxui/240px-orb.base.png"
-          alt="orb"
-          className={`filter-orbs-${mythSections[activeMyth]}  w-full h-full`}
-        />
-        <span
-          className={`absolute z-1 font-symbols t text-white text-[160px] mt-11 ml-1  opacity-50 orb-glow`}
+    <div className="flex justify-between relative w-full">
+      {/* Left */}
+      <div className="flex justify-between  h-[80%] w-fit flex-col items-start px-2">
+        <h1
+          className={`text-head glow-test-contour uppercase text-${mythSections[activeMyth]}-text`}
         >
-          {mythSymbols[mythSections[activeMyth]]}
-        </span>
-      </div>
-      <div className="flex justify-between h-full w-full px-2">
-        <div>
-          <h1
-            className={`text-tertiary uppercase glow-text-small-${mythSections[activeMyth]}`}
-          >
-            {" "}
-            {t(`elements.${elements[activeMyth]}`)}
-          </h1>
-          <h1
-            className={`text-primary uppercase text-${mythSections[activeMyth]}-text`}
-          >
-            Forge
-          </h1>
-
-          <div>
-            {" "}
-            <h1 className="text-white text-2xl">{orbs}</h1>
-            {/* <h1 className={`text-primary uppercase`}>{t("sections.forges")}</h1> */}
-          </div>
-        </div>
-        {/* //TODO: Fix this component */}
-        <div className="flex  gap-1">
-          <div
-            className={`flex flex-col relative text-center justify-center items-center max-w-orb top-0 rounded-full mr-1 -mt-10`}
-          >
+          Forge
+        </h1>
+        <div className="flex w-fit flex-col justify-end items-start">
+          <div className="flex glow-test-contour -mt-1 items-center text-num text-white font-fof font-normal">
             <div
               className={`flex flex-col glow-shard-${mythSections[activeMyth]} w-full`}
             >
               <img
                 src="/assets/uxui/240px-shard.base.png"
                 alt="orb"
-                className={`filter-orbs-${mythSections[activeMyth]} `}
+                className={`filter-orbs-${mythSections[activeMyth]} w-[10vw] `}
               />
             </div>
-            <div className="text-primary font-fof font-normal">{shards}</div>
+            <h1>{shards}</h1>
           </div>
+        </div>
+      </div>
+      <div className="flex absolute justify-center w-full">
+        {/* Orb */}
+        <div
+          className={`flex text-center justify-center h-[36vw] w-fit -mt-10 items-center rounded-full outline outline-[5px] outline-${
+            mythSections[activeMyth]
+          }-primary  transition-all duration-1000 ${
+            orbGlow
+              ? `glow-tap-${mythSections[activeMyth]} `
+              : `glow-icon-${mythSections[activeMyth]}`
+          }`}
+        >
+          <img
+            src="/assets/uxui/240px-orb.base.png"
+            alt="base-orb"
+            className={`filter-orbs-${mythSections[activeMyth]}  w-full h-full`}
+          />{" "}
+          <span
+            className={`absolute z-1 font-symbols  text-white text-[140px] mt-11  opacity-50 orb-glow`}
+          >
+            {mythSymbols[mythSections[activeMyth]]}
+          </span>
+        </div>
+      </div>
+      {/* Right */}
+      <div className="flex justify-between w-fit h-[80%] flex-col items-end pr-2">
+        <h1
+          className={` text-head  text-white glow-text-small-${mythSections[activeMyth]} uppercase`}
+        >
+          {elementNames[activeMyth]}
+        </h1>
+        <div className="flex w-full justify-end -mr-2.5">
+          <h1 className={`text-num  glow-test-contour -mt-2 text-white`}>
+            {orbs}
+          </h1>
+          <span
+            className={`font-symbols glow-test-contour opacity-70 text-red text-[50px] -ml-1 -mt-3.5 text-${mythSections[activeMyth]}-text`}
+          >
+            {mythSymbols[mythSections[activeMyth]]}
+          </span>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
 
 const Forges = () => {
   const { t } = useTranslation();
-  const { activeMyth, setActiveMyth, gameData, setGameData } =
+  const { activeMyth, setActiveMyth, setSection, gameData, setGameData } =
     useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -122,6 +122,7 @@ const Forges = () => {
   // setActiveCard
   const handleActiveCard = (type) => {
     setActiveCard(type);
+    console.log(type);
   };
 
   // update sessionStart timestamp
@@ -449,15 +450,21 @@ const Forges = () => {
               activeMyth={activeMyth}
             />
           </div> */}
-
           {/* Taping region */}
           <div className="flex relative flex-grow justify-center items-center">
-            {/* <div style={{ position: "relative", display: "inline-block" }}>
+            <div
+              style={{ position: "absolute", display: "inline-block" }}
+              className="w-[200px] -top-[35px] "
+            >
               <img
-                src="/assets/uxui/test.webp"
+                src="/assets/uxui/600px-smoke.wide.webp"
                 alt="smoke"
-                style={{ display: "block", width: "100%" }}
-                className="filter-norse"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  mixBlendMode: "color-dodge",
+                  filter: "contrast(154%) brightness(80%)",
+                }}
               />
               <div
                 style={{
@@ -468,7 +475,7 @@ const Forges = () => {
                   height: "100%",
                 }}
               ></div>
-            </div> */}
+            </div>
 
             {/* Header Stats */}
             <GameHeader
@@ -518,6 +525,50 @@ const Forges = () => {
               }}
               activeMyth={activeMyth}
             />
+            {/* <div
+              style={{ position: "absolute", display: "inline-block" }}
+              className="w-full -bottom-2.5 "
+            >
+              <img
+                src="/assets/uxui/480px-low.smoke.webp"
+                alt="smoke"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  mixBlendMode: "color-dodge",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                }}
+              ></div>
+            </div> */}
+            {activeCard === "shard" && (
+              <div className="absolute bottom-0 left-0 -mb-2.5">
+                <div className=" relative">
+                  {/* <div className="absolute ml-[50px] -mt-[50px]">
+                    <div className="talk-bubble  tri-right border round btm-left-in">
+                      <div className="talktext">
+                        <p>12:000</p>
+                      </div>
+                    </div>
+                  </div> */}
+                  <img
+                    src="/assets/uxui/188px-minion.png"
+                    alt="dwarf"
+                    className="w-full h-full"
+                    onClick={() => {
+                      setActiveCard(null);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
           {/* Footer */}
           <Footer />
@@ -527,10 +578,32 @@ const Forges = () => {
             preload={true}
             loop
           />
+          {activeCard === "automata" && (
+            <div className="absolute bottom-0 right-0 z-0">
+              <div className="relative">
+                {/* <div className="absolute mr-[50px] -mt-[50px]">
+                    <div className="talk-bubble  tri-right border round btm-left-in">
+                      <div className="talktext">
+                        <p>12:000</p>
+                      </div>
+                    </div>
+                  </div> */}
+                <img
+                  src="/assets/uxui/188px-automata.png"
+                  alt="dwarf"
+                  className="w-full h-full"
+                  onClick={() => {
+                    setActiveCard(null);
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <Convert />
       )}
+
       {/* Booster card */}
       {showBlackOrb && (
         <MilestoneCard
@@ -551,7 +624,13 @@ const Forges = () => {
           }
         />
       )}
-      {activeCard === "automata" && (
+    </>
+  );
+};
+
+export default Forges;
+{
+  /* {activeCard === "automata" && (
         <AutomataCard
           activeCard={activeCard}
           activeMyth={activeMyth}
@@ -586,361 +665,23 @@ const Forges = () => {
             />
           }
         />
-      )}
-    </>
-  );
-};
-
-export default Forges;
-
-{
-  /* {showCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="relative w-[72%] rounded-lg shadow-lg mt-12">
-            <img
-              src={`/assets/cards/320px-${
-                activeCard + "." + boosterCards[activeMyth]
-              }1.png`}
-              alt="card"
-              className="w-full h-full mx-auto"
-            />
-            <div className="absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer">
-              <img
-                src="/assets/icons/close.svg"
-                alt="close"
-                className={`h-full w-full ml-auto -mt-6 -mr-6 rounded-full ${
-                  isButtonGlowing === 3
-                    ? `glow-button-${mythSections[activeMyth]}`
-                    : ""
-                }`}
-                onClick={() => {
-                  handleCloseButtonClick(3);
-                }}
-              />
-            </div>
-
-            {activeCard === "automata" && mythStates?.isAutomataActive ? (
-              <div
-                className={`flex items-center justify-between h-[60px] w-[192px] mx-auto -mt-2 bg-glass-black z-50 text-white  rounded-primary`}
-              >
-                <div className="flex justify-center items-center w-1/4 h-full"></div>
-                <div className="text-[16px] uppercase">
-                  {calculateRemainingTime(
-                    mythStates[activeMyth].automataStartTime
-                  )}
-                </div>
-                <div className="flex justify-center items-center w-1/4  h-full"></div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between h-[60px] w-[192px] mx-auto -mt-2   bg-glass-black text-white  rounded-primary">
-                <div className="flex justify-center items-center w-1/4 h-full"></div>
-                <div className="text-[16px] uppercase">
-                  {calculateRemainingTime(
-                    mythStates[activeMyth].shardsLastClaimedAt
-                  )}
-                </div>
-                <div className="flex justify-center items-center w-1/4  h-full"></div>
-              </div>
-            )}
-          </div>
-        </div>
       )} */
 }
-
-//* Using Words
 {
-  /* <div className="text-right font-medium  text-[22px]">
-                {formatOrbsWithLeadingZeros(orbs)}{" "}
-                <span className={`text-${mythSections[activeMyth]}-text`}>
-                  ORB(S)
-                </span> */
+  /* <div className="-ml-2 relative">
+  <div className="absolute ml-[50px] -mt-[50px]">
+    <div className="talk-bubble  tri-right border round btm-left-in">
+      <div className="talktext">
+        <p>12:000</p>
+      </div>
+    </div>
+  </div>
+
+  <img
+    src="/assets/uxui/240px-minion.left.png"
+    alt="dwarf"
+    className="w-1/2 h-1/2"
+    onClick={() => {}}
+  />
+</div>; */
 }
-{
-  /* <div className="text-right font-medium  -mt-1 text-[14px]">
-                {formatShardsWithLeadingZeros(shards)}{" "}
-                <span className={`text-${mythSections[activeMyth]}-text`}>
-                  SHARDS
-                </span>
-              </div> */
-}
-
-//* Down button
-{
-  /* <div className="absolute bg-black rounded-full p-[6px] -mt-3">
-              <ChevronDown color="white" />
-            </div> */
-}
-
-//* Sound
-// const handlePlay = () => {
-//   if (audioRef.current) {
-//     audioRef.current.play().catch((error) => {
-//       // Handle the error here if play() fails
-//       console.log("Error playing audio:", error);
-//     });
-//   }
-// };
-
-// useEffect(() => {
-//   const audio = audioRef.current;
-//   // `/assets/audio/sound.background.pulsing.ogg`;
-
-//   if (audio) {
-//     audio.src = `/assets/audio/sound.background.pulsing.ogg`;
-
-//     audio.play();
-//   }
-// }, []);
-
-// useEffect(() => {
-//   const handleVisibilityChange = () => {
-//     if (document.hidden) {
-//       audioRef.current.pause();
-//     } else {
-//       audioRef.current.play();
-//     }
-//   };
-//   document.addEventListener("visibilitychange", handleVisibilityChange);
-//   return () => {
-//     document.removeEventListener("visibilitychange", handleVisibilityChange);
-//   };
-// }, []);
-
-//* V1
-// <>
-//   {activeMyth < 4 ? (
-//     <div
-//       style={{
-//         backgroundImage: `url(/assets/uxui/480px-fof.forge.${mythSections[activeMyth]}.png)`,
-//         backgroundRepeat: "no-repeat",
-//         backgroundSize: "cover",
-//         backgroundPosition: "center center",
-//         height: "100vh",
-//         width: "100vw",
-//         position: "fixed",
-//         top: 0,
-//         left: 0,
-//       }}
-//       className="flex flex-col h-screen overflow-hidden"
-//     >
-//       {/* Header */}
-//       <div
-//         style={{
-//           position: "relative",
-//           height: "18.5%",
-//           width: "100%",
-//         }}
-//         className="flex -mt-1"
-//       >
-//         <div
-//           style={{
-//             backgroundImage: `url(/assets/uxui/fof.header.paper.png)`,
-//             backgroundRepeat: "no-repeat",
-//             backgroundSize: "cover",
-//             backgroundPosition: "center center",
-//             position: "absolute",
-//             top: 0,
-//             left: 0,
-//             height: "100%",
-//             width: "100%",
-//             zIndex: -1,
-//           }}
-//           className={`filter-paper-${mythSections[activeMyth]}`}
-//         />
-//         {/* <button className="bg-white" onClick={handlePlay}>
-//           Click
-//         </button> */}
-
-//         <div className="flex flex-col flex-grow justify-center items-start text-white pl-5 pr-10 ">
-//           <h1 className={`glow-${mythSections[activeMyth]} uppercase`}>
-//             {t(`mythologies.${mythSections[activeMyth]}`)}
-//           </h1>
-//           <div className="text-right font-medium  text-[22px] -mt-3">
-//             {formatOrbsWithLeadingZeros(orbs)}{" "}
-//             <span className={`text-${mythSections[activeMyth]}-text`}>
-//               {t(`keywords.orbs`)}
-//             </span>
-//           </div>
-//           <div className="text-right font-medium  -mt-1 text-[14px]">
-//             {formatShardsWithLeadingZeros(shards)}{" "}
-//             <span
-//               className={`text-${mythSections[activeMyth]}-text uppercase`}
-//             >
-//               {t(`keywords.shards`)}
-//             </span>
-//           </div>
-//         </div>
-//         <div
-//           className="h-full relative ml-auto -mr-2 mt-1 pt-2"
-//           style={{ width: "18.5%" }}
-//         >
-//           <Symbol myth={mythSections[activeMyth]} />
-//           <div className="absolute -mt-[150px] -ml-[46px]">
-//             <ProgressBarSVG
-//               value={energy}
-//               max={gameData.mythologies[activeMyth].energyLimit}
-//               activeMyth={activeMyth}
-//             />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Main */}
-//       <div className="flex relative flex-grow justify-center items-center">
-//         <div className="flex flex-col absolute top-0 right-0 mt-2">
-//           {mythStates[activeMyth].isAutomataActive && (
-//             <h1
-//               onClick={() => {
-//                 setShowCard(true);
-//                 setActiveCard("automata");
-//               }}
-//               className="font-symbols text-[50px] p-0 ml-2 text-white glow-booster"
-//             >
-//               B
-//             </h1>
-//           )}
-//           {mythStates[activeMyth].shardsLastClaimedAt !== 0 && (
-//             <h1
-//               onClick={() => {
-//                 setShowCard(true);
-//                 setActiveCard("shard");
-//               }}
-//               className={`font-symbols text-[50px] p-0 ml-2 text-white booster-shadow ${
-//                 mythStates[activeMyth].isAutomataActive && "-mt-6"
-//               }`}
-//             >
-//               H
-//             </h1>
-//           )}
-//         </div>
-//         <div className="flex justify-center items-center w-[20%]">
-//           <div
-//             onClick={() => {
-//               handleButtonClick(1);
-
-//               setActiveMyth((prev) => (prev - 1 + 5) % 5);
-//             }}
-//             className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
-//               isButtonGlowing === 1
-//                 ? `glow-button-${mythSections[activeMyth]}`
-//                 : ""
-//             }`}
-//           >
-//             <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
-//           </div>
-//         </div>
-//         <div className="flex flex-col items-center justify-center w-full">
-//           {plusOnes.map((plusOne) => (
-//             <span
-//               key={plusOne.id}
-//               className={`plus-one glow-${mythSections[activeMyth]}`}
-//               style={{
-//                 top: `${plusOne.y}px`,
-//                 left: `${plusOne.x}px`,
-//                 position: "absolute",
-//                 zIndex: 99,
-//               }}
-//             >
-//               +{mythStates[activeMyth].shardslvl}
-//             </span>
-//           ))}
-//           <div
-//             onMouseDown={handleStartSession}
-//             onTouchStart={handleStartSession}
-//             onTouchEnd={handleTap}
-//             className="flex justify-center items-center h-[450px] w-full rounded-full"
-//           ></div>
-//         </div>
-//         <div className="flex justify-center items-center w-[20%]">
-//           <div
-//             onClick={() => {
-//               handleButtonClick(2);
-
-//               setActiveMyth((prev) => (prev + 1) % 5);
-//             }}
-//             className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
-//               isButtonGlowing === 2
-//                 ? `glow-button-${mythSections[activeMyth]}`
-//                 : ""
-//             }`}
-//           >
-//             <ChevronsRight color="white" className="h-[30px] w-[30px]" />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Footer */}
-//       <Footer />
-//     </div>
-//   ) : (
-//     <Convert />
-//   )}
-//   {/* Booster card */}
-//   {showCard && (
-//     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-//       <div className="relative w-[72%] rounded-lg shadow-lg mt-12">
-//         <img
-//           src={`/assets/cards/320px-${
-//             activeCard + "." + boosterCards[activeMyth]
-//           }1.png`}
-//           alt="card"
-//           className="w-full h-full mx-auto"
-//         />
-//         <div className="absolute top-0 right-0 w-[55px] h-[55px] cursor-pointer">
-//           <img
-//             src="/assets/icons/close.svg"
-//             alt="close"
-//             className={`h-full w-full ml-auto -mt-6 -mr-6 rounded-full ${
-//               isButtonGlowing === 3
-//                 ? `glow-button-${mythSections[activeMyth]}`
-//                 : ""
-//             }`}
-//             onClick={() => {
-//               handleCloseButtonClick(3);
-//             }}
-//           />
-//         </div>
-//         <div className="relative">
-//           <div className="absolute flex justify-center items-center w-full top-0 z-0">
-//             <div className="bg-black h-[60px] w-[60px] rounded-full -mt-2"></div>
-//           </div>
-//           <div className="relative z-50">
-//             {activeCard === "automata" && !mythStates?.isAutomataActive ? (
-//               <div
-//                 className={`flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black text-white  rounded-primary`}
-//               >
-//                 <div className="flex justify-center items-center w-1/4 h-full"></div>
-//                 <div className="text-[16px] uppercase">
-//                   {calculateRemainingTime(
-//                     mythStates[activeMyth].automataStartTime
-//                   )}
-//                 </div>
-//                 <div className="flex justify-center items-center w-1/4 h-full"></div>
-//               </div>
-//             ) : (
-//               <div className="flex items-center justify-between h-[45px] w-[192px] mx-auto bg-glass-black text-white  rounded-primary">
-//                 <div className="flex justify-center items-center w-1/4 h-full"></div>
-//                 <div className="text-[16px] uppercase">
-//                   {calculateRemainingTime(
-//                     mythStates[activeMyth].shardsLastClaimedAt
-//                   )}
-//                 </div>
-//                 <div className="flex justify-center items-center w-1/4 h-full"></div>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   )}
-//   <audio ref={audioRef} loop>
-//     <source src={`/assets/audio/sound.background.pulsing.ogg`} />
-//     Your browser does not support the audio element.
-//   </audio>
-//   {showBlackOrb && (
-//     <OrbCard
-//       updateBlackOrbStatus={updateBlackOrbStatus}
-//       closeCard={() => setShowBlackOrb(false)}
-//     />
-//   )}
-// </>

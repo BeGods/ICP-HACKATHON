@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Avatar from "./Avatar";
+import Avatar from "../components/Common/Avatar";
 import { MyContext } from "../context/context";
 
 const LeaderboardItem = ({ rank, name, totalOrbs }) => {
