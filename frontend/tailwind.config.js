@@ -12,6 +12,11 @@ export default {
     "bg-greek-primary",
     "bg-norse-primary",
 
+    "outline-celtic-primary",
+    "outline-egyptian-primary",
+    "outline-greek-primary",
+    "outline-norse-primary",
+
     "text-celtic-primary",
     "text-egyptian-primary",
     "text-greek-primary",
@@ -21,6 +26,10 @@ export default {
     "text-egyptian-text",
     "text-greek-text",
     "text-norse-text",
+
+    "scale-0",
+    "scale-100",
+    "scale-125",
   ],
   theme: {
     extend: {
@@ -74,6 +83,8 @@ export default {
         "orb-secondary": "45px",
         "orb-tertiary": "45px",
         booster: "70px",
+        num: "40px",
+        head: "30px",
       },
       width: {
         "icon-primary": "55px",

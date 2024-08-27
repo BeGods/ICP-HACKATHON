@@ -3,7 +3,7 @@ import { toggleBackButton } from "../utils/teleBackButton";
 import LeaderboardItem from "../components/LeaderboardItem";
 import { fetchLeaderboard } from "../utils/api";
 import { MyContext } from "../context/context";
-import Avatar from "../components/Avatar";
+import Avatar from "../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
@@ -61,7 +61,6 @@ const Leaderboard = (props) => {
             {t(`profile.squad`)}
           </div>
         </div>
-
         {/* LEADERBOARD */}
         <div className="flex flex-col w-full flex-grow  bg-black rounded-primary my-2 pt-[15px] pb-[30px] gap-[10px]">
           <div className="flex justify-between text-secondary text-cardsGray items-center w-[90%] mx-auto">
@@ -90,7 +89,6 @@ const Leaderboard = (props) => {
               ))}
         </div>
       </div>
-
       {/* FOOTER */}
       <div className="flex items-center justify-between h-[80px] w-[95%] mx-auto mb-1 text-tertiary  border border-borderDark bg-glass-black text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
         <div className="flex justify-center items-center w-2/5 h-full">

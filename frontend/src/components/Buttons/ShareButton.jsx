@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
+import { ArrowBigDown } from "lucide-react";
 
 const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -36,16 +37,22 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
           } z-50 text-white  rounded-primary`}
         >
           <div className="flex justify-center items-center w-1/4 h-full">
-            <img src={`/assets/icons/x.svg`} alt="orb" className="w-[85%]" />
+            <div className="flex justify-center items-center w-[40px] h-[40px]  bg-black rounded-full">
+              <img
+                src={`https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png`}
+                alt="orb"
+                className="w-[25px]"
+              />
+            </div>
           </div>
           <div className="text-[16px] uppercase">{t(`buttons.share`)}</div>
           {isInfo ? (
             <div className="flex justify-center items-center w-1/4  h-full">
               <div className="absolute top-0 z-10">
-                <img
-                  src="/assets/icons/arrow.down.svg"
-                  alt="upward"
-                  className="z-10 mt-2.5"
+                <ArrowBigDown
+                  color="white"
+                  fill="white"
+                  className="z-10 mt-1"
                 />
               </div>
               <img
@@ -59,10 +66,10 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
               className={`flex justify-center items-center w-1/4 border-borderGray h-full`}
             >
               <div className="absolute top-0 z-10">
-                <img
-                  src="/assets/icons/arrow.down.svg"
-                  alt="downward"
-                  className="z-10 mt-3 mr-1.5"
+                <ArrowBigDown
+                  color="white"
+                  fill="white"
+                  className="z-10 mt-1"
                 />
               </div>
               <div className={`filter-orbs-${mythSections[activeMyth]}`}>

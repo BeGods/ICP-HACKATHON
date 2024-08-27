@@ -15,7 +15,8 @@
         "shards": "Shards",
         "faith": "Faith",
         "conversion": "Conversion",
-        "discover": "Discover"
+        "discover": "Discover",
+        "whitelist": "Whitelist"
     },
     "buttons": {
         "convert": "Convert",
@@ -37,7 +38,7 @@
     "boosters": [
         { "title": "Automata", "desc": "Auto tap" },
         {"title": "Lost Quests", "desc": "Energy 200%"},  
-        { "title": "Shards", "desc": "Double tap" }
+        { "title": "Minion", "desc": "Increase tap" }
     ],
     "profile": {
         "profile": "Profile",
@@ -122,7 +123,11 @@
             "C07": {
               "QuestName": "Tuath Danann",
               "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
           },
           "egyptian": {
             "A01": {
@@ -176,7 +181,11 @@
             "C08": {
                 "QuestName": "Bull Apis Cult",
                 "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
         },
         "greek": {
             "A01": {
@@ -230,7 +239,11 @@
             "C06": {
                 "QuestName": "Titanomachia",
                 "desc": "'Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
         },
         "norse": {
             "A01": {
@@ -284,7 +297,11 @@
             "C07": {
                 "QuestName": "Asgardsreien I",
                 "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
-            }
+            },
+            "whitelist": {
+                "QuestName": "Whitelist",
+                "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+              }
         }
     },
     "toasts": {

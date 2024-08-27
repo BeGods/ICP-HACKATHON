@@ -6,7 +6,6 @@ import "./styles/speech.css";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import Test from "./pages/Test";
 import Home from "./Home";
-import Gacha from "./pages/Gacha";
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Auth />} />
-            <Route path="/bonus" element={<Gacha />} />
             <Route path="/home" element={<Home />} />
             <Route path="/test" element={<Test />} />
           </Routes>

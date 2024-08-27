@@ -25,7 +25,7 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t }) => {
       onTouchCancel={() => {
         setIsClicked(false);
       }}
-      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto mt-[40px] ${
+      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto mt-[42px] ${
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       } border border-${
         mythSections[activeMyth]

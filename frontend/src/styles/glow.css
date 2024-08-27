@@ -29,6 +29,33 @@
     0 0 5px black
 }
 
+.glow-icon-contour{
+    text-shadow: 
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black,
+    0 0 5px black
+}
+
+.glow-test-contour{
+  text-shadow: 
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black
+}
+
+.glow-white-contour{
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white
+}
+
 /* Glow quest text */
 .glow-quest-celtic {
   font-family: 'FOF';
@@ -76,7 +103,7 @@
 /* text glow */
 .glow-text-celtic {
     font-family: 'Celtic';
-    font-size: 15vw;
+    font-size: 17vw;
       text-shadow: 
       0 0 5px var(--celtic-color),
       0 0 5px var(--celtic-color),
@@ -85,7 +112,7 @@
   
   .glow-text-egyptian {
       font-family: 'Egyptian';
-      font-size: 15vw;
+      font-size: 17vw;
       text-shadow: 
       0 0 5px var(--egyptian-color),
       0 0 5px var(--egyptian-color),
@@ -94,7 +121,7 @@
   
   .glow-text-greek {
       font-family: 'Greek';
-      font-size: 15vw;
+      font-size: 17vw;
       text-shadow: 
       0 0 5px var(--greek-color),
       0 0 5px var(--greek-color),
@@ -103,7 +130,7 @@
 
 .glow-text-norse {
     font-family: 'Norse';
-    font-size: 15vw;
+    font-size: 17vw;
     text-shadow: 
     0 0 5px var(--norse-color),
     0 0 5px var(--norse-color),
@@ -173,6 +200,10 @@
   filter: drop-shadow(3px 3px 0px black);
 }
 
+.frame-shadow{
+  filter: drop-shadow(0px 0px 8px black);
+}
+
 .fof-white{
   filter: drop-shadow(1px 1px 0px #DEAC80);
 }
@@ -221,6 +252,14 @@
   filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.637));
 }
 
+.glow-footer-white {
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white;
+  filter: drop-shadow(0 0 5px white);
+}
+
 .glow-icon-white {
   text-shadow: 
   0 0 5px white,
@@ -251,7 +290,6 @@
 /* Orb Tapping glow */
 
 .glow-tap-celtic {
-  /* filter: drop-shadow(2px 2px 0px var(--celtic-color)); */
   filter:  drop-shadow(0 0 40px var(--celtic-color));
 }
 
@@ -266,6 +304,15 @@
 .glow-tap-norse {
   filter: drop-shadow(0 0 40px var(--norse-color));
 }
+
+.glow-tap-white {
+  filter: drop-shadow(0 0 40px white);
+}
+
+.glow-tap-black {
+  filter: drop-shadow(0 0 40px black);
+}
+
 
 
 /* Button Effect */
@@ -326,9 +373,50 @@
   filter: drop-shadow(0 0 8px white);
 }
 
-.glow-loader-card {
-  filter: drop-shadow(0 0 20px white);
+@keyframes scale-and-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px white);
+  }
+  50% {
+    filter: drop-shadow(0 0 30px white);
+  }
 }
+
+@keyframes scale-and-glow-wheel {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px black);
+  }
+  50% {
+    filter: drop-shadow(0 0 50px black);
+  }
+}
+
+.glow-loader-card {
+  animation: scale-and-glow 2s infinite ease-in-out;
+}
+
+.glow-wheel {
+  animation: scale-and-glow-wheel 2s infinite ease-in-out;
+}
+
+.glow-loader-card {
+  filter: drop-shadow(0 0 40px white);
+}
+
+.glow-box {
+  filter: drop-shadow(0 0 10px #FFFF00)
+          /* drop-shadow(0 0 20px #FFD660) */
+          drop-shadow(0 0 70px #FFD660);
+}
+
+.glow-box-scale {
+  filter: drop-shadow(0 0 10px #FFFF00)
+          drop-shadow(0 0 30px #FFD660)
+          drop-shadow(0 0 80px #FFFF00);
+}
+
+
+
 
 
 /* .glow-orb-celtic {

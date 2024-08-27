@@ -15,7 +15,9 @@
         "shards": "เสี้ยว",
         "faith": "ศรัทธา",
         "conversion": "การแปลง",
-        "discover": "ค้นพบ"
+        "discover": "ค้นพบ",
+        "whitelist": "Whitelist"
+
     },
     "buttons": {
         "convert": "แปลง",
@@ -120,7 +122,11 @@
               "C07": {
                 "QuestName": "ทวาท ดานัน",
                 "desc": "'การทะเลาะของโอบีรอนและทิทาเนีย', ประมาณปี 1849, เป็นภาพวาดโดย โจเซฟ โนเอล ปาโต จิตรกรประวัติศาสตร์สัญชาติสกอตแลนด์ เยี่ยมชมต้นฉบับที่หอศิลป์แห่งชาติ เอดินบะระ - สกอตแลนด์"
-              }
+              },
+              "whitelist": {
+                  "QuestName": "Whitelist",
+                  "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                }
             },
                 "egyptian": {
                   "A01": {
@@ -174,7 +180,11 @@
                   "C08": {
                     "QuestName": "ลัทธิบูลล์ อาปิส",
                     "desc": "'ขบวนพาเหรดของวัวอาปิส', ประมาณปี 1879, เป็นภาพวาดโดย เฟรดริก อาร์เธอร์ บริดจ์แมน จิตรกรชาวอเมริกันในแนวตะวันออก เยี่ยมชมต้นฉบับที่คอลเลกชันส่วนตัว สหรัฐอเมริกา"
-                  }
+                  },
+                  "whitelist": {
+                      "QuestName": "Whitelist",
+                      "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                    }
                 }
               ,
                 "greek": {
@@ -229,7 +239,11 @@
                   "C06": {
                     "QuestName": "ทีตานอมาชิอา",
                     "desc": "'โอลิมปัส: การล่มสลายของยักษ์', ประมาณปี 1764, เป็นภาพวาดโดย ฟรานซิสโก บาเยอู y ซูเบียส จิตรกรนีโอคลาสสิกชาวสเปน เยี่ยมชมต้นฉบับที่พิพิธภัณฑ์เดลปราโด มาดริด - สเปน"
-                  }
+                  },
+                  "whitelist": {
+                      "QuestName": "Whitelist",
+                      "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                    }
                 },
             
                     "norse": {
@@ -284,9 +298,12 @@
                       "C07": {
                         "QuestName": "แอสการ์ดรีเอน",
                         "desc": "'การล่าสัตว์อันป่าเถื่อน', ประมาณปี 1856, เป็นภาพวาดโดย โยฮันน์ วิลเฮล์ม คอร์เดส จิตรกรทิวทัศน์ชาวเยอรมัน เยี่ยมชมต้นฉบับที่บีห์นเฮาส์ ลูเบค - เยอรมนี"
-                      }
-                    }
-                  
+                      },
+                      "whitelist": {
+                          "QuestName": "Whitelist",
+                          "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+                        }
+                    }               
     },
 
         "toasts": {

@@ -64,7 +64,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
             src="/assets/audio/fof.tower.lock.wav"
             playing={!JSON.parse(localStorage.getItem("sound"))}
             preload={true}
-            ref={howlerRef} // Use the ref to control playback
+            ref={howlerRef}
             onEnd={() => setPlaySound(false)}
           />
         )}

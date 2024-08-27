@@ -44,7 +44,12 @@ const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
         <h1 className="text-tertiary uppercase">
           {t(`boosters.${booster}.title`)}
         </h1>
-        <h2 className="text-secondary">{t(`boosters.${booster}.desc`)}</h2>
+        <h2 className="text-secondary">
+          {t(`boosters.${booster}.desc`)}{" "}
+          <span className={`text-${mythSections[activeMyth]}-text`}>
+            {booster != 1 && "(Lvl 1-7)"}
+          </span>
+        </h2>
       </div>
       <div className="flex justify-center items-center w-[8%] ">
         {isActive ? (

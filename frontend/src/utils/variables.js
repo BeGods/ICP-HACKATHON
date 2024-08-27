@@ -17,3 +17,20 @@ export const mythSymbols = {
   egyptian: 1,
   other: 3,
 };
+export const mythElementNames = {
+  Greek: "Fire",
+  Celtic: "Earth",
+  Norse: "Water",
+  Egyptian: "Air",
+  Other: "Aether",
+};
+export const defaultIcons = {
+  quest: "q",
+  automata: "b",
+  shards: "H",
+  Greek: 4,
+  Celtic: 2,
+  Norse: 5,
+  Egyptian: 1,
+  blackOrb: 3,
+};

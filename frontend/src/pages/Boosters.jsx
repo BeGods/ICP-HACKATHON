@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../context/context";
-import Footer from "../components/Footer";
 import {
   claimAutomataBooster,
   claimLostQuest,
@@ -8,52 +7,38 @@ import {
   claimShardsBooster,
   fetchLostQuests,
 } from "../utils/api";
-
-import ToastMesg from "../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
-import { mythologies, mythSections, elements } from "../utils/variables";
+import { mythologies, mythSections } from "../utils/variables";
 import BoosterCard from "../components/Cards/Boosters/BoosterCard";
+import MilestoneCard from "../components/Cards/MilestoneCard";
 import BoosterButtom from "../components/Buttons/BoosterButtom";
-import MilestoneCard from "../components/MilestoneCard";
-import AutomataCard from "../components/Cards/Boosters/AutomataCard";
 import Symbol from "../components/Common/Symbol";
+import ToastMesg from "../components/Toast/ToastMesg";
+import Footer from "../components/Common/Footer";
+import BoosterClaim from "../components/Cards/Boosters/BoosterClaim";
 
-// const HeaderContent = ({ activeMyth, gameData, t, multiColorOrbs }) => {
-//   return (
-//     <div className="flex flex-col flex-grow justify-center items-center text-white pb-[20px]">
-//       <h1 className={`glow-text-${mythSections[activeMyth]} uppercase`}>
-//         {t(`sections.boosters`)}
-//       </h1>
-//       <div className="text-right -mt-[12px] font-medium text-primary">
-//         {multiColorOrbs}{" "}
-//         <span className="gradient-multi">{t(`keywords.orbs`)}</span>
-//       </div>
-//     </div>
-//   );
-// };
-
-const HeaderContent = ({ activeMyth, gameData, t }) => {
+const HeaderContent = ({ activeMyth, t }) => {
   return (
     <>
       <div className="h-full -ml-[14%] mr-auto mt-1">
         <Symbol myth={mythSections[activeMyth]} isCard={false} />
       </div>
       <div className="flex flex-col flex-grow justify-start items-end text-white pr-5">
-        <div className="text-right  gap-1 flex font-medium text-primary">
+        <div className="text-right  gap-1 flex font-medium text-head">
           {/* <span>{mythData[activeMyth].faith}</span> */}
           <span className={`text-${mythSections[activeMyth]}-text  uppercase`}>
             {/* <span className="text-white">
               {gameData.mythologies[activeMyth].faith}{" "}
             </span> */}
-            <span>Faith</span>
+            <span>BOOSTER</span>
           </span>
         </div>
         <h1
-          className={`glow-text-${mythSections[activeMyth]} uppercase -mt-4 -mr-2`}
+          className={`glow-text-${mythSections[activeMyth]} glow-test-contour uppercase -mt-4 -mr-2`}
         >
-          {t(`sections.boosters`)}
+          {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
       </div>
     </>
@@ -70,7 +55,7 @@ const Boosters = () => {
   const [showQuest, setShowQuest] = useState(false);
   const [showPay, setShowPay] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
-  const { gameData, setGameData, activeMyth, setActiveMyth } =
+  const { gameData, setGameData, setSection, activeMyth, setActiveMyth } =
     useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
@@ -115,7 +100,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Quest_orb_claim.success.title")}
           desc={t("toasts.Quest_orb_claim.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -138,7 +123,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Quest_orb_claim.error.title")}
           desc={t("toasts.Quest_orb_claim.error.desc")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -194,7 +179,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Quest_claim.success.title")}
           desc={t("toasts.Quest_claim.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -217,7 +202,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Quest_claim_InsufficientOrbs.error.title")}
           desc={t("toasts.Quest_claim_InsufficientOrbs.error.desc")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -250,7 +235,7 @@ const Boosters = () => {
           <ToastMesg
             title={t("toasts.Booster_Lost_Not_Available.error.title")}
             desc={t("toasts.Booster_Lost_Not_Available.error.desc")}
-            img={"/assets/icons/toast.fail.svg"}
+            status={"success"}
           />,
           {
             icon: false,
@@ -275,7 +260,7 @@ const Boosters = () => {
         <ToastMesg
           title={"There was a problem in loading quests."}
           desc={errorMessage}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -331,7 +316,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Booster_ShardsClaim.success.title")}
           desc={t("toasts.Booster_ShardsClaim.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -355,7 +340,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Booster_InsufficientOrbs.error.title")}
           desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -400,7 +385,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Booster_AutomataClaim.success.title")}
           desc={t("toasts.Booster_AutomataClaim.success.desc")}
-          img={"/assets/icons/toast.success.svg"}
+          status={"success"}
         />,
         {
           icon: false,
@@ -423,7 +408,7 @@ const Boosters = () => {
         <ToastMesg
           title={t("toasts.Booster_InsufficientOrbs.error.title")}
           desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
-          img={"/assets/icons/toast.fail.svg"}
+          status={"fail"}
         />,
         {
           icon: false,
@@ -547,7 +532,11 @@ const Boosters = () => {
         </div>
         <ToggleRight
           handleClick={() => {
-            setActiveMyth((prev) => (prev + 1) % 4);
+            if (activeMyth < 4) {
+              setActiveMyth((prev) => (prev + 1) % 4);
+            } else {
+              setSection(6);
+            }
           }}
           activeMyth={activeMyth}
         />
@@ -556,7 +545,7 @@ const Boosters = () => {
       <Footer />
       {/* Booster card */}
       {activeCard === "automata" && (
-        <AutomataCard
+        <BoosterClaim
           activeCard={activeCard}
           activeMyth={activeMyth}
           closeCard={() => setActiveCard(null)}
@@ -572,19 +561,15 @@ const Boosters = () => {
         />
       )}
       {activeCard === "shard" && (
-        <MilestoneCard
-          isOrb={false}
-          isBlack={false}
+        <BoosterClaim
+          activeCard={activeCard}
           activeMyth={activeMyth}
-          closeCard={() => {
-            setActiveCard(null);
-          }}
-          booster={5}
+          closeCard={() => setActiveCard(null)}
           Button={
             <BoosterButtom
               activeCard={activeCard}
               mythData={mythData}
-              handleClaim={handleClaimBooster}
+              handleClaim={handleClaimAutomata}
               activeMyth={activeMyth}
               t={t}
             />

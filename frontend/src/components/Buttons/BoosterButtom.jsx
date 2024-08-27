@@ -38,11 +38,18 @@ const BoosterButtom = ({
             className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary  bg-glass-black z-50 text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-[30%]  h-full  border-r border-borderGray">
-              <h1 className="text-xl  text-white rounded-full  w-full flex justify-center items-center">
-                2x
+              <h1
+                className={`text-xl text-${mythSections[activeMyth]}-text text-button-primary rounded-full  w-full flex justify-center items-center`}
+              >
+                L
+                {activeCard === "automata"
+                  ? mythData.automatalvl + 1
+                  : mythData.shardslvl + 1}
               </h1>
             </div>
-            <div className="text-secondary uppercase">{t(`buttons.buy`)}</div>
+            <div className="text-button-primary uppercase">
+              {t(`buttons.buy`)}
+            </div>
             <div className="flex justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
               <img
                 src={`/assets/uxui/240px-orb.multicolor.png`}
