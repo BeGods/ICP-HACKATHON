@@ -19,7 +19,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
-    "docker:build": "docker build . -t forges-of-faith-backend"
+    "docker:build": "docker build . -t forges-of-faith-backend",
+    "docker:stack:up": "docker-compose -f docker-compose-production.yml up -d",
+    "docker:stack:down": "docker-compose -f docker-compose-production.yml down"
   },
   "author": "",
   "license": "ISC",
