@@ -43,7 +43,7 @@ const Navbar = () => {
                 )}
             </div>
             <div className='w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
-                <div className='flex gap-[20vw] pt-8'>
+                <div className='flex gap-[140%] pt-8'>
                     <div className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF] pl-20'>
                         {t('title')}
                     </div>
@@ -56,11 +56,10 @@ const Navbar = () => {
                         </div>
                     </div>
                 </div>
-                <div className='flex gap-8 mr-12 pt-8'>
-                    <input type="text" placeholder={t('input')} className='w-[20vw] h-[5vh] pl-4 text-white bg-inherit border-[2px] border-gray-200' />
-                    <Link to="/profile" className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[20vw] h-[5vh]'>{t('button')}</Link>
+                <div className='w-[40%] flex gap-8 mr-12 pt-8'>
+                    <input type="text" placeholder={t('input')} className='w-[100%] h-[5vh] pl-4 text-white bg-inherit border-[2px] border-gray-200' />
+                    <Link to="/profile" className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[100%] h-[5vh]'>{t('button')}</Link>
                 </div>
-                
             </div>
             {isOpen && (
                 <div className='absolute top-[10vh] left-0 w-full h-screen bg-black bg-opacity-70 backdrop-blur-lg text-white flex flex-col items-center gap-8 py-8 md:hidden z-10'>

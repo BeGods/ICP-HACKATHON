@@ -6,9 +6,10 @@ import { CiShare2 } from "react-icons/ci";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa";
+import BlueButton from './button/BlueButton';
 const NftDetails = () => {
   return (
-    <div>
+    <div className='max-w-[1920px] mx-auto'>
       <Navbar />
       <div className='bg-[#2C2C2C4D] h-[320px]'>
         <div className='flex justify-between'>
@@ -48,14 +49,14 @@ const NftDetails = () => {
         </div>
       </div>
       {/* About section */}
-      <div className='w-[90vw] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-16 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
+      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-16 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
         <h1 className='text-[28px] font-[400] leading-[35px] pl-[3%] pt-[2%]'>About</h1>
         <p className='text-[16px] w-[95%] font-[400] leading-[20px] pl-[3%] pt-[2%] pb-8'>Discover the divine power of Norse mythology with this exclusive NFT card of Freyja, the goddess of love, beauty, and war. Known as Svallin-vondr, or "Shielded-Wand," Freyja is depicted with her iconic Brísingamen necklace and magical staff, embodying both grace and strength. <br />
           Her shield symbolizes protection and unwavering resolve, guiding souls to Valhalla and leading battles with fierce determination. This limited edition NFT card is a must-have for collectors and enthusiasts captivated by the enchanting world of Norse mythology.
         </p>
       </div>
       {/* Details */}
-      <div className='w-[90vw] ml-[5%] mt-16 flex gap-8' style={{ fontFamily: "QuickSand" }}>
+      <div className='w-[90%] ml-[5%] mt-4 flex gap-8' style={{ fontFamily: "QuickSand" }}>
         <div className='w-[45%] bg-[#1D1D1E] h-auto text-[#FFFFFF]'>
           <h1 className='text-[28px] font-[400] leading-[35px] pl-[10%] pt-[4%]'>Details</h1>
           <div className='flex flex-col ml-[7%] mt-4'>
@@ -81,14 +82,73 @@ const NftDetails = () => {
             </div>
           </div>
         </div>
-        <div className='w-[55%] bg-[#1D1D1E] h-auto text-[#FFFFFF]' style={{fontFamily:"QuickSand"}}>
+        <div className='w-[55%] bg-[#1D1D1E] h-auto text-[#FFFFFF]' style={{ fontFamily: "QuickSand" }}>
           <h1 className='text-[28px] font-[400] leading-[35px] pl-[10%] pt-[4%]'>Traits</h1>
-          <div className='flex flex-wrap'>
-            <div className='flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
+          <div className='flex flex-wrap items-center justify-center gap-8 ml-[5%] mr-[5%] mt-4'>
+            <div className='h-[60px] sm:[45%] md:w-[30%] flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
               Beauty and Grace
+            </div>
+            <div className='h-[60px] sm:[45%] md:w-[30%] flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
+              Warrior Spirit
+            </div>
+            <div className='h-[60px] sm:[40%] md:w-[30%] flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
+              Magic and Sorcery
+            </div>
+            <div className='h-[60px] sm:[40%] md:w-[30%] flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
+              Protective Nature
+            </div>
+            <div className='h-[60px] sm:[40%] md:w-[30%] flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
+              Protective Nature
             </div>
           </div>
         </div>
+      </div>
+      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-4 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
+        <div className='flex justify-between w-[95%] pt-[2%]'>
+          <h1 className='text-[28px] font-[400] leading-[35px] pl-[3%]'>Norse</h1>
+          <BlueButton >View Collection</BlueButton>
+        </div>
+        <p className='text-[16px] w-[95%] font-[400] leading-[20px] pl-[3%] pt-[2%] pb-8'>Discover the divine power of Norse mythology with this exclusive NFT card of Freyja, the goddess of love, beauty, and war. Known as Svallin-vondr, or "Shielded-Wand," Freyja is depicted with her iconic Brísingamen necklace and magical staff, embodying both grace and strength. <br />
+          Her shield symbolizes protection and unwavering resolve, guiding souls to Valhalla and leading battles with fierce determination. This limited edition NFT card is a must-have for collectors and enthusiasts captivated by the enchanting world of Norse mythology.
+        </p>
+      </div>
+      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-4 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
+        <div className='flex justify-between w-[95%] pt-[2%]'>
+          <h1 className='text-[28px] font-[400] leading-[35px] pl-[3%]'>Norse</h1>
+          <select name="" id="" className='bg-inherit text-[#FFFFFF] '>
+            <option value="" className='mr-4'>Date</option>
+          </select>
+        </div>
+        <div className='w-[95%] bg-[#414143] flex mt-4 ml-[3%] text-[#FFFFFF] '>
+          <div className='w-[25%] h-[5vh] flex items-center justify-center text-[16px] font-[400] leading-[20px]'>
+            MINT #
+          </div>
+          <div className='w-[25%] flex items-center justify-center text-[16px] font-[400] leading-[20px]'>
+            NRI
+          </div>
+          <div className='w-[25%] flex items-center justify-center text-[16px] font-[400] leading-[20px]'>
+            PRICE
+          </div>
+          <div className='w-[25%] flex items-center justify-center text-[16px] font-[400] leading-[20px]'>
+            TIME
+          </div>
+        </div>
+        <div className='w-[95%] bg-[#414143] flex mt-4 ml-[3%] text-[#FFFFFF]'>
+          <div className='w-[25%] h-[8vh] flex items-center justify-center text-[16px] font-[700] leading-[20px]'>
+            # 2156
+          </div>
+          <div className='w-[25%] flex items-center justify-center text-[16px] font-[700] leading-[20px]'>
+            -
+          </div>
+          <div className='w-[25%] flex items-center justify-center text-[16px] font-[700] leading-[20px]'>
+            $ 5.62
+          </div>
+          <div className='w-[25%] flex flex-col items-start justify-center text-[16px] font-[700] leading-[20px] pl-[8%]'>
+            <h1>3 months ago </h1>
+            <h1 className='font-[400]'>Bought</h1>
+          </div>
+        </div>
+
       </div>
       <Footer />
     </div>

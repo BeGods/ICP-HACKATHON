@@ -100,7 +100,7 @@ function SidebarContent({ onClose, ...rest }) {
             </NavItem>
           ))}
         </div>
-        <div className='flex items-center justify-start gap-x-4 px-8 text-white mb-4'>
+        <div className='flex items-center justify-start gap-x-4 px-8 text-white mb-4 2xl:mb-8'>
           <img className='w-12 h-12' src="/image/admin.png" alt="Admin" />
           <div className='space-y-2'>
             <div className='flex gap-x-2'>
