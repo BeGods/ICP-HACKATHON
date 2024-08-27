@@ -16,13 +16,15 @@ import Result "mo:base/Result";
 import AID "../EXT-V2/motoko/util/AccountIdentifier";
 import ExtCore "../EXT-V2/motoko/ext/Core";
 import Types "../EXT-V2/Types";
-import UsersTypes "./Users/Types"
+import UsersTypes "./Users/Types";
 
 actor Main {
 
     type AccountIdentifier = ExtCore.AccountIdentifier;
     type TokenIndex = ExtCore.TokenIndex;
     type TokenIdentifier = ExtCore.TokenIdentifier;
+    //
+    type NFTInfo = (TokenIndex, AccountIdentifier, Types.Metadata);
     type MetadataValue = (
         Text,
         {
@@ -49,7 +51,10 @@ actor Main {
         pubKey : Principal;
     };
 
+    //Exttypes
+    
     type User = ExtCore.User;
+    type CommonError = ExtCore.CommonError;
 
     // Maps user and the collection canisterIds they create
     private var usersCollectionMap = TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>(Principal.equal, Principal.hash);
@@ -60,12 +65,15 @@ actor Main {
 
     private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
+    private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
+
     
 
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
     /* -------------------------------------------------------------------------- */
 
+    //add collection manually to collection map
     public shared ({ caller = user }) func add_collection_to_map(collection_id : Principal) : async Text {
         let userCollections = usersCollectionMap.get(user);
         switch (userCollections) {
@@ -92,6 +100,7 @@ actor Main {
         };
     };
 
+    //remove any collection from collection map
     public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {
         let userCollections = usersCollectionMap.get(user);
         switch (userCollections) {
@@ -187,9 +196,87 @@ actor Main {
         return count;
     };
 
+    //getALLCollectionNFTs
+
+   /* public shared func getAllCollectionNFTs(
+        _collectionCanisterId: Principal
+    ) : async [(TokenIndex, AccountIdentifier, Types.Metadata)] {
+        let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+            getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
+        };
+
+        // Attempt to retrieve all NFTs from the specified collection canister
+        try {
+            let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
+            return nfts;
+        } catch (e) {
+            // Handle potential errors (e.g., canister not responding, method not implemented)
+            throw (e);
+            return [];
+        }
+    };*/
+
+    //Explore Collections or Get all Collection NFTS
+    public shared func getAllNFTsAcrossAllCollections() : async [(TokenIndex, AccountIdentifier, Types.Metadata)] {
+        var allNFTs : [(TokenIndex, AccountIdentifier, Types.Metadata)] = [];
+
+        // Iterate through all entries in usersCollectionMap
+        for ((_, collections) in usersCollectionMap.entries()) {
+            for ((_, collectionCanisterId) in collections.vals()) {
+                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+                    getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
+                };
+
+                // Attempt to retrieve all NFTs from the specified collection canister
+                try {
+                    let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
+                    allNFTs := Array.append(allNFTs, nfts); // Add the NFTs to the aggregate list
+                } catch (e) {
+                    // Handle potential errors, but continue to the next collection
+                    Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
+                }
+            };
+        };
+
+        return allNFTs; // Return the aggregated list of NFTs
+    };
+
+    //GET SINGLE COLLECTION DETAILS
+    // Function to get all NFT details within a specific collection and the count of total NFTs
+    public shared func getSingleCollectionDetails(
+        collectionCanisterId: Principal
+    ) : async ([(TokenIndex, AccountIdentifier, Types.Metadata)], Nat) {
+        let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+            getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
+        };
+
+        // Attempt to retrieve all NFTs from the specified collection canister
+        try {
+            let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
+            let nftCount = nfts.size(); // Count the total number of NFTs
+            return (nfts, nftCount); // Return both the NFT details and the count
+        } catch (e) {
+            // Handle potential errors (e.g., canister not responding, method not implemented)
+            Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
+            return ([], 0); // Return an empty list and a count of 0 in case of error
+        }
+    };
+
+    
+
     /* -------------------------------------------------------------------------- */
     /*                             NFT related methods                            */
     /* -------------------------------------------------------------------------- */
+
+    // Token will be transfered to this Vault and gives you req details to construct a link out of it, which you can share
+    public shared ({ caller = user }) func getNftTokenId(
+        _collectionCanisterId : Principal,
+        _tokenId : TokenIndex,
+
+    ) : async TokenIdentifier {
+        let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, _tokenId);
+        return tokenIdentifier;
+    };
 
     // Minting  a NFT pass the collection canisterId in which you want to mint and the required details to add, this enables minting multiple tokens
     public shared ({ caller = user }) func mintExtNonFungible(
@@ -296,14 +383,159 @@ actor Main {
     public shared query func getDeposits() : async [Deposit] {
         return deposits;
     };
+    
+    //fetch total number of nfts accross all collections  
+    public shared func getTotalNFTs() : async Nat {
+        var totalNFTs : Nat = 0;
+
+        // Iterate through all entries in usersCollectionMap
+        for ((_, collections) in usersCollectionMap.entries()) {
+            for ((_, collectionCanisterId) in collections.vals()) {
+                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+                    getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
+                };
+
+                // Attempt to retrieve all NFTs from the specified collection canister and add to the total count
+                try {
+                    let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
+                    totalNFTs += nfts.size();
+                } catch (e) {
+                    // Handle potential errors, but continue to the next collection
+                    Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
+                }
+            };
+        };
+
+        return totalNFTs; // Return the total number of NFTs across all collections
+    };
+
+
+
 
     /* -------------------------------------------------------------------------- */
     /*                            User Related Methods                            */
     /* -------------------------------------------------------------------------- */
 
+    //fetching user details by id
     public shared query func getUserdetailsbyid(id : Principal) : async Result.Result<UsersTypes.User, UsersTypes.GetUserError> {
         let user = users.get(id);
         return Result.fromOption(user, #UserNotFound);
     };
+
+    // Function to return the total number of users
+    public shared query func getTotalUsers() : async Nat {
+    return users.size();
+    };
+
+
+
+    //CREATE USER AND FILL RELATED DETAILS
+
+    //create user 
+    public shared func createUser(id: Principal, user: UsersTypes.User) : async Result.Result<(), UsersTypes.CreateUserError> {
+    switch (users.get(id)) {
+        case (null) {
+            if (user.email == "" or user.firstName == "" or user.lastName == "") {
+                return #err(#EmptyEmail); // or appropriate error based on the missing field
+            };
+            users.put(id, user);
+            return #ok(());
+        };
+        case (?_) {
+            return #err(#UserAlreadyExists);
+        };
+    };
+    };
+/*
+    //mycollection
+    public shared ({ caller = user }) func myCollection() : async [NFTInfo] {
+        var userNFTs : [NFTInfo] = [];
+
+        // Iterate through all entries in usersCollectionMap
+        for ((_, collections) in usersCollectionMap.entries()) {
+            for ((_, collectionCanisterId) in collections.vals()) {
+                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+                    getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
+                };
+
+                // Attempt to retrieve all NFTs from the specified collection canister
+                try {
+                    let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
+                    
+                    // Filter NFTs that are owned by the user
+                    for (nft in nfts.vals()) {
+                        if (nft.1 == AID.fromPrincipal(user, null)) {
+                            userNFTs := Array.append(userNFTs, [nft]);
+                        }
+                    }
+                } catch (e) {
+                    // Handle potential errors, but continue to the next collection
+                    Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
+                }
+            };
+        };
+
+        return userNFTs; // Return the list of NFTs owned by the user
+    };
+
+
+    //Favorite Nfts of User
+     public shared ({ caller = user }) func addToFavorites(principal: Principal, tokenId: TokenIndex) : async Text {
+    // Get the principal's collection
+    let userNFTs = await myCollection();
+
+    // Find the NFT in the principal's collection
+    let nft = List.find<NFTInfo>(List.fromArray(userNFTs), func(nftInfo) { nftInfo.0 == tokenId });
+
+    switch (nft) {
+        case null {
+            return "NFT not found in your collection.";
+        };
+        case (?nftInfo) {
+            // Add the NFT to the principal's favorites
+            let userFavorites = favoritesMap.get(principal);
+            switch (userFavorites) {
+                case null {
+                    favoritesMap.put(principal, [nftInfo]);
+                };
+                case (?existingFavorites) {
+                    // Check if the NFT is already in favorites
+                    if (List.find<NFTInfo>(List.fromArray(existingFavorites), func(favNFT) { favNFT.0 == tokenId }) == null) {
+                        favoritesMap.put(principal, Array.append(existingFavorites, [nftInfo]));
+                    } else {
+                        return "NFT is already in your favorites.";
+                    }
+                };
+            };
+            return "NFT added to your favorites.";
+        };
+    };
+    };
+
+
+    //get favorites 
+    public shared ({ caller = user }) func getFavorites(principal: Principal) : async [(Principal, TokenIndex)] {
+    // Fetch the principal's favorites from the favoritesMap
+    switch (favoritesMap.get(principal)) {
+        case null {
+            // If the principal has no favorites, return an empty array
+            return [];
+        };
+        case (?favorites) {
+            // Return the principal's list of favorite NFTs with the associated principal
+            return Array.map(favorites, func(myCollection) { (principal, nftInfo.0) });
+        };
+    };
+    };*/
+
+
+
+
+
+    /* -------------------------------------------------------------------------- */
+    /*                                  MARKETPLACE                               */
+    /* -------------------------------------------------------------------------- */
+
+    
 
 };
