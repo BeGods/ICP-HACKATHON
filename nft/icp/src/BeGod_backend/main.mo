@@ -60,8 +60,6 @@ actor Main {
 
     private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
-    
-
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
     /* -------------------------------------------------------------------------- */
@@ -190,6 +188,16 @@ actor Main {
     /* -------------------------------------------------------------------------- */
     /*                             NFT related methods                            */
     /* -------------------------------------------------------------------------- */
+
+    // Token will be transfered to this Vault and gives you req details to construct a link out of it, which you can share
+    public shared ({ caller = user }) func getNftTokenId(
+        _collectionCanisterId : Principal,
+        _tokenId : TokenIndex,
+
+    ) : async TokenIdentifier {
+        let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, _tokenId);
+        return tokenIdentifier;
+    };
 
     // Minting  a NFT pass the collection canisterId in which you want to mint and the required details to add, this enables minting multiple tokens
     public shared ({ caller = user }) func mintExtNonFungible(
