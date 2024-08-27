@@ -5,10 +5,11 @@ import User from "../models/user.models";
 export const authMiddleware = async (req, res, next) => {
   try {
     const tokenString = req.headers?.authorization;
-    const token = tokenString.split(" ")[1];
 
-    if (!token) {
-      res.status(400).json({ message: "Invalid token." });
+    const token = tokenString?.split(" ")[1];
+
+    if (!token || !tokenString) {
+      return res.status(400).json({ message: "Invalid token." });
     }
 
     const decodedUserData = await jwt.verify(token, config.security.JWT_SECRET);
