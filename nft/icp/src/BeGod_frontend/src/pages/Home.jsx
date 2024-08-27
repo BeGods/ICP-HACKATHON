@@ -36,26 +36,26 @@ const Home = () => {
     // }
     // translate();
     return (
-        <div className="md:w-[130vw] lg:w-auto">
+        <div className="max-w-[1920px] mx-auto md:w-[130vw] lg:w-auto">
             <Navbar />
             <div className='lg:flex'>
                 <div className='w-screen lg:w-1/2 h-[50vh] ml-[5vw] sm:ml-[8vw] md:ml-[22vw] lg:ml-32 mt-[10vh] md:mt-[23vh]'>
-                    <h1 style={{ fontFamily: 'MyCustomFont' }} className='w-[80%] sm:w-[80%] md:w-[70%] lg:w-[35vw] text-[30px] sm:text-[30px] md:text-[35px] lg:text-[50px] font-[500] text-[#FFFFFF] md:-pt-8'>
+                    <h1 style={{ fontFamily: 'MyCustomFont' }} className='w-[80%] sm:w-[80%] md:w-[70%] lg:w-[65%] text-[30px] sm:text-[30px] md:text-[35px] lg:text-[50px] font-[500] text-[#FFFFFF] md:-pt-8'>
                         {heading}
                     </h1>
-                    <h2 style={{ fontFamily: "QuickSand" }} className='w-[90vw] sm:w-[90%] md:w-[70%] lg:w-[40vw] text-[15px] sm:text-[24px] font-[400] text-[#FFFFFF]'>
+                    <h2 style={{ fontFamily: "QuickSand" }} className='w-[90vw] sm:w-[90%] md:w-[70%] lg:w-[40%] text-[15px] sm:text-[24px] font-[400] text-[#FFFFFF]'>
                         {description}
                     </h2>
-                    <button className='w-[50vw] sm:w-[40vw] md:w-[30vw] lg:w-[20vw] h-[5vh] bg-[#FCD37B] hover:text-white mt-8 explore-button'>
+                    <button className='w-[50vw] sm:w-[40vw] md:w-[30vw] lg:w-[50%] h-[5vh] bg-[#FCD37B] hover:text-white mt-8 explore-button'>
                         <span>{button}</span>
                     </button>
                 </div>
                 <div className='w-[100%] sm:w-[100%] md:w-[80%] lg:w-1/2 h-[40vh]'>
-                    <div className='relative w-full h-[60vh] lg:h-[100vh] lg:w-[40vw] -mt-[60vh] sm:-mt-[60vh]  md:ml-[13vw] lg:ml-0 md:-mt-[65vh] lg:mt-8'>
+                    <div className='max-w-[1920px] mx-auto relative w-full h-[60vh] lg:h-[100vh] lg:w-[90%] -mt-[60vh] sm:-mt-[60vh]  md:ml-[13vw] lg:ml-0 md:-mt-[65vh] lg:mt-8'>
                         <img src="/image/Group.png" alt="" className='h-full w-full' />
                     </div>
                     <div className='relative'>
-                        <div className='hidden lg:flex absolute w-[15vw] sm:w-[30vw] md:w-[17vw] h-[50vh] ml-[5%] sm:ml-[12%] md:ml-[15%] sm:-mt-[120%] md:-mt-[80vh] -mt-[50%] image-stack'>
+                        <div className='hidden lg:flex absolute w-[15vw] sm:w-[30vw] md:w-[40%] h-[50vh] ml-[5%] sm:ml-[12%] md:ml-[15%] sm:-mt-[120%] md:-mt-[80vh] -mt-[50%] image-stack'>
                             <img src="/image/Component 27.png" alt="" className='stacked-image' />
                             <img src="/image/Component 43.png" alt="" className='stacked-image' />
                             <img src="/image/Component 45.png" alt="" className='stacked-image' />

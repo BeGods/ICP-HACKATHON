@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from 'ic-auth';
+import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin, HelloIDL } from 'ic-auth';
 import { useNavigate } from "react-router-dom";
 import { setUserAndStore } from '../redux/authSlice';
-
+import { CreateActor } from "ic-auth";
+import {idlFactory} from "../../../declarations/BeGod_backend/BeGod_backend.did.js"
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const canisterID = "avqkn-guaaa-aaaaa-qaaea-cai";
+  const backend_canister_id = "ajuq4-ruaaa-aaaaa-qaaga-cai";
   const whitelist = [canisterID];
 
   useEffect(() => {
@@ -34,16 +36,19 @@ const Login = () => {
         userObject = await IdentityLogin();
       }
       if (userObject.agent._isAgent || userObject.agent.agent._isAgent) {
-        console.log("user details", userObject.principal);
+        console.log("user details", userObject);
         dispatch(setUserAndStore(userObject.principal));
         navigate('/admin');
       }
-
+      console.log("idl factory",idlFactory)
+      const actor = await CreateActor(userObject.agent,idlFactory, backend_canister_id);
+      const collectionResponse = await actor.createExtCollection("sd","sdd","sd");
+      console.log("Collection response",collectionResponse);
+      console.log("Created actor", actor);
     } catch (error) {
       console.error("Login error:", error);
     }
   };
-
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
       <div className="w-[80%] sm:w-[30%] h-[60vh] md:h-[90vh] bg-black/60 backdrop-blur-lg shadow-lg rounded-l-md p-8 hidden sm:flex sm:flex-col">

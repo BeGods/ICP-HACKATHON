@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-const DropzoneWithUrlInput = () => {
+const DropzoneWithUrlInput = ({ onFileChange }) => {
     const [url, setUrl] = useState('');
     const [file, setFile] = useState(null);
     const [inputType, setInputType] = useState(''); // 'file' or 'url'
 
     const onDrop = (acceptedFiles) => {
-        setFile(acceptedFiles[0]);
+        const selectedFile = acceptedFiles[0]; // Capture the accepted file
+        setFile(selectedFile);
         setUrl('');
         setInputType('file');
+        onFileChange(selectedFile); // Pass the selected file to the parent
     };
 
     const handleUrlChange = (e) => {
-        setUrl(e.target.value);
+        const newUrl = e.target.value;
+        setUrl(newUrl);
         setFile(null);
         setInputType('url');
+        onFileChange(newUrl); // Pass the URL to the parent
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -25,20 +29,18 @@ const DropzoneWithUrlInput = () => {
     });
 
     return (
-        <div className="w-full h-[130px] md:h-[150px] rounded-md flex flex-col items-center justify-center p-4 bg-[#29292C] text-white">
-            {inputType !== 'url' && (
-                <div
-                    {...getRootProps()}
-                    className={`w-full h-full flex items-center justify-center ${isDragActive ? 'bg-gray-700' : ''}`}
-                >
-                    <input {...getInputProps()} />
-                    <p className="text-center">
-                        {file
-                            ? `Selected file: ${file.name}`
-                            : 'Drag & drop an image here, or click to select one'}
-                    </p>
-                </div>
-            )}
+        <div className="w-full h-[130px] md:h-auto rounded-md flex flex-col items-center justify-center p-4 bg-[#29292C] text-white">
+            <div
+                {...getRootProps()}
+                className={`w-full h-full flex items-center justify-center ${isDragActive ? 'bg-gray-700' : ''}`}
+            >
+                <input {...getInputProps()} />
+                <p className="text-center">
+                    {file
+                        ? `Selected file: ${file.name}`
+                        : 'Drag & drop an image here, or click to select one'}
+                </p>
+            </div>
             <p className="text-center my-2">OR</p>
             <input
                 type="text"

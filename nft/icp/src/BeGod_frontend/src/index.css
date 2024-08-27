@@ -307,3 +307,37 @@ body{
 /* spreading the cards in collection details page */
 
 
+/* Effect on collection card */
+/* Add this to your CSS file or in a <style> block in your component */
+
+/* Initial shift from the top left corner */
+.smoke-shift {
+  top: -5px; /* Shift slightly upwards */
+  left: -5px; /* Shift slightly to the left */
+  transition: all 1s ease-in-out; /* Smooth transition on hover */
+  z-index: 0;
+  /* Initial state without animation */
+}
+
+@keyframes smoke {
+  0% {
+    transform: translate(-10%, -10%); /* Start slightly up and left */
+  }
+  25% {
+    transform: translate(20%, 0); /* Move right */
+  }
+  50% {
+    transform: translate(20%, 30%); /* Move down */
+  }
+  75% {
+    transform: translate(-5%, 20%); /* Move left */
+  }
+  100% {
+    transform: translate(-5%, -5%); /* Move up */
+  }
+}
+
+.smoke-shift.animated {
+  animation: smoke 4s infinite alternate;
+}
+
