@@ -14,6 +14,7 @@ import { Document } from "mongodb";
 import ranks from "../models/ranks.models";
 import { Team } from "../models/referral.models";
 import Stats, { IStats } from "../models/Stats.models";
+import { checkBonus } from "../services/general.services";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -366,10 +367,10 @@ export const getGameStats = async (req, res) => {
     let userRank = await ranks.findOne({ userId: req.user._id });
     if (!userRank) {
       const totalUsers = (await Stats.find()) as any;
-
-      userRank = { overallRank: totalUsers[0].totalUsers } as any;
-      console.log(userRank);
+      userRank = { overallRank: totalUsers[0]?.totalUsers && 0 } as any;
     }
+
+    const isEligibleToClaim = await checkBonus(user);
 
     // get totalMembers
     const squadOwner = user.squadOwner ? user.squadOwner : user._id;
@@ -389,6 +390,7 @@ export const getGameStats = async (req, res) => {
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
+      isEligibleToClaim: false,
       ...memberData,
     };
 
@@ -400,13 +402,17 @@ export const getGameStats = async (req, res) => {
         quest.isQuestClaimed !== undefined ? quest.isQuestClaimed : false,
     }));
 
+    const mythOrder = ["Greek", "Celtic", "Norse", "Egyptian"];
+
     res.status(200).json({
       user: userData,
       stats: {
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
         blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
         whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
-        mythologies: completeMythologies,
+        mythologies: completeMythologies.sort(
+          (a, b) => mythOrder.indexOf(a.name) - mythOrder.indexOf(b.name)
+        ),
       },
       quests: quests,
       // lostQuests: lostQuests,
@@ -475,6 +481,7 @@ export const claimAutomata = async (req, res) => {
     const userId = req.user;
     const userMyth = req.userMyth;
 
+    userMyth.boosters.automatalvl += 1;
     userMyth.boosters.isAutomataActive = true;
     userMyth.boosters.automataLastClaimedAt = Date.now();
     userMyth.boosters.automataStartTime = Date.now();

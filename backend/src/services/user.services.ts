@@ -1,4 +1,4 @@
-import Stats from "../models/Stats.models";
+import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
 import User from "../models/user.models";
@@ -80,7 +80,12 @@ export const createDefaultUserMyth = async (user) => {
       userId: user._id,
     });
 
+    const newMilestone = new milestones({
+      userId: user._id,
+    });
+
     await newUserMyth.save();
+    await newMilestone.save();
   } catch (error) {
     throw new Error("Could create default myth");
   }

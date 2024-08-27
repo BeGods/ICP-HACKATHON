@@ -71,7 +71,7 @@ export const fetchUserStats = async (userId) => {
     throw new Error("There was a problem fetching user data.");
   }
 };
-
+0;
 export const validateBooster = (boosters) => {
   try {
     const timeLapsed = Date.now() - boosters.shardsLastClaimedAt;
@@ -96,11 +96,10 @@ export const validateBooster = (boosters) => {
 export const validateAutomata = (gameData) => {
   try {
     const timeLapsed = Date.now() - gameData.boosters.automataStartTime;
-    console.log(timeLapsed);
 
     gameData.shards += calculateAutomataEarnings(
       gameData.boosters.automataLastClaimedAt,
-      gameData.boosters.shardslvl
+      gameData.boosters.automatalvl
     );
 
     gameData.boosters.automataLastClaimedAt = Date.now();
@@ -108,8 +107,16 @@ export const validateAutomata = (gameData) => {
     if (timeLapsed >= 86400000) {
       // 24 hours
       gameData.boosters.isAutomataActive = false;
-      gameData.boosters.automataLastClaimedAt = 0;
       gameData.boosters.automataStartTime = 0;
+      gameData.boosters.automataLastClaimedAt = 0;
+    }
+
+    if (timeLapsed >= 172800000 || gameData.boosters.automatalvl === 7) {
+      // 48 hours or level 7
+      gameData.boosters.isAutomataActive = false;
+      gameData.boosters.automatalvl = 1;
+      gameData.boosters.automataStartTime = 0;
+      gameData.boosters.automataLastClaimedAt = 0;
     }
 
     return gameData;
