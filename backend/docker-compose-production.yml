@@ -1,0 +1,36 @@
+# run with
+# cd ~/Development/forges-of-faith-backend
+# docker-compose -f docker-compose-production.yml up
+
+version: "3.3"
+
+services:
+  # MongoDB service
+  mongo:
+    container_name: mongo_container
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./volumes/mongo/db
+
+  # Node API service
+  api:
+    build: .
+    ports:
+      - 4000:3000
+    env_file: .env.docker
+    depends_on:
+      - mongo
+
+  # Web service
+  web:
+    build:
+      context: ../forges-of-faith-frontend
+      dockerfile: Dockerfile
+    container_name: web
+    ports:
+      - 4001:8083
+    environment:
+      - VITE_API_URL=http://fof.battleofgods.io:4000/api/v1
+    volumes:
+      - .:/src
