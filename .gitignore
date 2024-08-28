@@ -132,3 +132,4 @@ dist
 # custom
 .env.production
 .env.docker
+volumes/mongo
