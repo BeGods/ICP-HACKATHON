@@ -2095,41 +2095,6 @@ actor class EXTNFT(init_owner: Principal) = this {
 
       return Buffer.toArray(nonFungibleTokenData);
   };
-//singleNFTData
-  public query func getSingleNonFungibleTokenData(tokenid : TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata)] {
-    if (_tokenMetadata.size() == 0) {
-        return [];
-    };
-
-    let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(1);
-
-    switch (_tokenMetadata.get(tokenid)) {
-        case (?metadata) {
-            switch (metadata) {
-                case (#nonfungible(_)) {
-                    let owner = switch (_registry.get(tokenid)) {
-                        case (?owner) owner;
-                        case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-                    };
-                    nonFungibleTokenData.add((tokenid, owner, metadata));
-                };
-                case (#fungible(_)) {
-                    // Return empty if the token is fungible
-                    return [];
-                };
-            };
-        };
-        case (null) {
-            // Return empty if no metadata found
-            return [];
-        };
-    };
-
-    return Buffer.toArray(nonFungibleTokenData);
-};
-
-
-
   public query func getTokens() : async [(TokenIndex, MetadataLegacy)] {
     Iter.toArray(HashMap.map<TokenIndex, Metadata, MetadataLegacy>(_tokenMetadata, ExtCore.TokenIndex.equal, ExtCore.TokenIndex.hash, func (a : (TokenIndex, Metadata)) : MetadataLegacy {
       #nonfungible({metadata = null})

@@ -10,7 +10,7 @@ module {
     };
 
     public type UpdateUserError = {
-        #UserNotAuthenticated;
+        #UserNotAuthenticated; // If your logic requires authentication
         #UserNotFound;
         #EmptyEmail;
         #EmptyFirstName;
@@ -25,7 +25,7 @@ module {
         #UserAlreadyExists;
         #EmptyEmail;
         #EmptyFirstName;
-        #EmptyLastName;
+        #EmptyLastName; 
     };
 
     public type Statsdata = {
@@ -34,10 +34,7 @@ module {
         totalnfts : Int;
     };
 
-    public type TransactionsDtetails = {
-        
+    public type TransactionsDetails = {
+        // Define fields as needed
     };
-
 }
-
-
