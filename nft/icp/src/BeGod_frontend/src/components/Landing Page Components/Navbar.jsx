@@ -23,42 +23,25 @@ const Navbar = () => {
     }, [lang, i18n]);
 
     return (
-        <div className='w-full h-[10vh] flex items-center justify-between text-white'>
+        <div style={{fontFamily:"CaslonAntique"}} className='w-full h-[10vh] flex items-center justify-between text-white'>
             <div className='flex items-center gap-4'>
                 <button onClick={toggleMenu} className='md:hidden'>
                     {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                 </button>
-                <h1 className='md:hidden text-2xl font-bold'>Logo</h1>
-            </div>
-            <div className='flex items-center gap-4'>
-                <button onClick={toggleSearch} className='md:hidden'>
-                    <FaSearch size={24} />
-                </button>
-                {showSearch && (
-                    <input
-                        type="text"
-                        placeholder={t('input')}
-                        className='fixed top-[12vh] right-4 w-[80vw] h-[4vh] pl-4 text-white bg-black bg-opacity-80 border-[2px] border-gray-200 rounded-md'
-                    />
-                )}
+                <div className='flex sm:hidden pt-12'>
+                    <img src="/Hero/logo.png" alt="" />
+                </div>
             </div>
             <div className='w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
-                <div className='flex gap-[140%] pt-8'>
-                    <div className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF] pl-20'>
-                        {t('title')}
-                    </div>
-                    <div className='flex items-center gap-[5vw] -ml-40'>
-                        <div className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF]'>
-                            {t('nav1')}
-                        </div>
-                        <div className='text-[24px] font-[400] leading-[30px] text-[#FFFFFF]'>
-                            {t('nav2')}
-                        </div>
-                    </div>
+                <div className='pt-12'>
+                    <img src="/Hero/logo.png" alt="" />
                 </div>
-                <div className='w-[40%] flex gap-8 mr-12 pt-8'>
-                    <input type="text" placeholder={t('input')} className='w-[100%] h-[5vh] pl-4 text-white bg-inherit border-[2px] border-gray-200' />
-                    <Link to="/profile" className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[100%] h-[5vh]'>{t('button')}</Link>
+                <div className='w-[40%] flex justify-between'>
+                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>Collection</Link>
+                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>符 ENG</Link>
+                    <div className='w-[35%] flex gap-8 mr-12 pt-2'>
+                        <Link to="/profile" className='flex items-center bg-[#FCD37B] text-black font-[500] justify-center text-lg border-[2px] border-gray-200 w-[100%] h-[5vh]'>{t('button')}</Link>
+                    </div>
                 </div>
             </div>
             {isOpen && (

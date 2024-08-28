@@ -42,7 +42,7 @@ const Login = () => {
       }
       console.log("idl factory",idlFactory)
       const actor = await CreateActor(userObject.agent,idlFactory, backend_canister_id);
-      const collectionResponse = await actor.createExtCollection("sd","sdd","sd");
+      const collectionResponse = await actor.createExtCollection("sd");
       console.log("Collection response",collectionResponse);
       console.log("Created actor", actor);
     } catch (error) {

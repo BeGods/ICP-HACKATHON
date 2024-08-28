@@ -9,6 +9,10 @@
    font-family: 'MyCustomFont';
    src: url('/BeGods-all-Fonts/BeGods-Celtic.otf') format('truetype');
 }
+@font-face {
+  font-family: 'CaslonAntique';
+  src: url('/BeGods-all-Fonts/CaslonAntique-Bold.ttf') format('truetype');
+}
 body{
    background-color: var(--background-color) !important;
 }
@@ -16,6 +20,27 @@ body{
 .custome_max_width{
    max-width: 1280px;
 }
+.custom-text-border {
+  -webkit-text-stroke: 1px black; /* Adds a black border of 1px width */
+  text-stroke: 1px black; /* Fallback for other browsers */
+}
+
+/* NFT Gallery fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 1s ease-out;
+}
+
 
 @layer utilities {
    /* Hide scrollbar for Chrome, Safari and Opera */

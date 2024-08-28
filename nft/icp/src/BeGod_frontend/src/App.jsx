@@ -6,11 +6,12 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import CollectionDetail from './pages/CollectionDetail';
 import NftDetails from './components/NftDetails';
+import Hero from './pages/Hero';
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Home />}></Route>
+      <Route path='/' element={<Hero />}></Route>
       <Route path='/profile' element={<Profile />} />
       <Route path='/collection/:collectionName' element={<CollectionDetail/>}/>
       <Route path='/Nft/:Nftname' element={<NftDetails/>}/>
