@@ -31,6 +31,9 @@ const NFTGallery = ({ currentCollection, collections, currentIndex}) => {
     return () => clearTimeout(timer);
   }, [currentPage, currentCollection]); // Re-run animation on page change or collection change
 
+  useEffect(()=>{
+    setCurrentPage(0);
+  },[currentCollection]);
   return (
     <div>
       <div className={`w-[80%] grid grid-cols-4 gap-4 mt-8 ml-32 mb-8 ${animationClass}`}>

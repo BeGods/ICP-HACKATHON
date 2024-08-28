@@ -4,6 +4,7 @@ import YellowButton from '../components/button/YellowButton'
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import NFTGallery from '../components/Landing Page Components/NftGallery';
+import HeroSlider from '../components/Landing Page Components/HeroSlider';
 const collections = [
     { name: "Celtic", shadowColor: "#32CD32" },
     { name: "Norse", shadowColor: "#00bfff" },
@@ -54,29 +55,8 @@ const collectionsData = {
 }
 
 const Hero = () => {
-    const [isActive, setIsActive] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentCollection, setCurrentCollection] = useState(collectionsData[collections[currentIndex].name] || []);
-    const [currentPage, setCurrentPage] = useState(0);
-    const itemsPerPage = 8; // Show 8 images per page
-
-    // Calculate the range of images to show on the current page
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentItems = currentCollection.slice(startIndex, endIndex);
-
-    // Handlers for pagination
-    const handleNextPage = () => {
-        if ((currentPage + 1) * itemsPerPage < currentCollection.length) {
-            setCurrentPage(currentPage + 1);
-        }
-    };
-
-    const handlePreviousPage = () => {
-        if (currentPage > 0) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
 
     const upHandler = () => {
         if (currentIndex > 0) {
@@ -93,38 +73,7 @@ const Hero = () => {
     }, [currentIndex])
     return (
         <div className='max-w-[1920px] mx-auto w-[100%]'>
-            <div className="relative flex h-[100%]">
-                {/* Container for each image */}
-                <div className="w-1/4 h-[120vh]">
-                    <img
-                        src="/Hero/img1.png"
-                        alt="Image1"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="w-1/4 h-[120vh]">
-                    <img
-                        src="/Hero/img2.png"
-                        alt="Image2"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="w-1/4 h-[120vh]">
-                    <img
-                        src="/Hero/img3.png"
-                        alt="Image3"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-                <div className="w-1/4 h-[120vh]">
-                    <img
-                        src="/Hero/img4.png"
-                        alt="Image4"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            </div>
-
+            <HeroSlider/>
             <div className='absolute top-0 w-[100%]'>
                 <Navbar />
             </div>
