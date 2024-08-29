@@ -10,6 +10,7 @@ export const authMiddleware = async (req, res, next) => {
 
     if (!token || !tokenString) {
       return res.status(400).json({ message: "Invalid token." });
+      console.log("Invalid Token");
     }
 
     const decodedUserData = await jwt.verify(token, config.security.JWT_SECRET);
@@ -23,6 +24,8 @@ export const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.log(error);
+
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({ error: "Token expired" });
     } else if (error.name === "JsonWebTokenError") {
