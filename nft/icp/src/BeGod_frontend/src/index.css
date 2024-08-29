@@ -197,8 +197,8 @@ body{
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 640px) { /* Mobile screen size */
   .flip-card {
-    width: 150px; /* Reduced width for mobile */
-    height: 200px; /* Reduced height for mobile */
+    width: 250px; /* Reduced width for mobile */
+    height: 350px; /* Reduced height for mobile */
   }
 
   .flip-card-back .absolute {

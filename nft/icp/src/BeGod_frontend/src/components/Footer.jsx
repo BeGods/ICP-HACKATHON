@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <div style={{ fontFamily: "QuickSand" }} className="w-full h-auto sm:h-[287px] text-[#FFFFFF]">
-            <div className='h-[10vh] ml-[17%]'>
+        <div style={{ fontFamily: "QuickSand" }} className="w-full h-[400px] sm:h-[350px] md:h-[350px] text-[#FFFFFF]">
+            <div className='h-[10vh]  sm:ml-[17%]'>
                 <img src="/Hero/logo.png" alt="" />
-
             </div>
             <div className="flex flex-col lg:flex-row ml-[10%] sm:ml-[20%] mt-4">
                 <p className="w-[90%] lg:w-[25%] text-sm sm:text-base">

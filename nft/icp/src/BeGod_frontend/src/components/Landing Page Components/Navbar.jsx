@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaBars, FaTimes, FaSearch } from 'react-icons/fa';
+import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
@@ -23,20 +23,23 @@ const Navbar = () => {
     }, [lang, i18n]);
 
     return (
-        <div style={{fontFamily:"CaslonAntique"}} className='w-full h-[10vh] flex items-center justify-between text-white'>
-            <div className='flex items-center gap-4'>
-                <button onClick={toggleMenu} className='md:hidden'>
+        <div style={{ fontFamily: "CaslonAntique" }} className='max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative'>
+            {/* Mobile View */}
+            <div className='md:hidden w-full flex items-center justify-between gap-4 relative'>
+                <button onClick={toggleMenu} className='ml-[5%] z-50'>
                     {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                 </button>
-                <div className='flex sm:hidden pt-12'>
+                <div className='flex md:hidden pt-12'>
                     <img src="/Hero/logo.png" alt="" />
                 </div>
             </div>
-            <div className='w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
+            
+            {/* Desktop View */}
+            <div className='max-w-[1920px] mx-auto w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
                 <div className='pt-12'>
                     <img src="/Hero/logo.png" alt="" />
                 </div>
-                <div className='w-[40%] flex justify-between'>
+                <div className='w-[60%] lg:w-[40%] flex justify-between'>
                     <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>Collection</Link>
                     <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>符 ENG</Link>
                     <div className='w-[35%] flex gap-8 mr-12 pt-2'>
@@ -44,8 +47,10 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Menu */}
             {isOpen && (
-                <div className='absolute top-[10vh] left-0 w-full h-screen bg-black bg-opacity-70 backdrop-blur-lg text-white flex flex-col items-center gap-8 py-8 md:hidden z-10'>
+                <div className='absolute pt-24 top-0 left-0 w-full h-screen bg-black bg-opacity-70 backdrop-blur-lg text-white flex flex-col items-center gap-8 py-8 z-40 md:hidden'>
                     <div className='text-[24px] font-[400] leading-[30px]'>
                         {t('nav1')}
                     </div>

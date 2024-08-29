@@ -15,9 +15,32 @@ const HeroSlider = () => {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imagesPerSet, setImagesPerSet] = useState(4); // Default to 4 images per set
 
-  // Calculate total sets of images (each set contains 4 images)
-  const totalSets = Math.ceil(images.length / 4);
+  // Update the number of images per set based on screen size
+  useEffect(() => {
+    const updateImagesPerSet = () => {
+      if (window.innerWidth >= 1280) { // xl and above
+        setImagesPerSet(4);
+      } else if (window.innerWidth >= 650) { // md and above
+        setImagesPerSet(2);
+      } else { // below md
+        setImagesPerSet(1);
+      }
+    };
+
+    // Initial call
+    updateImagesPerSet();
+
+    // Event listener for window resize
+    window.addEventListener('resize', updateImagesPerSet);
+
+    // Clean up the event listener on component unmount
+    return () => window.removeEventListener('resize', updateImagesPerSet);
+  }, []);
+
+  // Calculate total sets of images
+  const totalSets = Math.ceil(images.length / imagesPerSet);
 
   useEffect(() => {
     // Set up interval for automatic sliding
@@ -33,17 +56,22 @@ const HeroSlider = () => {
   // Function to get the current set of images to display
   const getCurrentSet = () => {
     // Calculate starting index for the current set
-    const startIndex = currentIndex * 4;
-    // Slice array to get 4 images from starting index
-    return images.slice(startIndex, startIndex + 4);
+    const startIndex = currentIndex * imagesPerSet;
+    // Slice array to get imagesPerSet images from starting index
+    return images.slice(startIndex, startIndex + imagesPerSet);
   };
 
   const currentSet = getCurrentSet();
 
   return (
-    <div className="relative flex h-[100%]">
+    <div className="relative w-full flex h-full">
       {currentSet.map((image, index) => (
-        <div className="w-1/4 h-[120vh]" key={index}>
+        <div
+          key={index}
+          className={`w-full h-[120vh] ${
+            imagesPerSet === 4 ? 'xl:w-1/4' : imagesPerSet === 3 ? 'md:w-1/3' : 'w-full'
+          }`}
+        >
           <img
             src={image.src}
             alt={image.alt}
