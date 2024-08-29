@@ -76,12 +76,12 @@ const Hero = () => {
     }, [currentIndex])
 
     return (
-        <div className='max-w-[1920px] mx-auto w-[100%]'>
+        <div className='w-[100%]'>
             <HeroSlider />
-            <div className='max-w-[1920px] mx-auto  absolute top-0 w-[100%]'>
+            <div className=' absolute top-0 w-[100%]'>
                 <Navbar />
             </div>
-            <div style={{ fontFamily: "CaslonAntique" }} className='max-w-[1920px] mx-auto w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60'>
+            <div style={{ fontFamily: "CaslonAntique" }} className=' w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60'>
                 <h1 className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
                     BATTLE OF GODS
                 </h1>
@@ -93,7 +93,7 @@ const Hero = () => {
                 </div>
             </div>
             <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat" }} className='h-auto w-[100%] bg-cover bg-center'>
-                <div style={{ fontFamily: "CaslonAntique" }} className='pt-12 flex flex-col items-center justify-center'>
+                <div style={{ fontFamily: "CaslonAntique" }} className='max-w-[1920px] mx-auto pt-12 flex flex-col items-center justify-center'>
                     <div className='w-[40%]'>
                         <img src="/Hero/frame.svg" alt="" />
                     </div>
@@ -103,24 +103,24 @@ const Hero = () => {
                     </div>
                 </div>
                 {/* Collection details and its nfts part */}
-                <div className='lg:ml-12 flex flex-col lg:flex-row'>
-                    <Collections collections={collections} next={nextHandler} prev={prevHandler} currentCollection={setCurrentCollection} collectionsData={collectionsData} />
-                    <div className='w-[100%] h-[100%] mt-20'>
-                        <div className='w-[100%] flex flex-col pl-20 sm:pl-0 sm:flex-row'>
-                            <div className='w-[70%]'>
-                                <img src="/Hero/Mask group.png" alt="" />
-                            </div>
-                            <div className='w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
-                                <h1 className='ml-24 sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                <h2 className='-pl-8 text-center sm:text-start w-[90%] lg:w-[70%]'>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h2>
-                                <div className='ml-20 sm:ml-0 w-[190px] lg:w-[23%] p-2 border-[1px] border-[#FCD37B]'>
-                                    <YellowButton>Buy <span>Celtic</span> Collection</YellowButton>
+                    <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
+                        <Collections collections={collections} next={nextHandler} prev={prevHandler} currentCollection={setCurrentCollection} collectionsData={collectionsData} />
+                        <div className='w-[100%] h-[100%] mt-20'>
+                            <div className='w-[100%] flex flex-col pl-[100px] sm:pl-0 sm:flex-row'>
+                                <div className='w-[70%]'>
+                                    <img src="/Hero/Mask group.png" alt="" />
+                                </div>
+                                <div className='w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
+                                    <h1 className='ml-28 sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
+                                    <h2 className='-pl-8 text-center sm:text-start w-[90%] lg:w-[70%]'>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h2>
+                                    <div className='ml-24 sm:ml-0 w-[190px] lg:w-[190px] p-2 border-[1px] border-[#FCD37B]'>
+                                        <YellowButton>Buy <span>Celtic</span> Collection</YellowButton>
+                                    </div>
                                 </div>
                             </div>
+                            <NFTGallery currentCollection={currentCollection} collections={collections} currentIndex={currentIndex} />
                         </div>
-                        <NFTGallery currentCollection={currentCollection} collections={collections} currentIndex={currentIndex} />
                     </div>
-                </div>
             </div>
             <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative h-[50vh] sm:h-[50vh] md:h-[50vh] lg:h-[40vh] bg-center bg-cover'>
                 <div className='absolute top-0 overflow-hidden'>

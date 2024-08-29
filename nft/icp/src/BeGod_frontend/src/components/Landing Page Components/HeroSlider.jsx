@@ -64,7 +64,7 @@ const HeroSlider = () => {
   const currentSet = getCurrentSet();
 
   return (
-    <div className="relative w-full flex h-full">
+    <div className="relative w-full flex h-full ">
       {currentSet.map((image, index) => (
         <div
           key={index}

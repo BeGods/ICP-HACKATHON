@@ -24,7 +24,7 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
     }, [currentIndex])
 
     return (
-        <div className='w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col gap-12 items-center justify-center mt-20'>
+        <div className='sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col gap-12 items-center justify-center mt-20'>
             {/* Up button */}
             <div>
                 <img
@@ -64,12 +64,12 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
                 ))}
             </div>
             {/* for bigger screen */}
-            <div className='hidden w-[100%] lg:flex flex-row flex-col gap-12 overflow-hidden'>
+            <div className='hidden w-[100%] lg:flex flex-row flex-col items-center gap-12 overflow-hidden pt-8 pb-8'>
                 {collections.map((collection, index) => (
                     <div
                         onClick={() => setCurrentIndex(index)}
                         key={index}
-                        className='cursor-pointer relative w-[100%] h-[6vh] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
+                        className='cursor-pointer relative w-[50%] h-[6vh] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
                         style={{
                             backgroundColor: index === currentIndex ? collection.shadowColor : "inherit",
                             boxShadow: index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "",
