@@ -4,9 +4,8 @@ const NftCard = ({img}) => {
     return (
 
         <div
-            className="flip-card border rounded-lg"
+            className="flip-card rounded-lg"
             style={{
-                backgroundImage: `url('/image/goldbg.png')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}
