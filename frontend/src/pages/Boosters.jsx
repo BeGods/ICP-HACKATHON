@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
 import { mythologies, mythSections } from "../utils/variables";
 import BoosterCard from "../components/Cards/Boosters/BoosterCard";
-import MilestoneCard from "../components/Cards/MilestoneCard";
 import BoosterButtom from "../components/Buttons/BoosterButtom";
 import Symbol from "../components/Common/Symbol";
 import ToastMesg from "../components/Toast/ToastMesg";
@@ -27,16 +26,12 @@ const HeaderContent = ({ activeMyth, t }) => {
       </div>
       <div className="flex flex-col flex-grow justify-start items-end text-white pr-5">
         <div className="text-right  gap-1 flex font-medium text-head">
-          {/* <span>{mythData[activeMyth].faith}</span> */}
           <span className={`text-${mythSections[activeMyth]}-text  uppercase`}>
-            {/* <span className="text-white">
-              {gameData.mythologies[activeMyth].faith}{" "}
-            </span> */}
             <span>BOOSTER</span>
           </span>
         </div>
         <h1
-          className={`glow-text-${mythSections[activeMyth]} glow-test-contour uppercase -mt-4 -mr-2`}
+          className={`glow-text-${mythSections[activeMyth]} font-${mythSections[activeMyth]}  uppercase  -mt-4 -mr-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
@@ -655,7 +650,7 @@ export default Boosters;
                   </div>
                 </div>
                 <div
-                  className={`flex relative items-center h-[19%] uppercase glow-card-${mythSections[activeMyth]} text-white`}
+                  className={`flex relative items-center h-[19%] uppercase card-shadow-white-${mythSections[activeMyth]} text-white`}
                 >
                   <div
                     style={{

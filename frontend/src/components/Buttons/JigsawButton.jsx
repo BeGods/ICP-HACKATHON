@@ -42,7 +42,7 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t }) => {
       <div className="text-button-primary uppercase px-2">
         {t("buttons.complete")}
       </div>
-      <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
+      <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
           color="white"
           className="h-icon-secondary w-icon-secondary"

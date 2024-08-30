@@ -27,18 +27,17 @@ import MilestoneCard from "../components/Cards/MilestoneCard";
 import Button from "../components/Buttons/Button";
 import SecretCard from "../components/Cards/QuestCards/SecretCard";
 
-const HeaderContent = ({ activeMyth, mythData, t }) => {
+const HeaderContent = ({ activeMyth, t }) => {
   return (
     <>
       <div className="flex flex-col flex-grow justify-start items-start text-white pl-5">
         <div className="text-left  gap-1 flex font-medium text-head">
-          {/* <span>{mythData[activeMyth].faith}</span> */}
           <span className={`text-${mythSections[activeMyth]}-text uppercase`}>
             {t(`sections.quests`)}
           </span>
         </div>
         <h1
-          className={`glow-text-${mythSections[activeMyth]} glow-test-contour uppercase -mt-4 -ml-2`}
+          className={`glow-text-${mythSections[activeMyth]} font-${mythSections[activeMyth]}  uppercase -mt-4 -ml-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>

@@ -23,7 +23,7 @@ const InfoCard = ({
           top: 0,
           left: 0,
         }}
-        className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] glow-card"
+        className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] card-shadow-white"
       >
         <IconButton
           isInfo={false}
@@ -47,7 +47,7 @@ const InfoCard = ({
           <img
             src={`/assets/cards/188px-${mythSections[activeMyth]}.quest.${quest?.type}_info_painting.jpg`}
             alt="info_painting"
-            className="w-[82%] mx-auto frame-shadow"
+            className="w-[82%] mx-auto card-shadow-black"
           />
         </div>
         <div className="leading-[18px] text-[16px] -mt-[5px] text-left mx-auto w-[85%] text-card font-[550]">
