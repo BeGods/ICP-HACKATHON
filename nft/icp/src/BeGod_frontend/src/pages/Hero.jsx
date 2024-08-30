@@ -97,7 +97,7 @@ const Hero = () => {
                     <div className='w-[40%]'>
                         <img src="/Hero/frame.svg" alt="" />
                     </div>
-                    <h1 className='text-[96px] font-[500] leading-[115px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border'>Collection</h1>
+                    <h1 className='text-[70px] sm:text-[96px] font-[500] leading-[115px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border'>Collection</h1>
                     <div className='w-[40%]'>
                         <img src="/Hero/frame.svg" alt="" />
                     </div>
@@ -106,14 +106,14 @@ const Hero = () => {
                     <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
                         <Collections collections={collections} next={nextHandler} prev={prevHandler} currentCollection={setCurrentCollection} collectionsData={collectionsData} />
                         <div className='w-[100%] h-[100%] mt-20'>
-                            <div className='w-[100%] flex flex-col pl-[100px] sm:pl-0 sm:flex-row'>
+                            <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
                                 <div className='w-[70%]'>
                                     <img src="/Hero/Mask group.png" alt="" />
                                 </div>
-                                <div className='w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
-                                    <h1 className='ml-28 sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                    <h2 className='-pl-8 text-center sm:text-start w-[90%] lg:w-[70%]'>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h2>
-                                    <div className='ml-24 sm:ml-0 w-[190px] lg:w-[190px] p-2 border-[1px] border-[#FCD37B]'>
+                                <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
+                                    <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
+                                    <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h2>
+                                    <div className='sm:ml-0 w-[190px] lg:w-[190px] p-2 border-[1px] border-[#FCD37B]'>
                                         <YellowButton>Buy <span>Celtic</span> Collection</YellowButton>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@ const Hero = () => {
                         </div>
                     </div>
             </div>
-            <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative h-[50vh] sm:h-[50vh] md:h-[50vh] lg:h-[40vh] bg-center bg-cover'>
+            <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative h-[60vh] sm:h-[60vh] md:h-[50vh] lg:h-[40vh] bg-center bg-cover'>
                 <div className='absolute top-0 overflow-hidden'>
                     <Footer />
                 </div>

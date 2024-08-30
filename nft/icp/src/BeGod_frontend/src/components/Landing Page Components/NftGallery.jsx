@@ -96,10 +96,11 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
         </div>
       </div>
 
-      <Link to={`/collection/${collections[currentIndex].name}`} className='flex ml-[32%] sm:ml-[35%] mb-8 sm:hidden w-[200px] lg:w-[20%] p-2 border-[1px] border-[#FCD37B]'>
-        <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
-      </Link>
-
+      <div className='flex items-center justify-center'>
+        <Link to={`/collection/${collections[currentIndex].name}`} className='mb-8 sm:hidden w-[213px] lg:w-[20%] p-2 border-[1px] border-[#FCD37B]'>
+          <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
+        </Link>
+      </div>
       <div className={`hidden w-[80%] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:ml-20 lg:ml-32 mb-8 ${animationClass}`}>
         {currentItems && currentItems.map((img, index) => (
           <div className="flip-card rounded-lg" key={index}>
