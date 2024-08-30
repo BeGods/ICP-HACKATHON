@@ -43,7 +43,7 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
     }, [currentIndex])
 
     return (
-        <div className='sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-12  items-center justify-center mt-20'>
+        <div className='sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
             {/* Up button */}
             <div>
                 <img
@@ -83,7 +83,7 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
                 ))}
             </div>
             {/* for bigger screen */}
-            <div className='hidden w-[100%] lg:flex flex-row flex-col items-center gap-12  pt-8 pb-8'>
+            <div className='hidden w-[100%] lg:flex flex-row flex-col items-center gap-12'>
                 {collections.map((collection, index) => (
                     <div
                         onClick={() => setCurrentIndex(index)}

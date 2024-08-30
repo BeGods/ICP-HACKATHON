@@ -48,21 +48,23 @@ const Profile = () => {
   return (
     <div className='max-w-[1920px] mx-auto' style={{ fontFamily: "QuickSand" }}>
       <Navbar />
-      <div className='ml-[4%] mt-[3%]'>
-        <h1 className='text-[#FFFFFF] text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
-        <div className='flex gap-8 mt-[2%] ml-[2%]'>
-          <div className=''>
-            <img src="/image/Frame.png" alt="" />
-          </div>
-          <div>
-            <h1 className='text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>Barry</h1>
-            <h2 className='text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
-            <h2 className='text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
+      <div className='ml-[4%] mt-[3%] flex'>
+        <div className='w-[30%]'>
+          <h1 className='text-[#FFFFFF] text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
+          <div className='flex gap-8 mt-[2%] ml-[2%]'>
+            <div className=''>
+              <img src="/image/Frame.png" alt="" />
+            </div>
+            <div>
+              <h1 className='text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>Barry</h1>
+              <h2 className='text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
+              <h2 className='text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
+            </div>
           </div>
         </div>
 
-        <div className='mt-[3%] ml-[2%]'>
-          <div className='flex gap-[10%]'>
+        <div className=' w-[70%]'>
+          <div className='flex items-center justify-center gap-[10%]'>
             <div
               className={`text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
               onClick={() => setCategory("mycollection")}
@@ -75,25 +77,18 @@ const Profile = () => {
             >
               Favorite
             </div>
-            <div
-              className={`text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "purchased" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
-              onClick={() => setCategory("purchased")}
-            >
-              Purchased
-            </div>
-            <div className='text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>
-              Activity
-            </div>
           </div>
+          <div className='mt-8 grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-4 gap-x-8 gap-y-8'>
+          {
+            images.map((img, index) => (
+              <NftCard img={img} key={index} />
+            ))
+          }
         </div>
+        </div>
+        
       </div>
-      <div className='ml-[8%] mt-[3%] grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-8 gap-y-8'>
-        {
-          images.map((img, index) => (
-            <NftCard img={img} key={index} />
-          ))
-        }
-      </div>
+
       <Footer />
     </div>
   );
