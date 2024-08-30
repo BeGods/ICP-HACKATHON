@@ -20,7 +20,9 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
     "docker:build": "docker build . -t forges-of-faith-backend",
+    "docker:build:all": "docker-compose -f docker-compose-production.yml build",
     "docker:stack:up": "docker-compose -f docker-compose-production.yml up -d",
+    "docker:stack:build:up": "docker-compose -f docker-compose-production.yml up -d --build",
     "docker:stack:down": "docker-compose -f docker-compose-production.yml down",
     "docker:stack:logs": "docker-compose -f docker-compose-production.yml logs -f --tail 100"
   },
