@@ -5,13 +5,7 @@ import Footer from "../components/Common/Footer";
 import ConvertButton from "../components/Buttons/ConvertButton";
 import ConvertInfo from "../components/Cards/ConvertInfo";
 import { useTranslation } from "react-i18next";
-import {
-  mythSections,
-  mythSymbols,
-  mythologies,
-  wheel,
-  wheelNames,
-} from "../utils/variables";
+import { mythSymbols, mythologies, wheel } from "../utils/variables";
 import { showToast } from "../components/Toast/Toast";
 import Header from "../components/Headers/Header";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
@@ -24,7 +18,7 @@ const HeaderContent = ({ gameData, myth }) => {
       {/* Left */}
       <div className="flex justify-between w-fit h-[80%] flex-col items-start px-2">
         <h1
-          className={`text-head glow-test-contour uppercase ${
+          className={`text-head text-black-contour uppercase ${
             myth === 0 ? "text-white" : `text-${wheel[myth]}-text`
           }
            `}
@@ -34,12 +28,12 @@ const HeaderContent = ({ gameData, myth }) => {
         {myth !== 0 && (
           <div className="flex">
             <span
-              className={`font-symbols glow-test-contour text-red text-[50px] -ml-1.5 mr-1.5 -mt-3.5 text-white`}
+              className={`font-symbols text-black-contour text-red text-[50px] -ml-1.5 mr-1.5 -mt-3.5 text-white`}
             >
               {mythSymbols[wheel[myth]]}
             </span>
             <h1
-              className={`text-num -ml-3  glow-test-contour -mt-2 text-${wheel[myth]}-text`}
+              className={`text-num -ml-3 text-black-contour -mt-2 text-${wheel[myth]}-text`}
             >
               {gameData.mythologies[myth - 1]?.orbs}
             </h1>
@@ -57,7 +51,7 @@ const HeaderContent = ({ gameData, myth }) => {
             className={`filter-orbs-black w-full h-full`}
           />
           <span
-            className={`absolute z-1 font-symbols  text-white text-[140px] mt-11  opacity-50 orb-glow`}
+            className={`absolute z-1 font-symbols  text-white text-[140px] mt-11  opacity-50 orb-symbol-shadow`}
           >
             {mythSymbols["other"]}
           </span>
@@ -65,15 +59,15 @@ const HeaderContent = ({ gameData, myth }) => {
       </div>
       {/* Right */}
       <div className="flex justify-between w-fit h-[80%] flex-col items-start pr-2">
-        <h1 className={`text-head glow-white-contour uppercase text-black`}>
+        <h1 className={`text-head text-white-contour uppercase text-black`}>
           TOWER
         </h1>
         <div className="flex w-full justify-end ml-1">
-          <h1 className={`text-num  glow-white-contour -mt-2 text-black`}>
+          <h1 className={`text-num  text-white-contour -mt-2 text-black`}>
             {gameData.blackOrbs}
           </h1>
           <span
-            className={`font-symbols glow-test-contour text-red text-[50px] -ml-1 mr-0.5 -mt-3.5 text-white`}
+            className={`font-symbols text-black-contour text-red text-[50px] -ml-1 mr-0.5 -mt-3.5 text-white`}
           >
             {mythSymbols["other"]}
           </span>
@@ -140,6 +134,13 @@ const Convert = () => {
 
   useEffect(() => {}, [gameData]);
 
+  const handleClick = () => {
+    setToggleClick(true);
+    setTimeout(() => {
+      setToggleClick(false);
+    }, 500);
+  };
+
   return (
     <div
       style={{
@@ -198,7 +199,7 @@ const Convert = () => {
         )}
         {gameData.multiColorOrbs !== 0 && (
           <div className="absolute z-10">
-            <div className="font-medium text-[60px] text-white footer-shadow">
+            <div className="font-medium text-[60px] text-white glow-text-black">
               {gameData.multiColorOrbs}
             </div>
           </div>
@@ -211,23 +212,22 @@ const Convert = () => {
         />
         {/* Wheel */}
         <div className="flex  flex-col items-center justify-center w-full">
-          <div className="absolute z-10  h-[60px] w-[60px] rounded-full glow-wheel">
-            hi
-          </div>
           <img
             src="/assets/uxui/480px-forges.of.faith.tower.png"
             alt="wheel"
             className={`w-[90%] absolute transition-all duration-1000 ${
-              myth == 0 && "glow-wheel"
+              myth == 0 && "scale-wheel-glow"
             } ${toggleClick && `glow-tap-${wheel[myth]}`}`}
           />
           <div className="absolute h-full flex justify-center items-end bottom-[1%]">
             <ConvertButton
               t={t}
               handleNext={() => {
+                handleClick();
                 setMyth((prev) => (prev + 1) % 5);
               }}
               handlePrev={() => {
+                handleClick();
                 setMyth((prev) => (prev - 1 + 5) % 5);
               }}
               myth={myth}
@@ -263,136 +263,3 @@ const Convert = () => {
 };
 
 export default Convert;
-
-{
-  /* <div
-          className="absolute flex w-full pr-5 justify-end top-0"
-          onClick={() => {
-            handleButtonClick(3);
-            setShowInfo(true);
-          }}
-        >
-          <img
-            src="/assets/icons/info.svg"
-            alt="info"
-            className={`w-icon-primary h-icon-primary rounded-full mr-[15px] mt-7 ${
-              isButtonGlowing === 3 ? `glow-button-other` : ""
-            }`}
-          />
-        </div> */
-}
-
-{
-  /* <div
-  style={{
-    position: "relative",
-    height: "18.5%",
-    width: "100%",
-  }}
-  className="flex"
->
-  <div
-    style={{
-      backgroundImage: `url(/assets/uxui/fof.header.paper.png)`,
-      backgroundRepeat: "no-repeat",
-      backgroundSize: "cover",
-      backgroundPosition: "center center",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      height: "100%",
-      width: "100%",
-      zIndex: -1,
-    }}
-    className={`filter-paper-other relative -mt-1`}
-  />
-  <div className="flex flex-col flex-grow justify-center items-center text-white  -mt-1.5">
-    <div className="mt-2">
-      <img
-        src="/assets/uxui/forgesoffaith1.svg"
-        alt="fof"
-        className="w-full fof-text-shadow"
-      />
-    </div>
-    <div className="flex w-full justify-center items-center mt-2">
-      <div className="text-center">
-        {myth == 4 ? (
-          <div className="text-right font-medium text-orb-primary">
-            {formatOrbsWithLeadingZeros(gameData.blackOrbs)}
-            <span className="text-black fof-text-shadow">{t(`keywords.orbs`)}</span>
-          </div>
-        ) : (
-          <div className="text-right font-medium text-orb-primary">
-            {formatOrbsWithLeadingZeros(mythData[myth].orbs)}
-            <span className={`text-${mythSections[myth]}-text`}>
-              {t(`keywords.orbs`)}
-            </span>
-          </div>
-        )}
-        <div className="font-medium  text-orb-secondary -mt-1">
-          {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-          <span className="gradient-multi">{t(`keywords.orbs`)}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>; */
-}
-
-{
-  /* <h1 className="flex items-center gap-4 text-[43px] glow-white font-fof text-fof drop-shadow-2xl -mt-0.5"></h1> */
-  /* FORGES <span className="text-[20px]">OF</span> FAITH */
-  /* {t("main.fof")} */
-}
-
-{
-  /* {myth === 4 ? (
-          <div className="flex flex-col flex-grow justify-center items-center text-white  -mt-1.5">
-            <div className="mt-2">
-              <img
-                src="/assets/uxui/forgesoffaith1.svg"
-                alt="fof"
-                className="w-full fof-text-shadow"
-              />
-            </div>
-            <div className="flex w-full justify-center items-center mt-2">
-              <div className="text-center">
-                <div className="text-right font-medium  text-[22px]">
-                  {formatOrbsWithLeadingZeros(gameData.blackOrbs)}{" "}
-                  <span className="text-black fof-text-shadow">
-                    {t(`keywords.orbs`)}
-                  </span>
-                </div>
-                <div className="font-medium  text-[14px] -mt-1">
-                  {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-                  <span className="gradient-multi">{t(`keywords.orbs`)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col flex-grow justify-center items-center text-white  -mt-1.5">
-            <div className="mt-2">
-              <img
-                src="/assets/uxui/forgesoffaith1.svg"
-                alt="fof"
-                className="w-full fof-text-shadow"
-              />
-            </div>
-            <div className="flex  w-full justify-center items-center mt-2">
-              <div className="text-center">
-                <div className="text-right font-medium  text-[22px]">
-                  {formatOrbsWithLeadingZeros(mythData[myth].orbs)}{" "}
-                  <span className={`text-${mythSections[myth]}-text`}>
-                    {t(`keywords.orbs`)}
-                  </span>
-                </div>
-                <div className="font-medium  text-[14px] -mt-1">
-                  {formatOrbsWithLeadingZeros(gameData.multiColorOrbs)}{" "}
-                  <span className="gradient-multi">{t(`keywords.orbs`)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */
-}

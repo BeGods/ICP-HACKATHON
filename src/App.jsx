@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Auth from "./pages/Auth";
-import "./styles/filter.css";
-import "./styles/glow.css";
 import "./styles/speech.css";
+import "./styles/glow.css";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import Test from "./pages/Test";
 import Home from "./Home";

@@ -34,7 +34,7 @@ function PayCard({ t, quest, handleShowPay, handlePay, activeMyth }) {
                 className={`filter-orbs-${item.name.toLowerCase()}`}
               />
               <span
-                className={`absolute z-1 font-symbols text-white text-[40px] mt-0.5 ml-1 opacity-50 orb-glow ${
+                className={`absolute z-1 font-symbols text-white text-[40px] mt-0.5 ml-1 opacity-50 orb-symbol-shadow ${
                   scale
                     ? "transform scale-125 transition-transform duration-1000"
                     : ""
@@ -65,7 +65,7 @@ function PayCard({ t, quest, handleShowPay, handlePay, activeMyth }) {
         ))}
       </div>
       <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
-        <div className="relative glow-card">
+        <div className="relative card-shadow-white">
           <div className="absolute  bg-black h-full w-full z-10 opacity-50 rounded-xl"></div>
           {/* Card Image */}
           <img
@@ -87,7 +87,7 @@ function PayCard({ t, quest, handleShowPay, handlePay, activeMyth }) {
               />
             </div>
             <div
-              className={`flex relative items-center h-[19%] uppercase glow-card-${mythSections[activeMyth]} text-white grayscale`}
+              className={`flex relative items-center h-[19%] uppercase card-shadow-white-${mythSections[activeMyth]} text-white grayscale`}
             >
               <div
                 style={{
@@ -104,7 +104,7 @@ function PayCard({ t, quest, handleShowPay, handlePay, activeMyth }) {
                 className={`filter-paper-${mythSections[activeMyth]}  rounded-b-[15px]`}
               />
               <div
-                className={`flex justify-between w-full h-full items-center glow-quest px-3 z-10`}
+                className={`flex justify-between w-full h-full items-center glow-text-quest px-3 z-10`}
               >
                 <div>{quest?.questName}</div>
                 <div className="">

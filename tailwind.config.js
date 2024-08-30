@@ -1,7 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   safelist: [
+    "font-celtic",
+    "font-egyptian",
+    "font-greek",
+    "font-norse",
+
     "border-celtic-primary",
     "border-egyptian-primary",
     "border-greek-primary",
@@ -46,8 +52,8 @@ export default {
         hindi: ["Inknut Antiqua", "sans-serif"],
       },
       colors: {
-        gold: "#FFD660",
-        dark: "#1D1D1D",
+        gold: "var(--gold-primary)",
+        dark: "var(--dark)",
         card: "#53371E",
         fof: "var(--game-text-color)",
         borderGray: "#FFFFFF33",
@@ -56,19 +62,19 @@ export default {
         textGray: "#707579",
         celtic: {
           primary: "var(--celtic-color)",
-          text: "var(--celtic-text-color)",
+          text: "var(--celtic-text)",
         },
         egyptian: {
           primary: "var(--egyptian-color)",
-          text: "var(--egyptian-text-color)",
+          text: "var(--egyptian-text)",
         },
         greek: {
           primary: "var(--greek-color)",
-          text: "var(--greek-text-color)",
+          text: "var(--greek-text)",
         },
         norse: {
           primary: "var(--norse-color)",
-          text: "var(--norse-text-color)",
+          text: "var(--norse-text)",
         },
       },
       borderRadius: {
