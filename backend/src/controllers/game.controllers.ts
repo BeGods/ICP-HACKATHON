@@ -390,7 +390,7 @@ export const getGameStats = async (req, res) => {
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
-      isEligibleToClaim: false,
+      isEligibleToClaim: true,
       ...memberData,
     };
 
