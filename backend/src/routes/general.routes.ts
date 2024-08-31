@@ -19,7 +19,7 @@ router.get("/leaderboard", authMiddleware, getLeaderboard);
 router.post("/announcements", authMiddleware, updateAnnouncement);
 router.get("/bonus/claim", authMiddleware, claimDailyBonus);
 // router.get("/bonus/status", authMiddleware, checkBonus);
-router.get("/test", authMiddleware, test);
+// router.get("/test", authMiddleware, test);
 
 //TODO: make it on every 00:00:00 UTC
 // schedule cron job for leaderboard
