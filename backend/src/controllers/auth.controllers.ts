@@ -13,6 +13,12 @@ export const login = async (req, res) => {
   try {
     const { initData } = req.body;
 
+    if (!initData) {
+      return res.status(400).json({
+        message: "initData is required.",
+      });
+    }
+
     const { referralCode } = req.query as { referralCode?: string | null };
 
     const parsedInitData = parse(initData);
@@ -39,7 +45,7 @@ export const login = async (req, res) => {
     }
 
     // existing user or not
-    let existingUser = await User.findOne({ telegramId });
+    let existingUser: IUser | null = await User.findOne({ telegramId });
 
     if (existingUser) {
       // check if user details have updated
