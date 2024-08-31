@@ -31,7 +31,6 @@ const FlashScreen = ({ reward }) => {
 
   const handleClick = (e) => {
     tele.HapticFeedback.notificationOccurred("success");
-    e.stopPropagation();
     if (reward.type === "mythOrb") {
       setSection(0);
       setActiveMyth(mythologies.indexOf(reward.mythology));
@@ -233,6 +232,7 @@ const Gacha = (props) => {
     tele.HapticFeedback.notificationOccurred("success");
 
     setShowScale(true);
+    handlePlay();
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No access token found");
@@ -248,7 +248,6 @@ const Gacha = (props) => {
             ? response.reward?.boosterUpdatedData
             : response.reward?.quest
         );
-        handlePlay();
         setTimeout(() => {
           setShowSpin(false);
           setReward(response.reward);
