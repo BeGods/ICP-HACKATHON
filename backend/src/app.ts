@@ -20,8 +20,8 @@ app.set("trust proxy", 1);
 
 app.use(
   cors({
-    origin: "*",
-    // origin: "https://fof.battleofgods.io",
+    // origin: "*",
+    origin: "https://fof.battleofgods.io",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
