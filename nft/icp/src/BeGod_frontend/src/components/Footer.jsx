@@ -11,7 +11,7 @@ const Footer = () => {
                 <p className="w-[90%] lg:w-[35%] xl:w-[35%] text-sm sm:text-base">
                     Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-[40%] mt-4 sm:mt-4  md:ml-[10%]">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-[40%] mt-4 sm:mt-0 md:ml-[5%] lg:ml-[10%]">
                     <div className="flex flex-col gap-2 sm:gap-4">
                         <div className='flex gap-8'>
                             <h1 className="text-lg sm:text-xl">Home</h1>
