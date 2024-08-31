@@ -24,6 +24,7 @@
     "docker:stack:up": "docker-compose -f docker-compose-production.yml up -d",
     "docker:stack:build:up": "docker-compose -f docker-compose-production.yml up -d --build",
     "docker:stack:down": "docker-compose -f docker-compose-production.yml down",
+    "docker:stack:down:volumes": "docker-compose -f docker-compose-production.yml down --volumes",
     "docker:stack:logs": "docker-compose -f docker-compose-production.yml logs -f --tail 100"
   },
   "author": "",

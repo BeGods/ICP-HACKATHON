@@ -15,7 +15,10 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./volumes/mongo/db:/data/db
+      # using file system
+      # - ./volumes/mongo/db:/data/db
+      # using volumes
+      - mongo_data:/data/db
 
   # Node API service
   api:
@@ -40,3 +43,6 @@ services:
     env_file: .env.docker
     volumes:
       - .:/src
+
+volumes:
+  mongo_data:
