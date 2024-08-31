@@ -7,14 +7,14 @@ import { CiShare2 } from "react-icons/ci";
 
 const BuyNft = () => {
     return (
-        <div className='max-w-[1920px] mx-auto' style={{ fontFamily: "QuickSand" }}>
+        <div style={{ fontFamily: "QuickSand" }}>
             <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                 <Navbar />
-                <div className='mt-8 sm:mt-0 w-full flex flex-col  items-center justify-center gap-4'>
+                <div className='max-w-[1920px] mx-auto mt-8 sm:mt-0 w-full flex flex-col  items-center justify-center gap-4'>
                     <img src="/Hero/frame.svg" alt="" className='w-[20%]' />
-                    <div className='h-[4px] w-[80%] rounded-lg border'></div>
+                    <div className='h-[4px] w-[94%] rounded-lg border'></div>
                 </div>
-                <div className='mt-8 flex flex-col xl:hidden items-center justify-center'>
+                <div className='max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center'>
                     <div className=' w-[80%] flex text-white justify-between items-center'>
                         <div className='h-[2vh] w-[10%]'>
                             <CiStar className='h-full w-full object-cover' />
@@ -85,7 +85,7 @@ const BuyNft = () => {
                     </div>
                     <div className='mt-8 h-[4px] w-[80%] rounded-lg border'></div>
                 </div>
-                <div className='hidden xl:flex xl:w-[100%] 2xl:w-[80%] 2xl:ml-[10%] flex items-center ' style={{ backgroundImage: `url('/Hero/green BG.svg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
+                <div className='max-w-[1920px] mx-auto hidden xl:flex xl:w-[100%] 2xl:w-[93%] 2xl:ml-[3%] flex items-center gap' style={{ backgroundImage: `url('/Hero/green BG.svg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                     <div className='hidden sm:flex'>
                         <img
                             src="/Hero/up.png"
@@ -94,7 +94,7 @@ const BuyNft = () => {
                         />
                     </div>
                     <div className='hidden w-full sm:flex' >
-                        <div className='mt-8 w-[60%] flex flex-col space-y-8' >
+                        <div className='mt-8 w-[50%] flex flex-col space-y-8 ml-[10%]' >
                             <div className=' w-full flex text-white justify-between'>
                                 <div className='h-[2vh] w-[10%]'>
                                     <CiStar className='h-full w-full object-cover' />
@@ -157,18 +157,34 @@ const BuyNft = () => {
                     </div>
 
                 </div>
-                <div className='mt-8 pb-8 w-[100%] flex flex-col md:flex-row items-center justify-center'>
-                    <div className='w-[100%] xl:w-[130%] lg:pl-[10%]'>
+                <div className='relative max-w-[1920px] mx-auto mt-8 pb-8 w-[100%] flex flex-col md:flex-row items-center justify-center'>
+                    <div className='flex items-center justify-center xl:hidden  w-[100%] xl:w-[130%] lg:pl-[3%]'>
+                        <img src="/Hero/celtic_hero.png" alt="" />
+                    </div>
+                    <div className='hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]'>
                         <img src="/Hero/Mask group.png" alt="" />
                     </div>
                     <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                         <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>Celtic</h1>
                         <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h2>
-                        <div className='sm:ml-0 w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
+                        <div className='sm:ml-0 w-[193px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
                             <YellowButton>Buy <span>Celtic</span> Collection</YellowButton>
                         </div>
                     </div>
+                    <div className='absolute top-0 left-8'>
+                        <img src="/Hero/Vector.png" alt="" />
+                    </div>
+                    <div className='absolute top-0 right-8'>
+                        <img src="/Hero/Vector (1).png" alt="" />
+                    </div>
+                    <div className='absolute bottom-8 left-8'>
+                        <img src="/Hero/Vector (2).png" alt="" />
+                    </div>
+                    <div className='absolute bottom-8 right-8'>
+                        <img src="/Hero/Vector (4).png" alt="" />
+                    </div>
                 </div>
+
             </div>
 
             <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
