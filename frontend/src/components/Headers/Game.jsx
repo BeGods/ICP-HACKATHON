@@ -12,7 +12,7 @@ const GameHeader = ({ activeMyth, mythStates, handleActiveCard }) => {
               onClick={() => {
                 handleActiveCard("shard");
               }}
-              className={`font-symbols glow-test-contour text-[50px] p-0 ml-2 text-white`}
+              className={`font-symbols text-black-contour text-[50px] p-0 ml-2 text-white`}
             >
               H
             </h1>
@@ -25,7 +25,7 @@ const GameHeader = ({ activeMyth, mythStates, handleActiveCard }) => {
                 onClick={() => {
                   handleActiveCard("automata");
                 }}
-                className="font-symbols glow-test-contour text-[50px] p-0 ml-2  text-white"
+                className="font-symbols text-black-contour text-[50px] p-0 ml-2  text-white"
               >
                 B
               </h1>
@@ -53,7 +53,7 @@ export default GameHeader;
               className={`filter-orbs-${mythSections[activeMyth]}`}
             />
             <span
-              className={`absolute z-1 font-symbols text-[40px] mt-0.5 ml-1 opacity-50 orb-glow`}
+              className={`absolute z-1 font-symbols text-[40px] mt-0.5 ml-1 opacity-50 orb-symbol-shadow`}
             >
               {mythSymbols[mythSections[activeMyth]]}
             </span>

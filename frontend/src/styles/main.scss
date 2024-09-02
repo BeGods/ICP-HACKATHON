@@ -1,0 +1,143 @@
+$myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
+
+@each $myth in $myths {
+  // Filters
+  .filter-#{$myth} {
+    filter: var(--filter-#{$myth}-background);
+  }
+  .filter-orbs-#{$myth} {
+    filter: var(--filter-#{$myth}-orb);
+  }
+  .filter-paper-#{$myth} {
+    filter: var(--filter-#{$myth}-paper);
+  }
+
+  // Glow
+  .glow-symbol-#{$myth} {
+    filter: drop-shadow(0 0 6px var(--#{$myth}-light));
+  }
+  .glow-icon-#{$myth} {
+    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 5px var(--#{$myth}-color));
+  }
+  .glow-shard-#{$myth} {
+    filter: drop-shadow(0 0 20px var(--#{$myth}-color));
+  }
+  .glow-tap-#{$myth} {
+    filter: drop-shadow(0 0 40px var(--#{$myth}-color));
+  }
+  .glow-text-small-#{$myth} {
+    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color);
+  }
+  .glow-text-#{$myth} {
+    font-size: 17vw;
+    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color);
+  }
+
+  // Button Effects
+  .glow-button-#{$myth} {
+    box-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color), 0 0 10px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 5px var(--#{$myth}-color));
+    opacity: 0.9;
+  }
+  // Button color
+  .bg-#{$myth} {
+    background: var(--#{$myth}-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+// Milestone Card
+.filter-card {
+  filter: brightness(66%) contrast(172%) grayscale(100%) saturate(151%);
+}
+
+// Frame Shadow
+.card-shadow-black{
+  filter: drop-shadow(0px 0px 8px black);
+}
+
+.card-shadow-white {
+  filter: drop-shadow(0 0 8px white);
+}
+
+// Text Shadow
+.glow-text-black {
+  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black;
+}
+.glow-text-white {
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white;
+  filter: drop-shadow(0 0 5px white);
+}
+
+// Orb Symbol Shadow
+.orb-symbol-shadow{
+  text-shadow: 
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black;
+  filter: drop-shadow(0 0 1px black);
+}
+
+
+// Glow Quest Text
+.glow-text-quest {
+  font-family: "FOF";
+  font-size: 18px;
+  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black;
+}
+
+/* Button Black Glass Effect */
+.bg-glass-black {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Contours */
+.icon-black-contour{
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.text-black-contour{
+text-shadow: 
+0 0 3px black,
+0 0 3px black,
+0 0 3px black,
+0 0 3px black,
+0 0 3px black
+}
+
+.text-white-contour{
+text-shadow: 
+0 0 1px white,
+0 0 1px white,
+0 0 1px white,
+0 0 1px white,
+0 0 1px white
+}
+
+/* Gacha Glowing Box */
+.glow-box {
+  filter: drop-shadow(0 0 10px #FFFF00)
+          drop-shadow(0 0 70px #FFD660);
+}
+
+.glow-box-scale {
+  filter: drop-shadow(0 0 10px #FFFF00)
+          drop-shadow(0 0 30px #FFD660)
+          drop-shadow(0 0 80px #FFFF00);
+}

@@ -19,7 +19,7 @@ const ConvertInfo = ({ t, handleClick }) => {
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-60  backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="relative w-[72%] rounded-lg shadow-lg glow-card">
+      <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
             src="/assets/cards/320px-info_background.jpg"
@@ -45,7 +45,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute  opacity-50 orb-glow  z-1 flex justify-center items-center font-symbols text-white text-[2.3rem] mt-1 `}
+                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-[2.3rem] mt-1 `}
                         >
                           {value}
                         </span>
@@ -63,7 +63,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute z-1 text-[2.3rem]  opacity-50 orb-glow  mt-1 justify-center items-center font-symbols text-white `}
+                          className={`absolute z-1 text-[2.3rem]  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
                         >
                           {value}
                         </span>
@@ -94,7 +94,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                   <span
                     className={`absolute z-1  justify-center items-center font-symbols text-white `}
                   >
-                    <div className="text-[2.3rem] transition-all duration-1000  opacity-50 orb-glow  mt-1 justify-center items-center font-symbols text-white">
+                    <div className="text-[2.3rem] transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
                       {mythSymbols[myths[activeColor]]}
                     </div>
                   </span>
@@ -109,7 +109,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                     className={`filter-orbs-`}
                   />
                   <span
-                    className={`absolute z-1 text-[2.3rem]  opacity-50 orb-glow  mt-1 justify-center items-center font-symbols text-white `}
+                    className={`absolute z-1 text-[2.3rem]  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
                   >
                     3
                   </span>
