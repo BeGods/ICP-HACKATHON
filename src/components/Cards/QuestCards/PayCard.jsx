@@ -44,7 +44,7 @@ function PayCard({ t, quest, handleShowPay, handlePay, activeMyth }) {
               </span>
             </div>
             <div
-              className={`font-fof text-primary font-normal text-white glow-text-small-${item.name.toLowerCase()} ${
+              className={`font-fof text-primary font-normal text-white glow-myth-${item.name.toLowerCase()} ${
                 scale
                   ? "transform scale-125 transition-transform duration-1000"
                   : ""

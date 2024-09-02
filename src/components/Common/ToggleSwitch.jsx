@@ -26,7 +26,7 @@ const ToggleSwitch = () => {
         />
         <div
           className={`absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-400 rounded-full transition-all duration-300 ${
-            isChecked ? "bg-green-500" : ""
+            isChecked ? "" : "bg-green-500"
           }`}
         >
           <div

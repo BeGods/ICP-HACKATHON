@@ -27,7 +27,7 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
   .glow-tap-#{$myth} {
     filter: drop-shadow(0 0 40px var(--#{$myth}-color));
   }
-  .glow-text-small-#{$myth} {
+  .glow-myth-#{$myth} {
     text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
       0 0 5px var(--#{$myth}-color);
   }
@@ -132,12 +132,12 @@ text-shadow:
 
 /* Gacha Glowing Box */
 .glow-box {
-  filter: drop-shadow(0 0 10px #FFFF00)
+  filter: drop-shadow(0 0 10px #FFD660)
           drop-shadow(0 0 70px #FFD660);
 }
 
 .glow-box-scale {
-  filter: drop-shadow(0 0 10px #FFFF00)
+  filter: drop-shadow(0 0 10px #FFD660)
           drop-shadow(0 0 30px #FFD660)
-          drop-shadow(0 0 80px #FFFF00);
+          drop-shadow(0 0 80px #FFD660);
 }

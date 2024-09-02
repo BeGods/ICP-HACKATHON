@@ -10,6 +10,8 @@ import Loader from "./components/Common/Loader";
 import Forges from "./pages/Forges";
 import Gacha from "./pages/Gacha";
 import Convert from "./pages/Convert";
+import { toast } from "react-toastify";
+import ToastMesg from "./components/Toast/ToastMesg";
 
 const tele = window.Telegram?.WebApp;
 
@@ -19,7 +21,6 @@ const Home = (props) => {
   const [questsData, setQuestsData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
-  const [showBonus, setShowBonus] = useState(false);
   const [section, setSection] = useState(() => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });

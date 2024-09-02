@@ -17,6 +17,7 @@ import Symbol from "../components/Common/Symbol";
 import ToastMesg from "../components/Toast/ToastMesg";
 import Footer from "../components/Common/Footer";
 import BoosterClaim from "../components/Cards/Boosters/BoosterClaim";
+import { showToast } from "../components/Toast/Toast";
 
 const HeaderContent = ({ activeMyth, t }) => {
   return (
@@ -26,12 +27,14 @@ const HeaderContent = ({ activeMyth, t }) => {
       </div>
       <div className="flex flex-col flex-grow justify-start items-end text-white pr-5">
         <div className="text-right  gap-1 flex font-medium text-head">
-          <span className={`text-${mythSections[activeMyth]}-text  uppercase`}>
+          <span
+            className={`text-white glow-myth-${mythSections[activeMyth]} uppercase`}
+          >
             <span>BOOSTER</span>
           </span>
         </div>
         <h1
-          className={`glow-text-${mythSections[activeMyth]} font-${mythSections[activeMyth]}  uppercase  -mt-4 -mr-2`}
+          className={`text-${mythSections[activeMyth]}-text text-black-contour text-[17vw] font-${mythSections[activeMyth]}  uppercase -mt-4 -ml-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
@@ -90,47 +93,15 @@ const Boosters = () => {
         ),
       };
       setGameData(updatedGameData);
-
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Quest_orb_claim.success.title")}
-          desc={t("toasts.Quest_orb_claim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("orb_claim_success");
     } catch (error) {
       const errorMessage =
         error.response.data.error ||
         error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Quest_orb_claim.error.title")}
-          desc={t("toasts.Quest_orb_claim.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("orb_claim_error");
     }
   };
 
@@ -169,47 +140,14 @@ const Boosters = () => {
       };
 
       setGameData(updatedGameData);
-
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Quest_claim.success.title")}
-          desc={t("toasts.Quest_claim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("quest_claim_success");
     } catch (error) {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
         "An unexpected error occurred";
-
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Quest_claim_InsufficientOrbs.error.title")}
-          desc={t("toasts.Quest_claim_InsufficientOrbs.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("quest_claim_error");
     }
   };
 
@@ -226,23 +164,7 @@ const Boosters = () => {
         setShowQuest(true);
         setLostQuest(response.lostQuests[0]);
       } else {
-        toast.success(
-          <ToastMesg
-            title={t("toasts.Booster_Lost_Not_Available.error.title")}
-            desc={t("toasts.Booster_Lost_Not_Available.error.desc")}
-            status={"success"}
-          />,
-          {
-            icon: false,
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          }
-        );
+        showToast("lost_quest_success");
       }
     } catch (error) {
       const errorMessage =
@@ -250,24 +172,8 @@ const Boosters = () => {
         error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
-
-      toast.error(
-        <ToastMesg
-          title={"There was a problem in loading quests."}
-          desc={errorMessage}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("lost_quest_error");
     }
   };
 
@@ -306,48 +212,15 @@ const Boosters = () => {
       });
 
       setShowCard(false);
-      console.log("claimed succesfully");
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Booster_ShardsClaim.success.title")}
-          desc={t("toasts.Booster_ShardsClaim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("claim_minion_success");
     } catch (error) {
       const errorMessage =
         error.response.data.error ||
         error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
-
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Booster_InsufficientOrbs.error.title")}
-          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("claim_minion_error");
     }
   };
 
@@ -375,47 +248,14 @@ const Boosters = () => {
         return updatedData;
       });
       setShowCard(false);
-
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Booster_AutomataClaim.success.title")}
-          desc={t("toasts.Booster_AutomataClaim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("claim_automata_success");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "An unexpected error occurred";
-
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Booster_InsufficientOrbs.error.title")}
-          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("claim_automata_error");
     }
   };
 
@@ -543,12 +383,13 @@ const Boosters = () => {
         <BoosterClaim
           activeCard={activeCard}
           activeMyth={activeMyth}
+          mythData={mythData}
           closeCard={() => setActiveCard(null)}
           Button={
             <BoosterButtom
               activeCard={activeCard}
               mythData={mythData}
-              handleClaim={handleClaimBooster}
+              handleClaim={handleClaimAutomata}
               activeMyth={activeMyth}
               t={t}
             />
@@ -559,12 +400,13 @@ const Boosters = () => {
         <BoosterClaim
           activeCard={activeCard}
           activeMyth={activeMyth}
+          mythData={mythData}
           closeCard={() => setActiveCard(null)}
           Button={
             <BoosterButtom
               activeCard={activeCard}
               mythData={mythData}
-              handleClaim={handleClaimAutomata}
+              handleClaim={handleClaimBooster}
               activeMyth={activeMyth}
               t={t}
             />

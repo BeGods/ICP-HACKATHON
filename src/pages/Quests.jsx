@@ -12,8 +12,6 @@ import JigsawImage from "../components/Pieces";
 import InfoCard from "../components/Cards/QuestCards/InfoCard";
 import PayCard from "../components/Cards/QuestCards/PayCard";
 import OrbClaimCard from "../components/Cards/QuestCards/OrbClaimCard";
-import ToastMesg from "../components/Toast/ToastMesg";
-import { toast } from "react-toastify";
 import Symbol from "../components/Common/Symbol";
 import { useTranslation } from "react-i18next";
 import { mythologies, mythSections } from "../utils/variables";
@@ -26,18 +24,21 @@ import QuestButton from "../components/Buttons/QuestButton";
 import MilestoneCard from "../components/Cards/MilestoneCard";
 import Button from "../components/Buttons/Button";
 import SecretCard from "../components/Cards/QuestCards/SecretCard";
+import { showToast } from "../components/Toast/Toast";
 
 const HeaderContent = ({ activeMyth, t }) => {
   return (
     <>
       <div className="flex flex-col flex-grow justify-start items-start text-white pl-5">
         <div className="text-left  gap-1 flex font-medium text-head">
-          <span className={`text-${mythSections[activeMyth]}-text uppercase`}>
-            {t(`sections.quests`)}
+          <span
+            className={`text-white glow-myth-${mythSections[activeMyth]} uppercase`}
+          >
+            QUESTS
           </span>
         </div>
         <h1
-          className={`glow-text-${mythSections[activeMyth]} font-${mythSections[activeMyth]}  uppercase -mt-4 -ml-2`}
+          className={`text-${mythSections[activeMyth]}-text text-black-contour text-[17vw] font-${mythSections[activeMyth]}  uppercase -mt-4 -ml-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
@@ -114,24 +115,7 @@ const Quests = () => {
       await claimShareReward(questData, token);
       setShowInfo(false);
       setShowShareReward(true);
-
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Quest_share.success.title")}
-          desc={t("toasts.Quest_share.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("quest_share_success");
 
       // update quest data
       const updatedQuestData = questsData.map((item) =>
@@ -151,23 +135,8 @@ const Quests = () => {
         error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Quest_share.success.error")}
-          desc={t("toasts.Quest_share.success.error")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("quest_share_error");
     }
   };
 
@@ -200,47 +169,14 @@ const Quests = () => {
       };
       setQuestsData(updatedQuestData);
       setGameData(updatedGameData);
-
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Quest_orb_claim.success.title")}
-          desc={t("toasts.Quest_orb_claim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("orb_claim_success");
     } catch (error) {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
         "An unexpected error occurred";
-
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Quest_orb_claim.error.title")}
-          desc={t("toasts.Quest_orb_claim.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("orb_claim_error");
     }
   };
 
@@ -267,24 +203,8 @@ const Quests = () => {
           error.response?.data?.error ||
           error.message ||
           "An unexpected error occurred";
-
-        toast.error(
-          <ToastMesg
-            title={t("toasts.Quest_complete.error.title")}
-            desc={t("toasts.Quest_complete.error.desc")}
-            status={"fail"}
-          />,
-          {
-            icon: false,
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          }
-        );
+        console.log(errorMessage);
+        console.log("quest_complete_error");
       }
     } else {
       setShowPay(true);
@@ -332,48 +252,15 @@ const Quests = () => {
 
       setQuestsData(updatedQuestData);
       setGameData(updatedGameData);
-
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Quest_claim.success.title")}
-          desc={t("toasts.Quest_claim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      showToast("quest_claim_success");
     } catch (error) {
       const errorMessage =
         error.response?.data?.error ||
         error.message ||
         "An unexpected error occurred";
       setShowPay(false);
-
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Quest_claim_InsufficientOrbs.error.title")}
-          desc={t("toasts.Quest_claim_InsufficientOrbs.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
+      console.log(errorMessage);
+      showToast("quest_claim_error");
     }
   };
 
@@ -504,6 +391,7 @@ const Quests = () => {
                 activeMyth={activeMyth}
                 handleNext={handleNext}
                 handlePrev={handlePrev}
+                faith={gameData.mythologies[activeMyth].faith}
                 t={t}
               />
             </div>
