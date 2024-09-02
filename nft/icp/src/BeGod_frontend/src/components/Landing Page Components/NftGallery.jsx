@@ -64,7 +64,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
         </div>
         <div className={`w-[90%] flex items-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
           {currentItems && currentItems.map((img, index) => (
-            <Link to={`/Nft/${img.name}/buy`} className="flip-card border rounded-lg" key={index}>
+            <div className="flip-card border rounded-lg" key={index}>
               <div className="flip-card-inner">
                 {/* Front Side */}
                 <div className="w-[80%] h-[40vh] flip-card-front flex items-center justify-center">
@@ -77,13 +77,13 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                     <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
                     <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                     <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                    <button className="mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                    <Link to={`/Nft/${img.name}/buy`} className="mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                       Buy Now
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
         <div>
@@ -116,9 +116,9 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                   <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
                   <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                   <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                  <button className="mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                  <Link to={`/Nft/${img.name}/buy`} className="mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                     Buy Now
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

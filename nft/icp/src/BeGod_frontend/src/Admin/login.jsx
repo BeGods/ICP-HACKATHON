@@ -49,6 +49,7 @@ const Login = () => {
       console.error("Login error:", error);
     }
   };
+  
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
       <div className="w-[80%] sm:w-[30%] h-[60vh] md:h-[90vh] bg-black/60 backdrop-blur-lg shadow-lg rounded-l-md p-8 hidden sm:flex sm:flex-col">

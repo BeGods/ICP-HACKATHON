@@ -62,10 +62,10 @@ const Profile = () => {
   },[category])
 
   return (
-    <div className='max-w-[1920px] mx-auto' style={{ fontFamily: "QuickSand" }}>
+    <div className='' style={{ fontFamily: "QuickSand" }}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
-        <div style={{ fontFamily: "QuickSand" }} className='pl-[3%] mt-[3%] flex flex-col lg:flex-row'>
+        <div style={{ fontFamily: "QuickSand" }} className='max-w-[1920px] mx-auto pl-[3%] mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
             <h1 className='text-center lg:text-start text-[#FFFFFF] text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
             <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
