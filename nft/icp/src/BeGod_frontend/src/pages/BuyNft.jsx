@@ -7,13 +7,14 @@ import { CiShare2 } from "react-icons/ci";
 
 const BuyNft = () => {
     return (
-        <div style={{ fontFamily: "QuickSand" }}>
+        <div style={{ fontFamily: "QuickSand" }} >
             <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                 <Navbar />
                 <div className='max-w-[1920px] mx-auto mt-8 sm:mt-0 w-full flex flex-col  items-center justify-center gap-4'>
                     <img src="/Hero/frame.svg" alt="" className='w-[20%]' />
                     <div className='h-[4px] w-[94%] rounded-lg border'></div>
                 </div>
+                {/* for mobile screen */}
                 <div className='max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center'>
                     <div className=' w-[80%] flex text-white justify-between items-center'>
                         <div className='h-[2vh] w-[10%]'>
@@ -85,7 +86,8 @@ const BuyNft = () => {
                     </div>
                     <div className='mt-8 h-[4px] w-[80%] rounded-lg border'></div>
                 </div>
-                <div className='max-w-[1920px] mx-auto hidden xl:flex xl:w-[100%] 2xl:w-[93%] 2xl:ml-[3%] flex items-center gap' style={{ backgroundImage: `url('/Hero/green BG.svg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
+                {/* For desktop screen */}
+                <div className='max-w-[1920px] mx-auto hidden xl:flex xl:w-[100%] 2xl:w-[93%]  items-center justify-center' style={{ backgroundImage: `url('/Hero/green BG.svg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                     <div className='hidden sm:flex'>
                         <img
                             src="/Hero/up.png"
@@ -155,7 +157,6 @@ const BuyNft = () => {
                             className={`hover:cursor-pointer -rotate-90`}
                         />
                     </div>
-
                 </div>
                 <div className='relative max-w-[1920px] mx-auto mt-8 pb-8 w-[100%] flex flex-col md:flex-row items-center justify-center'>
                     <div className='flex items-center justify-center xl:hidden  w-[100%] xl:w-[130%] lg:pl-[3%]'>
@@ -184,10 +185,9 @@ const BuyNft = () => {
                         <img src="/Hero/Vector (4).png" alt="" />
                     </div>
                 </div>
-
             </div>
 
-            <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
+            <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden bg-center bg-cover'>
                 <Footer />
             </div>
         </div>
