@@ -29,16 +29,16 @@ const Navbar = () => {
                 <button onClick={toggleMenu} className='ml-[5%] z-50'>
                     {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                 </button>
-                <div className='flex md:hidden pt-20'>
+                <Link to="/" className='flex md:hidden pt-20'>
                     <img src="/Hero/logo.png" alt="" />
-                </div>
+                </Link>
             </div>
             
             {/* Desktop View */}
             <div className='max-w-[1920px] mx-auto w-full h-[10vh] hidden md:flex items-center justify-between text-white'>
-                <div className='pt-20'>
+                <Link to="/" className='pt-20'>
                     <img src="/Hero/logo.png" alt="" />
-                </div>
+                </Link>
                 <div className='w-[60%] lg:w-[35%] flex justify-between'>
                     <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>Collection</Link>
                     <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>符 ENG</Link>

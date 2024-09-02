@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Admin from './Admin/Admin';
 import Login from './Admin/login';
-import Home from './pages/Home';
 import Profile from './pages/Profile';
 import CollectionDetail from './pages/CollectionDetail';
 import NftDetails from './components/NftDetails';

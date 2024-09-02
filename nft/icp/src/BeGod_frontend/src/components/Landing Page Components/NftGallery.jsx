@@ -64,7 +64,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
         </div>
         <div className={`w-[90%] flex items-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
           {currentItems && currentItems.map((img, index) => (
-            <div className="flip-card border rounded-lg" key={index}>
+            <Link to={`/Nft/${img.name}/buy`} className="flip-card border rounded-lg" key={index}>
               <div className="flip-card-inner">
                 {/* Front Side */}
                 <div className="w-[80%] h-[40vh] flip-card-front flex items-center justify-center">
@@ -83,7 +83,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div>
@@ -103,7 +103,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
       </div>
       <div className={`hidden w-[80%] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:ml-20 lg:ml-32 mb-8 ${animationClass}`}>
         {currentItems && currentItems.map((img, index) => (
-          <div className="flip-card rounded-lg" key={index}>
+          <Link to={`/Nft/${img.name}/buy`} className="flip-card rounded-lg" key={index}>
             <div className="flip-card-inner">
               {/* Front Side */}
               <div className="flip-card-front flex items-center justify-center">
@@ -122,7 +122,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

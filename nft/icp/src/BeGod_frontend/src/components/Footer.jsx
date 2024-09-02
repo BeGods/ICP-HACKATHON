@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
     return (
         <div style={{ fontFamily: "QuickSand" }} className="max-w-[1920px] mx-auto flex flex-col justify-center   w-full h-[400px] sm:h-[370px] md:h-[350px]  text-[#FFFFFF]">
-            <div className='h-[10vh]  sm:ml-[4%] mt-60'>
+            <Link to="/" className='h-[10vh]  sm:ml-[4%] mt-60'>
                 <img src="/Hero/logo.png" alt="" />
-            </div>
+            </Link>
             <div className="flex flex-col lg:flex-row ml-[10%] sm:ml-[7%] mt-8">
                 <p className="w-[90%] lg:w-[35%] xl:w-[35%] text-sm sm:text-base">
                     Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.

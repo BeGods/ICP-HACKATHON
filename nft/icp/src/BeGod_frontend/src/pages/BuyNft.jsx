@@ -21,7 +21,7 @@ const BuyNft = () => {
                             <CiStar className='h-full w-full object-cover' />
                         </div>
                         <div className='space-y-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]'>
-                            <h1 className='text-[50px] sm:text-[64px] font-[400] leading-[54px]' style={{ fontFamily: "CaslonAntique" }}>DOHH</h1>
+                            <h1 style={{ fontFamily: "MyCustomFont" }} className='text-[50px] sm:text-[64px] font-[400] leading-[54px]' >DOHH</h1>
                             <h2 className='text-[16px] font-[400] leading-[14px] text-center' style={{ fontFamily: "CaslonAntique" }}>GAE DEARG</h2>
                         </div>
                         <CiShare2 />
