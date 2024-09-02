@@ -2,7 +2,7 @@
   @keyframes #{$name} {
     0%,
     100% {
-      filter: drop-shadow(0 0 #{$small} #{$color});
+      filter: drop-shadow(0 0 #{$small} #{$color})
     }
     50% {
       filter: drop-shadow(0 0 #{$large} #{$color});
@@ -13,6 +13,7 @@
     animation: #{$name} 2s infinite ease-in-out;
   }
 }
+
 
 @mixin scale-in-out(
   $keyframe-name,
@@ -34,6 +35,18 @@
 
   & {
     animation: #{$keyframe-name} #{$duration} #{$timing-function} #{$iteration-count};
+  }
+}
+
+@keyframes scale-reward {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.75);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -78,9 +91,29 @@
   }
 }
 
+
+
 // Scale and Glow Animations
 .scale-loader-glow {
   @include scale-and-glow(scale-loader-glow-animation, white, 5px, 30px);
+}
+
+
+@keyframes scale-more {
+  0%,
+  100% {
+    filter:drop-shadow(0 0 10px #FFD660)
+    drop-shadow(0 0 30px #FFD660)
+    drop-shadow(0 0 80px #FFD660);
+  }
+  50% {
+    filter:drop-shadow(0 0 10px #FFD660)
+    drop-shadow(0 0 70px #FFD660);
+  }
+}
+
+.scale-golden-glow {
+  animation: scale-more 2s ease-in-out infinite;
 }
 
 .scale-wheel-glow {
@@ -88,6 +121,10 @@
 }
 
 // Scale in and out Animations
+.scale-symbol {
+  animation: scale-reward 1.5s ease-in-out;
+}
+
 .scale-box {
   @include scale-in-out(scale-box-animation, 1, 1.1, 1s, ease-in, infinite);
 }
@@ -95,6 +132,11 @@
 .scale-hand {
   @include scale-in-out(scale-hand-animation, 2, 5, 1s, ease-in, infinite);
 }
+
+.scale-point{
+  @include scale-in-out(scale-hand-animation, 1, 1.3, 1s, ease-in, infinite);
+}
+
 .scale-none {
   animation: none;
 }

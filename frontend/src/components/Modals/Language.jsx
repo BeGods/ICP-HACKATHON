@@ -46,7 +46,7 @@ const Language = ({ close }) => {
             </option>
           ))}
         </select>
-        <div className="flex text-tertiary text-left justify-between w-full mt-4">
+        <div className="flex text-tertiary text-left justify-between w-full mt-8">
           <div>Sound</div>
           <ToggleSwitch />
         </div>

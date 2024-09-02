@@ -9,7 +9,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
   const howlerRef = useRef(null);
 
   const playAudio = () => {
-    if (howlerRef.current) {
+    if (howlerRef.current && !JSON.parse(localStorage.getItem("sound"))) {
       howlerRef.current.stop();
       howlerRef.current.play();
     } else {
