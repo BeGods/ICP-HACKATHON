@@ -3,10 +3,23 @@ import { mythSections } from "../../../utils/variables";
 import IconButton from "../../Buttons/IconButton";
 import ReactHowler from "react-howler";
 
-const BoosterClaim = ({ activeCard, activeMyth, Button, closeCard }) => {
+const BoosterClaim = ({
+  activeCard,
+  activeMyth,
+  Button,
+  closeCard,
+  mythData,
+}) => {
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-sm bg-opacity-60 z-50">
       <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
+        <div className="absolute z-10  top-0 left-0">
+          Lvl{" "}
+          {activeCard === "automata"
+            ? mythData.automatalvl
+            : mythData.shardslvl}
+        </div>
+
         <div
           className={`absolute inset-0 rounded-[15px]`}
           style={{

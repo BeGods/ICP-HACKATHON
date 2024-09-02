@@ -26,8 +26,8 @@ export const mythElementNames = {
 };
 export const defaultIcons = {
   quest: "q",
-  automata: "b",
-  shards: "H",
+  automata: "B",
+  minion: "H",
   Greek: 4,
   Celtic: 2,
   Norse: 5,

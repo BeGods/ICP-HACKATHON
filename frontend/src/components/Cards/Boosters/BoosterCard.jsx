@@ -46,8 +46,13 @@ const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
         </h1>
         <h2 className="text-secondary">
           {t(`boosters.${booster}.desc`)}{" "}
+          {booster === 1 && (
+            <span className={`text-${mythSections[activeMyth]}-text`}>
+              200%
+            </span>
+          )}
           <span className={`text-${mythSections[activeMyth]}-text`}>
-            {booster != 1 && "(Lvl 1-7)"}
+            {booster != 1 && "(Lvl 1-99)"}
           </span>
         </h2>
       </div>

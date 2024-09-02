@@ -48,7 +48,7 @@ const BoosterButtom = ({
               </h1>
             </div>
             <div className="text-button-primary uppercase">
-              {t(`buttons.buy`)}
+              {t(`buttons.hire`)}
             </div>
             <div className="flex justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
               <img

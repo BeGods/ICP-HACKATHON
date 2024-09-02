@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
 import { CornerUpLeft, CornerUpRight } from "lucide-react";
 
-const JigsawButton = ({ activeMyth, handleNext, handlePrev, t }) => {
+const JigsawButton = ({ activeMyth, handleNext, handlePrev, t, faith }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -27,9 +27,11 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t }) => {
       }}
       className={`flex items-center justify-between h-button-primary w-button-primary mx-auto mt-[42px] ${
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-      } border border-${
-        mythSections[activeMyth]
-      }-primary bg-glass-black text-white  rounded-primary  absolute top-0 left-0 right-0`}
+      } border ${
+        faith != 12
+          ? "border-borderGray"
+          : `border-${mythSections[activeMyth]}-primary`
+      } bg-glass-black text-white  rounded-primary  absolute top-0 left-0 right-0`}
       style={{ top: "100%", transform: "translateY(-50%)" }}
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
@@ -39,12 +41,16 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t }) => {
           onClick={handlePrev}
         />
       </div>
-      <div className="text-button-primary uppercase px-2">
-        {t("buttons.complete")}
+      <div
+        className={`text-button-primary uppercase px-2 ${
+          faith != 12 && "text-textGray"
+        }`}
+      >
+        {t("buttons.redeem")}
       </div>
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
-          color="white"
+          color="#414141"
           className="h-icon-secondary w-icon-secondary"
           onClick={handleNext}
         />

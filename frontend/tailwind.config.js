@@ -91,6 +91,7 @@ export default {
         booster: "70px",
         num: "40px",
         head: "30px",
+        icon: "50px",
       },
       width: {
         "icon-primary": "55px",

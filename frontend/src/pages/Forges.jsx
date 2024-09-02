@@ -6,7 +6,7 @@ import { startTapSession, updateGameData } from "../utils/api";
 import { hideBackButton } from "../utils/teleBackButton";
 import { useTranslation } from "react-i18next";
 import {
-  elementNames,
+  elements,
   mythologies,
   mythSections,
   mythSymbols,
@@ -20,29 +20,31 @@ import ReactHowler from "react-howler";
 
 const tele = window.Telegram?.WebApp;
 
-const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
+const HeaderContent = ({
+  activeMyth,
+  t,
+  shards,
+  orbs,
+  orbGlow,
+  tapGlow,
+  glowReward,
+}) => {
   return (
     <div className="flex justify-between relative w-full">
       {/* Left */}
-      <div className="flex justify-between  h-[80%] w-fit flex-col items-start px-2">
-        <h1
-          className={`text-head text-black-contour uppercase text-${mythSections[activeMyth]}-text`}
+      <div className="flex flex-col justify-between h-full px-2 pt-1">
+        <div
+          className={`text-head  text-white glow-myth-${mythSections[activeMyth]} uppercase`}
         >
           Forge
-        </h1>
-        <div className="flex w-fit flex-col justify-end items-start">
-          <div className="flex text-black-contour -mt-1 items-center text-num text-white font-fof font-normal">
-            <div
-              className={`flex flex-col glow-shard-${mythSections[activeMyth]} w-full`}
-            >
-              <img
-                src="/assets/uxui/240px-shard.base.png"
-                alt="orb"
-                className={`filter-orbs-${mythSections[activeMyth]} w-[10vw] `}
-              />
-            </div>
-            <h1>{shards}</h1>
+        </div>
+        <div className="flex mb-4 -ml-2 items-center text-black-contour w-fit h-fit">
+          <div
+            className={`font-symbols text-icon text-${mythSections[activeMyth]}-text`}
+          >
+            S
           </div>
+          <div className="text-num text-white">{shards}</div>
         </div>
       </div>
       <div className="flex absolute justify-center w-full">
@@ -54,7 +56,7 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
             orbGlow
               ? `glow-tap-${mythSections[activeMyth]} `
               : `glow-icon-${mythSections[activeMyth]}`
-          }`}
+          } ${tapGlow && "scale-[125%]"}`}
         >
           <img
             src="/assets/uxui/240px-orb.base.png"
@@ -62,28 +64,30 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
             className={`filter-orbs-${mythSections[activeMyth]}  w-full h-full`}
           />{" "}
           <span
-            className={`absolute z-1 font-symbols  text-white text-[140px] mt-11  opacity-50 orb-symbol-shadow`}
+            className={`absolute z-1 font-symbols  ${
+              glowReward
+                ? `scale-symbol  text-${mythSections[activeMyth]}-text`
+                : "text-white"
+            }  text-[140px] mt-11 myth-glow-greek text-black-contour opacity-50 orb-symbol-shadow`}
           >
             {mythSymbols[mythSections[activeMyth]]}
           </span>
         </div>
       </div>
       {/* Right */}
-      <div className="flex justify-between w-fit h-[80%] flex-col items-end pr-2">
+      <div className="flex items-end flex-col justify-between h-full px-2 pt-1">
         <h1
-          className={` text-head  text-white glow-text-small-${mythSections[activeMyth]} uppercase`}
+          className={`text-head  text-black-contour uppercase text-${mythSections[activeMyth]}-text`}
         >
-          {elementNames[activeMyth]}
+          {t(`elements.${elements[activeMyth]}`)}
         </h1>
-        <div className="flex w-full justify-end -mr-2.5">
-          <h1 className={`text-num  text-black-contour -mt-2 text-white`}>
-            {orbs}
-          </h1>
-          <span
-            className={`font-symbols text-black-contour opacity-70 text-red text-[50px] -ml-1 -mt-3.5 text-${mythSections[activeMyth]}-text`}
+        <div className="flex mb-4 -mr-2 items-center text-black-contour w-fit h-fit">
+          <div className="text-num text-white">{orbs}</div>
+          <div
+            className={`font-symbols text-icon text-${mythSections[activeMyth]}-text`}
           >
             {mythSymbols[mythSections[activeMyth]]}
-          </span>
+          </div>
         </div>
       </div>
     </div>
@@ -92,7 +96,7 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
 
 const Forges = () => {
   const { t } = useTranslation();
-  const { activeMyth, setActiveMyth, setSection, gameData, setGameData } =
+  const { activeMyth, setActiveMyth, gameData, setGameData } =
     useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -101,6 +105,7 @@ const Forges = () => {
     energyLimit: myth.energyLimit,
     currShards: 0,
     shardslvl: myth.boosters.shardslvl,
+    automatalvl: myth.boosters.automatalvl,
     isShardsClaimActive: myth.boosters.isShardsClaimActive,
     automataStartTime: myth.boosters.automataStartTime,
     isAutomataActive: myth.boosters.isAutomataActive,
@@ -114,7 +119,9 @@ const Forges = () => {
   const [timeoutId, setTimeoutId] = useState(null);
   const [startOrbGlow, setstartOrbGlow] = useState(false);
   const [orbGlow, setOrbGlow] = useState(false);
-  const { orbs, shards, energy } = mythStates[activeMyth >= 4 ? 0 : activeMyth];
+  const [tapGlow, setTapGlow] = useState(false);
+  const [glowReward, setGlowReward] = useState(false);
+  const { orbs, shards } = mythStates[activeMyth >= 4 ? 0 : activeMyth];
   const [plusOnes, setPlusOnes] = useState([]);
   const timeoutRef = useRef(null);
   const mythStatesRef = useRef(mythStates);
@@ -122,7 +129,6 @@ const Forges = () => {
   // setActiveCard
   const handleActiveCard = (type) => {
     setActiveCard(type);
-    console.log(type);
   };
 
   // update sessionStart timestamp
@@ -145,6 +151,7 @@ const Forges = () => {
     setSessionActive(true);
     handleTriggerStart();
     setstartOrbGlow(true);
+    setTapGlow(true);
   };
 
   // handle start session
@@ -169,7 +176,6 @@ const Forges = () => {
   // update tapData
   const handleUpdateTapData = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    setstartOrbGlow(false);
 
     const sessionShards =
       mythStates[activeMyth].shards === 999
@@ -217,6 +223,10 @@ const Forges = () => {
           let newOrbs = myth.orbs;
 
           if (newShards >= 1000) {
+            setGlowReward(true);
+            setTimeout(() => {
+              setGlowReward(false);
+            }, 1500);
             newOrbs += Math.floor(newShards / 1000);
             newShards = newShards % 1000;
           }
@@ -252,12 +262,15 @@ const Forges = () => {
 
       clearTimeout(timeoutId);
 
-      if (updatedMythStates[activeMyth].currShards > 10 || reachedBlackOrb) {
-        const newTimeoutId = setTimeout(async () => {
+      // Always set the glow effects off after a timeout
+      const newTimeoutId = setTimeout(async () => {
+        setstartOrbGlow(false);
+        setTapGlow(false);
+        if (updatedMythStates[activeMyth].currShards > 10 || reachedBlackOrb) {
           handleUpdateTapData();
-        }, 700);
-        setTimeoutId(newTimeoutId);
-      }
+        }
+      }, 700);
+      setTimeoutId(newTimeoutId);
     } else {
       setDisabled(true);
       setTimeout(() => {
@@ -265,7 +278,6 @@ const Forges = () => {
       }, 15000);
     }
   };
-
   useEffect(() => {
     if (startOrbGlow) {
       const interval = setInterval(() => {
@@ -318,11 +330,16 @@ const Forges = () => {
         const interval = setInterval(() => {
           setMythStates((prevState) => {
             const newState = [...prevState];
-            let newShards = newState[index].shards + newState[index].shardslvl;
+            let newShards =
+              newState[index].shards + newState[index].automatalvl;
             let newOrbs = newState[index].orbs;
 
             // Logic to convert shards to orbs
             if (newShards >= 1000) {
+              setGlowReward(true);
+              setTimeout(() => {
+                setGlowReward(false);
+              }, 1500);
               newOrbs += Math.floor(newShards / 1000);
               newShards = newShards % 1000;
             }
@@ -342,7 +359,8 @@ const Forges = () => {
         if (automataTimeleft > 0 && automataTimeleft < 1000) {
           setMythStates((prevState) => {
             const newState = [...prevState];
-            let newShards = newState[index].shards + newState[index].shardslvl;
+            let newShards =
+              newState[index].shards + newState[index].automatalvl;
             let newOrbs = newState[index].orbs;
 
             if (newShards >= 1000) {
@@ -435,6 +453,8 @@ const Forges = () => {
                 activeMyth={activeMyth}
                 t={t}
                 orbGlow={orbGlow}
+                tapGlow={tapGlow}
+                glowReward={glowReward}
                 orbs={orbs}
                 shards={mythStates[activeMyth].shards}
               />
@@ -442,41 +462,8 @@ const Forges = () => {
             gameData={gameData}
             t={t}
           />
-          {/* Progressbar Header */}
-          {/* <div className="relative flex justify-center">
-            <ProgressBar
-              value={energy}
-              max={mythStates[activeMyth].energyLimit}
-              activeMyth={activeMyth}
-            />
-          </div> */}
           {/* Taping region */}
           <div className="flex relative flex-grow justify-center items-center">
-            <div
-              style={{ position: "absolute", display: "inline-block" }}
-              className="w-[200px] -top-[35px] "
-            >
-              <img
-                src="/assets/uxui/600px-smoke.wide.webp"
-                alt="smoke"
-                style={{
-                  display: "block",
-                  width: "100%",
-                  mixBlendMode: "color-dodge",
-                  filter: "contrast(154%) brightness(80%)",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              ></div>
-            </div>
-
             {/* Header Stats */}
             <GameHeader
               orbs={orbs}
@@ -501,6 +488,57 @@ const Forges = () => {
               }}
               className="flex flex-col items-center justify-center w-full"
             >
+              <div
+                style={{ position: "absolute", display: "inline-block" }}
+                className="w-[250px] -top-[60px]"
+              >
+                <img
+                  src="/assets/uxui/600px-smoke.wide.webp"
+                  alt="smoke"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    mixBlendMode: "color-dodge",
+                    filter: "contrast(254%) brightness(80%)",
+                  }}
+                  className={` ${
+                    tapGlow && "scale-150 -mt-[50px]"
+                  } transition-all duration-[1s]`}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                ></div>
+                {/* <div
+                  style={{ position: "absolute", display: "inline-block" }}
+                  className="w-full -bottom-2.5 bg-green-400"
+                >
+                  <img
+                    src="/assets/uxui/480px-low.smoke.webp"
+                    alt="smoke"
+                    style={{
+                      display: "block",
+                      width: "100%",
+                      mixBlendMode: "color-dodge",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  ></div>
+                </div> */}
+              </div>
+
               {plusOnes.map((plusOne) => (
                 <span
                   key={plusOne.id}
@@ -525,29 +563,7 @@ const Forges = () => {
               }}
               activeMyth={activeMyth}
             />
-            {/* <div
-              style={{ position: "absolute", display: "inline-block" }}
-              className="w-full -bottom-2.5 "
-            >
-              <img
-                src="/assets/uxui/480px-low.smoke.webp"
-                alt="smoke"
-                style={{
-                  display: "block",
-                  width: "100%",
-                  mixBlendMode: "color-dodge",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                }}
-              ></div>
-            </div> */}
+
             {activeCard === "shard" && (
               <div className="absolute bottom-0 left-0 -mb-2.5">
                 <div className=" relative">
@@ -629,59 +645,3 @@ const Forges = () => {
 };
 
 export default Forges;
-{
-  /* {activeCard === "automata" && (
-        <AutomataCard
-          activeCard={activeCard}
-          activeMyth={activeMyth}
-          closeCard={() => setActiveCard(null)}
-          Button={
-            <BoosterButtom
-              activeCard={activeCard}
-              mythData={mythStates[activeMyth]}
-              handleClaim={() => {}}
-              activeMyth={activeMyth}
-              t={t}
-            />
-          }
-        />
-      )}
-      {activeCard === "shard" && (
-        <MilestoneCard
-          isOrb={false}
-          isBlack={false}
-          activeMyth={activeMyth}
-          closeCard={() => {
-            setActiveCard(null);
-          }}
-          booster={5}
-          Button={
-            <BoosterButtom
-              activeCard={activeCard}
-              mythData={mythStates[activeMyth]}
-              handleClaim={() => {}}
-              activeMyth={activeMyth}
-              t={t}
-            />
-          }
-        />
-      )} */
-}
-{
-  /* <div className="-ml-2 relative">
-  <div className="absolute ml-[50px] -mt-[50px]">
-    <div className="talk-bubble  tri-right border round btm-left-in">
-      <div className="talktext">
-        <p>12:000</p>
-      </div>
-    </div>
-  </div>
-
-  <img
-    src="/assets/uxui/240px-minion.left.png"
-    alt="dwarf"
-    className="w-1/2 h-1/2"
-    onClick={() => {}}
-  />
-</div>; */
-}
