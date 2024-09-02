@@ -6,6 +6,7 @@ import {
   mythSections,
   mythSymbols,
 } from "../../utils/variables";
+import ReactHowler from "react-howler";
 
 const MilestoneCard = ({
   activeMyth,
@@ -19,7 +20,7 @@ const MilestoneCard = ({
 }) => {
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-sm bg-opacity-60 z-50">
-      <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary glow-card">
+      <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
         <div
           className="absolute inset-0 filter-card  rounded-[15px]"
           style={{
@@ -61,7 +62,7 @@ const MilestoneCard = ({
                   }  rounded-full orb`}
                 />
                 <span
-                  className={`absolute  z-1 text-[200px] text-white font-symbols opacity-50 orb-glow`}
+                  className={`absolute  z-1 text-[200px] text-white font-symbols opacity-50 orb-symbol-shadow`}
                 >
                   {isBlack ? 3 : mythSymbols[mythSections[activeMyth]]}
                 </span>
@@ -80,7 +81,7 @@ const MilestoneCard = ({
               </div>
             )}
             <div
-              className={`flex relative  mt-auto items-center h-[19%] w-full uppercase glow-card-celtic text-white`}
+              className={`flex relative  mt-auto items-center h-[19%] w-full uppercase card-shadow-white-celtic text-white`}
             >
               <div
                 style={{
@@ -98,7 +99,7 @@ const MilestoneCard = ({
                   isBlack ? "black" : mythSections[activeMyth]
                 }`}
               />
-              <div className="flex justify-center w-full h-full items-center px-3 z-10 text-primary glow-quest-other">
+              <div className="flex justify-center w-full h-full items-center px-3 z-10 text-primary glow-text-black">
                 {isOrb && !isMulti ? (
                   <h1>
                     {isBlack
@@ -119,6 +120,11 @@ const MilestoneCard = ({
         </div>
       </div>
       {Button}
+      <ReactHowler
+        src={`/assets/audio/fof.orb.wav`}
+        playing={!JSON.parse(localStorage.getItem("sound"))}
+        preload={true}
+      />
     </div>
   );
 };

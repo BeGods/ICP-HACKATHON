@@ -17,7 +17,7 @@ const MappedOrbs = ({ quest }) => {
                 className={`filter-orbs-${key.toLowerCase()} `}
               />
               <span
-                className={`absolute z-1 opacity-50 orb-glow font-symbols text-white text-[2.3rem] mt-1 `}
+                className={`absolute z-1 opacity-50 orb-symbol-shadow font-symbols text-white text-[2.3rem] mt-1 `}
               >
                 {mythSymbols[key.toLowerCase()]}
               </span>

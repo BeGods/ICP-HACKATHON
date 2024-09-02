@@ -19,9 +19,9 @@ const FooterItem = ({ section, index, activeMyth, handleClick }) => {
             ? `${
                 activeMyth < 4
                   ? `glow-icon-${mythSections[activeMyth]}`
-                  : "glow-footer-white"
+                  : "glow-text-white"
               }`
-            : `glow-test-contour`
+            : `text-black-contour`
         }`}
         style={{
           fontSize: section === index ? "80px" : "70px",

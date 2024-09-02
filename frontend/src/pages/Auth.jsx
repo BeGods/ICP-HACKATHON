@@ -63,10 +63,6 @@ const Auth = (props) => {
 
   useEffect(() => {
     getUserData();
-    // delay to show captcha
-    setTimeout(() => {
-      setShowCaptcha(true);
-    }, 3000);
 
     // Add event listener for user interaction
     const handleUserInteraction = () => {
@@ -91,12 +87,16 @@ const Auth = (props) => {
       platform === "windows" ||
       platform === "tdesktop" ||
       platform === "web" ||
-      platform === "weba"
+      platform === "weba" ||
+      platform === "unknown" ||
+      !platform
     ) {
-      setShowCaptcha(false);
       setDisableDestop(true);
     } else {
       setDisableDestop(false);
+      setTimeout(() => {
+        setShowCaptcha(true);
+      }, 3000);
     }
   }, [platform]);
 
@@ -197,17 +197,17 @@ const Auth = (props) => {
           </div>
         </div>
       )}
+      {showCaptcha && (
+        <div className="absolute h-screen w-screen z-50">
+          <Captcha auth={auth} />
+        </div>
+      )}
       <ReactHowler
         src="/assets/audio/fof.music.intro.mp3"
         playing={true}
         preload={true}
         loop
       />
-      {showCaptcha && (
-        <div className="absolute h-screen w-screen z-50">
-          <Captcha auth={auth} />
-        </div>
-      )}
     </div>
   );
 };

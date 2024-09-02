@@ -1,15 +1,15 @@
 /* Toasts */
 .custom-toast {
-    border-radius: 8px !important; 
-    background-color: white !important;
-    color: black !important;
-    width: 95%;
-    margin: 20px auto;
-  }
-  
-  .ToastContainer--top-center {
-    width:  100%; 
-    display: flex;
-    justify-content: center !important; 
-    padding: 0;
-  }
+  border-radius: 8px !important;
+  background-color: white !important;
+  color: black !important;
+  width: 95%;
+  margin: 20px auto;
+}
+
+.ToastContainer--top-center {
+  width: 100%;
+  display: flex;
+  justify-content: center !important;
+  padding: 0;
+}
