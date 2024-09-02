@@ -17,7 +17,7 @@ import { validDailyBonusReq } from "../middlewares/general.middlewares";
 router.get("/ping", ping);
 router.get("/leaderboard", authMiddleware, getLeaderboard);
 router.post("/announcements", authMiddleware, updateAnnouncement);
-router.get("/bonus/claim", authMiddleware, claimDailyBonus);
+router.get("/bonus/claim", authMiddleware, validDailyBonusReq, claimDailyBonus);
 // router.get("/bonus/status", authMiddleware, checkBonus);
 // router.get("/test", authMiddleware, test);
 

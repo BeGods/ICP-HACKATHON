@@ -160,13 +160,13 @@ export const claimBonusOrb = async (reward, userId) => {
 
 export const claimBonusBooster = async (userId) => {
   try {
-    const boosters = ["automata", "shards"];
+    const boosters = ["automata", "minion"];
     const mythologies = ["Greek", "Celtic", "Norse", "Egyptian"];
     const randomMyth = mythologies[Math.floor(Math.random() * 4)];
     const randomBooster = boosters[Math.floor(Math.random() * 2)];
     let boosterUpdatedData;
 
-    if (randomBooster === "shards") {
+    if (randomBooster === "minion") {
       const result = await userMythologies.findOneAndUpdate(
         { userId, "mythologies.name": randomMyth },
         {

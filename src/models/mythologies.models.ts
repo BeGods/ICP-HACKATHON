@@ -72,7 +72,7 @@ const mythologySchema = new Schema({
   boosters: {
     automatalvl: {
       type: Number,
-      default: 1,
+      default: 0,
     },
     shardslvl: {
       type: Number,
