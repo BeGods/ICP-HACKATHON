@@ -39,8 +39,8 @@ const FlashScreen = ({ reward }) => {
     } else if (reward.type === "quest") {
       setSection(1);
       setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-    } else if (reward.type === "automata" || reward.type === "shards") {
-      setSection(2);
+    } else if (reward.type === "automata" || reward.type === "minion") {
+      setSection(0);
       setActiveMyth(mythologies.indexOf(reward.mythology));
     } else if (reward.type === "blackOrb") {
       setSection(6);
@@ -116,7 +116,7 @@ const FlashScreen = ({ reward }) => {
             ? "BLACK ORB"
             : reward.type === "quest"
             ? "COMPLETED QUEST"
-            : `${reward.type.toUpperCase()} BOOSTER`}
+            : `1 ${reward.type.toUpperCase()}`}
         </h1>
         {showHand && (
           <HandHelping
@@ -241,7 +241,6 @@ const Gacha = (props) => {
 
   const claimDailyBonus = async () => {
     tele.HapticFeedback.notificationOccurred("success");
-
     setShowScale(true);
     handlePlay();
     const token = localStorage.getItem("accessToken");
@@ -291,7 +290,7 @@ const Gacha = (props) => {
 
   return (
     <div className="flex flex-col h-screen w-screen justify-center font-fof items-center bg-black ">
-      <div className="flex flex-col w-full h-full items-center py-2">
+      <div className="flex flex-col w-full h-full items-center pt-2">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
           {!showScale && (
@@ -305,14 +304,16 @@ const Gacha = (props) => {
         </div>
         {/* Main */}
         <div
-          onClick={claimDailyBonus}
+          onClick={!showScale && claimDailyBonus}
           className="flex flex-grow justify-center items-center relative w-full h-full"
         >
           <img
             src="/assets/uxui/280px-pandora.png"
             alt="pandora"
             className={`w-fit h-fit transition-transform duration-1000 ${
-              showScale ? "glow-box" : "glow-box scale-box -mt-10"
+              showScale
+                ? "scale-golden-glow glow-box"
+                : "glow-box scale-box -mt-10"
             }`}
           />
           <div className="absolute -mt-10">
@@ -328,14 +329,18 @@ const Gacha = (props) => {
           </div>
         </div>
         {/* Bottom */}
-        <div className="flex items-center justify-center w-full h-1/5">
+        <div className="flex items-start justify-center w-full h-1/5"></div>
+        <div
+          onClick={!showScale && claimDailyBonus}
+          className="flex absolute items-start bottom-16 justify-center w-full"
+        >
           {!showScale && (
-            <LoaderPinwheel
-              color="#FFD660"
-              onClick={claimDailyBonus}
-              size={"20vw"}
-              className="animate-spin-slow"
-            />
+            <div className="relative">
+              <div className="font-symbols scale-point z-10 mx-auto my-auto absolute ml-2 text-white text-[80px] text-black-contour">
+                T
+              </div>
+              <LoaderPinwheel color="#FFD660" size={"20vw"} />
+            </div>
           )}
         </div>
         {showFlash && (

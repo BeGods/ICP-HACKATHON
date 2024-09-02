@@ -5,38 +5,40 @@ import Footer from "../components/Common/Footer";
 import ConvertButton from "../components/Buttons/ConvertButton";
 import ConvertInfo from "../components/Cards/ConvertInfo";
 import { useTranslation } from "react-i18next";
-import { mythSymbols, mythologies, wheel } from "../utils/variables";
+import {
+  elements,
+  mythSymbols,
+  mythologies,
+  wheel,
+  wheelNames,
+} from "../utils/variables";
 import { showToast } from "../components/Toast/Toast";
 import Header from "../components/Headers/Header";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
 import IconButton from "../components/Buttons/IconButton";
 import ReactHowler from "react-howler";
 
-const HeaderContent = ({ gameData, myth }) => {
+const HeaderContent = ({ gameData, myth, t }) => {
   return (
     <div className="flex justify-between relative w-full">
       {/* Left */}
-      <div className="flex justify-between w-fit h-[80%] flex-col items-start px-2">
+      <div className="flex flex-col justify-between h-full px-2 pt-1">
         <h1
           className={`text-head text-black-contour uppercase ${
             myth === 0 ? "text-white" : `text-${wheel[myth]}-text`
           }
            `}
         >
-          Dark
+          {myth === 0 ? "BLACK" : t(`elements.${elements[myth - 1]}`)}
         </h1>
         {myth !== 0 && (
-          <div className="flex">
-            <span
-              className={`font-symbols text-black-contour text-red text-[50px] -ml-1.5 mr-1.5 -mt-3.5 text-white`}
-            >
+          <div className="flex mb-4 -ml-2 items-center text-black-contour w-fit h-fit">
+            <div className={`font-symbols text-icon text-${wheel[myth]}-text`}>
               {mythSymbols[wheel[myth]]}
-            </span>
-            <h1
-              className={`text-num -ml-3 text-black-contour -mt-2 text-${wheel[myth]}-text`}
-            >
+            </div>
+            <div className="text-num text-white">
               {gameData.mythologies[myth - 1]?.orbs}
-            </h1>
+            </div>
           </div>
         )}
       </div>
@@ -58,7 +60,20 @@ const HeaderContent = ({ gameData, myth }) => {
         </div>
       </div>
       {/* Right */}
-      <div className="flex justify-between w-fit h-[80%] flex-col items-start pr-2">
+      <div className="flex flex-col items-end justify-between h-full px-2 pt-1">
+        <h1 className={`text-head text-white-contour uppercase text-black`}>
+          TOWER
+        </h1>
+        <div className="flex mb-4 -mr-2 items-center text-black-contour w-fit h-fit">
+          <div className="text-num text-white-contour  text-black">
+            {gameData.blackOrbs}
+          </div>
+          <div className={`font-symbols text-icon text-white`}>
+            {mythSymbols["other"]}
+          </div>
+        </div>
+      </div>
+      {/* <div className="flex justify-between w-fit h-[80%] mt-1 flex-col items-start pr-2">
         <h1 className={`text-head text-white-contour uppercase text-black`}>
           TOWER
         </h1>
@@ -72,7 +87,7 @@ const HeaderContent = ({ gameData, myth }) => {
             {mythSymbols["other"]}
           </span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -25,6 +25,8 @@
         "complete": "Completar",
         "completed": "Completado",
         "buy": "Comprar",
+        "hire": "Hire",
+        "redeem": "Redeem",
         "pay": "Pagar",
         "share": "Compartilhar",
         "shared": "Compartilhado"
@@ -37,7 +39,7 @@
         "leaderboard": "Classificação"
     },
     "boosters": [
-      { "title": "Autômata", "desc": "Toque automático" }, { "title": "Missões Perdidas", "desc": "Energia 200%" }, { "title": "Fragmentos", "desc": "Toque duplo" }
+      { "title": "Autômata", "desc": "Toque automático" }, { "title": "Missões Perdidas", "desc": "Energia" }, { "title": "Fragmentos", "desc": "Toque duplo" }
     ],
     "profile": {
         "profile": "Perfil",

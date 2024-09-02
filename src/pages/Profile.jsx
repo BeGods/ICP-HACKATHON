@@ -9,6 +9,7 @@ import ToastMesg from "../components/Toast/ToastMesg";
 import Avatar from "../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
 import Language from "../components/Modals/Language";
+import { showToast } from "../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
@@ -30,24 +31,7 @@ const Profile = (props) => {
     await navigator.clipboard.writeText(
       `https://t.me/BeGods_bot/forgesoffaith?startapp=${userData.referralCode}`
     );
-
-    toast.success(
-      <ToastMesg
-        title={t("toasts.ReferralCopy.success.title")}
-        desc={t("toasts.ReferralCopy.success.desc")}
-        status={"other"}
-      />,
-      {
-        icon: false,
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      }
-    );
+    showToast("copy_link");
   };
 
   // const handleConnectTon = async () => {

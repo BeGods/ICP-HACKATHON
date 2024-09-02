@@ -24,6 +24,8 @@
         "complete": "Complete",
         "completed": "Completed",
         "buy": "Buy",
+        "hire": "Hire",
+        "redeem": "Redeem",
         "pay": "Pay",
         "share": "Share",
         "shared": "Shared"
@@ -37,7 +39,7 @@
     },
     "boosters": [
         { "title": "Automata", "desc": "Auto tap" },
-        {"title": "Lost Quests", "desc": "Energy 200%"},  
+        {"title": "Lost Quests", "desc": "Energy"},  
         { "title": "Minion", "desc": "Increase tap" }
     ],
     "profile": {

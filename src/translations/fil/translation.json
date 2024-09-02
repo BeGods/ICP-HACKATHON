@@ -23,6 +23,8 @@
         "convert": "I-convert",
         "claim": "Kunin",
         "complete": "Kumpleto",
+        "hire": "Hire",
+        "redeem": "Redeem",
         "completed": "Nakumpleto",
         "buy": "Bumili",
         "pay": "Magbayad",
@@ -38,7 +40,7 @@
     },
     "boosters": [
         { "title": "Automata", "desc": "Auto tap" },
-        { "title": "Nawawalang Misyon", "desc": "Enerhiya 200%" },
+        { "title": "Nawawalang Misyon", "desc": "Enerhiya" },
         { "title": "Piraso", "desc": "Double tap" }
     ],
     "profile": {
