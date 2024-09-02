@@ -30,10 +30,8 @@ export const validDailyBonusReq = async (req, res, next) => {
       dailyBonusClaimed <= endOfTodayUtc;
 
     if (validClaim) {
-      console.log("Yes it was calimed today. kal ana");
       throw Error("You have already claimed today's daily bonus!");
     } else {
-      console.log("You are elibile bro");
       next();
     }
   } catch (error) {

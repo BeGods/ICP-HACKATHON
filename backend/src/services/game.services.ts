@@ -80,7 +80,7 @@ export const validateBooster = (boosters) => {
       // 24 hours
       boosters.isShardsClaimActive = true;
     }
-    if (timeLapsed >= 172800000 || boosters.shardslvl === 7) {
+    if (timeLapsed >= 172800000 || boosters.shardslvl === 99) {
       // 48 hours or level 7
       boosters.isShardsClaimActive = true;
       boosters.shardslvl = 1;
@@ -111,10 +111,10 @@ export const validateAutomata = (gameData) => {
       gameData.boosters.automataLastClaimedAt = 0;
     }
 
-    if (timeLapsed >= 172800000 || gameData.boosters.automatalvl === 7) {
+    if (timeLapsed >= 172800000 || gameData.boosters.automatalvl === 99) {
       // 48 hours or level 7
       gameData.boosters.isAutomataActive = false;
-      gameData.boosters.automatalvl = 1;
+      gameData.boosters.automatalvl = 0;
       gameData.boosters.automataStartTime = 0;
       gameData.boosters.automataLastClaimedAt = 0;
     }
