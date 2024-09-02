@@ -1,6 +1,7 @@
 import React from "react";
 import { mythSections } from "../../../utils/variables";
 import IconButton from "../../Buttons/IconButton";
+import ReactHowler from "react-howler";
 
 const BoosterClaim = ({ activeCard, activeMyth, Button, closeCard }) => {
   return (
@@ -50,6 +51,13 @@ const BoosterClaim = ({ activeCard, activeMyth, Button, closeCard }) => {
         </div>
       </div>
       {Button}
+      <ReactHowler
+        src={`/assets/audio/fof.${
+          activeCard === "automata" ? "automata" : "minion"
+        }.wav`}
+        playing={!JSON.parse(localStorage.getItem("sound"))}
+        preload={true}
+      />
     </div>
   );
 };

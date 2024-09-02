@@ -11,6 +11,7 @@ import {
 import Confetti from "react-confetti";
 import { Crown, HandHelping, LoaderPinwheel } from "lucide-react";
 import { MyContext } from "../context/context";
+import ReactHowler from "react-howler";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,6 +22,7 @@ const FlashScreen = ({ reward }) => {
   const [showYouScale, setShowYouScale] = useState(0);
   const [showWon, setShowWon] = useState(false);
   const [showHand, setShowHand] = useState(false);
+  const [play, setPlay] = useState(true);
 
   const playConfetti = () => {
     setRunConfetti(true);
@@ -135,6 +137,14 @@ const FlashScreen = ({ reward }) => {
           style={{ zIndex: 10, position: "fixed", top: 0, left: 0 }}
         />
       )}
+      <ReactHowler
+        src="/assets/audio/fof.gatcha.win.wav"
+        playing={play}
+        preload={true}
+        onEnd={() => {
+          setPlay(false);
+        }}
+      />
     </div>
   );
 };
@@ -149,6 +159,7 @@ const Gacha = (props) => {
   const [showFlash, setShowFlash] = useState(false);
   const [showScale, setShowScale] = useState(false);
   const [changeText, setChangeText] = useState("Win");
+  const [spinSound, setSpinSound] = useState(false);
 
   const handleUpdateData = (rewardType, rewardValue, data) => {
     if (rewardType === "blackOrb") {
@@ -250,6 +261,7 @@ const Gacha = (props) => {
         );
         setTimeout(() => {
           setShowSpin(false);
+          setSpinSound(false);
           setReward(response.reward);
           setShowFlash(true);
         }, 4000);
@@ -263,6 +275,7 @@ const Gacha = (props) => {
 
   const handlePlay = () => {
     if (lottieRef.current) {
+      setSpinSound(true);
       lottieRef.current.play();
       lottieRef.current.setSpeed(3);
     }
@@ -333,6 +346,14 @@ const Gacha = (props) => {
           >
             <FlashScreen showFlash={showFlash} reward={reward} />{" "}
           </div>
+        )}
+        {spinSound && (
+          <ReactHowler
+            src="/assets/audio/fof.gacha.spin.wav"
+            playing={true}
+            preload={true}
+            loop
+          />
         )}
       </div>
     </div>

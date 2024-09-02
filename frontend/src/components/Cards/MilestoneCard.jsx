@@ -6,6 +6,7 @@ import {
   mythSections,
   mythSymbols,
 } from "../../utils/variables";
+import ReactHowler from "react-howler";
 
 const MilestoneCard = ({
   activeMyth,
@@ -119,6 +120,11 @@ const MilestoneCard = ({
         </div>
       </div>
       {Button}
+      <ReactHowler
+        src={`/assets/audio/fof.orb.wav`}
+        playing={!JSON.parse(localStorage.getItem("sound"))}
+        preload={true}
+      />
     </div>
   );
 };
