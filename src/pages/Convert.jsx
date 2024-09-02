@@ -23,7 +23,7 @@ const HeaderContent = ({ gameData, myth }) => {
           }
            `}
         >
-          Forge
+          Dark
         </h1>
         {myth !== 0 && (
           <div className="flex">
