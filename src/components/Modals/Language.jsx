@@ -32,7 +32,7 @@ const Language = ({ close }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex flex-col justify-start items-center z-50">
-      <div className="flex relative w-[76%] bg-black rounded-primary justify-center items-center flex-col mt-[52px] glow-card p-6">
+      <div className="flex relative w-[76%] bg-black rounded-primary justify-center items-center flex-col mt-[52px] card-shadow-white p-6">
         <IconButton align={0} handleClick={close} activeMyth={4} />
         <h1 className="text-primary mb-4">Settings</h1>
         <select

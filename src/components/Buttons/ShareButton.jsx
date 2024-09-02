@@ -48,13 +48,6 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
           <div className="text-[16px] uppercase">{t(`buttons.share`)}</div>
           {isInfo ? (
             <div className="flex justify-center items-center w-1/4  h-full">
-              <div className="absolute top-0 z-10">
-                <ArrowBigDown
-                  color="white"
-                  fill="white"
-                  className="z-10 mt-1"
-                />
-              </div>
               <img
                 src={`/assets/uxui/240px-orb.multicolor.png`}
                 alt="orb"
@@ -65,13 +58,6 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
             <div
               className={`flex justify-center items-center w-1/4 border-borderGray h-full`}
             >
-              <div className="absolute top-0 z-10">
-                <ArrowBigDown
-                  color="white"
-                  fill="white"
-                  className="z-10 mt-1"
-                />
-              </div>
               <div className={`filter-orbs-${mythSections[activeMyth]}`}>
                 <img
                   src={`/assets/uxui/240px-orb.base.png`}

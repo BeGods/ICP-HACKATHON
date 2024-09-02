@@ -11,6 +11,7 @@ import {
 import Confetti from "react-confetti";
 import { Crown, HandHelping, LoaderPinwheel } from "lucide-react";
 import { MyContext } from "../context/context";
+import ReactHowler from "react-howler";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,6 +22,7 @@ const FlashScreen = ({ reward }) => {
   const [showYouScale, setShowYouScale] = useState(0);
   const [showWon, setShowWon] = useState(false);
   const [showHand, setShowHand] = useState(false);
+  const [play, setPlay] = useState(true);
 
   const playConfetti = () => {
     setRunConfetti(true);
@@ -30,7 +32,7 @@ const FlashScreen = ({ reward }) => {
   };
 
   const handleClick = (e) => {
-    e.stopPropagation();
+    tele.HapticFeedback.notificationOccurred("success");
     if (reward.type === "mythOrb") {
       setSection(0);
       setActiveMyth(mythologies.indexOf(reward.mythology));
@@ -80,7 +82,7 @@ const FlashScreen = ({ reward }) => {
         }}
       ></div>
       {/* Content */}
-      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold glow-test-contour  uppercase z-20">
+      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
         <h1
           className={`scale-${showYouScale} text-[22vw] mt-4 transition-transform duration-1000`}
         >
@@ -99,7 +101,7 @@ const FlashScreen = ({ reward }) => {
 
             setSection(0);
           }}
-          className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[85vw]  mx-auto glow-icon-contour`}
+          className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[85vw]  mx-auto icon-black-contour`}
         >
           {reward.type === "mythOrb"
             ? defaultIcons[reward.mythology]
@@ -107,7 +109,7 @@ const FlashScreen = ({ reward }) => {
         </div>
       </div>
       <div className="flex flex-col justify-between items-center w-full h-1/4 absolute bottom-0  text-[9vw] text-white uppercase z-20">
-        <h1 className={`glow-test-contour mt-10 scale-${showScale}`}>
+        <h1 className={`text-black-contour mt-10 scale-${showScale}`}>
           {reward.type === "mythOrb"
             ? `${mythElementNames[reward.mythology]} Orb`
             : reward.type === "blackOrb"
@@ -119,9 +121,7 @@ const FlashScreen = ({ reward }) => {
         {showHand && (
           <HandHelping
             onClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
-
-              setSection(0);
+              handleClick();
             }}
             size={"120px"}
             color="#FFD660"
@@ -137,6 +137,14 @@ const FlashScreen = ({ reward }) => {
           style={{ zIndex: 10, position: "fixed", top: 0, left: 0 }}
         />
       )}
+      <ReactHowler
+        src="/assets/audio/fof.gatcha.win.wav"
+        playing={play}
+        preload={true}
+        onEnd={() => {
+          setPlay(false);
+        }}
+      />
     </div>
   );
 };
@@ -151,6 +159,7 @@ const Gacha = (props) => {
   const [showFlash, setShowFlash] = useState(false);
   const [showScale, setShowScale] = useState(false);
   const [changeText, setChangeText] = useState("Win");
+  const [spinSound, setSpinSound] = useState(false);
 
   const handleUpdateData = (rewardType, rewardValue, data) => {
     if (rewardType === "blackOrb") {
@@ -234,6 +243,7 @@ const Gacha = (props) => {
     tele.HapticFeedback.notificationOccurred("success");
 
     setShowScale(true);
+    handlePlay();
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No access token found");
@@ -249,9 +259,9 @@ const Gacha = (props) => {
             ? response.reward?.boosterUpdatedData
             : response.reward?.quest
         );
-        handlePlay();
         setTimeout(() => {
           setShowSpin(false);
+          setSpinSound(false);
           setReward(response.reward);
           setShowFlash(true);
         }, 4000);
@@ -265,6 +275,7 @@ const Gacha = (props) => {
 
   const handlePlay = () => {
     if (lottieRef.current) {
+      setSpinSound(true);
       lottieRef.current.play();
       lottieRef.current.setSpeed(3);
     }
@@ -286,7 +297,7 @@ const Gacha = (props) => {
           {!showScale && (
             <>
               <Crown color="#FFD660" size={"20vw"} />
-              <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero glow-test-contour">
+              <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero text-black-contour">
                 {changeText}
               </h1>
             </>
@@ -301,7 +312,7 @@ const Gacha = (props) => {
             src="/assets/uxui/280px-pandora.png"
             alt="pandora"
             className={`w-fit h-fit transition-transform duration-1000 ${
-              showScale ? "glow-box" : "glow-box scale-more -mt-10"
+              showScale ? "glow-box" : "glow-box scale-box -mt-10"
             }`}
           />
           <div className="absolute -mt-10">
@@ -336,22 +347,17 @@ const Gacha = (props) => {
             <FlashScreen showFlash={showFlash} reward={reward} />{" "}
           </div>
         )}
+        {spinSound && (
+          <ReactHowler
+            src="/assets/audio/fof.gacha.spin.wav"
+            playing={true}
+            preload={true}
+            loop
+          />
+        )}
       </div>
     </div>
   );
 };
 
 export default Gacha;
-
-// const BonusClaimButton = ({ action, message }) => {
-//   return (
-//     <div
-//       onClick={action}
-//       className="w-button-primary flex justify-between mx-auto mt-[10px] items-center h-button-primary border border-gold rounded-primary cursor-pointer"
-//     >
-//       <div className="flex justify-center items-center w-1/4 h-full"></div>
-//       <div className="text-[16px] uppercase text-gold">{message}</div>
-//       <div className="flex justify-center items-center w-1/4  h-full"></div>
-//     </div>
-//   );
-// };

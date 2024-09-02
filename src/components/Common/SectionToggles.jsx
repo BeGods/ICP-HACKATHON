@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { mythSections } from "../../utils/variables";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import ReactHowler from "react-howler";
 
 export const ToggleLeft = ({ handleClick, activeMyth }) => {
+  const howlerRef = useRef(null);
+
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const handleButtonClick = () => {
@@ -10,9 +13,18 @@ export const ToggleLeft = ({ handleClick, activeMyth }) => {
 
     setTimeout(() => {
       setIsButtonClicked(false);
+      playAudio();
       handleClick();
     }, 100);
   };
+
+  const playAudio = () => {
+    if (howlerRef.current && !JSON.parse(localStorage.getItem("sound"))) {
+      howlerRef.current.stop();
+      howlerRef.current.play();
+    }
+  };
+
   return (
     <div className="flex justify-center items-center w-[20%] z-50">
       <div
@@ -23,20 +35,35 @@ export const ToggleLeft = ({ handleClick, activeMyth }) => {
       >
         <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
       </div>
+      <ReactHowler
+        src="/assets/audio/fof.side.button.wav"
+        playing={false}
+        ref={howlerRef}
+        html5={true}
+      />
     </div>
   );
 };
 
 export const ToggleRight = ({ handleClick, activeMyth }) => {
+  const howlerRef = useRef(null);
+
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const handleButtonClick = () => {
     setIsButtonClicked(true);
-
+    playAudio();
     setTimeout(() => {
       setIsButtonClicked(false);
       handleClick();
     }, 100);
+  };
+
+  const playAudio = () => {
+    if (howlerRef.current && !JSON.parse(localStorage.getItem("sound"))) {
+      howlerRef.current.stop();
+      howlerRef.current.play();
+    }
   };
 
   return (
@@ -49,6 +76,12 @@ export const ToggleRight = ({ handleClick, activeMyth }) => {
       >
         <ChevronsRight color="white" className="h-[30px] w-[30px]" />
       </div>
+      <ReactHowler
+        src="/assets/audio/fof.side.button.wav"
+        playing={false}
+        ref={howlerRef}
+        html5={true}
+      />
     </div>
   );
 };

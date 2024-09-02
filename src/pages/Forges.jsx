@@ -26,12 +26,12 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
       {/* Left */}
       <div className="flex justify-between  h-[80%] w-fit flex-col items-start px-2">
         <h1
-          className={`text-head glow-test-contour uppercase text-${mythSections[activeMyth]}-text`}
+          className={`text-head text-black-contour uppercase text-${mythSections[activeMyth]}-text`}
         >
           Forge
         </h1>
         <div className="flex w-fit flex-col justify-end items-start">
-          <div className="flex glow-test-contour -mt-1 items-center text-num text-white font-fof font-normal">
+          <div className="flex text-black-contour -mt-1 items-center text-num text-white font-fof font-normal">
             <div
               className={`flex flex-col glow-shard-${mythSections[activeMyth]} w-full`}
             >
@@ -62,7 +62,7 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
             className={`filter-orbs-${mythSections[activeMyth]}  w-full h-full`}
           />{" "}
           <span
-            className={`absolute z-1 font-symbols  text-white text-[140px] mt-11  opacity-50 orb-glow`}
+            className={`absolute z-1 font-symbols  text-white text-[140px] mt-11  opacity-50 orb-symbol-shadow`}
           >
             {mythSymbols[mythSections[activeMyth]]}
           </span>
@@ -76,11 +76,11 @@ const HeaderContent = ({ activeMyth, t, shards, orbs, orbGlow }) => {
           {elementNames[activeMyth]}
         </h1>
         <div className="flex w-full justify-end -mr-2.5">
-          <h1 className={`text-num  glow-test-contour -mt-2 text-white`}>
+          <h1 className={`text-num  text-black-contour -mt-2 text-white`}>
             {orbs}
           </h1>
           <span
-            className={`font-symbols glow-test-contour opacity-70 text-red text-[50px] -ml-1 -mt-3.5 text-${mythSections[activeMyth]}-text`}
+            className={`font-symbols text-black-contour opacity-70 text-red text-[50px] -ml-1 -mt-3.5 text-${mythSections[activeMyth]}-text`}
           >
             {mythSymbols[mythSections[activeMyth]]}
           </span>
