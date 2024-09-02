@@ -1,0 +1,137 @@
+@mixin scale-and-glow($name, $color, $small, $large) {
+  @keyframes #{$name} {
+    0%,
+    100% {
+      filter: drop-shadow(0 0 #{$small} #{$color});
+    }
+    50% {
+      filter: drop-shadow(0 0 #{$large} #{$color});
+    }
+  }
+
+  & {
+    animation: #{$name} 2s infinite ease-in-out;
+  }
+}
+
+@mixin scale-in-out(
+  $keyframe-name,
+  $start-scale,
+  $end-scale,
+  $duration: 1s,
+  $timing-function: ease-in-out,
+  $iteration-count: infinite
+) {
+  @keyframes #{$keyframe-name} {
+    0%,
+    100% {
+      transform: scale(#{$start-scale});
+    }
+    50% {
+      transform: scale(#{$end-scale});
+    }
+  }
+
+  & {
+    animation: #{$keyframe-name} #{$duration} #{$timing-function} #{$iteration-count};
+  }
+}
+
+@keyframes scale-from-zero {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeBody {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes moveAndFade {
+  0% {
+    opacity: 1;
+    transform: translateY(-200px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-500px);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Scale and Glow Animations
+.scale-loader-glow {
+  @include scale-and-glow(scale-loader-glow-animation, white, 5px, 30px);
+}
+
+.scale-wheel-glow {
+  @include scale-and-glow(scale-wheel-glow-animation, black, 5px, 50px);
+}
+
+// Scale in and out Animations
+.scale-box {
+  @include scale-in-out(scale-box-animation, 1, 1.1, 1s, ease-in, infinite);
+}
+
+.scale-hand {
+  @include scale-in-out(scale-hand-animation, 2, 5, 1s, ease-in, infinite);
+}
+.scale-none {
+  animation: none;
+}
+
+// Scale from zero to full animation
+.scale-zero {
+  animation: scale-from-zero 1s ease-in-out;
+}
+
+// White Flash Animation
+
+.flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1000;
+}
+
+.flash-overlay.show {
+  opacity: 1;
+  animation: fadeBody 0.5s ease-in-out forwards;
+}
+
+// Spin Animation
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+/* Plus one aimation */
+.plus-one {
+  position: absolute;
+  font-size: 55px;
+  color: rgba(255, 247, 220, 1);
+  animation: moveAndFade 1s forwards;
+}

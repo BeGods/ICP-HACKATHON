@@ -23,7 +23,7 @@ const SecretCard = ({
           top: 0,
           left: 0,
         }}
-        className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] glow-card"
+        className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] card-shadow-white"
       >
         <IconButton
           isInfo={false}

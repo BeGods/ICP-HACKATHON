@@ -24,7 +24,7 @@ const QuestCard = ({ quest, activeMyth, Button, t, InfoIcon, curr }) => {
             {InfoIcon}
           </div>
           <div
-            className={`flex relative items-center h-[19%] uppercase glow-quest text-white`}
+            className={`flex relative items-center h-[19%] uppercase glow-text-quest text-white`}
           >
             <div className="absolute text-primary  z-50 right-0 top-0 -mt-[30px] pr-2">
               <span>{curr + 1}/12 </span>
@@ -43,19 +43,12 @@ const QuestCard = ({ quest, activeMyth, Button, t, InfoIcon, curr }) => {
               }}
               className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
             />
-            <div className="flex justify-between w-full h-full items-center px-2 z-10">
-              <div className="w-full  text-left">
+            <div className="flex justify-between w-full h-full items-center glow-text-quest px-2 z-10">
+              <div className="w-full text-left">
                 {t(
                   `quests.${mythSections[activeMyth]}.${quest.type}.QuestName`
                 )}
-                <div className="text-right font-medium text-white text-secondary -mt-1 gap-1 flex justify-start w-full">
-                  {/* <span>{curr + 1}/12 </span> */}
-                  {/* <span
-                    className={`text-${mythSections[activeMyth]}-text uppercase`}
-                  >
-                    {t(`keywords.faith`)}
-                  </span> */}
-                </div>
+                <div className="text-right font-medium text-white text-secondary -mt-1 gap-1 flex justify-start w-full"></div>
               </div>
               <div className="">
                 <Symbol myth={mythSections[activeMyth]} isCard={true} />
