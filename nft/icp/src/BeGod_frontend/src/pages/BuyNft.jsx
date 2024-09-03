@@ -10,12 +10,12 @@ const BuyNft = () => {
         <div style={{ fontFamily: "QuickSand" }} >
             <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                 <Navbar />
-                <div className='max-w-[1920px] mx-auto mt-8 sm:mt-0 w-full flex flex-col  items-center justify-center gap-4'>
+                <div className='max-w-[1920px] mx-auto mt-8 sm:mt-8 w-full flex flex-col  items-center justify-center gap-4'>
                     <img src="/Hero/frame.svg" alt="" className='w-[20%]' />
                     <div className='h-[4px] w-[94%] rounded-lg border'></div>
                 </div>
                 {/* for mobile screen */}
-                <div className='max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center'>
+                <div className='max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center overflow-hidden '>
                     <div className=' w-[80%] flex text-white justify-between items-center'>
                         <div className='h-[2vh] w-[10%]'>
                             <CiStar className='h-full w-full object-cover' />
