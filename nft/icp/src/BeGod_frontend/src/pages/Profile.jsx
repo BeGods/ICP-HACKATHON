@@ -65,17 +65,17 @@ const Profile = () => {
     <div className='' style={{ fontFamily: "QuickSand" }}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
-        <div style={{ fontFamily: "QuickSand" }} className='max-w-[1920px] mx-auto pl-[3%] mt-[3%] flex flex-col lg:flex-row'>
+        <div style={{ fontFamily: "QuickSand" }} className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
+            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
             <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
               <div>
                 <img src="/image/Frame.png" alt="" />
               </div>
               <div>
-                <h1 className='text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>Barry</h1>
-                <h2 className='text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
-                <h2 className='text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
+                <h1 className='text-[20px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>Barry</h1>
+                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
+                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
               </div>
             </div>
           </div>
@@ -83,13 +83,13 @@ const Profile = () => {
           <div className='w-full lg:w-[70%]'>
             <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0'>
               <div
-                className={`text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
                 onClick={() => setCategory("mycollection")}
               >
                 My Collection
               </div>
               <div
-                className={`text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
                 onClick={() => setCategory("favorite")}
               >
                 Favorite

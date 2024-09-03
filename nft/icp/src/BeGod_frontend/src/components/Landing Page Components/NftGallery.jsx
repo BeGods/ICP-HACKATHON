@@ -64,7 +64,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
         </div>
         <div className={`w-[90%] flex items-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
           {currentItems && currentItems.map((img, index) => (
-            <div className="flip-card border rounded-lg" key={index}>
+            <div className="flip-card rounded-lg" key={index}>
               <div className="flip-card-inner">
                 {/* Front Side */}
                 <div className="w-[80%] h-[40vh] flip-card-front flex items-center justify-center">
