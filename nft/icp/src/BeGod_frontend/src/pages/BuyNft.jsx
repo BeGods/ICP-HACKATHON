@@ -87,7 +87,7 @@ const BuyNft = () => {
                     <div className='mt-8 h-[4px] w-[80%] rounded-lg border'></div>
                 </div>
                 {/* For desktop screen */}
-                <div className='max-w-[1920px] mx-auto hidden xl:flex xl:w-[100%] 2xl:w-[93%]  items-center justify-center' style={{ backgroundImage: `url('/Hero/green BG.svg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
+                <div className='max-w-[1920px] mx-auto hidden xl:flex xl:w-[100%] 2xl:w-[93%]  items-center justify-center overflow-hidden' style={{ backgroundImage: `url('/Hero/green BG.svg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                     <div className='hidden sm:flex'>
                         <img
                             src="/Hero/up.png"
