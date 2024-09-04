@@ -24,10 +24,10 @@ echo "CANISTER: $CANISTER"
 # Getting Result Like this
 # (
 #   principal "oz7jj-hclyb-5r7nw-ehlam-34yct-ktxcg-2wsq2-53not-tbxed-ru5vq-eae",
-#   principal "a3shf-5eaaa-aaaaa-qaafa-cai",
+#   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="a3shf-5eaaa-aaaaa-qaafa-cai"
+COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -69,27 +69,55 @@ echo "NFTID: $NFTID"
 
 
 
-
-
-
-
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+# dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
-# ("gosuq-3ykor-uwjaa-aaaaa-aeaab-iaqca-aaaaa-a")
+# ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
+
+
+
+# STEP-4
+# Set Price and List the NFT
+
+TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
+TOKENID='0'
+PRICE=100_000_000  # No underscores in the number for bash scripting
+echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
+echo "PRICE: $PRICE"
+
+
+
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+
+
+# STEP-5
+# Get the All NFT listing
+
+dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
 
 
 
 
 
+# STEP-6
+# Purchase NFT
+BUYERIDENTIFIER='2ipdv-mwghn-c5x64-fkchv-hbvge-yobre-szmep-6ntkb-d3a3h-w5jg6-zqe';
 
-# STEP 4
-# listing the price of the NFT
+# dfx canister call $CANISTER purchaseNft '(principal "'$COLLECTION_ID'","'$TOKENIDENTIFIER'",'$PRICE',"'$BUYERIDENTIFIER'")';
 
-TOKENID='0';
-PRICE=100_000_000;
+# (
+#   variant {
+#     ok = record {
+#       "0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834";
+#       100_000_000 : nat64;
+#     }
+#   },
+# )
 
-dfx canister call "$CANISTER" checkOwnership "(principal \"$COLLECTION_ID\", $TOKENID)";
+
+# STEP-7
+# Settelment NFT
+
