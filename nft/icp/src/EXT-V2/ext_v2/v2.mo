@@ -28,6 +28,7 @@ import ExtNonFungible "../motoko/ext/NonFungible";
 import Int64 "mo:base/Int64";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
+import TrieMap "mo:base/TrieMap";
 import Encoding "mo:encoding/Binary";
 //Cap
 import Cap "mo:cap/Cap";
@@ -694,6 +695,7 @@ actor class EXTNFT(init_owner: Principal) = this {
 			};
 		};
   };
+  
   public shared(msg) func ext_marketplaceSettle(paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
     switch(await ext_checkPayment(paymentaddress)) {
       case(?(settlement, response)){
@@ -2213,5 +2215,6 @@ actor class EXTNFT(init_owner: Principal) = this {
     return Buffer.toArray(nonFungibleTokenData);
 };
 
- 
+
+
 }

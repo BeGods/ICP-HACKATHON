@@ -20,13 +20,14 @@ import UsersTypes "./Users/Types";
 import V2 "../EXT-V2/ext_v2/v2";
 
 
-actor Main {
+actor Main {    
 
     type AccountIdentifier = ExtCore.AccountIdentifier;
     type TokenIndex = ExtCore.TokenIndex;
     type TokenIdentifier = ExtCore.TokenIdentifier;
-    //
-    type NFTInfo = (TokenIndex, AccountIdentifier, Types.Metadata);
+    
+    type NFTInfo = (TokenIndex, AccountIdentifier, Metadata);
+
     type MetadataValue = (
         Text,
         {
@@ -65,7 +66,15 @@ actor Main {
     seller : Principal;
     price : Nat64;
     locked : ?Time;
-  };
+    };
+
+    type Transaction = {
+    token : TokenIndex;
+    seller : AccountIdentifier;
+    price : Nat64;
+    buyer : AccountIdentifier;
+    time : Time;
+    };
 
    type Metadata = {
     #fungible : {
@@ -83,6 +92,13 @@ actor Main {
     };
    };
 
+   type TopSellingNFT = {
+    tokenId: TokenIdentifier;
+    totalSales: Nat64;
+    details: Metadata;
+    price: Listing;  
+    };
+
     //Exttypes
     type Time = Time.Time;
     
@@ -96,9 +112,12 @@ actor Main {
     // Stores details about the tokens coming into this vault
     private stable var deposits : [Deposit] = [];
 
+    //private stable var data_transactions : [Transaction] = [];
+
     private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
     private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
+
 
     
 
@@ -231,7 +250,7 @@ actor Main {
 
     //getALLCollectionNFTs
 
-   /* public shared func getAllCollectionNFTs(
+    public shared func getAllCollectionNFTs(
         _collectionCanisterId: Principal
     ) : async [(TokenIndex, AccountIdentifier, Types.Metadata)] {
         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
@@ -247,7 +266,7 @@ actor Main {
             throw (e);
             return [];
         }
-    };*/
+    };
 
     //Explore Collections or Get all Collection NFTS
     public shared func getAllNFTsAcrossAllCollections() : async [(TokenIndex, AccountIdentifier, Types.Metadata)] {
@@ -480,8 +499,8 @@ actor Main {
         };
     };
     };
-/*
-    //mycollection
+
+    /*//mycollection
     public shared ({ caller = user }) func myCollection() : async [NFTInfo] {
         var userNFTs : [NFTInfo] = [];
 
@@ -566,16 +585,7 @@ actor Main {
     /*                                  MARKETPLACE                               */
     /* -------------------------------------------------------------------------- */
 
-
-
-    // List the price of the nfts 
-   /* public shared(msg) func listprice(_collectionCanisterId : Principal , request : ListRequest): async Result.Result<(), CommonError>{
-    let priceactor =  actor (Principal.toText(_collectionCanisterId)): actor {
-        ext_marketplaceList : (request : ListRequest) -> async Result.Result<(), CommonError>;
-    };
-    return await priceactor.ext_marketplaceList(request);
-    };*/
-
+    //set price for the nfts 
     public shared(msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
     let priceactor = actor (Principal.toText(_collectionCanisterId)): actor {
         ext_marketplaceList : (caller: Principal, request: ListRequest) -> async Result.Result<(), CommonError>;
@@ -600,5 +610,30 @@ actor Main {
     return await buynft.ext_marketplacePurchase(tokenid, price, buyer);
     };
 
+    //settle and confirm purchase 
+    public shared func settlepurchase(_collectionCanisterId: Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+    let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
+    ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+    };
+     return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
+    };
 
+    //get transaction details
+    public shared func transactions(_collectionCanisterId: Principal) :  async [Transaction]{
+        let get_transactions =  actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceTransactions : () -> async [Transaction];
+        };
+
+        return await get_transactions.ext_marketplaceTransactions();
+    };
+
+    //get marketplace stats 
+    public shared func marketstats(_collectionCanisterId: Principal) : async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat) {
+    let getstats = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceStats: () -> async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat);
+    };
+
+    return await getstats.ext_marketplaceStats();
+    };
+    
 };
