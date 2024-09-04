@@ -87,7 +87,6 @@ const CollectionTypes = () => {
         ))}
       </div>
       </div>
-      
     </div>
   );
 };

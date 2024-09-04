@@ -148,7 +148,6 @@ const NftDetails = () => {
             <h1 className='font-[400]'>Bought</h1>
           </div>
         </div>
-
       </div>
       <Footer />
     </div>
