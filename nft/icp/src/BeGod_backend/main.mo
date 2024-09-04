@@ -17,6 +17,8 @@ import AID "../EXT-V2/motoko/util/AccountIdentifier";
 import ExtCore "../EXT-V2/motoko/ext/Core";
 import Types "../EXT-V2/Types";
 import UsersTypes "./Users/Types";
+import V2 "../EXT-V2/ext_v2/v2";
+
 
 actor Main {
 
@@ -51,7 +53,38 @@ actor Main {
         pubKey : Principal;
     };
 
+    type SubAccount = ExtCore.SubAccount;
+    
+    public type ListRequest = {
+        token : TokenIdentifier;
+        from_subaccount : ?SubAccount;
+        price : ?Nat64;
+    };
+
+      type Listing = {
+    seller : Principal;
+    price : Nat64;
+    locked : ?Time;
+  };
+
+   type Metadata = {
+    #fungible : {
+      name : Text;
+      symbol : Text;
+      decimals : Nat8;
+      metadata: ?MetadataContainer;
+    };
+    #nonfungible : {
+      name : Text;
+      description : Text;
+      asset : Text;
+      thumbnail : Text;
+      metadata: ?MetadataContainer;
+    };
+   };
+
     //Exttypes
+    type Time = Time.Time;
     
     type User = ExtCore.User;
     type CommonError = ExtCore.CommonError;
@@ -372,12 +405,13 @@ actor Main {
     public shared ({ caller = user }) func getSingleNonFungibleTokens(
         _collectionCanisterId : Principal,
         _tokenId : TokenIndex,
-    ) : async [(TokenIndex, AccountIdentifier, Types.Metadata)] {
+    ) : async [(TokenIndex, AccountIdentifier, Metadata)] {
         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            getSingleNonFungibleTokenData : (_tokenId : TokenIndex) -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
+            getSingleNonFungibleTokenData : (_tokenId : TokenIndex) -> async [(TokenIndex, AccountIdentifier, Metadata)];
         };
-        await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
+        return await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
     };
+
 
     // Gets all details about the tokens that were transfered into this vault
     public shared query func getDeposits() : async [Deposit] {
@@ -528,14 +562,43 @@ actor Main {
     };
     };*/
 
-
-
-
-
     /* -------------------------------------------------------------------------- */
     /*                                  MARKETPLACE                               */
     /* -------------------------------------------------------------------------- */
 
-    
+
+
+    // List the price of the nfts 
+   /* public shared(msg) func listprice(_collectionCanisterId : Principal , request : ListRequest): async Result.Result<(), CommonError>{
+    let priceactor =  actor (Principal.toText(_collectionCanisterId)): actor {
+        ext_marketplaceList : (request : ListRequest) -> async Result.Result<(), CommonError>;
+    };
+    return await priceactor.ext_marketplaceList(request);
+    };*/
+
+    public shared(msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
+    let priceactor = actor (Principal.toText(_collectionCanisterId)): actor {
+        ext_marketplaceList : (caller: Principal, request: ListRequest) -> async Result.Result<(), CommonError>;
+    };
+    return await priceactor.ext_marketplaceList(msg.caller, request);
+    };  
+
+
+    //get the nfts and their corresponding prices 
+    public shared func listings(_collectionCanisterId : Principal): async [(TokenIndex, Listing, Metadata)] {
+    let pricelistings = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceListings: () -> async [(TokenIndex, Listing, Metadata)]
+    };
+    return await pricelistings.ext_marketplaceListings();
+    };
+
+    //purchase nft
+    public shared func purchaseNft(_collectionCanisterId: Principal, tokenid: TokenIdentifier, price: Nat64, buyer: AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
+    let buynft = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplacePurchase: (tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) -> async Result.Result<(AccountIdentifier, Nat64), CommonError>;
+    };
+    return await buynft.ext_marketplacePurchase(tokenid, price, buyer);
+    };
+
 
 };
