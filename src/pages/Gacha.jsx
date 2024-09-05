@@ -9,7 +9,7 @@ import {
   mythologies,
 } from "../utils/variables";
 import Confetti from "react-confetti";
-import { Crown, HandHelping, LoaderPinwheel } from "lucide-react";
+import { Crown, LoaderPinwheel, ThumbsUp } from "lucide-react";
 import { MyContext } from "../context/context";
 import ReactHowler from "react-howler";
 
@@ -108,8 +108,10 @@ const FlashScreen = ({ reward }) => {
             : defaultIcons[reward.type]}
         </div>
       </div>
-      <div className="flex flex-col justify-between items-center w-full h-1/4 absolute bottom-0  text-[9vw] text-white uppercase z-20">
-        <h1 className={`text-black-contour mt-10 scale-${showScale}`}>
+      <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0  text-[9vw] text-gold uppercase z-20">
+        <h1
+          className={`text-black-contour mt-10 scale-${showScale} transition-all duration-1000`}
+        >
           {reward.type === "mythOrb"
             ? `${mythElementNames[reward.mythology]} Orb`
             : reward.type === "blackOrb"
@@ -119,11 +121,11 @@ const FlashScreen = ({ reward }) => {
             : `1 ${reward.type.toUpperCase()}`}
         </h1>
         {showHand && (
-          <HandHelping
+          <ThumbsUp
             onClick={() => {
               handleClick();
             }}
-            size={"120px"}
+            size={"15vw"}
             color="#FFD660"
             className="mx-auto drop-shadow-xl scale-more"
           />
@@ -160,6 +162,7 @@ const Gacha = (props) => {
   const [showScale, setShowScale] = useState(false);
   const [changeText, setChangeText] = useState("Win");
   const [spinSound, setSpinSound] = useState(false);
+  const [disableHand, setDisableHand] = useState(false);
 
   const handleUpdateData = (rewardType, rewardValue, data) => {
     if (rewardType === "blackOrb") {
@@ -239,6 +242,12 @@ const Gacha = (props) => {
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setDisableHand(true);
+    }, 2000);
+  }, []);
+
   const claimDailyBonus = async () => {
     tele.HapticFeedback.notificationOccurred("success");
     setShowScale(true);
@@ -289,7 +298,7 @@ const Gacha = (props) => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen w-screen justify-center font-fof items-center bg-black ">
+    <div className="flex flex-col h-screen w-screen justify-center font-fof items-center bg-black">
       <div className="flex flex-col w-full h-full items-center pt-2">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
@@ -332,14 +341,20 @@ const Gacha = (props) => {
         <div className="flex items-start justify-center w-full h-1/5"></div>
         <div
           onClick={!showScale && claimDailyBonus}
-          className="flex absolute items-start bottom-16 justify-center w-full"
+          className="flex absolute items-start bottom-28 justify-center w-full"
         >
           {!showScale && (
             <div className="relative">
-              <div className="font-symbols scale-point z-10 mx-auto my-auto absolute ml-2 text-white text-[80px] text-black-contour">
-                T
-              </div>
-              <LoaderPinwheel color="#FFD660" size={"20vw"} />
+              {!disableHand && (
+                <div className="font-symbols scale-point z-10 mx-auto my-auto absolute ml-2.5 -mt-1 text-white text-[80px] text-black-contour">
+                  T
+                </div>
+              )}
+              <LoaderPinwheel
+                color="#FFD660"
+                size={"18vw"}
+                className={`${disableHand && "animate-spin-slow"}`}
+              />
             </div>
           )}
         </div>

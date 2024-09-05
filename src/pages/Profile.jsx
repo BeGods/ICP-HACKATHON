@@ -1,31 +1,63 @@
-import { TonConnectButton, useTonAddress } from "@tonconnect/ui-react";
-import { Award, ChevronsRight, Globe, Settings, Trophy } from "lucide-react";
+import {
+  TonConnectButton,
+  useTonAddress,
+  useTonConnectModal,
+} from "@tonconnect/ui-react";
+import { Settings, Speech, Trophy, User, UserPlus, Users } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { toggleBackButton } from "../utils/teleBackButton";
 import ProfileCard from "../components/Cards/ProfileCard";
 import { MyContext } from "../context/context";
-import { toast } from "react-toastify";
-import ToastMesg from "../components/Toast/ToastMesg";
 import Avatar from "../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
 import Language from "../components/Modals/Language";
 import { showToast } from "../components/Toast/Toast";
+import { connectTonWallet } from "../utils/api";
+import Header from "../components/Headers/Header";
+import { mythSymbols } from "../utils/variables";
+import Footer from "../components/Common/Footer";
 
 const tele = window.Telegram?.WebApp;
 
+const HeaderContent = ({ userData, avatarColor, t }) => {
+  return (
+    <div className="flex justify-between relative w-full">
+      {/* Left */}
+      <div className="flex flex-col justify-between h-full px-2 pt-1">
+        <h1
+          className={`text-head text-black-contour uppercase text-white
+           `}
+        >
+          PLAYER
+        </h1>
+      </div>
+      <div className="flex absolute justify-center w-full">
+        <div className="h-[36vw] w-[36vw] -mt-5">
+          <Avatar
+            name={userData.telegramUsername}
+            profile={1}
+            color={avatarColor}
+          />
+        </div>
+      </div>
+      {/* Right */}
+      <div className="flex flex-col items-end justify-between h-full px-2 pt-1">
+        <h1 className={`text-head text-white-contour uppercase text-black`}>
+          TASKS
+        </h1>
+      </div>
+    </div>
+  );
+};
+
 const Profile = (props) => {
-  const { t, i18n } = useTranslation();
-  const { userData, setSection } = useContext(MyContext);
+  const { t } = useTranslation();
+  const { userData } = useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [showLang, setShowLang] = useState(false);
+  const [isClicked, setIsClicked] = useState(0);
   const userFriendlyAddress = useTonAddress();
-  const [isAddressSent, setIsAddressSent] = useState(false);
-  const [activeTab, setActiveTab] = useState(true);
   const [activeSection, setActiveSection] = useState(true);
-  const [toggleSound, setToggleSound] = useState(() => {
-    const savedSound = localStorage.getItem("sound");
-    return savedSound !== null ? JSON.parse(savedSound) : false;
-  });
+  const { state } = useTonConnectModal();
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(
@@ -34,200 +66,164 @@ const Profile = (props) => {
     showToast("copy_link");
   };
 
-  // const handleConnectTon = async () => {
-  //   const accessToken = localStorage.getItem("accessToken");
-  //   try {
-  //     await connectTonWallet({ tonAddress: userFriendlyAddress }, accessToken);
-  //     localStorage.setItem("tonnconnected", true);
-  //     setIsAddressSent(true); // Update the state after successful connection
-  //     localStorage.setItem("isAddressSent", "true"); // Persist state in localStorage
-
-  //     toast.success(
-  //       <ToastMesg
-  //         title={"Wallet connected successfully!"}
-  //         desc={"Ton wallet connected successfully."}
-  //         img={"/assets/icons/toast.success.svg"}
-  //       />,
-  //       {
-  //         icon: false,
-  //         autoClose: 2000,
-  //         hideProgressBar: true,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "colored",
-  //       }
-  //     );
-  //   } catch (error) {
-  //     const errorMessage =
-  //       error.response.data.error ||
-  //       error.response.data.message ||
-  //       error.message ||
-  //       "An unexpected error occurred";
-  //     toast.error(
-  //       <ToastMesg
-  //         title={"There was a problem connecting your wallet."}
-  //         desc={errorMessage}
-  //         img={"/assets/icons/toast.fail.svg"}
-  //       />,
-  //       {
-  //         icon: false,
-  //         autoClose: 2000,
-  //         hideProgressBar: true,
-  //         closeOnClick: true,
-  //         pauseOnHover: true,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "colored",
-  //       }
-  //     );
-  //   }
-  // };
+  const handleConnectTon = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      await connectTonWallet({ tonAddress: userFriendlyAddress }, accessToken);
+      localStorage.setItem("tonConnected", "true");
+      showToast("ton_connect_success");
+    } catch (error) {
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("ton_connect_error");
+    }
+  };
 
   useEffect(() => {
-    toggleBackButton(tele, () => {
-      setSection(0);
-    });
-  }, []);
-
-  // useEffect(() => {
-  //   const isAddressSentFlag = localStorage.getItem("isAddressSent");
-
-  //   if (userFriendlyAddress && !isAddressSent && !isAddressSentFlag) {
-  //     handleConnectTon(); // Only connect if the address hasn't been sent before
-  //   }
-  // }, [userFriendlyAddress, isAddressSent]);
+    if (
+      state.closeReason == "wallet-selected" &&
+      state.status == "closed" &&
+      !localStorage.getItem("tonConnected")
+    ) {
+      handleConnectTon();
+    }
+  }, [state]);
 
   return (
-    <div className="flex flex-col items-center w-full text-secondary text-white bg-[#121212] h-screen overflow-auto px-[15px] py-2">
-      {/* Tab */}
-      {activeTab ? (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100vh",
+        width: "100vw",
+      }}
+      className="flex flex-col h-screen overflow-hidden m-0"
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1,
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-other`}
+          style={{
+            backgroundImage: `url(/assets/uxui/fof.base.background.jpg)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
+      {/* Header */}
+      <Header
+        children={
+          <HeaderContent avatarColor={avatarColor} userData={userData} t={t} />
+        }
+      />
+      {/* Content */}
+      <div className="flex relative flex-grow justify-center items-center">
+        <div
+          className="h-icon-primary w-icon-primary flex justify-center items-center right-0 top-0 mr-[30px] mt-6 z-10 absolute border rounded-full p-3.5"
+          onClick={() => {
+            setShowLang(true);
+          }}
+        >
+          <Settings size={"30px"} color="white" />
+        </div>
         <div className="relative w-full">
-          <div
-            className="h-icon-primary w-icon-primary flex justify-center items-center left-0 mt-4 ml-2 absolute border rounded-full p-3.5"
-            onClick={() => {
-              setSection(4);
-            }}
-          >
-            <Trophy />
-          </div>
-
-          <div
-            className="h-icon-primary w-icon-primary flex justify-center items-center right-0 mt-4 mr-2 absolute border rounded-full p-3.5"
-            onClick={() => {
-              setShowLang(true);
-            }}
-          >
-            <Settings size={"30px"} />
-          </div>
-          {/* PROFILE DETAILS */}
-          <div className="flex justify-center items-center flex-col">
-            {/* <img
-              src="/images/profile.png"
-              alt="profile"
-              className="h-[100px] w-[100px] mt-4  rounded-full"
-            /> */}
-            <div className="w-[100px] h-[100px] mt-4">
-              <Avatar
-                name={userData.telegramUsername}
-                profile={1}
-                color={avatarColor}
-              />
-            </div>
-            <h1 className="text-secondary mt-2">
-              {userData.telegramUsername.toUpperCase()}
-            </h1>
-            <h2 className="text-textGray text-[12px] -mt-1">{t(`main.fdg`)}</h2>
-            <TonConnectButton className="mt-2" />
-          </div>
-          {/* SECTIONS */}
-          <div className="flex w-full text-tertiary mt-6">
-            <div
-              onClick={() => {
-                setActiveSection(true);
-              }}
-              className={`w-full text-center ${
-                activeSection ? "border-b-2 text-white" : "text-borderDark"
-              }  py-1`}
-            >
-              {t(`profile.details`)}
-            </div>
-            <div
-              onClick={() => {
-                setActiveSection(false);
-              }}
-              className={`w-full text-center ${
-                !activeSection ? "border-b-2 text-white" : "text-borderDark"
-              }  py-1`}
-            >
-              {t(`profile.notifications`)}
-            </div>
-          </div>
-          {/* DETAILS */}
           {activeSection ? (
-            <div className="flex gap-2 flex-col items-center justify-center w-full">
-              {/* STATS */}
-              <div className="text-center bg-black w-full p-[15px] mt-2 rounded-primary">
-                <h1 className="text-tertiary uppercase">
-                  {t(`profile.stats`)}
-                </h1>
+            <div className="flex px-2 text-white gap-2 mt-2.5 flex-col items-center justify-center w-full">
+              <h2 className="text-white uppercase text-tertiary mt-2">
+                {t(`main.fdg`)}
+              </h2>
+              <h1 className="text-tertiary -mt-1 ">
+                {userData.telegramUsername}
+              </h1>
+              <div
+                onMouseDown={() => {
+                  setIsClicked(1);
+                }}
+                onMouseUp={() => {
+                  setIsClicked(0);
+                }}
+                onMouseLeave={() => {
+                  setIsClicked(0);
+                }}
+                onTouchStart={() => {
+                  setIsClicked(1);
+                }}
+                onTouchEnd={() => {
+                  setIsClicked(0);
+                }}
+                onTouchCancel={() => {
+                  setIsClicked(0);
+                }}
+                className={`text-center outline outline-[0.5px] ${
+                  isClicked == 1 ? "outline-gray-400" : "outline-gray-600"
+                } bg-black text-tertiary w-full p-[15px] mt-2 rounded-primary`}
+              >
+                <div className="flex gap-2 -mt-1.5 uppercase justify-center items-center w-full">
+                  <Trophy size={"6vw"} />
+                  <h1 className="mt-1">Leaderboard</h1>
+                </div>
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
+                    <User size={"6vw"} />
                     <div className="text-left">
-                      <h3 className="text-secondary">
-                        {t(`profile.gameRank`)}
-                      </h3>
+                      <h3 className="text-tertiary">Player</h3>
                       <h2 className="text-secondary">
                         #{userData.overallRank === 0 ? 1 : userData.overallRank}
                       </h2>
                     </div>
                   </div>
                   <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
+                    <Users size={"6vw"} />
                     <div className="text-left">
-                      <h3 className="text-secondary">
-                        {t(`profile.squadRank`)}
-                      </h3>
+                      <h3 className="text-tertiary">Team</h3>
                       <h2 className="text-secondary">
                         #{userData.squadRank === 0 ? 1 : userData.squadRank}
                       </h2>
                     </div>
                   </div>
                 </div>
-                {/* <div
-                  onClick={() => {
-                    setSection(4);
-                  }}
-                  className="w-full text-center text-[12px] pt-3 uppercase"
-                >
-                  {t(`profile.leaderboard`)} {">"}
-                </div> */}
               </div>
-              {/* INVITE */}
-              <div className="text-center bg-black w-full p-[15px] rounded-primary">
-                <h1 className="text-tertiary uppercase">
-                  {t(`profile.invite`)}
-                </h1>
-                <div className="flex items-center w-full text-left mt-1">
-                  <div className="w-full" onClick={handleCopyLink}>
-                    <h2 className="text-secondary">
-                      {t(`profile.inviteYourFriends`)}
-                    </h2>
-                    <p className="text-[12px] -mt-1">
-                      {t(`profile.shareLinkToEarnOrbs`)}
-                    </p>
-                  </div>
-                  <ChevronsRight />
+              <div
+                onMouseDown={() => {
+                  setIsClicked(2);
+                }}
+                onMouseUp={() => {
+                  setIsClicked(0);
+                }}
+                onMouseLeave={() => {
+                  setIsClicked(0);
+                }}
+                onTouchStart={() => {
+                  setIsClicked(2);
+                }}
+                onTouchEnd={() => {
+                  setIsClicked(0);
+                }}
+                onTouchCancel={() => {
+                  setIsClicked(0);
+                }}
+                className={`text-center outline outline-[0.5px] ${
+                  isClicked == 2 ? "outline-gray-400" : "outline-gray-600"
+                } bg-black w-full text-tertiary p-[15px] mt-2.5 rounded-primary`}
+              >
+                <div className="flex gap-2 uppercase -mt-2 justify-center items-center w-full">
+                  <UserPlus size={"6vw"} />
+                  <h1 className="mt-1">Invite</h1>
                 </div>
                 <div className="flex gap-[8px] mt-[8px]">
                   <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
@@ -237,20 +233,20 @@ const Profile = (props) => {
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-secondary">{t(`profile.direct`)}</h3>
+                      <h3 className="text-tertiary">Referrals</h3>
                       <h2 className="text-secondary">
                         {userData.directReferralCount}
                       </h2>
                     </div>
                   </div>
-                  <div className="flex items-center gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
+                  <div className="flex items-center grayscale opacity-50 gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-secondary">{t(`profile.premium`)}</h3>
+                      <h3 className="text-tertiary">Premium</h3>
                       <h2 className="text-secondary">
                         {userData.premiumReferralCount}
                       </h2>
@@ -258,20 +254,22 @@ const Profile = (props) => {
                   </div>
                 </div>
               </div>
+              <div className="text-center grayscale opacity-50 outline outline-[0.5px] outline-gray-600 text-tertiary bg-black w-full p-[15px] mt-2.5 rounded-primary">
+                <div className="flex gap-2 uppercase justify-center items-center w-full pb-1">
+                  <Speech size={"6vw"} color="white" />
+                  <h1 className="mt-1">KOL(s)</h1>
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="flex gap-2 flex-col items-center justify-center w-full mt-2">
+            <div className="flex gap-2 flex-col items-center justify-center w-full mt-4">
               <ProfileCard />
               <ProfileCard />
             </div>
           )}
         </div>
-      ) : (
-        <div className="flex gap-2 flex-col items-center justify-center w-full mt-2">
-          <ProfileCard />
-          <ProfileCard />
-        </div>
-      )}
+      </div>
+      <Footer />
       {showLang && (
         <Language
           close={() => {
@@ -279,31 +277,190 @@ const Profile = (props) => {
           }}
         />
       )}
-      <div className="fixed bottom-3 w-full px-[15px] mx-auto">
-        <div className="flex border border-[#414141] w-full p-1 rounded-full h-[44px] uppercase">
-          <div
-            onClick={() => {
-              setActiveTab(true);
-            }}
-            className={`flex justify-center items-center ${
-              activeTab && "bg-borderGray"
-            } h-full rounded-full w-1/2 text-[16px] py-1.5`}
-          >
-            {t(`profile.profile`)}
-          </div>
-          <div
-            onClick={() => {
-              setActiveTab(false);
-            }}
-            className={`flex justify-center items-center ${
-              !activeTab && "bg-borderGray"
-            } h-full rounded-full w-1/2 text-[16px] py-1.5`}
-          >
-            {t(`profile.tasks`)}
-          </div>
-        </div>
-      </div>
     </div>
+
+    // <div className="flex flex-col items-center w-full text-secondary text-white bg-[#121212] h-screen overflow-auto px-[15px] py-2">
+    //   {activeTab ? (
+    //     <div className="relative w-full">
+    //       <div
+    //         className="h-icon-primary w-icon-primary flex justify-center items-center right-0 mt-4 mr-2 absolute border rounded-full p-3.5"
+    //         onClick={() => {
+    //           setShowLang(true);
+    //         }}
+    //       >
+    //         <Settings size={"30px"} />
+    //       </div>
+    //       <div className="flex justify-center items-center flex-col">
+    //         <div className="w-[100px] h-[100px] mt-4">
+    //           <Avatar
+    //             name={userData.telegramUsername}
+    //             profile={1}
+    //             color={avatarColor}
+    //           />
+    //         </div>
+    //         <h2 className="text-textGray uppercase text-tertiary mt-2">
+    //           {t(`main.fdg`)}
+    //         </h2>
+    //         <h1 className="text-tertiary -mt-1 ">
+    //           {userData.telegramUsername}
+    //         </h1>
+    //       </div>
+    //       <div className="flex w-full text-tertiary mt-4">
+    //         <div
+    //           onClick={() => {
+    //             setActiveSection(true);
+    //           }}
+    //           className={`w-full text-center uppercase ${
+    //             activeSection ? "border-b-2 text-white" : "text-borderDark"
+    //           }  py-1`}
+    //         >
+    //           {t(`profile.profile`)}
+    //         </div>
+    //         <div
+    //           onClick={() => {
+    //             setActiveSection(false);
+    //           }}
+    //           className={`w-full text-center uppercase ${
+    //             !activeSection ? "border-b-2 text-white" : "text-borderDark"
+    //           }  py-1`}
+    //         >
+    //           {t(`profile.tasks`)}
+    //         </div>
+    //       </div>
+    //       {activeSection ? (
+    //         <div className="flex gap-2 mt-2.5 flex-col items-center justify-center w-full">
+    //           <div
+    //             onMouseDown={() => {
+    //               setIsClicked(1);
+    //             }}
+    //             onMouseUp={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             onMouseLeave={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             onTouchStart={() => {
+    //               setIsClicked(1);
+    //             }}
+    //             onTouchEnd={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             onTouchCancel={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             className={`text-center outline outline-[0.5px] ${
+    //               isClicked == 1 ? "outline-gray-400" : "outline-gray-600"
+    //             } bg-black text-tertiary w-full p-[15px] mt-2 rounded-primary`}
+    //           >
+    //             <div className="flex gap-2 -mt-1.5 uppercase justify-center items-center w-full">
+    //               <Trophy size={"6vw"} />
+    //               <h1 className="mt-1">Leaderboard</h1>
+    //             </div>
+    //             <div className="flex gap-[8px] mt-[8px]">
+    //               <div className="flex  items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
+    //                 <User size={"6vw"} />
+    //                 <div className="text-left">
+    //                   <h3 className="text-tertiary">Player</h3>
+    //                   <h2 className="text-secondary">
+    //                     #{userData.overallRank === 0 ? 1 : userData.overallRank}
+    //                   </h2>
+    //                 </div>
+    //               </div>
+    //               <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
+    //                 <Users size={"6vw"} />
+    //                 <div className="text-left">
+    //                   <h3 className="text-tertiary">Team</h3>
+    //                   <h2 className="text-secondary">
+    //                     #{userData.squadRank === 0 ? 1 : userData.squadRank}
+    //                   </h2>
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           </div>
+    //           <div
+    //             onMouseDown={() => {
+    //               setIsClicked(2);
+    //             }}
+    //             onMouseUp={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             onMouseLeave={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             onTouchStart={() => {
+    //               setIsClicked(2);
+    //             }}
+    //             onTouchEnd={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             onTouchCancel={() => {
+    //               setIsClicked(0);
+    //             }}
+    //             className={`text-center outline outline-[0.5px] ${
+    //               isClicked == 2 ? "outline-gray-400" : "outline-gray-600"
+    //             } bg-black w-full text-tertiary p-[15px] mt-2.5 rounded-primary`}
+    //           >
+    //             <div className="flex gap-2 uppercase -mt-2 justify-center items-center w-full">
+    //               <UserPlus size={"6vw"} />
+    //               <h1 className="mt-1">Invite</h1>
+    //             </div>
+    //             <div className="flex gap-[8px] mt-[8px]">
+    //               <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
+    //                 <img
+    //                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
+    //                   alt="telegram"
+    //                   className="w-[28px] h-[28px]"
+    //                 />
+    //                 <div className="text-left">
+    //                   <h3 className="text-tertiary">Referrals</h3>
+    //                   <h2 className="text-secondary">
+    //                     {userData.directReferralCount}
+    //                   </h2>
+    //                 </div>
+    //               </div>
+    //               <div className="flex items-center grayscale opacity-50 gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
+    //                 <img
+    //                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
+    //                   alt="telegram"
+    //                   className="w-[28px] h-[28px]"
+    //                 />
+    //                 <div className="text-left">
+    //                   <h3 className="text-tertiary">Premium</h3>
+    //                   <h2 className="text-secondary">
+    //                     {userData.premiumReferralCount}
+    //                   </h2>
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           </div>
+    //           <div className="text-center grayscale opacity-50 outline outline-[0.5px] outline-gray-600 text-tertiary bg-black w-full p-[15px] mt-2.5 rounded-primary">
+    //             <div className="flex gap-2 uppercase justify-center items-center w-full pb-1">
+    //               <Speech size={"6vw"} color="white" />
+    //               <h1 className="mt-1">KOL(s)</h1>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       ) : (
+    //         <div className="flex gap-2 flex-col items-center justify-center w-full mt-4">
+    //           <ProfileCard />
+    //           <ProfileCard />
+    //         </div>
+    //       )}
+    //     </div>
+    //   ) : (
+    //     <div className="flex gap-2 flex-col items-center justify-center w-full mt-2">
+    //       <ProfileCard />
+    //       <ProfileCard />
+    //     </div>
+    //   )}
+    //   {showLang && (
+    //     <Language
+    //       close={() => {
+    //         setShowLang(false);
+    //       }}
+    //     />
+    //   )}
+    // </div>
   );
 };
 

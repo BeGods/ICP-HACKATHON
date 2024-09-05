@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 
 const alignBasedOnCard = [
   "-mt-[28px] ml-[52px]",
-  "-mt-7 ml-7",
+  "-mt-8 ml-10",
   "mr-[60px] mt-6",
 ];
 const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {

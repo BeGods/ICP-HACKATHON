@@ -313,6 +313,44 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "ton_connect_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.TonConnect.success.title")}
+          desc={t("toasts.TonConnect.success.desc")}
+          img={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "ton_connect_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.TonConnect.error.title")}
+          desc={t("toasts.TonConnect.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
 
     default:
       toast.info(

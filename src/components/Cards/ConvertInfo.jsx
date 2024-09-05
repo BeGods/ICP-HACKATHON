@@ -18,7 +18,7 @@ const ConvertInfo = ({ t, handleClick }) => {
   }, [myths.length]);
 
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-60  backdrop-blur-sm flex justify-center items-center z-50">
+    <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img

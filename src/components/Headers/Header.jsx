@@ -3,7 +3,7 @@ import { MyContext } from "../../context/context";
 import { mythSections } from "../../utils/variables";
 
 const Header = ({ children }) => {
-  const { activeMyth } = useContext(MyContext);
+  const { activeMyth, section } = useContext(MyContext);
   return (
     <div
       style={{
@@ -26,7 +26,10 @@ const Header = ({ children }) => {
           width: "100%",
           zIndex: -1,
         }}
-        className={`filter-paper-${mythSections[activeMyth]} relative -mt-1`}
+        className={`filter-paper-other relative -mt-1`}
+        // className={`filter-paper-${
+        //   section === 3 ? mythSections[4] : mythSections[activeMyth]
+        // } relative -mt-1`}
       />
       {children}
     </div>

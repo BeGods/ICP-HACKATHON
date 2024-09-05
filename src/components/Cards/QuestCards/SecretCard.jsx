@@ -12,7 +12,7 @@ const SecretCard = ({
   activeMyth,
 }) => {
   return (
-    <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-sm bg-opacity-60 z-50">
+    <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       <div
         style={{
           backgroundImage: `url(/assets/cards/320px-info_background.jpg)`,

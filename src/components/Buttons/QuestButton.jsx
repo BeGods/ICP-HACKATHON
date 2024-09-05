@@ -9,6 +9,9 @@ const QuestButton = ({
   activeMyth,
   action,
   message,
+  currQuest,
+  lastQuest,
+  faith,
   t,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -41,7 +44,7 @@ const QuestButton = ({
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
         <CornerUpLeft
-          color="white"
+          color={currQuest === 0 ? `#707579` : "white"}
           className="h-icon-secondary w-icon-secondary"
           onClick={handlePrev}
         />
@@ -64,7 +67,7 @@ const QuestButton = ({
       )}
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
-          color="white"
+          color={currQuest !== lastQuest ? "white" : "#707579"}
           className="h-icon-secondary w-icon-secondary"
           onClick={handleNext}
         />

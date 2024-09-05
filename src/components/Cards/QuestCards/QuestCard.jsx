@@ -3,16 +3,33 @@ import { mythSections } from "../../../utils/variables";
 import MappedOrbs from "../../Common/MappedOrbs";
 import Symbol from "../../Common/Symbol";
 
-const QuestCard = ({ quest, activeMyth, Button, t, InfoIcon, curr }) => {
+const QuestCard = ({
+  quest,
+  activeMyth,
+  Button,
+  t,
+  InfoIcon,
+  curr,
+  handleClick,
+  showClaimEffect,
+}) => {
   return (
-    <div className="relative mt-[30px]">
-      <div className="relative">
+    <div className="relative mt-[30px] w-[70%] mx-auto">
+      <div
+        className={`relative card-shadow-black ${
+          showClaimEffect && "scale-reward"
+        } ${
+          quest.isQuestClaimed &&
+          `border border-${mythSections[activeMyth]}-primary`
+        } rounded-[15px]  z-10`}
+      >
         <img
           src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}.jpg`}
           alt="card"
           className={`w-full h-[75%] ${
             !quest.isQuestClaimed && "grayscale"
           } rounded-[15px]`}
+          onClick={handleClick}
         />
         <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
           <div className="flex w-full">
@@ -27,7 +44,14 @@ const QuestCard = ({ quest, activeMyth, Button, t, InfoIcon, curr }) => {
             className={`flex relative items-center h-[19%] uppercase glow-text-quest text-white`}
           >
             <div className="absolute text-primary  z-50 right-0 top-0 -mt-[30px] pr-2">
-              <span>{curr + 1}/12 </span>
+              <span>
+                <span
+                  className={`text-black-contour uppercase text-${mythSections[activeMyth]}-text`}
+                >
+                  {curr + 1}
+                </span>
+                /12{" "}
+              </span>
             </div>
             <div
               style={{

@@ -420,7 +420,7 @@
                     "desc": "Seu link de referência foi copiado para a área de transferência. Compartilhe com seus amigos!"
                 }
             },
-            "Ton wallet connect": {
+            "TonConnect": {
                 "success": {
                     "title": "Carteira conectada com sucesso!",
                     "desc": "Sua carteira TON foi conectada."

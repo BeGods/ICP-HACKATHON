@@ -8,6 +8,7 @@ export const elements = ["fire", "earth", "water", "air"];
 export const elementNames = ["Fire", "Earth", "Water", "Air", "Aether"];
 export const wheelNames = ["aether", "fire", "earth", "water", "air"];
 export const wheel = ["other", "greek", "celtic", "norse", "egyptian"];
+export const wheelMyths = ["other", "Greek", "Celtic", "Norse", "Egyptian"];
 export const boosterIcon = ["B", "Q", "H", "A", "b", "S"];
 export const footerIcons = ["F", "q", "Z", "P"];
 export const mythSymbols = {
