@@ -419,7 +419,7 @@
                     "desc": "Tu enlace de referencia ha sido copiado al portapapeles. ¡Compártelo con tus amigos!"
                 }
             },
-            "Ton wallet connect": {
+            "TonConnect": {
                 "success": {
                     "title": "¡Billetera conectada con éxito!",
                     "desc": "Tu billetera TON ha sido conectada."
