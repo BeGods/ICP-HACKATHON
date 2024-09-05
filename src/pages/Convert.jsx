@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { convertOrbs } from "../utils/api";
 import { MyContext } from "../context/context";
 import Footer from "../components/Common/Footer";
@@ -31,13 +31,22 @@ const HeaderContent = ({ gameData, myth, t }) => {
         >
           {myth === 0 ? "BLACK" : t(`elements.${elements[myth - 1]}`)}
         </h1>
-        {myth !== 0 && (
+        {myth !== 0 ? (
           <div className="flex mb-4 -ml-2 items-center text-black-contour w-fit h-fit">
             <div className={`font-symbols text-icon text-${wheel[myth]}-text`}>
               {mythSymbols[wheel[myth]]}
             </div>
             <div className="text-num text-white">
               {gameData.mythologies[myth - 1]?.orbs}
+            </div>
+          </div>
+        ) : (
+          <div className="flex mb-4 -mr-2 items-center text-black-contour w-fit h-fit">
+            <div className={`font-symbols text-icon text-white`}>
+              {mythSymbols["other"]}
+            </div>
+            <div className="text-num text-black-contour  text-white">
+              {gameData.blackOrbs}
             </div>
           </div>
         )}
@@ -61,15 +70,19 @@ const HeaderContent = ({ gameData, myth, t }) => {
       </div>
       {/* Right */}
       <div className="flex flex-col items-end justify-between h-full px-2 pt-1">
-        <h1 className={`text-head text-white-contour uppercase text-black`}>
+        <h1 className={`text-head text-black-contour uppercase text-white`}>
           TOWER
         </h1>
-        <div className="flex mb-4 -mr-2 items-center text-black-contour w-fit h-fit">
-          <div className="text-num text-white-contour  text-black">
+        <div className="flex mb-4 items-center text-black-contour w-fit h-fit">
+          <div className="text-num text-black-contour  text-white">
             {gameData.blackOrbs}
           </div>
-          <div className={`font-symbols text-icon text-white`}>
-            {mythSymbols["other"]}
+          <div className="flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black">
+            <img
+              src="/assets/uxui/240px-orb.multicolor.png"
+              alt="multiOrb"
+              className="w-full h-full"
+            />
           </div>
         </div>
       </div>
@@ -204,12 +217,7 @@ const Convert = () => {
             </div>
           </div>
         )}
-        <ToggleLeft
-          handleClick={() => {
-            setActiveMyth((prev) => (prev - 1 + 5) % 5);
-          }}
-          activeMyth={4}
-        />
+
         {/* Wheel */}
         <div className="flex  flex-col items-center justify-center w-full">
           <img
@@ -235,12 +243,6 @@ const Convert = () => {
             />
           </div>
         </div>
-        <ToggleRight
-          handleClick={() => {
-            setActiveMyth((prev) => (prev + 1) % 5);
-          }}
-          activeMyth={4}
-        />
       </div>
       {/* Footer */}
       <Footer />
@@ -252,6 +254,19 @@ const Convert = () => {
           }}
         />
       )}
+
+      <ToggleLeft
+        handleClick={() => {
+          setActiveMyth((prev) => (prev - 1 + 5) % 5);
+        }}
+        activeMyth={4}
+      />
+      <ToggleRight
+        handleClick={() => {
+          setActiveMyth((prev) => (prev + 1) % 5);
+        }}
+        activeMyth={4}
+      />
       <ReactHowler
         src="/assets/audio/fof.tower.background01.wav"
         playing={!JSON.parse(localStorage.getItem("sound"))}

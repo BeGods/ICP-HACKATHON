@@ -92,7 +92,7 @@ const Quests = () => {
 
   const handleNext = () => {
     const range =
-      mythData[activeMyth].faith >= 12 ? quests.length : quests.length - 1;
+      mythData[activeMyth].faith > 0 ? quests.length : quests.length - 1;
     if (currQuest < range) {
       setCurrQuest((prev) => prev + 1);
     }
@@ -316,16 +316,6 @@ const Quests = () => {
       />
       {/* Content */}
       <div className="flex flex-grow justify-center items-center">
-        <ToggleLeft
-          handleClick={() => {
-            setCurrQuest(0);
-            setActiveMyth((prev) => (prev - 1 + 4) % 4);
-            setShowPay(false);
-            setShowInfo(false);
-            setShowClaim(false);
-          }}
-          activeMyth={activeMyth}
-        />
         {/* Quests */}
         <div className="flex items-center justify-center w-full">
           {currQuest < quests.length ? (
@@ -388,19 +378,21 @@ const Quests = () => {
                 className="h-full relative -mt-[42px]"
               >
                 <JigsawImage
-                  imageUrl={`/assets/cards/whitelist.fof.${mythSections[activeMyth]}.jpg`}
+                  imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.whitelist.wood.jpg`}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith
                   )}
                 />
-                <IconButton
-                  isInfo={true}
-                  activeMyth={activeMyth}
-                  handleClick={() => {
-                    setSecretInfo((prev) => !prev);
-                  }}
-                  align={1}
-                />
+                {gameData.mythologies[activeMyth].faith >= 12 && (
+                  <IconButton
+                    isInfo={true}
+                    activeMyth={activeMyth}
+                    handleClick={() => {
+                      setSecretInfo((prev) => !prev);
+                    }}
+                    align={1}
+                  />
+                )}
               </div>
               <JigsawButton
                 activeMyth={activeMyth}
@@ -412,19 +404,29 @@ const Quests = () => {
             </div>
           )}
         </div>
-        <ToggleRight
-          handleClick={() => {
-            setCurrQuest(0);
-            setActiveMyth((prev) => (prev + 1) % 4);
-            setShowPay(false);
-            setShowInfo(false);
-            setShowClaim(false);
-          }}
-          activeMyth={activeMyth}
-        />
       </div>
       {/* Footer */}
       <Footer />
+      <ToggleLeft
+        handleClick={() => {
+          setCurrQuest(0);
+          setActiveMyth((prev) => (prev - 1 + 4) % 4);
+          setShowPay(false);
+          setShowInfo(false);
+          setShowClaim(false);
+        }}
+        activeMyth={activeMyth}
+      />
+      <ToggleRight
+        handleClick={() => {
+          setCurrQuest(0);
+          setActiveMyth((prev) => (prev + 1) % 4);
+          setShowPay(false);
+          setShowInfo(false);
+          setShowClaim(false);
+        }}
+        activeMyth={activeMyth}
+      />
       {showShareReward && (
         <MilestoneCard
           t={t}

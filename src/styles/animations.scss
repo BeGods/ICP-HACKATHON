@@ -214,3 +214,29 @@
   color: rgba(255, 247, 220, 1);
   animation: moveAndFade 1s forwards;
 }
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.minimize{
+  animation: slideDown 0.8s ease-in-out forwards;
+}
+
+.maximize{
+  animation: slideUp 0.8s ease-in-out forwards;
+}

@@ -60,18 +60,20 @@ const HeaderContent = ({
       <div className="flex absolute justify-center w-full">
         {/* Orb */}
         <div
-          className={`flex text-center justify-center h-[36vw] w-[36vw] -mt-5 items-center rounded-full outline outline-[5px] outline-${
+          className={`flex text-center justify-center h-[36vw] w-[36vw]  -mt-5 items-center rounded-full outline  outline-${
             mythSections[activeMyth]
           }-primary  transition-all duration-1000 ${
             orbGlow
-              ? `glow-tap-${mythSections[activeMyth]} `
+              ? `glow-tap-${mythSections[activeMyth]} outline-[2px] `
               : `glow-icon-${mythSections[activeMyth]}`
-          } ${tapGlow && "scale-[125%]"} ${glowReward && "scale-[125%]"}`}
+          } ${tapGlow && "scale-[125%] outline-[2px]"} ${
+            glowReward && "scale-[125%] outline-[2px]"
+          }`}
         >
           <img
             src="/assets/uxui/240px-orb.base.png"
             alt="base-orb"
-            className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
+            className={` w-full h-full`}
           />{" "}
           <span
             className={`absolute z-1 font-symbols  ${
@@ -147,7 +149,7 @@ const Forges = () => {
   const [glowNumber, setGlowNumber] = useState(false);
   const [glowSymbol, setGlowSymbol] = useState(false);
   const [glowShards, setGlowShards] = useState(false);
-  const [minimize, setMinimize] = useState(false);
+  const [minimize, setMinimize] = useState(0);
   const { orbs, shards } = mythStates[activeMyth >= 4 ? 0 : activeMyth];
   const [plusOnes, setPlusOnes] = useState([]);
   const timeoutRef = useRef(null);
@@ -186,6 +188,7 @@ const Forges = () => {
     if (disabled) return;
 
     if (!sessionActive) {
+      setMinimize(1);
       startSession();
     }
 
@@ -281,10 +284,6 @@ const Forges = () => {
             newShards = newShards % 1000;
           }
 
-          if (myth.currShards >= 1) {
-            setMinimize(true);
-          }
-
           // Convert orbs to black orbs
           if (newOrbs >= 1000) {
             reachedBlackOrb = true;
@@ -318,7 +317,7 @@ const Forges = () => {
 
       // Always set the glow effects off after a timeout
       const newTimeoutId = setTimeout(async () => {
-        setMinimize(false);
+        setMinimize(2);
         setstartOrbGlow(false);
         setTapGlow(false);
         if (updatedMythStates[activeMyth].currShards > 10 || reachedBlackOrb) {
@@ -327,7 +326,7 @@ const Forges = () => {
       }, 700);
       setTimeoutId(newTimeoutId);
     } else {
-      setMinimize(false);
+      setMinimize(2);
       setMythStates((prevData) => {
         return prevData.map((item, index) => {
           if (index === activeMyth) {
@@ -542,18 +541,6 @@ const Forges = () => {
           />
           {/* Taping region */}
           <div className="flex relative flex-grow justify-center items-center">
-            <div className="flex flex-col bottom-3 absolute">
-              {" "}
-              <Star
-                onClick={() => {
-                  tele.HapticFeedback.notificationOccurred("success");
-                }}
-                size={"18vw"}
-                fill={"white"}
-                color={"white"}
-                className={`glow-star-${mythSections[activeMyth]} scale-star mb-2`}
-              />
-            </div>
             {/* Header Stats */}
             <GameHeader
               orbs={orbs}
@@ -562,13 +549,7 @@ const Forges = () => {
               mythStates={mythStates}
               handleActiveCard={handleActiveCard}
             />
-            {/* LeftButton */}
-            <ToggleLeft
-              handleClick={() => {
-                setActiveMyth((prev) => (prev - 1 + 5) % 5);
-              }}
-              activeMyth={activeMyth}
-            />
+
             {/* TapArea */}
             <div
               onMouseDown={handleStartSession}
@@ -628,7 +609,6 @@ const Forges = () => {
                   ></div>
                 </div> */}
               </div>
-
               {plusOnes.map((plusOne) => (
                 <span
                   key={plusOne.id}
@@ -643,57 +623,59 @@ const Forges = () => {
                   +{mythStates[activeMyth].shardslvl}
                 </span>
               ))}
-
               <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
             </div>
-            {/* RightButton */}
-            <ToggleRight
-              handleClick={() => {
-                setActiveMyth((prev) => (prev + 1) % 5);
+          </div>
+          <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
+            <Star
+              onClick={() => {
+                tele.HapticFeedback.notificationOccurred("success");
               }}
-              activeMyth={activeMyth}
+              size={"18vw"}
+              fill={"white"}
+              color={"white"}
+              className={`glow-star-${mythSections[activeMyth]} scale-star`}
             />
-
-            {activeCard === "shard" && (
-              <div className="absolute bottom-0 left-0 -mb-2.5">
-                <div className=" relative">
-                  {/* <div className="absolute ml-[50px] -mt-[50px]">
-                    <div className="talk-bubble  tri-right border round btm-left-in">
-                      <div className="talktext">
-                        <p>12:000</p>
-                      </div>
-                    </div>
-                  </div> */}
-                  <img
-                    src="/assets/uxui/188px-minion.png"
-                    alt="dwarf"
-                    className="w-full h-full"
-                    onClick={() => {
-                      setActiveCard(null);
-                    }}
-                  />
-                </div>
-              </div>
-            )}
           </div>
           {/* Footer */}
-          {!minimize && <Footer minimize={minimize} />}
+          <Footer minimize={minimize} />
+          {/* RightButton */}
+          <ToggleRight
+            handleClick={() => {
+              setActiveMyth((prev) => (prev + 1) % 5);
+            }}
+            activeMyth={activeMyth}
+          />{" "}
+          {/* LeftButton */}
+          <ToggleLeft
+            handleClick={() => {
+              setActiveMyth((prev) => (prev - 1 + 5) % 5);
+            }}
+            activeMyth={activeMyth}
+          />
           <ReactHowler
             src="/assets/audio/fof.forges.background01.wav"
             playing={!JSON.parse(localStorage.getItem("sound"))}
             preload={true}
             loop
           />
-          {activeCard === "automata" && (
+          {activeCard == "minion" && (
+            <div className="absolute bottom-0 left-0 -mb-2.5">
+              <div className=" relative">
+                <img
+                  src="/assets/uxui/188px-minion.png"
+                  alt="dwarf"
+                  className="w-full h-full"
+                  onClick={() => {
+                    setActiveCard(null);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {activeCard == "automata" && (
             <div className="absolute bottom-0 right-0 z-0">
               <div className="relative">
-                {/* <div className="absolute mr-[50px] -mt-[50px]">
-                    <div className="talk-bubble  tri-right border round btm-left-in">
-                      <div className="talktext">
-                        <p>12:000</p>
-                      </div>
-                    </div>
-                  </div> */}
                 <img
                   src="/assets/uxui/188px-automata.png"
                   alt="dwarf"
