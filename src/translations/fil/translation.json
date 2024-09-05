@@ -418,7 +418,7 @@
                 "desc": "Ang iyong referral link ay nakopya na sa clipboard. I-share ito sa iyong mga kaibigan!"
             }
         },
-        "Ton wallet connect": {
+        "TonConnect": {
             "success": {
                 "title": "Matagumpay na Nakonekta ang Wallet!",
                 "desc": "Ang iyong TON wallet ay nakonekta na."

@@ -334,6 +334,14 @@ const Boosters = () => {
         />
         {/* BOOSTER CARDS */}
         <div className="flex flex-col items-center justify-center w-full gap-[15px]">
+          {/* EXTRA BOOSTER */}
+          <BoosterCard
+            isActive={true}
+            handleClick={() => {}}
+            activeMyth={activeMyth}
+            t={t}
+            booster={6}
+          />
           {/* AUTOMATA BOOSTER */}
           <BoosterCard
             isActive={!mythData.isAutomataActive}
@@ -345,14 +353,6 @@ const Boosters = () => {
             t={t}
             booster={0}
           />
-          {/*  LOST QUESTS  */}
-          <BoosterCard
-            isActive={false}
-            handleClick={handleLostQuest}
-            activeMyth={activeMyth}
-            t={t}
-            booster={1}
-          />
           {/* SHARDS BOOSTER */}
           <BoosterCard
             isActive={mythData.isShardsClaimActive}
@@ -363,6 +363,14 @@ const Boosters = () => {
             activeMyth={activeMyth}
             t={t}
             booster={2}
+          />
+          {/*  LOST QUESTS  */}
+          <BoosterCard
+            isActive={false}
+            handleClick={handleLostQuest}
+            activeMyth={activeMyth}
+            t={t}
+            booster={1}
           />
         </div>
         <ToggleRight

@@ -11,7 +11,7 @@ const BoosterClaim = ({
   mythData,
 }) => {
   return (
-    <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-sm bg-opacity-60 z-50">
+    <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
         <div className="absolute z-10  top-0 left-0">
           Lvl{" "}

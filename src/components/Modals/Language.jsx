@@ -31,14 +31,13 @@ const Language = ({ close }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex flex-col justify-start items-center z-50">
-      <div className="flex relative w-[76%] bg-black rounded-primary justify-center items-center flex-col mt-[52px] card-shadow-white p-6">
+    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-start items-center z-50">
+      <div className="flex relative w-[76%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col mt-[52px] card-shadow-white p-6">
         <IconButton align={0} handleClick={close} activeMyth={4} />
-        <h1 className="text-primary mb-4">Settings</h1>
         <select
           value={lang}
           onChange={handleLanuageChange}
-          className="bg-gray-800 text-white p-2 rounded w-full h-[40px] text-tertiary"
+          className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
         >
           {languages.map((language) => (
             <option key={language.code} value={language.code}>
@@ -46,7 +45,7 @@ const Language = ({ close }) => {
             </option>
           ))}
         </select>
-        <div className="flex text-tertiary text-left justify-between w-full mt-8">
+        <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
           <div>Sound</div>
           <ToggleSwitch />
         </div>

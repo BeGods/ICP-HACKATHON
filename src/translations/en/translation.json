@@ -39,8 +39,12 @@
     },
     "boosters": [
         { "title": "Automata", "desc": "Auto tap" },
-        {"title": "Lost Quests", "desc": "Energy"},  
-        { "title": "Minion", "desc": "Increase tap" }
+        { "title": "Lost Quests", "desc": "Energy"},  
+        { "title": "Minion", "desc": "Increase tap" },
+        {},
+        {},
+        {},
+        { "title": "BURST", "desc": "Power Press" }
     ],
     "profile": {
         "profile": "Profile",
@@ -54,7 +58,7 @@
         "direct": "Direct",
         "premium": "Premium",
         "invite": "Invite",
-        "inviteYourFriends": "Invite Your friends",
+        "inviteYourFriends": "Invite to earn ORB(s)",
         "shareLinkToEarnOrbs": "Share link to earn ORB(S)",
         "squad": "Squad",
         "totalMembers": "Total Members",
@@ -417,7 +421,7 @@
                 "desc": "Your referral link has been copied to the clipboard. Share it with your friends!"
             }
         },
-        "Ton wallet connect": {
+        "TonConnect": {
             "success": {
                 "title": "Wallet Connected Successfully!",
                 "desc": "Your TON wallet has been connected."

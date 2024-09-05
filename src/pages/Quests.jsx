@@ -57,6 +57,7 @@ const Quests = () => {
   const [showPay, setShowPay] = useState(false);
   const [showReward, setShowReward] = useState(false);
   const [showShareReward, setShowShareReward] = useState(false);
+  const [showClaimEffect, setShowClaimEffect] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
   const [secretInfo, setSecretInfo] = useState(null);
   const [currQuest, setCurrQuest] = useState(0);
@@ -91,7 +92,7 @@ const Quests = () => {
 
   const handleNext = () => {
     const range =
-      mythData[activeMyth].faith > 0 ? quests.length : quests.length - 1;
+      mythData[activeMyth].faith >= 12 ? quests.length : quests.length - 1;
     if (currQuest < range) {
       setCurrQuest((prev) => prev + 1);
     }
@@ -104,6 +105,40 @@ const Quests = () => {
     }
 
     return activeParts;
+  };
+
+  const handeUpdateOnClaim = () => {
+    // update quest data
+    const updatedQuestData = questsData.map((item) =>
+      item._id === quest._id ? { ...item, isQuestClaimed: true } : item
+    );
+
+    // update game data
+    const updatedGameData = {
+      ...gameData,
+      mythologies: gameData.mythologies.map((myth) => {
+        const requiredOrbs = quest.requiredOrbs || {};
+        const orbsToDeduct = requiredOrbs[myth.name] || 0;
+
+        if (myth.name === mythologies[activeMyth]) {
+          return {
+            ...myth,
+            faith: myth.faith + 1,
+            energyLimit: myth.energyLimit + 1000,
+            orbs: myth.orbs - orbsToDeduct,
+          };
+        }
+
+        return {
+          ...myth,
+          orbs: myth.orbs - orbsToDeduct,
+        };
+      }),
+    };
+    setShowComplete(false);
+    showToast("quest_claim_success");
+    setQuestsData(updatedQuestData);
+    setGameData(updatedGameData);
   };
 
   const handleClaimShareReward = async (id) => {
@@ -218,41 +253,6 @@ const Quests = () => {
     };
     try {
       await claimQuest(questData, token);
-      setShowComplete(false);
-      setShowClaim(true);
-      setShowPay(false);
-
-      // update quest data
-      const updatedQuestData = questsData.map((item) =>
-        item._id === quest._id ? { ...item, isQuestClaimed: true } : item
-      );
-
-      // update game data
-      const updatedGameData = {
-        ...gameData,
-        mythologies: gameData.mythologies.map((myth) => {
-          const requiredOrbs = quest.requiredOrbs || {};
-          const orbsToDeduct = requiredOrbs[myth.name] || 0;
-
-          if (myth.name === mythologies[activeMyth]) {
-            return {
-              ...myth,
-              faith: myth.faith + 1,
-              energyLimit: myth.energyLimit + 1000,
-              orbs: myth.orbs - orbsToDeduct,
-            };
-          }
-
-          return {
-            ...myth,
-            orbs: myth.orbs - orbsToDeduct,
-          };
-        }),
-      };
-
-      setQuestsData(updatedQuestData);
-      setGameData(updatedGameData);
-      showToast("quest_claim_success");
     } catch (error) {
       const errorMessage =
         error.response?.data?.error ||
@@ -334,7 +334,11 @@ const Quests = () => {
               activeMyth={activeMyth}
               completedQuests={completedQuests}
               curr={currQuest}
+              showClaimEffect={showClaimEffect}
               t={t}
+              handleClick={() => {
+                setShowInfo((prev) => !prev);
+              }}
               InfoIcon={
                 <IconButton
                   isInfo={true}
@@ -353,7 +357,10 @@ const Quests = () => {
                     message={t("buttons.complete")}
                     isCompleted={quest?.isQuestClaimed}
                     activeMyth={activeMyth}
+                    lastQuest={quests.length}
                     action={handleCompleteQuest}
+                    currQuest={currQuest}
+                    faith={mythData[activeMyth].faith}
                     t={t}
                   />
                 ) : (
@@ -362,16 +369,24 @@ const Quests = () => {
                     handleNext={handleNext}
                     message={t("buttons.claim")}
                     isCompleted={quest?.isQuestClaimed}
+                    lastQuest={quests.length}
                     t={t}
                     activeMyth={activeMyth}
+                    faith={mythData[activeMyth].faith}
                     action={handleRedirect}
+                    currQuest={currQuest}
                   />
                 )
               }
             />
           ) : (
             <div className="relative">
-              <div className="h-full relative -mt-[42px]">
+              <div
+                handleClick={() => {
+                  setSecretInfo((prev) => !prev);
+                }}
+                className="h-full relative -mt-[42px]"
+              >
                 <JigsawImage
                   imageUrl={`/assets/cards/whitelist.fof.${mythSections[activeMyth]}.jpg`}
                   activeParts={handleActiveParts(
@@ -438,12 +453,20 @@ const Quests = () => {
           isBlack={false}
           activeMyth={activeMyth}
           closeCard={() => {
+            setShowClaimEffect(true);
+            setTimeout(() => {
+              setShowClaimEffect(false);
+            }, 1000);
             setShowReward(false);
           }}
           Button={
             <Button
               message={t("buttons.claim")}
               handleClick={() => {
+                setShowClaimEffect(true);
+                setTimeout(() => {
+                  setShowClaimEffect(false);
+                }, 1000);
                 setShowReward(false);
               }}
               activeMyth={activeMyth}
@@ -460,6 +483,11 @@ const Quests = () => {
           handlePay={handleClaimQuest}
           handleShowPay={() => {
             setShowPay((prev) => !prev);
+          }}
+          handleClaimEffect={() => {
+            setShowClaim(true);
+            setShowPay(false);
+            handeUpdateOnClaim();
           }}
           activeMyth={activeMyth}
         />
@@ -500,6 +528,10 @@ const Quests = () => {
           handleOrbClaimReward={handleOrbClaimReward}
           handleShowClaim={() => {
             setShowClaim((prev) => !prev);
+            setShowClaimEffect(true);
+            setTimeout(() => {
+              setShowClaimEffect(false);
+            }, 1000);
           }}
           activeMyth={activeMyth}
         />

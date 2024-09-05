@@ -3,6 +3,8 @@ import { MyContext } from "../../context/context";
 import { footerIcons, mythSections } from "../../utils/variables";
 import ReactHowler from "react-howler";
 
+const tele = window.Telegram?.WebApp;
+
 const FooterItem = ({ section, index, activeMyth, handleClick }) => {
   return (
     <div
@@ -14,12 +16,12 @@ const FooterItem = ({ section, index, activeMyth, handleClick }) => {
       style={{ minWidth: "90px" }}
     >
       <h1
-        className={`font-symbols  ${
+        className={`font-symbols ${
           section === index
             ? `${
-                activeMyth < 4
+                activeMyth < 4 && section != 3
                   ? `glow-icon-${mythSections[activeMyth]}`
-                  : "glow-text-white"
+                  : `glow-text-white`
               }`
             : `text-black-contour`
         }`}
@@ -34,7 +36,7 @@ const FooterItem = ({ section, index, activeMyth, handleClick }) => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ minimize }) => {
   const howlerRef = useRef(null);
   const { section, setSection, activeMyth, setActiveMyth } =
     useContext(MyContext);
@@ -47,6 +49,7 @@ const Footer = () => {
   };
 
   const handleSectionChange = (newSection) => {
+    tele.HapticFeedback.notificationOccurred("success");
     setSection(newSection);
     playAudio();
     if (activeMyth >= 4) {
@@ -60,7 +63,7 @@ const Footer = () => {
         position: "relative",
         width: "100%",
       }}
-      className="flex justify-between items-center h-[12%] z-10 w-full text-white"
+      className="flex justify-between transition-all duration-1000 items-center h-[12%] z-10 w-full text-white"
     >
       <div
         style={{
@@ -75,7 +78,9 @@ const Footer = () => {
           width: "100%",
           zIndex: -1,
         }}
-        className={`filter-paper-${mythSections[activeMyth]}`}
+        className={`filter-paper-${
+          section == 3 ? mythSections[4] : mythSections[activeMyth]
+        }`}
       />
       {footerIcons.map((item, index) => (
         <FooterItem

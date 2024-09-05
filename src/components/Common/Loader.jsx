@@ -6,7 +6,7 @@ import ReactHowler from "react-howler";
 const Loader = (props) => {
   return (
     <div className="bg-black flex flex-col justify-center items-center h-screen w-screen">
-      <div className="w-[75%] flex flex-col justify-between h-full mb-4 scale-loader-glow">
+      <div className="w-[75%] flex flex-col justify-between h-full mb-4 scale-loader-gold-glow">
         <img
           src="/assets/logos/battle.gods.white.svg"
           alt="black-gods"
@@ -24,12 +24,6 @@ const Loader = (props) => {
           Loading...
         </div>
       </div>
-      {/* <ReactHowler
-        src="/assets/audio/fof.music.intro.mp3"
-        playing={true}
-        preload={true}
-        loop
-      /> */}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import Verify from "../../Captcha/index";
 
 const Captcha = ({ auth }) => {
   return (
-    <div className="flex items-center select-none justify-center  h-full backdrop-blur-sm z-50">
+    <div className="flex items-center select-none justify-center  h-full backdrop-blur-[3px] z-50">
       <div className="captchaBg h-[340px] w-fit py-3 px-3">
         <Verify
           onSuccess={auth}

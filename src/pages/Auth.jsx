@@ -114,49 +114,49 @@ const Auth = (props) => {
             We designed the BeGods app to be fully optimized for mobile use.
             Simply scan the QR code or use Telegram to start playing!
           </h1>
-          <div className="mx-auto flex w-2/3 justify-between mt-8">
+          <div className="mx-auto flex w-[80%] justify-between mt-8">
             <div
               onClick={() => {
-                window.open("https://frogdog.games/", "_blank");
+                window.open("www.battleofgods.io", "_blank");
               }}
             >
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Globe_icon-white.svg"
                 alt="web"
-                className="h-[10vw] w-[10vw]"
+                className="h-[14vw] w-[14vw]"
               />
             </div>
             <div
               onClick={() => {
-                window.open("", "_blank");
+                window.open("@BeGods_bot", "_blank");
               }}
             >
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
+                src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/telegram-white-icon.png"
                 alt="telegram"
-                className="h-[11w] w-[11vw]"
+                className="h-[14w] w-[14vw]"
               />
             </div>
             <div
               onClick={() => {
-                window.open("", "_blank");
+                window.open("https://x.com/BattleofGods_io", "_blank");
               }}
             >
               <img
                 src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png"
-                alt="telegram"
-                className="h-[8vw] w-[8vw] mt-2"
+                alt="x"
+                className="h-[13vw] w-[13vw]"
               />
             </div>
             <div
               onClick={() => {
-                window.open("https://discord.gg/GxpMEG6h", "_blank");
+                window.open("https://discord.gg/Ac7h7huthN", "_blank");
               }}
             >
               <img
                 src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
-                alt="telegram"
-                className="h-[12vw] w-[12vw]"
+                alt="discord"
+                className="h-[14vw] w-[14vw]"
               />
             </div>
           </div>

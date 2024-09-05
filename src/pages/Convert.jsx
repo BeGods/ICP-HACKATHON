@@ -73,21 +73,6 @@ const HeaderContent = ({ gameData, myth, t }) => {
           </div>
         </div>
       </div>
-      {/* <div className="flex justify-between w-fit h-[80%] mt-1 flex-col items-start pr-2">
-        <h1 className={`text-head text-white-contour uppercase text-black`}>
-          TOWER
-        </h1>
-        <div className="flex w-full justify-end ml-1">
-          <h1 className={`text-num  text-white-contour -mt-2 text-black`}>
-            {gameData.blackOrbs}
-          </h1>
-          <span
-            className={`font-symbols text-black-contour text-red text-[50px] -ml-1 mr-0.5 -mt-3.5 text-white`}
-          >
-            {mythSymbols["other"]}
-          </span>
-        </div>
-      </div> */}
     </div>
   );
 };
@@ -108,7 +93,7 @@ const Convert = () => {
     setTimeout(() => {
       setToggleClick(false);
     }, 1000);
-    if (myth < 4) {
+    if (myth !== 0) {
       const token = localStorage.getItem("accessToken");
       const mythologyName = {
         mythologyName: mythData.name,
@@ -119,17 +104,17 @@ const Convert = () => {
         const updatedGameData = {
           ...gameData,
           multiColorOrbs: gameData.multiColorOrbs + 1,
-          mythologies: gameData.mythologies.map((myth) => {
-            if (myth.name === mythologies[myth]) {
+          mythologies: gameData.mythologies.map((currMyth) => {
+            console.log(currMyth.name, mythData.name);
+            if (currMyth.name === mythData.name) {
               return {
-                ...myth,
-                orbs: myth.orbs - 2,
+                ...currMyth,
+                orbs: currMyth.orbs - 2,
               };
             }
 
             return {
-              ...myth,
-              orbs: myth.orbs - 2,
+              ...currMyth,
             };
           }),
         };
