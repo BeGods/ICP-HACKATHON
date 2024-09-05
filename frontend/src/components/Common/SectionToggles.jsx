@@ -26,7 +26,7 @@ export const ToggleLeft = ({ handleClick, activeMyth }) => {
   };
 
   return (
-    <div className="flex justify-center items-center w-[20%] z-50">
+    <div className="flex absolute left-0 top-[50%] justify-center items-center w-[15%] z-50 -mt-8">
       <div
         onClick={handleButtonClick}
         className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
@@ -67,7 +67,7 @@ export const ToggleRight = ({ handleClick, activeMyth }) => {
   };
 
   return (
-    <div className="flex justify-center items-center w-[20%] z-50">
+    <div className="flex right-0 top-[50%] absolute justify-center items-center w-[15%] z-50 -mt-8">
       <div
         onClick={handleButtonClick}
         className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${

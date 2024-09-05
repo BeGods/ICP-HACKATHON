@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
 import { calculateRemainingTime } from "../../utils/getBoosterCard";
 
-const GameHeader = ({ activeMyth, mythStates }) => {
+const GameHeader = ({ activeMyth, mythStates, handleActiveCard }) => {
   const [showMinion, setShowMinion] = useState(false);
   const [showAutomata, setShowAutomata] = useState(false);
   const [toggleValue, setToggleValue] = useState(true);
@@ -22,7 +22,8 @@ const GameHeader = ({ activeMyth, mythStates }) => {
                   if (showMinion) {
                     setToggleValue((prev) => !prev);
                   }
-                  setShowMinion((prev) => !prev); // handleActiveCard("shard");
+                  setShowMinion((prev) => !prev);
+                  handleActiveCard("minion");
                 }}
                 className={`font-symbols text-black-contou text-[50px] p-0 ml-2 text-white`}
               >
@@ -53,7 +54,7 @@ const GameHeader = ({ activeMyth, mythStates }) => {
                     }
                     setToggleValue((prev) => !prev);
                     setShowAutomata((prev) => !prev);
-                    // handleActiveCard("automata");
+                    handleActiveCard("automata");
                   }}
                   className={`font-symbols text-black-contou text-[50px] p-0 ml-2 text-white`}
                 >

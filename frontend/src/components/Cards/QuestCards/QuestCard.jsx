@@ -14,7 +14,7 @@ const QuestCard = ({
   showClaimEffect,
 }) => {
   return (
-    <div className="relative mt-[30px]">
+    <div className="relative mt-[30px] w-[70%] mx-auto">
       <div
         className={`relative card-shadow-black ${
           showClaimEffect && "scale-reward"

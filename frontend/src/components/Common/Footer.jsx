@@ -63,7 +63,9 @@ const Footer = ({ minimize }) => {
         position: "relative",
         width: "100%",
       }}
-      className="flex justify-between transition-all duration-1000 items-center h-[12%] z-10 w-full text-white"
+      className={`flex justify-between ${minimize === 2 && "maximize"} ${
+        minimize === 1 && "minimize"
+      } transition-all duration-1000 items-center h-[12%] z-10 w-full text-white`}
     >
       <div
         style={{
@@ -78,9 +80,7 @@ const Footer = ({ minimize }) => {
           width: "100%",
           zIndex: -1,
         }}
-        className={`filter-paper-${
-          section == 3 ? mythSections[4] : mythSections[activeMyth]
-        }`}
+        className={`filter-paper-other`}
       />
       {footerIcons.map((item, index) => (
         <FooterItem

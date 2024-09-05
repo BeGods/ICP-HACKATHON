@@ -67,7 +67,7 @@ const QuestButton = ({
       )}
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
-          color={currQuest !== lastQuest && faith >= 12 ? "white" : "#707579"}
+          color={currQuest !== lastQuest ? "white" : "#707579"}
           className="h-icon-secondary w-icon-secondary"
           onClick={handleNext}
         />

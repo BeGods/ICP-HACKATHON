@@ -18,6 +18,7 @@ import ToastMesg from "../components/Toast/ToastMesg";
 import Footer from "../components/Common/Footer";
 import BoosterClaim from "../components/Cards/Boosters/BoosterClaim";
 import { showToast } from "../components/Toast/Toast";
+import Header from "../components/Headers/Header";
 
 const HeaderContent = ({ activeMyth, t }) => {
   return (
@@ -294,46 +295,22 @@ const Boosters = () => {
         />
       </div>
       {/* Header */}
-      <div
-        style={{
-          position: "relative",
-          height: "18.5%",
-          width: "100%",
-        }}
-        className="flex"
-      >
-        <div
-          style={{
-            backgroundImage: `url(/assets/uxui/fof.header.paper.png)`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            height: "100%",
-            width: "100%",
-            zIndex: -1,
-          }}
-          className={`filter-paper-${mythSections[activeMyth]} -mt-1`}
-        />
-        <HeaderContent
-          activeMyth={activeMyth}
-          gameData={gameData}
-          t={t}
-          multiColorOrbs={multiColorOrbs}
-        />
-      </div>
+
+      <Header
+        children={
+          <HeaderContent
+            activeMyth={activeMyth}
+            gameData={gameData}
+            t={t}
+            multiColorOrbs={multiColorOrbs}
+          />
+        }
+      />
+
       {/* Content */}
       <div className="flex flex-grow justify-center items-center">
-        <ToggleLeft
-          handleClick={() => {
-            setActiveMyth((prev) => (prev - 1 + 4) % 4);
-          }}
-          activeMyth={activeMyth}
-        />
         {/* BOOSTER CARDS */}
-        <div className="flex flex-col items-center justify-center w-full gap-[15px]">
+        <div className="flex flex-col items-center justify-center w-[70%] gap-[15px]">
           {/* EXTRA BOOSTER */}
           <BoosterCard
             isActive={true}
@@ -373,19 +350,26 @@ const Boosters = () => {
             booster={1}
           />
         </div>
-        <ToggleRight
-          handleClick={() => {
-            if (activeMyth < 4) {
-              setActiveMyth((prev) => (prev + 1) % 4);
-            } else {
-              setSection(6);
-            }
-          }}
-          activeMyth={activeMyth}
-        />
       </div>
       {/* Footer */}
       <Footer />
+
+      <ToggleLeft
+        handleClick={() => {
+          setActiveMyth((prev) => (prev - 1 + 4) % 4);
+        }}
+        activeMyth={activeMyth}
+      />
+      <ToggleRight
+        handleClick={() => {
+          if (activeMyth < 4) {
+            setActiveMyth((prev) => (prev + 1) % 4);
+          } else {
+            setSection(6);
+          }
+        }}
+        activeMyth={activeMyth}
+      />
       {/* Booster card */}
       {activeCard === "automata" && (
         <BoosterClaim
