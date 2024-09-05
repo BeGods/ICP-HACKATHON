@@ -4,6 +4,7 @@ import { mythSections } from "../../../utils/variables";
 import ShareButton from "../../Buttons/ShareButton";
 import IconButton from "../../Buttons/IconButton";
 import MappedOrbs from "../../Common/MappedOrbs";
+import ReactHowler from "react-howler";
 
 function OrbClaimCard({
   t,
@@ -13,7 +14,7 @@ function OrbClaimCard({
   activeMyth,
 }) {
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-60 backdrop-blur-sm flex justify-center items-center z-50">
+    <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
         <div className="relative card-shadow-white">
           {/* Card Image */}
@@ -72,6 +73,11 @@ function OrbClaimCard({
           t={t}
         />
       </div>
+      <ReactHowler
+        src={`/assets/audio/fof.quest.win.wav`}
+        playing={!JSON.parse(localStorage.getItem("sound"))}
+        preload={true}
+      />
     </div>
   );
 }

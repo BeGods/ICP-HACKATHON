@@ -14,6 +14,26 @@
   }
 }
 
+@mixin scale-quest-reward($name, $color, $small, $large) {
+  @keyframes #{$name} {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  & {
+    animation: #{$name} 1s  ease-in-out;
+  }
+}
+
+.scale-reward {
+  @include scale-quest-reward(scale-quest-reward-animation, white, 5px, 30px);
+}
+
 
 @mixin scale-in-out(
   $keyframe-name,
@@ -43,7 +63,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(0.75);
+    transform: scale(1.3);
   }
   100% {
     transform: scale(1);
@@ -56,6 +76,15 @@
   }
   50% {
     transform: scale(1);
+  }
+}
+
+@keyframes scale-from-star{
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
   }
 }
 
@@ -96,6 +125,10 @@
 // Scale and Glow Animations
 .scale-loader-glow {
   @include scale-and-glow(scale-loader-glow-animation, white, 5px, 30px);
+}
+
+.scale-loader-gold-glow {
+  @include scale-and-glow(scale-loader-gold-glow-animation, #FFD660, 5px, 30px);
 }
 
 
@@ -144,6 +177,10 @@
 // Scale from zero to full animation
 .scale-zero {
   animation: scale-from-zero 1s ease-in-out;
+}
+
+.scale-star {
+  animation: scale-from-star 1s ease-in-out;
 }
 
 // White Flash Animation

@@ -50,7 +50,7 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t, faith }) => {
       </div>
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
-          color="#414141"
+          color="#707579"
           className="h-icon-secondary w-icon-secondary"
           onClick={handleNext}
         />
