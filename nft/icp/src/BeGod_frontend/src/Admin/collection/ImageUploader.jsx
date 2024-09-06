@@ -55,8 +55,7 @@ function ImageUploader(props) {
   
 
   return (
-    <div className="m-0">
-      <br />
+    <div className="mt-1">
       {!hideUpload && (
         <input
         type={fileType}
@@ -83,7 +82,7 @@ function ImageUploader(props) {
         previews.map((pic) => {
           captureUploadedNftImage(pic)
           return (
-            <div className="relative w-[50px] h-[70px] m-0">
+            <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
             <img 
               src={pic} 
               alt="Selected" 
