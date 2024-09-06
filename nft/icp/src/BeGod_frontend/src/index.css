@@ -392,3 +392,30 @@ body{
   animation: smoke 4s infinite alternate;
 }
 
+/* This apply blur effect to a image in NftCardItem Component */
+
+.add_new_nft_popup_bg_container{
+  height: 90vh;
+  width: 25vw;
+  background-color: #161618;
+  border-radius: 5px;
+  padding: 32px 42px 36px 42px;
+}
+@media screen and (max-width:1200px){
+.add_new_nft_popup_bg_container{
+  width: 40vw;
+}
+}
+@media screen and (max-width:768px){
+.add_new_nft_popup_bg_container{
+  width: 80vw;
+  padding: 16px 22px 16px 22px;
+}
+}
+
+.nft_card_image{
+  transition: filter 0.3s ease-in-out;
+}
+.nft_card_image:hover {
+  filter:blur(2px);
+}

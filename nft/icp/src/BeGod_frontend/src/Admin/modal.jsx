@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { RxCross2 } from "react-icons/rx";
-import ImageUpload from "./collection/ImageUpload";
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Upload } from 'antd';
-import { RiFolder6Line } from "react-icons/ri";
+import { RxCross2 } from "react-icons/rx";;
 import ImageUploader from "./collection/ImageUploader";
+import toast from "react-hot-toast";
 
 const Modal = (props) => {
     const {getAddedNftDetails} = props;
@@ -20,18 +17,24 @@ const Modal = (props) => {
 
     const onClickAddButton = (event) => {
         event.preventDefault();
-        const nftDetails = {
-            nftId,
-            nftName,
-            nftType,
-            nftQuantity,
-            nftImage,
-            nftPrice,
-            nftDescription
+        if(nftId && nftName && nftType && nftQuantity && nftPrice && nftDescription && nftImage ){
+            const nftDetails = {
+                nftId,
+                nftName,
+                nftType,
+                nftQuantity,
+                nftImage,
+                nftPrice,
+                nftDescription
+            }
+            console.log("nft details",nftDetails);
+            getAddedNftDetails(nftDetails);
+            toggleModal();
+            toast.success("NFT Card Added");
+        }else{
+            toast.error("Enter All NFT Card Details")
         }
-        console.log("nft details",nftDetails);
-        getAddedNftDetails(nftDetails);
-        toggleModal();
+       
     
     }
 
@@ -41,9 +44,9 @@ const Modal = (props) => {
     }
 
     return (
-        <div className="nft_popup_bg_container">
-            <div className="button_container">
-                <button className="cross_mark" onClick={() => toggleModal()}>
+        <div className="add_new_nft_popup_bg_container">
+            <div className="flex justify-end items-center">
+                <button className="text-[#ffffff]" onClick={() => toggleModal()}>
                     <RxCross2 size={25} />
                 </button>
             </div>
@@ -73,11 +76,11 @@ const Modal = (props) => {
                 </div>
 
                 <div className="mt-2 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]">
-                    <label className="w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+                    <label className="w-full sm:w-1/2 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
                         Type:
-                        <select className="p-1 rounded-md md:h-[30px] bg-[#29292C] mt-0 md:text-[16px  text-[16px]  text-[#8a8686]" value={nftType} onChange={(e)=>setNftType(e.target.value)}>
-                            <option value="NORMAL" className="md:h-[30px]  text-[16px]  text-[#8a8686]">Normal</option>
-                            <option value="TEST" className="md:h-[30px]  text-[16px]  text-[#8a8686]">Test Option</option>
+                        <select className="p-1 rounded-md h-[30px] md:h-[30px] bg-[#29292C] mt-0 md:text-[16px  text-[16px]  text-[#8a8686]" value={nftType} onChange={(e)=>setNftType(e.target.value)}>
+                            <option value="NORMAL" className="text-[16px]  text-[#8a8686]">Normal</option>
+                            <option value="TEST" className="text-[16px]  text-[#8a8686]">Test Option</option>
                         </select>
                     </label>
                     <label className="w-full sm:w-1/2 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
@@ -86,13 +89,13 @@ const Modal = (props) => {
                             value={nftQuantity}
                             onChange={(e) => setNftQuantity(e.target.value)}
                             type="text"
-                            className="pl-4 rounded-md md:h-[30px] bg-[#29292C] mt-0  text-[16px]  text-[#8a8686]"
+                            className="pl-4 rounded-md h-[30px] md:h-[30px] bg-[#29292C] mt-0  text-[16px]  text-[#8a8686]"
                         />
                     </label>
                 </div>
 
                 <div className="mt-0">
-                    <label className="mt-[20px] w-[100%] h-[30px] md:h-[86px] text-[#FFFFFF] gap-0 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+                    <label className="mt-[20px] w-[100%] h-[20px] md:h-[70px] text-[#FFFFFF] gap-0 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
                             Image
                             <ImageUploader captureUploadedNftImage={captureUploadedNftImage}/>
                     </label>
@@ -118,12 +121,12 @@ const Modal = (props) => {
                             onChange={(e) => setNftDescription(e.target.value)}
                             type="textarea"
                             rows={3}
-                            className="pl-2 w-[100%] h-[30px]  bg-[#29292C] rounded-md mt-1 nft_description  text-[16px]  text-[#8a8686] "
+                            className="pl-2 w-[100%] h-[70px]  bg-[#29292C] rounded-md mt-1   text-[16px]  text-[#8a8686] "
                         ></textarea>
                     </label>
                 </div>
         <div className="mt-1 md:mt-2 flex justify-center">
-            <button type="submit" className="add_button" onClick={onClickAddButton}>ADD</button>
+            <button type="submit" className="h-[30px] w-[100px] border-0 bg-[#FCD37B] text-[#000000] rounded-sm" onClick={onClickAddButton}>ADD</button>
         </div>
                
             </form>

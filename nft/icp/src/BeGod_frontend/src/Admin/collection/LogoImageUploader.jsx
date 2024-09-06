@@ -54,7 +54,7 @@ function LogoImageUploader() {
       )}
       {!hideUpload && (
         <div 
-        className="image_upload_container  bg-[#29292C] h-[47px] m-0"
+        className="flex justify-end items-center pr-2  bg-[#29292C] h-[30px] md:h-[47px] m-0 rounded-md"
         
       >
         <RiFolder6Line className="cursor-pointer"  />

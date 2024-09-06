@@ -25,17 +25,31 @@ function ImageUploader(props) {
         URL.revokeObjectURL(objectUrls[i]);
       };
     }
-    setFileType("file");
+    
   
   }, [files]);
 
+  useEffect(()=>{
+    const timer = setTimeout(() => {
+      setFileType("file")
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  },[fileType])
+
   const toggleInputHide = () => {
       setHideUpload(!hideUpload);
-      setPreviews(null);
-      setFileType("none");
-      
-  } 
+      setPreviews();
+  }
+  const onClickDeleteImage = () => {
+    setFileType("none");
+    setHideUpload(!hideUpload);
+    setPreviews();
+    setFiles();
 
+  }
+
+  
 
 
   
@@ -59,7 +73,7 @@ function ImageUploader(props) {
       )}
       {!hideUpload && (
         <div 
-        className="image_upload_container  bg-[#29292C] h-[30px] m-0"
+        className="flex justify-end items-center pr-1 bg-[#29292C] h-[30px] m-0"
         
       >
         <RiFolder6Line className="cursor-pointer"  />
@@ -76,7 +90,7 @@ function ImageUploader(props) {
               className="w-full h-full object-cover rounded-lg"
             />
             <button
-              onClick={toggleInputHide}
+              onClick={onClickDeleteImage}
               className="absolute top-0 right-0 bg-white rounded-full w-4 h-4 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2"
             >
               <RxCross2 className="text-black" size={15} />
