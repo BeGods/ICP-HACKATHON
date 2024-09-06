@@ -87,13 +87,13 @@
 
   /* Filters for Backgrounds */
   --filter-celtic-background: brightness(100%) invert(5%) sepia(12%)
-    saturate(1237%) hue-rotate(48deg) brightness(90%) contrast(104%);
+    saturate(1500%) hue-rotate(48deg) brightness(90%) contrast(104%);
   --filter-norse-background: brightness(100%) invert(10%) sepia(15%)
     saturate(1237%) hue-rotate(171deg) brightness(90%) contrast(104%);
   --filter-egyptian-background: brightness(100%) invert(5%) sepia(22%)
-    saturate(600%) hue-rotate(6deg) brightness(90%) contrast(104%);
-  --filter-greek-background: brightness(100%) invert(5%) sepia(23%)
-    saturate(700%) hue-rotate(-14deg) brightness(90%) contrast(104%);
+    saturate(1000%) hue-rotate(6deg) brightness(125%) contrast(90%);
+  --filter-greek-background: brightness(90%) invert(15%) sepia(23%)
+    saturate(1200%) hue-rotate(-40deg) brightness(90%) contrast(120%);
   --filter-other-background: brightness(110%) invert(5%) sepia(6%)
     saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
 

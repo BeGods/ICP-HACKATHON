@@ -109,8 +109,21 @@ const FlashScreen = ({ reward }) => {
         </div>
       </div>
       <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0  text-[9vw] text-gold uppercase z-20">
+        <div>
+          {showHand && (
+            <ThumbsUp
+              onClick={() => {
+                handleClick();
+              }}
+              size={"18vw"}
+              color="#FFD660"
+              className="mx-auto drop-shadow-xl scale-more mt-1"
+            />
+          )}
+        </div>
+
         <h1
-          className={`text-black-contour mt-10 scale-${showScale} transition-all duration-1000`}
+          className={`text-black-contour mt-auto pb-8 scale-${showScale} transition-all duration-1000`}
         >
           {reward.type === "mythOrb"
             ? `${mythElementNames[reward.mythology]} Orb`
@@ -120,16 +133,6 @@ const FlashScreen = ({ reward }) => {
             ? "COMPLETED QUEST"
             : `1 ${reward.type.toUpperCase()}`}
         </h1>
-        {showHand && (
-          <ThumbsUp
-            onClick={() => {
-              handleClick();
-            }}
-            size={"15vw"}
-            color="#FFD660"
-            className="mx-auto drop-shadow-xl scale-more"
-          />
-        )}
       </div>
       {/* Confetti */}
       {runConfetti && (
