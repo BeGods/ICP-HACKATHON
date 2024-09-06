@@ -74,7 +74,8 @@
         "air": "Air",
         "fire": "Fire",
         "water": "Water",
-        "aether": "Aether"
+        "aether": "Aether",
+        "black": "Black"
     },
     "quests": {
           "celtic": {

@@ -69,7 +69,8 @@
       "air": "Воздух",
       "water": "Вода",
       "fire": "Огонь",
-      "aether": "Эфир"
+      "aether": "Эфир",
+      "black": "Black"
   },
     "quests": {
         "celtic": {

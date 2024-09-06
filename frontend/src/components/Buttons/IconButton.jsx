@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 
 const alignBasedOnCard = [
   "-mt-[28px] ml-[52px]",
-  "-mt-8 ml-10",
+  "-mt-8 ml-7",
   "mr-[60px] mt-6",
 ];
 const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
@@ -30,7 +30,7 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
       className={`absolute flex w-full justify-end top-0 ${alignBasedOnCard[align]}  z-10`}
     >
       {isInfo ? (
-        <div className="bg-black flex justify-center items-center h-[60px] w-[60px] rounded-full">
+        <div className="bg-black  flex justify-center items-center h-[60px] w-[60px] rounded-full">
           <h1
             className="text-white italic text-[1.8rem] mr-1"
             style={{ transform: "rotate(-10deg)" }}
@@ -39,7 +39,7 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
           </h1>
         </div>
       ) : (
-        <div className="bg-black p-3 rounded-full">
+        <div className="flex justify-center items-center bg-black h-[60px] w-[60px] rounded-full">
           <X color="white" size={"30px"} />
         </div>
       )}

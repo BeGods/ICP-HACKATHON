@@ -5,13 +5,7 @@ import Footer from "../components/Common/Footer";
 import ConvertButton from "../components/Buttons/ConvertButton";
 import ConvertInfo from "../components/Cards/ConvertInfo";
 import { useTranslation } from "react-i18next";
-import {
-  elements,
-  mythSymbols,
-  mythologies,
-  wheel,
-  wheelNames,
-} from "../utils/variables";
+import { elements, mythSymbols, wheel } from "../utils/variables";
 import { showToast } from "../components/Toast/Toast";
 import Header from "../components/Headers/Header";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
@@ -29,7 +23,7 @@ const HeaderContent = ({ gameData, myth, t }) => {
           }
            `}
         >
-          {myth === 0 ? "BLACK" : t(`elements.${elements[myth - 1]}`)}
+          {myth === 0 ? "Dark" : t(`elements.${elements[myth - 1]}`)}
         </h1>
         {myth !== 0 ? (
           <div className="flex mb-4 -ml-2 items-center text-black-contour w-fit h-fit">
@@ -51,10 +45,11 @@ const HeaderContent = ({ gameData, myth, t }) => {
           </div>
         )}
       </div>
+
       <div className="flex absolute justify-center w-full">
         {/* Orb */}
         <div
-          className={`flex text-center glow-icon-white justify-center h-[36vw] w-fit -mt-10 items-center rounded-full outline outline-[0.5px] outline-white  transition-all duration-1000`}
+          className={`flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] -mt-5 items-center rounded-full outline moutline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
         >
           <img
             src="/assets/uxui/240px-orb.base.png"

@@ -233,10 +233,67 @@
   }
 }
 
+@keyframes slideMinionUp {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideMinionDown {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.popup{
+  animation: slideMinionUp 0.8s ease-in-out forwards;
+}
+
+.popdown{
+  animation: slideMinionDown 0.8s ease-in-out forwards;
+}
+
+
 .minimize{
   animation: slideDown 0.8s ease-in-out forwards;
 }
 
 .maximize{
   animation: slideUp 0.8s ease-in-out forwards;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 200%;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.3);
+  opacity: 0.7;
+  border-radius: 100%;
+  animation: wave 4s infinite linear;
+}
+
+.wave2 {
+  animation: wave 4s infinite linear;
+  animation-delay: 2s;
+  opacity: 0.5;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
 }
