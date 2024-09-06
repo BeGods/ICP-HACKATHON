@@ -27,7 +27,7 @@ const HeaderContent = ({ userData, avatarColor, t }) => {
           className={`text-head text-black-contour uppercase text-white
            `}
         >
-          PLAYER
+          {t("profile.player")}
         </h1>
       </div>
       <div className="flex absolute justify-center w-full">
@@ -42,7 +42,7 @@ const HeaderContent = ({ userData, avatarColor, t }) => {
       {/* Right */}
       <div className="flex flex-col items-end justify-between h-full px-2 pt-1">
         <h1 className={`text-head text-white-contour uppercase text-black`}>
-          TASKS
+          {t("profile.tasks")}
         </h1>
       </div>
     </div>
@@ -51,7 +51,7 @@ const HeaderContent = ({ userData, avatarColor, t }) => {
 
 const Profile = (props) => {
   const { t } = useTranslation();
-  const { userData } = useContext(MyContext);
+  const { userData, setSection } = useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [showLang, setShowLang] = useState(false);
   const [isClicked, setIsClicked] = useState(0);
@@ -132,9 +132,15 @@ const Profile = (props) => {
         }
       />
       {/* Content */}
-      <div className="flex relative flex-grow justify-center items-center">
+      <div className="flex flex-col  relative flex-grow justify-center items-center">
+        <div className="text-center absolute top-0 mt-6">
+          <h2 className="text-white uppercase text-tertiary mt-2">
+            {t(`main.fdg`)}
+          </h2>
+          <h1 className="text-tertiary -mt-1 ">{userData.telegramUsername}</h1>
+        </div>
         <div
-          className="h-icon-primary w-icon-primary flex justify-center items-center right-0 top-0 mr-[30px] mt-6 z-10 absolute border rounded-full p-3.5"
+          className="h-icon-primary w-icon-primary bg-glass-black  flex justify-center items-center right-0 top-0 mr-[30px] mt-6 z-10 absolute border rounded-full p-3.5"
           onClick={() => {
             setShowLang(true);
           }}
@@ -144,12 +150,17 @@ const Profile = (props) => {
         <div className="relative w-full">
           {activeSection ? (
             <div className="flex px-2 text-white gap-2 mt-2.5 flex-col items-center justify-center w-full">
-              <h2 className="text-white uppercase text-tertiary mt-2">
-                {t(`main.fdg`)}
-              </h2>
-              <h1 className="text-tertiary -mt-1 ">
-                {userData.telegramUsername}
-              </h1>
+              <div
+                onClick={() => {
+                  setSection(4);
+                }}
+                className="flex gap-2 -mt-1.5 uppercase justify-center items-center w-full"
+              >
+                <Trophy size={"6vw"} />
+                <h1 className="mt-1 text-tertiary">
+                  {t(`profile.leaderboard`)}
+                </h1>
+              </div>
               <div
                 onMouseDown={() => {
                   setIsClicked(1);
@@ -169,25 +180,19 @@ const Profile = (props) => {
                 onTouchCancel={() => {
                   setIsClicked(0);
                 }}
-                className={`text-center outline outline-[0.5px] ${
-                  isClicked == 1 ? "outline-gray-400" : "outline-gray-600"
-                } bg-black text-tertiary w-full p-[15px] mt-2 rounded-primary`}
+                className={`text-center  text-tertiary w-full  rounded-primary`}
               >
-                <div className="flex gap-2 -mt-1.5 uppercase justify-center items-center w-full">
-                  <Trophy size={"6vw"} />
-                  <h1 className="mt-1">Leaderboard</h1>
-                </div>
-                <div className="flex gap-[8px] mt-[8px]">
-                  <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
+                <div className="flex  items-center justify-center gap-[8px]">
+                  <div className="flex bg-glass-black h-button-primary border border-white items-center gap-[20px] rounded-primary w-full p-[10px]">
                     <User size={"6vw"} />
                     <div className="text-left">
-                      <h3 className="text-tertiary">Player</h3>
+                      <h3 className="text-tertiary">{t("profile.player")}</h3>
                       <h2 className="text-secondary">
                         #{userData.overallRank === 0 ? 1 : userData.overallRank}
                       </h2>
                     </div>
                   </div>
-                  <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
+                  <div className="flex  bg-glass-black h-button-primary items-center border border-cardsGray text-cardsGray  grayscale  gap-[20px] rounded-primary w-full p-[10px]">
                     <Users size={"6vw"} />
                     <div className="text-left">
                       <h3 className="text-tertiary">Team</h3>
@@ -197,6 +202,10 @@ const Profile = (props) => {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="flex gap-2 uppercase justify-center items-center mt-2 w-full">
+                <UserPlus size={"6vw"} />
+                <h1 className="mt-1 text-tertiary">{t(`profile.invite`)}</h1>
               </div>
               <div
                 onMouseDown={() => {
@@ -217,16 +226,10 @@ const Profile = (props) => {
                 onTouchCancel={() => {
                   setIsClicked(0);
                 }}
-                className={`text-center outline outline-[0.5px] ${
-                  isClicked == 2 ? "outline-gray-400" : "outline-gray-600"
-                } bg-black w-full text-tertiary p-[15px] mt-2.5 rounded-primary`}
+                className={`text-center  w-full text-tertiary  rounded-primary`}
               >
-                <div className="flex gap-2 uppercase -mt-2 justify-center items-center w-full">
-                  <UserPlus size={"6vw"} />
-                  <h1 className="mt-1">Invite</h1>
-                </div>
-                <div className="flex gap-[8px] mt-[8px]">
-                  <div className="flex items-center gap-[20px] rounded-primary bg-dark w-full p-[10px]">
+                <div className="flex gap-[8px] ">
+                  <div className="flex border h-button-primary border-white items-center gap-[20px] rounded-primary bg-glass-black w-full p-[10px]">
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
@@ -239,14 +242,14 @@ const Profile = (props) => {
                       </h2>
                     </div>
                   </div>
-                  <div className="flex items-center grayscale opacity-50 gap-[20px] rounded-primary bg-[#1D1D1D] w-full p-[10px]">
+                  <div className="flex border h-button-primary border-cardsGray text-cardsGray items-center grayscale gap-[20px] rounded-primary bg-glass-black w-full p-[10px]">
                     <img
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
                       alt="telegram"
                       className="w-[28px] h-[28px]"
                     />
                     <div className="text-left">
-                      <h3 className="text-tertiary">Premium</h3>
+                      <h3 className="text-tertiary">{t(`profile.premium`)}</h3>
                       <h2 className="text-secondary">
                         {userData.premiumReferralCount}
                       </h2>
@@ -254,12 +257,12 @@ const Profile = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="text-center grayscale opacity-50 outline outline-[0.5px] outline-gray-600 text-tertiary bg-black w-full p-[15px] mt-2.5 rounded-primary">
+              {/* <div className="text-center grayscale opacity-50 outline outline-[0.5px] outline-gray-600 text-tertiary bg-black w-full p-[15px] mt-2.5 rounded-primary">
                 <div className="flex gap-2 uppercase justify-center items-center w-full pb-1">
                   <Speech size={"6vw"} color="white" />
                   <h1 className="mt-1">KOL(s)</h1>
                 </div>
-              </div>
+              </div> */}
             </div>
           ) : (
             <div className="flex gap-2 flex-col items-center justify-center w-full mt-4">

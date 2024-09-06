@@ -18,6 +18,11 @@ export default {
     "bg-greek-primary",
     "bg-norse-primary",
 
+    "bg-celtic-text",
+    "bg-egyptian-text",
+    "bg-greek-text",
+    "bg-norse-text",
+
     "outline-celtic-primary",
     "outline-egyptian-primary",
     "outline-greek-primary",

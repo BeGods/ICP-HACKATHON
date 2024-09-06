@@ -80,7 +80,11 @@ const Footer = ({ minimize }) => {
           width: "100%",
           zIndex: -1,
         }}
-        className={`filter-paper-other`}
+        className={`filter-paper-${
+          section === 3 || section === 0
+            ? mythSections[4]
+            : mythSections[activeMyth]
+        } `}
       />
       {footerIcons.map((item, index) => (
         <FooterItem

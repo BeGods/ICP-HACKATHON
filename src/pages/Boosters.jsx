@@ -308,17 +308,38 @@ const Boosters = () => {
       />
 
       {/* Content */}
-      <div className="flex flex-grow justify-center items-center">
-        {/* BOOSTER CARDS */}
-        <div className="flex flex-col items-center justify-center w-[70%] gap-[15px]">
+      <div className="flex flex-grow justify-center items-center"></div>
+      {/* Footer */}
+      <Footer />
+
+      <ToggleLeft
+        handleClick={() => {
+          setActiveMyth((prev) => (prev - 1 + 4) % 4);
+        }}
+        activeMyth={activeMyth}
+      />
+      <ToggleRight
+        handleClick={() => {
+          if (activeMyth < 4) {
+            setActiveMyth((prev) => (prev + 1) % 4);
+          } else {
+            setSection(6);
+          }
+        }}
+        activeMyth={activeMyth}
+      />
+
+      {/* BOOSTER CARDS */}
+      <div className="flex justify-center h-screen w-screen absolute mx-auto">
+        <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
           {/* EXTRA BOOSTER */}
-          <BoosterCard
+          {/* <BoosterCard
             isActive={true}
             handleClick={() => {}}
             activeMyth={activeMyth}
             t={t}
             booster={6}
-          />
+          /> */}
           {/* AUTOMATA BOOSTER */}
           <BoosterCard
             isActive={!mythData.isAutomataActive}
@@ -351,25 +372,7 @@ const Boosters = () => {
           />
         </div>
       </div>
-      {/* Footer */}
-      <Footer />
 
-      <ToggleLeft
-        handleClick={() => {
-          setActiveMyth((prev) => (prev - 1 + 4) % 4);
-        }}
-        activeMyth={activeMyth}
-      />
-      <ToggleRight
-        handleClick={() => {
-          if (activeMyth < 4) {
-            setActiveMyth((prev) => (prev + 1) % 4);
-          } else {
-            setSection(6);
-          }
-        }}
-        activeMyth={activeMyth}
-      />
       {/* Booster card */}
       {activeCard === "automata" && (
         <BoosterClaim

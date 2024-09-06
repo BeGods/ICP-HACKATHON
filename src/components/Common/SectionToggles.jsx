@@ -30,7 +30,13 @@ export const ToggleLeft = ({ handleClick, activeMyth }) => {
       <div
         onClick={handleButtonClick}
         className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
-          isButtonClicked ? `glow-button-${mythSections[activeMyth]}` : ""
+          isButtonClicked
+            ? `glow-button-${
+                mythSections[activeMyth] === "other"
+                  ? "white"
+                  : mythSections[activeMyth]
+              }`
+            : ""
         }`}
       >
         <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
@@ -71,7 +77,13 @@ export const ToggleRight = ({ handleClick, activeMyth }) => {
       <div
         onClick={handleButtonClick}
         className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
-          isButtonClicked ? `glow-button-${mythSections[activeMyth]}` : ""
+          isButtonClicked
+            ? `glow-button-${
+                mythSections[activeMyth] === "other"
+                  ? "white"
+                  : mythSections[activeMyth]
+              }`
+            : ""
         }`}
       >
         <ChevronsRight color="white" className="h-[30px] w-[30px]" />
