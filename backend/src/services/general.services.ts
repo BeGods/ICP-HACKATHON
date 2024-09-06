@@ -16,32 +16,35 @@ export const getLeaderboardSnapshot = async () => {
       {
         $group: {
           _id: "$userId",
-          // totalOrbs: {
-          //   $sum: {
-          //     $ifNull: ["$mythologies.orbs", 0],
-          //   },
-          // },
-          // multiColorOrbs: {
-          //   $first: {
-          //     $ifNull: ["$multiColorOrbs", 0],
-          //   },
-          // },
+          totalMythologyOrbs: {
+            $sum: {
+              $ifNull: ["$mythologies.orbs", 0],
+            },
+          },
           blackOrbs: {
             $first: {
               $ifNull: ["$blackOrbs", 0],
             },
           },
-          // whiteOrbs: {
-          //   $first: {
-          //     $ifNull: ["$whiteOrbs", 0],
-          //   },
-          // },
         },
       },
       {
         $addFields: {
+          // Convert totalMythologyOrbs to black orbs (1000 orbs = 1 black orb)
+          totalMythologyOrbsInBlackOrbs: {
+            $divide: ["$totalMythologyOrbs", 1000],
+          },
+          // Round the converted mythology orbs to 3 decimal places
+          roundedMythologyOrbs: {
+            $round: ["$totalMythologyOrbsInBlackOrbs", 3],
+          },
+        },
+      },
+      {
+        $addFields: {
+          // Calculate totalOrbs by adding rounded mythology orbs to black orbs
           totalOrbs: {
-            $add: ["$blackOrbs"],
+            $add: ["$totalMythologyOrbsInBlackOrbs", "$blackOrbs"],
           },
         },
       },
