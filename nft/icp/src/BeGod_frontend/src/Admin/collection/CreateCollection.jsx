@@ -7,7 +7,7 @@ import { idlFactory } from "../../../../declarations/BeGod_backend/BeGod_backend
 import { canisterId } from '../../../../declarations/BeGod_backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useSelector } from 'react-redux';
-import Modal from '../modal.jsx';
+import Modal from './modal.jsx';
 import NftCardItem from './NftCardItem.jsx';
 import LogoImageUploader from './LogoImageUploader.jsx';
 
@@ -20,7 +20,7 @@ const CreateCollection = () => {
     const [nfts, setNfts] = useState(0);
     const [isChecked, setIsChecked] = useState(false);
     const [nftRows, setNftRows] = useState([{ id: '', description: '' }]); // Initial row
-    const [modal, setModal] = useState(true);
+    const [modal, setModal] = useState(false);
     const [nftCardsList, setNftCardsList] = useState([]);
 
     const { user } = useSelector((state) => state.auth);
@@ -36,7 +36,9 @@ const CreateCollection = () => {
         setNftRows(updatedRows);
     };
 
-    
+
+
+
 
     const handleLogoChange = (file) => setLogo(file);
 
@@ -84,7 +86,7 @@ const CreateCollection = () => {
     };
 
     return (
-        <div>
+        <div className='w-[90%]'>
             <div className='flex flex-row gap-4 justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer 2xl:pt-[5vh] 2xl:ml-[10%]'>
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
                 <h1 className='text-2xl text-white -mt-2'>Create Collection</h1>
@@ -107,7 +109,7 @@ const CreateCollection = () => {
                     <input onChange={(e) => setDescription(e.target.value)} type="text" className='pl-4 w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
                 </label>
                 {/* Logo */}
-                <label className='mt-0 w-[100%] h-[100px] md:h-aut text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
+                <label className='mt-[20px] w-[100%] h-[100px] md:h-aut text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     Logo
                     <LogoImageUploader />
                 </label>
@@ -133,8 +135,8 @@ const CreateCollection = () => {
                         >
                             Add New
                         </button>
-                        <div className="absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-[#f0c96a] w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-900">
-                            <span className="text-black text-lg font-bold text-[25px]">+</span>
+                        <div className="absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-[#f0c96a] w-[35px] h-[35px] rounded-full flex items-center justify-center border-2 border-gray-900">
+                            <span className="text-black text-lg font-bold text-[29px] m-0 pb-[6px] ">+</span>
                         </div>
                     </div>
                     

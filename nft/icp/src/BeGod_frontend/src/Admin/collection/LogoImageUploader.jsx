@@ -29,15 +29,23 @@ function LogoImageUploader() {
   
   }, [files]);
 
+  useEffect(()=>{
+    const timer = setTimeout(() => {
+      setFileType("file")
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  },[fileType])
+
   const toggleInputHide = () => {
       setHideUpload(!hideUpload);
       setPreviews(null);
-      setFileType("none");
+      setFileType("none")
       
   } 
   return (
-    <div className="m-0">
-      <br />
+    <div className="mt-1">
+      
       {!hideUpload && (
         <input
         type={fileType}
@@ -71,9 +79,9 @@ function LogoImageUploader() {
             />
             <button
               onClick={toggleInputHide}
-              className="absolute top-0 right-0 bg-white rounded-full w-4 h-4 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2"
+              className="absolute top-0 right-0 bg-white rounded-full w-4 h-4 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2 pt-[1px] pl-[1px] "
             >
-              <RxCross2 className="text-black" size={15} />
+              <RxCross2 className="text-black" size={13} />
             </button>
           </div>
           )

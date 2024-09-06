@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";;
-import ImageUploader from "./collection/ImageUploader";
+import ImageUploader from "./ImageUploader";
 import toast from "react-hot-toast";
 
 const Modal = (props) => {
@@ -63,7 +63,7 @@ const Modal = (props) => {
                     </label>
                 </div>
 
-                <div className="mt-2">
+                <div className="mt-1">
                     <label className="mt-4 w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
                         NFT Name
                         <input
@@ -75,7 +75,7 @@ const Modal = (props) => {
                     </label>
                 </div>
 
-                <div className="mt-2 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]">
+                <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]">
                     <label className="w-full sm:w-1/2 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
                         Type:
                         <select className="p-1 rounded-md h-[30px] md:h-[30px] bg-[#29292C] mt-0 md:text-[16px  text-[16px]  text-[#8a8686]" value={nftType} onChange={(e)=>setNftType(e.target.value)}>
@@ -94,14 +94,14 @@ const Modal = (props) => {
                     </label>
                 </div>
 
-                <div className="mt-0">
+                <div className="mt-1">
                     <label className="mt-[20px] w-[100%] h-[20px] md:h-[70px] text-[#FFFFFF] gap-0 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
                             Image
                             <ImageUploader captureUploadedNftImage={captureUploadedNftImage}/>
                     </label>
                 </div>
 
-                <div className="mt-2">
+                <div className="mt-1">
                     <label className="mt-[20px] w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
                         Price
                         <input
@@ -113,7 +113,7 @@ const Modal = (props) => {
                     </label>
                 </div>
 
-                <div className="mt-2">
+                <div className="mt-1">
                     <label className="w-[100%] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
                         NFT's Description
                         <textarea
