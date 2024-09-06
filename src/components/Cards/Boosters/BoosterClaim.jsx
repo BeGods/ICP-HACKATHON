@@ -13,12 +13,12 @@ const BoosterClaim = ({
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
-        <div className="absolute z-10  top-0 left-0">
+        {/* <div className="absolute z-10  top-0 left-0">
           Lvl{" "}
           {activeCard === "automata"
             ? mythData.automatalvl
             : mythData.shardslvl}
-        </div>
+        </div> */}
 
         <div
           className={`absolute inset-0 rounded-[15px]`}

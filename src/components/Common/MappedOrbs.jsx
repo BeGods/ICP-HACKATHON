@@ -6,16 +6,15 @@ const MappedOrbs = ({ quest, showNum }) => {
     <div className="flex w-full gap-[3px]">
       {Object.entries(quest.requiredOrbs).map(([key, value]) => (
         <div className="flex gap-[3px]" key={key}>
-          {console.log(`text-${key.toLowerCase()}-text`)}
           {Array.from({ length: value }, (_, index) => (
             <div
               key={index}
-              className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${key.toLowerCase()} max-w-[10vw]`}
+              className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${key.toLowerCase()} `}
             >
               <img
                 src="/assets/uxui/240px-orb.base.png"
                 alt="orb"
-                className={`filter-orbs-${key.toLowerCase()}`}
+                className={`filter-orbs-${key.toLowerCase()} max-w-[10vw]`}
               />
               <span
                 className={`absolute z-1  text-black-sm-contour transition-all duration-1000 ${

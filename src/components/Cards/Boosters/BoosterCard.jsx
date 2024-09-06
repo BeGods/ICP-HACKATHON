@@ -49,13 +49,13 @@ const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
           ) : (
             <>{boosterIcon[booster]}</>
           )}
-        </div>{" "}
+        </div>
       </div>
-      <div className={`flex flex-col flex-grow justify-center -ml-1 `}>
+      <div className={`flex flex-col flex-grow justify-center -ml-1`}>
         <h1 className="text-tertiary uppercase">
           {t(`boosters.${booster}.title`)}
         </h1>
-        <h2 className="text-secondary">
+        <h2 className="text-tertiary">
           {t(`boosters.${booster}.desc`)}{" "}
           {booster === 1 && (
             <span className={`text-${mythSections[activeMyth]}-text pl-1`}>

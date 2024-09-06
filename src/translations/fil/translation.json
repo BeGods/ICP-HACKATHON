@@ -71,7 +71,9 @@
         "air": "Hangin",
         "fire": "Tubig",
         "water": "Apoy",
-        "aether": "Ether"
+        "aether": "Ether",
+        "black": "Black"
+
     },
     "quests": {
         "celtic": {

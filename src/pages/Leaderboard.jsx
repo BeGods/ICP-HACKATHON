@@ -10,7 +10,7 @@ const tele = window.Telegram?.WebApp;
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { userData } = useContext(MyContext);
+  const { userData, setSection } = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const avatarColor = localStorage.getItem("avatarColor");
   const [leaderboard, setLeaderboard] = useState([]);
@@ -46,7 +46,7 @@ const Leaderboard = (props) => {
             }}
             className={`flex justify-center items-center ${
               activeTab && "bg-borderGray"
-            } h-full rounded-full w-1/2 text-[16px] py-1.5`}
+            } h-full uppercase rounded-full w-1/2 text-[16px] py-1.5`}
           >
             {t(`profile.player`)}
           </div>
@@ -56,7 +56,7 @@ const Leaderboard = (props) => {
             }}
             className={`flex justify-center items-center ${
               !activeTab && "bg-borderGray"
-            } h-full rounded-full w-1/2 text-[16px] py-1.5`}
+            } h-full uppercase rounded-full w-1/2 text-[16px] py-1.5`}
           >
             {t(`profile.squad`)}
           </div>
