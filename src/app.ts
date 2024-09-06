@@ -8,7 +8,6 @@ import morgan from "morgan";
 const mongoSanitize = require("express-mongo-sanitize");
 
 app.use(express.json());
-
 // const limiter = rateLimit({
 //   windowMs: 20 * 1000,
 //   max: 40,
@@ -17,7 +16,6 @@ app.use(express.json());
 //   legacyHeaders: false,
 // });
 app.set("trust proxy", 1);
-
 app.use(
   cors({
     // origin: "*",
@@ -27,9 +25,8 @@ app.use(
 );
 app.use(helmet());
 app.use(mongoSanitize());
-
 app.use(morgan("tiny"));
-
+// xss and hpp
 // app.use(limiter);
 app.use("/api/v1", routes);
 
