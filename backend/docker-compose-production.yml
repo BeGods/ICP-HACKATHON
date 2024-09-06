@@ -40,16 +40,3 @@ services:
     env_file: .env.docker
     volumes:
       - .:/src
-
-  # Web service
-  tele-bot:
-    container_name: tele-bot
-    restart: unless-stopped
-    build:
-      context: ../BeGods-bot
-      dockerfile: Dockerfile
-    ports:
-      - 4002:8080
-    env_file: .env.docker
-    volumes:
-      - .:/src
