@@ -36,6 +36,8 @@ const CreateCollection = () => {
         setNftRows(updatedRows);
     };
 
+    
+
     const handleLogoChange = (file) => setLogo(file);
 
     const createActor = () => {

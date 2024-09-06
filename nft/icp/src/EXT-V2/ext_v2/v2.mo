@@ -28,6 +28,7 @@ import ExtNonFungible "../motoko/ext/NonFungible";
 import Int64 "mo:base/Int64";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
+import TrieMap "mo:base/TrieMap";
 import Encoding "mo:encoding/Binary";
 //Cap
 import Cap "mo:cap/Cap";
@@ -666,9 +667,16 @@ actor class EXTNFT(init_owner: Principal) = this {
   };
   
   //Marketplace
-  public shared(msg) func ext_marketplaceList(request: ListRequest) : async Result.Result<(), CommonError> {
+  /*public shared(msg) func ext_marketplaceList(request: ListRequest) : async Result.Result<(), CommonError> {
     await _ext_internal_marketplaceList(msg.caller, request);
+  };*/
+
+  public shared(msg) func ext_marketplaceList(caller: Principal, request: ListRequest) : async Result.Result<(), CommonError> {
+    await _ext_internal_marketplaceList(caller, request);
   };
+
+
+  
   public shared(msg) func ext_marketplacePurchase(tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
 		if (ExtCore.TokenIdentifier.isPrincipal(tokenid, Principal.fromActor(this)) == false) {
 			return #err(#InvalidToken(tokenid));
@@ -687,6 +695,7 @@ actor class EXTNFT(init_owner: Principal) = this {
 			};
 		};
   };
+  
   public shared(msg) func ext_marketplaceSettle(paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
     switch(await ext_checkPayment(paymentaddress)) {
       case(?(settlement, response)){
@@ -2172,5 +2181,40 @@ actor class EXTNFT(init_owner: Principal) = this {
     data_internalRunHeartbeat;
   };
 
- 
+
+  //singleNFTData
+  public query func getSingleNonFungibleTokenData(tokenid : TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata)] {
+    if (_tokenMetadata.size() == 0) {
+        return [];
+    };
+
+    let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(1);
+
+    switch (_tokenMetadata.get(tokenid)) {
+        case (?metadata) {
+            switch (metadata) {
+                case (#nonfungible(_)) {
+                    let owner = switch (_registry.get(tokenid)) {
+                        case (?owner) owner;
+                        case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+                    };
+                    nonFungibleTokenData.add((tokenid, owner, metadata));
+                };
+                case (#fungible(_)) {
+                    // Return empty if the token is fungible
+                    return [];
+                };
+            };
+        };
+        case (null) {
+            // Return empty if no metadata found
+            return [];
+        };
+    };
+
+    return Buffer.toArray(nonFungibleTokenData);
+};
+
+
+
 }
