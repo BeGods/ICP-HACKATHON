@@ -210,11 +210,16 @@ echo "PRICE: $PRICE"
 
 
 
+# Note: Before call the send_balance_and_nft make sure you are Topup your backend canister by given below command ex: recharge 50ICP to backend.
 
+# dfx canister call icp_ledger_canister icrc1_transfer "(record { to = record { owner = principal \"be2us-64aaa-aaaaa-qaabq-cai\";}; amount = 5_000_000_000;})"
 
 # # step 7 & step 8
 
+
+# PURCHASENFTTXNID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834'
 # SUBACCOUNT=null;
+
 # dfx canister call $CANISTER send_balance_and_nft '(principal "'$COLLECTION_ID'","'$PURCHASENFTTXNID'",'$PRICEE8S','$SUBACCOUNT')';
 
 
@@ -233,7 +238,7 @@ echo "PRICE: $PRICE"
 # # Send Balance to the Creater
 # Note: 1 ICP = 1 * 10^8 = 100000000
 
-PURCHASENFTTXNID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834'
+
 # export DEFAULT_ACCOUNT_ID=$(dfx ledger account-id)
 # echo "DEFAULT_ACCOUNT_ID: $DEFAULT_ACCOUNT_ID"
 # CHANDAN_ACCOUNT_ID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834';
