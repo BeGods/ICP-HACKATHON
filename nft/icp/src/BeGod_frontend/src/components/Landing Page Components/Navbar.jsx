@@ -50,6 +50,7 @@ const Navbar = ({ mobileView }) => {
                 <div className='w-[60%] lg:w-[35%] flex justify-between'>
                     <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>Collection</Link>
                     <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>符 ENG</Link>
+                 
                     {/* <div className='w-[35%] flex gap-8 mr-12 pt-2'>
                         <Link to="/profile" className='flex items-center bg-[#FCD37B] text-black font-[500] justify-center text-lg border-[2px] border-gray-200 w-[100%] h-[5vh]'>{t('button')}</Link>
                     </div> */}
