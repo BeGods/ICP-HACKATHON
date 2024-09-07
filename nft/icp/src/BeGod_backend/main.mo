@@ -18,7 +18,9 @@ import ExtCore "../EXT-V2/motoko/ext/Core";
 import Types "../EXT-V2/Types";
 import UsersTypes "./Users/Types";
 import V2 "../EXT-V2/ext_v2/v2";
-
+import HashMap "mo:base/HashMap";
+import Queue "../EXT-V2/motoko/util/Queue";
+import ExtCommon "../EXT-V2/motoko/ext/Common";
 
 actor Main {    
 
@@ -104,7 +106,7 @@ actor Main {
     
     type User = ExtCore.User;
     type CommonError = ExtCore.CommonError;
-
+    type MetadataLegacy = ExtCommon.Metadata;
     // Maps user and the collection canisterIds they create
     private var usersCollectionMap = TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>(Principal.equal, Principal.hash);
     //  Maps related to Campaigns
@@ -116,10 +118,17 @@ actor Main {
 
     private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
-    private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
-
-
+    //private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
     
+
+    //private stable var data_internalRunHeartbeat : Bool = true;
+
+    //private stable var data_paymentSettlementsTableState : [(AccountIdentifier, Payment)] = [];
+
+    //var _paymentSettlements : HashMap.HashMap<AccountIdentifier, Payment> = HashMap.fromIter(data_paymentSettlementsTableState.vals(), 0, AID.equal, AID.hash);
+    
+    //var _disbursements : Queue.Queue<(TokenIndex, AccountIdentifier, SubAccount, Nat64)> = Queue.fromArray(data_disbursementQueueState);
+    //private stable var data_disbursementQueueState : [(TokenIndex, AccountIdentifier, SubAccount, Nat64)] = [];
 
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
@@ -484,8 +493,8 @@ actor Main {
 
     //CREATE USER AND FILL RELATED DETAILS
 
-    //create user 
-    public shared func createUser(id: Principal, user: UsersTypes.User) : async Result.Result<(), UsersTypes.CreateUserError> {
+    //Fill user  details
+    public shared func filldetails(id: Principal, user: UsersTypes.User) : async Result.Result<(), UsersTypes.CreateUserError> {
     switch (users.get(id)) {
         case (null) {
             if (user.email == "" or user.firstName == "" or user.lastName == "") {
@@ -500,86 +509,48 @@ actor Main {
     };
     };
 
-    /*//mycollection
-    public shared ({ caller = user }) func myCollection() : async [NFTInfo] {
-        var userNFTs : [NFTInfo] = [];
-
-        // Iterate through all entries in usersCollectionMap
-        for ((_, collections) in usersCollectionMap.entries()) {
-            for ((_, collectionCanisterId) in collections.vals()) {
-                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
-                    getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
-                };
-
-                // Attempt to retrieve all NFTs from the specified collection canister
-                try {
-                    let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
-                    
-                    // Filter NFTs that are owned by the user
-                    for (nft in nfts.vals()) {
-                        if (nft.1 == AID.fromPrincipal(user, null)) {
-                            userNFTs := Array.append(userNFTs, [nft]);
-                        }
-                    }
-                } catch (e) {
-                    // Handle potential errors, but continue to the next collection
-                    Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
-                }
-            };
-        };
-
-        return userNFTs; // Return the list of NFTs owned by the user
+    // User Owned NFTs (MY COLLECTION)
+    public shared func userNFTcollection(_collectionCanisterId: Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
+    let myNFTcollection = actor (Principal.toText(_collectionCanisterId)) : actor {
+        myCollection: (user : AccountIdentifier) -> async (Result.Result<[(TokenIdentifier, Metadata)], CommonError>);
     };
 
-
-    //Favorite Nfts of User
-     public shared ({ caller = user }) func addToFavorites(principal: Principal, tokenId: TokenIndex) : async Text {
-    // Get the principal's collection
-    let userNFTs = await myCollection();
-
-    // Find the NFT in the principal's collection
-    let nft = List.find<NFTInfo>(List.fromArray(userNFTs), func(nftInfo) { nftInfo.0 == tokenId });
-
-    switch (nft) {
-        case null {
-            return "NFT not found in your collection.";
-        };
-        case (?nftInfo) {
-            // Add the NFT to the principal's favorites
-            let userFavorites = favoritesMap.get(principal);
-            switch (userFavorites) {
-                case null {
-                    favoritesMap.put(principal, [nftInfo]);
-                };
-                case (?existingFavorites) {
-                    // Check if the NFT is already in favorites
-                    if (List.find<NFTInfo>(List.fromArray(existingFavorites), func(favNFT) { favNFT.0 == tokenId }) == null) {
-                        favoritesMap.put(principal, Array.append(existingFavorites, [nftInfo]));
-                    } else {
-                        return "NFT is already in your favorites.";
-                    }
-                };
-            };
-            return "NFT added to your favorites.";
-        };
-    };
+    return await myNFTcollection.myCollection(user : AccountIdentifier);
     };
 
-
-    //get favorites 
-    public shared ({ caller = user }) func getFavorites(principal: Principal) : async [(Principal, TokenIndex)] {
-    // Fetch the principal's favorites from the favoritesMap
-    switch (favoritesMap.get(principal)) {
-        case null {
-            // If the principal has no favorites, return an empty array
-            return [];
-        };
-        case (?favorites) {
-            // Return the principal's list of favorite NFTs with the associated principal
-            return Array.map(favorites, func(myCollection) { (principal, nftInfo.0) });
-        };
+    //add to Favorite NFTs from MY COLLECTION
+    public shared func adduserfavouriteNFTs(_collectionCanisterId: Principal, user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : async Result.Result<(Text), CommonError> {
+    // Define the actor interface for interacting with the remote canister
+    let favouriteNFT = actor (Principal.toText(_collectionCanisterId)) : actor {
+        addToFavorites: (AccountIdentifier, TokenIdentifier) -> async Result.Result<(Text), CommonError>;
     };
-    };*/
+
+    // Call the remote canister's addToFavorites method and pass the correct arguments
+    return await favouriteNFT.addToFavorites(user, tokenIdentifier);
+    };
+
+    //remove from Favorite NFTs from MY COLLECTION
+    public shared func removeuserfavouriteNFTs(_collectionCanisterId: Principal, user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : async Result.Result<(Text), CommonError> {
+    // Define the actor interface for interacting with the remote canister
+    let favouriteNFT = actor (Principal.toText(_collectionCanisterId)) : actor {
+        removeFromFavorites: (AccountIdentifier, TokenIdentifier) -> async Result.Result<(Text), CommonError>;
+    };
+
+    // Call the remote canister's removeFromFavorites method and pass the correct arguments
+    return await favouriteNFT.removeFromFavorites(user, tokenIdentifier);
+    };
+
+    //get user favorites nfts
+   public shared func getuserfavoriteNFTs(_collectionCanisterId: Principal, user: AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
+    // Define the actor interface for interacting with the remote canister
+    let favouriteNFT = actor (Principal.toText(_collectionCanisterId)) : actor {
+        getFavorites: (AccountIdentifier) -> async Result.Result<[(TokenIdentifier)], CommonError>;
+    };
+
+    // Call the remote canister's getFavorites method and pass the correct argument
+    return await favouriteNFT.getFavorites(user);
+    };
+
 
     /* -------------------------------------------------------------------------- */
     /*                                  MARKETPLACE                               */
@@ -635,5 +606,26 @@ actor Main {
 
     return await getstats.ext_marketplaceStats();
     };
-    
+
+
+
+//--------------------------------------------------------------------------------------------------//
+     /*hearbeat functions
+    public shared(msg) func disbursements(_collectionCanisterId: Principal) : async (){
+        let get_disbursements = actor (Principal.toText(_collectionCanisterId)) : actor {
+            heartbeat_disbursements : () -> async ();
+    };
+    return await get_disbursements. heartbeat_disbursements();
+    };
+
+    public shared(msg) func paymentsettle(_collectionCanisterId: Principal) : async (){
+        let settlepayment = actor (Principal.toText(_collectionCanisterId)) : actor {
+            heartbeat_paymentSettlements : () -> async ();
+    };
+    return await settlepayment.heartbeat_paymentSettlements();
+    };*/
+//--------------------------------------------------------------------------------------------------//
+
+
+
 };
