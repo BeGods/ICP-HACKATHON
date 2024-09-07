@@ -186,7 +186,7 @@ echo "PRICE: $PRICE"
 
 
 
-dfx identity use default
+# dfx identity use default
 
 # # STEP-6
 # # Purchase NFT
