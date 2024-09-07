@@ -84,7 +84,7 @@ const Hero = () => {
         <div className='w-[100%]'>
             <div className='relative'>
                 <HeroSlider />
-                <div className=' absolute top-0 w-[100%] z-10'>
+                <div className=' absolute top-0 w-[100%] z-20'>
                     <Navbar mobileView={mobileViewHandler}/>
                 </div>
                 <div style={{ fontFamily: "CaslonAntique" }} className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
@@ -128,7 +128,7 @@ const Hero = () => {
                     </div>
                 </div>
             </div>
-            <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
+            <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className=' relative bg-center bg-cover'>
                 <Footer />
             </div>
         </div>

@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { RxCross2 } from "react-icons/rx";;
+import { RxCross2 } from "react-icons/rx";
 import ImageUploader from "./ImageUploader";
 import toast from "react-hot-toast";
 
 const Modal = (props) => {
     const {getAddedNftDetails} = props;
-    const [nftId, setNftId] = useState("asdadadf232f23");
-    const [nftName, setNftName] = useState("Be Gods");
+    const [nftId, setNftId] = useState("");
+    const [nftName, setNftName] = useState("");
     const [nftType, setNftType] = useState("NORMAL");
-    const [nftQuantity, setNftQuantity] = useState("2");
-    const [nftPrice, setPrice] = useState("323");
-    const [nftDescription, setNftDescription] = useState("This is a rear NFT which will be found.");
+    const [nftQuantity, setNftQuantity] = useState("");
+    const [nftPrice, setPrice] = useState("");
+    const [nftDescription, setNftDescription] = useState("");
     const [nftImage,setNftImage] = useState("");
     const {toggleModal} = props
 
@@ -58,7 +58,7 @@ const Modal = (props) => {
                             value={nftId}
                             onChange={(e) => setNftId(e.target.value)}
                             type="text"
-                            className="mt-1 pl-4 w-[100%] h-[30px] md:h-[30px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
+                            className="mt-1 pl-4 w-[100%] h-[30px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
                         />
                     </label>
                 </div>
@@ -70,32 +70,34 @@ const Modal = (props) => {
                             value={nftName}
                             onChange={(e) => setNftName(e.target.value)}
                             type="text"
-                            className="mt-1 pl-4 w-[100%] h-[30px] md:h-[30px] bg-[#29292C] rounded-md  text-[16px]  text-[#8a8686]"
+                            className="mt-1 pl-4 w-[100%] h-[30px]  bg-[#29292C] rounded-md  text-[16px]  text-[#8a8686]"
                         />
                     </label>
                 </div>
 
-                <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]">
-                    <label className="w-full sm:w-1/2 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+                <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
+                    <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
                         Type:
-                        <select className="p-1 rounded-md h-[30px] md:h-[30px] bg-[#29292C] mt-0 md:text-[16px  text-[16px]  text-[#8a8686]" value={nftType} onChange={(e)=>setNftType(e.target.value)}>
-                            <option value="NORMAL" className="text-[16px]  text-[#8a8686]">Normal</option>
-                            <option value="TEST" className="text-[16px]  text-[#8a8686]">Test Option</option>
+                        <select className="p-1 rounded-md h-[30px] bg-[#29292C] text-[16px] text-[#8a8686]" value={nftType} onChange={(e) => setNftType(e.target.value)}>
+                            <option value="NORMAL" className="text-[16px] text-[#8a8686]">Normal</option>
+                            <option value="TEST" className="text-[16px] text-[#8a8686]">Test Option</option>
                         </select>
                     </label>
-                    <label className="w-full sm:w-1/2 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-                        Quantity:
-                        <input
-                            value={nftQuantity}
-                            onChange={(e) => setNftQuantity(e.target.value)}
-                            type="text"
-                            className="pl-4 rounded-md h-[30px] md:h-[30px] bg-[#29292C] mt-0  text-[16px]  text-[#8a8686]"
-                        />
+
+                    <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+                            Quantity:
+                            <input
+                                value={nftQuantity}
+                                onChange={(e) => setNftQuantity(e.target.value)}
+                                type="text"
+                                className="pl-4 rounded-md h-[30px] bg-[#29292C] text-[16px] text-[#8a8686]"
+                            />
                     </label>
-                </div>
+            </div>
+
 
                 <div className="mt-1">
-                    <label className="mt-[20px] w-[100%] h-[20px] md:h-[70px] text-[#FFFFFF] gap-0 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+                    <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
                             Image
                             <ImageUploader captureUploadedNftImage={captureUploadedNftImage}/>
                     </label>
@@ -108,7 +110,7 @@ const Modal = (props) => {
                             value={nftPrice}
                             onChange={(e) => setPrice(e.target.value)}
                             type="text"
-                            className="pl-4 w-[100%] h-[30px] md:h-[30px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
+                            className="pl-4 w-[100%] h-[30px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
                         />
                     </label>
                 </div>

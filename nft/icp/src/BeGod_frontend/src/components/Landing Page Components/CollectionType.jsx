@@ -88,7 +88,7 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
                     <div
                         onClick={() => setCurrentIndex(index)}
                         key={index}
-                        className='cursor-pointer relative w-[50%] h-[6vh] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
+                        className='cursor-pointer relative w-[50%] h-[55px] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
                         style={{
                             backgroundColor: index === currentIndex ? collection.shadowColor : "inherit",
                             boxShadow: index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "",
