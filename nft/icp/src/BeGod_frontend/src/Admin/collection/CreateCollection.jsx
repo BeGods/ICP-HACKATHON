@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import Modal from './modal.jsx';
 import NftCardItem from './NftCardItem.jsx';
 import LogoImageUploader from './LogoImageUploader.jsx';
+import { GoPlus } from "react-icons/go";
+import { BiPlus } from "react-icons/bi";
 
 const CreateCollection = () => {
     const navigate = useNavigate();
@@ -91,7 +93,7 @@ const CreateCollection = () => {
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
                 <h1 className='text-2xl text-white -mt-2'>Create Collection</h1>
             </div>
-            <form onSubmit={handleFormSubmit} className='ml-[10%] sm:ml-[10%] md:ml-[85px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
+            <form onSubmit={handleFormSubmit} className='ml-[10%] sm:ml-[10%] md:ml-[20px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
                 {/* Collection Name and Max Limit */}
                 <div className='flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]'>
                     <label className='w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
@@ -136,7 +138,7 @@ const CreateCollection = () => {
                             Add New
                         </button>
                         <div className="absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-[#f0c96a] w-[35px] h-[35px] rounded-full flex items-center justify-center border-2 border-gray-900">
-                            <span className="text-black text-lg font-bold text-[29px] m-0 pb-[6px] ">+</span>
+                            <span><BiPlus size={22}/> </span>
                         </div>
                     </div>
                     

@@ -68,6 +68,7 @@ function ImageUploader(props) {
           }
         }}
         style={{display:'none'}}
+        className="h-0 w-0"
       />
       )}
       {!hideUpload && (

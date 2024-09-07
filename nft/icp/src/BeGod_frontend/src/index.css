@@ -395,15 +395,17 @@ body{
 /* This apply blur effect to a image in NftCardItem Component */
 
 .add_new_nft_popup_bg_container{
-  height: 90vh;
+  height: 80vh;
   width: 25vw;
   background-color: #161618;
   border-radius: 5px;
   padding: 32px 42px 36px 42px;
+  overflow-y: auto;
 }
 @media screen and (max-width:1200px){
 .add_new_nft_popup_bg_container{
   width: 40vw;
+  height: 50vh;
 }
 }
 @media screen and (max-width:950px){
