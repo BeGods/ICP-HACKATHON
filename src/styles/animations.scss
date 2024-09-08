@@ -159,7 +159,7 @@
 }
 
 .scale-box {
-  @include scale-in-out(scale-box-animation, 1, 1.1, 1s, ease-in, infinite);
+  @include scale-in-out(scale-box-animation, 1, 1.1, 0.8s, ease-in, infinite);
 }
 
 .scale-hand {
@@ -167,7 +167,7 @@
 }
 
 .scale-point{
-  @include scale-in-out(scale-hand-animation, 1, 1.3, 1s, ease-in, infinite);
+  @include scale-in-out(scale-hand-animation, 1, 1.3, 0.5s, ease-in, infinite);
 }
 
 .scale-none {
@@ -233,6 +233,59 @@
   }
 }
 
+
+// @keyframes slideAway {
+//   0% {
+//     transform: translateX(0);
+//   }
+//   100% {
+//     transform: translateX(100%);
+//   }
+// }
+
+// @keyframes slideInside {
+//   0% {
+//     transform: translateX(100%);
+//   }
+//   100% {
+//     transform: translateX(0);
+//   }
+// }
+
+@mixin slide($name, $initial, $final) {
+  @keyframes #{$name} {
+    0%{
+      transform: translateX($initial);
+    }
+    100% {
+      transform: translateX($final);
+    }
+  }
+
+  & {
+    animation: #{$name} 0.8s  ease-in-out forwards;
+  }
+}
+
+.slide-away-left{
+  @include slide(slide-away-left-animation, 0%, -100%);
+}
+
+.slide-inside-left{
+@include slide(slide-inside-left-animation, -100%, 0%);
+}
+
+.slide-away-right{
+  @include slide(slide-away-right-animation, 0%, 100%);
+}
+
+.slide-inside-right{
+@include slide(slide-inside-right-animation, 100%, 0%);
+}
+
+
+
+
 @keyframes slideMinionUp {
   0% {
     transform: translateY(100%);
@@ -267,6 +320,9 @@
 .maximize{
   animation: slideUp 0.8s ease-in-out forwards;
 }
+
+
+
 
 .wave {
   position: absolute;

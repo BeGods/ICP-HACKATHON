@@ -3,7 +3,7 @@ import { mythSections } from "../../utils/variables";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import ReactHowler from "react-howler";
 
-export const ToggleLeft = ({ handleClick, activeMyth }) => {
+export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -26,7 +26,13 @@ export const ToggleLeft = ({ handleClick, activeMyth }) => {
   };
 
   return (
-    <div className="flex absolute left-0 top-[50%] justify-center items-center w-[15%] z-50 -mt-8">
+    <div
+      className={`flex absolute left-0 ${
+        minimize === 2 && "slide-inside-left"
+      } ${
+        minimize === 1 && "slide-away-left"
+      }  top-[50%] justify-center items-center w-[15%] z-50 -mt-8`}
+    >
       <div
         onClick={handleButtonClick}
         className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
@@ -51,7 +57,7 @@ export const ToggleLeft = ({ handleClick, activeMyth }) => {
   );
 };
 
-export const ToggleRight = ({ handleClick, activeMyth }) => {
+export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -73,7 +79,11 @@ export const ToggleRight = ({ handleClick, activeMyth }) => {
   };
 
   return (
-    <div className="flex right-0 top-[50%] absolute justify-center items-center w-[15%] z-50 -mt-8">
+    <div
+      className={`flex right-0 ${minimize === 2 && "slide-inside-right"} ${
+        minimize === 1 && "slide-away-right"
+      }  top-[50%] absolute justify-center items-center w-[15%] z-50 -mt-8`}
+    >
       <div
         onClick={handleButtonClick}
         className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
