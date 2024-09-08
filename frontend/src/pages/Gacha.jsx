@@ -28,7 +28,7 @@ const FlashScreen = ({ reward }) => {
     setRunConfetti(true);
     setTimeout(() => {
       setRunConfetti(false);
-    }, 5000);
+    }, 3000);
   };
 
   const handleClick = (e) => {
@@ -49,7 +49,7 @@ const FlashScreen = ({ reward }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setShowYouScale(150);
+      setShowYouScale(125);
       setTimeout(() => {
         setShowYouScale(100);
         setShowWon(true);
@@ -65,7 +65,7 @@ const FlashScreen = ({ reward }) => {
         setTimeout(() => {
           setShowScale(100);
           setShowHand(true);
-        }, 1000);
+        }, 500);
       }, 500);
     }
   }, [showWon]);
@@ -84,12 +84,12 @@ const FlashScreen = ({ reward }) => {
       {/* Content */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
         <h1
-          className={`scale-${showYouScale} text-[22vw] mt-4 transition-transform duration-1000`}
+          className={`scale-[${showYouScale}%] text-[22vw] mt-7 transition-transform duration-500`}
         >
           YOU
         </h1>
         {showWon && (
-          <h1 className="text-[14.2vw] transition-opacity duration-500">
+          <h1 className="text-[14.2vw] transition-opacity duration-250">
             WON!
           </h1>
         )}
@@ -108,7 +108,7 @@ const FlashScreen = ({ reward }) => {
             : defaultIcons[reward.type]}
         </div>
       </div>
-      <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0  text-[9vw] text-gold uppercase z-20">
+      <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0 text-[9vw] text-gold uppercase z-20">
         <div>
           {showHand && (
             <ThumbsUp
@@ -117,7 +117,8 @@ const FlashScreen = ({ reward }) => {
               }}
               size={"18vw"}
               color="#FFD660"
-              className="mx-auto drop-shadow-xl scale-more mt-1"
+              fill="#FFD660"
+              className="mx-auto drop-shadow-xl scale-more mt-6"
             />
           )}
         </div>
@@ -248,7 +249,12 @@ const Gacha = (props) => {
   useEffect(() => {
     setTimeout(() => {
       setDisableHand(true);
-    }, 2000);
+      setTimeout(() => {
+        if (!showScale) {
+          claimDailyBonus();
+        }
+      }, 1500);
+    }, 1500);
   }, []);
 
   const claimDailyBonus = async () => {
@@ -275,7 +281,7 @@ const Gacha = (props) => {
           setSpinSound(false);
           setReward(response.reward);
           setShowFlash(true);
-        }, 4000);
+        }, 2000);
       } else {
         console.error("No reward in response:", response);
       }
@@ -302,7 +308,7 @@ const Gacha = (props) => {
 
   return (
     <div className="flex flex-col h-screen w-screen justify-center font-fof items-center bg-black">
-      <div className="flex flex-col w-full h-full items-center pt-2">
+      <div className="flex flex-col w-full h-full items-center pt-4">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
           {!showScale && (
@@ -344,12 +350,12 @@ const Gacha = (props) => {
         <div className="flex items-start justify-center w-full h-1/5"></div>
         <div
           onClick={!showScale && claimDailyBonus}
-          className="flex absolute items-start bottom-28 justify-center w-full"
+          className="flex absolute items-start bottom-[92px] justify-center w-full"
         >
           {!showScale && (
             <div className="relative">
               {!disableHand && (
-                <div className="font-symbols scale-point z-10 mx-auto my-auto absolute ml-2.5 -mt-1 text-white text-[80px] text-black-contour">
+                <div className="font-symbols scale-point z-10 mx-auto my-auto absolute -mt-3 text-white text-[100px] text-black-contour">
                   T
                 </div>
               )}
