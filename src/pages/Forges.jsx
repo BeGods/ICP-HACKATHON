@@ -24,6 +24,7 @@ import BoosterButtom from "../components/Buttons/BoosterButtom";
 import { showToast } from "../components/Toast/Toast";
 import Footer from "../components/Common/Footer";
 import { hideBackButton } from "../utils/teleBackButton";
+import { Star } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -35,7 +36,6 @@ const HeaderContent = ({
   orbGlow,
   tapGlow,
   glowReward,
-  glowNumber,
   glowSymbol,
   glowShards,
   mythData,
@@ -69,7 +69,7 @@ const HeaderContent = ({
           </div>
         </div>
       </div>
-      <div className="flex absolute justify-center w-full">
+      <div className="flex absolute justify-center w-full z-20">
         <div
           className={`flex text-center justify-center h-[36vw] w-[36vw] -mt-5 items-center rounded-full outline outline-${
             mythSections[activeMyth]
@@ -96,16 +96,14 @@ const HeaderContent = ({
             alt="base-orb"
             className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
           />
-          <div className="absolute flex  h-[36vw] w-[36vw] rounded-full">
-            <span
-              className={` z-1 font-symbols ${
-                glowReward
-                  ? ` text-${mythSections[activeMyth]}-text opacity-100`
-                  : "text-white opacity-50"
-              } text-[140px] -mt-[5%] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow`}
-            >
-              {mythSymbols[mythSections[activeMyth]]}
-            </span>
+          <div
+            className={`z-1 flex justify-center items-start font-symbols ${
+              glowReward
+                ? ` text-${mythSections[activeMyth]}-text opacity-100`
+                : "text-white opacity-50"
+            } text-[34vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute flex h-full w-full rounded-full`}
+          >
+            <div className="-mt-2">{mythSymbols[mythSections[activeMyth]]}</div>
           </div>
         </div>
       </div>
@@ -142,6 +140,7 @@ const Forges = () => {
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
     shards: myth.shards,
+    minionTaps: 0,
     energy: myth.energy,
     energyLimit: myth.energyLimit,
     currShards: 0,
@@ -152,6 +151,9 @@ const Forges = () => {
     isAutomataActive: myth.boosters.isAutomataActive,
     shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
     disabled: false,
+  }));
+  const popupDown = gameData.mythologies.map(() => ({
+    coolDown: 0,
   }));
   const [showCard, setShowCard] = useState(null);
   const [showBlackOrb, setShowBlackOrb] = useState(false);
@@ -347,6 +349,15 @@ const Forges = () => {
     }));
   };
 
+  // useEffect(() => {
+  //   const currTime = new Date.now();
+  //   console.log(currTime);
+  // }, []);
+
+  // const handleRandonPopup = (coolDown) => {
+  //   return true;
+  // };
+
   // handle tapping
   const handleTap = async (e) => {
     e.preventDefault();
@@ -362,11 +373,16 @@ const Forges = () => {
         if (index === activeMyth) {
           let newShards = myth.shards + shardslvl;
           let newOrbs = myth.orbs;
+          let newMinionTaps = myth.minionTaps;
 
           if (newShards >= 1000) {
             orbChangeEffect();
             newOrbs += Math.floor(newShards / 1000);
             newShards = newShards % 1000;
+          }
+
+          if (isHolding && activeCard === "minion") {
+            newMinionTaps += 1;
           }
 
           // Convert orbs to black orbs
@@ -379,6 +395,7 @@ const Forges = () => {
             ...myth,
             energy: Math.max(0, myth.energy - 1),
             shards: newShards,
+            minionTaps: newMinionTaps,
             currShards: myth.currShards + 1,
             orbs: newOrbs,
           };
@@ -391,6 +408,12 @@ const Forges = () => {
       if (reachedBlackOrb) {
         setShowBlackOrb(true);
       }
+
+      // if (currShards >= 10 && handleRandonPopup) {
+      // setActiveCard("minion");
+      // call the random time function which shall return random booster on a random time within a minute
+      // pass the cooldown period and update it as tapping increases
+      // }
 
       if (currShards === 25) {
         setActiveCard("minion");
@@ -674,35 +697,34 @@ const Forges = () => {
               }}
               className="flex flex-col items-center justify-center  w-full h-full"
             >
-              {platform != "ios" && (
+              {/* <div
+                style={{ position: "absolute", display: "inline-block" }}
+                className="w-[250px] -top-[80px]"
+              >
+                <img
+                  src="/assets/uxui/600px-smoke.wide.webp"
+                  alt="smoke"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    mixBlendMode: "color-dodge",
+                    filter: "contrast(254%) brightness(80%)",
+                  }}
+                  className={` ${
+                    tapGlow && "scale-150 -mt-[45px]"
+                  } transition-all duration-[1s]`}
+                />
                 <div
-                  style={{ position: "absolute", display: "inline-block" }}
-                  className="w-[250px] -top-[80px]"
-                >
-                  <img
-                    src="/assets/uxui/600px-smoke.wide.webp"
-                    alt="smoke"
-                    style={{
-                      display: "block",
-                      width: "100%",
-                      mixBlendMode: "color-dodge",
-                      filter: "contrast(254%) brightness(80%)",
-                    }}
-                    className={` ${
-                      tapGlow && "scale-150 -mt-[45px]"
-                    } transition-all duration-[1s]`}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  ></div>
-                </div>
-              )}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                ></div>
+              </div> */}
+
               {plusOnes.map((plusOne) => (
                 <span
                   key={plusOne.id}
@@ -723,7 +745,11 @@ const Forges = () => {
             </div>
           </div>
           <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
-            {/* <Star
+            {/* {mythStates[activeMyth].minionTaps} */}
+            {/* <div className="abolsute bg-white w-[50px] h-[140vw] z-0 -mb-8">
+              hi
+            </div>
+            <Star
               onClick={() => {
                 tele.HapticFeedback.notificationOccurred("success");
               }}
@@ -738,28 +764,18 @@ const Forges = () => {
           {/* RightButton */}
           <ToggleRight
             handleClick={() => {
-              // if (activeCard === "minion") {
-              //   setActiveCard("minion-down");
-              // }
-              // setTimeout(() => {
-              //   setActiveCard(null);
-              // }, 500);
               setActiveMyth((prev) => (prev + 1) % 5);
             }}
             activeMyth={activeMyth}
+            minimize={minimize}
           />
           {/* LeftButton */}
           <ToggleLeft
             handleClick={() => {
-              // if (activeCard === "minion") {
-              //   setActiveCard("minion-down");
-              // }
-              // setTimeout(() => {
-              //   setActiveCard(null);
-              // }, 500);
               setActiveMyth((prev) => (prev - 1 + 5) % 5);
             }}
             activeMyth={activeMyth}
+            minimize={minimize}
           />
           <ReactHowler
             src="/assets/audio/fof.forges.background01.wav"
