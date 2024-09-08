@@ -18,11 +18,14 @@ import Footer from "../components/Common/Footer";
 
 const tele = window.Telegram?.WebApp;
 
-const HeaderContent = ({ userData, avatarColor, t }) => {
+const HeaderContent = ({ userData, avatarColor, handleClick, t }) => {
   return (
     <div className="flex justify-between relative w-full">
       {/* Left */}
-      <div className="flex flex-col justify-between h-full px-2 pt-1">
+      <div
+        onClick={handleClick}
+        className="flex flex-col justify-between h-full px-2 pt-1 z-10"
+      >
         <h1
           className={`text-head text-black-contour uppercase text-white
            `}
@@ -128,7 +131,15 @@ const Profile = (props) => {
       {/* Header */}
       <Header
         children={
-          <HeaderContent avatarColor={avatarColor} userData={userData} t={t} />
+          <HeaderContent
+            avatarColor={avatarColor}
+            userData={userData}
+            t={t}
+            handleClick={() => {
+              tele.HapticFeedback.notificationOccurred("success");
+              setSection(4);
+            }}
+          />
         }
       />
       {/* Content */}
@@ -152,12 +163,13 @@ const Profile = (props) => {
             <div className="flex px-2 text-white gap-2 mt-2.5 flex-col items-center justify-center w-full">
               <div
                 onClick={() => {
+                  tele.HapticFeedback.notificationOccurred("success");
                   setSection(4);
                 }}
                 className="flex gap-2 -mt-1.5 uppercase justify-center items-center w-full"
               >
-                <Trophy size={"6vw"} />
-                <h1 className="mt-1 text-tertiary">
+                <Trophy size={"6vw"} color="#FFD660" />
+                <h1 className="mt-1 text-tertiary text-gold">
                   {t(`profile.leaderboard`)}
                 </h1>
               </div>
@@ -204,8 +216,10 @@ const Profile = (props) => {
                 </div>
               </div>
               <div className="flex gap-2 uppercase justify-center items-center mt-2 w-full">
-                <UserPlus size={"6vw"} />
-                <h1 className="mt-1 text-tertiary">{t(`profile.invite`)}</h1>
+                <UserPlus size={"6vw"} color="#FFD660" />
+                <h1 className="mt-1 text-tertiary text-gold">
+                  {t(`profile.invite`)}
+                </h1>
               </div>
               <div
                 onMouseDown={() => {

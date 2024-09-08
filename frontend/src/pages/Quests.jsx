@@ -375,7 +375,7 @@ const Quests = () => {
                 handleClick={() => {
                   setSecretInfo((prev) => !prev);
                 }}
-                className="h-full relative -mt-[42px]"
+                className="h-full relative -mt-[36px]"
               >
                 <JigsawImage
                   imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.whitelist.wood.jpg`}
