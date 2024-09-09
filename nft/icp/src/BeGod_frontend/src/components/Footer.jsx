@@ -7,17 +7,17 @@ import { IoLogoTwitter } from "react-icons/io";
 import { CiTwitter } from 'react-icons/ci';
 const Footer = () => {
     return (
-        <div style={{ fontFamily: "QuickSand" }} className="max-w-[1920px] mx-auto flex flex-col justify-center   w-full  text-[#FFFFFF]">
-            <Link to="/" className='h-[10vh]  sm:ml-[1%] xl:ml-[4%] '>
+        <div className="max-w-[1920px]  flex flex-col justify-center   w-full  text-[#FFFFFF]">
+            <Link to="/" className='h-[80px] ml-[-5%] sm:ml-[3%] mt-8'>
                 <img src="/Hero/logo.png" alt="" />
             </Link>
             <div className="flex flex-col lg:flex-row ml-[10%] sm:ml-[7%] mt-8">
-                <p className="w-[90%] lg:w-[35%] xl:w-[35%] text-sm sm:text-base">
+                <p className="w-[90%] lg:w-[35%] xl:w-[35%] text-sm sm:text-base fon">
                     Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-[40%] mt-4 sm:-mt-16 md:ml-0 lg:ml-[10%]">
                     <div className="flex flex-col gap-2 sm:gap-4 sm:mt-16 lg:mt-0">
-                        <div className='flex gap-56 sm:gap-80'>
+                        <div className='flex gap-40 sm:gap-80'>
                             <h1 className="text-lg sm:text-xl">Home</h1>
                             <h1 className="flex  text-lg sm:text-xl">Collection</h1>
                         </div>

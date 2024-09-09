@@ -1,6 +1,6 @@
 [dependencies]
 base = "0.12.1"
-motoko-base = "https://github.com/dfinity/motoko-base#master@e4d326221fc1ecb253b9b793c3de6417e42865b1"
+motoko-base = "https://github.com/dfinity/motoko-base#master@e1b5bba80a9ef1faacfcffa3e8f64ab84d60c570"
 "array.mo" = "https://github.com/aviate-labs/array.mo#master@8e4282825d3b401407954917cd94d1548ee21256"
 "encoding.mo" = "https://github.com/aviate-labs/encoding.mo#master@2711d18727e954b11afc0d37945608512b5fbce2"
 "io.mo" = "https://github.com/aviate-labs/io.mo#master@6492419a1592b3346085c32cadb98c5a9ff71075"

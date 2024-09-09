@@ -1,12 +1,13 @@
 module {
     public type User = {
-        profileimage : Text;
+        //profileimage : Text;
         firstName : Text;
         lastName : Text;
         email : Text;
-        twitter : Text;
-        discord : Text;
-        telegram : Text;
+        //twitter : Text;
+        //discord : Text;
+        //telegram : Text;
+        address: Text;
     };
 
     public type UpdateUserError = {
@@ -15,6 +16,7 @@ module {
         #EmptyEmail;
         #EmptyFirstName;
         #EmptyLastName;
+        #EmptyAddress;
     };
 
     public type GetUserError = {
@@ -37,4 +39,6 @@ module {
     public type TransactionsDetails = {
         // Define fields as needed
     };
+
+    
 }

@@ -2307,4 +2307,146 @@ actor class EXTNFT(init_owner : Principal) = this {
 
     return Buffer.toArray(nonFungibleTokenData);
   };
+
+
+
+//mycollection
+  public query func myCollection(user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
+    // Get all tokens owned by the user from the _owners map
+    switch (_owners.get(user)) {
+      case (?tokens) {
+        // Prepare an array to hold all metadata information along with their token identifiers
+        var tokenDetails : [(TokenIdentifier, Metadata)] = [];
+        
+        // Iterate through the tokens owned by the user
+        for (token in tokens.vals()) {
+          // Fetch metadata for each token
+          switch (_extGetTokenMetadata(token)) {
+            case (?metadata) {
+              // Convert metadata to legacy format and add it to the array
+              let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(Principal.fromActor(this), token);
+              tokenDetails := Array.append(tokenDetails, [(tokenIdentifier, metadata)]);
+            };
+            case (_) {
+              // If metadata is missing, you can skip this token or handle it differently
+              return #err(#Other("Metadata not found for some tokens"));
+            };
+          };
+        };
+        
+        // Return the array of token identifiers and metadata details
+        return #ok(tokenDetails);
+      };
+      case (_) {
+        // If the user owns no tokens, return an empty array
+        return #err(#Other("No tokens owned by this user"));
+      };
+    };
+};
+
+
+//User favorite NFTS from myCollection
+
+// favorites data structure 
+private var _favorites : HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]> = HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]>(0, AID.equal, AID.hash);
+
+// Function to add a token to the user's favorites
+func _addToFavorites(user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : () {
+    // Check if the user already has favorites
+    let userFavorites = switch (_favorites.get(user)) {
+        case (?favorites) favorites; // If the user has favorites, retrieve them
+        case (_) []  // If the user has no favorites, start with an empty array
+    };
+
+    // Append the new token to the user's favorites list
+    let updatedFavorites = Array.append(userFavorites, [(tokenIdentifier)]);
+
+    // Update the user's favorites in the favorites map
+    _favorites.put(user, updatedFavorites);
+};
+
+// ADD TO FAVORITES //
+  // Function to add a token to the user's favorites
+public shared func addToFavorites(
+    user: AccountIdentifier, 
+    tokenIdentifier: TokenIdentifier
+) : async Result.Result<Text, CommonError> {
+    // Check if the user already has favorites
+    let userFavorites = switch (_favorites.get(user)) {
+        case (?favorites) favorites; // If the user has favorites, retrieve them
+        case (_) []  // If the user has no favorites, start with an empty array
+    };
+
+    // Check if the token is already in the user's favorites
+    let isAlreadyFavorite = Array.find(userFavorites, func(entry: (TokenIdentifier)) : Bool {
+        entry == tokenIdentifier
+    }) != null;
+
+    if (isAlreadyFavorite) {
+        return #err(#Other("Token is already in favorites"));
+    } else {
+        // Append the new token to the user's favorites list (without metadata)
+        let updatedFavorites = Array.append(userFavorites, [tokenIdentifier]);
+
+        // Update the user's favorites in the favorites map
+        _favorites.put(user, updatedFavorites);
+        return #ok("Token added to favorites successfully");
+    }
+};
+
+
+
+
+
+//REMOVE FROM FAVORITES //
+// Function to remove a token from the user's favorites
+public shared func removeFromFavorites(user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : async Result.Result<Text, CommonError> {
+    // Check if the user already has favorites
+    let userFavorites = switch (_favorites.get(user)) {
+        case (?favorites) favorites; // If the user has favorites, retrieve them
+        case (_) return #err(#Other("No favorites found for this user")); // If the user has no favorites, return an error
+    };
+
+    // Check if the token is in the user's favorites
+    let isFavorite = Array.find(userFavorites, func(entry: (TokenIdentifier)) : Bool {
+        entry == tokenIdentifier
+    }) != null;
+
+    // Instead of if (!isFavorite), use if isFavorite == false
+    if (isFavorite == false) {
+        return #err(#Other("Token is not in favorites"));
+    };
+
+    // Remove the token from the user's favorites list
+    let updatedFavorites = Array.filter(userFavorites, func(entry: (TokenIdentifier)) : Bool {
+        entry != tokenIdentifier
+    });
+
+    // Update the user's favorites in the favorites map
+    _favorites.put(user, updatedFavorites);
+
+    // Return success message
+    return #ok("Token removed from favorites successfully");
+};
+
+
+
+// GET USER FAVORITES //
+// Function to get the user's favorites
+public shared query func getFavorites(user: AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
+    // Check if the user has any favorites
+    switch (_favorites.get(user)) {
+        case (?favorites) {
+            // Return the user's favorites if found
+            return #ok(favorites);
+        };
+        case (_) {
+            // Return an error if no favorites are found for the user
+            return #err(#Other("No favorites found for this user"));
+        };
+    };
+};
+
+
+
 };

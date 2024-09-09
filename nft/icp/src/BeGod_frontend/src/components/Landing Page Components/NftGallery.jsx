@@ -77,7 +77,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                     <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
                     <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                     <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                    <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[3vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                    <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                       Buy Now
                     </Link>
                   </div>
@@ -101,9 +101,9 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
           <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
         </Link>
       </div>
-      <div className={`hidden w-[80%] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:ml-20 lg:ml-32 mb-8 ${animationClass}`}>
+      <div className={`hidden w-[80%] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-24 lg:gap-4 mt-8 sm:ml-20 lg:ml-32 mb-8 ${animationClass}`}>
         {currentItems && currentItems.map((img, index) => (
-          <div className="flip-card rounded-lg" key={index}>
+          <div className="flip-card rounded-lg " key={index}>
             <div className="flip-card-inner">
               {/* Front Side */}
               <div className="flip-card-front flex items-center justify-center">
@@ -116,7 +116,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                   <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
                   <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                   <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                  <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                  <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[35px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                     Buy Now
                   </Link>
                 </div>

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { ThemeToggle } from './ThemeToggle';
 import "./i18n.js"
+import { Toaster } from 'react-hot-toast';
 // export function ThemeToggle() {
 //   // Use `useColorModeValue` to get the background color based on the color mode
 // 
@@ -17,6 +18,7 @@ import "./i18n.js"
 // }
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <Toaster />
     <ThemeToggle/>
   </React.StrictMode>,
 );

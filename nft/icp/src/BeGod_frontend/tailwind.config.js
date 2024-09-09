@@ -10,7 +10,11 @@ export default {
     //   buttonyellow: "#FCD37B"
     // },
     fontFamily:{
-      Quicksand  : ["Quicksand", "sans-serif"],
+      Quicksand: ["Quicksand", "sans-serif"],
+      Inter: ["Inter", "sans-serif"],
+      Roboto: ["Roboto", "sans-serif"],
+      Poppins: ["Poppins", "sans-serif"],
+      Montserrat: ["Montserrat", "sans-serif"],
     },
   //  maxWidth:{
   //   "screen": "1920px"
