@@ -10,7 +10,7 @@
           "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai"
         }
       }
-  },
+    },
     "BeGod_backend": {
       "main": "src/BeGod_backend/main.mo",
       "type": "motoko"

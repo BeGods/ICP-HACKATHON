@@ -4,9 +4,8 @@ const NftCard = ({img}) => {
     return (
 
         <div
-            className="flip-card border rounded-lg"
+            className="flip-card rounded-lg"
             style={{
-                backgroundImage: `url('/image/goldbg.png')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}
@@ -23,7 +22,7 @@ const NftCard = ({img}) => {
                         <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
                         <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                         <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                        <button className="mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                        <button className="flex items-center justify-center mt-4 w-[60%] h-[5vh] sm:w-[40%] sm:h-[3vh] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                             Buy Now
                         </button>
                     </div>

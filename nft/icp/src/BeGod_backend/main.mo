@@ -13,6 +13,7 @@ import Iter "mo:base/Iter";
 import Error "mo:base/Error";
 import Nat32 "mo:base/Nat32";
 import Result "mo:base/Result";
+import Nat64 "mo:base/Nat64";
 import AID "../EXT-V2/motoko/util/AccountIdentifier";
 import ExtCore "../EXT-V2/motoko/ext/Core";
 import Types "../EXT-V2/Types";
@@ -22,12 +23,12 @@ import HashMap "mo:base/HashMap";
 import Queue "../EXT-V2/motoko/util/Queue";
 import ExtCommon "../EXT-V2/motoko/ext/Common";
 
-actor Main {    
+actor Main {
 
     type AccountIdentifier = ExtCore.AccountIdentifier;
     type TokenIndex = ExtCore.TokenIndex;
     type TokenIdentifier = ExtCore.TokenIdentifier;
-    
+
     type NFTInfo = (TokenIndex, AccountIdentifier, Metadata);
 
     type MetadataValue = (
@@ -57,53 +58,69 @@ actor Main {
     };
 
     type SubAccount = ExtCore.SubAccount;
-    
+
     public type ListRequest = {
         token : TokenIdentifier;
         from_subaccount : ?SubAccount;
         price : ?Nat64;
     };
 
-      type Listing = {
-    seller : Principal;
-    price : Nat64;
-    locked : ?Time;
+    type Listing = {
+        seller : Principal;
+        price : Nat64;
+        locked : ?Time;
     };
 
     type Transaction = {
-    token : TokenIndex;
-    seller : AccountIdentifier;
-    price : Nat64;
-    buyer : AccountIdentifier;
-    time : Time;
+        token : TokenIndex;
+        seller : AccountIdentifier;
+        price : Nat64;
+        buyer : AccountIdentifier;
+        time : Time;
     };
 
-   type Metadata = {
-    #fungible : {
-      name : Text;
-      symbol : Text;
-      decimals : Nat8;
-      metadata: ?MetadataContainer;
+    type Metadata = {
+        #fungible : {
+            name : Text;
+            symbol : Text;
+            decimals : Nat8;
+            metadata : ?MetadataContainer;
+        };
+        #nonfungible : {
+            name : Text;
+            description : Text;
+            asset : Text;
+            thumbnail : Text;
+            metadata : ?MetadataContainer;
+        };
     };
-    #nonfungible : {
-      name : Text;
-      description : Text;
-      asset : Text;
-      thumbnail : Text;
-      metadata: ?MetadataContainer;
-    };
-   };
 
-   type TopSellingNFT = {
-    tokenId: TokenIdentifier;
-    totalSales: Nat64;
-    details: Metadata;
-    price: Listing;  
+    type TopSellingNFT = {
+        tokenId : TokenIdentifier;
+        totalSales : Nat64;
+        details : Metadata;
+        price : Listing;
+    };
+    //LEDGER
+    type AccountBalanceArgs = { account : AccountIdentifier };
+    type ICPTs = { e8s : Nat64 };
+    type SendArgs = {
+        memo : Nat64;
+        amount : ICPTs;
+        fee : ICPTs;
+        from_subaccount : ?SubAccount;
+        to : AccountIdentifier;
+        created_at_time : ?Time;
+    };
+
+    let ExternalService_ICPLedger = actor "bkyz2-fmaaa-aaaaa-qaaaq-cai" : actor {
+        send_dfx : shared SendArgs -> async Nat64;
+        account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
     };
 
     //Exttypes
     type Time = Time.Time;
-    
+
     type User = ExtCore.User;
     type CommonError = ExtCore.CommonError;
     type MetadataLegacy = ExtCommon.Metadata;
@@ -118,17 +135,10 @@ actor Main {
 
     private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
-    //private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
+    private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
+
+
     
-
-    //private stable var data_internalRunHeartbeat : Bool = true;
-
-    //private stable var data_paymentSettlementsTableState : [(AccountIdentifier, Payment)] = [];
-
-    //var _paymentSettlements : HashMap.HashMap<AccountIdentifier, Payment> = HashMap.fromIter(data_paymentSettlementsTableState.vals(), 0, AID.equal, AID.hash);
-    
-    //var _disbursements : Queue.Queue<(TokenIndex, AccountIdentifier, SubAccount, Nat64)> = Queue.fromArray(data_disbursementQueueState);
-    //private stable var data_disbursementQueueState : [(TokenIndex, AccountIdentifier, SubAccount, Nat64)] = [];
 
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
@@ -260,7 +270,7 @@ actor Main {
     //getALLCollectionNFTs
 
     public shared func getAllCollectionNFTs(
-        _collectionCanisterId: Principal
+        _collectionCanisterId : Principal
     ) : async [(TokenIndex, AccountIdentifier, Types.Metadata)] {
         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
             getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
@@ -274,7 +284,7 @@ actor Main {
             // Handle potential errors (e.g., canister not responding, method not implemented)
             throw (e);
             return [];
-        }
+        };
     };
 
     //Explore Collections or Get all Collection NFTS
@@ -295,7 +305,7 @@ actor Main {
                 } catch (e) {
                     // Handle potential errors, but continue to the next collection
                     Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
-                }
+                };
             };
         };
 
@@ -305,7 +315,7 @@ actor Main {
     //GET SINGLE COLLECTION DETAILS
     // Function to get all NFT details within a specific collection and the count of total NFTs
     public shared func getSingleCollectionDetails(
-        collectionCanisterId: Principal
+        collectionCanisterId : Principal
     ) : async ([(TokenIndex, AccountIdentifier, Types.Metadata)], Nat) {
         let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
             getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata)];
@@ -320,10 +330,8 @@ actor Main {
             // Handle potential errors (e.g., canister not responding, method not implemented)
             Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
             return ([], 0); // Return an empty list and a count of 0 in case of error
-        }
+        };
     };
-
-    
 
     /* -------------------------------------------------------------------------- */
     /*                             NFT related methods                            */
@@ -440,13 +448,12 @@ actor Main {
         return await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
     };
 
-
     // Gets all details about the tokens that were transfered into this vault
     public shared query func getDeposits() : async [Deposit] {
         return deposits;
     };
-    
-    //fetch total number of nfts accross all collections  
+
+    //fetch total number of nfts accross all collections
     public shared func getTotalNFTs() : async Nat {
         var totalNFTs : Nat = 0;
 
@@ -464,15 +471,12 @@ actor Main {
                 } catch (e) {
                     // Handle potential errors, but continue to the next collection
                     Debug.print(Text.concat("Error fetching NFTs from canister: ", Principal.toText(collectionCanisterId)));
-                }
+                };
             };
         };
 
         return totalNFTs; // Return the total number of NFTs across all collections
     };
-
-
-
 
     /* -------------------------------------------------------------------------- */
     /*                            User Related Methods                            */
@@ -486,10 +490,8 @@ actor Main {
 
     // Function to return the total number of users
     public shared query func getTotalUsers() : async Nat {
-    return users.size();
+        return users.size();
     };
-
-
 
     //CREATE USER AND FILL RELATED DETAILS
 
@@ -556,76 +558,143 @@ actor Main {
     /*                                  MARKETPLACE                               */
     /* -------------------------------------------------------------------------- */
 
-    //set price for the nfts 
-    public shared(msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
-    let priceactor = actor (Principal.toText(_collectionCanisterId)): actor {
-        ext_marketplaceList : (caller: Principal, request: ListRequest) -> async Result.Result<(), CommonError>;
+    //set price for the nfts
+    public shared (msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
+        let priceactor = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceList : (caller : Principal, request : ListRequest) -> async Result.Result<(), CommonError>;
+        };
+        return await priceactor.ext_marketplaceList(msg.caller, request);
     };
-    return await priceactor.ext_marketplaceList(msg.caller, request);
-    };  
 
-
-    //get the nfts and their corresponding prices 
-    public shared func listings(_collectionCanisterId : Principal): async [(TokenIndex, Listing, Metadata)] {
-    let pricelistings = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplaceListings: () -> async [(TokenIndex, Listing, Metadata)]
-    };
-    return await pricelistings.ext_marketplaceListings();
+    //get the nfts and their corresponding prices
+    public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, Listing, Metadata)] {
+        let pricelistings = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceListings : () -> async [(TokenIndex, Listing, Metadata)];
+        };
+        return await pricelistings.ext_marketplaceListings();
     };
 
     //purchase nft
-    public shared func purchaseNft(_collectionCanisterId: Principal, tokenid: TokenIdentifier, price: Nat64, buyer: AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
-    let buynft = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplacePurchase: (tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) -> async Result.Result<(AccountIdentifier, Nat64), CommonError>;
-    };
-    return await buynft.ext_marketplacePurchase(tokenid, price, buyer);
+    public shared func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
+        let buynft = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplacePurchase : (tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) -> async Result.Result<(AccountIdentifier, Nat64), CommonError>;
+        };
+        return await buynft.ext_marketplacePurchase(tokenid, price, buyer);
     };
 
-    //settle and confirm purchase 
-    public shared func settlepurchase(_collectionCanisterId: Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
-    let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
-    ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
-    };
-     return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
+    //settle and confirm purchase
+    public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+        let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+        };
+        return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
     };
 
     //get transaction details
-    public shared func transactions(_collectionCanisterId: Principal) :  async [Transaction]{
-        let get_transactions =  actor (Principal.toText(_collectionCanisterId)) : actor {
+    public shared func transactions(_collectionCanisterId : Principal) : async [Transaction] {
+        let get_transactions = actor (Principal.toText(_collectionCanisterId)) : actor {
             ext_marketplaceTransactions : () -> async [Transaction];
         };
 
         return await get_transactions.ext_marketplaceTransactions();
     };
 
-    //get marketplace stats 
-    public shared func marketstats(_collectionCanisterId: Principal) : async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat) {
-    let getstats = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplaceStats: () -> async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat);
+    //get marketplace stats
+    public shared func marketstats(_collectionCanisterId : Principal) : async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat) {
+        let getstats = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceStats : () -> async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat);
+        };
+
+        return await getstats.ext_marketplaceStats();
     };
 
-    return await getstats.ext_marketplaceStats();
+    public shared (msg) func transfer_balance(
+        _collectionCanisterId : Principal,
+        paymentAddress : AccountIdentifier,
+        amount_e8s : Nat64,
+        subaccount : ?SubAccount,
+    ) : async Result.Result<Nat64, CommonError> {
+        // Debug print available cycles
+        Debug.print("Available cycles: " # Nat.toText(Cycles.balance()));
+
+        try {
+            // Prepare the arguments for the ICP ledger transfer
+            let send_args = {
+                memo = 0 : Nat64; // Memo set to 0, explicitly typed as Nat64
+                amount = { e8s = amount_e8s }; // Transfer amount in e8s
+                fee = { e8s = 10000 : Nat64 }; // Transaction fee in e8s (0.0001 ICP)
+                from_subaccount = subaccount; // Subaccount for the buyer, if any
+                to = paymentAddress; // Recipient is the seller's account
+                created_at_time = null : ?Time; // Optional timestamp, explicitly typed as null
+            };
+
+            // Debugging the send arguments
+            Debug.print("Sending args: ");
+
+            // Call the ledger's send_dfx method to transfer funds
+            let block_height = await ExternalService_ICPLedger.send_dfx(send_args);
+
+            // Return the block height upon successful transaction
+            Debug.print("Transfer successful, block height: " # debug_show (block_height));
+            return #ok(block_height);
+
+        } catch (err) {
+            // Handle the error and return an appropriate CommonError variant
+            Debug.print("Transfer failed with error.");
+            // Here we check if the error is related to an invalid token or some other issue
+            let errorMessage = "Transfer Failed: " # Error.message(err);
+            return #err(#Other(errorMessage));
+        };
     };
 
+    public shared (msg) func send_balance_and_nft(
+        _collectionCanisterId : Principal,
+        paymentAddress : AccountIdentifier,
+        amount_e8s : Nat64,
+        subaccount : ?SubAccount,
+    ) : async Result.Result<Nat64, CommonError> {
+        // Debug print available cycles
+        Debug.print("Available cycles: " # Nat.toText(Cycles.balance()));
 
+        try {
+            // Prepare the arguments for the ICP ledger transfer
+            let send_args = {
+                memo = 0 : Nat64; // Memo set to 0, explicitly typed as Nat64
+                amount = { e8s = amount_e8s }; // Transfer amount in e8s
+                fee = { e8s = 10000 : Nat64 }; // Transaction fee in e8s (0.0001 ICP)
+                from_subaccount = subaccount; // Subaccount for the buyer, if any
+                to = paymentAddress; // Recipient is the seller's account
+                created_at_time = null : ?Time; // Optional timestamp, explicitly typed as null
+            };
 
-//--------------------------------------------------------------------------------------------------//
-     /*hearbeat functions
-    public shared(msg) func disbursements(_collectionCanisterId: Principal) : async (){
-        let get_disbursements = actor (Principal.toText(_collectionCanisterId)) : actor {
-            heartbeat_disbursements : () -> async ();
+            // Debugging the send arguments
+            Debug.print("Sending args: " # debug_show (send_args));
+
+            // Call the ledger's send_dfx method to transfer funds
+            let block_height : Nat64 = await ExternalService_ICPLedger.send_dfx(send_args);
+            Debug.print("Transfer successful, block height: " # Nat64.toText(block_height));
+
+            // Call the marketplace settle method after successful transfer
+            let marketplaceActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+                ext_marketplaceSettle : (paymentAddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+            };
+
+            switch (await marketplaceActor.ext_marketplaceSettle(paymentAddress)) {
+                case (#ok _) {
+                    Debug.print("NFT settle successful.");
+                    return #ok(block_height); // Return block height upon successful transaction and NFT settle
+                };
+                case (#err e) {
+                    return #err(#Other("NFT settle failed:"));
+                };
+            };
+
+        } catch (err) {
+            // Handle any unexpected errors and return an appropriate error message
+            Debug.print("Unexpected error occurred during transfer and NFT settle.");
+            let errorMessage = "Unexpected Transfer Failed: " # Error.message(err);
+            return #err(#Other(errorMessage));
+        };
     };
-    return await get_disbursements. heartbeat_disbursements();
-    };
-
-    public shared(msg) func paymentsettle(_collectionCanisterId: Principal) : async (){
-        let settlepayment = actor (Principal.toText(_collectionCanisterId)) : actor {
-            heartbeat_paymentSettlements : () -> async ();
-    };
-    return await settlepayment.heartbeat_paymentSettlements();
-    };*/
-//--------------------------------------------------------------------------------------------------//
-
-
 
 };

@@ -2,47 +2,55 @@ import React, { useState } from 'react';
 import { AddIcon, ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import DropzoneWithUrlInput from '../components/DropzoneWithUrlInput';
-import { Switch } from '@chakra-ui/react'
-import { idlFactory } from "../../../../declarations/BeGod_backend/BeGod_backend.did.js"
+import { Switch } from '@chakra-ui/react';
+import { idlFactory } from "../../../../declarations/BeGod_backend/BeGod_backend.did.js";
 import { canisterId } from '../../../../declarations/BeGod_backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useSelector } from 'react-redux';
+import Modal from './modal.jsx';
+import NftCardItem from './NftCardItem.jsx';
+import LogoImageUploader from './LogoImageUploader.jsx';
+import { GoPlus } from "react-icons/go";
+import { BiPlus } from "react-icons/bi";
 
 const CreateCollection = () => {
-    console.log(idlFactory, canisterId)
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [limit, setLimit] = useState(0);
-    const [logo, setLogo] = useState(null | "");
+    const [logo, setLogo] = useState(null);
     const [nfts, setNfts] = useState(0);
     const [isChecked, setIsChecked] = useState(false);
-    const [nftRows, setNftRows] = useState([
-        { id: '', description: '' } // Initial row
-    ]);
-    const handleAddRow = () => {
-        setNftRows([...nftRows, { id: '', description: '' }]); // Ensure you're spreading an array
-    };
+    const [nftRows, setNftRows] = useState([{ id: '', description: '' }]); // Initial row
+    const [modal, setModal] = useState(false);
+    const [nftCardsList, setNftCardsList] = useState([]);
+
+    const { user } = useSelector((state) => state.auth);
+    const principal_id = `ztrxb-fiosz-cy6zv-ugwdw-tcmmm-hg5cy-fzfw2-wlcme-4kbky-sorey-2ae`;
+
+    const toggleModal = () => setModal(!modal);
+
+    const handleAddRow = () => setNftRows([...nftRows, { id: '', description: '' }]);
 
     const handleInputChange = (index, field, value) => {
-        const updatedRows = [...nftRows]; // Copy the current array
-        updatedRows[index][field] = value; // Modify the specific row
-        setNftRows(updatedRows); // Set the new state with the modified array
+        const updatedRows = [...nftRows];
+        updatedRows[index][field] = value;
+        setNftRows(updatedRows);
     };
 
-    const handleLogoChange = (file) => {
-        setLogo(file);
-    };
+
+
+
+
+    const handleLogoChange = (file) => setLogo(file);
 
     const createActor = () => {
         const agent = new HttpAgent();
         return Actor.createActor(idlFactory, { agent, canisterId });
     };
-    const { user } = useSelector((state) => state.auth);
-    const principal_id=`ztrxb-fiosz-cy6zv-ugwdw-tcmmm-hg5cy-fzfw2-wlcme-4kbky-sorey-2ae`;
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        // Form submission logic here
         const actor = createActor();
         try {
             const collectionResponse = await actor.add_collection_to_map(principal_id);
@@ -59,8 +67,8 @@ const CreateCollection = () => {
         } catch (error) {
             console.error('Error creating collection or NFTs:', error);
         }
-        // Add form validation and API call here
     };
+
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -69,13 +77,23 @@ const CreateCollection = () => {
             reader.onerror = (error) => reject(error);
         });
     };
+
+    const getAddedNftDetails = (nftDetails) => {
+        setNftCardsList([...nftCardsList, nftDetails]);
+    };
+
+    const deleteNft = (nftId) => {
+        const updatedNFtList = nftCardsList.filter((eachNft) => eachNft.nftId !== nftId);
+        setNftCardsList(updatedNFtList);
+    };
+
     return (
-        <div>
+        <div className='w-[90%]'>
             <div className='flex flex-row gap-4 justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer 2xl:pt-[5vh] 2xl:ml-[10%]'>
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
                 <h1 className='text-2xl text-white -mt-2'>Create Collection</h1>
             </div>
-            <form onSubmit={handleFormSubmit} className='ml-[10%] sm:ml-[10%] md:ml-[85px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
+            <form onSubmit={handleFormSubmit} className='ml-[10%] sm:ml-[10%] md:ml-[20px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
                 {/* Collection Name and Max Limit */}
                 <div className='flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]'>
                     <label className='w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
@@ -93,47 +111,43 @@ const CreateCollection = () => {
                     <input onChange={(e) => setDescription(e.target.value)} type="text" className='pl-4 w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
                 </label>
                 {/* Logo */}
-                <label className='mt-[20px] w-[100%] h-[150px] md:h-auto flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
+                <label className='mt-[20px] w-[100%] h-[100px] md:h-aut text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
                     Logo
-                    <DropzoneWithUrlInput onFileChange={handleLogoChange} />
+                    <LogoImageUploader />
                 </label>
                 {/* No. of NFTs */}
                 <label className='mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
-                    No. of NFT's:
+                    No. of NFTs:
                     <input onChange={(e) => setNfts(e.target.value)} type="text" className='pl-4 w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md' />
                 </label>
                 <label className='mt-[20px] w-[100%] h-[60px] md:h-[46px] flex flex-row text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
-                    No. of NFT's:
+                    Featured:
                     <Switch id='isChecked' onChange={() => setIsChecked(!isChecked)} className='pt-1' />
                 </label>
-                {/* Dynamic NFT Rows */}
-                {nftRows.map((row, index) => (
-                    <div key={index} className='flex flex-col sm:flex-row md:flex-row gap-4 mt-[20px] w-[100%]'>
-                        <label className='w-full sm:w-[43%] md:w-[46%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
-                            NFT's ID:
-                            <input
-                                onChange={(e) => handleInputChange(index, 'id', e.target.value)}
-                                type="text"
-                                className='pl-4 w-[100%] h-[47px] bg-[#29292C] rounded-md' />
-                        </label>
-                        <label className='w-full sm:w-[43%] md:w-[46%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
-                            NFT's DESCRIPTION:
-                            <input
-                                onChange={(e) => handleInputChange(index, 'description', e.target.value)}
-                                type="text"
-                                className='pl-4 w-[100%] h-[47px] bg-[#29292C] rounded-md' />
-                        </label>
-                        {/* Show Add Button only on the last row */}
-                        {index === nftRows.length - 1 && (
-                            <div
-                                onClick={handleAddRow}
-                                className='w-[20%] sm:w-[8%] md:w-[43px] h-[43px] rounded-full bg-[#FCD37B] ml-20 sm:-ml-2 md:-ml-3 sm:mt-[25px] md:mt-[42px] font-bold text-xl flex items-center justify-center cursor-pointer'
-                            >
-                                <AddIcon />
-                            </div>
-                        )}
+                {/* Add new NFT Section */}
+                <div className={`${nftCardsList.length > 0 && "flex justify-end items-center"}`}>
+                    <label className='mt-[20px] w-[100%]  md:h-[46px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-[0px]'>
+                        NFT Cards
+                    </label>
+                    <br />
+                    <div className="relative inline-block mt-2">
+                        <button
+                            className='add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[35px] w-[120px] '
+                            onClick={toggleModal}
+                        >
+                            Add New
+                        </button>
+                        <div className="absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-[#f0c96a] w-[35px] h-[35px] rounded-full flex items-center justify-center border-2 border-gray-900">
+                            <span><BiPlus size={22}/> </span>
+                        </div>
                     </div>
-                ))}
+                    
+                </div>
+                <div className='flex'>
+                    {nftCardsList.map((eachNftItem) => (
+                        <NftCardItem nftDetails={eachNftItem} key={eachNftItem.nftId} deleteNft={deleteNft} />
+                    ))}
+                </div>
                 {/* Form Buttons */}
                 <div className='flex justify-start sm:justify-end md:justify-end gap-4 w-[100%] mt-[10px] pb-8 sm:mb-0'>
                     <button
@@ -150,6 +164,15 @@ const CreateCollection = () => {
                         Create Collection
                     </button>
                 </div>
+                {modal && (
+                        <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed">
+                            <div className='w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]'>
+                                <div className="h-screen flex justify-center items-center">
+                                    <Modal toggleModal={toggleModal} getAddedNftDetails={getAddedNftDetails} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
             </form>
         </div>
     );

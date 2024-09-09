@@ -3,7 +3,7 @@ import React from 'react'
 
 function YellowButton({children}) {
   return (
-    <Button bg="#FCD37B"   _hover={{ bg: "#FCD390" }}>
+    <Button bg="#FCD37B"  rounded="unset" _hover={{ bg: "#FCD390" }}>
         {children}
     </Button>
   )

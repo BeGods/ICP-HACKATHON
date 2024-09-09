@@ -42,13 +42,14 @@ const Login = () => {
       }
       console.log("idl factory",idlFactory)
       const actor = await CreateActor(userObject.agent,idlFactory, backend_canister_id);
-      const collectionResponse = await actor.createExtCollection("sd","sdd","sd");
+      const collectionResponse = await actor.createExtCollection("sd");
       console.log("Collection response",collectionResponse);
       console.log("Created actor", actor);
     } catch (error) {
       console.error("Login error:", error);
     }
   };
+  
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
       <div className="w-[80%] sm:w-[30%] h-[60vh] md:h-[90vh] bg-black/60 backdrop-blur-lg shadow-lg rounded-l-md p-8 hidden sm:flex sm:flex-col">
