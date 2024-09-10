@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
 function DashBoard() {
+  const { id } = useParams();
+
   return (
-    <div className=' bg-contain text-white m-auto text-center w-[90%] h-full px-12 md:px-24 pt-20 2xl:pt-[10%] 2xl:ml-[7%]'>
-      <div  className='grid grid-cols-1 sm:grid-cols-4  gap-8 max-w-screen-2xl justify-center mx-auto font-Quicksand sm:font-bold' >
+    <div className='bg-contain text-white mx-auto text-center w-[90%] h-full px-6 sm:px-12 md:px-24 pt-5 sm:pt-6 md:pt-16 lg:pt-28'>
+      <div  className='grid justify-center grid-cols-1 gap-8 mx-auto lg:text-2xl sm:grid-cols-4 max-w-screen-2xl font-Quicksand sm:font-bold md:text-xl sm:text-lg' >
         <div className='bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md'>
           <h3>Total Collections</h3>
           <p>2</p>

@@ -2,7 +2,7 @@ const LoginButton = ({ imgSrc, name, color, methodName }) => {
   return (
     <button
       onClick={methodName}
-      className="lg:w-[40%] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 border-[2px] border-transparent hover:shadow-neon p-2 drop-shadow-lg sm:w-full md:w-full"
+      className="lg:w-[36%] flex items-center justify-center bg-black/40 backdrop-blur-md rounded-lg transition-transform duration-300 hover:scale-110 border-[2px] border-transparent hover:shadow-neon p-2 drop-shadow-lg sm:w-full md:w-full"
       style={{
         "--hover-color": color,
       }}

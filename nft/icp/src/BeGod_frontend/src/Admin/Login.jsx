@@ -45,7 +45,7 @@ const Login = () => {
       if (userObject.agent._isAgent || userObject.agent.agent._isAgent) {
         console.log("user details", userObject);
         dispatch(setUserAndStore(userObject.principal));
-        navigate("/admin");
+        navigate("/admin/dashboard");
       }
       console.log("idl factory", idlFactory);
       const actor = await CreateActor(

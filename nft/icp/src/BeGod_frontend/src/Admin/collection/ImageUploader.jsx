@@ -68,12 +68,12 @@ function ImageUploader(props) {
           }
         }}
         style={{display:'none'}}
-        className="h-0 w-0"
+        className="w-0 h-0"
       />
       )}
       {!hideUpload && (
         <div 
-        className="flex justify-end items-center pr-1 bg-[#29292C] h-[30px] m-0"
+        className="flex justify-end items-center pr-1 bg-[#29292C] h-[38px] m-0 rounded-md"
         
       >
         <RiFolder6Line className="cursor-pointer"  />
@@ -87,11 +87,11 @@ function ImageUploader(props) {
             <img 
               src={pic} 
               alt="Selected" 
-              className="w-full h-full object-cover rounded-lg"
+              className="object-cover w-full h-full rounded-lg"
             />
             <button
               onClick={onClickDeleteImage}
-              className="absolute top-0 right-0 bg-white rounded-full w-4 h-4 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2"
+              className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
             >
               <RxCross2 className="text-black" size={15} />
             </button>
