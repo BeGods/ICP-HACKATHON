@@ -88,11 +88,17 @@ const Modal = (props) => {
               value={nftType}
               onChange={(e) => setNftType(e.target.value)}
             >
-              <option value="NORMAL" className="text-[16px] text-[#8a8686]">
-                Normal
+              <option value="common" className="text-[16px] text-[#8a8686]">
+                Common
               </option>
-              <option value="TEST" className="text-[16px] text-[#8a8686]">
-                Test Option
+              <option value="mythic" className="text-[16px] text-[#8a8686]">
+                Mythic
+              </option>
+              <option value="rare" className="text-[16px] text-[#8a8686]">
+                Rare
+              </option>
+              <option value="uncommon" className="text-[16px] text-[#8a8686]">
+                Uncommon
               </option>
             </select>
           </label>

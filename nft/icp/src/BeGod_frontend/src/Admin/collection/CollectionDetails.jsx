@@ -16,7 +16,6 @@ function CollectionDetails() {
   }
 
   const { heading, img, detail, collectionId, heading2, NftList } = filteredCollection.CollectionDetails;
-  console.log(NftList)
 
   return (
     <div className='w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20'>

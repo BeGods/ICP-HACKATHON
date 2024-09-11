@@ -175,7 +175,7 @@ const CreateCollection = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex">
+              <div className="grid grid-cols-3 gap-5">
                 {nftCardsList.map((eachNftItem) => (
                   <NftCardItem
                     nftDetails={eachNftItem}
