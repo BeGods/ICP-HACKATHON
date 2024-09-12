@@ -5,12 +5,12 @@ import toast from "react-hot-toast";
 
 const Modal = (props) => {
     const {getAddedNftDetails} = props;
-    const [nftId, setNftId] = useState("");
-    const [nftName, setNftName] = useState("");
-    const [nftType, setNftType] = useState("NORMAL");
-    const [nftQuantity, setNftQuantity] = useState("");
-    const [nftPrice, setPrice] = useState("");
-    const [nftDescription, setNftDescription] = useState("");
+    const [nftId, setNftId] = useState("23svsd223sv23");
+    const [nftName, setNftName] = useState("Cat Painting");
+    const [nftType, setNftType] = useState("Mythic");
+    const [nftQuantity, setNftQuantity] = useState("400");
+    const [nftPrice, setPrice] = useState("200");
+    const [nftDescription, setNftDescription] = useState("Lorem ipsum dolor sit amet consectetur. Volutpat sociis lectus fermentum arcu ...");
     const [nftImage,setNftImage] = useState("");
     const {toggleModal} = props
 
@@ -79,7 +79,7 @@ const Modal = (props) => {
                     <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
                         Type:
                         <select className="p-1 rounded-md h-[30px] bg-[#29292C] text-[16px] text-[#8a8686]" value={nftType} onChange={(e) => setNftType(e.target.value)}>
-                            <option value="NORMAL" className="text-[16px] text-[#8a8686]">Normal</option>
+                            <option value="NORMAL" className="text-[16px] text-[#8a8686]">Mythic</option>
                             <option value="TEST" className="text-[16px] text-[#8a8686]">Test Option</option>
                         </select>
                     </label>

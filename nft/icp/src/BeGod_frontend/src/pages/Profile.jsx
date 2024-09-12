@@ -4,6 +4,9 @@ import Footer from '../components/Footer';
 import NftCard from '../components/NftCard';
 import { Link } from 'react-router-dom';
 import YellowButton from '../components/button/YellowButton';
+import { useAuth } from '../utils/useAuthClient';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 const mycollection = [
   { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
   { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
@@ -32,6 +35,7 @@ const purchased = [
 const Profile = () => {
   const [category, setCategory] = useState("mycollection");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isAuthenticated = useSelector((state)=>(state.isAuthenticated));
 
   const getCategoryData = () => {
     switch (category) {
@@ -56,11 +60,22 @@ const Profile = () => {
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
 
+  // const {isAuthenticated} = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
     setCurrentIndex(0);
 
   },[category])
 
+  // useEffect(()=>{
+  //   console.log("is authenticated .." , isAuthenticated)
+  //   if(!isAuthenticated){
+  //     navigate('/')
+  //   }
+  // },[isAuthenticated])
+
+ 
   return (
     <div className='' style={{ fontFamily: "QuickSand" }}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
@@ -97,7 +112,7 @@ const Profile = () => {
             </div>
 
             {/* Small screen view for single image display with prev and next buttons */}
-            <div className='sm:hidden flex items-center justify-between mt-8'>
+            <div className='sm:hidden flex items-center justify-between mt-8 z-0'>
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
               </button>
@@ -114,9 +129,13 @@ const Profile = () => {
               </Link>
             </div>
             {/* Grid view for larger screens */}
-            <div className='hidden sm:grid mt-8 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-x-8 gap-y-8 sm:mb-8'>
+            <div className='hidden w-[80%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+             
               {images.map((img, index) => (
-                <NftCard img={img} key={index} />
+                 <div className='flip-card rounded-lg'>
+                  <NftCard img={img} key={index} />
+                 </div>
+                
               ))}
             </div>
           </div>

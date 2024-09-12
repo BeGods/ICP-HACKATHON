@@ -12,17 +12,20 @@ import NftCardItem from './NftCardItem.jsx';
 import LogoImageUploader from './LogoImageUploader.jsx';
 import { GoPlus } from "react-icons/go";
 import { BiPlus } from "react-icons/bi";
+import { RxCross2 } from "react-icons/rx";
+import { IoMdWarning } from "react-icons/io";
 
 const CreateCollection = () => {
     const navigate = useNavigate();
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [limit, setLimit] = useState(0);
+    const [name, setName] = useState("Nft Collection");
+    const [description, setDescription] = useState("This Collection is about painting nfts");
+    const [limit, setLimit] = useState(3);
     const [logo, setLogo] = useState(null);
-    const [nfts, setNfts] = useState(0);
+    const [nfts, setNfts] = useState(3);
     const [isChecked, setIsChecked] = useState(false);
     const [nftRows, setNftRows] = useState([{ id: '', description: '' }]); // Initial row
     const [modal, setModal] = useState(false);
+    const [confirmCollectionModal , setConfirmCollection] = useState(false);
     const [nftCardsList, setNftCardsList] = useState([]);
 
     const { user } = useSelector((state) => state.auth);
@@ -86,6 +89,12 @@ const CreateCollection = () => {
         const updatedNFtList = nftCardsList.filter((eachNft) => eachNft.nftId !== nftId);
         setNftCardsList(updatedNFtList);
     };
+    const toggleConfirmModal = () => {
+        setConfirmCollection(!confirmCollectionModal)
+    }
+
+
+
 
     return (
         <div className='w-[90%]'>
@@ -93,7 +102,7 @@ const CreateCollection = () => {
                 <ArrowBackIcon onClick={() => navigate(-1)} color='white' />
                 <h1 className='text-2xl text-white -mt-2'>Create Collection</h1>
             </div>
-            <form onSubmit={handleFormSubmit} className='ml-[10%] sm:ml-[10%] md:ml-[20px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
+            <form  className='ml-[10%] sm:ml-[10%] md:ml-[20px] 2xl:ml-[10%] w-9/12 space-y-4 mt-4'>
                 {/* Collection Name and Max Limit */}
                 <div className='flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]'>
                     <label className='w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]'>
@@ -134,6 +143,7 @@ const CreateCollection = () => {
                         <button
                             className='add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[35px] w-[120px] '
                             onClick={toggleModal}
+                            type='button'
                         >
                             Add New
                         </button>
@@ -143,7 +153,7 @@ const CreateCollection = () => {
                     </div>
                     
                 </div>
-                <div className='flex'>
+                <div className='w-[100%] flex justify-between flex-wrap'>
                     {nftCardsList.map((eachNftItem) => (
                         <NftCardItem nftDetails={eachNftItem} key={eachNftItem.nftId} deleteNft={deleteNft} />
                     ))}
@@ -158,8 +168,10 @@ const CreateCollection = () => {
                         Cancel
                     </button>
                     <button
-                        type="submit"
+                        type="button"
                         className='w-[60%] sm:w-[30%] md:w-[30%] lg:w-[25%] 2xl:w-[15%] h-[43px] bg-[#FCD37B] text-[#000000] rounded-md'
+                        onClick={toggleConfirmModal}
+
                     >
                         Create Collection
                     </button>
@@ -173,7 +185,40 @@ const CreateCollection = () => {
                             </div>
                         </div>
                     )}
+
+{confirmCollectionModal && (
+                        <div className='w-screen h-screen top-0 left-0 bottom-0 right-0 fixed'>
+                            <div className='w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]'>
+                                <div className='h-screen flex justify-center items-center '>
+                                    <div className='h-[45vh] w-[50vh] bg-[#161618] p-5 text-white rounded-md' style={{fontFamily:"Quicksand"}}> 
+                                        <div className="flex justify-end items-center">
+                                            <button className="text-[#ffffff]" onClick={() => toggleConfirmModal()}>
+                                                <RxCross2 size={25} />
+                                            </button>
+                                        </div>
+                                        <div className='flex justify-center items-center' style={{color:"#FCD37B"}}>
+                                            <IoMdWarning size={150}/>
+                                        </div>
+                                        <div className='flex flex-col items-center my-3'>
+                                            <h1>Warning! Once Uploaded Can't Be Edited</h1>
+                                            <h1>Please Check Details Carefully</h1>
+                                        </div>
+                                        <div className='flex justify-around items-center'>
+                                            <button className='w-[120px] h-[33px] border-solid border border-white bg-transparent' type='button' onClick={()=>toggleConfirmModal()}>Cancel</button>
+                                            <button className='w-[120px] h-[33px] bg-[#FCD37B] text-[#161618] '>Upload</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                    
+                                </div>
+                            </div>
+
+                        
+                    )}
+                    
             </form>
+
         </div>
     );
 };

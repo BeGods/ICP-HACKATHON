@@ -27,7 +27,7 @@ const defaultOptions = {
         identityProvider:
             process.env.DFX_NETWORK === "ic"
                 ? "https://identity.ic0.app/#"
-                : `http://ajuq4-ruaaa-aaaaa-qaaga-cai.localhost:4943/`,
+                : `https://identity.ic0.app/#`,
     },
     loginOptionsnfid: {
         identityProvider:
@@ -67,6 +67,7 @@ export const useAuthClient = (options = defaultOptions) => {
                     setBackendActor(backendActor);
                     updateClient(authClient);
                     resolve(AuthClient);
+                    console.log("logged in");
                 } else {
                     let opt = val === "Identity" ? "loginOptionsIcp" : "loginOptionsnfid"
                     authClient.login({
@@ -113,8 +114,10 @@ export const useAuthClient = (options = defaultOptions) => {
         const isAuthenticated = await client.isAuthenticated();
         setIsAuthenticated(isAuthenticated);
         const identity = client.getIdentity();
+        
         setIdentity(identity);
-        const principal = identity.getPrincipal();
+        
+       // console.log("principal...........",principal);
         setPrincipal(principal);
         setAuthClient(client);
         // console.log(identity);
@@ -154,7 +157,8 @@ export const useAuthClient = (options = defaultOptions) => {
         isAuthenticated,
         setPrincipal,
         identity,
-        backendActor
+        backendActor,
+        reloadLogin,
     };
 };
 
