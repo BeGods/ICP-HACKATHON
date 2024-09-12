@@ -24,7 +24,7 @@ function Admin() {
 
   // Conditional rendering based on isAuthenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />; // Redirect to the login page if not authenticated
+    return <Navigate to="/admin/login" replace />;
   }
 
   return (

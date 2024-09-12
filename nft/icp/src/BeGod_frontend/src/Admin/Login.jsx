@@ -1,17 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  PlugLogin,
-  StoicLogin,
-  NFIDLogin,
-  IdentityLogin,
-  HelloIDL,
-} from "ic-auth";
 import { useNavigate } from "react-router-dom";
 import { setUserAndStore } from "../redux/authSlice.js";
 import { CreateActor } from "ic-auth";
 import { idlFactory } from "../../../declarations/BeGod_backend/BeGod_backend.did.js";
+import { useAuth } from "../utils/useAuthClient.jsx";
 import LoginButton from "./components/LoginButton.jsx";
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,47 +14,21 @@ const Login = () => {
   const backend_canister_id = "ajuq4-ruaaa-aaaaa-qaaga-cai";
   const whitelist = [canisterID];
 
+  // Trigger the animation effect for wallet options
   useEffect(() => {
-    // Adding fade-in effect for the wallets section
     document.getElementById("wallet-options").style.opacity = 1;
     document.getElementById("wallet-options").style.transform = "translateY(0)";
   }, []);
 
-  const handleLogin = async (provider) => {
-    let userObject = {
-      principal: "Not Connected.",
-      agent: undefined,
-      provider: "N/A",
-    };
+  const { handleLogin, isAuthenticated } = useAuth();
 
-    try {
-      if (provider === "Plug") {
-        userObject = await PlugLogin(whitelist);
-      } else if (provider === "Stoic") {
-        userObject = await StoicLogin();
-      } else if (provider === "NFID") {
-        userObject = await NFIDLogin();
-      } else if (provider === "Identity") {
-        userObject = await IdentityLogin();
-      }
-      if (userObject.agent._isAgent || userObject.agent.agent._isAgent) {
-        console.log("user details", userObject);
-        dispatch(setUserAndStore(userObject.principal));
-        navigate("/admin/dashboard");
-      }
-      console.log("idl factory", idlFactory);
-      const actor = await CreateActor(
-        userObject.agent,
-        idlFactory,
-        backend_canister_id
-      );
-      const collectionResponse = await actor.createExtCollection("sd");
-      console.log("Collection response", collectionResponse);
-      console.log("Created actor", actor);
-    } catch (error) {
-      console.error("Login error:", error);
+  // Monitor authentication status and navigate accordingly
+  useEffect(() => {
+    // Only navigate if authentication status has truly changed
+    if (isAuthenticated) {
+      navigate("/admin/dashboard");
     }
-  };
+  }, [navigate]); // Add isAuthenticated as a dependency
 
   const buttonDataArray = [
     {

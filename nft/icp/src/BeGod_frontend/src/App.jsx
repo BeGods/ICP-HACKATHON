@@ -7,6 +7,7 @@ import CollectionDetail from './pages/CollectionDetail';
 import NftDetails from './components/NftDetails';
 import Hero from './pages/Hero';
 import BuyNft from './pages/BuyNft';
+import PageNotFound from './Admin/PageNotFound';
 
 function App() {
   return (
@@ -16,8 +17,9 @@ function App() {
       <Route path='/collection/:collectionName' element={<CollectionDetail/>}/>
       <Route path='/Nft/:Nftname' element={<NftDetails/>}/>
       <Route path='/Nft/:Nftname/buy' element={<BuyNft/>}/>
-      <Route path='/login' element={<Login />} />
+      <Route path='/admin/login' element={<Login />} />
       <Route path='/admin/*' element={<Admin />} />
+      <Route path='*' element={<PageNotFound />} />
     </Routes>
   );
 }

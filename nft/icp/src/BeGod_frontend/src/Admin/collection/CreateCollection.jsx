@@ -14,6 +14,7 @@ import { GoPlus } from "react-icons/go";
 import { BiPlus } from "react-icons/bi";
 import BackButton from "./BackButton.jsx";
 import YellowButton from "../../components/button/YellowButton.jsx";
+import { useAuth } from "../../utils/useAuthClient.jsx";
 
 const CreateCollection = () => {
   const navigate = useNavigate();
@@ -26,9 +27,14 @@ const CreateCollection = () => {
   const [nftRows, setNftRows] = useState([{ id: "", description: "" }]); // Initial row
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
+  const {backendActor} = useAuth()
 
   const { user } = useSelector((state) => state.auth);
-  const principal_id = `ztrxb-fiosz-cy6zv-ugwdw-tcmmm-hg5cy-fzfw2-wlcme-4kbky-sorey-2ae`;
+  const principal_id = user;
+ 
+
+//  backendActor?.CanisterActor?.createExtCollection;
+//   console.log(createExtCollection)
 
   const toggleModal = () => setModal(!modal);
 
@@ -70,6 +76,29 @@ const CreateCollection = () => {
     }
   };
 
+  const extractPrincipals = async (response) => {
+    try {
+      const principalArray = response.map((principalObj) => {
+        return principalObj.toText();
+      });
+      return principalArray;
+    } catch (error) {
+      console.error("Error extracting principals:", error);
+    }
+  };
+  
+
+  const createExtData = async (name, description, limit)=>{
+    console.log(name, description, limit);
+    // const report  = await backendActor?.createExtCollection("chandan","vishwakarma","2");
+    // if (report && Array.isArray(report)) {
+    //   const data = await extractPrincipals(report);
+    //   console.log(data)
+    // } else {
+    //   console.error("Unexpected response structure:", report);
+    // }
+  }
+
   const getBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -98,7 +127,6 @@ const CreateCollection = () => {
           <h1 className="text-3xl text-white ">Create Collection</h1>
           <div className="flex flex-col md:flex-row gap-x-8 items-center  w-full  px-1 py-2 text-[#FFFFFF] justify-start rounded-md">
             <form
-              onSubmit={handleFormSubmit}
               className="flex flex-col w-full gap-2 mt-4 space-y-4"
             >
               {/* Collection Name and Max Limit */}
@@ -193,7 +221,7 @@ const CreateCollection = () => {
                 >
                   Cancel
                 </button>
-                <YellowButton>Create Collection</YellowButton>
+                <YellowButton methodName={()=>createExtData(name,description,limit)}>Create Collection</YellowButton>
               </div>
               {modal && (
                 <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
