@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
 :root{
    --background-color: #161618;
@@ -13,8 +16,22 @@
   font-family: 'CaslonAntique';
   src: url('/BeGods-all-Fonts/CaslonAntique-Bold.ttf') format('truetype');
 }
+
+*{
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h1{
+  font-weight: 700;
+}
+
+
 body{
    background-color: var(--background-color) !important;
+
 }
 
 /* Swiper Slider */
@@ -435,4 +452,11 @@ body{
 }
 .nft_card_image:hover {
   filter:blur(2px);
+}
+
+
+@media screen and (max-width: 746px) {
+  .css-jfo9gg{
+    display: none !important;
+  }
 }
