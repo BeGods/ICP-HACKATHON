@@ -1,38 +1,39 @@
 // Function list:
 
-// 1. add_collection_to_map
-// 2. remove_collection_to_map
+// 1. addToFavorites
+// 2. add_collection_to_map
 // 3. createExtCollection
-// 4. getUserCollectionDetails
-// 5. getUserCollections
+// 4. createuser
+// 5. getAllCollectionNFTs
 // 6. getAllCollections
-// 7. totalcollections
-// 8. getAllCollectionNFTs
-// 9. getAllNFTsAcrossAllCollections
-// 10. getSingleCollectionDetails
+// 7. getAllNFTsAcrossAllCollections
+// 8. getDeposits
+// 9. getFavorites
+// 10. getFungibleTokens
 // 11. getNftTokenId
-// 12. mintExtNonFungible
-// 13. mintExtFungible
-// 14. getFungibleTokens
-// 15. getNonFungibleTokens
-// 16. getSingleNonFungibleTokens
-// 17. getDeposits
-// 18. getTotalNFTs
-// 19. getUserdetailsbyid
-// 20. getTotalUsers
-// 21. filldetails
-// 22. userNFTcollection
-// 23. adduserfavouriteNFTs
-// 24. removeuserfavouriteNFTs
-// 25. getuserfavoriteNFTs
-// 26. listprice
-// 27. listings
-// 28. purchaseNft
-// 29. settlepurchase
-// 30. transactions
-// 31. marketstats
-// 32. transfer_balance
-// 33. send_balance_and_nft
+// 12. getNonFungibleTokens
+// 13. getSingleCollectionDetails
+// 14. getSingleNonFungibleTokens
+// 15. getTotalNFTs
+// 16. getTotalUsers
+// 17. getUserCollectionDetails
+// 18. getUserCollections
+// 19. getUserDetails
+// 20. listings
+// 21. listprice
+// 22. marketstats
+// 23. mintExtFungible
+// 24. mintExtNonFungible
+// 25. userNFtCollection
+// 26. purchaseNft
+// 27. removeFromFavorites
+// 28. remove_collection_to_map
+// 29. send_balance_and_nft
+// 30. settlepurchase
+// 31. totalcollections
+// 32. transactions
+// 33. transfer_balance
+// 34. placeOrder
 
 import ExtTokenClass "../EXT-V2/ext_v2/v2";
 import Cycles "mo:base/ExperimentalCycles";
@@ -58,6 +59,7 @@ import V2 "../EXT-V2/ext_v2/v2";
 import HashMap "mo:base/HashMap";
 import Queue "../EXT-V2/motoko/util/Queue";
 import ExtCommon "../EXT-V2/motoko/ext/Common";
+import _owners "../EXT-V2/ext_v2/v2";
 
 actor Main {
 
@@ -137,6 +139,28 @@ actor Main {
         details : Metadata;
         price : Listing;
     };
+    
+    type Order = {
+    id: Nat;
+    accountIdentifier: Principal;
+    userId: Nat;             // Link order to user's ID
+    tokenid: TokenIdentifier;
+    phone: Text;
+    email: Text;
+    address: Text;
+    city: Text;
+    country: Text;
+    pincode: Text;
+    landmark: ?Text;
+    orderTime: Time.Time;
+    };
+
+    type User = {
+        id: Nat;                    // Unique user ID
+        accountIdentifier: Principal; // User's account identifier
+        createdAt: Time.Time;        // Time the user was created
+    };
+
     //LEDGER
     type AccountBalanceArgs = { account : AccountIdentifier };
     type ICPTs = { e8s : Nat64 };
@@ -157,7 +181,7 @@ actor Main {
     //Exttypes
     type Time = Time.Time;
 
-    type User = ExtCore.User;
+    //type User = ExtCore.User;
     type CommonError = ExtCore.CommonError;
     type MetadataLegacy = ExtCommon.Metadata;
     // Maps user and the collection canisterIds they create
@@ -167,11 +191,17 @@ actor Main {
     // Stores details about the tokens coming into this vault
     private stable var deposits : [Deposit] = [];
 
+    //DB to store user related data
+    private stable var usersArray: [User] = [];
+    private stable var userIdCounter: Nat = 0;
+
     //private stable var data_transactions : [Transaction] = [];
+   // private stable var usersMap: TrieMap.TrieMap<Principal, User> = TrieMap.TrieMap<Principal, User>(Principal.equal, Principal.hash);
+    //private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
-    private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
-
-    private var favoritesMap = TrieMap.TrieMap<Principal, [NFTInfo]>(Principal.equal, Principal.hash);
+    //DB to store order related details
+    private stable var orders: [Order] = [];
+    private stable var orderIdCounter: Nat = 0;
 
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
@@ -515,36 +545,80 @@ actor Main {
     /*                            User Related Methods                            */
     /* -------------------------------------------------------------------------- */
 
-    //fetching user details by id
-    public shared query func getUserdetailsbyid(id : Principal) : async Result.Result<UsersTypes.User, UsersTypes.GetUserError> {
-        let user = users.get(id);
-        return Result.fromOption(user, #UserNotFound);
-    };
 
-    // Function to return the total number of users
-    public shared query func getTotalUsers() : async Nat {
-        return users.size();
-    };
+     public shared func create_user(accountIdentifier: Principal) : async Result.Result<( Nat, Time.Time), Text> {
 
-    //CREATE USER AND FILL RELATED DETAILS
+        // Check if the user already exists in the array
+        let existingUser = Array.find<User>(usersArray, func (u: User) : Bool {
+            u.accountIdentifier == accountIdentifier
+        });
 
-    //Fill user  details
-    public shared func filldetails(id : Principal, user : UsersTypes.User) : async Result.Result<(), UsersTypes.CreateUserError> {
-        switch (users.get(id)) {
-            case (null) {
-                if (user.email == "" or user.firstName == "" or user.lastName == "") {
-                    return #err(#EmptyEmail); // or appropriate error based on the missing field
-                };
-                users.put(id, user);
-                return #ok(());
-            };
+        switch (existingUser) {
             case (?_) {
-                return #err(#UserAlreadyExists);
+                // If the user already exists, return an error
+                return #err("User already exists.");
+            };
+            case (null) {
+                // Generate a unique ID for the new user
+                let newUserId = userIdCounter + 1;
+                userIdCounter := newUserId;
+
+                // Get the current time
+                let currentTime = Time.now();
+
+                // Create the new user entry
+                let newUser: User = {
+                    id = newUserId;
+                    accountIdentifier = accountIdentifier;
+                    createdAt = currentTime;
+                };
+
+                // Store the new user in the array
+                usersArray := Array.append(usersArray, [newUser]);
+
+                Debug.print("New user created with ID: " # Nat.toText(newUserId));
+
+                // Return the new user's ID and time of creation
+                return #ok((newUserId, currentTime));
             };
         };
     };
+    
+    //function to get the list of users 
+    public shared query func getAllUsers() : async [(Principal, Nat, Time.Time)] {
+    // Map over the usersArray and extract the relevant fields
+    let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time)>(usersArray, func (u: User) : (Principal, Nat, Time.Time) {
+        return (u.accountIdentifier, u.id, u.createdAt);
+    });
 
-    // User Owned NFTs (MY COLLECTION)
+    return allUsersDetails;
+    };
+
+
+    // public shared query ({ caller = user }) func getUserDetails() : async ?(Principal, Nat, Time.Time) {
+    // let userDetails = Array.find<User>(usersArray, func (u: User) : Bool {
+    //     u.accountIdentifier == user
+    // });
+
+    // switch (userDetails) {
+    //     case (?foundUser) {
+    //         // Return account identifier, unique ID, and creation timestamp
+    //         return ?(foundUser.accountIdentifier, foundUser.id, foundUser.createdAt);
+    //     };
+    //     case (null) {
+    //         return null;
+    //     };
+    // };
+    // };
+
+
+    // Function to get the total number of users
+    public shared query func getTotalUsers() : async Nat {
+        return usersArray.size();
+    };
+    
+
+     //User Owned NFTs (MY COLLECTION)
     public shared func userNFTcollection(_collectionCanisterId : Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
         let myNFTcollection = actor (Principal.toText(_collectionCanisterId)) : actor {
             myCollection : (user : AccountIdentifier) -> async (Result.Result<[(TokenIdentifier, Metadata)], CommonError>);
@@ -553,38 +627,104 @@ actor Main {
         return await myNFTcollection.myCollection(user : AccountIdentifier);
     };
 
-    //add to Favorite NFTs from MY COLLECTION
-    public shared func adduserfavouriteNFTs(_collectionCanisterId : Principal, user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : async Result.Result<(Text), CommonError> {
-        // Define the actor interface for interacting with the remote canister
-        let favouriteNFT = actor (Principal.toText(_collectionCanisterId)) : actor {
-            addToFavorites : (AccountIdentifier, TokenIdentifier) -> async Result.Result<(Text), CommonError>;
-        };
+    //User favorite NFTS from myCollection
 
-        // Call the remote canister's addToFavorites method and pass the correct arguments
-        return await favouriteNFT.addToFavorites(user, tokenIdentifier);
+    // favorites data structure 
+    private var _favorites : HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]> = HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]>(0, AID.equal, AID.hash);
+
+    // Function to add a token to the user's favorites
+    func _addToFavorites(user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : () {
+    // Check if the user already has favorites
+    let userFavorites = switch (_favorites.get(user)) {
+        case (?favorites) favorites; // If the user has favorites, retrieve them
+        case (_) []  // If the user has no favorites, start with an empty array
     };
 
-    //remove from Favorite NFTs from MY COLLECTION
-    public shared func removeuserfavouriteNFTs(_collectionCanisterId : Principal, user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : async Result.Result<(Text), CommonError> {
-        // Define the actor interface for interacting with the remote canister
-        let favouriteNFT = actor (Principal.toText(_collectionCanisterId)) : actor {
-            removeFromFavorites : (AccountIdentifier, TokenIdentifier) -> async Result.Result<(Text), CommonError>;
-        };
+    // Append the new token to the user's favorites list
+    let updatedFavorites = Array.append(userFavorites, [(tokenIdentifier)]);
 
-        // Call the remote canister's removeFromFavorites method and pass the correct arguments
-        return await favouriteNFT.removeFromFavorites(user, tokenIdentifier);
+    // Update the user's favorites in the favorites map
+    _favorites.put(user, updatedFavorites);
+    };
+    
+    // ADD TO FAVORITES //
+    // Function to add a token to the user's favorites
+    public shared func addToFavorites(
+    user: AccountIdentifier, 
+    tokenIdentifier: TokenIdentifier
+    ) : async Result.Result<Text, CommonError> {
+    // Check if the user already has favorites
+    let userFavorites = switch (_favorites.get(user)) {
+        case (?favorites) favorites; // If the user has favorites, retrieve them
+        case (_) []  // If the user has no favorites, start with an empty array
     };
 
-    //get user favorites nfts
-    public shared func getuserfavoriteNFTs(_collectionCanisterId : Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
-        // Define the actor interface for interacting with the remote canister
-        let favouriteNFT = actor (Principal.toText(_collectionCanisterId)) : actor {
-            getFavorites : (AccountIdentifier) -> async Result.Result<[(TokenIdentifier)], CommonError>;
-        };
+    // Check if the token is already in the user's favorites
+    let isAlreadyFavorite = Array.find(userFavorites, func(entry: (TokenIdentifier)) : Bool {
+        entry == tokenIdentifier
+    }) != null;
 
-        // Call the remote canister's getFavorites method and pass the correct argument
-        return await favouriteNFT.getFavorites(user);
+    if (isAlreadyFavorite) {
+        return #err(#Other("Token is already in favorites"));
+    } else {
+        // Append the new token to the user's favorites list (without metadata)
+        let updatedFavorites = Array.append(userFavorites, [tokenIdentifier]);
+
+        // Update the user's favorites in the favorites map
+        _favorites.put(user, updatedFavorites);
+        return #ok("Token added to favorites successfully");
+    }
     };
+
+    //REMOVE FROM FAVORITES //
+    // Function to remove a token from the user's favorites
+    public shared func removeFromFavorites(user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : async Result.Result<Text, CommonError> {
+    // Check if the user already has favorites
+    let userFavorites = switch (_favorites.get(user)) {
+        case (?favorites) favorites; // If the user has favorites, retrieve them
+        case (_) return #err(#Other("No favorites found for this user")); // If the user has no favorites, return an error
+    };
+
+    // Check if the token is in the user's favorites
+    let isFavorite = Array.find(userFavorites, func(entry: (TokenIdentifier)) : Bool {
+        entry == tokenIdentifier
+    }) != null;
+
+    // Instead of if (!isFavorite), use if isFavorite == false
+    if (isFavorite == false) {
+        return #err(#Other("Token is not in favorites"));
+    };
+
+    // Remove the token from the user's favorites list
+    let updatedFavorites = Array.filter(userFavorites, func(entry: (TokenIdentifier)) : Bool {
+        entry != tokenIdentifier
+    });
+
+    // Update the user's favorites in the favorites map
+    _favorites.put(user, updatedFavorites);
+
+    // Return success message
+    return #ok("Token removed from favorites successfully");
+    };
+
+
+
+    // GET USER FAVORITES //
+    // Function to get the user's favorites
+    public shared query func getFavorites(user: AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
+    // Check if the user has any favorites
+    switch (_favorites.get(user)) {
+        case (?favorites) {
+            // Return the user's favorites if found
+            return #ok(favorites);
+        };
+        case (_) {
+            // Return an error if no favorites are found for the user
+            return #err(#Other("No favorites found for this user"));
+        };
+    };
+    };
+
 
     /* -------------------------------------------------------------------------- */
     /*                                  MARKETPLACE                               */
@@ -615,12 +755,12 @@ actor Main {
     };
 
     //settle and confirm purchase
-    public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
-        let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
-            ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
-        };
-        return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
-    };
+    // public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+    //     let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+    //     };
+    //     return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
+    // };
 
     //get transaction details
     public shared func transactions(_collectionCanisterId : Principal) : async [Transaction] {
@@ -727,6 +867,68 @@ actor Main {
             let errorMessage = "Unexpected Transfer Failed: " # Error.message(err);
             return #err(#Other(errorMessage));
         };
+    };
+
+    //place order ( to get hard copy )
+    public shared func placeOrder(
+    accountIdentifier: Principal,  // Now passed as a parameter
+    tokenid: TokenIdentifier,
+    phone: Text,
+    email: Text,
+    address: Text,
+    city: Text,
+    country: Text,
+    pincode: Text,
+    landmark: ?Text
+    ) : async Result.Result<Text, Text> {
+
+    // Validate required fields
+    if (phone == "" or email == "" or address == "" or city == "" or country == "" or pincode == "") {
+        return #err("Please fill in all required fields.");
+    };
+
+    // Find the user by the provided account identifier
+    let existingUser = Array.find<User>(usersArray, func (u: User) : Bool {
+        u.accountIdentifier == accountIdentifier;
+    });
+
+    // If user is not found, return an error
+    switch (existingUser) {
+        case (null) {
+            return #err("User not found. Please create a user before placing an order.");
+        };
+        case (?foundUser) {
+            // Generate a unique order ID
+            let newOrderId = orderIdCounter + 1;
+            orderIdCounter := newOrderId;
+
+            // Create a new order linked to the user's account
+            let newOrder: Order = {
+                id = newOrderId;
+                accountIdentifier = foundUser.accountIdentifier;
+                userId = foundUser.id;        // Link to user's unique ID
+                tokenid = tokenid;
+                phone = phone;
+                email = email;
+                address = address;
+                city = city;
+                country = country;
+                pincode = pincode;
+                landmark = landmark;         // Optional field
+                orderTime = Time.now();
+            };
+
+            // Add the new order to the stable orders array
+            orders := Array.append(orders, [newOrder]);
+
+            return #ok("Order placed successfully for user with ID: " # Nat.toText(foundUser.id));
+        };
+    };
+    };
+
+    //get orders of users 
+    public query func getallOrders() : async [Order] {
+    return orders;
     };
 
 };

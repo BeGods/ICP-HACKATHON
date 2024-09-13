@@ -48,4 +48,3 @@ echo "ICP ledger deployed and token name retrieved"
 # Step 7: Check balance of the default account
 balance=$(dfx canister call icp_ledger_canister account_balance_dfx "(record {account = \"$DEFAULT_ACCOUNT_ID\";})")
 echo "Balance of the default account: $balance"
-
