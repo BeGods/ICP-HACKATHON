@@ -1,58 +1,31 @@
 import { AuthClient } from "@dfinity/auth-client";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { createActor as createActorBackend } from "../../../declarations/BeGod_backend/index";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import {
-  PlugLogin,
-  StoicLogin,
-  NFIDLogin,
-  IdentityLogin,
-  CreateActor,
-} from "ic-auth";
+import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from "ic-auth";
 
-// import { Actor, HttpAgent } from "@dfinity/agent";
+// Create the Auth context
 const AuthContext = createContext();
-console.log(process.env.DFX_NETWORK);
+
 const defaultOptions = {
-  /**
-   *  @type {import("@dfinity/auth-client").AuthClientCreateOptions}
-   */
   createOptions: {
-    // idleOptions: {
-    //   // Set to true if you do not want idle functionality
-    //   disableIdle: true,
-    // },
     idleOptions: {
       idleTimeout: 1000 * 60 * 30, // set to 30 minutes
-      disableDefaultIdleCallback: true, // disable the default reload behavior
+      disableDefaultIdleCallback: true,
     },
   },
-  /**
-   * @type {import("@dfinity/auth-client").AuthClientLoginOptions}
-   */
   loginOptionsIcp: {
     identityProvider:
       process.env.DFX_NETWORK === "ic"
         ? "https://identity.ic0.app/#"
-        : `http://ajuq4-ruaaa-aaaaa-qaaga-cai.localhost:4943/`,
+        : `http://localhost:4943/`,
   },
-  loginOptionsnfid: {
-    identityProvider:
-      process.env.DFX_NETWORK === "ic"
-        ? `https://nfid.one/authenticate/?applicationName=my-ic-app#authorize`
-        : `https://nfid.one/authenticate/?applicationName=my-ic-app#authorize`,
+  loginOptionsNfid: {
+    identityProvider: `https://nfid.one/authenticate/?applicationName=my-ic-app#authorize`,
   },
 };
 
-/**
- *
- * @param options - Options for the AuthClient
- * @param {AuthClientCreateOptions} options.createOptions - Options for the AuthClient.create() method
- * @param {AuthClientLoginOptions} options.loginOptions - Options for the AuthClient.login() method
- * @returns
- */
 export const useAuthClient = (options = defaultOptions) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authClient, setAuthClient] = useState(null);
@@ -61,32 +34,36 @@ export const useAuthClient = (options = defaultOptions) => {
   const [backendActor, setBackendActor] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Function to restore user session from localStorage and set Redux
+  const restoreSessionFromLocalStorage = () => {
+    const storedAuth = JSON.parse(localStorage.getItem("auth"));
+    if (storedAuth && storedAuth.isAuthenticated) {
+      // If there is an authentication state in localStorage, restore it
+      setIsAuthenticated(true);
+      setIdentity(storedAuth.identity);
+      setPrincipal(storedAuth.user);
+      dispatch(setUser(storedAuth.user)); // Restore user to Redux
+    }
+  };
+
   useEffect(() => {
-    // Initialize AuthClient
+    restoreSessionFromLocalStorage();
     AuthClient.create(options.createOptions).then((client) => {
       setAuthClient(client);
     });
-  }, []);
+  }, [dispatch]);
   const backendCanisterId = process.env.CANISTER_ID_BEGOD_BACKEND;
 
   const login = (val) => {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log(AuthClient);
-        if (
-          authClient?.isAuthenticated() &&
-          (await authClient.getIdentity().getPrincipal().isAnonymous()) ===
-            false
-        ) {
-          console.log("line 8");
-          const backendActor = createActorBackend(backendCanisterId, {
-            agentOptions: { identity: identity },
-          });
-          setBackendActor(backendActor);
+        if (authClient?.isAuthenticated() && !(await authClient.getIdentity().getPrincipal().isAnonymous())) {
+          // Update the client with backendActor
           updateClient(authClient);
           resolve(AuthClient);
         } else {
-          let opt = val === "Identity" ? "loginOptionsIcp" : "loginOptionsnfid";
+          let opt = val === "Identity" ? "loginOptionsIcp" : "loginOptionsNfid";
           authClient.login({
             ...options[opt],
             onError: (error) => reject(error),
@@ -102,42 +79,9 @@ export const useAuthClient = (options = defaultOptions) => {
     });
   };
 
-  // const createTokenActor = (canisterId) => {
-  //     if(!canisterId){
-  //         throw new Error("Canister ID is undefined");
-  //     }
-  //     const agent = new HttpAgent();
-  //     let tokenActor = createActor(TokenIdl, {
-  //         agent,
-  //         canisterId: canisterId,
-  //     });
-  //     return tokenActor;
-  // };
-
-    // const canisterId = process.env.CANISTER_ID_CKETH_LEDGER
-
-  const reloadLogin = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        if (
-          authClient.isAuthenticated() &&
-          (await authClient.getIdentity().getPrincipal().isAnonymous()) ===
-            false
-        ) {
-          updateClient(authClient);
-          resolve(AuthClient);
-        }
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-
   const handleLogin = async (provider) => {
     try {
       let userObject;
-
-      // Login using different providers
       if (provider === "Plug") {
         userObject = await PlugLogin([backendCanisterId]);
       } else if (provider === "Stoic") {
@@ -150,14 +94,14 @@ export const useAuthClient = (options = defaultOptions) => {
 
       if (userObject.agent?._isAgent || userObject.agent?.agent?._isAgent) {
         setPrincipal(userObject.principal);
-        createActorBackend(userObject.agent);
-        const backendActor = createActorBackend(backendCanisterId, {
-          agentOptions: { identity: identity },
-        });
-        setBackendActor(backendActor);
-        setIsAuthenticated(true);
-        // updateClient(userObject);
-        dispatch(setUser(userObject.principal));
+        const authData = {
+          isAuthenticated: true,
+          user: userObject.principal,
+          identity: userObject.identity,
+        };
+        localStorage.setItem("auth", JSON.stringify(authData)); // Save authentication state to localStorage
+
+        dispatch(setUser(userObject.principal)); // Set Redux user state
         navigate("/admin/dashboard");
       } else {
         console.warn("Login was unsuccessful.");
@@ -175,37 +119,15 @@ export const useAuthClient = (options = defaultOptions) => {
     const principal = identity.getPrincipal();
     setPrincipal(principal);
     setAuthClient(client);
-    // console.log(identity);
   }
 
   async function logout() {
     await authClient?.logout();
     await updateClient(authClient);
     setIsAuthenticated(false);
+    localStorage.removeItem("auth");
+    window.location.href = '/admin/login';
   }
-
-  // const createTokenActor = (canisterID) => {
-  //     let tokenActor = ledgerActor(canisterID, { agentOptions: { identity: identity } })
-  //     return tokenActor;
-
-  //         }
-  // const canisterId =
-  //     process.env.CANISTER_ID_CKETH_LEDGER
-
-  const createBackendActor = (canisterID) => {
-    const actor = createActorBackend(canisterId, { agentOptions: { identity } });
-  }
-
-  // const actor = createActorBackend(canisterId, { agentOptions: { identity } });
-  // console.log(actor)
-
-  // const getBalance = async (principal, canisterId) =>{
-  //     const actor = await createTokenActor(canisterId)
-  //     const balance = await actor.icrc1_balance_of({ owner: principal, subaccount: [] })
-  //     setBalance(balance)
-  //     console.log("initialActor", actor)
-  //     return balance;
-  //    }
 
   return {
     login,
@@ -219,9 +141,6 @@ export const useAuthClient = (options = defaultOptions) => {
   };
 };
 
-/**
- * @type {React.FC}
- */
 export const AuthProvider = ({ children }) => {
   const auth = useAuthClient();
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
