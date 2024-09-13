@@ -65,9 +65,9 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
         <div className={`w-[90%] flex items-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
           {currentItems && currentItems.map((img, index) => (
             <div className="flip-card rounded-lg" key={index}>
-              <div className="flip-card-inner">
+              <div className="flip-card-inner w-[210px] h-[335px]">
                 {/* Front Side */}
-                <div className="w-[80%] h-[40vh] flip-card-front flex items-center justify-center">
+                <div className=" flip-card-front flex items-center justify-center">
                   <img src={img.img1} alt={`NFT ${index + 1}`} className="w-[100%] h-[98%] rounded-lg object-cover" />
                 </div>
                 {/* Back Side */}
@@ -101,7 +101,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
           <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
         </Link>
       </div>
-      <div className={`hidden w-[80%] sm:grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-24 lg:gap-4 mt-8 sm:ml-20 lg:ml-32 mb-8 ${animationClass}`}>
+      <div className={`hidden w-[80%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-11 lg:mx-15 mb-8 ${animationClass}`}>
         {currentItems && currentItems.map((img, index) => (
           <div className="flip-card rounded-lg " key={index}>
             <div className="flip-card-inner">
@@ -113,10 +113,10 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
               <div className="flip-card-back relative flex flex-col justify-center items-center text-white">
                 <img src={img.img1} alt={`NFT ${index + 1}`} className="object-cover blur-sm w-[98%] h-[98%]" />
                 <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-60 rounded-lg">
-                  <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
+                  <h1 className="text-xl sm:text-3xl lg:text-2xl font-extrabold">{img.name}</h1>
                   <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                   <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                  <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[35px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                  <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[35px] sm:w-[40%] sm:h-[32px]  lg:text-xs xl:text-sm bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                     Buy Now
                   </Link>
                 </div>
@@ -134,7 +134,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
           onClick={handlePreviousPage}
           className={`hover:cursor-pointer -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
-        <Link to={`/collection/${collections[currentIndex].name}`} className='lg:w-[215px] p-2 border-[1px] border-[#FCD37B]'>
+        <Link to={`/collection/${collections[currentIndex].name}`} className='lg:w-[215px] p-2 border-[1px] border-[#FCD37B] flex justify-center items-center'>
           <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
         </Link>
         <img

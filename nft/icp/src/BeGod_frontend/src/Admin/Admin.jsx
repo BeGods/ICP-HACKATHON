@@ -9,6 +9,7 @@ import CollectionDetails from './collection/CollectionDetails';
 import NftDetails from './collection/NftDetails';
 import CreateCollection from './collection/CreateCollection';
 import UserDetails from './UserDetails';
+import PageNotFound from './PageNotFound';
 
 function Admin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,15 +24,15 @@ function Admin() {
 
   // Conditional rendering based on isAuthenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />; // Redirect to the login page if not authenticated
+    return <Navigate to="/admin/login" replace />;
   }
 
   return (
-    <div className='flex min-h-screen'>
-      <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-      <div className="max-w-[1920px] mx-auto  flex-1 mx-auto">
+    <div className='flex flex-col items-start justify-center lg:flex-row md:flex-row sm:flex-col'>
+      <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} className="" />
+      <div className="flex items-center justify-center w-full">
         <Routes>
-          <Route path='/' element={<DashBoard />} />
+          <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
           <Route path='/dashboard' element={<DashBoard />} />
           <Route path='/collection' element={<Collection />} />
           <Route path='/collection/create' element={<CreateCollection />} />
@@ -39,6 +40,7 @@ function Admin() {
           <Route path='/collection/collectionDetails/:collectionId/nft/:nftId' element={<NftDetails />} />
           <Route path='/users/' element={<Users />} />
           <Route path='/users/:id' element={<UserDetails />} />
+          <Route path='*' element={<PageNotFound />} />
         </Routes>
       </div>
     </div>

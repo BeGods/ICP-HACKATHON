@@ -71,11 +71,11 @@ function LogoImageUploader() {
       {previews &&
         previews.map((pic) => {
           return (
-            <div className="relative w-[50px] h-[50px] m-0">
+            <div className="relative w-[80px] h-[80px] m-0">
             <img 
               src={pic} 
               alt="Selected" 
-              className="w-full h-full object-cover rounded-full"
+              className="object-cover w-full h-full rounded-full"
             />
             <button
               onClick={toggleInputHide}

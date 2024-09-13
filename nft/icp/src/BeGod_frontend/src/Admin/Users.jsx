@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 import {
   Table,
   Thead,
@@ -11,132 +11,133 @@ import {
   Input,
   Box,
   Button,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
+import BackButton from "./collection/BackButton";
 
 function Users() {
   const id = 1951982;
   return (
-    <div className='max-w-[1920px] mx-auto w-[80vw] overflow-hidden'>
-      <Box color='white'>
-        <Box mt={{ base: '20%', md: '15%', xl: '10%', '2xl': '10%' }} w={{ base: '80%', sm: '100%' }} mx={{ base: '4%', sm: '8%', md: '7%', lg: '7%', '2xl': '10%' }}>
+    <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll  md:w-full lg:w-[90%] lg:pt-20">
+      <div className="flex justify-between text-center">
+        <BackButton />
+      </div>
+      <Box color="white" className="flex flex-col items-center justify-center">
+        {/* Search Box */}
+        <Box
+          w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
+          mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
+          mt="5%"
+        >
           <Input
-            placeholder='Search'
-            w={{ base: '100%', sm: '90%', md: '85%', '2xl': '90%' }}
-            h='35px'
-            border='1px'
-            borderColor='white'
-            bg='black'
-            p='4'
+            placeholder="Search"
+            w={{ base: "100%", sm: "90%", md: "85%", "2xl": "100%" }}
+            h="45px"
+            border="1px"
+            borderColor="gray.600"
+            bg="#161618"
+            color="white"
+            p="4"
+            _placeholder={{ color: "gray.400" }}
           />
         </Box>
-        <Box w={{ base: '90%', sm: '100%', md: '85%', '2xl': '90%' }} mx={{ base: '4%', sm: '8%', md: '7%', lg: '7%', '2xl': '10%' }} mt='5%'>
-          <TableContainer w={'100%'}>
-            <Table variant='simple' border="2px solid"  rounded="md">
-              <Thead bg='#FCD37B' rounded="md">
+        {/* Table */}
+        <Box
+          w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
+          mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
+          mt="5%"
+        >
+          <TableContainer w={"100%"}>
+            <Table variant="simple" border="1px solid transparent" rounded="md">
+              <Thead bg="#FCD37B">
                 <Tr>
-                  <Th color='black' textAlign='center'>Name</Th>
-                  <Th color='black' textAlign='center'>Email</Th>
-                  <Th color='black' textAlign='center'>Principal</Th>
-                  <Th color='black' textAlign='center'>Details</Th>
+                  <Th textAlign="center" color="black" p={4} fontSize="md">Name</Th>
+                  <Th textAlign="center" color="black" p={4} fontSize="md">Email</Th>
+                  <Th textAlign="center" color="black" p={4} fontSize="md">Principal</Th>
+                  <Th textAlign="center" color="black" p={4} fontSize="md">Details</Th>
                 </Tr>
               </Thead>
-              <Tbody bg='#29292C'>
-                <Tr>
-                  <Td textAlign='center'><div className='flex gap-4'>
-                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
-                    Barry</div></Td>
-                  <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
-                  <Td textAlign='center'>1951982</Td>
-                  <Td textAlign='center'>
-                    <Link to={`/Admin/users/${id}`}>
-                      <Button
-                        size='sm'
-                        border='1px'
-                        borderColor='white'
-                        color='white'
-                        bg='black'
-                        _hover={{ bg: 'gray.700' }}
-                      >
-                        View
-                      </Button>
-                    </Link>
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td textAlign='center'><div className='flex gap-4'>
-                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
-                    Barry</div></Td>
-                  <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
-                  <Td textAlign='center'>1951982</Td>
-                  <Td textAlign='center'>
-                    <Link to={`/Admin/users/${id}`}>
-                      <Button
-                        size='sm'
-                        border='1px'
-                        borderColor='white'
-                        color='white'
-                        bg='black'
-                        _hover={{ bg: 'gray.700' }}
-                      >
-                        View
-                      </Button>
-                    </Link>
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td textAlign='center'><div className='flex gap-4'>
-                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
-                    Barry</div></Td>                  <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
-                  <Td textAlign='center'>1951982</Td>
-                  <Td textAlign='center'>
-                    <Link to={`/Admin/users/${id}`}>
-                      <Button
-                        size='sm'
-                        border='1px'
-                        borderColor='white'
-                        color='white'
-                        bg='black'
-                        _hover={{ bg: 'gray.700' }}
-                      >
-                        View
-                      </Button>
-                    </Link>
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td textAlign='center'><div className='flex gap-4'>
-                    <img src="/image/admin.png" alt="" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
-                    Barry</div></Td>
-                  <Td textAlign='center' wordBreak='break-all'>Tonya_Barrows@yahoo.com</Td>
-                  <Td textAlign='center'>1951982</Td>
-                  <Td textAlign='center'>
-                    <Link to={`/Admin/users/${id}`}>
-                      <Button
-                        size='sm'
-                        border='1px'
-                        borderColor='white'
-                        color='white'
-                        bg='black'
-                        _hover={{ bg: 'gray.700' }}
-                      >
-                        View
-                      </Button>
-                    </Link>
-                  </Td>
-                </Tr>
+              <Tbody>
+                {Array(4).fill("").map((_, index) => (
+                  <Tr key={index} bg={index % 2 === 0 ? "#333333" : "#444444"}>
+                    <Td textAlign="center">
+                      <div className="flex items-center justify-center gap-4">
+                        <img
+                          src="/image/admin.png"
+                          alt=""
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                        Barry
+                      </div>
+                    </Td>
+                    <Td textAlign="center" wordBreak="break-all" color="gray.200">
+                      Tonya_Barrows@yahoo.com
+                    </Td>
+                    <Td textAlign="center" color="gray.200">1951982</Td>
+                    <Td textAlign="center">
+                      <Link to={`/Admin/users/${id}`}>
+                        <Button
+                          size="sm"
+                          border="1px"
+                          borderColor="gray.500"
+                          color="white"
+                          bg="#161618"
+                          _hover={{ bg: "#FCD37B", color: "black" }}
+                        >
+                          View
+                        </Button>
+                      </Link>
+                    </Td>
+                  </Tr>
+                ))}
               </Tbody>
             </Table>
           </TableContainer>
-          <Box mt='5%' style={{ display: "flex", flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-            <Button mr='2' bg='#29292C' color='white'>&lt;</Button>
-            <Button bg='#FCD37B' color='black' border='1px' borderColor='black'>
+
+          {/* Pagination */}
+          <Box
+            mt="5%"
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Button
+              mr="2"
+              bg="#161618"
+              color="white"
+              border="1px"
+              borderColor="gray.500"
+              _hover={{ bg: "black" }}
+            >
+              &lt;
+            </Button>
+            <Button
+              bg="#FCD37B"
+              color="black"
+              border="1px"
+              borderColor="black"
+              _hover={{ bg: "#D4A849" }}
+            >
               1
             </Button>
-            <Button ml='2' bg='#29292C' color='white'>&gt;</Button>
+            <Button
+              ml="2"
+              bg="#161618"
+              color="white"
+              border="1px"
+              borderColor="gray.500"
+              _hover={{ bg: "black" }}
+            >
+              &gt;
+            </Button>
           </Box>
         </Box>
       </Box>
-    </div >
+    </div>
   );
 }
 

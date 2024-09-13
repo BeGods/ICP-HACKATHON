@@ -15,6 +15,7 @@ export default {
       Roboto: ["Roboto", "sans-serif"],
       Poppins: ["Poppins", "sans-serif"],
       Montserrat: ["Montserrat", "sans-serif"],
+      caslon: ['OPTICaslon Antique', 'serif'],
     },
   //  maxWidth:{
   //   "screen": "1920px"
