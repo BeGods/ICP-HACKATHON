@@ -42,7 +42,7 @@ const Footer = () => {
                                 <h1 className="text-sm sm:text-base">Egyptan Collection</h1>
                             </Link>
                         </div>
-                        <div className='flex gap-12 sm:gap-24 mb-8'>
+                        <div className='w-[70%] flex  items-center  justify-around  m-8'>
                             <a href="">
                                 <BiLogoTelegram className='text-2xl text-white' />
                             </a>
