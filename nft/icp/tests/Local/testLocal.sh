@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use chandan;
+# dfx identity use chandan;
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
 
@@ -186,7 +186,7 @@ echo "PRICE: $PRICE"
 
 
 
-# dfx identity use default
+dfx identity use default
 
 # # STEP-6
 # # Purchase NFT
@@ -197,7 +197,7 @@ echo "PRICE: $PRICE"
 # (
 #   variant {
 #     ok = record {
-#       "423f664cc96b0d8400320b3efd023db3373093284be7e0a72536df811d83c03d";
+#       "0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834";
 #       100_000_000 : nat64;
 #     }
 #   },
@@ -217,8 +217,8 @@ echo "PRICE: $PRICE"
 # # step 7 & step 8
 
 
-# PURCHASENFTTXNID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834'
-# SUBACCOUNT=null;
+PURCHASENFTTXNID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834'
+SUBACCOUNT=null;
 
 # dfx canister call $CANISTER send_balance_and_nft '(principal "'$COLLECTION_ID'","'$PURCHASENFTTXNID'",'$PRICEE8S','$SUBACCOUNT')';
 

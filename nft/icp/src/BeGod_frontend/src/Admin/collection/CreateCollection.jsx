@@ -191,6 +191,7 @@ const CreateCollection = () => {
                 <br />
                 <div className="relative inline-block py-2 mt-2">
                   <button
+                  type="button"
                     className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
                     onClick={toggleModal}
                   >
