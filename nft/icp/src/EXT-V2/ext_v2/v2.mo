@@ -346,8 +346,8 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //Services
-  let ExternalService_Cap = Cap.Cap(?"bkyz2-fmaaa-aaaaa-qaaaq-cai", cap_rootBucketId);
-  let ExternalService_ICPLedger = actor "bkyz2-fmaaa-aaaaa-qaaaq-cai" : actor {
+  let ExternalService_Cap = Cap.Cap(?"cuj6u-c4aaa-aaaaa-qaajq-cai", cap_rootBucketId);
+  let ExternalService_ICPLedger = actor "cuj6u-c4aaa-aaaaa-qaajq-cai" : actor {
     send_dfx : shared SendArgs -> async Nat64;
     account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
   };
