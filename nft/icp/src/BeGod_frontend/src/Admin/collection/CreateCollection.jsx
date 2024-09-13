@@ -27,14 +27,13 @@ const CreateCollection = () => {
   const [nftRows, setNftRows] = useState([{ id: "", description: "" }]); // Initial row
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
-  const {backendActor} = useAuth()
+  const { backendActor } = useAuth();
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
- 
 
-//  backendActor?.CanisterActor?.createExtCollection;
-//   console.log(createExtCollection)
+  //  backendActor?.CanisterActor?.createExtCollection;
+  //   console.log(createExtCollection)
 
   const toggleModal = () => setModal(!modal);
 
@@ -86,9 +85,8 @@ const CreateCollection = () => {
       console.error("Error extracting principals:", error);
     }
   };
-  
 
-  const createExtData = async (name, description, limit)=>{
+  const createExtData = async (name, description, limit) => {
     console.log(name, description, limit);
     // const report  = await backendActor?.createExtCollection("chandan","vishwakarma","2");
     // if (report && Array.isArray(report)) {
@@ -97,7 +95,7 @@ const CreateCollection = () => {
     // } else {
     //   console.error("Unexpected response structure:", report);
     // }
-  }
+  };
 
   const getBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -126,57 +124,36 @@ const CreateCollection = () => {
         <div className="my-8">
           <h1 className="text-3xl text-white ">Create Collection</h1>
           <div className="flex flex-col md:flex-row gap-x-8 items-center  w-full  px-1 py-2 text-[#FFFFFF] justify-start rounded-md">
-            <form
-              className="flex flex-col w-full gap-2 mt-4 space-y-4"
-            >
+            <form className="flex flex-col w-full gap-2 mt-4 space-y-4">
               {/* Collection Name and Max Limit */}
-              <div className="flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-[100%]">
-                <label className="w-full sm:w-1/2 h-16 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-                  Collection Name:
+              <div className="flex flex-col items-center justify-center w-full sm:flex-row sm:gap-4 md:flex-row md:gap-4">
+                <div className="flex flex-col w-full sm:w-1/2">
+                  <label className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
+                    Collection Name:
+                  </label>
                   <input
                     onChange={(e) => setName(e.target.value)}
                     type="text"
-                    className="pl-4 rounded-md  md:h-[86px] bg-[#29292C]"
+                    className="pl-4 rounded-md bg-[#29292C] h-[30px] md:h-[45px] w-full"
                   />
-                </label>
-                <label className="w-full sm:w-1/2 md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-                  Max Limit:
-                  <input
-                    onChange={(e) => setLimit(e.target.value)}
-                    type="text"
-                    className="pl-4 rounded-md md:h-[86px] bg-[#29292C]"
-                  />
-                </label>
+                </div>
+                <div className="w-full sm:w-1/2 flex flex-col mt-[20px] sm:mt-0">
+                  <label className="w-full flex flex-col mt-[20px] sm:mt-0">
+                    <span className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
+                      Logo
+                    </span>
+                    <LogoImageUploader />
+                  </label>
+                </div>
               </div>
               {/* Description */}
-              <label className="mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
+              <label className="mt-[20px] w-[100%] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
                 Description:
-                <input
+                <textarea
                   onChange={(e) => setDescription(e.target.value)}
-                  type="text"
-                  className="pl-4 w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md"
-                />
-              </label>
-              {/* Logo */}
-              <label className="mt-[20px] w-[100%] h-[100px] md:h-aut text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-                Logo
-                <LogoImageUploader />
-              </label>
-              {/* No. of NFTs */}
-              <label className="mt-[20px] w-[100%] h-[60px] md:h-[86px] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-                No. of NFTs:
-                <input
-                  onChange={(e) => setNfts(e.target.value)}
-                  type="text"
-                  className="pl-4 w-[100%] h-[60px] md:h-[47px] bg-[#29292C] rounded-md"
-                />
-              </label>
-              <label className="mt-[20px] w-[100%] h-[60px] md:h-[46px] flex flex-row text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-                Featured:
-                <Switch
-                  id="isChecked"
-                  onChange={() => setIsChecked(!isChecked)}
-                  className="pt-1"
+                  className="pl-4 w-[100%] h-[100px] bg-[#29292C] rounded-md resize-none p-2"
+                  rows="8"
+                  placeholder="Enter description here"
                 />
               </label>
               {/* Add new NFT Section */}
@@ -191,7 +168,7 @@ const CreateCollection = () => {
                 <br />
                 <div className="relative inline-block py-2 mt-2">
                   <button
-                  type="button"
+                    type="button"
                     className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
                     onClick={toggleModal}
                   >
@@ -222,7 +199,11 @@ const CreateCollection = () => {
                 >
                   Cancel
                 </button>
-                <YellowButton methodName={()=>createExtData(name,description,limit)}>Create Collection</YellowButton>
+                <YellowButton
+                  methodName={() => createExtData(name, description, limit)}
+                >
+                  Create Collection
+                </YellowButton>
               </div>
               {modal && (
                 <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">

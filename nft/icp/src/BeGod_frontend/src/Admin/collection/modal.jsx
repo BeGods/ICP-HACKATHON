@@ -2,10 +2,11 @@ import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import ImageUploader from "./ImageUploader";
 import toast from "react-hot-toast";
+import YellowButton from "../../components/button/YellowButton";
 
 const Modal = (props) => {
   const { getAddedNftDetails } = props;
-  const [nftId, setNftId] = useState("");
+  const [nftId, setNftId] = useState("32131");
   const [nftName, setNftName] = useState("");
   const [nftType, setNftType] = useState("NORMAL");
   const [nftQuantity, setNftQuantity] = useState("");
@@ -14,8 +15,8 @@ const Modal = (props) => {
   const [nftImage, setNftImage] = useState("");
   const { toggleModal } = props;
 
-  const onClickAddButton = (event) => {
-    event.preventDefault();
+  const onClickAddButton = () => {
+    // event.preventDefault();
     if (
       nftId &&
       nftName &&
@@ -56,18 +57,6 @@ const Modal = (props) => {
         </button>
       </div>
       <form className="flex flex-col gap-5">
-        <div>
-          <label className="mt-2 w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            NFT's ID
-            <input
-              value={nftId}
-              onChange={(e) => setNftId(e.target.value)}
-              type="text"
-              className="mt-1 pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
-            />
-          </label>
-        </div>
-
         <div className="mt-1">
           <label className="mt-4 w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             NFT Name
@@ -146,13 +135,14 @@ const Modal = (props) => {
           </label>
         </div>
         <div className="flex justify-center mt-2 md:mt-3">
-          <button
+          <YellowButton methodName={() =>onClickAddButton()}>Add</YellowButton>
+          {/* <button
             type="submit"
             className="h-[38px] w-[150px] border-0 bg-[#FCD37B] text-[#000000] rounded-sm"
             onClick={onClickAddButton}
           >
             ADD
-          </button>
+          </button> */}
         </div>
       </form>
     </div>
