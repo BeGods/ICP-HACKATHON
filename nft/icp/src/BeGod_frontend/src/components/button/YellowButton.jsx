@@ -10,6 +10,7 @@ function YellowButton({ children, methodName }) {
       _hover={{ bg: "#D4A849", borderColor: "#D4A849" }}  // Hover styles: background and border color change
       borderWidth="1px"  // Explicitly set border width
       onClick={methodName}
+      className='w-full'
     >
       {children}
     </Button>

@@ -63,19 +63,16 @@ const Navbar = ({ mobileView }) => {
     
 
     const onClickLogout = async() => {
-       
         await logout();
         navigate("/")
         
     }
 
     const toggleConnectWalletDropdown = () => {
-
         setConnectWalletDropdown(!connectWalletDropdown);
-
     }
     
-
+    console.log("is loggggggggged in .....", isAuthenticated)
         
 
     return (
@@ -122,7 +119,6 @@ const Navbar = ({ mobileView }) => {
                           </ul>
                         )}
                     </li> 
-                 
                       {isAuthenticated ?  (
                        <nav className='relative list-none pt-4 w-[180px] h-[50px] flex justify-center items-center'>
                        <button
@@ -153,20 +149,20 @@ const Navbar = ({ mobileView }) => {
                         <div className='relative w-[180px] h-[50px] flex gap-8 mr-12 pt-2 '>
                         <button className='flex items-center bg-[#FCD37B] text-black  justify-center text-xl border-0  w-[100%] h-[100%] rounded-sm font-medium font-caslon hover:bg-[#000000] hover:text-[#FCD37B] ' onClick={toggleConnectWalletDropdown}>{t('button')}</button>
                         {connectWalletDropdown && (
-                        <ul className="absolute top-4 mx-1  mt-10 bg-black text-[#FCD378]  rounded shadow-lg w-[170px] p-0 list-none">
-                          <li  className="px-2 py-2 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("Identity")}>
+                        <ul className="absolute top-4 mr-1  mt-10 bg-black text-[#FCD378]  rounded shadow-lg w-[180px] p-0 list-none">
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("Identity")}>
                           <span className='mr-4'><img src="https://i.ibb.co/8gNN3v1/icp.png" className='size-6 rounded-full' /></span> Internet Identity
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="px-2 py-2 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("Nfid")}>
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("Nfid")}>
                           <span className='mr-4'><img src="https://i.ibb.co/Y8ZMXhn/image.png" className='size-6 rounded-full' /></span>Nfid
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="px-2 py-2 hover:bg-purple-900 cursor-pointer flex items-center">
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center">
                           <span className='mr-4'><img src="https://i.ibb.co/sm6rrPD/image.png" className='size-6 rounded-full' /></span>Bifinity
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="px-2 py-2 hover:bg-purple-900 cursor-pointer flex items-center">
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center">
                           <span className='mr-4'><img src="https://docs.plugwallet.ooo/imgs/logo.png" className='size-6 rounded-full' /></span>Plug
                           </li>
                         </ul>

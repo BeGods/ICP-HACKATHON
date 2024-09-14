@@ -35,7 +35,6 @@ const purchased = [
 const Profile = () => {
   const [category, setCategory] = useState("mycollection");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const isAuthenticated = useSelector((state)=>(state.isAuthenticated));
 
   const getCategoryData = () => {
     switch (category) {
@@ -59,21 +58,29 @@ const Profile = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
-
-  // const {isAuthenticated} = useAuth();
+  const { reloadLogin, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Reload login and set login status when the component mounts
+    const checkLoginStatus = async () => {
+        await reloadLogin(); // Ensure that login status is refreshed
+         // Update state based on authentication
+    };
+
+    checkLoginStatus();
+
+    if(!isAuthenticated) {
+        navigate('/')
+    }
+}, [isAuthenticated, reloadLogin]); 
+ 
 
   useEffect(() => {
     setCurrentIndex(0);
 
   },[category])
 
-  // useEffect(()=>{
-  //   console.log("is authenticated .." , isAuthenticated)
-  //   if(!isAuthenticated){
-  //     navigate('/')
-  //   }
-  // },[isAuthenticated])
 
  
   return (
@@ -129,13 +136,12 @@ const Profile = () => {
               </Link>
             </div>
             {/* Grid view for larger screens */}
-            <div className='hidden w-[80%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+            <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
              
               {images.map((img, index) => (
-                 <div className='flip-card rounded-lg'>
+                 <div className='flip-card rounded-lg w-full'>
                   <NftCard img={img} key={index} />
                  </div>
-                
               ))}
             </div>
           </div>

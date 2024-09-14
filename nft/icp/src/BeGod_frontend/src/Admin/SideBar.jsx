@@ -22,8 +22,10 @@ import { logoutUser, logoutUserAndClear } from "../redux/authSlice";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
+// not working
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 const sideBarData = [
   {
     text: "Dashboard",
@@ -162,7 +164,7 @@ function SidebarContent({ onClose, ...rest }) {
           </div>
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={2000}
         hideProgressBar={false}
@@ -173,7 +175,7 @@ function SidebarContent({ onClose, ...rest }) {
         draggable
         pauseOnHover
         theme="colored"
-      />
+      /> */}
     </Box>
   );
 }

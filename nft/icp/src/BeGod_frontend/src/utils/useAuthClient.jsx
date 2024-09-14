@@ -36,7 +36,7 @@ const defaultOptions = {
     identityProvider:
       process.env.DFX_NETWORK === "ic"
         ? "https://identity.ic0.app/#"
-        : `http://ajuq4-ruaaa-aaaaa-qaaga-cai.localhost:4943/`,
+        : `https://identity.ic0.app/#"`,
   },
   loginOptionsnfid: {
     identityProvider:
@@ -118,6 +118,7 @@ export const useAuthClient = (options = defaultOptions) => {
 
   const reloadLogin = () => {
     return new Promise(async (resolve, reject) => {
+      console.log("reload Login")
       try {
         if (
           authClient.isAuthenticated() &&
@@ -125,6 +126,7 @@ export const useAuthClient = (options = defaultOptions) => {
             false
         ) {
           updateClient(authClient);
+          console.log("reload Login Success")
           resolve(AuthClient);
         }
       } catch (error) {
@@ -216,6 +218,7 @@ export const useAuthClient = (options = defaultOptions) => {
     identity,
     backendActor,
     handleLogin,
+    reloadLogin,
   };
 };
 

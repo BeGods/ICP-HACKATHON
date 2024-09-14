@@ -127,16 +127,14 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
       </div>
 
       {/* Pagination Controls */}
-      <div className='hidden w-[80%] sm:flex justify-between items-center ml-[10%]'>
+      <div className='hidden w-[86%] sm:flex justify-between items-center '>
         <img
           src="/Hero/up.png"
           alt="Previous"
           onClick={handlePreviousPage}
-          className={`hover:cursor-pointer -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`hover:cursor-pointer  -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
-        <Link to={`/collection/${collections[currentIndex].name}`} className='lg:w-[215px] p-2 border-[1px] border-[#FCD37B] flex justify-center items-center'>
-          <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
-        </Link>
+
         <img
           src="/Hero/down.png"
           alt="Next"

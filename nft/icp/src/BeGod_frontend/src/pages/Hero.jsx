@@ -81,7 +81,8 @@ const Hero = () => {
     }, [currentIndex])
 
     return (
-        <div className='w-[100%] font-caslon'>
+        // for medium devices width is 99.6% because in ipad air width is little overflowing
+        <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon'>
             <div className='relative'>
                 <HeroSlider />
                 <div className=' absolute top-0 w-[100%] z-20'>

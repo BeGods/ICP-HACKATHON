@@ -7,6 +7,7 @@ import { CiShare2 } from "react-icons/ci";
 import { RxCross2 } from "react-icons/rx";
 import { RiFileCopyLine } from "react-icons/ri";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { City, Country } from 'country-state-city';
 const buyingStatus = {
     payment : "PAYMENT",
     success : "UNLOCK",
@@ -17,10 +18,34 @@ const buyingStatus = {
 const BuyNft = () => {
     const [buyPopup , setbuyPopup] = useState(false);
     const [currentBuyingStatus , setBuyingStatus] = useState(buyingStatus.success);
+    const [selectedCountry , updateSelectedCountry] = useState("")
+    const [selectedCity , updateSelectedCity] = useState("");
+
+    const countries = Country.getAllCountries().map((eachCountry) => ({
+        id : eachCountry.isoCode,
+        displayText : eachCountry.name,
+    }));
+
+    const [cityList,updateCityList] = useState([]);
+
+
 
     const toggleBuyPopup  = () => {
         setbuyPopup(!buyPopup);
         setBuyingStatus(buyingStatus.success);
+    }
+
+    const onChangeCoutry = (event) => {
+        console.log(event.target.value);
+        const cities = City.getCitiesOfCountry(event.target.value);
+        updateCityList(cities);
+        updateSelectedCountry(event.target.value)
+    }
+
+    const onChangeCity = (event) => {
+        if(cityList.length != 0){
+            updateSelectedCity(event.target.value)
+        }
     }
    
     return (
@@ -221,7 +246,7 @@ const BuyNft = () => {
                                     <div className='h-[90%] relative flex flex-col items-center justify-center mt-10 '>
                                         <h1 className='text-2xl font-semibold'>Congratulations!!!</h1>
                                         <p className='text-sm mb-0'>You Unlocked</p>
-                                        <img src='/public/buynftimg.png' className='absolute size-64' />
+                                        <img src='buynftimg.png' className='absolute size-64' />
                                         <h1 className='text-3xl font-bold font-caslon mt-[180px]'>Horse Collection</h1>
                                         <button onClick={()=>setBuyingStatus(buyingStatus.deliveryInfo)} className='mt-3 w-40 border border-white border-solid cursor-pointer bg-[#1E62AC]'>Get A Hard Copy</button>
                                     </div>
@@ -230,7 +255,7 @@ const BuyNft = () => {
                                     <div className='md:mt-5'> 
                                         <h1 className='text-2xl font-semibold'>Delivery Info.</h1>
                                         <div className='relative flex items-center my-3'>
-                                            <img src="/public/buynftimg2.png" className='absolute w-[150px] h-[160px] -left-10'/>
+                                            <img src="buynftimg2.png" className='absolute w-[150px] h-[160px] -left-10'/>
                                             <div className='ml-[50px]'>
                                                 <h1 className='text-lg font-semibold'>Horse Collection</h1>
                                                 <p className='text-sm font-extralight'>Hard Copy</p>
@@ -254,11 +279,29 @@ const BuyNft = () => {
                                                 </div>
                                                 <div className='flex flex-col w-[35%]'>
                                                     <label className='text-sm font-extralight relative'>City<span className='text-red-700 absolute -top-1'>*</span></label>
-                                                    <input type='text' className='bg-transparent border-0 border-b border-solid border-white' />
+                                                    <select className='bg-transparent border-b font-Quicksand' value={selectedCity} onChange={onChangeCity}>
+                                                    <option value="" disabled hidden></option> {/* Empty option, hidden */}
+                                                        {!selectedCountry ? (
+                                                            <option value="" disabled className='bg-black font-Quicksand border-none border-0 text-white'>Select a country first</option>
+                                                            ) : (
+                                                                cityList.length === 0 ? (
+                                                                <option value="" disabled>No cities available</option>
+                                                            ) : (
+                                                                cityList.map((eachCity) => (
+                                                            <option value={eachCity.name} key={eachCity.name} className='bg-black font-Quicksand border-none border-0'>{eachCity.name}</option>
+                                                            ))
+                                                            )
+                                                        )}
+                                                    </select>
                                                 </div>
                                                 <div className='flex flex-col w-[20%] relative'>
                                                     <label className='text-sm font-extralight'>Country<span className='text-red-700 absolute -top-1'>*</span></label>
-                                                    <input type='text' className='bg-transparent border-0 border-b border-solid border-white' />
+                                                    <select className='bg-transparent border-b font-Quicksand' value={selectedCountry} onChange={onChangeCoutry}>
+                                                    <option value="" disabled hidden></option> {/* Empty option, hidden */}
+            {countries.map((eachCountry) => (
+                <option value={eachCountry.id} key={eachCountry.id} className='bg-black font-Quicksand border-none border-0'>{eachCountry.displayText}</option>
+            ))}
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div className='flex items-center relative'>
@@ -282,7 +325,7 @@ const BuyNft = () => {
                                 {currentBuyingStatus === buyingStatus.licenceInfo && (
                                     <div className='flex flex-col items-center mt-5 '>
                                         <h1 className='text-2xl font-semibold mb-2'>Congratulations</h1>
-                                        <img src='/public/buynftimg3.png' className='w-[180px] h-[260px]' />
+                                        <img src='buynftimg3.png' className='w-[180px] h-[260px]' />
                                         <h1 className='flex items-center text-base font-extralight mt-2'>
                                             
                                                 Licence No- 828746888
