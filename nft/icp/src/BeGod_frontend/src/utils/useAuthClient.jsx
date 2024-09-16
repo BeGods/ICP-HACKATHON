@@ -2,7 +2,7 @@ import { AuthClient } from "@dfinity/auth-client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createActor as createActorBackend } from "../../../declarations/BeGod_backend/index";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/authSlice";
+import { setUser , logoutUserAndClear , setUserAndStore } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import {
   PlugLogin,
@@ -185,6 +185,7 @@ export const useAuthClient = (options = defaultOptions) => {
     await authClient?.logout();
     await updateClient(authClient);
     setIsAuthenticated(false);
+    dispatch(logoutUserAndClear())
   }
 
   // const createTokenActor = (canisterID) => {

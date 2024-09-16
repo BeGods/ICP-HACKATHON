@@ -37,7 +37,7 @@ export const setUserAndStore = (user) => (dispatch) => {
 export const logoutUserAndClear = () => (dispatch) => {
   dispatch(logoutUser());
   localStorage.removeItem('auth');
-  window.location.href = '/admin/login'; 
+  // window.location.href = '/admin/login'; 
 };
 
 export default authSlice.reducer;
