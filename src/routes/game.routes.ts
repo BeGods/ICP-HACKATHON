@@ -6,16 +6,22 @@ import {
   claimShardsBooster,
   convertOrbs,
   claimAutomata,
+  claimStarBonus,
+  updateGameData,
+  claimBurst,
 } from "../controllers/game.controllers";
 import express from "express";
 import {
   validAutomataReq,
   validShardsBoosterReq,
+  validateBurstReq,
   validateOrbsConversion,
+  validateStarClaim,
 } from "../middlewares/game.middlewares";
 const router = express.Router();
 
 router.get("/game/stats", authMiddleware, getGameStats);
+router.get("/game/updateStats", authMiddleware, updateGameData);
 
 // tapping session
 router.post("/game/startTapSession", authMiddleware, startTapSession);
@@ -35,10 +41,22 @@ router.post(
   claimShardsBooster
 );
 router.post(
+  "/booster/claimBurst",
+  authMiddleware,
+  validateBurstReq,
+  claimBurst
+);
+router.post(
   "/booster/claimAutomata",
   authMiddleware,
   validAutomataReq,
   claimAutomata
+);
+router.post(
+  "/game/claimBurst",
+  authMiddleware,
+  validateStarClaim,
+  claimStarBonus
 );
 
 export default router;

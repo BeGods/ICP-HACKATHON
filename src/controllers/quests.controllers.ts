@@ -59,7 +59,7 @@ export const claimQuest = async (req, res) => {
           $inc: {
             "mythologies.$.faith": 1,
             "mythologies.$.energyLimit": 1000,
-          } as any,
+          },
         },
       },
     });

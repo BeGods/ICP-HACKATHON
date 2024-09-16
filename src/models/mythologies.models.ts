@@ -20,6 +20,9 @@ export interface IMyth extends Document {
   energy: number;
   energyLimit: number;
   faith: number;
+  isStarActive: boolean;
+  burstActiveAt: number;
+  isEligibleForBurst: boolean;
   boosters?: IBooster;
   claimedCards?: [];
 }
@@ -39,6 +42,18 @@ const mythologySchema = new Schema({
     type: Number,
     default: 0,
     required: true,
+  },
+  isStarActive: {
+    type: Boolean,
+    default: 0,
+  },
+  burstActiveAt: {
+    type: Number,
+    default: 0,
+  },
+  isEligibleForBurst: {
+    type: Boolean,
+    default: false,
   },
   tapSessionStartTime: {
     type: Number,

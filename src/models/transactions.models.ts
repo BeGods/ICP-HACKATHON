@@ -36,7 +36,15 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
     },
     source: {
       type: String,
-      enum: ["conversion", "quests", "boosters", "share", "automata", "bonus"],
+      enum: [
+        "conversion",
+        "quests",
+        "boosters",
+        "share",
+        "automata",
+        "bonus",
+        "burst",
+      ],
       required: true,
     },
   },
@@ -53,7 +61,7 @@ const shardsTransactionsSchema = new Schema<IShardsTransactions>(
     },
     source: {
       type: String,
-      enum: ["game"],
+      enum: ["game, burst"],
       required: true,
     },
   },

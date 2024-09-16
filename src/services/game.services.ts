@@ -71,7 +71,7 @@ export const fetchUserStats = async (userId) => {
     throw new Error("There was a problem fetching user data.");
   }
 };
-0;
+
 export const validateBooster = (boosters) => {
   try {
     const timeLapsed = Date.now() - boosters.shardsLastClaimedAt;
@@ -120,6 +120,23 @@ export const validateAutomata = (gameData) => {
     }
 
     return gameData;
+  } catch (error) {
+    throw new Error("Error in validating booster.");
+  }
+};
+
+export const disableActiveBurst = (mythology) => {
+  try {
+    const timeLapsed = Date.now() - mythology.burstActiveAt;
+
+    const twelveHours = 12 * 60 * 60 * 1000;
+
+    if (timeLapsed > twelveHours) {
+      mythology.isStarActive = false;
+      mythology.burstActiveAt = false;
+    }
+
+    return mythology;
   } catch (error) {
     throw new Error("Error in validating booster.");
   }

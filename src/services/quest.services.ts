@@ -16,15 +16,22 @@ export const questAggregator = async (userId, questId) => {
           },
           pipeline: [
             {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$userId", "$$userId"] },
-                    {
-                      $in: ["$$questId", "$claimedQuests.taskId"],
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$userId"] },
+                          { $in: ["$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
                     },
-                  ],
-                },
+                  },
+                ],
+                as: "milestones",
               },
             },
             {
@@ -42,6 +49,7 @@ export const questAggregator = async (userId, questId) => {
             },
             {
               $addFields: {
+                isCompleted: { $gt: [{ $size: "$questDetails" }, 0] },
                 orbClaimed: {
                   $cond: [
                     { $gt: [{ $size: "$questDetails" }, 0] },
@@ -64,7 +72,6 @@ export const questAggregator = async (userId, questId) => {
       },
       {
         $addFields: {
-          isCompleted: { $gt: [{ $size: "$claimed" }, 0] },
           isClaimed: { $arrayElemAt: ["$claimed.questClaimed", 0] },
         },
       },
@@ -73,7 +80,7 @@ export const questAggregator = async (userId, questId) => {
           taskId: "$_id",
           mythology: 1,
           requiredOrbs: 1,
-          isCompleted: 1,
+          isCompleted: { $arrayElemAt: ["$claimed.isCompleted", 0] },
           isClaimed: 1,
           orbClaimed: { $arrayElemAt: ["$claimed.orbClaimed", 0] },
           _id: 0,
