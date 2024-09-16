@@ -1,41 +1,34 @@
 import { AuthClient } from "@dfinity/auth-client";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { HttpAgent } from "@dfinity/agent";
+import { Principal } from "@dfinity/principal";
+import {
+  createActor,
+  BeGod_backend,
+} from "../../../declarations/BeGod_backend";
+import { createActor as createLedgerActor } from "../../../declarations/icp_ledger_canister/index";
+import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from "ic-auth";
+import { idlFactory } from "../../../declarations/BeGod_backend/index";
+import { idlFactory as ledgerIdlFactory } from "../../../declarations/icp_ledger_canister/index";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from "ic-auth";
-
-// Create the Auth context
+// Create a React context for authentication state
 const AuthContext = createContext();
 
-const defaultOptions = {
-  createOptions: {
-    idleOptions: {
-      idleTimeout: 1000 * 60 * 30, // set to 30 minutes
-      disableDefaultIdleCallback: true,
-    },
-  },
-  loginOptionsIcp: {
-    identityProvider:
-      process.env.DFX_NETWORK === "ic"
-        ? "https://identity.ic0.app/#"
-        : `http://localhost:4943/`,
-  },
-  loginOptionsNfid: {
-    identityProvider: `https://nfid.one/authenticate/?applicationName=my-ic-app#authorize`,
-  },
-};
-
-export const useAuthClient = (options = defaultOptions) => {
+// Custom hook to manage authentication with Internet Identity
+export const useAuthClient = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accountIdString, setAccountIdString] = useState("");
   const [authClient, setAuthClient] = useState(null);
   const [identity, setIdentity] = useState(null);
   const [principal, setPrincipal] = useState(null);
   const [backendActor, setBackendActor] = useState(null);
+  const [accountId, setAccountId] = useState(null);
+  const [ledgerActor, setLedgerActor] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Function to restore user session from localStorage and set Redux
   const restoreSessionFromLocalStorage = () => {
     const storedAuth = JSON.parse(localStorage.getItem("auth"));
     if (storedAuth && storedAuth.isAuthenticated) {
@@ -49,101 +42,286 @@ export const useAuthClient = (options = defaultOptions) => {
 
   useEffect(() => {
     restoreSessionFromLocalStorage();
-    AuthClient.create(options.createOptions).then((client) => {
+    AuthClient.create().then((client) => {
       setAuthClient(client);
     });
   }, [dispatch]);
-  const backendCanisterId = process.env.CANISTER_ID_BEGOD_BACKEND;
 
-  const login = (val) => {
+  useEffect(() => {
+    if (authClient) {
+      updateClient(authClient);
+    }
+  }, [authClient]);
+
+  const whitelist = [process.env.CANISTER_ID_BEGOD_BACKEND];
+
+  const ledgerCanId = process.env.CANISTER_ID_ICP_LEDGER_CANISTER;
+
+  const login = async (provider) => {
     return new Promise(async (resolve, reject) => {
       try {
-        if (authClient?.isAuthenticated() && !(await authClient.getIdentity().getPrincipal().isAnonymous())) {
-          // Update the client with backendActor
+        if (
+          (await authClient.isAuthenticated()) &&
+          !(await authClient.getIdentity().getPrincipal().isAnonymous())
+        ) {
           updateClient(authClient);
-          resolve(AuthClient);
+          resolve(authClient);
         } else {
-          let opt = val === "Identity" ? "loginOptionsIcp" : "loginOptionsNfid";
-          authClient.login({
-            ...options[opt],
-            onError: (error) => reject(error),
-            onSuccess: () => {
-              updateClient(authClient);
-              resolve(authClient);
-            },
-          });
+          let userObject = {
+            principal: "Not Connected.",
+            agent: undefined,
+            provider: "",
+          };
+          if (provider === "plug") {
+            userObject = await PlugLogin();
+            console.log("plug provider", userObject);
+          } else if (provider === "stoic") {
+            userObject = await StoicLogin();
+          } else if (provider === "nfid") {
+            userObject = await NFIDLogin();
+          } else if (provider === "ii") {
+            userObject = await IdentityLogin();
+          }
+
+          const identity = await userObject.agent._identity;
+          const principal = Principal.fromText(userObject.principal);
+
+          if (provider === "plug") {
+            const host =
+              process.env.DFX_NETWORK === "ic"
+                ? userObject.agent._host
+                : "http://127.0.0.1:4943";
+            const isConnected = await window.ic.plug.requestConnect({
+              whitelist,
+              host,
+            });
+            if (isConnected) {
+              const userActor = await window.ic.plug.createActor({
+                canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
+                interfaceFactory: idlFactory,
+              });
+              const EXTActor = await window.ic.plug.createActor({
+                canisterId: ledgerCanId,
+                interfaceFactory: ledgerIdlFactory,
+              });
+              setBackendActor(userActor);
+              setLedgerActor(EXTActor);
+            } else {
+              throw new Error("Plug connection refused");
+            }
+          } else {
+            const agent = new HttpAgent({ identity });
+
+            const backendActor = createActor(
+              process.env.CANISTER_ID_BEGOD_BACKEND,
+              { agentOptions: { identity, verifyQuerySignatures: false } }
+            );
+            const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+            setLedgerActor(ledgerActor1);
+            setBackendActor(backendActor);
+          }
+
+          console.log(principal.toString(),'my data');
+          setPrincipal(principal.toString());
+          setIdentity(identity);
+          setIsAuthenticated(true);
+          const authData = {
+            isAuthenticated: true,
+            user: userObject.principal,
+            identity: userObject.identity,
+          };
+          localStorage.setItem("auth", JSON.stringify(authData));
+          dispatch(setUser(userObject.principal));
+          navigate("/");
         }
       } catch (error) {
+        console.error("Login error:", error);
         reject(error);
       }
     });
   };
 
-  const handleLogin = async (provider) => {
+  const adminlogin = async (provider) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (
+          (await authClient.isAuthenticated()) &&
+          !(await authClient.getIdentity().getPrincipal().isAnonymous())
+        ) {
+          updateClient(authClient);
+          resolve(authClient);
+        } else {
+          let userObject = {
+            principal: "Not Connected.",
+            agent: undefined,
+            provider: "",
+          };
+          if (provider === "plug") {
+            userObject = await PlugLogin();
+            console.log("plug provider", userObject);
+          } else if (provider === "stoic") {
+            userObject = await StoicLogin();
+          } else if (provider === "nfid") {
+            userObject = await NFIDLogin();
+          } else if (provider === "ii") {
+            userObject = await IdentityLogin();
+          }
+
+          const identity = await userObject.agent._identity;
+          const principal = Principal.fromText(userObject.principal);
+
+          if (provider === "plug") {
+            const host =
+              process.env.DFX_NETWORK === "ic"
+                ? userObject.agent._host
+                : "http://127.0.0.1:4943";
+            const isConnected = await window.ic.plug.requestConnect({
+              whitelist,
+              host,
+            });
+            if (isConnected) {
+              const userActor = await window.ic.plug.createActor({
+                canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
+                interfaceFactory: idlFactory,
+              });
+              const EXTActor = await window.ic.plug.createActor({
+                canisterId: ledgerCanId,
+                interfaceFactory: ledgerIdlFactory,
+              });
+              setBackendActor(userActor);
+              setLedgerActor(EXTActor);
+            } else {
+              throw new Error("Plug connection refused");
+            }
+          } else {
+            const agent = new HttpAgent({ identity });
+
+            const backendActor = createActor(
+              process.env.CANISTER_ID_BEGOD_BACKEND,
+              { agentOptions: { identity, verifyQuerySignatures: false } }
+            );
+            const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+            setLedgerActor(ledgerActor1);
+            setBackendActor(backendActor);
+          }
+
+          console.log(principal.toString());
+          setPrincipal(principal.toString());
+          setIdentity(identity);
+          setIsAuthenticated(true);
+          const authData = {
+            isAuthenticated: true,
+            user: userObject.principal,
+            identity: userObject.identity,
+          };
+          localStorage.setItem("auth", JSON.stringify(authData));
+          dispatch(setUser(userObject.principal));
+          navigate("/admin/dashboard");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        reject(error);
+      }
+    });
+  };
+
+  const logout = async () => {
     try {
-      let userObject;
-      if (provider === "Plug") {
-        userObject = await PlugLogin([backendCanisterId]);
-      } else if (provider === "Stoic") {
-        userObject = await StoicLogin();
-      } else if (provider === "NFID") {
-        userObject = await NFIDLogin();
-      } else if (provider === "Identity") {
-        userObject = await IdentityLogin();
-      }
-
-      if (userObject.agent?._isAgent || userObject.agent?.agent?._isAgent) {
-        setPrincipal(userObject.principal);
-        const authData = {
-          isAuthenticated: true,
-          user: userObject.principal,
-          identity: userObject.identity,
-        };
-        localStorage.setItem("auth", JSON.stringify(authData)); // Save authentication state to localStorage
-
-        dispatch(setUser(userObject.principal)); // Set Redux user state
-        navigate("/admin/dashboard");
-      } else {
-        console.warn("Login was unsuccessful.");
-      }
+      await authClient.logout();
+      setIsAuthenticated(false);
+      setIdentity(null);
+      setPrincipal(null);
+      setBackendActor(null);
+      setAccountId(null);
+      localStorage.removeItem("auth");
+      window.location.reload();
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Logout error:", error);
     }
   };
 
-  async function updateClient(client) {
-    const isAuthenticated = await client.isAuthenticated();
-    setIsAuthenticated(isAuthenticated);
-    const identity = client.getIdentity();
-    setIdentity(identity);
-    const principal = identity.getPrincipal();
-    setPrincipal(principal);
-    setAuthClient(client);
-  }
+  const adminlogout = async () => {
+    try {
+      await authClient?.logout();
+      setIsAuthenticated(false);
+      setIdentity(null);
+      setPrincipal(null);
+      setBackendActor(null);
+      setAccountId(null);
+      localStorage.removeItem("auth");
+      window.location.href = "/admin/login";
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
-  async function logout() {
-    await authClient?.logout();
-    await updateClient(authClient);
-    setIsAuthenticated(false);
-    localStorage.removeItem("auth");
-    window.location.href = '/admin/login';
-  }
+  // Update client state after authentication
+  const updateClient = async (client) => {
+    try {
+      const isAuthenticated = await client.isAuthenticated();
+      setIsAuthenticated(isAuthenticated);
+      restoreSessionFromLocalStorage()
+      const identity = client.getIdentity();
+      setIdentity(identity);
+
+      const principal = identity.getPrincipal();
+      setPrincipal(principal.toString());
+
+      const agent = new HttpAgent({ identity });
+
+      const backendActor = createActor(process.env.CANISTER_ID_BEGOD_BACKEND, {
+        agentOptions: { identity, verifyQuerySignatures: false },
+      });
+      const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+      setLedgerActor(ledgerActor1);
+      setBackendActor(backendActor);
+    } catch (error) {
+      console.error("Authentication update error:", error);
+    }
+  };
+  
+
+  const reloadLogin = async () => {
+    try {
+      if (
+        authClient.isAuthenticated() && !(await authClient.getIdentity().getPrincipal().isAnonymous())
+      ) {
+        console.log("Called");
+        updateClient(authClient);
+      }
+    } catch (error) {
+      console.error("Reload login error:", error);
+    }
+  };
 
   return {
+    adminlogin,
+    adminlogout,
+    isAuthenticated,
     login,
     logout,
-    principal,
-    isAuthenticated,
-    setPrincipal,
+    updateClient,
+    authClient,
     identity,
+    principal,
     backendActor,
-    handleLogin,
+    accountId,
+    ledgerActor,
+    reloadLogin,
+    accountIdString,
   };
 };
 
+// Authentication provider component
 export const AuthProvider = ({ children }) => {
   const auth = useAuthClient();
+
+  if (!auth.authClient || !auth.backendActor) {
+    return null; // Or render a loading indicator
+  }
+
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
+// Hook to access authentication context
 export const useAuth = () => useContext(AuthContext);
