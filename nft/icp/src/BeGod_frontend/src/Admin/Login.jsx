@@ -7,7 +7,7 @@ import LoginButton from "./components/LoginButton.jsx";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { handleLogin, isAuthenticated, logout } = useAuth();
+  const { adminlogin, isAuthenticated, logout } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   // Trigger the animation effect for wallet options
@@ -35,25 +35,25 @@ const Login = () => {
       imgSrc: "/plug2-removebg-preview.png",
       color: "#3a86ff",
       name: "Plug",
-      methodName: () => handleLogin("Plug"),
+      methodName: () => adminlogin("plug"),
     },
     {
       imgSrc: "/stoic-removebg-preview.png",
       color: "#f9c74f",
       name: "Stoic",
-      methodName: () => handleLogin("Stoic"),
+      methodName: () => adminlogin("stoic"),
     },
     {
       imgSrc: "/nfid-removebg-preview.png",
       color: "#ff006e",
       name: "NFID",
-      methodName: () => handleLogin("NFID"),
+      methodName: () => adminlogin("nfid"),
     },
     {
       imgSrc: "favicon.ico",
       color: "#8338ec",
       name: "Identity",
-      methodName: () => handleLogin("Identity"),
+      methodName: () => adminlogin("ii"),
     },
   ];
 
