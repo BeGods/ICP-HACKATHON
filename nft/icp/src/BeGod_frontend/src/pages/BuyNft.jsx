@@ -49,13 +49,7 @@ const BuyNft = () => {
                         <CiShare2 />
                     </div>
                     <div className=' flex items-center mt-16'>
-                        <div>
-                            <img
-                                src="/Hero/up.png"
-                                alt="Previous"
-                                className={`hover:cursor-pointer -rotate-90`}
-                            />
-                        </div>
+                       
                         <div>
                             <div
                                 className="h-full w-full shadow-lg rounded-lg"
@@ -73,13 +67,7 @@ const BuyNft = () => {
                                 <YellowButton>{t('buyNow')}</YellowButton>
                             </div>
                         </div>
-                        <div>
-                            <img
-                                src="/Hero/down.png"
-                                alt="Previous"
-                                className={`hover:cursor-pointer -rotate-90`}
-                            />
-                        </div>
+                       
                     </div>
                     <h1 className=' w-[90%] mt-8 text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]'s>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h1>
                     <div className='mt-8 h-[4px] w-[80%] rounded-lg border'></div>

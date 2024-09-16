@@ -150,11 +150,7 @@ const {t} = useTranslation(['profile']);
                 <img src="/Hero/down.png" alt="Next" className='w-10 h-10 -rotate-90' />
               </button>
             </div>
-            <div className='mt-8 flex sm:hidden items-center justify-center'>
-              <Link to="" className='mb-8 sm:hidden w-[219px] lg:w-[20%] p-2 border-[1px] border-[#FCD37B]'>
-                <YellowButton>Explore <span>Celtic</span> Collection</YellowButton>
-              </Link>
-            </div>
+          
             {/* Grid view for larger screens */}
             <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
              

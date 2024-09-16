@@ -25,7 +25,7 @@ const Footer = () => {
                             <h1 className="flex  text-lg sm:text-xl underline">{t('collection')}</h1>
                         </div>
                         <h1 className=''>{t('categoriesText')}</h1>
-                        <div className='flex flex-row gap-4 sm:gap-x-12'>
+                        <div className='flex flex-col md:flex-row gap-4 sm:gap-x-12 '>
                             <Link to="#" className="flex items-center justify-start sm:justify-center gap-2">
                                 <img src="/image/col1.png" alt="" className="h-5 sm:h-6" />
                                 <h1 className="text-md sm:text-base underline">{horseCollection}</h1>
