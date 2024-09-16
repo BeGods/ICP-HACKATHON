@@ -17,6 +17,10 @@ body{
    background-color: var(--background-color) !important;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Swiper Slider */
 .swiper {
   position: relative;

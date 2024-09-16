@@ -6,10 +6,11 @@ import { Link , useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/useAuthClient';
 import { FaUserLarge } from "react-icons/fa6";
 
+import { useSelector } from 'react-redux';
+
 const Navbar = ({ mobileView }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
-    const [lang, setLang] = useState('en'); // Default to English
     const [modal , setModal] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [profileDropDown , setProfileDropDown] = useState(false);
@@ -36,63 +37,66 @@ const Navbar = ({ mobileView }) => {
     const toggleProfileDropDown = () => {
         setProfileDropDown(!profileDropDown);
     }
-    const { i18n, t } = useTranslation();
+    const { i18n, t } = useTranslation(['button']);
 
-    const { reloadLogin, isAuthenticated, logout ,login } = useAuth();
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-    useEffect(() => {
-        // Reload login and set login status when the component mounts
-        const checkLoginStatus = async () => {
-            await reloadLogin(); // Ensure that login status is refreshed
-             // Update state based on authentication
-        };
-
-        checkLoginStatus();
-
-        if(modal === true) {
-            toggleModal(false);
-        }
-    }, [isAuthenticated, reloadLogin]); // Re-run effect when `isAuthenticated` changes
-
-    useEffect(() => {
-        // Change language when `lang` changes
-        i18n.changeLanguage(lang);
-    }, [lang, i18n]);
-
-   // console.log("isLogged In" , isAuthenticated)
-    
+    const {logout ,login } = useAuth();
 
     const onClickLogout = async() => {
-       
         await logout();
         navigate("/")
         
     }
-   
+
+    const toggleConnectWalletDropdown = () => {
+        setConnectWalletDropdown(!connectWalletDropdown);
+    }
+
     const changeLanguage = (newLang) => {
         i18n.changeLanguage(newLang);
     }
     
-
-    const toggleConnectWalletDropdown = () => {
-
-        setConnectWalletDropdown(!connectWalletDropdown);
-
-    }
     
+    // console.log("is Authenticated in Navbar Section" , isAuthenticated);
 
-        
 
     return (
         <div  className='max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative'>
             {/* Mobile View */}
             <div className='relative flex items-center justify-between w-full gap-4 md:hidden'>
-                <Link to="/" className='flex pt-20 md:hidden'>
-                    <img src="/Hero/logo.png" alt="" />
+                <Link to="/" className='flex pt-7 md:hidden'>
+                    <img src="/Hero/logo.png" alt="" className='h-24 w-28' />
                 </Link>
-                <button onClick={toggleMenu} className='z-30 mr-8'>
-                    {isOpen ? <FaTimes size={36} /> :<img src='/Hero/hamburger.png' className='h-12'/>}
+               <div className='flex items-center justify-between'>
+                  <div className='relative  w-[130px] flex justify-center '>
+                  <button
+                          onClick={toggleDropdown}
+                          className="text-[20px] font-[500] leading-[28.92px] pt-0.5 text-[#FCD37B] flex justify-center items-center mr-4"
+                        >
+                          符 ENG <span className="ml-2 text-sm ">▼</span>
+                        </button>
+                  {dropdownOpen && (
+                          <ul className="absolute left-0 mt-10 bg-slate-900 text-[#FCD378]  rounded shadow-lg w-36 p-0 list-none">
+                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer" onClick={() => changeLanguage("en")}>
+                              English
+                            </li>
+                            <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
+                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("hi")}>
+                              Hindi
+                            </li>
+                            <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
+                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("fr")}>
+                              Français
+                            </li>
+                          </ul>
+                        )}
+                  </div>
+                      
+                <button onClick={toggleMenu} className='z-30 mr-4'>
+                    {isOpen ? <FaTimes size={36} /> :<img src='/Hero/hamburger.png' className='h-8'/>}
                 </button>
+               </div>
 
             </div>
 

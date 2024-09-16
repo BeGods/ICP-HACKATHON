@@ -91,19 +91,19 @@ const Hero = () => {
                     <Navbar mobileView={mobileViewHandler}/>
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
-                    <h1 className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
+                    <h1 className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[50px] md:h-[130px] xl:h-[160px] 2xl:h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
                         {mainHeading}
                     </h1>
                     <h2 className='text-[16px] md:text-[24px] leading-tight font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] text-center'>
                       {description}
                     </h2>
                     <div className='p-2 border-[1px] border-[#FCD37B]'>
-                        <YellowButton>{button}</YellowButton>
+                        <a href='#collections'><YellowButton>{button}</YellowButton></a>
                     </div>
                 </div>
             </div>
 
-            <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat" }} className='h-auto w-[100%] bg-cover bg-center'>
+            <div id='collections' style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat" }} className='h-auto w-[100%] bg-cover bg-center'>
                 <div  className='max-w-[1920px] mx-auto pt-12 flex flex-col items-center justify-center'>
                     <div className='w-[40%]'>
                         <img src="/Hero/frame.svg" alt="" />
@@ -120,7 +120,7 @@ const Hero = () => {
                         <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
                             <div className='w-[70%]'>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
-                                <img src="/Hero/celtic_hero.png" alt="" className='sm:hidden h-full w-[70%] ml-16' />
+                                <img src="/Hero/celtic_hero.png" alt="" className='sm:hidden w-full flex items-center justify-center' />
                             </div>
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                                 <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
