@@ -5,7 +5,6 @@ import { RxCross2 } from "react-icons/rx";
 import { Link , useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/useAuthClient';
 import { FaUserLarge } from "react-icons/fa6";
-import { useSelector } from 'react-redux';
 
 const Navbar = ({ mobileView }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -37,53 +36,47 @@ const Navbar = ({ mobileView }) => {
     const toggleProfileDropDown = () => {
         setProfileDropDown(!profileDropDown);
     }
-    const { i18n, t } = useTranslation(['button']);
+    const { i18n, t } = useTranslation();
 
-    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    const { reloadLogin, isAuthenticated, logout ,login } = useAuth();
 
-    const {logout ,login } = useAuth();
+    useEffect(() => {
+        // Reload login and set login status when the component mounts
+        const checkLoginStatus = async () => {
+            await reloadLogin(); // Ensure that login status is refreshed
+             // Update state based on authentication
+        };
 
-    // useEffect(() => {
-    //     // Reload login and set login status when the component mounts
-    //     const checkLoginStatus = async () => {
-    //         await reloadLogin(); // Ensure that login status is refreshed
-    //          // Update state based on authentication
-    //     };
+        checkLoginStatus();
 
-    //     checkLoginStatus();
+        if(modal === true) {
+            toggleModal(false);
+        }
+    }, [isAuthenticated, reloadLogin]); // Re-run effect when `isAuthenticated` changes
 
-    //     if(modal === true) {
-    //         toggleModal(false);
-    //     }
-    // }, [isAuthenticated, reloadLogin]); // Re-run effect when `isAuthenticated` changes
-
-    // useEffect(() => {
-    //     // Change language when `lang` changes
-    //     i18n.changeLanguage(lang);
-    // }, [lang, i18n]);
+    useEffect(() => {
+        // Change language when `lang` changes
+        i18n.changeLanguage(lang);
+    }, [lang, i18n]);
 
    // console.log("isLogged In" , isAuthenticated)
     
 
     const onClickLogout = async() => {
+       
         await logout();
         navigate("/")
         
     }
 
     const toggleConnectWalletDropdown = () => {
+
         setConnectWalletDropdown(!connectWalletDropdown);
-    }
 
-    const changeLanguage = (newLang) => {
-        i18n.changeLanguage(newLang);
     }
     
-    
-    // console.log("is Authenticated in Navbar Section" , isAuthenticated);
 
-
-    
+        
 
     return (
         <div  className='max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative'>
@@ -103,8 +96,8 @@ const Navbar = ({ mobileView }) => {
                 <Link to="/" className='pt-20'>
                     <img src="/Hero/logo.png" alt="" />
                 </Link>
-                <div className='p-5  flex space-x-5 items-center'>
-                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>{t('collection')}</Link>
+                <div className='flex items-center p-5 space-x-5'>
+                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>Collection</Link>
 
                     <li className='relative list-none pt-4 w-[130px] flex justify-center '>
                          <button
@@ -115,20 +108,21 @@ const Navbar = ({ mobileView }) => {
                         </button>
                         {dropdownOpen && (
                           <ul className="absolute left-0 mt-10 bg-slate-900 text-[#FCD378]  rounded shadow-lg w-36 p-0 list-none">
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer" onClick={() => changeLanguage("en")}>
+                            <li className="px-4 py-2 cursor-pointer hover:bg-purple-900">
                               English
                             </li>
                             <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("hi")}>
+                            <li className="px-4 py-2 cursor-pointer hover:bg-purple-900">
                               Hindi
                             </li>
                             <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("fr")}>
-                              Français
+                            <li className="px-4 py-2 cursor-pointer hover:bg-purple-900">
+                              Telugu
                             </li>
                           </ul>
                         )}
                     </li> 
+                 
                       {isAuthenticated ?  (
                        <nav className='relative list-none pt-4 w-[180px] h-[50px] flex justify-center items-center'>
                        <button
@@ -156,24 +150,24 @@ const Navbar = ({ mobileView }) => {
                         
                       ):(
 
-                        <div className='relative min-w-[180px] h-[50px] flex gap-8 mr-12 pt-2 '>
-                        <button className='flex items-center bg-[#FCD37B] text-black  justify-center text-xl border-0 p-2  w-[100%] h-[100%] rounded-sm font-medium font-caslon hover:bg-[#000000] hover:text-[#FCD37B] ' onClick={toggleConnectWalletDropdown}>{t('connectWallet')}</button>
+                        <div className='relative w-[180px] h-[50px] flex gap-8 mr-12 pt-2 '>
+                        <button className='flex items-center bg-[#FCD37B] text-black  justify-center text-xl border-0  w-[100%] h-[100%] rounded-sm font-medium font-caslon hover:bg-[#000000] hover:text-[#FCD37B] ' onClick={toggleConnectWalletDropdown}>{t('button')}</button>
                         {connectWalletDropdown && (
-                        <ul className="absolute top-4 mr-1  mt-10 bg-black text-[#FCD378]  rounded shadow-lg w-[180px] p-0 list-none">
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("Identity")}>
-                          <span className='mr-4'><img src="https://i.ibb.co/8gNN3v1/icp.png" className='size-6 rounded-full' /></span> Internet Identity
+                        <ul className="absolute top-4 mx-1  mt-10 bg-black text-[#FCD378]  rounded shadow-lg w-[170px] p-0 list-none">
+                          <li  className="flex items-center px-2 py-2 cursor-pointer hover:bg-purple-900" onClick={() => login("ii")}>
+                          <span className='mr-4'><img src="https://i.ibb.co/8gNN3v1/icp.png" className='rounded-full size-6' /></span> Internet Identity
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("NFID")}>
-                          <span className='mr-4'><img src="https://i.ibb.co/Y8ZMXhn/image.png" className='size-6 rounded-full' /></span>Nfid
+                          <li  className="flex items-center px-2 py-2 cursor-pointer hover:bg-purple-900" onClick={() => login("nfid")}>
+                          <span className='mr-4'><img src="https://i.ibb.co/Y8ZMXhn/image.png" className='rounded-full size-6' /></span>Nfid
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={()=> login("Stoic")}>
-                          <span className='mr-4'><img src="https://i.ibb.co/sm6rrPD/image.png" className='size-6 rounded-full' /></span> Stoic
+                          <li  className="flex items-center px-2 py-2 cursor-pointer hover:bg-purple-900" onClick={() => login("stoic")}>
+                          <span className='mr-4'><img src="https://i.ibb.co/sm6rrPD/image.png" className='rounded-full size-6' /></span>Bifinity
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={()=>login("Plug")}>
-                          <span className='mr-4'><img src="https://docs.plugwallet.ooo/imgs/logo.png" className='size-6 rounded-full' /></span>Plug
+                          <li  className="flex items-center px-2 py-2 cursor-pointer hover:bg-purple-900" onClick={() => login("plug")}>
+                          <span className='mr-4'><img src="https://docs.plugwallet.ooo/imgs/logo.png" className='rounded-full size-6' /></span>Plug
                           </li>
                         </ul>
                         
@@ -189,10 +183,10 @@ const Navbar = ({ mobileView }) => {
             {isOpen && (
                 <div className='absolute top-0 bottom-0 left-0 z-10 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 text-white bg-black bg-opacity-70 backdrop-blur-lg md:hidden'>
                     <Link to="/" className='text-[24px] font-[400] leading-[30px]'>
-                        Home
+                        {t('nav1')}
                     </Link>
                     <div className='text-[24px] font-[400] leading-[30px]'>
-                        {t('collection')}
+                        {t('nav2')}
                     </div>
                  
                         {isAuthenticated ?  (
@@ -202,15 +196,15 @@ const Navbar = ({ mobileView }) => {
                             Profile
                         </Link>
                      
-                    <div  className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md' onClick={onClickLogout}>
-                            Logout
+                    <div  className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md' onClick={onClickDisconnect}>
+                            Disconnect
                         </div>
                         </>
                         
                       ):(
 
                         <div  className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md' onClick={toggleModal}>
-                        {t('connectWallet')}
+                        {t('button')}
                     </div>
                       )}
                 </div>
