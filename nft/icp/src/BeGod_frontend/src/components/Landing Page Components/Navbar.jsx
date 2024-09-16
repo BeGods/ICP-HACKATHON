@@ -153,19 +153,19 @@ const Navbar = ({ mobileView }) => {
                         <button className='flex items-center bg-[#FCD37B] text-black  justify-center text-xl border-0 p-2  w-[100%] h-[100%] rounded-sm font-medium font-caslon hover:bg-[#000000] hover:text-[#FCD37B] ' onClick={toggleConnectWalletDropdown}>{t('connectWallet')}</button>
                         {connectWalletDropdown && (
                         <ul className="absolute top-4 mr-1  mt-10 bg-black text-[#FCD378]  rounded shadow-lg w-[180px] p-0 list-none">
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("Identity")}>
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("ii")}>
                           <span className='mr-4'><img src="https://i.ibb.co/8gNN3v1/icp.png" className='size-6 rounded-full' /></span> Internet Identity
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("NFID")}>
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={() => login("nffid")}>
                           <span className='mr-4'><img src="https://i.ibb.co/Y8ZMXhn/image.png" className='size-6 rounded-full' /></span>Nfid
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={()=> login("Stoic")}>
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={()=> login("stoic")}>
                           <span className='mr-4'><img src="https://i.ibb.co/sm6rrPD/image.png" className='size-6 rounded-full' /></span> Stoic
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={()=>login("Plug")}>
+                          <li  className="p-3 hover:bg-purple-900 cursor-pointer flex items-center" onClick={()=>login("plug")}>
                           <span className='mr-4'><img src="https://docs.plugwallet.ooo/imgs/logo.png" className='size-6 rounded-full' /></span>Plug
                           </li>
                         </ul>
