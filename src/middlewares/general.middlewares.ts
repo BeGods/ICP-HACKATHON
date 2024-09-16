@@ -38,3 +38,17 @@ export const validDailyBonusReq = async (req, res, next) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+export const validJoinBonusReq = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    if (user.joiningBonus) {
+      throw Error("You have already claimed joining bonus!");
+    } else {
+      next();
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
