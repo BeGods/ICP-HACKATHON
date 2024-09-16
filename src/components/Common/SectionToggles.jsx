@@ -31,7 +31,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
         minimize === 2 && "slide-inside-left"
       } ${
         minimize === 1 && "slide-away-left"
-      }  top-[50%] justify-center items-center w-[15%] z-50 -mt-8`}
+      }  top-[50%] justify-center items-center w-[15%] z-40 -mt-8`}
     >
       <div
         onClick={handleButtonClick}
@@ -82,7 +82,7 @@ export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
     <div
       className={`flex right-0 ${minimize === 2 && "slide-inside-right"} ${
         minimize === 1 && "slide-away-right"
-      }  top-[50%] absolute justify-center items-center w-[15%] z-50 -mt-8`}
+      }  top-[50%] absolute justify-center items-center w-[15%] z-40 -mt-8`}
     >
       <div
         onClick={handleButtonClick}

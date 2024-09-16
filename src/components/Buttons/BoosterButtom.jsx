@@ -44,18 +44,25 @@ const BoosterButtom = ({
                 L
                 {activeCard === "automata"
                   ? mythData.automatalvl + 1
-                  : mythData.shardslvl + 1}
+                  : activeCard === "minion"
+                  ? mythData.shardslvl + 1
+                  : 1}
               </h1>
             </div>
             <div className="text-button-primary uppercase">
-              {t(`buttons.hire`)}
+              {activeCard == "burst" ? t("buttons.buy") : t("buttons.hire")}
             </div>
-            <div className="flex justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
+            <div className="flex relative justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
               <img
                 src={`/assets/uxui/240px-orb.multicolor.png`}
                 alt="orb"
                 className="p-1.5"
               />
+              <div className="absolute z-10">
+                <div className="font-medium text-[40px] text-white glow-text-black">
+                  {activeCard == "burst" ? 9 : 1}
+                </div>
+              </div>
             </div>
           </div>
         )}

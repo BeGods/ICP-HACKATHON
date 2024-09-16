@@ -104,7 +104,9 @@ const MilestoneCard = ({
                   <h1>
                     {isBlack
                       ? t("elements.aether")
-                      : t(`elements.${elementNames[activeMyth]}`)}{" "}
+                      : t(
+                          `elements.${elementNames[activeMyth].toLowerCase()}`
+                        )}{" "}
                     Orb
                   </h1>
                 ) : isOrb && isMulti ? (

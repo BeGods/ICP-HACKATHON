@@ -88,6 +88,15 @@
   }
 }
 
+@keyframes scale-to-star{
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
 @keyframes fadeBody {
   0% {
     opacity: 0;
@@ -179,9 +188,14 @@
   animation: scale-from-zero 1s ease-in-out;
 }
 
-.scale-star {
+.maximize-star {
   animation: scale-from-star 1s ease-in-out;
 }
+
+.minimize-star {
+  animation: scale-to-star 1s ease-in-out;
+}
+
 
 // White Flash Animation
 
@@ -233,25 +247,6 @@
   }
 }
 
-
-// @keyframes slideAway {
-//   0% {
-//     transform: translateX(0);
-//   }
-//   100% {
-//     transform: translateX(100%);
-//   }
-// }
-
-// @keyframes slideInside {
-//   0% {
-//     transform: translateX(100%);
-//   }
-//   100% {
-//     transform: translateX(0);
-//   }
-// }
-
 @mixin slide($name, $initial, $final) {
   @keyframes #{$name} {
     0%{
@@ -263,9 +258,78 @@
   }
 
   & {
-    animation: #{$name} 0.8s  ease-in-out forwards;
+    animation: #{$name} 0.25s  ease-in-out forwards;
   }
 }
+
+@mixin slideY($name, $initial, $final) {
+  @keyframes #{$name} {
+    0%{
+      transform: translateY($initial);
+    }
+    100% {
+      transform: translateY($final);
+    }
+  }
+
+  & {
+    animation: #{$name} 0.25s  ease-in-out forwards;
+  }
+}
+
+.popup{
+  animation: slideMinionUp 0.25s ease-in-out forwards;
+}
+
+.popdown{
+  animation: slideMinionDown 0.25s ease-in-out forwards;
+}
+
+.minimize{
+  @include slideY(slide-down-animation, 0%, 100%);
+}
+
+.maximize{
+  @include slideY(slide-up-animation, 100%, 0%);
+}
+
+.minimize-booster{
+  @include slideY(slide-down-b-animation, 0%, 250%);
+}
+
+.maximize-booster{
+  @include slideY(slide-up-b-animation, 250%, 0%);
+}
+
+@keyframes starActiveBeam {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 120vw;
+  }
+}
+
+@keyframes starInactiveBeam {
+  0% {
+    height: 120vw;;
+  }
+  100% {
+    height: 0;
+  }
+}
+
+.star-beam-active {
+  animation: starActiveBeam 0.5s ease-in-out forwards;
+}
+
+.star-beam-inactive {
+  animation: starInactiveBeam 0.5s ease-in-out forwards;
+}
+
+
+
+// ==============================================
 
 .slide-away-left{
   @include slide(slide-away-left-animation, 0%, -100%);
@@ -282,9 +346,6 @@
 .slide-inside-right{
 @include slide(slide-inside-right-animation, 100%, 0%);
 }
-
-
-
 
 @keyframes slideMinionUp {
   0% {
@@ -303,25 +364,6 @@
     transform: translateY(100%);
   }
 }
-
-.popup{
-  animation: slideMinionUp 0.8s ease-in-out forwards;
-}
-
-.popdown{
-  animation: slideMinionDown 0.8s ease-in-out forwards;
-}
-
-
-.minimize{
-  animation: slideDown 0.8s ease-in-out forwards;
-}
-
-.maximize{
-  animation: slideUp 0.8s ease-in-out forwards;
-}
-
-
 
 
 .wave {

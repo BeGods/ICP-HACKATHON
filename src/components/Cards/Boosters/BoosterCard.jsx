@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { boosterIcon, mythSections } from "../../../utils/variables";
 import { ChevronRight, LockKeyhole, Star } from "lucide-react";
 
-const starColors = ["#ff0000", "#01ff29", "#179fd1", "#feea4b"];
-
 const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
   const [isClicked, setIsClicked] = useState(false);
-
+  // ${booster === 0 && "z-[60]"}
   return (
     <div
       onClick={handleClick}
@@ -42,9 +40,11 @@ const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
           {booster > 5 ? (
             <Star
               size={"13vw"}
-              fill={"white"}
-              color={"white"}
-              className={`mx-2 mt-[20px] glow-star-${mythSections[activeMyth]}`}
+              fill={isActive ? "white" : "gray"}
+              color={isActive ? "white" : "gray"}
+              className={`mx-2 mt-[20px] ${
+                isActive && `glow-star-${mythSections[activeMyth]}`
+              }`}
             />
           ) : (
             <>{boosterIcon[booster]}</>

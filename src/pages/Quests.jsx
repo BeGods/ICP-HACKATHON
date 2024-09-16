@@ -25,6 +25,9 @@ import MilestoneCard from "../components/Cards/MilestoneCard";
 import Button from "../components/Buttons/Button";
 import SecretCard from "../components/Cards/QuestCards/SecretCard";
 import { showToast } from "../components/Toast/Toast";
+import { QuestGuide } from "../components/Common/Tutorial";
+
+const tele = window.Telegram?.WebApp;
 
 const HeaderContent = ({ activeMyth, t }) => {
   return (
@@ -59,6 +62,7 @@ const Quests = () => {
   const [showShareReward, setShowShareReward] = useState(false);
   const [showClaimEffect, setShowClaimEffect] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
+  const [enableGuide, setEnableGuide] = useState(false);
   const [secretInfo, setSecretInfo] = useState(null);
   const [currQuest, setCurrQuest] = useState(0);
   const {
@@ -83,6 +87,20 @@ const Quests = () => {
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
+
+  useEffect(() => {
+    let guide = JSON.parse(localStorage.getItem("guide"));
+
+    if (!guide.includes(1)) {
+      setEnableGuide(true);
+
+      setTimeout(() => {
+        setEnableGuide(false);
+        guide.push(1);
+        localStorage.setItem("guide", JSON.stringify(guide));
+      }, 5000);
+    }
+  }, []);
 
   const handlePrev = () => {
     if (currQuest > 0) {
@@ -222,6 +240,7 @@ const Quests = () => {
     };
 
     if (!quest.isCompleted) {
+      console.log("Hello");
       try {
         await completeQuest(questData, token);
         setShowComplete(false);
@@ -253,6 +272,7 @@ const Quests = () => {
     };
     try {
       await claimQuest(questData, token);
+      return true;
     } catch (error) {
       const errorMessage =
         error.response?.data?.error ||
@@ -261,6 +281,7 @@ const Quests = () => {
       setShowPay(false);
       console.log(errorMessage);
       showToast("quest_claim_error");
+      return false;
     }
   };
 
@@ -321,20 +342,24 @@ const Quests = () => {
           {currQuest < quests.length ? (
             <QuestCard
               quest={quest}
+              isGuideActive={enableGuide}
               activeMyth={activeMyth}
               completedQuests={completedQuests}
               curr={currQuest}
               showClaimEffect={showClaimEffect}
               t={t}
               handleClick={() => {
-                setShowInfo((prev) => !prev);
+                if (!enableGuide) {
+                  tele.HapticFeedback.notificationOccurred("success");
+                  setShowInfo(true);
+                }
               }}
               InfoIcon={
                 <IconButton
                   isInfo={true}
                   activeMyth={activeMyth}
                   handleClick={() => {
-                    setShowInfo((prev) => !prev);
+                    setShowInfo(true);
                   }}
                   align={1}
                 />
@@ -375,7 +400,7 @@ const Quests = () => {
                 handleClick={() => {
                   setSecretInfo((prev) => !prev);
                 }}
-                className="h-full relative -mt-[36px]"
+                className="h-full relative -mt-[40px]"
               >
                 <JigsawImage
                   imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.whitelist.wood.jpg`}
@@ -407,6 +432,15 @@ const Quests = () => {
       </div>
       {/* Footer */}
       <Footer />
+
+      {enableGuide && (
+        <QuestGuide
+          handleClick={() => {
+            setEnableGuide(false);
+          }}
+        />
+      )}
+      {/* <Tutorial /> */}
       <ToggleLeft
         handleClick={() => {
           setCurrQuest(0);

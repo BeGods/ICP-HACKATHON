@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import Convert from "./Convert";
 import { MyContext } from "../context/context";
 import {
+  claimBurst,
   claimShardsBooster,
   startTapSession,
   updateGameData,
+  updateMythology,
 } from "../utils/api";
 import { useTranslation } from "react-i18next";
 import {
@@ -14,7 +16,6 @@ import {
   mythSymbols,
 } from "../utils/variables";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
-import MilestoneCard from "../components/Cards/MilestoneCard";
 import Button from "../components/Buttons/Button";
 import Header from "../components/Headers/Header";
 import GameHeader from "../components/Headers/Game";
@@ -25,6 +26,8 @@ import { showToast } from "../components/Toast/Toast";
 import Footer from "../components/Common/Footer";
 import { hideBackButton } from "../utils/teleBackButton";
 import { Star } from "lucide-react";
+import { ForgesGuide } from "../components/Common/Tutorial";
+import MilestoneCard from "../components/Cards/MilestoneCard";
 
 const tele = window.Telegram?.WebApp;
 
@@ -39,6 +42,7 @@ const HeaderContent = ({
   glowSymbol,
   glowShards,
   mythData,
+  showBlackOrb,
 }) => {
   const height = Math.min(
     100,
@@ -97,9 +101,11 @@ const HeaderContent = ({
             className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
           />
           <div
-            className={`z-1 flex justify-center items-start font-symbols ${
+            className={`z-1 flex justify-center items-start  font-symbols ${
               glowReward
                 ? ` text-${mythSections[activeMyth]}-text opacity-100`
+                : showBlackOrb === 1
+                ? "text-white opacity-100"
                 : "text-white opacity-50"
             } text-[34vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute flex h-full w-full rounded-full`}
           >
@@ -135,8 +141,14 @@ const HeaderContent = ({
 
 const Forges = () => {
   const { t } = useTranslation();
-  const { activeMyth, setActiveMyth, gameData, setGameData, setSection } =
-    useContext(MyContext);
+  const {
+    activeMyth,
+    setActiveMyth,
+    gameData,
+    setGameData,
+    showBooster,
+    setShowBooster,
+  } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
     shards: myth.shards,
@@ -150,15 +162,20 @@ const Forges = () => {
     automataStartTime: myth.boosters.automataStartTime,
     isAutomataActive: myth.boosters.isAutomataActive,
     shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
+    isStarActive: myth.isStarActive,
+    isEligibleForBurst: myth.isEligibleForBurst,
     disabled: false,
   }));
-  const popupDown = gameData.mythologies.map(() => ({
-    coolDown: 0,
-  }));
   const [showCard, setShowCard] = useState(null);
-  const [showBlackOrb, setShowBlackOrb] = useState(false);
+  const [showBlackOrb, setShowBlackOrb] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
   const [mythStates, setMythStates] = useState(initialState);
+  const [popupStates, setPopupStates] = useState({
+    isActive: false,
+    counter: 0,
+    popupTime: 0,
+    sessionTaps: 0,
+  });
   const [sessionActive, setSessionActive] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
@@ -169,13 +186,37 @@ const Forges = () => {
   const [glowNumber, setGlowNumber] = useState(false);
   const [glowSymbol, setGlowSymbol] = useState(false);
   const [glowShards, setGlowShards] = useState(false);
+  const [glowBooster, setGlowBooster] = useState(false);
   const [minimize, setMinimize] = useState(0);
-  const [platform, setPlatform] = useState(null);
   const { orbs, shards } = mythStates[activeMyth >= 4 ? 0 : activeMyth];
   const [plusOnes, setPlusOnes] = useState([]);
+  const [plusMinion, setPlusMinion] = useState([]);
+  const [plusAutomata, setPlusAutomata] = useState([]);
   const [isHolding, setIsHolding] = useState(false);
+  const [isStarHolding, setIsStarHolding] = useState(0);
+  const [showStarBoosters, setshowStarBoosters] = useState(false);
+  const [showStarHand, setshowStarHand] = useState(false);
+  const [enableGuide, setEnableGuide] = useState(false);
+  const [count, setCount] = useState(0);
   const timeoutRef = useRef(null);
+  const holdTimeoutId = useRef(null);
+  const maxHoldTimeoutId = useRef(null);
   const mythStatesRef = useRef(mythStates);
+  const countRef = useRef(count);
+  const disableStarTimeout = useRef(null);
+
+  useEffect(() => {
+    let guide = JSON.parse(localStorage.getItem("guide"));
+    console.log(guide);
+    if (!guide.includes(0)) {
+      setEnableGuide(true);
+      setTimeout(() => {
+        setEnableGuide(false);
+        guide.push(0);
+        localStorage.setItem("guide", JSON.stringify(guide));
+      }, 5000);
+    }
+  }, []);
 
   // update sessionStart timestamp
   const handleTriggerStart = async () => {
@@ -225,13 +266,15 @@ const Forges = () => {
     const accessToken = localStorage.getItem("accessToken");
 
     const sessionShards =
-      mythStates[activeMyth].shards === 999
+      mythStates[activeMyth].shards === 999 ||
+      mythStates[activeMyth].shards === 998
         ? mythStates[activeMyth].currShards + 1
         : mythStates[activeMyth].currShards;
 
     try {
       await updateGameData(
         {
+          minionTaps: mythStates[activeMyth].minionTaps / 2,
           taps: sessionShards,
           mythologyName: mythologies[activeMyth],
         },
@@ -241,10 +284,62 @@ const Forges = () => {
       setMythStates((prevState) => {
         const newState = [...prevState];
         newState[activeMyth].currShards = 0;
+        newState[activeMyth].minionTaps = 0;
         return newState;
       });
       console.log("Shards claimed successfully.");
     } catch (error) {
+      setMythStates((prevState) => {
+        const newState = [...prevState];
+        newState[activeMyth].currShards = 0;
+        newState[activeMyth].minionTaps = 0;
+        return newState;
+      });
+      console.log(error);
+    }
+  };
+
+  const handleUpdateStarStatus = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+      await claimBurst(
+        {
+          session: countRef.current,
+          mythologyName: mythologies[activeMyth],
+        },
+        accessToken
+      );
+      setCount(0);
+      setMythStates((prevState) => {
+        return prevState.map((item, index) => {
+          if (index === activeMyth) {
+            return {
+              ...item,
+              isStarActive: false,
+              isEligibleForBurst: true,
+            };
+          }
+          return item;
+        });
+      });
+
+      console.log("Star claimed successfully.");
+    } catch (error) {
+      setCount(0);
+      console.log(error);
+    }
+  };
+
+  const handleUpdateMythology = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    try {
+      await updateMythology(mythologies[activeMyth], accessToken);
+
+      console.log("Mythology Updated successfully.");
+    } catch (error) {
+      setCount(0);
       console.log(error);
     }
   };
@@ -272,6 +367,36 @@ const Forges = () => {
         }, 500);
       }, 250);
     }, 250);
+  };
+
+  const handlePlusMinon = (xvalue, yvalue) => {
+    const x = xvalue;
+    const y = yvalue;
+    const newPlusOne = { x, y, id: Date.now() };
+    setPlusMinion((prev) => [...prev, newPlusOne]);
+
+    setTimeout(() => {
+      setPlusMinion((prev) =>
+        prev.filter((plusOne) => plusOne.id !== newPlusOne.id)
+      );
+    }, 1000);
+
+    clearTimeout(timeoutId);
+  };
+
+  const handlePlusAutomata = (xvalue, yvalue) => {
+    const x = xvalue;
+    const y = yvalue;
+    const newPlusOne = { x, y, id: Date.now() };
+    setPlusAutomata((prev) => [...prev, newPlusOne]);
+
+    setTimeout(() => {
+      setPlusAutomata((prev) =>
+        prev.filter((plusOne) => plusOne.id !== newPlusOne.id)
+      );
+    }, 1000);
+
+    clearTimeout(timeoutId);
   };
 
   const handlePlusOneEffect = (e) => {
@@ -349,14 +474,58 @@ const Forges = () => {
     }));
   };
 
-  // useEffect(() => {
-  //   const currTime = new Date.now();
-  //   console.log(currTime);
-  // }, []);
+  const handleGenerateCoolDown = (counter) => {
+    if (counter === 0) {
+      return 0;
+    } else if (counter === 1) {
+      return 10000;
+    } else if (counter === 2) {
+      return 10000;
+    } else if (counter >= 3) {
+      return 5000;
+    } else {
+      return 10000;
+    }
+  };
 
-  // const handleRandonPopup = (coolDown) => {
-  //   return true;
-  // };
+  const clearMinionTimeouts = () => {
+    if (holdTimeoutId.current) {
+      clearTimeout(holdTimeoutId.current);
+      holdTimeoutId.current = null;
+    }
+    if (maxHoldTimeoutId.current) {
+      clearTimeout(maxHoldTimeoutId.current);
+      maxHoldTimeoutId.current = null;
+    }
+  };
+
+  // generate random time in next 1 min
+  const handleGeneratePopTime = (counter) => {
+    const currTime = Date.now();
+    const downTime = currTime + handleGenerateCoolDown(counter);
+
+    // Generate a random time within the next 1 minute (60,000 ms)
+    const randomOffset = Math.floor(Math.random() * 30000);
+    const randomTime = downTime + randomOffset;
+    return randomTime;
+  };
+
+  const closeMinion = () => {
+    if (activeCard === "minion") {
+      setActiveCard(`minion-down`);
+    }
+    setIsHolding(false);
+    clearMinionTimeouts();
+    setTimeout(() => {
+      setActiveCard(null);
+      setPopupStates((prev) => ({
+        ...prev,
+        popupTime: 0,
+        counter: prev.counter + 1,
+        isActive: false,
+      }));
+    }, 300);
+  };
 
   // handle tapping
   const handleTap = async (e) => {
@@ -364,14 +533,16 @@ const Forges = () => {
     if (mythStates[activeMyth].disabled) return;
 
     const { energy, shardslvl, currShards } = mythStates[activeMyth];
+    const { counter, popupTime, isActive } = popupStates;
 
-    if (energy > 0) {
+    if (energy > 0 && showBlackOrb !== 1) {
       window.navigator.vibrate(25);
       handlePlusOneEffect(e);
+
       let reachedBlackOrb = false;
       const updatedMythStates = mythStates.map((myth, index) => {
         if (index === activeMyth) {
-          let newShards = myth.shards + shardslvl;
+          let newShards = myth.shards + shardslvl * (isHolding ? 2 : 1);
           let newOrbs = myth.orbs;
           let newMinionTaps = myth.minionTaps;
 
@@ -381,7 +552,7 @@ const Forges = () => {
             newShards = newShards % 1000;
           }
 
-          if (isHolding && activeCard === "minion") {
+          if (isHolding) {
             newMinionTaps += 1;
           }
 
@@ -393,7 +564,7 @@ const Forges = () => {
 
           return {
             ...myth,
-            energy: Math.max(0, myth.energy - 1),
+            energy: Math.max(0, myth.energy - (isHolding ? 2 : 1)),
             shards: newShards,
             minionTaps: newMinionTaps,
             currShards: myth.currShards + 1,
@@ -402,60 +573,99 @@ const Forges = () => {
         }
         return myth;
       });
-
       setMythStates(() => updatedMythStates);
 
       if (reachedBlackOrb) {
-        setShowBlackOrb(true);
+        // setMinimize(1);
+        setShowBlackOrb(1);
+        closeMinion();
+        updateBlackOrbStatus();
+        // setTimeout(() => {
+        //   setIsStarHolding(false);
+        //   setshowStarBoosters(2);
+        //   setShowBlackOrb(2);
+        //   setMinimize(2);
+        //   handleUpdateStarStatus();
+        // }, 10000);
       }
 
-      // if (currShards >= 10 && handleRandonPopup) {
-      // setActiveCard("minion");
-      // call the random time function which shall return random booster on a random time within a minute
-      // pass the cooldown period and update it as tapping increases
-      // }
-
-      if (currShards === 25) {
+      // initial round
+      if (currShards >= 10 && popupTime === 0 && !isActive && energy >= 150) {
+        setPopupStates((prev) => ({
+          ...prev,
+          popupTime: handleGeneratePopTime(counter),
+        }));
+      } else if (currShards >= 10 && popupTime - Date.now() < 0 && !isActive) {
+        // trigger initial timeout for 3s
+        setPopupStates((prev) => ({
+          ...prev,
+          isActive: true,
+        }));
         setActiveCard("minion");
-        setTimeout(() => {
-          if (isHolding) {
-            setTimeout(() => {
-              setActiveCard("minion-down");
-              setTimeout(() => {
-                setActiveCard(null);
-              }, 500);
-            }, 5000);
-          } else {
-            setActiveCard("minion-down");
-            setTimeout(() => {
-              setActiveCard(null);
-            }, 500);
+        if (!holdTimeoutId.current) {
+          // 1. Disappear after 3 seconds if not held
+          holdTimeoutId.current = setTimeout(() => {
+            if (!isHolding) {
+              closeMinion();
+            }
+          }, 3000);
+        }
+      } else if (isActive) {
+        if (!maxHoldTimeoutId.current && isHolding) {
+          if (holdTimeoutId.current) {
+            clearTimeout(holdTimeoutId.current);
+            holdTimeoutId.current = null;
           }
-        }, 3000);
+          // 2. Should not stay more than 9 seconds if isHolding true
+          maxHoldTimeoutId.current = setTimeout(() => {
+            closeMinion();
+          }, 5000);
+        }
+        // 3. Should disappear immediately if stopped holding within those 9 seconds
+        if (!isHolding && maxHoldTimeoutId.current) {
+          closeMinion();
+        }
       }
 
       // After tap stop
       const newTimeoutId = setTimeout(async () => {
         if (activeCard === "minion") {
-          setActiveCard("minion-down");
+          setActiveCard(`minion-down`);
         }
         if (activeCard !== null) {
           setTimeout(() => {
             setActiveCard(null);
-          }, 500);
+          }, 1000);
         }
+
         setMinimize(2);
+
+        clearMinionTimeouts();
+        setPopupStates((prev) => ({
+          ...prev,
+          popupTime: 0,
+          counter: 0,
+          sessionTaps: prev.sessionTaps + 0,
+          isActive: false,
+        }));
+
         setstartOrbGlow(false);
         setOrbGlow(false);
         setTapGlow(false);
+
         if (updatedMythStates[activeMyth].currShards > 10 || reachedBlackOrb) {
-          handleUpdateTapData();
+          handleUpdateTapData(sessionTaps);
         }
       }, 700);
       setTimeoutId(newTimeoutId);
     } else {
       setMinimize(2);
       setOrbGlow(false);
+      setPopupStates((prev) => ({
+        ...prev,
+        popupTime: 0,
+        counter: 0,
+      }));
       setMythStates((prevData) => {
         return prevData.map((item, index) => {
           if (index === activeMyth) {
@@ -467,7 +677,6 @@ const Forges = () => {
           return item;
         });
       });
-
       setTimeout(() => {
         setMythStates((prevData) => {
           return prevData.map((item, index) => {
@@ -517,6 +726,19 @@ const Forges = () => {
 
               newOrbs += Math.floor(newShards / 1000);
               newShards = newShards % 1000;
+            }
+
+            if (newOrbs >= 1000) {
+              newOrbs = newOrbs % 1000;
+              handleUpdateMythology();
+              setShowBlackOrb(1);
+              // setTimeout(() => {
+              //   setIsStarHolding(false);
+              //   setshowStarBoosters(2);
+              //   setShowBlackOrb(2);
+              //   setMinimize(2);
+              //   handleUpdateStarStatus();
+              // }, 10000);
             }
 
             newState[index] = {
@@ -574,6 +796,8 @@ const Forges = () => {
           orbs: mythStatesRef.current[index].orbs,
           shards: mythStatesRef.current[index].shards,
           energy: mythStatesRef.current[index].energy,
+          isStarActive: mythStatesRef.current[index].isStarActive,
+          isEligibleForBurst: mythStatesRef.current[index].isEligibleForBurst,
         }));
         return {
           ...prevData,
@@ -603,27 +827,94 @@ const Forges = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // disable smoke for ios
-  useEffect(() => {
-    const teleConfigHandle = async () => {
-      if (tele) {
-        try {
-          await tele.ready();
-          setPlatform(tele.platform);
-        } catch (error) {
-          console.error("Error fetching user data from Telegram:", error);
-        }
-      } else {
-        console.warn("Telegram WebApp is not available");
-      }
-    };
-
-    teleConfigHandle();
-  }, []);
-
   // disable backbutton
   useEffect(() => {
     hideBackButton(tele);
+  }, []);
+
+  // star hold
+  useEffect(() => {
+    let intervalId;
+
+    if (isStarHolding === 1) {
+      disableStarTimeout.current = setTimeout(() => {
+        setIsStarHolding(2);
+        setshowStarBoosters(2);
+        setShowBlackOrb(2);
+        setMinimize(2);
+        handleUpdateStarStatus();
+        if (disableStarTimeout.current) {
+          clearTimeout(disableStarTimeout.current);
+          disableStarTimeout.current = null;
+        }
+        setTimeout(() => {
+          setShowBlackOrb(0);
+          setshowStarBoosters(0);
+        }, 500);
+      }, 9000);
+    }
+    if (isStarHolding === 1) {
+      intervalId = setInterval(() => {
+        window.navigator.vibrate(100);
+        setCount((prev) => prev + 1);
+        setMythStates((prevData) => {
+          return prevData.map((item, index) => {
+            let newShards = Math.floor(item.shards + 9.6);
+            let newOrbs = 0;
+            if (index === activeMyth) {
+              if (newShards >= 1000) {
+                orbChangeEffect();
+
+                newOrbs += Math.floor(newShards / 1000);
+                newShards = newShards % 1000;
+              }
+              if (!mythStates[activeMyth].isShardsClaimActive) {
+                handlePlusMinon(50, 800);
+              }
+              if (mythStates[activeMyth].isAutomataActive) {
+                handlePlusAutomata(300, 800);
+              }
+              return {
+                ...item,
+
+                shards: newShards,
+                orbs: newOrbs,
+              };
+            }
+            return item;
+          });
+        });
+      }, 100);
+    } else {
+      clearInterval(intervalId);
+      window.navigator.vibrate(0);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+      window.navigator.vibrate(0);
+    };
+  }, [isStarHolding]);
+
+  // Sync the ref with the state
+  useEffect(() => {
+    countRef.current = count;
+  }, [count]);
+
+  useEffect(() => {
+    if (mythStates[activeMyth]?.isStarActive) {
+      setShowBlackOrb(1);
+      setIsStarHolding(0);
+    } else {
+      setShowBlackOrb(0);
+      setIsStarHolding(0);
+    }
+  }, [activeMyth]);
+
+  useEffect(() => {
+    if (showBooster) {
+      setShowCard(showBooster);
+    }
   }, []);
 
   return (
@@ -667,6 +958,7 @@ const Forges = () => {
                 t={t}
                 orbGlow={orbGlow}
                 tapGlow={tapGlow}
+                showBlackOrb={showBlackOrb}
                 glowShards={glowShards}
                 glowReward={glowReward}
                 glowNumber={glowNumber}
@@ -687,6 +979,8 @@ const Forges = () => {
               shards={shards}
               activeMyth={activeMyth}
               mythStates={mythStates}
+              minimize={minimize}
+              glowBooster={glowBooster}
             />
             {/* TapArea */}
             <div
@@ -724,7 +1018,6 @@ const Forges = () => {
                   }}
                 ></div>
               </div> */}
-
               {plusOnes.map((plusOne) => (
                 <span
                   key={plusOne.id}
@@ -744,21 +1037,46 @@ const Forges = () => {
               <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
             </div>
           </div>
-          <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
-            {/* {mythStates[activeMyth].minionTaps} */}
-            {/* <div className="abolsute bg-white w-[50px] h-[140vw] z-0 -mb-8">
-              hi
+          {showBlackOrb > 0 && (
+            <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
+              <div
+                className={`bg-white  ${
+                  isStarHolding ? "w-[20vw]" : "w-[14vw]"
+                } glow-box-${mythSections[activeMyth]}  ${
+                  isStarHolding === 1 && "star-beam-active"
+                } ${isStarHolding === 2 && "star-beam-inactive"} -mb-5`}
+              ></div>
+              <div className="relative">
+                <Star
+                  onTouchStart={() => {
+                    setMinimize(1);
+                    setIsStarHolding(1);
+                    setshowStarBoosters(1);
+                  }}
+                  onTouchEnd={() => {
+                    setIsStarHolding(2);
+                    setshowStarBoosters(2);
+                    window.navigator.vibrate(0);
+                  }}
+                  size={"18vw"}
+                  fill={"white"}
+                  color={"white"}
+                  className={`glow-star-${
+                    mythSections[activeMyth]
+                  } duration-500 transition-all ${
+                    showBlackOrb === 1 && "maximize-star"
+                  } ${showBlackOrb === 2 && "minimize-star"} ${
+                    isStarHolding === 1 ? "scale-150" : "scale-100"
+                  }`}
+                />
+                {showStarHand && (
+                  <div className="font-symbols scale-point z-10 mx-auto my-auto absolute -mt-20 text-white text-[100px] text-black-contour">
+                    T
+                  </div>
+                )}
+              </div>
             </div>
-            <Star
-              onClick={() => {
-                tele.HapticFeedback.notificationOccurred("success");
-              }}
-              size={"18vw"}
-              fill={"white"}
-              color={"white"}
-              className={`glow-star-${mythSections[activeMyth]} scale-star`}
-            /> */}
-          </div>
+          )}
           {/* Footer */}
           {minimize < 4 && <Footer minimize={minimize} />}
           {/* RightButton */}
@@ -777,93 +1095,177 @@ const Forges = () => {
             activeMyth={activeMyth}
             minimize={minimize}
           />
-          <ReactHowler
-            src="/assets/audio/fof.forges.background01.wav"
-            playing={!JSON.parse(localStorage.getItem("sound"))}
-            preload={true}
-            loop
-          />
+          {showStarBoosters != 0 && (
+            <div>
+              <div
+                className={`absolute  ${showStarBoosters === 2 && "popdown"} ${
+                  showStarBoosters === 1 && "popup"
+                } bottom-0 select-none left-0 -mb-2.5 minion-button`}
+              >
+                <div className="relative">
+                  <img
+                    src="/assets/uxui/188px-minion.png"
+                    alt="dwarf"
+                    className="w-full h-full select-none pointer-events-none "
+                  />
+                </div>
+              </div>
+              {plusMinion.map((plusOne) => (
+                <span
+                  key={plusOne.id}
+                  className={`plus-one glow-text-${mythSections[activeMyth]}`}
+                  style={{
+                    top: `${plusOne.y}px`,
+                    left: `${plusOne.x}px`,
+
+                    zIndex: 99,
+                  }}
+                >
+                  +{mythStates[activeMyth].shardslvl * (isStarHolding ? 2 : 1)}
+                </span>
+              ))}
+              <div
+                className={`absolute  ${showStarBoosters === 2 && "popdown"} ${
+                  showStarBoosters === 1 && "popup"
+                } bottom-0 select-none right-0 -mb-2.5 minion-button`}
+              >
+                <div className="relative">
+                  <img
+                    src="/assets/uxui/188px-automata.png"
+                    alt="dwarf"
+                    className="w-full h-full select-none pointer-events-none "
+                  />
+                </div>
+              </div>
+              {plusAutomata.map((plusOne) => (
+                <span
+                  key={plusOne.id}
+                  className={`plus-one glow-text-${mythSections[activeMyth]}`}
+                  style={{
+                    top: `${plusOne.y}px`,
+                    left: `${plusOne.x}px`,
+
+                    zIndex: 99,
+                  }}
+                >
+                  +
+                  {mythStates[activeMyth].automatalvl * (isStarHolding ? 2 : 1)}
+                </span>
+              ))}
+            </div>
+          )}
           {(activeCard === "minion" || activeCard === "minion-down") && (
             <div
               onTouchStart={() => {
                 if (mythStates[activeMyth].isShardsClaimActive) {
                   setShowCard("minion");
+                  window.navigator.vibrate(500);
                 } else {
                   if (activeCard === "minion") {
                     setIsHolding(true);
+                    window.navigator.vibrate(1000);
                   }
                 }
               }}
               onTouchEnd={() => setIsHolding(false)}
-              className={`absolute ${
+              className={`absolute  ${
                 activeCard === "minion-down" && "popdown"
-              } ${
-                activeCard === "minion" && "popup"
-              } bottom-0 select-none left-0 -mb-2.5 minion-button`}
+              } ${activeCard === "minion" && "popup"} bottom-0 ${
+                mythStates[activeMyth].isShardsClaimActive && "grayscale"
+              } select-none left-0 -mb-2.5 minion-button`}
             >
               <div className="relative">
                 <img
                   src="/assets/uxui/188px-minion.png"
                   alt="dwarf"
-                  className="w-full h-full select-none pointer-events-none"
+                  className="w-full h-full select-none pointer-events-none "
                 />
               </div>
             </div>
           )}
-          {showCard === "minion" && (
+          {(showCard === "automata" || showCard === "minion") && (
             <BoosterClaim
-              activeCard={activeCard}
+              activeCard={showCard}
               activeMyth={activeMyth}
               mythData={mythStates[activeMyth]}
+              disableIcon={showBooster}
               closeCard={() => setShowCard(null)}
               Button={
-                <BoosterButtom
-                  activeCard={activeCard}
-                  mythData={mythStates[activeMyth]}
-                  handleClaim={handleClaimShards}
-                  activeMyth={activeMyth}
-                  t={t}
-                />
+                showBooster ? (
+                  <Button
+                    message={t("buttons.claim")}
+                    handleClick={() => {
+                      tele.HapticFeedback.notificationOccurred("success");
+                      setGlowBooster(() => {
+                        if (showCard === "automata") {
+                          return 2;
+                        } else {
+                          return 1;
+                        }
+                      });
+                      setTimeout(() => {
+                        setGlowBooster(0);
+                      }, 1500);
+                      setShowCard(null);
+                      setShowBooster(null);
+                    }}
+                    activeMyth={activeMyth}
+                  />
+                ) : (
+                  <BoosterButtom
+                    activeCard={showCard}
+                    mythData={mythStates[activeMyth]}
+                    handleClaim={handleClaimShards}
+                    activeMyth={activeMyth}
+                    t={t}
+                  />
+                )
               }
             />
           )}
-          {/* {activeCard == "automata" && (
-            <div className="absolute bottom-0 right-0 z-0">
-              <div className="relative">
-                <img
-                  src="/assets/uxui/188px-automata.png"
-                  alt="dwarf"
-                  className="w-full h-full"
-                  onClick={() => {
-                    setActiveCard(null);
-                  }}
-                />
-              </div>
-            </div>
-          )} */}
+
+          {enableGuide && (
+            <ForgesGuide
+              handleClick={() => {
+                setEnableGuide(false);
+              }}
+            />
+          )}
+          {(showBooster === "mythOrb" || showBooster === "blackOrb") &&
+            !enableGuide && (
+              <MilestoneCard
+                t={t}
+                isMulti={false}
+                isOrb={true}
+                isBlack={showBooster === "blackOrb"}
+                activeMyth={activeMyth}
+                closeCard={() => {
+                  setShowBooster(null);
+                }}
+                Button={
+                  <Button
+                    message={t("buttons.claim")}
+                    handleClick={() => {
+                      setShowBooster(null);
+                    }}
+                    activeMyth={activeMyth}
+                  />
+                }
+              />
+            )}
+
+          {/* <Tutorial /> */}
+          <ReactHowler
+            src="/assets/audio/fof.forges.background01.wav"
+            playing={
+              !JSON.parse(localStorage.getItem("sound")) && activeMyth < 4
+            }
+            preload={true}
+            loop
+          />
         </div>
       ) : (
         <Convert />
-      )}
-      {/* Booster card */}
-      {showBlackOrb && (
-        <MilestoneCard
-          isOrb={true}
-          isBlack={true}
-          t={t}
-          activeMyth={activeMyth}
-          closeCard={() => {
-            setShowBlackOrb(false);
-          }}
-          Button={
-            <Button
-              message={t(`buttons.claim`)}
-              handleClick={updateBlackOrbStatus}
-              activeMyth={activeMyth}
-              t={t}
-            />
-          }
-        />
       )}
     </>
   );

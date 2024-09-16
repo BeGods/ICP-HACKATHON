@@ -15,3 +15,9 @@ export const calculateRemainingTime = (card) => {
 
   return hoursLeft + ":" + minutesLeft;
 };
+
+export const hasTimeElapsed = (card) => {
+  const timeLeftInMs = card + 24 * 60 * 60 * 1000 - Date.now();
+
+  return timeLeftInMs <= 0;
+};
