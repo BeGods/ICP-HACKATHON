@@ -12,16 +12,18 @@ const QuestCard = ({
   curr,
   handleClick,
   showClaimEffect,
+  isGuideActive,
 }) => {
   return (
     <div className="relative mt-[30px] w-[70%] mx-auto">
       <div
-        className={`relative card-shadow-black ${
+        onClick={handleClick}
+        className={`relative card-shadow-black  ${isGuideActive && "z-[60]"}  ${
           showClaimEffect && "scale-reward"
         } ${
           quest.isQuestClaimed &&
           `border border-${mythSections[activeMyth]}-primary`
-        } rounded-[15px]  z-10`}
+        } rounded-[15px]`}
       >
         <img
           src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}.jpg`}
@@ -29,7 +31,6 @@ const QuestCard = ({
           className={`w-full h-[75%] ${
             !quest.isQuestClaimed && "grayscale"
           } rounded-[15px]`}
-          onClick={handleClick}
         />
         <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
           <div className="flex w-full">
@@ -38,7 +39,7 @@ const QuestCard = ({
                 <MappedOrbs quest={quest} />
               </div>
             </div>
-            {InfoIcon}
+            {!isGuideActive && InfoIcon}
           </div>
           <div
             className={`flex relative items-center h-[19%] uppercase glow-text-quest text-white`}

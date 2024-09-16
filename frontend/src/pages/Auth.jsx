@@ -3,6 +3,7 @@ import { authenticate } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import ReactHowler from "react-howler";
 import Captcha from "../components/Common/Captcha";
+import i18next from "i18next";
 
 const tele = window.Telegram?.WebApp;
 
@@ -23,15 +24,22 @@ const Auth = (props) => {
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
         tele.setHeaderColor("#000000");
+        tele.setBackgroundColor("#000000");
+        tele.setBottomBarColor("#000000");
 
         if (user) {
           const userData = {
             initData: tele?.initData,
           };
-          const referCode = tele.initDataUnsafe?.start_param;
+          const param = tele.initDataUnsafe?.start_param;
 
           setUserData(userData);
-          setReferralCode(referCode);
+
+          if (param.includes("FDG")) {
+            setReferralCode(param);
+          } else {
+            i18next.changeLanguage(param);
+          }
         } else {
           console.warn("No user found in Telegram data");
         }
@@ -48,13 +56,6 @@ const Auth = (props) => {
     try {
       const response = await authenticate(userData, referralCode);
       localStorage.setItem("accessToken", response.data.token);
-      // navigate("/bonus");
-      // const status = await fetchBonusStatus(response.data.token);
-      // if (status.isEligibleToClaim) {
-      //   navigate("/bonus");
-      // } else {
-      //   navigate("/home");
-      // }
       navigate("/home");
     } catch (error) {
       console.error("Authentication Error: ", error);
@@ -63,6 +64,10 @@ const Auth = (props) => {
 
   useEffect(() => {
     getUserData();
+
+    if (!localStorage.getItem("guide")) {
+      localStorage.setItem("guide", "[]");
+    }
 
     // Add event listener for user interaction
     const handleUserInteraction = () => {
@@ -101,7 +106,7 @@ const Auth = (props) => {
   }, [platform]);
 
   return (
-    <div className="bg-white flex h-screen w-screen text-wrap">
+    <div className="bg-white text-black flex h-screen w-screen text-wrap">
       {disableDesktop ? (
         // TMA desktop view
         <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
@@ -202,9 +207,10 @@ const Auth = (props) => {
           <Captcha auth={auth} />
         </div>
       )}
+
       <ReactHowler
         src="/assets/audio/fof.music.intro.mp3"
-        playing={true}
+        playing={!disableDesktop && !JSON.parse(localStorage.getItem("sound"))}
         preload={true}
         loop
       />

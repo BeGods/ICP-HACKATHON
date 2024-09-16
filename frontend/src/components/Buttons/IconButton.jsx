@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { mythSections } from "../../utils/variables";
 import { X } from "lucide-react";
 
 // mr-[55px] mt-7 - convert info
@@ -11,6 +10,7 @@ const alignBasedOnCard = [
   "-mt-[28px] ml-[52px]",
   "-mt-8 ml-7",
   "mr-[60px] mt-6",
+  "-mt-[5px] ml-[90px]",
 ];
 const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);

@@ -1,8 +1,12 @@
 import React from "react";
-import Gacha from "./Gacha";
+import JoinBonus from "./JoinBonus";
 
-const Test = () => {
-  return <Gacha />;
+const Test = (props) => {
+  return (
+    <div>
+      <JoinBonus />
+    </div>
+  );
 };
 
 export default Test;

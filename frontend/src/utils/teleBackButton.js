@@ -2,7 +2,9 @@ export const toggleBackButton = async (tele, handleNavigate) => {
   try {
     if (tele) {
       await tele.ready();
-
+      tele.setHeaderColor("#000000");
+      tele.setBackgroundColor("#000000");
+      tele.setBottomBarColor("#000000");
       tele.BackButton.show();
       tele.BackButton.onClick(handleNavigate);
     } else {
@@ -17,7 +19,9 @@ export const hideBackButton = async (tele) => {
   try {
     if (tele) {
       await tele.ready();
-
+      tele.setHeaderColor("#000000");
+      tele.setBackgroundColor("#000000");
+      tele.setBottomBarColor("#000000");
       tele.BackButton.hide();
     } else {
       console.error("Telegram WebApp API not available");

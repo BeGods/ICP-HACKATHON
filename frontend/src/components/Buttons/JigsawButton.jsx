@@ -25,13 +25,13 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t, faith }) => {
       onTouchCancel={() => {
         setIsClicked(false);
       }}
-      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto mt-[38px] ${
+      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto mt-[39px] ${
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       } border ${
         faith != 12
           ? "border-borderGray"
           : `border-${mythSections[activeMyth]}-primary`
-      } bg-glass-black text-white  rounded-primary  absolute top-0 left-0 right-0`}
+      } bg-glass-black  rounded-primary  absolute top-0 left-0 right-0`}
       style={{ top: "100%", transform: "translateY(-50%)" }}
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
@@ -43,8 +43,8 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t, faith }) => {
       </div>
       <div
         className={`text-button-primary uppercase px-2 ${
-          faith != 12 && "text-textGray"
-        }`}
+          faith < 12 ? "text-textGray" : "text-white"
+        } `}
       >
         {t("buttons.redeem")}
       </div>

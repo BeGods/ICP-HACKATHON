@@ -33,7 +33,11 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
     filter: drop-shadow(0 0 40px var(--#{$myth}-color));
   }
   .glow-myth-#{$myth} {
-    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+    text-shadow: 0 0 10px var(--#{$myth}-color), 0 0 10px var(--#{$myth}-color),
+      0 0 10px var(--#{$myth}-color);
+  }
+  .glow-box-#{$myth} {
+    box-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
       0 0 5px var(--#{$myth}-color);
   }
   .glow-myth-lg-#{$myth} {

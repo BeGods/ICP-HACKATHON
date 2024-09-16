@@ -70,7 +70,7 @@ const HeaderContent = ({ gameData, myth, t }) => {
         </h1>
         <div className="flex mb-4 items-center text-black-contour w-fit h-fit">
           <div className="text-num text-black-contour  text-white">
-            {gameData.blackOrbs}
+            {gameData.multiColorOrbs}
           </div>
           <div className="flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black">
             <img
@@ -89,7 +89,8 @@ const Convert = () => {
   const { t } = useTranslation();
   const [showInfo, setShowInfo] = useState(false);
   const [toggleClick, setToggleClick] = useState(false);
-  const { setActiveMyth, setGameData, gameData } = useContext(MyContext);
+  const { setActiveMyth, setGameData, gameData, activeMyth } =
+    useContext(MyContext);
   const [myth, setMyth] = useState(0);
   const mythData = gameData.mythologies.filter(
     (item) => item.name.toLowerCase() === wheel[myth]
@@ -264,7 +265,7 @@ const Convert = () => {
       />
       <ReactHowler
         src="/assets/audio/fof.tower.background01.wav"
-        playing={!JSON.parse(localStorage.getItem("sound"))}
+        playing={!JSON.parse(localStorage.getItem("sound")) && activeMyth >= 4}
         preload={true}
         loop
       />

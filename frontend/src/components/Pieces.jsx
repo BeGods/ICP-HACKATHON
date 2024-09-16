@@ -50,7 +50,7 @@ const JigsawImage = ({ imageUrl, activeParts }) => {
       style={{
         position: "relative",
         width: "71vw",
-        height: "54vh",
+        height: "53.5vh",
         overflow: "hidden",
         borderRadius: "16px",
         backgroundSize: "cover",

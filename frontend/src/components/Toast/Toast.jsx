@@ -293,7 +293,44 @@ export const showToast = (type) => {
         }
       );
       break;
-
+    case "claim_burst_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.Booster_AutomataClaim.success.title")}
+          desc={t("toasts.Booster_AutomataClaim.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "claim_burst_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Booster_InsufficientOrbs.error.title")}
+          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     case "copy_link":
       toast.success(
         <ToastMesg
@@ -351,7 +388,6 @@ export const showToast = (type) => {
         }
       );
       break;
-
     default:
       toast.info(
         <ToastMesg

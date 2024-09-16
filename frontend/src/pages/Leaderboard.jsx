@@ -90,7 +90,7 @@ const Leaderboard = (props) => {
         </div>
       </div>
       {/* FOOTER */}
-      <div className="flex items-center justify-between h-[80px] w-[95%] mx-auto mb-1 text-tertiary  border border-borderDark bg-glass-black text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
+      <div className="flex items-center justify-between h-[80px] w-[95%] mx-auto mb-1 text-tertiary  border border-borderDark bg-black text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
         <div className="flex justify-center items-center w-2/5 h-full">
           {userData.overallRank}
         </div>
@@ -106,7 +106,7 @@ const Leaderboard = (props) => {
           <h1>{userData.telegramUsername}</h1>
         </div>
         <div className="flex flex-col justify-center items-center text-tertiary w-2/5 h-full">
-          <h1>{userData.totalOrbs}</h1>
+          <h1>{parseFloat(userData.totalOrbs.toFixed(3))}</h1>
         </div>
       </div>
     </div>
