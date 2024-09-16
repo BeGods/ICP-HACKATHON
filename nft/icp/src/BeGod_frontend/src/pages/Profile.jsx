@@ -7,6 +7,7 @@ import YellowButton from '../components/button/YellowButton';
 import { useAuth } from '../utils/useAuthClient';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 const mycollection = [
   { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
   { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
@@ -58,22 +59,33 @@ const Profile = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
   };
-  const { reloadLogin, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+//   const { reloadLogin, isAuthenticated } = useAuth();
+   const navigate = useNavigate(); 
+   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+   
+  console.log("is authenticated in profile section" , isAuthenticated);
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/')
+     }
+  },[isAuthenticated]);
 
-  useEffect(() => {
-    // Reload login and set login status when the component mounts
-    const checkLoginStatus = async () => {
-        await reloadLogin(); // Ensure that login status is refreshed
-         // Update state based on authentication
-    };
+//   useEffect(() => {
+//     // Reload login and set login status when the component mounts
+//     const checkLoginStatus = async () => {
+//         await reloadLogin(); // Ensure that login status is refreshed
+//          // Update state based on authentication
+//          console.log("reload check")
+//     };
 
-    checkLoginStatus();
+//     checkLoginStatus();
+//     console.log("is Authenticated in Profile Section outside condition" , isAuthenticated);
 
-    if(!isAuthenticated) {
-        navigate('/')
-    }
-}, [isAuthenticated, reloadLogin]); 
+//     if(!isAuthenticated) {
+//       console.log("is Authenticated in Profile Section in side condition" , isAuthenticated);
+//         navigate('/')
+//     }
+// }, [isAuthenticated, reloadLogin]); 
  
 
   useEffect(() => {
@@ -81,15 +93,17 @@ const Profile = () => {
 
   },[category])
 
+const {t} = useTranslation(['profile']);
+
 
  
   return (
-    <div className='' style={{ fontFamily: "QuickSand" }}>
+    <div className='font-caslon'>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
-        <div style={{ fontFamily: "QuickSand" }} className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
+        <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]' style={{ fontFamily: "QuickSand" }}>My Profile</h1>
+            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
             <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
               <div>
                 <img src="/image/Frame.png" alt="" />
@@ -108,13 +122,19 @@ const Profile = () => {
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
                 onClick={() => setCategory("mycollection")}
               >
-                My Collection
+                {t('myCollection')}
               </div>
               <div
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
                 onClick={() => setCategory("favorite")}
               >
-                Favorite
+                {t('favorite')}
+              </div>
+              <div
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                onClick={() => setCategory("myAchievments")}
+              >
+                My Achievements
               </div>
             </div>
 
@@ -148,7 +168,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <div style={{ fontFamily: "CaslonAntique", backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
+      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
         <Footer />
       </div>
     </div>

@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import NFTGallery from '../components/Landing Page Components/NftGallery';
 import HeroSlider from '../components/Landing Page Components/HeroSlider';
 import Collections from '../components/Landing Page Components/CollectionType';
+import { useTranslation } from 'react-i18next';
 const collections = [
     { name: "Celtic", shadowColor: "#07632E" },
     { name: "Norse", shadowColor: "#00bfff" },
@@ -60,16 +61,11 @@ const Hero = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentCollection, setCurrentCollection] = useState(collectionsData[collections[currentIndex].name] || []);
 
-    const nextHandler = () => {
-        if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1);
-        }
-    }
+  
 
-    const prevHandler = () => {
-        if (currentIndex < 3) {
-            setCurrentIndex(currentIndex + 1);
-        }
+    const handleCurrentIndex  = (index) => {
+        console.log("card Index" , index);
+        setCurrentIndex(index);
     }
 
 
@@ -80,6 +76,12 @@ const Hero = () => {
         setCurrentCollection(collectionsData[collections[currentIndex].name] || []);
     }, [currentIndex])
 
+
+    const {t} =  useTranslation(['homepage']);
+    const {mainHeading,description,button} = t("landingPage");
+    const {celtic , norse , greek , egyption} = t("collection");
+    console.log("mainheading ",mainHeading , "description : " , description , "button text" , button)
+
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
         <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon'>
@@ -89,14 +91,14 @@ const Hero = () => {
                     <Navbar mobileView={mobileViewHandler}/>
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
-                    <h1 className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
-                        BATTLE OF GODS
+                    <h1 className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
+                        {mainHeading}
                     </h1>
                     <h2 className='text-[16px] md:text-[24px] leading-tight font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] text-center'>
-                        Unleash the Divine: Collect and Own NFT Cards of the Gods!
+                      {description}
                     </h2>
                     <div className='p-2 border-[1px] border-[#FCD37B]'>
-                        <YellowButton>Explore Collection</YellowButton>
+                        <YellowButton>{button}</YellowButton>
                     </div>
                 </div>
             </div>
@@ -106,14 +108,14 @@ const Hero = () => {
                     <div className='w-[40%]'>
                         <img src="/Hero/frame.svg" alt="" />
                     </div>
-                    <h1 className='text-[70px] sm:text-[96px] font-[500] leading-[115px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border'>Collection</h1>
+                    <h1 className='text-[70px] sm:text-[96px] font-[500] leading-[115px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border'>{t('collectionText')}</h1>
                     <div className='w-[40%]'>
                         <img src="/Hero/frame.svg" alt="" />
                     </div>
                 </div>
                 {/* Collection details and its nfts part */}
                 <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
-                    <Collections collections={collections} next={nextHandler} prev={prevHandler} currentCollection={setCurrentCollection} collectionsData={collectionsData} />
+                    <Collections collections={collections}  currentCollection={setCurrentCollection} collectionsData={collectionsData} handleCurrentIndex = {handleCurrentIndex} />
                     <div className='w-[100%] h-[100%] mt-12 sm:mt-20'>
                         <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
                             <div className='w-[70%]'>

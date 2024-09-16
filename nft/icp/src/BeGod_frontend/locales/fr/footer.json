@@ -1,0 +1,12 @@
+{
+    "footerDescription": "Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.",
+    "home": "Accueil",
+    "collection": "Ma Collection",
+    "categoriesText": "Catégories",
+    "categories": {
+        "horseCollection": "Cheval",
+        "greeceCollection": "Grèce",
+        "celticCollection": "Celtique",
+        "egyptanCollection": "Égyptien"
+    }
+}

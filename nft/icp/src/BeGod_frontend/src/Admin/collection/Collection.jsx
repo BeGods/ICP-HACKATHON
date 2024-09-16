@@ -21,7 +21,7 @@ function Collection() {
       <div className="grid w-full gap-6 pt-10 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
         {collection.collections.map((nft, index) => (
           <Link
-            to={`/Admin/collection/collectionDetails/${nft.CollectionDetails?.collectionId}`}
+            to={`/Admin/collection/collectionDetails/${nft.CollectionDetails?.collectionId}`} key={index}
           >
             <div
               key={index}

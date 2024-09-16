@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Assuming you're using react-router-dom for navigation
 import YellowButton from '../button/YellowButton';
+import { useTranslation } from 'react-i18next';
 const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
@@ -24,6 +25,8 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
       setCurrentPage(currentPage - 1);
     }
   };
+
+  const {t} = useTranslation(['button'])
 
   // Apply animation when the component mounts or the page changes
   useEffect(() => {
@@ -78,7 +81,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                     <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                     <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
                     <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
-                      Buy Now
+                      {t('buyNow')}
                     </Link>
                   </div>
                 </div>
@@ -117,7 +120,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                   <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                   <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
                   <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[35px] sm:w-[40%] sm:h-[32px]  lg:text-xs xl:text-sm bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
-                    Buy Now
+                     {t('buyNow')}
                   </Link>
                 </div>
               </div>
