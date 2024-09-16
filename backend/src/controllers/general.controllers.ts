@@ -11,6 +11,7 @@ import Stats from "../models/Stats.models";
 import { Team } from "../models/referral.models";
 import mongoose from "mongoose";
 import milestones from "../models/milestones.models";
+import userMythologies from "../models/mythologies.models";
 
 export const ping = async (req, res) => {
   try {
@@ -236,49 +237,24 @@ export const claimDailyBonus = async (req, res) => {
   }
 };
 
-// export const checkBonus = async (req, res) => {
-//   try {
-//     const user = req.user;
-//     const dailyBonusClaimed = user.dailyBonusClaimedAt;
-//     const nowUtc = new Date();
+export const claimJoiningBonus = async (req, res) => {
+  try {
+    const userId = req.user._id;
 
-//     const startOfTodayUtc = new Date(
-//       Date.UTC(
-//         nowUtc.getUTCFullYear(),
-//         nowUtc.getUTCMonth(),
-//         nowUtc.getUTCDate(),
-//         0,
-//         0,
-//         0
-//       )
-//     );
+    await User.findOneAndUpdate({ _id: userId }, { joiningBonus: true });
+    await userMythologies.findOneAndUpdate(
+      { userId: userId },
+      { $inc: { multiColorOrbs: 3 } }
+    );
 
-//     const endOfTodayUtc = new Date(
-//       Date.UTC(
-//         nowUtc.getUTCFullYear(),
-//         nowUtc.getUTCMonth(),
-//         nowUtc.getUTCDate(),
-//         23,
-//         59,
-//         59
-//       )
-//     );
-//     const validClaim =
-//       dailyBonusClaimed >= startOfTodayUtc &&
-//       dailyBonusClaimed <= endOfTodayUtc;
-
-//     if (validClaim) {
-//       res.status(201).json({ isEligibleToClaim: false });
-//     } else {
-//       res.status(200).json({ isEligibleToClaim: true });
-//     }
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Internal server error.",
-//       error: error.message,
-//     });
-//   }
-// };
+    res.status(200).json({ message: "Joining bonus claimed successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
 
 export const test = async (req, res) => {
   try {

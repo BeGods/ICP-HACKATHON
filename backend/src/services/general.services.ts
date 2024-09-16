@@ -31,12 +31,8 @@ export const getLeaderboardSnapshot = async () => {
       {
         $addFields: {
           // Convert totalMythologyOrbs to black orbs (1000 orbs = 1 black orb)
-          totalMythologyOrbsInBlackOrbs: {
-            $divide: ["$totalMythologyOrbs", 1000],
-          },
-          // Round the converted mythology orbs to 3 decimal places
           roundedMythologyOrbs: {
-            $round: ["$totalMythologyOrbsInBlackOrbs", 3],
+            $round: [{ $divide: ["$totalMythologyOrbs", 1000] }, 3],
           },
         },
       },
@@ -44,7 +40,7 @@ export const getLeaderboardSnapshot = async () => {
         $addFields: {
           // Calculate totalOrbs by adding rounded mythology orbs to black orbs
           totalOrbs: {
-            $add: ["$totalMythologyOrbsInBlackOrbs", "$blackOrbs"],
+            $add: ["$roundedMythologyOrbs", "$blackOrbs"],
           },
         },
       },
@@ -352,7 +348,6 @@ export const claimBonusQuest = async (userId) => {
     ];
 
     const quests = await milestones.aggregate(pipeline).exec();
-    console.log(quests);
 
     const unClaimedActiveQuests = quests[0].quests;
 
