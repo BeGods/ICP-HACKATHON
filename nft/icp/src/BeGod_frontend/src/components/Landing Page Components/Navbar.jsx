@@ -68,6 +68,11 @@ const Navbar = ({ mobileView }) => {
         navigate("/")
         
     }
+   
+    const changeLanguage = (newLang) => {
+        i18n.changeLanguage(newLang);
+    }
+    
 
     const toggleConnectWalletDropdown = () => {
 
