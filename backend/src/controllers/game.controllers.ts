@@ -1,4 +1,4 @@
-import { calculateEnergy } from "../utils/game";
+import { calculateAutomataEarnings, calculateEnergy } from "../utils/game";
 import userMythologies, {
   IMyth,
   IUserMyths,
@@ -7,13 +7,17 @@ import {
   OrbsTransactions,
   ShardsTransactions,
 } from "../models/transactions.models";
-import { validateBooster, validateAutomata } from "../services/game.services";
+import {
+  validateBooster,
+  validateAutomata,
+  disableActiveBurst,
+} from "../services/game.services";
 import { defaultMythologies } from "../utils/defaultMyths";
 import mongoose from "mongoose";
 import { Document } from "mongodb";
 import ranks from "../models/ranks.models";
 import { Team } from "../models/referral.models";
-import Stats, { IStats } from "../models/Stats.models";
+import Stats from "../models/Stats.models";
 import { checkBonus } from "../services/general.services";
 
 export const startTapSession = async (req, res) => {
@@ -74,7 +78,7 @@ export const startTapSession = async (req, res) => {
 export const claimTapSession = async (req, res) => {
   try {
     const userId = req.user;
-    let { taps, mythologyName } = req.body;
+    let { taps, minionTaps, mythologyName } = req.body;
 
     // get mythDta
     const userMythology = (await userMythologies.findOne({
@@ -98,6 +102,8 @@ export const claimTapSession = async (req, res) => {
       return res.status(400).json({ message: "Tap session has not started." });
     }
 
+    let totalTaps = taps - minionTaps;
+
     // calculate energy
     const restoredEnergy = calculateEnergy(
       mythData.tapSessionStartTime,
@@ -107,13 +113,35 @@ export const claimTapSession = async (req, res) => {
     );
 
     // check if numberOfTaps are valid
-    if (restoredEnergy < taps) {
-      taps = restoredEnergy;
+    if (restoredEnergy < totalTaps) {
+      totalTaps = restoredEnergy;
     }
 
     // update energy after tapping, shards, lastTapActivityTime
-    const updatedEnergy = restoredEnergy - taps;
-    const updatedShards = taps * mythData.boosters.shardslvl;
+    const updatedEnergy = restoredEnergy - totalTaps;
+    let updatedShards =
+      taps * mythData.boosters.shardslvl +
+      minionTaps * mythData.boosters.shardslvl * 2;
+
+    // update myth shards
+    mythData.shards += updatedShards;
+
+    // define flags
+    let isStarActive = false;
+    let blackOrbs = 0;
+
+    // update shards
+    if (mythData.shards >= 1000) {
+      mythData.orbs += Math.floor(mythData.shards / 1000);
+      mythData.shards = mythData.shards % 1000;
+    }
+
+    // update orbs
+    if (mythData.orbs >= 1000) {
+      isStarActive = true;
+      blackOrbs += Math.floor(mythData.orbs / 1000);
+      mythData.orbs = mythData.orbs % 1000;
+    }
 
     // maintain transaction
     const newShardTransaction = new ShardsTransactions({
@@ -130,8 +158,14 @@ export const claimTapSession = async (req, res) => {
         $set: {
           "mythologies.$.lastTapAcitivityTime": Date.now(),
           "mythologies.$.energy": updatedEnergy,
+          "mythologies.$.shards": mythData.shards,
+          "mythologies.$.orbs": mythData.orbs,
+          "mythologies.$.isStarActive": isStarActive,
+          "mythologies.$.burstActiveAt": isStarActive ? Date.now() : 0,
         },
-        $inc: { "mythologies.$.shards": updatedShards },
+        $inc: {
+          blackOrbs: blackOrbs,
+        },
       },
       { new: true }
     );
@@ -326,6 +360,11 @@ export const getGameStats = async (req, res) => {
         if (mythology.boosters.isAutomataActive) {
           mythology = validateAutomata(mythology);
         }
+
+        // validate burst timeout
+        if (mythology.isStarActive && mythology.burstActiveAt != 0) {
+          mythology = disableActiveBurst(mythology);
+        }
         mythology.energy = restoredEnergy;
         mythology.lastTapAcitivityTime = Date.now();
 
@@ -337,6 +376,8 @@ export const getGameStats = async (req, res) => {
         if (mythology.orbs >= 1000) {
           blackOrbs += Math.floor(mythology.orbs / 1000);
           mythology.orbs = mythology.orbs % 1000;
+          mythology.isStarActive = true;
+          mythology.burstActiveAt = Date.now();
         }
 
         return mythology;
@@ -391,6 +432,7 @@ export const getGameStats = async (req, res) => {
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
       isEligibleToClaim: true,
+      joiningBonus: user.joiningBonus,
       ...memberData,
     };
 
@@ -442,7 +484,7 @@ export const claimShardsBooster = async (req, res) => {
         { $inc: { multiColorOrbs: -1 }, $set: { "mythologies.$": userMyth } },
         { new: true }
       )
-      .lean()) as Document;
+      .select("-__v -createdAt -updatedAt")) as Document;
 
     const updatedBoosterData = updatedMythData.mythologies.filter(
       (item) => item.name === userMyth.name
@@ -492,14 +534,7 @@ export const claimAutomata = async (req, res) => {
         { $inc: { multiColorOrbs: -1 }, $set: { "mythologies.$": userMyth } },
         { new: true }
       )
-      .lean()) as Document;
-
-    // const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
-    // cleanedData.mythologies = cleanedData.mythologies.map(
-    //   ({ _id, ...rest }) => rest
-    // );
-
-    // delete cleanedData.userId;
+      .select("-__v -createdAt -updatedAt _id")) as Document;
 
     const updatedBoosterData = updatedMythData.mythologies.filter(
       (item) => item.name === userMyth.name
@@ -525,6 +560,43 @@ export const claimAutomata = async (req, res) => {
   }
 };
 
+export const claimBurst = async (req, res) => {
+  try {
+    const userId = req.user;
+    const userMyth = req.userMyth;
+
+    userMyth.isStarActive = true;
+    userMyth.burstActiveAt = Date.now();
+
+    (await userMythologies
+      .findOneAndUpdate(
+        { userId, "mythologies.name": userMyth.name },
+        { $inc: { multiColorOrbs: -9 }, $set: { "mythologies.$": userMyth } },
+        { new: true }
+      )
+      .select("-__v -createdAt -updatedAt _id")) as Document;
+
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "burst",
+      orbs: { [userMyth.name]: 9 },
+    });
+
+    await newOrbsTransaction.save();
+
+    res.status(200).json({
+      message: "Burst claimed successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
 export const convertOrbs = async (req, res) => {
   try {
     const userId = req.user;
@@ -532,6 +604,7 @@ export const convertOrbs = async (req, res) => {
 
     userMyth.orbs -= 2;
 
+    //! TODO: recheck if it is working or not
     await userMythologies.updateOne(
       { userId, "mythologies.name": userMyth.name },
       { $set: { "mythologies.$": userMyth }, $inc: { multiColorOrbs: 1 } }
@@ -546,6 +619,103 @@ export const convertOrbs = async (req, res) => {
     await newOrbsTransaction.save();
 
     res.status(200).json({ message: "Orbs converted successfully!" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimStarBonus = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const userMyth = req.userMyth;
+    const { session } = req.body;
+
+    const holdTimeInSession =
+      Math.round(session / 10) > 9 ? 9 : Math.round(session / 10);
+
+    const updatedShards = holdTimeInSession * 99;
+
+    await userMythologies.findOneAndUpdate(
+      { userId: userId, "mythologies.name": userMyth.name },
+      {
+        $set: {
+          "mythologies.$.isStarActive": false,
+          "mythologies.$.isEligibleForBurst": true,
+        },
+        $inc: { "mythologies.$.shards": updatedShards },
+      }
+    );
+
+    res.status(200).json({ message: "Star bonus claimed" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const updateGameData = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { mythologyName } = req.query;
+
+    const userMythologiesData = (await userMythologies.findOne({
+      userId,
+    })) as IUserMyths;
+
+    let blackOrbs = 0;
+    const updatedMythology = userMythologiesData.mythologies.map(
+      (mythology) => {
+        if (mythology.name === mythologyName) {
+          const restoredEnergy = calculateEnergy(
+            Date.now(),
+            mythology.lastTapAcitivityTime,
+            mythology.energy,
+            mythology.energyLimit
+          );
+
+          // Validate boosters
+          mythology.boosters = validateBooster(mythology.boosters);
+          if (mythology.boosters.isAutomataActive) {
+            mythology = validateAutomata(mythology);
+          }
+          mythology.energy = restoredEnergy;
+          mythology.lastTapAcitivityTime = Date.now();
+
+          if (mythology.shards >= 1000) {
+            mythology.orbs += Math.floor(mythology.shards / 1000);
+            mythology.shards = mythology.shards % 1000;
+          }
+
+          if (mythology.orbs >= 1000) {
+            blackOrbs += Math.floor(mythology.orbs / 1000);
+            mythology.orbs = mythology.orbs % 1000;
+            mythology.isStarActive = true;
+            mythology.burstActiveAt = Date.now();
+          }
+        }
+
+        return mythology;
+      }
+    );
+
+    let requestedMyth = updatedMythology.find(
+      (item) => item.name === mythologyName
+    ) as IMyth;
+
+    await userMythologies.findOneAndUpdate(
+      { userId: userId, "mythologies.name": mythologyName },
+      {
+        $set: { "mythologies.$": requestedMyth },
+        $inc: { blackOrbs: blackOrbs },
+      }
+    );
+
+    res.status(200).json({ message: "Mythology Updated Successfully" });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",

@@ -8,6 +8,7 @@ export interface IUser extends Document {
   directReferralCount: number;
   tonAddress: string;
   premiumReferralCount: number;
+  joiningBonus: boolean;
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
   referralCode: string;
@@ -24,6 +25,7 @@ const userSchema = new Schema<IUser>(
     telegramId: { type: String, unique: true, sparse: true },
     telegramUsername: { type: String, unique: true, sparse: true },
     isPremium: { type: Boolean },
+    joiningBonus: { type: Boolean, default: false },
     role: {
       type: String,
       enum: ["user", "admin", "partner"],

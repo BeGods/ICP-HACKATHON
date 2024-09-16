@@ -66,8 +66,6 @@ export const verifyQuestClaim = async (req, res, next) => {
 
     const validQuest = await questAggregator(userId, questId);
 
-    console.log(validQuest);
-
     // Check if the questId exists
     if (!validQuest) {
       return res.status(404).json({ message: "Please complete the quest" });
@@ -91,7 +89,14 @@ export const verifyQuestClaim = async (req, res, next) => {
       throw new Error("Insufficient orbs to claim this quest.");
     }
 
+    const currMyth = userOrbsData.mythologies.filter(
+      (item) => item.name === validQuest.mythology
+    );
+
+    console.log("Data", currMyth);
+
     req.quest = validQuest;
+    req.mythData = currMyth;
     next();
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -150,8 +155,6 @@ export const verifyCompletedQuest = async (req, res, next) => {
     const { questId } = req.body;
 
     const validCompletedQuest = await questAggregator(userId, questId);
-
-    console.log(validCompletedQuest);
 
     // Check if task is not completed
     if (!validCompletedQuest.isClaimed) {

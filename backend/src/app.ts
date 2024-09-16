@@ -20,7 +20,8 @@ app.use(
   cors({
     // origin: "*",
     origin: "https://fof.battleofgods.io",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    methods:
+      "GET,HEAD,PUT,PATCH,POST,DELETE                                                                                                                                  ",
   })
 );
 app.use(helmet());
