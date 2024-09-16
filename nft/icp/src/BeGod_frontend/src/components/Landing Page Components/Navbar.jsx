@@ -189,7 +189,7 @@ const Navbar = ({ mobileView }) => {
             {isOpen && (
                 <div className='absolute pt-24 top-0 left-0 bottom-0 w-full h-screen bg-black bg-opacity-70 backdrop-blur-lg text-white flex flex-col items-center gap-8 py-8 z-10 md:hidden'>
                     <Link to="/" className='text-[24px] font-[400] leading-[30px]'>
-                        {t('')}
+                        {t('collection')}
                     </Link>
                     <div className='text-[24px] font-[400] leading-[30px]'>
                         {t('nav2')}
@@ -202,8 +202,8 @@ const Navbar = ({ mobileView }) => {
                             Profile
                         </Link>
                      
-                    <div  className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md' onClick={onClickDisconnect}>
-                            Disconnect
+                    <div  className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md' onClick={onClickLogout}>
+                            Logout
                         </div>
                         </>
                         
