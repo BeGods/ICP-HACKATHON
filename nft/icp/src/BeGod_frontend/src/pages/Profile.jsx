@@ -132,7 +132,6 @@ const {t} = useTranslation(['profile']);
               </div>
               <div
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
-                onClick={() => setCategory("myAchievments")}
               >
                 My Achievements
               </div>
