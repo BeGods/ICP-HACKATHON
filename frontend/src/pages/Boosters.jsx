@@ -64,6 +64,7 @@ const Boosters = () => {
     activeMyth,
     setActiveMyth,
     setShowBooster,
+    setShowGlow,
   } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
@@ -76,13 +77,11 @@ const Boosters = () => {
       setTimeout(() => {
         setEnableGuide(false);
         setActiveCard("automata");
+        guide.push(2);
+        localStorage.setItem("guide", JSON.stringify(guide));
         setTimeout(() => {
           handleClaimAutomata();
         }, 3000);
-        guide.push(2);
-        if (!localStorage.getItem("guide")) {
-          localStorage.setItem("guide", JSON.stringify(guide));
-        }
       }, 5000);
     }
   }, []);
@@ -245,7 +244,7 @@ const Boosters = () => {
 
       setActiveCard(null);
       showToast("claim_minion_success");
-      setShowBooster("minion");
+      setShowGlow("minion");
       setSection(0);
     } catch (error) {
       setActiveCard(null);
@@ -286,7 +285,7 @@ const Boosters = () => {
       });
       setActiveCard(null);
       showToast("claim_automata_success");
-      setShowBooster("automata");
+      setShowGlow("automata");
       setSection(0);
     } catch (error) {
       setActiveCard(null);
@@ -337,17 +336,6 @@ const Boosters = () => {
       showToast("claim_burst_error");
     }
   };
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setActiveCard("automata");
-  //     setTimeout(() => {
-  //       setActiveCard(null);
-  //       claimAutomataBooster();
-  //       setShowTutorial(false);
-  //     }, 2000);
-  //   }, 2000);
-  // }, []);
 
   useEffect(() => {}, [gameData, showInfo, showClaim, showPay]);
 
