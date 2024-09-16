@@ -4,6 +4,7 @@ import {
   ping,
   updateAnnouncement,
   claimJoiningBonus,
+  updateRanks,
 } from "../controllers/general.controllers";
 import express from "express";
 const router = express.Router();
@@ -25,7 +26,7 @@ router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 
 //TODO: make it on every 00:00:00 UTC
 // schedule cron job for leaderboard
-// cron.schedule("*/2 * * * *", updateRanks);
+cron.schedule("*/5 * * * *", updateRanks);
 
 // deactivate quest
 // cron.schedule("0 * * * *", deactivateQuest);
