@@ -3,7 +3,7 @@ import React from "react";
 const Symbol = ({ myth, isCard }) => {
   return (
     <div
-      className={`relative flex justify-center items-center ${
+      className={`relative  select-none pointer-events-none  flex justify-center items-center ${
         isCard
           ? "h-symbol-secondary w-symbol-secondary"
           : "h-symbol-primary w-symbol-primary"

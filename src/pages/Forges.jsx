@@ -24,10 +24,10 @@ import BoosterClaim from "../components/Cards/Boosters/BoosterClaim";
 import BoosterButtom from "../components/Buttons/BoosterButtom";
 import { showToast } from "../components/Toast/Toast";
 import Footer from "../components/Common/Footer";
-import { hideBackButton } from "../utils/teleBackButton";
 import { Star } from "lucide-react";
 import { ForgesGuide } from "../components/Common/Tutorial";
 import MilestoneCard from "../components/Cards/MilestoneCard";
+import { hideBackButton } from "../utils/teleBackButton";
 
 const tele = window.Telegram?.WebApp;
 
@@ -86,13 +86,13 @@ const HeaderContent = ({
           } `}
         >
           <div
-            className={`absolute z-10 h-full w-full overflow-hidden rounded-full  outline outline-${mythSections[activeMyth]}-primary`}
+            className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full  outline outline-${mythSections[activeMyth]}-primary`}
           >
             <div
               style={{
                 height: `${height}%`,
               }}
-              className={`absolute bottom-0 opacity-20 w-full transition-all duration-500 bg-${mythSections[activeMyth]}-text z-10`}
+              className={`absolute bottom-0  opacity-20 w-full transition-all duration-500 bg-${mythSections[activeMyth]}-text z-10`}
             ></div>
           </div>
           <img
@@ -148,6 +148,8 @@ const Forges = () => {
     setGameData,
     showBooster,
     setShowBooster,
+    showGlow,
+    setShowGlow,
   } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -204,10 +206,11 @@ const Forges = () => {
   const mythStatesRef = useRef(mythStates);
   const countRef = useRef(count);
   const disableStarTimeout = useRef(null);
+  const intervalRef = useRef(null); // Use ref to store intervalId
 
   useEffect(() => {
     let guide = JSON.parse(localStorage.getItem("guide"));
-    console.log(guide);
+
     if (!guide.includes(0)) {
       setEnableGuide(true);
       setTimeout(() => {
@@ -832,6 +835,32 @@ const Forges = () => {
     hideBackButton(tele);
   }, []);
 
+  // Star hold effect
+  // // handle increment energy every second
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setMythStates((prevStates) => {
+  //       return prevStates.map((state) => {
+  //         if (state.energy < state.energyLimit) {
+  //           return {
+  //             ...state,
+  //             energy: state.energy + 1,
+  //           };
+  //         } else {
+  //           return state;
+  //         }
+  //       });
+  //     });
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  // // disable backbutton
+  // useEffect(() => {
+  //   hideBackButton(tele);
+  // }, []);
+
   // star hold
   useEffect(() => {
     let intervalId;
@@ -878,7 +907,7 @@ const Forges = () => {
                 ...item,
 
                 shards: newShards,
-                orbs: newOrbs,
+                orbs: item.orbs + newOrbs,
               };
             }
             return item;
@@ -887,12 +916,10 @@ const Forges = () => {
       }, 100);
     } else {
       clearInterval(intervalId);
-      window.navigator.vibrate(0);
     }
 
     return () => {
       clearInterval(intervalId);
-      window.navigator.vibrate(0);
     };
   }, [isStarHolding]);
 
@@ -914,6 +941,22 @@ const Forges = () => {
   useEffect(() => {
     if (showBooster) {
       setShowCard(showBooster);
+    }
+
+    if (showGlow) {
+      setTimeout(() => {
+        setGlowBooster(() => {
+          if (showGlow === "automata") {
+            return 2;
+          } else {
+            return 1;
+          }
+        });
+        setTimeout(() => {
+          setGlowBooster(0);
+          setShowGlow(null);
+        }, 2000);
+      }, 1000);
     }
   }, []);
 
@@ -1104,7 +1147,7 @@ const Forges = () => {
               >
                 <div className="relative">
                   <img
-                    src="/assets/uxui/188px-minion.png"
+                    src="/assets/uxui/120px-minion.png"
                     alt="dwarf"
                     className="w-full h-full select-none pointer-events-none "
                   />
@@ -1131,7 +1174,7 @@ const Forges = () => {
               >
                 <div className="relative">
                   <img
-                    src="/assets/uxui/188px-automata.png"
+                    src="/assets/uxui/120px-automata.png"
                     alt="dwarf"
                     className="w-full h-full select-none pointer-events-none "
                   />
@@ -1176,7 +1219,7 @@ const Forges = () => {
             >
               <div className="relative">
                 <img
-                  src="/assets/uxui/188px-minion.png"
+                  src="/assets/uxui/120px-minion.png"
                   alt="dwarf"
                   className="w-full h-full select-none pointer-events-none "
                 />
@@ -1193,7 +1236,7 @@ const Forges = () => {
               Button={
                 showBooster ? (
                   <Button
-                    message={t("buttons.claim")}
+                    message={"claim"}
                     handleClick={() => {
                       tele.HapticFeedback.notificationOccurred("success");
                       setGlowBooster(() => {
@@ -1205,7 +1248,7 @@ const Forges = () => {
                       });
                       setTimeout(() => {
                         setGlowBooster(0);
-                      }, 1500);
+                      }, 2000);
                       setShowCard(null);
                       setShowBooster(null);
                     }}
@@ -1231,28 +1274,27 @@ const Forges = () => {
               }}
             />
           )}
-          {(showBooster === "mythOrb" || showBooster === "blackOrb") &&
-            !enableGuide && (
-              <MilestoneCard
-                t={t}
-                isMulti={false}
-                isOrb={true}
-                isBlack={showBooster === "blackOrb"}
-                activeMyth={activeMyth}
-                closeCard={() => {
-                  setShowBooster(null);
-                }}
-                Button={
-                  <Button
-                    message={t("buttons.claim")}
-                    handleClick={() => {
-                      setShowBooster(null);
-                    }}
-                    activeMyth={activeMyth}
-                  />
-                }
-              />
-            )}
+          {(showBooster === "mythOrb" || showBooster === "blackOrb") && (
+            <MilestoneCard
+              t={t}
+              isMulti={false}
+              isOrb={true}
+              isBlack={showBooster === "blackOrb"}
+              activeMyth={activeMyth}
+              closeCard={() => {
+                setShowBooster(null);
+              }}
+              Button={
+                <Button
+                  message={"claim"}
+                  handleClick={() => {
+                    setShowBooster(null);
+                  }}
+                  activeMyth={activeMyth}
+                />
+              }
+            />
+          )}
 
           {/* <Tutorial /> */}
           <ReactHowler

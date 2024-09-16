@@ -17,6 +17,7 @@ import ReactHowler from "react-howler";
 const tele = window.Telegram?.WebApp;
 
 const FlashScreen = ({ reward }) => {
+  const { t } = useTranslation();
   const { setSection, setActiveMyth } = useContext(MyContext);
   const [runConfetti, setRunConfetti] = useState(false);
   const [showScale, setShowScale] = useState(0);
@@ -35,16 +36,16 @@ const FlashScreen = ({ reward }) => {
   const handleClick = (e) => {
     tele.HapticFeedback.notificationOccurred("success");
     if (reward.type === "mythOrb") {
-      setSection(0);
       setActiveMyth(mythologies.indexOf(reward.mythology));
+      setSection(0);
     } else if (reward.type === "quest") {
-      setSection(1);
       setActiveMyth(mythologies.indexOf(reward.quest.mythology));
+      setSection(1);
     } else if (reward.type === "automata" || reward.type === "minion") {
-      setSection(0);
       setActiveMyth(mythologies.indexOf(reward.mythology));
-    } else if (reward.type === "blackOrb") {
       setSection(0);
+    } else if (reward.type === "blackOrb") {
+      setSection(6);
     }
   };
 
@@ -67,7 +68,7 @@ const FlashScreen = ({ reward }) => {
           setShowScale(100);
           setShowHand(true);
           setTimeout(() => {
-            setSection(0);
+            handleClick();
           }, 3000);
         }, 500);
       }, 500);
@@ -125,14 +126,20 @@ const FlashScreen = ({ reward }) => {
           )}
         </div>
         <h1
-          className={`text-black-contour mt-auto pb-8 scale-${showScale} transition-all duration-1000`}
+          className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} transition-all duration-1000`}
         >
           {reward.type === "mythOrb"
-            ? `${mythElementNames[reward.mythology]} Orb`
+            ? `${
+                t(
+                  `elements.${mythElementNames[reward.mythology].toLowerCase()}`
+                ) +
+                " " +
+                t("keywords.orbs")
+              }`
             : reward.type === "blackOrb"
-            ? "BLACK ORB"
+            ? `${t("elements.aether") + " " + t("keywords.orbs")}`
             : reward.type === "quest"
-            ? "COMPLETED QUEST"
+            ? `${t("buttons.completed") + " " + t("sections.quests")}`
             : `1 ${
                 wheelNames[mythologies.indexOf(reward.mythology)] +
                 " " +
@@ -319,7 +326,7 @@ const Gacha = (props) => {
 
       // Clean up the second timeout
       return () => clearTimeout(secondTimeout);
-    }, 1500);
+    }, 2000);
 
     // Clean up the first timeout
     return () => clearTimeout(firstTimeout);
@@ -347,7 +354,7 @@ const Gacha = (props) => {
           className="flex flex-grow justify-center items-center relative w-full h-full"
         >
           <img
-            src="/assets/uxui/240px-pandora.png"
+            src="/assets/uxui/320px-pandora.png"
             alt="pandora"
             className={`w-fit h-fit transition-transform duration-1000 ${
               showScale

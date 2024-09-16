@@ -67,11 +67,11 @@ const GameHeader = ({
                       setToggleValue((prev) => !prev);
                       setShowAutomata((prev) => !prev);
                     }}
-                    className={`font-symbols duration-500 ${
+                    className={`font-symbols transition-all duration-1000 ${
                       glowBooster === 2
                         ? `scale-125 text-${mythSections[activeMyth]}-text`
                         : "text-white"
-                    }text-black-contour text-[50px] p-0 mr-2 text-white`}
+                    } text-black-contour text-[50px] p-0 ml-2 `}
                   >
                     b
                   </div>
