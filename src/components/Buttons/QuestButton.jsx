@@ -3,6 +3,7 @@ import {
   CircleCheck,
   CornerUpLeft,
   CornerUpRight,
+  Download,
   ThumbsUp,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -57,15 +58,15 @@ const QuestButton = ({
       </div>
       {isCompleted ? (
         <div className={`text-${mythSections[activeMyth]}-primary`}>
-          <CircleCheck size={"9vw"} />
+          <CircleCheck size={"18vw"} />
         </div>
       ) : message === "Complete" ? (
         <div onClick={action}>
-          <CircleCheck size={"9vw"} />
+          <CircleCheck size={"18vw"} />
         </div>
       ) : (
         <div onClick={action}>
-          <ThumbsUp size={"9vw"} />
+          <Download size={"18vw"} />
         </div>
       )}
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">

@@ -23,6 +23,7 @@ const Home = (props) => {
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
+  const [showGlow, setshowGlow] = useState(null);
   const [section, setSection] = useState(() => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });
@@ -85,7 +86,7 @@ const Home = (props) => {
   }, []);
 
   return (
-    <>
+    <div>
       {!isLoading ? (
         <div className="h-screen w-screen bg-white select-none font-fof">
           <MyContext.Provider
@@ -102,6 +103,8 @@ const Home = (props) => {
               setActiveMyth,
               showBooster,
               setShowBooster,
+              showGlow,
+              setshowGlow,
             }}
           >
             {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
@@ -112,7 +115,7 @@ const Home = (props) => {
       ) : (
         <Loader />
       )}
-    </>
+    </div>
   );
 };
 

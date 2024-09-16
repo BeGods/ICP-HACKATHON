@@ -18,8 +18,8 @@ export const ForgesGuide = ({ handleClick }) => {
           T
         </div>
       </div>
-      <div className="h-[20%] flex justify-center items-center  bottom-0 w-screen bg-black  text-white text-center uppercase">
-        <div className="text-primary">TO EARN ORB(S)</div>
+      <div className="h-[20%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+        <div className="text-primary break-words">TO EARN ORB(S)</div>
       </div>
     </div>
   );
@@ -28,11 +28,11 @@ export const ForgesGuide = ({ handleClick }) => {
 export const QuestGuide = ({ handleClick }) => {
   return (
     <div className="fixed inset-0 backdrop-blur-[3px] flex  flex-col items-center z-50">
-      <div className="pb-2 w-screen bg-black bg-opacity-85 text-white text-center uppercase">
+      <div className="pb-2 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col text-[12.2vw] mt-2 leading-[45px]">
           <span className="font-symbols text-[60px]">Q</span>
           <div>
-            COMPLETE <br /> QUESTS
+            CLAIM <br /> QUESTS
           </div>
         </div>
       </div>
@@ -44,8 +44,8 @@ export const QuestGuide = ({ handleClick }) => {
           T
         </div>
       </div>
-      <div className="h-[12%] flex justify-center items-center  bottom-0 w-screen bg-black bg-opacity-85 text-white text-center uppercase">
-        <div className="text-primary">To Earn $FAITH</div>
+      <div className="h-[12%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+        <div className="text-primary break-words">Complete To Earn $FAITH</div>
       </div>
     </div>
   );
@@ -56,9 +56,9 @@ export const BoosterGuide = ({ handleClick }) => {
     <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
       <div className="pb-2 h-[20%] w-screen bg-black -mt-1 text-white text-center uppercase">
         <div className="flex flex-col text-[12.2vw]  leading-[45px]">
-          <span className="font-symbols text-[60px]">P</span>
-          <div>BOOSTER</div>
+          <span className="font-symbols text-[60px]">Z</span>
           <div>ACQUIRE</div>
+          <div>BOOSTER</div>
         </div>
       </div>
       <div
@@ -69,8 +69,8 @@ export const BoosterGuide = ({ handleClick }) => {
           T
         </div>
       </div>
-      <div className="h-[20%] flex justify-center items-center  bottom-0 w-screen bg-black  text-white text-center uppercase">
-        <div className="text-primary">FOR MORE REWARDS</div>
+      <div className="h-[20%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+        <div className="text-primary break-words">FOR MORE REWARDS</div>
       </div>
     </div>
   );
@@ -79,7 +79,7 @@ export const BoosterGuide = ({ handleClick }) => {
 export const ProfileGuide = ({ handleClick }) => {
   return (
     <div className="fixed inset-0 backdrop-blur-[3px] flex  flex-col items-center z-50">
-      <div className="pb-2 w-screen bg-black bg-opacity-85 text-white text-center uppercase">
+      <div className="pb-2 w-screen bg-black text-white text-center uppercase">
         <div className="flex flex-col text-[12.2vw] mt-2 leading-[45px]">
           <span className="font-symbols text-[60px]">P</span>
           <div>PLAYER</div>
@@ -94,8 +94,8 @@ export const ProfileGuide = ({ handleClick }) => {
           T
         </div>
       </div>
-      <div className="h-[12%] flex justify-center items-center  bottom-0 w-screen bg-black bg-opacity-85 text-white text-center uppercase">
-        <div className="text-primary">TO CLAIM GIFTS</div>
+      <div className="h-[12%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+        <div className="text-primary break-words">TO CLAIM GIFTS</div>
       </div>
     </div>
   );
