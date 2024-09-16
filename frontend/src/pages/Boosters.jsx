@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../context/context";
 import {
   claimAutomataBooster,
+  claimBurstBooster,
   claimLostQuest,
   claimQuestOrbsReward,
   claimShardsBooster,
@@ -19,6 +20,7 @@ import Footer from "../components/Common/Footer";
 import BoosterClaim from "../components/Cards/Boosters/BoosterClaim";
 import { showToast } from "../components/Toast/Toast";
 import Header from "../components/Headers/Header";
+import { BoosterGuide } from "../components/Common/Tutorial";
 
 const HeaderContent = ({ activeMyth, t }) => {
   return (
@@ -54,10 +56,36 @@ const Boosters = () => {
   const [showQuest, setShowQuest] = useState(false);
   const [showPay, setShowPay] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
-  const { gameData, setGameData, setSection, activeMyth, setActiveMyth } =
-    useContext(MyContext);
+  const [enableGuide, setEnableGuide] = useState(false);
+  const {
+    gameData,
+    setGameData,
+    setSection,
+    activeMyth,
+    setActiveMyth,
+    setShowBooster,
+  } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
+
+  useEffect(() => {
+    let guide = JSON.parse(localStorage.getItem("guide"));
+
+    if (!guide.includes(2)) {
+      setEnableGuide(true);
+      setTimeout(() => {
+        setEnableGuide(false);
+        setActiveCard("automata");
+        setTimeout(() => {
+          handleClaimAutomata();
+        }, 3000);
+        guide.push(2);
+        if (!localStorage.getItem("guide")) {
+          localStorage.setItem("guide", JSON.stringify(guide));
+        }
+      }, 5000);
+    }
+  }, []);
 
   const handleCloseQuestButtonClick = (num) => {
     setIsButtonGlowing(num);
@@ -181,10 +209,12 @@ const Boosters = () => {
   const handleClaimBooster = (e) => {
     e.preventDefault();
 
-    if (activeCard === "shard") {
+    if (activeCard === "minion") {
       handleClaimShards();
     } else if (activeCard === "automata") {
       handleClaimAutomata();
+    } else if (activeCard === "burst") {
+      handleClaimBurst();
     }
   };
 
@@ -199,6 +229,7 @@ const Boosters = () => {
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
+          multiColorOrbs: prevData.multiColorOrbs - 1,
           mythologies: prevData.mythologies.map((item) =>
             item.name === mythologies[activeMyth]
               ? {
@@ -212,9 +243,12 @@ const Boosters = () => {
         return updatedData;
       });
 
-      setShowCard(false);
+      setActiveCard(null);
       showToast("claim_minion_success");
+      setShowBooster("minion");
+      setSection(0);
     } catch (error) {
+      setActiveCard(null);
       const errorMessage =
         error.response.data.error ||
         error.response.data.message ||
@@ -233,9 +267,11 @@ const Boosters = () => {
     };
     try {
       const response = await claimAutomataBooster(mythologyName, accessToken);
+
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
+          multiColorOrbs: prevData.multiColorOrbs - 1,
           mythologies: prevData.mythologies.map((item) =>
             item.name === mythologies[activeMyth]
               ? {
@@ -248,9 +284,12 @@ const Boosters = () => {
 
         return updatedData;
       });
-      setShowCard(false);
+      setActiveCard(null);
       showToast("claim_automata_success");
+      setShowBooster("automata");
+      setSection(0);
     } catch (error) {
+      setActiveCard(null);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
@@ -259,6 +298,56 @@ const Boosters = () => {
       showToast("claim_automata_error");
     }
   };
+
+  const handleClaimBurst = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    const mythologyName = {
+      mythologyName: mythologies[activeMyth],
+    };
+    try {
+      await claimBurstBooster(mythologyName, accessToken);
+
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          multiColorOrbs: prevData.multiColorOrbs - 9,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === mythologies[activeMyth]
+              ? {
+                  ...item,
+                  isStarActive: true,
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+      setActiveCard(null);
+      showToast("claim_burst_success");
+      setSection(0);
+    } catch (error) {
+      setActiveCard(null);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("claim_burst_error");
+    }
+  };
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setActiveCard("automata");
+  //     setTimeout(() => {
+  //       setActiveCard(null);
+  //       claimAutomataBooster();
+  //       setShowTutorial(false);
+  //     }, 2000);
+  //   }, 2000);
+  // }, []);
 
   useEffect(() => {}, [gameData, showInfo, showClaim, showPay]);
 
@@ -295,7 +384,6 @@ const Boosters = () => {
         />
       </div>
       {/* Header */}
-
       <Header
         children={
           <HeaderContent
@@ -333,13 +421,18 @@ const Boosters = () => {
       <div className="flex justify-center h-screen w-screen absolute mx-auto">
         <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
           {/* EXTRA BOOSTER */}
-          {/* <BoosterCard
-            isActive={true}
-            handleClick={() => {}}
-            activeMyth={activeMyth}
-            t={t}
-            booster={6}
-          /> */}
+          {gameData.mythologies[activeMyth].isEligibleForBurst && (
+            <BoosterCard
+              isActive={!gameData.mythologies[activeMyth].isStarActive}
+              handleClick={() => {
+                setShowCard(true);
+                setActiveCard("burst");
+              }}
+              activeMyth={activeMyth}
+              t={t}
+              booster={6}
+            />
+          )}
           {/* AUTOMATA BOOSTER */}
           <BoosterCard
             isActive={!mythData.isAutomataActive}
@@ -356,7 +449,7 @@ const Boosters = () => {
             isActive={mythData.isShardsClaimActive}
             handleClick={() => {
               setShowCard(true);
-              setActiveCard("shard");
+              setActiveCard("minion");
             }}
             activeMyth={activeMyth}
             t={t}
@@ -373,25 +466,18 @@ const Boosters = () => {
         </div>
       </div>
 
-      {/* Booster card */}
-      {activeCard === "automata" && (
-        <BoosterClaim
-          activeCard={activeCard}
-          activeMyth={activeMyth}
-          mythData={mythData}
-          closeCard={() => setActiveCard(null)}
-          Button={
-            <BoosterButtom
-              activeCard={activeCard}
-              mythData={mythData}
-              handleClaim={handleClaimAutomata}
-              activeMyth={activeMyth}
-              t={t}
-            />
-          }
+      {enableGuide && (
+        <BoosterGuide
+          handleClick={() => {
+            setEnableGuide(false);
+          }}
         />
       )}
-      {activeCard === "shard" && (
+
+      {/* Booster card */}
+      {(activeCard === "automata" ||
+        activeCard === "minion" ||
+        activeCard === "burst") && (
         <BoosterClaim
           activeCard={activeCard}
           activeMyth={activeMyth}

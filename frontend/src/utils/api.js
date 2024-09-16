@@ -31,6 +31,24 @@ export const fetchGameStats = async (accessToken) => {
   }
 };
 
+export const updateMythology = async (mythology, accessToken) => {
+  let url = `${
+    import.meta.env.VITE_API_URL
+  }/game/updateStats?mythologyName=${mythology}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const fetchLeaderboard = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/leaderboard`;
 
@@ -143,6 +161,22 @@ export const claimShardsBooster = async (mythologyName, accessToken) => {
   }
 };
 
+export const claimBurstBooster = async (mythologyName, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/booster/claimBurst`;
+
+  try {
+    const response = await axios.post(url, mythologyName, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const claimAutomataBooster = async (mythologyName, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/booster/claimAutomata`;
 
@@ -196,6 +230,22 @@ export const startTapSession = async (mythologyName, accessToken) => {
 
   try {
     const response = await axios.post(url, mythologyName, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimBurst = async (result, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/game/claimBurst`;
+
+  try {
+    const response = await axios.post(url, result, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -274,7 +324,23 @@ export const fetchBonusStatus = async (accessToken) => {
 };
 
 export const fetchDailyBonus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/claim`;
+  let url = `${import.meta.env.VITE_API_URL}/bonus/daily`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchJoiningBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/bonus/join`;
 
   try {
     const response = await axios.get(url, {

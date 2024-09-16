@@ -7,6 +7,7 @@ import {
   defaultIcons,
   mythElementNames,
   mythologies,
+  wheelNames,
 } from "../utils/variables";
 import Confetti from "react-confetti";
 import { Crown, LoaderPinwheel, ThumbsUp } from "lucide-react";
@@ -43,7 +44,7 @@ const FlashScreen = ({ reward }) => {
       setSection(0);
       setActiveMyth(mythologies.indexOf(reward.mythology));
     } else if (reward.type === "blackOrb") {
-      setSection(6);
+      setSection(0);
     }
   };
 
@@ -65,6 +66,9 @@ const FlashScreen = ({ reward }) => {
         setTimeout(() => {
           setShowScale(100);
           setShowHand(true);
+          setTimeout(() => {
+            setSection(0);
+          }, 3000);
         }, 500);
       }, 500);
     }
@@ -98,7 +102,6 @@ const FlashScreen = ({ reward }) => {
         <div
           onClick={() => {
             tele.HapticFeedback.notificationOccurred("success");
-
             setSection(0);
           }}
           className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[85vw]  mx-auto icon-black-contour`}
@@ -117,12 +120,10 @@ const FlashScreen = ({ reward }) => {
               }}
               size={"18vw"}
               color="#FFD660"
-              fill="#FFD660"
               className="mx-auto drop-shadow-xl scale-more mt-6"
             />
           )}
         </div>
-
         <h1
           className={`text-black-contour mt-auto pb-8 scale-${showScale} transition-all duration-1000`}
         >
@@ -132,7 +133,11 @@ const FlashScreen = ({ reward }) => {
             ? "BLACK ORB"
             : reward.type === "quest"
             ? "COMPLETED QUEST"
-            : `1 ${reward.type.toUpperCase()}`}
+            : `1 ${
+                wheelNames[mythologies.indexOf(reward.mythology)] +
+                " " +
+                reward.type.toUpperCase()
+              }`}
         </h1>
       </div>
       {/* Confetti */}
@@ -145,7 +150,7 @@ const FlashScreen = ({ reward }) => {
       )}
       <ReactHowler
         src="/assets/audio/fof.gatcha.win.wav"
-        playing={play}
+        playing={play && !JSON.parse(localStorage.getItem("sound"))}
         preload={true}
         onEnd={() => {
           setPlay(false);
@@ -156,9 +161,8 @@ const FlashScreen = ({ reward }) => {
 };
 
 const Gacha = (props) => {
-  const { gameData, setQuestsData, questsData, setGameData } =
+  const { gameData, setQuestsData, questsData, setGameData, setShowBooster } =
     useContext(MyContext);
-  const { t } = useTranslation();
   const lottieRef = useRef(null);
   const [reward, setReward] = useState(null);
   const [showSpin, setShowSpin] = useState(true);
@@ -167,14 +171,18 @@ const Gacha = (props) => {
   const [changeText, setChangeText] = useState("Win");
   const [spinSound, setSpinSound] = useState(false);
   const [disableHand, setDisableHand] = useState(false);
+  const [isClaimed, setIsClaimed] = useState(false);
 
   const handleUpdateData = (rewardType, rewardValue, data) => {
     if (rewardType === "blackOrb") {
+      setShowBooster("blackOrb");
+
       setGameData((prev) => ({
         ...prev,
         blackOrbs: prev.blackOrbs + 1,
       }));
     } else if (rewardType === "mythOrb") {
+      setShowBooster("mythOrb");
       const updatedGameData = {
         ...gameData,
         mythologies: gameData.mythologies.map((myth) =>
@@ -187,7 +195,8 @@ const Gacha = (props) => {
         ),
       };
       setGameData(updatedGameData);
-    } else if (rewardType === "shards") {
+    } else if (rewardType === "minion") {
+      setShowBooster("minion");
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
@@ -204,6 +213,7 @@ const Gacha = (props) => {
         return updatedData;
       });
     } else if (rewardType === "automata") {
+      setShowBooster("automata");
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
@@ -246,20 +256,11 @@ const Gacha = (props) => {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setDisableHand(true);
-      setTimeout(() => {
-        if (!showScale) {
-          claimDailyBonus();
-        }
-      }, 1500);
-    }, 1500);
-  }, []);
-
   const claimDailyBonus = async () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    if (isClaimed) return;
+
     setShowScale(true);
+    setIsClaimed(true);
     handlePlay();
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -306,6 +307,24 @@ const Gacha = (props) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const firstTimeout = setTimeout(() => {
+      setDisableHand(true);
+      const secondTimeout = setTimeout(() => {
+        // Ensure that claimDailyBonus is only called when necessary
+        if (!showScale && !isClaimed) {
+          claimDailyBonus();
+        }
+      }, 1500);
+
+      // Clean up the second timeout
+      return () => clearTimeout(secondTimeout);
+    }, 1500);
+
+    // Clean up the first timeout
+    return () => clearTimeout(firstTimeout);
+  }, [showScale, isClaimed]);
+
   return (
     <div className="flex flex-col h-screen w-screen justify-center font-fof items-center bg-black">
       <div className="flex flex-col w-full h-full items-center pt-4">
@@ -322,11 +341,13 @@ const Gacha = (props) => {
         </div>
         {/* Main */}
         <div
-          onClick={!showScale && claimDailyBonus}
+          onClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+          }}
           className="flex flex-grow justify-center items-center relative w-full h-full"
         >
           <img
-            src="/assets/uxui/280px-pandora.png"
+            src="/assets/uxui/240px-pandora.png"
             alt="pandora"
             className={`w-fit h-fit transition-transform duration-1000 ${
               showScale
@@ -379,7 +400,7 @@ const Gacha = (props) => {
         {spinSound && (
           <ReactHowler
             src="/assets/audio/fof.gacha.spin.wav"
-            playing={true}
+            playing={!JSON.parse(localStorage.getItem("sound"))}
             preload={true}
             loop
           />

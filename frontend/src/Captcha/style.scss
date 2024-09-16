@@ -47,13 +47,13 @@
   .sliderContainer_success .slider {
     height: 45px;
 
-    border: 1px solid #0db87f;
-    background-color: #0ca14a !important;
+    border: 1px solid black;
+    background-color: black !important;
   }
 
   .sliderContainer_success .sliderMask {
     height: 38px;
-    border: 1px solid #0db87f;
+    border: 1px solid black;
     background-color: #d2f4ef;
   }
 
@@ -64,14 +64,14 @@
   .sliderContainer_fail .slider {
     height: 45px;
 
-    border: 1px solid #f57a7a;
-    background-color: #f57a7a !important;
+    border: 1px solid black;
+    background-color: black !important;
   }
 
   .sliderContainer_fail .sliderMask {
     height: 38px;
-    border: 1px solid #f57a7a;
-    background-color: #fce1e1;
+    border: 1px solid black;
+    background-color: black;
   }
 
   .sliderContainer_fail .sliderIcon {

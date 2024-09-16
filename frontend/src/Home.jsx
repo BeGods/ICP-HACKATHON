@@ -12,6 +12,7 @@ import Gacha from "./pages/Gacha";
 import Convert from "./pages/Convert";
 import { toast } from "react-toastify";
 import ToastMesg from "./components/Toast/ToastMesg";
+import JoinBonus from "./pages/JoinBonus";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,6 +22,7 @@ const Home = (props) => {
   const [questsData, setQuestsData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
+  const [showBooster, setShowBooster] = useState(null);
   const [section, setSection] = useState(() => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });
@@ -33,6 +35,7 @@ const Home = (props) => {
     <Leaderboard />,
     <Gacha />,
     <Convert />,
+    <JoinBonus />,
   ];
 
   // fetch all game data
@@ -42,8 +45,15 @@ const Home = (props) => {
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setUserData(response?.user);
-      if (response?.user.isEligibleToClaim) {
+      if (!response?.user.joiningBonus) {
+        setSection(7);
+      } else if (
+        response?.user.joiningBonus &&
+        response?.user.isEligibleToClaim
+      ) {
         setSection(5);
+      } else {
+        setSection(0);
       }
       setTimeout(() => {
         setIsLoading(false);
@@ -90,9 +100,11 @@ const Home = (props) => {
               setSection,
               activeMyth,
               setActiveMyth,
+              showBooster,
+              setShowBooster,
             }}
           >
-            {[0, 1, 2, 3, 4, 5, 6].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
               <div key={item}>{section === item && sections[item]}</div>
             ))}
           </MyContext.Provider>

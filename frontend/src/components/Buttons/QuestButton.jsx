@@ -1,4 +1,10 @@
-import { CornerUpLeft, CornerUpRight, ThumbsUp } from "lucide-react";
+import {
+  Check,
+  CircleCheck,
+  CornerUpLeft,
+  CornerUpRight,
+  ThumbsUp,
+} from "lucide-react";
 import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
 
@@ -50,18 +56,16 @@ const QuestButton = ({
         />
       </div>
       {isCompleted ? (
-        <div
-          className={`text-[18px] uppercase px-2 text-${mythSections[activeMyth]}-primary`}
-        >
-          {t("buttons.completed")}
+        <div className={`text-${mythSections[activeMyth]}-primary`}>
+          <CircleCheck size={"9vw"} />
         </div>
       ) : message === "Complete" ? (
-        <div onClick={action} className={`text-[18px] uppercase px-2`}>
-          {message}
+        <div onClick={action}>
+          <CircleCheck size={"9vw"} />
         </div>
       ) : (
-        <div onClick={action} className={`text-[18px] uppercase`}>
-          <ThumbsUp size={"7vw"} />
+        <div onClick={action}>
+          <ThumbsUp size={"9vw"} />
         </div>
       )}
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">

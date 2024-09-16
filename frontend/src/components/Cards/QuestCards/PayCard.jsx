@@ -5,7 +5,6 @@ import IconButton from "../../Buttons/IconButton";
 import { mythSections, mythSymbols } from "../../../utils/variables";
 import Button from "../../Buttons/Button";
 import { MyContext } from "../../../context/context";
-import ReactHowler from "react-howler";
 
 function PayCard({
   t,
@@ -30,7 +29,8 @@ function PayCard({
     if (deduct) {
       const newValues = gameData.mythologies.reduce((acc, item) => {
         acc[item.name] =
-          deductedValues[item.name] - quest.requiredOrbs[item.name];
+          deductedValues[item.name] -
+          (quest.requiredOrbs[item.name] ? quest.requiredOrbs[item.name] : 0);
         return acc;
       }, {});
 
@@ -39,23 +39,24 @@ function PayCard({
   }, [deduct, gameData.mythologies, quest.requiredOrbs]);
 
   const handleOperation = async () => {
-    await handlePay();
-    setScale(true);
-    setTimeout(() => {
-      setScale(false);
-    }, 500);
-    setTimeout(() => {
-      setShowNum(true);
+    const result = await handlePay();
+    if (result) {
+      setScale(true);
       setTimeout(() => {
-        setDeduct(true);
-        setShowNum(false);
+        setScale(false);
+      }, 500);
+      setTimeout(() => {
+        setShowNum(true);
         setTimeout(() => {
-          handleClaimEffect();
-
-          setDeduct(false);
+          setDeduct(true);
+          setShowNum(false);
+          setTimeout(() => {
+            handleClaimEffect();
+            setDeduct(false);
+          }, 500);
         }, 500);
       }, 500);
-    }, 500);
+    }
   };
 
   const getDisplayValue = (mythName) => {
