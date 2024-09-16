@@ -29,7 +29,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs }) => {
         <h1>{name}</h1>
       </div>
       <div className="flex flex-col justify-center items-center text-tertiary w-2/5 h-full">
-        <h1>{totalOrbs}</h1>
+        <h1>{parseFloat(totalOrbs.toFixed(3))}</h1>
       </div>
     </div>
   );

@@ -1,7 +1,20 @@
 import { ChevronRight } from "lucide-react";
 import React from "react";
+import { showToast } from "../Toast/Toast";
 
-const ProfileCard = (props) => {
+const ProfileCard = ({ icon, task, link }) => {
+  const handleClaimTask = () => {
+    try {
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("claim_task_error");
+    }
+  };
+
   return (
     <div className="flex gap-[8px] text-center items-center bg-black w-full p-[15px] rounded-primary">
       <div className="flex items-center gap-[20px] rounded-primary w-full">
@@ -10,14 +23,14 @@ const ProfileCard = (props) => {
           alt="telegram"
           className="w-[32px] h-[32px]"
         />
-        <div className="text-left">
+        <div className="text-left text-white">
           <h3 className="text-[14px]">Join FrogDog Games</h3>
           <p className="text-[10px]">
             +1 <span className="gradient-multi">ORBs</span>
           </p>
         </div>
       </div>
-      <ChevronRight />
+      <ChevronRight color="white" />
     </div>
   );
 };
