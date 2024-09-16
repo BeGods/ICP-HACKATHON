@@ -92,6 +92,7 @@ const Convert = () => {
   const { setActiveMyth, setGameData, gameData, activeMyth } =
     useContext(MyContext);
   const [myth, setMyth] = useState(0);
+  const [showEffect, setShowEffect] = useState(false);
   const mythData = gameData.mythologies.filter(
     (item) => item.name.toLowerCase() === wheel[myth]
   )[0];
@@ -128,7 +129,11 @@ const Convert = () => {
           }),
         };
         setGameData(updatedGameData);
-        showToast("convert_success");
+        // showToast("convert_success");
+        setShowEffect(true);
+        setTimeout(() => {
+          setShowEffect(false);
+        }, 300);
       } catch (error) {
         const errorMessage =
           error.response.data.error ||
@@ -208,7 +213,11 @@ const Convert = () => {
         )}
         {gameData.multiColorOrbs !== 0 && (
           <div className="absolute z-10">
-            <div className="font-medium text-[60px] text-white glow-text-black">
+            <div
+              className={`font-medium ${
+                showEffect && "scale-150"
+              } transition-all duration-250 text-[60px] text-white glow-text-black`}
+            >
               {gameData.multiColorOrbs}
             </div>
           </div>

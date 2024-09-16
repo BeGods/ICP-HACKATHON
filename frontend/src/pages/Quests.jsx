@@ -88,19 +88,19 @@ const Quests = () => {
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
 
-  useEffect(() => {
-    let guide = JSON.parse(localStorage.getItem("guide"));
+  // useEffect(() => {
+  //   let guide = JSON.parse(localStorage.getItem("guide"));
 
-    if (!guide.includes(1)) {
-      setEnableGuide(true);
+  //   if (!guide.includes(1)) {
+  //     setEnableGuide(true);
 
-      setTimeout(() => {
-        setEnableGuide(false);
-        guide.push(1);
-        localStorage.setItem("guide", JSON.stringify(guide));
-      }, 5000);
-    }
-  }, []);
+  //     setTimeout(() => {
+  //       setEnableGuide(false);
+  //       guide.push(1);
+  //       localStorage.setItem("guide", JSON.stringify(guide));
+  //     }, 5000);
+  //   }
+  // }, []);
 
   const handlePrev = () => {
     if (currQuest > 0) {
@@ -382,7 +382,7 @@ const Quests = () => {
                   <QuestButton
                     handlePrev={handlePrev}
                     handleNext={handleNext}
-                    message={t("buttons.claim")}
+                    message={"claim"}
                     isCompleted={quest?.isQuestClaimed}
                     lastQuest={quests.length}
                     t={t}
@@ -473,7 +473,7 @@ const Quests = () => {
           }}
           Button={
             <Button
-              message={t("buttons.claim")}
+              message={"claim"}
               handleClick={() => {
                 setShowShareReward(false);
               }}
@@ -497,7 +497,7 @@ const Quests = () => {
           }}
           Button={
             <Button
-              message={t("buttons.claim")}
+              message={"claim"}
               handleClick={() => {
                 setShowClaimEffect(true);
                 setTimeout(() => {
