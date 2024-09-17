@@ -81,7 +81,7 @@ const Collections = ({ collections, currentCollection, collectionsData ,handleCu
                         <div className='absolute h-[90%] bottom-0 right-0'>
                             <img src="/Hero/corner-small-left-bottom 4.png" alt="" className='h-full object-cover' />
                         </div>
-                        <h1 className='text-lg font-[400] text-white z-10'>{collection.name}</h1>
+                        <h1 className='text-lg font-[400] text-white z-10' style={{fontFamily:'MyCustomFont'}}>{collection.name}</h1>
                     </div>
                 ))}
             </div>
@@ -112,7 +112,7 @@ const Collections = ({ collections, currentCollection, collectionsData ,handleCu
                         <div className='absolute h-[90%] bottom-0 right-0'>
                             <img src="/Hero/corner-small-left-bottom 4.png" alt="" className='h-full object-cover' />
                         </div>
-                        <h1 className='text-lg font-[400] text-white z-10'>{collection.name}</h1>
+                        <h1 className='text-lg font-[400] text-white z-10' style={{fontFamily:'MyCustomFont'}}>{collection.name}</h1>
                     </div>
                 ))}
             </div>
