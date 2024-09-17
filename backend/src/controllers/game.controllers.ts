@@ -376,7 +376,7 @@ export const getGameStats = async (req, res) => {
         if (mythology.orbs >= 1000) {
           blackOrbs += Math.floor(mythology.orbs / 1000);
           mythology.orbs = mythology.orbs % 1000;
-          mythology.isStarActive = false;
+          mythology.isStarActive = true;
           mythology.burstActiveAt = Date.now();
         }
 
