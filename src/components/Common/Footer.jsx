@@ -8,7 +8,7 @@ const tele = window.Telegram?.WebApp;
 const FooterItem = ({ section, index, activeMyth, handleClick }) => {
   return (
     <div
-      className="flex flex-col items-center cursor-pointer mt-2"
+      className="flex flex-col items-center cursor-pointer mt-2 z-10"
       onClick={(e) => {
         e.preventDefault();
         handleClick();
@@ -50,8 +50,8 @@ const Footer = ({ minimize }) => {
 
   const handleSectionChange = (newSection) => {
     tele.HapticFeedback.notificationOccurred("success");
-    setSection(newSection);
     playAudio();
+    setSection(newSection);
     if (activeMyth >= 4) {
       setActiveMyth(0);
     }
@@ -65,7 +65,7 @@ const Footer = ({ minimize }) => {
       }}
       className={`flex justify-between ${minimize === 2 && "maximize"} ${
         minimize === 1 && "minimize"
-      } transition-all duration-1000 items-center h-[12%] z-10 w-full text-white`}
+      } transition-all duration-1000 items-center h-[12%] z-20 w-full text-white`}
     >
       <div
         style={{

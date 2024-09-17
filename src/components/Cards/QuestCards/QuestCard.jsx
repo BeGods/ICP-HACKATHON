@@ -18,7 +18,7 @@ const QuestCard = ({
     <div className="relative mt-[30px] w-[70%] mx-auto">
       <div
         onClick={handleClick}
-        className={`relative card-shadow-black  ${isGuideActive && "z-[60]"}  ${
+        className={`relative  card-shadow-black ${isGuideActive && "z-[60]"}  ${
           showClaimEffect && "scale-reward"
         } ${
           quest.isQuestClaimed &&

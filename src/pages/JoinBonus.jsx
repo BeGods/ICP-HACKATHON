@@ -10,7 +10,8 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setGameData, userData, setSection } = useContext(MyContext);
+  const { setGameData, userData, setSection, authToken } =
+    useContext(MyContext);
   const [showConfetti, setShowConfetti] = useState(false);
   const [disableHand, setDisableHand] = useState(false);
 
@@ -24,10 +25,9 @@ const JoinBonus = (props) => {
 
   const handleClaimBonus = async () => {
     tele.HapticFeedback.notificationOccurred("success");
-    const accessToken = localStorage.getItem("accessToken");
 
     try {
-      await fetchJoiningBonus(accessToken);
+      await fetchJoiningBonus(authToken);
       playConfetti();
 
       setGameData((prevData) => {
@@ -53,9 +53,23 @@ const JoinBonus = (props) => {
 
   return (
     <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
+      <div
+        className="absolute animate-spin-slow scale-150 z-0"
+        style={{
+          background: "url(/assets/fx/star.light.jpg)",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+          backgroundPosition: "center center",
+          height: "100vh",
+          width: "100vw",
+          position: "fixed",
+          top: 0,
+          left: 0,
+        }}
+      ></div>
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
-        <div className="flex flex-col items-center justify-center  pt-4 w-full h-1/5">
+        <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
           <h1 className="uppercase text-gold text-[14.2vw] text-center -mt-4 text-black-contour leading-[55px]">
             Joining <br />
             BONUS

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReactHowler from "react-howler";
 import Captcha from "../components/Common/Captcha";
 import i18next from "i18next";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -55,7 +56,9 @@ const Auth = (props) => {
   const auth = async () => {
     try {
       const response = await authenticate(userData, referralCode);
-      localStorage.setItem("accessToken", response.data.token);
+
+      tele.CloudStorage.setItem("accessToken", response.data.token);
+
       navigate("/home");
     } catch (error) {
       console.error("Authentication Error: ", error);
@@ -64,10 +67,6 @@ const Auth = (props) => {
 
   useEffect(() => {
     getUserData();
-
-    if (!localStorage.getItem("guide")) {
-      localStorage.setItem("guide", "[]");
-    }
 
     // Add event listener for user interaction
     const handleUserInteraction = () => {

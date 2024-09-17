@@ -2,6 +2,7 @@ import React from "react";
 import ShareButton from "../../Buttons/ShareButton";
 import IconButton from "../../Buttons/IconButton";
 import { mythSections } from "../../../utils/variables";
+import { useTranslation } from "react-i18next";
 
 const InfoCard = ({
   t,
@@ -11,6 +12,7 @@ const InfoCard = ({
   handleShowInfo,
   activeMyth,
 }) => {
+  const { i18n } = useTranslation();
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       <div
@@ -37,7 +39,7 @@ const InfoCard = ({
               <h1 className="text-[28px] font-bold uppercase">
                 {t("keywords.discover")}
               </h1>
-              <h2 className="-mt-1 text-tertiary font-medium uppercase">
+              <h2 className={`-mt-1 text-tertiary font-medium uppercase `}>
                 {t(`mythologies.${mythSections[activeMyth]}`)}
               </h2>
             </div>
@@ -50,7 +52,14 @@ const InfoCard = ({
             className="w-[82%] mx-auto card-shadow-black"
           />
         </div>
-        <div className="leading-[18px] text-[16px] -mt-[5px] text-left mx-auto w-[85%] text-card font-[550]">
+        <div
+          className={`leading-[18px] text-[16px] -mt-[5px] text-left mx-auto w-[85%] text-card font-[550] ${
+            (i18n.language === "hi" ||
+              i18n.language === "th" ||
+              i18n.language === "ru") &&
+            "font-normal"
+          } ${i18n.language === "ru" && "leading-[15px]"}`}
+        >
           {t(`quests.${mythSections[activeMyth]}.${quest.type}.desc`)}
         </div>
       </div>
