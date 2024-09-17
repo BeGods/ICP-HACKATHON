@@ -37,7 +37,7 @@ const Navbar = ({ mobileView }) => {
     const toggleProfileDropDown = () => {
         setProfileDropDown(!profileDropDown);
     }
-    const { i18n, t } = useTranslation();
+    const { i18n, t } = useTranslation(['translation']);
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 

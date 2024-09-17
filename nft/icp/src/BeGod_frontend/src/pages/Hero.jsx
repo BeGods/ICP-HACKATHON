@@ -75,11 +75,13 @@ const Hero = () => {
     useEffect(() => {
         setCurrentCollection(collectionsData[collections[currentIndex].name] || []);
     }, [currentIndex])
+    
 
-
-    const {t} =  useTranslation();
+    const {t} =  useTranslation(['translation']);
     const {mainHeading,description,button} = t("landingPage");
     console.log("mainheading ",mainHeading , "description : " , description , "button text" , button)
+
+    
 
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
