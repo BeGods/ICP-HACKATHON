@@ -77,7 +77,7 @@ const Hero = () => {
     }, [currentIndex])
     
 
-    const {t} =  useTranslation(['translation']);
+    const {t} =  useTranslation();
     const {mainHeading,description,button} = t("landingPage");
     console.log("mainheading ",mainHeading , "description : " , description , "button text" , button)
 

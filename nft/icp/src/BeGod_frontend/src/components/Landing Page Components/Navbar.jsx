@@ -37,7 +37,7 @@ const Navbar = ({ mobileView }) => {
     const toggleProfileDropDown = () => {
         setProfileDropDown(!profileDropDown);
     }
-    const { i18n, t } = useTranslation(['translation']);
+    const { i18n, t } = useTranslation();
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -118,7 +118,7 @@ const Navbar = ({ mobileView }) => {
                     <img src="/Hero/logo.png" alt="" />
                 </Link>
                 <div className='p-5  flex space-x-5 items-center'>
-                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>{t('collection')}</Link>
+                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>{t('collectionNavItem')}</Link>
 
                     <li className='relative list-none pt-4 w-[130px] flex justify-center '>
                          <button
@@ -208,7 +208,7 @@ const Navbar = ({ mobileView }) => {
                         Home
                     </Link>
                     <div className='text-[24px] font-[400] leading-[30px]'>
-                        {t('collection')}
+                        {t('collectionNavItem')}
                     </div>
                  
                         {isAuthenticated ?  (
