@@ -32,7 +32,6 @@ const BoosterClaim = ({
           </div>
         </div>
       )}
-
       <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
         <div
           className={`absolute inset-0 rounded-[15px]`}
@@ -84,8 +83,12 @@ const BoosterClaim = ({
       {Button}
       <ReactHowler
         src={`/assets/audio/fof.${
-          activeCard === "automata" ? "automata" : "minion"
-        }.wav`}
+          activeCard === "automata"
+            ? "automata"
+            : activeCard === "minion"
+            ? "minion"
+            : ""
+        }.grunt.short.wav`}
         playing={!JSON.parse(localStorage.getItem("sound"))}
         preload={true}
       />

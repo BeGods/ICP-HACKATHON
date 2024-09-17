@@ -14,7 +14,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs }) => {
 
   return (
     <div className="flex items-center justify-between text-tertiary w-full h-fit mx-auto text-white mt-2">
-      <div className="flex justify-center items-center w-2/5 h-full">
+      <div className="flex justify-center items-center w-[30%] h-full">
         {rank}
       </div>
       <div className="flex gap-4 items-center  w-full">
@@ -26,7 +26,8 @@ const LeaderboardItem = ({ rank, name, totalOrbs }) => {
             color={avatarColor}
           />
         </div>
-        <h1>{name}</h1>
+
+        <h1>{name.length > 20 ? name.slice(0, 20) + "..." : name}</h1>
       </div>
       <div className="flex flex-col justify-center items-center text-tertiary w-2/5 h-full">
         <h1>{parseFloat(totalOrbs.toFixed(3))}</h1>

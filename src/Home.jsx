@@ -10,9 +10,8 @@ import Loader from "./components/Common/Loader";
 import Forges from "./pages/Forges";
 import Gacha from "./pages/Gacha";
 import Convert from "./pages/Convert";
-import { toast } from "react-toastify";
-import ToastMesg from "./components/Toast/ToastMesg";
 import JoinBonus from "./pages/JoinBonus";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -24,6 +23,8 @@ const Home = (props) => {
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
   const [showGlow, setshowGlow] = useState(null);
+  const [platform, setPlatform] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
   const [section, setSection] = useState(() => {
     return JSON.parse(localStorage.getItem("section")) ?? 0;
   });
@@ -68,20 +69,23 @@ const Home = (props) => {
   // set initial cookies
   useEffect(() => {
     localStorage.setItem("avatarColor", getRandomColor());
-    const token = localStorage.getItem("accessToken");
-    (async () => {
-      if (token) {
-        await getGameData(token);
-      } else {
-        console.log("You are not authenticated.");
-        //! TODO:Add error toast
-      }
-    })();
+    tele.CloudStorage.getItem("accessToken", (err, item) => {
+      (async () => {
+        if (item) {
+          setAuthToken(item);
+          await getGameData(item);
+        } else {
+          console.log("You are not authenticated.");
+          //! TODO:Add error toast
+        }
+      })();
+    });
   }, []);
 
   useEffect(() => {
     if (tele) {
       tele.setHeaderColor("#000000");
+      setPlatform(tele.platform);
     }
   }, []);
 
@@ -105,6 +109,8 @@ const Home = (props) => {
               setShowBooster,
               showGlow,
               setshowGlow,
+              platform,
+              authToken,
             }}
           >
             {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (

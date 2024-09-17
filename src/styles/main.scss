@@ -49,6 +49,10 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
     text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
       0 0 5px var(--#{$myth}-color);
   }
+  .card-shadow-#{$myth}{
+    filter: drop-shadow(0px 0px 8px var(--#{$myth}-color));
+  }
+  
 
   // Button Effects
   .glow-button-#{$myth} {
@@ -71,13 +75,13 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
 }
 
 // Frame Shadow
-.card-shadow-black{
-  filter: drop-shadow(0px 0px 8px black);
-}
+// .card-shadow-black{
+//   filter: drop-shadow(0px 0px 8px black);
+// }
 
-.card-shadow-white {
-  filter: drop-shadow(0 0 8px white);
-}
+// .card-shadow-white {
+//   filter: drop-shadow(0 0 8px white);
+// }
 
 // Text Shadow
 .glow-text-black {
