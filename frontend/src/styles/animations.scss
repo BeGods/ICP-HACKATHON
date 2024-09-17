@@ -179,6 +179,10 @@
   @include scale-in-out(scale-hand-animation, 1, 1.3, 0.5s, ease-in, infinite);
 }
 
+.scale-icon{
+  @include scale-in-out(scale-hand-animation, 1, 1.3, 0.5s, ease-in, 1);
+}
+
 .scale-none {
   animation: none;
 }

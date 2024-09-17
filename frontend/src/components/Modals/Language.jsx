@@ -9,7 +9,7 @@ const languages = [
   { name: "English", code: "en" },
   { name: "हिन्दी", code: "hi" },
   { name: "Русский", code: "ru" },
-  { name: "แบบไทย", code: "th" },
+  { name: "ภาษาไทย", code: "th" },
   { name: "Português", code: "pt" },
   { name: "Español", code: "es" },
   { name: "Filipino", code: "fil" },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import IconButton from "../Buttons/IconButton";
 import {
   boosterIcon,
@@ -7,6 +7,7 @@ import {
   mythSymbols,
 } from "../../utils/variables";
 import ReactHowler from "react-howler";
+import { Download } from "lucide-react";
 
 const MilestoneCard = ({
   activeMyth,
@@ -14,15 +15,24 @@ const MilestoneCard = ({
   isOrb,
   isBlack,
   booster,
-  Button,
+  handleClick,
   isMulti,
+  isForge,
   t,
 }) => {
+  const [disableSound, setDisableSound] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDisableSound(false);
+    }, 2200);
+  }, []);
+
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
         <div
-          className="absolute inset-0 filter-card  rounded-[15px]"
+          className="absolute inset-0 filter-card rounded-[15px]"
           style={{
             backgroundImage: `url(/assets/cards/320px-info_background.jpg)`,
             backgroundRepeat: "no-repeat",
@@ -32,12 +42,14 @@ const MilestoneCard = ({
         />
         <div className="relative h-full w-full flex flex-col items-center">
           <div className="flex relative flex-col justify-center items-center h-full w-full">
-            <IconButton
-              isInfo={false}
-              activeMyth={activeMyth}
-              handleClick={closeCard}
-              align={0}
-            />
+            {!isForge && (
+              <IconButton
+                isInfo={false}
+                activeMyth={activeMyth}
+                handleClick={closeCard}
+                align={0}
+              />
+            )}
             {isOrb && isMulti ? (
               <div
                 className={`flex absolute  text-center justify-center items-center h-full w-[72%] glow-symbol-black`}
@@ -50,22 +62,25 @@ const MilestoneCard = ({
               </div>
             ) : isOrb && !isMulti ? (
               <div
-                className={`flex absolute  text-center justify-center items-center h-full w-[72%] glow-symbol-${
+                className={`flex absolute text-center justify-center items-center h-full w-[72%] glow-symbol-${
                   isBlack ? "black" : mythSections[activeMyth]
-                } `}
+                }`}
               >
-                <img
-                  src="/assets/uxui/240px-orb.base.png"
-                  alt="orb"
-                  className={`w-full filter-orbs-${
-                    isBlack ? "black" : mythSections[activeMyth]
-                  }  rounded-full orb`}
-                />
-                <span
-                  className={`absolute  z-1 text-[200px] text-white font-symbols opacity-50 orb-symbol-shadow`}
-                >
-                  {isBlack ? 3 : mythSymbols[mythSections[activeMyth]]}
-                </span>
+                <div className="relative w-full h-full flex justify-center items-center">
+                  <img
+                    src="/assets/uxui/240px-orb.base.png"
+                    alt="orb"
+                    className={`w-full filter-orbs-${
+                      isBlack ? "black" : mythSections[activeMyth]
+                    } rounded-full orb`}
+                  />
+                  {/* symbol */}
+                  <span
+                    className={`absolute inset-0 flex justify-center items-center text-[200px] text-white font-symbols opacity-50 orb-symbol-shadow`}
+                  >
+                    {isBlack ? 3 : mythSymbols[mythSections[activeMyth]]}
+                  </span>
+                </div>
               </div>
             ) : (
               <div
@@ -121,12 +136,19 @@ const MilestoneCard = ({
           </div>
         </div>
       </div>
-      {Button}
-      <ReactHowler
-        src={`/assets/audio/fof.orb.wav`}
-        playing={!JSON.parse(localStorage.getItem("sound"))}
-        preload={true}
+      <Download
+        size={"18vw"}
+        color="#ffd660"
+        onClick={handleClick}
+        className="scale-icon"
       />
+      {disableSound && (
+        <ReactHowler
+          src={`/assets/audio/fof.orb.wav`}
+          playing={!JSON.parse(localStorage.getItem("sound"))}
+          html5={true}
+        />
+      )}
     </div>
   );
 };

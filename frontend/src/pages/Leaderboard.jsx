@@ -10,16 +10,15 @@ const tele = window.Telegram?.WebApp;
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { userData, setSection } = useContext(MyContext);
+  const { userData, setSection, authToken } = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const avatarColor = localStorage.getItem("avatarColor");
   const [leaderboard, setLeaderboard] = useState([]);
   const [squad, setSquad] = useState([]);
 
   const getLeaderboardData = async () => {
-    const accessToken = localStorage.getItem("accessToken");
     try {
-      const response = await fetchLeaderboard(accessToken);
+      const response = await fetchLeaderboard(authToken);
       setLeaderboard(response.leaderboard);
       setSquad(response.squad);
     } catch (error) {
@@ -61,8 +60,11 @@ const Leaderboard = (props) => {
             {t(`profile.squad`)}
           </div>
         </div>
+        <div className="w-full text-center pt-1">
+          (Note: Your rank updates hourly! Check back soon.)
+        </div>
         {/* LEADERBOARD */}
-        <div className="flex flex-col w-full flex-grow  bg-black rounded-primary my-2 pt-[15px] pb-[30px] gap-[10px]">
+        <div className="flex flex-col w-full flex-grow  bg-black rounded-primary my-2 pt-[8px] pb-[30px] gap-[10px]">
           <div className="flex justify-between text-secondary text-cardsGray items-center w-[90%] mx-auto">
             <h1>{t(`profile.name`)}</h1>
             <h1>{t(`keywords.orbs`)}</h1>

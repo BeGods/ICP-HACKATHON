@@ -45,7 +45,6 @@ const HeaderContent = ({ gameData, myth, t }) => {
           </div>
         )}
       </div>
-
       <div className="flex absolute justify-center w-full">
         {/* Orb */}
         <div
@@ -69,7 +68,7 @@ const HeaderContent = ({ gameData, myth, t }) => {
           TOWER
         </h1>
         <div className="flex mb-4 items-center text-black-contour w-fit h-fit">
-          <div className="text-num text-black-contour  text-white">
+          <div className="text-num text-black-contour  text-white pr-1.5">
             {gameData.multiColorOrbs}
           </div>
           <div className="flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black">
@@ -89,7 +88,7 @@ const Convert = () => {
   const { t } = useTranslation();
   const [showInfo, setShowInfo] = useState(false);
   const [toggleClick, setToggleClick] = useState(false);
-  const { setActiveMyth, setGameData, gameData, activeMyth } =
+  const { setActiveMyth, setGameData, gameData, activeMyth, authToken } =
     useContext(MyContext);
   const [myth, setMyth] = useState(0);
   const [showEffect, setShowEffect] = useState(false);
@@ -104,12 +103,11 @@ const Convert = () => {
       setToggleClick(false);
     }, 1000);
     if (myth !== 0) {
-      const token = localStorage.getItem("accessToken");
       const mythologyName = {
         mythologyName: mythData.name,
       };
       try {
-        await convertOrbs(mythologyName, token);
+        await convertOrbs(mythologyName, authToken);
 
         const updatedGameData = {
           ...gameData,
@@ -178,9 +176,9 @@ const Convert = () => {
         className="background-wrapper"
       >
         <div
-          className={`absolute top-0 left-0 h-full w-full filter-other`}
+          className={`absolute top-0 left-0 h-full w-full`}
           style={{
-            backgroundImage: `url(/assets/uxui/fof.base.background.jpg)`,
+            backgroundImage: `url(/assets/uxui/480px-fof.game.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -211,27 +209,16 @@ const Convert = () => {
             align={2}
           />
         )}
-        {gameData.multiColorOrbs !== 0 && (
-          <div className="absolute z-10">
-            <div
-              className={`font-medium ${
-                showEffect && "scale-150"
-              } transition-all duration-250 text-[60px] text-white glow-text-black`}
-            >
-              {gameData.multiColorOrbs}
-            </div>
-          </div>
-        )}
 
         {/* Wheel */}
         <div className="flex  flex-col items-center justify-center w-full">
-          <img
+          {/* <img
             src="/assets/uxui/480px-forges.of.faith.tower.png"
             alt="wheel"
             className={`w-[90%] absolute transition-all duration-1000 ${
               myth == 0 && "scale-wheel-glow"
             } ${toggleClick && `glow-tap-${wheel[myth]}`}`}
-          />
+          /> */}
           <div className="absolute h-full flex justify-center items-end bottom-[1%]">
             <ConvertButton
               t={t}
@@ -258,6 +245,18 @@ const Convert = () => {
             setShowInfo(false);
           }}
         />
+      )}
+
+      {gameData.multiColorOrbs !== 0 && (
+        <div className="absolute h-screen w-screen flex justify-center items-center z-10">
+          <div
+            className={`font-medium ${
+              showEffect && "scale-150"
+            } transition-all duration-250 text-[60px] text-white glow-text-black`}
+          >
+            {gameData.multiColorOrbs}
+          </div>
+        </div>
       )}
 
       <ToggleLeft

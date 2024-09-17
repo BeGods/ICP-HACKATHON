@@ -13,6 +13,7 @@ import Confetti from "react-confetti";
 import { Crown, LoaderPinwheel, ThumbsUp } from "lucide-react";
 import { MyContext } from "../context/context";
 import ReactHowler from "react-howler";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -76,14 +77,20 @@ const FlashScreen = ({ reward }) => {
   }, [showWon]);
 
   return (
-    <div className="w-screen h-screen relative">
+    <div className="w-screen h-screen relative bg-black">
       {/* Background Paper */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute animate-spin-slow scale-150 z-0"
         style={{
-          filter: "grayscale(100%) contrast(100%)",
-          background:
-            "url(https://upload.wikimedia.org/wikipedia/commons/6/6f/War_flag_of_the_Imperial_Japanese_Army_%281868%E2%80%931945%29.svg) no-repeat center center / cover",
+          background: "url(/assets/fx/star.light.jpg)",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+          backgroundPosition: "center center",
+          height: "100vh",
+          width: "100vw",
+          position: "fixed",
+          top: 0,
+          left: 0,
         }}
       ></div>
       {/* Content */}
@@ -168,8 +175,14 @@ const FlashScreen = ({ reward }) => {
 };
 
 const Gacha = (props) => {
-  const { gameData, setQuestsData, questsData, setGameData, setShowBooster } =
-    useContext(MyContext);
+  const {
+    gameData,
+    setQuestsData,
+    questsData,
+    setGameData,
+    setShowBooster,
+    authToken,
+  } = useContext(MyContext);
   const lottieRef = useRef(null);
   const [reward, setReward] = useState(null);
   const [showSpin, setShowSpin] = useState(true);
@@ -269,13 +282,9 @@ const Gacha = (props) => {
     setShowScale(true);
     setIsClaimed(true);
     handlePlay();
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      console.error("No access token found");
-      return;
-    }
+
     try {
-      const response = await fetchDailyBonus(token);
+      const response = await fetchDailyBonus(authToken);
       if (response && response.reward) {
         handleUpdateData(
           response.reward.type,
@@ -308,7 +317,7 @@ const Gacha = (props) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setChangeText((prevText) => (prevText === "Win" ? "Daily" : "Win"));
+      setChangeText((prevText) => (prevText === "PANDORA" ? "BOX" : "PANDORA"));
     }, 1500);
 
     return () => clearInterval(interval);
