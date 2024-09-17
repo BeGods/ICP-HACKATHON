@@ -26,7 +26,7 @@ router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 
 //TODO: make it on every 00:00:00 UTC
 // schedule cron job for leaderboard
-cron.schedule("*/5 * * * *", updateRanks);
+cron.schedule("*/60 * * * *", updateRanks);
 
 // deactivate quest
 // cron.schedule("0 * * * *", deactivateQuest);
