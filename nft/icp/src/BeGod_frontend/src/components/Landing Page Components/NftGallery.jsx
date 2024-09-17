@@ -26,7 +26,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
     }
   };
 
-  const {t} = useTranslation(['button'])
+  const {t} = useTranslation()
 
   // Apply animation when the component mounts or the page changes
   useEffect(() => {

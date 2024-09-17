@@ -93,7 +93,7 @@ const Profile = () => {
 
   },[category])
 
-const {t} = useTranslation(['profile']);
+const {t} = useTranslation();
 
 
  

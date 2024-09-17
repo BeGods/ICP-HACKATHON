@@ -7,7 +7,7 @@ import { IoLogoTwitter } from "react-icons/io";
 import { CiTwitter } from 'react-icons/ci';
 import { useTranslation } from 'react-i18next';
 const Footer = () => {
-    const {t} = useTranslation(['footer']);
+    const {t} = useTranslation();
      const {horseCollection,greeceCollection,celticCollection,egyptanCollection} = t('categories'); 
     return (
         <div className="max-w-[1920px]  flex flex-col justify-center   w-full  text-[#FFFFFF]">

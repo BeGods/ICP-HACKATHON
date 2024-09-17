@@ -25,7 +25,7 @@ const BuyNft = () => {
 
 
 
-    const { t } = useTranslation(['homepage']);
+    const { t } = useTranslation();
     const {detailsText,contactAddress,token,tokenStandard,chain,lastUpdated,buyNow} = t('buyNowDetails');
    
     return (

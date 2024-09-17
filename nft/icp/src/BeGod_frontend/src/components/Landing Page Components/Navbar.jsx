@@ -37,7 +37,7 @@ const Navbar = ({ mobileView }) => {
     const toggleProfileDropDown = () => {
         setProfileDropDown(!profileDropDown);
     }
-    const { i18n, t } = useTranslation(['button']);
+    const { i18n, t } = useTranslation();
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -53,12 +53,26 @@ const Navbar = ({ mobileView }) => {
         setConnectWalletDropdown(!connectWalletDropdown);
     }
 
-    const changeLanguage = (newLang) => {
+    const changeLanguage = (newLang,newLangText) => {
         i18n.changeLanguage(newLang);
+        setLanguage(newLangText)
+      toggleDropdown();
     }
     
     
     // console.log("is Authenticated in Navbar Section" , isAuthenticated);
+
+    const [currentLanguage,setLanguage] = useState(t('langText'));
+
+    const languages = [
+      { code: "en", lang: "English" },
+      { code: "fr", lang: "français" },
+      { code: "hi", lang: "हिन्दी" }
+    ]; 
+
+    const selectedLanguage  = i18n.language;
+
+    console.log("selected language" ,selectedLanguage);
 
 
     return (
@@ -74,21 +88,19 @@ const Navbar = ({ mobileView }) => {
                           onClick={toggleDropdown}
                           className="text-[20px] font-[500] leading-[28.92px] pt-0.5 text-[#FCD37B] flex justify-center items-center mr-4"
                         >
-                          符 ENG <span className="ml-2 text-sm ">▼</span>
+                          {currentLanguage} <span className="ml-2 text-sm ">▼</span>
                         </button>
-                  {dropdownOpen && (
+                        {dropdownOpen && (
                           <ul className="absolute left-0 mt-10 bg-slate-900 text-[#FCD378]  rounded shadow-lg w-36 p-0 list-none">
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer" onClick={() => changeLanguage("en")}>
-                              English
-                            </li>
-                            <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("hi")}>
-                              Hindi
-                            </li>
-                            <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("fr")}>
-                              Français
-                            </li>
+                              {languages.map((eachLang) => (
+                                <li 
+                                  key={eachLang.code} 
+                                  className= {`px-4 py-2 hover:bg-purple-800 cursor-pointer ${selectedLanguage === eachLang.code && 'bg-purple-950'}`} 
+                                  onClick={() =>changeLanguage(eachLang.code,eachLang.lang)}
+                                 >
+                                    {eachLang.lang}
+                                  </li>
+                                ))}
                           </ul>
                         )}
                   </div>
@@ -113,21 +125,23 @@ const Navbar = ({ mobileView }) => {
                           onClick={toggleDropdown}
                           className="text-[24px] font-[500] leading-[28.92px] pt-0.5 text-[#FCD37B] flex justify-center items-center"
                         >
-                          符 ENG <span className="ml-2 text-sm ">▼</span>
+                          {/* <span className='text-sm mr-1'>( {t('langText')} )</span>  */}
+                          {currentLanguage} <span className="ml-2 text-sm ">▼</span>
                         </button>
                         {dropdownOpen && (
                           <ul className="absolute left-0 mt-10 bg-slate-900 text-[#FCD378]  rounded shadow-lg w-36 p-0 list-none">
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer" onClick={() => changeLanguage("en")}>
-                              English
-                            </li>
-                            <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("hi")}>
-                              Hindi
-                            </li>
-                            <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                            <li className="px-4 py-2 hover:bg-purple-900 cursor-pointer"  onClick={() => changeLanguage("fr")}>
-                              Français
-                            </li>
+                              {languages.map((eachLang) => (
+                                <li 
+                                  key={eachLang.code} 
+                                  className= {`px-4 py-2 hover:bg-purple-800 cursor-pointer ${selectedLanguage === eachLang.code && 'bg-purple-950'}`} 
+                                  onClick={() => {
+                                    changeLanguage(eachLang.code)
+                                    setLanguage(eachLang.lang)
+                                  }}
+                                 >
+                                    {eachLang.lang}
+                                  </li>
+                                ))}
                           </ul>
                         )}
                     </li> 
