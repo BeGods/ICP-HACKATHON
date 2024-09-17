@@ -8,21 +8,23 @@ import {
   claimShardsBooster,
   fetchLostQuests,
 } from "../utils/api";
-import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
 import { mythologies, mythSections } from "../utils/variables";
 import BoosterCard from "../components/Cards/Boosters/BoosterCard";
 import BoosterButtom from "../components/Buttons/BoosterButtom";
 import Symbol from "../components/Common/Symbol";
-import ToastMesg from "../components/Toast/ToastMesg";
 import Footer from "../components/Common/Footer";
 import BoosterClaim from "../components/Cards/Boosters/BoosterClaim";
 import { showToast } from "../components/Toast/Toast";
 import Header from "../components/Headers/Header";
 import { BoosterGuide } from "../components/Common/Tutorial";
 
+const tele = window.Telegram?.WebApp;
+
 const HeaderContent = ({ activeMyth, t }) => {
+  const { i18n } = useTranslation();
+
   return (
     <>
       <div className="h-full -ml-[14%] mr-auto mt-1">
@@ -37,7 +39,11 @@ const HeaderContent = ({ activeMyth, t }) => {
           </span>
         </div>
         <h1
-          className={`text-${mythSections[activeMyth]}-text text-black-contour text-[17vw] font-${mythSections[activeMyth]}  uppercase -mt-4 -ml-2`}
+          className={`text-${mythSections[activeMyth]}-text ${
+            i18n.language === "ru" && "text-[10vw] mt-0"
+          }  text-black-contour text-[17vw] font-${
+            mythSections[activeMyth]
+          }  uppercase -mt-4 -ml-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
@@ -65,25 +71,25 @@ const Boosters = () => {
     setActiveMyth,
     setShowBooster,
     setShowGlow,
+    authToken,
   } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
 
   useEffect(() => {
-    let guide = JSON.parse(localStorage.getItem("guide"));
-
-    if (!guide.includes(2)) {
-      setEnableGuide(true);
-      setTimeout(() => {
-        setEnableGuide(false);
-        setActiveCard("automata");
-        guide.push(2);
-        localStorage.setItem("guide", JSON.stringify(guide));
+    tele.CloudStorage.getItem("guide3", (err, item) => {
+      if (!item) {
+        setEnableGuide(true);
         setTimeout(() => {
-          handleClaimAutomata();
-        }, 3000);
-      }, 5000);
-    }
+          setEnableGuide(false);
+          setActiveCard("automata");
+          tele.CloudStorage.setItem("guide3", 3);
+          setTimeout(() => {
+            handleClaimAutomata();
+          }, 3000);
+        }, 5000);
+      }
+    });
   }, []);
 
   const handleCloseQuestButtonClick = (num) => {
@@ -97,12 +103,11 @@ const Boosters = () => {
 
   // Quests Functions
   const handleOrbClaimReward = async () => {
-    const token = localStorage.getItem("accessToken");
     const questData = {
       questId: lostQuest[quest]._id,
     };
     try {
-      await claimQuestOrbsReward(questData, token);
+      await claimQuestOrbsReward(questData, authToken);
 
       setShowClaim(false);
 
@@ -134,12 +139,11 @@ const Boosters = () => {
   };
 
   const handleClaimQuest = async () => {
-    const token = localStorage.getItem("accessToken");
     const questData = {
       questId: lostQuest._id,
     };
     try {
-      await claimLostQuest(questData, token);
+      await claimLostQuest(questData, authToken);
       setShowQuest(false);
       setActiveCard(lostQuest[quest]?.type);
       setShowClaim(true);
@@ -181,12 +185,10 @@ const Boosters = () => {
 
   // Boosters functions
   const handleLostQuest = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     try {
       const response = await fetchLostQuests(
         mythologies[activeMyth],
-        accessToken
+        authToken
       );
       if (response.lostQuests.length !== 0) {
         setShowQuest(true);
@@ -218,13 +220,11 @@ const Boosters = () => {
   };
 
   const handleClaimShards = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     const mythologyName = {
       mythologyName: mythologies[activeMyth],
     };
     try {
-      const response = await claimShardsBooster(mythologyName, accessToken);
+      const response = await claimShardsBooster(mythologyName, authToken);
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
@@ -259,13 +259,11 @@ const Boosters = () => {
   };
 
   const handleClaimAutomata = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     const mythologyName = {
       mythologyName: mythologies[activeMyth],
     };
     try {
-      const response = await claimAutomataBooster(mythologyName, accessToken);
+      const response = await claimAutomataBooster(mythologyName, authToken);
 
       setGameData((prevData) => {
         const updatedData = {
@@ -299,13 +297,11 @@ const Boosters = () => {
   };
 
   const handleClaimBurst = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     const mythologyName = {
       mythologyName: mythologies[activeMyth],
     };
     try {
-      await claimBurstBooster(mythologyName, accessToken);
+      await claimBurstBooster(mythologyName, authToken);
 
       setGameData((prevData) => {
         const updatedData = {
@@ -454,13 +450,7 @@ const Boosters = () => {
         </div>
       </div>
 
-      {enableGuide && (
-        <BoosterGuide
-          handleClick={() => {
-            setEnableGuide(false);
-          }}
-        />
-      )}
+      {enableGuide && <BoosterGuide handleClick={() => {}} />}
 
       {/* Booster card */}
       {(activeCard === "automata" ||

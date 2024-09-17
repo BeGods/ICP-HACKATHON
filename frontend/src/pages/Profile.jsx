@@ -90,17 +90,17 @@ const Profile = (props) => {
   const [activeSection, setActiveSection] = useState(true);
   const [enableGuide, setEnableGuide] = useState(false);
   const { state } = useTonConnectModal();
-
   useEffect(() => {
-    let guide = JSON.parse(localStorage.getItem("guide"));
-    if (!guide.includes(3)) {
-      setEnableGuide(true);
-      setTimeout(() => {
-        setEnableGuide(false);
-        guide.push(3);
-        localStorage.setItem("guide", JSON.stringify(guide));
-      }, 5000);
-    }
+    tele.CloudStorage.getItem("guide4", (err, item) => {
+      if (!item) {
+        setEnableGuide(true);
+        setTimeout(() => {
+          setEnableGuide(false);
+
+          tele.CloudStorage.setItem("guide4", 4);
+        }, 5000);
+      }
+    });
   }, []);
 
   const handleCopyLink = async () => {
@@ -111,9 +111,8 @@ const Profile = (props) => {
   };
 
   const handleConnectTon = async () => {
-    const accessToken = localStorage.getItem("accessToken");
     try {
-      await connectTonWallet({ tonAddress: userFriendlyAddress }, accessToken);
+      await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
       localStorage.setItem("tonConnected", "true");
       showToast("ton_connect_success");
     } catch (error) {
@@ -205,7 +204,15 @@ const Profile = (props) => {
               <Settings size={"30px"} color="white" />
             </div>
           </div>
-          <div className="relative w-full flex flex-col flex-grow">
+          <div
+            style={{
+              backgroundImage: `url((/assets/cards/320px-info_background.jpg)`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "center center",
+            }}
+            className="relative w-full flex flex-col flex-grow"
+          >
             <div className="flex px-2 text-white gap-2 mt-2.5 flex-col items-center justify-center w-full">
               <div
                 onClick={() => {
@@ -370,6 +377,8 @@ const Profile = (props) => {
         </div>
       )}
 
+      <Footer />
+
       {enableGuide && (
         <ProfileGuide
           handleClick={() => {
@@ -378,7 +387,6 @@ const Profile = (props) => {
         />
       )}
 
-      <Footer />
       {showLang && (
         <Language
           close={() => {

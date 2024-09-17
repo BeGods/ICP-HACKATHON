@@ -30,6 +30,7 @@ import { QuestGuide } from "../components/Common/Tutorial";
 const tele = window.Telegram?.WebApp;
 
 const HeaderContent = ({ activeMyth, t }) => {
+  const { i18n } = useTranslation();
   return (
     <>
       <div className="flex flex-col flex-grow justify-start items-start text-white pl-5">
@@ -41,7 +42,11 @@ const HeaderContent = ({ activeMyth, t }) => {
           </span>
         </div>
         <h1
-          className={`text-${mythSections[activeMyth]}-text text-black-contour text-[17vw] font-${mythSections[activeMyth]}  uppercase -mt-4 -ml-2`}
+          className={` ${i18n.language === "ru" && "text-[10vw] mt-0"} text-${
+            mythSections[activeMyth]
+          }-text text-black-contour text-[17vw] font-${
+            mythSections[activeMyth]
+          }  uppercase -mt-4 -ml-2`}
         >
           {t(`mythologies.${mythSections[activeMyth]}`)}
         </h1>
@@ -72,6 +77,7 @@ const Quests = () => {
     setGameData,
     activeMyth,
     setActiveMyth,
+    authToken,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)
@@ -88,19 +94,18 @@ const Quests = () => {
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
 
-  // useEffect(() => {
-  //   let guide = JSON.parse(localStorage.getItem("guide"));
+  useEffect(() => {
+    tele.CloudStorage.getItem("guide2", (err, item) => {
+      if (!item) {
+        setEnableGuide(true);
+        setTimeout(() => {
+          setEnableGuide(false);
 
-  //   if (!guide.includes(1)) {
-  //     setEnableGuide(true);
-
-  //     setTimeout(() => {
-  //       setEnableGuide(false);
-  //       guide.push(1);
-  //       localStorage.setItem("guide", JSON.stringify(guide));
-  //     }, 5000);
-  //   }
-  // }, []);
+          tele.CloudStorage.setItem("guide2", 2);
+        }, 5000);
+      }
+    });
+  }, []);
 
   const handlePrev = () => {
     if (currQuest > 0) {
@@ -160,12 +165,11 @@ const Quests = () => {
   };
 
   const handleClaimShareReward = async (id) => {
-    const token = localStorage.getItem("accessToken");
     const questData = {
       questId: id,
     };
     try {
-      await claimShareReward(questData, token);
+      await claimShareReward(questData, authToken);
       setShowInfo(false);
       setShowShareReward(true);
       showToast("quest_share_success");
@@ -194,12 +198,11 @@ const Quests = () => {
   };
 
   const handleOrbClaimReward = async () => {
-    const token = localStorage.getItem("accessToken");
     const questData = {
       questId: quest._id,
     };
     try {
-      await claimQuestOrbsReward(questData, token);
+      await claimQuestOrbsReward(questData, authToken);
       setShowClaim(false);
       setShowReward(true);
 
@@ -234,15 +237,13 @@ const Quests = () => {
   };
 
   const handleCompleteQuest = async () => {
-    const token = localStorage.getItem("accessToken");
     const questData = {
       questId: quest._id,
     };
 
     if (!quest.isCompleted) {
-      console.log("Hello");
       try {
-        await completeQuest(questData, token);
+        await completeQuest(questData, authToken);
         setShowComplete(false);
         setShowPay(true);
 
@@ -266,12 +267,11 @@ const Quests = () => {
   };
 
   const handleClaimQuest = async () => {
-    const token = localStorage.getItem("accessToken");
     const questData = {
       questId: quest._id,
     };
     try {
-      await claimQuest(questData, token);
+      await claimQuest(questData, authToken);
       return true;
     } catch (error) {
       const errorMessage =
@@ -471,15 +471,9 @@ const Quests = () => {
           closeCard={() => {
             setShowShareReward(false);
           }}
-          Button={
-            <Button
-              message={"claim"}
-              handleClick={() => {
-                setShowShareReward(false);
-              }}
-              activeMyth={activeMyth}
-            />
-          }
+          handleClick={() => {
+            setShowShareReward(false);
+          }}
         />
       )}
       {showReward && (

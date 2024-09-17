@@ -28,6 +28,7 @@ import { Star } from "lucide-react";
 import { ForgesGuide } from "../components/Common/Tutorial";
 import MilestoneCard from "../components/Cards/MilestoneCard";
 import { hideBackButton } from "../utils/teleBackButton";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -42,7 +43,9 @@ const HeaderContent = ({
   glowSymbol,
   glowShards,
   mythData,
+  platform,
   showBlackOrb,
+  glowBooster,
 }) => {
   const height = Math.min(
     100,
@@ -101,7 +104,7 @@ const HeaderContent = ({
             className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
           />
           <div
-            className={`z-1 flex justify-center items-start  font-symbols ${
+            className={`z-1  flex justify-center items-start  font-symbols ${
               glowReward
                 ? ` text-${mythSections[activeMyth]}-text opacity-100`
                 : showBlackOrb === 1
@@ -109,7 +112,9 @@ const HeaderContent = ({
                 : "text-white opacity-50"
             } text-[34vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute flex h-full w-full rounded-full`}
           >
-            <div className="-mt-2">{mythSymbols[mythSections[activeMyth]]}</div>
+            <div className={` ${platform === "ios" ? "-mt-6" : "-mt-2"}`}>
+              {mythSymbols[mythSections[activeMyth]]}
+            </div>
           </div>
         </div>
       </div>
@@ -126,7 +131,7 @@ const HeaderContent = ({
           </div>
           <div
             className={`font-symbols  ${
-              glowSymbol && `scale-[175%]`
+              (glowSymbol || glowBooster) && `scale-[175%]`
             } text-icon transition-all duration-1000 text-${
               mythSections[activeMyth]
             }-text`}
@@ -150,6 +155,8 @@ const Forges = () => {
     setShowBooster,
     showGlow,
     setShowGlow,
+    platform,
+    authToken,
   } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -206,29 +213,26 @@ const Forges = () => {
   const mythStatesRef = useRef(mythStates);
   const countRef = useRef(count);
   const disableStarTimeout = useRef(null);
-  const intervalRef = useRef(null); // Use ref to store intervalId
 
   useEffect(() => {
-    let guide = JSON.parse(localStorage.getItem("guide"));
+    tele.CloudStorage.getItem("guide1", (err, item) => {
+      if (!item) {
+        setEnableGuide(true);
+        setTimeout(() => {
+          setEnableGuide(false);
 
-    if (!guide.includes(0)) {
-      setEnableGuide(true);
-      setTimeout(() => {
-        setEnableGuide(false);
-        guide.push(0);
-        localStorage.setItem("guide", JSON.stringify(guide));
-      }, 5000);
-    }
+          tele.CloudStorage.setItem("guide1", 1);
+        }, 5000);
+      }
+    });
   }, []);
 
   // update sessionStart timestamp
   const handleTriggerStart = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     try {
       await startTapSession(
         { mythologyName: mythologies[activeMyth] },
-        accessToken
+        authToken
       );
       console.log("Tap session started.");
     } catch (error) {
@@ -266,8 +270,6 @@ const Forges = () => {
 
   // update tapData
   const handleUpdateTapData = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     const sessionShards =
       mythStates[activeMyth].shards === 999 ||
       mythStates[activeMyth].shards === 998
@@ -281,7 +283,7 @@ const Forges = () => {
           taps: sessionShards,
           mythologyName: mythologies[activeMyth],
         },
-        accessToken
+        authToken
       );
 
       setMythStates((prevState) => {
@@ -303,15 +305,13 @@ const Forges = () => {
   };
 
   const handleUpdateStarStatus = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     try {
       await claimBurst(
         {
           session: countRef.current,
           mythologyName: mythologies[activeMyth],
         },
-        accessToken
+        authToken
       );
       setCount(0);
       setMythStates((prevState) => {
@@ -335,10 +335,8 @@ const Forges = () => {
   };
 
   const handleUpdateMythology = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     try {
-      await updateMythology(mythologies[activeMyth], accessToken);
+      await updateMythology(mythologies[activeMyth], authToken);
 
       console.log("Mythology Updated successfully.");
     } catch (error) {
@@ -420,13 +418,11 @@ const Forges = () => {
   };
 
   const handleClaimShards = async () => {
-    const accessToken = localStorage.getItem("accessToken");
-
     const mythologyName = {
       mythologyName: mythologies[activeMyth],
     };
     try {
-      const response = await claimShardsBooster(mythologyName, accessToken);
+      const response = await claimShardsBooster(mythologyName, authToken);
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
@@ -539,7 +535,12 @@ const Forges = () => {
     const { counter, popupTime, isActive } = popupStates;
 
     if (energy > 0 && showBlackOrb !== 1) {
-      window.navigator.vibrate(25);
+      if (platform !== "ios") {
+        window.navigator.vibrate(25);
+      }
+      if (platform === "ios") {
+        tele.HapticFeedback.impactOccurred("light");
+      }
       handlePlusOneEffect(e);
 
       let reachedBlackOrb = false;
@@ -835,31 +836,30 @@ const Forges = () => {
     hideBackButton(tele);
   }, []);
 
-  // Star hold effect
-  // // handle increment energy every second
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setMythStates((prevStates) => {
-  //       return prevStates.map((state) => {
-  //         if (state.energy < state.energyLimit) {
-  //           return {
-  //             ...state,
-  //             energy: state.energy + 1,
-  //           };
-  //         } else {
-  //           return state;
-  //         }
-  //       });
-  //     });
-  //   }, 1000);
+  // handle increment energy every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMythStates((prevStates) => {
+        return prevStates.map((state) => {
+          if (state.energy < state.energyLimit) {
+            return {
+              ...state,
+              energy: state.energy + 1,
+            };
+          } else {
+            return state;
+          }
+        });
+      });
+    }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
-  // // disable backbutton
-  // useEffect(() => {
-  //   hideBackButton(tele);
-  // }, []);
+  // disable backbutton
+  useEffect(() => {
+    hideBackButton(tele);
+  }, []);
 
   // star hold
   useEffect(() => {
@@ -884,7 +884,12 @@ const Forges = () => {
     }
     if (isStarHolding === 1) {
       intervalId = setInterval(() => {
-        window.navigator.vibrate(100);
+        if (platform !== "ios") {
+          window.navigator.vibrate(100);
+        }
+        if (platform === "ios") {
+          tele.HapticFeedback.impactOccurred("light");
+        }
         setCount((prev) => prev + 1);
         setMythStates((prevData) => {
           return prevData.map((item, index) => {
@@ -999,9 +1004,11 @@ const Forges = () => {
               <HeaderContent
                 activeMyth={activeMyth}
                 t={t}
+                platform={platform}
                 orbGlow={orbGlow}
                 tapGlow={tapGlow}
                 showBlackOrb={showBlackOrb}
+                glowBooster={glowBooster}
                 glowShards={glowShards}
                 glowReward={glowReward}
                 glowNumber={glowNumber}
@@ -1034,33 +1041,6 @@ const Forges = () => {
               }}
               className="flex flex-col items-center justify-center  w-full h-full"
             >
-              {/* <div
-                style={{ position: "absolute", display: "inline-block" }}
-                className="w-[250px] -top-[80px]"
-              >
-                <img
-                  src="/assets/uxui/600px-smoke.wide.webp"
-                  alt="smoke"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    mixBlendMode: "color-dodge",
-                    filter: "contrast(254%) brightness(80%)",
-                  }}
-                  className={` ${
-                    tapGlow && "scale-150 -mt-[45px]"
-                  } transition-all duration-[1s]`}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                ></div>
-              </div> */}
               {plusOnes.map((plusOne) => (
                 <span
                   key={plusOne.id}
@@ -1099,7 +1079,6 @@ const Forges = () => {
                   onTouchEnd={() => {
                     setIsStarHolding(2);
                     setshowStarBoosters(2);
-                    window.navigator.vibrate(0);
                   }}
                   size={"18vw"}
                   fill={"white"}
@@ -1147,7 +1126,7 @@ const Forges = () => {
               >
                 <div className="relative">
                   <img
-                    src="/assets/uxui/120px-minion.png"
+                    src="/assets/cards/160px-minion.png"
                     alt="dwarf"
                     className="w-full h-full select-none pointer-events-none "
                   />
@@ -1174,7 +1153,7 @@ const Forges = () => {
               >
                 <div className="relative">
                   <img
-                    src="/assets/uxui/120px-automata.png"
+                    src="/assets/cards/160px-automata.png"
                     alt="dwarf"
                     className="w-full h-full select-none pointer-events-none "
                   />
@@ -1202,11 +1181,21 @@ const Forges = () => {
               onTouchStart={() => {
                 if (mythStates[activeMyth].isShardsClaimActive) {
                   setShowCard("minion");
-                  window.navigator.vibrate(500);
+                  if (platform !== "ios") {
+                    window.navigator.vibrate(500);
+                  }
+                  if (platform === "ios") {
+                    tele.HapticFeedback.impactOccurred("light");
+                  }
                 } else {
                   if (activeCard === "minion") {
                     setIsHolding(true);
-                    window.navigator.vibrate(1000);
+                    if (platform !== "ios") {
+                      window.navigator.vibrate(1000);
+                    }
+                    if (platform === "ios") {
+                      tele.HapticFeedback.impactOccurred("light");
+                    }
                   }
                 }
               }}
@@ -1219,7 +1208,7 @@ const Forges = () => {
             >
               <div className="relative">
                 <img
-                  src="/assets/uxui/120px-minion.png"
+                  src="/assets/cards/160px-minion.png"
                   alt="dwarf"
                   className="w-full h-full select-none pointer-events-none "
                 />
@@ -1266,7 +1255,6 @@ const Forges = () => {
               }
             />
           )}
-
           {enableGuide && (
             <ForgesGuide
               handleClick={() => {
@@ -1281,30 +1269,51 @@ const Forges = () => {
               isOrb={true}
               isBlack={showBooster === "blackOrb"}
               activeMyth={activeMyth}
+              isForge={showBooster}
               closeCard={() => {
+                tele.HapticFeedback.notificationOccurred("success");
                 setShowBooster(null);
               }}
-              Button={
-                <Button
-                  message={"claim"}
-                  handleClick={() => {
-                    setShowBooster(null);
-                  }}
-                  activeMyth={activeMyth}
-                />
-              }
+              handleClick={() => {
+                tele.HapticFeedback.notificationOccurred("success");
+                setShowBooster(null);
+
+                setGlowBooster(3);
+                setTimeout(() => {
+                  setGlowBooster(0);
+                }, 2000);
+              }}
             />
           )}
 
-          {/* <Tutorial /> */}
-          <ReactHowler
-            src="/assets/audio/fof.forges.background01.wav"
-            playing={
-              !JSON.parse(localStorage.getItem("sound")) && activeMyth < 4
-            }
-            preload={true}
-            loop
-          />
+          <div className="absolute">
+            <ReactHowler
+              src="/assets/audio/fof.forges.background01.wav"
+              playing={
+                !JSON.parse(localStorage.getItem("sound")) && activeMyth < 4
+              }
+              preload={true}
+              loop
+            />
+            {(isHolding || isStarHolding) && (
+              <ReactHowler
+                src="/assets/audio/fof.minion.grunt.short.wav"
+                playing={
+                  !JSON.parse(localStorage.getItem("sound")) && activeMyth < 4
+                }
+                preload={true}
+              />
+            )}
+            {isStarHolding && (
+              <ReactHowler
+                src="/assets/audio/fof.automata.pulse.short.wav"
+                playing={
+                  !JSON.parse(localStorage.getItem("sound")) && activeMyth < 4
+                }
+                preload={true}
+              />
+            )}
+          </div>
         </div>
       ) : (
         <Convert />
@@ -1314,3 +1323,33 @@ const Forges = () => {
 };
 
 export default Forges;
+
+{
+  /* <div
+                style={{ position: "absolute", display: "inline-block" }}
+                className="w-[250px] -top-[80px]"
+              >
+                <img
+                  src="/assets/uxui/600px-smoke.wide.webp"
+                  alt="smoke"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    mixBlendMode: "color-dodge",
+                    filter: "contrast(254%) brightness(80%)",
+                  }}
+                  className={` ${
+                    tapGlow && "scale-150 -mt-[45px]"
+                  } transition-all duration-[1s]`}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                ></div>
+              </div> */
+}

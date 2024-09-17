@@ -27,7 +27,7 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
   return (
     <div
       onClick={handleButtonClick}
-      className={`absolute flex w-full justify-end top-0 ${alignBasedOnCard[align]}  z-10`}
+      className={`absolute flex w-full justify-end top-0 ${alignBasedOnCard[align]}  z-20`}
     >
       {isInfo ? (
         <div className="bg-black  flex justify-center items-center h-[60px] w-[60px] rounded-full">

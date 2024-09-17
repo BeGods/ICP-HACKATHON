@@ -1,13 +1,17 @@
 import {
-  Check,
   CircleCheck,
   CornerUpLeft,
   CornerUpRight,
   Download,
-  ThumbsUp,
 } from "lucide-react";
 import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
+
+// className={`flex items-center justify-between h-button-primary mt-[10px] w-button-primary mx-auto ${
+//   isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
+// }  border border-${
+//   mythSections[activeMyth]
+// }-primary bg-glass-black text-white rounded-primary z-10`}
 
 const QuestButton = ({
   handlePrev,
@@ -18,8 +22,6 @@ const QuestButton = ({
   message,
   currQuest,
   lastQuest,
-  faith,
-  t,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
 
