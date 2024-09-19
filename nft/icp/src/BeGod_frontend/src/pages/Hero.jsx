@@ -43,6 +43,7 @@ const Hero = () => {
         Greek: true,
         Egyptian: true
     });
+    const [collectionDetailsLoading,setCollectionLoadingDetails] = useState(true);
 
     const [collectionDescription,setCollectionDescription] = useState(initialCollectionDescription);
    
@@ -85,18 +86,21 @@ const Hero = () => {
                     ...prevData,
                     ["Celtic"]:eachItem[4]
                 }))
+                setCollectionLoadingDetails(false)
             }else if(eachItem[2] === "Norse"){
                 norseId = eachItem[1];
                 setCollectionDescription((prevData)=>({
                     ...prevData,
                     ["Norse"]:eachItem[4]
                 }))
+                setCollectionLoadingDetails(false)
             }else if(eachItem[2] === "Greek"){
                 greekId = eachItem[1];
                 setCollectionDescription((prevData)=>({
                     ...prevData,
                     ["Greek"]:eachItem[4]
                 }))
+                setCollectionLoadingDetails(false)
 
             }else if(eachItem[2] === "Egyptian"){
                 egyptianId = eachItem[1]
@@ -104,6 +108,7 @@ const Hero = () => {
                     ...prevData,
                     ["Egyptian"]:eachItem[4]
                 }))
+                setCollectionLoadingDetails(false)
             }
         });
 
@@ -196,9 +201,20 @@ const getCollectionNfts = (collectionList,collectionId) => {
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
                                 <img src="/Hero/celtic_hero.png" alt="" className='sm:hidden w-full flex items-center justify-center' />
                             </div>
+                            
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
+                            {collectionDetailsLoading ? (
+                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                <Skeleton count={1} height={80} width={150}  />
+                                <Skeleton count={3} width={600} height={20}/>
+                            </SkeletonTheme>
+                         ):(
+                            <>
                                 <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
                                 <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{collectionDescription[collections[currentIndex].name]}</h2>
+                            </>
+                         )}
+
                             </div>
                         </div>
                         {!loading[collections[currentIndex].name] && currentCollection.length > 0 ? (

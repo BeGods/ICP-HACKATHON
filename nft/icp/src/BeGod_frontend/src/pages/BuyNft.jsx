@@ -129,7 +129,7 @@ const BuyNft = () => {
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                 <div className='flex flex-col justify-center items-center'>
                                     <Skeleton count={1} width={100} height={50} />
-                                    <Skeleton count={1} width={70} height={30} />
+                                    <Skeleton count={1} width={70} height={20} />
                                 </div>
                             </SkeletonTheme>
                         ) : (
@@ -173,7 +173,7 @@ const BuyNft = () => {
                     <h1 className='w-[90%] mt-8 text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]'>
                         {nftCardLoading ? (
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <Skeleton count={3} width="100%" height={30} />
+                                <Skeleton count={3} width="100%" height={20} />
                             </SkeletonTheme>
                         ) : (
                             cardDetails.cardDescription
@@ -184,7 +184,7 @@ const BuyNft = () => {
                         <h1 className='text-[24px] font-[500] leading-[28px] text-[#FFFFFF]'>Details</h1>
                         {nftCardLoading ? (
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <Skeleton count={5} height={30} />
+                                <Skeleton count={5} height={20} />
                             </SkeletonTheme>
                         ) : (
                             <>
@@ -228,7 +228,7 @@ const BuyNft = () => {
                                          <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                         <div className='flex flex-col justify-center items-center'>
                                             <Skeleton count={1} width={100} height={50}/>
-                                            <Skeleton count={1} width={70} height={30}/>
+                                            <Skeleton count={1} width={70} height={20}/>
                                         </div>
                                          </SkeletonTheme>
                                     ):(
@@ -243,7 +243,7 @@ const BuyNft = () => {
                             {nftCardLoading ? (
                                     <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                         <div className='flex flex-col justify-center items-center'>
-                                            <Skeleton count={4} width={600} height={30}/>
+                                            <Skeleton count={4} width={600} height={20}/>
                                         </div>
                                     </SkeletonTheme>
                                 ):(
@@ -256,8 +256,8 @@ const BuyNft = () => {
                                     {nftCardLoading ? (
                                          <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                             
-                                                <Skeleton count={1} width={140} height={30}/>
-                                                <Skeleton count={1} width={140} height={30}/>
+                                                <Skeleton count={1} width={140} height={20}/>
+                                                <Skeleton count={1} width={140} height={20}/>
                                           </SkeletonTheme>
                                     ):(
                                         <>
@@ -270,8 +270,8 @@ const BuyNft = () => {
                                 {nftCardLoading ? (
                                          <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                             
-                                                <Skeleton count={1} width={140} height={30}/>
-                                                <Skeleton count={1} width={140} height={30}/>
+                                                <Skeleton count={1} width={140} height={20}/>
+                                                <Skeleton count={1} width={140} height={20}/>
                                           </SkeletonTheme>
                                     ):(
                                         <>
@@ -285,8 +285,8 @@ const BuyNft = () => {
                                 {nftCardLoading ? (
                                          <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                             
-                                                <Skeleton count={1} width={140} height={30}/>
-                                                <Skeleton count={1} width={140} height={30}/>
+                                                <Skeleton count={1} width={140} height={20}/>
+                                                <Skeleton count={1} width={140} height={20}/>
                                           </SkeletonTheme>
                                     ):(
                                         <>
@@ -300,8 +300,8 @@ const BuyNft = () => {
                                 {nftCardLoading ? (
                                          <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                             
-                                                <Skeleton count={1} width={140} height={30}/>
-                                                <Skeleton count={1} width={140} height={30}/>
+                                                <Skeleton count={1} width={140} height={20}/>
+                                                <Skeleton count={1} width={140} height={20}/>
                                           </SkeletonTheme>
                                     ):(
                                         <>
@@ -315,8 +315,8 @@ const BuyNft = () => {
                                 {nftCardLoading ? (
                                          <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                             
-                                                <Skeleton count={1} width={140} height={30}/>
-                                                <Skeleton count={1} width={140} height={30}/>
+                                                <Skeleton count={1} width={140} height={20}/>
+                                                <Skeleton count={1} width={140} height={20}/>
                                           </SkeletonTheme>
                                     ):(
                                         <>
@@ -380,7 +380,7 @@ const BuyNft = () => {
                          {collectionDetailsLoading ? (
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                 <Skeleton count={1} height={80} width={150}  />
-                                <Skeleton count={4} width={600} height={30}/>
+                                <Skeleton count={4} width={600} height={20}/>
                             </SkeletonTheme>
                          ):(
                             <>
