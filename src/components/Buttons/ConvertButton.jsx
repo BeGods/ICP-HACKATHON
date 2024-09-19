@@ -25,7 +25,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
       onTouchStart={() => setIsClicked(true)}
       onTouchEnd={() => setIsClicked(false)}
       onTouchCancel={() => setIsClicked(false)}
-      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${
+      className={`flex items-center z-20 justify-between h-button-primary w-button-primary mx-auto border border-${
         wheel[myth]
       }-primary bg-glass-black text-white rounded-primary ${
         isClicked ? `glow-button-${wheel[myth]}` : ""
