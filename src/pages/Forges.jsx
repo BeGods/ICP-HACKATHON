@@ -534,7 +534,7 @@ const Forges = () => {
     const { energy, shardslvl, currShards } = mythStates[activeMyth];
     const { counter, popupTime, isActive } = popupStates;
 
-    if (energy > 0 && showBlackOrb !== 1) {
+    if (energy > 0 && !isStarHolding) {
       if (platform !== "ios") {
         window.navigator.vibrate(25);
       }
