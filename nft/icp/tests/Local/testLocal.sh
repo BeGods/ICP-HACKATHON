@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-# dfx identity use chandan;
+dfx identity use bhargav;
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
 

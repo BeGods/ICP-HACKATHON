@@ -7,6 +7,9 @@ import NFTGallery from '../components/Landing Page Components/NftGallery';
 import HeroSlider from '../components/Landing Page Components/HeroSlider';
 import Collections from '../components/Landing Page Components/CollectionType';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from "../utils/useAuthClient.jsx";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 const collections = [
     { name: "Celtic", shadowColor: "#07632E" },
     { name: "Norse", shadowColor: "#00bfff" },
@@ -15,56 +18,38 @@ const collections = [
 ];
 
 
+
 const collectionsData = {
-    Celtic: [
-        { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 27.png", name: "SET", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-        { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 43.png", name: "RA", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 45.png", name: "DANU", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-        { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 43.png", name: "RA", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 45.png", name: "DANU", sold: "50", ICP: "0.56" },
-
-    ],
-
-    Norse: [
-
-        { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-        { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 43.png", name: "RA", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 45.png", name: "DANU", sold: "50", ICP: "0.56" },
-    ],
-    Egyptian: [
-
-        { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-        { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 43.png", name: "RA", sold: "50", ICP: "0.56" },
-    ],
-    Greek: [
-
-        { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
-        { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-        { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
-
-    ]
+    Celtic: [],
+    Norse: [],
+    Egyptian: [],
+    Greek: []
+}
+const initialCollectionDescription = {
+    Celtic:"",
+    Norse:"",
+    Egyptian:"",
+    Greek:"",
 }
 
 const Hero = () => {
     const[mobileView,setMobileView]=useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentCollection, setCurrentCollection] = useState(collectionsData[collections[currentIndex].name] || []);
+    const [currentCollectionData,setCollectionData] = useState(collectionsData);
+    const [currentCollection, setCurrentCollection] = useState(currentCollectionData[collections[currentIndex].name] || []);
+    const [loading, setLoading] = useState({
+        Celtic: true,
+        Norse: true,
+        Greek: true,
+        Egyptian: true
+    });
+
+    const [collectionDescription,setCollectionDescription] = useState(initialCollectionDescription);
+   
 
   
 
     const handleCurrentIndex  = (index) => {
-        console.log("card Index" , index);
         setCurrentIndex(index);
     }
 
@@ -73,15 +58,103 @@ const Hero = () => {
         setMobileView(!mobileView);
     }
     useEffect(() => {
-        setCurrentCollection(collectionsData[collections[currentIndex].name] || []);
-    }, [currentIndex])
+        setCurrentCollection(currentCollectionData[collections[currentIndex].name] || []);
+    }, [currentIndex,currentCollectionData])
     
 
     const {t} =  useTranslation();
     const {mainHeading,description,button} = t("landingPage");
-    console.log("mainheading ",mainHeading , "description : " , description , "button text" , button)
 
-    
+    const { backendActor } = useAuth();
+
+
+    useEffect(() => {
+        getCollections();
+    },[])
+    const getCollections = async() => {
+        const result = await backendActor?.getAllCollections();
+        const collectionItems = result[0][1];
+        let celticId ;
+        let norseId;
+        let greekId;
+        let egyptianId;
+        collectionItems.map((eachItem)=>{
+            if(eachItem[2] === "Celtic"){
+                celticId = eachItem[1]
+                setCollectionDescription((prevData)=>({
+                    ...prevData,
+                    ["Celtic"]:eachItem[4]
+                }))
+            }else if(eachItem[2] === "Norse"){
+                norseId = eachItem[1];
+                setCollectionDescription((prevData)=>({
+                    ...prevData,
+                    ["Norse"]:eachItem[4]
+                }))
+            }else if(eachItem[2] === "Greek"){
+                greekId = eachItem[1];
+                setCollectionDescription((prevData)=>({
+                    ...prevData,
+                    ["Greek"]:eachItem[4]
+                }))
+
+            }else if(eachItem[2] === "Egyptian"){
+                egyptianId = eachItem[1]
+                setCollectionDescription((prevData)=>({
+                    ...prevData,
+                    ["Egyptian"]:eachItem[4]
+                }))
+            }
+        });
+
+    console.log(celticId,norseId,greekId,egyptianId)
+
+    await fetchCollectionNfts(celticId, "Celtic");
+    await fetchCollectionNfts(norseId, "Norse");
+    await fetchCollectionNfts(greekId, "Greek");
+    await fetchCollectionNfts(egyptianId, "Egyptian");
+};
+let index = -1;
+const fetchCollectionNfts = async (collectionId, collectionName) => {
+    const listedNfts = await backendActor?.listings(collectionId);
+    index  = -1;
+    const fetchedNfts = getCollectionNfts(listedNfts,collectionId);
+
+
+    setCollectionData((prevData) => ({
+        ...prevData,
+        [collectionName]: fetchedNfts
+    }));
+
+    setLoading((prevLoading) => ({
+        ...prevLoading,
+        [collectionName]: false
+    }));
+};
+
+const getCollectionNfts = (collectionList,collectionId) => {
+    return collectionList.map((eachItem) => {
+        console.log("list item",eachItem)
+        index = index+1;
+        const nftDetails = eachItem[2].nonfungible;
+        const image = nftDetails.thumbnail;
+        const name = nftDetails.asset;
+        const sold = eachItem[1].price;
+        const ICP = "0.56";
+        return {
+            collectionId,
+            index,
+            img1: image,
+            name,
+            sold,
+            ICP
+        };
+    });
+};
+
+
+ console.log("collection data", currentCollectionData)
+
 
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -125,10 +198,21 @@ const Hero = () => {
                             </div>
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                                 <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat.</h2>
+                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{collectionDescription[collections[currentIndex].name]}</h2>
                             </div>
                         </div>
-                        <NFTGallery currentCollection={currentCollection} collections={collections} currentIndex={currentIndex} />
+                        {!loading[collections[currentIndex].name] && currentCollection.length > 0 ? (
+                            <NFTGallery currentCollection={currentCollection} collections={collections} currentIndex={currentIndex} />
+                        ) : (
+                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                <div className='flex justify-around mr-10'>
+                                    <Skeleton count={1} width={200} height={310} />
+                                    <Skeleton count={1} width={200} height={310} />
+                                    <Skeleton count={1} width={200} height={310} />
+                                    <Skeleton count={1} width={200} height={310} />
+                                </div>
+                            </SkeletonTheme>
+                        )}
                     </div>
                 </div>
             </div>
