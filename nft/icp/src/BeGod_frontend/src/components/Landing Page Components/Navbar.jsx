@@ -126,7 +126,7 @@ const Navbar = ({ mobileView }) => {
                           className="text-[24px] font-[500] leading-[28.92px] pt-0.5 text-[#FCD37B] flex justify-center items-center"
                         >
                           {/* <span className='text-sm mr-1'>( {t('langText')} )</span>  */}
-                          {currentLanguage} <span className="ml-2 text-sm ">▼</span>
+                          {currentLanguage} <span className="ml-2 text-sm "> {dropdownOpen ?"▲":"▼"}</span> 
                         </button>
                         {dropdownOpen && (
                           <ul className="absolute left-0 mt-10 bg-slate-900 text-[#FCD378]  rounded shadow-lg w-36 p-0 list-none">
