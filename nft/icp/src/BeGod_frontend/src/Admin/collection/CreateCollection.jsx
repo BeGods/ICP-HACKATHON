@@ -17,6 +17,9 @@ import YellowButton from "../../components/button/YellowButton.jsx";
 import { useAuth } from "../../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import { Opt } from "@dfinity/candid/lib/cjs/idl.js";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 const CreateCollection = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -43,6 +46,7 @@ const CreateCollection = () => {
   const [tokenidentifier, setTokenidentifier] = useState("");
   const [canprincipal, setcanpricipal] = useState();
   const [mintimagebase, setmintimagebase] = useState();
+  const [loading, setLoading] = useState(false);
 
   // const {
   //   nftType,
@@ -269,6 +273,7 @@ const CreateCollection = () => {
   };
 
   const finalcall = async () => {
+    setLoading(true);
     const answ = await createExtData(name, base64String, nfttype);
     setcanId(answ);
     // console.log(answ);
@@ -276,7 +281,7 @@ const CreateCollection = () => {
 
     await mintNFT(answ, nftname, nftdescription, nftimage, nftquantity);
     // alert("Your MFT is added succesfully");
-
+    setLoading(false);
     navigate("/admin/collection");
   };
 
@@ -362,6 +367,12 @@ const CreateCollection = () => {
                 >
                   Cancel
                 </button>
+
+                {loading && (
+                  <div className="spinner-container">
+                    <div className="spinner"></div>
+                  </div>
+                )}
 
                 <button
                   type="button"

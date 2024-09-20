@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { RiFolder6Line, RiDeleteBinLine } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
+import Skeleton from "react-loading-skeleton";
 
 function LogoImageUploader({ captureUploadedFiles }) {
   const [files, setFiles] = useState();
