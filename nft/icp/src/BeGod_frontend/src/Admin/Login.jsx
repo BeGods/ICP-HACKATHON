@@ -1,18 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setUserAndStore } from "../redux/authSlice.js";
-import { CreateActor } from "ic-auth";
-import { idlFactory } from "../../../declarations/BeGod_backend/BeGod_backend.did.js";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import LoginButton from "./components/LoginButton.jsx";
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const canisterID = "avqkn-guaaa-aaaaa-qaaea-cai";
-  const backend_canister_id = "ajuq4-ruaaa-aaaaa-qaaga-cai";
-  const whitelist = [canisterID];
+  const { adminlogin, isAuthenticated, logout } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Trigger the animation effect for wallet options
   useEffect(() => {
@@ -20,40 +16,44 @@ const Login = () => {
     document.getElementById("wallet-options").style.transform = "translateY(0)";
   }, []);
 
-  const { handleLogin, isAuthenticated } = useAuth();
-
-  // Monitor authentication status and navigate accordingly
+ 
   useEffect(() => {
-    // Only navigate if authentication status has truly changed
-    if (isAuthenticated) {
-      navigate("/admin/dashboard");
+    if (isLoading) {
+      setTimeout(() => setIsLoading(false), 1000);
+    } else {
+      if (isAuthenticated) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/admin/login");
+      }
+      console.log(isAuthenticated)
     }
-  }, [navigate]); // Add isAuthenticated as a dependency
+  }, [isAuthenticated, isLoading, navigate]);
 
   const buttonDataArray = [
     {
       imgSrc: "/plug2-removebg-preview.png",
       color: "#3a86ff",
       name: "Plug",
-      methodName: () => handleLogin("Plug"),
+      methodName: () => adminlogin("plug"),
     },
     {
       imgSrc: "/stoic-removebg-preview.png",
       color: "#f9c74f",
       name: "Stoic",
-      methodName: () => handleLogin("Stoic"),
+      methodName: () => adminlogin("stoic"),
     },
     {
       imgSrc: "/nfid-removebg-preview.png",
       color: "#ff006e",
       name: "NFID",
-      methodName: () => handleLogin("NFID"),
+      methodName: () => adminlogin("nfid"),
     },
     {
       imgSrc: "favicon.ico",
       color: "#8338ec",
       name: "Identity",
-      methodName: () => handleLogin("Identity"),
+      methodName: () => adminlogin("ii"),
     },
   ];
 

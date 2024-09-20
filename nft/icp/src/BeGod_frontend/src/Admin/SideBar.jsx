@@ -22,8 +22,10 @@ import { logoutUser, logoutUserAndClear } from "../redux/authSlice";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
+// not working
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 const sideBarData = [
   {
     text: "Dashboard",
@@ -81,12 +83,15 @@ function SidebarContent({ onClose, ...rest }) {
   const [Copied, setCopied] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  console.log(user)
   const logoutHandler = () => {
     dispatch(logoutUserAndClear());
   };
+  
   const handleCopy = () => {
     toast.success("Copied");
   };
+  
   return (
     <Box
       bg={useColorModeValue("#29292C", "gray.900")}
@@ -116,9 +121,7 @@ function SidebarContent({ onClose, ...rest }) {
               key={link.text}
               icon={link.icon}
               href={link.Link}
-              isActive={location
-                .toLowerCase()
-                .includes(link.Link.toLowerCase())}
+              isActive={location.toLowerCase().includes(link.Link.toLowerCase())}
               hovered={hovered}
             >
               {link.text}
@@ -129,7 +132,9 @@ function SidebarContent({ onClose, ...rest }) {
           <img className="w-12 h-12" src="/image/admin.png" alt="Admin" />
           <div className="space-y-2">
             <div className="flex items-center justify-start gap-x-2">
-              <p className="text-lg font-bold">Welcome, <span className="text-[#FCD37B]">Admin</span></p>
+              <p className="text-lg font-bold">
+                Welcome, <span className="text-[#FCD37B]">Admin</span>
+              </p>
               <button
                 onClick={() => logoutHandler()}
                 className="bg-red-100 rounded-full h-7 w-7 hover:bg-red-300 "
@@ -140,29 +145,28 @@ function SidebarContent({ onClose, ...rest }) {
             <div className="flex flex-col">
               <div>
                 <input
-                  value={`${user.slice(0, 5)}......${user.slice(
-                    user.length - 6
-                  )}`}
+                  value={
+                    user
+                      ? `${user.slice(0, 5)}......${user.slice(user.length - 6)}`
+                      : "No User"
+                  }
                   readOnly
                   className="text-green-400 w-[70%] bg-inherit"
                 />
-                <CopyToClipboard
-                  text={`${user.slice(0, 5)}.....${user.slice(
-                    user.length - 6
-                  )}`}
-                  onCopy={handleCopy}
-                >
-                  <button className="">
-                    <CopyIcon />
-                  </button>
-                </CopyToClipboard>
+                {user && (
+                  <CopyToClipboard text={user} onCopy={handleCopy}>
+                    <button className="">
+                      <CopyIcon />
+                    </button>
+                  </CopyToClipboard>
+                )}
               </div>
               {Copied && <p>Copied!</p>}
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={2000}
         hideProgressBar={false}
@@ -173,10 +177,11 @@ function SidebarContent({ onClose, ...rest }) {
         draggable
         pauseOnHover
         theme="colored"
-      />
+      /> */}
     </Box>
   );
 }
+
 
 SidebarContent.propTypes = {
   onClose: PropTypes.func.isRequired,

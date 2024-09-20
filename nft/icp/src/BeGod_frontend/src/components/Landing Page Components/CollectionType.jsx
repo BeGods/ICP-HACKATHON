@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Collections = ({ collections, next, prev, currentCollection, collectionsData }) => {
+const Collections = ({ collections, currentCollection, collectionsData ,handleCurrentIndex}) => {
     const [currentIndex, setCurrentIndex] = useState(0); // Track the current starting index of the visible items
 
     // Handler for navigating up (previous items)
@@ -10,7 +10,8 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
     const handleClick = (index) => {
         setAnimate(true);
         setTimeout(() => {
-            setCurrentIndex(currentIndex + index);
+            setCurrentIndex(currentIndex+index);
+            handleCurrentIndex(index);
             setAnimate(false);
         }, 300); // Duration should match the animation duration
     };
@@ -21,9 +22,10 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
             setAnimate(false);
         }, 300);
         if (currentIndex > 0) {
-            setCurrentIndex(currentIndex - 1); // Decrement current index to show previous collections
+            setCurrentIndex(currentIndex - 1); // Decrement current index to show previous collections 
+            handleCurrentIndex(currentIndex-1);
         }
-        next();
+        
     };
 
     // Handler for navigating down (next items)
@@ -34,8 +36,9 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
         }, 300);
         if (currentIndex < collections.length - 1) {
             setCurrentIndex(currentIndex + 1); // Increment current index to show next collections
+            handleCurrentIndex(currentIndex+1);
         }
-        prev();
+        
     };
 
     useEffect(() => {
@@ -78,15 +81,18 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
                         <div className='absolute h-[90%] bottom-0 right-0'>
                             <img src="/Hero/corner-small-left-bottom 4.png" alt="" className='h-full object-cover' />
                         </div>
-                        <h1 className='text-lg font-[400] text-white z-10'>{collection.name}</h1>
+                        <h1 className='text-lg font-[400] text-white z-10' style={{fontFamily:'MyCustomFont'}}>{collection.name}</h1>
                     </div>
                 ))}
             </div>
             {/* for bigger screen */}
-            <div className='hidden w-[100%] lg:flex flex-row flex-col items-center gap-12'>
+            <div className='hidden w-[100%] lg:flex flex-col items-center gap-12'>
                 {collections.map((collection, index) => (
                     <div
-                        onClick={() => setCurrentIndex(index)}
+                        onClick={() => {
+                            setCurrentIndex(index)
+                            handleCurrentIndex(index);
+                        }}
                         key={index}
                         className='cursor-pointer relative w-[50%] h-[55px] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
                         style={{
@@ -106,7 +112,7 @@ const Collections = ({ collections, next, prev, currentCollection, collectionsDa
                         <div className='absolute h-[90%] bottom-0 right-0'>
                             <img src="/Hero/corner-small-left-bottom 4.png" alt="" className='h-full object-cover' />
                         </div>
-                        <h1 className='text-lg font-[400] text-white z-10'>{collection.name}</h1>
+                        <h1 className='text-lg font-[400] text-white z-10 uppercase' style={{fontFamily:'MyCustomFont'}}>{collection.name}</h1>
                     </div>
                 ))}
             </div>
