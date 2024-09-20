@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 import DropzoneWithUrlInput from "../components/DropzoneWithUrlInput";
@@ -15,6 +15,10 @@ import { BiPlus } from "react-icons/bi";
 import BackButton from "./BackButton.jsx";
 import YellowButton from "../../components/button/YellowButton.jsx";
 import { useAuth } from "../../utils/useAuthClient.jsx";
+import { Principal } from "@dfinity/principal";
+import { Opt } from "@dfinity/candid/lib/cjs/idl.js";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const CreateCollection = () => {
   const navigate = useNavigate();
@@ -27,15 +31,44 @@ const CreateCollection = () => {
   const [nftRows, setNftRows] = useState([{ id: "", description: "" }]); // Initial row
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
-  const { backendActor } = useAuth();
+  const { backendActor, canisterId } = useAuth();
+  const [Ufile, setUFile] = useState([]);
+  const [base64String, setBase64String] = useState("");
+  const [nfttype, setnfttype] = useState("rare");
+  const [nftname, setnftname] = useState("");
+  const [nftquantity, setnftquantity] = useState();
+  const [nftprice, setnftprice] = useState("");
+  const [nftimage, setnftimage] = useState("");
+  const [nftbase64, setnftbase64] = useState("");
+  const [nftdescription, setnftdescription] = useState("");
+  const [canId, setcanId] = useState();
+  const [TokenId, setTokenId] = useState("");
+  const [tokenidentifier, setTokenidentifier] = useState("");
+  const [canprincipal, setcanpricipal] = useState();
+  const [mintimagebase, setmintimagebase] = useState();
+  const [loading, setLoading] = useState(false);
+
+  // const {
+  //   nftType,
+  //   nftName,
+  //   nftQuantity,
+  //   nftPrice,
+  //   nftDescription,
+  //   nftImage,
+  //   nftImageURL,
+  // } = nftCardsList;
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
 
-  //  backendActor?.CanisterActor?.createExtCollection;
-  //   console.log(createExtCollection)
+  // backendActor?.CanisterActor?.createExtCollection;
+  // console.log(createExtCollection);
 
-  const toggleModal = () => setModal(!modal);
+  const toggleModal = () => {
+    setModal(!modal);
+    // callCreateExtCollection();
+    // createExtData(name, base64String, nfttype);
+  };
 
   const handleAddRow = () =>
     setNftRows([...nftRows, { id: "", description: "" }]);
@@ -86,28 +119,150 @@ const CreateCollection = () => {
     }
   };
 
-  const createExtData = async (name, description, limit) => {
-    console.log(name, description, limit);
-    // const report  = await backendActor?.createExtCollection("chandan","vishwakarma","2");
-    // if (report && Array.isArray(report)) {
-    //   const data = await extractPrincipals(report);
-    //   console.log(data)
-    // } else {
-    //   console.error("Unexpected response structure:", report);
-    // }
+  const handleFiles = (files) => {
+    console.log("Uploaded files:", files);
+    setUFile(files);
+    const file = files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      // Convert the file to a Base64 string when it's loaded
+      reader.onloadend = () => {
+        setBase64String(reader.result); // The base64-encoded string is stored here
+      };
+
+      reader.readAsDataURL(file); // Read the file as a Data URL (Base64 format)
+    }
   };
 
-  const getBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
+  // const getBase64 = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
+
+  const createExtData = async (name, base64String, nfttype) => {
+    const metadata = JSON.stringify({ nfttype });
+    console.log(name, base64String, metadata);
+    const report = await backendActor?.createExtCollection(
+      name,
+      base64String,
+      metadata
+    );
+    if (report && Array.isArray(report)) {
+      const data = await extractPrincipals(report);
+
+      console.log(data[1]);
+
+      // const principalString = data[1];
+      // const principal = Principal.fromText(principalString);
+      setcanId(data[1]);
+      return data[1];
+      // setcanpricipal(principal);
+    } else {
+      console.error("Unexpected response structure:", report);
+    }
+  };
+
+  const mintNFT = async (
+    answ,
+    nftname,
+    nftdescription,
+    nftimage,
+    nftquantity
+  ) => {
+    console.log("in mint", answ);
+    const principalString = answ;
+    const principal = Principal.fromText(principalString);
+
+    const metadata = JSON.stringify({
+      nfttype,
+      standard: "EXT V2",
+      chain: "ICP",
+      contractAddress: canisterId,
     });
+
+    const metadataContainer = {
+      json: metadata,
+    };
+    console.log(principal, nftname, nftdescription, mintimagebase, nftquantity);
+    try {
+      const result = await backendActor?.mintExtNonFungible(
+        principal, //checking which principle put
+        nftname,
+        nftdescription,
+        "thumbnail",
+        nftimage, //thumbnail
+        metadataContainer ? [metadataContainer] : [],
+        Number(nftquantity)
+      );
+      setTokenId(result[0]);
+      console.log("NFT Minted: ", result[0]);
+      await getNftTokenId(answ, result[0]);
+    } catch (error) {
+      console.error("Error minting NFT: ", error);
+    }
+  };
+
+  const getNftTokenId = async (answ, nftId) => {
+    // console.log(canId, nftId);
+    const principalString = answ;
+    const principal = Principal.fromText(principalString);
+    try {
+      // Call the `getNftTokenId` function
+      const result = await backendActor?.getNftTokenId(
+        principal,
+        nftId //vector index
+      );
+      setTokenidentifier(result); // Set the retrieved NFT token ID
+      await listPrice(principal, result, nftprice);
+      console.log("NFT Token ID:", result);
+    } catch (error) {
+      console.error("Error fetching NFT token ID:", error);
+    }
+  };
+
+  const listPrice = async (principal, tokenidentifier, price) => {
+    try {
+      // console.log(canId, tokenidentifier, price);
+      const priceE8s = price ? BigInt(price) : null;
+      const request = {
+        token: tokenidentifier,
+        from_subaccount: [],
+        price: priceE8s ? [priceE8s] : [],
+      };
+      const result = await backendActor?.listprice(principal, request);
+
+      console.log("List Price Result:", result);
+      await getListing(principal);
+    } catch (error) {
+      console.error("Error listing price:", error);
+    }
+  };
+  const getListing = async (principal) => {
+    console.log(principal);
+    try {
+      // Call the `getNftTokenId` function
+      const result = await backendActor?.listings(principal);
+      console.log("Listing", result);
+      alert("Your MFT is added succesfully");
+    } catch (error) {
+      console.error("Error fetching listing", error);
+    }
   };
 
   const getAddedNftDetails = (nftDetails) => {
     setNftCardsList([...nftCardsList, nftDetails]);
+
+    setnfttype(nftDetails.nftType);
+    setnftname(nftDetails.nftName);
+    setnftquantity(nftDetails.nftQuantity);
+    setnftprice(nftDetails.nftPrice);
+    setnftdescription(nftDetails.nftDescription);
+    setnftimage(nftDetails.nftImage);
   };
 
   const deleteNft = (nftId) => {
@@ -115,6 +270,19 @@ const CreateCollection = () => {
       (eachNft) => eachNft.nftId !== nftId
     );
     setNftCardsList(updatedNFtList);
+  };
+
+  const finalcall = async () => {
+    setLoading(true);
+    const answ = await createExtData(name, base64String, nfttype);
+    setcanId(answ);
+    // console.log(answ);
+    // handleFiles(nftimage);
+
+    await mintNFT(answ, nftname, nftdescription, nftimage, nftquantity);
+    // alert("Your MFT is added succesfully");
+    setLoading(false);
+    navigate("/admin/collection");
   };
 
   return (
@@ -142,7 +310,7 @@ const CreateCollection = () => {
                     <span className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
                       Logo
                     </span>
-                    <LogoImageUploader />
+                    <LogoImageUploader captureUploadedFiles={handleFiles} />
                   </label>
                 </div>
               </div>
@@ -199,12 +367,22 @@ const CreateCollection = () => {
                 >
                   Cancel
                 </button>
-                <YellowButton
-                  methodName={() => createExtData(name, description, limit)}
+
+                {loading && (
+                  <div className="spinner-container">
+                    <div className="spinner"></div>
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
+                  onClick={finalcall}
                 >
                   Create Collection
-                </YellowButton>
+                </button>
               </div>
+
               {modal && (
                 <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
                   <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
