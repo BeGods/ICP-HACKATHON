@@ -24,7 +24,7 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-# dfx canister call "$CANISTER" createExtCollection '("Celtic", "https://picsum.photos/200/300", "{\"Name\":\"chandan\"}")'
+# dfx canister call "$CANISTER" createExtCollection '("Norse", "https://picsum.photos/200/300", "Norse Mythology revolves around a pantheon of gods, led by Odin, Thor, and Loki, who govern realms of power, wisdom, and chaos. Central themes include the inevitable fate of Ragnarok, where gods and giants clash in a final battle. These myths are filled with legendary creatures, powerful artifacts, and a cyclical worldview of destruction and rebirth.")'
 
 # Getting Result Like this
 # (
@@ -32,7 +32,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
+COLLECTION_ID="avqkn-guaaa-aaaaa-qaaea-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -50,12 +50,12 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
 #   principal "'$COLLECTION_ID'",
-#   "first nft",
-#   "this is the my first nft",
-#   "new data",
-#   "https://thisisthdata.jpg",
+#   "Ayesha",
+#   "Ayesha is a priestess in a series of novels by L.Horace Holly set in ancient Egypt. The series has been interpreted in a number of ways, including as an embodiment of the New Woman.",
+#   "Rare",
+#   "https://i.ibb.co/brHMh5G/ayeshabegods.png",
 #   opt variant {
-#     json = "{\"name\":\"vishwakarma\"}"
+#     json = "[{\"name\":\"Lugh\"}, {\"type\":\"Rear\"}]"
 #   },
 #   1
 # )'
@@ -95,7 +95,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-# dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+ #dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
@@ -117,7 +117,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
+TOKENIDENTIFIER='uq5fs-rqkor-uwjaa-aaaaa-aeaab-aaqca-aaaaa-a'
 TOKENID='1'
 PRICE=100_000_000
 # in e8s
@@ -125,7 +125,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+ dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 
