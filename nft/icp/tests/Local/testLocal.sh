@@ -6,14 +6,14 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use chandan;
-LEDGERID=$(dfx ledger account-id);
-echo $LEDGERID
+dfx identity use nftuser3;
+# LEDGERID=$(dfx ledger account-id);
+# echo $LEDGERID
 
-USER_PRINCIPAL=$(dfx identity get-principal)
-CANISTER=$(dfx canister id BeGod_backend)
-echo "USER_PRINCIPAL: $USER_PRINCIPAL"
-echo "CANISTER: $CANISTER"
+# USER_PRINCIPAL=$(dfx identity get-principal)
+# CANISTER=$(dfx canister id BeGod_backend)
+# echo "USER_PRINCIPAL: $USER_PRINCIPAL"
+# echo "CANISTER: $CANISTER"
 
 
 
@@ -48,17 +48,17 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 # STEP-2
 # add nft in the collection
 
-# dfx canister call "$CANISTER" mintExtNonFungible '(
-#   principal "'$COLLECTION_ID'",
-#   "first nft",
-#   "this is the my first nft",
-#   "new data",
-#   "https://thisisthdata.jpg",
-#   opt variant {
-#     json = "{\"name\":\"vishwakarma\"}"
-#   },
-#   1
-# )'
+dfx canister call "$CANISTER" mintExtNonFungible '(
+  principal "'$COLLECTION_ID'",
+  "first nft",
+  "this is the my first nft",
+  "new data",
+  "https://thisisthdata.jpg",
+  opt variant {
+    json = "{\"name\":\"vishwakarma\"}"
+  },
+  1
+)'
 
 # Getting Result Like this of same NFT 10 data
 # # (vec {
@@ -76,8 +76,8 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="0"
-echo "NFTID: $NFTID"
+# NFTID="0"
+# echo "NFTID: $NFTID"
 
 
 
@@ -117,13 +117,13 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
-TOKENID='1'
-PRICE=100_000_000
-# in e8s
-PRICEE8S=100000000
-echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
-echo "PRICE: $PRICE"
+# TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
+# TOKENID='1'
+# PRICE=100_000_000
+# # in e8s
+# PRICEE8S=100000000
+# echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
+# echo "PRICE: $PRICE"
 
 # dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 

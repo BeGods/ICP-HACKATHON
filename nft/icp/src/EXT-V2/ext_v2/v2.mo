@@ -346,8 +346,8 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //Services
-  let ExternalService_Cap = Cap.Cap(?"bd3sg-teaaa-aaaaa-qaaba-cai", cap_rootBucketId);
-  let ExternalService_ICPLedger = actor "bd3sg-teaaa-aaaaa-qaaba-cai" : actor {
+  let ExternalService_Cap = Cap.Cap(?"bkyz2-fmaaa-aaaaa-qaaaq-cai", cap_rootBucketId);
+  let ExternalService_ICPLedger = actor "bkyz2-fmaaa-aaaaa-qaaaq-cai" : actor {
     send_dfx : shared SendArgs -> async Nat64;
     account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
   };
@@ -2276,37 +2276,81 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //singleNFTData
-  public query func getSingleNonFungibleTokenData(tokenid : TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata)] {
+  // public query func getSingleNonFungibleTokenData(tokenid : TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata)] {
+  //   if (_tokenMetadata.size() == 0) {
+  //     return [];
+  //   };
+
+  //   let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(1);
+
+  //   switch (_tokenMetadata.get(tokenid)) {
+  //     case (?metadata) {
+  //       switch (metadata) {
+  //         case (#nonfungible(_)) {
+  //           let owner = switch (_registry.get(tokenid)) {
+  //             case (?owner) owner;
+  //             case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+  //           };
+  //           nonFungibleTokenData.add((tokenid, owner, metadata));
+  //         };
+  //         case (#fungible(_)) {
+  //           // Return empty if the token is fungible
+  //           return [];
+  //         };
+  //       };
+  //     };
+  //     case (null) {
+  //       // Return empty if no metadata found
+  //       return [];
+  //     };
+  //   };
+
+  //   return Buffer.toArray(nonFungibleTokenData);
+  // };
+
+  public query func getSingleNonFungibleTokenData(tokenid: TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
     if (_tokenMetadata.size() == 0) {
-      return [];
-    };
-
-    let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(1);
-
-    switch (_tokenMetadata.get(tokenid)) {
-      case (?metadata) {
-        switch (metadata) {
-          case (#nonfungible(_)) {
-            let owner = switch (_registry.get(tokenid)) {
-              case (?owner) owner;
-              case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-            };
-            nonFungibleTokenData.add((tokenid, owner, metadata));
-          };
-          case (#fungible(_)) {
-            // Return empty if the token is fungible
-            return [];
-          };
-        };
-      };
-      case (null) {
-        // Return empty if no metadata found
         return [];
-      };
     };
 
+    let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata, ?Nat64)>(1);
+
+    // Fetch the metadata for the token
+    switch (_tokenMetadata.get(tokenid)) {
+        case (?metadata) {
+            switch (metadata) {
+                case (#nonfungible(_)) {
+                    // Fetch the owner of the token
+                    let owner = switch (_registry.get(tokenid)) {
+                        case (?owner) owner;
+                        case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+                    };
+
+                    // Check if the token is listed in the marketplace and retrieve its price if it is
+                    let listing = _tokenListing.get(tokenid);
+                    let price = switch (listing) {
+                        case (?l) ?l.price;  // If listed, return the price
+                        case (_) null;  // If not listed, return null for price
+                    };
+
+                    // Add the token details (including price) to the buffer
+                    nonFungibleTokenData.add((tokenid, owner, metadata, price));
+                };
+                case (#fungible(_)) {
+                    // Return empty if the token is fungible
+                    return [];
+                };
+            };
+        };
+        case (null) {
+            // Return empty if no metadata found
+            return [];
+        };
+    };
+
+    // Return the array of token data, owner, metadata, and price (if listed)
     return Buffer.toArray(nonFungibleTokenData);
-  };
+};
 
 
 
