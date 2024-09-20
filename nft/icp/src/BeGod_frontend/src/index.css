@@ -2,19 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-   --background-color: #161618;
+:root {
+  --background-color: #161618;
 }
 @font-face {
-   font-family: 'MyCustomFont';
-   src: url('/BeGods-all-Fonts/BeGods-Celtic.otf') format('truetype');
+  font-family: "MyCustomFont";
+  src: url("/BeGods-all-Fonts/BeGods-Celtic.otf") format("truetype");
 }
 @font-face {
-  font-family: 'CaslonAntique';
-  src: url('/BeGods-all-Fonts/CaslonAntique-Bold.ttf') format('truetype');
+  font-family: "CaslonAntique";
+  src: url("/BeGods-all-Fonts/CaslonAntique-Bold.ttf") format("truetype");
 }
-body{
-   background-color: var(--background-color) !important;
+body {
+  background-color: var(--background-color) !important;
 }
 
 html {
@@ -46,9 +46,8 @@ html {
   object-fit: cover;
 }
 
-
-.custome_max_width{
-   max-width: 1280px;
+.custome_max_width {
+  max-width: 1280px;
 }
 .custom-text-border {
   -webkit-text-stroke: 1px black; /* Adds a black border of 1px width */
@@ -71,92 +70,91 @@ html {
   animation: fadeInUp 1s ease-out;
 }
 
-
 @layer utilities {
-   /* Hide scrollbar for Chrome, Safari and Opera */
-   .no-scrollbar::-webkit-scrollbar {
-       display: none;
-   }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
   /* Hide scrollbar for IE, Edge and Firefox */
-   .no-scrollbar {
-       -ms-overflow-style: none;  /* IE and Edge */
-       scrollbar-width: none;  /* Firefox */
- }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 /* Add this to your CSS file or inside a <style> tag in your component */
 
 .maincontainer {
-   position: relative;
-   width: 250px;
-   height: 320px;
-   background: none;
-   margin: 20px auto;
- }
- 
- .thecard {
-   position: absolute;
-   width: 100%;
-   height: 100%;
-   border-radius: 10px;
-   transform-style: preserve-3d;
-   transition: all 0.8s ease;
- }
- 
- .thefront, .theback {
-   position: absolute;
-   width: 100%;
-   height: 100%;
-   backface-visibility: hidden;
-   border-radius: 10px;
-   overflow: hidden;
- }
- 
- .theback {
-   transform: rotateY(180deg);
- }
- /* Global stylesheet or inline style */
-.hide-scrollbar::-webkit-scrollbar {
-   display: none;
- }
- 
- .hide-scrollbar {
-   -ms-overflow-style: none;  /* IE and Edge */
-   scrollbar-width: none;  /* Firefox */
- }
- 
+  position: relative;
+  width: 250px;
+  height: 320px;
+  background: none;
+  margin: 20px auto;
+}
 
- /* collection animation */
- @keyframes fadeIn {
-   0% {
-     opacity: 0;
-   }
-   100% {
-     opacity: 1;
-   }
- }
- 
- @keyframes slideInLeft {
-   0% {
-     transform: translateX(-50%);
-     opacity: 0;
-   }
-   100% {
-     transform: translateX(0);
-     opacity: 1;
-   }
- }
- 
- .animate-fadeIn {
-   animation: fadeIn 1.2s ease-in-out;
- }
- 
- .animate-slideInLeft {
-   animation: slideInLeft 1s ease-out;
- }
- 
- /* Flipping card css in homepage */
- @keyframes fadeIn {
+.thecard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  transform-style: preserve-3d;
+  transition: all 0.8s ease;
+}
+
+.thefront,
+.theback {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.theback {
+  transform: rotateY(180deg);
+}
+/* Global stylesheet or inline style */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* collection animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 1s ease-out;
+}
+
+/* Flipping card css in homepage */
+@keyframes fadeIn {
   0% {
     opacity: 0;
   }
@@ -193,8 +191,8 @@ html {
   flex-shrink: 0;
   margin-bottom: 20px;
 }
-@media screen and (min-width:1000px) and (max-width:1100px){
-  .flip-card{
+@media screen and (min-width: 1000px) and (max-width: 1100px) {
+  .flip-card {
     width: 170px;
     height: 210px;
   }
@@ -231,7 +229,8 @@ html {
 }
 
 /* Media Queries for Mobile Responsiveness */
-@media (max-width: 640px) { /* Mobile screen size */
+@media (max-width: 640px) {
+  /* Mobile screen size */
   .flip-card {
     width: 250px; /* Reduced width for mobile */
     height: 350px; /* Reduced height for mobile */
@@ -241,7 +240,6 @@ html {
     font-size: 14px; /* Adjust button font size for mobile */
   }
 }
-
 
 /* Image stacking of hero section */
 
@@ -283,18 +281,18 @@ html {
 .explore-button {
   position: relative;
   overflow: hidden;
-   /* Ensure the text color contrasts with the background */
+  /* Ensure the text color contrasts with the background */
   transition: background-color 0.3s ease;
 }
 
 .explore-button::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('/image/BGRoadmapTwo (1).png');
+  background-image: url("/image/BGRoadmapTwo (1).png");
   background-size: cover;
   background-position: center;
   opacity: 0;
@@ -308,7 +306,12 @@ html {
 }
 
 .explore-button:hover {
-  background-color: rgba(252, 211, 123, 0.8); /* Adjust background color if needed */
+  background-color: rgba(
+    252,
+    211,
+    123,
+    0.8
+  ); /* Adjust background color if needed */
 }
 
 .explore-button span {
@@ -329,7 +332,6 @@ html {
     transform: rotate(360deg);
   }
 }
-
 
 /* animate collection */
 @keyframes smokeMove {
@@ -353,7 +355,11 @@ html {
   left: 50%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
   transform: translate(-50%, -50%);
   opacity: 0; /* Initially hidden */
   pointer-events: none; /* Doesn't interfere with user interaction */
@@ -366,7 +372,6 @@ html {
 }
 
 /* spreading the cards in collection details page */
-
 
 /* Effect on collection card */
 /* Add this to your CSS file or in a <style> block in your component */
@@ -404,7 +409,7 @@ html {
 
 /* This apply blur effect to a image in NftCardItem Component */
 
-.add_new_nft_popup_bg_container{
+.add_new_nft_popup_bg_container {
   height: 80vh;
   width: 25vw;
   background-color: #161618;
@@ -412,42 +417,75 @@ html {
   padding: 32px 42px 36px 42px;
   overflow-y: auto;
 }
-@media screen and (max-width:1200px){
-.add_new_nft_popup_bg_container{
-  width: 40vw;
-  height: 50vh;
+@media screen and (max-width: 1200px) {
+  .add_new_nft_popup_bg_container {
+    width: 40vw;
+    height: 50vh;
+  }
 }
-}
-@media screen and (max-width:950px){
-  .add_new_nft_popup_bg_container{
+@media screen and (max-width: 950px) {
+  .add_new_nft_popup_bg_container {
     height: 50vh;
     overflow-y: auto;
   }
 }
-@media screen and (max-width:768px){
-.add_new_nft_popup_bg_container{
-  width: 80vw;
-  padding: 16px 22px 16px 22px;
-  height: 70vh;
+@media screen and (max-width: 768px) {
+  .add_new_nft_popup_bg_container {
+    width: 80vw;
+    padding: 16px 22px 16px 22px;
+    height: 70vh;
     overflow-y: auto;
-}
+  }
 }
 
-
-.nft_card_image{
+.nft_card_image {
   transition: filter 0.3s ease-in-out;
 }
 .nft_card_image:hover {
-  filter:blur(2px);
+  filter: blur(2px);
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 5px;
 }
-::-webkit-scrollbar-track{
+::-webkit-scrollbar-track {
   background-color: black;
 }
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   background: #ffffff;
   border-radius: 20px;
+}
+
+/* for spinner */
+
+/* Spinner styling */
+.spinner {
+  border: 8px solid rgba(0, 0, 0, 0.1); /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Center spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional background */
 }

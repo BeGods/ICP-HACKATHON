@@ -6,14 +6,14 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use bhargav;
-LEDGERID=$(dfx ledger account-id);
-echo $LEDGERID
+dfx identity use nftuser3;
+# LEDGERID=$(dfx ledger account-id);
+# echo $LEDGERID
 
-USER_PRINCIPAL=$(dfx identity get-principal)
-CANISTER=$(dfx canister id BeGod_backend)
-echo "USER_PRINCIPAL: $USER_PRINCIPAL"
-echo "CANISTER: $CANISTER"
+# USER_PRINCIPAL=$(dfx identity get-principal)
+# CANISTER=$(dfx canister id BeGod_backend)
+# echo "USER_PRINCIPAL: $USER_PRINCIPAL"
+# echo "CANISTER: $CANISTER"
 
 
 
@@ -76,8 +76,8 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="0"
-echo "NFTID: $NFTID"
+# NFTID="0"
+# echo "NFTID: $NFTID"
 
 
 

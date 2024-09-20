@@ -6,13 +6,14 @@ import YellowButton from "../../components/button/YellowButton";
 
 const Modal = (props) => {
   const { getAddedNftDetails } = props;
-  const [nftId, setNftId] = useState("32131");
+  const [nftId, setNftId] = useState("254");
   const [nftName, setNftName] = useState("");
   const [nftType, setNftType] = useState("NORMAL");
   const [nftQuantity, setNftQuantity] = useState("");
   const [nftPrice, setPrice] = useState("");
   const [nftDescription, setNftDescription] = useState("");
-  const [nftImage, setNftImage] = useState("");
+  const [nftImage, setNftImage] = useState();
+  const [nftImageURL, setNftImageURL] = useState("");
   const { toggleModal } = props;
 
   const onClickAddButton = () => {
@@ -24,7 +25,8 @@ const Modal = (props) => {
       nftQuantity &&
       nftPrice &&
       nftDescription &&
-      nftImage
+      nftImage &&
+      nftImageURL
     ) {
       const nftDetails = {
         nftId,
@@ -32,6 +34,7 @@ const Modal = (props) => {
         nftType,
         nftQuantity,
         nftImage,
+        nftImageURL,
         nftPrice,
         nftDescription,
       };
@@ -44,9 +47,26 @@ const Modal = (props) => {
     }
   };
 
-  const captureUploadedNftImage = (img) => {
-    setNftImage(img);
-    console.log("img", img);
+  const captureUploadedNftImageFile = (files) => {
+    const file = files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      // Convert the file to a Base64 string when it's loaded
+      reader.onloadend = () => {
+        console.log("in handlefiless", reader.result);
+        setNftImage(reader.result); // The base64-encoded string is stored here
+      };
+      reader.readAsDataURL(file);
+      // Read the file as a Data URL (Base64 format)
+    }
+    // setNftImage(files);
+  };
+
+  const captureUploadedNftImage = (pic) => {
+    setNftImageURL(pic);
+    console.log(nftImageURL);
+    // console.log("img", files);
   };
 
   return (
@@ -106,13 +126,16 @@ const Modal = (props) => {
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             Image
-            <ImageUploader captureUploadedNftImage={captureUploadedNftImage} />
+            <ImageUploader
+              captureUploadedNftImage={captureUploadedNftImage}
+              captureUploadedNftImageFile={captureUploadedNftImageFile}
+            />
           </label>
         </div>
 
         <div className="mt-1">
           <label className="mt-[20px] w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-            Price
+            Price(in Dollor)
             <input
               value={nftPrice}
               onChange={(e) => setPrice(e.target.value)}
@@ -135,7 +158,7 @@ const Modal = (props) => {
           </label>
         </div>
         <div className="flex justify-center mt-2 md:mt-3">
-          <YellowButton methodName={() =>onClickAddButton()}>Add</YellowButton>
+          <YellowButton methodName={() => onClickAddButton()}>Add</YellowButton>
           {/* <button
             type="submit"
             className="h-[38px] w-[150px] border-0 bg-[#FCD37B] text-[#000000] rounded-sm"
