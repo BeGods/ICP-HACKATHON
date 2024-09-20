@@ -1,4 +1,8 @@
 {
+    "connectWallet" : "Connet Wallet",
+    "collectionNavItem" : "Collection",
+    "buyNow" : "Buy Now",
+    "langText": "English",
     "landingPage" : {
         "mainHeading" :"BATTLE OF GODS",
         "description" : "Unleash the Divine: Collect and Own NFT Cards of the Gods!",
@@ -31,5 +35,18 @@
         "chain" : "Chain",
         "lastUpdated" : "Last Updated",
         "buyNow" : "Buy Now"
+    },
+    "myProfile" : "MY PROFILE",
+    "myCollection" : "My Collection",
+    "favorite" : "Favorite",
+    "footerDescription" : "Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.",
+    "home" : "Home",
+    "collectionFooterText" : "My Collection",
+    "categoriesText" : "Categories",
+    "categories" : {
+        "horseCollection" : "Horse",
+        "greeceCollection" : "Greece",
+        "celticCollection" : "Celtic",
+        "egyptanCollection" : "Egyptian"
     }
 }

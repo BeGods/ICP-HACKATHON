@@ -1,5 +1,9 @@
 {
-   "landingPage": {
+    "connectWallet": "वॉलेट कनेक्ट करें",
+    "collectionNavItem": "संग्रह",
+    "buyNow": "अभी खरीदें",
+    "langText": "हिन्दी",
+    "landingPage": {
        "mainHeading": "देवताओं का युद्ध",
        "description": "दैविक शक्ति को मुक्त करें: देवताओं के NFT कार्ड एकत्र करें और स्वामित्व लें!",
        "button": "संग्रह का अन्वेषण करें"
@@ -31,5 +35,20 @@
     "chain": "श्रृंखला",
     "lastUpdated": "अंतिम अपडेट",
     "buyNow": "अभी खरीदें"
-}
+    },
+    "myProfile": "मेरा प्रोफ़ाइल",
+    "myCollection": "मेरा संग्रह",
+    "favorite": "पसंदीदा",
+    "footerDescription": "Lorem ipsum dolor sit amet consectetur. एसी एट adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.",
+    "home": "मुखपृष्ठ",
+    "collectionFooterText": "मेरा संग्रह",
+    "categoriesText": "श्रेणियाँ",
+    "categories": {
+        "horseCollection": "घोड़ा",
+        "greeceCollection": "यूनान",
+        "celticCollection": "सेल्टिक",
+        "egyptanCollection": "मिस्री"
+    }
+
+
 }

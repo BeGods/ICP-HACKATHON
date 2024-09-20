@@ -259,7 +259,7 @@ actor Main {
         let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
         let extCollectionCanisterId = await extToken.getCanisterId();
         let collectionCanisterActor = actor (Principal.toText(extCollectionCanisterId)) : actor {
-            ext_setCollectionMetadata : (
+            ext_setCollectionMetadata : (   
                 name : Text,
                 symbol : Text,
                 metadata : Text,
@@ -313,13 +313,40 @@ actor Main {
     };
 
     // Getting all the collections ever created(only gets the canisterIds)
-    public shared query func getAllCollections() : async [(Principal, [(Time.Time, Principal)])] {
-        var result : [(Principal, [(Time.Time, Principal)])] = [];
-        for ((key, value) in usersCollectionMap.entries()) {
-            result := Array.append([(key, value)], result);
+public shared func getAllCollections() : async [(Principal, [(Time.Time, Principal, Text, Text, Text)])] {
+    var result : [(Principal, [(Time.Time, Principal, Text, Text, Text)])] = [];
+
+    // Iterate through all entries in usersCollectionMap
+    for ((userPrincipal, collections) in usersCollectionMap.entries()) {
+        var collectionDetails : [(Time.Time, Principal, Text, Text, Text)] = [];
+
+        // Iterate through each collection the user has
+        for ((time, collectionCanisterId) in collections.vals()) {
+            // Try-catch block to handle potential errors while fetching collection metadata
+            try {
+                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+                    getCollectionDetails : () -> async (Text, Text, Text);  // Assuming it returns (name, symbol, metadata)
+                };
+
+                // Fetch the collection details (name, symbol, metadata)
+                let (collectionName, collectionSymbol, collectionMetadata) = await collectionCanisterActor.getCollectionDetails();
+
+                // Add collection with its name, symbol, and metadata to the list
+                collectionDetails := Array.append(collectionDetails, [(time, collectionCanisterId, collectionName, collectionSymbol, collectionMetadata)]);
+            } catch (e) {
+                Debug.print("Error fetching collection details for canister: " # Principal.toText(collectionCanisterId));
+                // Handle failure by appending the collection with placeholder values
+                collectionDetails := Array.append(collectionDetails, [(time, collectionCanisterId, "Unknown Collection", "Unknown Symbol", "Unknown Metadata")]);
+            };
         };
-        return result;
+
+        // Append user's collections to the result
+        result := Array.append(result, [(userPrincipal, collectionDetails)]);
     };
+
+    return result;
+};
+
 
     //getTotalCollection
     public shared ({ caller = user }) func totalcollections() : async Nat {
@@ -501,15 +528,19 @@ actor Main {
     };
 
     // Get Single NFT details for specific collection
-    public shared ({ caller = user }) func getSingleNonFungibleTokens(
-        _collectionCanisterId : Principal,
-        _tokenId : TokenIndex,
-    ) : async [(TokenIndex, AccountIdentifier, Metadata)] {
-        let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            getSingleNonFungibleTokenData : (_tokenId : TokenIndex) -> async [(TokenIndex, AccountIdentifier, Metadata)];
-        };
-        return await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
-    };
+public shared ({ caller = user }) func getSingleNonFungibleTokens(
+    _collectionCanisterId: Principal,
+    _tokenId: TokenIndex
+    ) : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
+
+// Define the actor interface for the other canister
+let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    getSingleNonFungibleTokenData: (TokenIndex) -> async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)];
+};
+
+// Make the inter-canister call to fetch the token data (including price)
+return await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
+};
 
     // Gets all details about the tokens that were transfered into this vault
     public shared query func getDeposits() : async [Deposit] {

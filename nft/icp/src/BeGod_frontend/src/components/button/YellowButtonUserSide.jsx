@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import React from 'react';
 
-function YellowButton({ children, methodName }) {
+function YellowButtonUserSide({ children, methodName }) {
   return (
     <Button
       bg="#FCD37B"  // Initial background color
@@ -10,11 +10,11 @@ function YellowButton({ children, methodName }) {
       _hover={{ bg: "#D4A849", borderColor: "#D4A849" }}  // Hover styles: background and border color change
       borderWidth="1px"  // Explicitly set border width
       onClick={methodName}
-      
+      className='w-full'      
     >
       {children}
     </Button>
   );
 }
 
-export default YellowButton;
+export default YellowButtonUserSide;

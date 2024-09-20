@@ -7,7 +7,7 @@ import { IoLogoTwitter } from "react-icons/io";
 import { CiTwitter } from 'react-icons/ci';
 import { useTranslation } from 'react-i18next';
 const Footer = () => {
-    const {t} = useTranslation(['footer']);
+    const {t} = useTranslation();
      const {horseCollection,greeceCollection,celticCollection,egyptanCollection} = t('categories'); 
     return (
         <div className="max-w-[1920px]  flex flex-col justify-center   w-full  text-[#FFFFFF]">
@@ -22,7 +22,7 @@ const Footer = () => {
                     <div className="flex flex-col gap-2 sm:gap-4 sm:mt-16 lg:mt-0">
                         <div className='flex gap-40 sm:gap-50'>
                             <h1 className="text-lg sm:text-xl underline">{t('home')}</h1>
-                            <h1 className="flex  text-lg sm:text-xl underline">{t('collection')}</h1>
+                            <h1 className="flex  text-lg sm:text-xl underline">{t('collectionFooterText')}</h1>
                         </div>
                         <h1 className=''>{t('categoriesText')}</h1>
                         <div className='flex flex-col md:flex-row gap-4 sm:gap-x-12 '>

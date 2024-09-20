@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Assuming you're using react-router-dom for navigation
 import YellowButton from '../button/YellowButton';
 import { useTranslation } from 'react-i18next';
-const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
+
+
+const NFTGallery = ({ currentCollection }) => {
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);
@@ -26,7 +28,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
     }
   };
 
-  const {t} = useTranslation(['button'])
+  const {t} = useTranslation()
 
   // Apply animation when the component mounts or the page changes
   useEffect(() => {
@@ -54,6 +56,11 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
     // Clean up the event listener on component unmount
     return () => window.removeEventListener('resize', updateImagesPerSet);
   }, []);
+
+
+  currentItems.map((eachItem)=>(
+    console.log("current item",eachItem.collectionId)
+  ))
   return (
     <div>
       <div className='flex sm:hidden items-center justify-center'>
@@ -65,7 +72,7 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
             className={`hover:cursor-pointer -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
           />
         </div>
-        <div className={`w-[90%] flex items-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
+        <div className={`w-[90%] flex img-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
           {currentItems && currentItems.map((img, index) => (
             <div className="flip-card rounded-lg" key={index}>
               <div className="flip-card-inner w-[210px] h-[335px]">
@@ -80,9 +87,11 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                     <h1 className="text-xl sm:text-3xl font-extrabold">{img.name}</h1>
                     <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                     <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                    <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                    <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                       {t('buyNow')}
                     </Link>
+
+
                   </div>
                 </div>
               </div>
@@ -113,9 +122,11 @@ const NFTGallery = ({ currentCollection, collections, currentIndex }) => {
                   <h1 className="text-xl sm:text-3xl lg:text-2xl font-extrabold">{img.name}</h1>
                   <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                   <h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>
-                  <Link to={`/Nft/${img.name}/buy`} className="flex items-center justify-center mt-4 w-[60%] h-[35px] sm:w-[40%] sm:h-[32px]  lg:text-xs xl:text-sm bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
-                     {t('buyNow')}
+                  <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                    {t('buyNow')}
                   </Link>
+
+
                 </div>
               </div>
             </div>
