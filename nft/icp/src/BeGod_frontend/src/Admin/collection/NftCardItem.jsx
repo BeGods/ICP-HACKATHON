@@ -2,7 +2,17 @@ import { RxCross2 } from "react-icons/rx";
 const NftCardItem = (props) => {
   const { deleteNft } = props;
   const { nftDetails } = props;
-  const { nftImage, nftId } = nftDetails;
+  const {
+    nftImageUrl,
+    nftId,
+    nftDescription,
+    nftName,
+    nftQuantity,
+    nftType,
+    nftPrice,
+    nftImage,
+  } = nftDetails;
+  console.log(nftDetails);
 
   return (
     <div className="relative object-cover border-2 border-gray-700 w-[28rem] rounded-md">
@@ -13,16 +23,14 @@ const NftCardItem = (props) => {
           className="object-cover w-32 rounded-lg h-42 nft_card_image"
         />
         <div className="flex flex-col gap-2">
-          <span className="font-bold">Nft Name</span>
-          <span className="font-bold">Type: Mytic</span>
+          <span className="font-bold">{nftName}</span>
+          <span className="font-bold">Type: {nftType}</span>
           <div className="flex flex-row justify-between w-full gap-2">
-            <span className="font-bold">Quantity: 100</span>
-            <span className="font-bold">Price: 10ICP</span>
+            <span className="font-bold">Quantity: {nftQuantity}</span>
+            <span className="font-bold">Price: {nftPrice} ICP</span>
           </div>
 
-          <span className="font-light">
-            loreps, da dada dadada dadadadad dada dad dad{" "}
-          </span>
+          <span className="font-light">{nftDescription}</span>
         </div>
       </div>
       <button

@@ -2,7 +2,7 @@
 set -e
 
 # Step 2: Create a new identity for the minter account
-dfx identity new minter || true
+# dfx identity new minter || true
 dfx identity use minter
 export MINTER_ACCOUNT_ID=$(dfx ledger account-id)
 echo "MINTER_ACCOUNT_ID: $MINTER_ACCOUNT_ID"
