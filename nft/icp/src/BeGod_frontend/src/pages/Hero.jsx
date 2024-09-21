@@ -46,6 +46,8 @@ const Hero = () => {
     const [collectionDetailsLoading,setCollectionLoadingDetails] = useState(true);
 
     const [collectionDescription,setCollectionDescription] = useState(initialCollectionDescription);
+
+    const [noCards , updateNoCardsStatus] = useState(false);
    
 
   
@@ -121,6 +123,10 @@ const Hero = () => {
 };
 let index = -1;
 const fetchCollectionNfts = async (collectionId, collectionName) => {
+    if(collectionId === undefined) {
+        updateNoCardsStatus(true);
+        return;
+    }
     const listedNfts = await backendActor?.listings(collectionId);
     index  = -1;
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId);
@@ -220,6 +226,11 @@ const getCollectionNfts = (collectionList,collectionId) => {
                         {!loading[collections[currentIndex].name] && currentCollection.length > 0 ? (
                             <NFTGallery currentCollection={currentCollection} collections={collections} currentIndex={currentIndex} />
                         ) : (
+                           noCards ? (
+                              <div className='w-[70%] h-[220px] flex items-center justify-center'>
+                                    <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
+                              </div>
+                           ):(
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
                                 <div className='flex justify-around mr-10'>
                                     <Skeleton count={1} width={200} height={310} />
@@ -228,6 +239,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
                                     <Skeleton count={1} width={200} height={310} />
                                 </div>
                             </SkeletonTheme>
+                           )
                         )}
                     </div>
                 </div>

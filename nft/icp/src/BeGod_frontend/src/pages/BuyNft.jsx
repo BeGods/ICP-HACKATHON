@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,CSSProperties } from 'react'
 import Navbar from '../components/Landing Page Components/Navbar'
 import Footer from '../components/Footer'
 import YellowButtonUserSide from '../components/button/YellowButtonUserSide'
@@ -12,9 +12,20 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from '@dfinity/principal';
 import Skeleton,{SkeletonTheme} from 'react-loading-skeleton';
+import MoonLoader from "react-spinners/MoonLoader";
+import { IoMdCheckmarkCircle } from "react-icons/io";
+
+
+
+// const override: CSSProperties = {
+//   display: "block",
+//   margin: "0 auto",
+//   borderColor: "red",
+// };
+
 const buyingStatus = {
     payment : "PAYMENT",
-    licenceInfo : "Final"
+    success : "SUCCESS"
 }
 
 const BuyNft = () => {
@@ -27,10 +38,43 @@ const BuyNft = () => {
     const [collectionDetails,setCollectionDetails] = useState({});
     const [collectionDetailsLoading,setCollectionDetailsLoading]  = useState(true);
 
+    const [tokenId,setTokenId] = useState("");
+
+
+    
+
+    let [popUpFirstLoading, setLoadingFirst] = useState(true);
+    let [popUpSecondLoading,setLoadingSecond] = useState(false);
+    let [color, setColor] = useState("#ffffff");
 
     const toggleBuyPopup  = () => {
         setbuyPopup(!buyPopup);
         setBuyingStatus(buyingStatus.payment);
+    }
+    
+    const onClickBuyButton = async() => {
+        setbuyPopup(true);
+        setBuyingStatus(buyingStatus.payment);
+
+        const result1 = await backendActor?.purchaseNft(Principal.fromText(collectionId),tokenId,parseInt(cardDetails.cardPrice),"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe");
+        
+        setLoadingFirst(false);
+        setLoadingSecond(true);
+        console.log("payment address",result1);
+        console.log("payment address",result1.ok[0]);
+        const paymentAddress = result1.ok[0];
+
+        const result = await backendActor?.send_balance_and_nft(Principal.fromText(collectionId),paymentAddress,parseInt(cardDetails.cardPrice),[]);
+        console.log("final result",result);
+        setLoadingSecond(false);
+
+        console.log(result.ok);
+        console.log("result type",typeof(result.ok));
+
+        if(result.ok == parseInt(2n)){
+            setBuyingStatus(buyingStatus.success)
+        }
+
     }
 
     const location = useLocation();
@@ -64,11 +108,14 @@ const BuyNft = () => {
 
         const metadata = JSON.parse(cardDetails.metadata[0].json)
 
+        
+
         const updatedCardDetails = {
             cardName : metadata[0].name,
             cardType : metadata[1].type,
             cardImageUrl : cardDetails.thumbnail,
             cardDescription : cardDetails.description,
+            cardPrice : parseInt(100000000),
         }
 
         setCardDetails(updatedCardDetails);
@@ -78,6 +125,16 @@ const BuyNft = () => {
 
     useEffect(()=>{
         fetchCardDetails();
+    },[])
+
+    const fetchTokenId = async() => {
+        const tokenId = await backendActor?.getNftTokenId(Principal.fromText(collectionId),parseInt(index));
+
+        setTokenId(tokenId)
+
+    }
+    useEffect(()=>{
+        fetchTokenId()
     },[])
 
     const fetchCollectionDetails=async()=>{
@@ -108,7 +165,7 @@ const BuyNft = () => {
     },[])
 
 
-    console.log("before return ",collectionDetails)
+ //   console.log("before return ",collectionDetails)
    
     return (
         <div className='font-caslon'>
@@ -327,12 +384,13 @@ const BuyNft = () => {
                                     
                                 </div>
                             </div>
-                            <div className='ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={()=>setbuyPopup(!buyPopup)}>
+                            <div className='ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
                             <button 
                                 className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
                                 disabled={nftCardLoading}
+                                onClick={onClickBuyButton}
                             >
-                                    Buy
+                                    Buy for {cardDetails.cardPrice/100000000} ICP
                                 </button>
 
                             </div>
@@ -420,16 +478,57 @@ const BuyNft = () => {
                                 </div>
                                 {currentBuyingStatus === buyingStatus.payment && (
                                     <div className='h-[90%] relative flex flex-col items-center justify-center mt-10 '>
-                                        <h1 className='text-white'>Payment</h1>
-                                        <button onClick={()=>setBuyingStatus(buyingStatus.success)} className='mt-3 w-40 border border-white border-solid cursor-pointer bg-[#1E62AC]'>success</button>
+                                        <div className='w-[80%] h-[40px] bg-green-900 border border-slate-400 flex pl-5 items-center'>
+                                            {popUpFirstLoading ? (
+                                                <MoonLoader  
+                                                color={color}
+                                                loading={popUpFirstLoading}
+                                                size={15}
+                                                
+                                                aria-label="Loading Spinner"
+                                                data-testid="loader"
+                                                className='mr-2'
+                                            />
+                                            ):(
+                                                 <IoMdCheckmarkCircle color='green' size={25} className='mr-2'/>
+                                            )}
+                                            
+                                           
+                                            
+                                            <h1 className=''>Payment is initiated....</h1>
+                                        </div>
+                                        <div className={`w-[80%] h-[40px] border border-slate-400 flex items-center mt-3 pl-5
+                                                        ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none' : 'bg-green-900 text-white'}`}
+                                        
+                                         >
+                                            {!popUpFirstLoading && popUpSecondLoading && (
+                                                <MoonLoader  
+                                                color={color}
+                                                loading={popUpSecondLoading}
+                                                size={15}
+                                                aria-label="Loading Spinner"
+                                                data-testid="loader"
+                                                className='mr-2'
+                                                />
+                                            )}
+                                            {!popUpFirstLoading && !popUpSecondLoading && (
+                                                    <IoMdCheckmarkCircle color='green' size={25} className='mr-2'/>
+                                            )}
+                                            
+                                           
+                                            
+                                            <h1>Buying in Progress....</h1>
+                                        </div>
+                                        
+                                        
                                     </div>
                                 )}
                                 
                                 
                                 {currentBuyingStatus === buyingStatus.success && (
-                                    <div className='flex flex-col items-center mt-5 '>
+                                    <div className='flex flex-col items-center justify-center mt-5 '>
                                         <h1 className='text-2xl font-semibold mb-2'>Congratulations</h1>
-                                        <img src='buynftimg3.png' className='w-[180px] h-[260px]' />
+                                        <img src={cardDetails.cardImageUrl} className='w-[180px] h-[260px]' />
                                         <h1 className='flex items-center text-base font-extralight mt-2'>
                                             
                                                 Licence No- 828746888
