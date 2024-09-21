@@ -178,6 +178,7 @@ const CreateCollection = () => {
     console.log("in mint", answ);
     const principalString = answ;
     const principal = Principal.fromText(principalString);
+    const date = new Date();
 
     const metadata = JSON.stringify({
       nfttype,

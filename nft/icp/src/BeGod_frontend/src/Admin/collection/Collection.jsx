@@ -12,17 +12,17 @@ function Collection() {
   const getcolletion = async () => {
     const result = await backendActor?.getAllCollections();
     console.log(result[0]);
-    var arr = result[0];
-    arr = arr[1];
-    setcoll(arr);
-    setcoll(arr);
-    arr = arr[0];
-    console.log(arr);
+    // var arr = result[0];
+    // arr = arr[1];
+    // setcoll(arr);
+    // setcoll(arr);
+    // arr = arr[0];
+    // console.log(arr);
   };
 
-  useEffect(async () => {
-    await getcolletion();
-    console.log("in useeffect", coll);
+  useEffect(() => {
+    getcolletion();
+    // console.log("in useeffect", coll);
   }, []);
   console.log("in end  useeffect", coll);
   return (
