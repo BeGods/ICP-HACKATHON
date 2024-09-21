@@ -48,6 +48,7 @@ const CreateCollection = () => {
   const [mintimagebase, setmintimagebase] = useState();
   const [loading, setLoading] = useState(false);
 
+  // console.log(Date.now().toLocaleString());
   // const {
   //   nftType,
   //   nftName,
@@ -273,20 +274,27 @@ const CreateCollection = () => {
   };
 
   const finalcall = async () => {
-    setLoading(true);
-    const answ = await createExtData(name, base64String, nfttype);
-    setcanId(answ);
-    // console.log(answ);
-    // handleFiles(nftimage);
-
-    await mintNFT(answ, nftname, nftdescription, nftimage, nftquantity);
-    // alert("Your MFT is added succesfully");
-    setLoading(false);
-    navigate("/admin/collection");
+    setLoading(true); // Start loading
+    try {
+      const answ = await createExtData(name, base64String, nfttype);
+      setcanId(answ);
+      await mintNFT(answ, nftname, nftdescription, nftimage, nftquantity);
+      alert("Your NFT is added successfully");
+    } catch (error) {
+      console.error("Error in final call: ", error);
+    } finally {
+      setLoading(false); // Stop loading
+      navigate("/admin/collection");
+    }
   };
 
   return (
     <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
+      {/* {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <Skeleton height={400} width={400} />
+        </div>
+      ) : ( */}
       <div className="w-full">
         <BackButton />
         <div className="my-8">
@@ -368,11 +376,11 @@ const CreateCollection = () => {
                   Cancel
                 </button>
 
-                {loading && (
-                  <div className="spinner-container">
-                    <div className="spinner"></div>
-                  </div>
-                )}
+                {/* {loading && (
+                    <div className="spinner-container">
+                      <div className="spinner"></div>
+                    </div>
+                  )} */}
 
                 <button
                   type="button"
@@ -399,6 +407,7 @@ const CreateCollection = () => {
           </div>
         </div>
       </div>
+      {/* )} */}
     </div>
   );
 };
