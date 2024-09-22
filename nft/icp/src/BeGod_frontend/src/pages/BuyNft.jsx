@@ -8,7 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import { RiFileCopyLine } from "react-icons/ri";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from '@dfinity/principal';
 import Skeleton,{SkeletonTheme} from 'react-loading-skeleton';
@@ -725,7 +725,9 @@ const BuyNft = () => {
                                             </CopyToClipboard>
                                             
                                         </h1>
-                                        <button className='w-[150px] h-[26px] bg-transparent border-2 border-solid border-[#FCD37B] mt-2'>View Details</button>
+                                        <Link to="/profile">
+                                            <button className='w-[150px] h-[26px] bg-transparent border-2 border-solid border-[#FCD37B] mt-2'>View Details</button>
+                                        </Link>
                                     </div>
                                 )}
 

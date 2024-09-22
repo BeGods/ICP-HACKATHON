@@ -25,34 +25,47 @@ const purchased = [
 ];
 
 const Profile = () => {
-  const [category, setCategory] = useState("mycollection");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isCardsLoading,setIsCardsLoading] = useState(true);
   const [noCards,updateNoCardsStatus] = useState(false);
 
-  const [myCollections , setMyCollections] = useState(mycollection);
+  const [selectedList , updateSelectedList] = useState([]);
+  const [currentOption,updateCurrentOption] = useState("mycollection")
+  
 
-  const getCategoryData = () => {
-    switch (category) {
-      case "mycollection":
-        return myCollections;
-      case "favorite":
-        return favorite;
-      case "purchased":
-        return purchased;
-      default:
-        return [];
+
+  const onOptionChange = async(updatedOption) => {
+    updateCurrentOption(updatedOption)
+    if(updatedOption !== currentOption){
+      updateNoCardsStatus(false);
+      setIsCardsLoading(true)
+      if(updatedOption === "mycollection"){
+        await fetchCollections();
+      }else if(updatedOption === "favorite"){
+        await fetchFavoriteCards();
+      }
     }
-  };
 
-  const images = getCategoryData();
+  } 
+
+  const fetchFavoriteCards = async() => {
+    const result = await backendActor?.getFavorites("4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
+    console.log("resssssssult" , result);
+    updateNoCardsStatus(true);
+    setIsCardsLoading(false);
+    
+  }
+
+ 
+
+ 
 
   const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? selectedList.length - 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === selectedList.length - 1 ? 0 : prevIndex + 1));
   };
 //   const { reloadLogin, isAuthenticated } = useAuth();
    const navigate = useNavigate(); 
@@ -69,10 +82,12 @@ const Profile = () => {
   useEffect(() => {
     setCurrentIndex(0);
 
-  },[category])
+  },[selectedList])
 
 const {t} = useTranslation();
 const { backendActor } = useAuth({});
+
+
   const fetchCollections = async() => {
     const collectionList = [];
     const result = await backendActor?.getAllCollections();
@@ -109,7 +124,7 @@ const { backendActor } = useAuth({});
    if(collectionList.length === 0) {
      updateNoCardsStatus(true);
    }else{
-    setMyCollections(collectionList);
+    updateSelectedList(collectionList);
    }
     
   }
@@ -118,16 +133,6 @@ const { backendActor } = useAuth({});
 
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
     return collectionDetailsResult
-    // const collectionIdList = collectionDetailsResult.map((eachNft)=>{
-    //   const cardDetails = result[0][2].nonfungible;
-    //   const metadata = JSON.parse(cardDetails.metadata[0].json)
-    //   return {
-    //     collectionId,
-    //     cardName : metadata[0].name,
-    //     cardDescription : cardDetails.description,
-    //     cardPrice : parseInt(100000000),
-    //   }
-    // })
 
   }
    
@@ -160,14 +165,14 @@ const { backendActor } = useAuth({});
           <div className='w-full lg:w-[70%]'>
             <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0'>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
-                onClick={() => setCategory("mycollection")}
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                onClick={() => onOptionChange("mycollection")}
               >
                 {t('myCollection')}
               </div>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
-                onClick={() => setCategory("favorite")}
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                onClick={() => onOptionChange("favorite")}
               >
                 {t('favorite')}
               </div>
@@ -196,7 +201,7 @@ const { backendActor } = useAuth({});
                     <h1>No Cards Availalbe</h1>
                   ):(
                     <div>
-                      <NftCard img={images[currentIndex]} key={currentIndex} />
+                      <NftCard img={selectedList[currentIndex]} key={currentIndex} />
                     </div>
                   )
                   
@@ -208,33 +213,39 @@ const { backendActor } = useAuth({});
             </div>
           
             {/* Grid view for larger screens */}
-            <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+            {noCards ? (
+                <div className='hidden w-[90%] h-[300px] sm:flex justify-center items-center '>
+                  <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
+                </div>
+            ):(
+              <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
              
-             {isCardsLoading ? (
-                <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                <div className='flex justify-between  w-full'>
-                    <Skeleton count={1} width={200} height={310} />
-                </div>
-                <div>
-                <Skeleton count={1} width={200} height={310} />
-                </div>
-                <div>
-                <Skeleton count={1} width={200} height={310} />
-                </div>
-                <div>
-                <Skeleton count={1} width={200} height={310} />
-                </div>
-            </SkeletonTheme>
-             ):(
-              images.map((img, index) => (
-                <div className='flip-card rounded-lg w-full'>
-                 <NftCard img={img} key={index} />
-                </div>
-             ))
-             )}
+                    {isCardsLoading ? (
+                        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                        <div className='flex justify-between  w-full'>
+                            <Skeleton count={1} width={200} height={310} />
+                        </div>
+                        <div>
+                        <Skeleton count={1} width={200} height={310} />
+                        </div>
+                        <div>
+                        <Skeleton count={1} width={200} height={310} />
+                        </div>
+                        <div>
+                        <Skeleton count={1} width={200} height={310} />
+                        </div>
+                    </SkeletonTheme>
+                    ):(
+                      selectedList.map((img, index) => (
+                        <div className='flip-card rounded-lg w-full'>
+                          <NftCard img={img} key={index} />
+                        </div>
+                      ))
+                    )}
               
               
             </div>
+            )}
           </div>
         </div>
       </div>

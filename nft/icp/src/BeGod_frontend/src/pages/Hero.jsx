@@ -24,7 +24,7 @@ const Hero = () => {
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
     const [startIndex,setStartIndex] = useState(0);
-    const visibleButtons = 3;
+    const visibleButtons = 4;
 
 
 
@@ -180,11 +180,27 @@ console.log("current collection list",selectedCollectionNftCardsList)
                         // <h1>Collection Data</h1>
                      ):(
                         <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                            <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[45%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-40 mr-2'>
+                            <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
+                            <div className='pt-2 lg:pr-4 lg:pb-2'>
+                                <img
+                                    src="/Hero/up.png"
+                                    alt="Up"
+                                    className={`hover:cursor-pointer ${true ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
+                                />
+                            </div>
+                            <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[45%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mr-2'>
                                 <Skeleton count={1} height={60} width={220}  />
                                 <Skeleton count={1} height={60} width={220}  />
                                 <Skeleton count={1} height={60} width={220}  />
                                 <Skeleton count={1} height={60} width={220}  />
+                            </div>
+                            <div>
+                                <img
+                                    src="/Hero/down.png"
+                                    alt="Down"
+                                    className={`hover:cursor-pointer ${true ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
+                                />
+                            </div>
                             </div>
                         </SkeletonTheme>
 
