@@ -188,12 +188,23 @@ console.log("current collection list",selectedCollectionNftCardsList)
                                     className={`hover:cursor-pointer ${true ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
                                 />
                             </div>
-                            <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[45%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mr-2'>
-                                <Skeleton count={1} height={60} width={220}  />
-                                <Skeleton count={1} height={60} width={220}  />
-                                <Skeleton count={1} height={60} width={220}  />
-                                <Skeleton count={1} height={60} width={220}  />
+                            <div className="flex items-center gap-2 sm:hidden">
+                                <Skeleton count={1} height={40} width={90} />
+                                <Skeleton count={1} height={40} width={90} />
                             </div>
+                            <div className="md:flex items-center gap-2 lg:hidden">
+                                <Skeleton count={1} height={40} width={190} />
+                                <Skeleton count={1} height={40} width={190} />
+                            </div>
+
+                            <div className="hidden lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[45%] h-[100%] lg:flex lg:flex-col md:gap-8 items-center justify-center mr-2">
+                                <Skeleton count={1} height={60} width={220} />
+                                <Skeleton count={1} height={60} width={220} />
+                                <Skeleton count={1} height={60} width={220} />
+                                <Skeleton count={1} height={60} width={220} />
+                            </div>
+
+
                             <div>
                                 <img
                                     src="/Hero/down.png"
@@ -216,13 +227,13 @@ console.log("current collection list",selectedCollectionNftCardsList)
                             {collections.length === 0 ? (
                                 
                                      <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                        <div className='flex flex-col justify-center items-center mb-5 lg:hidden'>
-                                        <Skeleton count={1} height={80} width={150}  />
-                                        <Skeleton count={3} width={300} height={20}/>
+                                        <div className='flex flex-col justify-center items-center sm:items-start mb-5 lg:hidden'>
+                                            <Skeleton count={1} height={50} width={150} />
+                                            <Skeleton count={3} width={400} height={20}/>
                                         </div>
-                                        <div className='hidden lg:flex lg:mb-5'>
-                                        <Skeleton count={1} height={80} width={150}  />
-                                        <Skeleton count={3} width={300} height={20}/>
+                                        <div className='hidden lg:flex lg:mb-5 flex-col'>
+                                            <Skeleton count={1} height={80} width={150} />
+                                            <Skeleton count={3} width={600} height={20}/>
                                         </div>
                                     </SkeletonTheme>
                                 
@@ -245,7 +256,10 @@ console.log("current collection list",selectedCollectionNftCardsList)
                               </div>
                            ):(
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <div className='flex justify-around my-6 lg:hidden'>
+                                <div className='flex justify-around my-6 sm:hidden'>
+                                    <Skeleton count={1} width={220} height={280} />
+                                </div>
+                                <div className='sm:flex ml-10 my-6 lg:hidden'>
                                     <Skeleton count={1} width={220} height={280} />
                                 </div>
                                 <div className='hidden lg:flex justify-around m-10'>

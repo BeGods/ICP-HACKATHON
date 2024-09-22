@@ -239,9 +239,27 @@ const BuyNft = () => {
                                     />
                                 )}
                             </div>
-                            <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={() => setbuyPopup(!buyPopup)}>
+                            {/* <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={() => setbuyPopup(!buyPopup)}>
                                 <YellowButtonUserSide>{t('buyNow')}</YellowButtonUserSide>
+                            </div> */}
+                            {nftCardLoading ? (
+                               <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#202020]'>
+                                    <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                            <Skeleton count={1} width={178} height={40}/>
+                                      </SkeletonTheme>
+                               </div>
+                         ):(
+                            <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
+                            <button 
+                                className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                                disabled={nftCardLoading}
+                                onClick={onClickBuyButton}
+                            >
+                                    Buy for {cardDetails.cardPrice/100000000} ICP
+                                </button>
+
                             </div>
+                         )}
                         </div>
                     </div>
                     <h1 className='w-[90%] mt-8 text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]'>
@@ -263,23 +281,23 @@ const BuyNft = () => {
                         ) : (
                             <>
                                 <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>Contact Address</h1>
+                                    <h1>{contactAddress}</h1>
                                     <h1>0x2358...a68b</h1>
                                 </div>
                                 <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>Token</h1>
+                                    <h1>{token}</h1>
                                     <h1>ID8050</h1>
                                 </div>
                                 <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>Token Standard</h1>
+                                    <h1>{tokenStandard}</h1>
                                     <h1>ERC-721</h1>
                                 </div>
                                 <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>Chain</h1>
+                                    <h1>{chain}</h1>
                                     <h1>ICP</h1>
                                 </div>
                                 <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>Last updated</h1>
+                                    <h1>{lastUpdated}</h1>
                                     <h1>7 Days ago</h1>
                                 </div>
                             </>
@@ -542,7 +560,6 @@ const BuyNft = () => {
                             // </div>
 
                             //Type -2  
-
                                 // <div className='h-[80%] flex flex-col items-center justify-center mt-10'>
                                 //     <div className='w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md'>
                                 //         {popUpFirstLoading ? (
@@ -587,9 +604,8 @@ const BuyNft = () => {
                                 //         )}
                                 //         <h1 className={`${!popUpSecondLoading && popUpFirstLoading ? "pl-10" : "pl-0"}`}>Buying in Progress....</h1>
                                 //     </div>
-                                // </div>  
-                                
-                            //Type -3
+                                // </div>                                  
+                            //Type -3                          
                             //     <div className='h-[80%] flex flex-col items-center justify-center mt-10'>
                             //      <div className='flex items-center w-[90%]'>
                             //         {popUpFirstLoading ? (
@@ -713,7 +729,7 @@ const BuyNft = () => {
 
 
                                 
-                                {currentBuyingStatus === buyingStatus.success && (
+                                {currentBuyingStatus === buyingStatus.success && !popUpSecondLoading && (
                                     <div className='flex flex-col items-center justify-center mt-5 '>
                                         <h1 className='text-2xl font-semibold mb-2'>Congratulations</h1>
                                         <img src={cardDetails.cardImageUrl} className='w-[180px] h-[260px]' />

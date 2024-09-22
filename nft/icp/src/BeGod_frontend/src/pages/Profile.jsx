@@ -198,7 +198,7 @@ const { backendActor } = useAuth({});
                   
                 ):(
                   noCards ? (
-                    <h1>No Cards Availalbe</h1>
+                    <h1 className='text-[#FFD700] text-[22px]'>No Cards Availalbe</h1>
                   ):(
                     <div>
                       <NftCard img={selectedList[currentIndex]} key={currentIndex} />
@@ -214,7 +214,7 @@ const { backendActor } = useAuth({});
           
             {/* Grid view for larger screens */}
             {noCards ? (
-                <div className='hidden w-[90%] h-[300px] sm:flex justify-center items-center '>
+                <div className='hidden w-[90%] h-[380px] sm:flex justify-center items-center '>
                   <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
                 </div>
             ):(
