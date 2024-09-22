@@ -25,7 +25,7 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-# dfx canister call "$CANISTER" createExtCollection '("Egyptian", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk. ")'
+ dfx canister call "$CANISTER" createExtCollection '("Varma", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk. ")'
 
 # Getting Result Like this
 # (
@@ -33,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="asrmz-lmaaa-aaaaa-qaaeq-cai"
+COLLECTION_ID="by6od-j4aaa-aaaaa-qaadq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -80,7 +80,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="2"
+NFTID="1"
 echo "NFTID: $NFTID"
 
 
@@ -99,7 +99,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-#  dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+#   dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
@@ -122,7 +122,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-# TOKENIDENTIFIER='5rbth-xqkor-uwjaa-aaaaa-aeaab-eaqca-aaaab-a'
+# TOKENIDENTIFIER='ev2rs-oikor-uwjaa-aaaaa-aeaaa-4aqca-aaaaa-q'
 # TOKENID='1'
 # PRICE=100_000_000
 # # in e8s
@@ -216,7 +216,7 @@ dfx identity use default
 
 # Note: Before call the send_balance_and_nft make sure you are Topup your backend canister by given below command ex: recharge 50ICP to backend.
 
-dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"br5f7-7uaaa-aaaaa-qaaca-cai\";}; amount = 9_000_000_000;})"
+# dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"br5f7-7uaaa-aaaaa-qaaca-cai\";}; amount = 9_000_000_000;})"
 
 # # step 7 & step 8
 
