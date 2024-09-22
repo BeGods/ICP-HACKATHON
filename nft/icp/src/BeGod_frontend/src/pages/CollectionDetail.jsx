@@ -65,7 +65,7 @@ const CollectionDetail = () => {
                     <div className='w-[80vw] space-y-8 text-[#FFFFFF] mt-[3%]'>
                         <h1 style={{ fontFamily: "MyCustomFont" }} className='text-[40px] font-[400] leading-[30.04px]'>{nftData.title}</h1>
                         <div className='flex flex-col sm:flex-row'>
-                            <h2 className='w-[70vw] sm:w-[80vw] md:w-[40vw] lg:w-[65%] xl:w-[45%] text-[12px] lg:text-[16px] font-[400] leading-[20.04px]' style={{ fontFamily: "QuickSand" }}>{nftData.decription}</h2>
+                            <h2 className='w-[70vw] sm:w-[80vw] md:w-[40vw] lg:w-[65%] xl:w-[45%] text-[12px] lg:text-[16px] font-[400] leading-[20.04px]' >{nftData.decription}</h2>
                             <Link to="" className="md:ml-[30%] lg:ml-[40%] sm:mt-[17%] md:mt-[7%] h-[10%] w-[50%] sm:w-[35%] md:w-[25%] lg:w-[13%] border-[1px] border-white bg-[#1E62AC] text-center">
                                 Buy Collection
                             </Link>

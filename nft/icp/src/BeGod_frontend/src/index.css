@@ -7,11 +7,16 @@
 }
 @font-face {
   font-family: "MyCustomFont";
-  src: url("/BeGods-all-Fonts/BeGods-Celtic.otf") format("truetype");
+  src: url("./assets/begods-forges.of.faith.otf") format("opentype"); /* Change format to "opentype" for .otf */
+  font-weight: normal;
+  font-style: normal;
 }
+
 @font-face {
   font-family: "CaslonAntique";
-  src: url("/BeGods-all-Fonts/CaslonAntique-Bold.ttf") format("truetype");
+  src: url("./assets/OPTICaslon-Antique.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
 }
 body {
   background-color: var(--background-color) !important;
@@ -19,6 +24,23 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+body{
+  font-family: "CaslonAntique" !important;
+}
+
+.big-heading{
+  font-family: "MyCustomFont" !important;
+}
+
+.big-heading-text{
+  font-size: 70px !important;
+  font-family: "MyCustomFont" !important;
+}
+
+.normal-heading{
+  font-family: "CaslonAntique" !important;
 }
 
 /* Swiper Slider */
