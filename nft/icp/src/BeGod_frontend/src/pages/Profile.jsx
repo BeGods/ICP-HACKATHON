@@ -171,11 +171,11 @@ const { backendActor } = useAuth({});
               >
                 {t('favorite')}
               </div>
-              <div
+              {/* <div
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
               >
                 My Achievements
-              </div>
+              </div> */}
             </div>
 
             {/* Small screen view for single image display with prev and next buttons */}
