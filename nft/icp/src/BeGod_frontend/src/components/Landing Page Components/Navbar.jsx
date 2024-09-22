@@ -72,7 +72,7 @@ const Navbar = ({ mobileView }) => {
 
     const selectedLanguage  = i18n.language;
 
-    console.log("selected language" ,selectedLanguage);
+    // console.log("selected language" ,selectedLanguage);
 
 
     return (
@@ -118,12 +118,12 @@ const Navbar = ({ mobileView }) => {
                     <img src="/Hero/logo.png" alt="" />
                 </Link>
                 <div className='p-5  flex space-x-5 items-center'>
-                    <Link to="" className='pt-4 text-[24px] font-[500] leading-[28.92px] text-[#FCD37B]'>{t('collectionNavItem')}</Link>
+                    <Link to="" className='pt-4 text-[20px] font-[500] leading-[28.92px] text-[#FCD37B]'>{t('collectionNavItem')}</Link>
 
                     <li className='relative list-none pt-4 w-[130px] flex justify-center '>
                          <button
                           onClick={toggleDropdown}
-                          className="text-[24px] font-[500] leading-[28.92px] pt-0.5 text-[#FCD37B] flex justify-center items-center"
+                          className="text-[20px] font-[500] leading-[28.92px] pt-0.5 text-[#FCD37B] flex justify-center items-center"
                         >
                           {/* <span className='text-sm mr-1'>( {t('langText')} )</span>  */}
                           {currentLanguage} <span className="ml-2 text-sm "> {dropdownOpen ?"▲":"▼"}</span> 
@@ -149,7 +149,7 @@ const Navbar = ({ mobileView }) => {
                        <nav className='relative list-none pt-4 w-[180px] h-[50px] flex justify-center items-center'>
                        <button
                         onClick={toggleProfileDropDown}
-                        className="text-[24px] font-[500] leading-[28.92px] pt-0.5 h-full w-full rounded-sm text-white   flex justify-center items-center  bg-[#000000] border border-solid border-white"
+                        className="text-[20px] font-[500] leading-[28.92px] pt-0.5 h-full w-full rounded-sm text-white   flex justify-center items-center  bg-[#000000] border border-solid border-white"
                       >
                      <span className="mr-1"><FaUserLarge size={15} /></span> Dcd4-744
                       </button>

@@ -8,24 +8,15 @@ import { useAuth } from '../utils/useAuthClient';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
+ 
 const mycollection = [
-  { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 27.png", name: "SET", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-  { img1: "/image/Front.png", name: "CERBERVES", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 43.png", name: "RA", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 45.png", name: "DANU", sold: "50", ICP: "0.56" },
+  
 ];
 
 const favorite = [
-
-  { img1: "/image/Component 27.png", name: "SET", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 28.png", name: "KARNAYAM", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 22.png", name: "MIDGARD", sold: "50", ICP: "0.56" },
-  { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
 ];
 
 const purchased = [
@@ -36,11 +27,15 @@ const purchased = [
 const Profile = () => {
   const [category, setCategory] = useState("mycollection");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isCardsLoading,setIsCardsLoading] = useState(true);
+  const [noCards,updateNoCardsStatus] = useState(false);
+
+  const [myCollections , setMyCollections] = useState(mycollection);
 
   const getCategoryData = () => {
     switch (category) {
       case "mycollection":
-        return mycollection;
+        return myCollections;
       case "favorite":
         return favorite;
       case "purchased":
@@ -63,30 +58,13 @@ const Profile = () => {
    const navigate = useNavigate(); 
    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
    
-  console.log("is authenticated in profile section" , isAuthenticated);
+  // console.log("is authenticated in profile section" , isAuthenticated);
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/')
      }
   },[isAuthenticated]);
 
-//   useEffect(() => {
-//     // Reload login and set login status when the component mounts
-//     const checkLoginStatus = async () => {
-//         await reloadLogin(); // Ensure that login status is refreshed
-//          // Update state based on authentication
-//          console.log("reload check")
-//     };
-
-//     checkLoginStatus();
-//     console.log("is Authenticated in Profile Section outside condition" , isAuthenticated);
-
-//     if(!isAuthenticated) {
-//       console.log("is Authenticated in Profile Section in side condition" , isAuthenticated);
-//         navigate('/')
-//     }
-// }, [isAuthenticated, reloadLogin]); 
- 
 
   useEffect(() => {
     setCurrentIndex(0);
@@ -94,6 +72,69 @@ const Profile = () => {
   },[category])
 
 const {t} = useTranslation();
+const { backendActor } = useAuth({});
+  const fetchCollections = async() => {
+    const collectionList = [];
+    const result = await backendActor?.getAllCollections();
+   // console.log("result",result)
+    const collectionItems = result[0][1];
+
+   // console.log("collection id list" , collectionItems)
+
+   await Promise.all(
+    collectionItems.map(async(eachItem) => {
+      const resultOfUserNftCollections = await getDetails(eachItem[1]);
+      if(typeof(resultOfUserNftCollections.ok) === typeof([])){
+         const collectionDetails = resultOfUserNftCollections.ok;
+         console.log(collectionDetails)
+         collectionDetails.map((eachItem)=>{
+          const cardDetails = eachItem[1].nonfungible;
+          
+           const metadata = JSON.parse(cardDetails.metadata[0].json)
+           console.log(cardDetails);
+          // console.log(metadata);
+          const nftCard = {
+            collectionId:eachItem[0],
+            cardName : metadata[0].name,
+            cardImageUrl : cardDetails.thumbnail,
+            cardSold : "",
+          }
+          collectionList.push(nftCard);
+         })
+      }
+  })
+   )
+   console.log("collectionList" , collectionList)
+   setIsCardsLoading(false)
+   if(collectionList.length === 0) {
+     updateNoCardsStatus(true);
+   }else{
+    setMyCollections(collectionList);
+   }
+    
+  }
+
+  const getDetails =  async(collectionId) => {
+
+    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
+    return collectionDetailsResult
+    // const collectionIdList = collectionDetailsResult.map((eachNft)=>{
+    //   const cardDetails = result[0][2].nonfungible;
+    //   const metadata = JSON.parse(cardDetails.metadata[0].json)
+    //   return {
+    //     collectionId,
+    //     cardName : metadata[0].name,
+    //     cardDescription : cardDetails.description,
+    //     cardPrice : parseInt(100000000),
+    //   }
+    // })
+
+  }
+   
+
+   useEffect(()=>{
+      fetchCollections()
+   },[])
 
 
  
@@ -139,12 +180,28 @@ const {t} = useTranslation();
 
             {/* Small screen view for single image display with prev and next buttons */}
             <div className='sm:hidden flex items-center justify-between mt-8 z-0'>
+              
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
               </button>
-              <div>
-                <NftCard img={images[currentIndex]} key={currentIndex} />
-              </div>
+              {isCardsLoading?(
+                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                  <div className='mb-8'>
+                      <Skeleton count={1} width={250} height={350} />
+                  </div>
+              </SkeletonTheme>
+                  
+                ):(
+                  noCards ? (
+                    <h1>No Cards Availalbe</h1>
+                  ):(
+                    <div>
+                      <NftCard img={images[currentIndex]} key={currentIndex} />
+                    </div>
+                  )
+                  
+                )}
+              
               <button onClick={handleNext}>
                 <img src="/Hero/down.png" alt="Next" className='w-10 h-10 -rotate-90' />
               </button>
@@ -153,11 +210,30 @@ const {t} = useTranslation();
             {/* Grid view for larger screens */}
             <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
              
-              {images.map((img, index) => (
-                 <div className='flip-card rounded-lg w-full'>
-                  <NftCard img={img} key={index} />
-                 </div>
-              ))}
+             {isCardsLoading ? (
+                <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <div className='flex justify-between  w-full'>
+                    <Skeleton count={1} width={200} height={310} />
+                </div>
+                <div>
+                <Skeleton count={1} width={200} height={310} />
+                </div>
+                <div>
+                <Skeleton count={1} width={200} height={310} />
+                </div>
+                <div>
+                <Skeleton count={1} width={200} height={310} />
+                </div>
+            </SkeletonTheme>
+             ):(
+              images.map((img, index) => (
+                <div className='flip-card rounded-lg w-full'>
+                 <NftCard img={img} key={index} />
+                </div>
+             ))
+             )}
+              
+              
             </div>
           </div>
         </div>

@@ -14,14 +14,11 @@ import { Principal } from '@dfinity/principal';
 import Skeleton,{SkeletonTheme} from 'react-loading-skeleton';
 import MoonLoader from "react-spinners/MoonLoader";
 import { IoMdCheckmarkCircle } from "react-icons/io";
+import { FiLock } from "react-icons/fi";
+import { FaLock } from "react-icons/fa";
+import './index.css'
 
 
-
-// const override: CSSProperties = {
-//   display: "block",
-//   margin: "0 auto",
-//   borderColor: "red",
-// };
 
 const buyingStatus = {
     payment : "PAYMENT",
@@ -56,24 +53,44 @@ const BuyNft = () => {
         setbuyPopup(true);
         setBuyingStatus(buyingStatus.payment);
 
-        const result1 = await backendActor?.purchaseNft(Principal.fromText(collectionId),tokenId,parseInt(cardDetails.cardPrice),"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe");
+        setLoadingFirst(true);  // Start loading
+
+        //* this part is only to test the payment popup . comment this if you want to test the actual buying process  */
+
+        const timer = setTimeout(() => {
+            setLoadingFirst(false); 
+            setLoadingSecond(true); 
+        }, 3000);  
+
+        const timer2 = setTimeout(() => {
+            setLoadingSecond(false);  
+            setBuyingStatus(buyingStatus.success);  // comment this line to stay in the payment part only
+        }, 6000);  
+
+
+        //** uncomment the entire below part to make the actual buying process  **//
+
+
+        // const result1 = await backendActor?.purchaseNft(Principal.fromText(collectionId),tokenId,parseInt(cardDetails.cardPrice),"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe");
         
-        setLoadingFirst(false);
-        setLoadingSecond(true);
-        console.log("payment address",result1);
-        console.log("payment address",result1.ok[0]);
-        const paymentAddress = result1.ok[0];
+        // setLoadingFirst(false);
+        // setLoadingSecond(true);
+        // console.log("payment address",result1);
+        // console.log("payment address",result1.ok[0]);
+        // const paymentAddress = result1.ok[0];
 
-        const result = await backendActor?.send_balance_and_nft(Principal.fromText(collectionId),paymentAddress,parseInt(cardDetails.cardPrice),[]);
-        console.log("final result",result);
-        setLoadingSecond(false);
+        // const result = await backendActor?.send_balance_and_nft(Principal.fromText(collectionId),paymentAddress,parseInt(cardDetails.cardPrice),[]);
+        // console.log("final result",result);
+        // setLoadingSecond(false);
 
-        console.log(result.ok);
-        console.log("result type",typeof(result.ok));
+        // console.log(result.ok);
+        // console.log("result type",typeof(result.ok));
 
-        if(result.ok == parseInt(2n)){
-            setBuyingStatus(buyingStatus.success)
-        }
+        // // if(result.ok == parseInt(2n)){
+        // //     setBuyingStatus(buyingStatus.success)
+        // // }
+
+        // setBuyingStatus(buyingStatus.success);
 
     }
 
@@ -168,7 +185,7 @@ const BuyNft = () => {
  //   console.log("before return ",collectionDetails)
    
     return (
-        <div className='font-caslon'>
+        <div className={`font-caslon ${buyPopup && "fixed"}`}>
             <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
                 <Navbar />
                 <div className='max-w-[1920px] mx-auto mt-8 sm:mt-8 w-full flex flex-col  items-center justify-center gap-4'>
@@ -470,60 +487,223 @@ const BuyNft = () => {
                 <div className='w-screen h-screen top-0 bottom-0 right-0 left-0 fixed'>
                     <div className='w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)] '>
                         <div className='h-screen flex justify-center items-center'>
-                            <div className={`h-[50vh] md:h-[40vh] lg:h-[60vh] w-[70vw] lg:w-[30vw] bg-[#000000] text-white font-caslon  p-5 rounded-md overflow-y-auto`} style={{fontFamily:"Quicksand"}}> 
+                            <div className={`h-[50vh] md:h-[40vh]  ${currentBuyingStatus === buyingStatus.success ? "lg:h-[60vh]":"lg:h-[40vh]"} w-[70vw] lg:w-[25vw] bg-[#000000] text-white font-caslon  p-5 rounded-md overflow-y-auto`} style={{fontFamily:"Quicksand"}}> 
                                 <div className="relative flex justify-end items-center">
                                         <button className="text-[#ffffff] absolute bottom-1 top-1" onClick={() => toggleBuyPopup()}>
-                                            <RxCross2 size={25} />
+                                            <RxCross2 size={20} />
                                         </button>
                                 </div>
                                 {currentBuyingStatus === buyingStatus.payment && (
-                                    <div className='h-[90%] relative flex flex-col items-center justify-center mt-10 '>
-                                        <div className='w-[80%] h-[40px] bg-green-900 border border-slate-400 flex pl-5 items-center'>
-                                            {popUpFirstLoading ? (
-                                                <MoonLoader  
+                            // Type - 1 
+                                <div className='h-[85%] flex flex-col items-center justify-center mt-10'>
+                                    <div className='w-[80%] h-[40px] bg-purple-900 border border-slate-400 flex pl-5 items-center rounded-md'>
+                                        {popUpFirstLoading ? (
+                                            <MoonLoader  
                                                 color={color}
                                                 loading={popUpFirstLoading}
                                                 size={15}
-                                                
                                                 aria-label="Loading Spinner"
                                                 data-testid="loader"
                                                 className='mr-2'
                                             />
-                                            ):(
-                                                 <IoMdCheckmarkCircle color='green' size={25} className='mr-2'/>
-                                            )}
-                                            
-                                           
-                                            
-                                            <h1 className=''>Payment is initiated....</h1>
-                                        </div>
-                                        <div className={`w-[80%] h-[40px] border border-slate-400 flex items-center mt-3 pl-5
-                                                        ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none' : 'bg-green-900 text-white'}`}
-                                        
-                                         >
-                                            {!popUpFirstLoading && popUpSecondLoading && (
-                                                <MoonLoader  
+                                        ) : (
+                                            <IoMdCheckmarkCircle color='green' size={25} className='mr-2'/>
+                                        )}
+                                        <h1 className=''>Payment is initiated....</h1>
+                                    </div>
+
+                                    <div 
+                                        className={`w-[80%] h-[40px] border border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                                                    ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-20 pointer-events-none' : 'bg-purple-900 text-white'}`}
+                                    >
+                                        {!popUpFirstLoading && popUpSecondLoading && (
+                                            <MoonLoader  
                                                 color={color}
                                                 loading={popUpSecondLoading}
                                                 size={15}
                                                 aria-label="Loading Spinner"
                                                 data-testid="loader"
                                                 className='mr-2'
-                                                />
-                                            )}
-                                            {!popUpFirstLoading && !popUpSecondLoading && (
-                                                    <IoMdCheckmarkCircle color='green' size={25} className='mr-2'/>
-                                            )}
-                                            
-                                           
-                                            
-                                            <h1>Buying in Progress....</h1>
-                                        </div>
-                                        
-                                        
+                                            />
+                                        )}
+                                        {!popUpFirstLoading && !popUpSecondLoading && (
+                                            <IoMdCheckmarkCircle color='green' size={25} className='mr-2'/>
+                                        )}
+                                        <h1 className={`${!popUpSecondLoading ? "pl-7" : "pl-1"}`}>Buying in Progress....</h1>
                                     </div>
-                                )}
+                            </div>
+
+                            //Type -2  
+
+                                // <div className='h-[80%] flex flex-col items-center justify-center mt-10'>
+                                //     <div className='w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md'>
+                                //         {popUpFirstLoading ? (
+                                //             <div className='relative flex items-center justify-center'>
+                                //                 <MoonLoader  
+                                //                 color={color}
+                                //                 loading={popUpFirstLoading}
+                                //                 size={25}
+                                //                 aria-label="Loading Spinner"
+                                //                 data-testid="loader"
+                                //                 className='mr-2'
+                                //             />
+                                //             <FaLock className='absolute left-2 opacity-50' size={15} color='#ffffff'/>
+                                //             </div>
+                                            
+
+                                //         ) : (
+                                //             <IoMdCheckmarkCircle color='#000000' size={30} className='mr-2'/>
+                                //         )}
+                                //         <h1 className=''>Payment is initiated....</h1>
+                                //     </div>
+
+                                //     <div 
+                                //         className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                                //                     ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-20 pointer-events-none' : 'bg-purple-900 text-white'}`}
+                                //     >
+                                //         {!popUpFirstLoading && popUpSecondLoading && (
+                                //            <div className='relative flex items-center justify-center'>
+                                //            <MoonLoader  
+                                //            color={color}
+                                //            loading={popUpSecondLoading}
+                                //            size={25}
+                                //            aria-label="Loading Spinner"
+                                //            data-testid="loader"
+                                //            className='mr-2'
+                                //        />
+                                //        <FaLock className='absolute left-2 opacity-50' size={15} color='#ffffff'/>
+                                //        </div>
+                                //         )}
+                                //         {!popUpFirstLoading && !popUpSecondLoading && (
+                                //             <IoMdCheckmarkCircle color='#000000' size={30} className='mr-2'/>
+                                //         )}
+                                //         <h1 className={`${!popUpSecondLoading && popUpFirstLoading ? "pl-10" : "pl-0"}`}>Buying in Progress....</h1>
+                                //     </div>
+                                // </div>  
                                 
+                            //Type -3
+                            //     <div className='h-[80%] flex flex-col items-center justify-center mt-10'>
+                            //      <div className='flex items-center w-[90%]'>
+                            //         {popUpFirstLoading ? (
+                            //             <div className='relative flex items-center justify-center '>
+                            //                 <MoonLoader  
+                            //                 color={color}
+                            //                 loading={popUpFirstLoading}
+                            //                 size={26}
+                            //                 aria-label="Loading Spinner"
+                            //                 data-testid="loader"
+                            //                 className='mr-2'
+                            //             />
+                            //             <FaLock className='absolute left-2.5 bottom-2.5 opacity-50' size={15} color='#ffffff'/>
+                            //             </div>
+                                        
+
+                            //         ) : (
+                            //             <IoMdCheckmarkCircle color='#ffffff' size={30} className='mr-2 mt-0'/>
+                            //         )}
+                            //         <div className='w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md'>
+                            //             <h1 className=''>Payment is initiated....</h1>
+                            //         </div>
+                            //     </div>
+                            //     <div className='flex items-center w-[90%]'>
+                            //         {!popUpFirstLoading && popUpSecondLoading && (
+                            //            <div className='relative flex items-center justify-center'>
+                            //                 <MoonLoader  
+                            //                     color={color}
+                            //                     loading={popUpSecondLoading}
+                            //                     size={26}
+                            //                     aria-label="Loading Spinner"
+                            //                     data-testid="loader"
+                            //                     className='mr-2'
+                            //                 />
+                            //                 <FaLock className='absolute left-2.5 bottom-2.5 opacity-50' size={15} color='#ffffff'/>
+                            //             </div>
+                            //         )}
+                            //         {!popUpFirstLoading && !popUpSecondLoading && (
+                            //             <IoMdCheckmarkCircle color="green" size={30} className='mr-2 mt-2'/>
+                            //         )}
+                            //         <div 
+                            //             className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                            //                         ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-20 pointer-events-none ml-11' : 'bg-purple-900 text-white'}`}
+                            //         >
+                            //             <h1 className={``}>Buying in Progress....</h1>
+                            //         </div>
+                            //     </div>    
+                            // </div>      
+                            
+                           // Type - 4 
+                        //     <div className='h-[80%] flex flex-col items-center justify-center mt-10'>
+                        //     <div className='flex items-center w-[90%]'>
+                        //        {popUpFirstLoading ? (
+                        //            <div className='relative flex items-center justify-center '>
+                        //                <MoonLoader  
+                        //                color={color}
+                        //                loading={popUpFirstLoading}
+                        //                size={26}
+                        //                aria-label="Loading Spinner"
+                        //                data-testid="loader"
+                        //                className='mr-2'
+                        //            />
+                        //            <FaLock className='absolute left-2.5 bottom-2.5 opacity-50' size={15} color='#ffffff'/>
+                        //            </div>
+                                   
+
+                        //        ) : (
+                        //            <IoMdCheckmarkCircle color='purple' size={30} className='mr-3 mt-0'/>
+                        //        )}
+                        //        {
+                        //         popUpFirstLoading ? (
+                        //             <div className='w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10'>
+                        //            <h1 className='absolute z-10'>Payment is initiated....</h1>
+                        //        </div>
+                        //         ):(
+                        //             <div className='w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md'>
+                        //            <h1 className='absolute z-10'>Payment is initiated....</h1>
+                        //        </div>
+                        //         )
+                        //        }
+                        //    </div>
+                        //    <div className='flex items-center w-[90%]'>
+                        //        {!popUpFirstLoading && popUpSecondLoading && (
+                        //           <div className='relative flex items-center justify-center mt-3 '>
+                        //                <MoonLoader  
+                        //                    color={color}
+                        //                    loading={popUpSecondLoading}
+                        //                    size={26}
+                        //                    aria-label="Loading Spinner"
+                        //                    data-testid="loader"
+                        //                    className='mr-2'
+                        //                />
+                        //                <FaLock className='absolute left-2.5 bottom-2.5 opacity-50' size={15} color='#ffffff'/>
+                        //            </div>
+                        //        )}
+                        //        {!popUpFirstLoading && !popUpSecondLoading && (
+                        //            <IoMdCheckmarkCircle color="purple" size={30} className='mr-3 mt-2'/>
+                        //        )}
+                        //        {/* <div 
+                        //            className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                        //                        ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-20 pointer-events-none ml-11' : 'bg-purple-900 text-white'}`}
+                        //        >
+                        //            <h1 className={``}>Buying in Progress....</h1>
+                        //        </div> */}
+                        //        {
+                        //         popUpSecondLoading ? (
+                        //             <div className='w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10 mt-3'>
+                        //            <h1 className='absolute z-10'>Buying in Progress....</h1>
+                        //        </div>
+                        //         ):(
+                        //             <div  className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                        //                 ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11' : 'bg-purple-900 text-white'}`}>
+                        //            <h1 className='absolute z-10'>Buying in Progress....</h1>
+                        //        </div>
+                        //         )
+                        //        }
+                        //    </div>    
+                        //     </div>       
+                            )}
+
+
+
                                 
                                 {currentBuyingStatus === buyingStatus.success && (
                                     <div className='flex flex-col items-center justify-center mt-5 '>

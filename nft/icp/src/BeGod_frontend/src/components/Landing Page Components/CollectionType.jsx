@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Collections = ({ collections, currentCollection, collectionsData ,handleCurrentIndex}) => {
+const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons}) => {
     const [currentIndex, setCurrentIndex] = useState(0); // Track the current starting index of the visible items
 
     // Handler for navigating up (previous items)
@@ -41,14 +41,14 @@ const Collections = ({ collections, currentCollection, collectionsData ,handleCu
         
     };
 
-    useEffect(() => {
-        currentCollection(collectionsData[collections[currentIndex].name] || []);
-    }, [currentIndex])
+    // useEffect(() => {
+    //     currentCollection(collectionsData[collections[currentIndex].name] || []);
+    // }, [currentIndex])
 
     return (
         <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
             {/* Up button */}
-            <div>
+            <div className='pt-2 lg:pr-4 lg:pb-2'>
                 <img
                     src="/Hero/up.png"
                     alt="Up"
@@ -67,7 +67,7 @@ const Collections = ({ collections, currentCollection, collectionsData ,handleCu
                         style={{
                             backgroundColor: currentIndex + index === currentIndex ? collection.shadowColor : "inherit",
                             boxShadow: currentIndex + index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "", // Adjusted shadow
-                        }}
+                        }}  
                     >
                         <div className='absolute h-[90%] top-0 left-0'>
                             <img src="/Hero/corner-small-left-bottom 1.png" alt="" className='h-full object-cover' />
@@ -86,18 +86,18 @@ const Collections = ({ collections, currentCollection, collectionsData ,handleCu
                 ))}
             </div>
             {/* for bigger screen */}
-            <div className='hidden w-[100%] lg:flex flex-col items-center gap-12'>
-                {collections.map((collection, index) => (
+            <div className='hidden w-[100%] lg:flex flex-col items-center gap-12 '>
+                {collections.slice(startIndex,startIndex+visibleButtons).map((collection, index) => (
                     <div
                         onClick={() => {
-                            setCurrentIndex(index)
-                            handleCurrentIndex(index);
+                            setCurrentIndex(collection.index)
+                            handleCurrentIndex(collection.index);
                         }}
                         key={index}
                         className='cursor-pointer relative w-[50%] h-[55px] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
                         style={{
-                            backgroundColor: index === currentIndex ? collection.shadowColor : "inherit",
-                            boxShadow: index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "",
+                            backgroundColor: collection.index === currentIndex ? collection.shadowColor : "inherit",
+                            boxShadow: collection.index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "",
                         }}
                     >
                         <div className='absolute h-[90%] top-0 left-0'>
