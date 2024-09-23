@@ -23,7 +23,7 @@ function CollectionDetails() {
 
   console.log(nft);
 
-  // getAllCollectionNFTs
+  // // getAllCollectionNFTs
   // var princi = nft[1];
   // const getAllCollectionNFT = async (princi) => {
   //   // console.log("in function",nft[1]);
