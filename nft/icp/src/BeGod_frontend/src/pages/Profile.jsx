@@ -103,9 +103,9 @@ const {t} = useTranslation();
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
+            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[36px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
             <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
-              <div>
+              <div className='w-24'>
                 <img src="/image/Frame.png" alt="" />
               </div>
               <div>
@@ -119,26 +119,26 @@ const {t} = useTranslation();
           <div className='w-full lg:w-[70%]'>
             <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0'>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[22px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
                 onClick={() => setCategory("mycollection")}
               >
                 {t('myCollection')}
               </div>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[22px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
                 onClick={() => setCategory("favorite")}
               >
                 {t('favorite')}
               </div>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[22px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
               >
                 My Achievements
               </div>
             </div>
 
             {/* Small screen view for single image display with prev and next buttons */}
-            <div className='sm:hidden flex items-center justify-between mt-8 z-0'>
+            <div className='z-0 flex items-center justify-between mt-8 sm:hidden'>
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
               </button>
@@ -154,7 +154,7 @@ const {t} = useTranslation();
             <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
              
               {images.map((img, index) => (
-                 <div className='flip-card rounded-lg w-full'>
+                 <div className='w-full rounded-lg flip-card'>
                   <NftCard img={img} key={index} />
                  </div>
               ))}
@@ -163,7 +163,7 @@ const {t} = useTranslation();
         </div>
       </div>
 
-      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
+      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative overflow-hidden bg-center bg-cover'>
         <Footer />
       </div>
     </div>
