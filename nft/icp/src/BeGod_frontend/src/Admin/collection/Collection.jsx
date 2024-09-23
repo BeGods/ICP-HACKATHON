@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import YellowButton from "../../components/button/YellowButton";
 import { collection } from "../../TextData";
 import { Link } from "react-router-dom";
 import BackButton from "./BackButton";
+import { useAuth } from "../../utils/useAuthClient.jsx";
+
 function Collection() {
+  const { backendActor } = useAuth();
+  const [coll, setcoll] = useState();
+
+  const getcolletion = async () => {
+    const result = await backendActor?.getAllCollections();
+    console.log(result[0]);
+    var arr = result[0];
+    arr = arr[1];
+    setcoll(arr);
+    setcoll(arr);
+    arr = arr[0];
+    console.log(arr);
+  };
+
+  useEffect(async () => {
+    await getcolletion();
+    console.log("in useeffect", coll);
+  }, []);
+  console.log("in end  useeffect", coll);
   return (
     <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
       <div className="flex justify-center text-center">

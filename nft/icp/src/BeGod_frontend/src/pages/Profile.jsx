@@ -149,9 +149,9 @@ const { backendActor } = useAuth({});
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
+            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[36px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
             <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
-              <div>
+              <div className='w-24'>
                 <img src="/image/Frame.png" alt="" />
               </div>
               <div>
@@ -250,7 +250,7 @@ const { backendActor } = useAuth({});
         </div>
       </div>
 
-      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
+      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative overflow-hidden bg-center bg-cover'>
         <Footer />
       </div>
     </div>

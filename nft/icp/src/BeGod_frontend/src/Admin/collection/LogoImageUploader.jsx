@@ -58,7 +58,7 @@ function LogoImageUploader({ captureUploadedFiles }) {
     <div className="mt-1">
       {!hideUpload && (
         <input
-          id={Date.now}
+          id={Date.now()}
           type={fileType}
           accept="image/jpg, image/jpeg, image/png"
           multiple
