@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use chandan;
+dfx identity use bhargav;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -25,11 +25,7 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-<<<<<<< HEAD
-#  dfx canister call "$CANISTER" createExtCollection '("Yash", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk. ")'
-=======
-# dfx canister call "$CANISTER" createExtCollection '("Aarya", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk. ")'
->>>>>>> d7bd4f6bb596368381c86698173be584170793a5
+#   dfx canister call "$CANISTER" createExtCollection '("Vamsi", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk. ")'
 
 # Getting Result Like this
 # (
@@ -37,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="b77ix-eeaaa-aaaaa-qaada-cai"
+COLLECTION_ID="avqkn-guaaa-aaaaa-qaaea-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -53,7 +49,6 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 # STEP-2
 # add nft in the collection
 
-<<<<<<< HEAD
 #  dfx canister call "$CANISTER" mintExtNonFungible '(
 #    principal "'$COLLECTION_ID'",
 #    "image",
@@ -65,7 +60,6 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #    },
 #    1
 #  )'
-=======
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
 #   principal "'$COLLECTION_ID'",
@@ -78,7 +72,6 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #   },
 #   10
 # )'
->>>>>>> d7bd4f6bb596368381c86698173be584170793a5
 
 
 
@@ -140,23 +133,13 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-<<<<<<< HEAD
-# TOKENIDENTIFIER='6qcse-gykor-uwjaa-aaaaa-aeaaa-yaqca-aaaaa-a'
+# TOKENIDENTIFIER='uq5fs-rqkor-uwjaa-aaaaa-aeaab-aaqca-aaaaa-a'
 # TOKENID='1'
 # PRICE=100_000_000
 # # in e8s
 # PRICEE8S=100000000
 # echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 # echo "PRICE: $PRICE"
-=======
-TOKENIDENTIFIER='6qcse-gykor-uwjaa-aaaaa-aeaaa-yaqca-aaaaa-a'
-TOKENID='1'
-PRICE=100_000_000
-# in e8s
-PRICEE8S=100000000
-echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
-echo "PRICE: $PRICE"
->>>>>>> d7bd4f6bb596368381c86698173be584170793a5
 
 # dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
@@ -244,11 +227,7 @@ dfx identity use default
 
 # Note: Before call the send_balance_and_nft make sure you are Topup your backend canister by given below command ex: recharge 50ICP to backend.
 
-<<<<<<< HEAD
- dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"br5f7-7uaaa-aaaaa-qaaca-cai\";}; amount = 9_000_000_000;})"
-=======
-# dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"br5f7-7uaaa-aaaaa-qaaca-cai\";}; amount = 9_000_000_000;})"
->>>>>>> d7bd4f6bb596368381c86698173be584170793a5
+#  dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"br5f7-7uaaa-aaaaa-qaaca-cai\";}; amount = 8_000_000_000;})"
 
 # # step 7 & step 8
 
@@ -275,20 +254,20 @@ SUBACCOUNT=null;
 # Note: 1 ICP = 1 * 10^8 = 100000000
 
 
-export DEFAULT_ACCOUNT_ID=$(dfx ledger account-id)
-echo "DEFAULT_ACCOUNT_ID: $DEFAULT_ACCOUNT_ID"
-CHANDAN_ACCOUNT_ID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834';
+# export DEFAULT_ACCOUNT_ID=$(dfx ledger account-id)
+# echo "DEFAULT_ACCOUNT_ID: $DEFAULT_ACCOUNT_ID"
+# CHANDAN_ACCOUNT_ID='be3531619a7b0443a049c2da5cdabb301fba7e8367f53ea65aae42dcb84af223';
 
-block_height=$(dfx canister call icp_ledger_canister send_dfx "(record {
-    to = \"$PURCHASENFTTXNID\";
-    # from = \"$DEFAULT_ACCOUNT_ID\";
-    amount = record { e8s = $PRICEE8S : nat64 };
-    fee = record { e8s = 10000 : nat64 };
-    memo = 0;
-    created_at_time = null;
-})")
+# block_height=$(dfx canister call icp_ledger_canister send_dfx "(record {
+#     to = \"$PURCHASENFTTXNID\";
+#     # from = \"$DEFAULT_ACCOUNT_ID\";
+#     amount = record { e8s = $PRICEE8S : nat64 };
+#     fee = record { e8s = 10000 : nat64 };
+#     memo = 0;
+#     created_at_time = null;
+# })")
 
-echo "Transaction sent. Block height: $block_height"
+# echo "Transaction sent. Block height: $block_height"
 
 # balance=$(dfx canister call icp_ledger_canister account_balance_dfx "(record {account = \"$DEFAULT_ACCOUNT_ID\";})")
 # echo "Balance of the default account: $balance"
