@@ -33,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="b77ix-eeaaa-aaaaa-qaada-cai"
+COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -80,7 +80,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="0"
+NFTID="1"
 echo "NFTID: $NFTID"
 
 
@@ -99,7 +99,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-#  dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+ dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
@@ -122,8 +122,8 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='6qcse-gykor-uwjaa-aaaaa-aeaaa-yaqca-aaaaa-a'
-TOKENID='1'
+TOKENIDENTIFIER='wlvaq-eakor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-q'
+TOKENID='0'
 PRICE=100_000_000
 # in e8s
 PRICEE8S=100000000
@@ -221,7 +221,7 @@ dfx identity use default
 # # step 7 & step 8
 
 
-PURCHASENFTTXNID='2540113e3cd635e81fd1d569e2cc7ba5aba881247b4e07195f5d610ccbdc1052'
+PURCHASENFTTXNID='bd8b4519eadbce9100b00a18d65b5988e37cb67edc7a4eaf6f8f3dbe03d196f4'
 SUBACCOUNT=null;
 
 #    dfx canister call $CANISTER send_balance_and_nft '(principal "'$COLLECTION_ID'","'$PURCHASENFTTXNID'",'$PRICEE8S','$SUBACCOUNT')';
@@ -247,16 +247,16 @@ export DEFAULT_ACCOUNT_ID=$(dfx ledger account-id)
 echo "DEFAULT_ACCOUNT_ID: $DEFAULT_ACCOUNT_ID"
 CHANDAN_ACCOUNT_ID='0b98262a0be0b89c30709980fa282263d29c9f2d8ff465135f466a0eb4a93834';
 
-block_height=$(dfx canister call icp_ledger_canister send_dfx "(record {
-    to = \"$PURCHASENFTTXNID\";
-    # from = \"$DEFAULT_ACCOUNT_ID\";
-    amount = record { e8s = $PRICEE8S : nat64 };
-    fee = record { e8s = 10000 : nat64 };
-    memo = 0;
-    created_at_time = null;
-})")
+# block_height=$(dfx canister call icp_ledger_canister send_dfx "(record {
+#     to = \"$PURCHASENFTTXNID\";
+#     # from = \"$DEFAULT_ACCOUNT_ID\";
+#     amount = record { e8s = $PRICEE8S : nat64 };
+#     fee = record { e8s = 10000 : nat64 };
+#     memo = 0;
+#     created_at_time = null;
+# })")
 
-echo "Transaction sent. Block height: $block_height"
+# echo "Transaction sent. Block height: $block_height"
 
 # balance=$(dfx canister call icp_ledger_canister account_balance_dfx "(record {account = \"$DEFAULT_ACCOUNT_ID\";})")
 # echo "Balance of the default account: $balance"
