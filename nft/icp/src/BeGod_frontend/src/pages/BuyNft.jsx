@@ -248,11 +248,6 @@ const BuyNft = () => {
   useEffect(() => {
     fetchCollectionDetails();
   }, []);
-
-  //   console.log("before return ",collectionDetails)
-
- 
- //   console.log("before return ",collectionDetails)
    
     return (
         <div className={`font-caslon ${buyPopup && "fixed"}`}>

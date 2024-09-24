@@ -1,6 +1,5 @@
 import { Principal } from "@dfinity/principal";
 
-
 const afterPaymentFlow = async (
   backendActor,
   sendAmount,
@@ -10,32 +9,30 @@ const afterPaymentFlow = async (
   ledgerActor,
   metaData
 ) => {
-  console.log(sendAmount, transationId, collectionId, subAccount, "data");
   try {
     const transactionArg = {
       amount: { e8s: Number(sendAmount) },
       to: transationId,
-      fee: {e8s : metaData?.["icrc1:fee"]},
+      fee: { e8s: metaData?.["icrc1:fee"] },
       memo: 0,
-      from_subaccount : [],
+      from_subaccount: [],
       created_at_time: [],
     };
 
     const sendBalanceResult = await ledgerActor.send_dfx(transactionArg);
-    console.log(collectionId, "Result");
-    const res = await backendActor.settlepurchase(Principal.fromText(collectionId),transationId);
-    console.log(res);
+    if (BigInt(sendBalanceResult) > 0) {
+      const res = await backendActor.settlepurchase(
+        Principal.fromText(collectionId),
+        transationId
+      );
+      console.log(res, "success");
+    } else {
+      console.log("no balance");
+    }
   } catch (error) {
     console.error("Error in afterPaymentFlow:", error);
     throw error;
   }
-  // try {
-  
-  //   return res;
-  // } catch (error) {
-  //   console.error("Error in afterPaymentFlow:", error);
-  //   throw error;
-  // }
 };
 
 const formatTokenMetaData = (arr) => {

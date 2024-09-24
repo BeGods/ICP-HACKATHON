@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use bhargav;
+dfx identity use chandan;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -91,7 +91,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="1"
+NFTID="3"
 echo "NFTID: $NFTID"
 
 
@@ -110,11 +110,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-<<<<<<< HEAD
- dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
-=======
-#   dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
->>>>>>> 4ff9cd2ce9aceb27fc4e79fe17b7432383181d95
+#  dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
@@ -137,23 +133,13 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-<<<<<<< HEAD
-TOKENIDENTIFIER='wlvaq-eakor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-q'
+TOKENIDENTIFIER='ltsgs-pakor-uwjaa-aaaaa-aeaaa-uaqca-aaaab-q'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
 PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
-=======
-# TOKENIDENTIFIER='uq5fs-rqkor-uwjaa-aaaaa-aeaab-aaqca-aaaaa-a'
-# TOKENID='1'
-# PRICE=100_000_000
-# # in e8s
-# PRICEE8S=100000000
-# echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
-# echo "PRICE: $PRICE"
->>>>>>> 4ff9cd2ce9aceb27fc4e79fe17b7432383181d95
 
 # dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
@@ -241,7 +227,7 @@ dfx identity use default
 
 # Note: Before call the send_balance_and_nft make sure you are Topup your backend canister by given below command ex: recharge 50ICP to backend.
 
-#  dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"br5f7-7uaaa-aaaaa-qaaca-cai\";}; amount = 8_000_000_000;})"
+#  dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"bw4dl-smaaa-aaaaa-qaacq-cai\";}; amount = 100_000_000;})"
 
 # # step 7 & step 8
 
@@ -322,7 +308,7 @@ SUBACCOUNT=null;
 # STEP-9
 # Show NFT Txns
 
-# dfx canister call $CANISTER transactions '(principal "'$COLLECTION_ID'")';
+dfx canister call $CANISTER transactions '(principal "'$COLLECTION_ID'")';
 
 # (
 #   vec {
