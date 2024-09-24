@@ -110,7 +110,7 @@ const Hero = () => {
     const listedNfts = await backendActor?.listings(collectionId);
     if (listedNfts && listedNfts.length > 0) {
       const fetchedNfts = getCollectionNfts(listedNfts, collectionId);
-      setCurrentCollection(fetchedNfts);  // Properly set the fetched NFTs to the current collection
+      setCurrentCollection(fetchedNfts);
     } else {
       updateNoCardsStatus(true);
     }
@@ -126,7 +126,7 @@ const Hero = () => {
       const nftDetails = eachItem[2].nonfungible;
       return {
         collectionId,
-        index,
+        index: eachItem[0],
         img1: nftDetails.thumbnail,
         name: nftDetails.asset,
         sold: eachItem[1].price,
