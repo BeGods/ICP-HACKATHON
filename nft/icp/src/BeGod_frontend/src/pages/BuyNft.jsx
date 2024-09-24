@@ -557,93 +557,109 @@ const BuyNft = () => {
         <Footer />
       </div>
       {buyPopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-          <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)] ">
-            <div className="flex items-center justify-center h-screen">
+        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed">
+          <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+            <div className="h-screen flex justify-center items-center">
               <div
-                className={`h-[50vh] md:h-[40vh] lg:h-[60vh] w-[70vw] lg:w-[30vw] bg-[#222] text-white font-caslon  p-5 rounded-md overflow-y-auto drop-shadow-lg`}
+                className={`h-[50vh] md:h-[40vh] ${
+                  currentBuyingStatus === buyingStatus.success ? "lg:h-[60vh]" : "lg:h-[40vh]"
+                } w-[70vw] lg:w-[25vw] bg-[#000000] text-white font-caslon p-5 rounded-md overflow-y-auto`}
+                style={{ fontFamily: "Quicksand" }}
               >
-                <div className="relative flex items-center justify-end">
+                <div className="relative flex justify-end items-center">
                   <button
-                    className="text-[#ffffff] absolute bottom-1 top-1 cursor-pointer z-10"
+                    className="text-[#ffffff] absolute bottom-1 top-1"
                     onClick={() => toggleBuyPopup()}
                   >
-                    <RxCross2 size={25} />
+                    <RxCross2 size={20} />
                   </button>
                 </div>
+
                 {currentBuyingStatus === buyingStatus.payment && (
-                  <div className="h-[90%] relative flex flex-col items-center justify-center gap-3">
-                    <h1 className="mb-5 text-2xl">Please Wait <span className="animate-pulse">...</span></h1>
-                    <div className="w-[80%] h-[40px] bg-green-900 border border-slate-600 flex pl-5 items-center rounded-sm">
+                  <div className="h-[80%] flex flex-col items-center justify-center mt-10">
+                    <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
-                        <MoonLoader
-                          color={color}
-                          loading={popUpFirstLoading}
-                          size={15}
-                          aria-label="Loading Spinner"
-                          data-testid="loader"
-                          className="mr-2"
-                        />
+                        <div className="relative flex items-center justify-center">
+                          <MoonLoader
+                            color={color}
+                            loading={popUpFirstLoading}
+                            size={26}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                            className="mr-2"
+                          />
+                          <FaLock className="absolute left-2.5 bottom-2.5 opacity-50" size={15} color="#ffffff" />
+                        </div>
                       ) : (
-                        <IoMdCheckmarkCircle
-                          color="green"
-                          size={25}
-                          className="mr-2"
-                        />
+                        <IoMdCheckmarkCircle color="purple" size={30} className="mr-3 mt-0" />
                       )}
 
-                      <h1 className="">Payment is initiated....</h1>
+                      {popUpFirstLoading ? (
+                        <div className="w-[80%] h-[40px] rounded-md relative paymentbutton flex items-center pl-10">
+                          <h1 className="absolute z-10">Payment is initiated....</h1>
+                        </div>
+                      ) : (
+                        <div className="w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md">
+                          <h1 className="absolute z-10">Payment is initiated....</h1>
+                        </div>
+                      )}
                     </div>
-                    <div className={`w-[80%] h-[40px] border border-slate-600 flex items-center mt-3 pl-5 rounded-sm
-                        ${
-                            popUpFirstLoading
-                            ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none"
-                            : "bg-green-900 text-white"
-                        }`}
-                    >
+
+                    <div className="flex items-center w-[90%]">
                       {!popUpFirstLoading && popUpSecondLoading && (
-                        <MoonLoader
-                          color={color}
-                          loading={popUpSecondLoading}
-                          size={15}
-                          aria-label="Loading Spinner"
-                          data-testid="loader"
-                          className="mr-2"
-                        />
-                      )}
-                      {!popUpFirstLoading && !popUpSecondLoading && (
-                        <IoMdCheckmarkCircle
-                          color="green"
-                          size={25}
-                          className="mr-2"
-                        />
+                        <div className="relative flex items-center justify-center mt-3">
+                          <MoonLoader
+                            color={color}
+                            loading={popUpSecondLoading}
+                            size={26}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                            className="mr-2"
+                          />
+                          <FaLock className="absolute left-2.5 bottom-2.5 opacity-50" size={15} color="#ffffff" />
+                        </div>
                       )}
 
-                      <h1>Buying in Progress....</h1>
+                      {!popUpFirstLoading && !popUpSecondLoading && (
+                        <IoMdCheckmarkCircle color="purple" size={30} className="mr-3 mt-2" />
+                      )}
+
+                      {popUpSecondLoading ? (
+                        <div className="w-[80%] h-[40px] rounded-md relative paymentbutton flex items-center pl-10 mt-3">
+                          <h1 className="absolute z-10">Buying in Progress....</h1>
+                        </div>
+                      ) : (
+                        <div
+                          className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md ${
+                            popUpFirstLoading
+                              ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11"
+                              : "bg-purple-900 text-white"
+                          }`}
+                        >
+                          <h1 className="absolute z-10">Buying in Progress....</h1>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
 
-                {currentBuyingStatus === buyingStatus.success && (
-                  <div className="flex flex-col items-center justify-center mt-5 ">
-                    <h1 className="mb-2 text-2xl font-semibold">
-                      Congratulations
-                    </h1>
-                    <img
-                      src={cardDetails.cardImageUrl}
-                      className="w-[180px] h-[260px]"
-                    />
-                    <h1 className="flex items-center mt-2 text-base font-extralight">
+                {currentBuyingStatus === buyingStatus.success && !popUpSecondLoading && (
+                  <div className="flex flex-col items-center justify-center mt-5">
+                    <h1 className="text-2xl font-semibold mb-2">Congratulations</h1>
+                    <img src={cardDetails.cardImageUrl} className="w-[180px] h-[260px]" />
+                    <h1 className="flex items-center text-base font-extralight mt-2">
                       Licence No- 828746888
                       <CopyToClipboard text="828746888">
-                        <span className="ml-2 cursor-pointer text-slate-300">
+                        <span className="ml-2 text-slate-300 cursor-pointer">
                           <RiFileCopyLine />
                         </span>
                       </CopyToClipboard>
                     </h1>
-                    <button className="w-[150px] h-[26px] bg-transparent border-2 border-solid border-[#FCD37B] mt-2">
-                      View Details
-                    </button>
+                    <Link to="/profile">
+                      <button className="w-[150px] h-[26px] bg-transparent border-2 border-solid border-[#FCD37B] mt-2">
+                        View Details
+                      </button>
+                    </Link>
                   </div>
                 )}
               </div>
@@ -651,6 +667,7 @@ const BuyNft = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
