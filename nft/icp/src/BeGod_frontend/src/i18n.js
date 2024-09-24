@@ -12,7 +12,7 @@ i18n
     fallbackLng: "en",
     returnObjects: true,
     backend: {
-      loadPath: '/locales/{{lng}}/translation.json', // Adjust this path to where your translation files are stored
+      loadPath: './locales/{{lng}}/translation.json',
     },
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
