@@ -12,7 +12,7 @@ i18n
     debug: true,
     returnObjects:true,
     backend: {
-      loadPath: '/locales/{{lng}}/translation.json', // Path to language files
+      loadPath: '/locales/{{lng}}/translation.json',
     },
     detection: {
       order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],

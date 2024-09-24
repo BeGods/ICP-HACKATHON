@@ -35,19 +35,8 @@ export const useAuthClient = (options = defaultOptions) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const restoreSessionFromLocalStorage = () => {
-    const storedAuth = JSON.parse(localStorage.getItem("auth"));
-    if (storedAuth && storedAuth.isAuthenticated) {
-      // If there is an authentication state in localStorage, restore it
-      setIsAuthenticated(true);
-      setIdentity(storedAuth.identity);
-      setPrincipal(storedAuth.user);
-      dispatch(setUser(storedAuth.user)); // Restore user to Redux
-    }
-  };
-
   useEffect(() => {
-    restoreSessionFromLocalStorage();
+   
     AuthClient.create(options.createOptions).then((client) => {
       setAuthClient(client);
     });

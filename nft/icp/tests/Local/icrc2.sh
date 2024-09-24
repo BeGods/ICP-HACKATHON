@@ -36,6 +36,7 @@ dfx deploy icrc2_token_canister --argument "
       };
       token_symbol = opt \"$TOKEN_SYMBOL\";
       token_name = opt \"$TOKEN_NAME\";
+      feature_flags = opt record{icrc2 = true};
     }
   })
 "

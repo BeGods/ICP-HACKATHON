@@ -980,12 +980,12 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
     };
 
     //settle and confirm purchase
-    // public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
-    //     let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
-    //         ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
-    //     };
-    //     return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
-    // };
+    public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+        let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+        };
+        return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
+    };
 
     //get transaction details
     public shared func transactions(_collectionCanisterId : Principal) : async [Transaction] {
@@ -1093,6 +1093,18 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
             return #err(#Other(errorMessage));
         };
     };
+
+
+        public shared ({ caller }) func get_balance() : async Nat64 {
+
+            let balanceArgs = {
+                account = AID.fromPrincipal(caller, null);
+            };
+            let balanceResult = await ExternalService_ICPLedger.account_balance_dfx(balanceArgs);
+            return balanceResult.e8s;
+        };
+
+
 
    
    //Place order (to get hard copy)

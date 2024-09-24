@@ -45,6 +45,9 @@ const Navbar = ({ mobileView }) => {
     navigate("/");
   };
 
+   
+  
+    
   return (
     <div className='max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative'>
       {/* Mobile View */}

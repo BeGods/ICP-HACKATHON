@@ -25,7 +25,7 @@ CHANDAN_ACCOUNT_ID='492aacd082a520dfc078678759756ef4ac11133083799c77d4acc7a3490c
 
 
 
-dfx canister call icp_ledger_canister icrc1_transfer "(record { to = record { owner = principal \"be2us-64aaa-aaaaa-qaabq-cai\";}; amount = 5_000_000_000;})"
+dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"2ipdv-mwghn-c5x64-fkchv-hbvge-yobre-szmep-6ntkb-d3a3h-w5jg6-zqe\";}; amount = 1000000;})"
 
 
 
