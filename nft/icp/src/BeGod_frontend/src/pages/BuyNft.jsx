@@ -8,7 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import { RiFileCopyLine } from "react-icons/ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -16,6 +16,9 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import { AccountIdentifier } from "@dfinity/ledger-icp";
 import { useSelector } from "react-redux";
+import { transferApprove } from "../utils/transApprove";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // const override: CSSProperties = {
 //   display: "block",
@@ -33,7 +36,11 @@ const BuyNft = () => {
   const [currentBuyingStatus, setBuyingStatus] = useState(buyingStatus.payment);
   const [cardDetails, setCardDetails] = useState({});
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const collectionId = params.get("collectionId");
+  const index = params.get("index");
+  const { backendActor, ledgerActor, principal } = useAuth({});
   const [nftCardLoading, setNftCardLoading] = useState(true);
 
   const [collectionDetails, setCollectionDetails] = useState({});
@@ -81,38 +88,63 @@ const BuyNft = () => {
   };
 
   const onClickBuyButton = async () => {
-    const storedAuth = JSON.parse(localStorage.getItem("auth"));
-    const principal = storedAuth.user;
-    setbuyPopup(true);
-    setBuyingStatus(buyingStatus.payment);
+    if(isAuthenticated){
+      setbuyPopup(true);
+      setBuyingStatus(buyingStatus.payment);
+  
+      const result1 = await backendActor?.purchaseNft(
+        Principal.fromText(collectionId),
+        tokenId,
+        parseInt(cardDetails.cardPrice),
+        principal
+      );
 
-    const result1 = await backendActor?.purchaseNft(
-      Principal.fromText(collectionId),
+      console.log(Principal.fromText(collectionId),
       tokenId,
       parseInt(cardDetails.cardPrice),
-      principal
-    );
-
-    setLoadingFirst(false);
-    setLoadingSecond(true);
-    // console.log("payment address", result1);
+      principal,'data check')
+  
+      setLoadingFirst(false);
+      setLoadingSecond(true);
     console.log("payment address", result1.ok[0]);
+    const transationId = result1.ok[0];
+    const subAccount = [];
+    console.log("principal",principal)
+    await transferApprove(backendActor, ledgerActor, parseInt(cardDetails.cardPrice),Principal.fromText(principal),transationId,collectionId,subAccount);
     const paymentAddress = result1.ok[0];
-    if (isAuthenticated) {
-      // const subAccount = null;
-      // const accountIdentifier = AccountIdentifier.fromPrincipal(principal, subAccount);
-
-      // console.log(accountIdentifier.toHex(), 'Account Identifier (Hex)');
-      const accountIdentifier =
-        "af110b0d0563339ae4e479ff74de7894afcbc7a32db9dff03ba09b07116632aa";
-      // console.log(encodeIcrcAccount(accountIdentifier))
-      // Now send the balance using this Account Identifier
-      await sendBalance(
-        paymentAddress,
-        accountIdentifier,
-        parseInt(cardDetails.cardPrice)
-      );
+    console.log(cardDetails.cardPrice);
+    }else{
+      toast.error('Login First!', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     }
+   
+
+    // if (isAuthenticated) {
+    //   // const subAccount = null;
+    //   // const accountIdentifier = AccountIdentifier.fromPrincipal(principal, subAccount);
+
+    //   // console.log(accountIdentifier.toHex(), 'Account Identifier (Hex)');
+    //   const accountIdentifier =
+    //     "af110b0d0563339ae4e479ff74de7894afcbc7a32db9dff03ba09b07116632aa";
+    //   // console.log(encodeIcrcAccount(accountIdentifier))
+    //   // Now send the balance using this Account Identifier
+    //   // await sendBalance(
+    //   //   paymentAddress,
+    //   //   accountIdentifier,
+    //   //   parseInt(cardDetails.cardPrice)
+    //   // );
+
+    //   console.log(cardDetails.cardPrice);
+
+    //    }
     // const result = await backendActor?.send_balance_and_nft(
     //   Principal.fromText(collectionId),
     //   paymentAddress,
@@ -130,10 +162,7 @@ const BuyNft = () => {
     // }
   };
 
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const collectionId = params.get("collectionId");
-  const index = params.get("index");
+
 
   // console.log("collectionId",collectionId);
   // console.log("card index",index);
@@ -149,7 +178,7 @@ const BuyNft = () => {
     buyNow,
   } = t("buyNowDetails");
 
-  const { backendActor, ledgerActor, principal } = useAuth({});
+
   useEffect(() => {
     window.scrollTo(0, 0);
   });
@@ -641,6 +670,7 @@ const BuyNft = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
