@@ -159,7 +159,7 @@ const Navbar = ({ mobileView }) => {
                             Profile
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
-                          <li className="px-4 py-2 cursor-pointer hover:bg-purple-900">
+                          <li className="px-4 py-2 cursor-pointer hover:bg-purple-900" onClick={()=>navigate("/activity")}>
                             Activity
                           </li>
                           <hr style={{ backgroundColor: '#FCD378', height: '0.5px', border: 'none', width: '100%' }} />
