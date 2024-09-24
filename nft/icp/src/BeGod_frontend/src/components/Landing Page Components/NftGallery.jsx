@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const NFTGallery = ({ currentCollection }) => {
+  console.log("current collection in nft gallery",currentCollection);
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);
@@ -90,8 +91,6 @@ const NFTGallery = ({ currentCollection }) => {
                     <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[55%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                       {t('buyNow')}
                     </Link>
-
-
                   </div>
                 </div>
               </div>

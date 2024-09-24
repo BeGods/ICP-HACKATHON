@@ -49,7 +49,17 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 # STEP-2
 # add nft in the collection
 
-
+#  dfx canister call "$CANISTER" mintExtNonFungible '(
+#    principal "'$COLLECTION_ID'",
+#    "image",
+#    "this is nft from Norse Collection.",
+#    "Ayesha",
+#    "https://i.ibb.co/brHMh5G/ayeshabegods.png",
+#    opt variant {
+#      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
+#    },
+#    1
+#  )'
 # dfx canister call "$CANISTER" mintExtNonFungible '(
 #   principal "'$COLLECTION_ID'",
 #   "dragon",
@@ -111,7 +121,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-#  dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+#   dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")

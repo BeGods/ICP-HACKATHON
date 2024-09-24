@@ -45,17 +45,18 @@ const Collections = ({
     }
   };
 
-  // Handler for navigating down (next items)
-  const downHandler = () => {
-    setAnimate(true);
-    setTimeout(() => {
-      setAnimate(false);
-    }, 300);
-    if (currentIndex < collections.length - 1) {
-      setCurrentIndex(currentIndex + 1); // Increment current index to show next collections
-      handleCurrentIndex(currentIndex + 1);
-    }
-  };
+    // Handler for navigating down (next items)
+    const downHandler = () => {
+        setAnimate(true);
+        setTimeout(() => {
+            setAnimate(false);
+        }, 300);
+        if (currentIndex < collections.length - 1) {
+            setCurrentIndex(currentIndex + 1); // Increment current index to show next collections
+            handleCurrentIndex(currentIndex+1);
+        }
+        
+    };
 
   // useEffect(() => {
   //     currentCollection(collectionsData[collections[currentIndex].name] || []);
@@ -85,7 +86,7 @@ const Collections = ({
                         style={{
                             backgroundColor: currentIndex + index === currentIndex ? collection.shadowColor : "inherit",
                             boxShadow: currentIndex + index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "", // Adjusted shadow
-                        }}
+                        }}  
                     >
                         <div className='absolute h-[90%] top-0 left-0'>
                             <img src="/Hero/corner-small-left-bottom 1.png" alt="" className='object-cover h-full' />
