@@ -250,7 +250,6 @@ const CreateCollection = () => {
       // Call the `getNftTokenId` function
       const result = await backendActor?.listings(principal);
       console.log("Listing", result);
-      alert("Your MFT is added succesfully");
     } catch (error) {
       console.error("Error fetching listing", error);
     }
