@@ -170,6 +170,7 @@ actor Main {
         name : Text;
         email : Text;
         telegram : Text;
+        profilepic : ?Blob; // Optional Blob for profile picture
     };
 
     type Activity = {
@@ -214,10 +215,6 @@ actor Main {
     private stable var userIdCounter : Nat = 0;
     //private stable var userDetailsArray: [UserDetails] = [];
     private var userDetailsMap : TrieMap.TrieMap<Principal, UserDetails> = TrieMap.TrieMap<Principal, UserDetails>(Principal.equal, Principal.hash);
-
-    //private stable var data_transactions : [Transaction] = [];
-    // private stable var usersMap: TrieMap.TrieMap<Principal, User> = TrieMap.TrieMap<Principal, User>(Principal.equal, Principal.hash);
-    //private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
     //DB to store order related details
     private stable var orders : [Order] = [];
@@ -546,17 +543,6 @@ actor Main {
         await collectionCanisterActor.getAllNonFungibleTokenData();
     };
 
-    // Get Single NFT details for specific collection
-    // public shared ({ caller = user }) func getSingleNonFungibleTokens(
-    //     _collectionCanisterId : Principal,
-    //     _tokenId : TokenIndex,
-    // ) : async [(TokenIndex, AccountIdentifier, Metadata)] {
-    //     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-    //         getSingleNonFungibleTokenData : (_tokenId : TokenIndex) -> async [(TokenIndex, AccountIdentifier, Metadata)];
-    //     };
-    //     return await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
-    // };
-
     public shared ({ caller = user }) func getSingleNonFungibleTokens(
         _collectionCanisterId : Principal,
         _tokenId : TokenIndex,
@@ -605,6 +591,10 @@ actor Main {
     /*                            User Related Methods                            */
     /* -------------------------------------------------------------------------- */
 
+    public shared query func getTotalUsers() : async Nat {
+        return usersArray.size();
+    };
+
     public shared func create_user(accountIdentifier : Principal, uid : Text) : async Result.Result<(Nat, Time.Time), Text> {
 
         // Check if the user already exists in the array
@@ -649,7 +639,7 @@ actor Main {
     };
 
     //enter user details
-    public shared func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text) : async Result.Result<Text, Text> {
+    public shared func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text, profilePic : ?Blob) : async Result.Result<Text, Text> {
         // Check if the user exists in the usersArray created by the `create_user` function
         let existingUser = Array.find<User>(
             usersArray,
@@ -664,11 +654,12 @@ actor Main {
                 return #err("User not found. Please create a user before setting details.");
             };
             case (?_) {
-                // If the user exists, proceed to store or update the user's name and email
+                // If the user exists, proceed to store or update the user's name, email, telegram, and profile picture
                 let userDetails : UserDetails = {
                     name = name;
                     email = email;
                     telegram = telegram;
+                    profilepic = profilePic; // Use the renamed parameter
                 };
 
                 // Add or update user details in the userDetailsMap
@@ -679,8 +670,8 @@ actor Main {
         };
     };
 
-    //get user details (for admin and user side both)
-    public shared query func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text), Text> {
+    // Get user details (for admin and user side both)
+    public shared query func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
         // Check if the user exists in the usersArray (created by the create_user function)
         let existingUser = Array.find<User>(
             usersArray,
@@ -701,11 +692,11 @@ actor Main {
                 switch (userDetails) {
                     case (null) {
                         // Return basic user information if additional details are not found
-                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, "No Name", "No Email", "No Telegram"));
+                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, "No Name", "No Email", "No Telegram", null));
                     };
                     case (?details) {
-                        // Return the user's account identifier (principal), uid, id, name, email, and telegram
-                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, details.name, details.email, details.telegram));
+                        // Return the user's account identifier, uid, id, name, email, telegram, and profile picture
+                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, details.name, details.email, details.telegram, details.profilepic));
                     };
                 };
             };
@@ -713,30 +704,38 @@ actor Main {
     };
 
     //get all users (list of users for admin side )
-    public shared query func getAllUsers() : async [(Principal, Nat, Time.Time, Text)] {
-        // Map over the usersArray and extract the relevant fields including email
-        let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text)>(
+    public shared query func getAllUsers() : async [(Principal, Nat, Time.Time, Text, Text, ?Blob)] {
+        // Map over the usersArray and extract the relevant fields
+        let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
             usersArray,
-            func(u : User) : (Principal, Nat, Time.Time, Text) {
-                // Fetch user details (including email) from the userDetailsMap
+            func(u : User) : (Principal, Nat, Time.Time, Text, Text, ?Blob) {
+                // Fetch user details from the userDetailsMap
                 let userDetails = userDetailsMap.get(u.accountIdentifier);
 
-                // Determine the email to return
+                // Determine the name to return (if not found, return "No Name")
+                let name = switch (userDetails) {
+                    case (null) "No Name"; // Default to "No Name" if details are not found
+                    case (?details) details.name; // Return the user's name if available
+                };
+
+                // Determine the email to return (if not found, return "No Email")
                 let email = switch (userDetails) {
                     case (null) "No Email"; // Default to "No Email" if details are not found
                     case (?details) details.email; // Return the user's email if available
                 };
 
-                return (u.accountIdentifier, u.id, u.createdAt, email);
+                // Get the profile picture, if available
+                let profilePic = switch (userDetails) {
+                    case (null) null; // No details found
+                    case (?details) details.profilepic; // Return the profile picture if available
+                };
+
+                // Return the user details including the profile picture
+                return (u.accountIdentifier, u.id, u.createdAt, name, email, profilePic);
             },
         );
 
         return allUsersDetails;
-    };
-
-    // Function to get the total number of users
-    public shared query func getTotalUsers() : async Nat {
-        return usersArray.size();
     };
 
     //  User Owned NFTs (MY COLLECTION)
@@ -796,75 +795,17 @@ actor Main {
 
             // Update the user's favorites in the favorites map
             _favorites.put(user, updatedFavorites);
+            return #ok("Token added to favorites successfully");
         };
+    };
 
-        // ADD TO FAVORITES //
-        // Function to add a token to the user's favorites
-        public shared func addToFavorites(
-            user : AccountIdentifier,
-            tokenIdentifier : TokenIdentifier,
-        ) : async Result.Result<Text, CommonError> {
-            // Check if the user already has favorites
-            let userFavorites = switch (_favorites.get(user)) {
-                case (?favorites) favorites; // If the user has favorites, retrieve them
-                case (_) [] // If the user has no favorites, start with an empty array
-            };
-
-            // Check if the token is already in the user's favorites
-            let isAlreadyFavorite = Array.find(
-                userFavorites,
-                func(entry : (TokenIdentifier)) : Bool {
-                    entry == tokenIdentifier;
-                },
-            ) != null;
-
-            if (isAlreadyFavorite) {
-                return #err(#Other("Token is already in favorites"));
-            } else {
-                // Append the new token to the user's favorites list (without metadata)
-                let updatedFavorites = Array.append(userFavorites, [tokenIdentifier]);
-
-                // Update the user's favorites in the favorites map
-                _favorites.put(user, updatedFavorites);
-                return #ok("Token added to favorites successfully");
-            };
-        };
-
-        //REMOVE FROM FAVORITES //
-        // Function to remove a token from the user's favorites
-        public shared func removeFromFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : async Result.Result<Text, CommonError> {
-            // Check if the user already has favorites
-            let userFavorites = switch (_favorites.get(user)) {
-                case (?favorites) favorites; // If the user has favorites, retrieve them
-                case (_) return #err(#Other("No favorites found for this user")); // If the user has no favorites, return an error
-            };
-
-            // Check if the token is in the user's favorites
-            let isFavorite = Array.find(
-                userFavorites,
-                func(entry : (TokenIdentifier)) : Bool {
-                    entry == tokenIdentifier;
-                },
-            ) != null;
-
-            // Instead of if (!isFavorite), use if isFavorite == false
-            if (isFavorite == false) {
-                return #err(#Other("Token is not in favorites"));
-            };
-
-            // Remove the token from the user's favorites list
-            let updatedFavorites = Array.filter(
-                userFavorites,
-                func(entry : (TokenIdentifier)) : Bool {
-                    entry != tokenIdentifier;
-                },
-            );
-
-            // Update the user's favorites in the favorites map
-            _favorites.put(user, updatedFavorites);
-
-            // Return success message
-            return #ok("Token removed from favorites successfully");
+    //REMOVE FROM FAVORITES //
+    // Function to remove a token from the user's favorites
+    public shared func removeFromFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : async Result.Result<Text, CommonError> {
+        // Check if the user already has favorites
+        let userFavorites = switch (_favorites.get(user)) {
+            case (?favorites) favorites; // If the user has favorites, retrieve them
+            case (_) return #err(#Other("No favorites found for this user")); // If the user has no favorites, return an error
         };
 
         // Check if the token is in the user's favorites
@@ -910,330 +851,309 @@ actor Main {
             };
         };
     };
-};
 
-//acitivity of user
-// public shared func activity(user: Principal) : async [Activity] {
-// var userActivities: [Activity] = [];
+    //acitivity of user
+    // public shared func activity(user: Principal) : async [Activity] {
+    // var userActivities: [Activity] = [];
 
-// // Get the collections for the passed user Principal
-// let userCollections = usersCollectionMap.get(user);
+    // // Get the collections for the passed user Principal
+    // let userCollections = usersCollectionMap.get(user);
 
-// // If the user has collections, retrieve their transactions
-// switch (userCollections) {
-//     case (null) {
-//         Debug.print("No collections found for the user.");
-//         return []; // Return an empty list if the user has no collections
-//     };
-//     case (?collections) {
-//         // Iterate through each collection the user owns
-//         for ((_, collectionCanisterId) in collections.vals()) {
-//             // Retrieve the transactions for the specific collection
-//             let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
-//                 ext_marketplaceTransactions : () -> async [Transaction];
-//                 getCollectionDetails : () -> async (Text, Text, Text);  // Assuming this returns (name, symbol, metadata)
-//             };
+    // // If the user has collections, retrieve their transactions
+    // switch (userCollections) {
+    //     case (null) {
+    //         Debug.print("No collections found for the user.");
+    //         return []; // Return an empty list if the user has no collections
+    //     };
+    //     case (?collections) {
+    //         // Iterate through each collection the user owns
+    //         for ((_, collectionCanisterId) in collections.vals()) {
+    //             // Retrieve the transactions for the specific collection
+    //             let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+    //                 ext_marketplaceTransactions : () -> async [Transaction];
+    //                 getCollectionDetails : () -> async (Text, Text, Text);  // Assuming this returns (name, symbol, metadata)
+    //             };
 
-//             // Fetch the collection details
-//             let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+    //             // Fetch the collection details
+    //             let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
 
-//             // Fetch all transactions for the collection
-//             try {
-//                 let transactions = await collectionCanisterActor.ext_marketplaceTransactions();
+    //             // Fetch all transactions for the collection
+    //             try {
+    //                 let transactions = await collectionCanisterActor.ext_marketplaceTransactions();
 
-//                 // For each transaction, map it to an Activity type
-//                 for (transaction in transactions.vals()) {
-//                     let activity: Activity = {
-//                         collectionName = collectionName;
-//                         tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, transaction.token);
-//                         price = transaction.price;
-//                         time = transaction.time;
-//                     };
+    //                 // For each transaction, map it to an Activity type
+    //                 for (transaction in transactions.vals()) {
+    //                     let activity: Activity = {
+    //                         collectionName = collectionName;
+    //                         tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, transaction.token);
+    //                         price = transaction.price;
+    //                         time = transaction.time;
+    //                     };
 
-//                     // Add the activity to the userActivities array
-//                     userActivities := Array.append(userActivities, [activity]);
-//                 };
-//             } catch (e) {
-//                 Debug.print("Error fetching transactions for canister: " # Principal.toText(collectionCanisterId));
-//             };
-//         };
-//     };
-// };
+    //                     // Add the activity to the userActivities array
+    //                     userActivities := Array.append(userActivities, [activity]);
+    //                 };
+    //             } catch (e) {
+    //                 Debug.print("Error fetching transactions for canister: " # Principal.toText(collectionCanisterId));
+    //             };
+    //         };
+    //     };
+    // };
 
-// return userActivities; // Return the list of activities for the user
-// };
+    // return userActivities; // Return the list of activities for the user
+    // };
 
-// Optimized activity function to fetch user activities
-public shared func activity(user : Principal) : async [Activity] {
-    var userActivities : [Activity] = [];
+    // Optimized activity function to fetch user activities
+    public shared func activity(user : Principal) : async [Activity] {
+        var userActivities : [Activity] = [];
 
-    // Get the collections for the passed user Principal
-    let userCollections = usersCollectionMap.get(user);
+        // Get the collections for the passed user Principal
+        let userCollections = usersCollectionMap.get(user);
 
-    // If the user has collections, retrieve their transactions
-    switch (userCollections) {
-        case (null) {
-            Debug.print("No collections found for the user.");
-            return []; // Return an empty list if the user has no collections
-        };
-        case (?collections) {
-            // Iterate through each collection the user owns
-            for ((_, collectionCanisterId) in collections.vals()) {
-                // Retrieve the transactions for the specific collection
-                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
-                    ext_marketplaceTransactions : () -> async [Transaction];
-                    getCollectionDetails : () -> async (Text, Text, Text); // Assuming this returns (name, symbol, metadata)
-                };
-
-                // Fetch all transactions for the collection
-                try {
-                    let transactions = await collectionCanisterActor.ext_marketplaceTransactions();
-
-                    // Get collection details once to avoid repeated calls
-                    let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
-
-                    // Map transactions to activities
-                    for (transaction in transactions.vals()) {
-                        let activity : Activity = {
-                            collectionName = collectionName;
-                            tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, transaction.token);
-                            price = transaction.price;
-                            time = transaction.time;
-                        };
-
-                        // Add the activity to the userActivities array
-                        userActivities := Array.append(userActivities, [activity]);
+        // If the user has collections, retrieve their transactions
+        switch (userCollections) {
+            case (null) {
+                Debug.print("No collections found for the user.");
+                return []; // Return an empty list if the user has no collections
+            };
+            case (?collections) {
+                // Iterate through each collection the user owns
+                for ((_, collectionCanisterId) in collections.vals()) {
+                    // Retrieve the transactions for the specific collection
+                    let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+                        ext_marketplaceTransactions : () -> async [Transaction];
+                        getCollectionDetails : () -> async (Text, Text, Text); // Assuming this returns (name, symbol, metadata)
                     };
-                } catch (e) {
-                    Debug.print("Error fetching transactions for canister: " # Principal.toText(collectionCanisterId));
+
+                    // Fetch all transactions for the collection
+                    try {
+                        let transactions = await collectionCanisterActor.ext_marketplaceTransactions();
+
+                        // Get collection details once to avoid repeated calls
+                        let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+                        // Map transactions to activities
+                        for (transaction in transactions.vals()) {
+                            let activity : Activity = {
+                                collectionName = collectionName;
+                                tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, transaction.token);
+                                price = transaction.price;
+                                time = transaction.time;
+                            };
+
+                            // Add the activity to the userActivities array
+                            userActivities := Array.append(userActivities, [activity]);
+                        };
+                    } catch (e) {
+                        Debug.print("Error fetching transactions for canister: " # Principal.toText(collectionCanisterId));
+                    };
                 };
             };
         };
+
+        return userActivities; // Return the list of activities for the user
     };
 
-    return userActivities; // Return the list of activities for the user
-};
+    /* -------------------------------------------------------------------------- */
+    /*                                  MARKETPLACE                               */
+    /* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-/*                                  MARKETPLACE                               */
-/* -------------------------------------------------------------------------- */
-
-//set price for the nfts
-public shared (msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
-    let priceactor = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplaceList : (caller : Principal, request : ListRequest) -> async Result.Result<(), CommonError>;
-    };
-    return await priceactor.ext_marketplaceList(msg.caller, request);
-};
-
-//get the nfts and their corresponding prices
-public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, Listing, Metadata)] {
-    let pricelistings = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplaceListings : () -> async [(TokenIndex, Listing, Metadata)];
-    };
-    return await pricelistings.ext_marketplaceListings();
-};
-
-//purchase nft
-public shared func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
-    let buynft = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplacePurchase : (tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) -> async Result.Result<(AccountIdentifier, Nat64), CommonError>;
-    };
-    return await buynft.ext_marketplacePurchase(tokenid, price, buyer);
-};
-
-//settle and confirm purchase
-// public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
-//     let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
-//         ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
-//     };
-//     return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
-// };
-
-//get transaction details
-public shared func transactions(_collectionCanisterId : Principal) : async [Transaction] {
-    let get_transactions = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplaceTransactions : () -> async [Transaction];
+    //set price for the nfts
+    public shared (msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
+        let priceactor = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceList : (caller : Principal, request : ListRequest) -> async Result.Result<(), CommonError>;
+        };
+        return await priceactor.ext_marketplaceList(msg.caller, request);
     };
 
-    return await get_transactions.ext_marketplaceTransactions();
-};
-
-//get marketplace stats
-public shared func marketstats(_collectionCanisterId : Principal) : async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat) {
-    let getstats = actor (Principal.toText(_collectionCanisterId)) : actor {
-        ext_marketplaceStats : () -> async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat);
+    //get the nfts and their corresponding prices
+    public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, Listing, Metadata)] {
+        let pricelistings = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceListings : () -> async [(TokenIndex, Listing, Metadata)];
+        };
+        return await pricelistings.ext_marketplaceListings();
     };
 
-    return await getstats.ext_marketplaceStats();
-};
+    //purchase nft
+    public shared func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
+        let buynft = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplacePurchase : (tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) -> async Result.Result<(AccountIdentifier, Nat64), CommonError>;
+        };
+        return await buynft.ext_marketplacePurchase(tokenid, price, buyer);
+    };
 
-public shared (msg) func transfer_balance(
-    _collectionCanisterId : Principal,
-    paymentAddress : AccountIdentifier,
-    amount_e8s : Nat64,
-    subaccount : ?SubAccount,
-) : async Result.Result<Nat64, CommonError> {
-    // Debug print available cycles
-    Debug.print("Available cycles: " # Nat.toText(Cycles.balance()));
+    //settle and confirm purchase
+    public shared func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+        let confirmpurchase = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceSettle : (paymentaddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+        };
+        return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
+    };
 
-    try {
-        // Prepare the arguments for the ICP ledger transfer
-        let send_args = {
-            memo = 0 : Nat64; // Memo set to 0, explicitly typed as Nat64
-            amount = { e8s = amount_e8s }; // Transfer amount in e8s
-            fee = { e8s = 10000 : Nat64 }; // Transaction fee in e8s (0.0001 ICP)
-            from_subaccount = subaccount; // Subaccount for the buyer, if any
-            to = paymentAddress; // Recipient is the seller's account
-            created_at_time = null : ?Time; // Optional timestamp, explicitly typed as null
+    //get transaction details
+    public shared func transactions(_collectionCanisterId : Principal) : async [Transaction] {
+        let get_transactions = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceTransactions : () -> async [Transaction];
         };
 
-        // Debugging the send arguments
-        Debug.print("Sending args: ");
-
-        // Call the ledger's send_dfx method to transfer funds
-        let block_height = await ExternalService_ICPLedger.send_dfx(send_args);
-
-        // Return the block height upon successful transaction
-        Debug.print("Transfer successful, block height: " # debug_show (block_height));
-        return #ok(block_height);
-
-    } catch (err) {
-        // Handle the error and return an appropriate CommonError variant
-        Debug.print("Transfer failed with error.");
-        // Here we check if the error is related to an invalid token or some other issue
-        let errorMessage = "Transfer Failed: " # Error.message(err);
-        return #err(#Other(errorMessage));
+        return await get_transactions.ext_marketplaceTransactions();
     };
-};
 
-public shared (msg) func send_balance_and_nft(
-    _collectionCanisterId : Principal,
-    paymentAddress : AccountIdentifier,
-    amount_e8s : Nat64,
-    subaccount : ?SubAccount,
-) : async Result.Result<Nat64, CommonError> {
-    // Debug print available cycles
-    Debug.print("Available cycles: " # Nat.toText(Cycles.balance()));
-
-    try {
-        // Prepare the arguments for the ICP ledger transfer
-        let send_args = {
-            memo = 0 : Nat64; // Memo set to 0, explicitly typed as Nat64
-            amount = { e8s = amount_e8s }; // Transfer amount in e8s
-            fee = { e8s = 10000 : Nat64 }; // Transaction fee in e8s (0.0001 ICP)
-            from_subaccount = subaccount; // Subaccount for the buyer, if any
-            to = paymentAddress; // Recipient is the seller's account
-            created_at_time = null : ?Time; // Optional timestamp, explicitly typed as null
+    //get marketplace stats
+    public shared func marketstats(_collectionCanisterId : Principal) : async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat) {
+        let getstats = actor (Principal.toText(_collectionCanisterId)) : actor {
+            ext_marketplaceStats : () -> async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat);
         };
 
-        // Debugging the send arguments
-        Debug.print("Sending args: " # debug_show (send_args));
+        return await getstats.ext_marketplaceStats();
+    };
 
-        // Call the ledger's send_dfx method to transfer funds
-        let block_height : Nat64 = await ExternalService_ICPLedger.send_dfx(send_args);
-        Debug.print("Transfer successful, block height: " # Nat64.toText(block_height));
+    public shared (msg) func transfer_balance(
+        _collectionCanisterId : Principal,
+        paymentAddress : AccountIdentifier,
+        amount_e8s : Nat64,
+        subaccount : ?SubAccount,
+    ) : async Result.Result<Nat64, CommonError> {
+        // Debug print available cycles
+        Debug.print("Available cycles: " # Nat.toText(Cycles.balance()));
 
-        // Call the marketplace settle method after successful transfer
-        let marketplaceActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            ext_marketplaceSettle : (paymentAddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
-        };
-
-        switch (await marketplaceActor.ext_marketplaceSettle(paymentAddress)) {
-            case (#ok _) {
-                Debug.print("NFT settle successful.");
-                return #ok(block_height); // Return block height upon successful transaction and NFT settle
+        try {
+            // Prepare the arguments for the ICP ledger transfer
+            let send_args = {
+                memo = 0 : Nat64; // Memo set to 0, explicitly typed as Nat64
+                amount = { e8s = amount_e8s }; // Transfer amount in e8s
+                fee = { e8s = 10000 : Nat64 }; // Transaction fee in e8s (0.0001 ICP)
+                from_subaccount = subaccount; // Subaccount for the buyer, if any
+                to = paymentAddress; // Recipient is the seller's account
+                created_at_time = null : ?Time; // Optional timestamp, explicitly typed as null
             };
-            case (#err e) {
-                return #err(#Other("NFT settle failed:"));
+
+            // Debugging the send arguments
+            Debug.print("Sending args: ");
+
+            // Call the ledger's send_dfx method to transfer funds
+            let block_height = await ExternalService_ICPLedger.send_dfx(send_args);
+
+            // Return the block height upon successful transaction
+            Debug.print("Transfer successful, block height: " # debug_show (block_height));
+            return #ok(block_height);
+
+        } catch (err) {
+            // Handle the error and return an appropriate CommonError variant
+            Debug.print("Transfer failed with error.");
+            // Here we check if the error is related to an invalid token or some other issue
+            let errorMessage = "Transfer Failed: " # Error.message(err);
+            return #err(#Other(errorMessage));
+        };
+    };
+
+    public shared (msg) func send_balance_and_nft(
+        _collectionCanisterId : Principal,
+        paymentAddress : AccountIdentifier,
+        amount_e8s : Nat64,
+        subaccount : ?SubAccount,
+    ) : async Result.Result<Nat64, CommonError> {
+        // Debug print available cycles
+        Debug.print("Available cycles: " # Nat.toText(Cycles.balance()));
+
+        try {
+            // Prepare the arguments for the ICP ledger transfer
+            let send_args = {
+                memo = 0 : Nat64; // Memo set to 0, explicitly typed as Nat64
+                amount = { e8s = amount_e8s }; // Transfer amount in e8s
+                fee = { e8s = 10000 : Nat64 }; // Transaction fee in e8s (0.0001 ICP)
+                from_subaccount = subaccount; // Subaccount for the buyer, if any
+                to = paymentAddress; // Recipient is the seller's account
+                created_at_time = null : ?Time; // Optional timestamp, explicitly typed as null
             };
-        };
 
-    } catch (err) {
-        // Handle any unexpected errors and return an appropriate error message
-        Debug.print("Unexpected error occurred during transfer and NFT settle.");
-        let errorMessage = "Unexpected Transfer Failed: " # Error.message(err);
-        return #err(#Other(errorMessage));
-    };
-};
+            // Debugging the send arguments
+            Debug.print("Sending args: " # debug_show (send_args));
 
-//Place order (to get hard copy)
-public shared func placeOrder(
-    accountIdentifier : Principal, // Now passed as a parameter
-    tokenid : TokenIdentifier,
-    phone : Text,
-    email : ?Text, // Optional email parameter, but email should be fetched automatically if available
-    address : Text,
-    city : Text,
-    country : Text,
-    pincode : Text,
-    landmark : ?Text,
-) : async Result.Result<Text, Text> {
+            // Call the ledger's send_dfx method to transfer funds
+            let block_height : Nat64 = await ExternalService_ICPLedger.send_dfx(send_args);
+            Debug.print("Transfer successful, block height: " # Nat64.toText(block_height));
 
-    // Validate required fields (excluding optional email)
-    if (phone == "" or address == "" or city == "" or country == "" or pincode == "") {
-        return #err("Please fill in all required fields.");
-    };
+            // Call the marketplace settle method after successful transfer
+            let marketplaceActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+                ext_marketplaceSettle : (paymentAddress : AccountIdentifier) -> async Result.Result<(), CommonError>;
+            };
 
-    // Find the user by the provided account identifier
-    let existingUser = Array.find<User>(
-        usersArray,
-        func(u : User) : Bool {
-            u.accountIdentifier == accountIdentifier;
-        },
-    );
-
-    // If user is not found, return an error
-    switch (existingUser) {
-        case (null) {
-            return #err("User not found. Please create a user before placing an order.");
-        };
-        case (?foundUser) {
-            // Fetch user details if the email is not provided
-            let userDetails = userDetailsMap.get(accountIdentifier);
-
-            // Determine the email to use
-            let finalEmail = switch (email) {
-                case (?someEmail) someEmail; // Use the provided email if available
-                case (null) switch (userDetails) {
-                    // If not provided, try to fetch from user details
-                    case (?details) details.email; // Use stored email if available
-                    case (null) return #err("User details not found. Please set your user details or provide an email.");
+            switch (await marketplaceActor.ext_marketplaceSettle(paymentAddress)) {
+                case (#ok _) {
+                    Debug.print("NFT settle successful.");
+                    return #ok(block_height); // Return block height upon successful transaction and NFT settle
+                };
+                case (#err e) {
+                    return #err(#Other("NFT settle failed:"));
                 };
             };
 
-            // Generate a unique order ID
-            let newOrderId = orderIdCounter + 1;
-            orderIdCounter := newOrderId;
+        } catch (err) {
+            // Handle any unexpected errors and return an appropriate error message
+            Debug.print("Unexpected error occurred during transfer and NFT settle.");
+            let errorMessage = "Unexpected Transfer Failed: " # Error.message(err);
+            return #err(#Other(errorMessage));
+        };
+    };
 
-            // Create a new order linked to the user's account, with the chosen email
-            let newOrder : Order = {
-                id = newOrderId;
-                accountIdentifier = foundUser.accountIdentifier;
-                userId = foundUser.id; // Link to user's unique ID
-                tokenid = tokenid;
-                phone = phone;
-                email = finalEmail; // Use either provided or fetched email
-                address = address;
-                city = city;
-                country = country;
-                pincode = pincode;
-                landmark = landmark; // Optional field
-                orderTime = Time.now();
+    //Place order (to get hard copy)
+    public shared func gethardcopy(
+        accountIdentifier : Principal, // Now passed as a parameter
+        tokenid : TokenIdentifier,
+        phone : Text,
+        email : ?Text, // Optional email parameter, but email should be fetched automatically if available
+        address : Text,
+        city : Text,
+        country : Text,
+        pincode : Text,
+        landmark : ?Text,
+    ) : async Result.Result<Text, Text> {
+
+        // Validate required fields (excluding optional email)
+        if (phone == "" or address == "" or city == "" or country == "" or pincode == "") {
+            return #err("Please fill in all required fields.");
+        };
+
+        // Find the user by the provided account identifier
+        let existingUser = Array.find<User>(
+            usersArray,
+            func(u : User) : Bool {
+                u.accountIdentifier == accountIdentifier;
+            },
+        );
+
+        // If user is not found, return an error
+        switch (existingUser) {
+            case (null) {
+                return #err("User not found. Please create a user before placing an order.");
             };
             case (?foundUser) {
+                // Fetch user details if the email is not provided
+                let userDetails = userDetailsMap.get(accountIdentifier);
+
+                // Determine the email to use
+                let finalEmail = switch (email) {
+                    case (?someEmail) someEmail; // Use the provided email if available
+                    case (null) switch (userDetails) {
+                        // If not provided, try to fetch from user details
+                        case (?details) details.email; // Use stored email if available
+                        case (null) return #err("User details not found. Please set your user details or provide an email.");
+                    };
+                };
+
                 // Generate a unique order ID
                 let newOrderId = orderIdCounter + 1;
                 orderIdCounter := newOrderId;
 
-                // Create a new order linked to the user's account
+                // Create a new order linked to the user's account, with the chosen email
                 let newOrder : Order = {
                     id = newOrderId;
                     accountIdentifier = foundUser.accountIdentifier;
                     userId = foundUser.id; // Link to user's unique ID
                     tokenid = tokenid;
                     phone = phone;
-                    email = email;
+                    email = finalEmail; // Use either provided or fetched email
                     address = address;
                     city = city;
                     country = country;

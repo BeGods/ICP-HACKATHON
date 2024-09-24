@@ -6,9 +6,9 @@ import { setUser } from "../redux/authSlice.js";
 
 function DashBoard() {
   const { backendActor } = useAuth();
-  const [user, setUser] = useState(0);
-  const [nfts, setnfts] = useState(0);
-  const [collections, setcollections] = useState(0);
+  const [user, setUser] = useState();
+  const [nfts, setnfts] = useState();
+  const [collections, setcollections] = useState();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
 

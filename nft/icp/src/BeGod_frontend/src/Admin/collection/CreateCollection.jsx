@@ -210,7 +210,7 @@ const CreateCollection = () => {
   };
 
   const getNftTokenId = async (answ, nftId) => {
-    // console.log(canId, nftId);
+    console.log(answ);
     const principalString = answ;
     const principal = Principal.fromText(principalString);
     try {
@@ -291,124 +291,132 @@ const CreateCollection = () => {
 
   return (
     <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
-      {/* {loading ? (
-        <div className="flex justify-center items-center h-screen">
-          <Skeleton height={400} width={400} />
+      {loading ? (
+        <div
+          style={{
+            display: "grid",
+            lineHeight: 3,
+            padding: "1rem",
+            marginBottom: "0.5rem",
+          }}
+        >
+          <Skeleton />
+          <Skeleton count={5} />
         </div>
-      ) : ( */}
-      <div className="w-full">
-        <BackButton />
-        <div className="my-8">
-          <h1 className="text-3xl text-white ">Create Collection</h1>
-          <div className="flex flex-col md:flex-row gap-x-8 items-center  w-full  px-1 py-2 text-[#FFFFFF] justify-start rounded-md">
-            <form className="flex flex-col w-full gap-2 mt-4 space-y-4">
-              {/* Collection Name and Max Limit */}
-              <div className="flex flex-col items-center justify-center w-full sm:flex-row sm:gap-4 md:flex-row md:gap-4">
-                <div className="flex flex-col w-full sm:w-1/2">
-                  <label className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
-                    Collection Name:
-                  </label>
-                  <input
-                    onChange={(e) => setName(e.target.value)}
-                    type="text"
-                    className="pl-4 rounded-md bg-[#29292C] h-[30px] md:h-[45px] w-full"
-                  />
-                </div>
-                <div className="w-full sm:w-1/2 flex flex-col mt-[20px] sm:mt-0">
-                  <label className="w-full flex flex-col mt-[20px] sm:mt-0">
-                    <span className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
-                      Logo
-                    </span>
-                    <LogoImageUploader captureUploadedFiles={handleFiles} />
-                  </label>
-                </div>
-              </div>
-              {/* Description */}
-              <label className="mt-[20px] w-[100%] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-                Description:
-                <textarea
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="pl-4 w-[100%] h-[100px] bg-[#29292C] rounded-md resize-none p-2"
-                  rows="8"
-                  placeholder="Enter description here"
-                />
-              </label>
-              {/* Add new NFT Section */}
-              <div
-                className={`${
-                  nftCardsList.length > 0 && "flex justify-end items-center"
-                }`}
-              >
-                <label className="mt-[20px] w-[100%]  md:h-[46px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-[0px]">
-                  NFT Cards
-                </label>
-                <br />
-                <div className="relative inline-block py-2 mt-2">
-                  <button
-                    type="button"
-                    className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
-                    onClick={toggleModal}
-                  >
-                    Add New
-                  </button>
-                  <div className="absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-[#f0c96a] w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 border-gray-900">
-                    <span>
-                      <BiPlus size={22} />{" "}
-                    </span>
+      ) : (
+        <div className="w-full">
+          <BackButton />
+          <div className="my-8">
+            <h1 className="text-3xl text-white ">Create Collection</h1>
+            <div className="flex flex-col md:flex-row gap-x-8 items-center  w-full  px-1 py-2 text-[#FFFFFF] justify-start rounded-md">
+              <form className="flex flex-col w-full gap-2 mt-4 space-y-4">
+                {/* Collection Name and Max Limit */}
+                <div className="flex flex-col items-center justify-center w-full sm:flex-row sm:gap-4 md:flex-row md:gap-4">
+                  <div className="flex flex-col w-full sm:w-1/2">
+                    <label className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
+                      Collection Name:
+                    </label>
+                    <input
+                      onChange={(e) => setName(e.target.value)}
+                      type="text"
+                      className="pl-4 rounded-md bg-[#29292C] h-[30px] md:h-[45px] w-full"
+                    />
+                  </div>
+                  <div className="w-full sm:w-1/2 flex flex-col mt-[20px] sm:mt-0">
+                    <label className="w-full flex flex-col mt-[20px] sm:mt-0">
+                      <span className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
+                        Logo
+                      </span>
+                      <LogoImageUploader captureUploadedFiles={handleFiles} />
+                    </label>
                   </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-3 gap-5">
-                {nftCardsList.map((eachNftItem) => (
-                  <NftCardItem
-                    nftDetails={eachNftItem}
-                    key={eachNftItem.nftId}
-                    deleteNft={deleteNft}
+                {/* Description */}
+                <label className="mt-[20px] w-[100%] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
+                  Description:
+                  <textarea
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="pl-4 w-[100%] h-[100px] bg-[#29292C] rounded-md resize-none p-2"
+                    rows="8"
+                    placeholder="Enter description here"
                   />
-                ))}
-              </div>
-              {/* Form Buttons */}
-              <div className="flex justify-start sm:justify-end md:justify-end gap-4 w-[100%] mt-[10px] pb-8 sm:mb-0">
-                <button
-                  type="button"
-                  onClick={() => navigate(-1)}
-                  className="w-[30%] sm:w-[25%] md:w-[15%] h-[43px] text-[#FFFFFF] rounded-md border-[#FCD37B] border font-semibold"
+                </label>
+                {/* Add new NFT Section */}
+                <div
+                  className={`${
+                    nftCardsList.length > 0 && "flex justify-end items-center"
+                  }`}
                 >
-                  Cancel
-                </button>
+                  <label className="mt-[20px] w-[100%]  md:h-[46px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-[0px]">
+                    NFT Cards
+                  </label>
+                  <br />
+                  <div className="relative inline-block py-2 mt-2">
+                    <button
+                      type="button"
+                      className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
+                      onClick={toggleModal}
+                    >
+                      Add New
+                    </button>
+                    <div className="absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-[#f0c96a] w-[40px] h-[40px] rounded-full flex items-center justify-center border-2 border-gray-900">
+                      <span>
+                        <BiPlus size={22} />{" "}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-5">
+                  {nftCardsList.map((eachNftItem) => (
+                    <NftCardItem
+                      nftDetails={eachNftItem}
+                      key={eachNftItem.nftId}
+                      deleteNft={deleteNft}
+                    />
+                  ))}
+                </div>
+                {/* Form Buttons */}
+                <div className="flex justify-start sm:justify-end md:justify-end gap-4 w-[100%] mt-[10px] pb-8 sm:mb-0">
+                  <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="w-[30%] sm:w-[25%] md:w-[15%] h-[43px] text-[#FFFFFF] rounded-md border-[#FCD37B] border font-semibold"
+                  >
+                    Cancel
+                  </button>
 
-                {/* {loading && (
+                  {/* {loading && (
                     <div className="spinner-container">
                       <div className="spinner"></div>
                     </div>
                   )} */}
 
-                <button
-                  type="button"
-                  className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
-                  onClick={finalcall}
-                >
-                  Create Collection
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
+                    onClick={finalcall}
+                  >
+                    Create Collection
+                  </button>
+                </div>
 
-              {modal && (
-                <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-                  <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
-                    <div className="flex items-center justify-center h-screen">
-                      <Modal
-                        toggleModal={toggleModal}
-                        getAddedNftDetails={getAddedNftDetails}
-                      />
+                {modal && (
+                  <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
+                    <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
+                      <div className="flex items-center justify-center h-screen">
+                        <Modal
+                          toggleModal={toggleModal}
+                          getAddedNftDetails={getAddedNftDetails}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </form>
+                )}
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-      {/* )} */}
+      )}
     </div>
   );
 };
