@@ -91,10 +91,10 @@ const { backendActor } = useAuth({});
   const fetchCollections = async() => {
     const collectionList = [];
     const result = await backendActor?.getAllCollections();
-   // console.log("result",result)
+    console.log("result",result)
     const collectionItems = result[0][1];
 
-   // console.log("collection id list" , collectionItems)
+    console.log("collection id list" , collectionItems)
 
    await Promise.all(
     collectionItems.map(async(eachItem) => {
@@ -106,7 +106,7 @@ const { backendActor } = useAuth({});
           const cardDetails = eachItem[1].nonfungible;
           
            const metadata = JSON.parse(cardDetails.metadata[0].json)
-           console.log(cardDetails);
+           console.log("cardDetails",cardDetails);
           // console.log(metadata);
           const nftCard = {
             collectionId:eachItem[0],
@@ -114,6 +114,7 @@ const { backendActor } = useAuth({});
             cardImageUrl : cardDetails.thumbnail,
             cardSold : "",
           }
+           console.log("cardDetails after nft card",nftCard.collectionId);
           collectionList.push(nftCard);
          })
       }
@@ -132,6 +133,7 @@ const { backendActor } = useAuth({});
   const getDetails =  async(collectionId) => {
 
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
+    console.log("collection details",collectionDetailsResult);
     return collectionDetailsResult
 
   }
