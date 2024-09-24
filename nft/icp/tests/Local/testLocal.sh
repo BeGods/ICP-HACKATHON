@@ -91,7 +91,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="3"
+NFTID="5"
 echo "NFTID: $NFTID"
 
 
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='ltsgs-pakor-uwjaa-aaaaa-aeaaa-uaqca-aaaab-q'
+TOKENIDENTIFIER='wwd4y-cikor-uwjaa-aaaaa-aeaaa-uaqca-aaaac-q'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -141,7 +141,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 

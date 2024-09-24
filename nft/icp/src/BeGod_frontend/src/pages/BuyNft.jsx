@@ -18,9 +18,8 @@ import { FiLock } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { transferApprove } from "../utils/transApprove";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const buyingStatus = {
   payment: "PAYMENT",
@@ -84,10 +83,10 @@ const BuyNft = () => {
   };
 
   const onClickBuyButton = async () => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       setbuyPopup(true);
       setBuyingStatus(buyingStatus.payment);
-  
+
       const result1 = await backendActor?.purchaseNft(
         Principal.fromText(collectionId),
         tokenId,
@@ -95,22 +94,33 @@ const BuyNft = () => {
         principal
       );
 
-      console.log(Principal.fromText(collectionId),
-      tokenId,
-      parseInt(cardDetails.cardPrice),
-      principal,'data check')
-  
+      console.log(
+        Principal.fromText(collectionId),
+        tokenId,
+        parseInt(cardDetails.cardPrice),
+        principal,
+        "data check"
+      );
+
       setLoadingFirst(false);
       setLoadingSecond(true);
-    console.log("payment address", result1.ok[0]);
-    const transationId = result1.ok[0];
-    const subAccount = [];
-    console.log("principal",principal)
-    await transferApprove(backendActor, ledgerActor, parseInt(cardDetails.cardPrice),Principal.fromText(principal),transationId,collectionId,subAccount);
-    const paymentAddress = result1.ok[0];
-    console.log(cardDetails.cardPrice);
-    }else{
-      toast.error('Login First!', {
+      console.log("payment address", result1.ok[0]);
+      const transationId = result1.ok[0];
+      const subAccount = [];
+      console.log("principal", principal);
+      const resultTxn = await transferApprove(
+        backendActor,
+        ledgerActor,
+        parseInt(cardDetails.cardPrice),
+        Principal.fromText(principal),
+        transationId,
+        collectionId,
+        subAccount
+      );
+      console.log(resultTxn, "this is the finale result");
+      setBuyingStatus(buyingStatus.success);
+    } else {
+      toast.error("Login First!", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -119,49 +129,9 @@ const BuyNft = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
+      });
     }
-   
-
-    // if (isAuthenticated) {
-    //   // const subAccount = null;
-    //   // const accountIdentifier = AccountIdentifier.fromPrincipal(principal, subAccount);
-
-    //   // console.log(accountIdentifier.toHex(), 'Account Identifier (Hex)');
-    //   const accountIdentifier =
-    //     "af110b0d0563339ae4e479ff74de7894afcbc7a32db9dff03ba09b07116632aa";
-    //   // console.log(encodeIcrcAccount(accountIdentifier))
-    //   // Now send the balance using this Account Identifier
-    //   // await sendBalance(
-    //   //   paymentAddress,
-    //   //   accountIdentifier,
-    //   //   parseInt(cardDetails.cardPrice)
-    //   // );
-
-    //   console.log(cardDetails.cardPrice);
-
-    //    }
-    // const result = await backendActor?.send_balance_and_nft(
-    //   Principal.fromText(collectionId),
-    //   paymentAddress,
-    //   parseInt(cardDetails.cardPrice),
-    //   []
-    // );
-    // console.log("final result", result);
-    // setLoadingSecond(false);
-
-    // console.log(result.ok);
-    // console.log("result type", typeof result.ok);
-
-        // if(result.ok == parseInt(2n)){
-        //     setBuyingStatus(buyingStatus.success)
-        // }
-
-        setBuyingStatus(buyingStatus.success);
-
-    }
-
-
+  };
 
   // console.log("collectionId",collectionId);
   // console.log("card index",index);
@@ -177,11 +147,9 @@ const BuyNft = () => {
     buyNow,
   } = t("buyNowDetails");
 
-
   useEffect(() => {
     window.scrollTo(0, 0);
   });
-
 
   const fetchCardDetails = async () => {
     const result = await backendActor?.getSingleNonFungibleTokens(
@@ -248,128 +216,136 @@ const BuyNft = () => {
   useEffect(() => {
     fetchCollectionDetails();
   }, []);
-   
-    return (
-        <div className={`font-caslon ${buyPopup && "fixed"}`}>
-            <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
-                <Navbar />
-                <div className='max-w-[1920px] mx-auto mt-8 sm:mt-8 w-full flex flex-col  items-center justify-center gap-4'>
-                    <img src="/Hero/frame.svg" alt="" className='w-[20%]' />
-                    <div className='h-[4px] w-[94%] rounded-lg border'></div>
+
+  return (
+    <div className={`font-caslon ${buyPopup && "fixed"}`}>
+      <div
+        style={{
+          backgroundImage: `url('/Hero/smoke 1.png')`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <Navbar />
+        <div className="max-w-[1920px] mx-auto mt-8 sm:mt-8 w-full flex flex-col  items-center justify-center gap-4">
+          <img src="/Hero/frame.svg" alt="" className="w-[20%]" />
+          <div className="h-[4px] w-[94%] rounded-lg border"></div>
+        </div>
+
+        {/* for mobile screen */}
+        <div className="max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center overflow-hidden ">
+          <div className="w-[80%] flex text-white justify-between items-center">
+            <div className="h-[2vh] w-[10%]">
+              <CiStar className="object-cover w-full h-full" />
+            </div>
+            {nftCardLoading ? (
+              <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <div className="flex flex-col items-center justify-center">
+                  <Skeleton count={1} width={100} height={50} />
+                  <Skeleton count={1} width={70} height={20} />
                 </div>
-                
-                {/* for mobile screen */}
-                <div className='max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center overflow-hidden '>
-                    <div className='w-[80%] flex text-white justify-between items-center'>
-                        <div className='h-[2vh] w-[10%]'>
-                            <CiStar className='object-cover w-full h-full' />
-                        </div>
-                        {nftCardLoading ? (
-                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <div className='flex flex-col items-center justify-center'>
-                                    <Skeleton count={1} width={100} height={50} />
-                                    <Skeleton count={1} width={70} height={20} />
-                                </div>
-                            </SkeletonTheme>
-                        ) : (
-                            <div className='space-y-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]'>
-                                <h1 className='text-[50px] sm:text-[64px] font-[400] leading-[54px]'>
-                                    {cardDetails ? cardDetails.cardName : <Skeleton />}
-                                </h1>
-                                <h2 className='text-[16px] font-[400] leading-[14px] text-center'>
-                                    {cardDetails ? cardDetails.cardType : <Skeleton />}
-                                </h2>
-                            </div>
-                        )}
-                        <CiShare2 />
+              </SkeletonTheme>
+            ) : (
+              <div className="space-y-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
+                <h1 className="text-[50px] sm:text-[64px] font-[400] leading-[54px]">
+                  {cardDetails ? cardDetails.cardName : <Skeleton />}
+                </h1>
+                <h2 className="text-[16px] font-[400] leading-[14px] text-center">
+                  {cardDetails ? cardDetails.cardType : <Skeleton />}
+                </h2>
+              </div>
+            )}
+            <CiShare2 />
+          </div>
+          <div className="flex items-center mt-16">
+            <div>
+              <div
+                className="w-full h-full rounded-lg shadow-lg"
+                style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
+              >
+                {nftCardLoading ? (
+                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                    <div className="w-full h-full">
+                      <Skeleton height={320} width={280} />
                     </div>
-                    <div className='flex items-center mt-16'>
-                        <div>
-                            <div
-                                className="w-full h-full rounded-lg shadow-lg"
-                                style={{ boxShadow: '0px 0px 94px 36px #06B225' }}
-                            >
-                                {nftCardLoading ? (
-                                    <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                        <div className='w-full h-full'>
-                                            <Skeleton height={320} width={280} />
-                                        </div>
-                                    </SkeletonTheme>
-                                ) : (
-                                    <img
-                                        src={cardDetails?.cardImageUrl}
-                                        alt=""
-                                        className="object-cover w-full h-full rounded-lg shadow-lg"
-                                        style={{ boxShadow: '0px 0px 20.8px 5px #000000' }}
-                                    />
-                                )}
-                            </div>
-                            {/* <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={() => setbuyPopup(!buyPopup)}>
+                  </SkeletonTheme>
+                ) : (
+                  <img
+                    src={cardDetails?.cardImageUrl}
+                    alt=""
+                    className="object-cover w-full h-full rounded-lg shadow-lg"
+                    style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
+                  />
+                )}
+              </div>
+              {/* <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={() => setbuyPopup(!buyPopup)}>
                                 <YellowButtonUserSide>{t('buyNow')}</YellowButtonUserSide>
                             </div> */}
-                            {nftCardLoading ? (
-                               <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#202020]'>
-                                    <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                            <Skeleton count={1} width={178} height={40}/>
-                                      </SkeletonTheme>
-                               </div>
-                         ):(
-                            <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
-                            <button 
-                                className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                                disabled={nftCardLoading}
-                                onClick={onClickBuyButton}
-                            >
-                                    Buy for {cardDetails.cardPrice/100000000} ICP
-                                </button>
-
-                            </div>
-                         )}
-                        </div>
-                    </div>
-                    <h1 className='w-[90%] mt-8 text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]'>
-                        {nftCardLoading ? (
-                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <Skeleton count={3} width="100%" height={20} />
-                            </SkeletonTheme>
-                        ) : (
-                            cardDetails.cardDescription
-                        )}
-                    </h1>
-                    <div className='mt-8 h-[4px] w-[80%] rounded-lg border'></div>
-                    <div className='mt-8 w-[80%] flex flex-col space-y-2'>
-                        <h1 className='text-[24px] font-[500] leading-[28px] text-[#FFFFFF]'>Details</h1>
-                        {nftCardLoading ? (
-                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <Skeleton count={5} height={20} />
-                            </SkeletonTheme>
-                        ) : (
-                            <>
-                                <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>{contactAddress}</h1>
-                                    <h1>0x2358...a68b</h1>
-                                </div>
-                                <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>{token}</h1>
-                                    <h1>ID8050</h1>
-                                </div>
-                                <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>{tokenStandard}</h1>
-                                    <h1>ERC-721</h1>
-                                </div>
-                                <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>{chain}</h1>
-                                    <h1>ICP</h1>
-                                </div>
-                                <div className='flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]'>
-                                    <h1>{lastUpdated}</h1>
-                                    <h1>7 Days ago</h1>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    <div className='mt-8 h-[4px] w-[80%] rounded-lg border'></div>
+              {nftCardLoading ? (
+                <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
+                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                    <Skeleton count={1} width={178} height={40} />
+                  </SkeletonTheme>
                 </div>
+              ) : (
+                <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                  <button
+                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                    disabled={nftCardLoading}
+                    onClick={onClickBuyButton}
+                  >
+                    Buy for {cardDetails.cardPrice / 100000000} ICP
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <h1 className="w-[90%] mt-8 text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
+            {nftCardLoading ? (
+              <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <Skeleton count={3} width="100%" height={20} />
+              </SkeletonTheme>
+            ) : (
+              cardDetails.cardDescription
+            )}
+          </h1>
+          <div className="mt-8 h-[4px] w-[80%] rounded-lg border"></div>
+          <div className="mt-8 w-[80%] flex flex-col space-y-2">
+            <h1 className="text-[24px] font-[500] leading-[28px] text-[#FFFFFF]">
+              Details
+            </h1>
+            {nftCardLoading ? (
+              <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                <Skeleton count={5} height={20} />
+              </SkeletonTheme>
+            ) : (
+              <>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{contactAddress}</h1>
+                  <h1>0x2358...a68b</h1>
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{token}</h1>
+                  <h1>ID8050</h1>
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{tokenStandard}</h1>
+                  <h1>ERC-721</h1>
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{chain}</h1>
+                  <h1>ICP</h1>
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{lastUpdated}</h1>
+                  <h1>7 Days ago</h1>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="mt-8 h-[4px] w-[80%] rounded-lg border"></div>
+        </div>
 
         {/* For desktop screen */}
         <div
@@ -595,7 +571,9 @@ const BuyNft = () => {
                 </div>
                 {currentBuyingStatus === buyingStatus.payment && (
                   <div className="h-[90%] relative flex flex-col items-center justify-center gap-3">
-                    <h1 className="mb-5 text-2xl">Please Wait <span className="animate-pulse">...</span></h1>
+                    <h1 className="mb-5 text-2xl">
+                      Please Wait <span className="animate-pulse">...</span>
+                    </h1>
                     <div className="w-[80%] h-[40px] bg-green-900 border border-slate-600 flex pl-5 items-center rounded-sm">
                       {popUpFirstLoading ? (
                         <MoonLoader
@@ -616,9 +594,10 @@ const BuyNft = () => {
 
                       <h1 className="">Payment is initiated....</h1>
                     </div>
-                    <div className={`w-[80%] h-[40px] border border-slate-600 flex items-center mt-3 pl-5 rounded-sm
+                    <div
+                      className={`w-[80%] h-[40px] border border-slate-600 flex items-center mt-3 pl-5 rounded-sm
                         ${
-                            popUpFirstLoading
+                          popUpFirstLoading
                             ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none"
                             : "bg-green-900 text-white"
                         }`}
@@ -678,6 +657,4 @@ const BuyNft = () => {
   );
 };
 
-
 export default BuyNft;
-
