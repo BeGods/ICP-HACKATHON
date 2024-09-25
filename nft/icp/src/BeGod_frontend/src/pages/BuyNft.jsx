@@ -8,7 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import { RiFileCopyLine } from "react-icons/ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -101,7 +101,6 @@ const BuyNft = () => {
         principal,
         "data check"
       );
-
       setLoadingFirst(false);
       setLoadingSecond(true);
       console.log("payment address", result1.ok[0]);
@@ -118,7 +117,31 @@ const BuyNft = () => {
         subAccount
       );
       console.log(resultTxn, "this is the finale result");
-      setBuyingStatus(buyingStatus.success);
+      if (resultTxn === true) {
+        setLoadingSecond(false);
+        setBuyingStatus(buyingStatus.success);
+        toast.success("Payment Success!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        toast.error("Payment Failed!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
     } else {
       toast.error("Login First!", {
         position: "top-center",
@@ -160,16 +183,32 @@ const BuyNft = () => {
     // console.log("buying nft details 0 1" , result[0][1]);
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
     // console.log("buying nft details 2" , result[2]);
+    console.log(result, "result");
+    const parsedMetadata = {
+      nftTypes: [],
+      standards: [],
+      chains: [],
+    };
+
     const cardDetails = result[0][2].nonfungible;
-    const metadata = JSON.parse(cardDetails.metadata[0].json);
-    const cardPrice = (parseInt(result[0][3]));
-    
+    // const metadata = JSON.parse(cardDetails.metadata[0].json);
+    const cardPrice = parseInt(result[0][3]);
+    cardDetails?.metadata.forEach((item) => {
+      const parsedData = JSON.parse(item.json);
+      console.log(parsedData);
+      parsedMetadata.nftTypes.push(parsedData.nfttype);
+      parsedMetadata.standards.push(parsedData.standard);
+      parsedMetadata.chains.push(parsedData.chain);
+    });
+
     const updatedCardDetails = {
-      cardName: metadata[0].name,
-      cardType: metadata[1].type,
-      cardImageUrl: cardDetails.thumbnail,
-      cardDescription: cardDetails.description,
+      cardName: cardDetails?.name,
+      cardType: parsedMetadata?.nftTypes,
+      cardImageUrl: cardDetails?.thumbnail,
+      cardDescription: cardDetails?.description,
       cardPrice: cardPrice,
+      standards: parsedMetadata.standards,
+      chains: parsedMetadata.chains,
     };
 
     setCardDetails(updatedCardDetails);
@@ -372,7 +411,7 @@ const BuyNft = () => {
                     </div>
                   </SkeletonTheme>
                 ) : (
-                  <div className="flex flex-col gap-2 space-y-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
+                  <div className="flex flex-col gap-1 space-y-2 text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
                     <h1 className="text-[64px] font-[400] leading-[54px]">
                       {cardDetails.cardName}{" "}
                     </h1>
@@ -436,7 +475,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{tokenStandard}</h1>
-                      <h1>ERC-721</h1>
+                      <h1>{cardDetails?.standards}</h1>
                     </>
                   )}
                 </div>
@@ -449,7 +488,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{chain}</h1>
-                      <h1>ICP</h1>
+                      <h1>{cardDetails?.chains}</h1>
                     </>
                   )}
                 </div>
@@ -468,23 +507,22 @@ const BuyNft = () => {
                 </div>
               </div>
               {nftCardLoading ? (
-                               <div className='ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#202020]'>
-                                    <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                            <Skeleton count={1} width={178} height={40}/>
-                                      </SkeletonTheme>
-                               </div>
-                         ):(
-                            <div className='ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
-                            <button 
-                                className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                                disabled={nftCardLoading}
-                                onClick={onClickBuyButton}
-                            >
-                                    Buy for {cardDetails.cardPrice/100000000} ICP
-                                </button>
-
-                            </div>
-                         )}
+                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
+                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                    <Skeleton count={1} width={178} height={40} />
+                  </SkeletonTheme>
+                </div>
+              ) : (
+                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                  <button
+                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                    disabled={nftCardLoading}
+                    onClick={onClickBuyButton}
+                  >
+                    Buy for {cardDetails.cardPrice / 100000000} ICP
+                  </button>
+                </div>
+              )}
             </div>
             <div>
               {nftCardLoading ? (
@@ -500,7 +538,7 @@ const BuyNft = () => {
                 </div>
               ) : (
                 <div
-                  className="h-[60%] w-[80%] mt-[40%] ml-[50%] shadow-lg rounded-lg"
+                  className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
                   style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
                 >
                   <img
@@ -569,13 +607,14 @@ const BuyNft = () => {
             <div className="flex items-center justify-center h-screen">
               <div
                 className={`h-[50vh] md:h-[40vh] ${
-                  currentBuyingStatus === buyingStatus.success ? "lg:h-[60vh]" : "lg:h-[40vh]"
-                } w-[70vw] lg:w-[25vw] bg-[#000000] text-white font-caslon p-5 rounded-md overflow-y-auto`}
-                style={{ fontFamily: "Quicksand" }}
+                  currentBuyingStatus === buyingStatus.success
+                    ? "lg:h-[65vh]"
+                    : "lg:h-[40vh]"
+                } w-[70vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
               >
                 <div className="relative flex items-center justify-end">
                   <button
-                    className="text-[#ffffff] absolute bottom-1 top-1"
+                    className="text-[#ffffff] absolute bottom-1 top-1 z-10"
                     onClick={() => toggleBuyPopup()}
                   >
                     <RxCross2 size={20} />
@@ -584,10 +623,13 @@ const BuyNft = () => {
 
                 {currentBuyingStatus === buyingStatus.payment && (
                   <div className="h-[90%] relative flex flex-col items-center justify-center gap-3">
-                    <h1 className="mb-5 text-2xl">
+                    <h1 className="mb-5 text-3xl big-heading">
                       Please Wait <span className="animate-pulse">...</span>
                     </h1>
-                    <div className="w-[80%] h-[40px] bg-green-900 border border-slate-600 flex pl-5 items-center rounded-sm">
+                    <div
+                      className="w-full px-4 h-[40px] bg-green-900 border border-slate-600 flex pl-5 items-center rounded-sm"
+                      style={{ padding: "1.3rem 2rem" }}
+                    >
                       {popUpFirstLoading ? (
                         <MoonLoader
                           color={color}
@@ -608,15 +650,16 @@ const BuyNft = () => {
                       <h1 className="">Payment is initiated....</h1>
                     </div>
                     <div
-                      className={`w-[80%] h-[40px] border border-slate-600 flex items-center mt-3 pl-5 rounded-sm
+                      className={`w-full h-[40px] border border-slate-600  mt-3 flex justify-start pl-4 items-center rounded-sm
                         ${
                           popUpFirstLoading
                             ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none"
                             : "bg-green-900 text-white"
                         }`}
+                      style={{ padding: "1.3rem 2rem" }}
                     >
                       {!popUpFirstLoading && popUpSecondLoading && (
-                        <div className="relative flex items-center justify-center mt-3">
+                        <div className="relative flex items-center justify-center">
                           <MoonLoader
                             color={color}
                             loading={popUpSecondLoading}
@@ -625,52 +668,71 @@ const BuyNft = () => {
                             data-testid="loader"
                             className="mr-2"
                           />
-                          <FaLock className="absolute left-2.5 bottom-2.5 opacity-50" size={15} color="#ffffff" />
+                          <FaLock
+                            className="absolute left-2.5 bottom-2.5 opacity-50"
+                            size={15}
+                            color="#ffffff"
+                          />
                         </div>
                       )}
 
                       {!popUpFirstLoading && !popUpSecondLoading && (
-                        <IoMdCheckmarkCircle color="purple" size={30} className="mt-2 mr-3" />
+                        <IoMdCheckmarkCircle
+                          color="purple"
+                          size={30}
+                          className="mt-2 mr-3"
+                        />
                       )}
 
                       {popUpSecondLoading ? (
-                        <div className="w-[80%] h-[40px] rounded-md relative paymentbutton flex items-center pl-10 mt-3">
-                          <h1 className="absolute z-10">Buying in Progress....</h1>
+                        <div className="w-[10rem] h-[40px] rounded-md relative paymentbutton flex items-center mt-3">
+                          <h1 className="absolute z-10 h-full">
+                            Buying in Progress....
+                          </h1>
                         </div>
                       ) : (
                         <div
                           className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md ${
                             popUpFirstLoading
                               ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11"
-                              : "bg-purple-900 text-white"
+                              : "bg-green-900 text-white"
                           }`}
                         >
-                          <h1 className="absolute z-10">Buying in Progress....</h1>
+                          <h1 className="absolute z-10">
+                            Buying in Progress....
+                          </h1>
                         </div>
                       )}
                     </div>
                   </div>
                 )}
 
-                {currentBuyingStatus === buyingStatus.success && !popUpSecondLoading && (
-                  <div className="flex flex-col items-center justify-center mt-5">
-                    <h1 className="mb-2 text-2xl font-semibold">Congratulations</h1>
-                    <img src={cardDetails.cardImageUrl} className="w-[180px] h-[260px]" />
-                    <h1 className="flex items-center mt-2 text-base font-extralight">
-                      Licence No- 828746888
-                      <CopyToClipboard text="828746888">
-                        <span className="ml-2 cursor-pointer text-slate-300">
-                          <RiFileCopyLine />
-                        </span>
-                      </CopyToClipboard>
-                    </h1>
-                    <Link to="/profile">
-                      <button className="w-[150px] h-[26px] bg-transparent border-2 border-solid border-[#FCD37B] mt-2">
-                        View Details
-                      </button>
-                    </Link>
-                  </div>
-                )}
+                {currentBuyingStatus === buyingStatus.success &&
+                  !popUpSecondLoading && (
+                    <div className="flex flex-col items-center justify-center mt-5">
+                      <h1 className="mb-4 text-3xl font-semibold">
+                        Congratulations !
+                      </h1>
+                      <img
+                        src={cardDetails.cardImageUrl}
+                        className="w-[180px] h-[260px] drop-shadow-lg object-contain rounded-lg"
+                        style={{ border: "3px solid #2d2d2d" }}
+                      />
+                      <h1 className="flex items-center my-3 text-base font-extralight">
+                        Licence No- 828746888
+                        <CopyToClipboard text="828746888">
+                          <span className="ml-2 cursor-pointer text-slate-300">
+                            <RiFileCopyLine />
+                          </span>
+                        </CopyToClipboard>
+                      </h1>
+                      <Link to="/profile">
+                        <button className="w-[150px] h-[30px] bg-transparent border-2 border-solid border-[#FCD37B] mt-2">
+                          View Details
+                        </button>
+                      </Link>
+                    </div>
+                  )}
               </div>
             </div>
           </div>
@@ -680,6 +742,5 @@ const BuyNft = () => {
     </div>
   );
 };
-
 
 export default BuyNft;

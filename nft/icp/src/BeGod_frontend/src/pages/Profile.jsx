@@ -106,12 +106,12 @@ const { backendActor } = useAuth({});
           const cardDetails = eachItem[1].nonfungible;
           
            const metadata = JSON.parse(cardDetails.metadata[0].json)
-           console.log("cardDetails",cardDetails);
+           console.log("cardDetails",cardDetails[0][1]);
           // console.log(metadata);
           const nftCard = {
             collectionId:eachItem[0],
-            cardName : metadata[0].name,
-            cardImageUrl : cardDetails.thumbnail,
+            cardName : cardDetails?.name,
+            cardImageUrl : cardDetails?.thumbnail,
             cardSold : "",
           }
            console.log("cardDetails after nft card",nftCard.collectionId);

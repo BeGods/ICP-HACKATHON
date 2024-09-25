@@ -92,7 +92,7 @@ export const transferApprove = async (
         metaData?.["icrc1:fee"],
         process.env.CANISTER_ID_BEGOD_BACKEND
       );
-      const totatSendBalance = Number(amnt) + Number(metaData?.["icrc1:fee"]);
+      const totatSendBalance = Number(amnt);
       const transaction = {
         amount: Number(amnt) + Number(metaData?.["icrc1:fee"]),
         from_subaccount: [],
@@ -106,7 +106,6 @@ export const transferApprove = async (
         expected_allowance: [],
         expires_at: [],
       };
-      console.log("tRANSACTION OBJECT : ", transaction);
 
       // const approvalResponse = await ledgerActor.icrc2_approve(transaction);
       const approvalResponse = await afterPaymentFlow(
@@ -120,6 +119,7 @@ export const transferApprove = async (
       );
 
       console.log(approvalResponse, "approvalResponse");
+      return approvalResponse;
 
       // if (approvalResponse?.Err) {
       //   return approvalResponse;

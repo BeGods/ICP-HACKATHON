@@ -91,7 +91,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="1"
+NFTID="0"
 echo "NFTID: $NFTID"
 
 
@@ -110,7 +110,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
-#  dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+ dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='wlvaq-eakor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-q'
+TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
