@@ -1,119 +1,13 @@
-body { 
-  background: #222; 
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-figure { 
-  position: relative;
-  width: 6.250em; 
-  height: 6.250em;
-  animation: rotate 2.4s linear infinite;
-}
-
-.white { 
-  position: absolute;
-  top: 0; bottom: 0; left: 0; right: 0; 
-  background: white; 
-  animation: flash 2.4s linear infinite;
-  opacity: 0;
-}
-
-.dot {
-  position: absolute;
-  margin: auto;
-  width: 2.4em; 
-  height: 2.4em;
-  border-radius: 100%;
-  transition: all 1s ease;
-}
-
-.dot:nth-child(2) { 
-  top: 0; bottom: 0; left: 0; 
-  background: #FF4444; 
-  animation: dotsY 2.4s linear infinite; 
-}
-
-.dot:nth-child(3) { 
-  top: 0; left: 0; right: 0; 
-  background: #FFBB33; 
-  animation: dotsX 2.4s linear infinite; 
-}
-
-.dot:nth-child(4) { 
-  top: 0; bottom: 0; right: 0; 
-  background: #99CC00; 
-  animation: dotsY 2.4s linear infinite; 
-}
-
-.dot:nth-child(5) { 
-  bottom: 0; left: 0; right: 0; 
-  background: #33B5E5; 
-  animation: dotsX 2.4s linear infinite; 
-}
-
-/* Keyframes for rotating animation */
-@keyframes rotate {
-  0% { 
-    transform: rotate(0); 
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-18deg);
   }
-  50% { 
-    width: 2.4em; 
-    height: 2.4em; 
-  }
-  100% { 
-    transform: rotate(360deg); 
-    width: 6.250em; 
-    height: 6.250em; 
+  50% {
+    transform: rotate(18deg);
   }
 }
 
-/* Animation for Y-axis dots (vertical movement) */
-@keyframes dotsY {
-  0%, 50% { 
-    opacity: 1; 
-    width: 2.4em;
-  }
-  66% { 
-    opacity: 0.1; 
-    width: 0; 
-  }
-  100% { 
-    opacity: 1; 
-    width: 2.4em; 
-  }
-}
-
-/* Animation for X-axis dots (horizontal movement) */
-@keyframes dotsX {
-  0%, 50% { 
-    opacity: 1; 
-    height: 2.4em;
-  }
-  66% { 
-    opacity: 0.1; 
-    height: 0; 
-  }
-  100% { 
-    opacity: 1; 
-    height: 2.4em; 
-  }
-}
-
-/* Flash animation for the white background */
-@keyframes flash {
-  0%, 33% { 
-    opacity: 0; 
-    border-radius: 0%; 
-  }
-  55% { 
-    opacity: 0.6; 
-    border-radius: 100%; 
-  }
-  66% { 
-    opacity: 0; 
-  }
+.animate-wiggle {
+  display: inline-block;
+  animation: wiggle 3s ease-in-out infinite;
 }

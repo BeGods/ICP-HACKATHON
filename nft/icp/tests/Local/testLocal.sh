@@ -25,7 +25,7 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-#   dfx canister call "$CANISTER" createExtCollection '("Vamsi", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk. ")'
+#   dfx canister call "$CANISTER" createExtCollection '("Vamsi", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
 
 # Getting Result Like this
 # (
