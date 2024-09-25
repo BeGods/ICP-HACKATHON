@@ -73,11 +73,12 @@ const Hero = () => {
     },[])
     const getCollections = async() => {
         const result = await backendActor?.getAllCollections();
-        const collectionItems = result[0][1];
-        if(collectionItems.length === 0){
+        if(result.length === 0){
             updateNoCollectionStatus(true);
-            return;
+            return; 
         }
+        const collectionItems = result[0][1];
+      
         console.log("collection items" , collectionItems);
         const collections = []
         let i  = 0;
@@ -181,8 +182,8 @@ console.log("current collection list",selectedCollectionNftCardsList)
                 </div>
                 {/* Collection details and its nfts part */}
                 {noCollections ? (
-                    <div className='w-full flex items-center justify-center'>
-                        <h1 className='text-[30px]'>No Collections Found</h1>
+                    <div className='w-full h-[50vh] flex items-center justify-center'>
+                        <h1 className='text-[50px] text-[#FCD37B]'>No Collections Found</h1>
                     </div>
                 ):(
                     <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
