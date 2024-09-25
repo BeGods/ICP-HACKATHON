@@ -67,7 +67,7 @@ const Profile = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === selectedList.length - 1 ? 0 : prevIndex + 1));
   };
-//   const { reloadLogin, isAuthenticated } = useAuth();
+  const { principal } = useAuth();
    const navigate = useNavigate(); 
    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
    
@@ -132,7 +132,7 @@ const { backendActor } = useAuth({});
 
   const getDetails =  async(collectionId) => {
 
-    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
+    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
     console.log("collection details",collectionDetailsResult);
     return collectionDetailsResult
 
@@ -186,7 +186,7 @@ const { backendActor } = useAuth({});
             </div>
 
             {/* Small screen view for single image display with prev and next buttons */}
-            <div className='sm:hidden flex items-center justify-between mt-8 z-0'>
+            <div className='z-0 flex items-center justify-between mt-8 sm:hidden'>
               
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
@@ -224,7 +224,7 @@ const { backendActor } = useAuth({});
              
                     {isCardsLoading ? (
                         <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                        <div className='flex justify-between  w-full'>
+                        <div className='flex justify-between w-full'>
                             <Skeleton count={1} width={200} height={310} />
                         </div>
                         <div>
@@ -239,7 +239,7 @@ const { backendActor } = useAuth({});
                     </SkeletonTheme>
                     ):(
                       selectedList.map((img, index) => (
-                        <div className='flip-card rounded-lg w-full'>
+                        <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} />
                         </div>
                       ))
@@ -252,7 +252,7 @@ const { backendActor } = useAuth({});
         </div>
       </div>
 
-      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='overflow-hidden relative bg-center bg-cover'>
+      <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative overflow-hidden bg-center bg-cover'>
         <Footer />
       </div>
     </div>
