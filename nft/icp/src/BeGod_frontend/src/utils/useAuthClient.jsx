@@ -29,19 +29,10 @@ export const useAuthClient = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const restoreSessionFromLocalStorage = () => {
-    const storedAuth = JSON.parse(localStorage.getItem("auth"));
-    if (storedAuth && storedAuth.isAuthenticated) {
-      // If there is an authentication state in localStorage, restore it
-      setIsAuthenticated(true);
-      setIdentity(storedAuth.identity);
-      setPrincipal(storedAuth.user);
-      dispatch(setUser(storedAuth.user)); // Restore user to Redux
-    }
-  };
+
 
   useEffect(() => {
-    restoreSessionFromLocalStorage();
+
     AuthClient.create().then((client) => {
       setAuthClient(client);
     });
@@ -55,7 +46,7 @@ export const useAuthClient = () => {
 
   const whitelist = [process.env.CANISTER_ID_BEGOD_BACKEND];
 
-  const ledgerCanId = process.env.CANISTER_ID_ICP_LEDGER_CANISTER;
+  const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
 
   const login = async (provider) => {
     return new Promise(async (resolve, reject) => {
@@ -72,46 +63,55 @@ export const useAuthClient = () => {
             agent: undefined,
             provider: "",
           };
+  
           if (provider === "plug") {
-            userObject = await PlugLogin();
-            console.log("plug provider", userObject);
-          } else if (provider === "stoic") {
-            userObject = await StoicLogin();
-          } else if (provider === "nfid") {
-            userObject = await NFIDLogin();
-          } else if (provider === "ii") {
-            userObject = await IdentityLogin();
-          }
-
-          const identity = await userObject.agent._identity;
-          const principal = Principal.fromText(userObject.principal);
-
-          if (provider === "plug") {
-            const host =
-              process.env.DFX_NETWORK === "ic"
-                ? userObject.agent._host
-                : "http://127.0.0.1:4943";
-            const isConnected = await window.ic.plug.requestConnect({
-              whitelist,
-              host,
-            });
-            if (isConnected) {
-              const userActor = await window.ic.plug.createActor({
-                canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
-                interfaceFactory: idlFactory,
+            // Check if the wallet is already connected
+            const isPlugConnected = await window.ic.plug.isConnected();
+            if (!isPlugConnected) {
+              // Request connection if not already connected
+              const isConnected = await window.ic.plug.requestConnect({
+                whitelist,
+                host: process.env.DFX_NETWORK === "ic"
+                  ? window.ic.plug.agent._host
+                  : "http://127.0.0.1:4943",
               });
-              const EXTActor = await window.ic.plug.createActor({
-                canisterId: ledgerCanId,
-                interfaceFactory: ledgerIdlFactory,
-              });
-              setBackendActor(userActor);
-              setLedgerActor(EXTActor);
-            } else {
-              throw new Error("Plug connection refused");
+  
+              if (!isConnected) {
+                throw new Error("Plug connection refused");
+              }
             }
+  
+            // Now that we are connected, fetch the identity and principal
+            const principal = await window.ic.plug.agent.getPrincipal();
+            const userActor = await window.ic.plug.createActor({
+              canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
+              interfaceFactory: idlFactory,
+            });
+            const EXTActor = await window.ic.plug.createActor({
+              canisterId: ledgerCanId,
+              interfaceFactory: ledgerIdlFactory,
+            });
+  
+            userObject.principal = principal.toText();
+            userObject.agent = window.ic.plug.agent;
+  
+            setBackendActor(userActor);
+            setLedgerActor(EXTActor);
           } else {
+            // Handle other providers (stoic, nfid, ii) as before
+            if (provider === "stoic") {
+              userObject = await StoicLogin();
+            } else if (provider === "nfid") {
+              userObject = await NFIDLogin();
+            } else if (provider === "ii") {
+              userObject = await IdentityLogin();
+            }
+  
+            const identity = await userObject.agent._identity;
+            const principal = Principal.fromText(userObject.principal);
+  
             const agent = new HttpAgent({ identity });
-
+  
             const backendActor = createActor(
               process.env.CANISTER_ID_BEGOD_BACKEND,
               { agentOptions: { identity, verifyQuerySignatures: false } }
@@ -120,17 +120,10 @@ export const useAuthClient = () => {
             setLedgerActor(ledgerActor1);
             setBackendActor(backendActor);
           }
-
-          console.log(principal.toString(),'my data');
-          setPrincipal(principal.toString());
-          setIdentity(identity);
+  
+          setPrincipal(userObject.principal);
+          setIdentity(userObject.agent?._identity);
           setIsAuthenticated(true);
-          const authData = {
-            isAuthenticated: true,
-            user: userObject.principal,
-            identity: userObject.identity,
-          };
-          localStorage.setItem("auth", JSON.stringify(authData));
           dispatch(setUser(userObject.principal));
           navigate("/");
         }
@@ -140,6 +133,7 @@ export const useAuthClient = () => {
       }
     });
   };
+  
 
   const adminlogin = async (provider) => {
     return new Promise(async (resolve, reject) => {
@@ -214,7 +208,7 @@ export const useAuthClient = () => {
             user: userObject.principal,
             identity: userObject.identity,
           };
-          localStorage.setItem("auth", JSON.stringify(authData));
+
           dispatch(setUser(userObject.principal));
           navigate("/admin/dashboard");
         }
@@ -260,7 +254,6 @@ export const useAuthClient = () => {
     try {
       const isAuthenticated = await client.isAuthenticated();
       setIsAuthenticated(isAuthenticated);
-      restoreSessionFromLocalStorage()
       const identity = client.getIdentity();
       setIdentity(identity);
 

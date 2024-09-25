@@ -1,17 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-
-// Initialize state from local storage safely
-const storedAuth = typeof window !== 'undefined' && localStorage.getItem('auth')
-  ? JSON.parse(localStorage.getItem('auth'))
-  : null;
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  isAuthenticated: storedAuth ? storedAuth.isAuthenticated : false,
-  user: storedAuth ? storedAuth.user : null,
+  isAuthenticated: false,
+  user: null,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setUser: (state, action) => {
@@ -31,13 +26,13 @@ export const { setUser, logoutUser } = authSlice.actions;
 export const setUserAndStore = (user) => (dispatch) => {
   console.log("Setting user and storing in localStorage:", user);
   dispatch(setUser(user));
-  localStorage.setItem('auth', JSON.stringify({ isAuthenticated: true, user }));
+  localStorage.setItem("auth", JSON.stringify({ isAuthenticated: true, user }));
 };
 
 export const logoutUserAndClear = () => (dispatch) => {
   dispatch(logoutUser());
-  localStorage.removeItem('auth');
-  // window.location.href = '/admin/login'; 
+  localStorage.removeItem("auth");
+  // window.location.href = '/admin/login';
 };
 
 export default authSlice.reducer;

@@ -2,7 +2,7 @@
 set -e
 
 # Step 2: Create a new identity for the minter account
-# dfx identity new minter || true
+dfx identity new minter --storage-mode plaintext || true
 dfx identity use minter
 export MINTER_ACCOUNT_ID=$(dfx ledger account-id)
 echo "MINTER_ACCOUNT_ID: $MINTER_ACCOUNT_ID"
@@ -37,6 +37,7 @@ dfx deploy icp_ledger_canister --argument "
       };
       token_symbol = opt \"$TOKEN_SYMBOL\";
       token_name = opt \"$TOKEN_NAME\";
+      feature_flags = opt record{icrc2 = true};
     }
   })
 "

@@ -1,11 +1,6 @@
-dfx stop
-
-dfx start --clean --background
-
+#!/bin/bash
 cd tests/Local
 
- ./icrc2.sh
-
-./icp-ledgers.sh
+./icrc2.sh
 
 dfx deploy

@@ -10,58 +10,56 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from "../utils/useAuthClient.jsx";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-const collections = [
-    { name: "Celtic", shadowColor: "#07632E" },
-    { name: "Norse", shadowColor: "#00bfff" },
-    { name: "Greek", shadowColor: "#FFD700" },
-    { name: "Egyptian", shadowColor: "#FF4500" }
-];
 
 
+const shadowColors = ['#07632E',"#00bfff","#FFD700","#FF4500"]
 
-const collectionsData = {
-    Celtic: [],
-    Norse: [],
-    Egyptian: [],
-    Greek: []
-}
-const initialCollectionDescription = {
-    Celtic:"",
-    Norse:"",
-    Egyptian:"",
-    Greek:"",
-}
+let shadowColorIndex = 0;
+
+
 
 const Hero = () => {
     const[mobileView,setMobileView]=useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentCollectionData,setCollectionData] = useState(collectionsData);
-    const [currentCollection, setCurrentCollection] = useState(currentCollectionData[collections[currentIndex].name] || []);
-    const [loading, setLoading] = useState({
-        Celtic: true,
-        Norse: true,
-        Greek: true,
-        Egyptian: true
-    });
-    const [collectionDetailsLoading,setCollectionLoadingDetails] = useState(true);
+    const [collections,setCollections] = useState([]);
+    const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
+    const [startIndex,setStartIndex] = useState(0);
+    const visibleButtons = 4;
 
-    const [collectionDescription,setCollectionDescription] = useState(initialCollectionDescription);
+
+
+    const [noCards , updateNoCardsStatus] = useState(false);
    
 
   
 
-    const handleCurrentIndex  = (index) => {
+    const handleCurrentIndex  = async(index) => {
+        if(index === startIndex+visibleButtons-1 && index != collections.length-1){
+            setStartIndex(startIndex+1);
+        }
+        if(index === startIndex && index != 0){
+            setStartIndex(startIndex-1);
+        }
+        
+        const currentCollectionId = collections[index].collectionId;
+        if(currentCollectionId === collections[currentIndex].collectionId) {
+            return;
+        }
+        updateNoCardsStatus(false)
+        updateSelectedCollectionNftCardsList([]);
         setCurrentIndex(index);
+        const currList = await fetchCollectionNfts(currentCollectionId)
+        if(currList.length > 0){
+            updateSelectedCollectionNftCardsList(currList);
+        }else{
+            updateNoCardsStatus(true);
+        }
     }
 
 
     const mobileViewHandler=()=>{
         setMobileView(!mobileView);
     }
-    useEffect(() => {
-        setCurrentCollection(currentCollectionData[collections[currentIndex].name] || []);
-    }, [currentIndex,currentCollectionData])
-    
 
     const {t} =  useTranslation();
     const {mainHeading,description,button} = t("landingPage");
@@ -75,77 +73,58 @@ const Hero = () => {
     const getCollections = async() => {
         const result = await backendActor?.getAllCollections();
         const collectionItems = result[0][1];
-        let celticId ;
-        let norseId;
-        let greekId;
-        let egyptianId;
-        collectionItems.map((eachItem)=>{
-            if(eachItem[2] === "Celtic"){
-                celticId = eachItem[1]
-                setCollectionDescription((prevData)=>({
-                    ...prevData,
-                    ["Celtic"]:eachItem[4]
-                }))
-                setCollectionLoadingDetails(false)
-            }else if(eachItem[2] === "Norse"){
-                norseId = eachItem[1];
-                setCollectionDescription((prevData)=>({
-                    ...prevData,
-                    ["Norse"]:eachItem[4]
-                }))
-                setCollectionLoadingDetails(false)
-            }else if(eachItem[2] === "Greek"){
-                greekId = eachItem[1];
-                setCollectionDescription((prevData)=>({
-                    ...prevData,
-                    ["Greek"]:eachItem[4]
-                }))
-                setCollectionLoadingDetails(false)
-
-            }else if(eachItem[2] === "Egyptian"){
-                egyptianId = eachItem[1]
-                setCollectionDescription((prevData)=>({
-                    ...prevData,
-                    ["Egyptian"]:eachItem[4]
-                }))
-                setCollectionLoadingDetails(false)
+       // console.log("collection items" , collectionItems);
+        const collections = []
+        let i  = 0;
+        collectionItems.map((eachItem) =>{
+            const colItem = {
+                index : i,
+                collectionId : eachItem[1],
+                name : eachItem[2],
+                shadowColor : shadowColors[shadowColorIndex],
+                description:eachItem[4]
             }
-        });
+            i++;
+            shadowColorIndex = shadowColorIndex+1;
+            if(shadowColorIndex > 3){
+                shadowColorIndex = 0;
+            }
 
-    console.log(celticId,norseId,greekId,egyptianId)
-
-    await fetchCollectionNfts(celticId, "Celtic");
-    await fetchCollectionNfts(norseId, "Norse");
-    await fetchCollectionNfts(greekId, "Greek");
-    await fetchCollectionNfts(egyptianId, "Egyptian");
+            collections.push(colItem);
+        })
+        setCollections(collections);
+        
+        const currentCollectionId = collections[currentIndex].collectionId;
+        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId);
+        if(currentCollectionNfts.length>0){
+            updateSelectedCollectionNftCardsList(currentCollectionNfts);
+        }
+        //console.log(currentCollectionNfts)
 };
 let index = -1;
-const fetchCollectionNfts = async (collectionId, collectionName) => {
+const fetchCollectionNfts = async (collectionId) => {
     const listedNfts = await backendActor?.listings(collectionId);
     index  = -1;
+    if(listedNfts.length === 0){
+        updateNoCardsStatus(true);
+        return [];
+    }
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId);
+    // console.log("fetched nfts of a collection",fetchedNfts)
+    return fetchedNfts;
+   
 
-
-    setCollectionData((prevData) => ({
-        ...prevData,
-        [collectionName]: fetchedNfts
-    }));
-
-    setLoading((prevLoading) => ({
-        ...prevLoading,
-        [collectionName]: false
-    }));
 };
 
 const getCollectionNfts = (collectionList,collectionId) => {
     return collectionList.map((eachItem) => {
-        console.log("list item",eachItem)
+       // console.log("list item",eachItem)
         index = index+1;
         const nftDetails = eachItem[2].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.asset;
         const sold = eachItem[1].price;
-        const ICP = "0.56";
+        const ICP = parseInt(sold)/100000000;
         return {
             collectionId,
             index,
@@ -158,8 +137,10 @@ const getCollectionNfts = (collectionList,collectionId) => {
 };
 
 
- console.log("collection data", currentCollectionData)
+//  console.log("collection data", currentCollectionData)
+// console.log("collection list" , collections)
 
+console.log("current collection list",selectedCollectionNftCardsList)
 
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -194,7 +175,47 @@ const getCollectionNfts = (collectionList,collectionId) => {
                 </div>
                 {/* Collection details and its nfts part */}
                 <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
-                    <Collections collections={collections}  currentCollection={setCurrentCollection} collectionsData={collectionsData} handleCurrentIndex = {handleCurrentIndex} />
+                     {collections.length > 0 ? (
+                         <Collections collections={collections}    handleCurrentIndex = {handleCurrentIndex} startIndex={startIndex} visibleButtons={visibleButtons} />
+                        // <h1>Collection Data</h1>
+                     ):(
+                        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                            <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
+                            <div className='pt-2 lg:pr-4 lg:pb-2'>
+                                <img
+                                    src="/Hero/up.png"
+                                    alt="Up"
+                                    className={`hover:cursor-pointer ${true ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 sm:hidden">
+                                <Skeleton count={1} height={40} width={90} />
+                                <Skeleton count={1} height={40} width={90} />
+                            </div>
+                            {/* <div className="md:flex md:items-center md:gap-2 lg:hidden">
+                                <Skeleton count={1} height={40} width={190} />
+                                <Skeleton count={1} height={40} width={190} />
+                            </div> */}
+
+                            <div className="hidden lg:sticky top-0 w-[100%] lg:w-[45%] h-[100%] lg:flex lg:flex-col md:gap-8 items-center justify-center mr-2">
+                                <Skeleton count={1} height={60} width={220} />
+                                <Skeleton count={1} height={60} width={220} />
+                                <Skeleton count={1} height={60} width={220} />
+                                <Skeleton count={1} height={60} width={220} />
+                            </div>
+
+
+                            <div>
+                                <img
+                                    src="/Hero/down.png"
+                                    alt="Down"
+                                    className={`hover:cursor-pointer ${true ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
+                                />
+                            </div>
+                            </div>
+                        </SkeletonTheme>
+
+                     )}
                     <div className='w-[100%] h-[100%] mt-12 sm:mt-20'>
                         <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
                             <div className='w-[70%]'>
@@ -203,31 +224,52 @@ const getCollectionNfts = (collectionList,collectionId) => {
                             </div>
                             
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
-                            {collectionDetailsLoading ? (
-                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <Skeleton count={1} height={80} width={150}  />
-                                <Skeleton count={3} width={600} height={20}/>
-                            </SkeletonTheme>
+                            {collections.length === 0 ? (
+                                
+                                     <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                        <div className='flex flex-col justify-center items-center sm:items-start mb-5 lg:hidden'>
+                                            <Skeleton count={1} height={50} width={150} />
+                                            <Skeleton count={3} width={350} height={20}/>
+                                        </div>
+                                        <div className='hidden lg:flex lg:mb-5 flex-col'>
+                                            <Skeleton count={1} height={80} width={150} />
+                                            <Skeleton count={3} width={600} height={20}/>
+                                        </div>
+                                    </SkeletonTheme>
+                                
                          ):(
                             <>
                                 <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{collectionDescription[collections[currentIndex].name]}</h2>
+                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
                             </>
                          )}
 
                             </div>
                         </div>
-                        {!loading[collections[currentIndex].name] && currentCollection.length > 0 ? (
-                            <NFTGallery currentCollection={currentCollection} collections={collections} currentIndex={currentIndex} />
+                        {selectedCollectionNftCardsList.length >0? (
+                            <NFTGallery currentCollection={selectedCollectionNftCardsList}  />
+                            // <h1 className='text-white'>Nft Gallery</h1>
                         ) : (
+                           noCards ? (
+                              <div className='w-[100%] h-[220px] flex items-center justify-center'>
+                                    <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
+                              </div>
+                           ):(
                             <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <div className='flex justify-around mr-10'>
+                                <div className='flex justify-around my-6 sm:hidden'>
+                                    <Skeleton count={1} width={220} height={280} />
+                                </div>
+                                {/* <div className='sm:flex ml-10 my-6 lg:hidden'>
+                                    <Skeleton count={1} width={220} height={280} />
+                                </div> */}
+                                <div className='hidden lg:flex justify-around m-10'>
                                     <Skeleton count={1} width={200} height={310} />
                                     <Skeleton count={1} width={200} height={310} />
                                     <Skeleton count={1} width={200} height={310} />
                                     <Skeleton count={1} width={200} height={310} />
                                 </div>
                             </SkeletonTheme>
+                           )
                         )}
                     </div>
                 </div>

@@ -26,7 +26,7 @@ const NftDetails = () => {
             <div className="h-[120%] w-[20%]  -mt-8">
               <img src="/freyja.png" alt="" className='h-full w-full object-cover' />
             </div>
-            <div className='text-[#FFFFFF] mt-[1%] space-y-4' style={{ fontFamily: "QuickSand" }}>
+            <div className='text-[#FFFFFF] mt-[1%] space-y-4' >
               <h1 className='text-[40px] font-[700] leading-[50px]'>Freyja</h1>
               <h2 className='text-[28px] font-[400] leading-[35px]'>Svallin-Vondr</h2>
               <h1 className='text-[40px] font-[700] leading-[50px]'>10 ICP  <span className='text-[28px] font-[400] leading-[35px]'>20 ICP</span></h1>
@@ -49,14 +49,14 @@ const NftDetails = () => {
         </div>
       </div>
       {/* About section */}
-      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-16 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
+      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-16 ml-[5%]' >
         <h1 className='text-[28px] font-[400] leading-[35px] pl-[3%] pt-[2%]'>About</h1>
         <p className='text-[16px] w-[95%] font-[400] leading-[20px] pl-[3%] pt-[2%] pb-8'>Discover the divine power of Norse mythology with this exclusive NFT card of Freyja, the goddess of love, beauty, and war. Known as Svallin-vondr, or "Shielded-Wand," Freyja is depicted with her iconic Brísingamen necklace and magical staff, embodying both grace and strength. <br />
           Her shield symbolizes protection and unwavering resolve, guiding souls to Valhalla and leading battles with fierce determination. This limited edition NFT card is a must-have for collectors and enthusiasts captivated by the enchanting world of Norse mythology.
         </p>
       </div>
       {/* Details */}
-      <div className='w-[90%] ml-[5%] mt-4 flex gap-8' style={{ fontFamily: "QuickSand" }}>
+      <div className='w-[90%] ml-[5%] mt-4 flex gap-8' >
         <div className='w-[45%] bg-[#1D1D1E] h-auto text-[#FFFFFF]'>
           <h1 className='text-[28px] font-[400] leading-[35px] pl-[10%] pt-[4%]'>Details</h1>
           <div className='flex flex-col ml-[7%] mt-4'>
@@ -82,7 +82,7 @@ const NftDetails = () => {
             </div>
           </div>
         </div>
-        <div className='w-[55%] bg-[#1D1D1E] h-auto text-[#FFFFFF]' style={{ fontFamily: "QuickSand" }}>
+        <div className='w-[55%] bg-[#1D1D1E] h-auto text-[#FFFFFF]' >
           <h1 className='text-[28px] font-[400] leading-[35px] pl-[10%] pt-[4%]'>Traits</h1>
           <div className='flex flex-wrap items-center justify-center gap-8 ml-[5%] mr-[5%] mt-4'>
             <div className='h-[60px] sm:[45%] md:w-[30%] flex justify-center items-center bg-[#414143] text-[#FFFFFF] text-[16px] font-[700] leading-[20px]'>
@@ -103,7 +103,7 @@ const NftDetails = () => {
           </div>
         </div>
       </div>
-      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-4 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
+      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-4 ml-[5%]' >
         <div className='flex justify-between w-[95%] pt-[2%]'>
           <h1 className='text-[28px] font-[400] leading-[35px] pl-[3%]'>Norse</h1>
           <BlueButton >View Collection</BlueButton>
@@ -112,7 +112,7 @@ const NftDetails = () => {
           Her shield symbolizes protection and unwavering resolve, guiding souls to Valhalla and leading battles with fierce determination. This limited edition NFT card is a must-have for collectors and enthusiasts captivated by the enchanting world of Norse mythology.
         </p>
       </div>
-      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-4 ml-[5%]' style={{ fontFamily: "QuickSand" }}>
+      <div className='w-[90%] h-auto text-[#FFFFFF] bg-[#1D1D1E] mt-4 ml-[5%]' >
         <div className='flex justify-between w-[95%] pt-[2%]'>
           <h1 className='text-[28px] font-[400] leading-[35px] pl-[3%]'>Norse</h1>
           <select name="" id="" className='bg-inherit text-[#FFFFFF] '>

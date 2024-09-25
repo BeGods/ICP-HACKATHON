@@ -9,7 +9,6 @@ import "swiper/css/pagination";
 // Import required modules
 import { Pagination, Autoplay } from "swiper/modules";
 
-
 export default function HeroSlider() {
   // Array of image objects
   const images = [
@@ -29,11 +28,14 @@ export default function HeroSlider() {
   // Update the number of images per set based on screen size
   useEffect(() => {
     const updateImagesPerSet = () => {
-      if (window.innerWidth >= 1280) { // xl and above
+      if (window.innerWidth >= 1280) {
+        // xl and above
         setImagesPerSet(4);
-      } else if (window.innerWidth >= 650) { // md and above
+      } else if (window.innerWidth >= 650) {
+        // md and above
         setImagesPerSet(2);
-      } else { // below md
+      } else {
+        // below md
         setImagesPerSet(1);
       }
     };
@@ -42,10 +44,10 @@ export default function HeroSlider() {
     updateImagesPerSet();
 
     // Event listener for window resize
-    window.addEventListener('resize', updateImagesPerSet);
+    window.addEventListener("resize", updateImagesPerSet);
 
     // Clean up the event listener on component unmount
-    return () => window.removeEventListener('resize', updateImagesPerSet);
+    return () => window.removeEventListener("resize", updateImagesPerSet);
   }, []);
 
   // Calculate total sets of images
@@ -70,16 +72,16 @@ export default function HeroSlider() {
           disableOnInteraction: false,
         }}
         modules={[Pagination, Autoplay]} // Include Autoplay and Pagination modules
-        className="mySwiper relative"
+        className="relative mySwiper"
       >
         {/* Render each set of images as a separate SwiperSlide */}
         {Array.from({ length: totalSets }).map((_, setIndex) => (
           <SwiperSlide key={setIndex}>
-            <div className=" w-full flex h-full">
+            <div className="flex w-full h-full ">
               {getImageSet(setIndex).map((image, index) => (
                 <div
                   key={index}
-                  className={`w-full h-[120vh] ${
+                  className={`w-full h-[100vh] ${
                     imagesPerSet === 4
                       ? "xl:w-1/4"
                       : imagesPerSet === 2
@@ -90,7 +92,7 @@ export default function HeroSlider() {
                   <img
                     src={image.src}
                     alt={image.alt}
-                    className="w-full h-full object-cover"
+                    className="object-cover w-full h-full"
                   />
                 </div>
               ))}
