@@ -45,6 +45,9 @@ const Navbar = ({ mobileView }) => {
     navigate("/");
   };
 
+   
+  
+    
   return (
     <div className='max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative'>
       {/* Mobile View */}
@@ -185,7 +188,7 @@ const Navbar = ({ mobileView }) => {
 
       {/* Modal */}
       {modal && (
-        <div className='fixed top-0 left-0 z-40 w-full h-screen bg-[rgba(49,49,49,0.8)]'>
+        <div className='fixed top-0 left-0 z-40 w-full h-screen bg-[rgba(49,49,49,0.8)] sm:hidden'>
           <div className='flex items-center justify-center h-screen'>
             <div className='w-[80vw] h-[40vh] bg-gray-800 rounded-md'>
               <div className="flex justify-end p-2">
