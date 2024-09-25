@@ -18,6 +18,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Hero />}></Route>
           <Route path='/profile' element={<Profile />} />
+          <Route path='/activity' element={<Activity />} />
           <Route path='/collection/:collectionName' element={<CollectionDetail/>}/>
           <Route path='/Nft/:Nftname' element={<NftDetails/>}/>
           <Route path='/Nft/:Nftname/buy' element={<BuyNft/>}/>
