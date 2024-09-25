@@ -29,6 +29,7 @@ const Hero = () => {
 
 
     const [noCards , updateNoCardsStatus] = useState(false);
+    const [noCollections , updateNoCollectionStatus] = useState(false);
    
 
   
@@ -73,7 +74,11 @@ const Hero = () => {
     const getCollections = async() => {
         const result = await backendActor?.getAllCollections();
         const collectionItems = result[0][1];
-       // console.log("collection items" , collectionItems);
+        if(collectionItems.length === 0){
+            updateNoCollectionStatus(true);
+            return;
+        }
+        console.log("collection items" , collectionItems);
         const collections = []
         let i  = 0;
         collectionItems.map((eachItem) =>{
@@ -92,6 +97,7 @@ const Hero = () => {
 
             collections.push(colItem);
         })
+        
         setCollections(collections);
         
         const currentCollectionId = collections[currentIndex].collectionId;
@@ -174,7 +180,12 @@ console.log("current collection list",selectedCollectionNftCardsList)
                     </div>
                 </div>
                 {/* Collection details and its nfts part */}
-                <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
+                {noCollections ? (
+                    <div className='w-full flex items-center justify-center'>
+                        <h1 className='text-[30px]'>No Collections Found</h1>
+                    </div>
+                ):(
+                    <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
                      {collections.length > 0 ? (
                          <Collections collections={collections}    handleCurrentIndex = {handleCurrentIndex} startIndex={startIndex} visibleButtons={visibleButtons} />
                         // <h1>Collection Data</h1>
@@ -273,6 +284,7 @@ console.log("current collection list",selectedCollectionNftCardsList)
                         )}
                     </div>
                 </div>
+                )}
             </div>
             <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className=' relative bg-center bg-cover'>
                 <Footer />
