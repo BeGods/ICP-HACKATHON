@@ -110,7 +110,7 @@ const fetchCollectionNfts = async (collectionId) => {
         return [];
     }
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId);
-    // console.log("fetched nfts of a collection",fetchedNfts)
+    console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
    
 
@@ -118,8 +118,8 @@ const fetchCollectionNfts = async (collectionId) => {
 
 const getCollectionNfts = (collectionList,collectionId) => {
     return collectionList.map((eachItem) => {
-       // console.log("list item",eachItem)
-        index = index+1;
+       console.log("list item",eachItem)
+        index = eachItem[0];
         const nftDetails = eachItem[2].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.asset;
@@ -220,18 +220,18 @@ console.log("current collection list",selectedCollectionNftCardsList)
                         <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
                             <div className='w-[70%]'>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
-                                <img src="/Hero/celtic_hero.png" alt="" className='sm:hidden w-full flex items-center justify-center' />
+                                <img src="/Hero/celtic_hero.png" alt="" className='flex items-center justify-center w-full sm:hidden' />
                             </div>
                             
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                             {collections.length === 0 ? (
                                 
                                      <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                        <div className='flex flex-col justify-center items-center sm:items-start mb-5 lg:hidden'>
+                                        <div className='flex flex-col items-center justify-center mb-5 sm:items-start lg:hidden'>
                                             <Skeleton count={1} height={50} width={150} />
                                             <Skeleton count={3} width={350} height={20}/>
                                         </div>
-                                        <div className='hidden lg:flex lg:mb-5 flex-col'>
+                                        <div className='flex-col hidden lg:flex lg:mb-5'>
                                             <Skeleton count={1} height={80} width={150} />
                                             <Skeleton count={3} width={600} height={20}/>
                                         </div>
@@ -259,10 +259,10 @@ console.log("current collection list",selectedCollectionNftCardsList)
                                 <div className='flex justify-around my-6 sm:hidden'>
                                     <Skeleton count={1} width={220} height={280} />
                                 </div>
-                                {/* <div className='sm:flex ml-10 my-6 lg:hidden'>
+                                {/* <div className='my-6 ml-10 sm:flex lg:hidden'>
                                     <Skeleton count={1} width={220} height={280} />
                                 </div> */}
-                                <div className='hidden lg:flex justify-around m-10'>
+                                <div className='justify-around hidden m-10 lg:flex'>
                                     <Skeleton count={1} width={200} height={310} />
                                     <Skeleton count={1} width={200} height={310} />
                                     <Skeleton count={1} width={200} height={310} />
@@ -274,7 +274,7 @@ console.log("current collection list",selectedCollectionNftCardsList)
                     </div>
                 </div>
             </div>
-            <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className=' relative bg-center bg-cover'>
+            <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative bg-center bg-cover '>
                 <Footer />
             </div>
         </div>

@@ -401,6 +401,15 @@ actor class EXTNFT(init_owner : Principal) = this {
       };
     };
   };
+
+  public shared (msg) func heartbeat_myself() : async () {
+      try {
+        await heartbeat_paymentSettlements();
+        await heartbeat_disbursements();
+      }catch e {};
+  };
+
+
   public shared (msg) func heartbeat_assetCanisters() : async () {
     if (Cycles.balance() < ASSET_CANISTER_CYCLES_TOPUP) return ();
     for ((a, s) in _assetCanisters.entries()) {

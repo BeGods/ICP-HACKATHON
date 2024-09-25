@@ -161,15 +161,15 @@ const BuyNft = () => {
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
     // console.log("buying nft details 2" , result[2]);
     const cardDetails = result[0][2].nonfungible;
-
     const metadata = JSON.parse(cardDetails.metadata[0].json);
-
+    const cardPrice = (parseInt(result[0][3]));
+    
     const updatedCardDetails = {
       cardName: metadata[0].name,
       cardType: metadata[1].type,
       cardImageUrl: cardDetails.thumbnail,
       cardDescription: cardDetails.description,
-      cardPrice: parseInt(100000000),
+      cardPrice: cardPrice,
     };
 
     setCardDetails(updatedCardDetails);
@@ -564,16 +564,16 @@ const BuyNft = () => {
         <Footer />
       </div>
       {buyPopup && (
-        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed">
+        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
           <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
-            <div className="h-screen flex justify-center items-center">
+            <div className="flex items-center justify-center h-screen">
               <div
                 className={`h-[50vh] md:h-[40vh] ${
                   currentBuyingStatus === buyingStatus.success ? "lg:h-[60vh]" : "lg:h-[40vh]"
                 } w-[70vw] lg:w-[25vw] bg-[#000000] text-white font-caslon p-5 rounded-md overflow-y-auto`}
                 style={{ fontFamily: "Quicksand" }}
               >
-                <div className="relative flex justify-end items-center">
+                <div className="relative flex items-center justify-end">
                   <button
                     className="text-[#ffffff] absolute bottom-1 top-1"
                     onClick={() => toggleBuyPopup()}
@@ -630,7 +630,7 @@ const BuyNft = () => {
                       )}
 
                       {!popUpFirstLoading && !popUpSecondLoading && (
-                        <IoMdCheckmarkCircle color="purple" size={30} className="mr-3 mt-2" />
+                        <IoMdCheckmarkCircle color="purple" size={30} className="mt-2 mr-3" />
                       )}
 
                       {popUpSecondLoading ? (
@@ -654,12 +654,12 @@ const BuyNft = () => {
 
                 {currentBuyingStatus === buyingStatus.success && !popUpSecondLoading && (
                   <div className="flex flex-col items-center justify-center mt-5">
-                    <h1 className="text-2xl font-semibold mb-2">Congratulations</h1>
+                    <h1 className="mb-2 text-2xl font-semibold">Congratulations</h1>
                     <img src={cardDetails.cardImageUrl} className="w-[180px] h-[260px]" />
-                    <h1 className="flex items-center text-base font-extralight mt-2">
+                    <h1 className="flex items-center mt-2 text-base font-extralight">
                       Licence No- 828746888
                       <CopyToClipboard text="828746888">
-                        <span className="ml-2 text-slate-300 cursor-pointer">
+                        <span className="ml-2 cursor-pointer text-slate-300">
                           <RiFileCopyLine />
                         </span>
                       </CopyToClipboard>
