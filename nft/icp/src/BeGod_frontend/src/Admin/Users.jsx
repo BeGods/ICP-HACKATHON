@@ -96,8 +96,9 @@ function Users() {
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
             mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
             mt="5%"
+            className="whitespace-simple"
           >
-            <TableContainer w={"100%"} className="whitespace-wrap">
+            <TableContainer w={"100%"}>
               <Table
                 variant="simple"
                 border="1px solid transparent"
