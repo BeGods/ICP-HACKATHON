@@ -467,15 +467,24 @@ const BuyNft = () => {
                   )}
                 </div>
               </div>
-              <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
-                <button
-                  className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                  disabled={nftCardLoading}
-                  onClick={onClickBuyButton}
-                >
-                  Buy for {cardDetails.cardPrice / 100000000} ICP
-                </button>
-              </div>
+              {nftCardLoading ? (
+                               <div className='ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#202020]'>
+                                    <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                            <Skeleton count={1} width={178} height={40}/>
+                                      </SkeletonTheme>
+                               </div>
+                         ):(
+                            <div className='ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]'>
+                            <button 
+                                className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                                disabled={nftCardLoading}
+                                onClick={onClickBuyButton}
+                            >
+                                    Buy for {cardDetails.cardPrice/100000000} ICP
+                                </button>
+
+                            </div>
+                         )}
             </div>
             <div>
               {nftCardLoading ? (
