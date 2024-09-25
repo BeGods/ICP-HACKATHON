@@ -8,6 +8,7 @@ import NftDetails from './components/NftDetails';
 import Hero from './pages/Hero';
 import BuyNft from './pages/BuyNft';
 import PageNotFound from './Admin/PageNotFound';
+import Activity from './pages/Activity';
 const FullpageLoader = lazy(() => import('./Loader/FullpageLoader'));
 
 function App() {

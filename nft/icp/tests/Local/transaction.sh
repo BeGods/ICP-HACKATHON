@@ -10,8 +10,8 @@ echo "CANISTER: $CANISTER"
 
 # export DEFAULT_ACCOUNT_ID=$(dfx ledger account-id)
 # MINTER_ACCOUNT_ID=d898ce9ed801ccb3051fb6948a42d923ceacf39ac4e7ba98e14fe7c221ead305
-DEFAULT_ACCOUNT_ID=af110b0d0563339ae4e479ff74de7894afcbc7a32db9dff03ba09b07116632aa
-CHANDAN_ACCOUNT_ID='492aacd082a520dfc078678759756ef4ac11133083799c77d4acc7a3490cb5ec';
+DEFAULT_ACCOUNT_ID=be3531619a7b0443a049c2da5cdabb301fba7e8367f53ea65aae42dcb84af223;
+CHANDAN_ACCOUNT_ID='sfczs-5f2rv-6x62i-t3ca4-xxetq-h53h3-nrsaf-pjdgy-o7nid-csao7-uqe';
 
 # block_height=$(dfx canister call icp_ledger_canister send_dfx "(record { 
 #     to = \"$CHANDAN_ACCOUNT_ID\";
