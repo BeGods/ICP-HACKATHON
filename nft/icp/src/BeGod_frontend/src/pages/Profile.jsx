@@ -67,11 +67,11 @@ const Profile = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === selectedList.length - 1 ? 0 : prevIndex + 1));
   };
-//   const { reloadLogin, isAuthenticated } = useAuth();
+  const { principal } = useAuth();
    const navigate = useNavigate(); 
    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
    
-  // console.log("is authenticated in profile section" , isAuthenticated);
+   console.log("is authenticated in profile section" , isAuthenticated);
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/')
@@ -91,10 +91,10 @@ const { backendActor } = useAuth({});
   const fetchCollections = async() => {
     const collectionList = [];
     const result = await backendActor?.getAllCollections();
-   // console.log("result",result)
+    console.log("result",result)
     const collectionItems = result[0][1];
 
-   // console.log("collection id list" , collectionItems)
+    console.log("collection id list" , collectionItems)
 
    await Promise.all(
     collectionItems.map(async(eachItem) => {
@@ -106,7 +106,7 @@ const { backendActor } = useAuth({});
           const cardDetails = eachItem[1].nonfungible;
           
            const metadata = JSON.parse(cardDetails.metadata[0].json)
-           console.log(cardDetails);
+           console.log("cardDetails",cardDetails);
           // console.log(metadata);
           const nftCard = {
             collectionId:eachItem[0],
@@ -114,6 +114,7 @@ const { backendActor } = useAuth({});
             cardImageUrl : cardDetails.thumbnail,
             cardSold : "",
           }
+           console.log("cardDetails after nft card",nftCard.collectionId);
           collectionList.push(nftCard);
          })
       }
@@ -131,7 +132,8 @@ const { backendActor } = useAuth({});
 
   const getDetails =  async(collectionId) => {
 
-    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,"4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
+    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
+    console.log("collection details",collectionDetailsResult);
     return collectionDetailsResult
 
   }
@@ -149,9 +151,9 @@ const { backendActor } = useAuth({});
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[36px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
+            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
             <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
-              <div className='w-24'>
+              <div>
                 <img src="/image/Frame.png" alt="" />
               </div>
               <div>
@@ -184,7 +186,7 @@ const { backendActor } = useAuth({});
             </div>
 
             {/* Small screen view for single image display with prev and next buttons */}
-            <div className='sm:hidden flex items-center justify-between mt-8 z-0'>
+            <div className='z-0 flex items-center justify-between mt-8 sm:hidden'>
               
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
@@ -222,7 +224,7 @@ const { backendActor } = useAuth({});
              
                     {isCardsLoading ? (
                         <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                        <div className='flex justify-between  w-full'>
+                        <div className='flex justify-between w-full'>
                             <Skeleton count={1} width={200} height={310} />
                         </div>
                         <div>
@@ -237,7 +239,7 @@ const { backendActor } = useAuth({});
                     </SkeletonTheme>
                     ):(
                       selectedList.map((img, index) => (
-                        <div className='flip-card rounded-lg w-full'>
+                        <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} />
                         </div>
                       ))

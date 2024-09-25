@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use chandan;
+dfx identity use bhargav;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -70,7 +70,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #   opt variant {
 #     json = "[{\"name\":\"Lugh\"}, {\"type\":\"Rear\"}]"
 #   },
-#   10
+#   1
 # )'
 
 
@@ -141,7 +141,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 
