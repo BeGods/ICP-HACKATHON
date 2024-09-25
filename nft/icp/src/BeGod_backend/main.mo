@@ -170,7 +170,6 @@ actor Main {
         name : Text;
         email : Text;
         telegram : Text;
-        profilepic : ?Blob; // Optional Blob for profile picture
     };
 
     type Activity = {
@@ -215,6 +214,10 @@ actor Main {
     private stable var userIdCounter : Nat = 0;
     //private stable var userDetailsArray: [UserDetails] = [];
     private var userDetailsMap : TrieMap.TrieMap<Principal, UserDetails> = TrieMap.TrieMap<Principal, UserDetails>(Principal.equal, Principal.hash);
+
+    //private stable var data_transactions : [Transaction] = [];
+    // private stable var usersMap: TrieMap.TrieMap<Principal, User> = TrieMap.TrieMap<Principal, User>(Principal.equal, Principal.hash);
+    //private var users = TrieMap.TrieMap<Principal, UsersTypes.User>(Principal.equal, Principal.hash);
 
     //DB to store order related details
     private stable var orders : [Order] = [];
@@ -543,6 +546,17 @@ actor Main {
         await collectionCanisterActor.getAllNonFungibleTokenData();
     };
 
+    // Get Single NFT details for specific collection
+    // public shared ({ caller = user }) func getSingleNonFungibleTokens(
+    //     _collectionCanisterId : Principal,
+    //     _tokenId : TokenIndex,
+    // ) : async [(TokenIndex, AccountIdentifier, Metadata)] {
+    //     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         getSingleNonFungibleTokenData : (_tokenId : TokenIndex) -> async [(TokenIndex, AccountIdentifier, Metadata)];
+    //     };
+    //     return await collectionCanisterActor.getSingleNonFungibleTokenData(_tokenId);
+    // };
+
     public shared ({ caller = user }) func getSingleNonFungibleTokens(
         _collectionCanisterId : Principal,
         _tokenId : TokenIndex,
@@ -591,10 +605,6 @@ actor Main {
     /*                            User Related Methods                            */
     /* -------------------------------------------------------------------------- */
 
-    public shared query func getTotalUsers() : async Nat {
-        return usersArray.size();
-    };
-
     public shared func create_user(accountIdentifier : Principal, uid : Text) : async Result.Result<(Nat, Time.Time), Text> {
 
         // Check if the user already exists in the array
@@ -639,7 +649,7 @@ actor Main {
     };
 
     //enter user details
-    public shared func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text, profilePic : ?Blob) : async Result.Result<Text, Text> {
+    public shared func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text) : async Result.Result<Text, Text> {
         // Check if the user exists in the usersArray created by the `create_user` function
         let existingUser = Array.find<User>(
             usersArray,
@@ -654,12 +664,11 @@ actor Main {
                 return #err("User not found. Please create a user before setting details.");
             };
             case (?_) {
-                // If the user exists, proceed to store or update the user's name, email, telegram, and profile picture
+                // If the user exists, proceed to store or update the user's name and email
                 let userDetails : UserDetails = {
                     name = name;
                     email = email;
                     telegram = telegram;
-                    profilepic = profilePic; // Use the renamed parameter
                 };
 
                 // Add or update user details in the userDetailsMap
@@ -670,8 +679,8 @@ actor Main {
         };
     };
 
-    // Get user details (for admin and user side both)
-    public shared query func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
+    //get user details (for admin and user side both)
+    public shared query func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text), Text> {
         // Check if the user exists in the usersArray (created by the create_user function)
         let existingUser = Array.find<User>(
             usersArray,
@@ -692,11 +701,11 @@ actor Main {
                 switch (userDetails) {
                     case (null) {
                         // Return basic user information if additional details are not found
-                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, "No Name", "No Email", "No Telegram", null));
+                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, "No Name", "No Email", "No Telegram"));
                     };
                     case (?details) {
-                        // Return the user's account identifier, uid, id, name, email, telegram, and profile picture
-                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, details.name, details.email, details.telegram, details.profilepic));
+                        // Return the user's account identifier (principal), uid, id, name, email, and telegram
+                        return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, details.name, details.email, details.telegram));
                     };
                 };
             };
@@ -704,38 +713,30 @@ actor Main {
     };
 
     //get all users (list of users for admin side )
-    public shared query func getAllUsers() : async [(Principal, Nat, Time.Time, Text, Text, ?Blob)] {
-        // Map over the usersArray and extract the relevant fields
-        let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
+    public shared query func getAllUsers() : async [(Principal, Nat, Time.Time, Text)] {
+        // Map over the usersArray and extract the relevant fields including email
+        let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text)>(
             usersArray,
-            func(u : User) : (Principal, Nat, Time.Time, Text, Text, ?Blob) {
-                // Fetch user details from the userDetailsMap
+            func(u : User) : (Principal, Nat, Time.Time, Text) {
+                // Fetch user details (including email) from the userDetailsMap
                 let userDetails = userDetailsMap.get(u.accountIdentifier);
 
-                // Determine the name to return (if not found, return "No Name")
-                let name = switch (userDetails) {
-                    case (null) "No Name"; // Default to "No Name" if details are not found
-                    case (?details) details.name; // Return the user's name if available
-                };
-
-                // Determine the email to return (if not found, return "No Email")
+                // Determine the email to return
                 let email = switch (userDetails) {
                     case (null) "No Email"; // Default to "No Email" if details are not found
                     case (?details) details.email; // Return the user's email if available
                 };
 
-                // Get the profile picture, if available
-                let profilePic = switch (userDetails) {
-                    case (null) null; // No details found
-                    case (?details) details.profilepic; // Return the profile picture if available
-                };
-
-                // Return the user details including the profile picture
-                return (u.accountIdentifier, u.id, u.createdAt, name, email, profilePic);
+                return (u.accountIdentifier, u.id, u.createdAt, email);
             },
         );
 
         return allUsersDetails;
+    };
+
+    // Function to get the total number of users
+    public shared query func getTotalUsers() : async Nat {
+        return usersArray.size();
     };
 
     //  User Owned NFTs (MY COLLECTION)
@@ -1097,8 +1098,17 @@ actor Main {
         };
     };
 
+    public shared ({ caller }) func get_balance() : async Nat64 {
+
+        let balanceArgs = {
+            account = AID.fromPrincipal(caller, null);
+        };
+        let balanceResult = await ExternalService_ICPLedger.account_balance_dfx(balanceArgs);
+        return balanceResult.e8s;
+    };
+
     //Place order (to get hard copy)
-    public shared func gethardcopy(
+    public shared func placeOrder(
         accountIdentifier : Principal, // Now passed as a parameter
         tokenid : TokenIdentifier,
         phone : Text,

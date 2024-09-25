@@ -35,8 +35,8 @@ const NftCard = ({ list }) => {
             <h1 className="text-xl sm:text-3xl lg:text-2xl font-extrabold">
               {name}
             </h1>
-            <h2 className="text-lg sm:text-xl mt-2">Sold: /100</h2>
-            <h2 className="text-lg sm:text-xl mt-1"> ICP</h2>
+            <h2 className="text-lg sm:text-xl mt-2">Sold: 5/100</h2>
+            <h2 className="text-lg sm:text-xl mt-1"> 10 ICP</h2>
           </div>
         </div>
       </div>
