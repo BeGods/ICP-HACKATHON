@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use bhargav;
+dfx identity use chandan;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -58,7 +58,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #    opt variant {
 #      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
 #    },
-#    1
+#    10
 #  )'
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
@@ -91,7 +91,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="5"
+NFTID="0"
 echo "NFTID: $NFTID"
 
 
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='wwd4y-cikor-uwjaa-aaaaa-aeaaa-uaqca-aaaac-q'
+TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -308,7 +308,7 @@ SUBACCOUNT=null;
 # STEP-9
 # Show NFT Txns
 
-dfx canister call $CANISTER transactions '(principal "'$COLLECTION_ID'")';
+# dfx canister call $CANISTER transactions '(principal "'$COLLECTION_ID'")';
 
 # (
 #   vec {

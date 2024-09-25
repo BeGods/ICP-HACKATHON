@@ -1,7 +1,4 @@
-dfx stop
-
-dfx start --clean --background
-
+#!/bin/bash
 cd tests/Local
 
 ./icrc2.sh
