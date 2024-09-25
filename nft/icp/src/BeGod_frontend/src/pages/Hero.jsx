@@ -179,7 +179,7 @@ console.log("current collection list",selectedCollectionNftCardsList)
                          <Collections collections={collections}    handleCurrentIndex = {handleCurrentIndex} startIndex={startIndex} visibleButtons={visibleButtons} />
                         // <h1>Collection Data</h1>
                      ):(
-                        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                        <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                             <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
                             <div className='pt-2 lg:pr-4 lg:pb-2'>
                                 <img
@@ -226,7 +226,7 @@ console.log("current collection list",selectedCollectionNftCardsList)
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                             {collections.length === 0 ? (
                                 
-                                     <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                     <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                                         <div className='flex flex-col items-center justify-center mb-5 sm:items-start lg:hidden'>
                                             <Skeleton count={1} height={50} width={150} />
                                             <Skeleton count={3} width={350} height={20}/>
@@ -255,7 +255,7 @@ console.log("current collection list",selectedCollectionNftCardsList)
                                     <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
                               </div>
                            ):(
-                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                            <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                                 <div className='flex justify-around my-6 sm:hidden'>
                                     <Skeleton count={1} width={220} height={280} />
                                 </div>
