@@ -5,13 +5,16 @@ import { RxCross2 } from "react-icons/rx";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/useAuthClient';
 import { FaUserLarge } from "react-icons/fa6";
-import { useSelector } from 'react-redux';
+import { useSelector ,useDispatch} from 'react-redux';
+import { updateDisplayWalletOptionsStatus } from '../../redux/infoSlice';
 
 const Navbar = ({ mobileView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
-  const [connectWalletDropdown, setConnectWalletDropdown] = useState(false);
+
+  const iswalletOptionsOpen = useSelector((state)=>state.info.isDisplayWalletOptions);
+  const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
 
   const navigate = useNavigate();
@@ -140,12 +143,12 @@ const Navbar = ({ mobileView }) => {
           ) : (
             <div className='relative min-w-[180px] flex'>
               <button
-                onClick={() => setConnectWalletDropdown(!connectWalletDropdown)}
+                onClick={() => dispatch(updateDisplayWalletOptionsStatus(!iswalletOptionsOpen))}
                 className='bg-[#FCD37B] font-bold text-black w-full h-full rounded-sm p-2 text-md hover:bg-[#000] hover:text-[#FCD37B]'
               >
                 {t('connectWallet')}
               </button>
-              {connectWalletDropdown && (
+              {iswalletOptionsOpen && (
                 <ul className="absolute top-4 right-0 mt-10 bg-black text-[#FCD378] rounded shadow-lg w-[180px] p-0 list-none">
                   <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("ii")}>
                     <img src="https://i.ibb.co/8gNN3v1/icp.png" alt="Internet Identity" className="mr-4 rounded-full size-6" /> Internet Identity

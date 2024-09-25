@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from "../utils/useAuthClient.jsx";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { useSelector } from 'react-redux';
 
 
 const shadowColors = ['#07632E',"#00bfff","#FFD700","#FF4500"]
@@ -20,7 +21,8 @@ let shadowColorIndex = 0;
 
 const Hero = () => {
     const[mobileView,setMobileView]=useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const currIndexFromStore = useSelector((state) => state.info.currentCollectionIndex);
+    const [currentIndex, setCurrentIndex] = useState(currIndexFromStore);
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
     const [startIndex,setStartIndex] = useState(0);
@@ -30,17 +32,23 @@ const Hero = () => {
 
     const [noCards , updateNoCardsStatus] = useState(false);
     const [noCollections , updateNoCollectionStatus] = useState(false);
+
+
+    
    
 
-  
+    
 
     const handleCurrentIndex  = async(index) => {
+
         if(index === startIndex+visibleButtons-1 && index != collections.length-1){
             setStartIndex(startIndex+1);
         }
         if(index === startIndex && index != 0){
             setStartIndex(startIndex-1);
         }
+
+        console.log("index in handle click",index)
         
         const currentCollectionId = collections[index].collectionId;
         if(currentCollectionId === collections[currentIndex].collectionId) {
@@ -69,7 +77,7 @@ const Hero = () => {
 
 
     useEffect(() => {
-        getCollections();
+            getCollections();
     },[])
     const getCollections = async() => {
         const result = await backendActor?.getAllCollections();
@@ -79,7 +87,7 @@ const Hero = () => {
         }
         const collectionItems = result[0][1];
       
-        console.log("collection items" , collectionItems);
+      //  console.log("collection items" , collectionItems);
         const collections = []
         let i  = 0;
         collectionItems.map((eachItem) =>{
@@ -127,10 +135,10 @@ const getCollectionNfts = (collectionList,collectionId) => {
     return collectionList.map((eachItem) => {
        // console.log("list item",eachItem)
         index = index+1;
-        const nftDetails = eachItem[2].nonfungible;
+        const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.asset;
-        const sold = eachItem[1].price;
+        const sold = eachItem[2].price;
         const ICP = parseInt(sold)/100000000;
         return {
             collectionId,
@@ -147,7 +155,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
 
-console.log("current collection list",selectedCollectionNftCardsList)
+//console.log("current collection list",selectedCollectionNftCardsList)
 
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -188,7 +196,7 @@ console.log("current collection list",selectedCollectionNftCardsList)
                 ):(
                     <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
                      {collections.length > 0 ? (
-                         <Collections collections={collections}    handleCurrentIndex = {handleCurrentIndex} startIndex={startIndex} visibleButtons={visibleButtons} />
+                         <Collections collections={collections}    handleCurrentIndex = {handleCurrentIndex} startIndex={startIndex} visibleButtons={visibleButtons} currIndex={currentIndex} />
                         // <h1>Collection Data</h1>
                      ):(
                         <SkeletonTheme baseColor="#202020" highlightColor="#444">
