@@ -261,6 +261,12 @@ actor class EXTNFT(init_owner : Principal) = this {
     token : ?HttpStreamingCallbackToken;
   };
 
+  type Activity = {
+    tokenIdentifier: TokenIdentifier;
+    price: Nat64;
+    time: Time;
+  };
+
   //Stable State
   private let EXTENSIONS : [Extension] = ["@ext/common", "@ext/nonfungible"];
   private stable var data_disbursementQueueState : [(TokenIndex, AccountIdentifier, SubAccount, Nat64)] = [];
@@ -346,8 +352,8 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //Services
-  let ExternalService_Cap = Cap.Cap(?"bkyz2-fmaaa-aaaaa-qaaaq-cai", cap_rootBucketId);
-  let ExternalService_ICPLedger = actor "bkyz2-fmaaa-aaaaa-qaaaq-cai" : actor {
+  let ExternalService_Cap = Cap.Cap(?"be2us-64aaa-aaaaa-qaabq-cai", cap_rootBucketId);
+  let ExternalService_ICPLedger = actor "be2us-64aaa-aaaaa-qaabq-cai" : actor {
     send_dfx : shared SendArgs -> async Nat64;
     account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
   };
@@ -1825,6 +1831,8 @@ actor class EXTNFT(init_owner : Principal) = this {
     };
     results;
   };
+
+  
   func _ext_internalMetadata(token : TokenIdentifier) : Result.Result<Metadata, CommonError> {
     if (ExtCore.TokenIdentifier.isPrincipal(token, Principal.fromActor(this)) == false) {
       return #err(#InvalidToken(token));
@@ -2159,32 +2167,71 @@ actor class EXTNFT(init_owner : Principal) = this {
 
     return Buffer.toArray(fungibleTokenData);
   };
-  public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata)] {
+  // public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata)] {
+  //   if (_tokenMetadata.size() == 0) {
+  //     return [];
+  //   };
+
+  //   let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(_tokenMetadata.size());
+
+  //   for ((tokenIndex, metadata) in _tokenMetadata.entries()) {
+  //     switch (metadata) {
+  //       case (#nonfungible(_)) {
+  //         let owner = switch (_registry.get(tokenIndex)) {
+  //           case (?owner) { owner };
+  //           case (null) {
+  //             AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+  //           };
+  //         };
+  //         nonFungibleTokenData.add((tokenIndex, owner, metadata));
+  //       };
+  //       case (#fungible(_)) {
+
+  //       };
+  //     };
+  //   };
+
+  //   return Buffer.toArray(nonFungibleTokenData);
+  // };
+
+  public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
     if (_tokenMetadata.size() == 0) {
-      return [];
+        return [];
     };
 
-    let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(_tokenMetadata.size());
+    let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata, ?Nat64)>(_tokenMetadata.size());
 
     for ((tokenIndex, metadata) in _tokenMetadata.entries()) {
-      switch (metadata) {
-        case (#nonfungible(_)) {
-          let owner = switch (_registry.get(tokenIndex)) {
-            case (?owner) { owner };
-            case (null) {
-              AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-            };
-          };
-          nonFungibleTokenData.add((tokenIndex, owner, metadata));
-        };
-        case (#fungible(_)) {
+        switch (metadata) {
+            case (#nonfungible(_)) {
+                // Fetch the owner of the token
+                let owner = switch (_registry.get(tokenIndex)) {
+                    case (?owner) { owner };
+                    case (null) {
+                        AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+                    };
+                };
 
+                // Fetch the price if the token is listed in the marketplace
+                let listing = _tokenListing.get(tokenIndex);
+                let price = switch (listing) {
+                    case (?l) ?l.price;  // If listed, return the price
+                    case (_) null;  // If not listed, return null for price
+                };
+
+                // Add token details including price to the buffer
+                nonFungibleTokenData.add((tokenIndex, owner, metadata, price));
+            };
+            case (#fungible(_)) {
+                // Do nothing for fungible tokens
+            };
         };
-      };
     };
 
     return Buffer.toArray(nonFungibleTokenData);
   };
+
+
   public query func getTokens() : async [(TokenIndex, MetadataLegacy)] {
     Iter.toArray(
       HashMap.map<TokenIndex, Metadata, MetadataLegacy>(
@@ -2490,6 +2537,33 @@ public shared query func getFavorites(user: AccountIdentifier) : async Result.Re
         };
     };
 };
+
+//   public query func getUserActivity(user: AccountIdentifier) : async Result.Result<[Activity], CommonError> {
+//     // Initialize an empty array to hold the user's activities
+//     var activities: [Activity] = [];
+
+//     // Access the stable variable containing transactions
+//     let transactions: [Transaction] = data_transactions;
+
+//     // Iterate over all transactions to find those involving the specified user
+//     Array.iter<Transaction>(transactions, func(transaction) {
+//         // Check if the transaction's buyer matches the specified user
+//         if (AID.equal(transaction.buyer, user)) {
+//             // Create an activity record for this transaction
+//             activities := Array.append(activities, [{
+//                 tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(Principal.fromActor(this), transaction.token);
+//                 price = transaction.price;
+//                 time = transaction.time;
+//             }]);
+//         };
+//     });
+
+//     // Return the list of activities wrapped in a Result
+//     return #ok(activities);
+// };
+
+
+
 
 
 
