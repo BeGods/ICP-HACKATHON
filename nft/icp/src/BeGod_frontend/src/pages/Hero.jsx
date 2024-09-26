@@ -22,7 +22,7 @@ let shadowColorIndex = 0;
 const Hero = () => {
     const[mobileView,setMobileView]=useState(false);
     const currIndexFromStore = useSelector((state) => state.info.currentCollectionIndex);
-    const [currentIndex, setCurrentIndex] = useState(currIndexFromStore);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
     const [startIndex,setStartIndex] = useState(0);
@@ -65,7 +65,7 @@ const Hero = () => {
         }
     }
 
-
+  
     const mobileViewHandler=()=>{
         setMobileView(!mobileView);
     }
@@ -155,7 +155,11 @@ const getCollectionNfts = (collectionList,collectionId) => {
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
 
-//console.log("current collection list",selectedCollectionNftCardsList)
+console.log("current collection list",selectedCollectionNftCardsList)
+if(currIndexFromStore != currentIndex){
+    console.log("in side if condition", currIndexFromStore)
+    handleCurrentIndex(currIndexFromStore);
+   }
 
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -199,7 +203,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
                          <Collections collections={collections}    handleCurrentIndex = {handleCurrentIndex} startIndex={startIndex} visibleButtons={visibleButtons} currIndex={currentIndex} />
                         // <h1>Collection Data</h1>
                      ):(
-                        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                        <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                             <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
                             <div className='pt-2 lg:pr-4 lg:pb-2'>
                                 <img
@@ -246,7 +250,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                             {collections.length === 0 ? (
                                 
-                                     <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                                     <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                                         <div className='flex flex-col justify-center items-center sm:items-start mb-5 lg:hidden'>
                                             <Skeleton count={1} height={50} width={150} />
                                             <Skeleton count={3} width={350} height={20}/>
@@ -275,20 +279,20 @@ const getCollectionNfts = (collectionList,collectionId) => {
                                     <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
                               </div>
                            ):(
-                            <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                                <div className='flex justify-around my-6 sm:hidden'>
-                                    <Skeleton count={1} width={220} height={280} />
-                                </div>
-                                {/* <div className='sm:flex ml-10 my-6 lg:hidden'>
-                                    <Skeleton count={1} width={220} height={280} />
-                                </div> */}
-                                <div className='hidden lg:flex justify-around m-10'>
-                                    <Skeleton count={1} width={200} height={310} />
-                                    <Skeleton count={1} width={200} height={310} />
-                                    <Skeleton count={1} width={200} height={310} />
-                                    <Skeleton count={1} width={200} height={310} />
-                                </div>
+                            <div className="pb-10">
+                            <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                              <div className="grid justify-around grid-cols-5 gap-5 m-5">
+                                {Array.from({ length: 10 }).map((_, index) => (
+                                  <Skeleton
+                                    key={index}
+                                    count={1}
+                                    width={195}
+                                    height={300}
+                                  />
+                                ))}
+                              </div>
                             </SkeletonTheme>
+                          </div>
                            )
                         )}
                     </div>

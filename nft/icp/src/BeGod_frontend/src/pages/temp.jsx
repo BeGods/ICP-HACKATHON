@@ -112,6 +112,6 @@ const onChangeCity = (event) => {
     }
 }
 
-import { City, Country } from 'country-state-city'; 
+// import { City, Country } from 'country-state-city'; 
 
-${currentBuyingStatus === buyingStatus.deliveryInfo ? "w-[100vw] md:w-[95vw] lg:w-[50vw]" : "w-[70vw] lg:w-[30vw]"}
+// ${currentBuyingStatus === buyingStatus.deliveryInfo ? "w-[100vw] md:w-[95vw] lg:w-[50vw]" : "w-[70vw] lg:w-[30vw]"}
