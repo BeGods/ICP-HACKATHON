@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use chandan;
+dfx identity use bhargav;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -25,15 +25,15 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-#   dfx canister call "$CANISTER" createExtCollection '("Be Gods", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
+#  dfx canister call "$CANISTER" createExtCollection '("Chandan", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
 
 # Getting Result Like this
 # (
 #   principal "oz7jj-hclyb-5r7nw-ehlam-34yct-ktxcg-2wsq2-53not-tbxed-ru5vq-eae",
-#   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
+#   principal "avqkn-guaaa-aaaaa-qaaea-cai",
 # )
 
-COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
+COLLECTION_ID="a3shf-5eaaa-aaaaa-qaafa-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -51,14 +51,14 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 #  dfx canister call "$CANISTER" mintExtNonFungible '(
 #    principal "'$COLLECTION_ID'",
-#    "image",
+#    "Ayesha",
 #    "this is nft from Norse Collection.",
 #    "Ayesha",
 #    "https://i.ibb.co/brHMh5G/ayeshabegods.png",
 #    opt variant {
 #      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
 #    },
-#    10
+#    1
 #  )'
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
+TOKENIDENTIFIER='gosuq-3ykor-uwjaa-aaaaa-aeaab-iaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -141,9 +141,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
-# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
-
+dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 
@@ -160,7 +158,7 @@ echo "PRICE: $PRICE"
 
 # STEP-5
 # Get the All NFT listing
-dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
+# dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
 
 # (
 #   vec {
@@ -228,7 +226,7 @@ dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
 
 # Note: Before call the send_balance_and_nft make sure you are Topup your backend canister by given below command ex: recharge 50ICP to backend.
 
- dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"bw4dl-smaaa-aaaaa-qaacq-cai\";}; amount = 300_000_000;})"
+#  dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"be2us-64aaa-aaaaa-qaabq-cai\";}; amount = 300_000_000;})"
 
 # # step 7 & step 8
 
