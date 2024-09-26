@@ -15,6 +15,7 @@ const Modal = (props) => {
   const [nftImage, setNftImage] = useState();
   const [nftImageURL, setNftImageURL] = useState("");
   const { toggleModal } = props;
+  const [nftcolor, setnftcolor] = useState("Golden");
 
   const onClickAddButton = () => {
     // event.preventDefault();
@@ -26,7 +27,8 @@ const Modal = (props) => {
       nftPrice &&
       nftDescription &&
       nftImage &&
-      nftImageURL
+      nftImageURL &&
+      nftcolor
     ) {
       const nftDetails = {
         nftId,
@@ -37,6 +39,7 @@ const Modal = (props) => {
         nftImageURL,
         nftPrice,
         nftDescription,
+        nftcolor,
       };
       console.log("nft details", nftDetails);
       getAddedNftDetails(nftDetails);
@@ -142,6 +145,26 @@ const Modal = (props) => {
               type="text"
               className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
             />
+          </label>
+        </div>
+        <div className="mt-1">
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+            Type:
+            <select
+              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
+              value={nftcolor}
+              onChange={(e) => setnftcolor(e.target.value)}
+            >
+              <option value="Golden" className="text-[16px] text-[#8a8686]">
+                Golden
+              </option>
+              <option value="Silver" className="text-[16px] text-[#8a8686]">
+                Silver
+              </option>
+              <option value="Bronze" className="text-[16px] text-[#8a8686]">
+                Bronze
+              </option>
+            </select>
           </label>
         </div>
 
