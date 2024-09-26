@@ -11,6 +11,7 @@ function DashBoard() {
   const [collections, setcollections] = useState();
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.auth);
+  // console.log("in dashboard", backendActor);
 
   useEffect(() => {
     if (!isAuthenticated) {
