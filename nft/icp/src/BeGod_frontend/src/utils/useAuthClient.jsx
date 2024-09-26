@@ -28,6 +28,7 @@ export const useAuthClient = () => {
   const [backendActor, setBackendActor] = useState(null);
   const [accountId, setAccountId] = useState(null);
   const [ledgerActor, setLedgerActor] = useState(null);
+  const [showButtonLoading, setShowButtonLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
  
@@ -52,6 +53,7 @@ export const useAuthClient = () => {
 
   const login = async (provider,navigatingPath) => {
     return new Promise(async (resolve, reject) => {
+      setShowButtonLoading(true);
       try {
         if (
           (await authClient.isAuthenticated()) &&
@@ -87,6 +89,7 @@ export const useAuthClient = () => {
   
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
+            setShowButtonLoading(false);
             const user_uuid = uuidv4();
             const userActor = await window.ic.plug.createActor({
               canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
@@ -125,6 +128,7 @@ export const useAuthClient = () => {
               { agentOptions: { identity, verifyQuerySignatures: false } }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+            setShowButtonLoading(false);
             setLedgerActor(ledgerActor1);
             setBackendActor(backendActor);
           }
@@ -140,6 +144,7 @@ export const useAuthClient = () => {
         }
       } catch (error) {
         console.error("Login error:", error);
+        setShowButtonLoading(false);
         reject(error);
       }
     });
@@ -279,6 +284,7 @@ export const useAuthClient = () => {
       const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
       setLedgerActor(ledgerActor1);
       setBackendActor(backendActor);
+      setShowButtonLoading(false)
     } catch (error) {
       console.error("Authentication update error:", error);
     }
@@ -313,6 +319,7 @@ export const useAuthClient = () => {
     ledgerActor,
     reloadLogin,
     accountIdString,
+    showButtonLoading
   };
 };
 
