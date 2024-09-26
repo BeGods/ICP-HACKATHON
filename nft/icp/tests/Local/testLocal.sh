@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use bhargav;
+dfx identity use chandan;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -58,7 +58,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #    opt variant {
 #      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
 #    },
-#    1
+#    10
 #  )'
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
@@ -142,6 +142,7 @@ echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
 # dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 
@@ -159,7 +160,7 @@ echo "PRICE: $PRICE"
 
 # STEP-5
 # Get the All NFT listing
-# dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
+dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
 
 # (
 #   vec {
@@ -201,7 +202,7 @@ echo "PRICE: $PRICE"
 
 
 
-dfx identity use default
+# dfx identity use default
 
 # # STEP-6
 # # Purchase NFT

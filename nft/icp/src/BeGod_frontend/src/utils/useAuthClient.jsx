@@ -13,6 +13,7 @@ import { idlFactory as ledgerIdlFactory } from "../../../declarations/icp_ledger
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
 // Create a React context for authentication state
 const AuthContext = createContext();
@@ -29,11 +30,11 @@ export const useAuthClient = () => {
   const [ledgerActor, setLedgerActor] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
 
 
 
   useEffect(() => {
-
     AuthClient.create().then((client) => {
       setAuthClient(client);
     });
@@ -66,6 +67,8 @@ export const useAuthClient = () => {
           };
   
           if (provider === "plug") {
+            console.log(window,'windows')
+            if (!window.ic?.plug) throw new Error("Plug extension not installed");
             // Check if the wallet is already connected
             const isPlugConnected = await window.ic.plug.isConnected();
             if (!isPlugConnected) {
@@ -73,7 +76,7 @@ export const useAuthClient = () => {
               const isConnected = await window.ic.plug.requestConnect({
                 whitelist,
                 host: process.env.DFX_NETWORK === "ic"
-                  ? window.ic.plug.agent._host
+                  ? window.ic.plug._agent.agent._host.host
                   : "http://127.0.0.1:4943",
               });
   
@@ -84,6 +87,7 @@ export const useAuthClient = () => {
   
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
+            const user_uuid = uuidv4();
             const userActor = await window.ic.plug.createActor({
               canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
               interfaceFactory: idlFactory,
@@ -95,7 +99,10 @@ export const useAuthClient = () => {
   
             userObject.principal = principal.toText();
             userObject.agent = window.ic.plug.agent;
-  
+            console.log(userActor,'userActor')
+
+            const userdetails = await userActor.create_user(principal,user_uuid);
+            console.log(userdetails,'userdetails');
             setBackendActor(userActor);
             setLedgerActor(EXTActor);
           } else {

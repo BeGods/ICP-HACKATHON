@@ -18,9 +18,7 @@ import { Toaster } from 'react-hot-toast';
 // }
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <React.Suspense fallback="loading...">
     <Toaster />
     <ThemeToggle/>
-    </React.Suspense>
   </React.StrictMode>,
 );

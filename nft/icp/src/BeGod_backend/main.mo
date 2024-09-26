@@ -189,7 +189,7 @@ actor Main {
         created_at_time : ?Time;
     };
 
-    let ExternalService_ICPLedger = actor "be2us-64aaa-aaaaa-qaabq-cai" : actor {
+    let ExternalService_ICPLedger = actor "b77ix-eeaaa-aaaaa-qaada-cai" : actor {
         send_dfx : shared SendArgs -> async Nat64;
         account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
     };
@@ -927,7 +927,7 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
         return await confirmpurchase.ext_marketplaceSettle(paymentaddress);
     };
 
-    // //get transaction details
+    //get transaction details
     // public shared func transactions(_collectionCanisterId : Principal) : async [Transaction] {
     //     let get_transactions = actor (Principal.toText(_collectionCanisterId)) : actor {
     //         ext_marketplaceTransactions : () -> async [Transaction];
@@ -956,6 +956,132 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
 
     return transformedTransactions;
     };
+//     public shared func transactions(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
+//     let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+//         ext_marketplaceTransactions : () -> async [Transaction];
+//     };
+
+//     // Retrieve transactions from the collection canister
+//     let transactions = await transactionActor.ext_marketplaceTransactions();
+    
+//     // Retrieve all collections to get the names
+//     let collectionsMap = await getAllCollectionsMap();
+
+//     // Transform transaction data to include TokenIdentifier and collection name alongside TokenIndex
+//     let transformedTransactions = Array.map<Transaction, (TokenIndex, TokenIdentifier, Transaction, Text)>(
+//         transactions,
+//         func (transaction : Transaction) : (TokenIndex, TokenIdentifier, Transaction, Text) {
+//             let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+//             // Attempt to get the collection name from the collections map
+//             let collectionName = switch (collectionsMap.get(_collectionCanisterId)) {
+//                 case (null) "Unknown Collection"; // Handle case where collection is not found
+//                 case (?collection) collection.name; // Use the name from the map if found
+//             };
+//             return (transaction.token, tokenIdentifier, transaction, collectionName);
+//         }
+//     );
+
+//     return transformedTransactions;
+// };
+
+    // public shared func transactions(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
+    // let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //     ext_marketplaceTransactions : () -> async [Transaction];
+    // };
+
+    // // Retrieve transactions from the collection canister
+    // let transactions = await transactionActor.ext_marketplaceTransactions();
+
+    // var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+
+    // // Iterate through each transaction and fetch the collection name directly
+    // for (transaction in transactions.vals()) {
+    //     let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+
+    //     // Fetch the collection details to get the name
+    //     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         getCollectionDetails : () -> async (Text, Text, Text); // Assuming this returns (name, symbol, metadata)
+    //     };
+
+    //     let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+    //     // Append the transformed transaction data
+    //     transformedTransactions := Array.append(
+    //         transformedTransactions,
+    //         [(transaction.token, tokenIdentifier, transaction, collectionName)]
+    //     );
+    // };
+
+    // return transformedTransactions;
+    // };
+
+    public shared func useractivity(_collectionCanisterId : Principal, buyerId : AccountIdentifier) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
+    let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceTransactions : () -> async [Transaction];
+    };
+
+    // Retrieve transactions from the collection canister
+    let transactions = await transactionActor.ext_marketplaceTransactions();
+    
+    var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+
+    // Iterate through each transaction
+    for (transaction in transactions.vals()) {
+        if (transaction.buyer == buyerId) {
+            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+
+            // Fetch the collection details to get the name
+            let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+                getCollectionDetails : () -> async (Text, Text, Text); // Assuming this returns (name, symbol, metadata)
+            };
+
+            let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+            // Append the transformed transaction data
+            transformedTransactions := Array.append(
+                transformedTransactions,
+                [(transaction.token, tokenIdentifier, transaction, collectionName)]
+            );
+        };
+    };
+
+    return transformedTransactions;
+    };
+
+    // public shared ({ caller = user }) func userTransactions(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
+    // let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //     ext_marketplaceTransactions : () -> async [Transaction];
+    // };
+
+    // // Retrieve transactions from the collection canister
+    // let transactions = await transactionActor.ext_marketplaceTransactions();
+
+    // var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+
+    // // Iterate through each transaction and fetch the collection name directly
+    // for (transaction in transactions.vals()) {
+    //     // Check if the caller is the buyer in the transaction
+    //     if (transaction.buyer == user) {
+    //         let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+
+    //         // Fetch the collection details to get the name
+    //         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //             getCollectionDetails : () -> async (Text, Text, Text); // Assuming this returns (name, symbol, metadata)
+    //         };
+
+    //         let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+    //         // Append the transformed transaction data
+    //         transformedTransactions := Array.append(
+    //             transformedTransactions,
+    //             [(transaction.token, tokenIdentifier, transaction, collectionName)]
+    //         );
+    //     }
+    // };
+
+    // return transformedTransactions;
+    // };
+
 
 
     //get marketplace stats
@@ -1004,6 +1130,28 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
             let errorMessage = "Transfer Failed: " # Error.message(err);
             return #err(#Other(errorMessage));
         };
+    };
+
+
+    public shared ({ caller }) func balance_settelment(_collectionCanisterId : Principal) : async () {
+        let getResult = actor (Principal.toText(_collectionCanisterId)) : actor {
+            heartbeat_disbursements : () -> async ();
+        };
+        return await getResult.heartbeat_disbursements();
+    };
+
+    public shared ({ caller }) func balance_nft_settelment(_collectionCanisterId : Principal) : async () {
+        let getResult = actor (Principal.toText(_collectionCanisterId)) : actor {
+                heartbeat_myself : () -> async ();
+        };
+        return await getResult. heartbeat_myself();
+    };
+
+    public shared ({ caller }) func all_settelment(_collectionCanisterId : Principal) : async () {
+        let getResult = actor (Principal.toText(_collectionCanisterId)) : actor {
+            heartbeat_external : () -> async ();
+        };
+        return await getResult.heartbeat_external();
     };
 
     public shared (msg) func send_balance_and_nft(
@@ -1130,6 +1278,5 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
     public query func getallOrders() : async [Order] {
     return orders;
     };
-
 
 };

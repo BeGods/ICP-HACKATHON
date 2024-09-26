@@ -133,7 +133,7 @@ const fetchCollectionNfts = async (collectionId) => {
 
 const getCollectionNfts = (collectionList,collectionId) => {
     return collectionList.map((eachItem) => {
-       // console.log("list item",eachItem)
+       console.log("list item",eachItem)
         index = index+1;
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
@@ -142,7 +142,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
         const ICP = parseInt(sold)/100000000;
         return {
             collectionId,
-            index,
+            index:eachItem[0],
             img1: image,
             name,
             sold,
@@ -244,18 +244,18 @@ if(currIndexFromStore != currentIndex){
                         <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
                             <div className='w-[70%]'>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
-                                <img src="/Hero/celtic_hero.png" alt="" className='sm:hidden w-full flex items-center justify-center' />
+                                <img src="/Hero/celtic_hero.png" alt="" className='flex items-center justify-center w-full sm:hidden' />
                             </div>
                             
                             <div className='flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4'>
                             {collections.length === 0 ? (
                                 
                                      <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                                        <div className='flex flex-col justify-center items-center sm:items-start mb-5 lg:hidden'>
+                                        <div className='flex flex-col items-center justify-center mb-5 sm:items-start lg:hidden'>
                                             <Skeleton count={1} height={50} width={150} />
                                             <Skeleton count={3} width={350} height={20}/>
                                         </div>
-                                        <div className='hidden lg:flex lg:mb-5 flex-col'>
+                                        <div className='flex-col hidden lg:flex lg:mb-5'>
                                             <Skeleton count={1} height={80} width={150} />
                                             <Skeleton count={3} width={600} height={20}/>
                                         </div>
@@ -299,7 +299,7 @@ if(currIndexFromStore != currentIndex){
                 </div>
                 )}
             </div>
-            <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className=' relative bg-center bg-cover'>
+            <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative bg-center bg-cover '>
                 <Footer />
             </div>
         </div>
