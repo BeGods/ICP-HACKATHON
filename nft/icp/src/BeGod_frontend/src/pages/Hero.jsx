@@ -133,7 +133,7 @@ const fetchCollectionNfts = async (collectionId) => {
 
 const getCollectionNfts = (collectionList,collectionId) => {
     return collectionList.map((eachItem) => {
-       // console.log("list item",eachItem)
+       console.log("list item",eachItem)
         index = index+1;
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
@@ -142,7 +142,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
         const ICP = parseInt(sold)/100000000;
         return {
             collectionId,
-            index,
+            index:eachItem[0],
             img1: image,
             name,
             sold,

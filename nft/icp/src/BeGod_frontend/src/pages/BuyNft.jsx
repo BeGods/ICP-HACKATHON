@@ -176,6 +176,7 @@ const BuyNft = () => {
   });
 
   const fetchCardDetails = async () => {
+    console.log(collectionId,index);
     const result = await backendActor?.getSingleNonFungibleTokens(
       Principal.fromText(collectionId),
       parseInt(index)

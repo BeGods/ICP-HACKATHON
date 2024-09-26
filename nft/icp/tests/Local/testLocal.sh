@@ -6,7 +6,7 @@ set -e
 
 ############################################ admin funtion start here #####################################
 
-dfx identity use bhargav;
+dfx identity use chandan;
 
 LEDGERID=$(dfx ledger account-id);
 echo $LEDGERID
@@ -33,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="by6od-j4aaa-aaaaa-qaadq-cai"
+COLLECTION_ID="aovwi-4maaa-aaaaa-qaagq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -58,7 +58,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #    opt variant {
 #      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
 #    },
-#    1
+#    10
 #  )'
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='kjzct-lykor-uwjaa-aaaaa-aeaaa-4aqca-aaaaa-a'
+TOKENIDENTIFIER='r7pm4-rikor-uwjaa-aaaaa-aeaab-uaqca-aaaae-q'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -141,7 +141,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 

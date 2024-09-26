@@ -189,7 +189,7 @@ actor Main {
         created_at_time : ?Time;
     };
 
-    let ExternalService_ICPLedger = actor "be2us-64aaa-aaaaa-qaabq-cai" : actor {
+    let ExternalService_ICPLedger = actor "b77ix-eeaaa-aaaaa-qaada-cai" : actor {
         send_dfx : shared SendArgs -> async Nat64;
         account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
     };
