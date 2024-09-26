@@ -42,6 +42,10 @@ const BuyNft = () => {
   const [collectionDetails, setCollectionDetails] = useState({});
   const [collectionDetailsLoading, setCollectionDetailsLoading] =
     useState(true);
+    const [showError,setShowError]=useState({
+      show:false,
+      msg:""
+    });
 
   const [tokenId, setTokenId] = useState("");
 
@@ -84,6 +88,11 @@ const BuyNft = () => {
   };
 
   const onClickBuyButton = async () => {
+    setShowError({show:false,msg:""});
+    setLoadingFirst(true);
+    setLoadingSecond(false);
+    setBuyingStatus(buyingStatus.payment);
+
     if (isAuthenticated) {
       setbuyPopup(true);
       setBuyingStatus(buyingStatus.payment);
@@ -142,6 +151,10 @@ const BuyNft = () => {
           progress: undefined,
           theme: "light",
         });
+        setShowError({show:true,msg:resultTxn.error});
+        setLoadingFirst(false);
+        setLoadingSecond(false);
+        setBuyingStatus(buyingStatus.payment);
       }
     } else {
       toast.error("Login First!", {
@@ -176,7 +189,7 @@ const BuyNft = () => {
   });
 
   const fetchCardDetails = async () => {
-    console.log(collectionId,index);
+    console.log(collectionId, index);
     const result = await backendActor?.getSingleNonFungibleTokens(
       Principal.fromText(collectionId),
       parseInt(index)
@@ -622,8 +635,17 @@ const BuyNft = () => {
                     <RxCross2 size={20} />
                   </button>
                 </div>
+                  {
+                    (showError.show) && (
+                    <div className="h-[80%] flex flex-col items-center justify-center mt-10">
+                        <h1 className="text-3xl text-red-500">Error !</h1>
+                        <p className="text-xl my-2">{showError.msg}</p>
+                    </div>
+                    )
+                  }
+               
 
-                {currentBuyingStatus === buyingStatus.payment && (
+                {!showError.show && currentBuyingStatus === buyingStatus.payment && (
                   <div className="h-[80%] flex flex-col items-center justify-center mt-10">
                     <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
@@ -644,7 +666,7 @@ const BuyNft = () => {
                         </div>
                       ) : (
                         <IoMdCheckmarkCircle
-                          color="purple"
+                          color="green"
                           size={30}
                           className="mt-0 mr-3"
                         />
@@ -656,7 +678,7 @@ const BuyNft = () => {
                           </h1>
                         </div>
                       ) : (
-                        <div className="w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md">
+                        <div className="w-[80%] h-[40px] bg-green-900 border-none border-slate-400 flex pl-5 items-center rounded-md">
                           <h1 className="absolute z-10">
                             Payment is initiated....
                           </h1>
@@ -675,7 +697,7 @@ const BuyNft = () => {
                             className="mr-2"
                           />
                           <FaLock
-                            className="absolute left-2.5 bottom-2.5 opaci	ty-50"
+                            className="absolute left-2.5 bottom-2.5 opacity-50"
                             size={15}
                             color="#ffffff"
                           />
@@ -683,17 +705,11 @@ const BuyNft = () => {
                       )}
                       {!popUpFirstLoading && !popUpSecondLoading && (
                         <IoMdCheckmarkCircle
-                          color="purple"
+                          color="green"
                           size={30}
                           className="mt-2 mr-3"
                         />
                       )}
-                      {/* <div 
-                                    className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
-                                                ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-20 pointer-events-none ml-11' : 'bg-purple-900 text-white'}`}
-                                >
-                                    <h1 className={``}>Buying in Progress....</h1>
-                                </div> */}
                       {popUpSecondLoading ? (
                         <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10 mt-3">
                           <h1 className="absolute z-10">
@@ -706,7 +722,7 @@ const BuyNft = () => {
                                        ${
                                          popUpFirstLoading
                                            ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11"
-                                           : "bg-purple-900 text-white"
+                                           : "bg-green-900 text-white"
                                        }`}
                         >
                           <h1 className="absolute z-10">
