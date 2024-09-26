@@ -5,13 +5,23 @@ import { RxCross2 } from "react-icons/rx";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../utils/useAuthClient';
 import { FaUserLarge } from "react-icons/fa6";
-import { useSelector } from 'react-redux';
-
+import { useSelector ,useDispatch} from 'react-redux';
+import { updateDisplayWalletOptionsStatus } from '../../redux/infoSlice';
+import { useLocation } from 'react-router-dom';
 const Navbar = ({ mobileView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
-  const [connectWalletDropdown, setConnectWalletDropdown] = useState(false);
+
+
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const iswalletOptionsOpen = useSelector((state)=>state.info.isDisplayWalletOptions);
+  const dispatch = useDispatch();
+
+  const navigatingPath = iswalletOptionsOpen.path === "/profile" ?  iswalletOptionsOpen.path : currentPath ;
+
   const [modal, setModal] = useState(false);
 
   const navigate = useNavigate();
@@ -91,8 +101,8 @@ const Navbar = ({ mobileView }) => {
           <img src="/Hero/logo.png" alt="Logo" />
         </Link>
         <div className='flex items-center p-5 space-x-5'>
-          <Link to="/" className='text-[20px] font-[500] text-[#FCD37B]'>{t('collectionNavItem')}</Link>
-
+          
+          <a href='#collections' className='text-[20px] font-[500] text-[#FCD37B]'>{t('collectionNavItem')}</a>
           {/* Language Dropdown */}
           <div className='relative w-[130px] flex justify-center'>
             <button
@@ -140,26 +150,26 @@ const Navbar = ({ mobileView }) => {
           ) : (
             <div className='relative min-w-[180px] flex'>
               <button
-                onClick={() => setConnectWalletDropdown(!connectWalletDropdown)}
+                onClick={() => dispatch(updateDisplayWalletOptionsStatus({status:!iswalletOptionsOpen.status,path:navigatingPath}))}
                 className='bg-[#FCD37B] font-bold text-black w-full h-full rounded-sm p-2 text-md hover:bg-[#000] hover:text-[#FCD37B]'
               >
                 {t('connectWallet')}
               </button>
-              {connectWalletDropdown && (
+              {iswalletOptionsOpen.status && (
                 <ul className="absolute top-4 right-0 mt-10 bg-black text-[#FCD378] rounded shadow-lg w-[180px] p-0 list-none">
-                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("ii")}>
+                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("ic",navigatingPath)}>
                     <img src="https://i.ibb.co/8gNN3v1/icp.png" alt="Internet Identity" className="mr-4 rounded-full size-6" /> Internet Identity
                   </li>
                   <hr className="my-1 border-t border-[#FCD378]" />
-                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("nffid")}>
+                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("nffid",navigatingPath)}>
                     <img src="https://i.ibb.co/Y8ZMXhn/image.png" alt="Nfid" className="mr-4 rounded-full size-6" /> Nfid
                   </li>
                   <hr className="my-1 border-t border-[#FCD378]" />
-                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("stoic")}>
+                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("stoic",navigatingPath)}>
                     <img src="https://i.ibb.co/sm6rrPD/image.png" alt="Stoic" className="mr-4 rounded-full size-6" /> Stoic
                   </li>
                   <hr className="my-1 border-t border-[#FCD378]" />
-                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("plug")}>
+                  <li className="flex items-center p-3 cursor-pointer hover:bg-purple-900" onClick={() => login("plug",navigatingPath)}>
                     <img src="https://docs.plugwallet.ooo/imgs/logo.png" alt="Plug" className="mr-4 rounded-full size-6" /> Plug
                   </li>
                 </ul>
@@ -171,43 +181,43 @@ const Navbar = ({ mobileView }) => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className='absolute top-0 bottom-0 left-0 z-10 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 text-white bg-black bg-opacity-70 backdrop-blur-lg md:hidden'>
-          <Link to="/" className='text-[20px] font-[400] leading-[30px]'>Home</Link>
-          <div className='text-[20px] font-[400] leading-[30px]'>{t('collectionNavItem')}</div>
+        <div className='absolute top-0 bottom-0 left-0 z-10 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique'>
+          <Link to="/#collections" className='text-[20px] font-[400] leading-[30px] text-[#FCD378] '>Home</Link>
+          <div className='text-[20px] font-[400] leading-[30px] text-[#FCD378] '>{t('collectionNavItem')}</div>
 
           {isAuthenticated ? (
             <>
-              <Link to="/profile" className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md'>Profile</Link>
-              <div onClick={onClickLogout} className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md'>Logout</div>
+              <Link to="/profile" className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md text-[#FCD378] '>Profile</Link>
+              <div onClick={onClickLogout} className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md text-[#FCD378] '>Logout</div>
             </>
           ) : (
-            <div onClick={() => setModal(true)} className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md'>{t('connectWallet')}</div>
+            <div onClick={() => setModal(true)} className='flex items-center justify-center  w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px] '>{t('connectWallet')}</div>
           )}
         </div>
       )}
 
       {/* Modal */}
-      {modal && (
-        <div className='fixed top-0 left-0 z-40 w-full h-screen bg-[rgba(49,49,49,0.8)] sm:hidden'>
+      {iswalletOptionsOpen.status && (
+        <div className='fixed top-0 left-0 z-40 w-full h-screen bg-[rgba(49,49,49,0.8)] sm:hidden '>
           <div className='flex items-center justify-center h-screen'>
-            <div className='w-[80vw] h-[40vh] bg-gray-800 rounded-md'>
-              <div className="flex justify-end p-2">
-                <button onClick={() => setModal(false)} className="text-white">
+            <div className='w-[80vw] h-[40vh] bg-black rounded-md overflow-y-auto font-caslonAntique text-[#FCD378]'>
+              <div className="flex justify-end p-2 ">
+                <button onClick={() => dispatch(updateDisplayWalletOptionsStatus({status:!iswalletOptionsOpen.status,path:navigatingPath}))} className="text-[#FCD378] ">
                   <RxCross2 size={25} />
                 </button>
               </div>
-              <h1 className='text-center text-[25px] text-white'>Connect Wallet</h1>
+              <h1 className='text-center text-[25px] text-[#FCD378] '>Connect Wallet</h1>
               <div className='flex flex-col p-4'>
-                <button className='pl-3 mt-5 h-[40px] bg-gray-700 rounded-lg flex items-center text-[16px] sm:text-[20px] hover:text-slate-200' onClick={() => login("ii")}>
+                <button className='pl-3 mt-5 h-[40px] bg-transparent rounded-lg flex items-center text-[16px] sm:text-[20px]  border border-[#FCD378]' onClick={() => login("ic",navigatingPath)}>
                   <img src="https://i.ibb.co/8gNN3v1/icp.png" alt="Internet Identity" className='mr-4 rounded-full size-8' /> Internet Identity
                 </button>
-                <button className='pl-3 mt-5 h-[40px] bg-gray-700 rounded-lg flex items-center text-[16px] sm:text-[20px] hover:text-slate-200' onClick={() => login("nfid")}>
+                <button className='pl-3 mt-5 h-[40px] bg-transparent rounded-lg flex items-center text-[16px] sm:text-[20px]  border border-[#FCD378]' onClick={() => login("nfid",navigatingPath)}>
                   <img src="https://i.ibb.co/Y8ZMXhn/image.png" alt="Nfid" className='mr-4 rounded-full size-8' /> Nfid
                 </button>
-                <button className='pl-3 mt-5 h-[40px] bg-gray-700 rounded-lg flex items-center text-[16px] sm:text-[20px] hover:text-slate-200' onClick={() => login("stoic")}>
+                <button className='pl-3 mt-5 h-[40px] bg-transparent rounded-lg flex items-center text-[16px] sm:text-[20px]  border border-[#FCD378]' onClick={() => login("stoic",navigatingPath)}>
                   <img src="https://i.ibb.co/sm6rrPD/image.png" alt="Stoic" className='mr-4 rounded-full size-8' /> Stoic
                 </button>
-                <button className='pl-3 mt-5 h-[40px] bg-gray-700 rounded-lg flex items-center text-[16px] sm:text-[20px] hover:text-slate-200' onClick={() => login("plug")}>
+                <button className='pl-3 mt-5 h-[40px] bg-transparent rounded-lg flex items-center text-[16px] sm:text-[20px]  border border-[#FCD378]' onClick={() => login("plug",navigatingPath)}>
                   <img src="https://docs.plugwallet.ooo/imgs/logo.png" alt="Plug" className='mr-4 rounded-full size-8' /> Plug
                 </button>
               </div>

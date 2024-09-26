@@ -1132,6 +1132,28 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
         };
     };
 
+
+    public shared ({ caller }) func balance_settelment(_collectionCanisterId : Principal) : async () {
+        let getResult = actor (Principal.toText(_collectionCanisterId)) : actor {
+            heartbeat_disbursements : () -> async ();
+        };
+        return await getResult.heartbeat_disbursements();
+    };
+
+    public shared ({ caller }) func balance_nft_settelment(_collectionCanisterId : Principal) : async () {
+        let getResult = actor (Principal.toText(_collectionCanisterId)) : actor {
+                heartbeat_myself : () -> async ();
+        };
+        return await getResult. heartbeat_myself();
+    };
+
+    public shared ({ caller }) func all_settelment(_collectionCanisterId : Principal) : async () {
+        let getResult = actor (Principal.toText(_collectionCanisterId)) : actor {
+            heartbeat_external : () -> async ();
+        };
+        return await getResult.heartbeat_external();
+    };
+
     public shared (msg) func send_balance_and_nft(
         _collectionCanisterId : Principal,
         paymentAddress : AccountIdentifier,

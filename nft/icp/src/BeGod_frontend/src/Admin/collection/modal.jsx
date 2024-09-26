@@ -135,7 +135,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="mt-[20px] w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
-            Price(in Dollor)
+            Price (in ICP)
             <input
               value={nftPrice}
               onChange={(e) => setPrice(e.target.value)}
