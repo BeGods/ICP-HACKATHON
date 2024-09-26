@@ -14,7 +14,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { v4 as uuidv4 } from "uuid";
 import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
 // Create a React context for authentication state
 const AuthContext = createContext();
@@ -101,7 +100,6 @@ export const useAuthClient = () => {
             userObject.principal = principal.toText();
             userObject.agent = window.ic.plug.agent;
             console.log(userActor, "userActor");
-
             const userdetails = await userActor.create_user(
               principal,
               user_uuid
