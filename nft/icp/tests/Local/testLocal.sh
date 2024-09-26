@@ -110,7 +110,7 @@ echo "NFTID: $NFTID"
 # STEP-3
 # Getting actual NFT ID TokenIdentifier
 
- dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
+#  dfx canister call "$CANISTER" getNftTokenId "(principal \"$COLLECTION_ID\", $NFTID)"
 
 # Getting Result Like this
 # ("yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a")
@@ -141,7 +141,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 
@@ -159,7 +159,7 @@ dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {to
 
 # STEP-5
 # Get the All NFT listing
-# dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
+dfx canister call $CANISTER listings '(principal "'$COLLECTION_ID'")';
 
 # (
 #   vec {
