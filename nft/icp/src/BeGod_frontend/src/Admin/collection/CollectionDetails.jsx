@@ -22,7 +22,7 @@ function CollectionDetails() {
     return <p>No NFT data available</p>; // if no data is passed
   }
 
-  console.log(collectiondata);
+  console.log(collectiondata?.[1].toString());
 
   // // getAllCollectionNFTs
   const principal = collectiondata?.[1]; // Optional chaining in case `nft` is undefined

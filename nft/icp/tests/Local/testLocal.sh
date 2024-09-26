@@ -33,7 +33,8 @@ echo "CANISTER: $CANISTER"
 #   principal "avqkn-guaaa-aaaaa-qaaea-cai",
 # )
 
-COLLECTION_ID="a3shf-5eaaa-aaaaa-qaafa-cai"
+
+COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -133,7 +134,8 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='gosuq-3ykor-uwjaa-aaaaa-aeaab-iaqca-aaaaa-a'
+
+TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
