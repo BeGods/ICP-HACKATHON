@@ -33,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="by6od-j4aaa-aaaaa-qaadq-cai"
+COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='kjzct-lykor-uwjaa-aaaaa-aeaaa-4aqca-aaaaa-a'
+TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -141,7 +141,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
 
 
@@ -227,7 +227,7 @@ dfx identity use default
 
 # Note: Before call the send_balance_and_nft make sure you are Topup your backend canister by given below command ex: recharge 50ICP to backend.
 
-#  dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"bw4dl-smaaa-aaaaa-qaacq-cai\";}; amount = 100_000_000;})"
+ dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"bw4dl-smaaa-aaaaa-qaacq-cai\";}; amount = 300_000_000;})"
 
 # # step 7 & step 8
 
