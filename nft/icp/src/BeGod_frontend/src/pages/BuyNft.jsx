@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { transferApprove } from "../utils/transApprove";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./index.css";
 
 const buyingStatus = {
   payment: "PAYMENT",
@@ -622,47 +623,13 @@ const BuyNft = () => {
                 </div>
 
                 {currentBuyingStatus === buyingStatus.payment && (
-                  <div className="h-[90%] relative flex flex-col items-center justify-center gap-3">
-                    <h1 className="mb-5 text-3xl big-heading">
-                      Please Wait <span className="animate-pulse">...</span>
-                    </h1>
-                    <div
-                      className="w-full px-4 h-[40px] bg-green-900 border border-slate-600 flex pl-5 items-center rounded-sm"
-                      style={{ padding: "1.3rem 2rem" }}
-                    >
+                  <div className="h-[80%] flex flex-col items-center justify-center mt-10">
+                    <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
-                        <MoonLoader
-                          color={color}
-                          loading={popUpFirstLoading}
-                          size={15}
-                          aria-label="Loading Spinner"
-                          data-testid="loader"
-                          className="mr-2"
-                        />
-                      ) : (
-                        <IoMdCheckmarkCircle
-                          color="green"
-                          size={25}
-                          className="mr-2"
-                        />
-                      )}
-
-                      <h1 className="">Payment is initiated....</h1>
-                    </div>
-                    <div
-                      className={`w-full h-[40px] border border-slate-600  mt-3 flex justify-start pl-4 items-center rounded-sm
-                        ${
-                          popUpFirstLoading
-                            ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none"
-                            : "bg-green-900 text-white"
-                        }`}
-                      style={{ padding: "1.3rem 2rem" }}
-                    >
-                      {!popUpFirstLoading && popUpSecondLoading && (
-                        <div className="relative flex items-center justify-center">
+                        <div className="relative flex items-center justify-center ">
                           <MoonLoader
                             color={color}
-                            loading={popUpSecondLoading}
+                            loading={popUpFirstLoading}
                             size={26}
                             aria-label="Loading Spinner"
                             data-testid="loader"
@@ -674,8 +641,45 @@ const BuyNft = () => {
                             color="#ffffff"
                           />
                         </div>
+                      ) : (
+                        <IoMdCheckmarkCircle
+                          color="purple"
+                          size={30}
+                          className="mt-0 mr-3"
+                        />
                       )}
-
+                      {popUpFirstLoading ? (
+                        <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10">
+                          <h1 className="absolute z-10">
+                            Payment is initiated....
+                          </h1>
+                        </div>
+                      ) : (
+                        <div className="w-[80%] h-[40px] bg-purple-900 border-none border-slate-400 flex pl-5 items-center rounded-md">
+                          <h1 className="absolute z-10">
+                            Payment is initiated....
+                          </h1>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center w-[90%]">
+                      {!popUpFirstLoading && popUpSecondLoading && (
+                        <div className="relative flex items-center justify-center mt-3 ">
+                          <MoonLoader
+                            color={color}
+                            loading={popUpSecondLoading}
+                            size={26}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                            className="mr-2"
+                          />
+                          <FaLock
+                            className="absolute left-2.5 bottom-2.5 opaci	ty-50"
+                            size={15}
+                            color="#ffffff"
+                          />
+                        </div>
+                      )}
                       {!popUpFirstLoading && !popUpSecondLoading && (
                         <IoMdCheckmarkCircle
                           color="purple"
@@ -683,20 +687,26 @@ const BuyNft = () => {
                           className="mt-2 mr-3"
                         />
                       )}
-
+                      {/* <div 
+                                    className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                                                ${popUpFirstLoading ? 'bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-20 pointer-events-none ml-11' : 'bg-purple-900 text-white'}`}
+                                >
+                                    <h1 className={``}>Buying in Progress....</h1>
+                                </div> */}
                       {popUpSecondLoading ? (
-                        <div className="w-[10rem] h-[40px] rounded-md relative paymentbutton flex items-center mt-3">
-                          <h1 className="absolute z-10 h-full">
+                        <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10 mt-3">
+                          <h1 className="absolute z-10">
                             Buying in Progress....
                           </h1>
                         </div>
                       ) : (
                         <div
-                          className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md ${
-                            popUpFirstLoading
-                              ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11"
-                              : "bg-green-900 text-white"
-                          }`}
+                          className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                                       ${
+                                         popUpFirstLoading
+                                           ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11"
+                                           : "bg-purple-900 text-white"
+                                       }`}
                         >
                           <h1 className="absolute z-10">
                             Buying in Progress....

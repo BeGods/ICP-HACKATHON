@@ -40,7 +40,7 @@ export const fetchCollections = createAsyncThunk(
 const initialState = {
   collectionList: [],
   currentCollectionIndex : 0,
-  isDisplayWalletOptions : false,
+  isDisplayWalletOptions : {status:false,path:""},
 };
 
 const infoSlice = createSlice({
@@ -49,7 +49,7 @@ const infoSlice = createSlice({
   reducers: {
     updateCurrentIndex : (state,action) => {
         const newIndex = action.payload;
-        // console.log("new index", newIndex)
+        console.log("new index", newIndex)
         state.currentCollectionIndex = newIndex;
     },
     updateDisplayWalletOptionsStatus : (state,action) => {

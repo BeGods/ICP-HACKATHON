@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
+import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
 // Create a React context for authentication state
 const AuthContext = createContext();
 
@@ -49,7 +50,7 @@ export const useAuthClient = () => {
 
   const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
 
-  const login = async (provider) => {
+  const login = async (provider,navigatingPath) => {
     return new Promise(async (resolve, reject) => {
       try {
         if (
@@ -132,7 +133,10 @@ export const useAuthClient = () => {
           setIdentity(userObject.agent?._identity);
           setIsAuthenticated(true);
           dispatch(setUser(userObject.principal));
-          navigate("/");
+          dispatch(updateDisplayWalletOptionsStatus(false))
+          if(navigatingPath === "/profile"){
+            navigate(navigatingPath)
+          }
         }
       } catch (error) {
         console.error("Login error:", error);
