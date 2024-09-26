@@ -15,6 +15,7 @@ import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
+
 // Create a React context for authentication state
 const AuthContext = createContext();
 
@@ -31,8 +32,6 @@ export const useAuthClient = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
  
-
-
 
   useEffect(() => {
     AuthClient.create().then((client) => {
@@ -65,7 +64,7 @@ export const useAuthClient = () => {
             agent: undefined,
             provider: "",
           };
-  
+
           if (provider === "plug") {
             console.log(window,'windows')
             if (!window.ic?.plug) throw new Error("Plug extension not installed");
@@ -78,13 +77,14 @@ export const useAuthClient = () => {
                 host: process.env.DFX_NETWORK === "ic"
                   ? window.ic.plug._agent.agent._host.host
                   : "http://127.0.0.1:4943",
+
               });
-  
+
               if (!isConnected) {
                 throw new Error("Plug connection refused");
               }
             }
-  
+
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
             const user_uuid = uuidv4();
@@ -96,11 +96,10 @@ export const useAuthClient = () => {
               canisterId: ledgerCanId,
               interfaceFactory: ledgerIdlFactory,
             });
-  
+
             userObject.principal = principal.toText();
             userObject.agent = window.ic.plug.agent;
             console.log(userActor,'userActor')
-
             const userdetails = await userActor.create_user(principal,user_uuid);
             console.log(userdetails,'userdetails');
             setBackendActor(userActor);
@@ -114,12 +113,12 @@ export const useAuthClient = () => {
             } else if (provider === "ii") {
               userObject = await IdentityLogin();
             }
-  
+
             const identity = await userObject.agent._identity;
             const principal = Principal.fromText(userObject.principal);
-  
+
             const agent = new HttpAgent({ identity });
-  
+
             const backendActor = createActor(
               process.env.CANISTER_ID_BEGOD_BACKEND,
               { agentOptions: { identity, verifyQuerySignatures: false } }
@@ -128,7 +127,7 @@ export const useAuthClient = () => {
             setLedgerActor(ledgerActor1);
             setBackendActor(backendActor);
           }
-  
+
           setPrincipal(userObject.principal);
           setIdentity(userObject.agent?._identity);
           setIsAuthenticated(true);
@@ -144,7 +143,6 @@ export const useAuthClient = () => {
       }
     });
   };
-  
 
   const adminlogin = async (provider) => {
     return new Promise(async (resolve, reject) => {
@@ -193,6 +191,7 @@ export const useAuthClient = () => {
                 canisterId: ledgerCanId,
                 interfaceFactory: ledgerIdlFactory,
               });
+              console.log("in use auth", userActor);
               setBackendActor(userActor);
               setLedgerActor(EXTActor);
             } else {
@@ -283,12 +282,12 @@ export const useAuthClient = () => {
       console.error("Authentication update error:", error);
     }
   };
-  
 
   const reloadLogin = async () => {
     try {
       if (
-        authClient.isAuthenticated() && !(await authClient.getIdentity().getPrincipal().isAnonymous())
+        authClient.isAuthenticated() &&
+        !(await authClient.getIdentity().getPrincipal().isAnonymous())
       ) {
         console.log("Called");
         updateClient(authClient);
