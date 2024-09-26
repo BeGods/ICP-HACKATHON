@@ -33,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "bw4dl-smaaa-aaaaa-qaacq-cai",
 # )
 
-COLLECTION_ID="aovwi-4maaa-aaaaa-qaagq-cai"
+COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -58,7 +58,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #    opt variant {
 #      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
 #    },
-#    10
+#    1
 #  )'
 
 # dfx canister call "$CANISTER" mintExtNonFungible '(
@@ -133,7 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='r7pm4-rikor-uwjaa-aaaaa-aeaab-uaqca-aaaae-q'
+TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
