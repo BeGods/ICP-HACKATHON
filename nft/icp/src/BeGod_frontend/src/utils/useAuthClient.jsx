@@ -88,7 +88,7 @@ export const useAuthClient = () => {
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
             const user_uuid = uuidv4();
-            const user_uuid = uuidv4();
+
             const userActor = await window.ic.plug.createActor({
               canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
               interfaceFactory: idlFactory,
