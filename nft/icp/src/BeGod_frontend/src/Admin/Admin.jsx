@@ -28,7 +28,7 @@ function Admin() {
   }
 
   return (
-    <div className='flex flex-col items-start justify-center lg:flex-row md:flex-row sm:flex-col'>
+    <div className='flex flex-col items-start justify-center lg:flex-row md:flex-row sm:flex-col admin-control-font' style={{fontFamily:"sans-serif !importent"}}>
       <SideBar isOpen={isOpen} toggleSidebar={toggleSidebar} className="" />
       <div className="flex items-center justify-center w-full">
         <Routes>
