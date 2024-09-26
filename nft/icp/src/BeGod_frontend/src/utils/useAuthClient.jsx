@@ -13,7 +13,9 @@ import { idlFactory as ledgerIdlFactory } from "../../../declarations/icp_ledger
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
+import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
+
 // Create a React context for authentication state
 const AuthContext = createContext();
 
@@ -29,6 +31,7 @@ export const useAuthClient = () => {
   const [ledgerActor, setLedgerActor] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
 
   useEffect(() => {
     AuthClient.create().then((client) => {
@@ -46,7 +49,7 @@ export const useAuthClient = () => {
 
   const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
 
-  const login = async (provider) => {
+  const login = async (provider,navigatingPath) => {
     return new Promise(async (resolve, reject) => {
       try {
         if (
@@ -63,16 +66,18 @@ export const useAuthClient = () => {
           };
 
           if (provider === "plug") {
+            console.log(window,'windows')
+            if (!window.ic?.plug) throw new Error("Plug extension not installed");
             // Check if the wallet is already connected
             const isPlugConnected = await window.ic.plug.isConnected();
             if (!isPlugConnected) {
               // Request connection if not already connected
               const isConnected = await window.ic.plug.requestConnect({
                 whitelist,
-                host:
-                  process.env.DFX_NETWORK === "ic"
-                    ? window.ic.plug.agent._host
-                    : "http://127.0.0.1:4943",
+                host: process.env.DFX_NETWORK === "ic"
+                  ? window.ic.plug._agent.agent._host.host
+                  : "http://127.0.0.1:4943",
+
               });
 
               if (!isConnected) {
@@ -94,13 +99,9 @@ export const useAuthClient = () => {
 
             userObject.principal = principal.toText();
             userObject.agent = window.ic.plug.agent;
-            console.log(userActor, "userActor");
-
-            const userdetails = await userActor.create_user(
-              principal,
-              user_uuid
-            );
-            console.log(userdetails, "userdetails");
+            console.log(userActor,'userActor')
+            const userdetails = await userActor.create_user(principal,user_uuid);
+            console.log(userdetails,'userdetails');
             setBackendActor(userActor);
             setLedgerActor(EXTActor);
           } else {
@@ -131,7 +132,10 @@ export const useAuthClient = () => {
           setIdentity(userObject.agent?._identity);
           setIsAuthenticated(true);
           dispatch(setUser(userObject.principal));
-          navigate("/");
+          dispatch(updateDisplayWalletOptionsStatus(false))
+          if(navigatingPath === "/profile"){
+            navigate(navigatingPath)
+          }
         }
       } catch (error) {
         console.error("Login error:", error);

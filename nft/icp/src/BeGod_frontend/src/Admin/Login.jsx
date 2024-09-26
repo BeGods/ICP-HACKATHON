@@ -16,19 +16,18 @@ const Login = () => {
     document.getElementById("wallet-options").style.transform = "translateY(0)";
   }, []);
 
- 
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => setIsLoading(false), 1000);
+ useEffect(() => {
+  if (isLoading) {
+    setTimeout(() => setIsLoading(false), 1000);
+  }
+  if (!isLoading) {
+    if (isAuthenticated) {
+      navigate("/admin/dashboard");
     } else {
-      if (isAuthenticated) {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/admin/login");
-      }
-      console.log(isAuthenticated)
+      navigate("/admin/login");
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }
+}, [isAuthenticated, navigate]);
 
   const buttonDataArray = [
     {
@@ -58,7 +57,7 @@ const Login = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-white sm:flex-row bg-gradient-to-br from-black via-gray-900 to-black">
+    <div className="flex flex-col items-center justify-center h-screen text-white sm:flex-row bg-gradient-to-br from-black via-gray-900 to-black admin-control-font">
       <div className="w-[80%] sm:w-[30%] h-[60vh] md:h-[90vh] bg-black/60 backdrop-blur-lg shadow-lg rounded-l-md p-8 hidden sm:flex sm:flex-col">
         <h1 className="text-[36px] text-white font-bold md:pt-[10vh]">
           Get Started

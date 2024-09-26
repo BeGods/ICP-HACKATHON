@@ -269,7 +269,10 @@ const CreateCollection = () => {
 
   const listPrice = async (principal, tokenidentifier, price) => {
     try {
-      const priceE8s = price ? BigInt(price) : null;
+      const finalPrice = BigInt(price) * 100000000;
+
+      const priceE8s = finalPrice ? finalPrice : null;
+
       const request = {
         token: tokenidentifier,
         from_subaccount: [],

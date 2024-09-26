@@ -21,13 +21,27 @@ const afterPaymentFlow = async (
 
     const sendBalanceResult = await ledgerActor.send_dfx(transactionArg);
     if (BigInt(sendBalanceResult) > 0) {
-      const res = await backendActor.settlepurchase(
+      const response = await backendActor.settlepurchase(
         Principal.fromText(collectionId),
         transationId
       );
-      console.log(res, "success");
+
+      console.log(response, "success1");
+      if ("ok" in response && response.ok === null) {
+        const finalResult = await backendActor.balance_nft_settelment(
+          Principal.fromText(collectionId)
+        );
+        if (finalResult === undefined) {
+          console.log("congratutation");
+          return true;
+        }else{
+          console.log("balance settelment failed");
+          return false;
+        }
+      }
     } else {
       console.log("no balance");
+      return false
     }
   } catch (error) {
     console.error("Error in afterPaymentFlow:", error);
@@ -78,7 +92,7 @@ export const transferApprove = async (
         metaData?.["icrc1:fee"],
         process.env.CANISTER_ID_BEGOD_BACKEND
       );
-      const totatSendBalance = Number(amnt) + Number(metaData?.["icrc1:fee"]);
+      const totatSendBalance = Number(amnt);
       const transaction = {
         amount: Number(amnt) + Number(metaData?.["icrc1:fee"]),
         from_subaccount: [],
@@ -92,23 +106,34 @@ export const transferApprove = async (
         expected_allowance: [],
         expires_at: [],
       };
-      console.log("tRANSACTION OBJECT : ", transaction);
 
-      const approvalResponse = await ledgerActor.icrc2_approve(transaction);
+      // const approvalResponse = await ledgerActor.icrc2_approve(transaction);
+      const approvalResponse = await afterPaymentFlow(
+        backendActor,
+        totatSendBalance,
+        transationId,
+        collectionId,
+        subAccount,
+        ledgerActor,
+        metaData
+      );
 
-      if (approvalResponse?.Err) {
-        return approvalResponse;
-      } else {
-        return await afterPaymentFlow(
-          backendActor,
-          totatSendBalance,
-          transationId,
-          collectionId,
-          subAccount,
-          ledgerActor,
-          metaData
-        );
-      }
+      console.log(approvalResponse, "approvalResponse");
+      return approvalResponse;
+
+      // if (approvalResponse?.Err) {
+      //   return approvalResponse;
+      // } else {
+      //   return await afterPaymentFlow(
+      //     backendActor,
+      //     totatSendBalance,
+      //     transationId,
+      //     collectionId,
+      //     subAccount,
+      //     ledgerActor,
+      //     metaData
+      //   );
+      // }
     } else {
       console.log("balance is less : ", amnt, sendAmount);
       return { error: "Insufficient balance" };

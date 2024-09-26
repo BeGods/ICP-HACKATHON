@@ -352,8 +352,8 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //Services
-  let ExternalService_Cap = Cap.Cap(?"be2us-64aaa-aaaaa-qaabq-cai", cap_rootBucketId);
-  let ExternalService_ICPLedger = actor "be2us-64aaa-aaaaa-qaabq-cai" : actor {
+  let ExternalService_Cap = Cap.Cap(?"bkyz2-fmaaa-aaaaa-qaaaq-cai", cap_rootBucketId);
+  let ExternalService_ICPLedger = actor "bkyz2-fmaaa-aaaaa-qaaaq-cai" : actor {
     send_dfx : shared SendArgs -> async Nat64;
     account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
   };
@@ -407,6 +407,15 @@ actor class EXTNFT(init_owner : Principal) = this {
       };
     };
   };
+
+  public shared (msg) func heartbeat_myself() : async () {
+      try {
+        await heartbeat_paymentSettlements();
+        await heartbeat_disbursements();
+      }catch e {};
+  };
+
+
   public shared (msg) func heartbeat_assetCanisters() : async () {
     if (Cycles.balance() < ASSET_CANISTER_CYCLES_TOPUP) return ();
     for ((a, s) in _assetCanisters.entries()) {

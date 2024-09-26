@@ -11,18 +11,29 @@ import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
- 
+
+
+
 const mycollection = [
-  
+
 ];
+
 
 const favorite = [
+
 ];
 
+
 const purchased = [
+
   { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
   { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
+
 ];
+
+
+
+
 
 const Profile = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -32,6 +43,7 @@ const Profile = () => {
   const [selectedList , updateSelectedList] = useState([]);
   const [currentOption,updateCurrentOption] = useState("mycollection")
   
+
 
 
   const onOptionChange = async(updatedOption) => {
@@ -49,8 +61,8 @@ const Profile = () => {
   } 
 
   const fetchFavoriteCards = async() => {
-    const result = await backendActor?.getFavorites("4vjzx-uecpg-txgb6-n5dpd-blies-iofpf-q27ye-lqa6i-b5mth-dyind-eqe")
-    console.log("resssssssult" , result);
+    const result = await backendActor?.getFavorites(principal)
+    // console.log("resssssssult" , result);
     updateNoCardsStatus(true);
     setIsCardsLoading(false);
     
@@ -71,7 +83,7 @@ const Profile = () => {
    const navigate = useNavigate(); 
    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
    
-   console.log("is authenticated in profile section" , isAuthenticated);
+  //  console.log("is authenticated in profile section" , isAuthenticated);
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/')
@@ -91,7 +103,7 @@ const { backendActor } = useAuth({});
   const fetchCollections = async() => {
     const collectionList = [];
     const result = await backendActor?.getAllCollections();
-    console.log("result",result)
+    // console.log("result",result)
     const collectionItems = result[0][1];
 
     console.log("collection id list" , collectionItems)
@@ -101,26 +113,28 @@ const { backendActor } = useAuth({});
       const resultOfUserNftCollections = await getDetails(eachItem[1]);
       if(typeof(resultOfUserNftCollections.ok) === typeof([])){
          const collectionDetails = resultOfUserNftCollections.ok;
-         console.log(collectionDetails)
+         console.log("collection details",collectionDetails)
          collectionDetails.map((eachItem)=>{
           const cardDetails = eachItem[1].nonfungible;
           
            const metadata = JSON.parse(cardDetails.metadata[0].json)
-           console.log("cardDetails",cardDetails);
+          //  console.log("cardDetails",cardDetails);
           // console.log(metadata);
           const nftCard = {
             collectionId:eachItem[0],
-            cardName : metadata[0].name,
-            cardImageUrl : cardDetails.thumbnail,
+            cardName : cardDetails?.name,
+            cardImageUrl : cardDetails?.thumbnail,
             cardSold : "",
           }
-           console.log("cardDetails after nft card",nftCard.collectionId);
+          //  console.log("cardDetails after nft card",nftCard.collectionId);
+
+          console.log("nft card",nftCard)
           collectionList.push(nftCard);
          })
       }
   })
    )
-   console.log("collectionList" , collectionList)
+    console.log("collectionList" , collectionList)
    setIsCardsLoading(false)
    if(collectionList.length === 0) {
      updateNoCardsStatus(true);
@@ -133,7 +147,7 @@ const { backendActor } = useAuth({});
   const getDetails =  async(collectionId) => {
 
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
-    console.log("collection details",collectionDetailsResult);
+     console.log("collection details in getDetails",collectionDetailsResult);
     return collectionDetailsResult
 
   }
@@ -142,6 +156,9 @@ const { backendActor } = useAuth({});
    useEffect(()=>{
       fetchCollections()
    },[])
+
+
+   console.log("selected List",selectedList);
 
 
  
@@ -167,13 +184,13 @@ const { backendActor } = useAuth({});
           <div className='w-full lg:w-[70%]'>
             <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0'>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "mycollection" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "mycollection" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={() => onOptionChange("mycollection")}
               >
                 {t('myCollection')}
               </div>
               <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "favorite" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={() => onOptionChange("favorite")}
               >
                 {t('favorite')}
@@ -192,7 +209,7 @@ const { backendActor } = useAuth({});
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
               </button>
               {isCardsLoading?(
-                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                  <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                   <div className='mb-8'>
                       <Skeleton count={1} width={250} height={350} />
                   </div>
@@ -220,33 +237,34 @@ const { backendActor } = useAuth({});
                   <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
                 </div>
             ):(
-              <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
-             
-                    {isCardsLoading ? (
-                        <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                        <div className='flex justify-between w-full'>
-                            <Skeleton count={1} width={200} height={310} />
+              
+               (isCardsLoading ? (
+                        <div className="pb-10">
+                        <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                          <div className="grid justify-around grid-cols-5 gap-5 m-5">
+                            {Array.from({ length: 10 }).map((_, index) => (
+                              <Skeleton
+                                key={index}
+                                count={1}
+                                width={195}
+                                height={300}
+                              />
+                            ))}
+                          </div>
+                        </SkeletonTheme>
                         </div>
-                        <div>
-                        <Skeleton count={1} width={200} height={310} />
-                        </div>
-                        <div>
-                        <Skeleton count={1} width={200} height={310} />
-                        </div>
-                        <div>
-                        <Skeleton count={1} width={200} height={310} />
-                        </div>
-                    </SkeletonTheme>
                     ):(
-                      selectedList.map((img, index) => (
+                      <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+                      {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} />
                         </div>
-                      ))
-                    )}
+                      ))}
+                    </div>
+                    ))
               
               
-            </div>
+           
             )}
           </div>
         </div>

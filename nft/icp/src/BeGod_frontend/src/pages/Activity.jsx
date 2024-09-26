@@ -56,7 +56,18 @@ const Activity = () => {
 
         }
     ]
- 
+
+    const {backendActor} = useAuth();
+
+
+    // useEffect(()=>{
+    //   fetchUserActivity();
+    // })
+    // const fetchUserActivity = async() => {
+
+    //   const result = backendActor?.
+
+    // }
 
  
   return (

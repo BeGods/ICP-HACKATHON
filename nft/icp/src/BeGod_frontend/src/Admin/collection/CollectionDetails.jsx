@@ -33,7 +33,7 @@ function CollectionDetails() {
     return <p>No NFT data available</p>;
   }
 
-  console.log(collectiondata);
+  console.log(collectiondata?.[1].toString());
 
   // // getAllCollectionNFTs
   const principal = collectiondata?.[1];
