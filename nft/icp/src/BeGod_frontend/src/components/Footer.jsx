@@ -36,7 +36,7 @@ const Footer = () => {
         navigate('/profile')
     }else{
         window.scroll(0,0)
-        dispatch(updateDisplayWalletOptionsStatus(true)); 
+        dispatch(updateDisplayWalletOptionsStatus({status:true,path:"/profile"})); 
         toast.error("Please connect to your wallet.")
         
     }
@@ -78,24 +78,6 @@ const Footer = () => {
                             ))
                         )}
                          </div>
-                        {/* <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12'>
-                            <Link to="#" className="flex items-center justify-start gap-2 sm:justify-center">
-                                <img src="/image/col1.png" alt="" className="h-5 sm:h-6" />
-                                <h1 className="underline text-md sm:text-base">{horseCollection}</h1>
-                            </Link>
-                            <Link to="#" className="flex items-center justify-start gap-2 sm:justify-center">
-                                <img src="/image/col3.png" alt="" className="h-6 sm:h-6" />
-                                <h1 className="underline text-md sm:text-base">{greeceCollection}</h1>
-                            </Link>
-                            <Link to="#" className="flex items-center justify-start gap-2 sm:justify-center ">
-                                <img src="/image/col4.png" alt="" className="h-6 sm:h-6" />
-                                <h1 className="underline text-md sm:text-base">{celticCollection}</h1>
-                            </Link>
-                            <Link to="#" className="flex items-center justify-start gap-2 sm:justify-center">
-                                <img src="/image/col2.png" alt="" className="h-6 sm:h-6" />
-                                <h1 className="underline text-md sm:text-base">{egyptanCollection}</h1>
-                            </Link>
-                        </div>  */}
                         <div className='w-[100%] flex gap-16  items-center  justify-center  my-8'>
                             <a href="">
                                 <BiLogoTelegram className='text-2xl text-white' />
