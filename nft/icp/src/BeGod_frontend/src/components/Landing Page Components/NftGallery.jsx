@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next';
 
 
 const NFTGallery = ({ currentCollection }) => {
-  console.log("current collection in nft gallery",currentCollection);
+  // console.log("current collection in nft gallery",currentCollection);
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);
   const [animationClass, setAnimationClass] = useState('');
-  console.log(itemsPerPage)
+  // console.log(itemsPerPage)
   // Calculate the range of images to show on the current page
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -59,9 +59,6 @@ const NFTGallery = ({ currentCollection }) => {
   }, []);
 
 
-  currentItems.map((eachItem)=>(
-    console.log("current item",eachItem.collectionId)
-  ))
   return (
     <div>
       <div className='flex sm:hidden items-center justify-center'>
