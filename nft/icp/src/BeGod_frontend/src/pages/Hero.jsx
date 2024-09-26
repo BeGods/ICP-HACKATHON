@@ -8,21 +8,22 @@ import HeroSlider from "../components/Landing Page Components/HeroSlider";
 import Collections from "../components/Landing Page Components/CollectionType";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../utils/useAuthClient.jsx";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import { useSelector } from 'react-redux';
 
 const shadowColors = ["#07632E", "#00bfff", "#FFD700", "#FF4500"];
 
 let shadowColorIndex = 0;
 
 const Hero = () => {
-  const [mobileView, setMobileView] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [collections, setCollections] = useState([]);
-  const [selectedCollectionNftCardsList, updateSelectedCollectionNftCardsList] =
-    useState([]);
-  const [startIndex, setStartIndex] = useState(0);
-  const visibleButtons = 4;
+    const[mobileView,setMobileView]=useState(false);
+    const currIndexFromStore = useSelector((state) => state.info.currentCollectionIndex);
+    const [currentIndex, setCurrentIndex] = useState(currIndexFromStore);
+    const [collections,setCollections] = useState([]);
+    const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
+    const [startIndex,setStartIndex] = useState(0);
+    const visibleButtons = 4;
 
   const [noCards, updateNoCardsStatus] = useState(false);
 
