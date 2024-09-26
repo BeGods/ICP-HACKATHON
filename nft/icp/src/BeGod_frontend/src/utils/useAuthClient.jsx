@@ -89,6 +89,7 @@ export const useAuthClient = () => {
 
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
+            console.log(principal,'principal')
             setShowButtonLoading(false);
             const user_uuid = uuidv4();
             const userActor = await window.ic.plug.createActor({

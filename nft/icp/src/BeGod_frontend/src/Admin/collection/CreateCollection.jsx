@@ -160,7 +160,7 @@ const CreateCollection = () => {
   const createExtData = async (name, base64String, description, collColor) => {
     try {
       const metadata = JSON.stringify({ description, collColor });
-      console.log(name, base64String, metadata);
+      // console.log(name, base64String, metadata);
       const report = await backendActor?.createExtCollection(
         name,
         base64String,
@@ -195,10 +195,11 @@ const CreateCollection = () => {
     nftdescription,
     nftimage,
     nftquantity,
-    nftcolor
+    nftcolor,
+    nftPrice
   ) => {
     try {
-      console.log("in mint", answ);
+      // console.log("in mint", answ);
       const principalString = answ;
       const principal = Principal.fromText(principalString);
       const date = new Date();
@@ -217,7 +218,7 @@ const CreateCollection = () => {
       const metadataContainer = {
         json: metadata,
       };
-      console.log(principal, nftname, nftdescription, nftimage, nftquantity);
+      // console.log(principal, nftname, nftdescription, nftimage, nftquantity);
 
       const result = await backendActor?.mintExtNonFungible(
         principal,
@@ -229,14 +230,23 @@ const CreateCollection = () => {
         Number(nftquantity)
       );
 
-      if (result) {
-        setTokenId(result[0]);
-        console.log("NFT Minted: ", result[0]);
-        await getNftTokenId(answ, result[0]);
-      } else {
-        throw new Error("Error in mintNFT");
-        toast.error("Error in mintNFT");
+      console.log(result,'nft mint data');
+      const es8_price = parseFloat(nftPrice) * 100000000;
+      console.log(es8_price,'price');
+      if(result && result.length > 0){
+        result.map((val,key)=>{
+          getNftTokenId(answ, val[1],es8_price)
+        });
       }
+
+      // if (result) {
+      //   setTokenId(result[0]);
+      //   console.log("NFT Minted: ", result[0]);
+      //   await getNftTokenId(answ, result[0]);
+      // } else {
+      //   throw new Error("Error in mintNFT");
+      //   toast.error("Error in mintNFT");
+      // }
     } catch (error) {
       console.error("Error minting NFT:", error);
       toast.error("Error minting NFT");
@@ -244,32 +254,22 @@ const CreateCollection = () => {
     }
   };
 
-  const getNftTokenId = async (answ, nftId) => {
+  const getNftTokenId = async (answ, nftIdentifier,nftprice) => {
     try {
-      console.log(answ);
-      const principalString = answ;
-      const principal = Principal.fromText(principalString);
-
-      const result = await backendActor?.getNftTokenId(principal, nftId);
-      if (result) {
-        setTokenidentifier(result);
-        console.log("NFT Token ID:", result);
-        toast.error("NFT Token ID");
-        await listPrice(principal, result, nftprice);
-      } else {
-        throw new Error("Error in getNftTokenId");
-        toast.error("Error in getNftTokenId");
-      }
+      console.log(answ, nftIdentifier,nftprice);
+      const principal = Principal.fromText(answ);
+        const res = await listPrice(principal, nftIdentifier, nftprice);
+        console.log(res,'res data');
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
-      return error; // Return error
+      return error;
     }
   };
 
   const listPrice = async (principal, tokenidentifier, price) => {
     try {
-      const finalPrice = BigInt(price) * 100000000;
+      const finalPrice = (price);
 
       const priceE8s = finalPrice ? finalPrice : null;
 
@@ -347,27 +347,29 @@ const CreateCollection = () => {
         throw answ;
       }
 
+      console.log(nftCardsList,'nftCardsList nftCardsList');
       setcanId(answ);
-      const mintResult = await mintNFT(
-        answ,
-        nftname,
-        nftdescription,
-        nftimage,
-        nftquantity,
-        nftcolor
-      );
-      if (mintResult instanceof Error) {
-        hasError = true;
-        throw mintResult;
-        toast.error(mintResult);
+      if(nftCardsList && nftCardsList.length > 0){
+        nftCardsList.map((val,key)=>{
+          const mintResult = mintNFT(answ, val.nftName, val.nftDescription, val.nftImage, val.nftQuantity, val.nftcolor,val.nftPrice
+          );
+          console.log(mintResult,'minResult')
+          if (mintResult instanceof Error) {
+            hasError = true;
+            throw mintResult;
+            toast.error(mintResult);
+          }
+          setLoading(false);
+          if (!hasError) {
+            setsuccess(!Success);
+            setTimeout(() => {
+              navigate("/admin/collection");
+            }, 2000);
+          }
+        });
       }
-      setLoading(false);
-      if (!hasError) {
-        setsuccess(!Success);
-        setTimeout(() => {
-          navigate("/admin/collection");
-        }, 2000);
-      }
+
+
     } catch (error) {
       console.error("Error in final call: ", error);
       toast.error("Error in final call");

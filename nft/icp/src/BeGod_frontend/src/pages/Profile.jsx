@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import NftCardProfile from '../components/NftCardProfile';
 
 
 
@@ -87,6 +88,8 @@ const Profile = () => {
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/')
+     }else{
+      console.log(principal,'principal')
      }
   },[isAuthenticated]);
 
@@ -145,7 +148,7 @@ const { backendActor } = useAuth({});
   }
 
   const getDetails =  async(collectionId) => {
-
+    console.log(collectionId,principal)
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
      console.log("collection details in getDetails",collectionDetailsResult);
     return collectionDetailsResult
@@ -220,7 +223,7 @@ const { backendActor } = useAuth({});
                     <h1 className='text-[#FFD700] text-[22px]'>No Cards Availalbe</h1>
                   ):(
                     <div>
-                      <NftCard img={selectedList[currentIndex]} key={currentIndex} />
+                      <NftCardProfile img={selectedList[currentIndex]} key={currentIndex} />
                     </div>
                   )
                   
@@ -257,7 +260,7 @@ const { backendActor } = useAuth({});
                       <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
-                          <NftCard img={img} key={index} />
+                          <NftCardProfile img={img} key={index} />
                         </div>
                       ))}
                     </div>
