@@ -7,7 +7,7 @@ export MINTER_ACCOUNT_ID=$(dfx ledger account-id --network ic)
 echo "MINTER_ACCOUNT_ID: $MINTER_ACCOUNT_ID"
 
 # Step 3: Switch back to the default identity
-dfx identity use default
+dfx identity use chandan
 export DEFAULT_ACCOUNT_ID=$(dfx ledger account-id --network ic)
 echo "DEFAULT_ACCOUNT_ID: $DEFAULT_ACCOUNT_ID"
 
