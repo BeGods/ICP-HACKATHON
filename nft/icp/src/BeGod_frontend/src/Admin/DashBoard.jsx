@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { setUser } from "../redux/authSlice.js";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 function DashBoard() {
   const { backendActor } = useAuth();
@@ -10,6 +13,7 @@ function DashBoard() {
   const [nfts, setnfts] = useState();
   const [collections, setcollections] = useState();
   const navigate = useNavigate();
+  const [loading, setloading] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
   // console.log("in dashboard", backendActor);
 
@@ -17,13 +21,18 @@ function DashBoard() {
     if (!isAuthenticated) {
       navigate("/login");
     } else {
-      getTotalNFT();
-      getTotalUser();
-      getallcollection();
+      const fetching = async () => {
+        await getTotalNFT();
+        await getTotalUser();
+        await getallcollection();
+        setloading(false);
+      };
+      fetching();
     }
   }, [navigate]);
 
   const getTotalNFT = async () => {
+    setloading(true);
     if (backendActor) {
       try {
         const result = await backendActor?.getTotalNFTs();
@@ -37,6 +46,7 @@ function DashBoard() {
   };
 
   const getTotalUser = async () => {
+    setloading(true);
     if (backendActor) {
       try {
         const result = await backendActor?.getTotalUsers();
@@ -50,6 +60,7 @@ function DashBoard() {
   };
 
   const getallcollection = async () => {
+    setloading(true);
     if (backendActor) {
       try {
         const result = await backendActor?.totalcollections();
@@ -78,11 +89,11 @@ function DashBoard() {
                   // lineHeight: 3,
                   // padding: "1rem",
                   // marginBottom: "0.5rem",
-                  width: "10px",
+                  width: "100%",
                 }}
               >
                 <Skeleton />
-                <Skeleton count={5} />
+                <Skeleton count={0} />
               </div>
             ) : (
               <p>{collections}</p>
@@ -93,11 +104,14 @@ function DashBoard() {
             {loading ? (
               <div
                 style={{
-                  width: "10px",
+                  // display: "block",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  width: "100%",
                 }}
               >
                 <Skeleton />
-                <Skeleton count={5} />
+                <Skeleton count={0} />
               </div>
             ) : (
               <p>{nfts}</p>
@@ -108,11 +122,11 @@ function DashBoard() {
             {loading ? (
               <div
                 style={{
-                  width: "10px",
+                  width: "100%",
                 }}
               >
                 <Skeleton />
-                <Skeleton count={1} />
+                <Skeleton count={0} />
               </div>
             ) : (
               <p>{user}</p>
