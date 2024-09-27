@@ -101,12 +101,13 @@ const Hero = () => {
         const collections = []
         let i  = 0;
         collectionItems.map((eachItem) =>{
+            console.log(eachItem)
             const colItem = {
                 index : i,
                 collectionId : eachItem[1],
                 name : eachItem[2],
                 shadowColor : shadowColors[shadowColorIndex],
-                description:JSON.parse(eachItem[4])?.description
+                description:eachItem[4]
             }
             i++;
             shadowColorIndex = shadowColorIndex+1;
@@ -297,12 +298,12 @@ if(currIndexFromStore != currentIndex){
                            ):(
                             <div className="pb-10">
                             <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                              <div className="hidden lg:grid justify-around grid-cols-5 gap-5 m-5">
+                              <div className="hidden md:grid justify-around md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-5 m-5">
                                 {Array.from({ length: 10 }).map((_, index) => (
                                   <Skeleton
                                     key={index}
                                     count={1}
-                                    width={195}
+                                    width={210}
                                     height={300}
                                   />
                                 ))}

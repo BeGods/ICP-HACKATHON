@@ -578,8 +578,8 @@ const BuyNft = () => {
           <div className="flex flex-col items-center justify-center md:items-start w-[100%] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] space-y-4">
             {collectionDetailsLoading ? (
               <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                <Skeleton count={1} height={80} width={150} />
-                <Skeleton count={4} width={600} height={20} />
+                <Skeleton count={1} height={70} width={150} />
+                <Skeleton count={3} width={280} height={15} />
               </SkeletonTheme>
             ) : (
               <>
