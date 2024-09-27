@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { setUser } from "../redux/authSlice.js";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 function DashBoard() {
   const { backendActor } = useAuth();
@@ -10,6 +13,7 @@ function DashBoard() {
   const [nfts, setnfts] = useState();
   const [collections, setcollections] = useState();
   const navigate = useNavigate();
+  const [loading, setloading] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
   // console.log("in dashboard", backendActor);
 
@@ -17,13 +21,18 @@ function DashBoard() {
     if (!isAuthenticated) {
       navigate("/login");
     } else {
-      getTotalNFT();
-      getTotalUser();
-      getallcollection();
+      const fetching = async () => {
+        await getTotalNFT();
+        await getTotalUser();
+        await getallcollection();
+        setloading(false);
+      };
+      fetching();
     }
   }, [navigate]);
 
   const getTotalNFT = async () => {
+    setloading(true);
     if (backendActor) {
       try {
         const result = await backendActor?.getTotalNFTs();
@@ -37,6 +46,7 @@ function DashBoard() {
   };
 
   const getTotalUser = async () => {
+    setloading(true);
     if (backendActor) {
       try {
         const result = await backendActor?.getTotalUsers();
@@ -50,6 +60,7 @@ function DashBoard() {
   };
 
   const getallcollection = async () => {
+    setloading(true);
     if (backendActor) {
       try {
         const result = await backendActor?.totalcollections();
@@ -64,22 +75,66 @@ function DashBoard() {
   console.log(collections, user, nfts);
 
   return (
-    <div className="bg-contain text-white mx-auto text-center w-[90%] h-full px-6 sm:px-12 md:px-24 pt-5 sm:pt-6 md:pt-16 lg:pt-28">
-      <div className="grid justify-center grid-cols-1 gap-8 mx-auto lg:text-2xl sm:grid-cols-4 max-w-screen-2xl font-Quicksand sm:font-bold md:text-xl sm:text-lg">
-        <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
-          <h3>Total Collections</h3>
-          <p>{collections}</p>
-        </div>
-        <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
-          <h3>Total NFTs</h3>
-          <p>{nfts}</p>
-        </div>
-        <div className="bg-[#29292C] px-6 py-4 col-span-2 sm:col-start-2 sm:col-end-4 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
-          <h3>Total Users</h3>
-          <p>{user}</p>
+    <SkeletonTheme baseColor="#202020" highlightColor="#444">
+      <div className="bg-contain text-white mx-auto text-center w-[90%] h-full px-6 sm:px-12 md:px-24 pt-5 sm:pt-6 md:pt-16 lg:pt-28">
+        <div className="grid justify-center grid-cols-1 gap-8 mx-auto lg:text-2xl sm:grid-cols-4 max-w-screen-2xl font-Quicksand sm:font-bold md:text-xl sm:text-lg">
+          <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
+            <h3>Total Collections</h3>
+            {loading ? (
+              <div
+                style={{
+                  // display: "block",
+                  // alignItems: "center",
+                  // justifyContent: "center",
+                  // lineHeight: 3,
+                  // padding: "1rem",
+                  // marginBottom: "0.5rem",
+                  width: "100%",
+                }}
+              >
+                <Skeleton />
+                <Skeleton count={0} />
+              </div>
+            ) : (
+              <p>{collections}</p>
+            )}
+          </div>
+          <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
+            <h3>Total NFTs</h3>
+            {loading ? (
+              <div
+                style={{
+                  // display: "block",
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <Skeleton />
+                <Skeleton count={0} />
+              </div>
+            ) : (
+              <p>{nfts}</p>
+            )}
+          </div>
+          <div className="bg-[#29292C] px-6 py-4 col-span-2 sm:col-start-2 sm:col-end-4 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
+            <h3>Total Users</h3>
+            {loading ? (
+              <div
+                style={{
+                  width: "100%",
+                }}
+              >
+                <Skeleton />
+                <Skeleton count={0} />
+              </div>
+            ) : (
+              <p>{user}</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </SkeletonTheme>
   );
 }
 
