@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import toast from 'react-hot-toast';
+import NftCardProfile from '../components/NftCardProfile';
 
 
 
@@ -112,6 +113,8 @@ const Profile = () => {
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/')
+     }else{
+      console.log(principal,'principal')
      }
   },[isAuthenticated]);
 
@@ -208,7 +211,7 @@ const { backendActor } = useAuth({});
   
 
   const getDetails =  async(collectionId) => {
-
+    console.log(collectionId,principal)
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
     //  console.log("collection details in getDetails",collectionDetailsResult);
     return collectionDetailsResult

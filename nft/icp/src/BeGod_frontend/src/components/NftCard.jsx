@@ -30,7 +30,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
             <div className="flip-card-inner ">
                 {/* Front Side */}
                 <div className="flex items-center justify-center flip-card-front ">
-                    <img src={img.cardImageUrl} alt={`NFT`} className="w-[98%] h-[98%] rounded-lg object-cover" />
+                    <img src={nonfungible.thumbnail} alt={`NFT`} className="w-[98%] h-[98%] rounded-lg object-cover" />
                 </div>
                 {/* Back Side */}
                 <div className="relative flex flex-col items-center justify-center text-white flip-card-back ">
