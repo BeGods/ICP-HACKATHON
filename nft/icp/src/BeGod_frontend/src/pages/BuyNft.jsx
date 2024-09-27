@@ -259,7 +259,7 @@ const BuyNft = () => {
         setCollectionDetails({
           collectionId: collectionId,
           collectionName: eachItem[2],
-          collectionDescription: eachItem[4],
+          collectionDescription: JSON.parse(eachItem[4])?.description,
         });
         setCollectionDetailsLoading(false);
         return;
@@ -305,7 +305,7 @@ const BuyNft = () => {
                 <h1 className="text-[50px] sm:text-[64px] font-[400] leading-[54px]">
                   {cardDetails ? cardDetails.cardName : <Skeleton />}
                 </h1>
-                <h2 className="text-[16px] font-[400] leading-[14px] text-center">
+                <h2 className="text-[16px] font-[400] leading-[14px] text-center capitalize">
                   {cardDetails ? cardDetails.cardType : <Skeleton />}
                 </h2>
               </div>
@@ -430,7 +430,7 @@ const BuyNft = () => {
                     <h1 className="text-[64px] font-[400] leading-[54px]">
                       {cardDetails.cardName}{" "}
                     </h1>
-                    <h2 className="text-[16px] font-[400] leading-[14px] text-center">
+                    <h2 className="text-[16px] font-[400] leading-[14px] text-center capitalize">
                       {cardDetails.cardType}
                     </h2>
                   </div>
@@ -639,7 +639,7 @@ const BuyNft = () => {
                     (showError.show) && (
                     <div className="h-[80%] flex flex-col items-center justify-center mt-10">
                         <h1 className="text-3xl text-red-500">Error !</h1>
-                        <p className="text-xl my-2">{showError.msg}</p>
+                        <p className="my-2 text-xl">{showError.msg}</p>
                     </div>
                     )
                   }
