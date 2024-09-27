@@ -42,12 +42,14 @@ function Collection() {
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
-      <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
+      <div className="w-[90%] h-screen overscroll-none overflow-hidden pt-10 px-10 pb-8 no-scrollbar 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
         {/* Flex container for back button and collection buttons */}
         <div className="flex justify-between items-center w-full mb-6 mt-5">
+          {/* Back button (hidden on small screens) */}
           <div className="hidden sm:block">
             <BackButton />
           </div>
+          {/* Create collection button */}
           <div className="flex space-x-4">
             <Link to="/Admin/collection/create">
               <YellowButton className="font-semibold">
@@ -57,6 +59,7 @@ function Collection() {
           </div>
         </div>
 
+        {/* Loader skeleton when loading */}
         {loading ? (
           <div
             style={{
@@ -73,10 +76,11 @@ function Collection() {
             <Skeleton count={5} width="100%" />
           </div>
         ) : (
-          <div className="grid w-full gap-6  lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
-            <>
-              {coll.length > 0 ? (
-                coll.map((collectiondata, index) => (
+          <div className="w-full h-full flex justify-center items-center">
+            {/* Grid of collections */}
+            {coll.length > 0 ? (
+              <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
+                {coll.map((collectiondata, index) => (
                   <Link
                     to={`/Admin/collection/collectionDetails/${collectiondata[0]}`}
                     key={index}
@@ -84,10 +88,10 @@ function Collection() {
                   >
                     <div
                       key={index}
-                      className="bg-[#29292C] w-[100%] h-[100%] px-10 py-6 text-white flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border hover:border-[#FCD37B]"
+                      className="bg-[#29292C] w-full h-full px-10 py-6 text-white flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border hover:border-[#FCD37B]"
                     >
                       <img
-                        className=" w-28 h-28 sm:h-40 sm:w-40"
+                        className="w-28 h-28 sm:h-40 sm:w-40"
                         src={collectiondata[3]}
                         alt=""
                       />
@@ -99,15 +103,16 @@ function Collection() {
                       </div>
                     </div>
                   </Link>
-                ))
-              ) : (
-                <div className="grid-cols-1">
-                  <p className="text-white text-2xl text-center">
-                    No collections available
-                  </p>
-                </div>
-              )}
-            </>
+                ))}
+              </div>
+            ) : (
+              // Centered "No collections available" message
+              <div className="flex justify-center items-center w-full h-full">
+                <p className="text-white text-2xl text-center">
+                  No collections available
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

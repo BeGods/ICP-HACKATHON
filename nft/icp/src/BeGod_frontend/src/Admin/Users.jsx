@@ -24,33 +24,40 @@ function Users() {
   const [loading, setLoading] = useState(false);
   const [alluser, setalluser] = useState([]);
   const [principal, setprincipal] = useState([]);
-  // const id = 1951982;
 
   const getallDUser = async () => {
     if (backendActor) {
       try {
         const result = await backendActor?.getAllUsers();
-        console.log("User details", result);
-        setalluser(result);
-        // getUserDetail(result[0][0]);
+        console.log("getting all users", result);
 
-        const userPrincipalArray = result[0][0];
-        const principalString = Principal.fromUint8Array(
-          userPrincipalArray._arr
-        ).toText();
-        console.log(principalString);
-        setprincipal(principalString);
+        if (result && result.length > 0 && result[0].length > 0) {
+          setalluser(result);
+          const userPrincipalArray = result[0][0];
+          const principalString = Principal.fromUint8Array(
+            userPrincipalArray._arr
+          ).toText();
+          console.log(principalString);
+          setprincipal(principalString);
+        } else {
+          console.log("No users found in the result");
+        }
       } catch (error) {
-        console.error("Error fetching in user details:", error);
+        console.error("Error fetching user details:", error);
       }
     }
   };
 
   useEffect(() => {
-    setLoading(true); // Start loading
-    getallDUser();
-    setLoading(false); // Stop loading
+    const fetchData = async () => {
+      setLoading(true);
+      await getallDUser();
+      setLoading(false);
+    };
+
+    fetchData();
   }, []);
+
   console.log(alluser[0]);
   const n = alluser?.length || 0;
   console.log("length", n);
