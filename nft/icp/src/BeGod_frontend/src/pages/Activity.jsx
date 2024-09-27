@@ -14,6 +14,8 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 const Activity = () => {
 
+  const { principal } = useAuth();
+
     const activityList = [
         {
             mintId : "#2156",
@@ -60,14 +62,15 @@ const Activity = () => {
     const {backendActor} = useAuth();
 
 
-    // useEffect(()=>{
-    //   fetchUserActivity();
-    // })
-    // const fetchUserActivity = async() => {
+    useEffect(()=>{
+      fetchUserActivity();
+    })
+    const fetchUserActivity = async() => {
 
-    //   const result = backendActor?.
+      const result = await backendActor?.useractivity(principal)
+      console.log("result in avtivity ", result)
 
-    // }
+    }
 
  
   return (

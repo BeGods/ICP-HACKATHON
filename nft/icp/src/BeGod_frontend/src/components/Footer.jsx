@@ -34,11 +34,11 @@ const Footer = () => {
     
     if(isAuthenticated){
         navigate('/profile')
+        window.scroll(0,0);
     }else{
         window.scroll(0,0)
         dispatch(updateDisplayWalletOptionsStatus({status:true,path:"/profile"})); 
         toast.error("Please connect to your wallet.")
-        
     }
     
   }
@@ -57,11 +57,14 @@ const Footer = () => {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-[40%] mt-4 sm:-mt-16 md:ml-0 lg:ml-[10%]">
                     <div className="flex flex-col gap-2 sm:gap-4 sm:mt-16 lg:mt-0">
                         <div className='flex gap-40 sm:gap-50'>
-                            <Link to="/" onClick={()=>window.scrollTo(0, 0)}>
-                               <h1 className="text-lg underline sm:text-xl cursor-pointer">{t('home')}</h1>
-                            </Link>
-                            <div  onClick={onClickFooterMyCollection}>
-                            <h1 className="flex text-lg underline sm:text-xl cursor-pointer">{t('collectionFooterText')}</h1>
+                            <div >
+                               <h1 className="text-lg underline sm:text-xl cursor-pointer" onClick={()=>{
+                                window.scrollTo(0, 0)
+                                navigate("/")
+                               }}>{t('home')}</h1>
+                            </div>
+                            <div>
+                            <h1 className="flex text-lg underline sm:text-xl cursor-pointer"  onClick={onClickFooterMyCollection}>{t('collectionFooterText')}</h1>
                             </div>
                         </div>
                         <h1 className='mt-2'>{t('categoriesText')}</h1>

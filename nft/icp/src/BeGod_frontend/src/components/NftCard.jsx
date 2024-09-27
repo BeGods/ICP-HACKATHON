@@ -1,12 +1,22 @@
 import { Principal } from '@dfinity/principal'
 import { useAuth } from '../utils/useAuthClient'
-import React from 'react'
+import React,{useState} from 'react'
+import MoonLoader from "react-spinners/MoonLoader";
 
-const NftCard = ({img}) => {
-  const {backendActor} = useAuth();
-    const onClickAddToFavorite = async() => {
-        const tokenId = await backendActor?.getNftTokenId(Principal.fromText(img.collectionId),0);
-        console.log("token identifier",tokenId);
+
+const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
+
+    const [showLoader,updateLoaderStatus] = useState(false);
+
+    const onClickRemove = async() => {
+        updateLoaderStatus(true);
+        if(img.isFavourite){
+           await removeFromFavorites(img.tokenId);
+
+        }else{
+         await addToFavorites(img.tokenId)
+        }
+        updateLoaderStatus(false)
     }
     return (
 
@@ -29,10 +39,21 @@ const NftCard = ({img}) => {
                         <h1 className="text-xl sm:text-3xl lg:text-2xl font-extrabold">{img.cardName}</h1>
                         <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
                         <h2 className="text-lg sm:text-xl mt-1">1 ICP</h2>
-                        <button  onClick={onClickAddToFavorite}
+                        {showLoader ? (
+                            <div className='flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon'>
+                             <MoonLoader
+                             color="#000000"
+                             size={15}
+                             aria-label="Loading Spinner"
+                             data-testid="loader"
+                           />
+                           </div>
+                        ):(
+                            <button  onClick={onClickRemove}
                         className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
-                            Add to Favorite
+                            {img.isFavourite ? "Remove" : "Add to Favourite"}
                         </button>
+                        )}
                     </div>
                 </div>
             </div>

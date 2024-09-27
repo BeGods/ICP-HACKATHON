@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import toast from 'react-hot-toast';
 
 
 
@@ -41,9 +42,11 @@ const Profile = () => {
   const [noCards,updateNoCardsStatus] = useState(false);
 
   const [selectedList , updateSelectedList] = useState([]);
-  const [currentOption,updateCurrentOption] = useState("mycollection")
-  
+  const [currentOption,updateCurrentOption] = useState("mycollection");
 
+  const [favIds,setFavIds] = useState(undefined);
+  
+  const { principal } = useAuth();
 
 
   const onOptionChange = async(updatedOption) => {
@@ -62,9 +65,31 @@ const Profile = () => {
 
   const fetchFavoriteCards = async() => {
     const result = await backendActor?.getFavorites(principal)
-    // console.log("resssssssult" , result);
-    updateNoCardsStatus(true);
-    setIsCardsLoading(false);
+    console.log("resssssssult" , result);
+    if(result.ok?.length>0){
+
+      const favItems = result.ok;
+
+      const favCardslist = favItems.map((eachFavToken)=>{
+       for(let i=0;i<selectedList.length;i++){
+        if(selectedList[i].tokenId === eachFavToken){
+          return selectedList[i];
+        }
+       }
+      })
+
+      console.log("favList",favCardslist)
+
+      setIsCardsLoading(false);
+
+      updateSelectedList(favCardslist);
+
+
+    }else{
+      
+      updateNoCardsStatus(true);
+      
+    }
     
   }
 
@@ -79,7 +104,7 @@ const Profile = () => {
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex === selectedList.length - 1 ? 0 : prevIndex + 1));
   };
-  const { principal } = useAuth();
+
    const navigate = useNavigate(); 
    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
    
@@ -99,55 +124,93 @@ const Profile = () => {
 const {t} = useTranslation();
 const { backendActor } = useAuth({});
 
-
-  const fetchCollections = async() => {
-    const collectionList = [];
-    const result = await backendActor?.getAllCollections();
-    // console.log("result",result)
-    const collectionItems = result[0][1];
-
-    console.log("collection id list" , collectionItems)
-
-   await Promise.all(
-    collectionItems.map(async(eachItem) => {
-      const resultOfUserNftCollections = await getDetails(eachItem[1]);
-      if(typeof(resultOfUserNftCollections.ok) === typeof([])){
-         const collectionDetails = resultOfUserNftCollections.ok;
-         console.log("collection details",collectionDetails)
-         collectionDetails.map((eachItem)=>{
-          const cardDetails = eachItem[1].nonfungible;
-          
-           const metadata = JSON.parse(cardDetails.metadata[0].json)
-          //  console.log("cardDetails",cardDetails);
-          // console.log(metadata);
-          const nftCard = {
-            collectionId:eachItem[0],
-            cardName : cardDetails?.name,
-            cardImageUrl : cardDetails?.thumbnail,
-            cardSold : "",
-          }
-          //  console.log("cardDetails after nft card",nftCard.collectionId);
-
-          console.log("nft card",nftCard)
-          collectionList.push(nftCard);
-         })
+  const checkIsFavourite = async(tokenId) => {
+      const ids = await backendActor?.getFavorites(principal);
+      console.log("iddddddddds",ids.ok);
+      if(ids.ok.length>0){
+        console.log("inside if")
+        for(let i=0;i<ids.ok.length;i++){
+        console.log("fav token id",ids.ok[i]);
+        if(ids.ok[i] == tokenId){
+          return true;
+        }
       }
-  })
-   )
-    console.log("collectionList" , collectionList)
-   setIsCardsLoading(false)
-   if(collectionList.length === 0) {
-     updateNoCardsStatus(true);
-   }else{
-    updateSelectedList(collectionList);
-   }
-    
+      }
+      
+      return false;
+  
+
   }
+
+  const fetchCollections = async () => {
+    const collectionList = [];
+    setIsCardsLoading(true);  
+  
+    try {
+      const result = await backendActor?.getAllCollections();
+      const collectionItems = result[0][1];
+  
+      // console.log("collection id list", collectionItems);
+  
+      await Promise.all(
+        collectionItems.map(async (eachItem) => {
+          try {
+            const resultOfUserNftCollections = await getDetails(eachItem[1]);
+            if (Array.isArray(resultOfUserNftCollections.ok)) {
+              const collectionDetails = resultOfUserNftCollections.ok;
+              console.log("collection details", collectionDetails);
+  
+              // Process each NFT card in the collection
+              await Promise.all(
+                collectionDetails.map(async (eachDetail) => {
+                  const cardDetails = eachDetail[1].nonfungible;
+                  const metadata = JSON.parse(cardDetails.metadata[0].json);
+  
+                  // Check if the item is a favorite
+                  const isFav = await checkIsFavourite(eachDetail[0]);
+                  console.log("is fav after calling",isFav)
+  
+                  // Create the nftCard object
+                  const nftCard = {
+                    tokenId: eachDetail[0],
+                    cardName: cardDetails?.name,
+                    cardImageUrl: cardDetails?.thumbnail,
+                    cardSold: "", // Placeholder, replace with actual data if necessary
+                    isFavourite: isFav,
+                  };
+  
+                  collectionList.push(nftCard);
+                  // console.log("nft card", nftCard);
+                })
+              );
+            }
+          } catch (error) {
+            console.error("Error fetching details for collection item", eachItem, error);
+          }
+        })
+      );
+  
+      // console.log("collectionList", collectionList);
+  
+      
+      if (collectionList.length === 0) {
+        updateNoCardsStatus(true);
+      } else {
+        updateSelectedList(collectionList);
+      }
+  
+    } catch (error) {
+      console.error("Error fetching collections:", error);
+    } finally {
+      setIsCardsLoading(false); 
+    }
+  };
+  
 
   const getDetails =  async(collectionId) => {
 
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
-     console.log("collection details in getDetails",collectionDetailsResult);
+    //  console.log("collection details in getDetails",collectionDetailsResult);
     return collectionDetailsResult
 
   }
@@ -160,7 +223,52 @@ const { backendActor } = useAuth({});
 
    console.log("selected List",selectedList);
 
+const removeFromFavorites = async(tokenId) => {
+  const removeFavResult = await backendActor?.removeFromFavorites(principal,tokenId);
+  console.log("remove fav result",removeFavResult);
+  toast.success(removeFavResult.ok);
+  if(currentOption === "favorite"){
+    fetchFavoriteCards();
+  }else{
+    const modifiedSelectedList = selectedList.map((eachItem)=>{
+      if(eachItem.tokenId === tokenId){
+        return {
+          ...eachItem,
+          isFavourite:false,
+         }
+      }
+      return eachItem;
+     })
+     updateSelectedList(modifiedSelectedList)
 
+  }
+}
+
+const addToFavorites = async(tokenId)=>{
+  const result = await backendActor?.addToFavorites(principal,tokenId);
+            console.log("add to fav result",result.ok);
+            if(result.ok){
+                // fetchCollections();
+                
+                const modifiedSelectedList = selectedList.map((eachItem)=>{
+                  if(eachItem.tokenId === tokenId){
+                    return {
+                      ...eachItem,
+                      isFavourite:true,
+                     }
+                  }
+                  return eachItem;
+                 })
+                 updateSelectedList(modifiedSelectedList)
+                 toast.success(result.ok)
+
+            }else{
+                toast.error(result.err.Other)
+            }
+
+            
+    
+}
  
   return (
     <div className='font-caslon'>
@@ -217,10 +325,10 @@ const { backendActor } = useAuth({});
                   
                 ):(
                   noCards ? (
-                    <h1 className='text-[#FFD700] text-[22px]'>No Cards Availalbe</h1>
+                    <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
                   ):(
                     <div>
-                      <NftCard img={selectedList[currentIndex]} key={currentIndex} />
+                      <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
                     </div>
                   )
                   
@@ -241,12 +349,12 @@ const { backendActor } = useAuth({});
                (isCardsLoading ? (
                         <div className="pb-10">
                         <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                          <div className="grid justify-around grid-cols-5 gap-5 m-5">
+                          <div className="hidden md:grid justify-around md:grid-cols-3 lg:grid-cols-4  gap-5 m-5">
                             {Array.from({ length: 10 }).map((_, index) => (
                               <Skeleton
                                 key={index}
                                 count={1}
-                                width={195}
+                                width={220}
                                 height={300}
                               />
                             ))}
@@ -257,7 +365,7 @@ const { backendActor } = useAuth({});
                       <div className='hidden w-[90%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
-                          <NftCard img={img} key={index} />
+                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} />
                         </div>
                       ))}
                     </div>

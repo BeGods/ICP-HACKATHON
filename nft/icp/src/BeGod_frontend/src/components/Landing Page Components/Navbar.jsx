@@ -191,7 +191,7 @@ const Navbar = ({ mobileView }) => {
               <div onClick={onClickLogout} className='flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md text-[#FCD378] '>Logout</div>
             </>
           ) : (
-            <div onClick={() => setModal(true)} className='flex items-center justify-center  w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px] '>{t('connectWallet')}</div>
+            <div onClick={() => dispatch(updateDisplayWalletOptionsStatus({status:!iswalletOptionsOpen.status,path:navigatingPath}))} className='flex items-center justify-center  w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px] '>{t('connectWallet')}</div>
           )}
         </div>
       )}

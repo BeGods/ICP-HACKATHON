@@ -25,7 +25,7 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-#  dfx canister call "$CANISTER" createExtCollection '("Chandan", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
+ dfx canister call "$CANISTER" createExtCollection '("Ravi", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
 
 # Getting Result Like this
 # (
@@ -58,6 +58,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 #    opt variant {
 #      json = "[{\"name\":\"Ayesha\"}, {\"type\":\"Common\"}]"
 #    },
+#    1
 #    1
 #  )'
 
@@ -141,9 +142,9 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
-
+          
 
 
 

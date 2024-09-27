@@ -44,9 +44,19 @@ const Hero = () => {
         if(index === startIndex+visibleButtons-1 && index != collections.length-1){
             setStartIndex(startIndex+1);
         }
+        // else if(index > startIndex+visibleButtons-1){
+        //     setStartIndex(index-(visibleButtons-1));
+        // }
         if(index === startIndex && index != 0){
             setStartIndex(startIndex-1);
         }
+        // else if(index < startIndex){
+        //     if(index === 0){
+        //         setStartIndex(index)
+        //     }else{
+        //         setStartIndex(index-1);
+        //     }
+        // }
 
         console.log("index in handle click",index)
         
@@ -281,7 +291,7 @@ if(currIndexFromStore != currentIndex){
                            ):(
                             <div className="pb-10">
                             <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                              <div className="grid justify-around grid-cols-5 gap-5 m-5">
+                              <div className="hidden lg:grid justify-around grid-cols-5 gap-5 m-5">
                                 {Array.from({ length: 10 }).map((_, index) => (
                                   <Skeleton
                                     key={index}
