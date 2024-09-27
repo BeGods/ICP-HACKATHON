@@ -142,7 +142,7 @@ const Modal = (props) => {
             <input
               value={nftPrice}
               onChange={(e) => setPrice(e.target.value)}
-              type="text"
+              type="number"
               className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
             />
           </label>

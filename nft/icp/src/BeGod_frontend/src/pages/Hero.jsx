@@ -96,7 +96,7 @@ const Hero = () => {
                 collectionId : eachItem[1],
                 name : eachItem[2],
                 shadowColor : shadowColors[shadowColorIndex],
-                description:eachItem[4]
+                description:JSON.parse(eachItem[4])?.description
             }
             i++;
             shadowColorIndex = shadowColorIndex+1;
@@ -137,16 +137,22 @@ const getCollectionNfts = (collectionList,collectionId) => {
         index = index+1;
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
-        const name = nftDetails.asset;
+        const name = nftDetails.name;
         const sold = eachItem[2].price;
         const ICP = parseInt(sold)/100000000;
+        const metadata = JSON.parse(nftDetails.metadata[0].json);
+        console.log(metadata,'metadata');
+        const nftType = metadata.nfttype;
+        const borderColor = metadata.nftcolor;
         return {
             collectionId,
             index:eachItem[0],
             img1: image,
             name,
             sold,
-            ICP
+            ICP,
+            nftType,
+            borderColor
         };
     });
 };

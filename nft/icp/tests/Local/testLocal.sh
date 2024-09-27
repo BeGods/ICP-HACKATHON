@@ -34,7 +34,7 @@ echo "CANISTER: $CANISTER"
 # )
 
 
-COLLECTION_ID="bw4dl-smaaa-aaaaa-qaacq-cai"
+COLLECTION_ID="be2us-64aaa-aaaaa-qaabq-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 

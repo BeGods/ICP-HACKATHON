@@ -6,10 +6,10 @@ import { ArrowBackIcon } from '@chakra-ui/icons'
 const NftDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    console.log(collection.collections[0].CollectionDetails.NftList[0])
+    // console.log(collection.collections[0].CollectionDetails.NftList[0])
     const filteredNft = collection.collections[0].CollectionDetails.NftList[0];
     // const filteredNft = collection.collections[0].CollectionDetails.NftList.find((nft)=>nft.License_No===id);
-    console.log(filteredNft);
+    // console.log(filteredNft);
     return (
         <div className='2xl:mt-[10vh]'>
             <div className=' flex justify-start mx-auto w-11/12 pt-9 hover:cursor-pointer 2xl:ml-[13%]'>

@@ -516,3 +516,18 @@ body{
 .admin-control-font{
   font-family: sans-serif !important;
 }
+
+.border-golden{
+  border: 5px solid goldenrod;
+  border-radius: 10px;
+}
+
+.border-silver{
+  border: 5px solid silver;
+  border-radius: 10px;
+}
+
+.border-bronze{
+  border: 5px solid #cd7f32;
+  border-radius: 10px;
+}
