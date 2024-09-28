@@ -71,10 +71,6 @@ function Users() {
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll  md:w-full lg:w-[90%] lg:pt-20">
-        <div className="flex justify-between text-center">
-          <BackButton />
-        </div>
-
         <Box
           color="white"
           className="flex flex-col items-center justify-center"

@@ -99,25 +99,41 @@ const CreateCollection = () => {
     return Actor.createActor(idlFactory, { agent, canisterId });
   };
 
-  const handleFormSubmit = async (e) => {
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const actor = createActor();
+  //   try {
+  //     const collectionResponse = await actor.add_collection_to_map(
+  //       principal_id
+  //     );
+  //     console.log("Collection created successfully:", collectionResponse);
+  //     for (const nft of nftRows) {
+  //       const nftResponse = await actor.addNFT({
+  //         id: nft.id,
+  //         description: nft.description,
+  //         collectionId: collectionResponse.collectionId,
+  //       });
+  //       console.log("NFT created successfully:", nftResponse);
+  //     }
+  //     navigate("/success");
+  //   } catch (error) {
+  //     console.error("Error creating collection or NFTs:", error);
+  //   }
+  // };
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const actor = createActor();
-    try {
-      const collectionResponse = await actor.add_collection_to_map(
-        principal_id
-      );
-      console.log("Collection created successfully:", collectionResponse);
-      for (const nft of nftRows) {
-        const nftResponse = await actor.addNFT({
-          id: nft.id,
-          description: nft.description,
-          collectionId: collectionResponse.collectionId,
-        });
-        console.log("NFT created successfully:", nftResponse);
-      }
-      navigate("/success");
-    } catch (error) {
-      console.error("Error creating collection or NFTs:", error);
+
+    // Form validation checks
+    if (!name || !description || !Ufile) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+    // Ensure at least one NFT card is added
+    else if (nftCardsList.length === 0) {
+      toast.error("Please add at least one NFT card.");
+      return;
+    } else {
+      togglewarning();
     }
   };
 
@@ -492,7 +508,7 @@ const CreateCollection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-5">
+                  <div className="grid grid-row-3 gap-5">
                     {nftCardsList.map((eachNftItem) => (
                       <NftCardItem
                         nftDetails={eachNftItem}
@@ -522,7 +538,7 @@ const CreateCollection = () => {
                       className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border rounded-md border-[#d1b471]  h-[40px] w-[180px] "
                       // onClick={finalcall}
                       // onClick={() => setShowModal(true)}
-                      onClick={togglewarning}
+                      onClick={handleSubmit}
                     >
                       Create Collection
                     </button>

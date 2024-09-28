@@ -18,6 +18,7 @@ function DashBoard() {
   // console.log("in dashboard", backendActor);
 
   useEffect(() => {
+    console.log("in dashboard", isAuthenticated);
     if (!isAuthenticated) {
       navigate("/login");
     } else {
@@ -77,62 +78,39 @@ function DashBoard() {
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <div className="bg-contain text-white mx-auto text-center w-[90%] h-full px-6 sm:px-12 md:px-24 pt-5 sm:pt-6 md:pt-16 lg:pt-28">
-        <div className="grid justify-center grid-cols-1 gap-8 mx-auto lg:text-2xl sm:grid-cols-4 max-w-screen-2xl font-Quicksand sm:font-bold md:text-xl sm:text-lg">
-          <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
-            <h3>Total Collections</h3>
-            {loading ? (
-              <div
-                style={{
-                  // display: "block",
-                  // alignItems: "center",
-                  // justifyContent: "center",
-                  // lineHeight: 3,
-                  // padding: "1rem",
-                  // marginBottom: "0.5rem",
-                  width: "100%",
-                }}
-              >
-                <Skeleton />
-                <Skeleton count={0} />
-              </div>
-            ) : (
+        {loading ? (
+          <div
+            style={{
+              display: "block",
+              alignItems: "center",
+              justifyContent: "center",
+              lineHeight: 3,
+              padding: "1rem",
+              marginBottom: "0.5rem",
+              width: "100%",
+            }}
+          >
+            <Skeleton />
+            <Skeleton count={5} />
+          </div>
+        ) : (
+          <div className="grid justify-center grid-cols-1 gap-8 mx-auto lg:text-2xl sm:grid-cols-4 max-w-screen-2xl font-Quicksand sm:font-bold md:text-xl sm:text-lg">
+            <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
+              <h3>Total Collections</h3>
+
               <p>{collections}</p>
-            )}
-          </div>
-          <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
-            <h3>Total NFTs</h3>
-            {loading ? (
-              <div
-                style={{
-                  // display: "block",
-                  // justifyContent: "center",
-                  // alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                <Skeleton />
-                <Skeleton count={0} />
-              </div>
-            ) : (
+            </div>
+            <div className="bg-[#29292C] px-6 py-4 col-span-2 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
+              <h3>Total NFTs</h3>
+
               <p>{nfts}</p>
-            )}
-          </div>
-          <div className="bg-[#29292C] px-6 py-4 col-span-2 sm:col-start-2 sm:col-end-4 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
-            <h3>Total Users</h3>
-            {loading ? (
-              <div
-                style={{
-                  width: "100%",
-                }}
-              >
-                <Skeleton />
-                <Skeleton count={0} />
-              </div>
-            ) : (
+            </div>
+            <div className="bg-[#29292C] px-6 py-4 col-span-2 sm:col-start-2 sm:col-end-4 h-32 2xl:h-52 flex flex-col justify-center rounded-md">
+              <h3>Total Users</h3>
               <p>{user}</p>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </SkeletonTheme>
   );

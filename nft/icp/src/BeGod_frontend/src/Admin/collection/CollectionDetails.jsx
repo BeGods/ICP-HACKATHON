@@ -16,7 +16,7 @@ function CollectionDetails() {
   const [nfttype, setnfttype] = useState("rare");
   const [nftname, setnftname] = useState("");
   const [nftquantity, setnftquantity] = useState();
-  const [nftprice, setnftprice] = useState("");
+  const [nftprice, setnftprice] = useState();
   const [nftimage, setnftimage] = useState("");
   const [nftdescription, setnftdescription] = useState("");
   const [nftcolor, setnftcolor] = useState("");

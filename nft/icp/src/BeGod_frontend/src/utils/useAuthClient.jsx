@@ -228,6 +228,7 @@ export const useAuthClient = () => {
             user: userObject.principal,
             identity: userObject.identity,
           };
+          console.log(isAuthenticated);
 
           dispatch(setUser(userObject.principal));
           navigate("/admin/dashboard");
@@ -307,7 +308,17 @@ export const useAuthClient = () => {
       console.error("Reload login error:", error);
     }
   };
-
+  console.log(
+    "in authclient",
+    isAuthenticated,
+    principal,
+    authClient,
+    identity,
+    backendActor,
+    accountId,
+    ledgerActor
+  );
+  console.log("in authclient", principal);
   return {
     adminlogin,
     adminlogout,

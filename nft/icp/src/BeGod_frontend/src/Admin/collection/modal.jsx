@@ -9,8 +9,8 @@ const Modal = (props) => {
   const [nftId, setNftId] = useState("254");
   const [nftName, setNftName] = useState("");
   const [nftType, setNftType] = useState("NORMAL");
-  const [nftQuantity, setNftQuantity] = useState("");
-  const [nftPrice, setPrice] = useState("");
+  const [nftQuantity, setNftQuantity] = useState();
+  const [nftPrice, setPrice] = useState();
   const [nftDescription, setNftDescription] = useState("");
   const [nftImage, setNftImage] = useState();
   const [nftImageURL, setNftImageURL] = useState("");
@@ -120,7 +120,7 @@ const Modal = (props) => {
             <input
               value={nftQuantity}
               onChange={(e) => setNftQuantity(e.target.value)}
-              type="text"
+              type="number"
               className="pl-4 rounded-md h-[38px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
             />
           </label>

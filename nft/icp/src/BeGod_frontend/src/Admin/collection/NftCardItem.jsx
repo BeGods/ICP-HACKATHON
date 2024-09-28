@@ -12,7 +12,7 @@ const NftCardItem = (props) => {
     nftPrice,
     nftImage,
   } = nftDetails;
-  console.log(nftDetails,'hello dddddd');
+  console.log(nftDetails, "hello dddddd");
 
   return (
     <div className="relative object-cover border-2 border-gray-700 w-[28rem] rounded-md">
