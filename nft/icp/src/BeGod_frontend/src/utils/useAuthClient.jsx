@@ -46,11 +46,13 @@ export const useAuthClient = () => {
     }
   }, [authClient]);
 
-  const whitelist = [process.env.CANISTER_ID_BEGOD_BACKEND];
-
+  const backend_id = process.env.CANISTER_ID_BEGOD_BACKEND;
+  const frontend_id = process.env.CANISTER_ID_BEGOD_FRONTEND;
   const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
 
-  const login = async (provider,navigatingPath) => {
+  const whitelist = [backend_id,ledgerCanId,frontend_id]
+
+  const login = async (provider, navigatingPath) => {
     return new Promise(async (resolve, reject) => {
       setShowButtonLoading(true);
       try {
@@ -66,46 +68,63 @@ export const useAuthClient = () => {
             agent: undefined,
             provider: "",
           };
-
+  
           if (provider === "plug") {
-            console.log(window,'windows')
+            console.log(window, "windows");
+            // Ensure Plug is installed
             if (!window.ic?.plug) throw new Error("Plug extension not installed");
-            // Check if the wallet is already connected
-            const isPlugConnected = await window.ic.plug.isConnected();
-            if (!isPlugConnected) {
+  
+            const host =
+              process.env.DFX_NETWORK === "ic"
+                ? "https://icp-api.io"
+                : "http://127.0.0.1:4943";
+  
+            // Check if Plug is connected
+            // const isPlugConnected = await window.ic.plug.isConnected({
+            //   whitelist,
+            //   host,
+            // });
+  
+            // if (!isPlugConnected) {
               // Request connection if not already connected
               const isConnected = await window.ic.plug.requestConnect({
                 whitelist,
-                host: process.env.DFX_NETWORK === "ic"
-                  ? window.ic.plug._agent.agent._host.host
-                  : "http://127.0.0.1:4943",
-
+                host,
               });
-
+  
               if (!isConnected) {
                 throw new Error("Plug connection refused");
               }
-            }
-
+            // }
+  
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
-            console.log(principal,'principal')
-            setShowButtonLoading(false);
+            console.log(principal, "principal");
+  
             const user_uuid = uuidv4();
+  
+            // Create actor for the backend
             const userActor = await window.ic.plug.createActor({
               canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
               interfaceFactory: idlFactory,
             });
+  
+            // Create actor for the ledger
             const EXTActor = await window.ic.plug.createActor({
               canisterId: ledgerCanId,
               interfaceFactory: ledgerIdlFactory,
             });
-
+  
             userObject.principal = principal.toText();
             userObject.agent = window.ic.plug.agent;
-            console.log(userActor,'userActor')
-            const userdetails = await userActor.create_user(principal,user_uuid);
-            console.log(userdetails,'userdetails');
+  
+            console.log(userActor, "userActor");
+  
+            // Create user with the principal and user UUID
+            const userdetails = await userActor.create_user(principal, user_uuid);
+            console.log(userdetails, "userdetails");
+  
+            // Update the actors and state
             setBackendActor(userActor);
             setLedgerActor(EXTActor);
           } else {
@@ -117,38 +136,42 @@ export const useAuthClient = () => {
             } else if (provider === "ii") {
               userObject = await IdentityLogin();
             }
-
+  
             const identity = await userObject.agent._identity;
             const principal = Principal.fromText(userObject.principal);
-
+  
             const agent = new HttpAgent({ identity });
-
+  
             const backendActor = createActor(
               process.env.CANISTER_ID_BEGOD_BACKEND,
               { agentOptions: { identity, verifyQuerySignatures: false } }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
-            setShowButtonLoading(false);
+  
             setLedgerActor(ledgerActor1);
             setBackendActor(backendActor);
           }
-
+  
           setPrincipal(userObject.principal);
           setIdentity(userObject.agent?._identity);
           setIsAuthenticated(true);
           dispatch(setUser(userObject.principal));
-          dispatch(updateDisplayWalletOptionsStatus(false))
-          if(navigatingPath === "/profile"){
-            navigate(navigatingPath)
+          dispatch(updateDisplayWalletOptionsStatus(false));
+  
+          if (navigatingPath === "/profile") {
+            navigate(navigatingPath);
           }
         }
       } catch (error) {
         console.error("Login error:", error);
-        setShowButtonLoading(false);
+        setShowButtonLoading(false); // Update loading state on error
         reject(error);
+      } finally {
+        setShowButtonLoading(false); // Ensure button loading state is cleared
       }
     });
   };
+  
 
   const adminlogin = async (provider) => {
     return new Promise(async (resolve, reject) => {
