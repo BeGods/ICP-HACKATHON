@@ -25,7 +25,7 @@ echo "CANISTER: $CANISTER"
 # STEP-1
 # creating new collection
 
-#  dfx canister call "$CANISTER" createExtCollection '("Chandan", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
+#  dfx canister call "$CANISTER" createExtCollection '("Vamsi", "https://picsum.photos/200/300", "Egyptian Mythology card collection would showcase the gods, goddesses, pharaohs, and sacred symbols that shaped the beliefs of ancient Egypt. Central to the collection would be Ra, the sun god and king of the gods, often depicted with a falcon head and a sun disk.")'
 
 # Getting Result Like this
 # (
@@ -33,8 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "avqkn-guaaa-aaaaa-qaaea-cai",
 # )
 
-
-COLLECTION_ID="be2us-64aaa-aaaaa-qaabq-cai"
+COLLECTION_ID="b77ix-eeaaa-aaaaa-qaada-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -92,8 +91,8 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 
 # Just suppose that we are going to list token 0
 
-NFTID="0"
-echo "NFTID: $NFTID"
+# NFTID="2"
+# echo "NFTID: $NFTID"
 
 
 
@@ -134,8 +133,7 @@ echo "NFTID: $NFTID"
 # STEP-4
 # Set Price and List the NFT
 
-
-TOKENIDENTIFIER='yxwtr-bqkor-uwjaa-aaaaa-aeaaa-uaqca-aaaaa-a'
+TOKENIDENTIFIER='6qcse-gykor-uwjaa-aaaaa-aeaaa-yaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -145,7 +143,7 @@ echo "PRICE: $PRICE"
 
 dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
-
+          
 
 
 

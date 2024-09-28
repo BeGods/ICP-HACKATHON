@@ -41,7 +41,7 @@ const CreateCollection = () => {
   const [nfttype, setnfttype] = useState("rare");
   const [nftname, setnftname] = useState("");
   const [nftquantity, setnftquantity] = useState();
-  const [nftprice, setnftprice] = useState("");
+  const [nftprice, setnftprice] = useState(0);
   const [nftimage, setnftimage] = useState("");
   const [nftbase64, setnftbase64] = useState("");
   const [nftdescription, setnftdescription] = useState("");
@@ -247,7 +247,7 @@ const CreateCollection = () => {
       );
 
       console.log(result, "nft mint data");
-      const es8_price = parseFloat(nftPrice) * 100000000;
+      const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
       console.log(es8_price, "price");
       if (result && result.length > 0) {
         result.map((val, key) => {
