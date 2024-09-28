@@ -26,7 +26,11 @@ const Hero = () => {
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
     const [startIndex,setStartIndex] = useState(0);
-    const visibleButtons = 4;
+    const visibleButtons = 4; 
+
+    const allCollectionsList = useSelector((state)=>state.info.collectionList); 
+
+    console.log("collection List frist time",allCollectionsList);
 
 
 
@@ -44,9 +48,19 @@ const Hero = () => {
         if(index === startIndex+visibleButtons-1 && index != collections.length-1){
             setStartIndex(startIndex+1);
         }
+        // else if(index > startIndex+visibleButtons-1){
+        //     setStartIndex(index-(visibleButtons-1));
+        // }
         if(index === startIndex && index != 0){
             setStartIndex(startIndex-1);
         }
+        // else if(index < startIndex){
+        //     if(index === 0){
+        //         setStartIndex(index)
+        //     }else{
+        //         setStartIndex(index-1);
+        //     }
+        // }
 
         console.log("index in handle click",index)
         
@@ -88,15 +102,21 @@ const Hero = () => {
         const collectionItems = result[0][1];
       
       //  console.log("collection items" , collectionItems);
-        const collections = []
+        const collections = [] 
+        
         let i  = 0;
+        
         collectionItems.map((eachItem) =>{
+            console.log("each card ---------- item",eachItem)
+            const jsonData = JSON.parse(eachItem[4]);
+
+            console.log("json -------------- data",jsonData)
             const colItem = {
                 index : i,
                 collectionId : eachItem[1],
                 name : eachItem[2],
-                shadowColor : shadowColors[shadowColorIndex],
-                description:JSON.parse(eachItem[4])?.description
+                shadowColor : jsonData.collColor,
+                description:jsonData.description
             }
             i++;
             shadowColorIndex = shadowColorIndex+1;
@@ -287,12 +307,12 @@ if(currIndexFromStore != currentIndex){
                            ):(
                             <div className="pb-10">
                             <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                              <div className="grid justify-around grid-cols-5 gap-5 m-5">
+                              <div className="hidden md:grid justify-around md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-5 m-5">
                                 {Array.from({ length: 10 }).map((_, index) => (
                                   <Skeleton
                                     key={index}
                                     count={1}
-                                    width={195}
+                                    width={210}
                                     height={300}
                                   />
                                 ))}

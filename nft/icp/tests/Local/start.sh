@@ -1,7 +1,7 @@
 
-# dfx stop
+dfx stop
 
-# dfx start --clean --background
+dfx start --clean --background
 
 cd tests/Local
 

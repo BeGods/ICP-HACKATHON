@@ -19,9 +19,10 @@ export const fetchCollections = createAsyncThunk(
 
       let i = 0;
       collectionItems.forEach((eachItem) => {
+        // console.log("collection item in redux slice",eachItem)
         const colItem = {
           index: i,
-          collectionId: eachItem[0],  
+          collectionId: eachItem[1],  
           name: eachItem[2],
           description: eachItem[4],
         };

@@ -165,7 +165,7 @@ const Navbar = ({ mobileView }) => {
                     Profile
                   </li>
                   <hr className="my-1 border-t border-[#FCD378]" />
-                  <li className="px-4 py-2 cursor-pointer hover:bg-purple-900">
+                  <li className="px-4 py-2 cursor-pointer hover:bg-purple-900" onClick={()=>navigate('/activity')}>
                     Activity
                   </li>
                   <hr className="my-1 border-t border-[#FCD378]" />
@@ -311,12 +311,7 @@ const Navbar = ({ mobileView }) => {
               </div>
             </>
           ) : (
-            <div
-              onClick={() => setModal(true)}
-              className="flex items-center justify-center  w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px] "
-            >
-              {t("connectWallet")}
-            </div>
+            <div onClick={() => dispatch(updateDisplayWalletOptionsStatus({status:!iswalletOptionsOpen.status,path:navigatingPath}))} className='flex items-center justify-center  w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px] '>{t('connectWallet')}</div>
           )}
         </div>
       )}
