@@ -26,7 +26,11 @@ const Hero = () => {
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
     const [startIndex,setStartIndex] = useState(0);
-    const visibleButtons = 4;
+    const visibleButtons = 4; 
+
+    const allCollectionsList = useSelector((state)=>state.info.collectionList); 
+
+    console.log("collection List frist time",allCollectionsList);
 
 
 
@@ -98,16 +102,21 @@ const Hero = () => {
         const collectionItems = result[0][1];
       
       //  console.log("collection items" , collectionItems);
-        const collections = []
+        const collections = [] 
+        
         let i  = 0;
+        
         collectionItems.map((eachItem) =>{
-            console.log(eachItem)
+            console.log("each card ---------- item",eachItem)
+            const jsonData = JSON.parse(eachItem[4]);
+
+            console.log("json -------------- data",jsonData)
             const colItem = {
                 index : i,
                 collectionId : eachItem[1],
                 name : eachItem[2],
-                shadowColor : shadowColors[shadowColorIndex],
-                description:eachItem[4]
+                shadowColor : jsonData.collColor,
+                description:jsonData.description
             }
             i++;
             shadowColorIndex = shadowColorIndex+1;

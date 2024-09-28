@@ -45,6 +45,10 @@ const Profile = () => {
   const [selectedList , updateSelectedList] = useState([]);
   const [currentOption,updateCurrentOption] = useState("mycollection");
 
+  const allCollectionsList = useSelector((state)=> state.info.collectionList);
+
+  console.log("all collection list in profile",allCollectionsList)
+
   const [favIds,setFavIds] = useState(undefined);
   
   const { principal } = useAuth();
@@ -129,8 +133,8 @@ const { backendActor } = useAuth({});
 
   const checkIsFavourite = async(tokenId) => {
       const ids = await backendActor?.getFavorites(principal);
-      console.log("iddddddddds",ids.ok);
-      if(ids.ok.length>0){
+      // console.log("iddddddddds",ids);
+      if(ids.ok?.length>0){
         console.log("inside if")
         for(let i=0;i<ids.ok.length;i++){
         console.log("fav token id",ids.ok[i]);
@@ -146,69 +150,54 @@ const { backendActor } = useAuth({});
   }
 
   const fetchCollections = async () => {
-    const collectionList = [];
-    setIsCardsLoading(true);  
-  
-    try {
-      const result = await backendActor?.getAllCollections();
-      const collectionItems = result[0][1];
-  
-      // console.log("collection id list", collectionItems);
-  
-      await Promise.all(
-        collectionItems.map(async (eachItem) => {
-          try {
-            const resultOfUserNftCollections = await getDetails(eachItem[1]);
-            if (Array.isArray(resultOfUserNftCollections.ok)) {
-              const collectionDetails = resultOfUserNftCollections.ok;
-              console.log("collection details", collectionDetails);
-  
-              // Process each NFT card in the collection
-              await Promise.all(
-                collectionDetails.map(async (eachDetail) => {
-                  const cardDetails = eachDetail[1].nonfungible;
-                  const metadata = JSON.parse(cardDetails.metadata[0].json);
-  
-                  // Check if the item is a favorite
-                  const isFav = await checkIsFavourite(eachDetail[0]);
-                  console.log("is fav after calling",isFav)
-  
-                  // Create the nftCard object
-                  const nftCard = {
-                    tokenId: eachDetail[0],
-                    cardName: cardDetails?.name,
-                    cardImageUrl: cardDetails?.thumbnail,
-                    cardSold: "", // Placeholder, replace with actual data if necessary
-                    isFavourite: isFav,
-                  };
-  
-                  collectionList.push(nftCard);
-                  // console.log("nft card", nftCard);
-                })
-              );
-            }
-          } catch (error) {
-            console.error("Error fetching details for collection item", eachItem, error);
-          }
-        })
-      );
-  
-      // console.log("collectionList", collectionList);
-  
-      
-      if (collectionList.length === 0) {
-        updateNoCardsStatus(true);
-      } else {
-        updateSelectedList(collectionList);
-      }
-  
-    } catch (error) {
-      console.error("Error fetching collections:", error);
-    } finally {
-      setIsCardsLoading(false); 
+    const myCollectionList = [];
+    console.log("all collection list ",allCollectionsList);
+    if(allCollectionsList.length === 0){
+      updateNoCardsStatus(true);
+      return;
     }
-  };
-  
+    
+
+    await Promise.all(
+      allCollectionsList.map(async (eachItem) => {
+        const resultOfUserNftCollections = await getDetails(eachItem.collectionId);
+        if (typeof resultOfUserNftCollections.ok === typeof ([])) {
+          const collectionDetails = resultOfUserNftCollections.ok;
+          console.log("collection details", collectionDetails);
+
+          for (let i = 0; i < collectionDetails.length; i++) {
+            const eachItem = collectionDetails[i];
+            const cardDetails = eachItem[1].nonfungible;
+            const metadata = JSON.parse(cardDetails.metadata[0].json);
+          
+     
+            const isFav = await checkIsFavourite(eachItem[0]);
+          
+            const nftCard = {
+              tokenId: eachItem[0],
+              cardName: cardDetails?.name,
+              cardImageUrl: cardDetails?.thumbnail,
+              cardSold: "",
+              isFavourite: isFav,
+            };
+          
+            console.log("nft card", nftCard);
+            myCollectionList.push(nftCard);
+          }
+          
+        }
+      })
+    );
+
+    console.log("myCollectionList", myCollectionList);
+    setIsCardsLoading(false);
+
+    if (myCollectionList.length === 0) {
+      updateNoCardsStatus(true);
+    } else {
+      updateSelectedList(myCollectionList);
+    }
+};
 
   const getDetails =  async(collectionId) => {
     console.log(collectionId,principal)
@@ -272,6 +261,11 @@ const addToFavorites = async(tokenId)=>{
             
     
 }
+
+  // const updatedList = selectedList.map((eachCard)=>{
+  //     if()
+  // })
+  
  
   return (
     <div className='font-caslon'>
@@ -330,9 +324,11 @@ const addToFavorites = async(tokenId)=>{
                   noCards ? (
                     <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
                   ):(
-                    <div>
+                    selectedList.length>0 && (
+                      <div>
                       <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
                     </div>
+                    )
                   )
                   
                 )}
