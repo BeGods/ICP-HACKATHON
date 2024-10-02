@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ShareButton from "../../Buttons/ShareButton";
 import IconButton from "../../Buttons/IconButton";
 import { mythSections } from "../../../utils/variables";
 import { useTranslation } from "react-i18next";
+
+const tele = window.Telegram?.WebApp;
 
 const InfoCard = ({
   t,
@@ -13,6 +15,19 @@ const InfoCard = ({
   activeMyth,
 }) => {
   const { i18n } = useTranslation();
+
+  const [platform, setPlatform] = useState(null);
+
+  useEffect(() => {
+    const teleConfi = async () => {
+      if (tele) {
+        await tele.ready();
+        setPlatform(tele.platform);
+      }
+    };
+    teleConfi();
+  }, []);
+
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       <div
@@ -27,12 +42,22 @@ const InfoCard = ({
         }}
         className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] card-shadow-white"
       >
-        <IconButton
-          isInfo={false}
-          activeMyth={activeMyth}
-          handleClick={handleShowInfo}
-          align={0}
-        />
+        {platform === "ios" ? (
+          <IconButton
+            isInfo={false}
+            activeMyth={activeMyth}
+            handleClick={handleShowInfo}
+            align={5}
+          />
+        ) : (
+          <IconButton
+            isInfo={false}
+            activeMyth={activeMyth}
+            handleClick={handleShowInfo}
+            align={0}
+          />
+        )}
+
         <div className="flex w-full">
           <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
             <div className="text-left">

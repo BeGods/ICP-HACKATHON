@@ -65,11 +65,11 @@ export const fetchLeaderboard = async (accessToken) => {
   }
 };
 
-export const convertOrbs = async (mythologyName, accessToken) => {
+export const convertOrbs = async (data, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/game/convertOrbs`;
 
   try {
-    const response = await axios.post(url, mythologyName, {
+    const response = await axios.post(url, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -339,6 +339,22 @@ export const fetchDailyBonus = async (accessToken) => {
   }
 };
 
+export const fetchExploitDailyBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/bonus/dail`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const fetchJoiningBonus = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/bonus/join`;
 
@@ -348,6 +364,126 @@ export const fetchJoiningBonus = async (accessToken) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimSocialTask = async (data, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/quests/social`;
+
+  try {
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchRewards = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/rewards`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchOTP = async (mobileNumber, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/playsuper/otp`;
+
+  try {
+    const response = await axios.post(
+      url,
+      { mobileNumber: mobileNumber },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const verifyOtp = async (mobileNumber, otp, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/playsuper/verify`;
+
+  try {
+    const response = await axios.post(
+      url,
+      {
+        mobileNumber: mobileNumber,
+        otp: otp,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchResendOTP = async (mobileNumber, otp, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/playsuper/resendOtp`;
+
+  try {
+    const response = await axios.get(
+      url,
+      {
+        mobileNumber: mobileNumber,
+        otp: otp,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimPlaysuperReward = async (rewardId, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/playsuper/redeem`;
+
+  try {
+    const response = await axios.post(
+      url,
+      {
+        rewardId: rewardId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);

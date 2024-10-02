@@ -1,9 +1,11 @@
 import { RotateCcw, RotateCw } from "lucide-react";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { wheel } from "../../utils/variables";
 import ReactHowler from "react-howler";
+import { MyContext } from "../../context/context";
 
 const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
+  const { enableSound } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
   const [playSound, setPlaySound] = useState(false);
   const howlerRef = useRef(null);
@@ -62,7 +64,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
         {playSound && (
           <ReactHowler
             src="/assets/audio/fof.tower.lock.wav"
-            playing={!JSON.parse(localStorage.getItem("sound"))}
+            playing={enableSound}
             preload={true}
             ref={howlerRef}
             onEnd={() => setPlaySound(false)}

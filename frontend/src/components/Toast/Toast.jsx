@@ -369,6 +369,27 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "convert_key_fail":
+      toast.error(
+        <ToastMesg
+          title={"Invalid Key"}
+          desc={
+            "The key you provided is incorrect. No multiplier has been applied."
+          }
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     case "ton_connect_error":
       toast.error(
         <ToastMesg

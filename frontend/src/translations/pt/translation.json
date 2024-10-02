@@ -62,7 +62,10 @@
         "name": "Nome",
         "apply": "Aplicar",
         "select": "Selecionar",
-        "lang": "Idioma"
+        "lang": "Idioma",
+        "referrals": "Referências",
+    "team": "Referrals"
+
     },
     "elements": {
       "earth": "Terra",   

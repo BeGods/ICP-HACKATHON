@@ -21,3 +21,12 @@ export const categorizeQuestsByMythology = (quests) => {
 
   return categorizedQuestsArray;
 };
+
+export const handleActiveParts = (faith) => {
+  const activeParts = [];
+  for (let i = 0; i < faith; i++) {
+    activeParts.push(i);
+  }
+
+  return activeParts;
+};

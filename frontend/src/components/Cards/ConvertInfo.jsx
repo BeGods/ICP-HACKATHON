@@ -45,7 +45,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-[2.3rem] mt-1 `}
+                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-[30px] mt-1 `}
                         >
                           {value}
                         </span>
@@ -63,7 +63,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute z-1 text-[2.3rem]  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
+                          className={`absolute z-1 text-[30px]  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
                         >
                           {value}
                         </span>
@@ -94,7 +94,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                   <span
                     className={`absolute z-1  justify-center items-center font-symbols text-white `}
                   >
-                    <div className="text-[2.3rem] transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                    <div className="text-[30px] transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
                       {mythSymbols[myths[activeColor]]}
                     </div>
                   </span>
@@ -103,15 +103,11 @@ const ConvertInfo = ({ t, handleClick }) => {
                 <div
                   className={`flex relative text-center justify-end items-center max-w-orb -mr-2 rounded-full glow-icon-black`}
                 >
-                  <img
-                    src="/assets/uxui/240px-orb.base.png"
-                    alt={`gray orb`}
-                    className={`filter-orbs-`}
-                  />
+                  <img src="/assets/uxui/240px-orb.base.png" alt={`gray orb`} />
                   <span
-                    className={`absolute z-1 text-[2.3rem]  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
+                    className={`absolute z-1 text-[30px] opacity-50 orb-symbol-shadow  mt-1  mr-1 font-symbols text-white `}
                   >
-                    3
+                    g
                   </span>
                 </div>
               </div>

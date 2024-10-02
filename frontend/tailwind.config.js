@@ -41,6 +41,8 @@ export default {
     "scale-0",
     "scale-100",
     "scale-125",
+    "left-0",
+    "right-0",
   ],
   theme: {
     extend: {
@@ -93,7 +95,7 @@ export default {
         "orb-primary": "120px",
         "orb-secondary": "45px",
         "orb-tertiary": "45px",
-        booster: "70px",
+        booster: "50px",
         num: "40px",
         head: "30px",
         icon: "50px",
