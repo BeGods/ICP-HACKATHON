@@ -12,26 +12,17 @@ export const questAggregator = async (userId, questId) => {
           from: "milestones",
           let: {
             questId: new mongoose.Types.ObjectId(questId),
-            userId: new mongoose.Types.ObjectId(userId),
+            userId: userId,
           },
           pipeline: [
             {
-              $lookup: {
-                from: "milestones",
-                let: { questId: "$_id", userId: "$$userId" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$userId", "$userId"] },
-                          { $in: ["$questId", "$claimedQuests.taskId"] },
-                        ],
-                      },
-                    },
-                  },
-                ],
-                as: "milestones",
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$userId", "$$userId"] },
+                    { $in: ["$$questId", "$claimedQuests.taskId"] },
+                  ],
+                },
               },
             },
             {

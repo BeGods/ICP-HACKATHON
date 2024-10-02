@@ -1,9 +1,14 @@
-import { validateAutomata, validateBooster } from "../services/game.services";
+import {
+  fetchUserData,
+  validateAutomata,
+  validateBooster,
+} from "../services/game.services";
 import userMythologies, {
   IMyth,
   IUserMyths,
 } from "../models/mythologies.models";
 import { calculateAutomataEarnings } from "../utils/game";
+import { mythOrder } from "../utils/variables";
 
 export const validShardsBoosterReq = async (req, res, next) => {
   try {
@@ -129,16 +134,19 @@ export const validateBurstReq = async (req, res, next) => {
         .json({ message: `Mythology ${mythologyName} not found.` });
     }
 
-    if (!requestedMyth.isEligibleForBurst) {
-      throw new Error("You are not eligible to buy burst.");
+    if (
+      !requestedMyth.isEligibleForBurst ||
+      !requestedMyth.boosters.isBurstActiveToClaim
+    ) {
+      throw new Error("You are not eligible to buy burst. Try again later.");
     }
 
-    if (requestedMyth.isStarActive) {
+    if (requestedMyth.boosters.isBurstActive) {
       throw new Error("Burst is already active. Try again later.");
     }
 
     // Check sufficient orbs to claim automata
-    if (userMythologiesData.multiColorOrbs < 9) {
+    if (userMythologiesData.multiColorOrbs < 3) {
       throw new Error("Insufficient multiColorOrbs to claim this burst.");
     }
 
@@ -151,32 +159,81 @@ export const validateBurstReq = async (req, res, next) => {
 
 export const validateOrbsConversion = async (req, res, next) => {
   try {
-    const userId = req.user;
-    const { mythologyName } = req.body;
+    const userId = req.user._id;
+    const { mythologyName, key, convertedOrbs } = req.body;
 
-    const userMythologiesData = (await userMythologies.findOne({
-      userId,
-    })) as IUserMyths;
+    const data = await fetchUserData(userId);
 
-    if (!userMythologiesData) {
-      throw new Error("User mythologies not found.");
-    }
+    const quests = data[0].quests.map((quest) => ({
+      ...quest,
+      isQuestClaimed:
+        quest.isQuestClaimed !== undefined ? quest.isQuestClaimed : false,
+    }));
 
-    const requestedMyth = userMythologiesData.mythologies.find(
+    const completedQuests = quests.filter(
+      (item) => item.isQuestClaimed === true && !item.isKeyClaimed
+    );
+    const towerKeys = completedQuests.map((item) => {
+      const indexes = Object.keys(item.requiredOrbs)
+        .map((myth) => mythOrder.indexOf(myth))
+        .join("");
+
+      return indexes;
+    });
+    const towerId = completedQuests.map((item) => item._id);
+
+    const requestedMyth = data[0].mythologies.find(
       (item) => item.name === mythologyName
     ) as IMyth;
 
-    if (requestedMyth.orbs < 2) {
+    // check valid number of orbs
+    if (requestedMyth.orbs < convertedOrbs) {
       throw new Error("Insufficient orbs to make this transaction.");
     }
 
-    req.userMyth = requestedMyth;
+    // check if exists in claimedQuest
+    if (key && towerKeys.includes(key)) {
+      req.isValidKey = towerId[towerKeys.indexOf(key)];
+    } else {
+      req.isValidKey = null;
+    }
+    req.convertedOrbs = convertedOrbs;
+    req.userMyth = data[0];
 
     next();
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+// export const validateOrbsConversion = async (req, res, next) => {
+//   try {
+//     const userId = req.user;
+//     const { mythologyName } = req.body;
+
+//     const userMythologiesData = (await userMythologies.findOne({
+//       userId,
+//     })) as IUserMyths;
+
+//     if (!userMythologiesData) {
+//       throw new Error("User mythologies not found.");
+//     }
+
+//     const requestedMyth = userMythologiesData.mythologies.find(
+//       (item) => item.name === mythologyName
+//     ) as IMyth;
+
+//     if (requestedMyth.orbs < 2) {
+//       throw new Error("Insufficient orbs to make this transaction.");
+//     }
+
+//     req.userMyth = requestedMyth;
+
+//     next();
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 
 export const validateStarClaim = async (req, res, next) => {
   try {
@@ -206,7 +263,7 @@ export const validateStarClaim = async (req, res, next) => {
       requestedMyth.boosters.automatalvl
     );
 
-    if (requestedMyth.isStarActive) {
+    if (requestedMyth.boosters.isBurstActive) {
       req.userMyth = requestedMyth;
       next();
     } else {

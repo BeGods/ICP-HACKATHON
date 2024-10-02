@@ -1,0 +1,182 @@
+{
+    "questName": "Narcyssus & Echo",
+    "description": "'Echo and Narcissus', ca 1903, is a painting by John William Waterhouse, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England.",
+    "type": "A01",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "WATER NYMPHS",
+    "description": "'Hylas and the Water Nymphs', ca 1909, is a painting by Henrietta Rae, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England.",
+    "type": "A02",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "Achilles' Fury",
+    "description": "'Fury of Achilles', ca 1737, is a painting by Charles-Antoine Coypel, a French classical painter. Visit the original in Walker Art Gallery, Saint Petersburg - Russia.",
+    "type": "A03",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "PHAETON'S FALL",
+    "description": "'The Fall of Phaeton', ca 1737, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States.",
+    "type": "A04",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "Icarus & Daedalus",
+    "description": "'The Sun or the Fall of Icarus', ca 1819, is a painting by Merry Joseph Blondel, a French neoclassical painter. Visit the original in Louvre Museum, Paris - France.",
+    "type": "A05",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "PROMETHEUS' GIFT",
+    "description": "'Prometheus', ca 1620, is a painting by Theodoor Rombouts, a Flemish caravaggesque painter. Visit the original in Royal Museums of Fine Arts, Antwerp - Belgium.",
+    "type": "A06",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "Oracle Of Delphi",
+    "description": "'Pythia: Oracle and High Priestess of Delphi', ca 1880, is a painting by Camillo Miola, an Italian historical painter. Visit the original in J. Paul Getty Center, Los Angeles - USA.",
+    "type": "B01",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "Hephaestus' Fate",
+    "description": "'The Last Day of Pompeii', ca 1833, is a painting by Karl Pavlovich Bryullov, a Russian neoclassical painter. Visit the original in State Russian Museum, Saint Petersburg - Russia.",
+    "type": "B02",
+    "link": "djfa",
+    "mythology": "Roman",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "GOLDEN FLEECE",
+    "description": "'The Golden Fleece', ca 1904, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Cartwright Hall, Bradford - England.",
+    "type": "B03",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "Odysseus' Sirens",
+    "description": "'Ulysses and the Sirens', ca 1909, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Ferens Art Gallery, Hull - England.",
+    "type": "B04",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "EMPIRE'S RISE",
+    "description": "'The Consummation The Course of the Empire', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA.",
+    "type": "B05",
+    "link": "djfa",
+    "mythology": "Roman",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "EMPIRE'S FALL",
+    "description": "'The Course of Empire Destruction', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA.",
+    "type": "B06",
+    "link": "djfa",
+    "mythology": "Roman",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+},
+{
+    "questName": "Titanomachia",
+    "description": "'Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain.",
+    "type": "C06",
+    "link": "djfa",
+    "mythology": "Greek",
+    "status": "Active",
+    "requiredOrbs": {
+      "Greek": 3,
+      "Egyptian": 1,
+      "Celtic": 1,
+      "Norse": 1
+    }
+}

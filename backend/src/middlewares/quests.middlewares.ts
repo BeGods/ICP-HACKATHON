@@ -4,31 +4,10 @@ import { areObjectsEqual } from "../utils/compareObjects";
 import { questAggregator } from "../services/quest.services";
 import milestones from "../models/milestones.models";
 
-// 46ms
-// export const testValidQuest = async (req, res, next) => {
-//   try {
-//     const { questId } = req.body;
-//     const userId = req.user;
-
-//     // Check if the questId is a valid ObjectId
-//     if (!mongoose.Types.ObjectId.isValid(questId)) {
-//       throw new Error("Invalid quest ID.");
-//     }
-
-//     const result = await questAggregator(userId, questId);
-//     console.log(result);
-
-//     res.status(200).json({ message: "hllo" });
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
-// 20ms
 export const verifyValidQuest = async (req, res, next) => {
   try {
     const { questId } = req.body;
-    const userId = req.user;
+    const userId = req.user._id;
 
     // Check if the questId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(questId)) {
@@ -50,6 +29,8 @@ export const verifyValidQuest = async (req, res, next) => {
     req.quest = validQuest;
     next();
   } catch (error) {
+    console.log(error);
+
     res.status(400).json({ error: error.message });
   }
 };
@@ -57,7 +38,7 @@ export const verifyValidQuest = async (req, res, next) => {
 export const verifyQuestClaim = async (req, res, next) => {
   try {
     const { questId } = req.body;
-    const userId = req.user;
+    const userId = req.user._id;
 
     // Check if the questId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(questId)) {
@@ -93,8 +74,6 @@ export const verifyQuestClaim = async (req, res, next) => {
       (item) => item.name === validQuest.mythology
     );
 
-    console.log("Data", currMyth);
-
     req.quest = validQuest;
     req.mythData = currMyth;
     next();
@@ -106,7 +85,7 @@ export const verifyQuestClaim = async (req, res, next) => {
 export const verifyValidLostQuest = async (req, res, next) => {
   try {
     const { questId } = req.body;
-    const userId = req.user;
+    const userId = req.user._id;
 
     // Check if the questId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(questId)) {
@@ -151,7 +130,7 @@ export const verifyValidLostQuest = async (req, res, next) => {
 
 export const verifyCompletedQuest = async (req, res, next) => {
   try {
-    const userId = req.user;
+    const userId = req.user._id;
     const { questId } = req.body;
 
     const validCompletedQuest = await questAggregator(userId, questId);
@@ -174,7 +153,7 @@ export const verifyCompletedQuest = async (req, res, next) => {
 
 export const verifyValidShareClaim = async (req, res, next) => {
   try {
-    const userId = req.user;
+    const userId = req.user._id;
     const { questId } = req.body;
 
     const validShareReq = await milestones.findOne({ userId: userId });

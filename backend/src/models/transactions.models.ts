@@ -61,7 +61,26 @@ const shardsTransactionsSchema = new Schema<IShardsTransactions>(
     },
     source: {
       type: String,
-      enum: ["game, burst"],
+      enum: ["game", "burst"],
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const rewardsTransactionsSchema = new Schema(
+  {
+    ...baseTransactionSchema,
+    rewardId: {
+      type: String,
+      required: true,
+    },
+    source: {
+      type: String,
+      required: true,
+    },
+    region: {
+      type: String,
       required: true,
     },
   },

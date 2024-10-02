@@ -7,6 +7,7 @@ export interface IUser extends Document {
   role: "user" | "admin" | "partner";
   directReferralCount: number;
   tonAddress: string;
+  exploitCount: number;
   premiumReferralCount: number;
   joiningBonus: boolean;
   parentReferrerId?: mongoose.Types.ObjectId;
@@ -15,6 +16,11 @@ export interface IUser extends Document {
   profile?: {
     avatarUrl: string;
     updateAt: Date;
+  };
+  playsuper?: {
+    isVerified: boolean;
+    key: string;
+    createdAt: Date;
   };
   dailyBonusClaimedAt: Date;
   announcements: number;
@@ -37,6 +43,10 @@ const userSchema = new Schema<IUser>(
       sparse: true,
     },
     directReferralCount: {
+      type: Number,
+      default: 0,
+    },
+    exploitCount: {
       type: Number,
       default: 0,
     },
@@ -75,6 +85,16 @@ const userSchema = new Schema<IUser>(
     announcements: {
       type: Number,
       default: 0,
+    },
+    playsuper: {
+      isVerified: {
+        type: Boolean,
+        default: false,
+      },
+      key: String,
+      createdAt: {
+        type: Date,
+      },
     },
   },
   { timestamps: true }
