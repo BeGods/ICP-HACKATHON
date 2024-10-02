@@ -10,8 +10,16 @@ import {
 import Stats from "../models/Stats.models";
 import { Team } from "../models/referral.models";
 import mongoose from "mongoose";
-import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
+import {
+  claimPlaysuperReward,
+  fetchPlaySuperRewards,
+  getPlaysuperOtp,
+  resendPlaysuperOtp,
+  verifyPlaysuperOtp,
+} from "../services/game.services";
+import milestones from "../models/milestones.models";
+import partners from "../models/partners.models";
 
 export const ping = async (req, res) => {
   try {
@@ -163,7 +171,7 @@ export const updateRanks = async (req, res) => {
       { $set: { totalUsers: totalUsers } },
       { upsert: true }
     );
-    console.log("Leaderboard updated");
+    console.log("Leaderboard updated successfully.");
   } catch (error) {
     console.error("Error during updateRanks:", error);
     res.status(500).json({
@@ -208,15 +216,33 @@ export const generateRandomBonus = async (req, res) => {
 export const claimDailyBonus = async (req, res) => {
   try {
     const user = req.user;
+    const isNotClaimedToday = req.isNotClaimedToday;
 
     const result = getRandomValue();
     const currTimeInUTC = new Date();
     let bonusReward;
 
-    await User.findOneAndUpdate(
-      { _id: user._id },
-      { dailyBonusClaimedAt: currTimeInUTC }
-    );
+    if (isNotClaimedToday) {
+      await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          $set: {
+            dailyBonusClaimedAt: currTimeInUTC,
+            exploitCount: 0,
+          },
+        }
+      );
+    } else {
+      await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          $set: {
+            dailyBonusClaimedAt: currTimeInUTC,
+          },
+          $inc: { exploitCount: 1 },
+        }
+      );
+    }
 
     if (result === "blackOrb") {
       bonusReward = await claimBonusOrb(result, user._id);
@@ -369,28 +395,189 @@ export const test = async (req, res) => {
   }
 };
 
-// export const getUsers = async (req, res) => {
-//   try {
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+// rewards
+export const getRewards = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    // const playsuperRewards = await fetchPlaySuperRewards();
+    const userMilestones = await milestones.findOne({ userId });
+    const activePartners = await partners
+      .find()
+      .lean()
+      .select("-__v -createdAt -updatedAt");
+    const claimedRewards = userMilestones.rewards.claimedRewards;
+    const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
 
-// export const getLeaderboard = async (req, res) => {
-//   try {
-//     const leaderboard = await ranks
-//       .find()
-//       .sort({ totalOrbs: -1 })
-//       .limit(100)
-//       .select("-__v -createdAt -updatedAt");
+    // const playsuper = playsuperRewards.map((reward) => {
+    //   const claimedReward = claimedRewards.find(
+    //     (claimed) => claimed.partnerId === reward.id
+    //   );
 
-//     res.status(200).json({
-//       leaderboard,
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Internal server error.",
-//       error: error.message,
-//     });
-//   }
-// };
+    //   return {
+    //     ...reward,
+    //     partnerType: "playsuper",
+    //     tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+    //     isClaimed: claimedReward ? claimedReward.isClaimed : false,
+    //   };
+    // });
+
+    const ourpartners = activePartners.map((reward) => {
+      const claimedReward = claimedRewards.find(
+        (claimed) => claimed.partnerId == reward._id.toString()
+      );
+
+      return {
+        ...reward,
+        id: reward._id,
+        partnerType: "custom",
+        tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+        isClaimed: claimedReward ? claimedReward.isClaimed : false,
+      };
+    });
+
+    res.status(200).json({
+      rewards: [...ourpartners],
+      rewardsClaimedInLastHr: rewardsClaimedInLastHr,
+      bubbleLastClaimed: userMilestones.rewards.updatedAt,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+// playsuper
+export const generateOtp = async (req, res) => {
+  try {
+    const { mobileNumber } = req.body;
+
+    await getPlaysuperOtp(mobileNumber);
+    res.status(200).json({ message: "OTP has been sent successfully!" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const resendOtp = async (req, res) => {
+  try {
+    const { mobileNumber } = req.body;
+
+    const response = await resendPlaysuperOtp(mobileNumber);
+    res.status(200).json({ otp: response });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+export const verifyOtp = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { mobileNumber, otp } = req.body;
+
+    const response = await verifyPlaysuperOtp(mobileNumber, otp);
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          "playsuper.isVerified": true,
+          "playsuper.key": response.data.access_token,
+          "playsuper.createdAt": Date.now(),
+        },
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "Authenticated successfully!" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const redeemPlayuperReward = async (req, res) => {
+  try {
+    const user = req.user;
+    const userId = req.user._id;
+    const updatedPartner = req.partner;
+    const { rewardId } = req.body;
+
+    const reward = await claimPlaysuperReward(rewardId, user.playsuper.key);
+
+    console.log(reward);
+
+    updatedPartner.isClaimed = true;
+    updatedPartner.couponCode = reward.couponCode;
+
+    if (reward) {
+      await milestones.findOneAndUpdate(
+        { userId, "rewards.claimedRewards.partnerId": rewardId },
+        {
+          $set: {
+            "rewards.claimedRewards.$": updatedPartner,
+          },
+        }
+      );
+    }
+
+    res.status(200).json({ message: "Reward claimed successfully!" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const createPartner = async (req, res) => {
+  try {
+    const { data } = req.body;
+
+    const newPartner = new partners(data);
+
+    await newPartner.save();
+    res.status(201).json({ message: "Partner added successfully." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const clearRewardsInLastHr = async (req, res) => {
+  try {
+    await milestones.bulkWrite([
+      {
+        updateMany: {
+          filter: {},
+          update: { $set: { "rewards.rewardsInLastHr": [] } },
+        },
+      },
+    ]);
+
+    res.status(200).json({ message: "rewardsInLastHr is cleared." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
