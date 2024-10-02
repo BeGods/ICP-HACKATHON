@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../../Captcha/style.scss";
-import Verify from "../../Captcha/index";
+import "./style.scss";
+import Verify from "./index";
 
 const Captcha = ({ auth }) => {
   return (

@@ -1,5 +1,5 @@
 import { Gift } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Button from "../components/Buttons/Button";
 import { useTranslation } from "react-i18next";
 import { fetchJoiningBonus } from "../utils/api";
@@ -10,39 +10,44 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setGameData, userData, setSection, authToken } =
-    useContext(MyContext);
+  const { setGameData, setSection, authToken } = useContext(MyContext);
   const [showConfetti, setShowConfetti] = useState(false);
   const [disableHand, setDisableHand] = useState(false);
+  let disableRef = useRef(false);
 
   const playConfetti = () => {
     setShowConfetti(true);
     setTimeout(() => {
       setShowConfetti(false);
-      setSection(0);
     }, 3000);
   };
 
   const handleClaimBonus = async () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    if (disableRef.current === false) {
+      tele.HapticFeedback.notificationOccurred("success");
+      disableRef.current = true;
 
-    try {
-      await fetchJoiningBonus(authToken);
-      playConfetti();
-
-      setGameData((prevData) => {
-        const updateData = {
-          ...prevData,
-          multiColorOrbs: prevData.multiColorOrbs - 1,
-        };
-        return updateData;
-      });
-    } catch (error) {
-      console.log(error);
+      try {
+        await fetchJoiningBonus(authToken);
+        setTimeout(() => {
+          setSection(1);
+        }, 1000);
+        setGameData((prevData) => {
+          const updateData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs + 3,
+          };
+          return updateData;
+        });
+      } catch (error) {
+        console.log(error);
+        //!TODO :  add toast
+      }
     }
   };
 
   useEffect(() => {
+    playConfetti();
     setTimeout(() => {
       setDisableHand(true);
     }, 2000);
@@ -97,7 +102,7 @@ const JoinBonus = (props) => {
           <Gift color="#FFD660" size={"18vw"} />
           {!disableHand && (
             <div className="font-symbols scale-point z-10 mx-auto my-auto absolute  ml-2.5 -mt-3 text-white text-[100px] text-black-contour">
-              T
+              b
             </div>
           )}
         </div>

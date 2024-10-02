@@ -5,17 +5,12 @@ import {
   hasTimeElapsed,
 } from "../../utils/getBoosterCard";
 
-const GameHeader = ({
-  activeMyth,
-  mythStates,
-  handleActiveCard,
-  minimize,
-  glowBooster,
-}) => {
+const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
   const [showMinion, setShowMinion] = useState(false);
   const [showAutomata, setShowAutomata] = useState(false);
   const [toggleValue, setToggleValue] = useState(true);
 
+  //TODO: this can be improved
   return (
     <div className="flex justify-between -mt-2">
       <div
@@ -36,13 +31,13 @@ const GameHeader = ({
                     glowBooster === 1
                       ? `scale-125 text-${mythSections[activeMyth]}-text`
                       : "text-white"
-                  } text-black-contour text-[50px] p-0 ml-2 `}
+                  } text-black-contour text-[50px] p-0 ml-4 `}
                 >
-                  h
+                  m
                 </div>
                 {showMinion && (
                   <div
-                    className={`text-${mythSections[activeMyth]}-text text-black-contour bottom-0 right-0 text-tertiary -mt-3`}
+                    className={`text-${mythSections[activeMyth]}-text ml-4 text-center text-black-contour bottom-0 right-0  w-full text-tertiary -mt-1`}
                   >
                     {!toggleValue
                       ? calculateRemainingTime(
@@ -71,13 +66,13 @@ const GameHeader = ({
                       glowBooster === 2
                         ? `scale-125 text-${mythSections[activeMyth]}-text`
                         : "text-white"
-                    } text-black-contour text-[50px] p-0 ml-2 `}
+                    } text-black-contour text-[50px] p-0 mr-3 `}
                   >
-                    b
+                    n
                   </div>
                   {showAutomata && (
                     <div
-                      className={`text-${mythSections[activeMyth]}-text text-black-contour bottom-0 right-0 text-tertiary -mt-3`}
+                      className={`text-${mythSections[activeMyth]}-text w-full text-center text-black-contour bottom-0 right-0 text-tertiary -mt-1 mr-3`}
                     >
                       {!toggleValue
                         ? calculateRemainingTime(

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { mythSections } from "../../utils/variables";
 import { calculateRemainingTime } from "../../utils/getBoosterCard";
 
@@ -9,6 +9,8 @@ const BoosterButtom = ({
   handleClaim,
   t,
 }) => {
+  let disableClick = useRef(false);
+
   return (
     <div className="relative mt-[10px]">
       <div className="relative z-50">
@@ -22,7 +24,7 @@ const BoosterButtom = ({
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
-        ) : activeCard === "shard" && !mythData?.isShardsClaimActive ? (
+        ) : activeCard === "minion" && !mythData?.isShardsClaimActive ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
           >
@@ -32,9 +34,27 @@ const BoosterButtom = ({
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
+        ) : activeCard === "burst" && !mythData?.isBurstActiveToClaim ? (
+          <div
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+          >
+            <div className="flex justify-center items-center w-1/4 h-full"></div>
+            <div className="text-primary uppercase">
+              {calculateRemainingTime(mythData.burstActiveAt)}
+            </div>
+            <div className="flex justify-center items-center w-1/4  h-full"></div>
+          </div>
         ) : (
           <div
-            onClick={handleClaim}
+            onClick={(e) => {
+              if (disableClick.current === false) {
+                disableClick.current = true;
+                handleClaim(e);
+                setTimeout(() => {
+                  disableClick.current = false;
+                }, 2000);
+              }
+            }}
             className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary  bg-glass-black z-50 text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-[30%]  h-full  border-r border-borderGray">
@@ -43,9 +63,11 @@ const BoosterButtom = ({
               >
                 L
                 {activeCard === "automata"
-                  ? mythData.automatalvl + 1
+                  ? mythData.automataPaylvl + 1
                   : activeCard === "minion"
-                  ? mythData.shardslvl + 1
+                  ? mythData.shardsPaylvl + 1
+                  : activeCard === "burst"
+                  ? mythData.burstlvl + 1
                   : 1}
               </h1>
             </div>
@@ -60,7 +82,7 @@ const BoosterButtom = ({
               />
               <div className="absolute z-10">
                 <div className="font-medium text-[40px] text-white glow-text-black">
-                  {activeCard == "burst" ? 9 : 1}
+                  {activeCard == "burst" ? 3 : 1}
                 </div>
               </div>
             </div>

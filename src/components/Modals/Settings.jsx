@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import IconButton from "../Buttons/IconButton";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
+import { ChevronRight } from "lucide-react";
+import { MyContext } from "../../context/context";
+const tele = window.Telegram?.WebApp;
 
 const languages = [
   { name: "Language", code: "" },
@@ -15,8 +18,9 @@ const languages = [
   { name: "Filipino", code: "fil" },
 ];
 
-const Language = ({ close }) => {
+const SettingModal = ({ close }) => {
   const { t } = useTranslation();
+  const { setSection } = useContext(MyContext);
   const [lang, setLang] = useState(false);
   const handleLanuageChange = (e) => {
     if (e.target.value == "") {
@@ -28,6 +32,17 @@ const Language = ({ close }) => {
 
   const handleApply = () => {
     close();
+  };
+
+  const handleEnableGuide = () => {
+    tele.HapticFeedback.notificationOccurred("success");
+
+    tele.CloudStorage.removeItem("g1");
+    tele.CloudStorage.removeItem("g2");
+    tele.CloudStorage.removeItem("g3");
+    tele.CloudStorage.removeItem("g4");
+    close();
+    setSection(1);
   };
 
   return (
@@ -50,6 +65,13 @@ const Language = ({ close }) => {
           <ToggleSwitch />
         </div>
         <div
+          onClick={handleEnableGuide}
+          className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4"
+        >
+          <div>Show Guide</div>
+          <ChevronRight />
+        </div>
+        <div
           onClick={handleApply}
           className="w-full bg-white text-black text-center text-xl rounded-md py-2 mt-6"
         >
@@ -60,4 +82,4 @@ const Language = ({ close }) => {
   );
 };
 
-export default Language;
+export default SettingModal;

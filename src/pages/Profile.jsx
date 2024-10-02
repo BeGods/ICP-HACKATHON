@@ -1,80 +1,60 @@
 import { useTonAddress, useTonConnectModal } from "@tonconnect/ui-react";
 import {
-  Gift,
+  HeartHandshake,
+  ListChecks,
   Settings,
-  Speech,
-  Trophy,
   User,
-  UserPlus,
   Users,
 } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import ProfileCard from "../components/Cards/ProfileCard";
 import { MyContext } from "../context/context";
-import Avatar from "../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
-import Language from "../components/Modals/Language";
+import SettingModal from "../components/Modals/Settings";
 import { showToast } from "../components/Toast/Toast";
+import MilestoneCard from "../components/Cards/MilestoneCard";
 import { connectTonWallet } from "../utils/api";
 import Header from "../components/Headers/Header";
 import Footer from "../components/Common/Footer";
 import { ProfileGuide } from "../components/Common/Tutorial";
+import { useProfileGuide } from "../hooks/Tutorial";
 
 const tele = window.Telegram?.WebApp;
 
 const HeaderContent = ({
   userData,
   avatarColor,
-  handleLeaderboard,
   handleSection,
   t,
-  activeSection,
+  showLang,
 }) => {
   return (
     <div className="flex justify-between relative w-full">
       {/* Left */}
       <div
-        onClick={() => {
-          if (!activeSection) {
-            handleSection();
-          }
-        }}
-        className="flex flex-col justify-between h-full px-2 pt-1 z-10"
-      >
-        <h1
-          className={`${
-            activeSection
-              ? "text-head text-black-contour uppercase text-white"
-              : "text-head text-white-contour uppercase text-black"
-          }
-           `}
-        >
-          {t("profile.player")}
-        </h1>
-      </div>
-      <div className="flex absolute justify-center w-full">
-        <div className="h-[36vw] w-[36vw] -mt-5">
-          <Avatar
-            name={userData.telegramUsername}
-            profile={1}
-            color={avatarColor}
-          />
-        </div>
-      </div>
-      {/* Right */}
-      <div
         onClick={handleSection}
         className="flex flex-col items-end justify-between h-full px-2 pt-1 z-10"
       >
-        <h1
-          className={`${
-            !activeSection
-              ? "text-head text-black-contour uppercase text-white"
-              : "text-head text-white-contour uppercase text-black"
-          }`}
+        <ListChecks size={"13vw"} color="white" />
+      </div>
+      {/* ORB */}
+      <div className="flex absolute justify-center w-full">
+        <div
+          className={`h-[36vw] flex justify-center mt-0.5 items-center relative text-white w-[36vw] ${avatarColor} rounded-full`}
         >
-          {t("profile.tasks")}
-        </h1>
+          <div className="absolute flex flex-col text-center justify-center">
+            <div className="text-primary uppercase">
+              {userData.telegramUsername}
+            </div>
+            <h2 className="uppercase text-secondary text-black">
+              {t(`main.fdg`)}
+            </h2>
+          </div>
+        </div>
+      </div>
+      {/* Right */}
+      <div className="flex flex-col items-end justify-between h-full px-2 pt-1 z-10">
+        <Settings onClick={showLang} size={"13vw"} color="white" />
       </div>
     </div>
   );
@@ -82,26 +62,17 @@ const HeaderContent = ({
 
 const Profile = (props) => {
   const { t } = useTranslation();
-  const { userData, setSection } = useContext(MyContext);
+  const { userData, setSection, socialQuestData, authToken } =
+    useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [showLang, setShowLang] = useState(false);
   const [isClicked, setIsClicked] = useState(0);
   const userFriendlyAddress = useTonAddress();
   const [activeSection, setActiveSection] = useState(true);
-  const [enableGuide, setEnableGuide] = useState(false);
+  const [enableGuide, setEnableGuide] = useProfileGuide("tut4");
+  const [playAudio, setPlayAudio] = useState(false);
+  const [showClaim, setShowClaim] = useState(false);
   const { state } = useTonConnectModal();
-  useEffect(() => {
-    tele.CloudStorage.getItem("guide4", (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-        setTimeout(() => {
-          setEnableGuide(false);
-
-          tele.CloudStorage.setItem("guide4", 4);
-        }, 5000);
-      }
-    });
-  }, []);
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(
@@ -135,6 +106,13 @@ const Profile = (props) => {
       handleConnectTon();
     }
   }, [state]);
+
+  useEffect(() => {
+    setPlayAudio(true);
+    setTimeout(() => {
+      setPlayAudio(false);
+    }, 1000);
+  }, []);
 
   return (
     <div
@@ -176,6 +154,9 @@ const Profile = (props) => {
             avatarColor={avatarColor}
             userData={userData}
             t={t}
+            showLang={() => {
+              setShowLang(true);
+            }}
             handleSection={() => {
               tele.HapticFeedback.notificationOccurred("success");
               setActiveSection((prev) => !prev);
@@ -183,187 +164,184 @@ const Profile = (props) => {
           />
         }
       />
+      <div className="flex flex-grow justify-center items-center"></div>
+
       {/* Content */}
       {activeSection ? (
-        <div className="flex flex-col relative flex-grow justify-center items-center">
-          <div className="top-0 flex justify-center relative w-full px-2">
-            <div className="text-center top-0">
-              <h2 className="text-white uppercase text-tertiary mt-2">
-                {t(`main.fdg`)}
-              </h2>
-              <h1 className="text-tertiary -mt-1 ">
-                {userData.telegramUsername}
-              </h1>
-            </div>
-            <div
-              className="h-icon-primary w-icon-primary bg-glass-black  flex justify-center items-center absolute right-0 mr-[30px]  z-10  border rounded-full p-3.5"
-              onClick={() => {
-                setShowLang(true);
-              }}
-            >
-              <Settings size={"30px"} color="white" />
-            </div>
-          </div>
-          <div
-            style={{
-              backgroundImage: `url((/assets/cards/320px-info_background.jpg)`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-            }}
-            className="relative w-full flex flex-col flex-grow"
-          >
-            <div className="flex px-2 text-white gap-2 mt-2.5 flex-col items-center justify-center w-full">
+        <div className="flex justify-center h-screen w-screen absolute mx-auto">
+          <div className="flex flex-col w-full items-center justify-center gap-[15px]">
+            <div>
               <div
-                onClick={() => {
-                  tele.HapticFeedback.notificationOccurred("success");
-                  setSection(4);
+                style={{
+                  backgroundImage: `url((/assets/cards/320px-info_background.jpg)`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center center",
                 }}
-                className="flex gap-2 -mt-1.5 uppercase justify-center items-center w-full"
+                className="relative w-screen flex flex-col flex-grow"
               >
-                <Trophy size={"6vw"} color="#FFD660" />
-                <h1 className="mt-1 text-tertiary text-gold">
-                  {t(`profile.leaderboard`)}
-                </h1>
-              </div>
-              <div
-                onMouseDown={() => {
-                  setIsClicked(1);
-                }}
-                onMouseUp={() => {
-                  setIsClicked(0);
-                }}
-                onMouseLeave={() => {
-                  setIsClicked(0);
-                }}
-                onTouchStart={() => {
-                  setIsClicked(1);
-                }}
-                onTouchEnd={() => {
-                  setIsClicked(0);
-                }}
-                onTouchCancel={() => {
-                  setIsClicked(0);
-                }}
-                className={`text-center  text-tertiary w-full  rounded-primary`}
-              >
-                <div className="flex  items-center justify-center gap-[8px]">
+                <div className="flex px-2 text-white gap-2 mt-2.5 flex-col items-center justify-center w-full">
                   <div
                     onClick={() => {
                       tele.HapticFeedback.notificationOccurred("success");
                       setSection(4);
                     }}
-                    className="flex  bg-glass-black h-button-primary border border-white items-center gap-[20px] rounded-primary w-full p-[10px]"
+                    className="flex gap-2 -mt-1.5 justify-center items-center w-full"
                   >
-                    <User size={"13vw"} />
-                    <div className="text-left">
-                      <h3 className="text-tertiary uppercase">
-                        {t("profile.player")}
-                      </h3>
-                      <h2 className="text-secondary">
-                        #{userData.overallRank === 0 ? 1 : userData.overallRank}
-                      </h2>
+                    <div className="font-symbols text-gold">r</div>
+                    <h1 className="mt-1 text-tertiary text-gold uppercase">
+                      {t(`profile.leaderboard`)}
+                    </h1>
+                  </div>
+                  <div
+                    className={`text-center  text-tertiary w-full  rounded-primary`}
+                  >
+                    <div className="flex  items-center justify-center gap-[8px]">
+                      <div
+                        onClick={() => {
+                          tele.HapticFeedback.notificationOccurred("success");
+                          setSection(4);
+                        }}
+                        className="flex  bg-glass-black h-button-primary border border-white items-center gap-[10px] rounded-primary w-full p-[10px]"
+                      >
+                        <User size={"13vw"} />
+                        <div className="text-left">
+                          <h3 className="text-tertiary">
+                            {t("profile.player")}
+                          </h3>
+                          <h2 className="text-secondary">
+                            #
+                            {userData.overallRank === 0
+                              ? 1
+                              : userData.overallRank}
+                          </h2>
+                        </div>
+                      </div>
+                      <div className="flex  bg-glass-black h-button-primary items-center border border-cardsGray text-cardsGray  grayscale  gap-[10px] rounded-primary w-full p-[10px]">
+                        <Users size={"13vw"} />
+                        <div className="text-left">
+                          <h3 className="text-tertiary">
+                            {t("profile.squad")}
+                          </h3>
+                          <h2 className="text-secondary">
+                            #{userData.squadRank === 0 ? 1 : userData.squadRank}
+                          </h2>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex  bg-glass-black h-button-primary items-center border border-cardsGray text-cardsGray  grayscale  gap-[20px] rounded-primary w-full p-[10px]">
-                    <Users size={"13vw"} />
-                    <div className="text-left">
-                      <h3 className="text-tertiary uppercase">
-                        {t("profile.squad")}
-                      </h3>
-                      <h2 className="text-secondary">
-                        #{userData.squadRank === 0 ? 1 : userData.squadRank}
-                      </h2>
+                  <div className="flex gap-2 bg-red justify-center items-center mt-2 w-full">
+                    <div className="font-symbols text-gold">u</div>
+                    <h1 className="mt-1 uppercase text-tertiary text-gold">
+                      {t(`profile.invite`)}
+                    </h1>
+                  </div>
+                  <div
+                    className={`text-center  w-full text-tertiary  rounded-primary`}
+                  >
+                    <div className="flex gap-[8px] ">
+                      <div
+                        onMouseDown={() => {
+                          setIsClicked(2);
+                        }}
+                        onMouseUp={() => {
+                          setIsClicked(0);
+                        }}
+                        onMouseLeave={() => {
+                          setIsClicked(0);
+                        }}
+                        onTouchStart={() => {
+                          setIsClicked(2);
+                        }}
+                        onTouchEnd={() => {
+                          setIsClicked(0);
+                        }}
+                        onTouchCancel={() => {
+                          setIsClicked(0);
+                        }}
+                        onClick={handleCopyLink}
+                        className={`flex border h-button-primary border-white items-center gap-[10px] rounded-primary bg-glass-black w-full p-[10px] ${
+                          isClicked === 2 ? `glow-button-white` : ""
+                        }`}
+                      >
+                        <img
+                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
+                          alt="telegram"
+                          className="w-[13vw]"
+                        />
+                        <div className="text-left w-full">
+                          <h3 className="text-tertiary">
+                            {t("profile.referrals")}
+                          </h3>
+                          <h2 className="text-secondary">
+                            {userData.directReferralCount}
+                          </h2>
+                        </div>
+                      </div>
+                      <div className="flex border h-button-primary border-cardsGray text-cardsGray items-center grayscale gap-[10px] rounded-primary bg-glass-black w-full p-[10px]">
+                        <img
+                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
+                          alt="telegram"
+                          className="w-[13vw]"
+                        />
+                        <div className="text-left w-full">
+                          <h3 className="text-tertiary">
+                            {t(`profile.premium`)}
+                          </h3>
+                          <h2 className="text-secondary">
+                            {userData.premiumReferralCount}
+                          </h2>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="flex gap-2 uppercase justify-center items-center mt-2 w-full">
-                <UserPlus size={"6vw"} color="#FFD660" />
-                <h1 className="mt-1 text-tertiary text-gold">
-                  {t(`profile.invite`)}
-                </h1>
-              </div>
-              <div
-                onMouseDown={() => {
-                  setIsClicked(2);
-                }}
-                onMouseUp={() => {
-                  setIsClicked(0);
-                }}
-                onMouseLeave={() => {
-                  setIsClicked(0);
-                }}
-                onTouchStart={() => {
-                  setIsClicked(2);
-                }}
-                onTouchEnd={() => {
-                  setIsClicked(0);
-                }}
-                onTouchCancel={() => {
-                  setIsClicked(0);
-                }}
-                className={`text-center  w-full text-tertiary  rounded-primary`}
-              >
-                <div className="flex gap-[8px] ">
-                  <div className="flex border h-button-primary border-white items-center gap-[20px] rounded-primary bg-glass-black w-full p-[10px]">
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
-                    <div className="text-left">
-                      <h3 className="text-tertiary uppercase">Referrals</h3>
-                      <h2 className="text-secondary">
-                        {userData.directReferralCount}
-                      </h2>
-                    </div>
+                  <div className="flex gap-2  justify-center items-center mt-2 w-full">
+                    <div className="font-symbols text-gold">t</div>
+                    <h1 className="mt-1 text-tertiary text-gold uppercase">
+                      Rewards
+                    </h1>
+                    <h1 className="text-gold font-bold">|</h1>
+                    <HeartHandshake size={"6vw"} color="#FFD660" />
+                    <h1 className="mt-1 text-tertiary uppercase text-gold">
+                      Charity
+                    </h1>
                   </div>
-                  <div className="flex border h-button-primary border-cardsGray text-cardsGray items-center grayscale gap-[20px] rounded-primary bg-glass-black w-full p-[10px]">
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
-                      alt="telegram"
-                      className="w-[28px] h-[28px]"
-                    />
-                    <div className="text-left">
-                      <h3 className="text-tertiary uppercase">
-                        {t(`profile.premium`)}
-                      </h3>
-                      <h2 className="text-secondary">
-                        {userData.premiumReferralCount}
-                      </h2>
+                  <div
+                    onMouseDown={() => {
+                      setIsClicked(3);
+                    }}
+                    onMouseUp={() => {
+                      setIsClicked(0);
+                    }}
+                    onMouseLeave={() => {
+                      setIsClicked(0);
+                    }}
+                    onTouchStart={() => {
+                      setIsClicked(3);
+                    }}
+                    onTouchEnd={() => {
+                      setIsClicked(0);
+                    }}
+                    onTouchCancel={() => {
+                      setIsClicked(0);
+                    }}
+                    className={`text-center  w-full text-tertiary rounded-primary`}
+                  >
+                    <div className="flex gap-[8px]">
+                      <div
+                        onClick={() => {
+                          setSection(8);
+                        }}
+                        className={`flex ${
+                          isClicked === 3 ? `glow-button-white` : ""
+                        } bg-glass-black h-button-primary border border-white justify-center items-center gap-[20px] rounded-primary w-full p-[10px]`}
+                      >
+                        Partners
+                      </div>
+                      <div className="flex  bg-glass-black h-button-primary items-center justify-center border border-cardsGray text-cardsGray  grayscale  gap-[20px] rounded-primary w-full p-[10px]">
+                        Causes
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2 uppercase justify-center items-center mt-2 w-full">
-                <Gift size={"6vw"} color="#FFD660" />
-                <h1 className="mt-1 text-tertiary text-gold">Rewards</h1>
-              </div>
-              <div
-                onMouseDown={() => {
-                  setIsClicked(2);
-                }}
-                onMouseUp={() => {
-                  setIsClicked(0);
-                }}
-                onMouseLeave={() => {
-                  setIsClicked(0);
-                }}
-                onTouchStart={() => {
-                  setIsClicked(2);
-                }}
-                onTouchEnd={() => {
-                  setIsClicked(0);
-                }}
-                onTouchCancel={() => {
-                  setIsClicked(0);
-                }}
-                className={`text-center w-full text-tertiary rounded-primary`}
-              >
-                <div className="flex gap-[8px]">
-                  <div className="flex justify-center border h-button-primary border-cardsGray text-cardsGray items-center grayscale gap-[20px] rounded-primary bg-glass-black w-full p-[10px]">
-                    COMING SOON
                   </div>
                 </div>
               </div>
@@ -372,12 +350,37 @@ const Profile = (props) => {
         </div>
       ) : (
         <div className="flex flex-col px-2 gap-2 relative flex-grow justify-start items-cente pt-4">
-          <ProfileCard />
-          <ProfileCard />
+          {socialQuestData.map((quest, index) => {
+            return (
+              <div key={index}>
+                <ProfileCard
+                  quest={quest}
+                  claimCard={() => {
+                    setShowClaim(true);
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
-
       <Footer />
+
+      {showClaim && (
+        <MilestoneCard
+          t={t}
+          isMulti={true}
+          isOrb={true}
+          isBlack={false}
+          activeMyth={4}
+          isForge={true}
+          closeCard={() => {}}
+          handleClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+            setShowClaim(false);
+          }}
+        />
+      )}
 
       {enableGuide && (
         <ProfileGuide
@@ -388,7 +391,7 @@ const Profile = (props) => {
       )}
 
       {showLang && (
-        <Language
+        <SettingModal
           close={() => {
             setShowLang(false);
           }}
@@ -399,12 +402,3 @@ const Profile = (props) => {
 };
 
 export default Profile;
-
-{
-  /* <div className="text-center grayscale opacity-50 outline outline-[0.5px] outline-gray-600 text-tertiary bg-black w-full p-[15px] mt-2.5 rounded-primary">
-                <div className="flex gap-2 uppercase justify-center items-center w-full pb-1">
-                  <Speech size={"6vw"} color="white" />
-                  <h1 className="mt-1">KOL(s)</h1>
-                </div>
-              </div> */
-}

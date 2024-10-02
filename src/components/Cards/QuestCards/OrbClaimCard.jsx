@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import Symbol from "../../Common/Symbol";
 import { mythSections } from "../../../utils/variables";
 import ShareButton from "../../Buttons/ShareButton";
 import IconButton from "../../Buttons/IconButton";
 import MappedOrbs from "../../Common/MappedOrbs";
 import ReactHowler from "react-howler";
+import { MyContext } from "../../../context/context";
 
 function OrbClaimCard({
   t,
@@ -13,6 +14,8 @@ function OrbClaimCard({
   handleShowClaim,
   activeMyth,
 }) {
+  const { enableSound } = useContext(MyContext);
+
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
@@ -75,7 +78,7 @@ function OrbClaimCard({
       </div>
       <ReactHowler
         src={`/assets/audio/fof.quest.win.wav`}
-        playing={!JSON.parse(localStorage.getItem("sound"))}
+        playing={enableSound}
         preload={true}
       />
     </div>

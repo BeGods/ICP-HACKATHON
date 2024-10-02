@@ -12,7 +12,7 @@ const BoosterClaim = ({
   disableIcon,
   mythData,
 }) => {
-  const { gameData, section } = useContext(MyContext);
+  const { gameData, section, enableSound } = useContext(MyContext);
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
@@ -36,7 +36,9 @@ const BoosterClaim = ({
         <div
           className={`absolute inset-0 rounded-[15px]`}
           style={{
-            backgroundImage: `url(/assets/cards/320px-${activeCard}.jpg)`,
+            backgroundImage: `url(/assets/cards/320px-${
+              activeCard === "minion" ? "alchemist" : activeCard
+            }.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center ",
@@ -69,12 +71,12 @@ const BoosterClaim = ({
                 }}
                 className={`rounded-b-primary filter-paper-${mythSections[activeMyth]}`}
               />
-              <div className="flex justify-center  text-[80px] w-full h-full items-center px-3 z-10 font-symbols glow-text-black">
+              <div className="flex justify-center text-[60px] w-full h-full items-center px-3 z-10 font-symbols glow-text-black">
                 {activeCard === "automata"
-                  ? "b"
+                  ? "n"
                   : activeCard === "minion"
-                  ? "h"
-                  : "★"}
+                  ? "m"
+                  : "s"}
               </div>
             </div>
           </div>
@@ -89,7 +91,7 @@ const BoosterClaim = ({
             ? "minion"
             : ""
         }.grunt.short.wav`}
-        playing={!JSON.parse(localStorage.getItem("sound"))}
+        playing={enableSound}
         preload={true}
       />
     </div>

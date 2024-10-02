@@ -36,7 +36,7 @@
         "boosters": "Mga Tagapagpaangat",
         "quests": "Misyon",
         "profile": "Profile",
-        "leaderboard": "Leaderboard"
+        "leaderboard": "Tablá "
     },
     "boosters": [
         { "title": "Automata", "desc": "Auto tap" },
@@ -51,7 +51,7 @@
         "stats": "Estadistika",
         "gameRank": "Ranggo ng Laro",
         "squadRank": "Ranggo ng mga Nangunguna",
-        "leaderboard": "Leaderboard",
+        "leaderboard": "Tablá ",
         "direct": "Direktang",
         "premium": "Premium",
         "invite": "Imbitahan",
@@ -64,7 +64,11 @@
         "name": "angalan",
         "apply": "Ilapat",
         "select": "Piliin",
-        "lang": "Wika"
+        "lang": "Wika",
+    "referrals": "Reperensiya",
+    "team": "Koponan"
+
+
     },
     "elements": {
         "earth": "Lupa",

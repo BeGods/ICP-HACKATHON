@@ -1,62 +1,40 @@
 import React, { useContext, useEffect, useState } from "react";
-import { MyContext } from "../context/context";
-import { categorizeQuestsByMythology } from "../utils/categorizeQuests";
+import { MyContext } from "../../context/context";
+import {
+  categorizeQuestsByMythology,
+  handleActiveParts,
+} from "../../utils/categorizeQuests";
 import {
   claimQuest,
   claimQuestOrbsReward,
   claimShareReward,
   completeQuest,
-} from "../utils/api";
-import Footer from "../components/Common/Footer";
-import JigsawImage from "../components/Pieces";
-import InfoCard from "../components/Cards/QuestCards/InfoCard";
-import PayCard from "../components/Cards/QuestCards/PayCard";
-import OrbClaimCard from "../components/Cards/QuestCards/OrbClaimCard";
-import Symbol from "../components/Common/Symbol";
+} from "../../utils/api";
+import Footer from "../../components/Common/Footer";
+import JigsawImage from "../../components/Pieces";
+import InfoCard from "../../components/Cards/QuestCards/InfoCard";
+import PayCard from "../../components/Cards/QuestCards/PayCard";
+import OrbClaimCard from "../../components/Cards/QuestCards/OrbClaimCard";
 import { useTranslation } from "react-i18next";
-import { mythologies, mythSections } from "../utils/variables";
-import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
-import QuestCard from "../components/Cards/QuestCards/QuestCard";
-import Header from "../components/Headers/Header";
-import JigsawButton from "../components/Buttons/JigsawButton";
-import IconButton from "../components/Buttons/IconButton";
-import QuestButton from "../components/Buttons/QuestButton";
-import MilestoneCard from "../components/Cards/MilestoneCard";
-import Button from "../components/Buttons/Button";
-import SecretCard from "../components/Cards/QuestCards/SecretCard";
-import { showToast } from "../components/Toast/Toast";
-import { QuestGuide } from "../components/Common/Tutorial";
+import { mythologies, mythSections } from "../../utils/variables";
+import {
+  ToggleLeft,
+  ToggleRight,
+} from "../../components/Common/SectionToggles";
+import QuestCard from "../../components/Cards/QuestCards/QuestCard";
+import Header from "../../components/Headers/Header";
+import JigsawButton from "../../components/Buttons/JigsawButton";
+import IconButton from "../../components/Buttons/IconButton";
+import QuestButton from "../../components/Buttons/QuestButton";
+import MilestoneCard from "../../components/Cards/MilestoneCard";
+import SecretCard from "../../components/Cards/QuestCards/SecretCard";
+import { showToast } from "../../components/Toast/Toast";
+import MythInfoCard from "../../components/Cards/MythInfoCard";
+import QuestHeader from "./Header";
+import { useQuestGuide } from "../../hooks/Tutorial";
+import { QuestGuide } from "../../components/Common/Tutorial";
 
 const tele = window.Telegram?.WebApp;
-
-const HeaderContent = ({ activeMyth, t }) => {
-  const { i18n } = useTranslation();
-  return (
-    <>
-      <div className="flex flex-col flex-grow justify-start items-start text-white pl-5">
-        <div className="text-left  gap-1 flex font-medium text-head">
-          <span
-            className={`text-white glow-myth-${mythSections[activeMyth]} uppercase`}
-          >
-            QUESTS
-          </span>
-        </div>
-        <h1
-          className={` ${i18n.language === "ru" && "text-[10vw] mt-0"} text-${
-            mythSections[activeMyth]
-          }-text text-black-contour text-[17vw] font-${
-            mythSections[activeMyth]
-          }  uppercase -mt-4 -ml-2`}
-        >
-          {t(`mythologies.${mythSections[activeMyth]}`)}
-        </h1>
-      </div>
-      <div className="h-full -mr-[14%] ml-auto mt-1">
-        <Symbol myth={mythSections[activeMyth]} isCard={false} />
-      </div>
-    </>
-  );
-};
 
 const Quests = () => {
   const { t } = useTranslation();
@@ -67,9 +45,11 @@ const Quests = () => {
   const [showShareReward, setShowShareReward] = useState(false);
   const [showClaimEffect, setShowClaimEffect] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
-  const [enableGuide, setEnableGuide] = useState(false);
+  const [enableGuide, setEnableGuide] = useQuestGuide("tut2");
   const [secretInfo, setSecretInfo] = useState(null);
   const [currQuest, setCurrQuest] = useState(0);
+  const [showMythCard, setShowMythCard] = useState(false);
+
   const {
     questsData,
     setQuestsData,
@@ -78,6 +58,7 @@ const Quests = () => {
     activeMyth,
     setActiveMyth,
     authToken,
+    setKeysData,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)
@@ -94,19 +75,6 @@ const Quests = () => {
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
 
-  useEffect(() => {
-    tele.CloudStorage.getItem("guide2", (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-        setTimeout(() => {
-          setEnableGuide(false);
-
-          tele.CloudStorage.setItem("guide2", 2);
-        }, 5000);
-      }
-    });
-  }, []);
-
   const handlePrev = () => {
     if (currQuest > 0) {
       setCurrQuest((prev) => prev - 1);
@@ -121,24 +89,22 @@ const Quests = () => {
     }
   };
 
-  const handleActiveParts = (faith) => {
-    const activeParts = [];
-    for (let i = 0; i < faith; i++) {
-      activeParts.push(i);
-    }
-
-    return activeParts;
-  };
-
   const handeUpdateOnClaim = () => {
     // update quest data
     const updatedQuestData = questsData.map((item) =>
       item._id === quest._id ? { ...item, isQuestClaimed: true } : item
     );
 
+    const currQuest = questsData.filter((item) => item._id === quest._id);
+    const currQuestKeys = Object.keys(currQuest[0].requiredOrbs)
+      .map((item) => mythologies.indexOf(item))
+      .join("");
+
     // update game data
     const updatedGameData = {
       ...gameData,
+      multiColorOrbs:
+        gameData.multiColorOrbs - (quest.requiredOrbs.MultiOrb || 0),
       mythologies: gameData.mythologies.map((myth) => {
         const requiredOrbs = quest.requiredOrbs || {};
         const orbsToDeduct = requiredOrbs[myth.name] || 0;
@@ -158,9 +124,11 @@ const Quests = () => {
         };
       }),
     };
+
     setShowComplete(false);
     showToast("quest_claim_success");
     setQuestsData(updatedQuestData);
+    setKeysData((prev) => [...prev, currQuestKeys]);
     setGameData(updatedGameData);
   };
 
@@ -327,10 +295,14 @@ const Quests = () => {
       {/* Header */}
       <Header
         children={
-          <HeaderContent
+          <QuestHeader
             activeMyth={activeMyth}
             completedQuests={completedQuests}
             mythData={mythData}
+            showClaimEffect={showClaimEffect}
+            showSymbol={() => {
+              setShowMythCard(true);
+            }}
             t={t}
           />
         }
@@ -420,6 +392,7 @@ const Quests = () => {
                 )}
               </div>
               <JigsawButton
+                handleClick={() => {}}
                 activeMyth={activeMyth}
                 handleNext={handleNext}
                 handlePrev={handlePrev}
@@ -440,7 +413,15 @@ const Quests = () => {
           }}
         />
       )}
-      {/* <Tutorial /> */}
+
+      {showMythCard && (
+        <MythInfoCard
+          close={() => {
+            setShowMythCard(false);
+          }}
+        />
+      )}
+
       <ToggleLeft
         handleClick={() => {
           setCurrQuest(0);
@@ -472,6 +453,7 @@ const Quests = () => {
             setShowShareReward(false);
           }}
           handleClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
             setShowShareReward(false);
           }}
         />
@@ -481,27 +463,17 @@ const Quests = () => {
           t={t}
           isOrb={true}
           isBlack={false}
+          isForge={true}
           activeMyth={activeMyth}
-          closeCard={() => {
+          closeCard={() => {}}
+          handleClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
             setShowClaimEffect(true);
             setTimeout(() => {
               setShowClaimEffect(false);
             }, 1000);
             setShowReward(false);
           }}
-          Button={
-            <Button
-              message={"claim"}
-              handleClick={() => {
-                setShowClaimEffect(true);
-                setTimeout(() => {
-                  setShowClaimEffect(false);
-                }, 1000);
-                setShowReward(false);
-              }}
-              activeMyth={activeMyth}
-            />
-          }
         />
       )}
 

@@ -1,10 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/variables";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import ReactHowler from "react-howler";
+import { MyContext } from "../../context/context";
 
 export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
+  const { enableSound } = useContext(MyContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -19,7 +21,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   };
 
   const playAudio = () => {
-    if (howlerRef.current && !JSON.parse(localStorage.getItem("sound"))) {
+    if (howlerRef.current && enableSound) {
       howlerRef.current.stop();
       howlerRef.current.play();
     }
@@ -31,7 +33,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
         minimize === 2 && "slide-inside-left"
       } ${
         minimize === 1 && "slide-away-left"
-      }  top-[50%] justify-center items-center w-[15%] z-40 -mt-8`}
+      }  top-1/2 -mt-6 justify-center items-center w-[15%]  z-40`}
     >
       <div
         onClick={handleButtonClick}
@@ -59,6 +61,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
 
 export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
+  const { enableSound } = useContext(MyContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -72,7 +75,7 @@ export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
   };
 
   const playAudio = () => {
-    if (howlerRef.current && !JSON.parse(localStorage.getItem("sound"))) {
+    if (howlerRef.current && enableSound) {
       howlerRef.current.stop();
       howlerRef.current.play();
     }
@@ -82,7 +85,7 @@ export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
     <div
       className={`flex right-0 ${minimize === 2 && "slide-inside-right"} ${
         minimize === 1 && "slide-away-right"
-      }  top-[50%] absolute justify-center items-center w-[15%] z-40 -mt-8`}
+      }  top-1/2 -mt-6 absolute justify-center items-center w-[15%] z-40`}
     >
       <div
         onClick={handleButtonClick}

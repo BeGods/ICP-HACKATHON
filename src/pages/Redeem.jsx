@@ -1,0 +1,195 @@
+import React, { useContext, useState } from "react";
+import Footer from "../components/Common/Footer";
+import { MyContext } from "../context/context";
+import { useTranslation } from "react-i18next";
+import JigsawButton from "../components/Buttons/JigsawButton";
+import JigsawImage from "../components/Pieces";
+import Header from "../components/Headers/Header";
+import { ToggleLeft, ToggleRight } from "../components/Common/SectionToggles";
+import { handleActiveParts } from "../utils/categorizeQuests";
+import AuthenticatePlaySuper from "../components/Modals/AuthOTP";
+import { claimPlaysuperReward } from "../utils/api";
+import { toast } from "react-toastify";
+import IconButton from "../components/Buttons/IconButton";
+import PartnerCard from "../components/Cards/PartnerCard";
+
+const HeaderContent = ({ imageUrl, title, handleClick }) => {
+  return (
+    <>
+      <div className="flex flex-col flex-grow justify-start items-start text-white pl-5">
+        <div className="text-left  gap-1 flex font-medium text-head">
+          <span className={`text-white text-black-contour uppercase`}>
+            PARTNERS
+          </span>
+        </div>
+        <h1 className={`text-white text-black-contour text-[36px] uppercase`}>
+          {title}
+        </h1>
+      </div>
+      <div onClick={handleClick} className="h-full -mr-[10%] ml-auto mt-1">
+        <img
+          src={imageUrl}
+          alt="turbo"
+          className="h-symbol-primary rounded-full w-symbol-primary"
+        />
+      </div>
+    </>
+  );
+};
+
+const Redeem = (props) => {
+  const { t } = useTranslation();
+  const { activeMyth, activeReward, userData, authToken } =
+    useContext(MyContext);
+  const [showAuth, setShowAuth] = useState(false);
+  const [showRedeem, setShowRedeem] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+
+  const handleClick = () => {
+    if (userData.isPlaySuperVerified) {
+      handleRedeen(true);
+    } else {
+      setShowAuth(true);
+    }
+  };
+
+  const handleRedeen = async () => {
+    try {
+      if (activeReward.partnerType === "playsuper") {
+        const reward = await claimPlaysuperReward(activeReward.id, authToken);
+        console.log(reward);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("YOu failed");
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100vh",
+        width: "100vw",
+      }}
+      className="flex flex-col h-screen overflow-hidden m-0"
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1,
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-other`}
+          style={{
+            backgroundImage: `url(/assets/uxui/fof.base.background.jpg)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
+      {/* Header */}
+      <Header
+        children={
+          <HeaderContent
+            handleClick={() => {
+              setShowRedeem(true);
+            }}
+            title={activeReward.name}
+            imageUrl={`/assets/partners/160px-${activeReward.category}.bubble.png`}
+          />
+        }
+      />
+      {/* Content */}
+      <div className="flex flex-grow justify-center items-center">
+        {/* Quests */}
+        <div className="flex items-center justify-center w-full">
+          <div className="relative">
+            <div
+              handleClick={() => {
+                setSecretInfo((prev) => !prev);
+              }}
+              className="h-full relative -mt-[40px]"
+            >
+              <JigsawImage
+                imageUrl={`/assets/partners/320px-${activeReward.category}.brand.jpg`}
+                activeParts={handleActiveParts(activeReward.tokensCollected)}
+              />
+              <IconButton
+                isInfo={true}
+                activeMyth={activeMyth}
+                handleClick={() => {
+                  setShowInfo(true);
+                }}
+                align={1}
+              />
+            </div>
+            <JigsawButton
+              handleClick={() => {
+                setShowRedeem(true);
+              }}
+              activeMyth={4}
+              handleNext={() => {}}
+              handlePrev={() => {}}
+              faith={activeReward.tokensCollected}
+              disableLeft={true}
+              t={t}
+            />
+          </div>
+        </div>
+      </div>
+      {/* Footer */}
+      <Footer />
+
+      {showAuth && (
+        <AuthenticatePlaySuper
+          handleClose={() => {
+            setShowAuth(false);
+          }}
+        />
+      )}
+
+      {showInfo && (
+        <PartnerCard
+          close={() => {
+            setShowInfo(false);
+          }}
+        />
+      )}
+
+      {showRedeem && (
+        <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
+          <div className="relative w-full  shadow-lg card-shadow-white">
+            <img
+              src={`/assets/partners/320px-${activeReward.category}.campaign.jpg`}
+              alt="campaign"
+              className="w-full h-full rounded-primary"
+            />
+            <IconButton
+              isInfo={false}
+              activeMyth={4}
+              handleClick={() => {
+                setShowRedeem(false);
+              }}
+              align={4}
+            />
+          </div>
+        </div>
+      )}
+
+      <ToggleLeft handleClick={() => {}} activeMyth={activeMyth} />
+      <ToggleRight handleClick={() => {}} activeMyth={activeMyth} />
+    </div>
+  );
+};
+
+export default Redeem;

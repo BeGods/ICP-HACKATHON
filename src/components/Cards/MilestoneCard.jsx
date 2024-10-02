@@ -21,6 +21,7 @@ const MilestoneCard = ({
   t,
 }) => {
   const [disableSound, setDisableSound] = useState(true);
+  const { enableSound } = useContext(MyContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -76,7 +77,7 @@ const MilestoneCard = ({
                   />
                   {/* symbol */}
                   <span
-                    className={`absolute inset-0 flex justify-center items-center text-[200px] text-white font-symbols opacity-50 orb-symbol-shadow`}
+                    className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
                   >
                     {isBlack ? 3 : mythSymbols[mythSections[activeMyth]]}
                   </span>
@@ -145,7 +146,7 @@ const MilestoneCard = ({
       {disableSound && (
         <ReactHowler
           src={`/assets/audio/fof.orb.wav`}
-          playing={!JSON.parse(localStorage.getItem("sound"))}
+          playing={enableSound}
           html5={true}
         />
       )}
