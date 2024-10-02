@@ -2,11 +2,20 @@ import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
 import { CornerUpLeft, CornerUpRight } from "lucide-react";
 
-const JigsawButton = ({ activeMyth, handleNext, handlePrev, t, faith }) => {
+const JigsawButton = ({
+  activeMyth,
+  handleNext,
+  handlePrev,
+  t,
+  faith,
+  disableLeft,
+  handleClick,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
     <div
+      onClick={handleClick}
       onMouseDown={() => {
         setIsClicked(true);
       }}
@@ -36,7 +45,7 @@ const JigsawButton = ({ activeMyth, handleNext, handlePrev, t, faith }) => {
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
         <CornerUpLeft
-          color="white"
+          color={disableLeft ? "#707579" : `white`}
           className="h-icon-secondary w-icon-secondary"
           onClick={handlePrev}
         />

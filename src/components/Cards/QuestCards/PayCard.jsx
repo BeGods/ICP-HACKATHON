@@ -13,17 +13,19 @@ function PayCard({
   handlePay,
   activeMyth,
   handleClaimEffect,
+  isBooster,
 }) {
   const { gameData } = useContext(MyContext);
   const [deduct, setDeduct] = useState(false);
   const [scale, setScale] = useState(false);
   const [showNum, setShowNum] = useState(false);
-  const [deductedValues, setDeductedValues] = useState(
-    gameData.mythologies.reduce((acc, item) => {
+  const [deductedValues, setDeductedValues] = useState({
+    ...gameData.mythologies.reduce((acc, item) => {
       acc[item.name] = item.orbs;
       return acc;
-    }, {})
-  );
+    }, {}),
+    multiColorOrbs: gameData.multiColorOrbs,
+  });
 
   useEffect(() => {
     if (deduct) {
@@ -34,6 +36,12 @@ function PayCard({
         return acc;
       }, {});
 
+      // Ensure that multiColorOrbs deduction is handled properly
+      const requiredMultiOrbs = quest.requiredOrbs.MultiOrbs || 0;
+      const updatedMultiColorOrbs =
+        deductedValues.multiColorOrbs - requiredMultiOrbs;
+
+      newValues.multiColorOrbs = Math.max(0, updatedMultiColorOrbs);
       setDeductedValues(newValues);
     }
   }, [deduct, gameData.mythologies, quest.requiredOrbs]);
@@ -62,41 +70,65 @@ function PayCard({
   const getDisplayValue = (mythName) => {
     return deductedValues[mythName];
   };
+  const getMultiOrbsDisplayValue = () => {
+    console.log(deductedValues.multiColorOrbs);
+    return deductedValues.multiColorOrbs;
+  };
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
-      <div className="flex gap-3 absolute bottom-5">
-        {gameData.mythologies.map((item, index) => (
-          <div key={index} className="flex gap-1 items-center">
-            <div
-              className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name.toLowerCase()}`}
-            >
-              <img
-                src="/assets/uxui/240px-orb.base.png"
-                alt="orb"
-                className={`filter-orbs-${item.name.toLowerCase()}`}
-              />
-              <span
-                className={`absolute z-1 font-symbols  text-[40px] mt-1 text-black-sm-contour transition-all duration-1000 ${
-                  scale
-                    ? `transform scale-150 transition-transform duration-1000 opacity-100 text-${item.name.toLowerCase()}-text`
-                    : "text-white opacity-50"
-                }`}
-              >
-                <>{mythSymbols[item.name.toLowerCase()]}</>
-              </span>
-            </div>
+      <div className="flex flex-col absolute bottom-5">
+        <div>
+          <div
+            className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white} `}
+          >
+            <img
+              src="/assets/uxui/240px-orb.multicolor.png"
+              alt="orb"
+              className={` max-w-[10vw]`}
+            />
             <div
               className={`font-fof text-[28px] font-normal  text-black-sm-contour transition-all duration-1000 ${
-                deduct
-                  ? `text-${item.name.toLowerCase()}-text scale-150`
-                  : "text-white"
+                deduct ? `scale-150` : "text-white"
               }`}
             >
-              {getDisplayValue(item.name)}
+              {getMultiOrbsDisplayValue()}
             </div>
           </div>
-        ))}
+        </div>
+        <div className="flex gap-3">
+          {gameData.mythologies.map((item, index) => (
+            <div key={index} className="flex gap-1 items-center">
+              <div
+                className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name.toLowerCase()}`}
+              >
+                <img
+                  src="/assets/uxui/240px-orb.base.png"
+                  alt="orb"
+                  className={`filter-orbs-${item.name.toLowerCase()}`}
+                />
+                <span
+                  className={`absolute z-1 font-symbols  text-[30px] mt-1 text-black-sm-contour transition-all duration-1000 ${
+                    scale
+                      ? `transform scale-150 transition-transform duration-1000 opacity-100 text-${item.name.toLowerCase()}-text`
+                      : "text-white opacity-50"
+                  }`}
+                >
+                  <>{mythSymbols[item.name.toLowerCase()]}</>
+                </span>
+              </div>
+              <div
+                className={`font-fof text-[28px] font-normal  text-black-sm-contour transition-all duration-1000 ${
+                  deduct
+                    ? `text-${item.name.toLowerCase()}-text scale-150`
+                    : "text-white"
+                }`}
+              >
+                {getDisplayValue(item.name)}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
         <div className="relative card-shadow-white">
@@ -153,8 +185,10 @@ function PayCard({
           handleClick={handleOperation}
           message={t(`buttons.pay`)}
           activeMyth={activeMyth}
+          isBooster={isBooster}
         />
       </div>
+      c
     </div>
   );
 }

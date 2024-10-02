@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import { boosterIcon, mythSections } from "../../../utils/variables";
 import { Atom, ChevronRight, LockKeyhole, Star } from "lucide-react";
 
-const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
+const BoosterCard = ({
+  isActive,
+  handleClick,
+  activeMyth,
+  t,
+  booster,
+  isGuideActive,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
-  // ${booster === 0 && "z-[60]"}
+
   return (
     <div
       onClick={handleClick}
-      className={`flex gap-1 border 
+      className={`flex gap-1 border  ${
+        booster === 0 && isGuideActive && "z-[60]"
+      }
   ${
     isActive
       ? `border-${mythSections[activeMyth]}-primary text-white`
@@ -36,18 +45,8 @@ const BoosterCard = ({ isActive, handleClick, activeMyth, t, booster }) => {
       }}
     >
       <div>
-        <div className={`font-symbols text-booster p-0 -mt-5 -ml-2 `}>
-          {booster > 5 ? (
-            <Atom
-              size={"13vw"}
-              color={isActive ? "white" : "gray"}
-              className={`mx-2 mt-[20px] ${
-                isActive && `glow-star-${mythSections[activeMyth]}`
-              }`}
-            />
-          ) : (
-            <>{boosterIcon[booster]}</>
-          )}
+        <div className={`font-symbols text-booster p-0 -mt-2 mr-2`}>
+          {booster > 5 ? <>p</> : <>{boosterIcon[booster]}</>}
         </div>
       </div>
       <div className={`flex flex-col flex-grow justify-center -ml-1`}>

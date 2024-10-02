@@ -21,6 +21,11 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
       0 0 5px var(--#{$myth}-color);
     filter: drop-shadow(0 0 5px var(--#{$myth}-color));
   }
+  .glow-icon-lg-#{$myth} {
+    text-shadow: 0 0 8px var(--#{$myth}-color), 0 0 8px var(--#{$myth}-color),
+      0 0 8px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 8px var(--#{$myth}-color));
+  }
   .glow-star-#{$myth} {
     text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
       0 0 5px var(--#{$myth}-color);
@@ -114,8 +119,8 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
 
 /* Button Black Glass Effect */
 .bg-glass-black {
-  background: rgba(0, 0, 0, 0.7);
-  opacity: 75%;
+  background: black;
+  opacity: 60%;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -139,6 +144,15 @@ text-shadow:
 0 0 3px black
 }
 
+.text-black-lg-contour{
+  text-shadow: 
+  0 0 10px black,
+  0 0 10px black,
+  0 0 10px black,
+  0 0 10px black,
+  0 0 10px black
+  }
+
 .text-black-sm-contour{
   text-shadow: 
   0 0 1px black,
@@ -156,6 +170,15 @@ text-shadow:
 0 0 1px white,
 0 0 1px white
 }
+
+.text-white-lg-contour{
+  text-shadow: 
+  0 0 3px white,
+  0 0 3px white,
+  0 0 3px white,
+  0 0 3px white,
+  0 0 3px white
+  }
 
 /* Gacha Glowing Box */
 .glow-box {

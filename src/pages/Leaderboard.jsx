@@ -28,7 +28,7 @@ const Leaderboard = (props) => {
 
   useEffect(() => {
     toggleBackButton(tele, () => {
-      setSection(0);
+      setSection(1);
     });
     (async () => getLeaderboardData())();
   }, []);

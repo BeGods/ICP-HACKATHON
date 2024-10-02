@@ -1,13 +1,15 @@
 import React from "react";
 
-const Symbol = ({ myth, isCard }) => {
+const Symbol = ({ myth, isCard, showClaimEffect }) => {
   return (
     <div
       className={`relative  select-none pointer-events-none  flex justify-center items-center ${
         isCard
           ? "h-symbol-secondary w-symbol-secondary"
           : "h-symbol-primary w-symbol-primary"
-      } bg-black border border-white rounded-full z-50 glow-symbol-${myth}`}
+      } bg-black border border-white rounded-full outline-[2px] transition-all duration-1000  z-50 ${
+        showClaimEffect ? `glow-tap-${myth}` : `glow-symbol-${myth}`
+      } `}
     >
       <div className={`flex justify-center items-center absolute z-10  `}>
         <div className={`w-[65%] h-[65%] glow-symbol-${myth}`}>

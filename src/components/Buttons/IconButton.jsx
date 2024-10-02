@@ -9,8 +9,10 @@ import { X } from "lucide-react";
 const alignBasedOnCard = [
   "-mt-[28px] ml-[52px]",
   "-mt-8 ml-7",
-  "mr-[60px] mt-6",
+  "mr-[60px] mt-2",
   "-mt-[5px] ml-[90px]",
+  "mr-[60px] -mt-8",
+  "mt-[18vh] -ml-[12vw]",
 ];
 const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -27,10 +29,10 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
   return (
     <div
       onClick={handleButtonClick}
-      className={`absolute flex w-full justify-end top-0 ${alignBasedOnCard[align]}  z-20`}
+      className={`absolute flex w-full justify-end top-0 ${alignBasedOnCard[align]} `}
     >
       {isInfo ? (
-        <div className="bg-black  flex justify-center items-center h-[60px] w-[60px] rounded-full">
+        <div className="bg-black  flex justify-center items-center h-[60px] w-[60px] z-20 rounded-full">
           <h1
             className="text-white italic text-[1.8rem] mr-1"
             style={{ transform: "rotate(-10deg)" }}
@@ -39,7 +41,7 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
           </h1>
         </div>
       ) : (
-        <div className="flex justify-center items-center bg-black h-[60px] w-[60px] rounded-full">
+        <div className="flex justify-center items-center bg-black h-[60px] w-[60px] z-50 rounded-full">
           <X color="white" size={"30px"} />
         </div>
       )}
