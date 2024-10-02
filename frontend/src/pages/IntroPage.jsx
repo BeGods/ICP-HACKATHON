@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { authenticate } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import ReactHowler from "react-howler";
-import Captcha from "../components/Common/Captcha";
+import Captcha from "../components/Captcha/Captcha";
 import i18next from "i18next";
-import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
-const Auth = (props) => {
+const IntroPage = (props) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [platform, setPlatform] = useState(null);
+  const [enableSound, setEnableSound] = useState(true);
   const [disableDesktop, setDisableDestop] = useState(false);
 
   // configure tma.auth
@@ -56,7 +56,7 @@ const Auth = (props) => {
   const auth = async () => {
     try {
       const response = await authenticate(userData, referralCode);
-
+      localStorage.setItem("accessToken", response.data.token);
       tele.CloudStorage.setItem("accessToken", response.data.token);
 
       navigate("/home");
@@ -67,6 +67,22 @@ const Auth = (props) => {
 
   useEffect(() => {
     getUserData();
+
+    tele.CloudStorage.getItem("sound", (err, item) => {
+      (async () => {
+        if (item) {
+          setEnableSound(false);
+        } else {
+          console.log("Unable to fetch sound.");
+          //! TODO:Add error toast
+        }
+      })();
+    });
+
+    // tele.CloudStorage.removeItem("guide1");
+    // tele.CloudStorage.removeItem("guide2");
+    // tele.CloudStorage.removeItem("guide3");
+    // tele.CloudStorage.removeItem("guide4");
 
     // Add event listener for user interaction
     const handleUserInteraction = () => {
@@ -102,7 +118,23 @@ const Auth = (props) => {
         setShowCaptcha(true);
       }, 3000);
     }
+    if (platform === "ios") {
+      document.body.style.position = "fixed";
+      document.body.style.top = 0;
+      document.body.style.bottom = 0;
+      document.body.style.left = 0;
+      document.body.style.right = 0;
+      document.body.style.overflow = "hidden";
+    }
   }, [platform]);
+
+  function setFullHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }
+
+  window.addEventListener("resize", setFullHeight);
+  setFullHeight();
 
   return (
     <div className="bg-white text-black flex h-screen w-screen text-wrap">
@@ -169,7 +201,7 @@ const Auth = (props) => {
         // TMA mobile view
         <div
           style={{
-            background: "url(/assets/uxui/480px-fof.game.png)",
+            background: "url(/assets/uxui/480px-fof.intro.png)",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -209,7 +241,7 @@ const Auth = (props) => {
 
       <ReactHowler
         src="/assets/audio/fof.music.intro.mp3"
-        playing={!disableDesktop && !JSON.parse(localStorage.getItem("sound"))}
+        playing={!disableDesktop && enableSound}
         preload={true}
         loop
       />
@@ -217,4 +249,4 @@ const Auth = (props) => {
   );
 };
 
-export default Auth;
+export default IntroPage;

@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { mythSections } from "../../utils/variables";
-import { ArrowBigDown } from "lucide-react";
 
 const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
   const [isClicked, setIsClicked] = useState(false);
+  let disableClick = useRef(false);
 
   return (
     <div
+      onClick={() => {
+        if (disableClick.current === false) {
+          disableClick.current = true;
+          handleClaim();
+          setTimeout(() => {
+            disableClick.current = false;
+          }, 2000);
+        }
+      }}
       onMouseDown={() => {
         setIsClicked(true);
       }}
@@ -29,7 +38,6 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
     >
       {!isShared ? (
         <div
-          onClick={handleClaim}
           className={`flex items-center  mt-[10px] justify-between ${
             isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
           }  border border-black h-button-primary w-button-primary mx-auto  bg-${

@@ -9,14 +9,14 @@ export const elementNames = ["Fire", "Earth", "Water", "Air", "Aether"];
 export const wheelNames = ["aether", "fire", "earth", "water", "air"];
 export const wheel = ["other", "greek", "celtic", "norse", "egyptian"];
 export const wheelMyths = ["other", "Greek", "Celtic", "Norse", "Egyptian"];
-export const boosterIcon = ["B", "Q", "H", "A", "b", "S"];
-export const footerIcons = ["F", "q", "Z", "P"];
+export const boosterIcon = ["o", "i", "v", "A", "b", "S"];
+export const footerIcons = ["j", "x", "k", "t"];
 export const mythSymbols = {
-  greek: 4,
-  celtic: 2,
-  norse: 5,
-  egyptian: 1,
-  other: 3,
+  greek: "d",
+  celtic: "f",
+  norse: "c",
+  egyptian: "e",
+  other: "g",
 };
 export const mythElementNames = {
   Greek: "Fire",
@@ -26,12 +26,12 @@ export const mythElementNames = {
   Other: "Aether",
 };
 export const defaultIcons = {
-  quest: "q",
-  automata: "B",
-  minion: "H",
-  Greek: 4,
-  Celtic: 2,
-  Norse: 5,
-  Egyptian: 1,
-  blackOrb: 3,
+  quest: "j",
+  automata: "o",
+  minion: "v",
+  Greek: "d",
+  Celtic: "f",
+  Norse: "c",
+  Egyptian: "e",
+  blackOrb: "g",
 };
