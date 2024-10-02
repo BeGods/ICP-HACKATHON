@@ -3,6 +3,7 @@ import { RxCross2 } from "react-icons/rx";
 import ImageUploader from "./ImageUploader";
 import toast from "react-hot-toast";
 import YellowButton from "../../components/button/YellowButton";
+import imageCompression from "browser-image-compression";
 
 const Modal = (props) => {
   const { getAddedNftDetails } = props;
@@ -50,20 +51,30 @@ const Modal = (props) => {
     }
   };
 
-  const captureUploadedNftImageFile = (files) => {
+  const captureUploadedNftImageFile = async (files) => {
     const file = files[0];
     if (file) {
-      const reader = new FileReader();
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        };
 
-      // Convert the file to a Base64 string when it's loaded
-      reader.onloadend = () => {
-        console.log("in handlefiless", reader.result);
-        setNftImage(reader.result); // The base64-encoded string is stored here
-      };
-      reader.readAsDataURL(file);
-      // Read the file as a Data URL (Base64 format)
+        const compressedFile = await imageCompression(file, options);
+        console.log("Compressed file:", compressedFile);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          console.log("In handleFiles:", reader.result);
+          setNftImage(reader.result);
+        };
+
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error("Error during file compression:", error);
+      }
     }
-    // setNftImage(files);
   };
 
   const captureUploadedNftImage = (pic) => {
@@ -119,8 +130,16 @@ const Modal = (props) => {
             Quantity:
             <input
               value={nftQuantity}
-              onChange={(e) => setNftQuantity(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value > 0 && Number.isInteger(+value)) {
+                  setNftQuantity(value);
+                } else {
+                  toast.error("Enter the natural number");
+                }
+              }}
               type="number"
+              min="1"
               className="pl-4 rounded-md h-[38px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
             />
           </label>
@@ -141,8 +160,16 @@ const Modal = (props) => {
             Price (in ICP)
             <input
               value={nftPrice}
-              onChange={(e) => setPrice(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value > 0 && Number.isInteger(+value)) {
+                  setPrice(value);
+                } else {
+                  toast.error("Enter the natural number");
+                }
+              }}
               type="number"
+              min="1"
               className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
             />
           </label>
@@ -155,13 +182,13 @@ const Modal = (props) => {
               value={nftcolor}
               onChange={(e) => setnftcolor(e.target.value)}
             >
-              <option value="Golden" className="text-[16px] text-[#8a8686]">
+              <option value="golden" className="text-[16px] text-[#8a8686]">
                 Golden
               </option>
-              <option value="Silver" className="text-[16px] text-[#8a8686]">
+              <option value="silver" className="text-[16px] text-[#8a8686]">
                 Silver
               </option>
-              <option value="Bronze" className="text-[16px] text-[#8a8686]">
+              <option value="bronze" className="text-[16px] text-[#8a8686]">
                 Bronze
               </option>
             </select>

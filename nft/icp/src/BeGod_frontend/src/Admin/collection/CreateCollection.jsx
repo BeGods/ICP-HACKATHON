@@ -23,6 +23,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import WarningModal from "./WarningModal.jsx";
 import SuccessModal from "./SuccessModal.jsx";
 import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 const CreateCollection = () => {
   const navigate = useNavigate();
@@ -148,19 +149,31 @@ const CreateCollection = () => {
     }
   };
 
-  const handleFiles = (files) => {
+  const handleFiles = async (files) => {
     console.log("Uploaded files:", files);
     setUFile(files);
-    const file = files[0];
+
+    const file = files[0]; // Get the first uploaded file
     if (file) {
-      const reader = new FileReader();
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        };
 
-      // Convert the file to a Base64 string when it's loaded
-      reader.onloadend = () => {
-        setBase64String(reader.result); // The base64-encoded string is stored here
-      };
+        const compressedFile = await imageCompression(file, options);
+        console.log("Compressed file:", compressedFile);
 
-      reader.readAsDataURL(file); // Read the file as a Data URL (Base64 format)
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setBase64String(reader.result);
+        };
+
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error("Error during file compression:", error);
+      }
     }
   };
 
@@ -221,7 +234,10 @@ const CreateCollection = () => {
       const date = new Date();
       const formattedDate = `${
         date.getMonth() + 1
-      }-${date.getDate()}-${date.getFullYear()}`;
+      }-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date
+        .getMinutes()
+        .toString()
+        .padStart(2, "0")}`;
       const metadata = JSON.stringify({
         nfttype,
         standard: "EXT V2",
@@ -508,7 +524,7 @@ const CreateCollection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-row-3 gap-5">
+                  <div className="grid grid-col-3 gap-5">
                     {nftCardsList.map((eachNftItem) => (
                       <NftCardItem
                         nftDetails={eachNftItem}

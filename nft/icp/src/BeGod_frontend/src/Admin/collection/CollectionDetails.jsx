@@ -4,7 +4,7 @@ import { collection } from "../../TextData";
 import { useLocation, useParams } from "react-router-dom";
 import YellowButton from "../../components/button/YellowButton";
 import BackButton from "./BackButton";
-import NftCard from "../../components/NftCard";
+import NftCard from "./NftCard.jsx";
 import { Principal } from "@dfinity/principal";
 import { useAuth } from "../../utils/useAuthClient.jsx";
 import Modal from "./modal.jsx";
@@ -28,7 +28,7 @@ function CollectionDetails() {
   const toggleModal = () => {
     setModal(!modal);
   };
-
+  console.log(collectiondata);
   if (!collectiondata) {
     return <p>No NFT data available</p>;
   }
@@ -62,21 +62,25 @@ function CollectionDetails() {
   }, []);
 
   const mintNFT = async (
-    principal,
+    principalStringg,
     nftname,
     nftdescription,
     nftimage,
     nftquantity,
-    nftcolor
+    nftcolor,
+    nftprice
   ) => {
     try {
-      console.log("in mint", principal);
-      const userPrincipalArray = principal;
-      const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
+      // console.log("in mint", answ);
+      const principalString = principalStringg;
+      const principal = Principal.fromText(principalString);
       const date = new Date();
-      const formattedDate = `${
-        date.getMonth() + 1
-      }-${date.getDate()}-${date.getFullYear()}`;
+      // const formattedDate = `${
+      //   date.getMonth() + 1
+      // }-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date
+      //   .getMinutes()
+      //   .toString()
+      //   .padStart(2, "0")}`;
       const metadata = JSON.stringify({
         nfttype,
         standard: "EXT V2",
@@ -89,10 +93,9 @@ function CollectionDetails() {
       const metadataContainer = {
         json: metadata,
       };
-      console.log(principal, nftname, nftdescription, nftimage, nftquantity);
 
       const result = await backendActor?.mintExtNonFungible(
-        principalString,
+        principal,
         nftname,
         nftdescription,
         "thumbnail",
@@ -101,14 +104,23 @@ function CollectionDetails() {
         Number(nftquantity)
       );
 
-      if (result) {
-        setTokenId(result[0]);
-        console.log("NFT Minted: ", result[0]);
-        await getNftTokenId(principalString, result[0]);
-      } else {
-        throw new Error("Error in mintNFT");
-        toast.error("Error in mintNFT");
+      console.log(result, "nft mint data");
+      const es8_price = parseInt(parseFloat(nftprice) * 100000000);
+      console.log(es8_price, "price");
+      if (result && result.length > 0) {
+        result.map((val, key) => {
+          getNftTokenId(principal, val[1], es8_price);
+        });
       }
+
+      // if (result) {
+      //   setTokenId(result[0]);
+      //   console.log("NFT Minted: ", result[0]);
+      //   await getNftTokenId(answ, result[0]);
+      // } else {
+      //   throw new Error("Error in mintNFT");
+      //   toast.error("Error in mintNFT");
+      // }
     } catch (error) {
       console.error("Error minting NFT:", error);
       toast.error("Error minting NFT");
@@ -116,28 +128,25 @@ function CollectionDetails() {
     }
   };
 
-  const getNftTokenId = async (principalString, nftId) => {
+  const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
     try {
-      const result = await backendActor?.getNftTokenId(principalString, nftId);
-      if (result) {
-        setTokenidentifier(result);
-        console.log("NFT Token ID:", result);
-        toast.error("NFT Token ID");
-        await listPrice(principalString, result, nftprice);
-      } else {
-        throw new Error("Error in getNftTokenId");
-        toast.error("Error in getNftTokenId");
-      }
+      console.log(principal, nftIdentifier, nftprice);
+      const principall = Principal.fromText(principal);
+      const res = await listPrice(principall, nftIdentifier, nftprice);
+      console.log(res, "res data");
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
-      return error; // Return error
+      return error;
     }
   };
 
   const listPrice = async (principal, tokenidentifier, price) => {
     try {
-      const priceE8s = price ? BigInt(price) : null;
+      const finalPrice = price;
+
+      const priceE8s = finalPrice ? finalPrice : null;
+
       const request = {
         token: tokenidentifier,
         from_subaccount: [],
@@ -170,7 +179,7 @@ function CollectionDetails() {
     }
   };
 
-  const getAddedNftDetails = async (nftDetails) => {
+  const getAddedNftDetails = async (nftDetails, principal) => {
     setnfttype(nftDetails.nftType);
     setnftname(nftDetails.nftName);
     setnftquantity(nftDetails.nftQuantity);
@@ -178,6 +187,8 @@ function CollectionDetails() {
     setnftdescription(nftDetails.nftDescription);
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
+    let hasError = false;
+
     try {
       const mintResult = await mintNFT(
         principal,
@@ -185,19 +196,22 @@ function CollectionDetails() {
         nftDetails.nftDescription,
         nftDetails.nftImage,
         nftDetails.nftQuantity,
-        nftDetails.nftcolor
+        nftDetails.nftcolor,
+        nftDetails.nftPrice
       );
+      console.log(mintResult);
+      toast.success("nft added");
       if (mintResult instanceof Error) {
         hasError = true;
         throw mintResult;
         toast.error(mintResult);
       }
     } catch (error) {
-      console.error("Error in final call: ", error);
-      toast.error("Error in final call");
+      console.error("Error in get added nft: ", error);
+      toast.error("Error in get added nft");
     }
   };
-  console.log(nftdescription);
+  console.log(nftList);
 
   return (
     <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
@@ -206,8 +220,8 @@ function CollectionDetails() {
         <div className="flex items-center justify-between w-full pt-9">
           <BackButton />
           <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
-            <YellowButton methodName={() => togglenft()}>
-              Add Collection
+            <YellowButton methodName={() => toggleModal()}>
+              Add NFT
             </YellowButton>
           </div>
         </div>
@@ -239,10 +253,10 @@ function CollectionDetails() {
           <h1 className="text-2xl">
             List of all NFT Collection - {principalStringg}
           </h1>
-          <div className="grid justify-between grid-cols-5 gap-5 mt-8 overflow-x-auto overflow-y-hidden sm:flex-wrap md:gap-8 xl:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {nftList?.map((list, index) => (
               <>
-                <NftCard id={id} list={list[2]} img={list[2]} key={index} />
+                <NftCard id={principalStringg} list={list[2]} key={index} />
               </>
             ))}
           </div>

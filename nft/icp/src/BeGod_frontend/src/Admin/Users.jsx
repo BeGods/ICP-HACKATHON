@@ -167,7 +167,11 @@ function Users() {
                               {alluser[0][4]}
                             </Td>
                             <Td textAlign="center" color="white.200">
-                              {principal}
+                              {principal
+                                ? `${principal.slice(0, 5)}...${principal.slice(
+                                    principal.length - 6
+                                  )}`
+                                : "No ID available"}
                             </Td>
                             <Td textAlign="center">
                               <Link
