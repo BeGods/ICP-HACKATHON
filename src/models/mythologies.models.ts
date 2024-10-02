@@ -4,11 +4,17 @@ import mongoose, { Schema, model, Document } from "mongoose";
 interface IBooster {
   shardslvl: number;
   automatalvl: number;
+  shardsPaylvl: number;
+  automataPaylvl: number;
+  burstlvl: number;
   shardsLastClaimedAt: number;
   isShardsClaimActive: boolean;
   isAutomataActive: boolean;
   automataLastClaimedAt: number;
   automataStartTime: number;
+  isBurstActiveToClaim: boolean;
+  isBurstActive: boolean;
+  burstActiveAt: number;
 }
 export interface IMyth extends Document {
   _id?: string;
@@ -20,8 +26,6 @@ export interface IMyth extends Document {
   energy: number;
   energyLimit: number;
   faith: number;
-  isStarActive: boolean;
-  burstActiveAt: number;
   isEligibleForBurst: boolean;
   boosters?: IBooster;
   claimedCards?: [];
@@ -42,14 +46,6 @@ const mythologySchema = new Schema({
     type: Number,
     default: 0,
     required: true,
-  },
-  isStarActive: {
-    type: Boolean,
-    default: 0,
-  },
-  burstActiveAt: {
-    type: Number,
-    default: 0,
   },
   isEligibleForBurst: {
     type: Boolean,
@@ -93,6 +89,18 @@ const mythologySchema = new Schema({
       type: Number,
       default: 1,
     },
+    burstlvl: {
+      type: Number,
+      default: 1,
+    },
+    automataPaylvl: {
+      type: Number,
+      default: 0,
+    },
+    shardsPaylvl: {
+      type: Number,
+      default: 1,
+    },
     shardsLastClaimedAt: {
       type: Number,
       default: 0,
@@ -110,6 +118,18 @@ const mythologySchema = new Schema({
       default: false,
     },
     automataStartTime: {
+      type: Number,
+      default: 0,
+    },
+    isBurstActive: {
+      type: Boolean,
+      default: 0,
+    },
+    isBurstActiveToClaim: {
+      type: Boolean,
+      default: false,
+    },
+    burstActiveAt: {
       type: Number,
       default: 0,
     },
