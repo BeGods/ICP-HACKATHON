@@ -1,4 +1,4 @@
-import { calculateAutomataEarnings, calculateEnergy } from "../utils/game";
+import { calculateEnergy } from "../utils/game";
 import userMythologies, {
   IMyth,
   IUserMyths,
@@ -10,15 +10,17 @@ import {
 import {
   validateBooster,
   validateAutomata,
-  disableActiveBurst,
+  updateMythologies,
+  fetchUserGameStats,
 } from "../services/game.services";
 import { defaultMythologies } from "../utils/defaultMyths";
-import mongoose from "mongoose";
 import { Document } from "mongodb";
 import ranks from "../models/ranks.models";
 import { Team } from "../models/referral.models";
 import Stats from "../models/Stats.models";
 import { checkBonus } from "../services/general.services";
+import { mythOrder } from "../utils/variables";
+import milestones from "../models/milestones.models";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -78,7 +80,7 @@ export const startTapSession = async (req, res) => {
 export const claimTapSession = async (req, res) => {
   try {
     const userId = req.user;
-    let { taps, minionTaps, mythologyName } = req.body;
+    let { taps, minionTaps, mythologyName, bubbleSession } = req.body;
 
     // get mythDta
     const userMythology = (await userMythologies.findOne({
@@ -127,7 +129,6 @@ export const claimTapSession = async (req, res) => {
     mythData.shards += updatedShards;
 
     // define flags
-    let isStarActive = false;
     let blackOrbs = 0;
 
     // update shards
@@ -138,10 +139,13 @@ export const claimTapSession = async (req, res) => {
 
     // update orbs
     if (mythData.orbs >= 1000) {
-      isStarActive = true;
+      mythData.boosters.isBurstActive = true;
       blackOrbs += Math.floor(mythData.orbs / 1000);
       mythData.orbs = mythData.orbs % 1000;
     }
+
+    mythData.lastTapAcitivityTime = Date.now();
+    mythData.energy = updatedEnergy;
 
     // maintain transaction
     const newShardTransaction = new ShardsTransactions({
@@ -156,12 +160,7 @@ export const claimTapSession = async (req, res) => {
       { userId: userId, "mythologies.name": mythologyName },
       {
         $set: {
-          "mythologies.$.lastTapAcitivityTime": Date.now(),
-          "mythologies.$.energy": updatedEnergy,
-          "mythologies.$.shards": mythData.shards,
-          "mythologies.$.orbs": mythData.orbs,
-          "mythologies.$.isStarActive": isStarActive,
-          "mythologies.$.burstActiveAt": isStarActive ? Date.now() : 0,
+          "mythologies.$": mythData,
         },
         $inc: {
           blackOrbs: blackOrbs,
@@ -170,12 +169,68 @@ export const claimTapSession = async (req, res) => {
       { new: true }
     );
 
+    if (bubbleSession && bubbleSession.holdDuration >= 2) {
+      const userMilestones = await milestones.findOne({ userId });
+
+      // Find the first matching partner
+      const partnerExists = userMilestones.rewards.claimedRewards.find(
+        (item) => item.partnerId === bubbleSession.partnerId
+      );
+      //! Enable it
+      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      if (
+        partnerExists &&
+        userMilestones.rewards.updatedAt <= Date.now() - fiveMinutesInMs
+      ) {
+        // if partner exists update tokensCollected
+        if (partnerExists.tokensCollected < 12) {
+          await milestones.findOneAndUpdate(
+            {
+              userId,
+              "rewards.claimedRewards.partnerId": bubbleSession.partnerId,
+            },
+            {
+              $set: { "rewards.updatedAt": bubbleSession.lastClaimedAt },
+              $push: { "rewards.rewardsInLastHr": bubbleSession.partnerId },
+              $inc: { "rewards.claimedRewards.$.tokensCollected": 1 },
+            },
+            {
+              new: true,
+            }
+          );
+        }
+      } else {
+        // add new partner
+        await milestones.findOneAndUpdate(
+          { userId },
+          {
+            $set: {
+              "rewards.updatedAt": Date.now(),
+            },
+            $push: {
+              "rewards.rewardsInLastHr": bubbleSession.partnerId,
+              "rewards.claimedRewards": {
+                partnerId: bubbleSession.partnerId,
+                type: bubbleSession.type,
+                isClaimed: false,
+                tokensCollected: 1,
+              },
+            },
+          },
+          { new: true }
+        );
+      }
+    }
+
     if (!updatedUserMythology) {
       return res.status(500).json({ message: "Failed to update mythology." });
     }
 
     res.status(200).json({ message: "Tap session shards claimed." });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -188,207 +243,27 @@ export const getGameStats = async (req, res) => {
     const userId = req.user._id;
     const user = req.user;
 
-    // Aggregate pipeline
-    const pipeline = [
-      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
-      {
-        $lookup: {
-          from: "usermythologies",
-          localField: "userId",
-          foreignField: "userId",
-          as: "userMythologies",
-        },
-      },
-      {
-        $lookup: {
-          from: "quests",
-          let: { userId: "$userId" },
-          pipeline: [
-            {
-              $lookup: {
-                from: "milestones",
-                let: { questId: "$_id", userId: "$$userId" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$userId", "$$userId"] },
-                          { $in: ["$$questId", "$claimedQuests.taskId"] },
-                        ],
-                      },
-                    },
-                  },
-                ],
-                as: "milestones",
-              },
-            },
-            {
-              $addFields: {
-                isCompleted: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$milestones" }, 0] },
-                    then: true,
-                    else: false,
-                  },
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "milestones",
-                let: { questId: "$_id", userId: "$$userId" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$userId", "$$userId"] },
-                          { $in: ["$$questId", "$sharedQuests"] },
-                        ],
-                      },
-                    },
-                  },
-                ],
-                as: "sharedMilestones",
-              },
-            },
-            {
-              $addFields: {
-                isShared: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$sharedMilestones" }, 0] },
-                    then: true,
-                    else: false,
-                  },
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "milestones",
-                let: { questId: "$_id", userId: "$$userId" },
-                pipeline: [
-                  {
-                    $unwind: "$claimedQuests",
-                  },
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$userId", "$$userId"] },
-                          { $eq: ["$$questId", "$claimedQuests.taskId"] },
-                        ],
-                      },
-                    },
-                  },
-                  {
-                    $project: {
-                      orbClaimed: "$claimedQuests.orbClaimed",
-                      questClaimed: "$claimedQuests.questClaimed",
-                    },
-                  },
-                ],
-                as: "claimedQuestData",
-              },
-            },
-            {
-              $addFields: {
-                isOrbClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.orbClaimed", 0],
-                },
-                isQuestClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
-                },
-              },
-            },
-            { $sort: { createdAt: -1 as -1 } },
-            {
-              $project: {
-                milestones: 0,
-                sharedMilestones: 0,
-                claimedQuestData: 0,
-                updatedAt: 0,
-                createdAt: 0,
-                __v: 0,
-              },
-            },
-          ],
-          as: "allQuests",
-        },
-      },
-      {
-        $addFields: {
-          quests: {
-            $filter: {
-              input: "$allQuests",
-              as: "quest",
-              cond: {
-                $or: [
-                  { $eq: ["$$quest.status", "Active"] },
-                  { $eq: ["$$quest.isQuestClaimed", true] },
-                ],
-              },
-            },
-          },
-        },
-      },
-      { $project: { allQuests: 0 } },
-    ];
-
     // Execute the aggregation pipeline
-    const userGameStats = await userMythologies.aggregate(pipeline);
+    const userGameStats = await fetchUserGameStats(userId);
 
     if (!userGameStats || userGameStats.length === 0) {
       return res.status(404).json({ message: "User game stats not found" });
     }
 
     const userMythologiesData = userGameStats[0];
-    let blackOrbs = 0;
+
     // Calculate and update energy for each mythology
-    const updatedMythologies =
-      userMythologiesData.userMythologies[0].mythologies.map((mythology) => {
-        const restoredEnergy = calculateEnergy(
-          Date.now(),
-          mythology.lastTapAcitivityTime,
-          mythology.energy,
-          mythology.energyLimit
-        );
-
-        // Validate boosters
-        mythology.boosters = validateBooster(mythology.boosters);
-        if (mythology.boosters.isAutomataActive) {
-          mythology = validateAutomata(mythology);
-        }
-
-        // validate burst timeout
-        if (mythology.isStarActive && mythology.burstActiveAt != 0) {
-          mythology = disableActiveBurst(mythology);
-        }
-        mythology.energy = restoredEnergy;
-        mythology.lastTapAcitivityTime = Date.now();
-
-        if (mythology.shards >= 1000) {
-          mythology.orbs += Math.floor(mythology.shards / 1000);
-          mythology.shards = mythology.shards % 1000;
-        }
-
-        if (mythology.orbs >= 1000) {
-          blackOrbs += Math.floor(mythology.orbs / 1000);
-          mythology.orbs = mythology.orbs % 1000;
-          mythology.isStarActive = true;
-          mythology.burstActiveAt = Date.now();
-        }
-
-        return mythology;
-      });
+    const updatedData = updateMythologies(
+      userMythologiesData.userMythologies[0].mythologies
+    );
+    const updatedMythologies = updatedData.data;
+    let blackOrbs = updatedData.updatedBlackOrb;
 
     // Add missing mythologies with default values
     const existingNames = updatedMythologies.map((myth) => myth.name);
     const missingMythologies = defaultMythologies.filter(
       (defaultMyth) => !existingNames.includes(defaultMyth.name)
     );
-
     const completeMythologies = [...updatedMythologies, ...missingMythologies];
 
     // Remove id from each mythology
@@ -396,6 +271,7 @@ export const getGameStats = async (req, res) => {
       delete mythology._id;
     });
 
+    // update latest data
     await userMythologies.updateOne(
       { userId },
       {
@@ -423,7 +299,6 @@ export const getGameStats = async (req, res) => {
       squadCount: members?.members.length ?? 0,
       squadTotalOrbs: members?.totalOrbs ?? 0,
     };
-
     const userData = {
       telegramUsername: user.telegramUsername,
       profile: user.profile,
@@ -431,20 +306,36 @@ export const getGameStats = async (req, res) => {
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
-      isEligibleToClaim: true,
+      isEligibleToClaim: false,
       joiningBonus: user.joiningBonus,
+      isPlaySuperVerified: user.playsuper.isVerified,
       ...memberData,
     };
 
     // const lostQuests = await unClaimedQuests(userId);
 
-    const quests = userMythologiesData.quests.map((quest) => ({
-      ...quest,
-      isQuestClaimed:
-        quest.isQuestClaimed !== undefined ? quest.isQuestClaimed : false,
-    }));
+    const otherQuest = userMythologiesData.quests.filter(
+      (item) => item.mythology === "Other"
+    );
 
-    const mythOrder = ["Greek", "Celtic", "Norse", "Egyptian"];
+    const quests = userMythologiesData.quests
+      .filter((item) => item.mythology !== "Other")
+      .map((quest) => ({
+        ...quest,
+        isQuestClaimed:
+          quest.isQuestClaimed !== undefined ? quest.isQuestClaimed : false,
+      }));
+
+    const completedQuests = quests.filter(
+      (item) => item.isQuestClaimed === true && !item.isKeyClaimed
+    );
+    const towerKeys = completedQuests.map((item) => {
+      const indexes = Object.keys(item.requiredOrbs)
+        .map((myth) => mythOrder.indexOf(myth))
+        .join("");
+
+      return indexes;
+    });
 
     res.status(200).json({
       user: userData,
@@ -457,6 +348,8 @@ export const getGameStats = async (req, res) => {
         ),
       },
       quests: quests,
+      extraQuests: otherQuest,
+      towerKeys: towerKeys,
       // lostQuests: lostQuests,
     });
   } catch (error) {
@@ -474,7 +367,8 @@ export const claimShardsBooster = async (req, res) => {
 
     const userMyth = req.userMyth;
 
-    userMyth.boosters.shardslvl += 1;
+    userMyth.boosters.shardsPaylvl += 1;
+    userMyth.boosters.shardslvl = userMyth.boosters.shardsPaylvl;
     userMyth.boosters.isShardsClaimActive = false;
     userMyth.boosters.shardsLastClaimedAt = Date.now();
 
@@ -523,7 +417,8 @@ export const claimAutomata = async (req, res) => {
     const userId = req.user;
     const userMyth = req.userMyth;
 
-    userMyth.boosters.automatalvl += 1;
+    userMyth.boosters.automataPaylvl += 1;
+    userMyth.boosters.automatalvl = userMyth.boosters.automataPaylvl;
     userMyth.boosters.isAutomataActive = true;
     userMyth.boosters.automataLastClaimedAt = Date.now();
     userMyth.boosters.automataStartTime = Date.now();
@@ -562,30 +457,37 @@ export const claimAutomata = async (req, res) => {
 
 export const claimBurst = async (req, res) => {
   try {
-    const userId = req.user;
+    const userId = req.user._id;
     const userMyth = req.userMyth;
 
-    userMyth.isStarActive = true;
-    userMyth.burstActiveAt = Date.now();
+    userMyth.boosters.burstlvl += 1;
+    userMyth.boosters.isBurstActive = true;
+    userMyth.boosters.isBurstActiveToClaim = false;
+    userMyth.boosters.burstActiveAt = Date.now();
 
-    (await userMythologies
+    const updatedMythData = (await userMythologies
       .findOneAndUpdate(
         { userId, "mythologies.name": userMyth.name },
-        { $inc: { multiColorOrbs: -9 }, $set: { "mythologies.$": userMyth } },
+        { $inc: { multiColorOrbs: -3 }, $set: { "mythologies.$": userMyth } },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt _id")) as Document;
 
+    const updatedBoosterData = updatedMythData.mythologies.filter(
+      (item) => item.name === userMyth.name
+    )[0].boosters;
+
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
       source: "burst",
-      orbs: { [userMyth.name]: 9 },
+      orbs: { [userMyth.name]: 3 },
     });
 
     await newOrbsTransaction.save();
 
     res.status(200).json({
       message: "Burst claimed successfully.",
+      updatedBooster: updatedBoosterData,
     });
   } catch (error) {
     console.log(error);
@@ -599,22 +501,45 @@ export const claimBurst = async (req, res) => {
 
 export const convertOrbs = async (req, res) => {
   try {
-    const userId = req.user;
+    const userId = req.user._id;
     const userMyth = req.userMyth;
+    const isValidKey = req.isValidKey;
+    const { mythologyName, convertedOrbs } = req.body;
 
-    userMyth.orbs -= 2;
+    let updatedMultiOrbs = convertedOrbs / (isValidKey ? 1 : 2);
+    let blackOrbs = 0;
 
-    //! TODO: recheck if it is working or not
+    if (userMyth.multiColorOrbs + updatedMultiOrbs >= 500) {
+      blackOrbs += Math.floor(updatedMultiOrbs / 500);
+      updatedMultiOrbs = updatedMultiOrbs % 500;
+    }
+
     await userMythologies.updateOne(
-      { userId, "mythologies.name": userMyth.name },
-      { $set: { "mythologies.$": userMyth }, $inc: { multiColorOrbs: 1 } }
+      { userId: userId, "mythologies.name": mythologyName },
+      {
+        $inc: {
+          blackOrbs: blackOrbs,
+          multiColorOrbs: updatedMultiOrbs,
+          "mythologies.$.orbs": -1 * convertedOrbs,
+        },
+      }
     );
+
+    if (isValidKey) {
+      await milestones.findOneAndUpdate(
+        {
+          userId: userId,
+          "claimedQuests.taskId": isValidKey,
+        },
+        { $set: { "claimedQuests.$.isKeyClaimed": true } }
+      );
+    }
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
       source: "conversion",
-      orbs: { [userMyth.name]: 2 },
+      orbs: { [mythologyName]: convertedOrbs },
     });
     await newOrbsTransaction.save();
 
@@ -636,18 +561,37 @@ export const claimStarBonus = async (req, res) => {
     const holdTimeInSession =
       Math.round(session / 10) > 9 ? 9 : Math.round(session / 10);
 
-    const updatedShards = holdTimeInSession * 99;
+    const multiplier =
+      userMyth.burstlvl +
+      (!userMyth.boosters.isShardsClaimActive
+        ? userMyth.boosters.shardslvl
+        : 0) +
+      (userMyth.boosters.isAutomataActive ? userMyth.boosters.automatalvl : 0);
 
-    await userMythologies.findOneAndUpdate(
-      { userId: userId, "mythologies.name": userMyth.name },
-      {
-        $set: {
-          "mythologies.$.isStarActive": false,
-          "mythologies.$.isEligibleForBurst": true,
-        },
-        $inc: { "mythologies.$.shards": updatedShards },
-      }
-    );
+    const updatedShards = holdTimeInSession * 99 * multiplier;
+
+    userMyth.boosters.isBurstActive = false;
+    userMyth.shards += updatedShards;
+
+    if (userMyth.isEligibleForBurst === true) {
+      await userMythologies.findOneAndUpdate(
+        { userId: userId, "mythologies.name": userMyth.name },
+        {
+          $set: { "mythologies.$": userMyth },
+        }
+      );
+    } else {
+      userMyth.boosters.isBurstActiveToClaim = true;
+      userMyth.isEligibleForBurst = true;
+      userMyth.burstActiveAt = Date.now();
+
+      await userMythologies.findOneAndUpdate(
+        { userId: userId, "mythologies.name": userMyth.name },
+        {
+          $set: { "mythologies.$": userMyth },
+        }
+      );
+    }
 
     res.status(200).json({ message: "Star bonus claimed" });
   } catch (error) {
@@ -694,8 +638,8 @@ export const updateGameData = async (req, res) => {
           if (mythology.orbs >= 1000) {
             blackOrbs += Math.floor(mythology.orbs / 1000);
             mythology.orbs = mythology.orbs % 1000;
-            mythology.isStarActive = true;
-            mythology.burstActiveAt = Date.now();
+            mythology.boosters.isBurstActive = true;
+            mythology.boosters.burstActiveAt = Date.now();
           }
         }
 

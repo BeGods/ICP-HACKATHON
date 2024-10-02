@@ -39,16 +39,31 @@ export const claimQuest = async (req, res) => {
 
     // deduct required orbs
     const updateOperations = Object.entries(requiredOrbs).map(
-      ([mythologyName, orbsToDeduct]) => ({
-        updateOne: {
-          filter: { userId: userId, "mythologies.name": mythologyName },
-          update: {
-            $inc: {
-              "mythologies.$.orbs": -orbsToDeduct,
-            } as any,
-          },
-        },
-      })
+      ([mythologyName, orbsToDeduct]) => {
+        if (mythologyName === "MultiOrb") {
+          return {
+            updateOne: {
+              filter: { userId: userId },
+              update: {
+                $inc: {
+                  multiColorOrbs: -orbsToDeduct,
+                },
+              },
+            },
+          };
+        } else {
+          return {
+            updateOne: {
+              filter: { userId: userId, "mythologies.name": mythologyName },
+              update: {
+                $inc: {
+                  "mythologies.$.orbs": -orbsToDeduct,
+                } as any,
+              },
+            },
+          };
+        }
+      }
     );
 
     // update rewards
@@ -73,6 +88,48 @@ export const claimQuest = async (req, res) => {
       userId: userId,
       source: "quests",
       orbs: quest.requiredOrbs,
+    });
+    await newOrbTransaction.save();
+
+    res.status(200).json({ message: "Quest claimed successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimSocialQuest = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const quest = req.quest;
+
+    // Add to claimed quests
+    await milestones.findOneAndUpdate(
+      { userId: userId },
+      {
+        $push: {
+          claimedQuests: {
+            taskId: quest.taskId,
+            questClaimed: true,
+          },
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    await userMythologies.findOneAndUpdate(
+      { userId: userId },
+      {
+        $inc: { multiColorOrbs: 3 },
+      }
+    );
+
+    const newOrbTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "quests",
+      orbs: { multiColorOrbs: 3 },
     });
     await newOrbTransaction.save();
 
@@ -121,7 +178,10 @@ export const claimLostQuest = async (req, res) => {
       { userId: userId },
       {
         $push: {
-          claimedQuests: { taskId: new mongoose.Types.ObjectId(quest.taskId) },
+          claimedQuests: {
+            taskId: quest.taskId,
+            questClaimed: true,
+          },
         },
       },
       { upsert: true }
@@ -225,19 +285,24 @@ export const claimOrbOnShare = async (req, res) => {
 export const deactivateQuest = async (req, res) => {
   try {
     const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    //   const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-    await quest.updateMany(
-      {
-        status: "Active",
-        createdAt: { $lt: twentyFourHoursAgo },
-      },
-      {
-        status: "Inactive",
-      }
-    );
+    //   await quest.updateMany(
+    //     {
+    //       status: "Active",
+    //       createdAt: { $lt: twentyFourHoursAgo },
+    //       mythology: { $ne: "Other" },
+    //     },
+    //     {
+    //       status: "Inactive",
+    //     }
+    //   );
 
-    res.status(200).json({ message: "Task Deactivated Successfully." });
+    const currentDate = now.toISOString().split("T")[0];
+
+    console.log(currentDate);
+
+    //   res.status(200).json({ message: "Task Deactivated Successfully." });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",
@@ -295,117 +360,70 @@ export const unClaimedQuests = async (req, res) => {
     const pipeline = [
       {
         $lookup: {
-          from: "milestones",
+          from: "quests",
           let: { userId: new mongoose.Types.ObjectId(userId) },
           pipeline: [
             {
               $match: {
-                $expr: { $eq: ["$_id", "$$userId"] },
+                mythology: mythologyName,
+                status: "Inactive",
               },
             },
             {
-              $project: {
-                claimedQuests: 1,
-                sharedQuests: 1,
-              },
-            },
-          ],
-          as: "milestones",
-        },
-      },
-      {
-        $addFields: {
-          milestones: { $arrayElemAt: ["$milestones", 0] },
-          claimedQuests: {
-            $ifNull: ["$milestones.claimedQuests", []],
-          },
-          sharedQuests: {
-            $ifNull: ["$milestones.sharedQuests", []],
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "quests",
-          let: {
-            claimedQuests: "$claimedQuests",
-            sharedQuests: "$sharedQuests",
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$status", "Inactive"] },
-                    { $eq: ["$mythology", mythologyName] },
-                    {
-                      $not: {
-                        $in: [
-                          "$_id",
-                          {
-                            $map: {
-                              input: "$$claimedQuests",
-                              as: "cq",
-                              in: "$$cq.taskId",
-                            },
-                          },
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $unwind: "$claimedQuests",
+                  },
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $eq: ["$$questId", "$claimedQuests.taskId"] },
                         ],
                       },
                     },
-                  ],
-                },
+                  },
+                  {
+                    $project: {
+                      questClaimed: "$claimedQuests.questClaimed",
+                    },
+                  },
+                ],
+                as: "claimedQuestData",
               },
             },
             {
               $addFields: {
-                isOrbClaimed: {
-                  $cond: [
-                    {
-                      $in: [
-                        "$_id",
-                        {
-                          $map: {
-                            input: "$$claimedQuests",
-                            as: "cq",
-                            in: "$$cq.taskId",
-                          },
-                        },
-                      ],
+                isQuestClaimed: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$claimedQuestData" }, 0] },
+                    then: {
+                      $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
                     },
-                    {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$$claimedQuests",
-                            cond: { $eq: ["$$this.taskId", "$_id"] },
-                          },
-                        },
-                        0,
-                      ],
-                    },
-                    false,
-                  ],
-                },
-                isShared: {
-                  $in: ["$_id", "$$sharedQuests"],
+                    else: false,
+                  },
                 },
               },
+            },
+            {
+              $match: {
+                isQuestClaimed: false,
+              },
+            },
+            {
+              $sort: { createdAt: -1 as -1 },
             },
             {
               $project: {
-                questName: 1,
-                description: 1,
-                type: 1,
-                link: 1,
-                mythology: 1,
-                status: 1,
-                requiredOrbs: 1,
-                isOrbClaimed: 1,
-                isShared: 1,
+                claimedQuestData: 0,
+                updatedAt: 0,
+                createdAt: 0,
+                __v: 0,
               },
-            },
-            {
-              $limit: 1,
             },
           ],
           as: "inactiveUnclaimedQuests",
@@ -413,20 +431,18 @@ export const unClaimedQuests = async (req, res) => {
       },
       {
         $project: {
-          _id: 0,
           inactiveUnclaimedQuests: 1,
         },
       },
     ];
 
-    const lostQuests = await milestones.aggregate(pipeline);
+    const result = await milestones.aggregate(pipeline);
 
     res
       .status(200)
-      .json({ lostQuests: lostQuests[0]?.inactiveUnclaimedQuests });
+      .json({ lostQuests: result[0]?.inactiveUnclaimedQuests || [] });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     res
       .status(500)
       .json({ error: "There was a problem fetching lost quests." });

@@ -47,16 +47,16 @@ router.post(
   claimBurst
 );
 router.post(
-  "/booster/claimAutomata",
-  authMiddleware,
-  validAutomataReq,
-  claimAutomata
-);
-router.post(
   "/game/claimBurst",
   authMiddleware,
   validateStarClaim,
   claimStarBonus
+);
+router.post(
+  "/booster/claimAutomata",
+  authMiddleware,
+  validAutomataReq,
+  claimAutomata
 );
 
 export default router;

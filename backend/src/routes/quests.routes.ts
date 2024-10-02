@@ -5,6 +5,7 @@ import {
   claimOrbOnShare,
   claimQuest,
   claimQuestShare,
+  claimSocialQuest,
   completeQuest,
   createQuest,
   unClaimedQuests,
@@ -25,6 +26,12 @@ router.post(
   authMiddleware,
   verifyValidQuest,
   completeQuest
+);
+router.post(
+  "/quests/social",
+  authMiddleware,
+  verifyValidQuest,
+  claimSocialQuest
 );
 router.post("/quests/claim", authMiddleware, verifyQuestClaim, claimQuest);
 router.post(
