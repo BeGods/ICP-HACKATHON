@@ -2411,7 +2411,7 @@ actor class EXTNFT(init_owner : Principal) = this {
 
 
 //mycollection
-  public query func myCollection(user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
+  public query func myCollection(_collectionCanisterId: Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
     // Get all tokens owned by the user from the _owners map
     switch (_owners.get(user)) {
       case (?tokens) {
@@ -2443,137 +2443,81 @@ actor class EXTNFT(init_owner : Principal) = this {
       };
     };
 };
+  // public shared func myCollection(_collectionCanisterId: Principal, user: AccountIdentifier) : async Result.Result<{
+  //   boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)];
+  //   unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)]
+  // }, CommonError> {
+  //   // Define the canister actor interface
+  //   let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+  //       ext_marketplaceListings: () -> async [(TokenIndex, Listing, Metadata)];
+  //       getCollectionDetails: () -> async (Text, Text, Text);
+  //   };
 
+  //   // Fetch the collection details
+  //   let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
 
-//User favorite NFTS from myCollection
+  //   // Fetch marketplace listings (i.e., unbought NFTs)
+  //   let listings = await collectionCanisterActor.ext_marketplaceListings();
 
-// favorites data structure 
-private var _favorites : HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]> = HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]>(0, AID.equal, AID.hash);
+  //   // Initialize arrays for bought and unbought NFTs
+  //   var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
+  //   var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
 
-// Function to add a token to the user's favorites
-func _addToFavorites(user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : () {
-    // Check if the user already has favorites
-    let userFavorites = switch (_favorites.get(user)) {
-        case (?favorites) favorites; // If the user has favorites, retrieve them
-        case (_) []  // If the user has no favorites, start with an empty array
-    };
+  //   // Iterate through the listings and categorize the NFTs
+  //   for ((tokenIndex, listing, metadata) in listings.vals()) {
+  //       let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
 
-    // Append the new token to the user's favorites list
-    let updatedFavorites = Array.append(userFavorites, [(tokenIdentifier)]);
+  //       // Check if the user is the owner of the NFT
+  //       if (listing.seller == user) {
+  //           // If the user owns the NFT, add it to the boughtNFTs list
+  //           boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
+  //       } else {
+  //           // If the NFT is listed but not owned by the user, add it to the unboughtNFTs list
+  //           unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
+  //       }
+  //   };
 
-    // Update the user's favorites in the favorites map
-    _favorites.put(user, updatedFavorites);
-};
+  //   // Proper return type with result wrapped in a tuple
+  //   return #ok({
+  //       boughtNFTs = boughtNFTs;
+  //       unboughtNFTs = unboughtNFTs;
+  //   });
+  // };
 
-// ADD TO FAVORITES //
-  // Function to add a token to the user's favorites
-public shared func addToFavorites(
-    user: AccountIdentifier, 
-    tokenIdentifier: TokenIdentifier
-) : async Result.Result<Text, CommonError> {
-    // Check if the user already has favorites
-    let userFavorites = switch (_favorites.get(user)) {
-        case (?favorites) favorites; // If the user has favorites, retrieve them
-        case (_) []  // If the user has no favorites, start with an empty array
-    };
+  // public shared func myCollection(user: AccountIdentifier) : async Result.Result<{
+  //   boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)];
+  //   unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)]
+  // }, CommonError> {
 
-    // Check if the token is already in the user's favorites
-    let isAlreadyFavorite = Array.find(userFavorites, func(entry: (TokenIdentifier)) : Bool {
-        entry == tokenIdentifier
-    }) != null;
+  //   // Fetch the collection details
+  //   let (collectionName, _, _) = await getCollectionDetails(); // Call the function directly
 
-    if (isAlreadyFavorite) {
-        return #err(#Other("Token is already in favorites"));
-    } else {
-        // Append the new token to the user's favorites list (without metadata)
-        let updatedFavorites = Array.append(userFavorites, [tokenIdentifier]);
+  //   // Fetch marketplace listings (i.e., unbought NFTs)
+  //   let listings = await ext_marketplaceListings(); // Call the function directly
 
-        // Update the user's favorites in the favorites map
-        _favorites.put(user, updatedFavorites);
-        return #ok("Token added to favorites successfully");
-    }
-};
+  //   // Initialize arrays for bought and unbought NFTs
+  //   var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
+  //   var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
 
+  //   // Iterate through the listings and categorize the NFTs
+  //   for ((tokenIndex, listing, metadata) in listings.vals()) {
+  //       let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(Principal.fromActor(this), tokenIndex); // Use this canister's principal
 
+  //       // Check if the user is the owner of the NFT
+  //       if (listing.seller == user) {
+  //           // If the user owns the NFT, add it to the boughtNFTs list
+  //           boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
+  //       } else {
+  //           // If the NFT is listed but not owned by the user, add it to the unboughtNFTs list
+  //           unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
+  //       }
+  //   };
 
-
-
-//REMOVE FROM FAVORITES //
-// Function to remove a token from the user's favorites
-public shared func removeFromFavorites(user: AccountIdentifier, tokenIdentifier: TokenIdentifier) : async Result.Result<Text, CommonError> {
-    // Check if the user already has favorites
-    let userFavorites = switch (_favorites.get(user)) {
-        case (?favorites) favorites; // If the user has favorites, retrieve them
-        case (_) return #err(#Other("No favorites found for this user")); // If the user has no favorites, return an error
-    };
-
-    // Check if the token is in the user's favorites
-    let isFavorite = Array.find(userFavorites, func(entry: (TokenIdentifier)) : Bool {
-        entry == tokenIdentifier
-    }) != null;
-
-    // Instead of if (!isFavorite), use if isFavorite == false
-    if (isFavorite == false) {
-        return #err(#Other("Token is not in favorites"));
-    };
-
-    // Remove the token from the user's favorites list
-    let updatedFavorites = Array.filter(userFavorites, func(entry: (TokenIdentifier)) : Bool {
-        entry != tokenIdentifier
-    });
-
-    // Update the user's favorites in the favorites map
-    _favorites.put(user, updatedFavorites);
-
-    // Return success message
-    return #ok("Token removed from favorites successfully");
-};
-
-
-
-// GET USER FAVORITES //
-// Function to get the user's favorites
-public shared query func getFavorites(user: AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
-    // Check if the user has any favorites
-    switch (_favorites.get(user)) {
-        case (?favorites) {
-            // Return the user's favorites if found
-            return #ok(favorites);
-        };
-        case (_) {
-            // Return an error if no favorites are found for the user
-            return #err(#Other("No favorites found for this user"));
-        };
-    };
-};
-
-//   public query func getUserActivity(user: AccountIdentifier) : async Result.Result<[Activity], CommonError> {
-//     // Initialize an empty array to hold the user's activities
-//     var activities: [Activity] = [];
-
-//     // Access the stable variable containing transactions
-//     let transactions: [Transaction] = data_transactions;
-
-//     // Iterate over all transactions to find those involving the specified user
-//     Array.iter<Transaction>(transactions, func(transaction) {
-//         // Check if the transaction's buyer matches the specified user
-//         if (AID.equal(transaction.buyer, user)) {
-//             // Create an activity record for this transaction
-//             activities := Array.append(activities, [{
-//                 tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(Principal.fromActor(this), transaction.token);
-//                 price = transaction.price;
-//                 time = transaction.time;
-//             }]);
-//         };
-//     });
-
-//     // Return the list of activities wrapped in a Result
-//     return #ok(activities);
-// };
-
-
-
-
-
+  //   // Proper return type with result wrapped in a tuple
+  //   return #ok({
+  //       boughtNFTs = boughtNFTs;
+  //       unboughtNFTs = unboughtNFTs;
+  //   });
+  // };
 
 };
