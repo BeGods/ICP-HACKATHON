@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons,currIndex}) => {
     const [currentIndex, setCurrentIndex] = useState(currIndex); // Track the current starting index of the visible items
 
-    console.log("current index inside collection type" , currentIndex)
+    // console.log("current index inside collection type" , currentIndex)
 
     // Handler for navigating up (previous items)
     const [animate, setAnimate] = useState(false);

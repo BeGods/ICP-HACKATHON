@@ -1,10 +1,11 @@
 .paymentbutton{
-    background: repeating-conic-gradient(from var(--a),#ff2770 0%, #ff2770 5% , transparent 5% , transparent 40% , #ff2770 50%);
+    background: repeating-conic-gradient(from var(--a), #28a745 0%, #28a745 5%, transparent 5%, transparent 40%, #28a745 50%);
     animation: animate 4s linear infinite;
     border-radius: 20px;
-    height: 40px;
+    height: 40px;  
     width: 80%;
 }
+
 @property --a
 {
     syntax: '<angle>';

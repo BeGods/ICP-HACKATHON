@@ -13,7 +13,7 @@ import { updateCurrentIndex,updateDisplayWalletOptionsStatus} from '../redux/inf
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-const Footer = () => {
+const Footer = ({handleCurrentIndex}) => {
   const { t } = useTranslation();
   const { backendActor } = useAuth();
   const dispatch = useDispatch();
@@ -34,16 +34,26 @@ const Footer = () => {
     
     if(isAuthenticated){
         navigate('/profile')
+        window.scroll(0,0);
     }else{
         window.scroll(0,0)
         dispatch(updateDisplayWalletOptionsStatus({status:true,path:"/profile"})); 
         toast.error("Please connect to your wallet.")
-        
     }
     
   }
 
-  //console.log("collection list in footer", collections.length); // Debugging step
+  const onClickCollection = (index) =>{
+    dispatch(updateCurrentIndex(index));
+    if(handleCurrentIndex){
+        handleCurrentIndex(index);
+    }
+    
+    navigate("/#collections")
+
+  }
+
+//   console.log("collection list in footer", collections); 
 
     return (
         <div className="max-w-[1920px]  flex flex-col justify-center   w-full  text-[#FFFFFF]">
@@ -57,22 +67,24 @@ const Footer = () => {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-[40%] mt-4 sm:-mt-16 md:ml-0 lg:ml-[10%]">
                     <div className="flex flex-col gap-2 sm:gap-4 sm:mt-16 lg:mt-0">
                         <div className='flex gap-40 sm:gap-50'>
-                            <Link to="/" onClick={()=>window.scrollTo(0, 0)}>
-                               <h1 className="text-lg underline sm:text-xl cursor-pointer">{t('home')}</h1>
-                            </Link>
-                            <div  onClick={onClickFooterMyCollection}>
-                            <h1 className="flex text-lg underline sm:text-xl cursor-pointer">{t('collectionFooterText')}</h1>
+                            <div >
+                               <h1 className="text-lg underline sm:text-xl cursor-pointer" onClick={()=>{
+                                window.scrollTo(0, 0)
+                                navigate("/")
+                               }}>{t('home')}</h1>
+                            </div>
+                            <div>
+                            <h1 className="flex text-lg underline sm:text-xl cursor-pointer"  onClick={onClickFooterMyCollection}>{t('collectionFooterText')}</h1>
                             </div>
                         </div>
                         <h1 className='mt-2'>{t('categoriesText')}</h1>
-                        <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12'>
+                        <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12 overflow-auto'>
                         {collections.length > 0 && (
                             collections.map((eachCollection)=>(
-                                
-                                    <Link to="/#collections" className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>dispatch(updateCurrentIndex(eachCollection.index))}>
-                                        <img src="/image/col1.png" alt="" className="h-5 sm:h-6" />
+                                    <button to="/#collections" className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>onClickCollection(eachCollection.index)}>
+                                        <img src={eachCollection.image} alt={eachCollection.name} className="h-5 w-5 sm:h-6 sm:w-6 rounded-full" />
                                         <h1 className="underline text-md sm:text-base">{eachCollection.name}</h1>
-                                    </Link>
+                                    </button>
                                
 
                             ))
