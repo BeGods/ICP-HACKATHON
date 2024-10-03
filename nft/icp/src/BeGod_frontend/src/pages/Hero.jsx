@@ -11,26 +11,83 @@ import { useAuth } from "../utils/useAuthClient.jsx";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { useSelector } from 'react-redux';
+import { BiCategory } from "react-icons/bi";
+import { IoCheckmarkOutline } from "react-icons/io5";
+import { CiDollar } from "react-icons/ci";
+import { HiMiniArrowsUpDown } from "react-icons/hi2";
+import { HiArrowsUpDown } from "react-icons/hi2";
+import { RiArrowUpDownFill } from "react-icons/ri";
 
 
 const shadowColors = ['#07632E',"#00bfff","#FFD700","#FF4500"]
 
 let shadowColorIndex = 0;
 
+const cardTypeList = [
+    {
+        cardId :"ALL" ,
+        displayText:"All"
+    },
+    {
+        cardId : "COMMAN",
+        displayText : "Comman"
+    },
+    {
+        cardId : "MYTHIC" ,
+        displayText:"Mythic"
+    },
+    {
+        cardId : "REAR" ,
+        displayText:"Rear"
+    },
+    {
+        cardId : "UNCOMMON",
+        displayText:"Uncommon"
+    },
+]
+const dropdownItems = {
+    none : "NONE",
+    type : "TYPE",
+    price : "PRICE",
+    filter : "FILTER"
+}
 
+const filterListOptions = [
+    {
+        optionId : "DEFAULT",
+        displayText : "Default"
+    },
+    {
+        optionId : 'RecentlyAdded',
+        displayText : "Recently Added"
+    },
+    {
+        optionId : "LowToHigh",
+        displayText : "Price : Low to High"
+    },
+    {
+        optionId : "HighToLow",
+        displayText : "Price : Hight to Low"
+    }
+]
 
 const Hero = () => {
     const[mobileView,setMobileView]=useState(false);
     const currIndexFromStore = useSelector((state) => state.info.currentCollectionIndex);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(currIndexFromStore);
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
-    const [startIndex,setStartIndex] = useState(0);
-    const visibleButtons = 4; 
+    
+    const visibleButtons = 3; 
+    let start = 0;
+    if(currentIndex >= visibleButtons){
+        start = currentIndex+1-visibleButtons
+    }
+    const [startIndex,setStartIndex] = useState(start);
 
     const allCollectionsList = useSelector((state)=>state.info.collectionList); 
 
-    console.log("collection List frist time",allCollectionsList);
+   // console.log("collection List frist time",allCollectionsList);
 
 
 
@@ -38,30 +95,54 @@ const Hero = () => {
     const [noCollections , updateNoCollectionStatus] = useState(false);
 
 
-    
-   
+    const [currentCardType,updateCardType] = useState(cardTypeList[0].cardId);
+    const [fromPrice , updateFromPrice] = useState(undefined);
+    const [toPrice,updateToPrice] = useState(undefined);
+    const [currentDropDown,updateDropDown] = useState(dropdownItems.none);
+    const [applyPriceRange,updateApplyPriceRange] = useState({isApply:false,from:NaN,to:NaN});
+    const [currentFilterOption,updateCurrentFilterOption] = useState(filterListOptions[0].optionId)
 
+    const onClickAnyFilter = (updatedFilter) => {
+
+        console.log("updated filter", updatedFilter)
+        if(updatedFilter === currentDropDown){
+            updateDropDown(dropdownItems.none);
+            return;
+        }
+
+        updateDropDown(updatedFilter);
+        
+
+    }
+   
+  
     
 
     const handleCurrentIndex  = async(index) => {
 
-        if(index === startIndex+visibleButtons-1 && index != collections.length-1){
-            setStartIndex(startIndex+1);
-        }
-        // else if(index > startIndex+visibleButtons-1){
-        //     setStartIndex(index-(visibleButtons-1));
+        // if(index === startIndex+visibleButtons-1 && index != collections.length-1){
+        //     setStartIndex(startIndex+1);
         // }
-        if(index === startIndex && index != 0){
-            setStartIndex(startIndex-1);
-        }
-        // else if(index < startIndex){
-        //     if(index === 0){
-        //         setStartIndex(index)
-        //     }else{
-        //         setStartIndex(index-1);
-        //     }
+     
+        // if(index === startIndex && index != 0){
+        //     setStartIndex(startIndex-1);
         // }
 
+        if(index >= visibleButtons-1 && index >= startIndex) {
+            if(index != collections.length-1){
+                setStartIndex(index+2 - visibleButtons);
+            }else{
+                setStartIndex(index+1 - visibleButtons);
+            }
+            
+        }else if(index < startIndex){
+            if(index == 0){
+                setStartIndex(0);
+            }else{
+                setStartIndex(index-1);
+            }
+        }
+        if(index )
         console.log("index in handle click",index)
         
         const currentCollectionId = collections[index].collectionId;
@@ -101,16 +182,16 @@ const Hero = () => {
         }
         const collectionItems = result[0][1];
       
-      //  console.log("collection items" , collectionItems);
+        console.log("collection items" , collectionItems);
         const collections = [] 
         
         let i  = 0;
         
         collectionItems.map((eachItem) =>{
-            console.log("each card ---------- item",eachItem)
+           // console.log("each card ---------- item",eachItem)
             const jsonData = JSON.parse(eachItem[4]);
 
-            console.log("json -------------- data",jsonData)
+           // console.log("json -------------- data",jsonData)
             const colItem = {
                 index : i,
                 collectionId : eachItem[1],
@@ -153,7 +234,7 @@ const fetchCollectionNfts = async (collectionId) => {
 
 const getCollectionNfts = (collectionList,collectionId) => {
     return collectionList.map((eachItem) => {
-       console.log("list item",eachItem)
+    //    console.log("list item",eachItem)
         index = index+1;
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
@@ -161,7 +242,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
         const sold = eachItem[2].price;
         const ICP = parseInt(sold)/100000000;
         const metadata = JSON.parse(nftDetails.metadata[0].json);
-        console.log(metadata,'metadata');
+        // console.log(metadata,'metadata');
         const nftType = metadata.nfttype;
         const borderColor = metadata.nftcolor;
         return {
@@ -182,11 +263,48 @@ const getCollectionNfts = (collectionList,collectionId) => {
 // console.log("collection list" , collections)
 
 console.log("current collection list",selectedCollectionNftCardsList)
-if(currIndexFromStore != currentIndex){
-    console.log("in side if condition", currIndexFromStore)
-    handleCurrentIndex(currIndexFromStore);
-   }
+// if(currIndexFromStore != currentIndex){
+//     console.log("in side if condition", currIndexFromStore)
+//     handleCurrentIndex(currIndexFromStore);
+//    }
 
+
+// console.log("current drop down" , currentDropDown)
+let filteredList = selectedCollectionNftCardsList
+    
+if(currentCardType !== cardTypeList[0].cardId){
+    filteredList = filteredList.filter((eachItem=>{
+        if(eachItem.nftType.toLowerCase() === currentCardType.toLowerCase()){
+            return true;
+        }
+        return false;
+
+    }))
+}
+
+if (applyPriceRange.isApply) {
+    filteredList = filteredList.filter((eachItem) => {
+        console.log("from price", applyPriceRange.from, "card price", eachItem.ICP, "to price", applyPriceRange.to);
+        if (applyPriceRange.from <= eachItem.ICP && eachItem.ICP <= applyPriceRange.to) {
+            return true;
+        }
+        return false;
+    });
+    
+}
+
+if(currentFilterOption != filterListOptions[0].optionId){
+    if(currentFilterOption === filterListOptions[1].optionId){
+        filteredList = filteredList.slice().reverse();
+    }else if(currentFilterOption === filterListOptions[2].optionId){
+        filteredList = [...filteredList].sort((a,b)=>a.ICP - b.ICP);
+    }else if(currentFilterOption === filterListOptions[3].optionId){
+        filteredList = [...filteredList].sort((a,b)=> b.ICP - a.ICP);
+    }
+}
+
+
+console.log("filtered list after applying filters",filteredList)
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
         <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon'>
@@ -296,11 +414,111 @@ if(currIndexFromStore != currentIndex){
 
                             </div>
                         </div>
-                        {selectedCollectionNftCardsList.length >0? (
-                            <NFTGallery currentCollection={selectedCollectionNftCardsList}  />
+                        <div className='flex items-center justify-between text-[12px] md:text-sm lg:text-base ml-2'>
+                            <div className="relative w-[160px] md:w-[180px] flex justify-center lg:mr-5">
+                            {currentDropDown === dropdownItems.type && (
+                                        <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                                            {cardTypeList.map((eachType,index)=>(
+                                                <>
+                                                    <div key={eachType.cardId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
+                                                    onClick={()=>{if(eachType.cardId != currentCardType){updateCardType(eachType.cardId); onClickAnyFilter(dropdownItems.type)}}}>
+                                                        <li key={eachType.cardId}>{eachType.displayText}</li>
+                                                        {currentCardType === eachType.cardId && (
+                                                        <IoCheckmarkOutline />
+                                                        )}
+                                                    </div>
+                                                    {index != cardTypeList.length-1 && ( <hr className="my-1 border-t border-[#FCD378]" />)}
+                                                </>
+                                            ))}
+                                        </ul>
+                                    )}
+                                <button
+                                    onClick={()=>onClickAnyFilter(dropdownItems.type)}
+                                    className={`rounded-full flex justify-center items-center gap-1 
+                                    w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.type ? "border-[#FCD378]" : " border-gray-800"}`}
+                                >
+                                    <BiCategory />
+                                    Category
+                                    ({currentCardType.charAt(0)}{currentCardType.slice(1).toLowerCase()})
+                                </button>
+                                    
+                            </div>
+                            <div className="relative w-[160px] md:w-[180px]  flex justify-center">
+                                <button
+                                    onClick={()=>onClickAnyFilter(dropdownItems.price)}
+                                    className={`rounded-full flex justify-center items-center gap-1 
+                                    w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.price ? "border-[#FCD378]" : " border-gray-800"}`}
+                                >
+                                    <CiDollar size={20} />
+                                        Price
+                                    (
+                                        {`${
+                                                !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
+                                                    ? `${applyPriceRange.from} - ${applyPriceRange.to} `
+                                                    : ""
+                                            }`} ICP
+                                        )
+                                </button>
+                                    {currentDropDown === dropdownItems.price && (
+                                      <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'>
+                                            <h1>Price in ICP</h1>
+                                            <div className='flex items-center flex-col lg:flex-row'>
+                                                <input value={fromPrice} onChange={(e)=>{
+                                                updateFromPrice(parseInt(e.target.value));
+                                                }}
+                                                placeholder='From' type='number' className='w-20 mb:2 lg:mb-0 lg:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm'  />
+                                                <input value={toPrice} onChange={(e)=> { updateToPrice(parseInt(e.target.value))}} placeholder='to' type='number' className='w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm'/>
+                                            </div>
+                                            <div className=''>
+                                                <button className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${(isNaN(applyPriceRange.from)|| isNaN(applyPriceRange.to))?"opacity-20":"opacity-100"} `}
+                                                    disabled={isNaN(applyPriceRange.from) || isNaN(applyPriceRange.to)}
+                                                    onClick={()=>{onClickAnyFilter(dropdownItems.none);updateApplyPriceRange({isApply:false,from:NaN,to:NaN}); updateFromPrice(NaN); updateToPrice(NaN)}}
+                                                >Cancel</button>
+                                                <button className={`w-20 border-none bg-[#FCD378] text-black h-6 rounded-full ${(isNaN(fromPrice) || isNaN(toPrice)) ? "opacity-20":"opacity-100"}`}
+                                                onClick={()=>{
+                                                    onClickAnyFilter(dropdownItems.price);
+                                                    updateApplyPriceRange({isApply:true,from:fromPrice,to:toPrice});
+                                                }}
+                                                
+                                               
+                                                disabled={isNaN(fromPrice) || isNaN(toPrice)}
+                                                >Apply</button>
+                                            </div>
+                                      </div>
+                                    )}
+                            </div>
+                            <div className=' relative lg:ml-auto mr-2 lg:mr-20 w-[160px] md:w-[180px] '>
+                            <button
+                                    onClick={()=>onClickAnyFilter(dropdownItems.filter)}
+                                    className={`rounded-full flex justify-center items-center gap-1 
+                                    w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.filter ? "border-[#FCD378]" : " border-gray-800"}`}
+                                >
+                                       < RiArrowUpDownFill />
+                                        Filter & Sort
+                                </button>
+                                {currentDropDown === dropdownItems.filter && (
+                                        <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                                            {filterListOptions.map((eachFilter,index)=>(
+                                                <>
+                                                    <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
+                                                    onClick={()=>{if(eachFilter.optionId != currentFilterOption){updateCurrentFilterOption(eachFilter.optionId); onClickAnyFilter(dropdownItems.filter)}}}>
+                                                        <li key={eachFilter.optionId}>{eachFilter.displayText}</li>
+                                                        {currentFilterOption === eachFilter.optionId && (
+                                                        <IoCheckmarkOutline />
+                                                        )}
+                                                    </div>
+                                                    {index != filterListOptions.length-1 && ( <hr className="my-1 border-t border-[#FCD378]" />)}
+                                                </>
+                                            ))}
+                                        </ul>
+                                    )}
+                            </div>
+                        </div>
+                        {filteredList.length >0? (
+                            <NFTGallery currentCollection={filteredList}  />
                             // <h1 className='text-white'>Nft Gallery</h1>
                         ) : (
-                           noCards ? (
+                           noCards || (selectedCollectionNftCardsList.length>0 && filteredList.length===0) ? (
                               <div className='w-[100%] h-[220px] flex items-center justify-center'>
                                     <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
                               </div>
@@ -326,7 +544,7 @@ if(currIndexFromStore != currentIndex){
                 )}
             </div>
             <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative bg-center bg-cover '>
-                <Footer />
+                <Footer handleCurrentIndex ={handleCurrentIndex} />
             </div>
         </div>
     )

@@ -15,7 +15,7 @@ export const fetchCollections = createAsyncThunk(
       }
 
       const collectionItems = result[0][1];
-    //   console.log("Fetched collection items:", collectionItems);
+      console.log("Fetched collection items in Footer:", collectionItems);
 
       let i = 0;
       collectionItems.forEach((eachItem) => {
@@ -25,12 +25,13 @@ export const fetchCollections = createAsyncThunk(
           collectionId: eachItem[1],  
           name: eachItem[2],
           description: eachItem[4],
+          image : eachItem[3]
         };
         i++;
         collections.push(colItem);
       });
 
-    //   console.log("Processed collections:", collections);
+      console.log("Processed collections:", collections);
       return collections; 
     }
 

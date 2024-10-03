@@ -13,7 +13,7 @@ import { updateCurrentIndex,updateDisplayWalletOptionsStatus} from '../redux/inf
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-const Footer = () => {
+const Footer = ({handleCurrentIndex}) => {
   const { t } = useTranslation();
   const { backendActor } = useAuth();
   const dispatch = useDispatch();
@@ -43,7 +43,17 @@ const Footer = () => {
     
   }
 
-  //console.log("collection list in footer", collections.length); // Debugging step
+  const onClickCollection = (index) =>{
+    dispatch(updateCurrentIndex(index));
+    if(handleCurrentIndex){
+        handleCurrentIndex(index);
+    }
+    
+    navigate("/#collections")
+
+  }
+
+//   console.log("collection list in footer", collections); 
 
     return (
         <div className="max-w-[1920px]  flex flex-col justify-center   w-full  text-[#FFFFFF]">
@@ -68,14 +78,13 @@ const Footer = () => {
                             </div>
                         </div>
                         <h1 className='mt-2'>{t('categoriesText')}</h1>
-                        <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12'>
+                        <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12 overflow-auto'>
                         {collections.length > 0 && (
                             collections.map((eachCollection)=>(
-                                
-                                    <Link to="/#collections" className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>dispatch(updateCurrentIndex(eachCollection.index))}>
-                                        <img src="/image/col1.png" alt="" className="h-5 sm:h-6" />
+                                    <button to="/#collections" className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>onClickCollection(eachCollection.index)}>
+                                        <img src={eachCollection.image} alt={eachCollection.name} className="h-5 w-5 sm:h-6 sm:w-6 rounded-full" />
                                         <h1 className="underline text-md sm:text-base">{eachCollection.name}</h1>
-                                    </Link>
+                                    </button>
                                
 
                             ))
