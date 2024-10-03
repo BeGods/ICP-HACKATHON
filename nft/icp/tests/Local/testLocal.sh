@@ -33,7 +33,7 @@ echo "CANISTER: $CANISTER"
 #   principal "avqkn-guaaa-aaaaa-qaaea-cai",
 # )
 
-COLLECTION_ID="b77ix-eeaaa-aaaaa-qaada-cai"
+COLLECTION_ID="avqkn-guaaa-aaaaa-qaaea-cai"
 echo "COLLECTION_ID: $COLLECTION_ID"
 
 
@@ -64,15 +64,14 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 # dfx canister call "$CANISTER" mintExtNonFungible '(
 #   principal "'$COLLECTION_ID'",
 #   "dragon",
-#   "this is nft from Egyptian Collection.",
+#   "This is NFT from Egyptian Collection.",
 #   "Lugh",
 #   "https://i.ibb.co/gJPLC4c/lughbegods.png",
 #   opt variant {
-#     json = "[{\"name\":\"Lugh\"}, {\"type\":\"Rear\"}]"
+#     json = "[{\"name\":\"Lugh\", \"type\":\"Rear\", \"nfttype\":\"mythic\", \"standard\":\"EXT V2\", \"chain\":\"ICP\", \"nftcolor\":\"Gold\", \"date\":\"10-1-2024\"}]"
 #   },
 #   1
 # )'
-
 
 
 # Getting Result Like this of same NFT 10 data
@@ -133,7 +132,7 @@ echo "COLLECTION_ID: $COLLECTION_ID"
 # STEP-4
 # Set Price and List the NFT
 
-TOKENIDENTIFIER='6qcse-gykor-uwjaa-aaaaa-aeaaa-yaqca-aaaaa-a'
+TOKENIDENTIFIER='uq5fs-rqkor-uwjaa-aaaaa-aeaab-aaqca-aaaaa-a'
 TOKENID='0'
 PRICE=100_000_000
 # in e8s
@@ -141,7 +140,7 @@ PRICEE8S=100000000
 echo "TOKENIDENTIFIER: $TOKENIDENTIFIER"
 echo "PRICE: $PRICE"
 
-dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
+# dfx canister call $CANISTER listprice '(principal "'$COLLECTION_ID'", record {token="'$TOKENIDENTIFIER'"; from_subaccount=null; price= opt '$PRICE'})';
 
           
 

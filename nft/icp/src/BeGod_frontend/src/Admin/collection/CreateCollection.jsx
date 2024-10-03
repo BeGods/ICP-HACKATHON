@@ -203,9 +203,7 @@ const CreateCollection = () => {
       const principalString = answ;
       const principal = Principal.fromText(principalString);
       const date = new Date();
-      const formattedDate = `${
-        date.getMonth() + 1
-      }-${date.getDate()}-${date.getFullYear()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
+      const formattedDate = date.toISOString();
       const metadata = JSON.stringify({
         nfttype,
         standard: "EXT V2",
