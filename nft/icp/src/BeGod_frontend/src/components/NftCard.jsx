@@ -4,20 +4,17 @@ import React,{useState} from 'react'
 import MoonLoader from "react-spinners/MoonLoader";
 
 
-const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
+const NftCard = ({img,data}) => {
+    const {asset,description,metadata,name,thumbnail} = data[2].nonfungible;
+    const price = parseInt(BigInt(data[3][0]));
+    const actualPrice = parseFloat(price/100000000).toFixed(3);
+    console.log(actualPrice)
+    const parsedData = JSON.parse(metadata[0].json);
+    console.log(data)
+    const {chain,standerd,date,nftcolor,nfttype} = (parsedData);
 
     const [showLoader,updateLoaderStatus] = useState(false);
 
-    const onClickRemove = async() => {
-        updateLoaderStatus(true);
-        if(img.isFavourite){
-           await removeFromFavorites(img.tokenId);
-
-        }else{
-         await addToFavorites(img.tokenId)
-        }
-        updateLoaderStatus(false)
-    }
     return (
 
         <div
@@ -30,15 +27,15 @@ const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
             <div className="flip-card-inner ">
                 {/* Front Side */}
                 <div className="flex items-center justify-center flip-card-front ">
-                    <img src={img.cardImageUrl} alt={`NFT`} className="w-[98%] h-[98%] rounded-lg object-cover" />
+                    <img src={thumbnail} alt={`NFT`} className="w-[98%] h-[98%] rounded-lg object-cover" />
                 </div>
                 {/* Back Side */}
                 <div className="relative flex flex-col items-center justify-center text-white flip-card-back ">
-                    <img src={img.cardImageUrl} alt={`NFT`} className="object-cover blur-sm w-[98%] h-[98%]" />
-                    <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-60 rounded-lg">
-                        <h1 className="text-xl sm:text-3xl lg:text-2xl font-extrabold">{img.cardName}</h1>
-                        <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
-                        <h2 className="text-lg sm:text-xl mt-1">1 ICP</h2>
+                    <img src={thumbnail} alt={`NFT`} className="object-cover blur-sm w-[98%] h-[98%]" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
+                        <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">{name}</h1>
+                        <h2 className="mt-2 text-lg sm:text-xl">Type: {nfttype}</h2>
+                        <h2 className="mt-1 text-lg sm:text-xl">{actualPrice} ICP</h2>
                         {showLoader ? (
                             <div className='flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon'>
                              <MoonLoader
@@ -49,10 +46,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
                            />
                            </div>
                         ):(
-                            <button  onClick={onClickRemove}
-                        className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
-                            {img.isFavourite ? "Remove" : "Add to Favourite"}
-                        </button>
+""
                         )}
                     </div>
                 </div>

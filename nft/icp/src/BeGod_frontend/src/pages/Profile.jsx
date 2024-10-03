@@ -326,7 +326,7 @@ const addToFavorites = async(tokenId)=>{
                   ):(
                     selectedList.length>0 && (
                       <div>
-                      <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
+                      <NftCardProfile img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
                     </div>
                     )
                   )
@@ -348,7 +348,7 @@ const addToFavorites = async(tokenId)=>{
                (isCardsLoading ? (
                         <div className="pb-10">
                         <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                          <div className="hidden md:grid justify-around md:grid-cols-3 xl:grid-cols-4  gap-5 m-5">
+                          <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4">
                             {Array.from({ length: 10 }).map((_, index) => (
                               <Skeleton
                                 key={index}
@@ -363,7 +363,7 @@ const addToFavorites = async(tokenId)=>{
                     ):(
                       <div className='hidden w-[90%] h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {selectedList.length > 0 && selectedList.map((img, index) => (
-                        <div className='w-full  rounded-lg flip-card'>
+                        <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} />
                         </div>
                       ))}
