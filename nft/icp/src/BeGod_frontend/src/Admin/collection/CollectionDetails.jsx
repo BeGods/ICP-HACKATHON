@@ -28,6 +28,8 @@ function CollectionDetails() {
   const { id } = useParams();
   const location = useLocation();
   const { collectiondata } = location.state || {};
+  console.log(nftprice);
+  console.log(nftquantity)
 
   const toggleModal = () => {
     setModal(!modal);

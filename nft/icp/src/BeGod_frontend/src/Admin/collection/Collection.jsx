@@ -11,6 +11,7 @@ function Collection() {
   const { backendActor } = useAuth();
   const [coll, setColl] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(false);
+  console.log(loading);
 
   const getCollection = async () => {
     setLoading(true);
