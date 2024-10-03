@@ -789,7 +789,7 @@ const BuyNft = () => {
         </div>
       )}
       {sharePopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screenn z-20">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screenn">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
@@ -806,12 +806,12 @@ const BuyNft = () => {
               
                   
 
-                <div className="flex items-center flex-wrap">
+                <div className="flex flex-wrap items-center">
                 {shareOptions.map((option, index) => {
                     const Button = option.button;
                     return (
                       <div key={index} className="h-[60px] w-[80px] flex justify-center items-center">
-                        <Button url="https://www.ccbp.in/" className="flex flex-col justify-center items-center">
+                        <Button url="https://www.ccbp.in/" className="flex flex-col items-center justify-center">
                           {option.icon}
                           <span className="text-xs">{option.displayText}</span>
                         </Button>
