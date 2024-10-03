@@ -404,9 +404,7 @@ const addToFavorites = async(tokenId)=>{
                 <div className='flex flex-col items-center'>
                   <img src="/image/Frame.png" alt="" />
                   <div className='mt-5'>
-                  <a href={userDetails.telegramUrl} target="_blank"><FaTelegram size={25} color='#24A1DE' /></a>
-  
-                      
+                    <a href={userDetails.telegramUrl} target="_blank"><FaTelegram size={25} color='#24A1DE' /></a>
                   </div>
                 </div>
                 <div>       
