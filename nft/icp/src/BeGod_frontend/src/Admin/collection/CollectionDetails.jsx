@@ -28,6 +28,8 @@ function CollectionDetails() {
   const { id } = useParams();
   const location = useLocation();
   const { collectiondata } = location.state || {};
+  console.log(nftprice);
+  console.log(nftquantity);
 
   const toggleModal = () => {
     setModal(!modal);
@@ -287,7 +289,7 @@ function CollectionDetails() {
               <h1 className="text-2xl">
                 List of all NFT Collection - {principalStringg}
               </h1>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3">
                 {nftList?.map((list, index) => (
                   <>
                     <NftCard id={principalStringg} list={list[2]} key={index} />
