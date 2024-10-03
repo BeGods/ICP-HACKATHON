@@ -48,9 +48,10 @@ export const useAuthClient = () => {
 
   const backend_id = process.env.CANISTER_ID_BEGOD_BACKEND;
   const frontend_id = process.env.CANISTER_ID_BEGOD_FRONTEND;
+  const custom_token_ledger = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
   const ledgerCanId = "ryjl3-tyaaa-aaaaa-aaaba-cai";
 
-  const whitelist = [backend_id,ledgerCanId,frontend_id]
+  const whitelist = [backend_id,ledgerCanId,custom_token_ledger,frontend_id]
 
   const login = async (provider, navigatingPath) => {
     return new Promise(async (resolve, reject) => {
