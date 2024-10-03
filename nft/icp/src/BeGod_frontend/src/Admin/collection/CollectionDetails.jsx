@@ -9,6 +9,9 @@ import { Principal } from "@dfinity/principal";
 import { useAuth } from "../../utils/useAuthClient.jsx";
 import Modal from "./modal.jsx";
 import toast from "react-hot-toast";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 function CollectionDetails() {
   const [nftList, setnftList] = useState([]);
@@ -20,7 +23,8 @@ function CollectionDetails() {
   const [nftimage, setnftimage] = useState("");
   const [nftdescription, setnftdescription] = useState("");
   const [nftcolor, setnftcolor] = useState("");
-  const { backendActor } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { backendActor, canisterId } = useAuth();
   const { id } = useParams();
   const location = useLocation();
   const { collectiondata } = location.state || {};
@@ -58,8 +62,19 @@ function CollectionDetails() {
   };
 
   useEffect(() => {
-    getAllCollectionNFT(principal);
-  }, []);
+    const fetchNFTs = async () => {
+      setLoading(true);
+      try {
+        await getAllCollectionNFT(principal);
+      } catch (error) {
+        console.error("Error fetching NFTs:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNFTs();
+  }, [principal]);
 
   const mintNFT = async (
     principalStringg,
@@ -71,9 +86,10 @@ function CollectionDetails() {
     nftprice
   ) => {
     try {
-      // console.log("in mint", answ);
+      console.log("in mint", principalStringg);
       const principalString = principalStringg;
       const principal = Principal.fromText(principalString);
+      console.log(principal);
       const date = new Date();
       // const formattedDate = `${
       //   date.getMonth() + 1
@@ -87,7 +103,7 @@ function CollectionDetails() {
         chain: "ICP",
         contractAddress: canisterId,
         nftcolor,
-        date: formattedDate,
+        // date: formattedDate,
       });
 
       const metadataContainer = {
@@ -131,8 +147,8 @@ function CollectionDetails() {
   const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
     try {
       console.log(principal, nftIdentifier, nftprice);
-      const principall = Principal.fromText(principal);
-      const res = await listPrice(principall, nftIdentifier, nftprice);
+      // const principall = Principal.fromText(principal);
+      const res = await listPrice(principal, nftIdentifier, nftprice);
       console.log(res, "res data");
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
@@ -179,7 +195,7 @@ function CollectionDetails() {
     }
   };
 
-  const getAddedNftDetails = async (nftDetails, principal) => {
+  const getAddedNftDetails = async (nftDetails) => {
     setnfttype(nftDetails.nftType);
     setnftname(nftDetails.nftName);
     setnftquantity(nftDetails.nftQuantity);
@@ -188,10 +204,11 @@ function CollectionDetails() {
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
     let hasError = false;
-
+    console.log(principalStringg);
+    setLoading(true);
     try {
       const mintResult = await mintNFT(
-        principal,
+        principalStringg,
         nftDetails.nftName,
         nftDetails.nftDescription,
         nftDetails.nftImage,
@@ -200,81 +217,100 @@ function CollectionDetails() {
         nftDetails.nftPrice
       );
       console.log(mintResult);
-      toast.success("nft added");
+
       if (mintResult instanceof Error) {
         hasError = true;
         throw mintResult;
         toast.error(mintResult);
+      } else {
+        toast.success("nft added");
       }
     } catch (error) {
       console.error("Error in get added nft: ", error);
       toast.error("Error in get added nft");
+    } finally {
+      setLoading(false);
     }
   };
-  console.log(nftList);
 
   return (
-    <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
-      <div className="w-full">
-        {/* Back button and action buttons */}
-        <div className="flex items-center justify-between w-full pt-9">
-          <BackButton />
-          <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
-            <YellowButton methodName={() => toggleModal()}>
-              Add NFT
-            </YellowButton>
+    <SkeletonTheme baseColor="#202020" highlightColor="#444">
+      <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
+        {loading ? (
+          <div
+            style={{
+              display: "grid",
+              lineHeight: 3,
+              padding: "1rem",
+              marginBottom: "0.5rem",
+            }}
+          >
+            <Skeleton />
+            <Skeleton count={5} />
           </div>
-        </div>
-
-        {/* Collection details section */}
-        <div className="flex flex-col md:flex-row gap-x-8 items-center bg-[#414141] w-full  p-10 text-[#FFFFFF]  rounded-md my-10 justify-between">
-          <img
-            className="w-32 h-32"
-            src={collectiondata[3]}
-            alt={collectiondata[2]}
-          />
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <h1 className="text-sm font-semibold md:text-3xl">
-                {collectiondata[2]}
-              </h1>
-            </div>
-            <p className="text-sm font-normal font-Quicksand md:text-xl">
-              {nftdescription}
-            </p>
-            <h3 className="text-sm font-bold font-Quicksand md:text-xl">
-              Collection ID - {principalStringg}
-            </h3>
-          </div>
-        </div>
-
-        {/* NFT list section */}
-        <div className="w-full pb-12 text-white">
-          <h1 className="text-2xl">
-            List of all NFT Collection - {principalStringg}
-          </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {nftList?.map((list, index) => (
-              <>
-                <NftCard id={principalStringg} list={list[2]} key={index} />
-              </>
-            ))}
-          </div>
-        </div>
-        {modal && (
-          <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-            <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
-              <div className="flex items-center justify-center h-screen">
-                <Modal
-                  toggleModal={toggleModal}
-                  getAddedNftDetails={getAddedNftDetails}
-                />
+        ) : (
+          <div className="w-full">
+            {/* Back button and action buttons */}
+            <div className="flex items-center justify-between w-full pt-9">
+              <BackButton />
+              <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
+                <YellowButton methodName={() => toggleModal()}>
+                  Add NFT
+                </YellowButton>
               </div>
             </div>
+
+            {/* Collection details section */}
+            <div className="flex flex-col md:flex-row gap-x-8 items-center bg-[#414141] w-full  p-10 text-[#FFFFFF]  rounded-md my-10 justify-between">
+              <img
+                className="w-32 h-32"
+                src={collectiondata[3]}
+                alt={collectiondata[2]}
+              />
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <h1 className="text-sm font-semibold md:text-3xl">
+                    {collectiondata[2]}
+                  </h1>
+                </div>
+                <p className="text-sm font-normal font-Quicksand md:text-xl">
+                  {nftdescription}
+                </p>
+                <h3 className="text-sm font-bold font-Quicksand md:text-xl">
+                  Collection ID - {principalStringg}
+                </h3>
+              </div>
+            </div>
+
+            {/* NFT list section */}
+            <div className="w-full pb-12 text-white">
+              <h1 className="text-2xl">
+                List of all NFT Collection - {principalStringg}
+              </h1>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {nftList?.map((list, index) => (
+                  <>
+                    <NftCard id={principalStringg} list={list[2]} key={index} />
+                  </>
+                ))}
+              </div>
+            </div>
+            {modal && (
+              <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
+                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
+                  <div className="flex items-center justify-center h-screen">
+                    <Modal
+                      toggleModal={toggleModal}
+                      getAddedNftDetails={getAddedNftDetails}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
-    </div>
+    </SkeletonTheme>
   );
 }
 
