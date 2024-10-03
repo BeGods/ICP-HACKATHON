@@ -13,7 +13,7 @@ import { idlFactory as ledgerIdlFactory } from "../../../declarations/icp_ledger
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
 
 // Create a React context for authentication state
@@ -32,6 +32,7 @@ export const useAuthClient = () => {
   const [showButtonLoading, setShowButtonLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
 
   useEffect(() => {
     AuthClient.create().then((client) => {
@@ -53,7 +54,7 @@ export const useAuthClient = () => {
   // mainnet
   // const ledgerCanId = "ryjl3-tyaaa-aaaaa-aaaba-cai";
 
-  const whitelist = [backend_id, ledgerCanId, frontend_id];
+  const whitelist = [backend_id,ledgerCanId,frontend_id]
 
   const login = async (provider, navigatingPath) => {
     return new Promise(async (resolve, reject) => {
@@ -71,66 +72,62 @@ export const useAuthClient = () => {
             agent: undefined,
             provider: "",
           };
-
+  
           if (provider === "plug") {
             console.log(window, "windows");
             // Ensure Plug is installed
-            if (!window.ic?.plug)
-              throw new Error("Plug extension not installed");
-
+            if (!window.ic?.plug) throw new Error("Plug extension not installed");
+  
             const host =
               process.env.DFX_NETWORK === "ic"
                 ? "https://icp-api.io"
                 : "http://127.0.0.1:4943";
-
+  
             // Check if Plug is connected
             // const isPlugConnected = await window.ic.plug.isConnected({
             //   whitelist,
             //   host,
             // });
-
+  
             // if (!isPlugConnected) {
-            // Request connection if not already connected
-            const isConnected = await window.ic.plug.requestConnect({
-              whitelist,
-              host,
-            });
-
-            if (!isConnected) {
-              throw new Error("Plug connection refused");
-            }
+              // Request connection if not already connected
+              const isConnected = await window.ic.plug.requestConnect({
+                whitelist,
+                host,
+              });
+  
+              if (!isConnected) {
+                throw new Error("Plug connection refused");
+              }
             // }
-
+  
             // Now that we are connected, fetch the identity and principal
             const principal = await window.ic.plug.agent.getPrincipal();
             console.log(principal, "principal");
-
+  
             const user_uuid = uuidv4();
-
+  
             // Create actor for the backend
             const userActor = await window.ic.plug.createActor({
               canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
               interfaceFactory: idlFactory,
             });
-
+  
             // Create actor for the ledger
             const EXTActor = await window.ic.plug.createActor({
               canisterId: ledgerCanId,
               interfaceFactory: ledgerIdlFactory,
             });
-
+  
             userObject.principal = principal.toText();
             userObject.agent = window.ic.plug.agent;
-
+  
             console.log(userActor, "userActor");
-
+  
             // Create user with the principal and user UUID
-            const userdetails = await userActor.create_user(
-              principal,
-              user_uuid
-            );
+            const userdetails = await userActor.create_user(principal, user_uuid);
             console.log(userdetails, "userdetails");
-
+  
             // Update the actors and state
             setBackendActor(userActor);
             setLedgerActor(EXTActor);
@@ -143,28 +140,28 @@ export const useAuthClient = () => {
             } else if (provider === "ii") {
               userObject = await IdentityLogin();
             }
-
+  
             const identity = await userObject.agent._identity;
             const principal = Principal.fromText(userObject.principal);
-
+  
             const agent = new HttpAgent({ identity });
-
+  
             const backendActor = createActor(
               process.env.CANISTER_ID_BEGOD_BACKEND,
               { agentOptions: { identity, verifyQuerySignatures: false } }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
-
+  
             setLedgerActor(ledgerActor1);
             setBackendActor(backendActor);
           }
-
+  
           setPrincipal(userObject.principal);
           setIdentity(userObject.agent?._identity);
           setIsAuthenticated(true);
           dispatch(setUser(userObject.principal));
           dispatch(updateDisplayWalletOptionsStatus(false));
-
+  
           if (navigatingPath === "/profile") {
             navigate(navigatingPath);
           }
@@ -178,6 +175,7 @@ export const useAuthClient = () => {
       }
     });
   };
+  
 
   const adminlogin = async (provider) => {
     return new Promise(async (resolve, reject) => {
@@ -253,7 +251,6 @@ export const useAuthClient = () => {
             user: userObject.principal,
             identity: userObject.identity,
           };
-          console.log(isAuthenticated);
 
           dispatch(setUser(userObject.principal));
           navigate("/admin/dashboard");
@@ -314,7 +311,7 @@ export const useAuthClient = () => {
       const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
       setLedgerActor(ledgerActor1);
       setBackendActor(backendActor);
-      setShowButtonLoading(false);
+      setShowButtonLoading(false)
     } catch (error) {
       console.error("Authentication update error:", error);
     }
@@ -333,17 +330,7 @@ export const useAuthClient = () => {
       console.error("Reload login error:", error);
     }
   };
-  console.log(
-    "in authclient",
-    isAuthenticated,
-    principal,
-    authClient,
-    identity,
-    backendActor,
-    accountId,
-    ledgerActor
-  );
-  console.log("in authclient", principal);
+
   return {
     adminlogin,
     adminlogout,
@@ -359,7 +346,7 @@ export const useAuthClient = () => {
     ledgerActor,
     reloadLogin,
     accountIdString,
-    showButtonLoading,
+    showButtonLoading
   };
 };
 
