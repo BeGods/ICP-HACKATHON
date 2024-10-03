@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const NFTGallery = ({ currentCollection }) => {
-  console.log("current collection in nft gallery",currentCollection);
+  // console.log("current collection in nft gallery",currentCollection);
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);
@@ -107,14 +107,14 @@ const NFTGallery = ({ currentCollection }) => {
         {currentItems && currentItems.map((img, index) => (
           <div className="rounded-lg flip-card " key={index}>
             <div className={`flip-card-inner border-3 ${
-  img.borderColor === 'Golden'
-    ? 'border-golden'
-    : img.borderColor === 'Silver'
-    ? 'border-silver'
-    : img.borderColor === 'Bronze'
-    ? 'border-bronze'
-    : 'border-gray-100'
-}`}>
+              img.borderColor === 'Golden'
+                ? 'border-golden'
+                : img.borderColor === 'Silver'
+                ? 'border-silver'
+                : img.borderColor === 'Bronze'
+                ? 'border-bronze'
+                : 'border-gray-100'
+            }`}>
               {/* Front Side */}
               <div className="flex items-center justify-center flip-card-front">
                 <img src={img.img1} alt={`NFT ${index + 1}`} className="object-cover w-full h-full rounded-lg" />

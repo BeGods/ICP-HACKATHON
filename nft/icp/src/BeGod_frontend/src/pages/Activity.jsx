@@ -60,6 +60,10 @@ const Activity = () => {
 
     }
 
+  activityList.sort((a,b)=> new Date(b.time)-new Date(a.time)); 
+
+ // console.log("activity list recent" , recentActivityList)
+
  
   return (
     <div className='font-caslon'>

@@ -469,14 +469,14 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 ::-webkit-scrollbar-track {
   background-color: black;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ffffff;
-  border-radius: 20px;
+  background: #FCD378;
+  border-radius: 100px;
 }
 
 /* for spinner */

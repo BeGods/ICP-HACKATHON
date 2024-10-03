@@ -232,19 +232,20 @@ const CreateCollection = () => {
       const principalString = answ;
       const principal = Principal.fromText(principalString);
       const date = new Date();
-      const formattedDate = `${
-        date.getMonth() + 1
-      }-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date
-        .getMinutes()
-        .toString()
-        .padStart(2, "0")}`;
+      // const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date
+      //   .getMinutes()
+      //   .toString()
+      //   .padStart(2, "0")}:${date
+      //   .getSeconds()
+      //   .toString()
+      //   .padStart(2, "0")}`;
       const metadata = JSON.stringify({
         nfttype,
         standard: "EXT V2",
         chain: "ICP",
         contractAddress: canisterId,
         nftcolor,
-        date: formattedDate,
+        // date: formattedDate,
       });
 
       const metadataContainer = {
