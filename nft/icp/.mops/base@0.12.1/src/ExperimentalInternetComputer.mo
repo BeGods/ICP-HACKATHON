@@ -19,7 +19,7 @@ module {
   /// import IC "mo:base/ExperimentalInternetComputer";
   /// import Principal "mo:base/Principal";
   ///
-  /// let ledger = Principal.fromText("ryjl3-tyaaa-aaaaa-aaaba-cai");
+  /// let ledger = Principal.fromText("bkyz2-fmaaa-aaaaa-qaaaq-cai");
   /// let method = "decimals";
   /// let input = ();
   /// type OutputType = { decimals : Nat32 };

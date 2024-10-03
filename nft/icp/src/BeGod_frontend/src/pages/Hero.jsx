@@ -462,7 +462,7 @@ console.log("filtered list after applying filters",filteredList)
                                     {currentDropDown === dropdownItems.price && (
                                       <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'>
                                             <h1>Price in ICP</h1>
-                                            <div className='flex items-center flex-col lg:flex-row'>
+                                            <div className='flex flex-col items-center lg:flex-row'>
                                                 <input value={fromPrice} onChange={(e)=>{
                                                 updateFromPrice(parseInt(e.target.value));
                                                 }}
@@ -525,7 +525,7 @@ console.log("filtered list after applying filters",filteredList)
                            ):(
                             <div className="pb-10">
                             <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                              <div className="hidden md:grid justify-around md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5  gap-5 m-5">
+                              <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                                 {Array.from({ length: 10 }).map((_, index) => (
                                   <Skeleton
                                     key={index}
