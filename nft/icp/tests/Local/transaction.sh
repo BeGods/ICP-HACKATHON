@@ -25,7 +25,7 @@ CHANDAN_ACCOUNT_ID='sfczs-5f2rv-6x62i-t3ca4-xxetq-h53h3-nrsaf-pjdgy-o7nid-csao7-
 
 
 
-dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"2ipdv-mwghn-c5x64-fkchv-hbvge-yobre-szmep-6ntkb-d3a3h-w5jg6-zqe\";}; amount = 1000000;})"
+dfx canister call icrc2_token_canister icrc1_transfer "(record { to = record { owner = principal \"r3yqz-y5gbg-zpur7-osnrv-wjxls-ixeno-c7l3k-7ocwg-hlfwt-ogvsb-4ae\";}; amount = 1000000000;})"
 
 
 

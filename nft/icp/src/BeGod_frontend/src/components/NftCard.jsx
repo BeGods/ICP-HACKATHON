@@ -1,23 +1,37 @@
 import { Principal } from '@dfinity/principal'
-import React from 'react'
+import { useAuth } from '../utils/useAuthClient'
+import React,{useState} from 'react'
+import MoonLoader from "react-spinners/MoonLoader";
+import { Link } from 'react-router-dom';
 
-const NftCard = ({img}) => {
-    const onClickAddToFavorite = () => {
-        const tokenId = getNftTokenId(Principal.fromText(img.collectionId),0);
-        console.log(tokenId)
+
+const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
+
+    const [showLoader,updateLoaderStatus] = useState(false);
+
+    const onClickRemove = async() => {
+        updateLoaderStatus(true);
+        if(img.isFavourite){
+           await removeFromFavorites(img.tokenId);
+
+        }else{
+         await addToFavorites(img.tokenId)
+        }
+        updateLoaderStatus(false)
     }
+    // console.log("img",img)
     return (
 
         <div
-            className="rounded-lg flip-card"
+            className={`rounded-lg flip-card ${!img.isOwned && "filter grayscale"}`}
             style={{
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
             }}
         >
-            <div className="flip-card-inner ">
+            <div className={`flip-card-inner`}>
                 {/* Front Side */}
-                <div className="flex items-center justify-center flip-card-front ">
+                <div className={`flex items-center justify-center flip-card-front`}>
                     <img src={img.cardImageUrl} alt={`NFT`} className="w-[98%] h-[98%] rounded-lg object-cover" />
                 </div>
                 {/* Back Side */}
@@ -26,11 +40,39 @@ const NftCard = ({img}) => {
                     <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-60 rounded-lg">
                         <h1 className="text-xl sm:text-3xl lg:text-2xl font-extrabold">{img.cardName}</h1>
                         <h2 className="text-lg sm:text-xl mt-2">Sold: {img.sold}/100</h2>
-                        <h2 className="text-lg sm:text-xl mt-1">1 ICP</h2>
-                        <button  onClick={onClickAddToFavorite}
-                        className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
-                            Add to Favorite
-                        </button>
+                        {!img.isOwned && (<h2 className="text-lg sm:text-xl mt-1">{img.ICP} ICP</h2>)}
+                        {img.isOwned ? (
+                            (showLoader ? (
+                                <div className='flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon'>
+                                 <MoonLoader
+                                 color="#000000"
+                                 size={15}
+                                 aria-label="Loading Spinner"
+                                 data-testid="loader"
+                               />
+                               </div>
+                            ):(
+                                <>
+                                <button  onClick={onClickRemove}
+                            className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
+                                {img.isFavourite ? "Remove" : "Add to Favourite"}
+                            </button>
+                            
+                            </>
+                            )
+                        )
+                            
+                        ):(
+                            <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&index=${img.cardIndex}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                                Buy Now
+                            </Link>
+                        )}
+                        {img.isOwned && (
+                            <Link to={`/Nft/${img.cardName}/buy?collectionId=${img.collectionId}&index=${img.index}`}
+                            className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
+                                View Details
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

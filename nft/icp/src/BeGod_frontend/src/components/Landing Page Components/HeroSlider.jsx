@@ -9,7 +9,6 @@ import "swiper/css/pagination";
 // Import required modules
 import { Pagination, Autoplay } from "swiper/modules";
 
-
 export default function HeroSlider() {
   // Array of image objects
   const images = [
@@ -29,11 +28,14 @@ export default function HeroSlider() {
   // Update the number of images per set based on screen size
   useEffect(() => {
     const updateImagesPerSet = () => {
-      if (window.innerWidth >= 1280) { // xl and above
+      if (window.innerWidth >= 1280) {
+        // xl and above
         setImagesPerSet(4);
-      } else if (window.innerWidth >= 650) { // md and above
+      } else if (window.innerWidth >= 650) {
+        // md and above
         setImagesPerSet(2);
-      } else { // below md
+      } else {
+        // below md
         setImagesPerSet(1);
       }
     };
@@ -42,10 +44,10 @@ export default function HeroSlider() {
     updateImagesPerSet();
 
     // Event listener for window resize
-    window.addEventListener('resize', updateImagesPerSet);
+    window.addEventListener("resize", updateImagesPerSet);
 
     // Clean up the event listener on component unmount
-    return () => window.removeEventListener('resize', updateImagesPerSet);
+    return () => window.removeEventListener("resize", updateImagesPerSet);
   }, []);
 
   // Calculate total sets of images

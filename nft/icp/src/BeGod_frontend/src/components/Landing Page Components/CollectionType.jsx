@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons}) => {
-    const [currentIndex, setCurrentIndex] = useState(0); // Track the current starting index of the visible items
+const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons,currIndex}) => {
+    const [currentIndex, setCurrentIndex] = useState(currIndex); // Track the current starting index of the visible items
+
+    // console.log("current index inside collection type" , currentIndex)
 
     // Handler for navigating up (previous items)
     const [animate, setAnimate] = useState(false);
@@ -11,7 +13,7 @@ const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons}
         setAnimate(true);
         setTimeout(() => {
             setCurrentIndex(currentIndex+index);
-            handleCurrentIndex(index);
+            handleCurrentIndex(currentIndex+index);
             setAnimate(false);
         }, 300); // Duration should match the animation duration
     };
@@ -41,9 +43,9 @@ const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons}
         
     };
 
-    // useEffect(() => {
-    //     currentCollection(collectionsData[collections[currentIndex].name] || []);
-    // }, [currentIndex])
+    useEffect(()=>{
+        setCurrentIndex(currIndex)
+    },[currIndex])
 
     return (
         <div className='lg:sticky top-0 w-[100%] sm:w-[100%] lg:w-[35%] h-[100%] flex flex-row lg:flex-col md:gap-8  items-center justify-center mt-20'>
