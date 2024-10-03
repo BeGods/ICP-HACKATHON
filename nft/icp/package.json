@@ -23,6 +23,7 @@
     "@dfinity/ledger-icrc": "^2.5.0",
     "@reduxjs/toolkit": "^2.2.7",
     "antd": "^5.20.5",
+    "browser-image-compression": "^2.0.2",
     "country-state-city": "^3.2.1",
     "framer-motion": "^11.3.29",
     "i18next": "^23.15.1",
