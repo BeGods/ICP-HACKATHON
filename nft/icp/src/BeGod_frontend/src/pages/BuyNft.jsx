@@ -19,6 +19,7 @@ import { FaLock } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { transferApprove } from "../utils/transApprove";
 import { ToastContainer, toast } from "react-toastify";
+import ReactTimeAgo from 'react-time-ago'
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
@@ -26,6 +27,10 @@ const buyingStatus = {
   payment: "PAYMENT",
   success: "SUCCESS",
 };
+
+
+import shareOptions from "./shareOptions.jsx";
+
 
 const BuyNft = () => {
   const [buyPopup, setbuyPopup] = useState(false);
@@ -38,6 +43,7 @@ const BuyNft = () => {
   const index = params.get("index");
   const { backendActor, ledgerActor, principal } = useAuth({});
   const [nftCardLoading, setNftCardLoading] = useState(true);
+  const [isDisplayBuyNow,updateIsDisplayBuyNow] = useState(true);
 
   const [collectionDetails, setCollectionDetails] = useState({});
   const [collectionDetailsLoading, setCollectionDetailsLoading] =
@@ -53,6 +59,8 @@ const BuyNft = () => {
   let [popUpSecondLoading, setLoadingSecond] = useState(false);
   let [color, setColor] = useState("#ffffff");
 
+
+  const [sharePopup,updateSharePopup] = useState(false);
   const toggleBuyPopup = () => {
     setbuyPopup(!buyPopup);
     setBuyingStatus(buyingStatus.payment);
@@ -129,6 +137,7 @@ const BuyNft = () => {
       console.log(resultTxn, "this is the finale result");
       if (resultTxn === true) {
         setLoadingSecond(false);
+        updateIsDisplayBuyNow(false);
         setBuyingStatus(buyingStatus.success);
         toast.success("Payment Success!", {
           position: "top-center",
@@ -194,11 +203,11 @@ const BuyNft = () => {
       Principal.fromText(collectionId),
       parseInt(index)
     );
-    //  console.log("buying nft details" , result);
+     console.log("buying nft details" , result);
     // console.log("buying nft details 0 1" , result[0][1]);
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
     // console.log("buying nft details 2" , result[2]);
-    console.log(result, "result");
+    // console.log(result, "result");
     const parsedMetadata = {
       nftTypes: [],
       standards: [],
@@ -208,12 +217,14 @@ const BuyNft = () => {
     const cardDetails = result[0][2].nonfungible;
     // const metadata = JSON.parse(cardDetails.metadata[0].json);
     const cardPrice = parseInt(result[0][3]);
+    let date;
     cardDetails?.metadata.forEach((item) => {
       const parsedData = JSON.parse(item.json);
       console.log(parsedData);
       parsedMetadata.nftTypes.push(parsedData.nfttype);
       parsedMetadata.standards.push(parsedData.standard);
       parsedMetadata.chains.push(parsedData.chain);
+      date = parsedData.date;
     });
 
     const updatedCardDetails = {
@@ -224,8 +235,10 @@ const BuyNft = () => {
       cardPrice: cardPrice,
       standards: parsedMetadata.standards,
       chains: parsedMetadata.chains,
+      date : date,
+      contactAddress:result[0][1],
     };
-
+    console.log("updated Card Details", updatedCardDetails)
     setCardDetails(updatedCardDetails);
     setNftCardLoading(false);
   };
@@ -310,7 +323,9 @@ const BuyNft = () => {
                 </h2>
               </div>
             )}
+            <div onClick={()=>updateSharePopup(!sharePopup)}>
             <CiShare2 />
+            </div>
           </div>
           <div className="flex items-center mt-16">
             <div>
@@ -336,14 +351,15 @@ const BuyNft = () => {
               {/* <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={() => setbuyPopup(!buyPopup)}>
                                 <YellowButtonUserSide>{t('buyNow')}</YellowButtonUserSide>
                             </div> */}
-              {nftCardLoading ? (
+              {nftCardLoading && isDisplayBuyNow ? (
                 <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
                   <SkeletonTheme baseColor="#202020" highlightColor="#444">
                     <Skeleton count={1} width={178} height={40} />
                   </SkeletonTheme>
                 </div>
               ) : (
-                <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                (isDisplayBuyNow && (
+                  <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
                   <button
                     className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
                     disabled={nftCardLoading}
@@ -352,6 +368,7 @@ const BuyNft = () => {
                     Buy for {cardDetails.cardPrice / 100000000} ICP
                   </button>
                 </div>
+                ))
               )}
             </div>
           </div>
@@ -377,7 +394,7 @@ const BuyNft = () => {
               <>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{contactAddress}</h1>
-                  <h1>0x2358...a68b</h1>
+                  <h1>{cardDetails.contactAddress}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{token}</h1>
@@ -435,7 +452,7 @@ const BuyNft = () => {
                     </h2>
                   </div>
                 )}
-                <div className="h-[20px]">
+                <div className="h-[20px]" onClick={()=>updateSharePopup(!sharePopup)}>
                   <CiShare2 className="object-cover w-full h-full cursor-pointer" />
                 </div>
               </div>
@@ -464,7 +481,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{contactAddress}</h1>
-                      <h1>0x2358...a68b</h1>
+                      <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
                     </>
                   )}
                 </div>
@@ -503,7 +520,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{chain}</h1>
-                      <h1>{cardDetails?.chains}</h1>
+                      <h1>{cardDetails?.chains[0]}</h1>
                     </>
                   )}
                 </div>
@@ -516,19 +533,21 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{lastUpdated}</h1>
-                      <h1>7 Days ago</h1>
+                      <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
                     </>
                   )}
                 </div>
               </div>
-              {nftCardLoading ? (
+              {nftCardLoading && isDisplayBuyNow && (
                 <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
                   <SkeletonTheme baseColor="#202020" highlightColor="#444">
                     <Skeleton count={1} width={178} height={40} />
                   </SkeletonTheme>
-                </div>
-              ) : (
-                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                </div>  
+              )}
+              {!nftCardLoading && isDisplayBuyNow && (
+                (isDisplayBuyNow && (
+                  <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
                   <button
                     className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
                     disabled={nftCardLoading}
@@ -536,8 +555,12 @@ const BuyNft = () => {
                   >
                     Buy for {cardDetails.cardPrice / 100000000} ICP
                   </button>
+                  
                 </div>
+                
+                ))
               )}
+              
             </div>
             <div>
               {nftCardLoading ? (
@@ -764,6 +787,44 @@ const BuyNft = () => {
             </div>
           </div>
         </div>
+      )}
+      {sharePopup && (
+        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screenn z-20">
+        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+          <div className="flex items-center justify-center h-screen">
+            <div
+              className="h-[50vh] md:h-[40vh] w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+            >
+              <div className="relative flex items-center justify-end">
+                <button
+                  className="text-[#ffffff] absolute bottom-1 top-1 z-10"
+                  onClick={() => updateSharePopup(!sharePopup)}
+                >
+                  <RxCross2 size={20} />
+                </button>
+              </div>
+              
+                  
+
+                <div className="flex items-center flex-wrap">
+                {shareOptions.map((option, index) => {
+                    const Button = option.button;
+                    return (
+                      <div key={index} className="h-[60px] w-[80px] flex justify-center items-center">
+                        <Button url="https://www.ccbp.in/" className="flex flex-col justify-center items-center">
+                          {option.icon}
+                          <span className="text-xs">{option.displayText}</span>
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </div>
+            
+          </div> 
+        </div>
+    </div>
+  </div>
+        
       )}
       <ToastContainer />
     </div>
