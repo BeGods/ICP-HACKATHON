@@ -522,7 +522,7 @@ const addToFavorites = async(tokenId)=>{
                (isCardsLoading ? (
                         <div className="pb-10">
                         <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                          <div className="hidden md:grid justify-around md:grid-cols-3 xl:grid-cols-4  gap-5 m-5">
+                          <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4">
                             {Array.from({ length: 10 }).map((_, index) => (
                               <Skeleton
                                 key={index}
@@ -544,7 +544,7 @@ const addToFavorites = async(tokenId)=>{
                     ):(
                       <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {filteredList.length > 0 && filteredList.map((img, index) => (
-                        <div className='w-full  rounded-lg flip-card'>
+                        <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} />
                         </div>
                       ))}
@@ -564,7 +564,7 @@ const addToFavorites = async(tokenId)=>{
         <Footer />
       </div>
       {isDisplayEditProfile && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screenn z-20">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screenn">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
@@ -594,7 +594,7 @@ const addToFavorites = async(tokenId)=>{
                   <input onChange={(e)=>updateTelegramUrl(e.target.value)} type='text' placeholder='Enter your telegram link' className='pl-2 bg-transparent border border-white h-[30px] text-[13px] rounded-sm' value={telegramUrl} />
                 </div>
               </div>
-              <div className='flex justify-center items-center'>
+              <div className='flex items-center justify-center'>
                 <button className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full `}  
                 >Cancel</button>
                 {profileUpdateInProcess ? (

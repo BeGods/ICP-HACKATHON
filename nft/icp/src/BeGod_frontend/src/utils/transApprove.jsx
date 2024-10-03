@@ -7,7 +7,8 @@ const afterPaymentFlow = async (
   collectionId,
   subAccount,
   ledgerActor,
-  metaData
+  metaData,
+  principal
 ) => {
   try {
     const transactionArg = {
@@ -19,7 +20,27 @@ const afterPaymentFlow = async (
       created_at_time: [],
     };
 
+    // const transaction = {
+    //   amount: Number(sendAmount),
+    //   to:{
+    //     owner: Principal.fromText("2xtmc-5eo2k-c5422-e3fih-uyjbn-fiefs-u72o7-xgn4m-kveqk-7unet-3qe"),
+    //     subaccount: [],
+    //   },
+    //   from_subaccount: [],
+    //   spender: {
+    //     owner: principal,
+    //     subaccount: [],
+    //   },
+    //   fee: [0],
+    //   memo: [],
+    //   created_at_time: [],
+    //   expires_at: [],
+    // };
+
+    console.log(ledgerActor, "ledgerActor");
+
     const sendBalanceResult = await ledgerActor.send_dfx(transactionArg);
+    console.log(sendBalanceResult, "sendBalanceResult");
     if (BigInt(sendBalanceResult) > 0) {
       const response = await backendActor.settlepurchase(
         Principal.fromText(collectionId),
@@ -115,7 +136,8 @@ export const transferApprove = async (
         collectionId,
         subAccount,
         ledgerActor,
-        metaData
+        metaData,
+        principal
       );
 
       console.log(approvalResponse, "approvalResponse");

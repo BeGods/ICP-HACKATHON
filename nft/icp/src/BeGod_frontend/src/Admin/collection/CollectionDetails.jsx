@@ -242,7 +242,7 @@ function CollectionDetails() {
           <div className="grid justify-between grid-cols-5 gap-5 mt-8 overflow-x-auto overflow-y-hidden sm:flex-wrap md:gap-8 xl:gap-5">
             {nftList?.map((list, index) => (
               <>
-                <NftCard id={id} list={list[2]} img={list[2]} key={index} />
+                <NftCard id={id} list={list[2]} img={list[2]} key={index} data={list} />
               </>
             ))}
           </div>
