@@ -16,11 +16,11 @@ const NftCard = ({ id, list }) => {
 
   return (
     <div
-      className="nftcard-container"
+      className="rounded-lg flip-card"
       style={{
-        border: "5px solid",
-        borderColor: nftColor || "golden",
-      }}
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    }}
     >
       <div className="flip-card-inner">
         {/* Front Side */}
@@ -28,27 +28,27 @@ const NftCard = ({ id, list }) => {
           <img
             src={list.nonfungible.thumbnail}
             alt={`${list.nonfungible.name}`}
-            className="w-full h-full rounded-lg object-cover"
+            className="w-[98%] h-[98%] rounded-lg object-cover"
           />
         </div>
         {/* Back Side */}
-        <div className="flip-card-back relative flex flex-col justify-center items-center text-white">
+        <div className="relative flex flex-col items-center justify-center text-white flip-card-back">
           <img
             src={list.nonfungible.thumbnail}
             alt={`${list.nonfungible.name}`}
-            className="object-cover blur-sm w-full h-full"
+            className="object-cover blur-sm w-[98%] h-[98%]"
           />
-          <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-60 rounded-lg p-4">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
+            <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">
               {list.nonfungible.name}
             </h1>
             <h2 className="text-xs sm:text-lg mt-1 text-center">{id}</h2>
             <Link
               to={`/Admin/collection/collectionDetails/${id}/nft/${id}`}
-              className="w-[50%]"
+              className="w-full flex justify-center items-center"
               state={{ list }}
             >
-              <button className=" mt-4 w-full sm:w-[100%] h-10 sm:h-12 bg-blue-400 text-black border border-white shadow-lg transform transition-transform hover:scale-105 flex items-center justify-center rounded">
+              <button className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
                 View Details
               </button>
             </Link>
