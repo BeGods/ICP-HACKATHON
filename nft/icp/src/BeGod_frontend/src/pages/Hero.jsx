@@ -215,6 +215,8 @@ const Hero = () => {
         if(currentCollectionNfts.length>0){
             updateSelectedCollectionNftCardsList(currentCollectionNfts);
         }
+        
+        // updateNoCardsStatus(true);
         //console.log(currentCollectionNfts)
 };
 let index = -1;
@@ -226,16 +228,17 @@ const fetchCollectionNfts = async (collectionId) => {
         return [];
     }
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId);
-    // console.log("fetched nfts of a collection",fetchedNfts)
+    console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
    
 
 };
 
 const getCollectionNfts = (collectionList,collectionId) => {
-    return collectionList.map((eachItem) => {
-    //    console.log("list item",eachItem)
-        index = index+1;
+    const tempList = [];
+    let tempIndex = 0;
+    for(let i=0;i<collectionList.length;i++){
+        const eachItem = collectionList[i];
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.name;
@@ -245,7 +248,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
         // console.log(metadata,'metadata');
         const nftType = metadata.nfttype;
         const borderColor = metadata.nftcolor;
-        return {
+        const nftCard= {
             collectionId,
             index:eachItem[0],
             img1: image,
@@ -255,26 +258,35 @@ const getCollectionNfts = (collectionList,collectionId) => {
             nftType,
             borderColor
         };
-    });
+        if(tempIndex === 0){
+            tempList.push([nftCard]);
+            tempIndex++;
+        }else if(tempList[tempIndex-1][0].name === nftCard.name){
+            tempList[tempIndex-1].push(nftCard);
+        }else{
+            tempList.push([nftCard]);
+            tempIndex++;
+        }
+    }
+    return tempList;
 };
 
+const onClickFilterContainer = () => {
+    if(currentDropDown != dropdownItems.none){
+        onClickAnyFilter(dropdownItems.none)
+    }
+}
 
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
 
 console.log("current collection list",selectedCollectionNftCardsList)
-// if(currIndexFromStore != currentIndex){
-//     console.log("in side if condition", currIndexFromStore)
-//     handleCurrentIndex(currIndexFromStore);
-//    }
 
-
-// console.log("current drop down" , currentDropDown)
 let filteredList = selectedCollectionNftCardsList
     
 if(currentCardType !== cardTypeList[0].cardId){
     filteredList = filteredList.filter((eachItem=>{
-        if(eachItem.nftType.toLowerCase() === currentCardType.toLowerCase()){
+        if(eachItem[0].nftType.toLowerCase() === currentCardType.toLowerCase()){
             return true;
         }
         return false;
@@ -285,7 +297,7 @@ if(currentCardType !== cardTypeList[0].cardId){
 if (applyPriceRange.isApply) {
     filteredList = filteredList.filter((eachItem) => {
         console.log("from price", applyPriceRange.from, "card price", eachItem.ICP, "to price", applyPriceRange.to);
-        if (applyPriceRange.from <= eachItem.ICP && eachItem.ICP <= applyPriceRange.to) {
+        if (applyPriceRange.from <= eachItem[0].ICP && eachItem.ICP <= applyPriceRange.to) {
             return true;
         }
         return false;
@@ -297,9 +309,9 @@ if(currentFilterOption != filterListOptions[0].optionId){
     if(currentFilterOption === filterListOptions[1].optionId){
         filteredList = filteredList.slice().reverse();
     }else if(currentFilterOption === filterListOptions[2].optionId){
-        filteredList = [...filteredList].sort((a,b)=>a.ICP - b.ICP);
+        filteredList = [...filteredList].sort((a,b)=>a[0].ICP - b[0].ICP);
     }else if(currentFilterOption === filterListOptions[3].optionId){
-        filteredList = [...filteredList].sort((a,b)=> b.ICP - a.ICP);
+        filteredList = [...filteredList].sort((a,b)=> b[0].ICP - a[0].ICP);
     }
 }
 
@@ -307,6 +319,7 @@ if(currentFilterOption != filterListOptions[0].optionId){
 console.log("filtered list after applying filters",filteredList)
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
+        // onClick={onClickFilterContainer}
         <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon'>
             <div className='relative'>
                 <HeroSlider />
@@ -386,7 +399,8 @@ console.log("filtered list after applying filters",filteredList)
                      )}
                     <div className='w-[100%] h-[100%] mt-12 sm:mt-20'>
                         <div className='w-[100%] flex flex-col sm:flex-row items-center justify-center'>
-                            <div className='w-[70%]'>
+                        {/* style={{ boxShadow: "0px 0px 94px 36px orange" }} */}
+                            <div className='w-[70%] '>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
                                 <img src="/Hero/celtic_hero.png" alt="" className='flex items-center justify-center w-full sm:hidden' />
                             </div>
@@ -447,7 +461,7 @@ console.log("filtered list after applying filters",filteredList)
                                 <button
                                     onClick={()=>onClickAnyFilter(dropdownItems.price)}
                                     className={`rounded-full flex justify-center items-center gap-1 
-                                    w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.price ? "border-[#FCD378]" : " border-gray-800"}`}
+                                     p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.price ? "border-[#FCD378]" : " border-gray-800"}`}
                                 >
                                     <CiDollar size={20} />
                                         Price
@@ -487,17 +501,18 @@ console.log("filtered list after applying filters",filteredList)
                                       </div>
                                     )}
                             </div>
-                            <div className=' relative lg:ml-auto mr-2 lg:mr-20 w-[160px] md:w-[180px] '>
+                            <div className=' relative lg:ml-auto mr-2 lg:mr-20 w-[160px] h-[40px] md:w-[180px] '>
+                            <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                             <button
                                     onClick={()=>onClickAnyFilter(dropdownItems.filter)}
-                                    className={`rounded-full flex justify-center items-center gap-1 
+                                    className={` absolute rounded-full flex justify-center items-center gap-1 
                                     w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.filter ? "border-[#FCD378]" : " border-gray-800"}`}
                                 >
-                                       < RiArrowUpDownFill />
-                                        Filter & Sort
+                                     < RiArrowUpDownFill />
+                                    {currentFilterOption}
                                 </button>
                                 {currentDropDown === dropdownItems.filter && (
-                                        <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                                        <ul className="absolute top-[60px] left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
                                             {filterListOptions.map((eachFilter,index)=>(
                                                 <>
                                                     <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'

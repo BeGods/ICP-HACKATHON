@@ -55,6 +55,8 @@ const BuyNft = () => {
 
   const [tokenId, setTokenId] = useState("");
 
+  const [isOwned,updateIsOwnedStatus] = useState(true)
+
   let [popUpFirstLoading, setLoadingFirst] = useState(true);
   let [popUpSecondLoading, setLoadingSecond] = useState(false);
   let [color, setColor] = useState("#ffffff");
@@ -137,7 +139,7 @@ const BuyNft = () => {
       console.log(resultTxn, "this is the finale result");
       if (resultTxn === true) {
         setLoadingSecond(false);
-        updateIsDisplayBuyNow(false);
+        updateIsOwnedStatus(true)
         setBuyingStatus(buyingStatus.success);
         toast.success("Payment Success!", {
           position: "top-center",
@@ -201,8 +203,10 @@ const BuyNft = () => {
     console.log(collectionId, index);
     const result = await backendActor?.getSingleNonFungibleTokens(
       Principal.fromText(collectionId),
-      parseInt(index)
+      parseInt(index),
+      principal
     );
+    updateIsOwnedStatus(result[0][4]);
      console.log("buying nft details" , result);
     // console.log("buying nft details 0 1" , result[0][1]);
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
@@ -236,7 +240,7 @@ const BuyNft = () => {
       standards: parsedMetadata.standards,
       chains: parsedMetadata.chains,
       date : date,
-      contactAddress:result[0][1],
+      contactAddress:principal,
     };
     console.log("updated Card Details", updatedCardDetails)
     setCardDetails(updatedCardDetails);
@@ -398,19 +402,19 @@ const BuyNft = () => {
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{token}</h1>
-                  <h1>ID8050</h1>
+                  <h1>{tokenId.slice(0,4)}...{tokenId.slice(-4)}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{tokenStandard}</h1>
-                  <h1>ERC-721</h1>
+                  <h1>{cardDetails?.standards}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{chain}</h1>
-                  <h1>ICP</h1>
+                  <h1>{cardDetails?.chains[0]}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{lastUpdated}</h1>
-                  <h1>7 Days ago</h1>
+                  <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
                 </div>
               </>
             )}
@@ -494,7 +498,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{token}</h1>
-                      <h1>ID8050</h1>
+                      <h1>{tokenId.slice(0,4)}...{tokenId.slice(-4)}</h1>
                     </>
                   )}
                 </div>
@@ -538,27 +542,17 @@ const BuyNft = () => {
                   )}
                 </div>
               </div>
-              {nftCardLoading && isDisplayBuyNow && (
-                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
-                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                    <Skeleton count={1} width={178} height={40} />
-                  </SkeletonTheme>
-                </div>  
-              )}
-              {!nftCardLoading && isDisplayBuyNow && (
-                (isDisplayBuyNow && (
-                  <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
-                  <button
-                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                    disabled={nftCardLoading}
-                    onClick={onClickBuyButton}
-                  >
-                    Buy for {cardDetails.cardPrice / 100000000} ICP
-                  </button>
-                  
-                </div>
+              {!isOwned && (
+                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                <button
+                  className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                  disabled={nftCardLoading}
+                  onClick={onClickBuyButton}
+                >
+                  Buy for {cardDetails.cardPrice / 100000000} ICP
+                </button>
                 
-                ))
+              </div>
               )}
               
             </div>
@@ -831,4 +825,4 @@ const BuyNft = () => {
   );
 };
 
-export default BuyNft;
+export default BuyNft
