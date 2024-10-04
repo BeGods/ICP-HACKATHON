@@ -173,9 +173,21 @@ function CollectionDetails() {
   const getListing = async (principal) => {
     try {
       console.log(principal);
+      toast('Featching NFTs,Please Wait! ...',
+        {
+          icon: '⚠️',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        }
+      );
       const result = await backendActor?.listings(principal);
       console.log("Listing", result);
+
       fetchNFTs();
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching listing:", error);
       toast.error("Error fetching listing");
@@ -216,8 +228,6 @@ function CollectionDetails() {
     } catch (error) {
       console.error("Error in get added nft: ", error);
       toast.error("Error in get added nft");
-    } finally {
-      setLoading(false);
     }
   };
 

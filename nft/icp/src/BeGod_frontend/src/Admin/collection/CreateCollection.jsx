@@ -57,16 +57,6 @@ const CreateCollection = () => {
   const [nftcolor, setnftcolor] = useState("");
   const [Success, setsuccess] = useState(false);
 
-  // console.log(Date.now().toLocaleString());
-  // const {
-  //   nftType,
-  //   nftName,
-  //   nftQuantity,
-  //   nftPrice,
-  //   nftDescription,
-  //   nftImage,
-  //   nftImageURL,
-  // } = nftCardsList;
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
@@ -100,27 +90,6 @@ const CreateCollection = () => {
     return Actor.createActor(idlFactory, { agent, canisterId });
   };
 
-  // const handleFormSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const actor = createActor();
-  //   try {
-  //     const collectionResponse = await actor.add_collection_to_map(
-  //       principal_id
-  //     );
-  //     console.log("Collection created successfully:", collectionResponse);
-  //     for (const nft of nftRows) {
-  //       const nftResponse = await actor.addNFT({
-  //         id: nft.id,
-  //         description: nft.description,
-  //         collectionId: collectionResponse.collectionId,
-  //       });
-  //       console.log("NFT created successfully:", nftResponse);
-  //     }
-  //     navigate("/success");
-  //   } catch (error) {
-  //     console.error("Error creating collection or NFTs:", error);
-  //   }
-  // };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -177,14 +146,6 @@ const CreateCollection = () => {
     }
   };
 
-  // const getBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
 
   const createExtData = async (name, base64String, description, collColor) => {
     try {
