@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   IconButton,
@@ -17,15 +17,13 @@ import { CiUser } from "react-icons/ci";
 import { FiMenu } from "react-icons/fi";
 import { CopyIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logoutUser, logoutUserAndClear } from "../redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUserAndClear } from "../redux/authSlice";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
-// not working
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+// Sidebar data
 const sideBarData = [
   {
     text: "Dashboard",
@@ -46,6 +44,20 @@ const sideBarData = [
 
 export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Automatically close the sidebar on screen resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        onClose(); // Automatically close sidebar if screen is resized to >= 768px
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [onClose]);
 
   return (
     <Box
@@ -83,24 +95,21 @@ function SidebarContent({ onClose, ...rest }) {
   const [Copied, setCopied] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
-  console.log(user)
+
   const logoutHandler = () => {
     dispatch(logoutUserAndClear());
   };
-  
+
   const handleCopy = () => {
     toast.success("Copied");
   };
-  
+
   return (
     <Box
       bg={useColorModeValue("#29292C", "gray.900")}
       w={{ base: "full", md: 60, "2xl": 80 }}
       pos="fixed"
       h="full"
-      display={{ md: "flex" }}
-      flexDirection={{ md: "row" }}
-      justifyContent={{ md: "space-evenly" }}
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
@@ -121,14 +130,17 @@ function SidebarContent({ onClose, ...rest }) {
               key={link.text}
               icon={link.icon}
               href={link.Link}
-              isActive={location.toLowerCase().includes(link.Link.toLowerCase())}
+              isActive={location
+                .toLowerCase()
+                .includes(link.Link.toLowerCase())}
               hovered={hovered}
+              onClose={onClose}
             >
               {link.text}
             </NavItem>
           ))}
         </div>
-        <div className="flex items-center justify-start px-8 pt-4 text-white border-t border-gray-700 gap-x-4 2xl:mb-8">
+        <div className="flex items-center justify-start px-8 pt-4 mb-9 text-white border-t border-gray-700 gap-x-4 2xl:mb-8">
           <img className="w-12 h-12" src="/image/admin.png" alt="Admin" />
           <div className="space-y-2">
             <div className="flex items-center justify-start gap-x-2">
@@ -147,7 +159,9 @@ function SidebarContent({ onClose, ...rest }) {
                 <input
                   value={
                     user
-                      ? `${user.slice(0, 5)}......${user.slice(user.length - 6)}`
+                      ? `${user.slice(0, 5)}......${user.slice(
+                          user.length - 6
+                        )}`
                       : "No User"
                   }
                   readOnly
@@ -155,7 +169,7 @@ function SidebarContent({ onClose, ...rest }) {
                 />
                 {user && (
                   <CopyToClipboard text={user} onCopy={handleCopy}>
-                    <button className="">
+                    <button className="ml-3">
                       <CopyIcon />
                     </button>
                   </CopyToClipboard>
@@ -166,28 +180,23 @@ function SidebarContent({ onClose, ...rest }) {
           </div>
         </div>
       </div>
-      {/* <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      /> */}
     </Box>
   );
 }
-
 
 SidebarContent.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
+function NavItem({
+  icon,
+  children,
+  href,
+  isActive,
+  hovered,
+  onClose,
+  ...rest
+}) {
   return (
     <Box
       as={Link}
@@ -195,6 +204,7 @@ function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
       {...rest}
+      onClick={onClose}
     >
       <Flex
         align="center"
@@ -206,18 +216,13 @@ function NavItem({ icon, children, href, isActive, hovered, ...rest }) {
         color={isActive ? "black" : "white"}
         cursor="pointer"
         bg={isActive ? "#FCD37B" : ""}
-        _hover={{
-          bg: "#FCD37A30",
-          color: "#fff",
-        }}
+        _hover={{ bg: "#FCD37A30", color: "#fff" }}
       >
         {icon && (
           <Icon
             mr="4"
             fontSize="24"
-            _groupHover={{
-              color: "#fff",
-            }}
+            _groupHover={{ color: "#fff" }}
             as={icon}
           />
         )}
@@ -232,6 +237,7 @@ NavItem.propTypes = {
   children: PropTypes.node.isRequired,
   href: PropTypes.string.isRequired,
   isActive: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 function MobileNav({ onOpen, ...rest }) {

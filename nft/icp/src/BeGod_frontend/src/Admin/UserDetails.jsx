@@ -51,6 +51,7 @@ const UserDetails = () => {
   useEffect(() => {
     getUserDetail(principalString);
   }, []);
+  console.log(image);
   console.log(data);
 
   return (
@@ -86,9 +87,9 @@ const UserDetails = () => {
           <div className="h-1/2 md:h-full md:w-[30%] lg:w-[1/2] flex items-center justify-center md:mt-[5vh] lg:mt-0 md:mb-[5vh] lg:mb-0">
             <div className="w-[30%] md:w-[60%] flex items-center justify-center 2xl:h-[80%]">
               <img
-                src={image}
-                alt={`Image of ${name} `}
-                className="w-full h-full "
+                src={image && image.length > 0 ? image[0] : "/image/admin.png"}
+                alt={`Image of ${name}`}
+                className="w-full h-full"
               />
             </div>
           </div>

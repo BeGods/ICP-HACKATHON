@@ -23,6 +23,7 @@ import { SkeletonTheme } from "react-loading-skeleton";
 import WarningModal from "./WarningModal.jsx";
 import SuccessModal from "./SuccessModal.jsx";
 import toast from "react-hot-toast";
+import imageCompression from "browser-image-compression";
 
 const CreateCollection = () => {
   const navigate = useNavigate();
@@ -99,25 +100,41 @@ const CreateCollection = () => {
     return Actor.createActor(idlFactory, { agent, canisterId });
   };
 
-  const handleFormSubmit = async (e) => {
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const actor = createActor();
+  //   try {
+  //     const collectionResponse = await actor.add_collection_to_map(
+  //       principal_id
+  //     );
+  //     console.log("Collection created successfully:", collectionResponse);
+  //     for (const nft of nftRows) {
+  //       const nftResponse = await actor.addNFT({
+  //         id: nft.id,
+  //         description: nft.description,
+  //         collectionId: collectionResponse.collectionId,
+  //       });
+  //       console.log("NFT created successfully:", nftResponse);
+  //     }
+  //     navigate("/success");
+  //   } catch (error) {
+  //     console.error("Error creating collection or NFTs:", error);
+  //   }
+  // };
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const actor = createActor();
-    try {
-      const collectionResponse = await actor.add_collection_to_map(
-        principal_id
-      );
-      console.log("Collection created successfully:", collectionResponse);
-      for (const nft of nftRows) {
-        const nftResponse = await actor.addNFT({
-          id: nft.id,
-          description: nft.description,
-          collectionId: collectionResponse.collectionId,
-        });
-        console.log("NFT created successfully:", nftResponse);
-      }
-      navigate("/success");
-    } catch (error) {
-      console.error("Error creating collection or NFTs:", error);
+
+    // Form validation checks
+    if (!name || !description || !Ufile) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+    // Ensure at least one NFT card is added
+    else if (nftCardsList.length === 0) {
+      toast.error("Please add at least one NFT card.");
+      return;
+    } else {
+      togglewarning();
     }
   };
 
@@ -132,19 +149,31 @@ const CreateCollection = () => {
     }
   };
 
-  const handleFiles = (files) => {
+  const handleFiles = async (files) => {
     console.log("Uploaded files:", files);
     setUFile(files);
-    const file = files[0];
+
+    const file = files[0]; // Get the first uploaded file
     if (file) {
-      const reader = new FileReader();
+      try {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+        };
 
-      // Convert the file to a Base64 string when it's loaded
-      reader.onloadend = () => {
-        setBase64String(reader.result); // The base64-encoded string is stored here
-      };
+        const compressedFile = await imageCompression(file, options);
+        console.log("Compressed file:", compressedFile);
 
-      reader.readAsDataURL(file); // Read the file as a Data URL (Base64 format)
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setBase64String(reader.result);
+        };
+
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error("Error during file compression:", error);
+      }
     }
   };
 
@@ -210,7 +239,7 @@ const CreateCollection = () => {
         chain: "ICP",
         contractAddress: canisterId,
         nftcolor,
-        date: formattedDate,
+        // date: formattedDate,
       });
 
       const metadataContainer = {
@@ -228,12 +257,12 @@ const CreateCollection = () => {
         Number(nftquantity)
       );
 
-      console.log(result,'nft mint data');
+      console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-      console.log(es8_price,'price');
-      if(result && result.length > 0){
-        result.map((val,key)=>{
-          getNftTokenId(answ, val[1],es8_price)
+      console.log(es8_price, "price");
+      if (result && result.length > 0) {
+        result.map((val, key) => {
+          getNftTokenId(answ, val[1], es8_price);
         });
       }
 
@@ -252,12 +281,12 @@ const CreateCollection = () => {
     }
   };
 
-  const getNftTokenId = async (answ, nftIdentifier,nftprice) => {
+  const getNftTokenId = async (answ, nftIdentifier, nftprice) => {
     try {
-      console.log(answ, nftIdentifier,nftprice);
+      console.log(answ, nftIdentifier, nftprice);
       const principal = Principal.fromText(answ);
-        const res = await listPrice(principal, nftIdentifier, nftprice);
-        console.log(res,'res data');
+      const res = await listPrice(principal, nftIdentifier, nftprice);
+      console.log(res, "res data");
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
@@ -267,7 +296,7 @@ const CreateCollection = () => {
 
   const listPrice = async (principal, tokenidentifier, price) => {
     try {
-      const finalPrice = (price);
+      const finalPrice = price;
 
       const priceE8s = finalPrice ? finalPrice : null;
 
@@ -345,13 +374,20 @@ const CreateCollection = () => {
         throw answ;
       }
 
-      console.log(nftCardsList,'nftCardsList nftCardsList');
+      console.log(nftCardsList, "nftCardsList nftCardsList");
       setcanId(answ);
-      if(nftCardsList && nftCardsList.length > 0){
-        nftCardsList.map((val,key)=>{
-          const mintResult = mintNFT(answ, val.nftName, val.nftDescription, val.nftImage, val.nftQuantity, val.nftcolor,val.nftPrice
+      if (nftCardsList && nftCardsList.length > 0) {
+        nftCardsList.map((val, key) => {
+          const mintResult = mintNFT(
+            answ,
+            val.nftName,
+            val.nftDescription,
+            val.nftImage,
+            val.nftQuantity,
+            val.nftcolor,
+            val.nftPrice
           );
-          console.log(mintResult,'minResult')
+          console.log(mintResult, "minResult");
           if (mintResult instanceof Error) {
             hasError = true;
             throw mintResult;
@@ -366,8 +402,6 @@ const CreateCollection = () => {
           }
         });
       }
-
-
     } catch (error) {
       console.error("Error in final call: ", error);
       toast.error("Error in final call");
@@ -485,7 +519,7 @@ const CreateCollection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-5">
+                  <div className="grid grid-col-3 gap-5">
                     {nftCardsList.map((eachNftItem) => (
                       <NftCardItem
                         nftDetails={eachNftItem}
@@ -515,7 +549,7 @@ const CreateCollection = () => {
                       className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border rounded-md border-[#d1b471]  h-[40px] w-[180px] "
                       // onClick={finalcall}
                       // onClick={() => setShowModal(true)}
-                      onClick={togglewarning}
+                      onClick={handleSubmit}
                     >
                       Create Collection
                     </button>
