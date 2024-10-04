@@ -771,9 +771,12 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
 
 
 
-    public shared func userNFTcollection(_collectionCanisterId: Principal, user: AccountIdentifier) : async Result.Result<{
-    boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)];
-    unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)]
+  public shared func userNFTcollection(
+    _collectionCanisterId: Principal,
+    user: AccountIdentifier
+    ) : async Result.Result<{
+    boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)];
+    unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)];
     }, CommonError> {
 
     // Define the canister actor interface
@@ -791,11 +794,11 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
     // Fetch the listings (unbought NFTs)
     let marketplaceListings = await listings(_collectionCanisterId);
 
-    var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)] = [];
-    var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)] = [];
+    var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
+    var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
 
     // Iterate through all NFTs in the collection
-    for ((tokenIndex, nftOwner, metadata, _) in allNFTs.vals()) {
+    for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
         let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
 
         // Check if the NFT is listed in the marketplace (unbought)
@@ -804,11 +807,11 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
         });
 
         if (nftOwner == user) {
-            // If the user owns the NFT, add it to the boughtNFTs list
-            boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId)]);
+            // If the user owns the NFT, add it to the boughtNFTs list with its price
+            boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
         } else if (isListed != null) {
-            // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list
-            unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId)]);
+            // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list with its price
+            unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
         }
     };
 

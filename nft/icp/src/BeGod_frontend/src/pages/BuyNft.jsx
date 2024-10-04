@@ -40,6 +40,10 @@ const BuyNft = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const collectionId = params.get("collectionId");
+  let collectionColor = params.get("type");
+  if(collectionColor === 'Golden'){
+    collectionColor = "gold";
+  }
   const index = params.get("index");
   const { backendActor, ledgerActor, principal } = useAuth({});
   const [nftCardLoading, setNftCardLoading] = useState(true);
@@ -558,7 +562,9 @@ const BuyNft = () => {
             </div>
             <div>
               {nftCardLoading ? (
-                <div className="h-[60%] w-[80%] mt-[40%] ml-[50%] shadow-lg rounded-lg">
+                <div className="h-[60%] w-[80%] mt-[40%] ml-[50%] shadow-lg rounded-lg"
+                style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                >
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <Skeleton
                       count={1}
@@ -570,9 +576,10 @@ const BuyNft = () => {
                 </div>
               ) : (
                 <div
-                  className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                  style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
-                >
+                    className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
+                    style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                  >
+
                   <img
                     src={cardDetails?.cardImageUrl}
                     alt=""

@@ -146,13 +146,14 @@ const Hero = () => {
         console.log("index in handle click",index)
         
         const currentCollectionId = collections[index].collectionId;
+        const color = collections[index].shadowColor;
         if(currentCollectionId === collections[currentIndex].collectionId) {
             return;
         }
         updateNoCardsStatus(false)
         updateSelectedCollectionNftCardsList([]);
         setCurrentIndex(index);
-        const currList = await fetchCollectionNfts(currentCollectionId)
+        const currList = await fetchCollectionNfts(currentCollectionId,color)
         if(currList.length > 0){
             updateSelectedCollectionNftCardsList(currList);
         }else{
@@ -200,18 +201,14 @@ const Hero = () => {
                 description:jsonData.description
             }
             i++;
-            shadowColorIndex = shadowColorIndex+1;
-            if(shadowColorIndex > 3){
-                shadowColorIndex = 0;
-            }
-
             collections.push(colItem);
         })
         
         setCollections(collections);
         
         const currentCollectionId = collections[currentIndex].collectionId;
-        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId);
+        const color = collections[currentIndex].shadowColor;
+        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color);
         if(currentCollectionNfts.length>0){
             updateSelectedCollectionNftCardsList(currentCollectionNfts);
         }
@@ -220,21 +217,21 @@ const Hero = () => {
         //console.log(currentCollectionNfts)
 };
 let index = -1;
-const fetchCollectionNfts = async (collectionId) => {
+const fetchCollectionNfts = async (collectionId,color) => {
     const listedNfts = await backendActor?.listings(collectionId);
     index  = -1;
     if(listedNfts.length === 0){
         updateNoCardsStatus(true);
         return [];
     }
-    const fetchedNfts = getCollectionNfts(listedNfts,collectionId);
+    const fetchedNfts = getCollectionNfts(listedNfts,collectionId,color);
     console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
    
 
 };
 
-const getCollectionNfts = (collectionList,collectionId) => {
+const getCollectionNfts = (collectionList,collectionId,color) => {
     const tempList = [];
     let tempIndex = 0;
     for(let i=0;i<collectionList.length;i++){
@@ -248,6 +245,7 @@ const getCollectionNfts = (collectionList,collectionId) => {
         // console.log(metadata,'metadata');
         const nftType = metadata.nfttype;
         const borderColor = metadata.nftcolor;
+        console.log("collection list before nft card",collections)
         const nftCard= {
             collectionId,
             index:eachItem[0],
@@ -256,7 +254,8 @@ const getCollectionNfts = (collectionList,collectionId) => {
             sold,
             ICP,
             nftType,
-            borderColor
+            borderColor,
+            collectionColor : color,
         };
         if(tempIndex === 0){
             tempList.push([nftCard]);
@@ -501,7 +500,7 @@ console.log("filtered list after applying filters",filteredList)
                                       </div>
                                     )}
                             </div>
-                            <div className=' relative lg:ml-auto mr-2 lg:mr-20 w-[160px] h-[40px] md:w-[180px] '>
+                            <div className=' relative lg:ml-auto mr-2 lg:mr-20 w-[160px] h-[40px] md:w-[180px] bottom-5 '>
                             <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                             <button
                                     onClick={()=>onClickAnyFilter(dropdownItems.filter)}

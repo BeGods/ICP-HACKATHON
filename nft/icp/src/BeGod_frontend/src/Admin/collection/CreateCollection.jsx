@@ -239,7 +239,7 @@ const CreateCollection = () => {
         chain: "ICP",
         contractAddress: canisterId,
         nftcolor,
-        // date: formattedDate,
+        date: formattedDate,
       });
 
       const metadataContainer = {

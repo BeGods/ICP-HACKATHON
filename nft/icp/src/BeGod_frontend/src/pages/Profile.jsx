@@ -64,6 +64,8 @@ const Profile = () => {
   const navigate = useNavigate(); 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
+  const [remainingNftsCount,updateRemainingNfts] = useState([]);
+
   useEffect(()=>{
     if(!isAuthenticated){
       navigate('/')
@@ -236,6 +238,7 @@ const fetchCollections = async () => {
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,true);
      updatedCardsList = updatedOwnedList;
     const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,false);
+    updateRemainingNfts(updatedNotOwnedNfts.length);
     updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
     setIsCardsLoading(false);
     if(updatedCardsList.length >0){
@@ -494,14 +497,40 @@ const onChangeFilterOption = (eachCollection) => {
                       <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
                       <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
                     </div>
-                    ):(
+                    ):( 
+                      <>
                       <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} />
                         </div>
                       ))}
+                        
                     </div>
+                    <div className='flex flex-col items-end '>
+                    <div className='flex items-center justify-end mx-20 my-10'>
+                          <div className={`relative ${remainingNftsCount>0 && "group"}`}>
+                            <button 
+                              disabled={remainingNftsCount > 0} 
+                              className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
+                            >
+                              Place Order
+                            </button>
+                            
+                              <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[250px] text-center py-1 rounded`}>
+                              Buy remaining {remainingNftsCount} nfts to place order!
+                            </span>
+                            
+                          </div>
+                        </div>
+
+
+                      
+                    </div>
+
+
+                    
+                    </>
                     )}
                     </>
                     ))

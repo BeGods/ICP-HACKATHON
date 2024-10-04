@@ -32,9 +32,9 @@ const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
             <div className={`flip-card-inner  ${!img.isOwned && "border-3"} ${
               img.borderColor === 'Golden'
                 ? 'border-golden'
-                : img.borderColor === 'Silver'
+                : img.borderColor === 'silver'
                 ? 'border-silver'
-                : img.borderColor === 'Bronze'
+                : img.borderColor === 'bronze'
                 ? 'border-bronze'
                 : 'border-gray-100'
             }`}>
