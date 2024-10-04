@@ -220,12 +220,12 @@ const fetchUserDetails= async () => {
   }
 
 const fetchCollections = async () => {
-    // console.log("all collection list ",allCollectionsList);
+     console.log("all collection list ",allCollectionsList);
     if(allCollectionsList.length === 0){
       updateNoCardsStatus(true);
       return;
     }
-    const currentSelectedCollection = allCollectionsList[0];
+    const currentSelectedCollection = allCollectionsList[currentDropDownOption];
     await getSelectedOptionCards(currentSelectedCollection.collectionId);
 };
 
@@ -262,6 +262,7 @@ const fetchCollections = async () => {
           if(isOwned){
            isFav = await checkIsFavourite(eachCard[0]);
           }
+          console.log("all collections",allCollectionsList,"currentindex",currentDropDownOption);
           const tempcard= {
                 tokenId:eachCard[0],
                 index : eachCard[1],
@@ -271,9 +272,10 @@ const fetchCollections = async () => {
                 cardType:metadata.nfttype,
                 isOwned,
                 isFavourite : isFav,
-                borderColor : metadata.nftcolor
+                borderColor : metadata.nftcolor,
+                collectionColor : allCollectionsList[currentDropDownOption].collectionColor,
              }
-             tempList.push(tempcard)
+             tempList.push(tempcard);
 
       }
 
