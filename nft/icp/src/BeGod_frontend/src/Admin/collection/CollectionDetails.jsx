@@ -26,16 +26,20 @@ function CollectionDetails() {
   const { id } = useParams();
   const location = useLocation();
   const { collectiondata } = location.state || {};
-  console.log(nftprice);
-  console.log(nftquantity);
 
   const toggleModal = () => {
     setModal(!modal);
   };
   console.log(collectiondata);
+
   if (!collectiondata) {
     return <p>No NFT data available</p>;
   }
+
+  const jsonString = collectiondata[4];
+  const parsedData = JSON.parse(jsonString);
+  const colldescription = parsedData.description;
+  console.log(colldescription);
 
   console.log(collectiondata?.[1].toString());
 
@@ -136,7 +140,6 @@ function CollectionDetails() {
       // const principall = Principal.fromText(principal);
       const res = await listPrice(principal, nftIdentifier, nftprice);
       console.log(res, "res data");
-
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
@@ -173,16 +176,14 @@ function CollectionDetails() {
   const getListing = async (principal) => {
     try {
       console.log(principal);
-      toast('Featching NFTs,Please Wait! ...',
-        {
-          icon: '⚠️',
-          style: {
-            borderRadius: '10px',
-            background: '#333',
-            color: '#fff',
-          },
-        }
-      );
+      toast("Featching NFTs,Please Wait! ...", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       const result = await backendActor?.listings(principal);
       console.log("Listing", result);
 
@@ -254,13 +255,15 @@ function CollectionDetails() {
 
             {/* Skeleton for NFT Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3">
-              {Array(6).fill().map((_, index) => (
-                <div key={index} className="flex flex-col space-y-3">
-                  <Skeleton height={200} />
-                  <Skeleton width="80%" height={20} />
-                  <Skeleton width="60%" height={20} />
-                </div>
-              ))}
+              {Array(6)
+                .fill()
+                .map((_, index) => (
+                  <div key={index} className="flex flex-col space-y-3">
+                    <Skeleton height={200} />
+                    <Skeleton width="80%" height={20} />
+                    <Skeleton width="60%" height={20} />
+                  </div>
+                ))}
             </div>
           </div>
         ) : (
@@ -289,7 +292,7 @@ function CollectionDetails() {
                   </h1>
                 </div>
                 <p className="text-sm font-normal font-Quicksand md:text-xl">
-                  Collection description goes here
+                  {colldescription}
                 </p>
                 <h3 className="text-sm font-bold font-Quicksand md:text-xl">
                   Collection ID - {principalStringg}
@@ -300,11 +303,21 @@ function CollectionDetails() {
             {/* NFT list section */}
             <div className="w-full pb-12 text-white">
               <h1 className="text-xl my-4">
-                List of all NFT Collection - <span className="font-bold text-green-500">{principalStringg}</span>
+                List of all NFT Collection -{" "}
+                <span className="font-bold text-green-500">
+                  {principalStringg}
+                </span>
               </h1>
-              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-20 items-center justify-start">
                 {nftList?.map((list, index) => (
-                  <NftCard id={principalStringg} list={list[2]} key={index} />
+                  <>
+                    <NftCard
+                      id={principalStringg}
+                      list={list}
+                      key={index}
+                      collectiondata={collectiondata}
+                    />
+                  </>
                 ))}
               </div>
             </div>
@@ -313,7 +326,7 @@ function CollectionDetails() {
               <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
                 <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
                   <div className="flex items-center justify-center h-screen">
-                  <Modal
+                    <Modal
                       toggleModal={toggleModal}
                       getAddedNftDetails={getAddedNftDetails}
                     />

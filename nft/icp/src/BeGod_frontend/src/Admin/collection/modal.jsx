@@ -132,10 +132,11 @@ const Modal = (props) => {
               value={nftQuantity}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value > 0 && Number.isInteger(+value)) {
-                  setNftQuantity(value);
+                if (value < 0) {
+                  toast.error("Enter a valid natural number greater than 0");
+                  setNftQuantity("");
                 } else {
-                  toast.error("Enter the natural number");
+                  setNftQuantity(value);
                 }
               }}
               type="number"
@@ -162,15 +163,16 @@ const Modal = (props) => {
               value={nftPrice}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value > 0 && Number.isInteger(+value)) {
-                  setPrice(value);
+                if (value < 0) {
+                  toast.error("Enter a valid natural number greater than 0");
+                  setPrice("");
                 } else {
-                  toast.error("Enter the natural number");
+                  setPrice(value);
                 }
               }}
-              type="number"
+              type="natural-number"
               min="1"
-              className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px]  text-[#8a8686] "
+              className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px] text-[#8a8686]"
             />
           </label>
         </div>
