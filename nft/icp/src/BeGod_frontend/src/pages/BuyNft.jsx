@@ -416,10 +416,15 @@ const BuyNft = () => {
                   <h1>{chain}</h1>
                   <h1>{cardDetails?.chains[0]}</h1>
                 </div>
-                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                {
+                  cardDetails && cardDetails?.date && (
+                    <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{lastUpdated}</h1>
                   <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
                 </div>
+                  )
+                }
+                
               </>
             )}
           </div>
@@ -541,7 +546,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{lastUpdated}</h1>
-                      <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
+                      <h1><ReactTimeAgo date={cardDetails?.date || 0} locale="en" /></h1>
                     </>
                   )}
                 </div>

@@ -52,9 +52,9 @@ export const useAuthClient = () => {
   const frontend_id = process.env.CANISTER_ID_BEGOD_FRONTEND;
   
   // testnet
-  // const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
+  const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
   // mainnet
-  const ledgerCanId = "ryjl3-tyaaa-aaaaa-aaaba-cai";
+  // const ledgerCanId = "ryjl3-tyaaa-aaaaa-aaaba-cai";
 
   const whitelist = [backend_id,ledgerCanId,frontend_id];
 
