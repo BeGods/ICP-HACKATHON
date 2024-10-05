@@ -402,7 +402,7 @@ const BuyNft = () => {
               <>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{contactAddress}</h1>
-                  <h1>{cardDetails.contactAddress}</h1>
+                  <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{token}</h1>
@@ -562,8 +562,7 @@ const BuyNft = () => {
             </div>
             <div>
               {nftCardLoading ? (
-                <div className="h-[60%] w-[80%] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                <div className="mt-[40%] ml-[50%] shadow-lg rounded-lg mb-5"
                 >
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <Skeleton
@@ -649,7 +648,7 @@ const BuyNft = () => {
                   currentBuyingStatus === buyingStatus.success
                     ? "lg:h-[65vh]"
                     : "lg:h-[40vh]"
-                } w-[70vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
+                } w-[90vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
               >
                 <div className="relative flex items-center justify-end">
                   <button
@@ -790,7 +789,7 @@ const BuyNft = () => {
         </div>
       )}
       {sharePopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screenn">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div

@@ -77,7 +77,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
                             </Link>
                         )}
                         {img.isOwned && (
-                            <Link to={`/Nft/${img.cardName}/buy?collectionId=${img.collectionId}&index=${img.index}`}
+                            <Link to={`/Nft/${img.cardName}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`}
                             className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
                                 View Details
                             </Link>
