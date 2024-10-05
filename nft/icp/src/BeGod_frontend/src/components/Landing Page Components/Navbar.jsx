@@ -31,7 +31,7 @@ const Navbar = ({ mobileView }) => {
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { logout, login, principal, showButtonLoading } = useAuth();
+  const { logout, login, principal, showButtonLoading,plugConnectMobile } = useAuth();
 
   const [currentLanguage, setLanguage] = useState(t("langText"));
 
@@ -375,7 +375,7 @@ const Navbar = ({ mobileView }) => {
                 </button>
                 <button
                   className="pl-3 mt-5 h-[40px] bg-transparent rounded-lg flex items-center text-[16px] sm:text-[20px]  border border-[#FCD378]"
-                  onClick={() => login("plug", navigatingPath)}
+                  onClick={() => plugConnectMobile()}
                 >
                   <img
                     src="https://docs.plugwallet.ooo/imgs/logo.png"
