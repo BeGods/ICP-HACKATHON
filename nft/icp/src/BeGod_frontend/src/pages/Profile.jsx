@@ -378,7 +378,7 @@ const onChangeFilterOption = (eachCollection) => {
                 <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
                 <button
             onClick={()=>updateEditProfileStatus(true)}
-            className=' flex items-center justify-center mt-4  h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>Edit Profile
+            className=' flex items-center justify-center mt-4 w-[130px]  h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>Edit Profile
             </button>
               </div>
               </div>
@@ -408,7 +408,7 @@ const onChangeFilterOption = (eachCollection) => {
               </div> */}
             </div>
             {allCollectionsList.length >0 && (
-              <div className="relative w-[180px] flex justify-center mr-5 z-10 mt-5 ">
+              <div className="relative w-[96%] h-[35px] sm:h-[40px]  md:w-[180px] flex justify-center md:mr-5 z-10 mt-5 ">
                            
               <button
                   onClick={()=>updateDropDownStatus(!isDisplayCollectionDropDown)}
@@ -509,29 +509,28 @@ const onChangeFilterOption = (eachCollection) => {
                       ))}
                         
                     </div>
-                    <div className='flex flex-col items-end '>
-                    <div className='flex items-center justify-end mx-20 my-10'>
-                          <div className={`relative ${remainingNftsCount>0 && "group"}`}>
-                            <button 
-                              disabled={remainingNftsCount > 0} 
-                              className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
-                            >
-                              Place Order
-                            </button>
-                            
-                              <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[250px] text-center py-1 rounded`}>
-                              Buy remaining {remainingNftsCount} nfts to place order!
-                            </span>
-                            
+                    {currentOption === "mycollection" && (
+                      <div className='flex flex-col items-center md:items-end '>
+                      <div className='flex items-center justify-end mx-20 my-10 '>
+                            <div className={`relative ${remainingNftsCount>0 && "group"}`}>
+                              <button 
+                                disabled={remainingNftsCount > 0} 
+                                className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
+                              >
+                                Place Order
+                              </button>
+                              
+                                <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[250px] text-center py-1 rounded`}>
+                                Buy remaining {remainingNftsCount} nfts to place order!
+                              </span>
+                              
+                            </div>
                           </div>
-                        </div>
-
-
-                      
-                    </div>
-
-
-                    
+  
+  
+                        
+                      </div>
+                    )}
                     </>
                     )}
                     </>
@@ -549,7 +548,7 @@ const onChangeFilterOption = (eachCollection) => {
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[50vh] md:h-[40vh] w-[70vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className="h-[40vh] w-[90vw] md:h-[40vh]  lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
             >
               <div className="relative flex items-center justify-end">
                 <button
