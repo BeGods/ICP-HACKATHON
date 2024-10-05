@@ -339,7 +339,7 @@ const BuyNft = () => {
             <div>
               <div
                 className="w-full h-full rounded-lg shadow-lg"
-                style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
+                style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}
               >
                 {nftCardLoading ? (
                   <SkeletonTheme baseColor="#202020" highlightColor="#444">
@@ -576,7 +576,7 @@ const BuyNft = () => {
               ) : (
                 <div
                     className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                    style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                    style={{ boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}` }}
                   >
 
                   <img
