@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import userMythologies from "../models/mythologies.models";
-import { areObjectsEqual } from "../utils/compareObjects";
+import { areObjectsEqual } from "../utils/helpers/helpers";
 import { questAggregator } from "../services/quest.services";
 import milestones from "../models/milestones.models";
 

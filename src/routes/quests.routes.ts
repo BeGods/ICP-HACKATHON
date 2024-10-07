@@ -19,7 +19,7 @@ import {
 } from "../middlewares/quests.middlewares";
 const router = express.Router();
 
-router.get("/quests/lost", authMiddleware, unClaimedQuests);
+// quests
 router.post("/quests/create", authMiddleware, createQuest);
 router.post(
   "/quests/complete",
@@ -27,25 +27,34 @@ router.post(
   verifyValidQuest,
   completeQuest
 );
+router.post("/quests/claim", authMiddleware, verifyQuestClaim, claimQuest);
+
+// lost quests
+router.get("/quests/lost", authMiddleware, unClaimedQuests);
+router.post(
+  "/quests/claim/lost",
+  authMiddleware,
+  verifyValidLostQuest,
+  claimLostQuest
+);
+
+// other social quests
 router.post(
   "/quests/social",
   authMiddleware,
   verifyValidQuest,
   claimSocialQuest
 );
-router.post("/quests/claim", authMiddleware, verifyQuestClaim, claimQuest);
-router.post(
-  "/quests/claimLostQuest",
-  authMiddleware,
-  verifyValidLostQuest,
-  claimLostQuest
-);
+
+// extra orb-reward
 router.post(
   "/quests/claim/share",
   authMiddleware,
   verifyCompletedQuest,
   claimOrbOnShare
 );
+
+// share quest
 router.post(
   "/quests/share",
   authMiddleware,

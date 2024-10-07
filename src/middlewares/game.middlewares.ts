@@ -7,8 +7,8 @@ import userMythologies, {
   IMyth,
   IUserMyths,
 } from "../models/mythologies.models";
-import { calculateAutomataEarnings } from "../utils/game";
-import { mythOrder } from "../utils/variables";
+import { calculateAutomataEarnings } from "../utils/helpers/game.helpers";
+import { mythOrder } from "../utils/constants/variables";
 
 export const validShardsBoosterReq = async (req, res, next) => {
   try {

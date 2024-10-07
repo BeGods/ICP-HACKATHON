@@ -3,7 +3,7 @@ import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
 import User from "../models/user.models";
 
-export const createUser = async (userData) => {
+export const addNewUser = async (userData) => {
   try {
     userData.referralCode = `FDG${userData.telegramId}`;
     userData.squadOwner = userData.parentReferrerId;

@@ -7,7 +7,7 @@ import express from "express";
 
 const router = express.Router();
 
-router.post("/user/connectTon", authMiddleware, connectTonWallet);
-router.post("/user/disconnectTon", authMiddleware, disconnectTonWallet);
+// router.post("/user/connectTon", authMiddleware, connectTonWallet);
+// router.post("/user/disconnectTon", authMiddleware, disconnectTonWallet);
 
 export default router;

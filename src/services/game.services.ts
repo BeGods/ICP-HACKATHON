@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
-import { calculateAutomataEarnings, calculateEnergy } from "../utils/game";
+import {
+  calculateAutomataEarnings,
+  calculateEnergy,
+} from "../utils/helpers/game.helpers";
 import userMythologies from "../models/mythologies.models";
 const axios = require("axios");
 

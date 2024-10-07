@@ -66,7 +66,6 @@ export const updateRanks = async (req, res) => {
   try {
     const leaderboard = await getLeaderboardSnapshot();
 
-    // calculate squad totalsorbs
     const squadPipeline = [
       {
         $group: {
@@ -244,15 +243,17 @@ export const claimDailyBonus = async (req, res) => {
       );
     }
 
-    if (result === "blackOrb") {
-      bonusReward = await claimBonusOrb(result, user._id);
-    } else if (result === "mythOrb") {
-      bonusReward = await claimBonusOrb(result, user._id);
-    } else if (result === "booster") {
-      bonusReward = await claimBonusBooster(user._id);
-    } else if (result === "quest") {
-      bonusReward = await claimBonusQuest(user._id);
-    }
+    // if (result === "blackOrb") {
+    //   bonusReward = await claimBonusOrb(result, user._id);
+    // } else if (result === "mythOrb") {
+    //   bonusReward = await claimBonusOrb(result, user._id);
+    // } else if (result === "booster") {
+    //   bonusReward = await claimBonusBooster(user._id);
+    // } else if (result === "quest") {
+    //   bonusReward = await claimBonusQuest(user._id);
+    // }
+
+    bonusReward = await claimBonusQuest(user._id);
 
     res.status(200).json({ reward: bonusReward });
   } catch (error) {
@@ -399,27 +400,25 @@ export const test = async (req, res) => {
 export const getRewards = async (req, res) => {
   try {
     const userId = req.user._id;
-    // const playsuperRewards = await fetchPlaySuperRewards();
     const userMilestones = await milestones.findOne({ userId });
+
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000;
+    const timeElapsed = now - userMilestones.rewards.lastResetAt;
+
+    if (userMilestones.rewards.lastResetAt === 0 || timeElapsed > oneHour) {
+      userMilestones.rewards.rewardsInLastHr = [];
+      userMilestones.rewards.lastResetAt = now;
+      await userMilestones.save();
+    }
+
     const activePartners = await partners
       .find()
       .lean()
       .select("-__v -createdAt -updatedAt");
+
     const claimedRewards = userMilestones.rewards.claimedRewards;
     const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
-
-    // const playsuper = playsuperRewards.map((reward) => {
-    //   const claimedReward = claimedRewards.find(
-    //     (claimed) => claimed.partnerId === reward.id
-    //   );
-
-    //   return {
-    //     ...reward,
-    //     partnerType: "playsuper",
-    //     tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
-    //     isClaimed: claimedReward ? claimedReward.isClaimed : false,
-    //   };
-    // });
 
     const ourpartners = activePartners.map((reward) => {
       const claimedReward = claimedRewards.find(
@@ -447,6 +446,20 @@ export const getRewards = async (req, res) => {
     });
   }
 };
+
+// const playsuperRewards = await fetchPlaySuperRewards();
+// const playsuper = playsuperRewards.map((reward) => {
+//   const claimedReward = claimedRewards.find(
+//     (claimed) => claimed.partnerId === reward.id
+//   );
+
+//   return {
+//     ...reward,
+//     partnerType: "playsuper",
+//     tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+//     isClaimed: claimedReward ? claimedReward.isClaimed : false,
+//   };
+// });
 
 // playsuper
 export const generateOtp = async (req, res) => {
@@ -516,8 +529,6 @@ export const redeemPlayuperReward = async (req, res) => {
     const { rewardId } = req.body;
 
     const reward = await claimPlaysuperReward(rewardId, user.playsuper.key);
-
-    console.log(reward);
 
     updatedPartner.isClaimed = true;
     updatedPartner.couponCode = reward.couponCode;
