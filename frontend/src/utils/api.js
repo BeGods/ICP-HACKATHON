@@ -34,7 +34,7 @@ export const fetchGameStats = async (accessToken) => {
 export const updateMythology = async (mythology, accessToken) => {
   let url = `${
     import.meta.env.VITE_API_URL
-  }/game/updateStats?mythologyName=${mythology}`;
+  }/game/stats/update?mythologyName=${mythology}`;
 
   try {
     const response = await axios.get(url, {
@@ -66,7 +66,7 @@ export const fetchLeaderboard = async (accessToken) => {
 };
 
 export const convertOrbs = async (data, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/convertOrbs`;
+  let url = `${import.meta.env.VITE_API_URL}/game/convert`;
 
   try {
     const response = await axios.post(url, data, {
@@ -146,7 +146,7 @@ export const completeQuest = async (questData, accessToken) => {
 };
 
 export const claimShardsBooster = async (mythologyName, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claimShards`;
+  let url = `${import.meta.env.VITE_API_URL}/booster/claim/minion`;
 
   try {
     const response = await axios.post(url, mythologyName, {
@@ -162,7 +162,7 @@ export const claimShardsBooster = async (mythologyName, accessToken) => {
 };
 
 export const claimBurstBooster = async (mythologyName, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claimBurst`;
+  let url = `${import.meta.env.VITE_API_URL}/booster/claim/burst`;
 
   try {
     const response = await axios.post(url, mythologyName, {
@@ -178,7 +178,7 @@ export const claimBurstBooster = async (mythologyName, accessToken) => {
 };
 
 export const claimAutomataBooster = async (mythologyName, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claimAutomata`;
+  let url = `${import.meta.env.VITE_API_URL}/booster/claim/automata`;
 
   try {
     const response = await axios.post(url, mythologyName, {
@@ -242,7 +242,7 @@ export const startTapSession = async (mythologyName, accessToken) => {
 };
 
 export const claimBurst = async (result, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/claimBurst`;
+  let url = `${import.meta.env.VITE_API_URL}/game/burst`;
 
   try {
     const response = await axios.post(url, result, {
@@ -292,7 +292,7 @@ export const fetchLostQuests = async (mythologyName, accessToken) => {
 };
 
 export const claimLostQuest = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/claimLostQuest`;
+  let url = `${import.meta.env.VITE_API_URL}/quests/claim/lost`;
 
   try {
     const response = await axios.post(url, questData, {
@@ -388,7 +388,7 @@ export const claimSocialTask = async (data, accessToken) => {
 };
 
 export const fetchRewards = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/rewards`;
+  let url = `${import.meta.env.VITE_API_URL}/partners`;
 
   try {
     const response = await axios.get(url, {

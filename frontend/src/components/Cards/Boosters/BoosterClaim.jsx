@@ -10,7 +10,6 @@ const BoosterClaim = ({
   Button,
   closeCard,
   disableIcon,
-  mythData,
 }) => {
   const { gameData, section, enableSound } = useContext(MyContext);
 
@@ -86,11 +85,11 @@ const BoosterClaim = ({
       <ReactHowler
         src={`/assets/audio/fof.${
           activeCard === "automata"
-            ? "automata"
+            ? "automata.pulse"
             : activeCard === "minion"
-            ? "minion"
+            ? "alchemist.grunt"
             : ""
-        }.grunt.short.wav`}
+        }.short.wav`}
         playing={enableSound}
         preload={true}
       />

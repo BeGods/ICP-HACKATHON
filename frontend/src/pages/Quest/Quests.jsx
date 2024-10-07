@@ -375,6 +375,7 @@ const Quests = () => {
                 className="h-full relative -mt-[40px]"
               >
                 <JigsawImage
+                  handleClick={() => {}}
                   imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.whitelist.wood.jpg`}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith

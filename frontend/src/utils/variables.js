@@ -10,7 +10,7 @@ export const wheelNames = ["aether", "fire", "earth", "water", "air"];
 export const wheel = ["other", "greek", "celtic", "norse", "egyptian"];
 export const wheelMyths = ["other", "Greek", "Celtic", "Norse", "Egyptian"];
 export const boosterIcon = ["o", "i", "v", "A", "b", "S"];
-export const footerIcons = ["j", "x", "k", "t"];
+export const footerIcons = ["j", "x", "k", "t"]; //"t"
 export const mythSymbols = {
   greek: "d",
   celtic: "f",
@@ -34,4 +34,10 @@ export const defaultIcons = {
   Norse: "c",
   Egyptian: "e",
   blackOrb: "g",
+};
+export const orbSounds = {
+  0: "fire.red",
+  1: "earth.green",
+  2: "water.blue",
+  3: "air.yellow",
 };

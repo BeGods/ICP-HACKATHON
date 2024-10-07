@@ -75,9 +75,8 @@ const JoinBonus = (props) => {
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
-          <h1 className="uppercase text-gold text-[14.2vw] text-center -mt-4 text-black-contour leading-[55px]">
-            Joining <br />
-            BONUS
+          <h1 className="uppercase text-gold text-[14.2vw] text-center -mt-4 text-black-contour break-words leading-[55px]">
+            {t("bonus.join")}
           </h1>
         </div>
         {/* Main */}

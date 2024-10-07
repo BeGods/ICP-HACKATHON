@@ -7,10 +7,12 @@ import { Crown, LoaderPinwheel } from "lucide-react";
 import { MyContext } from "../../context/context";
 import ReactHowler from "react-howler";
 import SplashScreen from "./SplashScreen";
+import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
 const Gacha = (props) => {
+  const { t } = useTranslation();
   const {
     gameData,
     setQuestsData,
@@ -191,7 +193,9 @@ const Gacha = (props) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setChangeText((prevText) => (prevText === "PANDORA" ? "BOX" : "PANDORA"));
+      setChangeText((prevText) =>
+        prevText === "PANDORA" ? t("bonus.box") : "PANDORA"
+      );
     }, 1500);
 
     return () => clearInterval(interval);
