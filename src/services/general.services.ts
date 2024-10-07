@@ -2,7 +2,6 @@ import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { OrbsTransactions } from "../models/transactions.models";
 import mongoose from "mongoose";
-import quest from "../models/quests.models";
 
 export const getLeaderboardSnapshot = async () => {
   try {
@@ -23,24 +22,20 @@ export const getLeaderboardSnapshot = async () => {
           },
           blackOrbs: {
             $first: {
-              $ifNull: ["$blackOrbs", 0],
+              $multiply: [{ $ifNull: ["$blackOrbs", 0] }, 1000],
+            },
+          },
+          multiColorOrbs: {
+            $first: {
+              $multiply: [{ $ifNull: ["$multiColorOrbs", 0] }, 2],
             },
           },
         },
       },
       {
         $addFields: {
-          // Convert totalMythologyOrbs to black orbs (1000 orbs = 1 black orb)
-          roundedMythologyOrbs: {
-            $round: [{ $divide: ["$totalMythologyOrbs", 1000] }, 3],
-          },
-        },
-      },
-      {
-        $addFields: {
-          // Calculate totalOrbs by adding rounded mythology orbs to black orbs
           totalOrbs: {
-            $add: ["$roundedMythologyOrbs", "$blackOrbs"],
+            $add: ["$totalMythologyOrbs", "$blackOrbs", "$multiColorOrbs"],
           },
         },
       },

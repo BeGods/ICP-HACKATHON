@@ -17,7 +17,6 @@ interface IBooster {
   burstActiveAt: number;
 }
 export interface IMyth extends Document {
-  _id?: string;
   name: string;
   orbs: number;
   shards: number;
