@@ -1,13 +1,13 @@
 // Function list:
 
 // Collection-related Functions:
-    // 1. add_collection_to_map
-    // 2. remove_collection_to_map
-    // 3. createExtCollection
+    // 1. add_collection_to_map (admin)
+    // 2. remove_collection_to_map(admin)
+    // 3. createExtCollection(admin)
     // 4. getUserCollectionDetails
     // 5. getUserCollections
-    // 6. getAllCollections
-    // 7. totalcollections
+    // 6. getAllCollections(user,admin)
+    // 7. totalcollections(admin)
     // 8. getAllCollectionNFTs
     // 9. getSingleCollectionDetails
     // 10. getAllNFTsAcrossAllCollections
@@ -75,6 +75,7 @@ import HashMap "mo:base/HashMap";
 import Queue "../EXT-V2/motoko/util/Queue";
 import ExtCommon "../EXT-V2/motoko/ext/Common";
 import _owners "../EXT-V2/ext_v2/v2";
+import Admin "./Admin/admin";
 
 actor Main {
 
@@ -148,28 +149,28 @@ actor Main {
         };
     };
 
-    type TopSellingNFT = {
-        tokenId : TokenIdentifier;
-        totalSales : Nat64;
-        details : Metadata;
-        price : Listing;
-    };
+    // type TopSellingNFT = {
+    //     tokenId : TokenIdentifier;
+    //     totalSales : Nat64;
+    //     details : Metadata;
+    //     price : Listing;
+    // };
     
-    type Order = {
-    id: Nat;
-    accountIdentifier: Principal;
-    //collectionCanisterId: Principal;
-    userId: Nat;             // Link order to user's ID
-    tokenid: TokenIdentifier;
-    phone: Text;
-    email: Text;
-    address: Text;
-    city: Text;
-    country: Text;
-    pincode: Text;
-    landmark: ?Text;
-    orderTime: Time.Time;
-    };
+    // type Order = {
+    // id: Nat;
+    // accountIdentifier: Principal;
+    // //collectionCanisterId: Principal;
+    // userId: Nat;             // Link order to user's ID
+    // tokenid: TokenIdentifier;
+    // phone: Text;
+    // email: Text;
+    // address: Text;
+    // city: Text;
+    // country: Text;
+    // pincode: Text;
+    // landmark: ?Text;
+    // orderTime: Time.Time;
+    // };
 
     type User = {
         uid: Text;
@@ -225,10 +226,6 @@ actor Main {
     //private stable var userDetailsArray: [UserDetails] = [];
     private  var userDetailsMap: TrieMap.TrieMap<Principal, UserDetails> = TrieMap.TrieMap<Principal, UserDetails>(Principal.equal, Principal.hash);
 
-    //DB to store order related details
-    private stable var orders: [Order] = [];
-    private stable var orderIdCounter: Nat = 0;
-
 
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
@@ -262,7 +259,7 @@ actor Main {
     };
 
     //remove any collection from collection map
-    public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {
+    public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {       
         let userCollections = usersCollectionMap.get(user);
         switch (userCollections) {
             case null {
@@ -769,11 +766,13 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
         return usersArray.size();
     };
 
-
-
-    public shared func userNFTcollection(_collectionCanisterId: Principal, user: AccountIdentifier) : async Result.Result<{
-    boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)];
-    unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)]
+    // USER MY COLLECTION
+    public shared func userNFTcollection(
+    _collectionCanisterId: Principal,
+    user: AccountIdentifier
+    ) : async Result.Result<{
+    boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)];
+    unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)];
     }, CommonError> {
 
     // Define the canister actor interface
@@ -791,11 +790,11 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
     // Fetch the listings (unbought NFTs)
     let marketplaceListings = await listings(_collectionCanisterId);
 
-    var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)] = [];
-    var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal)] = [];
+    var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
+    var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
 
     // Iterate through all NFTs in the collection
-    for ((tokenIndex, nftOwner, metadata, _) in allNFTs.vals()) {
+    for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
         let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
 
         // Check if the NFT is listed in the marketplace (unbought)
@@ -804,11 +803,11 @@ public shared func getAllCollections() : async [(Principal, [(Time.Time, Princip
         });
 
         if (nftOwner == user) {
-            // If the user owns the NFT, add it to the boughtNFTs list
-            boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId)]);
+            // If the user owns the NFT, add it to the boughtNFTs list with its price
+            boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
         } else if (isListed != null) {
-            // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list
-            unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId)]);
+            // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list with its price
+            unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
         }
     };
 
