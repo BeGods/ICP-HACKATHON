@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./nftcard.css";
 
-const NftCard = ({ id, list, collectiondata }) => {
+const NftCard = ({ id, list, collectiondata,quantity }) => {
   const name = list[2]?.nonfungible?.name ?? "Name not found";
   const priceBigInt = list[3]?.[0]?.toString() ?? "Price not found";
   const price = Number(priceBigInt) / 100000000;
@@ -10,6 +10,7 @@ const NftCard = ({ id, list, collectiondata }) => {
   const metadataJson = list[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
   const nftColor = metadata?.nftcolor ?? "Color not found";
+  const nftType = metadata?.nfttype ?? "Type not found";
 
   return (
     <div
@@ -51,6 +52,13 @@ const NftCard = ({ id, list, collectiondata }) => {
             </h1>
             <h2 className="text-xs sm:text-lg mt-1 text-center">
               Price: {price} ICP
+            </h2>
+            <h2 className="text-xs sm:text-lg mt-1 text-center">
+              Type: {nftType}
+            </h2>
+
+            <h2 className="text-xs sm:text-lg mt-1 text-center">
+              Quantity: {quantity}
             </h2>
             <Link
               to={`/Admin/collection/collectionDetails/${id}/nft/${id}`}

@@ -426,6 +426,7 @@ console.log("filtered list after applying filters",filteredList)
                         {/* style={{ boxShadow: "0px 0px 94px 36px orange" }} */}
                             <div className='w-[70%] '>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
+                                {/* <img src="/Hero/celtic_updated_coll_image.png" alt="" className='hidden sm:flex'/> */}
                                 <img src="/Hero/celtic_hero.png" alt="" className='flex items-center justify-center w-full sm:hidden'  />
                             </div>
                             

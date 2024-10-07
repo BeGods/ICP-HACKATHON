@@ -100,10 +100,11 @@ const Profile = () => {
 
       const favItems = result.ok;
 
-      const favCardslist = favItems.map((eachFavToken)=>{
+      let favCardslist = [];
+      favItems.map((eachFavToken)=>{
        for(let i=0;i<selectedList.length;i++){
-        if(selectedList[i].tokenId === eachFavToken){
-          return selectedList[i];
+        if(selectedList[i][0].tokenId === eachFavToken){
+          favCardslist.push(selectedList[i][0]);
         }
        }
       })
@@ -167,7 +168,7 @@ const onClickUpdateUserDetails = async() => {
     
     console.log("updated user details",updatedName,updatedEmail,updatedTelegramUrl);
 
-    const updateResult = await backendActor?.updateUserDetails(Principal.fromText(principal),updatedName,updatedEmail,updatedTelegramUrl,[]);
+    await backendActor?.updateUserDetails(Principal.fromText(principal),updatedName,updatedEmail,updatedTelegramUrl,[]);
     updateUserDetails({name:updatedName,email:updatedEmail,telegramUrl:updatedTelegramUrl});
     toast.success("Updated Successfully!")
     setProfileUpdateInProcess(false);
@@ -233,12 +234,14 @@ const fetchCollections = async () => {
     let updatedCardsList = [];
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
     const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
-    console.log("owned nfts",ownedNfts);
+    //console.log("owned nfts",ownedNfts);
     const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
-    console.log("not owned nfts",notOwnedNfts);
-    const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,true);
-     updatedCardsList = updatedOwnedList;
-    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,false);
+    //console.log("not owned nfts",notOwnedNfts);
+    const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
+    console.log("owned nfts",updatedOwnedList);
+    updatedCardsList = updatedOwnedList;
+    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
+    console.log("not owned nfts",updatedNotOwnedNfts);
     updateRemainingNfts(updatedNotOwnedNfts.length);
     updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
     setIsCardsLoading(false);
@@ -251,13 +254,24 @@ const fetchCollections = async () => {
 
   }
 
-  const getUpdatedList= async(collectionId,cardsList,isOwned)=>{
+  const getUpdatedList= async(collectionId,cardsList,ownedList,isOwned)=>{
+
+      
+      
       const formatedList = [];
       let tempIndex = 0;
       for(let i=0;i<cardsList.length;i++){
         const eachCard = cardsList[i];
         console.log("each card",eachCard);
         const cardDetails = eachCard[2].nonfungible;
+        if(!isOwned){
+          console.log("owned list in getUpdatedlist",ownedList)
+          for(let i = 0; i< ownedList.length;i++) {
+            if(ownedList[i][0].cardName === cardDetails.name){
+              return [];
+            }
+          }
+        }
 
           console.log("card details",cardDetails)
           const metadata = JSON.parse(cardDetails.metadata[0].json);
@@ -309,14 +323,12 @@ const removeFromFavorites = async(tokenId) => {
   console.log("remove fav result",removeFavResult);
   toast.success(removeFavResult.ok);
   if(currentOption === "favorite"){
-    fetchFavoriteCards();
+    const updatedFavList = selectedList.filter((eachItem)=> (eachItem.tokenId != tokenId));
+    updateSelectedList(updatedFavList);
   }else{
     const modifiedSelectedList = selectedList.map((eachItem)=>{
-      if(eachItem.tokenId === tokenId){
-        return {
-          ...eachItem,
-          isFavourite:false,
-         }
+      if(eachItem[0].tokenId === tokenId){
+        return  [{...eachItem[0],isFavourite:false},...eachItem.slice(1)];
       }
       return eachItem;
      })
@@ -332,11 +344,10 @@ const addToFavorites = async(tokenId)=>{
                 // fetchCollections();
                 
                 const modifiedSelectedList = selectedList.map((eachItem)=>{
-                  if(eachItem.tokenId === tokenId){
-                    return {
-                      ...eachItem,
-                      isFavourite:true,
-                     }
+                  const eachCard = eachItem[0];
+                  if(eachCard.tokenId === tokenId){
+                    return [{...eachCard,isFavourite : true},...eachItem.slice(1)];
+                     
                   }
                   return eachItem;
                  })
@@ -517,7 +528,11 @@ console.log("selected List",selectedList);
                       <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
-                          <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} />
+                          {currentOption === "mycollection" ? (
+                            <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} />
+                          ):(
+                            <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}  />
+                          )}
                         </div>
                       ))}
                         
