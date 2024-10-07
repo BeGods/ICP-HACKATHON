@@ -5,7 +5,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { Link } from 'react-router-dom';
 
 
-const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
+const NftCard = ({img,removeFromFavorites,addToFavorites,quantity}) => {
 
     const [showLoader,updateLoaderStatus] = useState(false);
 
@@ -48,24 +48,25 @@ const NftCard = ({img,removeFromFavorites,addToFavorites}) => {
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
                         <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">{img.cardName}</h1>
                         <h2 className="mt-2 text-lg sm:text-xl">Type : {img.cardType.charAt(0).toUpperCase()}{img.cardType.slice(1)}</h2>
+                        {quantity > 1 && <h2 className="mt-2 text-lg sm:text-xl">Quantity : {quantity}</h2>}
                         {/* <h2 className="mt-2 text-lg sm:text-xl">Sold: {img.sold}/100</h2> */}
-                        {/* {!img.isOwned && (<h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>)} */}
+                        {!img.isOwned && (<h2 className="mt-1 text-lg sm:text-xl">{img.price} ICP</h2>)}
                         {img.isOwned ? (
                             (showLoader ? (
                                 <div className='flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon'>
-                                 <MoonLoader
-                                 color="#000000"
-                                 size={15}
-                                 aria-label="Loading Spinner"
-                                 data-testid="loader"
-                               />
+                                    <MoonLoader
+                                        color="#000000"
+                                        size={15}
+                                        aria-label="Loading Spinner"
+                                        data-testid="loader"
+                                    />
                                </div>
                             ):(
                                 <>
                                 <button  onClick={onClickRemove}
-                            className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
-                                {img.isFavourite ? "Remove" : "Add to Favourite"}
-                            </button>
+                                    className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
+                                    {img.isFavourite ? "Remove" : "Add to Favourite"}
+                                </button>
                             
                             </>
                             )

@@ -233,6 +233,7 @@ const fetchCollections = async () => {
     let updatedCardsList = [];
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
     const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
+    console.log("owned nfts",ownedNfts);
     const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
     console.log("not owned nfts",notOwnedNfts);
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,true);
@@ -251,9 +252,11 @@ const fetchCollections = async () => {
   }
 
   const getUpdatedList= async(collectionId,cardsList,isOwned)=>{
-      const tempList = [];
+      const formatedList = [];
+      let tempIndex = 0;
       for(let i=0;i<cardsList.length;i++){
         const eachCard = cardsList[i];
+        console.log("each card",eachCard);
         const cardDetails = eachCard[2].nonfungible;
 
           console.log("card details",cardDetails)
@@ -262,7 +265,8 @@ const fetchCollections = async () => {
           if(isOwned){
            isFav = await checkIsFavourite(eachCard[0]);
           }
-          console.log("all collections",allCollectionsList,"currentindex",currentDropDownOption);
+          // console.log("all collections",allCollectionsList,"currentindex",currentDropDownOption);
+          
           const tempcard= {
                 tokenId:eachCard[0],
                 index : eachCard[1],
@@ -274,12 +278,21 @@ const fetchCollections = async () => {
                 isFavourite : isFav,
                 borderColor : metadata.nftcolor,
                 collectionColor : allCollectionsList[currentDropDownOption].collectionColor,
+                price : parseInt(eachCard[5][0])/100000000
              }
-             tempList.push(tempcard);
+             if(tempIndex === 0){
+              formatedList.push([tempcard]);
+              tempIndex++;
+              }else if(formatedList[tempIndex-1][0].cardName === tempcard.cardName){
+                  formatedList[tempIndex-1].push(tempcard);
+              }else{
+                  formatedList.push([tempcard]);
+                  tempIndex++;
+              }
 
       }
 
-      return tempList;
+      return formatedList;
     
   }
    
@@ -289,7 +302,7 @@ const fetchCollections = async () => {
    },[])
 
 
-  //  console.log("selected List",selectedList);
+   
 
 const removeFromFavorites = async(tokenId) => {
   const removeFavResult = await backendActor?.removeFromFavorites(principal,tokenId);
@@ -347,7 +360,7 @@ const onChangeFilterOption = (eachCollection) => {
   }
   
 }
-  
+console.log("selected List",selectedList);
  
   return (
     <div className='font-caslon'>
@@ -456,7 +469,7 @@ const onChangeFilterOption = (eachCollection) => {
                   ):(
                     selectedList.length>0 ? (
                       <div>
-                      <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
+                      {/* <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/> */}
                     </div>
                     ):(
                       <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
@@ -504,7 +517,7 @@ const onChangeFilterOption = (eachCollection) => {
                       <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                       {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
-                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} />
+                          <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} />
                         </div>
                       ))}
                         

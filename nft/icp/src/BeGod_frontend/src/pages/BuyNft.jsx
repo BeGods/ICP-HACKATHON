@@ -599,7 +599,9 @@ const BuyNft = () => {
           <div className="flex items-center justify-center xl:hidden  w-[100%] xl:w-[130%] lg:pl-[3%]">
             <img src="/Hero/celtic_hero.png" alt="" />
           </div>
-          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]">
+          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]"
+          
+          >
             <img src="/Hero/Mask group.png" alt="" />
           </div>
 
