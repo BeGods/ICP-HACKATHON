@@ -1,4 +1,4 @@
-import { calculateEnergy } from "../utils/game";
+import { calculateEnergy } from "../utils/helpers/game.helpers";
 import userMythologies, {
   IMyth,
   IUserMyths,
@@ -13,14 +13,15 @@ import {
   updateMythologies,
   fetchUserGameStats,
 } from "../services/game.services";
-import { defaultMythologies } from "../utils/defaultMyths";
+import { defaultMythologies } from "../utils/constants/variables";
 import { Document } from "mongodb";
 import ranks from "../models/ranks.models";
 import { Team } from "../models/referral.models";
 import Stats from "../models/Stats.models";
 import { checkBonus } from "../services/general.services";
-import { mythOrder } from "../utils/variables";
+import { mythOrder } from "../utils/constants/variables";
 import milestones from "../models/milestones.models";
+import User from "../models/user.models";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -176,8 +177,8 @@ export const claimTapSession = async (req, res) => {
       const partnerExists = userMilestones.rewards.claimedRewards.find(
         (item) => item.partnerId === bubbleSession.partnerId
       );
-      //! Enable it
-      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      const fiveMinutesInMs = 2 * 60 * 1000;
 
       if (
         partnerExists &&
@@ -289,8 +290,12 @@ export const getGameStats = async (req, res) => {
 
     const isEligibleToClaim = await checkBonus(user);
 
+    if (isEligibleToClaim) {
+      await User.findOneAndUpdate({ userId }, { $set: { exploitCount: 0 } });
+    }
+
     // get totalMembers
-    const squadOwner = user.squadOwner ? user.squadOwner : user._id;
+    const squadOwner = user.squadOwner ? user.squadOwner : userId;
     const members = await Team.findOne({ owner: squadOwner });
     const memberData = {
       overallRank: userRank?.overallRank ?? 0,

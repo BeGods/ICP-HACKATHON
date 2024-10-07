@@ -20,14 +20,18 @@ import {
 } from "../middlewares/game.middlewares";
 const router = express.Router();
 
+// stats
 router.get("/game/stats", authMiddleware, getGameStats);
-router.get("/game/updateStats", authMiddleware, updateGameData);
+router.get("/game/stats/update", authMiddleware, updateGameData);
 
 // tapping session
 router.post("/game/startTapSession", authMiddleware, startTapSession);
 router.post("/game/claimTapSession", authMiddleware, claimTapSession);
+router.post("/game/burst", authMiddleware, validateStarClaim, claimStarBonus);
+
+// tower conversion
 router.post(
-  "/game/convertOrbs",
+  "/game/convert",
   authMiddleware,
   validateOrbsConversion,
   convertOrbs
@@ -35,25 +39,19 @@ router.post(
 
 // boosters
 router.post(
-  "/booster/claimShards",
+  "/booster/claim/minion",
   authMiddleware,
   validShardsBoosterReq,
   claimShardsBooster
 );
 router.post(
-  "/booster/claimBurst",
+  "/booster/claim/burst",
   authMiddleware,
   validateBurstReq,
   claimBurst
 );
 router.post(
-  "/game/claimBurst",
-  authMiddleware,
-  validateStarClaim,
-  claimStarBonus
-);
-router.post(
-  "/booster/claimAutomata",
+  "/booster/claim/automata",
   authMiddleware,
   validAutomataReq,
   claimAutomata

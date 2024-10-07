@@ -1,8 +1,15 @@
 import express from "express";
-import { login, testLogin } from "../controllers/auth.controllers";
+import {
+  authenticate,
+  testAuthenticate,
+} from "../controllers/auth.controllers";
 const router = express.Router();
 
-router.post("/auth", login);
-// router.post("/test/auth", testLogin);
+// login
+router.post("/auth", authenticate);
+// router.post(
+//   "/test/f115d48c-4929-4190-b326-e50f228500c9/auth",
+//   testAuthenticate
+// );
 
 export default router;
