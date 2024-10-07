@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import Test from "./pages/Test";
 import Home from "./Home";
 import IntroPage from "./pages/IntroPage";
 
@@ -12,7 +11,6 @@ function App() {
           <Routes>
             <Route path="/" element={<IntroPage />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/test" element={<Test />} />
           </Routes>
         </Router>
       </TonConnectUIProvider>

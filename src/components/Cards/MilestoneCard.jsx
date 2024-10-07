@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import IconButton from "../Buttons/IconButton";
 import {
   boosterIcon,
@@ -8,6 +8,7 @@ import {
 } from "../../utils/variables";
 import ReactHowler from "react-howler";
 import { Download } from "lucide-react";
+import { MyContext } from "../../context/context";
 
 const MilestoneCard = ({
   activeMyth,
@@ -126,7 +127,7 @@ const MilestoneCard = ({
                     Orb
                   </h1>
                 ) : isOrb && isMulti ? (
-                  <h1>Multi Orb</h1>
+                  <h1>MultiOrb</h1>
                 ) : (
                   <div className="font-symbols absolute">
                     <h1 className="text-booster">{boosterIcon[booster]}</h1>

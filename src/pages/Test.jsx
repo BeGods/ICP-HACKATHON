@@ -170,13 +170,348 @@
 //   </div>
 // </div>;
 
+// import React from "react";
+// import { mythSections, mythSymbols } from "../../utils/variables";
+
+// const ForgeHeader = ({
+//   activeMyth,
+//   shards,
+//   orbs,
+//   orbGlow,
+//   tapGlow,
+//   glowReward,
+//   glowSymbol,
+//   glowShards,
+//   mythData,
+//   platform,
+//   showBlackOrb,
+//   glowBooster,
+// }) => {
+//   const height = Math.min(
+//     100,
+//     Math.max(0, (mythData.energy / mythData.energyLimit) * 100)
+//   );
+
+//   return (
+//     <div className="flex justify-between relative w-full">
+//       <div
+//         className={`text-head -mt-2 mx-auto  w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
+//       >
+//         Forge
+//       </div>
+//       <div>
+//         <img src="/assets/uxui/160px-header.top.left.png" alt="right" />
+//       </div>
+//       {/* Left */}
+//       {/* <div className="flex flex-col justify-center h-full px-2">
+//         <div className="flex flex-col leading-[45px] mb-4 justify-start ml-1 items-center text-black-contour w-fit h-fit">
+//           <div className={`text-num transition-all duration-1000 text-white`}>
+//             {shards}
+//           </div>
+//           <div
+//             className={`font-symbols pt-3 ${
+//               glowShards && `scale-[150%]`
+//             }  text-[50px] transition-all duration-1000 text-${
+//               mythSections[activeMyth]
+//             }-text`}
+//           >
+//             l
+//           </div>
+//         </div>
+//       </div> */}
+//       {/* Orb */}
+//       <div className="flex absolute justify-center w-full z-20">
+//         <div
+//           className={`flex text-center justify-center h-[36vw] w-[36vw] mt-0.5 overflow-hidden items-center rounded-full outline outline-${
+//             mythSections[activeMyth]
+//           }-primary transition-all duration-1000 ${
+//             orbGlow
+//               ? `glow-tap-${mythSections[activeMyth]} outline-[2px] `
+//               : `glow-icon-${mythSections[activeMyth]}`
+//           } ${tapGlow && "scale-[125%] outline-[2px]"} ${
+//             glowReward && "scale-[125%] outline-[2px]"
+//           } `}
+//         >
+//           {" "}
+//           <div
+//             className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full  outline outline-${mythSections[activeMyth]}-primary`}
+//           >
+//             <div
+//               style={{
+//                 height: `${height}%`,
+//               }}
+//               className={`absolute bottom-0  opacity-20 w-full transition-all duration-500 bg-${mythSections[activeMyth]}-text z-10`}
+//             ></div>
+//           </div>
+//           <img
+//             src="/assets/uxui/240px-orb.base.png"
+//             alt="base-orb"
+//             className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
+//           />
+//           <div></div>
+//           <div
+//             className={`z-1  flex justify-center items-start  font-symbols  ${
+//               glowReward
+//                 ? ` text-${mythSections[activeMyth]}-text opacity-100`
+//                 : showBlackOrb === 1
+//                 ? "text-white opacity-100"
+//                 : "text-white opacity-50"
+//             }  text-[28vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+//           >
+//             <div className={`${platform === "ios" ? "mt-1" : "mt-2"}`}>
+//               {mythSymbols[mythSections[activeMyth]]}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       {/* Right */}
+//       {/* 154px-head.lft.png */}
+//       <div>
+//         <img src="/assets/uxui/160px-header.top.right.png" alt="right" />
+//       </div>
+//       {/* <div className="flex flex-col justify-center h-full px-2">
+//         <div className="flex flex-col leading-[45px] mb-4 items-center text-black-contour w-fit h-fit">
+//           <div className={`text-num transition-all duration-1000 text-white`}>
+//             {orbs}
+//           </div>
+//           <div
+//             className={`font-symbols pt-3 ${
+//               (glowSymbol || glowBooster === 3) && `scale-[150%]`
+//             } text-[50px] transition-all duration-1000 text-${
+//               mythSections[activeMyth]
+//             }-text`}
+//           >
+//             {mythSymbols[mythSections[activeMyth]]}
+//           </div>
+//         </div>
+//       </div> */}
+//     </div>
+//   );
+// };
+
+// export default ForgeHeader;
+
 import React from "react";
 import PropTypes from "prop-types";
 
-const Test = (props) => {
+function Test(props) {
   return <div>Test</div>;
-};
+}
 
 Test.propTypes = {};
 
 export default Test;
+
+// import React from "react";
+// import { mythSections, mythSymbols } from "../../utils/variables";
+
+// const ForgeHeader = ({
+//   activeMyth,
+//   shards,
+//   orbs,
+//   orbGlow,
+//   tapGlow,
+//   glowReward,
+//   glowSymbol,
+//   glowShards,
+//   mythData,
+//   platform,
+//   showBlackOrb,
+//   glowBooster,
+// }) => {
+//   const height = Math.min(
+//     100,
+//     Math.max(0, (mythData.energy / mythData.energyLimit) * 100)
+//   );
+
+//   return (
+//     <div className="flex justify-center relative w-full">
+//       <div
+//         className={`text-head -mt-2 mx-auto  w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
+//       >
+//         Forge
+//       </div>
+//       <div>
+//         <img src="/assets/uxui/160px-header.top.left.png" alt="right" />
+//       </div>
+//       {/* Left */}
+//       {/* Orb */}
+//       <div className="flex absolute justify-center w-full z-20">
+//         <div
+//           className={`flex text-center justify-center h-[36vw] w-[36vw] mt-0.5 overflow-hidden items-center rounded-full outline outline-${
+//             mythSections[activeMyth]
+//           }-primary transition-all duration-1000 ${
+//             orbGlow
+//               ? `glow-tap-${mythSections[activeMyth]} outline-[2px] `
+//               : `glow-icon-${mythSections[activeMyth]}`
+//           } ${tapGlow && "scale-[125%] outline-[2px]"} ${
+//             glowReward && "scale-[125%] outline-[2px]"
+//           } `}
+//         >
+//           {" "}
+//           <div
+//             className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full  outline outline-${mythSections[activeMyth]}-primary`}
+//           >
+//             <div
+//               style={{
+//                 height: `${height}%`,
+//               }}
+//               className={`absolute bottom-0  opacity-20 w-full transition-all duration-500 bg-${mythSections[activeMyth]}-text z-10`}
+//             ></div>
+//           </div>
+//           <img
+//             src="/assets/uxui/240px-orb.base.png"
+//             alt="base-orb"
+//             className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
+//           />
+//           <div></div>
+//           <div
+//             className={`z-1  flex justify-center items-start  font-symbols  ${
+//               glowReward
+//                 ? ` text-${mythSections[activeMyth]}-text opacity-100`
+//                 : showBlackOrb === 1
+//                 ? "text-white opacity-100"
+//                 : "text-white opacity-50"
+//             }  text-[28vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+//           >
+//             <div className={`${platform === "ios" ? "mt-1" : "mt-2"}`}>
+//               {mythSymbols[mythSections[activeMyth]]}
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       {/* Right */}
+//       <div>
+//         <img src="/assets/uxui/160px-header.top.right.png" alt="right" />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ForgeHeader;
+
+// import React, { useContext, useRef } from "react";
+// import { MyContext } from "../../context/context";
+// import { footerIcons, mythSections } from "../../utils/variables";
+// import ReactHowler from "react-howler";
+
+// const tele = window.Telegram?.WebApp;
+
+// const FooterItem = ({
+//   section,
+//   index,
+//   activeMyth,
+//   handleClick,
+//   enableSound,
+// }) => {
+//   const howlerRef = useRef(null);
+
+//   const playAudio = () => {
+//     if (howlerRef.current && enableSound) {
+//       howlerRef.current.stop();
+//       howlerRef.current.play();
+//     }
+//   };
+
+//   return (
+//     <>
+//       <div
+//         className="flex relative flex-col items-center cursor-pointer mt-2 z-50"
+//         onClick={(e) => {
+//           e.preventDefault();
+//           playAudio();
+//           handleClick();
+//         }}
+//         style={{ minWidth: "90px" }}
+//       >
+//         <h1
+//           className={`font-symbols ${
+//             section === index
+//               ? `${
+//                   activeMyth < 4 && section != 3
+//                     ? `glow-icon-${mythSections[activeMyth]}`
+//                     : `glow-text-white`
+//                 }`
+//               : `text-black-contour`
+//           }`}
+//           style={{
+//             fontSize: section === index ? "60px" : "50px",
+//             transition: "font-size 0.3s ease",
+//           }}
+//         >
+//           {footerIcons[index]}
+//         </h1>
+//       </div>
+//       <div className="absolute ">
+//         <ReactHowler
+//           src="/assets/audio/fof.menu01.wav"
+//           playing={false}
+//           preload={true}
+//           ref={howlerRef}
+//           html5={true}
+//         />
+//       </div>
+//     </>
+//   );
+// };
+
+// const Footer = ({ minimize }) => {
+//   const { section, setSection, activeMyth, setActiveMyth, enableSound } =
+//     useContext(MyContext);
+
+//   const handleSectionChange = (newSection) => {
+//     tele.HapticFeedback.notificationOccurred("success");
+//     setSection(newSection);
+//     if (activeMyth >= 4) {
+//       setActiveMyth(0);
+//     }
+//   };
+
+//   return (
+//     <div
+//       style={{
+//         position: "relative",
+//         width: "100%",
+//       }}
+//       className={`flex justify-between ${minimize === 2 && "maximize"} ${
+//         minimize === 1 && "minimize"
+//       } transition-all duration-1000 items-center h-[12%] z-50 w-full text-white`}
+//     >
+//       <div
+//         style={{
+//           backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+//           backgroundRepeat: "no-repeat",
+//           backgroundSize: "cover",
+//           backgroundPosition: "center center",
+//           position: "absolute",
+//           top: 0,
+//           left: 0,
+//           height: "100%",
+//           width: "100%",
+//           zIndex: -1,
+//         }}
+//         className={`filter-paper-${
+//           section === 3 || section === 9
+//             ? mythSections[8]
+//             : mythSections[activeMyth]
+//         } `}
+//       />
+//       <div className="flex justify-between mx-auto w-[80%]">
+//         {footerIcons.map((item, index) => (
+//           <FooterItem
+//             key={index}
+//             section={section}
+//             index={index}
+//             enableSound={enableSound}
+//             activeMyth={activeMyth}
+//             handleClick={() => {
+//               handleSectionChange(index);
+//             }}
+//           />
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Footer;

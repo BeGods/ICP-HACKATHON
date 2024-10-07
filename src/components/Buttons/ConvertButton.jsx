@@ -1,4 +1,4 @@
-import { RotateCcw, RotateCw } from "lucide-react";
+import { ArrowLeftRight, RotateCcw, RotateCw } from "lucide-react";
 import React, { useState, useRef, useContext } from "react";
 import { wheel } from "../../utils/variables";
 import ReactHowler from "react-howler";
@@ -49,7 +49,11 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
         }}
         className="text-button-primary uppercase"
       >
-        {t(`buttons.convert`)}
+        <div
+          className={`w-[18vw] h-[17vw] flex justify-center items-center rounded-full bg-${wheel[myth]}-primary`}
+        >
+          <ArrowLeftRight strokeWidth={3} />
+        </div>
       </div>
       <div
         onClick={() => {

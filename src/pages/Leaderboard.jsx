@@ -60,13 +60,16 @@ const Leaderboard = (props) => {
             {t(`profile.squad`)}
           </div>
         </div>
-        <div className="w-full text-center pt-1">
-          (Note: Your rank updates hourly! Check back soon.)
+        <div className="w-full text-secondary text-center pt-1">
+          (Rankings are updated hourly)
         </div>
         {/* LEADERBOARD */}
-        <div className="flex flex-col w-full flex-grow  bg-black rounded-primary my-2 pt-[8px] pb-[30px] gap-[10px]">
-          <div className="flex justify-between text-secondary text-cardsGray items-center w-[90%] mx-auto">
-            <h1>{t(`profile.name`)}</h1>
+        <div className="flex flex-col w-full flex-grow bg-black rounded-primary my-2 pt-[8px] pb-[30px] gap-[10px]">
+          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto">
+            <h1>
+              <span className="pr-6">#</span>
+              {t(`profile.name`)}
+            </h1>
             <h1>{t(`keywords.orbs`)}</h1>
           </div>
           {activeTab

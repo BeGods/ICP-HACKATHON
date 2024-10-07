@@ -190,7 +190,7 @@ const Profile = (props) => {
                   >
                     <div className="font-symbols text-gold">r</div>
                     <h1 className="mt-1 text-tertiary text-gold uppercase">
-                      {t(`profile.leaderboard`)}
+                      {t(`sections.leaderboard`)}
                     </h1>
                   </div>
                   <div
@@ -298,12 +298,12 @@ const Profile = (props) => {
                   <div className="flex gap-2  justify-center items-center mt-2 w-full">
                     <div className="font-symbols text-gold">t</div>
                     <h1 className="mt-1 text-tertiary text-gold uppercase">
-                      Rewards
+                      {t("profile.rewards")}
                     </h1>
                     <h1 className="text-gold font-bold">|</h1>
                     <HeartHandshake size={"6vw"} color="#FFD660" />
                     <h1 className="mt-1 text-tertiary uppercase text-gold">
-                      Charity
+                      {t("profile.charity")}
                     </h1>
                   </div>
                   <div
@@ -332,14 +332,14 @@ const Profile = (props) => {
                         onClick={() => {
                           setSection(8);
                         }}
-                        className={`flex ${
+                        className={`flex ${enableGuide && "z-[60]"} ${
                           isClicked === 3 ? `glow-button-white` : ""
                         } bg-glass-black h-button-primary border border-white justify-center items-center gap-[20px] rounded-primary w-full p-[10px]`}
                       >
-                        Partners
+                        {t("profile.partner")}
                       </div>
                       <div className="flex  bg-glass-black h-button-primary items-center justify-center border border-cardsGray text-cardsGray  grayscale  gap-[20px] rounded-primary w-full p-[10px]">
-                        Causes
+                        {t("profile.causes")}
                       </div>
                     </div>
                   </div>
