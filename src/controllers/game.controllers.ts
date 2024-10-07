@@ -177,8 +177,8 @@ export const claimTapSession = async (req, res) => {
       const partnerExists = userMilestones.rewards.claimedRewards.find(
         (item) => item.partnerId === bubbleSession.partnerId
       );
-      //! Enable it
-      const fiveMinutesInMs = 5 * 60 * 1000;
+
+      const fiveMinutesInMs = 2 * 60 * 1000;
 
       if (
         partnerExists &&
