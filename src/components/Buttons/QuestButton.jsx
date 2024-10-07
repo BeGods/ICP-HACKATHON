@@ -1,4 +1,5 @@
 import {
+  Check,
   CircleCheck,
   CornerUpLeft,
   CornerUpRight,
@@ -59,16 +60,23 @@ const QuestButton = ({
         />
       </div>
       {isCompleted ? (
-        <div className={`text-${mythSections[activeMyth]}-primary`}>
-          <CircleCheck size={"18vw"} />
+        <div>
+          <div
+            className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]} p-4 h-[17vw] w-[17vw] rounded-full`}
+          >
+            <Check size={"7.5vw"} strokeWidth={5} />
+          </div>
         </div>
       ) : message === "Complete" ? (
-        <div onClick={action}>
+        <div
+          onClick={action}
+          className={`text-${mythSections[activeMyth]}-primary`}
+        >
           <CircleCheck size={"18vw"} />
         </div>
       ) : (
         <div onClick={action}>
-          <Download size={"18vw"} />
+          <CircleCheck size={"18vw"} />
         </div>
       )}
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">

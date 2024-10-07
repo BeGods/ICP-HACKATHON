@@ -120,16 +120,27 @@ const SplashScreen = ({ reward, exploitReward }) => {
       ></div>
       {/* Content */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
-        <h1
-          className={`scale-[${showYouScale}%] text-[22vw] mt-7 transition-transform duration-500`}
-        >
-          YOU
-        </h1>
-        {showWon && (
-          <h1 className="text-[14.2vw] transition-opacity duration-250">
-            WON!
-          </h1>
-        )}
+        {t("bonus.youwon")
+          .split(" ")
+          .map((word, index) => (
+            <>
+              {index === 0 ? (
+                <h1
+                  className={`scale-[${showYouScale}%] text-[22vw] mt-7 transition-transform duration-500`}
+                >
+                  {word}
+                </h1>
+              ) : (
+                <>
+                  {showWon && (
+                    <h1 className="text-[14.2vw] transition-opacity duration-250">
+                      {word}
+                    </h1>
+                  )}
+                </>
+              )}
+            </>
+          ))}
       </div>
       <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl">
         <div
@@ -173,7 +184,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
             : currReward.type === "blackOrb"
             ? `${t("elements.aether") + " " + t("keywords.orbs")}`
             : currReward.type === "quest"
-            ? `${t("buttons.completed") + " " + t("sections.quests")}`
+            ? `${t("sections.quests")}`
             : `1 ${
                 wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
                 " " +

@@ -81,7 +81,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                   </React.Fragment>
                 ))}
               <div className="flex justify-center items-center gap-x-3 -ml-2.5 mt-2">
-                <div className="text-[30px] font-">999</div>
+                <div className="text-[30px] font-">1000</div>
                 <div className="text-[24px] font-medium">X</div>
                 <div
                   className={`flex relative text-center justify-center items-center max-w-orb rounded-full glow-icon-black`}

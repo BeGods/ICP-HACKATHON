@@ -6,6 +6,8 @@ import { X } from "lucide-react";
 // -mt-7 ml-7 - quest and jigsaw info
 // -mt-[28px] ml-[52px] - infoncard close
 
+const tele = window.Telegram?.WebApp;
+
 const alignBasedOnCard = [
   "-mt-[28px] ml-[52px]",
   "-mt-8 ml-7",
@@ -18,6 +20,8 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const handleButtonClick = () => {
+    tele.HapticFeedback.notificationOccurred("success");
+
     setIsButtonClicked(true);
 
     setTimeout(() => {
@@ -34,7 +38,7 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
       {isInfo ? (
         <div className="bg-black  flex justify-center items-center h-[60px] w-[60px] z-20 rounded-full">
           <h1
-            className="text-white italic text-[1.8rem] mr-1"
+            className="text-white italic text-[2.5rem] mr-1"
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
@@ -42,7 +46,7 @@ const IconButton = ({ isInfo, handleClick, activeMyth, align }) => {
         </div>
       ) : (
         <div className="flex justify-center items-center bg-black h-[60px] w-[60px] z-50 rounded-full">
-          <X color="white" size={"30px"} />
+          <X color="white" size={"40px"} />
         </div>
       )}
     </div>

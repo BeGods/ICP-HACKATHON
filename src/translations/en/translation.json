@@ -1,5 +1,4 @@
 {
-  "name": "hello",
   "main": {
     "fdg": "FrogdogGames",
     "fof": "Forges of faith"
@@ -18,17 +17,11 @@
   },
   "keywords": {
     "orbs": "ORB(S)",
-    "shards": "Shards",
-    "faith": "Faith",
     "conversion": "Conversion",
     "discover": "Discover",
     "whitelist": "Whitelist"
   },
   "buttons": {
-    "convert": "Convert",
-    "claim": "Claim",
-    "complete": "Complete",
-    "completed": "Completed",
     "buy": "Buy",
     "hire": "Hire",
     "redeem": "Redeem",
@@ -40,51 +33,53 @@
     "forges": "Forges",
     "boosters": "Booster",
     "quests": "Quests",
-    "profile": "Profile",
     "leaderboard": "Leaderboard"
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
     { "title": "Lost Quests", "desc": "Energy" },
-    { "title": "Minion", "desc": "Increase tap" },
+    { "title": "Alchemist", "desc": "Increase tap" },
     {},
     {},
     {},
-    { "title": "BURST", "desc": "Power Press" }
+    { "title": "Burst", "desc": "Power Press" }
   ],
   "profile": {
-    "profile": "Profile",
-    "tasks": "Tasks",
-    "details": "Details",
-    "notifications": "Notifications",
-    "stats": "Stats",
-    "gameRank": "Game Rank",
-    "squadRank": "Squad Rank",
-    "leaderboard": "Leaderboard",
-    "direct": "Direct",
     "premium": "Premium",
     "invite": "Invite",
-    "inviteYourFriends": "Invite to earn ORB(s)",
-    "shareLinkToEarnOrbs": "Share link to earn ORB(S)",
     "squad": "Squad",
-    "totalMembers": "Total Members",
-    "totalOrbs": "Total Orbs",
     "player": "Player",
     "name": "Name",
     "apply": "Apply",
-    "select": "Select",
-    "lang": "Language",
     "referrals": "Referrals",
-    "team": "Referrals"
-
+    "team": "Team",
+    "guide": "Guide",
+    "causes": "Causes",
+    "partner": "Partners",
+    "charity": "Charity",
+    "rewards": "Rewards"
+  },
+  "note": {
+    "text": "(Rankings are updated hourly)"
+  },
+  "bonus": {
+    "join": "JOINING BONUS",
+    "box": "BOX",
+    "youwon": "YOU WON!",
+    "win": "Win"
   },
   "elements": {
     "earth": "Earth",
     "air": "Air",
     "fire": "Fire",
     "water": "Water",
-    "aether": "Aether",
-    "black": "Black"
+    "aether": "Aether"
+  },
+  "tutorial": {
+    "forge": { "title": "TAP FORGES", "desc": "TO EARN ORB(S)" },
+    "quests": { "title": "CLAIM QUESTS", "desc": "COMPLETE TO EARN $FAITH" },
+    "boosters": { "title": "ACQUIRE BOOSTERS", "desc": "FOR GAME REWARDS" },
+    "profile": { "title": "SELECT PARTNERS", "desc": "TO CLAIM PRIZES" }
   },
   "quests": {
     "celtic": {

@@ -77,7 +77,7 @@ function PayCard({
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
-      <div className="flex flex-col absolute bottom-5">
+      <div className="flex flex-col absolute bottom-1.5">
         <div>
           <div
             className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white} `}
@@ -85,7 +85,7 @@ function PayCard({
             <img
               src="/assets/uxui/240px-orb.multicolor.png"
               alt="orb"
-              className={` max-w-[10vw]`}
+              className={`glow-icon-white max-w-[10vw]`}
             />
             <div
               className={`font-fof text-[28px] font-normal  text-black-sm-contour transition-all duration-1000 ${

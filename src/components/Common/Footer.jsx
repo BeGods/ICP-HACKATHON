@@ -99,7 +99,7 @@ const Footer = ({ minimize }) => {
           zIndex: -1,
         }}
         className={`filter-paper-${
-          section === 3 || section === 0 || section === 9
+          section === 3 || section === 9
             ? mythSections[4]
             : mythSections[activeMyth]
         } `}

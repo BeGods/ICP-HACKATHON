@@ -193,7 +193,7 @@ const Tower = ({ setMythStates }) => {
 
                   setSessionOrbs((prev) => {
                     const orbs = gameData.mythologies[myth - 1]?.orbs || 0;
-                    return orbs > 0 && orbs - prev * 2 > 0 ? prev + 1 : prev;
+                    return orbs != 0 && orbs - prev * 2 > 1 ? prev + 1 : prev;
                   });
                 }
               }}

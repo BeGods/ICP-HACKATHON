@@ -479,6 +479,7 @@ const Boosters = () => {
           }}
         />
       )}
+
       {enableGuide && (
         <BoosterGuide
           handleClick={() => {

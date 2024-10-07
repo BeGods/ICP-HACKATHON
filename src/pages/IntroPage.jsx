@@ -150,6 +150,7 @@ const IntroPage = (props) => {
             We designed the BeGods app to be fully optimized for mobile use.
             Simply scan the QR code or use Telegram to start playing!
           </h1>
+          {/* //TODO: this can be improved */}
           <div className="mx-auto flex w-[80%] justify-between mt-8">
             <div
               onClick={() => {
@@ -218,7 +219,7 @@ const IntroPage = (props) => {
                 <img
                   src="/assets/logos/forgesoffaith.svg"
                   alt="fof"
-                  className="w-[200px] mt-4 fof-text-shadow"
+                  className="w-[200px] mt-6 fof-text-shadow"
                 />
               </div>
             </div>
@@ -227,7 +228,7 @@ const IntroPage = (props) => {
               <img
                 src="/assets/logos/battle.gods.black.svg"
                 alt="logo"
-                className="w-[65px] h-[75px] mb-4"
+                className="w-[65px] h-[75px] mb-6 begod-text-shadow"
               />
             </div>
           </div>

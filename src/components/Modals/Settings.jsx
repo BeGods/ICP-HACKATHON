@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
 import { ChevronRight } from "lucide-react";
 import { MyContext } from "../../context/context";
+import { country } from "../../utils/country";
+
 const tele = window.Telegram?.WebApp;
 
 const languages = [
@@ -56,19 +58,26 @@ const SettingModal = ({ close }) => {
         >
           {languages.map((language) => (
             <option key={language.code} value={language.code}>
-              {language.name === "Select" ? t("profile.select") : language.name}
+              {language.name}
+            </option>
+          ))}
+        </select>
+        <select className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary">
+          {country.map((ctx) => (
+            <option key={ctx.code} value={ctx.code}>
+              {ctx.name}
             </option>
           ))}
         </select>
         <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
-          <div>Sound</div>
+          <div>🔈</div>
           <ToggleSwitch />
         </div>
         <div
           onClick={handleEnableGuide}
           className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4"
         >
-          <div>Show Guide</div>
+          <div> {t(`profile.guide`)}</div>
           <ChevronRight />
         </div>
         <div

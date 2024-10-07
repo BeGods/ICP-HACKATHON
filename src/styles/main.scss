@@ -119,11 +119,11 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
 
 /* Button Black Glass Effect */
 .bg-glass-black {
-  background: black;
-  opacity: 60%;
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
 
 /* Contours */
 .icon-black-contour{
@@ -190,4 +190,16 @@ text-shadow:
   filter: drop-shadow(0 0 10px #FFD660)
           drop-shadow(0 0 30px #FFD660)
           drop-shadow(0 0 80px #FFD660);
+}
+
+.fof-text-shadow{
+  filter: drop-shadow(0 0 1.5px #ffff00)
+          drop-shadow(0 0 1px #ffff00)
+          drop-shadow(0 0 1px #FFD660)
+          drop-shadow(0 0 1px #d34c1f)
+          drop-shadow(0 0 1.5px #ff4000);
+}
+
+.begod-text-shadow{
+  filter: drop-shadow(0 0 5px #FFD660)
 }

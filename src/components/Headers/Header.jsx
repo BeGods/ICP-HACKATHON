@@ -27,8 +27,8 @@ const Header = ({ children }) => {
           zIndex: -1,
         }}
         className={`filter-paper-${
-          section === 3 || section === 0 || section === 9
-            ? mythSections[4]
+          section === 3 || section === 9
+            ? mythSections[8]
             : mythSections[activeMyth]
         } relative -mt-1`}
       />

@@ -42,6 +42,7 @@ const Redeem = (props) => {
   const { activeMyth, activeReward, userData, authToken } =
     useContext(MyContext);
   const [showAuth, setShowAuth] = useState(false);
+  const [claimRedeem, setClaimRedeem] = useState(false);
   const [showRedeem, setShowRedeem] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -114,15 +115,15 @@ const Redeem = (props) => {
         {/* Quests */}
         <div className="flex items-center justify-center w-full">
           <div className="relative">
-            <div
-              handleClick={() => {
-                setSecretInfo((prev) => !prev);
-              }}
-              className="h-full relative -mt-[40px]"
-            >
+            <div className="h-full relative -mt-[40px] cursor-pointer z-20">
               <JigsawImage
                 imageUrl={`/assets/partners/320px-${activeReward.category}.brand.jpg`}
                 activeParts={handleActiveParts(activeReward.tokensCollected)}
+                handleClick={() => {
+                  if (activeReward.tokensCollected === 12) {
+                    window.open("_blank", "dsifk");
+                  }
+                }}
               />
               <IconButton
                 isInfo={true}
@@ -135,7 +136,10 @@ const Redeem = (props) => {
             </div>
             <JigsawButton
               handleClick={() => {
-                setShowRedeem(true);
+                if (activeReward.tokensCollected === 12) {
+                  setShowRedeem(true);
+                  setClaimRedeem(true);
+                }
               }}
               activeMyth={4}
               handleNext={() => {}}
@@ -154,6 +158,7 @@ const Redeem = (props) => {
         <AuthenticatePlaySuper
           handleClose={() => {
             setShowAuth(false);
+            setClaimRedeem(false);
           }}
         />
       )}
@@ -173,6 +178,12 @@ const Redeem = (props) => {
               src={`/assets/partners/320px-${activeReward.category}.campaign.jpg`}
               alt="campaign"
               className="w-full h-full rounded-primary"
+              onClick={() => {
+                if (claimRedeem) {
+                  setShowRedeem(false);
+                  setShowAuth(true);
+                }
+              }}
             />
             <IconButton
               isInfo={false}

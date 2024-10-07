@@ -62,6 +62,7 @@ const Forges = () => {
     currShards: 0,
     burstlvl: myth.boosters.burstlvl,
     shardslvl: myth.boosters.shardslvl,
+    shardsPaylvl: myth.boosters.shardsPaylvl,
     automatalvl: myth.boosters.automatalvl,
     isShardsClaimActive: myth.boosters.isShardsClaimActive,
     automataStartTime: myth.boosters.automataStartTime,
@@ -438,14 +439,14 @@ const Forges = () => {
 
     if (autoCloseTimeoutId.current) {
       clearTimeout(autoCloseTimeoutId.current);
-      autoCloseTimeoutId.current = null; // Set to null after clearing if you want
+      autoCloseTimeoutId.current = null;
     }
 
     const { energy, shardslvl, currShards } = mythStates[activeMyth];
     const { counter, popupTime, isActive } = popupStates;
 
     const lastBubbleClaimedTime = getBubbleLastClaimedTime();
-    const bubbleCooldown = 5 * 60 * 1000;
+    const bubbleCooldown = 2 * 60 * 1000;
     const canShowBubble =
       !lastBubbleClaimedTime ||
       Date.now() - lastBubbleClaimedTime >= bubbleCooldown;
@@ -745,7 +746,7 @@ const Forges = () => {
         setTimeout(() => {
           setGlowBooster(0);
           setShowGlow(null);
-        }, 2000);
+        }, 500);
       }, 1000);
     }
 
@@ -1375,7 +1376,7 @@ const Forges = () => {
                       });
                       setTimeout(() => {
                         setGlowBooster(0);
-                      }, 2000);
+                      }, 500);
                       setShowCard(null);
                       setShowBooster(null);
                     }}
@@ -1419,7 +1420,7 @@ const Forges = () => {
                 setGlowBooster(3);
                 setTimeout(() => {
                   setGlowBooster(0);
-                }, 2000);
+                }, 500);
               }}
             />
           )}
@@ -1432,7 +1433,7 @@ const Forges = () => {
             />
             {(isStarHold.current === true || isMinionHold.current === true) && (
               <ReactHowler
-                src="/assets/audio/fof.minion.grunt.short.wav"
+                src="/assets/audio/fof.alchemist.grunt.long.wav"
                 playing={
                   enableSound &&
                   (isStarHold.current === true || isMinionHold.current === true)
@@ -1444,7 +1445,7 @@ const Forges = () => {
 
             {isStarHold.current === true && (
               <ReactHowler
-                src="/assets/audio/fof.automata.pulse.short.wav"
+                src="/assets/audio/fof.automata.pulse.long.wav"
                 playing={enableSound && isStarHold.current === true}
                 preload={true}
                 html5={true}
