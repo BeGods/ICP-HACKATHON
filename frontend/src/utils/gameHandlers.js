@@ -13,13 +13,26 @@ const handleGenerateCoolDown = (counter) => {
     return 10000;
   }
 };
-// generate random time in next 1 min
+
 export const handleGeneratePopTime = (counter) => {
   const currTime = Date.now();
   const downTime = currTime + handleGenerateCoolDown(counter);
 
-  // Generate a random time within the next 1 minute (60,000 ms)
+  // Generate a random time within the next 1 minute (20s)
   const randomOffset = Math.floor(Math.random() * 20000);
   const randomTime = downTime + randomOffset;
   return randomTime;
+};
+
+export const formatRankOrbs = (num) => {
+  if (num < 1000) {
+    return num.toString();
+  }
+
+  const numStr = num.toString();
+
+  const thousands = numStr.slice(0, -3); // before the last three digits
+  const remainder = numStr.slice(-3).replace(/^0+/, ""); // last three digits
+
+  return `${thousands},${remainder}`;
 };

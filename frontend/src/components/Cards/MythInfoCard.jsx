@@ -20,7 +20,7 @@ const MythInfoCard = ({ close }) => {
             {mythologies[activeMyth]}
           </div>
           <div
-            className={`absolute leading-[18px] text-[16px] inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] ${
+            className={`absolute leading-[18px] text-[16px] -mt-4 inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] ${
               (i18n.language === "hi" ||
                 i18n.language === "th" ||
                 i18n.language === "ru") &&

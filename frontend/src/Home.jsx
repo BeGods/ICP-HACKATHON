@@ -32,9 +32,7 @@ const Home = (props) => {
   const [showGlow, setShowGlow] = useState(null);
   const [platform, setPlatform] = useState(null);
   const [authToken, setAuthToken] = useState(null);
-  const [section, setSection] = useState(() => {
-    return JSON.parse(localStorage.getItem("section")) ?? 0;
-  });
+  const [section, setSection] = useState(0);
 
   const sections = [
     <Quests />,

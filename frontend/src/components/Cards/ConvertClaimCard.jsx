@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { mythSymbols, mythologies } from "../../utils/variables";
-import { CircleCheck } from "lucide-react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { mythSymbols, mythologies, orbSounds } from "../../utils/variables";
+import { CircleCheck, CircleX } from "lucide-react";
+import ReactHowler from "react-howler";
+import { MyContext } from "../../context/context";
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",
@@ -10,8 +12,11 @@ const orbPos = [
 ];
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
+  const { enableSound } = useContext(MyContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
+  const [playSound, setPlaySound] = useState(0);
+  const howlerRef = useRef(null);
 
   const handleKeys = () => {
     const selectedKeys = clickedOrbs
@@ -22,12 +27,20 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
     handleSubmit(selectedKeys);
   };
 
+  const playAudio = () => {
+    if (howlerRef.current && enableSound) {
+      howlerRef.current.stop();
+      howlerRef.current.play();
+    }
+  };
+
+  // fof.orb.water.blue.wav
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
       {!showPlay ? (
         <div className="flex flex-col w-full items-center justify-center">
           <div className="uppercase text-center leading-[60px] top-0 text-gold text-[14.2vw] px-0.5 scale-zero text-black-contour">
-            Do You Know The tune?
+            Do You Know The tune <span className="text-[20vw]">♪</span> ?
           </div>
           <div className="flex text-[10vw] w-2/3 mt-10 justify-between text-gold">
             <div
@@ -35,7 +48,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                 setShowPlay(true);
               }}
             >
-              Yes
+              <CircleCheck size={"18vw"} color="green" />
             </div>
             <div
               onClick={() => {
@@ -43,7 +56,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                 handleSubmit();
               }}
             >
-              No
+              <CircleX size={"18vw"} color="red" />
             </div>
           </div>
         </div>
@@ -66,6 +79,8 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             {mythologies.map((item, index) => (
               <div
                 onClick={() => {
+                  playAudio();
+                  setPlaySound(index);
                   setClickedOrbs((prev) =>
                     prev.includes(item) ? prev : [...prev, item]
                   );
@@ -99,6 +114,10 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             ))}
             <div
               onClick={() => {
+                playAudio();
+                if (!prev.includes("MultiOrb")) {
+                  setPlaySound(index);
+                }
                 setClickedOrbs((prev) =>
                   prev.includes("MultiOrb") ? prev : [...prev, "MultiOrb"]
                 );
@@ -128,64 +147,21 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
           </div>
         </div>
       )}
+      <div className="absolute">
+        {playSound != 0 && (
+          <>
+            <ReactHowler
+              src={`/assets/audio/fof.orb.${orbSounds[playSound]}.wav`}
+              playing={enableSound}
+              preload={true}
+              ref={howlerRef}
+              onEnd={() => setPlaySound(false)}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 };
 
 export default ConvertClaimCard;
-
-// Celtic: -ml-[31.5vw] -mt-[18vw]
-// Norse: -mt-[45vw] ml-[32vw]
-// Greek: mt-[45vw] mr-[32vw]
-// Egyptian:
-
-// {mythologies.map((item, index) => (
-//   <div
-//     onClick={() => {
-//       setClickedOrbs((prev) =>
-//         prev.includes(item) ? prev : [...prev, item]
-//       );
-//     }}
-//     key={index}
-//     className="flex gap-1 items-center"
-//   >
-//     <div
-//       className={`flex relative text-center justify-center ${
-//         clickedOrbs.includes(item) ? "w-[12vw]" : "max-w-orb"
-//       } items-center rounded-full glow-icon-${item.toLowerCase()}`}
-//     >
-//       <img
-//         src="/assets/uxui/240px-orb.base.png"
-//         alt="orb"
-//         className={`filter-orbs-${item.toLowerCase()}`}
-//       />
-//       <span
-//         className={`absolute z-1 font-symbols ${
-//           clickedOrbs.includes(item)
-//             ? ` transition-all duration-1000 opacity-100 text-${item.toLowerCase()}-text`
-//             : "text-white opacity-50"
-//         } text-[40px] mt-1 text-black-sm-contour`}
-//       >
-//         <>{mythSymbols[item.toLowerCase()]}</>
-//       </span>
-//     </div>
-//   </div>
-// ))}
-{
-  /* <div
-  onClick={() => {
-    setClickedOrbs((prev) =>
-      prev.includes("MultiOrb") ? prev : [...prev, "MultiOrb"]
-    );
-  }}
-  className="flex gap-1 items-center"
->
-  <div
-    className={`flex relative text-center justify-center ${
-      clickedOrbs.includes("MultiOrb") ? "w-[12vw]" : "max-w-orb"
-    } items-center rounded-full glow-icon-white`}
-  >
-    <img src="/assets/uxui/240px-orb.multicolor.png" alt="orb" />
-  </div>
-</div>; */
-}
