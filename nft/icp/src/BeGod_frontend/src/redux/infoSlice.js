@@ -19,19 +19,23 @@ export const fetchCollections = createAsyncThunk(
 
       let i = 0;
       collectionItems.forEach((eachItem) => {
-        // console.log("collection item in redux slice",eachItem)
+        //  console.log("collection item in redux slice",eachItem)
+         const metadata = JSON.parse(eachItem[4]);
+        //  console.log("meta data in redux",metadata);
         const colItem = {
           index: i,
           collectionId: eachItem[1],  
           name: eachItem[2],
-          description: eachItem[4],
-          image : eachItem[3]
+          description: metadata.description,
+          collectionColor : metadata.collColor,
+          image : eachItem[3],
         };
         i++;
+         console.log("each col in redux",colItem)
         collections.push(colItem);
       });
 
-      console.log("Processed collections:", collections);
+      // console.log("Processed collections:", collections);
       return collections; 
     }
 

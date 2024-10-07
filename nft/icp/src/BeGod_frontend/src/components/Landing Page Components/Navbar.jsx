@@ -8,10 +8,12 @@ import { FaUserLarge } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDisplayWalletOptionsStatus } from "../../redux/infoSlice";
 import { useLocation } from "react-router-dom";
+import { FiActivity } from "react-icons/fi";
 const Navbar = ({ mobileView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
+  
 
   const location = useLocation();
   const currentPath = location.pathname;
@@ -31,7 +33,7 @@ const Navbar = ({ mobileView }) => {
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { logout, login, principal, showButtonLoading } = useAuth();
+  const { logout, login, principal, showButtonLoading,plugConnectMobile } = useAuth();
 
   const [currentLanguage, setLanguage] = useState(t("langText"));
 
@@ -187,7 +189,7 @@ const Navbar = ({ mobileView }) => {
                   disabled
                 >
                   <svg
-                    className="animate-spin h-5 w-5 mr-3 text-white"
+                    className="w-5 h-5 mr-3 text-white animate-spin"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -284,43 +286,95 @@ const Navbar = ({ mobileView }) => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-0 bottom-0 left-0 z-10 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique">
-          <Link
-            to="/#collections"
-            className="text-[20px] font-[400] leading-[30px] text-[#FCD378] "
-          >
-            Home
-          </Link>
-          <div className="text-[20px] font-[400] leading-[30px] text-[#FCD378] ">
-            {t("collectionNavItem")}
-          </div>
+  <div className="fixed top-0 bottom-0 left-0 z-20 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique">
+    <Link
+      to="/#collections"
+      className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+    >
+      Home
+    </Link>
+    <div className="text-[20px] font-[400] leading-[30px] text-[#FCD378]">
+      {t("collectionNavItem")}
+    </div>
 
-          {isAuthenticated ? (
-            <>
-              <Link
-                to="/profile"
-                className="flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md text-[#FCD378] "
-              >
-                Profile
-              </Link>
-              <div
-                onClick={onClickLogout}
-                className="flex items-center justify-center text-lg border-[2px] border-gray-200 w-[60vw] h-[4vh] rounded-md text-[#FCD378] "
-              >
-                Logout
-              </div>
-            </>
-          ) : (
-            <div onClick={() => dispatch(updateDisplayWalletOptionsStatus({status:!iswalletOptionsOpen.status,path:navigatingPath}))} className='flex items-center justify-center  w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px] '>{t('connectWallet')}</div>
-          )}
+    {isAuthenticated ? (
+      <>
+        <Link
+          to="/profile"
+          className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
+        >
+          <FaUserLarge size={15} className="mr-1" />
+          {/* {principal ? `${principal.slice(0, 4)}...${principal.slice(principal.length - 5)}` : "loading..."} */}
+          <span className="mr-3">Profile</span>
+        </Link>
+        <Link
+          to="/activity"
+          className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
+        >
+          <FiActivity size={15} className="mr-1" />
+
+          <span className="mr-3">Activity</span>
+        </Link>
+        <div
+          onClick={onClickLogout}
+          className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
+        >
+          Logout
         </div>
-      )}
+      </>
+    ) : showButtonLoading ? (
+      <button
+        type="button"
+        className="flex items-center justify-center w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px]"
+        disabled
+      >
+        <svg
+          className="w-5 h-5 mr-3 text-black animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+          ></path>
+        </svg>
+        Processing...
+      </button>
+    ) : (
+      <div
+        onClick={() =>
+          dispatch(
+            updateDisplayWalletOptionsStatus({
+              status: !iswalletOptionsOpen.status,
+              path: navigatingPath,
+            })
+          )
+        }
+        className="flex items-center justify-center w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px]"
+      >
+        {t("connectWallet")}
+      </div>
+    )}
+  </div>
+)}
+
 
       {/* Modal */}
       {iswalletOptionsOpen.status && (
         <div className="fixed top-0 left-0 z-40 w-full h-screen bg-[rgba(49,49,49,0.8)] sm:hidden ">
           <div className="flex items-center justify-center h-screen">
-            <div className="w-[80vw] h-[40vh] bg-black rounded-md overflow-y-auto font-caslonAntique text-[#FCD378]">
+            <div className="w-[80vw] h-[50vh] bg-black rounded-md overflow-y-auto font-caslonAntique text-[#FCD378]">
               <div className="flex justify-end p-2 ">
                 <button
                   onClick={() =>
@@ -375,7 +429,7 @@ const Navbar = ({ mobileView }) => {
                 </button>
                 <button
                   className="pl-3 mt-5 h-[40px] bg-transparent rounded-lg flex items-center text-[16px] sm:text-[20px]  border border-[#FCD378]"
-                  onClick={() => login("plug", navigatingPath)}
+                  onClick={() => plugConnectMobile()}
                 >
                   <img
                     src="https://docs.plugwallet.ooo/imgs/logo.png"

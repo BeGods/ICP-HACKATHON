@@ -26,20 +26,20 @@ html {
   scroll-behavior: smooth;
 }
 
-body{
+body {
   font-family: "CaslonAntique" !important;
 }
 
-.big-heading{
+.big-heading {
   font-family: "MyCustomFont" !important;
 }
 
-.big-heading-text{
+.big-heading-text {
   font-size: 70px !important;
   font-family: "MyCustomFont" !important;
 }
 
-.normal-heading{
+.normal-heading {
   font-family: "CaslonAntique" !important;
 }
 
@@ -242,7 +242,7 @@ body{
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border-radius: 1rem;
+  border-style: none;
   border-width: 0px;
 }
 
@@ -256,6 +256,9 @@ body{
   .flip-card {
     width: 250px; /* Reduced width for mobile */
     height: 350px; /* Reduced height for mobile */
+  }
+  .flip-card-inner{
+    min-height: 100%;
   }
 
   .flip-card-back .absolute {
@@ -433,11 +436,12 @@ body{
 
 .add_new_nft_popup_bg_container {
   height: 80vh;
-  width: 25vw;
+  width: 35vw;
   background-color: #161618;
   border-radius: 5px;
   padding: 32px 42px 36px 42px;
   overflow-y: auto;
+  scrollbar-width: none;
 }
 @media screen and (max-width: 1200px) {
   .add_new_nft_popup_bg_container {
@@ -512,22 +516,21 @@ body{
   background-color: rgba(255, 255, 255, 0.8); /* Optional background */
 }
 
-
-.admin-control-font{
+.admin-control-font {
   font-family: sans-serif !important;
 }
 
-.border-golden{
+.border-golden {
   border: 5px solid goldenrod;
   border-radius: 10px;
 }
 
-.border-silver{
+.border-silver {
   border: 5px solid silver;
   border-radius: 10px;
 }
 
-.border-bronze{
+.border-bronze {
   border: 5px solid #cd7f32;
   border-radius: 10px;
 }

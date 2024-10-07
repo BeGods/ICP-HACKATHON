@@ -11,8 +11,9 @@ import {
   Input,
   Box,
   Button,
+  IconButton,
 } from "@chakra-ui/react";
-import BackButton from "./collection/BackButton";
+import { CloseIcon } from "@chakra-ui/icons"; // Import CloseIcon from Chakra UI
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../utils/useAuthClient.jsx";
@@ -24,50 +25,63 @@ function Users() {
   const [loading, setLoading] = useState(false);
   const [alluser, setalluser] = useState([]);
   const [principal, setprincipal] = useState([]);
-  // const id = 1951982;
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search input
 
   const getallDUser = async () => {
     if (backendActor) {
       try {
         const result = await backendActor?.getAllUsers();
-        console.log("User details", result);
-        setalluser(result);
-        // getUserDetail(result[0][0]);
+        console.log("getting all users", result);
 
-        const userPrincipalArray = result[0][0];
-        const principalString = Principal.fromUint8Array(
-          userPrincipalArray._arr
-        ).toText();
-        console.log(principalString);
-        setprincipal(principalString);
+        if (result && result.length > 0 && result[0].length > 0) {
+          setalluser(result);
+          const userPrincipalArray = result[0][0];
+          const principalString = Principal.fromUint8Array(
+            userPrincipalArray._arr
+          ).toText();
+          console.log(principalString);
+          setprincipal(principalString);
+        } else {
+          console.log("No users found in the result");
+        }
       } catch (error) {
-        console.error("Error fetching in user details:", error);
+        console.error("Error fetching user details:", error);
       }
     }
   };
 
   useEffect(() => {
-    setLoading(true); // Start loading
-    getallDUser();
-    setLoading(false); // Stop loading
+    const fetchData = async () => {
+      setLoading(true);
+      const loadStart = Date.now(); // Record the start time
+      await getallDUser();
+      const loadTime = Date.now() - loadStart;
+
+      // Ensure that the loading spinner runs for at least 3 seconds
+      const remainingTime = 3000 - loadTime;
+      if (remainingTime > 0) {
+        setTimeout(() => setLoading(false), remainingTime);
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
-  console.log(alluser[0]);
-  const n = alluser?.length || 0;
-  console.log("length", n);
-  // console.log(principal);
-  // const userPrincipalArray = principal;
-  // const principalString = Principal.fromUint8Array(
-  //   userPrincipalArray._arr
-  // ).toText();
-  // console.log(principalString);
+
+  // Filtered users based on the search term
+  const filteredUsers = alluser.filter(
+    (user) => user[3].toLowerCase().includes(searchTerm.toLowerCase()) // Assuming user[3] is the name
+  );
+
+  // Function to clear the search input
+  const clearSearch = () => {
+    setSearchTerm("");
+  };
 
   return (
-    <SkeletonTheme baseColor="#202020" highlightColor="#444">
-      <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll  md:w-full lg:w-[90%] lg:pt-20">
-        <div className="flex justify-between text-center">
-          <BackButton />
-        </div>
-
+    <SkeletonTheme baseColor="#202020" highlightColor="#282828">
+      <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar md:w-full lg:w-[90%] lg:pt-20">
         <Box
           color="white"
           className="flex flex-col items-center justify-center"
@@ -77,21 +91,39 @@ function Users() {
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
             mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
             mt="5%"
+            display="flex" // Added flex to align items horizontally
+            alignItems="center" // Center the items vertically
           >
-            <Input
-              placeholder="Search"
-              w={{ base: "100%", sm: "90%", md: "85%", "2xl": "100%" }}
-              h="45px"
-              border="1px"
-              borderColor="gray.600"
-              bg="#161618"
-              color="white"
-              p="4"
-              _placeholder={{ color: "gray.400" }}
-            />
+            {loading ? (
+              <Skeleton height={45} width="100%" />
+            ) : (
+              <>
+                <Input
+                  placeholder="Search by Name"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)} // Update search term on input change
+                  w="100%"
+                  h="45px"
+                  border="1px"
+                  borderColor="gray.600"
+                  bg="#161618"
+                  color="white"
+                  p="4"
+                  _placeholder={{ color: "gray.400" }}
+                />
+                <IconButton
+                  aria-label="Clear search"
+                  icon={<CloseIcon />}
+                  onClick={clearSearch}
+                  ml={2}
+                  colorScheme="red"
+                  variant="outline"
+                />
+              </>
+            )}
           </Box>
-          {/* Table */}
 
+          {/* Table */}
           <Box
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
             mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
@@ -121,72 +153,91 @@ function Users() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {loading ? (
-                    <div
-                      style={{
-                        display: "grid",
-                        lineHeight: 3,
-                        padding: "1rem",
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      <Skeleton />
-                      <Skeleton count={5} />
-                    </div>
-                  ) : (
-                    <>
-                      {Array(n)
+                  {loading
+                    ? Array(5)
                         .fill("")
                         .map((_, index) => (
-                          <Tr
-                            key={index}
-                            bg={index % 2 === 0 ? "#333333" : "#444444"}
-                          >
-                            <Td textAlign="center">
-                              <div className="flex items-center justify-center gap-4">
-                                <img
-                                  src="/image/admin.png"
-                                  alt=""
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                  }}
+                          <Tr key={index}>
+                            <Td>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "10px",
+                                }}
+                              >
+                                <Skeleton
+                                  circle={true}
+                                  height={30}
+                                  width={30}
                                 />
-                                {alluser[0][3]}
+                                <Skeleton height={20} width="150px" />{" "}
+                                {/* Name placeholder */}
                               </div>
                             </Td>
-                            <Td
-                              textAlign="center"
-                              wordBreak="break-all"
-                              color="gray.200"
-                            >
-                              {alluser[0][4]}
+                            <Td>
+                              <Skeleton height={20} width="80%" />
                             </Td>
-                            <Td textAlign="center" color="white.200">
-                              {principal}
+                            <Td>
+                              <Skeleton height={20} width="60%" />
                             </Td>
-                            <Td textAlign="center">
-                              <Link
-                                to={`/Admin/users/${alluser[0][2]}`}
-                                state={{ alluser }}
-                              >
-                                <Button
-                                  size="sm"
-                                  border="1px"
-                                  borderColor="gray.500"
-                                  color="white"
-                                  bg="#161618"
-                                  _hover={{ bg: "#FCD37B", color: "black" }}
-                                >
-                                  View
-                                </Button>
-                              </Link>
+                            <Td>
+                              <Skeleton height={20} width="40%" />
                             </Td>
                           </Tr>
-                        ))}
-                    </>
-                  )}
+                        ))
+                    : filteredUsers.map((user, index) => (
+                        <Tr
+                          key={index}
+                          bg={index % 2 === 0 ? "#333333" : "#282828444"}
+                        >
+                          <Td textAlign="center">
+                            <div className="flex items-center justify-center gap-4">
+                              <img
+                                src="/image/admin.png"
+                                alt=""
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  borderRadius: "50%",
+                                }}
+                              />
+                              {user[3]} {/* Actual Name */}
+                            </div>
+                          </Td>
+                          <Td
+                            textAlign="center"
+                            wordBreak="break-all"
+                            color="gray.200"
+                          >
+                            {user[4]}
+                          </Td>
+                          <Td textAlign="center" color="white.200">
+                            {principal
+                              ? `${principal.slice(0, 5)}...${principal.slice(
+                                  principal.length - 6
+                                )}`
+                              : "No ID available"}
+                          </Td>
+                          <Td textAlign="center">
+                            <Link
+                              to={`/Admin/users/${user[2]}`}
+                              state={{ alluser }}
+                            >
+                              <Button
+                                size="sm"
+                                border="1px"
+                                borderColor="gray.500"
+                                color="white"
+                                bg="#161618"
+                                _hover={{ bg: "#FCD37B", color: "black" }}
+                              >
+                                View
+                              </Button>
+                            </Link>
+                          </Td>
+                        </Tr>
+                      ))}
                 </Tbody>
               </Table>
             </TableContainer>

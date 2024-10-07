@@ -15,6 +15,8 @@ import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import { updateDisplayWalletOptionsStatus } from "../redux/infoSlice";
+import { PlugMobileProvider } from '@funded-labs/plug-mobile-sdk';
+import MobileProvider from '@funded-labs/plug-mobile-sdk/dist/src/MobileProvider';
 
 // Create a React context for authentication state
 const AuthContext = createContext();
@@ -54,7 +56,85 @@ export const useAuthClient = () => {
   // mainnet
   // const ledgerCanId = "ryjl3-tyaaa-aaaaa-aaaba-cai";
 
-  const whitelist = [backend_id,ledgerCanId,frontend_id]
+  const whitelist = [backend_id,ledgerCanId,frontend_id];
+
+
+  async function plugConnectMobile() {
+    try {
+      // Check if the user is on a mobile device
+      const isMobile = PlugMobileProvider.isMobileBrowser();
+      
+      if (isMobile) {
+        // Initialize PlugMobileProvider for mobile
+        const provider = new PlugMobileProvider({
+          debug: true,
+          walletConnectProjectId: '143e95d92fffc4fe5b2355904907a616',
+          window: window,
+        });
+  
+        // Initialize the provider
+        await provider.initialize();
+  
+        // Check if the provider is already paired
+        if (!provider.isPaired()) {
+          // Pair the provider
+          await provider.pair();
+        }
+  
+        // Create the agent with the provider
+        const agent = await provider.createAgent({
+          host: 'https://icp0.io',
+          targets: whitelist,
+        });
+
+        const actor=await createActor(process.env.CANISTER_ID_BEGOD_BACKEND ,{agent});
+        console.log(actor,'mobile actor')
+
+        // const principal = await window.ic.plug.agent.getPrincipal();
+        // console.log(principal, "principal");
+  
+        const user_uuid = uuidv4();
+        // // Create actor for the backend
+        // const userActor = await window.ic.plug.createActor({
+        //   canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
+        //   interfaceFactory: idlFactory,
+        // });
+
+        // // Create actor for the ledger
+        // const EXTActor = await window.ic.plug.createActor({
+        //   canisterId: ledgerCanId,
+        //   interfaceFactory: ledgerIdlFactory,
+        // });
+
+        // userObject.principal = principal.toText();
+        // userObject.agent = window.ic.plug.agent;
+  
+        // // Create user with the principal and user UUID
+        const userdetails = await actor.create_user(await agent.getPrincipal(), user_uuid);
+        console.log(userdetails, "userdetails");
+        setBackendActor(actor);
+        // setLedgerActor(EXTActor);
+      } else {
+        // If not a mobile device, fallback to desktop Plug connection
+        const pubKey = await window.ic.plug.requestConnect({ whitelist });
+        const actor = await window.ic.plug.createActor({
+          canisterId: process.env.CANISTER_ID_BEGOD_BACKEND,
+          interfaceFactory: idlFactory,
+        });
+        console.log("plug desk actor created", actor);
+  
+        // Verify connection and fetch data
+        const res = await actor.whami();
+        console.log(res);
+        setBackendActor(actor);
+        setPrincipal(res);
+      }
+    } catch (err) {
+      console.error("Error in plugConnectMobile:", err);
+      alert(err.message || "An error occurred while connecting.");
+    }
+  }
+  
 
   const login = async (provider, navigatingPath) => {
     return new Promise(async (resolve, reject) => {
@@ -346,7 +426,8 @@ export const useAuthClient = () => {
     ledgerActor,
     reloadLogin,
     accountIdString,
-    showButtonLoading
+    showButtonLoading,
+    plugConnectMobile
   };
 };
 

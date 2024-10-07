@@ -40,6 +40,10 @@ const BuyNft = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const collectionId = params.get("collectionId");
+  let collectionColor = params.get("type");
+  if(collectionColor === 'Golden'){
+    collectionColor = "gold";
+  }
   const index = params.get("index");
   const { backendActor, ledgerActor, principal } = useAuth({});
   const [nftCardLoading, setNftCardLoading] = useState(true);
@@ -54,6 +58,8 @@ const BuyNft = () => {
     });
 
   const [tokenId, setTokenId] = useState("");
+
+  const [isOwned,updateIsOwnedStatus] = useState(true)
 
   let [popUpFirstLoading, setLoadingFirst] = useState(true);
   let [popUpSecondLoading, setLoadingSecond] = useState(false);
@@ -137,7 +143,7 @@ const BuyNft = () => {
       console.log(resultTxn, "this is the finale result");
       if (resultTxn === true) {
         setLoadingSecond(false);
-        updateIsDisplayBuyNow(false);
+        updateIsOwnedStatus(true)
         setBuyingStatus(buyingStatus.success);
         toast.success("Payment Success!", {
           position: "top-center",
@@ -201,8 +207,10 @@ const BuyNft = () => {
     console.log(collectionId, index);
     const result = await backendActor?.getSingleNonFungibleTokens(
       Principal.fromText(collectionId),
-      parseInt(index)
+      parseInt(index),
+      principal
     );
+    updateIsOwnedStatus(result[0][4]);
      console.log("buying nft details" , result);
     // console.log("buying nft details 0 1" , result[0][1]);
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
@@ -236,7 +244,7 @@ const BuyNft = () => {
       standards: parsedMetadata.standards,
       chains: parsedMetadata.chains,
       date : date,
-      contactAddress:result[0][1],
+      contactAddress:principal,
     };
     console.log("updated Card Details", updatedCardDetails)
     setCardDetails(updatedCardDetails);
@@ -394,24 +402,29 @@ const BuyNft = () => {
               <>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{contactAddress}</h1>
-                  <h1>{cardDetails.contactAddress}</h1>
+                  <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{token}</h1>
-                  <h1>ID8050</h1>
+                  <h1>{tokenId.slice(0,4)}...{tokenId.slice(-4)}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{tokenStandard}</h1>
-                  <h1>ERC-721</h1>
+                  <h1>{cardDetails?.standards}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{chain}</h1>
-                  <h1>ICP</h1>
+                  <h1>{cardDetails?.chains[0]}</h1>
                 </div>
-                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                {
+                  cardDetails && cardDetails?.date && (
+                    <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{lastUpdated}</h1>
-                  <h1>7 Days ago</h1>
+                  <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
                 </div>
+                  )
+                }
+                
               </>
             )}
           </div>
@@ -494,7 +507,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{token}</h1>
-                      <h1>ID8050</h1>
+                      <h1>{tokenId.slice(0,4)}...{tokenId.slice(-4)}</h1>
                     </>
                   )}
                 </div>
@@ -533,38 +546,29 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{lastUpdated}</h1>
-                      <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
+                      <h1><ReactTimeAgo date={cardDetails?.date || 0} locale="en" /></h1>
                     </>
                   )}
                 </div>
               </div>
-              {nftCardLoading && isDisplayBuyNow && (
-                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
-                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                    <Skeleton count={1} width={178} height={40} />
-                  </SkeletonTheme>
-                </div>  
-              )}
-              {!nftCardLoading && isDisplayBuyNow && (
-                (isDisplayBuyNow && (
-                  <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
-                  <button
-                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                    disabled={nftCardLoading}
-                    onClick={onClickBuyButton}
-                  >
-                    Buy for {cardDetails.cardPrice / 100000000} ICP
-                  </button>
-                  
-                </div>
+              {!isOwned && (
+                <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                <button
+                  className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                  disabled={nftCardLoading}
+                  onClick={onClickBuyButton}
+                >
+                  Buy for {cardDetails.cardPrice / 100000000} ICP
+                </button>
                 
-                ))
+              </div>
               )}
               
             </div>
             <div>
               {nftCardLoading ? (
-                <div className="h-[60%] w-[80%] mt-[40%] ml-[50%] shadow-lg rounded-lg">
+                <div className="mt-[40%] ml-[50%] shadow-lg rounded-lg mb-5"
+                >
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <Skeleton
                       count={1}
@@ -576,9 +580,10 @@ const BuyNft = () => {
                 </div>
               ) : (
                 <div
-                  className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                  style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
-                >
+                    className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
+                    style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                  >
+
                   <img
                     src={cardDetails?.cardImageUrl}
                     alt=""
@@ -648,7 +653,7 @@ const BuyNft = () => {
                   currentBuyingStatus === buyingStatus.success
                     ? "lg:h-[65vh]"
                     : "lg:h-[40vh]"
-                } w-[70vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
+                } w-[90vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
               >
                 <div className="relative flex items-center justify-end">
                   <button
@@ -789,7 +794,7 @@ const BuyNft = () => {
         </div>
       )}
       {sharePopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screenn">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
@@ -831,4 +836,4 @@ const BuyNft = () => {
   );
 };
 
-export default BuyNft;
+export default BuyNft

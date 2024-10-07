@@ -48,7 +48,6 @@ const Profile = () => {
   const [noCards,updateNoCardsStatus] = useState(false);
 
   const [selectedList , updateSelectedList] = useState([]);
-  const [notOwnedCardsList,updateNotOwnedCardsList] = useState([]);
   const [currentOption,updateCurrentOption] = useState("mycollection");
 
   const allCollectionsList = useSelector((state)=> state.info.collectionList);
@@ -64,6 +63,8 @@ const Profile = () => {
   const [isDisplayCollectionDropDown , updateDropDownStatus] = useState(false);
   const navigate = useNavigate(); 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const [remainingNftsCount,updateRemainingNfts] = useState([]);
 
   useEffect(()=>{
     if(!isAuthenticated){
@@ -152,7 +153,10 @@ const [telegramUrl,updateTelegramUrl] = useState("");
 
 const [isDisplayEditProfile,updateEditProfileStatus] = useState(false);
 const [profileUpdateInProcess,setProfileUpdateInProcess] = useState(false);
-const [displayProfileUpdateSuccess,updateDisplayProfileUpdateSuccess] = useState(false);
+// const [displayProfileUpdateSuccess,updateDisplayProfileUpdateSuccess] = useState(false);
+
+
+
 const onClickUpdateUserDetails = async() => {
     setProfileUpdateInProcess(true)
   
@@ -214,107 +218,69 @@ const fetchUserDetails= async () => {
   
 
   }
-let index = 0;
-  const fetchCollections = async () => {
-    const myCollectionList = [];
-    let   fetchNotOwnedNfts = [];
-    console.log("all collection list ",allCollectionsList);
+
+const fetchCollections = async () => {
+     console.log("all collection list ",allCollectionsList);
     if(allCollectionsList.length === 0){
       updateNoCardsStatus(true);
       return;
     }
-    
-
-    await Promise.all(
-      allCollectionsList.map(async (eachCollection,index) => {
-        const resultOfUserNftCollections = await getDetails(eachCollection.collectionId);
-        if (typeof resultOfUserNftCollections.ok === typeof ([])) {
-          const collectionDetails = resultOfUserNftCollections.ok;
-          console.log("collection details", collectionDetails);
-
-          for (let i = 0; i < collectionDetails.length; i++) {
-            const eachItem = collectionDetails[i];
-            const cardDetails = eachItem[1].nonfungible;
-            const metadata = JSON.parse(cardDetails.metadata[0].json);
-          
-            console.log("each item of owned nft",eachItem);
-            const isFav = await checkIsFavourite(eachItem[0]);
-          
-            const nftCard = {
-              collectionId:eachCollection.collectionId,
-              index,
-              isOwned:true,
-              tokenId: eachItem[0],
-              cardName: cardDetails?.name,
-              cardImageUrl: cardDetails?.thumbnail,
-              cardSold: "",
-              isFavourite: isFav,
-            };
-          
-            console.log("nft card", nftCard);
-            myCollectionList.push(nftCard); 
-          }
-    
-            const listedNfts = await backendActor?.listings(eachCollection.collectionId);
-            if(listedNfts.length !== 0){
-              const collectionNotOwendcards = getCollectionNfts(listedNfts,eachCollection.collectionId,index);
-              fetchNotOwnedNfts = [...fetchNotOwnedNfts, ...collectionNotOwendcards];
-              console.log("fetched nfts of a collection",fetchNotOwnedNfts)
-            }
-            
-        
-      
-        }
-      })
-    );
-
-    fetchNotOwnedNfts.forEach(element => {
-        myCollectionList.push(element);
-    });
-    console.log("myCollectionList", myCollectionList);
-    setIsCardsLoading(false);
-
-    if (myCollectionList.length === 0) {
-      updateNoCardsStatus(true);
-    } else {
-      updateSelectedList(myCollectionList);
-     
-    }
-};
-const getCollectionNfts = (collectionList,collectionId,collectionIndex) => {
-  return collectionList.map((eachItem) => {
-  //    console.log("list item",eachItem)
-      index = index+1;
-      const nftDetails = eachItem[3].nonfungible;
-      const image = nftDetails.thumbnail;
-      const name = nftDetails.name;
-      const sold = eachItem[2].price;
-      const ICP = parseInt(sold)/100000000;
-      const metadata = JSON.parse(nftDetails.metadata[0].json);
-      // console.log(metadata,'metadata');
-      const nftType = metadata.nfttype;
-      const borderColor = metadata.nftcolor;
-      return {
-          isOwned:false,
-          collectionId,
-          index:collectionIndex,
-          cardIndex : eachItem[0],
-          cardImageUrl: image,
-          cardName :name,
-          sold,
-          ICP,
-          nftType,
-          borderColor
-      };
-  });
+    const currentSelectedCollection = allCollectionsList[currentDropDownOption];
+    await getSelectedOptionCards(currentSelectedCollection.collectionId);
 };
 
-  const getDetails =  async(collectionId) => {
-    console.log(collectionId,principal)
+  const getSelectedOptionCards =  async(collectionId) => {
+    let updatedCardsList = [];
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
-    //  console.log("collection details in getDetails",collectionDetailsResult);
-    return collectionDetailsResult
+    const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
+    const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
+    console.log("not owned nfts",notOwnedNfts);
+    const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,true);
+     updatedCardsList = updatedOwnedList;
+    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,false);
+    updateRemainingNfts(updatedNotOwnedNfts.length);
+    updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
+    setIsCardsLoading(false);
+    if(updatedCardsList.length >0){
+      updateSelectedList(updatedCardsList);
+    }else{
+      updateNoCardsStatus(true);
+    }
+    
 
+  }
+
+  const getUpdatedList= async(collectionId,cardsList,isOwned)=>{
+      const tempList = [];
+      for(let i=0;i<cardsList.length;i++){
+        const eachCard = cardsList[i];
+        const cardDetails = eachCard[2].nonfungible;
+
+          console.log("card details",cardDetails)
+          const metadata = JSON.parse(cardDetails.metadata[0].json);
+          let isFav = false;
+          if(isOwned){
+           isFav = await checkIsFavourite(eachCard[0]);
+          }
+          console.log("all collections",allCollectionsList,"currentindex",currentDropDownOption);
+          const tempcard= {
+                tokenId:eachCard[0],
+                index : eachCard[1],
+                collectionId,
+                cardName:cardDetails.name,
+                cardImageUrl:cardDetails.thumbnail,
+                cardType:metadata.nfttype,
+                isOwned,
+                isFavourite : isFav,
+                borderColor : metadata.nftcolor,
+                collectionColor : allCollectionsList[currentDropDownOption].collectionColor,
+             }
+             tempList.push(tempcard);
+
+      }
+
+      return tempList;
+    
   }
    
 
@@ -372,23 +338,15 @@ const addToFavorites = async(tokenId)=>{
     
 }
 
-  // const updatedList = selectedList.map((eachCard)=>{
-  //     if()
-  // })
-  // console.log("selected list before return", selectedList)
-  // console.log("not owned nfts" , notOwnedCardsList)
-
-  // console.log("user details",userDetails)
-
-  const filteredList = selectedList.filter((eachItem)=>{
-      console.log("eachItem",eachItem);
-      console.log("each item index",eachItem.index, " ",currentDropDownOption);
-      if(eachItem.index == currentDropDownOption){
-        return true;
-      }
-      return false;
-  })
-
+const onChangeFilterOption = (eachCollection) => {
+  if (eachCollection.index != currentDropDownOption) {
+    updateDropDownOption(eachCollection.index);
+    updateDropDownStatus(!isDisplayCollectionDropDown);
+    setIsCardsLoading(true);
+    getSelectedOptionCards(eachCollection.collectionId);
+  }
+  
+}
   
  
   return (
@@ -420,7 +378,7 @@ const addToFavorites = async(tokenId)=>{
                 <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
                 <button
             onClick={()=>updateEditProfileStatus(true)}
-            className=' flex items-center justify-center mt-4  h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>Edit Profile
+            className=' flex items-center justify-center mt-4 w-[130px]  h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>Edit Profile
             </button>
               </div>
               </div>
@@ -450,7 +408,7 @@ const addToFavorites = async(tokenId)=>{
               </div> */}
             </div>
             {allCollectionsList.length >0 && (
-              <div className="relative w-[180px] flex justify-center mr-5 z-10 mt-5 ">
+              <div className="relative w-[96%] h-[35px] sm:h-[40px]  md:w-[180px] flex justify-center md:mr-5 z-10 mt-5 ">
                            
               <button
                   onClick={()=>updateDropDownStatus(!isDisplayCollectionDropDown)}
@@ -465,7 +423,7 @@ const addToFavorites = async(tokenId)=>{
                           {allCollectionsList.map((eachCollection,index)=>(
                               <>
                                   <div key={eachCollection.index} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
-                                  onClick={()=>{if(eachCollection.index != currentDropDownOption){updateDropDownOption(index);updateDropDownStatus(!isDisplayCollectionDropDown)}}}>
+                                  onClick={()=>onChangeFilterOption(eachCollection)}>
                                       <li key={eachCollection.index}>{eachCollection.name}</li>
                                       {currentDropDownOption === eachCollection.index && (
                                       <IoCheckmarkOutline />
@@ -496,9 +454,9 @@ const addToFavorites = async(tokenId)=>{
                   noCards ? (
                     <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
                   ):(
-                    filteredList.length>0 ? (
+                    selectedList.length>0 ? (
                       <div>
-                      <NftCard img={filteredList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
+                      <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/>
                     </div>
                     ):(
                       <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
@@ -537,24 +495,46 @@ const addToFavorites = async(tokenId)=>{
                     ):(
                       <>
                      
-                    {filteredList.length === 0 ? (
+                    {selectedList.length === 0 ? (
                       <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
                       <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
                     </div>
-                    ):(
+                    ):( 
+                      <>
                       <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
-                      {filteredList.length > 0 && filteredList.map((img, index) => (
+                      {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
                           <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} />
                         </div>
                       ))}
+                        
                     </div>
+                    {currentOption === "mycollection" && (
+                      <div className='flex flex-col items-center md:items-end '>
+                      <div className='flex items-center justify-end mx-20 my-10 '>
+                            <div className={`relative ${remainingNftsCount>0 && "group"}`}>
+                              <button 
+                                disabled={remainingNftsCount > 0} 
+                                className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
+                              >
+                                Place Order
+                              </button>
+                              
+                                <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[250px] text-center py-1 rounded`}>
+                                Buy remaining {remainingNftsCount} nfts to place order!
+                              </span>
+                              
+                            </div>
+                          </div>
+  
+  
+                        
+                      </div>
+                    )}
+                    </>
                     )}
                     </>
                     ))
-              
-              
-           
             )}
           </div>
         </div>
@@ -568,7 +548,7 @@ const addToFavorites = async(tokenId)=>{
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[50vh] md:h-[40vh] w-[70vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className="h-[40vh] w-[90vw] md:h-[40vh]  lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
             >
               <div className="relative flex items-center justify-end">
                 <button
@@ -578,7 +558,6 @@ const addToFavorites = async(tokenId)=>{
                   <RxCross2 size={20} />
                 </button>
               </div>
-              {!displayProfileUpdateSuccess ? (
                 <div>
                   <div className='mt-10 mb-5'>
                 <div className='flex flex-col mb-1'>
@@ -601,7 +580,7 @@ const addToFavorites = async(tokenId)=>{
                   <div className='flex justify-center items-center w-20 border-none bg-[#FCD378] text-black h-6 rounded-full'>
                   <MoonLoader
                   color="#000000"
-                  size={20}
+                  size={15}
                   aria-label="Loading Spinner"
                   data-testid="loader"
                 />
@@ -613,12 +592,6 @@ const addToFavorites = async(tokenId)=>{
                 )}
               </div>
                 </div>
-              ):(
-                <div>
-                  <h1>Profile updated successfully!</h1>
-                  <button onClick={updateEditProfileStatus(false)}>Close</button>
-                </div>
-              )}
           </div> 
         </div>
     </div>
