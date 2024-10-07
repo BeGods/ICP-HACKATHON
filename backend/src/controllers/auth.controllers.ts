@@ -6,23 +6,12 @@ import { generateAuthToken } from "../services/auth.services";
 import {
   addTeamMember,
   createDefaultUserMyth,
-  createUser,
+  addNewUser,
 } from "../services/user.services";
 
-export const login = async (req, res) => {
+const validateInitData = (initData, res) => {
   try {
-    const { initData } = req.body;
-
-    if (!initData) {
-      return res.status(400).json({
-        message: "initData is required.",
-      });
-    }
-
-    const { referralCode } = req.query as { referralCode?: string | null };
-
     const parsedInitData = parse(initData);
-    let isUpdated = false;
 
     // validate initData
     try {
@@ -43,6 +32,56 @@ export const login = async (req, res) => {
         message: "User not found.",
       });
     }
+
+    return { telegramId, telegramUsername, isPremium };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const createNewUser = async (newUserData, referralCode, res) => {
+  try {
+    let existingReferrer: any;
+
+    //check referrer
+    if (referralCode) {
+      existingReferrer = await User.findOne({ referralCode });
+
+      if (!existingReferrer) {
+        return res.status(404).json({ message: "Invalid referral code." });
+      }
+
+      newUserData.parentReferrerId = existingReferrer._id as ObjectId;
+    }
+
+    // create new  user
+    const updatedUser = await addNewUser(newUserData);
+    await addTeamMember(updatedUser, existingReferrer, referralCode);
+    await createDefaultUserMyth(updatedUser);
+
+    return updatedUser;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const authenticate = async (req, res) => {
+  try {
+    const { initData } = req.body as { initData: string };
+    const { referralCode } = req.query as { referralCode?: string | null };
+    let isUpdated = false;
+
+    if (!initData) {
+      return res.status(400).json({
+        message: "Telegram initData is required.",
+      });
+    }
+
+    // validate initData
+    const { telegramId, telegramUsername, isPremium } = validateInitData(
+      initData,
+      res
+    );
 
     // existing user or not
     let existingUser: IUser | null = await User.findOne({ telegramId });
@@ -72,31 +111,17 @@ export const login = async (req, res) => {
         data: { token: accessToken },
       });
     } else {
-      let newUser: Partial<IUser> = {
+      let newUserObject: Partial<IUser> = {
         telegramId,
         telegramUsername,
         isPremium,
       };
 
-      let existingReferrer: any;
+      // handle create new user
+      const createdNewUser = createNewUser(newUserObject, referralCode, res);
 
-      //check referrer
-      if (referralCode) {
-        existingReferrer = await User.findOne({ referralCode });
-
-        if (!existingReferrer) {
-          return res.status(404).json({ message: "Invalid referral code." });
-        }
-
-        newUser.parentReferrerId = existingReferrer._id as ObjectId;
-      }
-
-      // create new  user
-      existingUser = await createUser(newUser);
-      await addTeamMember(existingUser, existingReferrer, referralCode);
-      await createDefaultUserMyth(existingUser);
       // response token
-      const accessToken = await generateAuthToken(existingUser);
+      const accessToken = await generateAuthToken(createdNewUser);
 
       res.status(201).json({
         message: "User authenticated successfully.",
@@ -105,7 +130,6 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -114,7 +138,7 @@ export const login = async (req, res) => {
 };
 
 //test login
-export const testLogin = async (req, res) => {
+export const testAuthenticate = async (req, res) => {
   try {
     const { telegramId, telegramUsername, isPremium, referralCode } = req.body;
 
@@ -153,31 +177,17 @@ export const testLogin = async (req, res) => {
         data: { token: accessToken },
       });
     } else {
-      let newUser: Partial<IUser> = {
+      let newUserObject: Partial<IUser> = {
         telegramId,
         telegramUsername,
         isPremium,
       };
 
-      let existingReferrer: any;
+      // handle create new user
+      const createdNewUser = createNewUser(newUserObject, referralCode, res);
 
-      //check referrer
-      if (referralCode) {
-        existingReferrer = await User.findOne({ referralCode });
-
-        if (!existingReferrer) {
-          return res.status(404).json({ message: "Invalid referral code." });
-        }
-
-        newUser.parentReferrerId = existingReferrer._id as ObjectId;
-      }
-
-      // create new  user
-      existingUser = await createUser(newUser);
-      await addTeamMember(existingUser, existingReferrer, referralCode);
-      await createDefaultUserMyth(existingUser);
       // response token
-      const accessToken = await generateAuthToken(existingUser);
+      const accessToken = await generateAuthToken(createdNewUser);
 
       res.status(201).json({
         message: "User authenticated successfully.",

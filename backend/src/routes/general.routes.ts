@@ -2,7 +2,6 @@ import {
   claimDailyBonus,
   getLeaderboard,
   ping,
-  updateAnnouncement,
   claimJoiningBonus,
   updateRanks,
   getRewards,
@@ -25,12 +24,18 @@ import {
   validPlaysuperRedeem,
 } from "../middlewares/general.middlewares";
 
+// ping
 router.get("/ping", ping);
-router.get("/leaderboard", authMiddleware, getLeaderboard);
-router.post("/announcements", authMiddleware, updateAnnouncement);
-router.get("/rewards", authMiddleware, getRewards);
 
-router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);
+// leaderboard
+router.get("/leaderboard", authMiddleware, getLeaderboard);
+router.get(
+  "/f115d48c-4929-4190-b326-e50f228500c7/update/rewardsInLastHr",
+  updateRanks
+);
+
+// bonus
+router.get("/bonus/daily", authMiddleware, claimDailyBonus);
 router.get("/bonus/dail", authMiddleware, validDailyHackBonus, claimDailyBonus);
 router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 
@@ -38,7 +43,6 @@ router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 router.post("/playsuper/otp", authMiddleware, generateOtp);
 router.post("/playsuper/resendOtp", authMiddleware, resendOtp);
 router.post("/playsuper/verify", authMiddleware, verifyOtp);
-router.post("/partners/create", authMiddleware, createPartner);
 router.post(
   "/playsuper/redeem",
   authMiddleware,
@@ -46,23 +50,27 @@ router.post(
   redeemPlayuperReward
 );
 
+// partners
+router.get("/partners", authMiddleware, getRewards);
+router.post("/partners/create", authMiddleware, createPartner);
+
+// clear rewards 1hr stats
 router.get(
   "/f115d48c-4929-4190-b326-e50f228500c7/update/clearLast1hr",
   clearRewardsInLastHr
 );
-router.get(
-  "/f115d48c-4929-4190-b326-e50f228500c7/update/rewardsInLastHr",
-  updateRanks
-);
+
+// schedule quest
 router.get(
   "/f115d48c-4929-4190-b326-e50f228500c7/update/quest",
   deactivateQuest
 );
+
+// announcements
+// router.post("/announcements", authMiddleware, updateAnnouncement);
+
 // Schedule cron job for leaderboard update every hour
 cron.schedule("0 * * * *", updateRanks);
-
-// Schedule cron job for clearing rewards every hour
-cron.schedule("0 * * * *", clearRewardsInLastHr);
 
 // deactivate quest
 // cron.schedule("0 * * * *", deactivateQuest);

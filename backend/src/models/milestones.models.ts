@@ -19,6 +19,7 @@ export interface IClaimedReward {
 export interface IRewards {
   rewardsInLastHr: string[];
   updatedAt: number;
+  lastResetAt: number;
   claimedRewards: IClaimedReward[];
 }
 
@@ -69,6 +70,10 @@ const milestoneSchema = new Schema({
       default: [],
     },
     updatedAt: {
+      type: Number,
+      default: 0,
+    },
+    lastResetAt: {
       type: Number,
       default: 0,
     },
