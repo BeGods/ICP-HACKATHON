@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { mythSections, mythSymbols } from "../../utils/variables";
+import { MyContext } from "../../context/context";
+
+const tele = window.Telegram?.WebApp;
 
 const ForgeHeader = ({
   activeMyth,
@@ -15,6 +18,7 @@ const ForgeHeader = ({
   showBlackOrb,
   glowBooster,
 }) => {
+  const { setSection } = useContext(MyContext);
   const height = Math.min(
     100,
     Math.max(0, (mythData.energy / mythData.energyLimit) * 100)
@@ -45,7 +49,13 @@ const ForgeHeader = ({
         </div>
       </div>
       {/* Orb */}
-      <div className="flex absolute justify-center w-full z-20">
+      <div
+        onClick={() => {
+          tele.HapticFeedback.notificationOccurred("success");
+          setSection(6);
+        }}
+        className="flex absolute justify-center w-full z-20"
+      >
         <div
           className={`flex text-center justify-center h-[36vw] w-[36vw] mt-0.5 overflow-hidden items-center rounded-full outline outline-${
             mythSections[activeMyth]
