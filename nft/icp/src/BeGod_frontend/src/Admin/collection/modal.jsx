@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import ImageUploader from "./ImageUploader";
 import toast from "react-hot-toast";
@@ -7,9 +7,9 @@ import imageCompression from "browser-image-compression";
 
 const Modal = (props) => {
   const { getAddedNftDetails } = props;
-  const [nftId, setNftId] = useState("254");
+  const [nftId, setNftId] = useState("");
   const [nftName, setNftName] = useState("");
-  const [nftType, setNftType] = useState("NORMAL");
+  const [nftType, setNftType] = useState("Common");
   const [nftQuantity, setNftQuantity] = useState();
   const [nftPrice, setPrice] = useState();
   const [nftDescription, setNftDescription] = useState("");
@@ -17,6 +17,15 @@ const Modal = (props) => {
   const [nftImageURL, setNftImageURL] = useState("");
   const { toggleModal } = props;
   const [nftcolor, setnftcolor] = useState("Golden");
+
+  const nnftid = () => {
+    const value = Math.floor(Math.random() * 1000000);
+    setNftId(value);
+  };
+
+  useEffect(() => {
+    nnftid();
+  }, []);
 
   const onClickAddButton = () => {
     // event.preventDefault();
@@ -96,9 +105,18 @@ const Modal = (props) => {
             NFT Name
             <input
               value={nftName}
-              onChange={(e) => setNftName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Set the state only if the input is not just whitespace
+                if (value.trim() !== "") {
+                  setNftName(value);
+                } else {
+                  setNftName(""); // or handle as needed
+                }
+              }}
               type="text"
-              className="mt-1 pl-4 w-[100%] h-[38px]  bg-[#29292C] rounded-md  text-[16px]  text-[#8a8686]"
+              placeholder="Enter your NFT Name"
+              className="mt-1 pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px] text-[#8a8686]"
             />
           </label>
         </div>
@@ -170,7 +188,7 @@ const Modal = (props) => {
                   setPrice(value);
                 }
               }}
-              type="natural-number"
+              type="number"
               min="1"
               className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px] text-[#8a8686]"
             />
@@ -202,11 +220,19 @@ const Modal = (props) => {
             NFT's Description
             <textarea
               value={nftDescription}
-              onChange={(e) => setNftDescription(e.target.value)}
-              type="textarea"
+              onChange={(e) => {
+                const value = e.target.value;
+
+                if (value.trim() !== "") {
+                  setNftDescription(value);
+                } else {
+                  setNftDescription("");
+                }
+              }}
               rows={5}
-              className="pl-2 w-[100%] h-[100px]  bg-[#29292C] rounded-md mt-1   text-[16px]  text-[#8a8686] "
-            ></textarea>
+              className="pl-2 w-[100%] h-[100px] bg-[#29292C] rounded-md mt-1 text-[16px] text-[#8a8686]"
+              placeholder="Enter NFT description here"
+            />
           </label>
         </div>
         <div className="flex justify-center mt-2 md:mt-3">

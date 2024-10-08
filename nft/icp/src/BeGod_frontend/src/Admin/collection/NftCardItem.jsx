@@ -1,9 +1,8 @@
 import { RxCross2 } from "react-icons/rx";
+
 const NftCardItem = (props) => {
-  const { deleteNft } = props;
-  const { nftDetails } = props;
+  const { deleteNft, nftDetails } = props;
   const {
-    nftImageUrl,
     nftId,
     nftDescription,
     nftName,
@@ -12,37 +11,45 @@ const NftCardItem = (props) => {
     nftPrice,
     nftImage,
   } = nftDetails;
-  console.log(nftDetails, "hello dddddd");
 
   return (
-    <div className="relative object-cover border-2 border-gray-700 w-full max-w-[28rem] rounded-md">
-      <div className="flex flex-col md:flex-row w-full gap-4 p-4">
+    <div className="relative object-cover border-2 border-gray-700 w-full max-w-[28rem] rounded-md p-4">
+      <div className="flex flex-col md:flex-row w-full gap-4">
+        {/* Image Section */}
         <img
           src={nftImage}
-          alt="Selected"
-          className="object-cover w-32 h-32 rounded-lg nft_card_image"
+          alt="NFT"
+          className="object-cover w-full md:w-[40%] h-32 rounded-lg"
         />
-        <div className="flex flex-col gap-2 w-full">
-          <span className="font-bold text-lg">{nftName}</span>
+
+        {/* NFT Details Section */}
+        <div className="flex flex-col gap-2 w-[50%]">
+          <span className="font-bold text-lg truncate">{nftName}</span>
           <span className="font-bold text-md">Type: {nftType}</span>
-          <div className="flex flex-row justify-between w-full gap-2">
+
+          <div className="flex flex-col md:flex-row justify-between w-full gap-2">
             <span className="font-bold text-md">Quantity: {nftQuantity}</span>
             <span className="font-bold text-md">Price: {nftPrice} ICP</span>
           </div>
-          <span className="font-light text-sm">
+
+          {/* Truncated description for smaller screens */}
+          <span className="font-light text-sm truncate">
             {nftDescription
-              ? `${nftDescription.slice(0, 150)}...`
+              ? `${nftDescription.slice(0, 100)}...`
               : "No Description available"}
           </span>
         </div>
       </div>
+
+      {/* Delete Button */}
       <button
-        className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 transform bg-white rounded-full hover:bg-gray-300 transition duration-150"
-        onClick={(e) => deleteNft(nftId)}
+        className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 bg-white rounded-full hover:bg-gray-300 transition duration-150"
+        onClick={() => deleteNft(nftId)}
       >
         <RxCross2 className="text-black" size={15} />
       </button>
     </div>
   );
 };
+
 export default NftCardItem;
