@@ -95,7 +95,11 @@ function Users() {
             alignItems="center" // Center the items vertically
           >
             {loading ? (
-              <Skeleton height={45} width="100%" />
+              <>
+                <div className="w-full">
+                  <Skeleton height={45} count={1} />
+                </div>
+              </>
             ) : (
               <>
                 <Input

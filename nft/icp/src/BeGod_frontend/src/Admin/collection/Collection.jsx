@@ -17,6 +17,7 @@ function Collection() {
     if (backendActor) {
       try {
         const result = await backendActor?.getAllCollections();
+        console.log(result);
         if (result && result[0] && result[0][1]) {
           setColl(result[0][1]);
         }
