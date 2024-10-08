@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { mythSymbols, wheel } from "../../utils/variables";
+import { MyContext } from "../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const TowerHeader = ({ gameData, myth, sessionOrbs }) => {
   const [platform, setPlatform] = useState(null);
+  const { setSection } = useContext(MyContext);
 
   useEffect(() => {
     const teleConfi = async () => {
@@ -52,7 +54,11 @@ const TowerHeader = ({ gameData, myth, sessionOrbs }) => {
       <div className="flex absolute justify-center w-full">
         {/* Orb */}
         <div
-          className={`flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline moutline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
+          onClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+            setSection(1);
+          }}
+          className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline moutline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
         >
           <img
             src="/assets/uxui/240px-orb.base.png"
