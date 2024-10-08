@@ -15,7 +15,7 @@ const NftCard = ({ id, list, collectiondata, quantity }) => {
   const metadataJson = list[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
   const nftColor = metadata?.nftcolor ?? "Color not found";
-  const nftType = metadata?.nftType ?? "Type not found";
+  const nftType = metadata?.nfttype ?? "Type not found";
 
   return (
     <div
@@ -55,11 +55,9 @@ const NftCard = ({ id, list, collectiondata, quantity }) => {
             <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">
               Name: {name}
             </h1>
-            {isValidPrice && (
-              <h2 className="text-xs sm:text-lg mt-1 text-center">
-                Price: {price} ICP
-              </h2>
-            )}
+            <h2 className="text-xs sm:text-lg mt-1 text-center">
+              Quantity: {quantity}
+            </h2>
             <h2 className="text-xs sm:text-lg mt-1 text-center">
               Type: {nftType}
             </h2>

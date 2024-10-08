@@ -261,11 +261,11 @@ actor class EXTNFT(init_owner : Principal) = this {
     token : ?HttpStreamingCallbackToken;
   };
 
-  type Activity = {
-    tokenIdentifier: TokenIdentifier;
-    price: Nat64;
-    time: Time;
-  };
+  // type Activity = {
+  //   tokenIdentifier: TokenIdentifier;
+  //   price: Nat64;
+  //   time: Time;
+  // };
 
   //Stable State
   private let EXTENSIONS : [Extension] = ["@ext/common", "@ext/nonfungible"];
