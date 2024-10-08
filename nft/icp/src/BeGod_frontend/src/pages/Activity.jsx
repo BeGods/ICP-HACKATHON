@@ -9,6 +9,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import ReactTimeAgo from 'react-time-ago'
+import { useNavigate } from 'react-router-dom';
 
 const Activity = () => {
 
@@ -19,7 +20,18 @@ const Activity = () => {
   const [loading,updateLoadingStatus] = useState(true);
 
   const [noActivity , updateNoActivityStatus] = useState(false);
-  
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const navigate = useNavigate(); 
+
+  useEffect(()=>{
+    if(!isAuthenticated){
+      navigate('/')
+     }else{
+      console.log(principal,'principal')
+     }
+  },[isAuthenticated]);
+
+
 
     const {backendActor} = useAuth();
 

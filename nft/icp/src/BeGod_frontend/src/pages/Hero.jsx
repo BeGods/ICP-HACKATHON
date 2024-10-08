@@ -20,9 +20,6 @@ import { RiArrowUpDownFill } from "react-icons/ri";
 import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 
-const shadowColors = ['#07632E',"#00bfff","#FFD700","#FF4500"]
-
-let shadowColorIndex = 0;
 
 const cardTypeList = [
     {
@@ -283,44 +280,65 @@ const onClickFilterContainer = () => {
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
 
+const [filteredList, updateFilteredList] = useState(selectedCollectionNftCardsList);
 
-let filteredList = selectedCollectionNftCardsList
-    
-if(currentCardType !== cardTypeList[0].cardId){
-    filteredList = filteredList.filter((eachItem=>{
-        if(eachItem[0].nftType.toLowerCase() === currentCardType.toLowerCase()){
-            return true;
-        }
-        return false;
+useEffect(() => {
+    updateFilteredList(selectedCollectionNftCardsList);
+}, [currentCardType,currentFilterOption,applyPriceRange,selectedCollectionNftCardsList]);
 
-    }))
-}
+useEffect(() => {
+    if (currentCardType !== cardTypeList[0].cardId) {
+        const updatedList = filteredList.filter((eachItem) => {
+            return eachItem[0].nftType.toLowerCase() === currentCardType.toLowerCase();
+        });
 
-if (applyPriceRange.isApply) {
-    filteredList = filteredList.filter((eachItem) => {
-        console.log("from price", applyPriceRange.from, "card price", eachItem.ICP, "to price", applyPriceRange.to);
-        if (applyPriceRange.from <= eachItem[0].ICP && eachItem.ICP <= applyPriceRange.to) {
-            return true;
-        }
-        return false;
-    });
-    
-}
-
-if(currentFilterOption != filterListOptions[0].optionId){
-    if(currentFilterOption === filterListOptions[1].optionId){
-        filteredList = filteredList.slice().reverse();
-    }else if(currentFilterOption === filterListOptions[2].optionId){
-        filteredList = [...filteredList].sort((a,b)=>a[0].ICP - b[0].ICP);
-    }else if(currentFilterOption === filterListOptions[3].optionId){
-        filteredList = [...filteredList].sort((a,b)=> b[0].ICP - a[0].ICP);
+        console.log("Updated list after card type filter:", updatedList);
+        updateFilteredList(updatedList);
     }
-}
+}, [currentCardType,applyPriceRange]); 
 
+useEffect(() => {
+    if (applyPriceRange.isApply) {
+        const updatedList = filteredList.filter((eachItem) => {
+            console.log("From price:", applyPriceRange.from, "Card price:", eachItem[0].ICP, "To price:", applyPriceRange.to);
+            return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
+        });
+
+        console.log("Updated list after price range filter:", updatedList);
+        updateCardType(currentCardType);
+        updateFilteredList(updatedList);
+        
+    }
+}, [applyPriceRange]);
+
+useEffect(() => {
+    let updatedList = [...filteredList];
+    if (currentFilterOption !== filterListOptions[0].optionId) {
+        if (currentFilterOption === filterListOptions[1].optionId) {
+            updatedList = updatedList.reverse();
+        } else if (currentFilterOption === filterListOptions[2].optionId) {
+            updatedList = updatedList.sort((a, b) => a[0].ICP - b[0].ICP);
+        } else if (currentFilterOption === filterListOptions[3].optionId) {
+            updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
+        }
+        console.log("Updated list after filter option:", updatedList);
+        updateFilteredList(updatedList);
+    }
+}, [currentFilterOption]);
 
 
 
 console.log("filtered list after applying filters",filteredList)
+    let count = 0;
+    if(currentCardType !== cardTypeList[0].cardId){
+        count++;
+    }
+    if(applyPriceRange.isApply){
+        count++;
+    }
+    if(currentFilterOption !== "DEFAULT"){
+        count++;
+    }
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
         // onClick={onClickFilterContainer}
@@ -408,6 +426,7 @@ console.log("filtered list after applying filters",filteredList)
                         {/* style={{ boxShadow: "0px 0px 94px 36px orange" }} */}
                             <div className='w-[70%] '>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
+                                {/* <img src="/Hero/celtic_updated_coll_image.png" alt="" className='hidden sm:flex'/> */}
                                 <img src="/Hero/celtic_hero.png" alt="" className='flex items-center justify-center w-full sm:hidden'  />
                             </div>
                             
@@ -541,7 +560,8 @@ console.log("filtered list after applying filters",filteredList)
                             onClick={()=>updateFiltersDisplayStatus(true)}
                         >
                             <LuFilter />
-                            Filters
+                            Filters 
+                            {count >0 &&  <span className='size-5 border-none bg-gray-800 rounded-full flex justify-center items-center pt-0.5 '>{count}</span>}
                             
                       </button>
                         {filteredList.length >0? (
