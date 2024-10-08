@@ -50,7 +50,6 @@ const Footer = ({handleCurrentIndex}) => {
         window.scrollBy({ top: -500, behavior: 'smooth' });
     }else{
         navigate('/#collections');
-        
     }
     
     
