@@ -234,14 +234,14 @@ const fetchCollections = async () => {
     let updatedCardsList = [];
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
     const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
-    //console.log("owned nfts",ownedNfts);
+   // console.log("owned nfts after fetching",ownedNfts);
     const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
-    //console.log("not owned nfts",notOwnedNfts);
+   // console.log("not owned nfts after fetching",notOwnedNfts);
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
-    console.log("owned nfts",updatedOwnedList);
+   // console.log("owned nfts",updatedOwnedList);
     updatedCardsList = updatedOwnedList;
     const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
-    console.log("not owned nfts",updatedNotOwnedNfts);
+   // console.log("not owned nfts",updatedNotOwnedNfts);
     updateRemainingNfts(updatedNotOwnedNfts.length);
     updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
     setIsCardsLoading(false);
@@ -257,20 +257,25 @@ const fetchCollections = async () => {
   const getUpdatedList= async(collectionId,cardsList,ownedList,isOwned)=>{
 
       
-      
+      console.log("cards list",cardsList)
       const formatedList = [];
       let tempIndex = 0;
       for(let i=0;i<cardsList.length;i++){
         const eachCard = cardsList[i];
         console.log("each card",eachCard);
         const cardDetails = eachCard[2].nonfungible;
+        let skipCard = false;
         if(!isOwned){
           console.log("owned list in getUpdatedlist",ownedList)
           for(let i = 0; i< ownedList.length;i++) {
             if(ownedList[i][0].cardName === cardDetails.name){
-              return [];
+              skipCard = true;
+              continue;
             }
           }
+        }
+        if(skipCard){
+          continue;
         }
 
           console.log("card details",cardDetails)
