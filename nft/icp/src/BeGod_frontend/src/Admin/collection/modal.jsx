@@ -65,20 +65,13 @@ const Modal = (props) => {
     if (file) {
       try {
         const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 800,
+          maxSizeMB: 0.05,
+          maxWidthOrHeight: 300,
           useWebWorker: true,
         };
-
         const compressedFile = await imageCompression(file, options);
-        console.log("Compressed file:", compressedFile);
-
         const reader = new FileReader();
-        reader.onloadend = () => {
-          console.log("In handleFiles:", reader.result);
-          setNftImage(reader.result);
-        };
-
+        reader.onloadend = () => setNftImage(reader.result);
         reader.readAsDataURL(compressedFile);
       } catch (error) {
         console.error("Error during file compression:", error);
