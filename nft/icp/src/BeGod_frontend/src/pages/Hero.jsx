@@ -237,7 +237,7 @@ const getCollectionNfts = (collectionList,collectionId,color) => {
     let tempIndex = 0;
     for(let i=0;i<collectionList.length;i++){
         const eachItem = collectionList[i];
-        //console.log("each item before formating",eachItem);
+        console.log("each item before formating",eachItem);
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.name;
@@ -479,15 +479,14 @@ console.log("filtered list after applying filters",filteredList)
                                     className={`rounded-full flex justify-center items-center gap-1 w-full
                                      p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.price ? "border-[#FCD378]" : " border-gray-800"}`}
                                 >
-                                    <CiDollar size={20} />
+                                    <CiDollar size={22} />
                                         Price
                                     (
                                         {`${
                                                 !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
                                                     ? `${applyPriceRange.from} - ${applyPriceRange.to} `
                                                     : ""
-                                            }`} ICP
-                                        )
+                                            }`} ICP)
                                 </button>
                                     {currentDropDown === dropdownItems.price && (
                                       <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'>
