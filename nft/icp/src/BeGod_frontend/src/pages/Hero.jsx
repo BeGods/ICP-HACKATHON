@@ -27,16 +27,16 @@ const cardTypeList = [
         displayText:"All"
     },
     {
-        cardId : "COMMAN",
-        displayText : "Comman"
+        cardId : "COMMON",
+        displayText : "Common"
     },
     {
         cardId : "MYTHIC" ,
         displayText:"Mythic"
     },
     {
-        cardId : "REAR" ,
-        displayText:"Rear"
+        cardId : "RARE" ,
+        displayText:"Rare"
     },
     {
         cardId : "UNCOMMON",
@@ -237,16 +237,17 @@ const getCollectionNfts = (collectionList,collectionId,color) => {
     let tempIndex = 0;
     for(let i=0;i<collectionList.length;i++){
         const eachItem = collectionList[i];
+        //console.log("each item before formating",eachItem);
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.name;
         const sold = eachItem[2].price;
         const ICP = parseInt(sold)/100000000;
         const metadata = JSON.parse(nftDetails.metadata[0].json);
-        // console.log(metadata,'metadata');
-        const nftType = metadata.nfttype;
+        //  console.log(metadata,'metadata');
+        const nftType = metadata.nftType;
         const borderColor = metadata.nftcolor;
-        console.log("collection list before nft card",collections)
+       // console.log("collection list before nft card",collections)
         const nftCard= {
             collectionId,
             index:eachItem[0],
@@ -283,36 +284,24 @@ const onClickFilterContainer = () => {
 const [filteredList, updateFilteredList] = useState(selectedCollectionNftCardsList);
 
 useEffect(() => {
-    updateFilteredList(selectedCollectionNftCardsList);
-}, [currentCardType,currentFilterOption,applyPriceRange,selectedCollectionNftCardsList]);
 
-useEffect(() => {
+    let updatedList = [...selectedCollectionNftCardsList];
+
     if (currentCardType !== cardTypeList[0].cardId) {
-        const updatedList = filteredList.filter((eachItem) => {
-            return eachItem[0].nftType.toLowerCase() === currentCardType.toLowerCase();
+        const currType = currentCardType.toLowerCase();
+        updatedList = updatedList.filter((eachItem) => {
+            const cardType = eachItem[0].nftType.toLowerCase();
+            return currType === cardType;
         });
-
-        console.log("Updated list after card type filter:", updatedList);
-        updateFilteredList(updatedList);
     }
-}, [currentCardType,applyPriceRange]); 
 
-useEffect(() => {
+
     if (applyPriceRange.isApply) {
-        const updatedList = filteredList.filter((eachItem) => {
-            console.log("From price:", applyPriceRange.from, "Card price:", eachItem[0].ICP, "To price:", applyPriceRange.to);
+        updatedList = updatedList.filter((eachItem) => {
             return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
         });
-
-        console.log("Updated list after price range filter:", updatedList);
-        updateCardType(currentCardType);
-        updateFilteredList(updatedList);
-        
     }
-}, [applyPriceRange]);
 
-useEffect(() => {
-    let updatedList = [...filteredList];
     if (currentFilterOption !== filterListOptions[0].optionId) {
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
@@ -321,10 +310,12 @@ useEffect(() => {
         } else if (currentFilterOption === filterListOptions[3].optionId) {
             updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
         }
-        console.log("Updated list after filter option:", updatedList);
-        updateFilteredList(updatedList);
     }
-}, [currentFilterOption]);
+
+    console.log("Updated list after all filters:", updatedList);
+    updateFilteredList(updatedList);
+
+}, [currentCardType, applyPriceRange, currentFilterOption, selectedCollectionNftCardsList]);
 
 
 

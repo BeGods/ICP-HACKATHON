@@ -23,16 +23,16 @@ const cardTypeList = [
     displayText: "All",
   },
   {
-    cardId: "COMMAN",
-    displayText: "Comman",
+    cardId: "COMMON",
+    displayText: "Common",
   },
   {
     cardId: "MYTHIC",
     displayText: "Mythic",
   },
   {
-    cardId: "REAR",
-    displayText: "Rear",
+    cardId: "RARE",
+    displayText: "Rare",
   },
   {
     cardId: "UNCOMMON",
@@ -342,75 +342,60 @@ function CollectionDetails() {
 
   const [filteredList, updateFilteredList] = useState(nftList);
 
-  useEffect(() => {
-    updateFilteredList(nftList);
-  }, [currentCardType, currentFilterOption, applyPriceRange, nftList]);
+useEffect(() => {
 
-  useEffect(() => {
+    let updatedList = [...nftList];
+
+
     if (currentCardType !== cardTypeList[0].cardId) {
-      const updatedList = filteredList.filter((eachItem) => {
-        console.log("each item", eachItem[0]);
-        const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
-        const metadata = JSON.parse(metadataJson);
-        const nftType = metadata?.nfttype;
-        return nftType.toLowerCase() === currentCardType.toLowerCase();
-      });
-      //console.log("Updated list after card type filter:", updatedList);
-      updateFilteredList(updatedList);
+        updatedList = updatedList.filter((eachItem) => {
+            console.log("each item", eachItem[0]);
+            const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
+            const metadata = JSON.parse(metadataJson);
+            const nftType = metadata?.nftType;
+            return nftType.toLowerCase() === currentCardType.toLowerCase();
+        });
     }
-  }, [currentCardType, applyPriceRange]);
 
-  useEffect(() => {
     if (applyPriceRange.isApply) {
-      const updatedList = filteredList.filter((eachItem) => {
-        const priceBigInt =
-          eachItem[0][3]?.[0]?.toString() ?? "Price not found";
-        const price = Number(priceBigInt) / 100000000;
-        console.log(
-          "From price:",
-          applyPriceRange.from,
-          "Card price:",
-          eachItem[0].ICP,
-          "To price:",
-          applyPriceRange.to
-        );
-        return applyPriceRange.from <= price && price <= applyPriceRange.to;
-      });
-
-      console.log("Updated list after price range filter:", updatedList);
-      updateCardType(currentCardType);
-      updateFilteredList(updatedList);
+        updatedList = updatedList.filter((eachItem) => {
+            const priceBigInt = eachItem[0][3]?.[0]?.toString() ?? "Price not found";
+            const price = Number(priceBigInt) / 100000000;
+            console.log("From price:", applyPriceRange.from, "Card price:", price, "To price:", applyPriceRange.to);
+            return applyPriceRange.from <= price && price <= applyPriceRange.to;
+        });
     }
-  }, [applyPriceRange]);
 
-  useEffect(() => {
-    let updatedList = [...filteredList];
+
     if (currentFilterOption !== filterListOptions[0].optionId) {
-      if (currentFilterOption === filterListOptions[1].optionId) {
-        updatedList = updatedList.reverse();
-      } else if (currentFilterOption === filterListOptions[2].optionId) {
-        updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceA = Number(priceBigIntA) / 100000000;
+        if (currentFilterOption === filterListOptions[1].optionId) {
+            updatedList = updatedList.reverse();
+        } else if (currentFilterOption === filterListOptions[2].optionId) {
+            updatedList = updatedList.sort((a, b) => {
+                const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
+                const priceA = Number(priceBigIntA) / 100000000;
 
-          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceB = Number(priceBigIntB) / 100000000;
-          return priceA - priceB;
-        });
-      } else if (currentFilterOption === filterListOptions[3].optionId) {
-        updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceA = Number(priceBigIntA) / 100000000;
+                const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
+                const priceB = Number(priceBigIntB) / 100000000;
+                return priceA - priceB;
+            });
+        } else if (currentFilterOption === filterListOptions[3].optionId) {
+            updatedList = updatedList.sort((a, b) => {
+                const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
+                const priceA = Number(priceBigIntA) / 100000000;
 
-          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceB = Number(priceBigIntB) / 100000000;
-          return priceB - priceA;
-        });
-      }
-      console.log("Updated list after filter option:", updatedList);
-      updateFilteredList(updatedList);
+                const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
+                const priceB = Number(priceBigIntB) / 100000000;
+                return priceB - priceA;
+            });
+        }
     }
-  }, [currentFilterOption]);
+
+    console.log("Updated list after all filters:", updatedList);
+    updateFilteredList(updatedList);
+
+}, [nftList, currentCardType, applyPriceRange, currentFilterOption]);
+
 
   console.log("filtered list after applying filters", filteredList);
   let count = 0;
