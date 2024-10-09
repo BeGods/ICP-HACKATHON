@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./nftcard.css";
 
-const NftCard = ({ id, list, collectiondata,quantity }) => {
+const NftCard = ({ id, list, collectiondata, quantity }) => {
   const name = list[2]?.nonfungible?.name ?? "Name not found";
   const priceBigInt = list[3]?.[0]?.toString() ?? "Price not found";
   const price = Number(priceBigInt) / 100000000;
+
+  // Check if the price is a valid number and not NaN
+
+  const isValidPrice = typeof price === "number" && !isNaN(price) && price >= 0;
+
   const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";
   const metadataJson = list[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
   const nftColor = metadata?.nftcolor ?? "Color not found";
-  const nftType = metadata?.nfttype ?? "Type not found";
+  const nftType = metadata?.nftType ?? "Type not found";
 
   return (
     <div
@@ -50,9 +55,11 @@ const NftCard = ({ id, list, collectiondata,quantity }) => {
             <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">
               Name: {name}
             </h1>
-            <h2 className="text-xs sm:text-lg mt-1 text-center">
-              Price: {price} ICP
-            </h2>
+            {isValidPrice && (
+              <h2 className="text-xs sm:text-lg mt-1 text-center">
+                Price: {price} ICP
+              </h2>
+            )}
             <h2 className="text-xs sm:text-lg mt-1 text-center">
               Type: {nftType}
             </h2>
