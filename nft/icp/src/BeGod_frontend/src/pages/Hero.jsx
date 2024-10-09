@@ -346,7 +346,7 @@ console.log("filtered list after applying filters",filteredList)
             <div className='relative'>
                 <HeroSlider />
                 <div className=' absolute top-0 w-[100%] z-20'>
-                    <Navbar mobileView={mobileViewHandler}/>
+                    <Navbar mobileView={mobileViewHandler} landingPage={true} />
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
                     <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[50px] md:h-[130px] xl:h-[160px] 2xl:h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
