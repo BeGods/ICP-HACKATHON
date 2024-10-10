@@ -291,11 +291,7 @@ useEffect(() => {
             const cardType = eachItem[0].nftType.toLowerCase();
             return currType === cardType;
         });
-        if(updatedList.length>0){
-            toast.success(`${updatedList.length} Cards Found`);
-        }else{
-            toast.error("No Cards Found");
-        }
+        
         
     }
 
@@ -304,11 +300,7 @@ useEffect(() => {
         updatedList = updatedList.filter((eachItem) => {
             return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
         });
-        if(updatedList.length>0){
-            toast.success(`${updatedList.length} Cards Found`);
-        }else{
-            toast.error("No Cards Found");
-        }
+        
     }
 
     if (currentFilterOption !== filterListOptions[0].optionId) {
@@ -319,15 +311,18 @@ useEffect(() => {
         } else if (currentFilterOption === filterListOptions[3].optionId) {
             updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
         }
+    }
+
+    console.log("Updated list after all filters:", updatedList);
+
+    if(currentCardType != cardTypeList[0].cardId || applyPriceRange.isApply || currentFilterOption !== filterListOptions[0].optionId){
         if(updatedList.length>0){
             toast.success(`${updatedList.length} Cards Found`);
         }else{
             toast.error("No Cards Found");
         }
     }
-
-    console.log("Updated list after all filters:", updatedList);
-    
+       
     updateFilteredList(updatedList);
 
 }, [currentCardType, applyPriceRange, currentFilterOption, selectedCollectionNftCardsList]);
