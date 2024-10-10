@@ -18,29 +18,19 @@ import { IoCheckmarkOutline } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import MoonLoader from "react-spinners/MoonLoader";
 
+import { City, Country } from 'country-state-city'; 
+
 import { FaTelegram } from "react-icons/fa6";
-
-
-const mycollection = [
-
-];
-
-
-const favorite = [
-
-];
-
-
-const purchased = [
-
-  { img1: "/image/nft.png", name: "TANNGIOST", sold: "50", ICP: "0.56" },
-  { img1: "/image/Component 25.png", name: "POSIDONE", sold: "50", ICP: "0.56" },
-
-];
+import { RiFileCopyLine } from 'react-icons/ri';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 
-
+const buyingStatus = {
+   initial : "INITIAL",
+   deliveryInfo : "DELIVERYINFO",
+   showCollection : "COLLECTION"
+}
 
 const Profile = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -74,6 +64,60 @@ const Profile = () => {
      }
   },[isAuthenticated]);
 
+
+const [placeOrderPopup , setplaceOrderPopup] = useState(false);
+const [currentOrderingStatus , updateOrderingStatus] = useState(buyingStatus.showCollection);
+const [selectedCountry , updateSelectedCountry] = useState("")
+const [selectedCity , updateSelectedCity] = useState("");
+const [phoneNo , updatePhoneNumber] = useState(NaN);
+const [orderEmail,updateOrderEmail] = useState("");
+const [streetAddress,updateStreetAddress] = useState('');
+const [pinCode , updatePinCode] = useState(NaN);
+const [landMark,updateLandMark] = useState("");
+
+const countries = Country.getAllCountries().map((eachCountry) => ({
+  id : eachCountry.isoCode,
+  displayText : eachCountry.name,
+}));
+
+const [cityList,updateCityList] = useState([]);
+
+
+
+const togglePlaceOrderPopup  = () => {
+  setplaceOrderPopup(!placeOrderPopup);
+  updateOrderingStatus(buyingStatus.showCollection);
+}
+
+const onChangeCoutry = (event) => {
+  console.log(event.target.value);
+  const cities = City.getCitiesOfCountry(event.target.value);
+  updateCityList(cities);
+  updateSelectedCountry(event.target.value)
+}
+
+const onChangeCity = (event) => {
+  if(cityList.length != 0){
+      updateSelectedCity(event.target.value)
+  }
+}
+const onClickPlaceOrder = () => {
+  if (
+    selectedCountry.trim() !== "" &&
+    selectedCity.trim() !== "" &&
+    phoneNo.toString().length === 10 && // Assuming a 10-digit phone number
+    orderEmail.trim() !== "" &&
+    /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail) && // Valid email format
+    streetAddress.trim() !== "" &&
+    !isNaN(pinCode) && pinCode.toString().length === 6 && // Assuming a 6-digit pin code
+    landMark.trim() !== ""
+  ) {
+    togglePlaceOrderPopup(true);
+    toast.success("Order Placed Successfully")
+  } else {
+    toast.error("Please fill out all fields correctly, including a valid phone number, email, and pin code.")
+  }
+};
 
 
   const [currentDropDownOption , updateDropDownOption] = useState(0);
@@ -292,7 +336,7 @@ const fetchCollections = async () => {
                 collectionId,
                 cardName:cardDetails.name,
                 cardImageUrl:cardDetails.thumbnail,
-                cardType:metadata.nfttype,
+                cardType:metadata.nftType,
                 isOwned,
                 isFavourite : isFav,
                 borderColor : metadata.nftcolor,
@@ -384,7 +428,7 @@ console.log("selected List",selectedList);
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
           <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[48px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
+            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[40px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
             
               {!isUserDetailsLoadging && (
                 <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
@@ -403,8 +447,17 @@ console.log("selected List",selectedList);
                             <h1 className='text-[13px] sm:text-[16px] font-[400] text-[#FFFFFF] leading-[40px]'>{userDetails.email}</h1>
                         </div>
                       </div>
-                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
-                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2>
+                {/* <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
+                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2> */}
+                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px] flex items-center'>User Id: {principal.slice(0,4)}....{principal.slice(-4)}
+
+                <CopyToClipboard text={principal}>
+                <span className="ml-2 cursor-pointer text-slate-300" onClick={()=>toast.success("Copied")}>
+                            <RiFileCopyLine />
+                          </span>
+                        </CopyToClipboard>    
+                </h2>
+                    
                 <button
             onClick={()=>updateEditProfileStatus(true)}
             className=' flex items-center justify-center mt-4 w-[130px]  h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>Edit Profile
@@ -437,25 +490,25 @@ console.log("selected List",selectedList);
               </div> */}
             </div>
             {allCollectionsList.length >0 && (
-              <div className="relative w-[96%] h-[35px] sm:h-[40px]  md:w-[180px] flex justify-center md:mr-5 z-10 mt-5 ">
+              <div className="relative  md:w-full flex items-center justify-between  z-10 mt-5 ">
                            
               <button
                   onClick={()=>updateDropDownStatus(!isDisplayCollectionDropDown)}
                   className={`rounded-full flex justify-center items-center gap-1 
-                  w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 border-gray-800`}
+                 min-w-[120px] h-[35px] sm:h-[40px]  md:w-[180px] p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 border-gray-800`}
               >
                   <BiCategory />
                   {allCollectionsList[currentDropDownOption].name}
               </button>
               {isDisplayCollectionDropDown && (
-                      <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none  w-full max-h-[160px] overflow-y-auto ">
+                      <ul className="absolute top-10 left-0 mt-2  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none  min-w-[120px]   md:w-[180px] max-h-[160px] overflow-y-auto ">
                           {allCollectionsList.map((eachCollection,index)=>(
                               <>
                                   <div key={eachCollection.index} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
                                   onClick={()=>onChangeFilterOption(eachCollection)}>
                                       <li key={eachCollection.index}>{eachCollection.name}</li>
                                       {currentDropDownOption === eachCollection.index && (
-                                      <IoCheckmarkOutline />
+                                        <IoCheckmarkOutline />
                                       )}
                                   </div>
                                   {index != allCollectionsList.length-1 && ( <hr className="m-0 border-t border-[#FCD378]" />)}
@@ -463,7 +516,29 @@ console.log("selected List",selectedList);
                           ))}
                       </ul>
                   )}
-                  
+                {currentOption === "mycollection" && (
+                      <div className='flex flex-col items-center md:items-end mr-5 lg:mr-20'>
+                      <div className='flex items-center justify-end  '>
+                            <div className={`relative ${remainingNftsCount>0 && "group"}`}>
+                              <button 
+                                disabled={remainingNftsCount > 0} 
+                                className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
+                                onClick={togglePlaceOrderPopup}
+                              >
+                                Unlock Achievement
+                              </button>
+                              
+                                <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[150px] lg:w-[250px] text-center py-1 rounded`}>
+                                Buy remaining {remainingNftsCount} nfts to place order!
+                              </span>
+                              
+                            </div>
+                          </div>
+  
+  
+                        
+                      </div>
+                    )}
           </div>
             ) }
             {/* Small screen view for single image display with prev and next buttons */}
@@ -485,7 +560,7 @@ console.log("selected List",selectedList);
                   ):(
                     selectedList.length>0 ? (
                       <div>
-                      {/* <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/> */}
+                      <NftCard img={selectedList[0][currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/> 
                     </div>
                     ):(
                       <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
@@ -542,28 +617,7 @@ console.log("selected List",selectedList);
                       ))}
                         
                     </div>
-                    {currentOption === "mycollection" && (
-                      <div className='flex flex-col items-center md:items-end '>
-                      <div className='flex items-center justify-end mx-20 my-10 '>
-                            <div className={`relative ${remainingNftsCount>0 && "group"}`}>
-                              <button 
-                                disabled={remainingNftsCount > 0} 
-                                className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
-                              >
-                                Place Order
-                              </button>
-                              
-                                <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[250px] text-center py-1 rounded`}>
-                                Buy remaining {remainingNftsCount} nfts to place order!
-                              </span>
-                              
-                            </div>
-                          </div>
-  
-  
-                        
-                      </div>
-                    )}
+                    
                     </>
                     )}
                     </>
@@ -629,6 +683,206 @@ console.log("selected List",selectedList);
         </div>
     </div>
   </div>
+      )}
+      {placeOrderPopup && (
+        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen z-20">
+        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+          <div className="flex items-center justify-center h-screen">
+          <div className={`h-[50vh] md:h-[60vh] w-[90vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg ${
+            currentOrderingStatus === buyingStatus.deliveryInfo
+              ? "w-[100vw] md:w-[95vw] lg:w-[50vw]"
+              : "w-[70vw] lg:w-[30vw]"
+          }`}>
+             <div className="relative flex items-center justify-end">
+                  <button
+                    className="text-[#ffffff] absolute bottom-1 top-1"
+                    onClick={() => togglePlaceOrderPopup()}
+                  >
+                    <RxCross2 size={20} />
+                  </button>
+                </div>
+            {currentOrderingStatus === buyingStatus.showCollection && (
+              <div className="h-[90%]  flex flex-col items-center justify-center mt-10">
+                <h1 className="text-xl lg:text-4xl font-semibold text-[#FCD37B] ">CONGRATULATIONS!!!</h1>
+                <p className="text-xs font-medium my-1 font-caslonAntique">You Unlocked</p>
+                <img src={allCollectionsList[currentDropDownOption].image} className=" w-[80px] h-[80px] lg:w-[150px] lg:h-[150px] rounded-full" />
+                <h1 className="text-lg lg:text-3xl font-semibold my-1">
+                  {allCollectionsList[currentDropDownOption].name.toUpperCase()} {'  '} {' '} COLLECTION
+                </h1>
+                {/* <button
+                  
+                  className="mt-3 w-40 border border-white border-solid cursor-pointer bg-[#1E62AC]"
+                >
+                  Get A Hard Copy
+                </button> */}
+                <div className=" w-[190px] lg:w-[220px] p-2 border-[1px] border-[#FCD37B]">
+                <button
+                  className="w-full text-black bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[30px] font-caslon font-semibold "
+                  onClick={() => updateOrderingStatus(buyingStatus.deliveryInfo)}
+                >
+                  Get Hard Copy
+                </button>
+                
+              </div>
+              </div>
+            )}
+            {currentOrderingStatus === buyingStatus.deliveryInfo && (
+              <div className="md:mt-5">
+                <h1 className="text-2xl font-semibold">Delivery Info.</h1>
+                <div className="relative flex items-center my-3">
+                  <img
+                    src={allCollectionsList[currentDropDownOption].image}
+                    className=" w-[70px] h-[70px]  rounded-full"
+                  />
+                  <div className="ml-2">
+                    <h1 className="text-lg font-semibold">{allCollectionsList[currentDropDownOption].name.toUpperCase()} {'  '} {' '} COLLECTION</h1>
+                    <p className="text-sm font-extralight">Hard Copy</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col w-[40%] relative">
+                    <label className="text-lg font-semibold">
+                      Phone No.<span className="text-red-700 absolute -top-1">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      className="bg-transparent border-0 border-b border-solid border-white"
+                      value={phoneNo}
+                      onChange={(e)=>updatePhoneNumber(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col w-[40%] relative">
+                    <label className="text-lg font-semibold">
+                      Email<span className="text-red-700 absolute -top-2">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-transparent border-0 border-b border-solid border-white"
+                      value={orderEmail}
+                      onChange={(e)=>updateOrderEmail(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <h1 className="text-lg font-semibold mt-3">Address</h1>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex flex-col w-[35%]">
+                    <label className="text-sm font-extralight relative">
+                      H No, St No
+                      <span className="text-red-700 absolute -top-1">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-transparent border-0 border-b border-solid border-white"
+                      value={streetAddress}
+                      onChange={(e)=>updateStreetAddress(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col w-[35%]">
+                    <label className="text-sm font-extralight relative">
+                      City<span className="text-red-700 absolute -top-1">*</span>
+                    </label>
+                    <select
+                      className="bg-transparent border-b font-Quicksand"
+                      value={selectedCity}
+                      onChange={onChangeCity}
+                    >
+                      <option value="" disabled hidden></option>
+                      {!selectedCountry ? (
+                        <option
+                          value=""
+                          disabled
+                          className="bg-black font-Quicksand border-none border-0 text-white"
+                        >
+                          Select a country first
+                        </option>
+                      ) : cityList.length === 0 ? (
+                        <option value="" disabled>
+                          No cities available
+                        </option>
+                      ) : (
+                        cityList.map((eachCity) => (
+                          <option
+                            value={eachCity.name}
+                            key={eachCity.name}
+                            className="bg-black font-Quicksand border-none border-0"
+                          >
+                            {eachCity.name}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  </div>
+                  <div className="flex flex-col w-[20%] relative">
+                    <label className="text-sm font-extralight">
+                      Country
+                      <span className="text-red-700 absolute -top-1">*</span>
+                    </label>
+                    <select
+                      className="bg-transparent border-b font-Quicksand"
+                      value={selectedCountry}
+                      onChange={onChangeCoutry}
+                    >
+                      <option value="" disabled hidden></option>
+                      {countries.map((eachCountry) => (
+                        <option
+                          value={eachCountry.id}
+                          key={eachCountry.id}
+                          className="bg-black font-Quicksand border-none border-0"
+                        >
+                          {eachCountry.displayText}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="flex items-center relative">
+                  <div className="flex flex-col w-[35%] mb-3 mr-9">
+                    <label className="text-sm font-extralight">
+                      Pincode
+                      <span className="text-red-700 absolute -top-1">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      className="bg-transparent border-0 border-b border-solid border-white"
+                      value={pinCode}
+                      onChange={(e)=>updatePinCode(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col w-[35%] mb-3">
+                    <label className="text-sm font-extralight">
+                      Nearby LandMark(Optional)
+                    </label>
+                    <input
+                      type="text"
+                      className="bg-transparent border-0 border-b border-solid border-white"
+                      value={landMark}
+                      onChange={(e)=>updateLandMark(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="">
+                  <p className="text-sm font-extralight">
+                    <span className="text-red-700 mr-2">*</span>
+                    Mandatory Information
+                  </p>
+                </div>
+                <div className='flex justify-center'>
+                <div className="flex justify-center w-[190px] lg:w-[220px] p-2 border-[1px] border-[#FCD37B]">
+                  <button className="w-full text-black bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                  onClick={onClickPlaceOrder}
+                  >
+                    Place Order
+                  </button>
+                </div>
+                </div>
+                
+              </div>
+            )}
+          </div>
+          </div>
+        </div>
+      </div>
+      
       )}
     </div>
   );

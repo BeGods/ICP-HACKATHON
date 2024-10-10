@@ -189,7 +189,7 @@ ScrollToCollections();
 
           {/* User Profile / Connect Wallet */}
           {isAuthenticated ? (
-            <div className="relative w-[180px] flex justify-center">
+            <div className="relative w-[180px] flex justify-center z-20">
               <button
                 onClick={() => setProfileDropDown(!profileDropDown)}
                 aria-expanded={profileDropDown}

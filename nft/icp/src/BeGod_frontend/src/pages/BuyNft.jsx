@@ -776,8 +776,8 @@ const BuyNft = () => {
                         style={{ border: "3px solid #2d2d2d" }}
                       />
                       <h1 className="flex items-center my-3 text-base font-extralight">
-                        Licence No- 828746888
-                        <CopyToClipboard text="828746888">
+                        Token Id : {tokenId}
+                        <CopyToClipboard text={tokenId}>
                           <span className="ml-2 cursor-pointer text-slate-300">
                             <RiFileCopyLine />
                           </span>
