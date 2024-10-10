@@ -689,8 +689,8 @@ console.log("selected List",selectedList);
           <div className="flex items-center justify-center h-screen">
           <div className={`  bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
-              ? "w-[100vw] md:w-[95vw] md:h-[70vh] lg:w-[50vw]"
-              : "h-[70vh] w-[95vw] md:w-[40vw] lg:w-[60vw] lg:h-[60vh] "
+              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[50vw] lg:h-[40vh] 2xl:h-[70vh] "
+              : "h-[70vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[40vw] lg:h-[50vh] 2xl:h-[60vh] "
           }`}>
              <div className="relative flex items-center justify-end">
                   <button
