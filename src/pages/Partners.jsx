@@ -10,7 +10,7 @@ const Partners = (props) => {
 
   useEffect(() => {
     toggleBackButton(tele, () => {
-      setSection(1);
+      setSection(0);
     });
   }, []);
 
@@ -49,7 +49,7 @@ const Partners = (props) => {
               <div
                 onClick={() => {
                   setActiveReward(item);
-                  setSection(9);
+                  setSection(6);
                 }}
                 className="flex flex-col justify-center items-center w-full h-32 rounded-primary"
               >

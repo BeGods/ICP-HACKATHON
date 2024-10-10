@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Symbol from "../../Common/Symbol";
 import { mythSections } from "../../../utils/variables";
 import ShareButton from "../../Buttons/ShareButton";
-import IconButton from "../../Buttons/IconButton";
+import IconBtn from "../../Buttons/IconBtn";
 import MappedOrbs from "../../Common/MappedOrbs";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
@@ -32,7 +32,7 @@ function OrbClaimCard({
               <div className="m-2 z-50">
                 <MappedOrbs quest={quest} />
               </div>
-              <IconButton
+              <IconBtn
                 isInfo={false}
                 activeMyth={activeMyth}
                 handleClick={handleShowClaim}

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import IconButton from "../Buttons/IconButton";
+import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
@@ -29,6 +29,7 @@ const SettingModal = ({ close }) => {
       i18next.changeLanguage("en");
     } else {
       i18next.changeLanguage(e.target.value);
+      tele.CloudStorage.setItem("lang", e.target.value);
     }
   };
 
@@ -44,13 +45,13 @@ const SettingModal = ({ close }) => {
     tele.CloudStorage.removeItem("g3");
     tele.CloudStorage.removeItem("g4");
     close();
-    setSection(1);
+    setSection(0);
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-start items-center z-50">
       <div className="flex relative w-[76%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col mt-[52px] card-shadow-white p-6">
-        <IconButton align={0} handleClick={close} activeMyth={4} />
+        <IconBtn align={0} handleClick={close} activeMyth={4} />
         <select
           value={lang}
           onChange={handleLanuageChange}

@@ -1,6 +1,5 @@
 import { Gift } from "lucide-react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import Button from "../components/Buttons/Button";
 import { useTranslation } from "react-i18next";
 import { fetchJoiningBonus } from "../utils/api";
 import { MyContext } from "../context/context";
@@ -30,7 +29,7 @@ const JoinBonus = (props) => {
       try {
         await fetchJoiningBonus(authToken);
         setTimeout(() => {
-          setSection(1);
+          setSection(0);
         }, 1000);
         setGameData((prevData) => {
           const updateData = {

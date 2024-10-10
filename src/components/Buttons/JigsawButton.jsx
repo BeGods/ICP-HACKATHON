@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { mythSections } from "../../utils/variables";
-import { CornerUpLeft, CornerUpRight } from "lucide-react";
+import { CornerUpLeft, CornerUpRight, Download } from "lucide-react";
 
 const JigsawButton = ({
   activeMyth,
@@ -55,7 +55,7 @@ const JigsawButton = ({
           faith < 12 ? "text-textGray" : "text-white"
         } `}
       >
-        {t("buttons.redeem")}
+        <Download size={"8vw"} />
       </div>
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight

@@ -129,6 +129,17 @@
   }
 }
 
+@keyframes bubble-spin { 
+  100% { 
+      -webkit-transform: rotate(360deg); 
+      transform:rotate(360deg); 
+  } 
+}
+
+.bubble-spin-effect{
+  animation:bubble-spin 4s linear infinite;
+}
+
 
 
 // Scale and Glow Animations
@@ -291,6 +302,14 @@
 
 .minimize{
   @include slideY(slide-down-animation, 0%, 100%);
+}
+
+.minimize-head{
+  @include slideY(slide-up-head-animation, 0%, -100%);
+}
+
+.maximize-head{
+  @include slideY(slide--head-animation, -100%, 0%);
 }
 
 .maximize{

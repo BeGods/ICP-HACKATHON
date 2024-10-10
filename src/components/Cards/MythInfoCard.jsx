@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { mythSections, mythologies } from "../../utils/variables";
 import { MyContext } from "../../context/context";
-import IconButton from "../Buttons/IconButton";
+import IconBtn from "../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 
 const MythInfoCard = ({ close }) => {
@@ -16,11 +16,11 @@ const MythInfoCard = ({ close }) => {
             alt="info card background"
             className="w-full h-full object-cover rounded-primary"
           />
-          <div className="absolute text-card top-0 w-full text-center text-[28px] font-bold mt-2 uppercase">
+          <div className="absolute text-card top-0 w-full text-center text-paperHead font-bold mt-2 uppercase">
             {mythologies[activeMyth]}
           </div>
           <div
-            className={`absolute leading-[18px] text-[16px] -mt-4 inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] ${
+            className={`absolute leading-[18px] text-para -mt-4 inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] ${
               (i18n.language === "hi" ||
                 i18n.language === "th" ||
                 i18n.language === "ru") &&
@@ -30,12 +30,7 @@ const MythInfoCard = ({ close }) => {
             {t(`descriptions.${mythSections[activeMyth]}`)}
           </div>
         </div>
-        <IconButton
-          isInfo={false}
-          activeMyth={4}
-          handleClick={close}
-          align={1}
-        />
+        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
       </div>
     </div>
   );

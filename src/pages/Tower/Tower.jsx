@@ -8,11 +8,7 @@ import { useTranslation } from "react-i18next";
 import { wheel, wheelNames } from "../../utils/variables";
 import { showToast } from "../../components/Toast/Toast";
 import Header from "../../components/Headers/Header";
-import {
-  ToggleLeft,
-  ToggleRight,
-} from "../../components/Common/SectionToggles";
-import IconButton from "../../components/Buttons/IconButton";
+import IconBtn from "../../components/Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { Download } from "lucide-react";
 import ConvertClaimCard from "../../components/Cards/ConvertClaimCard";
@@ -25,7 +21,6 @@ const Tower = ({ setMythStates }) => {
   const [showClaim, setShowClaim] = useState(false);
   const [sessionOrbs, setSessionOrbs] = useState(0);
   const {
-    setActiveMyth,
     setGameData,
     gameData,
     activeMyth,
@@ -42,8 +37,11 @@ const Tower = ({ setMythStates }) => {
 
   // convert orbs to multicolor
   const handleOrbsConversion = async (key) => {
-    if (!keysData.includes(key) && key) {
+    if (!keysData.includes(key) && !key) {
       showToast("convert_key_fail");
+    }
+    if (keysData.includes(key) && key) {
+      showToast("convert_key_success");
     }
     if (myth !== 0) {
       const mythologyName = {
@@ -79,12 +77,6 @@ const Tower = ({ setMythStates }) => {
           }),
         };
 
-        setMythStates((prevState) => {
-          const newState = [...prevState];
-          const mythIndex = myth - 1;
-          newState[mythIndex].orbs -= sessionOrbs * 2;
-          return newState;
-        });
         setKeysData((prevState) => prevState.filter((item) => item != key));
         setGameData(updatedGameData);
         setSessionOrbs(0);
@@ -158,7 +150,7 @@ const Tower = ({ setMythStates }) => {
       <div className="flex relative flex-grow justify-center items-center">
         {/* Info Icon */}
         {!showInfo && (
-          <IconButton
+          <IconBtn
             isInfo={true}
             handleClick={() => {
               setShowInfo(true);
@@ -260,18 +252,6 @@ const Tower = ({ setMythStates }) => {
         />
       )}
 
-      <ToggleLeft
-        handleClick={() => {
-          setActiveMyth((prev) => (prev - 1 + 5) % 5);
-        }}
-        activeMyth={4}
-      />
-      <ToggleRight
-        handleClick={() => {
-          setActiveMyth((prev) => (prev + 1) % 5);
-        }}
-        activeMyth={4}
-      />
       <ReactHowler
         src="/assets/audio/fof.tower.background01.wav"
         playing={enableSound && activeMyth >= 4}

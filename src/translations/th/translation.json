@@ -15,6 +15,10 @@
     "greek": "กรีก",
     "norse": "นอร์ส"
   },
+  "tower": {
+    "tune": "คุณรู้ ♪ ทำนอง ♪ ไหม?",
+    "play": "เล่นให้ถูกลำดับ!"
+  },
   "keywords": {
     "orbs": "ออร์บ",
     "conversion": "อัตราแลกเปลี่ยน",
@@ -78,8 +82,8 @@
   "tutorial": {
     "forge": { "title": "่แตะโรงหลอม", "desc": "เพื่อรับ ORB(S)" },
     "quests": { "title": "รับเควส", "desc": "ทำให้เสร็จเพื่อรับ $FAITH" },
-    "boosters":  { "title": "รับบูสเตอร์", "desc": "สำหรับรางวัลเกม" },
-    "profile": { "title": "เลือกพันธมิตร", "desc": "เพื่อรับรางวัล"}
+    "boosters": { "title": "รับบูสเตอร์", "desc": "สำหรับรางวัลเกม" },
+    "profile": { "title": "เลือกพันธมิตร", "desc": "เพื่อรับรางวัล" }
   },
   "quests": {
     "celtic": {
@@ -334,34 +338,34 @@
         "desc": "คุณต้องมี orb มากกว่านี้เพื่อทำธุรกรรมนี้ใหัสำเร็จ."
       }
     },
-    "Booster_AutomataClaim": {
+    "Booster_Claim": {
       "success": {
-        "title": "เปิดใช้งาน Booster สำเร็จ!",
-        "desc": "Automata ของคุณตอนนี้เปิดใช้งานและทำงานแล้ว!"
+        "title": "ได้รับบูสเตอร์เพิ่มพลังงาน!",
+        "desc": "คุณพร้อมสำหรับชัยชนะที่ยิ่งใหญ่แล้ว! ไปพิชิตมัน!"
+      },
+      "error": {
+        "title": "รับบูสเตอร์ไม่สำเร็จ!",
+        "desc": "เอ๊ะ! มีบางอย่างผิดปกติขณะรับบูสเตอร์ โปรดลองอีกครั้ง!"
       }
     },
-    "Booster_ShardsClaim": {
+    "Conversion_Multiplier": {
       "success": {
-        "title": "เปิดใช้งาน Booster สำเร็จ!",
-        "desc": "รับ Booster Shards แล้ว! ตอนนี้เพิ่มพลังการแตะของคุณ."
+        "title": "ผิดทำนอง!",
+        "desc": "คุณทำได้! คุณใส่ทำนองถูกต้องและได้ MultiOrbs สองเท่า!"
+      },
+      "error": {
+        "title": "ผิดทำนอง!",
+        "desc": "คุณใส่ทำนองผิด น่าเสียดายที่ไม่ได้ MultiOrbs สองเท่า"
       }
     },
-    "Booster_InsufficientOrbs": {
+    "Tasks": {
+      "success": {
+        "title": "ภารกิจเสร็จสมบูรณ์แล้ว",
+        "desc": "ทำได้ดี! คุณได้รับ 3 MultiOrbs"
+      },
       "error": {
-        "title": "การขอ Booster ไม่สำเร็จ",
-        "desc": "Orb หลายสีไม่เพียงพอในการเปิดใช้งาน Booster."
-      }
-    },
-    "Booster_AutomataAlreadyClaim": {
-      "error": {
-        "title": "การขอ Booster ไม่สำเร็จ",
-        "desc": "การเปิดใช้งาน Booster ล้มเหลว กรุณาลองขอ Automata ใหม่ในภายหลัง."
-      }
-    },
-    "Booster_ShardsAlreadyClaim": {
-      "error": {
-        "title": "การขอ Booster ไม่สำเร็จ",
-        "desc": "การเปิดใช้งาน Booster ล้มเหลว กรุณาลองเพิ่มพลังการแตะ Shards ของคุณในภายหลัง."
+        "title": "ภารกิจไม่สำเร็จ",
+        "desc": "ภารกิจไม่สำเร็จ โปรดลองอีกครั้งเพื่อรับรางวัล"
       }
     },
     "Booster_Lost_Not_Available": {

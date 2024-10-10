@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { mythSymbols } from "../../utils/variables";
-import IconButton from "../Buttons/IconButton";
+import IconBtn from "../Buttons/IconBtn";
 
 const ConvertInfo = ({ t, handleClick }) => {
   const [activeColor, setActiveColor] = useState(0);
@@ -114,7 +114,7 @@ const ConvertInfo = ({ t, handleClick }) => {
             </div>
           </div>
         </div>
-        <IconButton
+        <IconBtn
           isInfo={false}
           activeMyth={4}
           handleClick={handleClick}

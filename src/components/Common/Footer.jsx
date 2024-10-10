@@ -1,16 +1,18 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import { footerIcons, mythSections } from "../../utils/variables";
 import ReactHowler from "react-howler";
+import animationData from "../../../public/assets/fx/tower.json";
+import Lottie from "lottie-react";
 
 const tele = window.Telegram?.WebApp;
 
 const FooterItem = ({
   section,
-  index,
   activeMyth,
   handleClick,
   enableSound,
+  icon,
 }) => {
   const howlerRef = useRef(null);
 
@@ -34,7 +36,7 @@ const FooterItem = ({
       >
         <h1
           className={`font-symbols ${
-            section === index
+            section === icon
               ? `${
                   activeMyth < 4 && section != 3
                     ? `glow-icon-${mythSections[activeMyth]}`
@@ -43,11 +45,11 @@ const FooterItem = ({
               : `text-black-contour`
           }`}
           style={{
-            fontSize: section === index ? "60px" : "50px",
+            fontSize: section === icon ? "60px" : "50px",
             transition: "font-size 0.3s ease",
           }}
         >
-          {footerIcons[index]}
+          {footerIcons[icon]}
         </h1>
       </div>
       <div className="absolute ">
@@ -66,6 +68,22 @@ const FooterItem = ({
 const Footer = ({ minimize }) => {
   const { section, setSection, activeMyth, setActiveMyth, enableSound } =
     useContext(MyContext);
+  const lottieRef = useRef(null);
+  const [isForward, setIsForward] = useState(true);
+
+  const handlePlay = () => {
+    if (lottieRef.current) {
+      if (isForward) {
+        lottieRef.current.setSpeed(0.1);
+        lottieRef.current.setDirection(1);
+      } else {
+        lottieRef.current.setSpeed(0.1);
+        lottieRef.current.setDirection(-1);
+      }
+      lottieRef.current.goToAndPlay(0, false);
+      setIsForward(!isForward);
+    }
+  };
 
   const handleSectionChange = (newSection) => {
     tele.HapticFeedback.notificationOccurred("success");
@@ -77,45 +95,58 @@ const Footer = ({ minimize }) => {
 
   return (
     <div
-      style={{
-        position: "relative",
-        width: "100%",
-      }}
-      className={`flex justify-between ${minimize === 2 && "maximize"} ${
+      className={`relative ${minimize === 2 && "maximize"} ${
         minimize === 1 && "minimize"
-      } transition-all duration-1000 items-center h-[12%] z-50 w-full text-white`}
+      } `}
     >
-      <div
-        style={{
-          backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className={`filter-paper-${
-          section === 3 || section === 9
-            ? mythSections[4]
+      <img
+        src="/assets/uxui/fof.footer.rock3.png"
+        alt="paper"
+        className={`w-full h-auto filter-paper-${
+          section === 3 || section === 4 || section === 5 || section === 6
+            ? mythSections[8]
             : mythSections[activeMyth]
-        } `}
+        }`}
       />
-      {footerIcons.map((item, index) => (
-        <FooterItem
-          key={index}
-          section={section}
-          index={index}
-          enableSound={enableSound}
-          activeMyth={activeMyth}
-          handleClick={() => {
-            handleSectionChange(index);
-          }}
-        />
-      ))}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-[80%] flex justify-between text-white">
+          {/* <FooterItem
+            icon={footerLeft[section]}
+            section={section}
+            enableSound={enableSound}
+            activeMyth={activeMyth}
+            handleClick={() => {
+              handleSectionChange(footerLeft[section]);
+            }}
+          /> */}
+          <Lottie
+            onClick={handlePlay}
+            lottieRef={lottieRef}
+            autoplay={false}
+            loop={false}
+            animationData={animationData}
+            className="w-[15vw]"
+          />
+          {/* <FooterItem
+            icon={footerMed[section]}
+            section={section}
+            enableSound={enableSound}
+            activeMyth={activeMyth}
+            handleClick={() => {
+              handleSectionChange(footerMed[section]);
+            }}
+          />
+          <FooterItem
+            icon={footerRight[section]}
+            section={section}
+            enableSound={enableSound}
+            activeMyth={activeMyth}
+            handleClick={() => {
+              handleSectionChange(footerRight[section]);
+            }}
+          /> */}
+        </div>
+      </div>
     </div>
   );
 };

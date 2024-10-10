@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { mythSections } from "../../../utils/variables";
-import IconButton from "../../Buttons/IconButton";
+import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
 
@@ -46,7 +46,7 @@ const BoosterClaim = ({
         <div className="relative h-full w-full flex flex-col items-center">
           <div className="flex relative flex-col justify-center items-center h-full w-full">
             {!disableIcon && (
-              <IconButton
+              <IconBtn
                 isInfo={false}
                 activeMyth={activeMyth}
                 handleClick={closeCard}

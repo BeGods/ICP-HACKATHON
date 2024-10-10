@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
 import MappedOrbs from "../../Common/MappedOrbs";
-import IconButton from "../../Buttons/IconButton";
+import IconBtn from "../../Buttons/IconBtn";
 import { mythSections, mythSymbols } from "../../../utils/variables";
-import Button from "../../Buttons/Button";
+import Button from "../../Buttons/DefaultBtn";
 import { MyContext } from "../../../context/context";
 
 function PayCard({
@@ -145,7 +145,7 @@ function PayCard({
               <div className="m-2 z-50">
                 <MappedOrbs quest={quest} showNum={scale} />
               </div>
-              <IconButton
+              <IconBtn
                 isInfo={false}
                 activeMyth={activeMyth}
                 handleClick={handleShowPay}
@@ -183,7 +183,7 @@ function PayCard({
         {/* Button */}
         <Button
           handleClick={handleOperation}
-          message={t(`buttons.pay`)}
+          message={0}
           activeMyth={activeMyth}
           isBooster={isBooster}
         />

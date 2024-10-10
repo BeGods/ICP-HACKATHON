@@ -56,7 +56,7 @@ const QuestCard = ({
             </div>
             <div
               style={{
-                backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                backgroundImage: `url(/assets/uxui/fof.footer.rock3.png)`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",

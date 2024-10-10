@@ -201,8 +201,8 @@ export const showToast = (type) => {
     case "lost_quest_error":
       toast.error(
         <ToastMesg
-          title={"There was a problem in loading quests."}
-          desc={"Please try again later"}
+          title={t("toasts.default.error.title")}
+          desc={t("toasts.default.error.desc")}
           status={"fail"}
         />,
         {
@@ -217,11 +217,11 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "claim_minion_success":
+    case "booster_success":
       toast.success(
         <ToastMesg
-          title={t("toasts.Booster_ShardsClaim.success.title")}
-          desc={t("toasts.Booster_ShardsClaim.success.desc")}
+          title={t("toasts.Booster_Claim.success.title")}
+          desc={t("toasts.Booster_Claim.success.desc")}
           status={"success"}
         />,
         {
@@ -236,11 +236,11 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "claim_minion_error":
+    case "booster_error":
       toast.error(
         <ToastMesg
-          title={t("toasts.Booster_InsufficientOrbs.error.title")}
-          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
+          title={t("toasts.Booster_Claim.error.title")}
+          desc={t("toasts.Booster_Claim.error.desc")}
           status={"fail"}
         />,
         {
@@ -255,64 +255,6 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "claim_automata_success":
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Booster_AutomataClaim.success.title")}
-          desc={t("toasts.Booster_AutomataClaim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      break;
-    case "claim_automata_error":
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Booster_InsufficientOrbs.error.title")}
-          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      break;
-    case "claim_burst_success":
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Booster_AutomataClaim.success.title")}
-          desc={t("toasts.Booster_AutomataClaim.success.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      break;
-    case "claim_burst_error":
       toast.error(
         <ToastMesg
           title={t("toasts.Booster_InsufficientOrbs.error.title")}
@@ -369,13 +311,68 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "convert_key_success":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Conversion_Multiplier.error.title")}
+          desc={t("toasts.Conversion_Multiplier.error.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     case "convert_key_fail":
       toast.error(
         <ToastMesg
-          title={"Invalid Key"}
-          desc={
-            "The key you provided is incorrect. No multiplier has been applied."
-          }
+          title={t("toasts.Conversion_Multiplier.error.title")}
+          desc={t("toasts.Conversion_Multiplier.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "task_success":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Tasks.success.title")}
+          desc={t("toasts.Tasks.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "task_fail":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Tasks.error.title")}
+          desc={t("toasts.Tasks.error.desc")}
           status={"fail"}
         />,
         {
@@ -412,8 +409,8 @@ export const showToast = (type) => {
     default:
       toast.info(
         <ToastMesg
-          title={"Info"}
-          desc={"This is an informational message."}
+          title={t("toasts.default.error.title")}
+          desc={t("toasts.default.error.desc")}
           status={"other"}
         />,
         {

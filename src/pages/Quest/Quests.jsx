@@ -24,7 +24,7 @@ import {
 import QuestCard from "../../components/Cards/QuestCards/QuestCard";
 import Header from "../../components/Headers/Header";
 import JigsawButton from "../../components/Buttons/JigsawButton";
-import IconButton from "../../components/Buttons/IconButton";
+import IconBtn from "../../components/Buttons/IconBtn";
 import QuestButton from "../../components/Buttons/QuestButton";
 import MilestoneCard from "../../components/Cards/MilestoneCard";
 import SecretCard from "../../components/Cards/QuestCards/SecretCard";
@@ -285,7 +285,7 @@ const Quests = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/fof.base.background.jpg)`,
+            backgroundImage: `url(/assets/uxui/1160px-fof.base.background.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -327,7 +327,7 @@ const Quests = () => {
                 }
               }}
               InfoIcon={
-                <IconButton
+                <IconBtn
                   isInfo={true}
                   activeMyth={activeMyth}
                   handleClick={() => {
@@ -382,7 +382,7 @@ const Quests = () => {
                   )}
                 />
                 {gameData.mythologies[activeMyth].faith >= 12 && (
-                  <IconButton
+                  <IconBtn
                     isInfo={true}
                     activeMyth={activeMyth}
                     handleClick={() => {

@@ -9,7 +9,7 @@
     "greek": "Greek mythology is a thrilling saga of epic quests and heart-wrenching struggles, where heroes rise and fall against overwhelming odds. It brims with dramatic confrontations, treacherous betrayals, and passionate romances, each tale echoing the tumult of human emotion. Mortal souls clash with fate, battling monstrous foes and navigating labyrinthine challenges, as the fabric of destiny intertwines with the divine. This grand narrative captures the essence of triumph, loss, and the relentless pursuit of glory.",
     "norse": "Norse mythology unveils a fantastical realm of swirling realms and legendary beasts, where valiant heroes embark on daring quests against looming shadows. Epic sagas brim with magical artifacts and cosmic trees that bridge worlds, while fierce battles echo through the ages. Enigmatic creatures roam the landscapes, and the air crackles with ancient magic. Themes of bravery, sacrifice, and the inexorable dance of fate intertwine, creating a vivid tapestry of wonder and peril that captivates the imagination."
   },
-  "mythologies" : {
+  "mythologies": {
     "celtic": "Celtic",
     "egyptian": "Egyptian",
     "greek": "Greek",
@@ -28,6 +28,10 @@
     "pay": "Pay",
     "share": "Share",
     "shared": "Shared"
+  },
+  "tower": {
+    "tune": "Do you know the ♪ tune ♪?",
+    "play": "Play in the right order"
   },
   "sections": {
     "forges": "Forges",
@@ -332,34 +336,34 @@
         "desc": "You need more orbs to complete this transaction."
       }
     },
-    "Booster_AutomataClaim": {
+    "Booster_Claim": {
       "success": {
-        "title": "Booster Activated Successfully!",
-        "desc": "Your automata is now active and running!"
+        "title": "Power Boost Achieved!",
+        "desc": "You're now equipped for epic wins! Go conquer it!"
+      },
+      "error": {
+        "title": "Booster Claim Failed!",
+        "desc": "Oops! Something went wrong while claiming your booster. Please try again!"
       }
     },
-    "Booster_ShardsClaim": {
+    "Conversion_Multiplier": {
       "success": {
-        "title": "Booster Activated Successfully!",
-        "desc": "Shards Booster claimed! Now multiply your tapping power."
+        "title": "Tune Matched!",
+        "desc": "You got it! The key is correct, and the multiplier has been applied!"
+      },
+      "error": {
+        "title": "Tune Mismatch!",
+        "desc": "The key you entered is incorrect. Unfortunately, no multiplier has been applied."
       }
     },
-    "Booster_InsufficientOrbs": {
+    "Tasks": {
+      "success": {
+        "title": "Task Completed Successfully!",
+        "desc": "Well done! You've earned 3 MultiOrbs."
+      },
       "error": {
-        "title": "Booster Claim Unsuccessful",
-        "desc": "Insufficient MultiColor Orbs to activate the booster."
-      }
-    },
-    "Booster_AutomataAlreadyClaim": {
-      "error": {
-        "title": "Booster Claim Unsuccessful",
-        "desc": "Booster activation failed. Please try to claim automata later."
-      }
-    },
-    "Booster_ShardsAlreadyClaim": {
-      "error": {
-        "title": "Booster Claim Unsuccessful",
-        "desc": "Booster activation failed. Please try to multiply your shards tapping power later."
+        "title": "Task Incomplete!",
+        "desc": "The task could not be completed. Please try again to earn your rewards."
       }
     },
     "Booster_Lost_Not_Available": {
@@ -423,7 +427,7 @@
     "ReferralCopy": {
       "success": {
         "title": "Referral Link Copied!",
-        "desc": "Your referral link has been copied to the clipboard. Share it with your friends!"
+        "desc": "Share it with your friends to claim 3 multicolor ORBs!"
       }
     },
     "TonConnect": {

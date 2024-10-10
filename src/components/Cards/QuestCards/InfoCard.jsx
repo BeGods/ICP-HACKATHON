@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ShareButton from "../../Buttons/ShareButton";
-import IconButton from "../../Buttons/IconButton";
+import IconBtn from "../../Buttons/IconBtn";
 import { mythSections } from "../../../utils/variables";
 import { useTranslation } from "react-i18next";
 
@@ -40,17 +40,17 @@ const InfoCard = ({
           top: 0,
           left: 0,
         }}
-        className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] card-shadow-white"
+        className="flex flex-col rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] card-shadow-white"
       >
         {platform === "ios" ? (
-          <IconButton
+          <IconBtn
             isInfo={false}
             activeMyth={activeMyth}
             handleClick={handleShowInfo}
             align={5}
           />
         ) : (
-          <IconButton
+          <IconBtn
             isInfo={false}
             activeMyth={activeMyth}
             handleClick={handleShowInfo}
@@ -61,10 +61,10 @@ const InfoCard = ({
         <div className="flex w-full">
           <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
             <div className="text-left">
-              <h1 className="text-[28px] font-bold uppercase">
+              <h1 className="text-paperHead font-bold uppercase">
                 {t("keywords.discover")}
               </h1>
-              <h2 className={`-mt-1 text-tertiary font-medium uppercase `}>
+              <h2 className={`-mt-1 text-tertiary font-medium uppercase`}>
                 {t(`mythologies.${mythSections[activeMyth]}`)}
               </h2>
             </div>
@@ -78,7 +78,7 @@ const InfoCard = ({
           />
         </div>
         <div
-          className={`leading-[18px] text-[16px] -mt-[5px] text-left mx-auto w-[85%] text-card font-[550] ${
+          className={`leading-[18px] text-para -mt-[5px] text-left mx-auto w-[85%] text-card font-[550] ${
             (i18n.language === "hi" ||
               i18n.language === "th" ||
               i18n.language === "ru") &&

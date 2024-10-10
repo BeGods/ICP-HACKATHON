@@ -1,6 +1,6 @@
 import React from "react";
 import ShareButton from "../../Buttons/ShareButton";
-import IconButton from "../../Buttons/IconButton";
+import IconBtn from "../../Buttons/IconBtn";
 import { mythSections } from "../../../utils/variables";
 
 const SecretCard = ({
@@ -25,7 +25,7 @@ const SecretCard = ({
         }}
         className="flex flex-col  rounded-[15px] items-center gap-4 w-[72%] h-[55%] mt-[73px] card-shadow-white"
       >
-        <IconButton
+        <IconBtn
           isInfo={false}
           activeMyth={activeMyth}
           handleClick={handleShowInfo}

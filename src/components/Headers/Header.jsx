@@ -4,35 +4,19 @@ import { mythSections } from "../../utils/variables";
 
 const Header = ({ children }) => {
   const { activeMyth, section } = useContext(MyContext);
+
   return (
-    <div
-      style={{
-        position: "relative",
-        height: "19%",
-        width: "100%",
-      }}
-      className="flex"
-    >
-      <div
-        style={{
-          backgroundImage: `url(/assets/uxui/fof.header.paper.png)`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className={`filter-paper-${
-          section === 3 || section === 9
+    <div className={`relative`}>
+      <img
+        src="/assets/uxui/fof.footer.rock3.png"
+        alt="paper"
+        className={`rotate-180 w-full h-auto filter-paper-${
+          section === 3 || section === 4 || section === 5 || section === 6
             ? mythSections[8]
             : mythSections[activeMyth]
-        } relative -mt-1`}
+        }`}
       />
-      {children}
+      <div className="absolute inset-0 flex justify-center">{children}</div>
     </div>
   );
 };

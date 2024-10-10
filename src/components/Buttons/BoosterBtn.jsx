@@ -1,14 +1,9 @@
 import React, { useRef } from "react";
 import { mythSections } from "../../utils/variables";
 import { calculateRemainingTime } from "../../utils/getBoosterCard";
+import { Handshake } from "lucide-react";
 
-const BoosterButtom = ({
-  activeCard,
-  mythData,
-  activeMyth,
-  handleClaim,
-  t,
-}) => {
+const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
   let disableClick = useRef(false);
 
   return (
@@ -72,7 +67,13 @@ const BoosterButtom = ({
               </h1>
             </div>
             <div className="text-button-primary uppercase">
-              {activeCard == "burst" ? t("buttons.buy") : t("buttons.hire")}
+              {activeCard == "burst" ? (
+                <div className="text-[40px] font-symbols z-10 uppercase">V</div>
+              ) : (
+                <>
+                  <Handshake size={"10vw"} />
+                </>
+              )}
             </div>
             <div className="flex relative justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
               <img
@@ -93,4 +94,4 @@ const BoosterButtom = ({
   );
 };
 
-export default BoosterButtom;
+export default BoosterBtn;

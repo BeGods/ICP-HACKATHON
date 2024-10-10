@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import IconButton from "../Buttons/IconButton";
+import IconBtn from "../Buttons/IconBtn";
 import { MyContext } from "../../context/context";
 import { fetchOTP, verifyOtp } from "../../utils/api";
 
@@ -36,7 +36,7 @@ const AuthOTP = ({ handleClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-start items-center z-50">
       <div className="relative w-[76%] bg-[#1D1D1D] rounded-primary mt-[52px] card-shadow-white p-6 flex flex-col justify-center items-center">
-        <IconButton align={0} handleClick={handleClose} activeMyth={4} />
+        <IconBtn align={0} handleClick={handleClose} activeMyth={4} />
         <div className="text-white text-center break-words w-2/3 mx-auto mt-4">
           Verify with Playsuper
         </div>

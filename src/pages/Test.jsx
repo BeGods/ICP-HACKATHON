@@ -291,17 +291,6 @@
 
 // export default ForgeHeader;
 
-import React from "react";
-import PropTypes from "prop-types";
-
-function Test(props) {
-  return <div>Test</div>;
-}
-
-Test.propTypes = {};
-
-export default Test;
-
 // import React from "react";
 // import { mythSections, mythSymbols } from "../../utils/variables";
 
@@ -515,3 +504,80 @@ export default Test;
 // };
 
 // export default Footer;
+
+// import React, { useContext } from "react";
+// import { MyContext } from "../../context/context";
+// import { mythSections } from "../../utils/variables";
+
+// const Header = ({ children }) => {
+//   const { activeMyth, section } = useContext(MyContext);
+//   return (
+//     <div
+//       style={{
+//         position: "relative",
+//         height: "12%",
+//         width: "100%",
+//       }}
+//       className="flex"
+//     >
+//       <div
+//         style={{
+//           backgroundImage: `url(/assets/uxui/fof.footer.rock2.png)`,
+//           backgroundRepeat: "no-repeat",
+//           transform: "rotate(180deg)",
+//           backgroundSize: "cover",
+//           backgroundPosition: "center center",
+//           position: "absolute",
+//           top: 0,
+//           left: 0,
+//           height: "100%",
+//           width: "100%",
+//           zIndex: -1,
+//         }}
+//         className={`filter-paper-${
+//           section === 3 || section === 9
+//             ? mythSections[8]
+//             : mythSections[activeMyth]
+//         } relative -mt-1`}
+//       />
+//       {children}
+//     </div>
+//   );
+// };
+
+// export default Header;
+
+{
+  /* <div className="bg-white h-screen">
+<div className="relative">
+  <img
+    src="/assets/uxui/fof.footer.rock2.png"
+    alt="paper"
+    className="rotate-180 w-full h-auto"
+  />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="bg-red-400 p-4">Hi</div>
+  </div>
+</div>
+<div className="relative">
+  <img
+    src="/assets/uxui/fof.footer.rock2.png"
+    alt="paper"
+    className="w-full bottom-0 h-auto"
+  />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="bg-red-400 p-4">Hi</div>
+  </div>
+</div>
+</div> */
+}
+
+import React, { useRef, useState } from "react";
+
+function Test(props) {
+  return (
+    <div className="bg-black h-screen w-scree flex justify-center items-center"></div>
+  );
+}
+
+export default Test;

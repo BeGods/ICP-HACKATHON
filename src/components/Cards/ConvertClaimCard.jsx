@@ -22,7 +22,6 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
     const selectedKeys = clickedOrbs
       .map((item) => mythologies.indexOf(item))
       .join("");
-
     handleClose();
     handleSubmit(selectedKeys);
   };
@@ -40,7 +39,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
       {!showPlay ? (
         <div className="flex flex-col w-full items-center justify-center">
           <div className="uppercase text-center leading-[60px] top-0 text-gold text-[14.2vw] px-0.5 scale-zero text-black-contour">
-            Do You Know The tune <span className="text-[20vw]">♪</span> ?
+            {t("tower.tune")}
           </div>
           <div className="flex text-[10vw] w-2/3 mt-10 justify-between text-gold">
             <div
@@ -63,7 +62,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
       ) : (
         <div className="flex flex-col gap-10 flex-grow w-full justify-center items-center">
           <div className="uppercase text-center absolute leading-[60px] top-0 text-gold text-[14.2vw] px-0.5 scale-zero text-black-contour">
-            Play in the right order!
+            {t("tower.play")}
           </div>
           <div
             className="relative flex justify-center items-center w-full h-full"
@@ -116,7 +115,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               onClick={() => {
                 playAudio();
                 if (!prev.includes("MultiOrb")) {
-                  setPlaySound(index);
+                  setPlaySound(4);
                 }
                 setClickedOrbs((prev) =>
                   prev.includes("MultiOrb") ? prev : [...prev, "MultiOrb"]
@@ -136,7 +135,6 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             </div>
             ;
           </div>
-
           <div className="absolute bottom-0 mb-8">
             <CircleCheck
               size={"18vw"}

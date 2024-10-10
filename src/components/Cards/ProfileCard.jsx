@@ -24,14 +24,14 @@ const ProfileCard = ({ quest, claimCard }) => {
         );
         claimCard();
         setSocialQuestData(updatedQuestData);
-        showToast("quest_complete_success");
+        showToast("task_succes");
       } catch (error) {
         const errorMessage =
           error.response?.data?.message ||
           error.message ||
           "An unexpected error occurred";
         console.log(errorMessage);
-        showToast("quest_complete_error");
+        showToast("task_error");
       }
     }
   };
