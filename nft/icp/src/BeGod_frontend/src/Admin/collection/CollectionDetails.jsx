@@ -68,7 +68,7 @@ const filterListOptions = [
 function CollectionDetails() {
   const [nftList, setnftList] = useState([]);
   const [modal, setModal] = useState(false);
-  const [nfttype, setnfttype] = useState("rare");
+  const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
   const [nftquantity, setnftquantity] = useState();
   const [nftprice, setnftprice] = useState();
@@ -169,7 +169,8 @@ function CollectionDetails() {
     nftimage,
     nftquantity,
     nftcolor,
-    nftprice
+    nftprice,
+    nftType
   ) => {
     try {
       console.log("in mint", principalStringg);
@@ -179,12 +180,12 @@ function CollectionDetails() {
       const date = new Date();
       const formattedDate = date.toISOString();
       const metadata = JSON.stringify({
-        nfttype,
+        nftType,
         standard: "EXT V2",
         chain: "ICP",
         contractAddress: canisterId,
         nftcolor,
-        // date: formattedDate,
+        date: formattedDate,
       });
 
       const metadataContainer = {
@@ -299,7 +300,8 @@ function CollectionDetails() {
         nftDetails.nftImage,
         nftDetails.nftQuantity,
         nftDetails.nftcolor,
-        nftDetails.nftPrice
+        nftDetails.nftPrice,
+        nftDetails.nftType
       );
 
       if (mintResult instanceof Error) {
@@ -352,7 +354,7 @@ function CollectionDetails() {
         console.log("each item", eachItem[0]);
         const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
         const metadata = JSON.parse(metadataJson);
-        const nftType = metadata?.nfttype;
+        const nftType = metadata?.nftType;
         return nftType.toLowerCase() === currentCardType.toLowerCase();
       });
       //console.log("Updated list after card type filter:", updatedList);

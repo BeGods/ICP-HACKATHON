@@ -39,7 +39,7 @@ const CreateCollection = () => {
   const { backendActor, canisterId } = useAuth();
   const [Ufile, setUFile] = useState([]);
   const [base64String, setBase64String] = useState("");
-  const [nfttype, setnfttype] = useState("");
+  const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
   const [nftquantity, setnftquantity] = useState();
   const [nftprice, setnftprice] = useState(0);
@@ -303,7 +303,7 @@ const CreateCollection = () => {
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
-  console.log(nfttype);
+  console.log(nftType);
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
       (eachNft) => eachNft.nftId !== nftId
@@ -353,13 +353,18 @@ const CreateCollection = () => {
             hasError = true;
             throw mintResult;
             toast.error(mintResult);
-          }
-          setLoading(false);
-          if (!hasError) {
+          } else {
             setsuccess(!Success);
             setTimeout(() => {
               navigate("/admin/collection");
             }, 2000);
+          }
+          setLoading(false);
+          if (!hasError) {
+            // setsuccess(!Success);
+            // setTimeout(() => {
+            //   navigate("/admin/collection");
+            // }, 2000);
           }
         });
       }

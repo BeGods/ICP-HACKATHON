@@ -145,23 +145,23 @@ const NftDetails = () => {
                   </span>
                 </p>
                 <p className="text-white text-lg">
-                  <span className="font-semibold">Collection:</span>
+                  <span className="font-semibold">Collection: </span>
                   <span>{collectiondata[2] || "Not Available"}</span>
                 </p>
                 <p className="text-white text-lg">
-                  <span className="font-semibold">NFT ID:</span>
-                  <span>{identifier || id}</span>
+                  <span className="font-semibold">NFT ID: </span>
+                  <span className="text-yellow-500">{identifier || id}</span>
                 </p>
                 <p className="text-white text-lg">
-                  <span className="font-semibold">Owner:</span>
-                  <span>{owner || "Unknown"}</span>
+                  <span className="font-semibold">Owner: </span>
+                  <span className="text-green-800">{owner || "Unknown"}</span>
                 </p>
                 <p className="text-white text-lg">
-                  <span className="font-semibold">Price:</span>
+                  <span className="font-semibold">Price: </span>
                   <span>{price || "Not Listed"} ICP</span>
                 </p>
                 <p className="text-white text-lg">
-                  <span className="font-semibold">Listed:</span>
+                  <span className="font-semibold">Listed: </span>
                   <span>{isOwned ? "Yes" : "No"}</span>
                 </p>
               </div>
