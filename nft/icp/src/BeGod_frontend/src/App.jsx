@@ -9,7 +9,16 @@ import Hero from "./pages/Hero";
 import BuyNft from "./pages/BuyNft";
 import PageNotFound from "./Admin/PageNotFound";
 import Activity from "./pages/Activity";
-const FullpageLoader = lazy(() => import("./Loader/FullpageLoader"));
+
+// Introduce a manual delay for testing
+const simulateNetworkDelay = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+// Lazy load the FullpageLoader with a simulated delay
+const FullpageLoader = lazy(() =>
+  simulateNetworkDelay(2000).then(() => import("./Loader/FullpageLoader"))
+);
 
 function App() {
   return (
