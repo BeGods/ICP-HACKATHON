@@ -292,7 +292,7 @@ const fetchCollections = async () => {
                 collectionId,
                 cardName:cardDetails.name,
                 cardImageUrl:cardDetails.thumbnail,
-                cardType:metadata.nfttype,
+                cardType:metadata.nftType,
                 isOwned,
                 isFavourite : isFav,
                 borderColor : metadata.nftcolor,
