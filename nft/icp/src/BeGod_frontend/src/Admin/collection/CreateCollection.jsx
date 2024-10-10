@@ -120,35 +120,41 @@ const CreateCollection = () => {
   const handleFiles = async (files) => {
     console.log("Uploaded files:", files);
     setUFile(files);
-
+  
     const file = files[0]; // Get the first uploaded file
     if (file) {
       try {
-        const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 800,
+        let options = {
+          maxSizeMB: 0.05, // 50KB
+          maxWidthOrHeight: 300,
           useWebWorker: true,
         };
-
-        const compressedFile = await imageCompression(file, options);
-        console.log("Compressed file:", compressedFile);
-
+  
+        let compressedFile = await imageCompression(file, options);
+        while (compressedFile.size > 100 * 1024) { 
+          options.maxSizeMB *= 0.9;
+          compressedFile = await imageCompression(file, options);
+        }
+  
+        console.log("Compressed file size:", compressedFile.size);
+  
         const reader = new FileReader();
         reader.onloadend = () => {
           setBase64String(reader.result);
         };
-
+  
         reader.readAsDataURL(compressedFile);
       } catch (error) {
         console.error("Error during file compression:", error);
       }
     }
   };
+  
 
   const createExtData = async (name, base64String, description, collColor) => {
     try {
       const metadata = JSON.stringify({ description, collColor });
-      // console.log(name, base64String, metadata);
+      console.log(name, metadata);
       const report = await backendActor?.createExtCollection(
         name,
         base64String,
@@ -498,7 +504,7 @@ const CreateCollection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2   gap-5">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-2">
                     {nftCardsList.map((eachNftItem) => (
                       <NftCardItem
                         nftDetails={eachNftItem}
