@@ -291,7 +291,10 @@ export const getGameStats = async (req, res) => {
     const isEligibleToClaim = await checkBonus(user);
 
     if (isEligibleToClaim) {
-      await User.findOneAndUpdate({ userId }, { $set: { exploitCount: 0 } });
+      await User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $set: { exploitCount: 0 } }
+      );
     }
 
     // get totalMembers
@@ -311,7 +314,7 @@ export const getGameStats = async (req, res) => {
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
-      isEligibleToClaim: false,
+      isEligibleToClaim: isEligibleToClaim,
       joiningBonus: user.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,
       ...memberData,
