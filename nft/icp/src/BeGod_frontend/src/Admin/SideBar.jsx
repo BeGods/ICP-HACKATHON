@@ -11,6 +11,7 @@ import {
   DrawerContent,
   useDisclosure,
 } from "@chakra-ui/react";
+import { TbMoneybag } from "react-icons/tb";
 import { MdOutlineDashboard, MdLogout } from "react-icons/md";
 import { LuCopyPlus } from "react-icons/lu";
 import { CiUser } from "react-icons/ci";
@@ -39,6 +40,11 @@ const sideBarData = [
     text: "Users",
     icon: CiUser,
     Link: "/admin/users",
+  },
+  {
+    text: "Activity",
+    icon: TbMoneybag,
+    Link: "/admin/activity",
   },
 ];
 
@@ -159,9 +165,7 @@ function SidebarContent({ onClose, ...rest }) {
                 <input
                   value={
                     user
-                      ? `${user.slice(0, 5)}......${user.slice(
-                          user.length - 6
-                        )}`
+                      ? `${user.slice(0, 5)}......${user.slice(-6)}`
                       : "No User"
                   }
                   readOnly
