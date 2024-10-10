@@ -116,7 +116,7 @@ const NFTGallery = ({ currentCollection }) => {
           />
         </div>
       </div>
-      <div className={`hidden w-[80%] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-11 lg:mx-15 mb-8 ${animationClass}`}>
+      <div className={`justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
         {currentItems && currentItems.map((eachCard, index) => {
           const img = eachCard[0];
          return(
