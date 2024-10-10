@@ -221,10 +221,18 @@ body {
     1px 1px 0 #000; 
   } */
 
-  .bouncing-ball {
-    width: 50px;
-    height: 50px;
-    background-color: red; /* Change to your desired color */
-    border-radius: 50%; /* Make it a circle */
-    position: absolute; /* Positioning for animation */
-  }
+.bouncing-ball {
+  width: 50px;
+  height: 50px;
+  background-color: red; /* Change to your desired color */
+  border-radius: 50%; /* Make it a circle */
+  position: absolute; /* Positioning for animation */
+}
+
+.custom-skew {
+  -moz-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  -webkit-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  -o-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  -ms-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+}

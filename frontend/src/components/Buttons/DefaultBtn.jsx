@@ -1,8 +1,15 @@
 import React, { useRef, useState } from "react";
 import { mythSections } from "../../utils/variables";
-import { Download } from "lucide-react";
+import { Download, Share2 } from "lucide-react";
 
-const Button = ({ message, handleClick, activeMyth, t, isGold, isBooster }) => {
+const DefaultBtn = ({
+  message,
+  handleClick,
+  activeMyth,
+  t,
+  isGold,
+  isBooster,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
   let disableClick = useRef(false);
 
@@ -44,8 +51,8 @@ const Button = ({ message, handleClick, activeMyth, t, isGold, isBooster }) => {
       } justify-between h-button-primary w-button-primary mt-[10px] mx-auto  bg-glass-black z-50 rounded-primary`}
     >
       <div className="flex justify-center items-center w-1/4 h-full"></div>
-      <div className="text-[16px] z-10 uppercase">
-        {message === "claim" ? <Download size={"18vw"} /> : message}
+      <div className="text-[40px] font-symbols z-10 uppercase">
+        {message === 0 ? "V" : message === 1 ? <Handshake size={"10vw"} /> : ""}
       </div>
       <div className="flex justify-center items-center w-1/4  h-full">
         {isBooster && (
@@ -68,4 +75,4 @@ const Button = ({ message, handleClick, activeMyth, t, isGold, isBooster }) => {
   );
 };
 
-export default Button;
+export default DefaultBtn;

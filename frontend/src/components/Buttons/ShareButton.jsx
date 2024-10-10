@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { mythSections } from "../../utils/variables";
+import { Share2 } from "lucide-react";
 
 const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -53,7 +54,9 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
               />
             </div>
           </div>
-          <div className="text-[16px] uppercase">{t(`buttons.share`)}</div>
+          <div>
+            <Share2 size={"8vw"} />
+          </div>
           {isInfo ? (
             <div className="flex justify-center items-center w-1/4  h-full">
               <img
@@ -82,7 +85,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
             rounded-primary`}
         >
           <div className="flex justify-center items-center w-1/4 h-full"></div>
-          <div className="text-[16px] uppercase"> {t(`buttons.shared`)}</div>
+          <Share2 size={"8vw"} />
           <div className="flex justify-center items-center w-1/4  h-full"></div>
         </div>
       )}

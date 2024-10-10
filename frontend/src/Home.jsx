@@ -13,6 +13,8 @@ import Tower from "./pages/Tower/Tower";
 import JoinBonus from "./pages/JoinBonus";
 import Partners from "./pages/Partners";
 import Redeem from "./pages/Redeem";
+import Tasks from "./pages/Tasks";
+import i18next from "i18next";
 
 const tele = window.Telegram?.WebApp;
 
@@ -32,19 +34,20 @@ const Home = (props) => {
   const [showGlow, setShowGlow] = useState(null);
   const [platform, setPlatform] = useState(null);
   const [authToken, setAuthToken] = useState(null);
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(1);
 
   const sections = [
-    <Quests />,
-    <Forges />,
-    <Boosters />,
-    <Profile />,
-    <Leaderboard />,
-    <Gacha />,
-    <Tower />,
-    <JoinBonus />,
-    <Partners />,
-    <Redeem />,
+    <Forges />, // 0
+    <Quests />, // 1
+    <Boosters />, // 2
+    <Profile />, // 3
+    <Tower />, // 4
+    <Tasks />, // 5
+    <Redeem />, // 6
+    <Leaderboard />, // 7
+    <Gacha />, // 8
+    <JoinBonus />, // 9
+    <Partners />, // 10
   ];
 
   // fetch all game data
@@ -61,14 +64,14 @@ const Home = (props) => {
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
       setKeysData(response?.towerKeys);
       if (!response?.user.joiningBonus) {
-        setSection(7);
+        setSection(9);
       } else if (
         response?.user.joiningBonus &&
         response?.user.isEligibleToClaim
       ) {
-        setSection(5);
+        setSection(8);
       } else {
-        setSection(1);
+        setSection(0);
       }
       setTimeout(() => {
         setIsLoading(false);
@@ -94,6 +97,16 @@ const Home = (props) => {
     //   }
     // })();
 
+    tele.CloudStorage.getItem("lang", (err, item) => {
+      (async () => {
+        if (item) {
+          i18next.changeLanguage(item);
+        } else {
+          console.log("Unable to fetch language.");
+          //! TODO:Add error toast
+        }
+      })();
+    });
     tele.CloudStorage.getItem("accessToken", (err, item) => {
       (async () => {
         if (item) {
@@ -105,7 +118,6 @@ const Home = (props) => {
         }
       })();
     });
-
     tele.CloudStorage.getItem("sound", (err, item) => {
       (async () => {
         if (item) {
@@ -173,7 +185,7 @@ const Home = (props) => {
             }}
             ps
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
               <div key={item}>{section === item && sections[item]}</div>
             ))}
           </MyContext.Provider>

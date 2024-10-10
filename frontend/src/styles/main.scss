@@ -135,14 +135,23 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
   0 0 5px black
 }
 
-.text-black-contour{
+.text-black-md-contour{
 text-shadow: 
-0 0 3px black,
-0 0 3px black,
-0 0 3px black,
-0 0 3px black,
-0 0 3px black
+0 0 6px black,
+0 0 6px black,
+0 0 6px black,
+0 0 6px black,
+0 0 6px black
 }
+
+.text-black-contour{
+  text-shadow: 
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black
+  }
 
 .text-black-lg-contour{
   text-shadow: 

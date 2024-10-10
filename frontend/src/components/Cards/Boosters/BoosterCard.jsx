@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { boosterIcon, mythSections } from "../../../utils/variables";
-import { Atom, ChevronRight, LockKeyhole, Star } from "lucide-react";
+import { ChevronRight, LockKeyhole } from "lucide-react";
 
 const BoosterCard = ({
   isActive,

@@ -39,10 +39,10 @@ const IntroPage = (props) => {
           if (param.includes("FDG")) {
             setReferralCode(param);
           } else {
-            i18next.changeLanguage(param);
+            tele.CloudStorage.setItem("lang", param);
           }
         } else {
-          console.warn("No user found in Telegram data");
+          console.log("No user found in Telegram data");
         }
       } catch (error) {
         console.error("Error fetching user data from Telegram:", error);
@@ -84,14 +84,12 @@ const IntroPage = (props) => {
     // tele.CloudStorage.removeItem("guide3");
     // tele.CloudStorage.removeItem("guide4");
 
-    // Add event listener for user interaction
     const handleUserInteraction = () => {
       playAudio();
       document.removeEventListener("click", handleUserInteraction);
       document.removeEventListener("touchstart", handleUserInteraction);
     };
 
-    // Attach the listener for user interaction
     document.addEventListener("click", handleUserInteraction);
     document.addEventListener("touchstart", handleUserInteraction);
 

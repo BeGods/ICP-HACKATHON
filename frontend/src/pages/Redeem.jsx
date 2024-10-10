@@ -10,7 +10,7 @@ import { handleActiveParts } from "../utils/categorizeQuests";
 import AuthenticatePlaySuper from "../components/Modals/AuthOTP";
 import { claimPlaysuperReward } from "../utils/api";
 import { toast } from "react-toastify";
-import IconButton from "../components/Buttons/IconButton";
+import IconBtn from "../components/Buttons/IconBtn";
 import PartnerCard from "../components/Cards/PartnerCard";
 
 const HeaderContent = ({ imageUrl, title, handleClick }) => {
@@ -91,7 +91,7 @@ const Redeem = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/assets/uxui/fof.base.background.jpg)`,
+            backgroundImage: `url(/assets/uxui/1160px-fof.base.background.jpg)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -125,7 +125,7 @@ const Redeem = (props) => {
                   }
                 }}
               />
-              <IconButton
+              <IconBtn
                 isInfo={true}
                 activeMyth={activeMyth}
                 handleClick={() => {
@@ -185,7 +185,7 @@ const Redeem = (props) => {
                 }
               }}
             />
-            <IconButton
+            <IconBtn
               isInfo={false}
               activeMyth={4}
               handleClick={() => {

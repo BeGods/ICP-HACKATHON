@@ -1,4 +1,4 @@
-import { ArrowLeftRight, RotateCcw, RotateCw } from "lucide-react";
+import { ArrowLeftRight, Repeat2, RotateCcw, RotateCw } from "lucide-react";
 import React, { useState, useRef, useContext } from "react";
 import { wheel } from "../../utils/variables";
 import ReactHowler from "react-howler";
@@ -52,7 +52,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
         <div
           className={`w-[18vw] h-[17vw] flex justify-center items-center rounded-full bg-${wheel[myth]}-primary`}
         >
-          <ArrowLeftRight strokeWidth={3} />
+          <Repeat2 strokeWidth={3} />
         </div>
       </div>
       <div

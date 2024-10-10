@@ -36,13 +36,13 @@ const SplashScreen = ({ reward, exploitReward }) => {
     tele.HapticFeedback.notificationOccurred("success");
     if (reward.type === "mythOrb") {
       setActiveMyth(mythologies.indexOf(reward.mythology));
-      setSection(1);
+      setSection(0);
     } else if (reward.type === "quest") {
       setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-      setSection(0);
+      setSection(1);
     } else if (reward.type === "automata" || reward.type === "minion") {
       setActiveMyth(mythologies.indexOf(reward.mythology));
-      setSection(1);
+      setSection(0);
     } else if (reward.type === "blackOrb") {
       setSection(6);
     }
@@ -146,7 +146,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
         <div
           onClick={() => {
             tele.HapticFeedback.notificationOccurred("success");
-            setSection(1);
+            setSection(0);
           }}
           className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[85vw]  mx-auto icon-black-contour`}
         >

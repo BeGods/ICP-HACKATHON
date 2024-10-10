@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import IconButton from "../Buttons/IconButton";
+import IconBtn from "../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import { MyContext } from "../../context/context";
 
@@ -32,12 +32,7 @@ const PartnerCard = ({ close }) => {
             {activeReward.metadata.campaignDetails}
           </div>
         </div>
-        <IconButton
-          isInfo={false}
-          activeMyth={4}
-          handleClick={close}
-          align={1}
-        />
+        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
       </div>
     </div>
   );

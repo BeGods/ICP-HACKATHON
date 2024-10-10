@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import IconButton from "../Buttons/IconButton";
+import IconBtn from "../Buttons/IconBtn";
 import {
   boosterIcon,
   elementNames,
@@ -45,7 +45,7 @@ const MilestoneCard = ({
         <div className="relative h-full w-full flex flex-col items-center">
           <div className="flex relative flex-col justify-center items-center h-full w-full">
             {!isForge && (
-              <IconButton
+              <IconBtn
                 isInfo={false}
                 activeMyth={activeMyth}
                 handleClick={closeCard}
