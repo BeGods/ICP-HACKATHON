@@ -490,7 +490,7 @@ console.log("selected List",selectedList);
               </div> */}
             </div>
             {allCollectionsList.length >0 && (
-              <div className="relative  md:w-full flex items-center justify-between  z-10 mt-5 ">
+              <div className="relative z-10 flex items-center justify-between mt-5 md:w-full ">
                            
               <button
                   onClick={()=>updateDropDownStatus(!isDisplayCollectionDropDown)}
@@ -517,8 +517,8 @@ console.log("selected List",selectedList);
                       </ul>
                   )}
                 {currentOption === "mycollection" && (
-                      <div className='flex flex-col items-center md:items-end mr-5 lg:mr-20'>
-                      <div className='flex items-center justify-end  '>
+                      <div className='flex flex-col items-center mr-5 md:items-end lg:mr-20'>
+                      <div className='flex items-center justify-end '>
                             <div className={`relative ${remainingNftsCount>0 && "group"}`}>
                               <button 
                                 disabled={remainingNftsCount > 0} 
@@ -685,10 +685,10 @@ console.log("selected List",selectedList);
   </div>
       )}
       {placeOrderPopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen z-20">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
-          <div className={`h-[50vh] md:h-[60vh] w-[90vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg ${
+          <div className={`h-[50vh] md:h-[70vh] w-[90vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
               ? "w-[100vw] md:w-[95vw] lg:w-[50vw]"
               : "w-[70vw] lg:w-[30vw]"
@@ -702,11 +702,11 @@ console.log("selected List",selectedList);
                   </button>
                 </div>
             {currentOrderingStatus === buyingStatus.showCollection && (
-              <div className="h-[90%]  flex flex-col items-center justify-center mt-10">
-                <h1 className="text-xl lg:text-4xl font-semibold text-[#FCD37B] ">CONGRATULATIONS!!!</h1>
-                <p className="text-xs font-medium my-1 font-caslonAntique">You Unlocked</p>
-                <img src={allCollectionsList[currentDropDownOption].image} className=" w-[80px] h-[80px] lg:w-[150px] lg:h-[150px] rounded-full" />
-                <h1 className="text-lg lg:text-3xl font-semibold my-1">
+              <div className="h-[90%]  flex flex-col items-center justify-center gap-2 mt-4">
+                <h1 className="text-xl lg:text-3xl font-semibold text-[#FCD37B] ">CONGRATULATIONS!!!</h1>
+                <p className="my-1 text-sm font-medium font-caslonAntique">You Unlocked</p>
+                <img src={allCollectionsList[currentDropDownOption].image} className=" w-[80px] h-[80px] lg:w-[150px] lg:h-[150px] rounded-full drop-shadow-lg" />
+                <h1 className="my-3 text-lg font-semibold lg:text-3xl">
                   {allCollectionsList[currentDropDownOption].name.toUpperCase()} {'  '} {' '} COLLECTION
                 </h1>
                 {/* <button
@@ -742,44 +742,44 @@ console.log("selected List",selectedList);
                 <div className="flex items-center justify-between">
                   <div className="flex flex-col w-[40%] relative">
                     <label className="text-lg font-semibold">
-                      Phone No.<span className="text-red-700 absolute -top-1">*</span>
+                      Phone No.<span className="absolute text-red-700 -top-1">*</span>
                     </label>
                     <input
                       type="number"
-                      className="bg-transparent border-0 border-b border-solid border-white"
+                      className="bg-transparent border-0 border-b border-white border-solid"
                       value={phoneNo}
                       onChange={(e)=>updatePhoneNumber(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col w-[40%] relative">
                     <label className="text-lg font-semibold">
-                      Email<span className="text-red-700 absolute -top-2">*</span>
+                      Email<span className="absolute text-red-700 -top-2">*</span>
                     </label>
                     <input
                       type="text"
-                      className="bg-transparent border-0 border-b border-solid border-white"
+                      className="bg-transparent border-0 border-b border-white border-solid"
                       value={orderEmail}
                       onChange={(e)=>updateOrderEmail(e.target.value)}
                     />
                   </div>
                 </div>
-                <h1 className="text-lg font-semibold mt-3">Address</h1>
+                <h1 className="mt-3 text-lg font-semibold">Address</h1>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex flex-col w-[35%]">
-                    <label className="text-sm font-extralight relative">
+                    <label className="relative text-sm font-extralight">
                       H No, St No
-                      <span className="text-red-700 absolute -top-1">*</span>
+                      <span className="absolute text-red-700 -top-1">*</span>
                     </label>
                     <input
                       type="text"
-                      className="bg-transparent border-0 border-b border-solid border-white"
+                      className="bg-transparent border-0 border-b border-white border-solid"
                       value={streetAddress}
                       onChange={(e)=>updateStreetAddress(e.target.value)}
                     />
                   </div>
                   <div className="flex flex-col w-[35%]">
-                    <label className="text-sm font-extralight relative">
-                      City<span className="text-red-700 absolute -top-1">*</span>
+                    <label className="relative text-sm font-extralight">
+                      City<span className="absolute text-red-700 -top-1">*</span>
                     </label>
                     <select
                       className="bg-transparent border-b font-Quicksand"
@@ -791,7 +791,7 @@ console.log("selected List",selectedList);
                         <option
                           value=""
                           disabled
-                          className="bg-black font-Quicksand border-none border-0 text-white"
+                          className="text-white bg-black border-0 border-none font-Quicksand"
                         >
                           Select a country first
                         </option>
@@ -804,7 +804,7 @@ console.log("selected List",selectedList);
                           <option
                             value={eachCity.name}
                             key={eachCity.name}
-                            className="bg-black font-Quicksand border-none border-0"
+                            className="bg-black border-0 border-none font-Quicksand"
                           >
                             {eachCity.name}
                           </option>
@@ -815,7 +815,7 @@ console.log("selected List",selectedList);
                   <div className="flex flex-col w-[20%] relative">
                     <label className="text-sm font-extralight">
                       Country
-                      <span className="text-red-700 absolute -top-1">*</span>
+                      <span className="absolute text-red-700 -top-1">*</span>
                     </label>
                     <select
                       className="bg-transparent border-b font-Quicksand"
@@ -827,7 +827,7 @@ console.log("selected List",selectedList);
                         <option
                           value={eachCountry.id}
                           key={eachCountry.id}
-                          className="bg-black font-Quicksand border-none border-0"
+                          className="bg-black border-0 border-none font-Quicksand"
                         >
                           {eachCountry.displayText}
                         </option>
@@ -835,15 +835,15 @@ console.log("selected List",selectedList);
                     </select>
                   </div>
                 </div>
-                <div className="flex items-center relative">
+                <div className="relative flex items-center">
                   <div className="flex flex-col w-[35%] mb-3 mr-9">
                     <label className="text-sm font-extralight">
                       Pincode
-                      <span className="text-red-700 absolute -top-1">*</span>
+                      <span className="absolute text-red-700 -top-1">*</span>
                     </label>
                     <input
                       type="number"
-                      className="bg-transparent border-0 border-b border-solid border-white"
+                      className="bg-transparent border-0 border-b border-white border-solid"
                       value={pinCode}
                       onChange={(e)=>updatePinCode(e.target.value)}
                     />
@@ -854,7 +854,7 @@ console.log("selected List",selectedList);
                     </label>
                     <input
                       type="text"
-                      className="bg-transparent border-0 border-b border-solid border-white"
+                      className="bg-transparent border-0 border-b border-white border-solid"
                       value={landMark}
                       onChange={(e)=>updateLandMark(e.target.value)}
                     />
@@ -862,7 +862,7 @@ console.log("selected List",selectedList);
                 </div>
                 <div className="">
                   <p className="text-sm font-extralight">
-                    <span className="text-red-700 mr-2">*</span>
+                    <span className="mr-2 text-red-700">*</span>
                     Mandatory Information
                   </p>
                 </div>
