@@ -20,6 +20,7 @@ import { RiArrowUpDownFill } from "react-icons/ri";
 import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { GrPowerReset } from "react-icons/gr";
+import toast from 'react-hot-toast';
 
 
 const cardTypeList = [
@@ -118,7 +119,7 @@ const Hero = () => {
     }
 
     const onClickResetButton = () =>{
-        updateDropDown(cardTypeList[0].cardId);
+        updateCardType(cardTypeList[0].cardId);
         updateApplyPriceRange({isApply:false,from:NaN,to:NaN});
         updateCurrentFilterOption(filterListOptions[0].optionId);
     }
@@ -290,6 +291,12 @@ useEffect(() => {
             const cardType = eachItem[0].nftType.toLowerCase();
             return currType === cardType;
         });
+        if(updatedList.length>0){
+            toast.success(`${updatedList.length} Cards Found`);
+        }else{
+            toast.error("No Cards Found");
+        }
+        
     }
 
 
@@ -297,6 +304,11 @@ useEffect(() => {
         updatedList = updatedList.filter((eachItem) => {
             return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
         });
+        if(updatedList.length>0){
+            toast.success(`${updatedList.length} Cards Found`);
+        }else{
+            toast.error("No Cards Found");
+        }
     }
 
     if (currentFilterOption !== filterListOptions[0].optionId) {
@@ -307,9 +319,15 @@ useEffect(() => {
         } else if (currentFilterOption === filterListOptions[3].optionId) {
             updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
         }
+        if(updatedList.length>0){
+            toast.success(`${updatedList.length} Cards Found`);
+        }else{
+            toast.error("No Cards Found");
+        }
     }
 
     console.log("Updated list after all filters:", updatedList);
+    
     updateFilteredList(updatedList);
 
 }, [currentCardType, applyPriceRange, currentFilterOption, selectedCollectionNftCardsList]);
@@ -501,7 +519,9 @@ console.log("filtered list after applying filters",filteredList)
                                             }`} ICP)
                                 </button>
                                     {currentDropDown === dropdownItems.price && (
-                                      <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'>
+                                      <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'
+                                        onClick={(e)=> e.stopPropagation()}
+                                      >
                                             <h1>Price in ICP</h1>
                                             <div className='flex flex-col items-center md:flex-row'>
                                                 <input value={fromPrice} onChange={(e)=>{
@@ -668,7 +688,9 @@ console.log("filtered list after applying filters",filteredList)
                                                         }`} ICP)
                                             </button>
                                                 {currentDropDown === dropdownItems.price && (
-                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[100%] h-[150px] flex flex-col items-center justify-around'>
+                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[100%] h-[150px] flex flex-col items-center justify-around'
+                                                onClick={(e)=>e.stopPropagation()}
+                                                >
                                                         <h1>Price in ICP</h1>
                                                         <div className='flex items-center'>
                                                             <input value={fromPrice} onChange={(e)=>{
