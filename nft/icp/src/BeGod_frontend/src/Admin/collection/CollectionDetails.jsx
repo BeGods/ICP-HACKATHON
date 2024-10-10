@@ -68,7 +68,7 @@ const filterListOptions = [
 function CollectionDetails() {
   const [nftList, setnftList] = useState([]);
   const [modal, setModal] = useState(false);
-  const [nfttype, setnfttype] = useState("rare");
+  const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
   const [nftquantity, setnftquantity] = useState();
   const [nftprice, setnftprice] = useState();
@@ -169,7 +169,8 @@ function CollectionDetails() {
     nftimage,
     nftquantity,
     nftcolor,
-    nftprice
+    nftprice,
+    nftType
   ) => {
     try {
       console.log("in mint", principalStringg);
@@ -179,12 +180,12 @@ function CollectionDetails() {
       const date = new Date();
       const formattedDate = date.toISOString();
       const metadata = JSON.stringify({
-        nfttype,
+        nftType,
         standard: "EXT V2",
         chain: "ICP",
         contractAddress: canisterId,
         nftcolor,
-        // date: formattedDate,
+        date: formattedDate,
       });
 
       const metadataContainer = {
@@ -299,7 +300,8 @@ function CollectionDetails() {
         nftDetails.nftImage,
         nftDetails.nftQuantity,
         nftDetails.nftcolor,
-        nftDetails.nftPrice
+        nftDetails.nftPrice,
+        nftDetails.nftType
       );
 
       if (mintResult instanceof Error) {
@@ -342,60 +344,63 @@ function CollectionDetails() {
 
   const [filteredList, updateFilteredList] = useState(nftList);
 
-useEffect(() => {
-
+  useEffect(() => {
     let updatedList = [...nftList];
 
-
     if (currentCardType !== cardTypeList[0].cardId) {
-        updatedList = updatedList.filter((eachItem) => {
-            console.log("each item", eachItem[0]);
-            const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
-            const metadata = JSON.parse(metadataJson);
-            const nftType = metadata?.nftType;
-            return nftType.toLowerCase() === currentCardType.toLowerCase();
-        });
+      updatedList = updatedList.filter((eachItem) => {
+        console.log("each item", eachItem[0]);
+        const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
+        const metadata = JSON.parse(metadataJson);
+        const nftType = metadata?.nftType;
+        return nftType.toLowerCase() === currentCardType.toLowerCase();
+      });
     }
 
     if (applyPriceRange.isApply) {
-        updatedList = updatedList.filter((eachItem) => {
-            const priceBigInt = eachItem[0][3]?.[0]?.toString() ?? "Price not found";
-            const price = Number(priceBigInt) / 100000000;
-            console.log("From price:", applyPriceRange.from, "Card price:", price, "To price:", applyPriceRange.to);
-            return applyPriceRange.from <= price && price <= applyPriceRange.to;
-        });
+      updatedList = updatedList.filter((eachItem) => {
+        const priceBigInt =
+          eachItem[0][3]?.[0]?.toString() ?? "Price not found";
+        const price = Number(priceBigInt) / 100000000;
+        console.log(
+          "From price:",
+          applyPriceRange.from,
+          "Card price:",
+          price,
+          "To price:",
+          applyPriceRange.to
+        );
+        return applyPriceRange.from <= price && price <= applyPriceRange.to;
+      });
     }
 
-
     if (currentFilterOption !== filterListOptions[0].optionId) {
-        if (currentFilterOption === filterListOptions[1].optionId) {
-            updatedList = updatedList.reverse();
-        } else if (currentFilterOption === filterListOptions[2].optionId) {
-            updatedList = updatedList.sort((a, b) => {
-                const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
-                const priceA = Number(priceBigIntA) / 100000000;
+      if (currentFilterOption === filterListOptions[1].optionId) {
+        updatedList = updatedList.reverse();
+      } else if (currentFilterOption === filterListOptions[2].optionId) {
+        updatedList = updatedList.sort((a, b) => {
+          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceA = Number(priceBigIntA) / 100000000;
 
-                const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
-                const priceB = Number(priceBigIntB) / 100000000;
-                return priceA - priceB;
-            });
-        } else if (currentFilterOption === filterListOptions[3].optionId) {
-            updatedList = updatedList.sort((a, b) => {
-                const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
-                const priceA = Number(priceBigIntA) / 100000000;
+          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceB = Number(priceBigIntB) / 100000000;
+          return priceA - priceB;
+        });
+      } else if (currentFilterOption === filterListOptions[3].optionId) {
+        updatedList = updatedList.sort((a, b) => {
+          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceA = Number(priceBigIntA) / 100000000;
 
-                const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
-                const priceB = Number(priceBigIntB) / 100000000;
-                return priceB - priceA;
-            });
-        }
+          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceB = Number(priceBigIntB) / 100000000;
+          return priceB - priceA;
+        });
+      }
     }
 
     console.log("Updated list after all filters:", updatedList);
     updateFilteredList(updatedList);
-
-}, [nftList, currentCardType, applyPriceRange, currentFilterOption]);
-
+  }, [nftList, currentCardType, applyPriceRange, currentFilterOption]);
 
   console.log("filtered list after applying filters", filteredList);
   let count = 0;
