@@ -105,12 +105,11 @@ const onClickPlaceOrder = () => {
   if (
     selectedCountry.trim() !== "" &&
     selectedCity.trim() !== "" &&
-    phoneNo.toString().length === 10 && // Assuming a 10-digit phone number
+    !isNaN(phoneNo) && 
     orderEmail.trim() !== "" &&
-    /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail) && // Valid email format
+    /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail) && 
     streetAddress.trim() !== "" &&
-    !isNaN(pinCode) && pinCode.toString().length === 6 && // Assuming a 6-digit pin code
-    landMark.trim() !== ""
+    !isNaN(pinCode) && pinCode.toString().length === 6
   ) {
     togglePlaceOrderPopup(true);
     toast.success("Order Placed Successfully")

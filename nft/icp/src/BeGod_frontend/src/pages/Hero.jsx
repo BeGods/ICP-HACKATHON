@@ -327,7 +327,7 @@ useEffect(() => {
     }
 
     console.log("Updated list after all filters:", updatedList);
-    
+       
     updateFilteredList(updatedList);
 
 }, [currentCardType, applyPriceRange, currentFilterOption, selectedCollectionNftCardsList]);
