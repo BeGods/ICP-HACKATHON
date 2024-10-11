@@ -53,40 +53,66 @@ function Users() {
   };
 
   const checktranscations = async (Collection) => {
-    const listtime = [];
+    const listdata = []; // To store individual arrays from results
+
     for (let i = 0; i < Collection.length; i++) {
       const userPrincipalArray = Collection[i][1];
 
-      const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
-      const result = await backendActor?.transactions(principalString);
+      try {
+        const principalString = Principal.fromUint8Array(
+          userPrincipalArray._arr
+        );
+        const result = await backendActor?.transactions(principalString);
 
-      console.log(result);
-
-      // Check if the result is not empty before setting the state
-      if (result && Array.isArray(result) && result.length > 0) {
-        setalldata(result);
-        console.log("Data stored:", result);
-        // setLoading(false);
-      } else {
-        console.log("No data to store for principal:", principalString);
+        // Check if result is valid and contains arrays
+        if (result && Array.isArray(result) && result.length > 0) {
+          // Store each array individually in listdata
+          result.forEach((transactionArray) => {
+            if (
+              Array.isArray(transactionArray) &&
+              transactionArray.length > 0
+            ) {
+              listdata.push(transactionArray); // Add individual array to listdata
+            }
+          });
+          console.log("Transaction data added:", result);
+        } else {
+          console.log("No valid data for principal:", principalString);
+        }
+      } catch (error) {
+        console.log(
+          "Error fetching transactions for principal:",
+          userPrincipalArray,
+          error
+        );
+        // Do not add errors or empty data to listdata
       }
+    }
+
+    // Update the state with accumulated successful transaction data
+    if (listdata.length > 0) {
+      setalldata(listdata);
+      setLoading(false);
+      console.log("All successful individual arrays stored:", listdata);
+    } else {
+      console.log("No successful data to store.");
     }
   };
 
   useEffect(() => {
     const fetchCollection = async () => {
       setLoading(true);
-      const loadStart = Date.now(); // Record the start time
+      // const loadStart = Date.now(); // Record the start time
       await getCollection();
-      const loadTime = Date.now() - loadStart;
+      // const loadTime = Date.now() - loadStart;
 
-      // Ensure that the loading spinner runs for at least 3 seconds
-      const remainingTime = 3000 - loadTime;
-      if (remainingTime > 0) {
-        setTimeout(() => setLoading(false), remainingTime);
-      } else {
-        setLoading(false);
-      }
+      // // Ensure that the loading spinner runs for at least 3 seconds
+      // const remainingTime = 3000 - loadTime;
+      // if (remainingTime > 0) {
+      //   setTimeout(() => setLoading(false), remainingTime);
+      // } else {
+      //   setLoading(false);
+      // }
     };
 
     fetchCollection();
