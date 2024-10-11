@@ -43,6 +43,7 @@ function Users() {
         console.log(result);
         if (result && result[0] && result[0][1]) {
           console.log(result[0][1]);
+
           checktranscations(result[0][1]);
         }
       } catch (error) {
@@ -65,34 +66,31 @@ function Users() {
       if (result && Array.isArray(result) && result.length > 0) {
         setalldata(result);
         console.log("Data stored:", result);
-        setLoading(false);
+        // setLoading(false);
       } else {
         console.log("No data to store for principal:", principalString);
       }
     }
   };
-  console.log(alldata[0]);
-  // const timeinmilisecond = Number(alldata[0]?.[2].time) / 1000000;
-  // const transactionTime = new Date(timeinmilisecond); // Create a Date object for the transaction time
-
-  // // Get the current time
-  // const currentTime = new Date();
-
-  // // Calculate the difference in milliseconds and convert to days
-  // const timeDifferenceInMilliseconds = currentTime - transactionTime;
-  // const daysDifference = Math.floor(
-  //   timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)
-  // ); // Convert to days
-
-  // console.log(`Transaction was ${daysDifference} day(s) ago.`);
 
   useEffect(() => {
     const fetchCollection = async () => {
+      setLoading(true);
+      const loadStart = Date.now(); // Record the start time
       await getCollection();
+      const loadTime = Date.now() - loadStart;
+
+      // Ensure that the loading spinner runs for at least 3 seconds
+      const remainingTime = 3000 - loadTime;
+      if (remainingTime > 0) {
+        setTimeout(() => setLoading(false), remainingTime);
+      } else {
+        setLoading(false);
+      }
     };
 
     fetchCollection();
-  }, [backendActor]);
+  }, []);
 
   const handleCopy = () => {
     toast.success("Copied");
