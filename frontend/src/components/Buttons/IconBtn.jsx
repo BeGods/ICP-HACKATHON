@@ -36,13 +36,9 @@ const IconBtn = ({ isInfo, handleClick, align }) => {
       className={`absolute  flex w-full justify-end top-0 ${alignBasedOnCard[align]} `}
     >
       {isInfo ? (
-        <div className="bg-black  flex justify-center items-center h-[60px] w-[60px] z-20 rounded-full">
+        <div className="bg-black flex justify-center items-center h-[60px] w-[60px] z-20 rounded-full">
           <h1
-            className={`text-white italic mr-1 ${
-              isButtonClicked
-                ? "text-[3rem] transition-all duration-250"
-                : "text-[2.5rem]"
-            }`}
+            className={`text-white italic mr-1 text-[2.5rem]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
@@ -50,13 +46,7 @@ const IconBtn = ({ isInfo, handleClick, align }) => {
         </div>
       ) : (
         <div className="flex justify-center items-center bg-black h-[60px] w-[60px] z-50 rounded-full">
-          <X
-            color="white"
-            size={"40px"}
-            className={`${
-              isButtonClicked && "scale-125 transition-all duration-250"
-            }`}
-          />
+          <X color="white" size={"40px"} />
         </div>
       )}
     </div>

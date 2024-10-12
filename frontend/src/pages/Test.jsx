@@ -171,7 +171,7 @@
 // </div>;
 
 // import React from "react";
-// import { mythSections, mythSymbols } from "../../utils/variables";
+// import { mythSections, mythSymbols } from "../../utils/constants";
 
 // const ForgeHeader = ({
 //   activeMyth,
@@ -292,7 +292,7 @@
 // export default ForgeHeader;
 
 // import React from "react";
-// import { mythSections, mythSymbols } from "../../utils/variables";
+// import { mythSections, mythSymbols } from "../../utils/constants";
 
 // const ForgeHeader = ({
 //   activeMyth,
@@ -381,7 +381,7 @@
 
 // import React, { useContext, useRef } from "react";
 // import { MyContext } from "../../context/context";
-// import { footerIcons, mythSections } from "../../utils/variables";
+// import { footerIcons, mythSections } from "../../utils/constants";
 // import ReactHowler from "react-howler";
 
 // const tele = window.Telegram?.WebApp;
@@ -507,7 +507,7 @@
 
 // import React, { useContext } from "react";
 // import { MyContext } from "../../context/context";
-// import { mythSections } from "../../utils/variables";
+// import { mythSections } from "../../utils/constants";
 
 // const Header = ({ children }) => {
 //   const { activeMyth, section } = useContext(MyContext);
@@ -572,12 +572,63 @@
 </div> */
 }
 
-import React, { useRef, useState } from "react";
+// import Lottie from "lottie-react";
+// import React, { useRef, useState } from "react";
+// import animationData from "../../public/assets/fx/tower.json";
 
-function Test(props) {
+// function Test(props) {
+//   const lottieRef = useRef(null);
+
+//   const handlePlay = () => {
+//     if (lottieRef.current) {
+//       lottieRef.current.setDirection(1);
+//       lottieRef.current.play();
+//     }
+//   };
+
+//   const handleReverse = () => {
+//     if (lottieRef.current) {
+//       lottieRef.current.setDirection(-1);
+//       lottieRef.current.play();
+//     }
+//   };
+
+//   return (
+//     <div className="bg-black h-screen w-scree flex flex-col justify-center items-center">
+//       <Lottie
+//         lottieRef={lottieRef}
+//         autoplay={false}
+//         loop={false}
+//         animationData={animationData}
+//         className="w-[15vw]"
+//       />
+
+//       <div className="flex gap-5 mt-10">
+//         <div onClick={handlePlay} className="bg-white text-black">
+//           Play
+//         </div>
+//         <div onClick={handleReverse} className="bg-white text-black">
+//           Reverse
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Test;
+
+import React, { useState } from "react";
+import "../styles/flip.scss";
+import Footer from "../components/Common/Footer";
+
+const Test = (props) => {
   return (
-    <div className="bg-black h-screen w-scree flex justify-center items-center"></div>
+    <>
+      <Footer />
+    </>
   );
-}
+};
+
+Test.propTypes = {};
 
 export default Test;

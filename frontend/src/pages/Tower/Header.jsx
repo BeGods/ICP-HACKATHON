@@ -1,12 +1,96 @@
 import { useContext, useEffect, useState } from "react";
-import { mythSymbols, wheel } from "../../utils/variables";
+import { mythSymbols, wheel } from "../../utils/constants";
 import { MyContext } from "../../context/context";
+import Header from "../../components/Common/Header";
 
 const tele = window.Telegram?.WebApp;
 
+const CenterChild = ({ platform }) => {
+  const { setSection } = useContext(MyContext);
+
+  return (
+    <div className="flex absolute justify-center w-full">
+      {/* Orb */}
+      <div
+        onClick={() => {
+          tele.HapticFeedback.notificationOccurred("success");
+          setSection(0);
+        }}
+        className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
+      >
+        <img
+          src="/assets/uxui/240px-orb.base.png"
+          alt="base-orb"
+          className={`filter-orbs-black w-full h-full`}
+        />
+        <span
+          className={`absolute z-1 font-symbols  text-white text-[28vw] ${
+            platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
+          } opacity-50 orb-symbol-shadow`}
+        >
+          {mythSymbols["other"]}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const TopChild = ({ myth }) => {
+  return (
+    <div className="absolute flex w-full justify-between top-0 z-50">
+      <div className="ml-[13vw]">
+        {myth !== 0 ? (
+          <>
+            <div
+              className={`font-symbols text-black-md-contour text-[50px] mt-0.5 transition-all duration-1000 text-${wheel[myth]}-text`}
+            >
+              {mythSymbols[wheel[myth]]}
+            </div>
+          </>
+        ) : (
+          <>
+            {" "}
+            <div
+              className={`font-symbols  text-black-md-contour mt-0.5 text-[50px] text-black-contour transition-all duration-1000 text-white`}
+            >
+              {mythSymbols["other"]}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="flex relative text-center justify-center items-center w-[14vw] h-[14vw] mt-[12px] glow-icon-white mr-[13vw] rounded-full">
+        <img
+          src="/assets/uxui/240px-orb.multicolor.png"
+          alt="multiOrb"
+          className="w-full h-full"
+        />
+      </div>
+    </div>
+  );
+};
+const BottomChild = ({ gameData, sessionOrbs, myth }) => {
+  return (
+    <div className="absolute flex w-full justify-between bottom-0 z-50 mb-[2vh]">
+      <div
+        className={`text-num transition-all italic text-black-lg-contour custom-skew ml-[13vw]  duration-1000 text-white`}
+      >
+        {myth !== 0 ? (
+          <>{gameData?.mythologies[myth - 1]?.orbs - sessionOrbs * 2}</>
+        ) : (
+          <>{gameData.blackOrbs}</>
+        )}
+      </div>
+      <div
+        className={`text-num text-black-lg-contour transition-all text-right mr-[13vw] italic -rotate-6 duration-1000 text-white`}
+      >
+        {gameData.multiColorOrbs}
+      </div>
+    </div>
+  );
+};
+
 const TowerHeader = ({ gameData, myth, sessionOrbs }) => {
   const [platform, setPlatform] = useState(null);
-  const { setSection } = useContext(MyContext);
 
   useEffect(() => {
     const teleConfi = async () => {
@@ -19,147 +103,17 @@ const TowerHeader = ({ gameData, myth, sessionOrbs }) => {
   }, []);
 
   return (
-    // <div className="flex justify-between relative w-full">
-    //   <div
-    //     className={`text-head -mt-2 mx-auto text-white-lg-contour w-full text-center top-0 absolute z-30 text-black  uppercase`}
-    //   >
-    //     TOWER
-    //   </div>
-    //   {/* Left */}
-    //   <div className="flex flex-col justify-center h-full px-2">
-    //     {myth !== 0 ? (
-    //       <div className="flex flex-col leading-[45px] mb-4 justify-start ml-1 items-center text-black-contour w-fit h-fit">
-    //         <div className={`text-num transition-all duration-1000 text-white`}>
-    //           {gameData.mythologies[myth - 1].orbs - sessionOrbs * 2}
-    //         </div>
-    //         <div
-    //           className={`font-symbols pt-3  text-[50px] transition-all duration-1000 text-${wheel[myth]}-text`}
-    //         >
-    //           {mythSymbols[wheel[myth]]}
-    //         </div>
-    //       </div>
-    //     ) : (
-    //       <div className="flex flex-col leading-[45px] mb-4 justify-start ml-1 items-center text-black-contour w-fit h-fit">
-    //         <div className={`text-num transition-all duration-1000 text-white`}>
-    //           {gameData.blackOrbs}
-    //         </div>
-    //         <div
-    //           className={`font-symbols pt-3 text-[50px] text-black-contour transition-all duration-1000 text-white`}
-    //         >
-    //           {mythSymbols["other"]}
-    //         </div>
-    //       </div>
-    //     )}
-    //   </div>
-
-    //   {/* Right */}
-
-    //   <div className="flex flex-col justify-center h-full px-2">
-    //     <div className="flex flex-col leading-[45px] mb-4 items-center text-black-contour w-fit h-fit">
-    //       <div className={`text-num transition-all duration-1000 text-white`}>
-    //         {gameData.multiColorOrbs}
-    //       </div>
-    //       <div className="flex relative text-center justify-center items-center max-w-orb mt-3 rounded-full glow-icon-black">
-    //         <img
-    //           src="/assets/uxui/240px-orb.multicolor.png"
-    //           alt="multiOrb"
-    //           className="w-full h-full"
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-
-    <div className="flex justify-between w-full">
-      <div
-        className={`text-head -mt-2 mx-auto  w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
-      >
-        TOWER
-      </div>
-      <div className="relative flex justify-center w-full">
-        {/* Left */}
-        <div className="relative">
-          <img
-            src="/assets/uxui/390px-header-new.png"
-            alt="left"
-            className={`left-0 h-[36vw]`}
-          />
-          <div className="absolute flex w-full justify-center top-0 z-50">
-            {myth !== 0 ? (
-              <>
-                <div
-                  className={`font-symbols mr-[12vw] text-black-md-contour text-[50px] mt-0.5 transition-all duration-1000 text-${wheel[myth]}-text`}
-                >
-                  {mythSymbols[wheel[myth]]}
-                </div>
-              </>
-            ) : (
-              <>
-                {" "}
-                <div
-                  className={`font-symbols mr-[12vw] text-black-md-contour mt-0.5 text-[50px] text-black-contour transition-all duration-1000 text-white`}
-                >
-                  {mythSymbols["other"]}
-                </div>
-              </>
-            )}
-          </div>
-          <div className="absolute flex w-full justify-center  rotate-6 bottom-0 z-50">
-            <div
-              className={`text-num transition-all italic text-black-lg-contour custom-skew  -mb-[8vw] mr-[18vw] duration-1000 text-white`}
-            >
-              3
-            </div>
-          </div>
-        </div>
-        {/* Orb */}
-        <div className="flex absolute justify-center w-full">
-          {/* Orb */}
-          <div
-            onClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
-              setSection(0);
-            }}
-            className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline moutline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
-          >
-            <img
-              src="/assets/uxui/240px-orb.base.png"
-              alt="base-orb"
-              className={`filter-orbs-black w-full h-full`}
-            />
-            <span
-              className={`absolute z-1 font-symbols  text-white text-[28vw] ${
-                platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
-              } opacity-50 orb-symbol-shadow`}
-            >
-              {mythSymbols["other"]}
-            </span>
-          </div>
-        </div>
-        {/* Right */}
-        <img
-          src="/assets/uxui/390px-header-new.png"
-          alt="left"
-          className={`right-0 transform scale-x-[-1]  h-[36vw] filter-`}
+    <Header
+      BottomChild={
+        <BottomChild
+          gameData={gameData}
+          myth={myth}
+          sessionOrbs={sessionOrbs}
         />
-        <div className="absolute flex w-full justify-center top-0 z-50">
-          <div className="flex relative text-center justify-center items-center max-w-[14vw] mt-[12px] glow-icon-white ml-[60vw] rounded-full">
-            <img
-              src="/assets/uxui/240px-orb.multicolor.png"
-              alt="multiOrb"
-              className="w-full h-full"
-            />
-          </div>
-        </div>
-        <div className="absolute flex w-full justify-center  -mb-[8vw] ml-[70vw] italic bottom-0 z-50">
-          <div
-            className={`text-num text-black-lg-contour transition-all text-right -rotate-6 duration-1000 text-white`}
-          >
-            3
-          </div>
-        </div>
-      </div>
-    </div>
+      }
+      TopChild={<TopChild myth={myth} />}
+      CenterChild={<CenterChild platform={platform} />}
+    />
   );
 };
 

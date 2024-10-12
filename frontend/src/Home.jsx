@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { fetchGameStats, fetchRewards } from "./utils/api";
-import Quests from "./pages/Quest/Quests";
-import Profile from "./pages/Profile";
-import Boosters from "./pages/Booster/Boosters";
+import i18next, { use } from "i18next";
+import { getRandomColor } from "./helpers/randomColor.helper";
 import { MyContext } from "./context/context";
-import Leaderboard from "./pages/Leaderboard";
-import { getRandomColor } from "./utils/randomColor";
+import Quests from "./pages/Quest/Page";
+import Profile from "./pages/Profile/Page";
+import Boosters from "./pages/Booster/Page";
+import Leaderboard from "./pages/Leaderboard/Page";
 import Loader from "./components/Common/Loader";
-import Forges from "./pages/Forge/Forge";
-import Gacha from "./pages/Gacha/Gacha";
-import Tower from "./pages/Tower/Tower";
-import JoinBonus from "./pages/JoinBonus";
-import Partners from "./pages/Partners";
-import Redeem from "./pages/Redeem";
-import Tasks from "./pages/Tasks";
-import i18next from "i18next";
-
+import Forges from "./pages/Forge/Page";
+import Gacha from "./pages/Gacha/Page";
+import Tower from "./pages/Tower/Page";
+import JoinBonus from "./pages/JoinBonus/Page";
+import Partners from "./pages/Gift/Partners";
+import Redeem from "./pages/Gift/Redeem";
+import Tasks from "./pages/Profile/Tasks";
+import Footer from "./components/Common/Footer";
+import Rewards from "./pages/Gift/Rewards";
 const tele = window.Telegram?.WebApp;
 
-const Home = (props) => {
+const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [showCard, setShowCard] = useState(null);
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
   const [socialQuestData, setSocialQuestData] = useState(null);
@@ -35,6 +37,7 @@ const Home = (props) => {
   const [platform, setPlatform] = useState(null);
   const [authToken, setAuthToken] = useState(null);
   const [section, setSection] = useState(1);
+  const [minimize, setMinimize] = useState(0);
 
   const sections = [
     <Forges />, // 0
@@ -48,6 +51,7 @@ const Home = (props) => {
     <Gacha />, // 8
     <JoinBonus />, // 9
     <Partners />, // 10
+    <Rewards />, // 11
   ];
 
   // fetch all game data
@@ -182,12 +186,22 @@ const Home = (props) => {
               rewardsClaimedInLastHr,
               enableSound,
               setEnableSound,
+              minimize,
+              setMinimize,
+              setShowCard,
             }}
-            ps
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-              <div key={item}>{section === item && sections[item]}</div>
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => (
+              <div key={item}>
+                <>{section === item && sections[item]}</>
+              </div>
             ))}
+            {section != 7 && section != 10 && section != 9 && section != 8 && (
+              <Footer minimize={minimize} />
+            )}
+            {showCard && (
+              <div className="absolute z-50 h-screen w-screen">{showCard}</div>
+            )}
           </MyContext.Provider>
         </div>
       ) : (
