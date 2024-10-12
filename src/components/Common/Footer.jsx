@@ -1,20 +1,22 @@
 import React, { useContext, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
-import { footerIcons, mythSections } from "../../utils/variables";
+import {
+  footerArray,
+  footerIcons,
+  footerLeft,
+  footerMed,
+  footerRight,
+  mythSections,
+} from "../../utils/constants";
 import ReactHowler from "react-howler";
-import animationData from "../../../public/assets/fx/tower.json";
-import Lottie from "lottie-react";
+import "../../styles/flip.scss";
 
 const tele = window.Telegram?.WebApp;
 
-const FooterItem = ({
-  section,
-  activeMyth,
-  handleClick,
-  enableSound,
-  icon,
-}) => {
+const FooterItem = ({ enableSound, icon }) => {
   const howlerRef = useRef(null);
+  const [flipped, setFlipped] = useState(false);
+  const { setSection } = useContext(MyContext);
 
   const playAudio = () => {
     if (howlerRef.current && enableSound) {
@@ -23,36 +25,48 @@ const FooterItem = ({
     }
   };
 
+  const handleFlip = (e) => {
+    tele.HapticFeedback.notificationOccurred("success");
+    setFlipped((prev) => !prev);
+    playAudio();
+  };
+
+  const handleSectionChange = (section) => {
+    setSection(footerArray[icon][section]);
+    if (activeMyth >= 4) {
+      setActiveMyth(0);
+    }
+  };
+
   return (
     <>
-      <div
-        className="flex relative flex-col items-center cursor-pointer mt-2 z-50"
-        onClick={(e) => {
-          e.preventDefault();
-          playAudio();
-          handleClick();
-        }}
-        style={{ minWidth: "90px" }}
-      >
-        <h1
-          className={`font-symbols ${
-            section === icon
-              ? `${
-                  activeMyth < 4 && section != 3
-                    ? `glow-icon-${mythSections[activeMyth]}`
-                    : `glow-text-white`
-                }`
-              : `text-black-contour`
-          }`}
-          style={{
-            fontSize: section === icon ? "60px" : "50px",
-            transition: "font-size 0.3s ease",
-          }}
-        >
-          {footerIcons[icon]}
-        </h1>
+      <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+        <div className={`font-symbols text-[15vw]`}>
+          <div
+            className={`ficon ${flipped ? "flipped" : ""} text-black-contour`}
+          >
+            <div
+              onClick={(e) => {
+                handleFlip(e);
+                handleSectionChange(0);
+              }}
+              className="ficon__face ficon__face--front font-symbols flex justify-center items-center"
+            >
+              {footerIcons[footerArray[icon][0]]}
+            </div>
+            <div
+              onClick={(e) => {
+                handleFlip(e);
+                handleSectionChange(1);
+              }}
+              className="ficon__face ficon__face--back font-symbols flex justify-center items-center"
+            >
+              {footerIcons[footerArray[icon][1]]}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="absolute ">
+      <div className="absolute">
         <ReactHowler
           src="/assets/audio/fof.menu01.wav"
           playing={false}
@@ -64,87 +78,48 @@ const FooterItem = ({
     </>
   );
 };
-
 const Footer = ({ minimize }) => {
-  const { section, setSection, activeMyth, setActiveMyth, enableSound } =
-    useContext(MyContext);
-  const lottieRef = useRef(null);
-  const [isForward, setIsForward] = useState(true);
-
-  const handlePlay = () => {
-    if (lottieRef.current) {
-      if (isForward) {
-        lottieRef.current.setSpeed(0.1);
-        lottieRef.current.setDirection(1);
-      } else {
-        lottieRef.current.setSpeed(0.1);
-        lottieRef.current.setDirection(-1);
-      }
-      lottieRef.current.goToAndPlay(0, false);
-      setIsForward(!isForward);
-    }
-  };
-
-  const handleSectionChange = (newSection) => {
-    tele.HapticFeedback.notificationOccurred("success");
-    setSection(newSection);
-    if (activeMyth >= 4) {
-      setActiveMyth(0);
-    }
-  };
+  const { section, activeMyth, enableSound } = useContext(MyContext);
 
   return (
     <div
-      className={`relative ${minimize === 2 && "maximize"} ${
+      className={`absolute  w-screen bottom-0 ${minimize === 2 && "maximize"} ${
         minimize === 1 && "minimize"
       } `}
     >
       <img
-        src="/assets/uxui/fof.footer.rock3.png"
+        src="/assets/uxui/1280px-fof.footer.png"
         alt="paper"
         className={`w-full h-auto filter-paper-${
-          section === 3 || section === 4 || section === 5 || section === 6
+          section === 3 ||
+          section === 4 ||
+          section === 5 ||
+          section === 6 ||
+          section === 11
             ? mythSections[8]
             : mythSections[activeMyth]
         }`}
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="w-[80%] flex justify-between text-white">
-          {/* <FooterItem
-            icon={footerLeft[section]}
+          <FooterItem
+            icon={0}
             section={section}
             enableSound={enableSound}
             activeMyth={activeMyth}
-            handleClick={() => {
-              handleSectionChange(footerLeft[section]);
-            }}
-          /> */}
-          <Lottie
-            onClick={handlePlay}
-            lottieRef={lottieRef}
-            autoplay={false}
-            loop={false}
-            animationData={animationData}
-            className="w-[15vw]"
-          />
-          {/* <FooterItem
-            icon={footerMed[section]}
-            section={section}
-            enableSound={enableSound}
-            activeMyth={activeMyth}
-            handleClick={() => {
-              handleSectionChange(footerMed[section]);
-            }}
           />
           <FooterItem
-            icon={footerRight[section]}
+            icon={1}
             section={section}
             enableSound={enableSound}
             activeMyth={activeMyth}
-            handleClick={() => {
-              handleSectionChange(footerRight[section]);
-            }}
-          /> */}
+          />
+          <FooterItem
+            icon={2}
+            section={section}
+            enableSound={enableSound}
+            activeMyth={activeMyth}
+          />
         </div>
       </div>
     </div>

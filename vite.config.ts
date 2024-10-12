@@ -12,5 +12,4 @@ export default defineConfig({
   optimizeDeps: {
     include: ["konva"],
   },
-  assetsInclude: ["**/*.lottie"],
 });

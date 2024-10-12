@@ -1,13 +1,13 @@
 import React from "react";
-import { mythSymbols } from "../../utils/variables";
+import { mythSymbols } from "../../utils/constants";
 
 const MappedOrbs = ({ quest, showNum }) => {
   return (
     <div className="flex w-full gap-[3px]">
-      {Object.entries(quest.requiredOrbs).map(([key, value]) => (
-        <>
+      {Object.entries(quest.requiredOrbs).map(([key, value], index) => (
+        <div key={index}>
           {key.toLowerCase() === "multiorb" ? (
-            <div className="flex gap-[3px]" key={key}>
+            <div className="flex gap-[3px]" key={index}>
               {Array.from({ length: value }, (_, index) => (
                 <div key={index}>
                   <div
@@ -48,7 +48,7 @@ const MappedOrbs = ({ quest, showNum }) => {
               ))}
             </div>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

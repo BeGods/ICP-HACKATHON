@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
-import { mythSections } from "../../utils/variables";
-import { calculateRemainingTime } from "../../utils/getBoosterCard";
+import { mythSections } from "../../utils/constants";
+import { calculateRemainingTime } from "../../helpers/booster.helper";
 import { Handshake } from "lucide-react";
 
 const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {

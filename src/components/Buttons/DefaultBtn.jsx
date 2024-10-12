@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { mythSections } from "../../utils/variables";
+import { mythSections } from "../../utils/constants";
 import { Download, Share2 } from "lucide-react";
 
 const DefaultBtn = ({

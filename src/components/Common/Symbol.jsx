@@ -9,7 +9,7 @@ const Symbol = ({ myth, isCard, showClaimEffect }) => {
           : "h-symbol-primary w-symbol-primary"
       } bg-black border border-white rounded-full outline-[2px] transition-all duration-1000  z-30 ${
         showClaimEffect ? `glow-tap-${myth}` : `glow-symbol-${myth}`
-      } `}
+      }`}
     >
       <div className={`flex justify-center items-center absolute z-10  `}>
         <div className={`w-[65%] h-[65%] glow-symbol-${myth}`}>
