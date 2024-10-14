@@ -85,10 +85,12 @@ const Footer = ({handleCurrentIndex}) => {
                         <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12 overflow-auto'>
                         {collections.length > 0 ? (
                             collections.map((eachCollection)=>(
-                                    <button  className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>onClickCollection(eachCollection.index)}>
+                                    <div>
+                                        <button  className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>onClickCollection(eachCollection.index)}>
                                         <img src={eachCollection.image} alt={eachCollection.name} className="h-5 w-5 sm:h-6 sm:w-6 rounded-full" />
                                         <h1 className="underline text-md sm:text-base">{eachCollection.name}</h1>
                                     </button>
+                                    </div>
                                
 
                             ))

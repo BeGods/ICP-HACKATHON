@@ -5,20 +5,28 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { Link } from 'react-router-dom';
 
 
-const NftCard = ({img,removeFromFavorites,addToFavorites,quantity}) => {
+const NftCard = ({img,removeFromFavorites,addToFavorites,quantity,buttonStatus}) => {
 
     const [showLoader,updateLoaderStatus] = useState(false);
-
-    const onClickRemove = async() => {
+    const onClickFav = async () => {
         updateLoaderStatus(true);
-        if(img.isFavourite){
-           await removeFromFavorites(img.tokenId);
-
-        }else{
-         await addToFavorites(img.tokenId)
+      
+        try {
+          if (img.isFavourite) {
+            console.log("remove from fav initiated")
+            await removeFromFavorites(img.tokenId);
+          } else {
+            await addToFavorites(img.tokenId);
+          }
+        } catch (error) {
+          console.error("Error in onClickFav:", error);
+         
+        } finally {
+         
+          updateLoaderStatus(false);
         }
-        updateLoaderStatus(false)
-    }
+      };
+      
     console.log("img",img)
     return (
 
@@ -63,8 +71,8 @@ const NftCard = ({img,removeFromFavorites,addToFavorites,quantity}) => {
                                </div>
                             ):(
                                 <>
-                                <button  onClick={onClickRemove}
-                                    className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
+                                <button  onClick={onClickFav} disabled={buttonStatus}
+                                    className={`flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon ${buttonStatus && "opacity-40"}`}>
                                     {img.isFavourite ? "Remove" : "Add to Favourite"}
                                 </button>
                             
