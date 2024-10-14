@@ -9,12 +9,21 @@ import Hero from "./pages/Hero";
 import BuyNft from "./pages/BuyNft";
 import PageNotFound from "./Admin/PageNotFound";
 import Activity from "./pages/Activity";
-// const FullpageLoader = lazy(() => import("./Loader/FullpageLoader"));
+
+// Introduce a manual delay for testing
+const simulateNetworkDelay = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+// Lazy load the FullpageLoader with a simulated delay
+const FullpageLoader = lazy(() =>
+  simulateNetworkDelay(2000).then(() => import("./Loader/FullpageLoader"))
+);
 
 function App() {
   return (
     <div>
-      {/* <Suspense fallback={<FullpageLoader />}> */}
+      <Suspense fallback={<FullpageLoader />}>
         <Routes>
           <Route path="/" element={<Hero />}></Route>
           <Route path="/profile" element={<Profile />} />
@@ -29,7 +38,7 @@ function App() {
           <Route path="/admin/*" element={<Admin />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      {/* </Suspense> */}
+      </Suspense>
     </div>
   );
 }

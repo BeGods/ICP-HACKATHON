@@ -19,10 +19,9 @@ import { HiArrowsUpDown } from "react-icons/hi2";
 import { RiArrowUpDownFill } from "react-icons/ri";
 import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
+import { GrPowerReset } from "react-icons/gr";
+import toast from 'react-hot-toast';
 
-const shadowColors = ['#07632E',"#00bfff","#FFD700","#FF4500"]
-
-let shadowColorIndex = 0;
 
 const cardTypeList = [
     {
@@ -30,16 +29,16 @@ const cardTypeList = [
         displayText:"All"
     },
     {
-        cardId : "COMMAN",
-        displayText : "Comman"
+        cardId : "COMMON",
+        displayText : "Common"
     },
     {
         cardId : "MYTHIC" ,
         displayText:"Mythic"
     },
     {
-        cardId : "REAR" ,
-        displayText:"Rear"
+        cardId : "RARE" ,
+        displayText:"Rare"
     },
     {
         cardId : "UNCOMMON",
@@ -55,19 +54,19 @@ const dropdownItems = {
 
 const filterListOptions = [
     {
-        optionId : "DEFAULT",
+        optionId : "Default",
         displayText : "Default"
     },
     {
-        optionId : 'RecentlyAdded',
+        optionId : 'Recently Added',
         displayText : "Recently Added"
     },
     {
-        optionId : "LowToHigh",
+        optionId : "Low to High",
         displayText : "Price : Low to High"
     },
     {
-        optionId : "HighToLow",
+        optionId : "High to Low",
         displayText : "Price : Hight to Low"
     }
 ]
@@ -79,11 +78,11 @@ const Hero = () => {
     const [collections,setCollections] = useState([]);
     const [selectedCollectionNftCardsList , updateSelectedCollectionNftCardsList] = useState([]);
     
-    const visibleButtons = 3; 
+    const visibleButtons = 4; 
     let start = 0;
     if(currentIndex >= visibleButtons){
         start = currentIndex+1-visibleButtons
-    }
+    } 
     const [startIndex,setStartIndex] = useState(start);
 
     const allCollectionsList = useSelector((state)=>state.info.collectionList); 
@@ -115,7 +114,16 @@ const Hero = () => {
         
 
     }
+    const onClickFilterContainer = () => {
+        updateDropDown(dropdownItems.none);
+    }
 
+    const onClickResetButton = () =>{
+        updateCardType(cardTypeList[0].cardId);
+        updateApplyPriceRange({isApply:false,from:NaN,to:NaN});
+        updateCurrentFilterOption(filterListOptions[0].optionId);
+    }
+    
 
     const [isDisplayFiltersPopup,updateFiltersDisplayStatus] = useState(false);
    
@@ -124,14 +132,6 @@ const Hero = () => {
 
     const handleCurrentIndex  = async(index) => {
 
-        // if(index === startIndex+visibleButtons-1 && index != collections.length-1){
-        //     setStartIndex(startIndex+1);
-        // }
-     
-        // if(index === startIndex && index != 0){
-        //     setStartIndex(startIndex-1);
-        // }
-
         if(index >= visibleButtons-1 && index >= startIndex) {
             if(index != collections.length-1){
                 setStartIndex(index+2 - visibleButtons);
@@ -139,7 +139,7 @@ const Hero = () => {
                 setStartIndex(index+1 - visibleButtons);
             }
             
-        }else if(index < startIndex){
+        }else if(index <= startIndex){
             if(index == 0){
                 setStartIndex(0);
             }else{
@@ -240,16 +240,17 @@ const getCollectionNfts = (collectionList,collectionId,color) => {
     let tempIndex = 0;
     for(let i=0;i<collectionList.length;i++){
         const eachItem = collectionList[i];
+        console.log("each item before formating",eachItem);
         const nftDetails = eachItem[3].nonfungible;
         const image = nftDetails.thumbnail;
         const name = nftDetails.name;
         const sold = eachItem[2].price;
         const ICP = parseInt(sold)/100000000;
         const metadata = JSON.parse(nftDetails.metadata[0].json);
-        // console.log(metadata,'metadata');
-        const nftType = metadata.nfttype;
+        //  console.log(metadata,'metadata');
+        const nftType = metadata.nftType;
         const borderColor = metadata.nftcolor;
-        console.log("collection list before nft card",collections)
+       // console.log("collection list before nft card",collections)
         const nftCard= {
             collectionId,
             index:eachItem[0],
@@ -274,61 +275,94 @@ const getCollectionNfts = (collectionList,collectionId,color) => {
     return tempList;
 };
 
-const onClickFilterContainer = () => {
-    if(currentDropDown != dropdownItems.none){
-        onClickAnyFilter(dropdownItems.none)
-    }
-}
 
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
 
+const [filteredList, updateFilteredList] = useState(selectedCollectionNftCardsList);
 
-let filteredList = selectedCollectionNftCardsList
-    
-if(currentCardType !== cardTypeList[0].cardId){
-    filteredList = filteredList.filter((eachItem=>{
-        if(eachItem[0].nftType.toLowerCase() === currentCardType.toLowerCase()){
-            return true;
-        }
-        return false;
+useEffect(() => {
 
-    }))
-}
+    let updatedList = [...selectedCollectionNftCardsList];
 
-if (applyPriceRange.isApply) {
-    filteredList = filteredList.filter((eachItem) => {
-        console.log("from price", applyPriceRange.from, "card price", eachItem.ICP, "to price", applyPriceRange.to);
-        if (applyPriceRange.from <= eachItem[0].ICP && eachItem.ICP <= applyPriceRange.to) {
-            return true;
-        }
-        return false;
-    });
-    
-}
-
-if(currentFilterOption != filterListOptions[0].optionId){
-    if(currentFilterOption === filterListOptions[1].optionId){
-        filteredList = filteredList.slice().reverse();
-    }else if(currentFilterOption === filterListOptions[2].optionId){
-        filteredList = [...filteredList].sort((a,b)=>a[0].ICP - b[0].ICP);
-    }else if(currentFilterOption === filterListOptions[3].optionId){
-        filteredList = [...filteredList].sort((a,b)=> b[0].ICP - a[0].ICP);
+    if (currentCardType !== cardTypeList[0].cardId) {
+        const currType = currentCardType.toLowerCase();
+        updatedList = updatedList.filter((eachItem) => {
+            const cardType = eachItem[0].nftType.toLowerCase();
+            return currType === cardType;
+        });
+        
+        
     }
-}
 
+
+    if (applyPriceRange.isApply) {
+        updatedList = updatedList.filter((eachItem) => {
+            return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
+        });
+        
+    }
+
+    if (currentFilterOption !== filterListOptions[0].optionId) {
+        if (currentFilterOption === filterListOptions[1].optionId) {
+            updatedList = updatedList.reverse();
+        } else if (currentFilterOption === filterListOptions[2].optionId) {
+            updatedList = updatedList.sort((a, b) => a[0].ICP - b[0].ICP);
+        } else if (currentFilterOption === filterListOptions[3].optionId) {
+            updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
+        }
+    }
+
+    console.log("Updated list after all filters:", updatedList);
+
+    if(currentCardType != cardTypeList[0].cardId || applyPriceRange.isApply || currentFilterOption !== filterListOptions[0].optionId){
+        if(updatedList.length>0){
+            toast.success(`${updatedList.length} Cards Found`);
+        }else{
+            toast.error("No Cards Found");
+        }
+    }
+       
+    updateFilteredList(updatedList);
+
+}, [currentCardType, applyPriceRange, currentFilterOption, selectedCollectionNftCardsList]);
 
 
 
 console.log("filtered list after applying filters",filteredList)
+    let count = 0;
+    if(currentCardType !== cardTypeList[0].cardId){
+        count++;
+    }
+    if(applyPriceRange.isApply){
+        count++;
+    }
+    if(currentFilterOption !== filterListOptions[0].optionId){
+        count++;
+    }
+    useEffect(() => {
+        if (isDisplayFiltersPopup) {
+          
+          document.body.style.overflow = 'hidden';
+        } else {
+          
+          document.body.style.overflow = 'auto';
+        }
+    
+        
+        return () => {
+          document.body.style.overflow = 'auto';
+        };
+      }, [isDisplayFiltersPopup]);
+    
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
         // onClick={onClickFilterContainer}
-        <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon'>
+        <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon isDisplayFiltersPopup ' onClick={onClickFilterContainer}>
             <div className='relative'>
                 <HeroSlider />
                 <div className=' absolute top-0 w-[100%] z-20'>
-                    <Navbar mobileView={mobileViewHandler}/>
+                    <Navbar mobileView={mobileViewHandler} landingPage={true} />
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
                     <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[50px] md:h-[130px] xl:h-[160px] 2xl:h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
@@ -379,10 +413,10 @@ console.log("filtered list after applying filters",filteredList)
                                 <Skeleton count={1} height={40} width={90} />
                                 <Skeleton count={1} height={40} width={90} />
                             </div>
-                            {/* <div className="md:flex md:items-center md:gap-2 lg:hidden">
+                            <div className="hidden md:flex md:items-center md:gap-2 lg:hidden">
                                 <Skeleton count={1} height={40} width={190} />
                                 <Skeleton count={1} height={40} width={190} />
-                            </div> */}
+                            </div>
 
                             <div className="hidden lg:sticky top-0 w-[100%] lg:w-[45%] h-[100%] lg:flex lg:flex-col md:gap-8 items-center justify-center mr-2">
                                 <Skeleton count={1} height={60} width={220} />
@@ -408,6 +442,7 @@ console.log("filtered list after applying filters",filteredList)
                         {/* style={{ boxShadow: "0px 0px 94px 36px orange" }} */}
                             <div className='w-[70%] '>
                                 <img src="/Hero/Mask group.png" alt="" className='hidden sm:flex'/>
+                                {/* <img src="/Hero/celtic_updated_coll_image.png" alt="" className='hidden sm:flex'/> */}
                                 <img src="/Hero/celtic_hero.png" alt="" className='flex items-center justify-center w-full sm:hidden'  />
                             </div>
                             
@@ -453,7 +488,7 @@ console.log("filtered list after applying filters",filteredList)
                                         </ul>
                                     )}
                                 <button
-                                    onClick={()=>onClickAnyFilter(dropdownItems.type)}
+                                    onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.type)}}
                                     className={`rounded-full flex justify-center items-center gap-1 
                                     w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.type ? "border-[#FCD378]" : " border-gray-800"}`}
                                 >
@@ -465,28 +500,29 @@ console.log("filtered list after applying filters",filteredList)
                             </div>
                             <div className="relative w-[160px] md:w-[180px]  flex justify-center">
                                 <button
-                                    onClick={()=>onClickAnyFilter(dropdownItems.price)}
+                                    onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.price)}}
                                     className={`rounded-full flex justify-center items-center gap-1 w-full
                                      p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.price ? "border-[#FCD378]" : " border-gray-800"}`}
                                 >
-                                    <CiDollar size={20} />
+                                    <CiDollar size={22} />
                                         Price
                                     (
                                         {`${
                                                 !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
                                                     ? `${applyPriceRange.from} - ${applyPriceRange.to} `
                                                     : ""
-                                            }`} ICP
-                                        )
+                                            }`} ICP)
                                 </button>
                                     {currentDropDown === dropdownItems.price && (
-                                      <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'>
+                                      <div className='absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around'
+                                        onClick={(e)=> e.stopPropagation()}
+                                      >
                                             <h1>Price in ICP</h1>
-                                            <div className='flex flex-col items-center lg:flex-row'>
+                                            <div className='flex flex-col items-center md:flex-row'>
                                                 <input value={fromPrice} onChange={(e)=>{
                                                 updateFromPrice(parseInt(e.target.value));
                                                 }}
-                                                placeholder='From' type='number' className='w-20 mb:2 lg:mb-0 lg:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm'  />
+                                                placeholder='From' type='number' className='w-20 mb:2 md:mb-0 md:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm'  />
                                                 <input value={toPrice} onChange={(e)=> { updateToPrice(parseInt(e.target.value))}} placeholder='to' type='number' className='w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm'/>
                                             </div>
                                             <div className=''>
@@ -510,7 +546,7 @@ console.log("filtered list after applying filters",filteredList)
                             <div className=' relative lg:ml-auto mr-2 lg:mr-20 w-[160px] h-[40px] md:w-[180px] bottom-6'>
                             <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                             <button
-                                    onClick={()=>onClickAnyFilter(dropdownItems.filter)}
+                                    onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.filter)}}
                                     className={` absolute rounded-full flex justify-center items-center gap-1 
                                     w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.filter ? "border-[#FCD378]" : " border-gray-800"}`}
                                 >
@@ -522,11 +558,11 @@ console.log("filtered list after applying filters",filteredList)
                                             {filterListOptions.map((eachFilter,index)=>(
                                                 <>
                                                     <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
-                                                    onClick={()=>{if(eachFilter.optionId != currentFilterOption){updateCurrentFilterOption(eachFilter.optionId); onClickAnyFilter(dropdownItems.filter)}}}>
-                                                        <li key={eachFilter.optionId}>{eachFilter.displayText}</li>
-                                                        {currentFilterOption === eachFilter.optionId && (
-                                                        <IoCheckmarkOutline />
-                                                        )}
+                                                        onClick={()=>{if(eachFilter.optionId != currentFilterOption){updateCurrentFilterOption(eachFilter.optionId); onClickAnyFilter(dropdownItems.filter)}}}>
+                                                                <li key={eachFilter.optionId}>{eachFilter.displayText}</li>
+                                                                {currentFilterOption === eachFilter.optionId && (
+                                                                <IoCheckmarkOutline />
+                                                            )}
                                                     </div>
                                                     {index != filterListOptions.length-1 && ( <hr className="my-1 border-t border-[#FCD378]" />)}
                                                 </>
@@ -535,15 +571,26 @@ console.log("filtered list after applying filters",filteredList)
                                     )}
                             </div>
                         </div>
-                        <button
-                            className={`rounded-full flex justify-center items-center w-[120px] h-[35px] mt-5 gap-1 
-                            p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 ml-auto mr-5 sm:hidden`}
+                      <div className='flex items-center  mt-5'>
+                      <button
+                            className={`rounded-full flex justify-center items-center w-[120px] h-[35px] gap-1 
+                            p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 ml-5 mr-2 sm:hidden`}
                             onClick={()=>updateFiltersDisplayStatus(true)}
                         >
                             <LuFilter />
-                            Filters
-                            
+                            Filters 
+                            {count >0 &&  <span className='size-5 border-none bg-gray-800 rounded-full flex justify-center items-center pt-0.5 '>{count}</span>}
                       </button>
+                     {count > 0 && (
+                         <button className='rounded-full flex justify-center items-center w-[120px] h-[35px] gap-1 
+                         p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 mr-5 sm:hidden'
+                         onClick={onClickResetButton}
+                         >
+                             <GrPowerReset />
+                     Reset
+                   </button>
+                     )}
+                      </div>
                         {filteredList.length >0? (
                             <NFTGallery currentCollection={filteredList}  />
                         ) : (
@@ -579,10 +626,10 @@ console.log("filtered list after applying filters",filteredList)
                 <Footer handleCurrentIndex ={handleCurrentIndex} />
             </div>
             {isDisplayFiltersPopup && (
-                <div className='fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen'>
+                <div className='fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden'>
                     <div className='w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]'>
                             <div className='flex items-center justify-center h-screen w-screen '>
-                                <div className='h-[50vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto '>
+                                <div className={`h-[50vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto ${currentDropDown === dropdownItems.filter && "h-[60vh]"} `}>
                                     <div className="flex items-center justify-end">
                                         <button
                                             className="text-[#FCD378] bottom-1 z-10"
@@ -594,7 +641,7 @@ console.log("filtered list after applying filters",filteredList)
                                     <div className='flex flex-col items-center justify-around h-[80%] text-[16px]'>
                                         <div className="relative w-full flex justify-center">
                                         {currentDropDown === dropdownItems.type && (
-                                                    <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
+                                                    <ul className="absolute top-10 left-0 mt-2 bg-black border border-[#FCD378] text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
                                                         {cardTypeList.map((eachType,index)=>(
                                                             <>
                                                                 <div key={eachType.cardId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
@@ -610,9 +657,9 @@ console.log("filtered list after applying filters",filteredList)
                                                     </ul>
                                                 )}
                                             <button
-                                                onClick={()=>onClickAnyFilter(dropdownItems.type)}
-                                                className={`rounded-full flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.type ? "border-[#FCD378]" : " border-gray-800"}`}
+                                                onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.type)}}
+                                                className={`rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378]`}
                                             >
                                                 <BiCategory />
                                                 Category
@@ -622,9 +669,9 @@ console.log("filtered list after applying filters",filteredList)
                                         </div>
                                         <div className="relative w-full  flex justify-center">
                                             <button
-                                                onClick={()=>onClickAnyFilter(dropdownItems.price)}
-                                                className={`rounded-full flex justify-center items-center gap-1 w-[100%]
-                                                p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.price ? "border-[#FCD378]" : " border-gray-800"}`}
+                                                onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.price)}}
+                                                className={`rounded-md flex justify-center items-center gap-1 w-[100%]
+                                                p-2 bg-[#000] text-[#FCD378]  border border-[#FCD378]`}
                                             >
                                                 <CiDollar size={20} />
                                                     Price
@@ -633,11 +680,12 @@ console.log("filtered list after applying filters",filteredList)
                                                             !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
                                                                 ? `${applyPriceRange.from} - ${applyPriceRange.to} `
                                                                 : ""
-                                                        }`} ICP
-                                                    )
+                                                        }`} ICP)
                                             </button>
                                                 {currentDropDown === dropdownItems.price && (
-                                                <div className='absolute top-10 -left-1 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[100%] h-[150px] flex flex-col items-center justify-around'>
+                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[100%] h-[150px] flex flex-col items-center justify-around'
+                                                onClick={(e)=>e.stopPropagation()}
+                                                >
                                                         <h1>Price in ICP</h1>
                                                         <div className='flex items-center'>
                                                             <input value={fromPrice} onChange={(e)=>{
@@ -667,15 +715,15 @@ console.log("filtered list after applying filters",filteredList)
                                         <div className='relative  h-[40px] w-full bottom-5 '>
                                         <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                                         <button
-                                                onClick={()=>onClickAnyFilter(dropdownItems.filter)}
-                                                className={` absolute rounded-full flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${currentDropDown === dropdownItems.filter ? "border-[#FCD378]" : " border-gray-800"}`}
+                                                onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.filter)}}
+                                                className=' absolute rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border '
                                             >
                                                 < RiArrowUpDownFill />
                                                 {currentFilterOption}
                                             </button>
                                             {currentDropDown === dropdownItems.filter && (
-                                                    <ul className="absolute top-[60px] left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                                                    <ul className="absolute top-[60px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[100px] overflow-y-auto ">
                                                         {filterListOptions.map((eachFilter,index)=>(
                                                             <>
                                                                 <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'

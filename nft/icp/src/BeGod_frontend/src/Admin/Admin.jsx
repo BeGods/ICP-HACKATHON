@@ -10,6 +10,7 @@ import NftDetails from "./collection/NftDetails";
 import CreateCollection from "./collection/CreateCollection";
 import UserDetails from "./UserDetails";
 import PageNotFound from "./PageNotFound";
+import Useractivity from "./Useractivity";
 
 function Admin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +55,7 @@ function Admin() {
           <Route path="/users/" element={<Users />} />
           <Route path="/users/:id" element={<UserDetails />} />
           <Route path="*" element={<PageNotFound />} />
+          <Route path="/activity" element={<Useractivity />} />
         </Routes>
       </div>
     </div>

@@ -339,7 +339,7 @@ const BuyNft = () => {
             <div>
               <div
                 className="w-full h-full rounded-lg shadow-lg"
-                style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
+                style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}
               >
                 {nftCardLoading ? (
                   <SkeletonTheme baseColor="#202020" highlightColor="#444">
@@ -581,7 +581,7 @@ const BuyNft = () => {
               ) : (
                 <div
                     className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                    style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                    style={{ boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}` }}
                   >
 
                   <img
@@ -599,7 +599,9 @@ const BuyNft = () => {
           <div className="flex items-center justify-center xl:hidden  w-[100%] xl:w-[130%] lg:pl-[3%]">
             <img src="/Hero/celtic_hero.png" alt="" />
           </div>
-          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]">
+          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]"
+          
+          >
             <img src="/Hero/Mask group.png" alt="" />
           </div>
 
@@ -774,8 +776,8 @@ const BuyNft = () => {
                         style={{ border: "3px solid #2d2d2d" }}
                       />
                       <h1 className="flex items-center my-3 text-base font-extralight">
-                        Licence No- 828746888
-                        <CopyToClipboard text="828746888">
+                        Token Id : {tokenId}
+                        <CopyToClipboard text={tokenId}>
                           <span className="ml-2 cursor-pointer text-slate-300">
                             <RiFileCopyLine />
                           </span>

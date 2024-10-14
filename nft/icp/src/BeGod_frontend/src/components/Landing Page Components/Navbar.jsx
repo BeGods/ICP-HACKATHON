@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
@@ -7,9 +8,8 @@ import { useAuth } from "../../utils/useAuthClient";
 import { FaUserLarge } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDisplayWalletOptionsStatus } from "../../redux/infoSlice";
-import { useLocation } from "react-router-dom";
 import { FiActivity } from "react-icons/fi";
-const Navbar = ({ mobileView }) => {
+const Navbar = ({ mobileView,landingPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
@@ -61,8 +61,52 @@ const Navbar = ({ mobileView }) => {
     navigate("/");
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      
+      document.body.style.overflow = 'hidden';
+    } else {
+      
+      document.body.style.overflow = 'auto';
+    }
+
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
+
+
+
+const onClickCollections = () => {
+  if (landingPage) {
+    // If you're already on the landing page, just scroll to the section
+    navigate("/#collections");
+    window.scrollBy({ top: 800, behavior: 'smooth' });
+  } else {
+    // If you're not on the landing page, navigate first
+    navigate("/#collections");
+  }
+};
+
+const ScrollToCollections = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === '#collections') {
+      // Wait until the page has loaded, then scroll to the section
+      window.scrollTo({ top: document.querySelector('#collections').offsetTop, behavior: 'smooth' });
+    }
+  }, [location]);
+
+  return null;
+};
+
+ScrollToCollections();
+
+
   return (
-    <div className="max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative">
+    <div className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`}>
       {/* Mobile View */}
       <div className="relative flex items-center justify-between w-full gap-4 md:hidden">
         <Link to="/" className="flex pt-7">
@@ -96,7 +140,7 @@ const Navbar = ({ mobileView }) => {
 
           <button onClick={toggleMenu} className="z-30 mr-4">
             {isOpen ? (
-              <FaTimes size={36} />
+              <FaTimes size={30} className="text-[#FCD37B]" />
             ) : (
               <img src="/Hero/hamburger.png" className="h-8" alt="Menu" />
             )}
@@ -110,12 +154,12 @@ const Navbar = ({ mobileView }) => {
           <img src="/Hero/logo.png" alt="Logo" />
         </Link>
         <div className="flex items-center p-5 space-x-5">
-          <a
-            href="#collections"
+          <button
+            onClick={onClickCollections}
             className="text-[20px] font-[500] text-[#FCD37B]"
           >
             {t("collectionNavItem")}
-          </a>
+          </button>
           {/* Language Dropdown */}
           <div className="relative w-[130px] flex justify-center">
             <button
@@ -145,7 +189,7 @@ const Navbar = ({ mobileView }) => {
 
           {/* User Profile / Connect Wallet */}
           {isAuthenticated ? (
-            <div className="relative w-[180px] flex justify-center">
+            <div className="relative w-[180px] flex justify-center z-20">
               <button
                 onClick={() => setProfileDropDown(!profileDropDown)}
                 aria-expanded={profileDropDown}
@@ -288,14 +332,24 @@ const Navbar = ({ mobileView }) => {
       {isOpen && (
   <div className="fixed top-0 bottom-0 left-0 z-20 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique">
     <Link
-      to="/#collections"
+      to="/"
       className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+      onClick={toggleMenu} 
     >
       Home
     </Link>
-    <div className="text-[20px] font-[400] leading-[30px] text-[#FCD378]">
+    <button
+     
+      className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+      onClick={()=>{
+        toggleMenu();
+        onClickCollections();
+      }} 
+      
+    >
       {t("collectionNavItem")}
-    </div>
+
+    </button>
 
     {isAuthenticated ? (
       <>

@@ -56,7 +56,6 @@
 // 43. getDeposits
 // 44. fetchAvailableCycles
 
-
 import ExtTokenClass "../EXT-V2/ext_v2/v2";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
@@ -999,6 +998,7 @@ actor Main {
         };
 
         return transformedTransactions;
+        return transformedTransactions;
     };
 
     //functions to get hard copy of cards
@@ -1343,6 +1343,5 @@ actor Main {
             return #err(#Other(errorMessage));
         };
     }; 
-
 
 };

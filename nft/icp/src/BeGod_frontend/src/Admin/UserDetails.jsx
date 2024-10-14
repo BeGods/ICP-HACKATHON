@@ -31,7 +31,9 @@ const UserDetails = () => {
         setData(result);
 
         const userPrincipalArray = result.ok[0];
-        const principalStringg = Principal.fromUint8Array(userPrincipalArray._arr).toText();
+        const principalStringg = Principal.fromUint8Array(
+          userPrincipalArray._arr
+        ).toText();
 
         setPrincipal(principalStringg);
         setUserId(result.ok[1]);
@@ -59,7 +61,10 @@ const UserDetails = () => {
         </div>
 
         {/* User Info */}
-        <Box color="white" className="flex flex-col items-center justify-center">
+        <Box
+          color="white"
+          className="flex flex-col items-center justify-center"
+        >
           {/* User Details */}
           <Box
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
@@ -73,7 +78,9 @@ const UserDetails = () => {
                   <Skeleton circle width={150} height={150} />
                 ) : (
                   <img
-                    src={image && image.length > 0 ? image[0] : "/image/admin.png"}
+                    src={
+                      image && image.length > 0 ? image[0] : "/image/admin.png"
+                    }
                     alt={`Image of ${name}`}
                     className="w-full h-full object-cover rounded-full"
                   />
@@ -93,23 +100,35 @@ const UserDetails = () => {
                 <>
                   <p className="text-[#FFFFFF] text-[14px] lg:text-[20px] flex gap-10">
                     <span className="w-24 font-semibold text-white">Id </span>
-                    <span className="text-gray-400 font-[700]">{userId}</span>
+                    <span className="text-gray-400 font-[700]"> {userId}</span>
                   </p>
                   <p className="text-[#FFFFFF] text-[14px] lg:text-[20px] flex gap-10">
                     <span className="w-24 font-semibold text-white">Name </span>
-                    <span className="text-gray-400 font-[700]">{name}</span>
+                    <span className="text-gray-400 font-[700]"> {name}</span>
                   </p>
                   <p className="text-[#FFFFFF] text-[14px] lg:text-[20px] flex gap-10">
-                    <span className="w-24 font-semibold text-white">Email </span>
-                    <span className="text-gray-400 font-[700]">{email}</span>
+                    <span className="w-24 font-semibold text-white">
+                      Email{" "}
+                    </span>
+                    <span className="text-gray-400 font-[700]"> {email}</span>
                   </p>
                   <p className="text-[#FFFFFF] text-[14px] lg:text-[20px] flex gap-10">
-                    <span className="w-24 font-semibold text-white">Principal </span>
-                    <span className="text-gray-400 font-[700]">{principal}</span>
+                    <span className="w-24 font-semibold text-white">
+                      Principal{" "}
+                    </span>
+                    <span className="text-gray-400 font-[700]">
+                      {" "}
+                      {principal}
+                    </span>
                   </p>
                   <p className="text-[#FFFFFF] text-[14px] lg:text-[20px] flex gap-10">
-                    <span className="w-24 font-semibold text-white">Telegram </span>
-                    <span className="text-gray-400 font-[700]">{telegram}</span>
+                    <span className="w-24 font-semibold text-white">
+                      Telegram{" "}
+                    </span>
+                    <span className="text-gray-400 font-[700]">
+                      {" "}
+                      {telegram}
+                    </span>
                   </p>
                 </>
               )}
