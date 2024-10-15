@@ -1,3 +1,5 @@
+@import "./animations.scss";
+
 $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
 
 @each $myth in $myths {
@@ -58,7 +60,6 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
     filter: drop-shadow(0px 0px 8px var(--#{$myth}-color));
   }
   
-
   // Button Effects
   .glow-button-#{$myth} {
     box-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
@@ -71,6 +72,10 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
     background: var(--#{$myth}-color);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+  }
+
+  .scale-orb-#{$myth} {
+    @include scale-and-glow(scale-orb-glow-#{$myth}, var(--#{$myth}-color), 2px, 14px);
   }
 }
 

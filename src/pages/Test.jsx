@@ -673,14 +673,30 @@
 
 // export default Test;
 
-import React from "react";
-import QuestCard from "../components/Cards/Quests/QuestCrd";
+import React, { useState } from "react";
+import "../styles/flip.scss";
 
 const Test = (props) => {
-  const quest = {};
+  const [flipped, setFlipped] = useState(false);
+
   return (
-    <div className="bg-white h-screen w-screen">
-      <QuestCard quest={quest} activeMyth={1} t={t} handleClick={() => {}} />
+    <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+      <div className={`font-symbols text-[15vw]`}>
+        <div className={`card ${flipped ? "flipped" : ""} text-black-contour`}>
+          <div
+            onClick={(e) => {
+              setFlipped((prev) => !prev);
+            }}
+            className="card__face card__face--front bg-red-400 h-[10vh] w-[20vw] flex justify-center items-center"
+          ></div>
+          <div
+            onClick={(e) => {
+              setFlipped((prev) => !prev);
+            }}
+            className="card__face card__face--back bg-green-400 flex justify-center items-center"
+          ></div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -32,6 +32,7 @@ import MythInfoCard from "../../components/Cards/Info/MythInfoCrd";
 import QuestHeader from "./Header";
 import { useQuestGuide } from "../../hooks/Tutorial";
 import { QuestGuide } from "../../components/Common/Tutorials";
+import ShareButton from "../../components/Buttons/ShareBtn";
 
 const tele = window.Telegram?.WebApp;
 
@@ -40,6 +41,7 @@ const Quests = () => {
   const [showClaimEffect, setShowClaimEffect] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
   const [enableGuide, setEnableGuide] = useQuestGuide("tut2");
+  const [flipped, setFlipped] = useState(false);
 
   const {
     questsData,
@@ -432,8 +434,24 @@ const Quests = () => {
       />
 
       {/* Content */}
+      {/* <div className="flex justify-center items-center h-screen w-screen absolute mx-auto">
+        <div className={`card ${flipped ? "flipped" : ""}`}>
+          <div
+            onClick={(e) => {
+              setFlipped((prev) => !prev);
+            }}
+            className="card__face card__face--front bg-red-400 h-[10vh] w-[20vw] flex justify-center items-center"
+          ></div>
+          <div
+            onClick={(e) => {
+              setFlipped((prev) => !prev);
+            }}
+            className="card__face card__face--back bg-green-400 flex justify-center items-center"
+          ></div>
+        </div>
+      </div> */}
       <div className="flex mt-7 justify-center items-center h-screen w-screen absolute mx-auto">
-        <div className="flex items-center justify-center w-full">
+        <div className={`flex items-center justify-center w-full h-full`}>
           {currQuest < quests.length ? (
             <QuestCard
               quest={quest}
@@ -462,27 +480,29 @@ const Quests = () => {
                   );
                 }
               }}
-              InfoIcon={
-                <IconBtn
+              ShareButton={
+                <ShareButton
+                  isShared={quest?.isShared}
                   isInfo={true}
+                  handleClaimShareReward={() =>
+                    handleClaimShareReward(quest._id)
+                  }
                   activeMyth={activeMyth}
-                  handleClick={() => {
-                    setShowCard(
-                      <InfoCard
-                        t={t}
-                        isShared={quest?.isShared}
-                        quest={quest}
-                        handleClaimShareReward={() =>
-                          handleClaimShareReward(quest._id)
-                        }
-                        handleShowInfo={() => {
-                          setShowCard(null);
-                        }}
-                        activeMyth={activeMyth}
-                      />
-                    );
+                  t={t}
+                />
+              }
+              InfoCard={
+                <InfoCard
+                  t={t}
+                  isShared={quest?.isShared}
+                  quest={quest}
+                  handleClaimShareReward={() =>
+                    handleClaimShareReward(quest._id)
+                  }
+                  handleShowInfo={() => {
+                    setShowCard(null);
                   }}
-                  align={1}
+                  activeMyth={activeMyth}
                 />
               }
               Button={
