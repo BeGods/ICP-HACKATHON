@@ -44,16 +44,6 @@ const QuestCard = ({
           <div
             className={`flex relative items-center h-[19%] uppercase glow-text-quest text-white`}
           >
-            <div className="absolute text-primary  z-50 right-0 top-0 -mt-[30px] pr-2">
-              <span>
-                <span
-                  className={`text-black-contour uppercase text-${mythSections[activeMyth]}-text`}
-                >
-                  {curr + 1}
-                </span>
-                /12{" "}
-              </span>
-            </div>
             <div
               style={{
                 backgroundImage: `url(/assets/uxui/fof.footer.rock3.png)`,

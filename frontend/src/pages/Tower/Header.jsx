@@ -58,7 +58,7 @@ const TopChild = ({ myth }) => {
           </>
         )}
       </div>
-      <div className="flex relative text-center justify-center items-center w-[14vw] h-[14vw] mt-[12px] glow-icon-white mr-[13vw] rounded-full">
+      <div className="flex relative text-center justify-center items-center w-[12vw] h-[12vw] mt-[14px] glow-icon-white mr-[13vw] rounded-full">
         <img
           src="/assets/uxui/240px-orb.multicolor.png"
           alt="multiOrb"
@@ -68,11 +68,12 @@ const TopChild = ({ myth }) => {
     </div>
   );
 };
+
 const BottomChild = ({ gameData, sessionOrbs, myth }) => {
   return (
-    <div className="absolute flex w-full justify-between bottom-0 z-50 mb-[2vh]">
+    <div className="flex justify-center -mt-[4vh]">
       <div
-        className={`text-num transition-all italic text-black-lg-contour custom-skew ml-[13vw]  duration-1000 text-white`}
+        className={`flex text-num pl-6 text-black-lg-contour text-white items-center border justify-start h-button-primary w-button-primary bg-black z-10 rounded-primary transform skew-x-12`}
       >
         {myth !== 0 ? (
           <>{gameData?.mythologies[myth - 1]?.orbs - sessionOrbs * 2}</>
@@ -81,7 +82,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth }) => {
         )}
       </div>
       <div
-        className={`text-num text-black-lg-contour transition-all text-right mr-[13vw] italic -rotate-6 duration-1000 text-white`}
+        className={`flex text-num pr-6 text-black-lg-contour text-white items-center border justify-end h-button-primary w-button-primary bg-black z-10 rounded-primary transform -skew-x-12`}
       >
         {gameData.multiColorOrbs}
       </div>

@@ -20,8 +20,35 @@
       height: 100%;
       backface-visibility: hidden;
       transition: 0.5s ease-in-out;
-  //   -webkit-box-reflect: below 0
-  //     linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
+
+      &--back {
+        transform: rotateY(0.5turn);
+      }
+    }
+  }
+
+  .cardFlip {
+    position: relative;
+    width: 70px;
+    height: 90px;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+    transform-style: preserve-3d;
+    transform: rotateY(0);
+  
+    &.flipped {
+      transform: rotateY(0.5turn);
+    }
+  
+    .ficon__face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      transition: 0.5s ease-in-out;
 
       &--back {
         transform: rotateY(0.5turn);

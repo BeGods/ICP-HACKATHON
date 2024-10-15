@@ -108,6 +108,32 @@ export const BoosterGuide = ({ handleClick }) => {
   );
 };
 
+export const TuneGuide = ({ handleClick }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="fixed inset-0 backdrop-blur-[3px] flex  flex-col items-center z-50">
+      <div className="pb-2 w-screen bg-black text-white text-center">
+        <div className="flex flex-col text-[12.2vw] mt-2 leading-[45px] px-1.5">
+          <span className="font-symbols text-[60px] pb-3">x</span>
+          <div>CHOOSE ORB & CONVERT</div>
+        </div>
+      </div>
+      <div
+        onClick={handleClick}
+        className="flex relative flex-grow font-symbols items-center text-white "
+      >
+        <div className="font-symbols  text-white text-[24vw] z-[99] mt-[22vh] -ml-[23vw] scale-point">
+          b
+        </div>
+      </div>
+      <div className="h-[14%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+        <div className="text-primary break-words">TO AFFORD BOOSTER</div>
+      </div>
+    </div>
+  );
+};
+
 export const ProfileGuide = ({ handleClick }) => {
   const { t } = useTranslation();
 
@@ -135,7 +161,7 @@ export const ProfileGuide = ({ handleClick }) => {
           b
         </div>
       </div>
-      <div className="h-[12%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+      <div className="h-[14%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
         <div className="text-primary break-words">
           {t("tutorial.profile.desc")}
         </div>

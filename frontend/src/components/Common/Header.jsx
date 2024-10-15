@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-import { mythSections, mythologies } from "../../utils/constants";
+import { elementNames, mythSections, mythologies } from "../../utils/constants";
 
 const sectionNames = {
   0: "Forge",
@@ -8,25 +8,21 @@ const sectionNames = {
   2: "Boosters",
   3: "Profile",
   4: "Tower",
-  5: "Tasks",
+  5: "Partners",
+  6: "Rewards",
 };
 
 const Header = ({ TopChild, CenterChild, BottomChild }) => {
   const { activeMyth, section } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
-  const myth =
-    section != 3 &&
-    section != 5 &&
-    section != 4 &&
-    section != 11 &&
-    mythSections[activeMyth];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setChangeText((prevText) => !prevText);
-    }, 1500);
-
-    return () => clearInterval(interval);
+    if (section === 1 || section === 2 || section === 4 || section == 0) {
+      const interval = setInterval(() => {
+        setChangeText((prevText) => !prevText);
+      }, 1500);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   return (
@@ -39,32 +35,40 @@ const Header = ({ TopChild, CenterChild, BottomChild }) => {
         </div>
       ) : (
         <div
-          className={`text-head -mt-2 mx-auto w-full text-center top-0 absolute z-30 text-${mythSections[activeMyth]}-text text-black-lg-contour uppercase`}
+          className={`text-head -mt-2 mx-auto w-full text-center top-0 absolute z-30 text-${
+            section === 4 ? "black" : mythSections[activeMyth]
+          }-text ${
+            section === 4 ? "text-white-lg-contour" : "text-black-lg-contour"
+          } uppercase`}
         >
-          {mythologies[activeMyth]}
+          {section === 4
+            ? "DARK"
+            : section === 0
+            ? elementNames[activeMyth]
+            : mythologies[activeMyth]}
         </div>
       )}
-
       <div className="relative flex justify-center w-full h-auto">
-        {/* Left */}
-        <div className="relative">
-          <img
-            src="/assets/uxui/390px-header-k.png"
-            alt="left"
-            className={`left-0 h-[36vw] filter-${myth}`}
-          />
-        </div>
-        {/* Orb */}
-        <div className="justify-center flex">{CenterChild}</div>
-        {/* Right */}
         <img
-          src="/assets/uxui/390px-header-k.png"
-          alt="left"
-          className={`right-0 transform scale-x-[-1] h-[36vw] filter-${myth}`}
+          src="/assets/uxui/1280px-fof.footer.png"
+          alt="paper"
+          className={`w-full h-auto rotate-180 filter-paper-${
+            section === 3 ||
+            section === 4 ||
+            section === 5 ||
+            section === 6 ||
+            section === 11
+              ? mythSections[8]
+              : mythSections[activeMyth]
+          }`}
         />
+        {/* Orb */}
+        {CenterChild}
       </div>
-      {TopChild}
-      {BottomChild}
+      <div className="w-full">
+        {TopChild}
+        {BottomChild}
+      </div>
     </div>
   );
 };

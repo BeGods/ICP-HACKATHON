@@ -1,4 +1,3 @@
-import { Gift } from "lucide-react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchJoiningBonus } from "../../utils/api";
@@ -97,9 +96,9 @@ const JoinBonus = (props) => {
           onClick={handleClaimBonus}
           className="flex absolute items-start bottom-[92px] justify-center w-full"
         >
-          <Gift color="#FFD660" size={"18vw"} />
+          <div className="text-gold text-[18vw] font-symbols">t</div>
           {!disableHand && (
-            <div className="font-symbols scale-point z-10 mx-auto my-auto absolute  ml-2.5 -mt-3 text-white text-[100px] text-black-contour">
+            <div className="font-symbols scale-point z-10 mx-auto my-auto absolute  ml-3 mt-5 text-white text-[100px] text-black-contour">
               b
             </div>
           )}

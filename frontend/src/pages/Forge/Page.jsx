@@ -26,6 +26,7 @@ import { useForgeGuide } from "../../hooks/Tutorial";
 import { handleGeneratePopTime } from "../../helpers/game.helper";
 import ForgeHeader from "./Header";
 import gsap from "gsap";
+import { Download } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -727,7 +728,26 @@ const Forges = () => {
   useEffect(() => {
     // show booster card
     if (showBooster) {
-      setShowCard(showBooster);
+      setShowCard(
+        <BoosterClaim
+          activeCard={showBooster}
+          activeMyth={activeMyth}
+          mythData={mythStates[activeMyth]}
+          disableIcon={showBooster}
+          closeCard={() => setShowCard(null)}
+          Button={
+            <Download
+              size={"14vw"}
+              color="#ffd660"
+              onClick={() => {
+                setShowCard(null);
+                setShowBooster(null);
+              }}
+              className="scale-icon mt-2"
+            />
+          }
+        />
+      );
     }
 
     if (showGlow) {
@@ -1103,11 +1123,12 @@ const Forges = () => {
           closeCard={() => {
             tele.HapticFeedback.notificationOccurred("success");
             setShowCard(null);
+            setShowBooster(null);
           }}
           handleClick={() => {
             tele.HapticFeedback.notificationOccurred("success");
             setShowCard(null);
-
+            setShowBooster(null);
             setGlowBooster(3);
             setTimeout(() => {
               setGlowBooster(0);
@@ -1139,17 +1160,24 @@ const Forges = () => {
             width: "100%",
             zIndex: -1,
           }}
-          className="background-wrapper"
+          className="background-wrapper transition-all duration-500"
         >
           <div
             className={`absolute top-0 left-0 h-full w-full filter-orbs-${mythSections[activeMyth]}`}
             style={{
-              backgroundImage: `url(/assets/uxui/480px-fof.jpg)`,
+              backgroundImage: `url(/assets/uxui/480px-fof.forge.png)`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundPosition: "center center",
             }}
           />
+          {/* {minimize === 1 && (
+            <img
+              src="/assets/uxui/480px-fof.forge.fx.png"
+              alt="forge.fx"
+              className={`filter-orbs-${mythSections[activeMyth]} h-screen w-screen transition-all duration-500 ease-in-out scale-[110%]`}
+            />
+          )} */}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
@@ -1279,7 +1307,7 @@ const Forges = () => {
             </div>
           </div>
         )}
-        // Star
+        {/* Star */}
         {showStarBoosters != 0 && (
           <div>
             <div
@@ -1338,7 +1366,7 @@ const Forges = () => {
             ))}
           </div>
         )}
-        // Minion
+        {/* Minion */}
         {(activeCard === "minion" || activeCard === "minion-down") && (
           <div
             onTouchStart={() => {

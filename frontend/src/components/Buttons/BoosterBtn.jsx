@@ -15,7 +15,7 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
-              {calculateRemainingTime(mythData.automataStartTime)}
+              -{calculateRemainingTime(mythData.automataStartTime)}
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
@@ -25,7 +25,7 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
-              {calculateRemainingTime(mythData.shardsLastClaimedAt)}
+              -{calculateRemainingTime(mythData.shardsLastClaimedAt)}
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
@@ -35,7 +35,7 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
-              {calculateRemainingTime(mythData.burstActiveAt)}
+              -{calculateRemainingTime(mythData.burstActiveAt)}
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>

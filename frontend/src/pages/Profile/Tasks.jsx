@@ -76,38 +76,6 @@ const Tasks = (props) => {
         }
       />
       <div className="flex flex-grow justify-center items-center"></div>
-
-      {/* Content */}
-      <div className="flex flex-col px-2 gap-2 relative flex-grow justify-start items-cente pt-4">
-        {socialQuestData.map((quest, index) => {
-          return (
-            <div key={index}>
-              <ProfileCard
-                quest={quest}
-                claimCard={() => {
-                  setShowClaim(true);
-                }}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      {showClaim && (
-        <MilestoneCard
-          t={t}
-          isMulti={true}
-          isOrb={true}
-          isBlack={false}
-          activeMyth={4}
-          isForge={true}
-          closeCard={() => {}}
-          handleClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setShowClaim(false);
-          }}
-        />
-      )}
     </div>
   );
 };

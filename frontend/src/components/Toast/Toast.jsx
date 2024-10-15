@@ -179,26 +179,6 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "lost_quest_success":
-      toast.success(
-        <ToastMesg
-          title={t("toasts.Booster_Lost_Not_Available.error.title")}
-          desc={t("toasts.Booster_Lost_Not_Available.error.desc")}
-          status={"success"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      break;
-    case "lost_quest_error":
       toast.error(
         <ToastMesg
           title={t("toasts.default.error.title")}
@@ -241,24 +221,6 @@ export const showToast = (type) => {
         <ToastMesg
           title={t("toasts.Booster_Claim.error.title")}
           desc={t("toasts.Booster_Claim.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      break;
-      toast.error(
-        <ToastMesg
-          title={t("toasts.Booster_InsufficientOrbs.error.title")}
-          desc={t("toasts.Booster_InsufficientOrbs.error.desc")}
           status={"fail"}
         />,
         {

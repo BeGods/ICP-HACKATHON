@@ -1,11 +1,14 @@
-import { Check, ChevronRight, Download, Loader } from "lucide-react";
 import React, { useContext, useRef, useState } from "react";
+import { Check, ChevronRight, Download } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
-import { claimSocialTask } from "../../../utils/api";
 import { MyContext } from "../../../context/context";
+import { claimSocialTask } from "../../../utils/api";
 
-const ProfileCard = ({ quest, claimCard }) => {
-  const { authToken, socialQuestData, setSocialQuestData } =
+const tele = window.Telegram?.WebApp;
+
+const TaskItem = ({ quest }) => {
+  const [isClicked, setIsClicked] = useState(false);
+  const { authToken, socialQuestData, setSocialQuestData, setGameData } =
     useContext(MyContext);
   const [claim, setClaim] = useState(false);
   const disableClick = useRef(false);
@@ -13,7 +16,6 @@ const ProfileCard = ({ quest, claimCard }) => {
   const handleClaimTask = async () => {
     if (disableClick.current === false) {
       disableClick.current = true;
-
       setTimeout(() => {
         disableClick.current = false;
       }, 2000);
@@ -22,9 +24,14 @@ const ProfileCard = ({ quest, claimCard }) => {
         const updatedQuestData = socialQuestData.map((item) =>
           item._id === quest._id ? { ...item, isCompleted: true } : item
         );
-        claimCard();
+        const updatedGameData = {
+          ...gameData,
+          multiColorOrbs:
+            gameData.multiColorOrbs + quest.requiredOrbs.multiOrbs,
+        };
+        setGameData(updatedGameData);
         setSocialQuestData(updatedQuestData);
-        showToast("task_succes");
+        showToast("task_success");
       } catch (error) {
         const errorMessage =
           error.response?.data?.message ||
@@ -35,9 +42,12 @@ const ProfileCard = ({ quest, claimCard }) => {
       }
     }
   };
+
   return (
     <div
       onClick={() => {
+        tele.HapticFeedback.notificationOccurred("success");
+
         if (!quest.isCompleted && claim === false) {
           window.open(quest?.link, "_blank");
           setClaim(true);
@@ -45,34 +55,58 @@ const ProfileCard = ({ quest, claimCard }) => {
           handleClaimTask();
         }
       }}
-      className="flex gap-[8px] text-center items-center bg-black w-full p-[15px] rounded-primary"
+      className={`flex gap-1 border 
+${
+  isClicked ? `glow-button-white` : ""
+} rounded-primary h-[90px] w-full bg-glass-black p-[15px] `}
+      onMouseDown={() => {
+        setIsClicked(true);
+      }}
+      onMouseUp={() => {
+        setIsClicked(false);
+      }}
+      onMouseLeave={() => {
+        setIsClicked(false);
+      }}
+      onTouchStart={() => {
+        setIsClicked(true);
+      }}
+      onTouchEnd={() => {
+        setIsClicked(false);
+      }}
+      onTouchCancel={() => {
+        setIsClicked(false);
+      }}
     >
-      <div className="flex items-center gap-[20px] rounded-primary w-full">
+      <div className="w-[20%] flex justify-start items-center">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
           alt="telegram"
-          className="w-[32px] h-[32px]"
+          className="w-full"
         />
-        <div className="text-left text-white">
-          <h3 className="text-[14px]">{quest.questName}</h3>
-          <p className="text-[10px]">
-            +3 <span className="gradient-multi">Multi ORB(S)</span>
-          </p>
-        </div>
       </div>
-      {quest.isCompleted ? (
-        <Check color="white" />
-      ) : (
-        <>
-          {claim == false ? (
-            <ChevronRight color="white" />
-          ) : (
-            <Download color="white" />
-          )}
-        </>
-      )}
+      <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
+        <h1 className="text-tertiary uppercase">{quest.questName}</h1>
+        <h2 className="text-tertiary">
+          +{quest.requiredOrbs.multiOrbs}
+          <span className="pl-2 gradient-multi">Multi ORB(S)</span>
+        </h2>
+      </div>
+      <div className="flex justify-center items-center w-[8%] ">
+        {quest.isCompleted ? (
+          <Check color="white" />
+        ) : (
+          <>
+            {!claim ? (
+              <ChevronRight className="absolute" size={"30px"} color="white" />
+            ) : (
+              <Download className="absolute" size={"30px"} color="white" />
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
 
-export default ProfileCard;
+export default TaskItem;

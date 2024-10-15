@@ -212,3 +212,9 @@ text-shadow:
 .begod-text-shadow{
   filter: drop-shadow(0 0 5px #FFD660)
 }
+
+.hexagon{
+
+  aspect-ratio: 1/cos(30deg);
+  clip-path: polygon(50% -50%, 100% 50%, 50% 150%, 0 50%);
+}

@@ -22,7 +22,6 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import QuestCard from "../../components/Cards/Quests/QuestCrd";
-import Header from "../../components/Common/Header";
 import JigsawButton from "../../components/Buttons/JigsawBtn";
 import IconBtn from "../../components/Buttons/IconBtn";
 import QuestButton from "../../components/Buttons/QuestBtn";
@@ -41,7 +40,6 @@ const Quests = () => {
   const [showClaimEffect, setShowClaimEffect] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
   const [enableGuide, setEnableGuide] = useQuestGuide("tut2");
-  const [currQuest, setCurrQuest] = useState(0);
 
   const {
     questsData,
@@ -55,16 +53,39 @@ const Quests = () => {
     setShowCard,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
-  const quests = categorizeQuestsByMythology(questsData)
-    [activeMyth][mythologies[activeMyth]]?.filter(
-      (item) => item?.secret !== true
-    )
-    .sort((a, b) => a.isQuestClaimed - b.isQuestClaimed);
+  const quests = categorizeQuestsByMythology(questsData)[activeMyth][
+    mythologies[activeMyth]
+  ]?.sort((a, b) => {
+    // First condition: Inactive and isQuestClaimed is false
+    if (a.status === "Inactive" && !a.isQuestClaimed) return -1;
+    if (b.status === "Inactive" && !b.isQuestClaimed) return 1;
 
+    // Second condition: Active and isQuestClaimed is false
+    if (a.status === "Active" && !a.isQuestClaimed) return -1;
+    if (b.status === "Active" && !b.isQuestClaimed) return 1;
+
+    // Third condition: Active and isQuestClaimed is true
+    if (a.status === "Active" && a.isQuestClaimed) return -1;
+    if (b.status === "Active" && b.isQuestClaimed) return 1;
+
+    return 0;
+  });
+
+  const todaysQuest = quests.findIndex((item) => item.status === "Active");
+
+  // completed quests
   const completedQuests = quests?.filter(
     (item) => item.isQuestClaimed === true
   );
+
+  const lostQuests = quests?.filter(
+    (item) => item.isQuestClaimed === false && item.status === "Inactive"
+  );
+
+  const [currQuest, setCurrQuest] = useState(todaysQuest);
   const quest = quests[currQuest];
+
+  // secret quests
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
@@ -392,7 +413,10 @@ const Quests = () => {
       {/* Header */}
       <QuestHeader
         activeMyth={activeMyth}
+        todayQuest={todaysQuest}
+        currQuest={currQuest}
         completedQuests={completedQuests}
+        lostQuests={lostQuests}
         mythData={mythData}
         showClaimEffect={showClaimEffect}
         showSymbol={() => {
@@ -466,10 +490,10 @@ const Quests = () => {
                   <QuestButton
                     handlePrev={handlePrev}
                     handleNext={handleNext}
-                    message={t("buttons.complete")}
+                    message={"Complete"}
                     isCompleted={quest?.isQuestClaimed}
                     activeMyth={activeMyth}
-                    lastQuest={quests.length}
+                    lastQuest={quests.length - 1}
                     action={handleCompleteQuest}
                     currQuest={currQuest}
                     faith={mythData[activeMyth].faith}
@@ -481,7 +505,7 @@ const Quests = () => {
                     handleNext={handleNext}
                     message={"claim"}
                     isCompleted={quest?.isQuestClaimed}
-                    lastQuest={quests.length}
+                    lastQuest={quests.length - 1}
                     t={t}
                     activeMyth={activeMyth}
                     faith={mythData[activeMyth].faith}

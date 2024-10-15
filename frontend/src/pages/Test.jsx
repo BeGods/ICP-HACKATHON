@@ -617,18 +617,72 @@
 
 // export default Test;
 
-import React, { useState } from "react";
-import "../styles/flip.scss";
-import Footer from "../components/Common/Footer";
+// import React, { useState } from "react";
+
+// function Test(props) {
+//   const [plusOnes, setPlusOnes] = useState([]);
+
+//   const handlePlusOneEffect = (e) => {
+//     let x, y;
+
+//     if (e.type === "touchstart" || e.type === "touchend") {
+//       // Touch event handling
+//       x = e.touches[0]?.clientX || e.changedTouches[0]?.clientX;
+//       y = e.touches[0]?.clientY || e.changedTouches[0]?.clientY;
+//     } else {
+//       // Mouse event handling
+//       x = e.clientX;
+//       y = e.clientY;
+//     }
+
+//     const newPlusOne = { x, y, id: Date.now() };
+//     setPlusOnes((prev) => [...prev, newPlusOne]);
+
+//     setTimeout(() => {
+//       setPlusOnes((prev) =>
+//         prev.filter((plusOne) => plusOne.id !== newPlusOne.id)
+//       );
+//     }, 1000);
+//   };
+
+//   return (
+//     <div className="bg-black h-screen w-screen flex justify-center items-center">
+//       <div
+//         onMouseDown={(e) => handlePlusOneEffect(e)}
+//         onTouchStart={(e) => handlePlusOneEffect(e)}
+//         onTouchEnd={(e) => handlePlusOneEffect(e)}
+//         className="flex flex-col items-center justify-center bg-red-400 w-[84vw] h-[84vw] rounded-full"
+//       >
+//         {plusOnes.map((plusOne) => (
+//           <span
+//             key={plusOne.id}
+//             className="plus-one absolute mt-[120px]"
+//             style={{
+//               top: `${plusOne.y}px`,
+//               left: `${plusOne.x}px`,
+//               zIndex: 99,
+//             }}
+//           >
+//             250
+//           </span>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Test;
+
+import React from "react";
+import QuestCard from "../components/Cards/Quests/QuestCrd";
 
 const Test = (props) => {
+  const quest = {};
   return (
-    <>
-      <Footer />
-    </>
+    <div className="bg-white h-screen w-screen">
+      <QuestCard quest={quest} activeMyth={1} t={t} handleClick={() => {}} />
+    </div>
   );
 };
-
-Test.propTypes = {};
 
 export default Test;

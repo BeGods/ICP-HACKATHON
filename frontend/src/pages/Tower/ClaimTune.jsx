@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { mythSymbols, mythologies, orbSounds } from "../../utils/constants";
 import { CircleCheck, CircleX } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";
+import { useTranslation } from "react-i18next";
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",
@@ -12,6 +13,7 @@ const orbPos = [
 ];
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
+  const { t } = useTranslation();
   const { enableSound } = useContext(MyContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
@@ -33,7 +35,6 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
     }
   };
 
-  // fof.orb.water.blue.wav
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
       {!showPlay ? (
@@ -65,7 +66,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             {t("tower.play")}
           </div>
           <div
-            className="relative flex justify-center items-center w-full h-full"
+            className="relative flex justify-center items-center w-full h-full pointer-events-none"
             style={{
               backgroundImage:
                 "url(/assets/uxui/480px-fof.background.aether1.png)",
@@ -85,7 +86,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   );
                 }}
                 key={index}
-                className={`absolute ${orbPos[index]}`}
+                className={`absolute ${orbPos[index]} pointer-events-auto z-50`}
               >
                 <div
                   className={`flex relative text-center justify-center ${
@@ -97,7 +98,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   <img
                     src="/assets/uxui/240px-orb.base.png"
                     alt="orb"
-                    className={`filter-orbs-${item.toLowerCase()}`}
+                    className={`filter-orbs-${item.toLowerCase()} `}
                   />
                   <span
                     className={`absolute z-1 font-symbols ${
@@ -134,7 +135,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 mb-8">
+          <div className="absolute bottom-0 mb-[26vw]">
             <CircleCheck
               size={"18vw"}
               color="white"

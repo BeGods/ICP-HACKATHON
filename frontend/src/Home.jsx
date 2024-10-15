@@ -12,11 +12,9 @@ import Forges from "./pages/Forge/Page";
 import Gacha from "./pages/Gacha/Page";
 import Tower from "./pages/Tower/Page";
 import JoinBonus from "./pages/JoinBonus/Page";
-import Partners from "./pages/Gift/Partners";
-import Redeem from "./pages/Gift/Redeem";
-import Tasks from "./pages/Profile/Tasks";
+import Redeem from "./pages/Redeem/Redeem";
 import Footer from "./components/Common/Footer";
-import Rewards from "./pages/Gift/Rewards";
+import Gift from "./pages/Gift/Gift";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -45,13 +43,11 @@ const Home = () => {
     <Boosters />, // 2
     <Profile />, // 3
     <Tower />, // 4
-    <Tasks />, // 5
+    <Gift />, // 5
     <Redeem />, // 6
     <Leaderboard />, // 7
     <Gacha />, // 8
     <JoinBonus />, // 9
-    <Partners />, // 10
-    <Rewards />, // 11
   ];
 
   // fetch all game data
@@ -67,10 +63,10 @@ const Home = () => {
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
       setKeysData(response?.towerKeys);
-      if (!response?.user.joiningBonus) {
+      if (!response?.user?.joiningBonus) {
         setSection(9);
       } else if (
-        response?.user.joiningBonus &&
+        response?.user?.joiningBonus &&
         response?.user.isEligibleToClaim
       ) {
         setSection(8);
@@ -89,17 +85,6 @@ const Home = () => {
   // set initial cookies
   useEffect(() => {
     localStorage.setItem("avatarColor", getRandomColor());
-
-    // const token = localStorage.getItem("accessToken");
-    // (async () => {
-    //   if (token) {
-    //     setAuthToken(token);
-    //     await getGameData(token);
-    //   } else {
-    //     console.log("You are not authenticated.");
-    //     //! TODO:Add error toast
-    //   }
-    // })();
 
     tele.CloudStorage.getItem("lang", (err, item) => {
       (async () => {
@@ -191,7 +176,7 @@ const Home = () => {
               setShowCard,
             }}
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
               <div key={item}>
                 <>{section === item && sections[item]}</>
               </div>
