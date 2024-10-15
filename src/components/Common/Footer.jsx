@@ -1,13 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
-import {
-  footerArray,
-  footerIcons,
-  footerLeft,
-  footerMed,
-  footerRight,
-  mythSections,
-} from "../../utils/constants";
+import { footerArray, footerIcons, mythSections } from "../../utils/constants";
 import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
 
@@ -16,7 +9,8 @@ const tele = window.Telegram?.WebApp;
 const FooterItem = ({ enableSound, icon }) => {
   const howlerRef = useRef(null);
   const [flipped, setFlipped] = useState(false);
-  const { setSection } = useContext(MyContext);
+  const { section, setSection, activeMyth, setActiveMyth } =
+    useContext(MyContext);
 
   const playAudio = () => {
     if (howlerRef.current && enableSound) {
@@ -27,12 +21,16 @@ const FooterItem = ({ enableSound, icon }) => {
 
   const handleFlip = (e) => {
     tele.HapticFeedback.notificationOccurred("success");
-    setFlipped((prev) => !prev);
     playAudio();
   };
 
-  const handleSectionChange = (section) => {
-    setSection(footerArray[icon][section]);
+  const handleSectionChange = (curr) => {
+    if (footerArray[icon][curr] == 4 && icon === 1 && section !== 0) {
+      setSection(0);
+    } else {
+      setSection(footerArray[icon][curr]);
+      setFlipped((prev) => !prev);
+    }
     if (activeMyth >= 4) {
       setActiveMyth(0);
     }

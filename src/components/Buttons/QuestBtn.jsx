@@ -1,18 +1,6 @@
-import {
-  Check,
-  CircleCheck,
-  CornerUpLeft,
-  CornerUpRight,
-  Download,
-} from "lucide-react";
+import { Check, CircleCheck, CornerUpLeft, CornerUpRight } from "lucide-react";
 import React, { useState } from "react";
 import { mythSections } from "../../utils/constants";
-
-// className={`flex items-center justify-between h-button-primary mt-[10px] w-button-primary mx-auto ${
-//   isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-// }  border border-${
-//   mythSections[activeMyth]
-// }-primary bg-glass-black text-white rounded-primary z-10`}
 
 const QuestButton = ({
   handlePrev,
@@ -23,6 +11,7 @@ const QuestButton = ({
   message,
   currQuest,
   lastQuest,
+  faith,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
 
@@ -62,7 +51,7 @@ const QuestButton = ({
       {isCompleted ? (
         <div>
           <div
-            className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]} p-4 h-[17vw] w-[17vw] rounded-full`}
+            className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text p-[5vw] rounded-full`}
           >
             <Check size={"7.5vw"} strokeWidth={5} />
           </div>
@@ -70,18 +59,18 @@ const QuestButton = ({
       ) : message === "Complete" ? (
         <div
           onClick={action}
-          className={`text-${mythSections[activeMyth]}-primary`}
+          className={`text-${mythSections[activeMyth]}-text`}
         >
-          <CircleCheck size={"18vw"} />
+          <CircleCheck size={"75px"} />
         </div>
       ) : (
         <div onClick={action}>
-          <CircleCheck size={"18vw"} />
+          <CircleCheck size={"75px"} />
         </div>
       )}
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
-          color={currQuest !== lastQuest ? "white" : "#707579"}
+          color={currQuest !== lastQuest || faith !== 0 ? "white" : "#707579"}
           className="h-icon-secondary w-icon-secondary"
           onClick={handleNext}
         />

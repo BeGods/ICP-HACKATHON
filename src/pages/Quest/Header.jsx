@@ -4,9 +4,9 @@ import Header from "../../components/Common/Header";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ activeMyth, showSymbol, showClaimEffect }) => {
+const CenterChild = ({ activeMyth, showSymbol }) => {
   return (
-    <div className="flex absolute justify-center w-full z-20">
+    <div className="flex absolute justify-center w-fit rounded-full mt-1 z-20">
       <div
         onClick={() => {
           tele.HapticFeedback.notificationOccurred("success");
@@ -14,61 +14,88 @@ const CenterChild = ({ activeMyth, showSymbol, showClaimEffect }) => {
         }}
         className="h-full z-20"
       >
-        <Symbol
-          myth={mythSections[activeMyth]}
-          showClaimEffect={showClaimEffect}
-          isCard={false}
-        />
+        <Symbol myth={mythSections[activeMyth]} isCard={false} />
       </div>
     </div>
   );
 };
 
-const BottomChild = ({ shards, orbs }) => {
+const BottomChild = ({
+  activeMyth,
+  currQuest,
+  todayQuest,
+  lostQuests,
+  completedQuests,
+}) => {
   return (
-    <div className="absolute flex w-full justify-between bottom-0 z-50 mb-[2vh]">
+    <div className="flex justify-center -mt-[4vh]">
       <div
-        className={`text-num transition-all italic text-black-lg-contour custom-skew ml-[13vw]  duration-1000 text-white`}
+        className={`flex text-num pl-6 text-black-lg-contour ${
+          currQuest < todayQuest
+            ? `text-${mythSections[activeMyth]}-text`
+            : "text-white"
+        } items-center border border-${
+          mythSections[activeMyth]
+        }-primary justify-start h-button-primary w-button-primary bg-black z-10 rounded-primary transform skew-x-12`}
       >
-        1/12
+        {lostQuests.length}
       </div>
       <div
-        className={`text-num text-black-lg-contour transition-all text-right mr-[8vw] italic -rotate-6 duration-1000 text-white`}
+        className={`flex text-num pr-6 text-black-lg-contour  ${
+          currQuest > todayQuest
+            ? `text-${mythSections[activeMyth]}-text`
+            : "text-white"
+        }  items-center border border-${
+          mythSections[activeMyth]
+        }-primary justify-end h-button-primary w-button-primary bg-black z-10 rounded-primary transform -skew-x-12`}
       >
-        2
+        {completedQuests.length}/12
       </div>
     </div>
   );
 };
 
-const TopChild = ({ activeMyth, glowShards, glowBooster, glowSymbol }) => {
+const TopChild = ({ activeMyth }) => {
   return (
-    <div className="absolute flex w-full justify-between top-0 z-50">
+    <div className="absolute flex w-full justify-between top-0 z-50 text-white">
       <div
-        className={`ml-[13vw] mt-0.5  text-[50px] transition-all duration-1000`}
+        className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
       >
-        D
+        i
       </div>
       <div
-        className={`mr-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
+        className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
       >
-        T
+        j
       </div>
     </div>
   );
 };
 
-const QuestHeader = ({ activeMyth, showSymbol, showClaimEffect }) => {
+const QuestHeader = ({
+  activeMyth,
+  showSymbol,
+  showClaimEffect,
+  currQuest,
+  lostQuests,
+  todayQuest,
+  completedQuests,
+}) => {
   return (
     <Header
-      TopChild={<TopChild />}
-      BottomChild={<BottomChild />}
-      CenterChild={
-        <CenterChild
+      handleClick={showClaimEffect}
+      TopChild={<TopChild activeMyth={activeMyth} />}
+      BottomChild={
+        <BottomChild
+          completedQuests={completedQuests}
+          currQuest={currQuest}
+          lostQuests={lostQuests}
+          todayQuest={todayQuest}
           activeMyth={activeMyth}
-          showSymbol={showSymbol}
-          showClaimEffect={showClaimEffect}
         />
+      }
+      CenterChild={
+        <CenterChild activeMyth={activeMyth} showSymbol={showSymbol} />
       }
     />
   );

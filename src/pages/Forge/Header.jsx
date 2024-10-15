@@ -22,7 +22,7 @@ const CenterChild = ({
         tele.HapticFeedback.notificationOccurred("success");
         setSection(4);
       }}
-      className="flex absolute justify-center w-full z-20"
+      className="flex absolute justify-center w-full z-20 mt-1"
     >
       <div
         className={`flex text-center justify-center h-[36vw] w-[36vw] overflow-hidden items-center rounded-full outline outline-${
@@ -70,7 +70,7 @@ const TopChild = ({ activeMyth, glowShards, glowBooster, glowSymbol }) => {
   return (
     <div className="absolute flex w-full justify-between top-0 z-50">
       <div
-        className={`font-symbols text-black-md-contour ml-[13vw] mt-0.5 ${
+        className={`font-symbols ml-[10vw] text-black-md-contour  ${
           glowShards && `scale-150`
         }  text-[50px] transition-all duration-1000 text-${
           mythSections[activeMyth]
@@ -79,7 +79,7 @@ const TopChild = ({ activeMyth, glowShards, glowBooster, glowSymbol }) => {
         l
       </div>
       <div
-        className={`font-symbols text-black-lg-contour mr-[13vw] mt-0.5 ${
+        className={`font-symbols mr-[10vw] text-black-lg-contour ${
           (glowSymbol || glowBooster === 3) && `scale-[150%]`
         } text-[50px] transition-all duration-1000 text-${
           mythSections[activeMyth]
@@ -90,16 +90,16 @@ const TopChild = ({ activeMyth, glowShards, glowBooster, glowSymbol }) => {
     </div>
   );
 };
-const BottomChild = ({ shards, orbs }) => {
+const BottomChild = ({ shards, orbs, activeMyth }) => {
   return (
-    <div className="absolute flex w-full justify-between bottom-0 z-50 mb-[2vh]">
+    <div className="flex justify-center -mt-[4vh]">
       <div
-        className={`text-num transition-all italic text-black-lg-contour custom-skew ml-[13vw]  duration-1000 text-white`}
+        className={`flex text-num pl-6 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-button-primary bg-black z-10 rounded-primary transform skew-x-12`}
       >
         {shards}
       </div>
       <div
-        className={`text-num text-black-lg-contour transition-all text-right mr-[13vw] italic -rotate-6 duration-1000 text-white`}
+        className={`flex text-num pr-6 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-button-primary bg-black z-10 rounded-primary transform -skew-x-12`}
       >
         {orbs}
       </div>
@@ -133,8 +133,8 @@ const ForgeHeader = ({
           glowBooster={glowBooster}
           glowSymbol={glowSymbol}
           shards={shards}
-          glowShards={glowShards}
           activeMyth={activeMyth}
+          glowShards={glowShards}
         />
       }
       CenterChild={
@@ -148,7 +148,9 @@ const ForgeHeader = ({
           activeMyth={activeMyth}
         />
       }
-      BottomChild={<BottomChild shards={shards} orbs={orbs} />}
+      BottomChild={
+        <BottomChild shards={shards} orbs={orbs} activeMyth={activeMyth} />
+      }
     />
   );
 };

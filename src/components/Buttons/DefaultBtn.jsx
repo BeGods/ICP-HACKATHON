@@ -1,12 +1,11 @@
 import React, { useRef, useState } from "react";
 import { mythSections } from "../../utils/constants";
-import { Download, Share2 } from "lucide-react";
+import { Handshake } from "lucide-react";
 
 const DefaultBtn = ({
   message,
   handleClick,
   activeMyth,
-  t,
   isGold,
   isBooster,
 }) => {
@@ -57,7 +56,6 @@ const DefaultBtn = ({
       <div className="flex justify-center items-center w-1/4  h-full">
         {isBooster && (
           <div className="relative flex justify-center items-center">
-            {" "}
             <img
               src={`/assets/uxui/240px-orb.multicolor.png`}
               alt="orb"

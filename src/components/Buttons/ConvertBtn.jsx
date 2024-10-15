@@ -1,10 +1,10 @@
-import { ArrowLeftRight, Repeat2, RotateCcw, RotateCw } from "lucide-react";
+import { Repeat2, RotateCcw, RotateCw } from "lucide-react";
 import React, { useState, useRef, useContext } from "react";
 import { wheel } from "../../utils/constants";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";
 
-const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
+const ConvertButton = ({ handleNext, handlePrev, action, myth }) => {
   const { enableSound } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
   const [playSound, setPlaySound] = useState(false);
@@ -50,7 +50,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, t, myth }) => {
         className="text-button-primary uppercase"
       >
         <div
-          className={`w-[18vw] h-[17vw] flex justify-center items-center rounded-full bg-${wheel[myth]}-primary`}
+          className={`p-[6vw] flex justify-center items-center rounded-full bg-${wheel[myth]}-text`}
         >
           <Repeat2 strokeWidth={3} />
         </div>

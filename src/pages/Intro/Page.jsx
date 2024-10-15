@@ -78,8 +78,6 @@ const IntroPage = (props) => {
       })();
     });
 
-    // tele.CloudStorage.removeItem("guide1");
-
     const handleUserInteraction = () => {
       playAudio();
       document.removeEventListener("click", handleUserInteraction);

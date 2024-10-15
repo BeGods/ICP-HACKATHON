@@ -49,8 +49,8 @@ const SettingModal = ({ close }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-start items-center z-50">
-      <div className="flex relative w-[76%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col mt-[52px] card-shadow-white p-6">
+    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
+      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[14vh] card-shadow-white p-4">
         <IconBtn align={0} handleClick={close} activeMyth={4} />
         <select
           value={lang}

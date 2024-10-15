@@ -20,6 +20,7 @@ import MythInfoCard from "../../components/Cards/Info/MythInfoCrd";
 import BoosterHeader from "./Header";
 import { useBoosterGuide } from "../../hooks/Tutorial";
 import { toast } from "react-toastify";
+import IconBtn from "../../components/Buttons/IconBtn";
 
 const tele = window.Telegram?.WebApp;
 
@@ -239,10 +240,11 @@ const Boosters = () => {
           }}
         />
       </div>
+
       {/* Header */}
       <BoosterHeader
         activeMyth={activeMyth}
-        gameData={gameData}
+        gameData={mythData}
         t={t}
         multiColorOrbs={multiColorOrbs}
         showSymbol={() => {
@@ -255,44 +257,18 @@ const Boosters = () => {
           );
         }}
       />
+
       {/* BOOSTER CARDS */}
       <div className="flex justify-center h-screen w-screen absolute mx-auto">
-        <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
-          {/* BURST */}
-          <BoosterItem
-            isActive={
-              !gameData.mythologies[activeMyth].boosters.isBurstActive &&
-              gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
-            }
-            handleClick={() => {
-              if (gameData.mythologies[activeMyth].isEligibleForBurst) {
-                tele.HapticFeedback.notificationOccurred("success");
-                setShowCard(
-                  <BoosterClaim
-                    activeCard={"burst"}
-                    activeMyth={activeMyth}
-                    mythData={mythData}
-                    closeCard={() => setShowCard(null)}
-                    Button={
-                      <BoosterBtn
-                        activeCard={"burst"}
-                        mythData={mythData}
-                        handleClaim={handleClaimBurst}
-                        activeMyth={activeMyth}
-                        t={t}
-                      />
-                    }
-                  />
-                );
-              } else {
-                toast.success("Locked");
-              }
-            }}
-            isGuideActive={enableGuide}
-            activeMyth={activeMyth}
-            t={t}
-            booster={6}
+        <div className=" w-full absolute top-0 mt-[17.75vh] mr-[8.5vw] right-0">
+          <IconBtn
+            isInfo={true}
+            handleClick={() => {}}
+            activeMyth={4}
+            align={2}
           />
+        </div>
+        <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
           {/* AUTOMATA */}
           <BoosterItem
             isActive={!mythData.isAutomataActive}
@@ -347,6 +323,41 @@ const Boosters = () => {
             activeMyth={activeMyth}
             t={t}
             booster={2}
+          />
+          {/* BURST */}
+          <BoosterItem
+            isActive={
+              !gameData.mythologies[activeMyth].boosters.isBurstActive &&
+              gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
+            }
+            handleClick={() => {
+              if (gameData.mythologies[activeMyth].isEligibleForBurst) {
+                tele.HapticFeedback.notificationOccurred("success");
+                setShowCard(
+                  <BoosterClaim
+                    activeCard={"burst"}
+                    activeMyth={activeMyth}
+                    mythData={mythData}
+                    closeCard={() => setShowCard(null)}
+                    Button={
+                      <BoosterBtn
+                        activeCard={"burst"}
+                        mythData={mythData}
+                        handleClaim={handleClaimBurst}
+                        activeMyth={activeMyth}
+                        t={t}
+                      />
+                    }
+                  />
+                );
+              } else {
+                toast.success("Locked");
+              }
+            }}
+            isGuideActive={enableGuide}
+            activeMyth={activeMyth}
+            t={t}
+            booster={6}
           />
         </div>
       </div>

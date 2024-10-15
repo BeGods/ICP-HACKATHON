@@ -5,6 +5,7 @@ import { fetchLeaderboard } from "../../utils/api";
 import { MyContext } from "../../context/context";
 import Avatar from "../../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
+import { timeRemainingForHourToFinishUTC } from "../../helpers/leaderboard.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -15,6 +16,7 @@ const Leaderboard = (props) => {
   const avatarColor = localStorage.getItem("avatarColor");
   const [leaderboard, setLeaderboard] = useState([]);
   const [squad, setSquad] = useState([]);
+  const updateTimeLeft = timeRemainingForHourToFinishUTC();
 
   const getLeaderboardData = async () => {
     try {
@@ -61,11 +63,11 @@ const Leaderboard = (props) => {
           </div>
         </div>
         <div className="w-full text-secondary text-center pt-1">
-          {t("note.text")}
+          {t(`note.text`)} {updateTimeLeft.minutes}min
         </div>
         {/* LEADERBOARD */}
-        <div className="flex flex-col w-full flex-grow bg-black rounded-primary my-2 pt-[8px] pb-[30px] gap-[10px]">
-          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto">
+        <div className="flex flex-col w-full flex-grow bg-black rounded-primary my-2">
+          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-6">#</span>
               {t(`profile.name`)}
@@ -74,7 +76,7 @@ const Leaderboard = (props) => {
           </div>
           {activeTab
             ? leaderboard.map((item, index) => (
-                <div>
+                <div className="">
                   <div className="border-t border-borderDark w-[90%] mx-auto"></div>
                   <LeaderboardItem
                     key={index}
