@@ -6,6 +6,7 @@ import ConvertInfo from "../../components/Cards/Info/ConvertInfoCrd";
 import { useTranslation } from "react-i18next";
 import {
   mythologies,
+  mythSections,
   mythSymbols,
   wheel,
   wheelNames,
@@ -21,7 +22,7 @@ const tele = window.Telegram?.WebApp;
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",
-  "-ml-[55vw] -mt-[18vw]",
+  "-ml-[52vw] -mt-[17vw]",
   "-mt-[45vw] ml-[32vw]",
   "mt-[18vw] ml-[52vw]",
 ];
@@ -43,6 +44,7 @@ const Tower = () => {
   } = useContext(MyContext);
   const [myth, setMyth] = useState(0);
   const [showEffect, setShowEffect] = useState(false);
+  const [scaleOrb, setScaleOrb] = useState(null);
   const mythData = gameData.mythologies.filter(
     (item) => item.name.toLowerCase() === wheel[myth]
   )[0];
@@ -159,10 +161,7 @@ const Tower = () => {
         mythData={mythData}
         sessionOrbs={sessionOrbs}
       />
-      {/* Wheel */}
-      <div className="flex relative flex-grow justify-center items-center">
-        {/* Info Icon */}
-
+      <div className="flex relative h-fit w-full justify-center bg-red-400 items-center">
         {!showInfo && (
           <IconBtn
             isInfo={true}
@@ -182,53 +181,53 @@ const Tower = () => {
             align={2}
           />
         )}
+      </div>
 
-        {/* Wheel */}
-        <div className="flex  flex-col items-center justify-center w-full">
-          <div className="absolute h-full flex justify-center items-end bottom-[17.5%]">
-            {myth !== 0 && (
-              <div
-                onClick={() => {
-                  tele.HapticFeedback.notificationOccurred("success");
+      {/* Wheel */}
+      <div className="flex  flex-col items-center justify-center w-full">
+        <div className="absolute h-full flex justify-center items-end bottom-[15%]">
+          {myth !== 0 && (
+            <div
+              onClick={() => {
+                tele.HapticFeedback.notificationOccurred("success");
 
-                  if (myth !== 0) {
-                    setShowEffect(true);
-                    setTimeout(() => {
-                      setShowEffect(false);
-                    }, 300);
+                if (myth !== 0) {
+                  setShowEffect(true);
+                  setTimeout(() => {
+                    setShowEffect(false);
+                  }, 300);
 
-                    if (handTimeoutRef.current) {
-                      clearTimeout(handTimeoutRef.current);
-                      handTimeoutRef.current = null;
-                    }
-                    handTimeoutRef.current = setTimeout(() => {
-                      setShowHand(true);
-                      handTimeoutRef.current = setTimeout(() => {
-                        setShowHand(false);
-                      }, 2000);
-                    }, 2000);
-
-                    setSessionOrbs((prev) => {
-                      const orbs = gameData.mythologies[myth - 1]?.orbs || 0;
-                      return orbs != 0 && orbs - prev * 2 > 1 ? prev + 1 : prev;
-                    });
+                  if (handTimeoutRef.current) {
+                    clearTimeout(handTimeoutRef.current);
+                    handTimeoutRef.current = null;
                   }
-                }}
-                className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
+                  handTimeoutRef.current = setTimeout(() => {
+                    setShowHand(true);
+                    handTimeoutRef.current = setTimeout(() => {
+                      setShowHand(false);
+                    }, 2000);
+                  }, 2000);
+
+                  setSessionOrbs((prev) => {
+                    const orbs = gameData.mythologies[myth - 1]?.orbs || 0;
+                    return orbs != 0 && orbs - prev * 2 > 1 ? prev + 1 : prev;
+                  });
+                }
+              }}
+              className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
+            >
+              <div
+                className={`p-[6vw] border flex justify-center items-center rounded-full ${
+                  myth === 0 ? "bg-black" : `bg-${wheel[myth]}-text`
+                }`}
               >
-                <div
-                  className={`p-[6vw] border flex justify-center items-center rounded-full ${
-                    myth === 0 ? "bg-black" : `bg-${wheel[myth]}-text`
-                  }`}
-                >
-                  <Repeat2
-                    strokeWidth={3}
-                    color={`${myth === 0 ? "white" : `white`}`}
-                  />
-                </div>
+                <Repeat2
+                  strokeWidth={3}
+                  color={`${myth === 0 ? "white" : `white`}`}
+                />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -257,15 +256,23 @@ const Tower = () => {
         >
           {mythologies.map((item, index) => (
             <div
+              onTouchStart={() => {
+                setScaleOrb(index);
+              }}
+              onTouchEnd={() => {
+                setScaleOrb(null);
+              }}
               onClick={() => {
                 tele.HapticFeedback.notificationOccurred("success");
                 setMyth(index + 1);
               }}
               key={index}
-              className={`absolute z-50 pointer-events-auto ${orbPos[index]}`}
+              className={`absolute transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
             >
               <div
-                className={`flex relative text-center justify-center "w-[12vw]  glow-icon-lg-white max-w-orb glow-icon-white items-center rounded-full `}
+                className={`flex relative transition-all duration-1000 text-center justify-center ${
+                  scaleOrb == index ? "w-[11vw]" : "max-w-orb"
+                } scale-orb-${item.toLowerCase()} items-center rounded-full `}
               >
                 <img
                   src="/assets/uxui/240px-orb.base.png"
@@ -273,7 +280,9 @@ const Tower = () => {
                   className={`filter-orbs-${item.toLowerCase()} `}
                 />
                 <span
-                  className={`absolute z-1 font-symbols text-white opacity-50 text-[30px] mt-1 text-black-sm-contour`}
+                  className={`absolute z-1 font-symbols text-white opacity-50 ${
+                    scaleOrb == index ? "text-[35px]" : "text-[30px]"
+                  }  mt-1 text-black-sm-contour`}
                 >
                   <>{mythSymbols[item.toLowerCase()]}</>{" "}
                 </span>
