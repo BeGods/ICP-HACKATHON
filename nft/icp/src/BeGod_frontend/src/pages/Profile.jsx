@@ -17,19 +17,21 @@ import { BiCategory } from "react-icons/bi";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import MoonLoader from "react-spinners/MoonLoader";
+import { v4 as uuidv4 } from 'uuid';
 
 import { City, Country } from 'country-state-city'; 
 
 import { FaTelegram } from "react-icons/fa6";
 import { RiFileCopyLine } from 'react-icons/ri';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
+import FadeLoader from "react-spinners/FadeLoader"
 
 
 const buyingStatus = {
    initial : "INITIAL",
    deliveryInfo : "DELIVERYINFO",
-   showCollection : "COLLECTION"
+   showCollection : "COLLECTION",
+   placeOrderStatus : "ORDERSTATUS"
 }
 
 const Profile = () => {
@@ -76,7 +78,11 @@ const [orderEmail,updateOrderEmail] = useState("");
 const [streetAddress,updateStreetAddress] = useState('');
 const [pinCode , updatePinCode] = useState(NaN);
 const [landMark,updateLandMark] = useState("");
+const [placeOrderLoading , updatePlaceOrderLoading] = useState(false);
+const [orderMsg,updateOrderMsg] = useState("");
+const [isOrderPlaced,updateOrderPlacedStatus] = useState(false);
 
+const [orderId,updateOrderId] = useState(NaN)
 const countries = Country.getAllCountries().map((eachCountry) => ({
   id : eachCountry.isoCode,
   displayText : eachCountry.name,
@@ -89,6 +95,7 @@ const [cityList,updateCityList] = useState([]);
 const togglePlaceOrderPopup  = () => {
   setplaceOrderPopup(!placeOrderPopup);
   updateOrderingStatus(buyingStatus.showCollection);
+  updateOrderPlacedStatus(false);
 }
 
 const onChangeCoutry = (event) => {
@@ -103,23 +110,153 @@ const onChangeCity = (event) => {
       updateSelectedCity(event.target.value)
   }
 }
-const onClickPlaceOrder = () => {
+
+const resetFormFields = () => {
+  updateSelectedCountry("");
+  updateSelectedCity("");
+  updatePhoneNumber(NaN);
+  updateOrderEmail("");
+  updateStreetAddress("");
+  updatePinCode(NaN);
+  updateLandMark("");
+};
+
+const onClickOrder = async (orderType) => {
+  // Check if all fields are empty
+  const isFormValid = 
+  !selectedCountry &&
+  !selectedCity &&
+  !streetAddress &&
+  !orderEmail &&
+  (isNaN(phoneNo) || phoneNo === "") && // Check if phoneNo is NaN or empty
+  (isNaN(pinCode) || pinCode === "")    
   if (
-    selectedCountry.trim() !== "" &&
-    selectedCity.trim() !== "" &&
-    !isNaN(phoneNo) && 
-    orderEmail.trim() !== "" &&
-    /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail) && 
-    streetAddress.trim() !== "" &&
-    !isNaN(pinCode) && pinCode.toString().length === 6
+    isFormValid
   ) {
-    togglePlaceOrderPopup(true);
-    toast.success("Order Placed Successfully")
-  } else {
-    toast.error("Please fill out all fields correctly, including a valid phone number, email, and pin code.")
+    toast.error("Please fill out all the fields.");
+    return;
+  }
+
+  // Validate phone number first
+  if (phoneNo.toString().trim() === "" || isNaN(phoneNo)) {
+    toast.error("Please enter a valid phone number.");
+    return;
+  }
+
+  // Validate email next
+  if (
+    orderEmail.trim() === "" ||
+    !/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail)
+  ) {
+    toast.error("Please enter a valid email address.");
+    return;
+  }
+
+  // Validate street address
+  if (streetAddress.trim() === "") {
+    toast.error("Please enter a street address.");
+    return;
+  }
+
+  // Validate city
+  if (selectedCity.trim() === "") {
+    toast.error("Please select a city.");
+    return;
+  }
+
+  // Validate country
+  if (selectedCountry.trim() === "") {
+    toast.error("Please select a country.");
+    return;
+  }
+
+  // Validate pin code
+  if (pinCode.toString().trim() === "" || pinCode.toString().length !== 6) {
+    toast.error("Please enter a valid 6-digit pin code.");
+    return;
+  }
+
+  // If all validations pass, proceed to place the order
+  try {
+    if(orderType === "placeorder"){
+      updatePlaceOrderLoading(true);
+    updateOrderingStatus(buyingStatus.placeOrderStatus);
+    console.log("landmark before sending",landMark);
+    const validLandMark = landMark != "" ? [landMark] : []
+    const result = await backendActor.gethardcopy(
+      Principal.fromText(principal),
+      uuidv4(),
+      allCollectionsList[currentDropDownOption].collectionId,
+      phoneNo.toString(),
+      orderEmail,
+      streetAddress,
+      selectedCity,
+      selectedCountry,
+      pinCode.toString(),
+      validLandMark,
+    );
+
+
+
+
+        if (result.ok) {
+          updateOrderMsg("Order Placed Successfully!")
+          resetFormFields();
+          fetchOrderHistory();
+        } else {
+          updateOrderMsg(result.err);
+        }
+    }else{
+      updatePlaceOrderLoading(true);
+    updateOrderingStatus(buyingStatus.placeOrderStatus);
+    console.log("order id",orderId);
+    const validLandMark = landMark != "" ? [landMark] : []
+    const result = await backendActor.updateOrder(
+      Principal.fromText(principal),
+      parseInt(orderId),
+      phoneNo.toString(),
+      orderEmail,
+      streetAddress,
+      selectedCity,
+      selectedCountry,
+      pinCode.toString(),
+      validLandMark,
+    );
+
+    console.log("result of update order",result);
+
+
+    if (result.ok) {
+      updateOrderMsg("Order Updated Successfully!");
+      await fetchOrderHistory();
+      resetFormFields();
+    } else {
+      updateOrderMsg(result.err);
+    }
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("An error occurred while placing the order.");
+  }
+  finally{
+    updatePlaceOrderLoading(false);
   }
 };
 
+
+const onClickRemoveOrder = async () =>{
+  updatePlaceOrderLoading(true);
+  updateOrderingStatus(buyingStatus.placeOrderStatus);
+  const result = await backendActor?.removeOrder(Principal.fromText(principal),parseInt(orderId));
+  if (result.ok) {
+    updateOrderMsg("Order Removed Successfully!");
+    await fetchOrderHistory();
+    resetFormFields()
+  } else {
+    updateOrderMsg(result.err);
+  }
+  updatePlaceOrderLoading(false);
+}
 
   const [currentDropDownOption , updateDropDownOption] = useState(0);
 
@@ -128,11 +265,14 @@ const onClickPlaceOrder = () => {
     updateCurrentOption(updatedOption)
     if(updatedOption !== currentOption){
       updateNoCardsStatus(false);
-      setIsCardsLoading(true)
       if(updatedOption === "mycollection"){
+        setIsCardsLoading(true)
         await fetchCollections();
       }else if(updatedOption === "favorite"){
+        setIsCardsLoading(true)
         await fetchFavoriteCards();
+      }else if(updatedOption === "myorders"){
+        await fetchOrderHistory();
       }
     }
 
@@ -190,6 +330,16 @@ const onClickPlaceOrder = () => {
 
   },[selectedList])
 
+
+
+
+
+
+
+
+
+
+
 const {t} = useTranslation();
 const { backendActor } = useAuth({});
 
@@ -230,12 +380,14 @@ useEffect(()=>{
   fetchUserDetails()
 },[])
 
-useEffect(()=>{
+useEffect(()=>{  
   updateUserName(userDetails?.name);
   updateEmail(userDetails?.email);
   updateTelegramUrl(userDetails.telegramUrl);
 
 },[userDetails])
+
+
 
 const fetchUserDetails= async () => {
      const fetchUserResults= await backendActor?.getUserDetails(Principal.fromText(principal));
@@ -253,6 +405,62 @@ const fetchUserDetails= async () => {
      }
     
 }
+
+
+
+const [orderHistory,updateOrderHistory] = useState([]);
+useEffect(()=>{
+  fetchOrderHistory();
+},[])
+   
+const fetchOrderHistory = async () => {
+  const result = await backendActor?.getuserorders(Principal.fromText(principal));
+  console.log("result in my orders", result);
+
+  let historyResponse;
+  const updatedOrderHistory = [];
+  
+  if(result.ok){
+    historyResponse = result.ok
+  }else{
+    updateOrderHistory([]);
+    return;
+  }
+
+  historyResponse.map((eachOrder) => {
+    console.log("each order in fetch",eachOrder)
+    const updatedOrder = {
+      orderId: parseInt(eachOrder.id),
+      collectionName: getCollectionName(eachOrder.collectionCanisterId),
+      collectionId: eachOrder.collectionCanisterId,
+      country: eachOrder.country || "",
+      city: eachOrder.city || "",
+      address: eachOrder.address || "",
+      phone: eachOrder.phone || "",
+      email: eachOrder.email || "",
+      pinCode: eachOrder.pincode || "",
+      landmark: eachOrder.landmark.length > 0 ? eachOrder.landmark[0] : "",
+      orderTime: eachOrder.orderTime ? eachOrder.orderTime.toString() : "",
+    };
+
+    updatedOrderHistory.push(updatedOrder);
+  });
+
+  updateOrderHistory(updatedOrderHistory);
+  console.log("order history", updatedOrderHistory);
+};
+
+
+
+ const getCollectionName = (id) => {
+  const collection = allCollectionsList.find(element => {
+    console.log("inside getCollectionName",element, element.collectionId, id);
+    return element.collectionId.toText() === id.toText();
+  });
+  console.log("is true",collection)
+  return collection ? collection.name : null;
+}
+
 
 
   const checkIsFavourite = async(tokenId) => {
@@ -293,7 +501,10 @@ const fetchCollections = async () => {
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
    // console.log("owned nfts",updatedOwnedList);
     updatedCardsList = updatedOwnedList;
-    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
+    if(updatedCardsList.length == 0){
+      updateNoCardsStatus(true);
+    }else{
+      const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
    // console.log("not owned nfts",updatedNotOwnedNfts);
     updateRemainingNfts(updatedNotOwnedNfts.length);
     updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
@@ -303,6 +514,8 @@ const fetchCollections = async () => {
     }else{
       updateNoCardsStatus(true);
     }
+    }
+    
     
 
   }
@@ -459,9 +672,40 @@ const onChangeFilterOption = (eachCollection) => {
     getSelectedOptionCards(eachCollection.collectionId);
   }
   
-}
-console.log("selected List",selectedList);
- 
+ }
+// console.log("selected List",selectedList);
+  const isPlaced = (currentId)=> {
+    console.log("orderlist in isplaced",orderHistory)
+    for(let i =0;i< orderHistory.length;i++){
+      const order = orderHistory[i];
+    //  console.log("inside isplaced outside if",currentId.toText(),order.collectionId.toText());
+      if(order.collectionId.toText() === currentId.toText()){
+        console.log("is true")
+        return true;
+      }
+    }
+    return false;
+  }
+
+  const onClickViewDetails = (order) => {
+    console.log("order",order);
+    updateOrderPlacedStatus(true);
+    updateOrderId(parseInt(order.orderId));
+    updateSelectedCountry(order.country || ""); 
+    const cities = City.getCitiesOfCountry(order.country);
+    updateCityList(cities);
+    updatePhoneNumber(order.phone || NaN); 
+    updateOrderEmail(order.email || ""); 
+    updateStreetAddress(order.address || ""); 
+    updatePinCode(order.pinCode || NaN); 
+    updateSelectedCity(order.city || ""); 
+    updateLandMark(order.landmark.length > 0 ? order.landmark : "");
+    updatePlaceOrderLoading(false);
+    updateOrderingStatus(buyingStatus.deliveryInfo); 
+    setplaceOrderPopup(true); 
+  }
+  
+
   return (
     <div className='font-caslon'>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
@@ -510,27 +754,28 @@ console.log("selected List",selectedList);
           </div>
 
           <div className='w-full lg:w-[70%]'>
-            <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0'>
+            <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0 mb-10 md:mb-1'>
               <button
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "mycollection" ? 'border-b-4 border-[#FFD700]' : ''}`}
+                className={`text-[18px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "mycollection" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={() => onOptionChange("mycollection")}
               >
                 {t('myCollection')}
               </button>
               <button
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "favorite" ? 'border-b-4 border-[#FFD700]' : ''}`}
+                className={`text-[18px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "favorite" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={() => onOptionChange("favorite")}
                 disabled = {areButtonsDisabled}
               >
                 {t('favorite')}
               </button>
-              {/* <div
-                className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
+               <div
+                className={`text-[18px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "myorders" ? 'border-b-4 border-[#FFD700]' : ''}`}
+                onClick={()=>onOptionChange("myorders")}
               >
-                My Achievements
-              </div> */}
+                My Orders
+              </div> 
             </div>
-            {allCollectionsList.length >0 && (
+            {allCollectionsList.length>0 && currentOption !== "myorders" && (
               <div className="relative z-10 flex items-center justify-between mt-5 md:w-full ">
                            
               <button
@@ -560,7 +805,11 @@ console.log("selected List",selectedList);
                 {currentOption === "mycollection" && !isCardsLoading && (
                       <div className='flex flex-col items-center mr-5 md:items-end lg:mr-20'>
                       <div className='flex items-center justify-end '>
-                            <div className={`relative ${remainingNftsCount>0 && "group"}`}>
+                          
+                            {isPlaced(allCollectionsList[currentDropDownOption].collectionId)?(
+                                <h1 className='bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm flex justify-center items-center'>Order Placed!</h1>
+                            ):(
+                              <div className={`relative ${remainingNftsCount>0 && "group"}`}>
                               <button 
                                 disabled={remainingNftsCount > 0} 
                                 className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
@@ -574,13 +823,16 @@ console.log("selected List",selectedList);
                               </span>
                               
                             </div>
+                            )}
                           </div>
                       </div>
                     )}
           </div>
             ) }
             {/* Small screen view for single image display with prev and next buttons */}
-            <div className='z-0 flex items-center justify-between mt-8 sm:hidden'>
+            
+            {currentOption !== "myorders" && (
+              <div className='z-0 flex items-center justify-between mt-8 sm:hidden'>
               
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
@@ -599,11 +851,11 @@ console.log("selected List",selectedList);
                   (
                     selectedList.length>0 ? (
                       <div>
-                      {currentOption === "mycollection" ? (
+                       {currentOption === "mycollection" ? (
                          <NftCard img={selectedList[currentIndex][0]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={selectedList[currentIndex].length} buttonStatus = {areButtonsDisabled} /> 
                       ):(
                         <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled}/> 
-                      )}
+                      )} 
                     </div>
                     ):(
                       <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
@@ -616,56 +868,86 @@ console.log("selected List",selectedList);
                 <img src="/Hero/down.png" alt="Next" className='w-10 h-10 -rotate-90' />
               </button>
             </div>
+            )}
           
             {/* Grid view for larger screens */}
-            {noCards ? (
-                <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
-                  <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
-                </div>
+           {currentOption !== "myorders" && (
+             (noCards ? (
+              <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
+                <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
+              </div>
+          ):(
+            
+             (isCardsLoading ? (
+                      <div className="pb-10">
+                      <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                        <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4">
+                          {Array.from({ length: 10 }).map((_, index) => (
+                            <Skeleton
+                              key={index}
+                              count={1}
+                              width={210}
+                              height={300}
+                            />
+                          ))}
+                        </div>
+                      </SkeletonTheme>
+                      </div>
+                  ):(
+                    <>
+                   
+                  {selectedList.length === 0 ? (
+                    <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
+                    <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
+                  </div>
+                  ):( 
+                    <>
+                    <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+                    {selectedList.length > 0 && selectedList.map((img, index) => (
+                      <div className='w-full rounded-lg flip-card'>
+                        {currentOption === "mycollection" ? (
+                          <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} buttonStatus = {areButtonsDisabled} />
+                        ):(
+                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled} />
+                        )}
+                      </div>
+                    ))}
+                  
+                  </div>
+                  
+                  </>
+                  )}
+                  </>
+                  ))
+          ))
+           )}
+           {currentOption === "myorders" && (
+            <div className='w-[97%] min-h-[65vh] sm:my-10  mb-8 '>
+            <ul className='w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-sm lg:text-lg bg-[#FCD37B1A] m-0  grid grid-cols-3  items-center mb-[21px]'>
+                  <li className='flex justify-center items-center'>Order Id</li>
+                  <li className='flex justify-center items-center'>Collection</li>
+                  <li className='flex justify-center items-center'>Details</li>
+            </ul>
+            <div>
+            {orderHistory.length>0 ?(
+              orderHistory.map((eachOrder)=>(
+                <ul key={eachOrder.orderId} className='w-[100%] h-[75px] lg:h-[100px] text-[#FCD378] text-sm bg-[#FCD37B1A] m-0  grid grid-cols-3 items-center mb-[21px] overflow-x-auto'>
+                <li className='flex justify-center items-center'>{eachOrder.orderId}</li>
+                <li className='flex justify-center items-center'>{eachOrder.collectionName}</li>
+                <li className='flex justify-center items-center'><button className='text-[#000000] bg-[#FCD378] px-2 rounded-sm' 
+                onClick={()=>onClickViewDetails(eachOrder)}
+                >view details</button></li>
+            </ul>
+              ))
             ):(
-              
-               (isCardsLoading ? (
-                        <div className="pb-10">
-                        <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                          <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4">
-                            {Array.from({ length: 10 }).map((_, index) => (
-                              <Skeleton
-                                key={index}
-                                count={1}
-                                width={210}
-                                height={300}
-                              />
-                            ))}
-                          </div>
-                        </SkeletonTheme>
-                        </div>
-                    ):(
-                      <>
-                     
-                    {selectedList.length === 0 ? (
-                      <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
-                      <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
-                    </div>
-                    ):( 
-                      <>
-                      <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
-                      {selectedList.length > 0 && selectedList.map((img, index) => (
-                        <div className='w-full rounded-lg flip-card'>
-                          {currentOption === "mycollection" ? (
-                            <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} buttonStatus = {areButtonsDisabled} />
-                          ):(
-                            <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled} />
-                          )}
-                        </div>
-                      ))}
-                        
-                    </div>
-                    
-                    </>
-                    )}
-                    </>
-                    ))
+              <div className='w-[90%] min-h-[45vh] sm:my-10 ml-[10%] mb-8 flex justify-center items-center'>
+                <h1 className='text-[#FFD700] text-[22px] my-20'>Order History Found</h1>
+              </div>
             )}
+             
+          </div>
+            </div>
+           )}
           </div>
         </div>
       </div>
@@ -733,19 +1015,33 @@ console.log("selected List",selectedList);
         <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
-          <div className={`  bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
+          <div className={`bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
-              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] 2xl:h-[70vh] "
-              : "h-[70vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[60vw] lg:h-[45vh] 2xl:h-[60vh] "
+              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] xl:h-[70vh] xl:w-[60vw] "
+              : currentOrderingStatus === buyingStatus.showCollection? "h-[50vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[60vw] lg:h-[45vh] xl:h-[60vh] xl:w-[40vw] "
+              : "h-[30vh] w-[60vw] md:w-[40vw] md:h-[25vh] lg:w-[30vw] lg:h-[20vh] xl:h-[35vh] xl:w-[26vw]"
           }`}>
-             <div className="relative flex items-center justify-end">
-                  <button
-                    className="text-[#ffffff] absolute bottom-1 top-1"
-                    onClick={() => togglePlaceOrderPopup()}
-                  >
-                    <RxCross2 size={20} />
-                  </button>
-                </div>
+             {!placeOrderLoading && (
+              (isOrderPlaced ? (
+                <div className="relative flex items-center justify-end">
+              <button
+                className="text-[#ffffff] absolute bottom-1 top-1"
+                onClick={() => {togglePlaceOrderPopup();resetFormFields()}}
+              >
+                <RxCross2 size={20} />
+              </button>
+            </div>
+              ):(
+                <div className="relative flex items-center justify-end">
+              <button
+                className="text-[#ffffff] absolute bottom-1 top-1"
+                onClick={() => togglePlaceOrderPopup()}
+              >
+                <RxCross2 size={20} />
+              </button>
+            </div>
+              ))
+             )}
             {currentOrderingStatus === buyingStatus.showCollection && (
               <div className="h-[90%]  flex flex-col items-center justify-center gap-2 mt-4">
                 <h1 className="text-xl lg:text-3xl font-semibold text-[#FCD37B] ">CONGRATULATIONS!!!</h1>
@@ -832,7 +1128,7 @@ console.log("selected List",selectedList);
                       onChange={onChangeCity}
                     >
                       <option value="" disabled hidden></option>
-                      {!selectedCountry ? (
+                      {selectedCountry==="" ? (
                         <option
                           value=""
                           disabled
@@ -847,8 +1143,8 @@ console.log("selected List",selectedList);
                       ) : (
                         cityList.map((eachCity) => (
                           <option
-                            value={eachCity.name}
-                            key={eachCity.name}
+                            value={eachCity.id}
+                            key= {uuidv4()}
                             className="bg-black border-0 border-none font-Quicksand"
                           >
                             {eachCity.name}
@@ -893,12 +1189,12 @@ console.log("selected List",selectedList);
                       onChange={(e)=>updatePinCode(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-col w-[35%] mb-3">
+                  <div className="flex flex-col w-[35%] mb-3 ml-2">
                     <label className="text-sm font-extralight">
                       Nearby LandMark(Optional)
                     </label>
                     <input
-                      type="text"
+                      type="text" 
                       className="bg-transparent border-0 border-b border-white border-solid"
                       value={landMark}
                       onChange={(e)=>updateLandMark(e.target.value)}
@@ -912,15 +1208,48 @@ console.log("selected List",selectedList);
                   </p>
                 </div>
                 <div className='flex justify-center'>
-                <div className="flex justify-center w-[190px] lg:w-[220px] p-2 border-[1px] border-[#FCD37B]">
+                {isOrderPlaced ? (
+                      <div className='w-[80%] md:w-[70%] lg:w-[60%] flex justify-between '>
+                      <div className="flex justify-center w-[120px] lg:w-[220px] p-2 border-[1px] border-[#FCD37B] mr-5">
+                  <button className="w-full text-[15px] lg:text-[18px] text-black bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                  onClick={()=>onClickOrder("update")}
+                  >
+                    Update Order
+                  </button>
+                </div>
+                <div className="flex justify-center w-[120px] md:w-[180px] lg:w-[220px] p-2 border-[1px] border-[#FCD37B]">
+                  <button className="w-full text-[15px] lg:text-[18px] text-black bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                  onClick={onClickRemoveOrder}
+                  >
+                    Remove Order
+                  </button>
+                </div>
+                      </div>
+                ):(
+                  <div className="flex justify-center w-[190px] lg:w-[220px] p-2 border-[1px] border-[#FCD37B]">
                   <button className="w-full text-black bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                  onClick={onClickPlaceOrder}
+                  onClick={()=>onClickOrder("placeorder")}
                   >
                     Place Order
                   </button>
                 </div>
+                )}
                 </div>
                 
+              </div>
+            )}
+            {currentOrderingStatus === buyingStatus.placeOrderStatus && (
+              <div className='text-white h-[90%] flex justify-center items-center'>
+        
+                {placeOrderLoading ? (
+                  <div className=' '>
+                    <FadeLoader color='grey' />
+                  </div>
+                ):(
+                  <div>
+                    <h1 className='text-white'>{orderMsg}</h1>
+                  </div>
+                )} 
               </div>
             )}
           </div>
