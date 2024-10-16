@@ -120,7 +120,7 @@ const CreateCollection = () => {
   const handleFiles = async (files) => {
     console.log("Uploaded files:", files);
     setUFile(files);
-  
+
     const file = files[0]; // Get the first uploaded file
     if (file) {
       try {
@@ -129,27 +129,26 @@ const CreateCollection = () => {
           maxWidthOrHeight: 300,
           useWebWorker: true,
         };
-  
+
         let compressedFile = await imageCompression(file, options);
-        while (compressedFile.size > 100 * 1024) { 
+        while (compressedFile.size > 100 * 1024) {
           options.maxSizeMB *= 0.9;
           compressedFile = await imageCompression(file, options);
         }
-  
+
         console.log("Compressed file size:", compressedFile.size);
-  
+
         const reader = new FileReader();
         reader.onloadend = () => {
           setBase64String(reader.result);
         };
-  
+
         reader.readAsDataURL(compressedFile);
       } catch (error) {
         console.error("Error during file compression:", error);
       }
     }
   };
-  
 
   const createExtData = async (name, base64String, description, collColor) => {
     try {
@@ -384,16 +383,19 @@ const CreateCollection = () => {
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
         {loading ? (
-          <div
-            style={{
-              display: "grid",
-              lineHeight: 3,
-              padding: "1rem",
-              marginBottom: "0.5rem",
-            }}
-          >
-            <Skeleton />
-            <Skeleton count={5} />
+          <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
+            {Array(6) // Generate skeleton loaders for each collection card
+              .fill()
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-[#29292C] w-full h-full px-10 py-6 flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border"
+                >
+                  <Skeleton circle width={160} height={160} />
+                  <Skeleton width={140} height={30} />
+                  <Skeleton width={140} height={30} />
+                </div>
+              ))}
           </div>
         ) : (
           <div className="w-full">
