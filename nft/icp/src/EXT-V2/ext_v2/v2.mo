@@ -261,12 +261,6 @@ actor class EXTNFT(init_owner : Principal) = this {
     token : ?HttpStreamingCallbackToken;
   };
 
-  // type Activity = {
-  //   tokenIdentifier: TokenIdentifier;
-  //   price: Nat64;
-  //   time: Time;
-  // };
-
   //Stable State
   private let EXTENSIONS : [Extension] = ["@ext/common", "@ext/nonfungible"];
   private stable var data_disbursementQueueState : [(TokenIndex, AccountIdentifier, SubAccount, Nat64)] = [];
@@ -2176,32 +2170,6 @@ actor class EXTNFT(init_owner : Principal) = this {
 
     return Buffer.toArray(fungibleTokenData);
   };
-  // public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata)] {
-  //   if (_tokenMetadata.size() == 0) {
-  //     return [];
-  //   };
-
-  //   let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(_tokenMetadata.size());
-
-  //   for ((tokenIndex, metadata) in _tokenMetadata.entries()) {
-  //     switch (metadata) {
-  //       case (#nonfungible(_)) {
-  //         let owner = switch (_registry.get(tokenIndex)) {
-  //           case (?owner) { owner };
-  //           case (null) {
-  //             AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-  //           };
-  //         };
-  //         nonFungibleTokenData.add((tokenIndex, owner, metadata));
-  //       };
-  //       case (#fungible(_)) {
-
-  //       };
-  //     };
-  //   };
-
-  //   return Buffer.toArray(nonFungibleTokenData);
-  // };
 
   public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
     if (_tokenMetadata.size() == 0) {
@@ -2332,38 +2300,6 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //singleNFTData
-  // public query func getSingleNonFungibleTokenData(tokenid : TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata)] {
-  //   if (_tokenMetadata.size() == 0) {
-  //     return [];
-  //   };
-
-  //   let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata)>(1);
-
-  //   switch (_tokenMetadata.get(tokenid)) {
-  //     case (?metadata) {
-  //       switch (metadata) {
-  //         case (#nonfungible(_)) {
-  //           let owner = switch (_registry.get(tokenid)) {
-  //             case (?owner) owner;
-  //             case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-  //           };
-  //           nonFungibleTokenData.add((tokenid, owner, metadata));
-  //         };
-  //         case (#fungible(_)) {
-  //           // Return empty if the token is fungible
-  //           return [];
-  //         };
-  //       };
-  //     };
-  //     case (null) {
-  //       // Return empty if no metadata found
-  //       return [];
-  //     };
-  //   };
-
-  //   return Buffer.toArray(nonFungibleTokenData);
-  // };
-
   public query func getSingleNonFungibleTokenData(tokenid: TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
     if (_tokenMetadata.size() == 0) {
         return [];
@@ -2408,8 +2344,6 @@ actor class EXTNFT(init_owner : Principal) = this {
     return Buffer.toArray(nonFungibleTokenData);
 };
 
-
-
 //mycollection
   public query func myCollection(_collectionCanisterId: Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
     // Get all tokens owned by the user from the _owners map
@@ -2443,81 +2377,5 @@ actor class EXTNFT(init_owner : Principal) = this {
       };
     };
 };
-  // public shared func myCollection(_collectionCanisterId: Principal, user: AccountIdentifier) : async Result.Result<{
-  //   boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)];
-  //   unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)]
-  // }, CommonError> {
-  //   // Define the canister actor interface
-  //   let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-  //       ext_marketplaceListings: () -> async [(TokenIndex, Listing, Metadata)];
-  //       getCollectionDetails: () -> async (Text, Text, Text);
-  //   };
-
-  //   // Fetch the collection details
-  //   let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
-
-  //   // Fetch marketplace listings (i.e., unbought NFTs)
-  //   let listings = await collectionCanisterActor.ext_marketplaceListings();
-
-  //   // Initialize arrays for bought and unbought NFTs
-  //   var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
-  //   var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
-
-  //   // Iterate through the listings and categorize the NFTs
-  //   for ((tokenIndex, listing, metadata) in listings.vals()) {
-  //       let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
-
-  //       // Check if the user is the owner of the NFT
-  //       if (listing.seller == user) {
-  //           // If the user owns the NFT, add it to the boughtNFTs list
-  //           boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
-  //       } else {
-  //           // If the NFT is listed but not owned by the user, add it to the unboughtNFTs list
-  //           unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
-  //       }
-  //   };
-
-  //   // Proper return type with result wrapped in a tuple
-  //   return #ok({
-  //       boughtNFTs = boughtNFTs;
-  //       unboughtNFTs = unboughtNFTs;
-  //   });
-  // };
-
-  // public shared func myCollection(user: AccountIdentifier) : async Result.Result<{
-  //   boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)];
-  //   unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)]
-  // }, CommonError> {
-
-  //   // Fetch the collection details
-  //   let (collectionName, _, _) = await getCollectionDetails(); // Call the function directly
-
-  //   // Fetch marketplace listings (i.e., unbought NFTs)
-  //   let listings = await ext_marketplaceListings(); // Call the function directly
-
-  //   // Initialize arrays for bought and unbought NFTs
-  //   var boughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
-  //   var unboughtNFTs: [(TokenIdentifier, TokenIndex, Metadata, Text)] = [];
-
-  //   // Iterate through the listings and categorize the NFTs
-  //   for ((tokenIndex, listing, metadata) in listings.vals()) {
-  //       let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(Principal.fromActor(this), tokenIndex); // Use this canister's principal
-
-  //       // Check if the user is the owner of the NFT
-  //       if (listing.seller == user) {
-  //           // If the user owns the NFT, add it to the boughtNFTs list
-  //           boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
-  //       } else {
-  //           // If the NFT is listed but not owned by the user, add it to the unboughtNFTs list
-  //           unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName)]);
-  //       }
-  //   };
-
-  //   // Proper return type with result wrapped in a tuple
-  //   return #ok({
-  //       boughtNFTs = boughtNFTs;
-  //       unboughtNFTs = unboughtNFTs;
-  //   });
-  // };
 
 };

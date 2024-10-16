@@ -55,6 +55,8 @@ const Profile = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [remainingNftsCount,updateRemainingNfts] = useState([]);
+  const [areButtonsDisabled, setAreButtonsDisabled] = useState(false);
+
 
   useEffect(()=>{
     if(!isAuthenticated){
@@ -160,7 +162,8 @@ const onClickPlaceOrder = () => {
 
 
     }else{
-      
+      console.log("no cards in fav")
+      updateSelectedList([]);
       updateNoCardsStatus(true);
       
     }
@@ -226,6 +229,13 @@ const onClickUpdateUserDetails = async() => {
 useEffect(()=>{
   fetchUserDetails()
 },[])
+
+useEffect(()=>{
+  updateUserName(userDetails?.name);
+  updateEmail(userDetails?.email);
+  updateTelegramUrl(userDetails.telegramUrl);
+
+},[userDetails])
 
 const fetchUserDetails= async () => {
      const fetchUserResults= await backendActor?.getUserDetails(Principal.fromText(principal));
@@ -361,54 +371,85 @@ const fetchCollections = async () => {
 
    useEffect(()=>{
       fetchCollections()
+      
    },[])
 
 
    
 
-const removeFromFavorites = async(tokenId) => {
-  const removeFavResult = await backendActor?.removeFromFavorites(principal,tokenId);
-  console.log("remove fav result",removeFavResult);
-  toast.success(removeFavResult.ok);
-  if(currentOption === "favorite"){
-    const updatedFavList = selectedList.filter((eachItem)=> (eachItem.tokenId != tokenId));
-    updateSelectedList(updatedFavList);
-  }else{
-    const modifiedSelectedList = selectedList.map((eachItem)=>{
-      if(eachItem[0].tokenId === tokenId){
-        return  [{...eachItem[0],isFavourite:false},...eachItem.slice(1)];
+   const removeFromFavorites = async(tokenId) => {
+    setAreButtonsDisabled(true);
+  
+    const resultPromise = new Promise(async(resolve,reject)=>{
+      const result = await backendActor?.removeFromFavorites(principal,tokenId);
+      if (result?.ok) {
+        resolve(result); 
+      } else {
+        setAreButtonsDisabled(false);
+        reject(result?.err?.Other || 'Failed to remove from favorites'); 
       }
-      return eachItem;
-     })
-     updateSelectedList(modifiedSelectedList)
-
+    })
+    toast.promise(resultPromise, {
+      loading: 'Removing from favorites...',
+      success: 'Successfully removed from favorites!',
+      error: (errorMsg) => errorMsg || 'An error occurred while removing from favorites.',
+    });
+   const res = await resultPromise;
+    if(currentOption === "favorite"){
+      const updatedFavList = selectedList.filter((eachItem)=> (eachItem.tokenId != tokenId));
+      updateSelectedList(updatedFavList);
+    }else{
+      const modifiedSelectedList = selectedList.map((eachItem)=>{
+        if(eachItem[0].tokenId === tokenId){
+          return  [{...eachItem[0],isFavourite:false},...eachItem.slice(1)];
+        }
+        return eachItem;
+       })
+       updateSelectedList(modifiedSelectedList)
+  
+    }
+    setAreButtonsDisabled(false);
   }
-}
 
-const addToFavorites = async(tokenId)=>{
-  const result = await backendActor?.addToFavorites(principal,tokenId);
-            console.log("add to fav result",result.ok);
-            if(result.ok){
-                // fetchCollections();
-                
-                const modifiedSelectedList = selectedList.map((eachItem)=>{
-                  const eachCard = eachItem[0];
-                  if(eachCard.tokenId === tokenId){
-                    return [{...eachCard,isFavourite : true},...eachItem.slice(1)];
-                     
-                  }
-                  return eachItem;
-                 })
-                 updateSelectedList(modifiedSelectedList)
-                 toast.success(result.ok)
 
-            }else{
-                toast.error(result.err.Other)
-            }
 
-            
+  
+const addToFavorites = async (tokenId) => {
+  setAreButtonsDisabled(true); 
+
+
+  const resultPromise = new Promise(async (resolve, reject) => {
+    const result = await backendActor?.addToFavorites(principal, tokenId);
     
-}
+    if (result?.ok) {
+      resolve(result); 
+    } else {
+      setAreButtonsDisabled(false);
+      reject(result?.err?.Other || 'Failed to add to favorites'); 
+    }
+  });
+
+  
+  toast.promise(resultPromise, {
+    loading: 'Adding to favorites...',
+    success: 'Successfully added to favorites!',
+    error: (errorMsg) => errorMsg || 'An error occurred while adding to favorites.',
+  });
+
+  const result = await resultPromise;
+
+  const modifiedSelectedList = selectedList.map((eachItem) => {
+    const eachCard = eachItem[0];
+    if (eachCard.tokenId === tokenId) {
+      return [{ ...eachCard, isFavourite: true }, ...eachItem.slice(1)];
+    }
+    return eachItem;
+  });
+
+  updateSelectedList(modifiedSelectedList);
+
+  setAreButtonsDisabled(false);
+};
 
 const onChangeFilterOption = (eachCollection) => {
   if (eachCollection.index != currentDropDownOption) {
@@ -470,18 +511,19 @@ console.log("selected List",selectedList);
 
           <div className='w-full lg:w-[70%]'>
             <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0'>
-              <div
+              <button
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "mycollection" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={() => onOptionChange("mycollection")}
               >
                 {t('myCollection')}
-              </div>
-              <div
+              </button>
+              <button
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "favorite" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={() => onOptionChange("favorite")}
+                disabled = {areButtonsDisabled}
               >
                 {t('favorite')}
-              </div>
+              </button>
               {/* <div
                 className={`text-[25px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${category === "favorite" ? 'border-b-4 border-[#FFD700] pb-2' : ''}`}
               >
@@ -515,7 +557,7 @@ console.log("selected List",selectedList);
                           ))}
                       </ul>
                   )}
-                {currentOption === "mycollection" && (
+                {currentOption === "mycollection" && !isCardsLoading && (
                       <div className='flex flex-col items-center mr-5 md:items-end lg:mr-20'>
                       <div className='flex items-center justify-end '>
                             <div className={`relative ${remainingNftsCount>0 && "group"}`}>
@@ -527,15 +569,12 @@ console.log("selected List",selectedList);
                                 Unlock Achievement
                               </button>
                               
-                                <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[150px] lg:w-[250px] text-center py-1 rounded`}>
+                                <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 hidden group-hover:opacity-100 group-hover:block bg-[#000000] text-[#FCD378] w-[180px] lg:w-[250px] text-center py-1 rounded text-xs`}>
                                 Buy remaining {remainingNftsCount} nfts to place order!
                               </span>
                               
                             </div>
                           </div>
-  
-  
-                        
                       </div>
                     )}
           </div>
@@ -546,27 +585,32 @@ console.log("selected List",selectedList);
               <button onClick={handlePrev}>
                 <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
               </button>
-              {isCardsLoading?(
+
+              {noCards ? (
+                <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
+              ):(
+                (isCardsLoading ? (
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                   <div className='mb-8'>
                       <Skeleton count={1} width={250} height={350} />
                   </div>
               </SkeletonTheme>
-                  
                 ):(
-                  noCards ? (
-                    <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
-                  ):(
+                  (
                     selectedList.length>0 ? (
                       <div>
-                      <NftCard img={selectedList[0][currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}/> 
+                      {currentOption === "mycollection" ? (
+                         <NftCard img={selectedList[currentIndex][0]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={selectedList[currentIndex].length} buttonStatus = {areButtonsDisabled} /> 
+                      ):(
+                        <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled}/> 
+                      )}
                     </div>
                     ):(
                       <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
                     )
                   )
-                  
-                )}
+                ))
+              )}
               
               <button onClick={handleNext}>
                 <img src="/Hero/down.png" alt="Next" className='w-10 h-10 -rotate-90' />
@@ -608,9 +652,9 @@ console.log("selected List",selectedList);
                       {selectedList.length > 0 && selectedList.map((img, index) => (
                         <div className='w-full rounded-lg flip-card'>
                           {currentOption === "mycollection" ? (
-                            <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} />
+                            <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} buttonStatus = {areButtonsDisabled} />
                           ):(
-                            <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites}  />
+                            <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled} />
                           )}
                         </div>
                       ))}
@@ -636,14 +680,14 @@ console.log("selected List",selectedList);
             <div
               className="h-[40vh] w-[90vw] md:h-[40vh]  lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
             >
-              <div className="relative flex items-center justify-end">
+              {/* <div className="relative flex items-center justify-end">
                 <button
                   className="text-[#ffffff] absolute bottom-1 top-1 z-10"
                   onClick={() => updateEditProfileStatus(false)}
                 >
                   <RxCross2 size={20} />
                 </button>
-              </div>
+              </div> */}
                 <div>
                   <div className='mt-10 mb-5'>
                 <div className='flex flex-col mb-1'>
@@ -660,7 +704,9 @@ console.log("selected List",selectedList);
                 </div>
               </div>
               <div className='flex items-center justify-center'>
-                <button className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full `}  
+                <button className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${profileUpdateInProcess && "opacity-30"} `}  
+                disabled={profileUpdateInProcess}
+                onClick={()=>updateEditProfileStatus(false)}
                 >Cancel</button>
                 {profileUpdateInProcess ? (
                   <div className='flex justify-center items-center w-20 border-none bg-[#FCD378] text-black h-6 rounded-full'>
@@ -689,8 +735,8 @@ console.log("selected List",selectedList);
           <div className="flex items-center justify-center h-screen">
           <div className={`  bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
-              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[50vw] lg:h-[40vh] 2xl:h-[70vh] "
-              : "h-[70vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[40vw] lg:h-[50vh] 2xl:h-[60vh] "
+              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] 2xl:h-[70vh] "
+              : "h-[70vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[60vw] lg:h-[45vh] 2xl:h-[60vh] "
           }`}>
              <div className="relative flex items-center justify-end">
                   <button

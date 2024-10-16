@@ -1,13 +1,13 @@
-// Function list:
+//functions list:
 
 // Collection-related Functions:
-// 1. add_collection_to_map (admin)
-// 2. remove_collection_to_map(admin)
-// 3. createExtCollection(admin)
+// 1. add_collection_to_map
+// 2. remove_collection_to_map
+// 3. createExtCollection
 // 4. getUserCollectionDetails
 // 5. getUserCollections
-// 6. getAllCollections(user,admin)
-// 7. totalcollections(admin)
+// 6. getAllCollections
+// 7. totalcollections
 // 8. getAllCollectionNFTs
 // 9. getSingleCollectionDetails
 // 10. getAllNFTsAcrossAllCollections
@@ -23,8 +23,8 @@
 
 // User-related Functions:
 // 18. create_user
-// 19. getUserDetails
-// 20. updateUserDetails
+// 19. updateUserDetails
+// 20. getUserDetails
 // 21. getAllUsers
 // 22. getTotalUsers
 // 23. userNFTcollection
@@ -33,21 +33,28 @@
 // 26. getFavorites
 // 27. useractivity
 
+// Order-related Functions:
+// 28. gethardcopy
+// 29. updateOrder
+// 30. removeOrder
+// 31. getallOrders
+
 // Marketplace-related Functions:
-// 28. listprice
-// 29. listings
-// 30. purchaseNft
-// 31. settlepurchase
-// 32. transactions
-// 33. marketstats
-// 34. send_balance_and_nft
-// 35. transfer_balance
+// 32. listprice
+// 33. listings
+// 34. purchaseNft
+// 35. settlepurchase
+// 36. transactions
+// 37. marketstats
+// 38. transfer_balance
+// 39. balance_settelment
+// 40. balance_nft_settelment
+// 41. all_settelment
+// 42. send_balance_and_nft
 
 // Miscellaneous Functions:
-// 36. getDeposits
-// 37. balance_settelment
-// 38. balance_nft_settelment
-// 39. all_settelment
+// 43. getDeposits
+// 44. fetchAvailableCycles
 
 import ExtTokenClass "../EXT-V2/ext_v2/v2";
 import Cycles "mo:base/ExperimentalCycles";
@@ -74,7 +81,6 @@ import HashMap "mo:base/HashMap";
 import Queue "../EXT-V2/motoko/util/Queue";
 import ExtCommon "../EXT-V2/motoko/ext/Common";
 import _owners "../EXT-V2/ext_v2/v2";
-import Admin "./Admin/admin";
 
 actor Main {
 
@@ -148,39 +154,14 @@ actor Main {
         };
     };
 
-    // type TopSellingNFT = {
-    //     tokenId : TokenIdentifier;
-    //     totalSales : Nat64;
-    //     details : Metadata;
-    //     price : Listing;
-    // };
-
-    // type Order = {
-    // id: Nat;
-    // accountIdentifier: Principal;
-    // //collectionCanisterId: Principal;
-    // userId: Nat;             // Link order to user's ID
-    // tokenid: TokenIdentifier;
-    // phone: Text;
-    // email: Text;
-    // address: Text;
-    // city: Text;
-    // country: Text;
-    // pincode: Text;
-    // landmark: ?Text;
-    // orderTime: Time.Time;
-    // };
-
     type User = {
         uid : Text;
-        id : Nat; // Unique user ID
-        accountIdentifier : Principal; // User's account identifier
-        createdAt : Time.Time; // Time the user was created
-        //name: Text;
-        //email: Text;
+        id : Nat;
+        accountIdentifier : Principal;
+        createdAt : Time.Time;
     };
 
-    // Type to store additional user details such as name and email
+    //To store additional user details
     type UserDetails = {
         name : Text;
         email : Text;
@@ -205,6 +186,22 @@ actor Main {
         account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
     };
 
+    type Order = {
+    id: Nat;
+    accountIdentifier: Principal;
+    uuid: Text;                  
+    collectionCanisterId: Principal; 
+    phone: Text;
+    email: Text;                 
+    address: Text;
+    city: Text;
+    country: Text;
+    pincode: Text;
+    landmark: ?Text;
+    orderTime: Time.Time;
+    };
+
+
     //Exttypes
     type Time = Time.Time;
 
@@ -224,12 +221,38 @@ actor Main {
     //private stable var userDetailsArray: [UserDetails] = [];
     private var userDetailsMap : TrieMap.TrieMap<Principal, UserDetails> = TrieMap.TrieMap<Principal, UserDetails>(Principal.equal, Principal.hash);
 
+    //DB to store order related details
+    private stable var orders: [Order] = [];
+    private stable var orderIdCounter: Nat = 0;
+
+    //available cycles for backend cansiter
+    public shared func fetchAvailableCycles(canisterId : Principal) : async ?Nat {
+        let targetCanister = actor (Principal.toText(canisterId)) : actor {
+            getCycleBalance : () -> async Nat;
+        };
+
+        try {
+            let cycleBalance = await targetCanister.getCycleBalance();
+            Debug.print("Cycle balance for canister: " # Principal.toText(canisterId) # " is: " # Nat.toText(cycleBalance));
+            return ?cycleBalance;
+        } catch (e) {
+            Debug.print("Failed to retrieve cycle balance for canister: " # Principal.toText(canisterId));
+            return null;
+        };
+    };
+
     /* -------------------------------------------------------------------------- */
     /*                         collection related methods                         */
     /* -------------------------------------------------------------------------- */
 
     //add collection manually to collection map
     public shared ({ caller = user }) func add_collection_to_map(collection_id : Principal) : async Text {
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
+        if (Principal.isAnonymous(user)) {
+            throw Error.reject("User is not authenticated");
+        };
         let userCollections = usersCollectionMap.get(user);
         switch (userCollections) {
             case null {
@@ -257,6 +280,9 @@ actor Main {
 
     //remove any collection from collection map
     public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {
+        // if (Principal.isAnonymous((user))) {
+        //     throw Error.reject("User is not authenticated");
+        // };
         let userCollections = usersCollectionMap.get(user);
         switch (userCollections) {
             case null {
@@ -276,6 +302,9 @@ actor Main {
 
     // Collection creation
     public shared ({ caller = user }) func createExtCollection(_title : Text, _symbol : Text, _metadata : Text) : async (Principal, Principal) {
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
         Cycles.add<system>(500_500_000_000);
         let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
         let extCollectionCanisterId = await extToken.getCanisterId();
@@ -615,7 +644,10 @@ actor Main {
     /*                            User Related Methods                            */
     /* -------------------------------------------------------------------------- */
 
-    public shared func create_user(accountIdentifier : Principal, uid : Text) : async Result.Result<(Nat, Time.Time), Text> {
+    public shared ({ caller = user }) func create_user(accountIdentifier : Principal, uid : Text) : async Result.Result<(Nat, Time.Time), Text> {
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
 
         // Check if the user already exists in the array
         let existingUser = Array.find<User>(
@@ -659,7 +691,10 @@ actor Main {
     };
 
     //enter user details
-    public shared func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text, profilePic : ?Blob) : async Result.Result<Text, Text> {
+    public shared ({ caller = user }) func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text, profilePic : ?Blob) : async Result.Result<Text, Text> {
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
         // Check if the user exists in the usersArray created by the `create_user` function
         let existingUser = Array.find<User>(
             usersArray,
@@ -691,7 +726,10 @@ actor Main {
     };
 
     // Get user details (for admin and user side both)
-    public shared query func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
+    public shared query ({ caller = user }) func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
         // Check if the user exists in the usersArray (created by the create_user function)
         let existingUser = Array.find<User>(
             usersArray,
@@ -724,7 +762,10 @@ actor Main {
     };
 
     //get all users (list of users for admin side )
-    public shared query func getAllUsers() : async [(Principal, Nat, Time.Time, Text, Text, ?Blob)] {
+    public shared query ({ caller = user }) func getAllUsers() : async [(Principal, Nat, Time.Time, Text, Text, ?Blob)] {
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
         // Map over the usersArray and extract the relevant fields
         let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
             usersArray,
@@ -759,15 +800,21 @@ actor Main {
     };
 
     // Function to get the total number of users
-    public shared query func getTotalUsers() : async Nat {
+    public shared query ({ caller = user }) func getTotalUsers() : async Nat {
+        //  if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
         return usersArray.size();
     };
 
     // USER MY COLLECTION
-    public shared func userNFTcollection(
+    public shared ({ caller = user }) func userNFTcollection(
         _collectionCanisterId : Principal,
         user : AccountIdentifier,
     ) : async Result.Result<{ boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)]; unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] }, CommonError> {
+        //  if (Principal.isAnonymous(Principal.fromText(user))) {
+        //     throw Error.reject("User is not authenticated");
+        // };
 
         // Define the canister actor interface
         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
@@ -951,7 +998,162 @@ actor Main {
         };
 
         return transformedTransactions;
+        return transformedTransactions;
     };
+
+    //functions to get hard copy of cards
+    // gethardcopy function
+    public shared func gethardcopy(
+    accountIdentifier: Principal,
+    uuid: Text,
+    collectionCanisterId: Principal, // Added collectionCanisterId parameter
+    phone: Text,
+    email: Text, // Make email a required parameter
+    address: Text,
+    city: Text,
+    country: Text,
+    pincode: Text,
+    landmark: ?Text
+    ) : async Result.Result<Text, Text> {
+    // Validate required fields
+    if (phone == "") {
+        return #err("Phone number is required.");
+    };
+    if (address == "") {
+        return #err("Address is required.");
+    };
+    if (city == "") {
+        return #err("City is required.");
+    };
+    if (country == "") {
+        return #err("Country is required.");
+    };
+    if (pincode == "") {
+        return #err("Pincode is required.");
+    };
+
+    // Find the user by the provided account identifier
+    let existingUser = Array.find<User>(usersArray, func (u: User) : Bool {
+        u.accountIdentifier == accountIdentifier;
+    });
+
+    // If user is not found, return an error
+    switch (existingUser) {
+        case (null) {
+            return #err("User not found. Please create a user before placing an order.");
+        };
+        case (?foundUser) {
+            // Generate a unique order ID
+            let newOrderId = orderIdCounter + 1;
+            orderIdCounter := newOrderId;
+
+            // Create a new order linked to the user's account with the provided email
+            let newOrder: Order = {
+                id = newOrderId;
+                accountIdentifier = foundUser.accountIdentifier;
+                uuid = uuid;
+                collectionCanisterId = collectionCanisterId; // Set collection canister ID
+                phone = phone;
+                email = email; // Use the provided email directly
+                address = address;
+                city = city;
+                country = country;
+                pincode = pincode;
+                landmark = landmark; // Optional field
+                orderTime = Time.now();
+            };
+
+            // Add the new order to the stable orders array
+            orders := Array.append(orders, [newOrder]);
+
+            // Return success with orderId and message
+            return #ok("Order placed successfully for user with UUID: " # uuid # ". Order ID: " # Nat.toText(newOrderId));
+        };
+    };
+    };
+
+
+    //update existing order details
+    public shared func updateOrder(
+    accountIdentifier: Principal,
+    orderId: Nat,
+    phone: Text,
+    email: Text, 
+    address: Text,
+    city: Text,
+    country: Text,
+    pincode: Text,
+    landmark: ?Text
+    ) : async Result.Result<Text, Text> {   
+    var orderFound = false;
+
+    // Create a new array where the order is updated if found
+    let updatedOrders = Array.map<Order, Order>(orders, func (order: Order) : Order {
+        if (order.id == orderId and order.accountIdentifier == accountIdentifier) {
+            orderFound := true; // Mark that the order was found
+
+            // Return the updated order with new values
+            return {
+                id = order.id;
+                accountIdentifier = order.accountIdentifier;
+                uuid = order.uuid;
+                collectionCanisterId = order.collectionCanisterId;
+                phone = phone; // Update phone
+                email = email; // Use the provided email directly
+                address = address; // Update address
+                city = city; // Update city
+                country = country; // Update country
+                pincode = pincode; // Update pincode
+                landmark = landmark; // Update landmark (optional)
+                orderTime = order.orderTime; // Keep the original order time
+            };
+        } else {
+            // Return the unchanged order
+            return order; // Ensure the unchanged order is returned
+        }
+    });
+
+    // If the order was updated, update the orders array
+    if (orderFound) {
+        orders := updatedOrders; // Update the global orders array
+        return #ok("Order updated successfully.");
+    } else {
+        return #err("Order not found for the provided account identifier and order ID.");
+    }
+    };
+
+
+    //remove existing orders
+    public shared func removeOrder(
+    accountIdentifier: Principal,
+    orderId: Nat
+    ) : async Result.Result<Text, Text> {
+    var orderRemoved = false;
+
+    // Create a new array with the order removed
+    let updatedOrders = Array.filter<Order>(orders, func (order: Order) : Bool {
+        if (order.id == orderId and order.accountIdentifier == accountIdentifier) {
+            orderRemoved := true; // Mark that the order was found and removed
+            return false; // Exclude this order from the new array
+        };
+        true; // Keep all other orders
+    });
+
+    // If the order was removed, update the orders array
+    if (orderRemoved) {
+        orders := updatedOrders;
+        return #ok("Order removed successfully.");
+    } else {
+        return #err("Order not found for the provided account identifier and order ID.");
+    };
+    };  
+
+    //get all orders of users 
+    public query func getallOrders() : async [Order] {
+    return orders;
+    };
+
+
 
     /* -------------------------------------------------------------------------- */
     /*                                  MARKETPLACE                               */
@@ -1140,6 +1342,6 @@ actor Main {
             let errorMessage = "Unexpected Transfer Failed: " # Error.message(err);
             return #err(#Other(errorMessage));
         };
-    };
+    }; 
 
 };

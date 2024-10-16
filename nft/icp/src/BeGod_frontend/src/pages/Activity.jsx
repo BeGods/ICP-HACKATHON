@@ -81,7 +81,7 @@ const Activity = () => {
     <div className='font-caslon'>
       <div style={{ backgroundImage: `url('/Hero/activity smoke.jpeg')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "right", }}>
         <Navbar />
-        <div className='p-[10px] lg:min-h-[70vh] w-full lg:p-[70px] '>
+        <div className='p-[10px] min-h-[70vh] w-full lg:p-[70px] '>
           <h1 className='text-3xl text-center mb-3 lg:text-5xl text-[#FCD378] lg:mb-5 lg:text-start'>Activity</h1>
           <ul className='w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-sm lg:text-lg bg-[#FCD37B1A] m-0 pl-[20px] lg:pl-[180px] grid grid-cols-4  items-center mb-[21px]'>
                 <li>Collection Name</li>
@@ -113,7 +113,7 @@ const Activity = () => {
                 </div>
               ):(
                 activityList.map((eachActivity,index)=>(
-                  <ul key={index} className='w-[100%] h-[75px] lg:h-[100px] text-[#FCD378] text-sm bg-[#FCD37B1A] m-0  pl-[20px] lg:pl-[180px] grid grid-cols-4 items-center mb-[21px] '>
+                  <ul key={index} className='w-[100%] h-[75px] lg:h-[100px] text-[#FCD378] text-sm bg-[#FCD37B1A] m-0  pl-[20px] lg:pl-[180px] grid grid-cols-4 items-center mb-[21px] overflow-x-auto'>
                       <li>{eachActivity.collectionName}</li>
                       <li>{eachActivity.tokenId.slice(0,5)}.....{eachActivity.tokenId.slice(-4)}</li>
                       <li>{eachActivity.price} ICP</li>

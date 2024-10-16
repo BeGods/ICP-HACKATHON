@@ -203,18 +203,18 @@ ScrollToCollections();
                   : "loading..."}
               </button>
               {profileDropDown && (
-                <ul className="absolute top-10 left-2 mt-1 bg-black text-[#FCD378] rounded shadow-lg w-36 p-0 list-none">
+                <ul className="absolute top-10  mt-1 bg-black text-[#FCD378] rounded shadow-lg w-full p-0 list-none">
                   <li
                     className="px-4 py-2 cursor-pointer hover:bg-purple-900"
                     onClick={() => navigate("/profile")}
                   >
                     Profile
                   </li>
-                  <hr className="my-1 border-t border-[#FCD378]" />
+                  <hr className="my-0 border-t border-[#FCD378]" />
                   <li className="px-4 py-2 cursor-pointer hover:bg-purple-900" onClick={()=>navigate('/activity')}>
                     Activity
                   </li>
-                  <hr className="my-1 border-t border-[#FCD378]" />
+                  <hr className="my-0 border-t border-[#FCD378]" />
                   <li
                     className="px-4 py-2 cursor-pointer hover:bg-purple-900"
                     onClick={onClickLogout}
@@ -283,7 +283,7 @@ ScrollToCollections();
                         />
                         Internet Identity
                       </li>
-                      <hr className="my-1 border-t border-[#FCD378]" />
+                      <hr className="my-0 border-t border-[#FCD378]" />
                       <li
                         className="flex items-center p-3 cursor-pointer hover:bg-purple-900"
                         onClick={() => login("nffid", navigatingPath)}
@@ -295,7 +295,7 @@ ScrollToCollections();
                         />
                         Nfid
                       </li>
-                      <hr className="my-1 border-t border-[#FCD378]" />
+                      <hr className="my-0 border-t border-[#FCD378]" />
                       <li
                         className="flex items-center p-3 cursor-pointer hover:bg-purple-900"
                         onClick={() => login("stoic", navigatingPath)}
@@ -307,7 +307,7 @@ ScrollToCollections();
                         />
                         Stoic
                       </li>
-                      <hr className="my-1 border-t border-[#FCD378]" />
+                      <hr className="my-0 border-t border-[#FCD378]" />
                       <li
                         className="flex items-center p-3 cursor-pointer hover:bg-purple-900"
                         onClick={() => login("plug", navigatingPath)}
@@ -331,25 +331,45 @@ ScrollToCollections();
       {/* Mobile Menu */}
       {isOpen && (
   <div className="fixed top-0 bottom-0 left-0 z-20 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique">
-    <Link
+    {landingPage ? (
+      <Link
       to="/"
       className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
-      onClick={toggleMenu} 
+      onClick={()=>toggleMenu()} 
     >
       Home
     </Link>
-    <button
-     
+    ):(
+      <Link
+      to="/"
       className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
-      onClick={()=>{
-        toggleMenu();
-        onClickCollections();
-      }} 
-      
     >
-      {t("collectionNavItem")}
+      Home
+    </Link>
+    )}
+    {landingPage ? (
+      <button
+     
+     className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+     onClick={()=>{
+       toggleMenu();
+       onClickCollections();
+     }} 
+     
+   >
+     {t("collectionNavItem")}
 
-    </button>
+   </button>
+    ):(
+<Link
+     to="/#collections"
+     className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+     
+   >
+     {t("collectionNavItem")}
+
+   </Link>
+    )}
 
     {isAuthenticated ? (
       <>
