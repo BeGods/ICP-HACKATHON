@@ -19,7 +19,6 @@ function Collection() {
         const result = await backendActor?.getAllCollections();
         console.log(result);
         const tempArray = [];
-
         if (result && Array.isArray(result)) {
           result.forEach((item) => {
             if (item && item.length > 1) {
