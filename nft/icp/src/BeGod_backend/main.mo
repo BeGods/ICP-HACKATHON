@@ -1053,17 +1053,6 @@ actor Main {
 
     //functions to get hard copy of cards
     // gethardcopy function
-    // Get all orders for a specific user based on their account identifier
-    public query func getuserorders(accountIdentifier: Principal) : async Result.Result<[Order], Text> {
-    let userOrders = Array.filter<Order>(orders, func (order: Order) : Bool {
-        order.accountIdentifier == accountIdentifier;
-    });
-    if (userOrders.size() == 0) {
-        return #err("No orders found for the provided account identifier.");
-    } else {
-        return #ok(userOrders);
-    }
-    };
     public shared func gethardcopy(
         accountIdentifier : Principal,
         uuid : Text,
@@ -1219,26 +1208,6 @@ actor Main {
     //get all orders of users (admin side)
     public query func getallOrders() : async [Order] {
         return orders;
-    };
-    // get order details for a specific order
-    public query func orderDetails(
-    accountIdentifier: Principal,
-    orderId: Nat
-    ) : async Result.Result<Order, Text> {
-    // Search for the order that matches the provided account identifier and order ID
-    let foundOrder = Array.find<Order>(orders, func (order: Order) : Bool {
-        order.id == orderId and order.accountIdentifier == accountIdentifier;
-    });
-
-    // If the order is found, return the order details
-    switch (foundOrder) {
-        case (null) {
-            return #err("Order not found for the provided account identifier and order ID.");
-        };
-        case (?order) {
-            return #ok(order); // Return the found order details
-        };
-    };
     };
 
     // get order details for a specific order
