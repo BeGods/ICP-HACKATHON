@@ -25,7 +25,8 @@ import CollectionDetails from "./collection/CollectionDetails.jsx";
 import { CopyIcon } from "@chakra-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import toast from "react-hot-toast";
-
+import BackButton from "./collection/BackButton.jsx";
+import YellowButton from "../components/button/YellowButton";
 function Users() {
   const { backendActor } = useAuth();
 
@@ -34,6 +35,7 @@ function Users() {
   const [principal, setprincipal] = useState([]);
   const [alldata, setalldata] = useState([]);
   const [copiedtokenid, setcopiedtokenid] = useState("");
+  const [coll, setColl] = useState([]);
 
   const getCollection = async () => {
     setLoading(true);
@@ -41,12 +43,24 @@ function Users() {
       try {
         const result = await backendActor?.getAllCollections();
         console.log(result);
-        if (result && result[0] && result[0][1]) {
-          console.log(result[0][1]);
-          checktranscations(result[0][1]);
-        } else {
-          console.log("No collection available");
-          setLoading(false);
+        const tempArray = [];
+
+        if (result && Array.isArray(result)) {
+          result.forEach((item) => {
+            if (item && item.length > 1) {
+              // console.log(item);
+              item[1].forEach((value) => {
+                // console.log(value);
+                if (value && value.length > 1) {
+                  tempArray.push(value);
+                }
+              });
+            }
+          });
+
+          console.log(tempArray);
+          setColl(tempArray);
+          checktranscations(tempArray);
         }
       } catch (error) {
         console.error("Error fetching collections:", error);
@@ -110,6 +124,18 @@ function Users() {
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar md:w-full lg:w-[90%] lg:pt-20">
+        <div className="flex justify-between items-center w-full mb-6 mt-5">
+          {/* Back button (hidden on small screens) */}
+          <div className="hidden sm:block">
+            <BackButton />
+          </div>
+          {/* Create allorder button */}
+          <div className="flex space-x-4">
+            <Link to="/Admin/activity/allorder">
+              <YellowButton className="font-semibold">All Orders</YellowButton>
+            </Link>
+          </div>
+        </div>
         <Box
           color="white"
           className="flex flex-col items-center justify-center"
@@ -185,9 +211,49 @@ function Users() {
                       const currentTime = new Date();
                       const timeDifferenceInMilliseconds =
                         currentTime - transactionTime;
-                      const daysDifference = Math.floor(
+
+                      // Calculate total days difference
+                      const totalDaysDifference = Math.floor(
                         timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)
                       );
+
+                      // Calculate months, remaining days, hours, and minutes
+                      const monthsDifference = Math.floor(
+                        totalDaysDifference / 30
+                      );
+                      const daysDifference = totalDaysDifference % 30;
+
+                      const hoursDifference = Math.floor(
+                        (timeDifferenceInMilliseconds % (1000 * 60 * 60 * 24)) /
+                          (1000 * 60 * 60)
+                      );
+                      const minutesDifference = Math.floor(
+                        (timeDifferenceInMilliseconds % (1000 * 60 * 60)) /
+                          (1000 * 60)
+                      );
+
+                      // Constructing the output message with priority
+                      let displayMessage = "";
+
+                      if (monthsDifference > 0) {
+                        displayMessage = `${monthsDifference} month${
+                          monthsDifference > 1 ? "s" : ""
+                        } ago`;
+                      } else if (daysDifference > 0) {
+                        displayMessage = `${daysDifference} day${
+                          daysDifference > 1 ? "s" : ""
+                        } ago`;
+                      } else if (hoursDifference > 0) {
+                        displayMessage = `${hoursDifference} hour${
+                          hoursDifference > 1 ? "s" : ""
+                        } ago`;
+                      } else if (minutesDifference > 0) {
+                        displayMessage = `${minutesDifference} minute${
+                          minutesDifference > 1 ? "s" : ""
+                        } ago`;
+                      } else {
+                        displayMessage = "Just now";
+                      }
 
                       return (
                         <Tr
@@ -245,7 +311,7 @@ function Users() {
                             {Number(user[2].price) / 100000000} ICP
                           </Td>
                           <Td textAlign="center" color="white.200">
-                            {daysDifference} days ago
+                            {displayMessage}
                           </Td>
                         </Tr>
                       );
