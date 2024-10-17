@@ -13,7 +13,7 @@ import {
   Button,
   IconButton,
 } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons"; // Import CloseIcon from Chakra UI
+import { CloseIcon } from "@chakra-ui/icons";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../utils/useAuthClient.jsx";
@@ -91,15 +91,13 @@ function Users() {
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
             mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
             mt="5%"
-            display="flex" // Added flex to align items horizontally
-            alignItems="center" // Center the items vertically
+            display="flex"
+            alignItems="center"
           >
             {loading ? (
-              <>
-                <div className="w-full">
-                  <Skeleton height={45} count={1} />
-                </div>
-              </>
+              <div className="w-full">
+                <Skeleton height={45} count={1} />
+              </div>
             ) : (
               <>
                 <Input
@@ -157,101 +155,105 @@ function Users() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {loading
-                    ? Array(5)
-                        .fill("")
-                        .map((_, index) => (
-                          <Tr key={index}>
-                            <Td>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "10px",
-                                }}
-                              >
-                                <Skeleton
-                                  circle={true}
-                                  height={30}
-                                  width={30}
-                                />
-                                <Skeleton height={20} width="150px" />{" "}
-                                {/* Name placeholder */}
-                              </div>
-                            </Td>
-                            <Td>
-                              <Skeleton height={20} width="80%" />
-                            </Td>
-                            <Td>
-                              <Skeleton height={20} width="60%" />
-                            </Td>
-                            <Td>
-                              <Skeleton height={20} width="40%" />
-                            </Td>
-                          </Tr>
-                        ))
-                    : filteredUsers.map((user, index) => {
-                        const userPrincipalArray = user[0];
-                        const principal = userPrincipalArray
-                          ? Principal.fromUint8Array(
-                              userPrincipalArray._arr
-                            ).toText()
-                          : null;
-
-                        return (
-                          <Tr
-                            key={index}
-                            bg={index % 2 === 0 ? "#333333" : "#282828444"}
-                          >
-                            <Td textAlign="center">
-                              <div className="flex items-center justify-center gap-4">
-                                <img
-                                  src="/image/admin.png"
-                                  alt=""
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                  }}
-                                />
-                                {user[3]} {/* Display user's name */}
-                              </div>
-                            </Td>
-                            <Td
-                              textAlign="center"
-                              wordBreak="break-all"
-                              color="gray.200"
+                  {loading ? (
+                    Array(5)
+                      .fill("")
+                      .map((_, index) => (
+                        <Tr key={index}>
+                          <Td>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                              }}
                             >
-                              {user[4]} {/* Display some other user data */}
-                            </Td>
-                            <Td textAlign="center" color="white.200">
-                              {principal
-                                ? `${principal.slice(0, 5)}...${principal.slice(
-                                    principal.length - 6
-                                  )}`
-                                : "No ID available"}{" "}
-                              {/* Display truncated principal ID */}
-                            </Td>
-                            <Td textAlign="center">
-                              <Link
-                                to={`/Admin/users/${user[2]}`}
-                                state={{ alluser }}
+                              <Skeleton circle={true} height={30} width={30} />
+                              <Skeleton height={20} width="150px" />{" "}
+                              {/* Name placeholder */}
+                            </div>
+                          </Td>
+                          <Td>
+                            <Skeleton height={20} width="80%" />
+                          </Td>
+                          <Td>
+                            <Skeleton height={20} width="60%" />
+                          </Td>
+                          <Td>
+                            <Skeleton height={20} width="40%" />
+                          </Td>
+                        </Tr>
+                      ))
+                  ) : filteredUsers.length === 0 ? (
+                    <Tr>
+                      <Td colSpan={4} textAlign="center" color="gray.400">
+                        No users found
+                      </Td>
+                    </Tr>
+                  ) : (
+                    filteredUsers.map((user, index) => {
+                      const userPrincipalArray = user[0];
+                      const principal = userPrincipalArray
+                        ? Principal.fromUint8Array(
+                            userPrincipalArray._arr
+                          ).toText()
+                        : null;
+
+                      return (
+                        <Tr
+                          key={index}
+                          bg={index % 2 === 0 ? "#333333" : "#282828"}
+                        >
+                          <Td textAlign="center">
+                            <div className="flex items-center justify-center gap-4">
+                              <img
+                                src="/image/admin.png"
+                                alt=""
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  borderRadius: "50%",
+                                }}
+                              />
+                              {user[3]} {/* Display user's name */}
+                            </div>
+                          </Td>
+                          <Td
+                            textAlign="center"
+                            wordBreak="break-all"
+                            color="gray.200"
+                          >
+                            {user[4]} {/* Display user's email */}
+                          </Td>
+                          <Td textAlign="center" color="white.200">
+                            {principal
+                              ? `${principal.slice(0, 5)}...${principal.slice(
+                                  principal.length - 6
+                                )}`
+                              : "No ID available"}{" "}
+                            {/* Display truncated principal ID */}
+                          </Td>
+                          <Td textAlign="center">
+                            <Link
+                              to={`/Admin/users/${user[2]}`}
+                              state={{ alluser }}
+                            >
+                              <Button
+                                size="sm"
+                                border="1px"
+                                borderColor="gray.500"
+                                color="white"
+                                bg="#161618"
+                                _hover={{ bg: "#FCD37B", color: "black" }}
                               >
-                                <Button
-                                  size="sm"
-                                  border="1px"
-                                  borderColor="gray.500"
-                                  color="white"
-                                  bg="#161618"
-                                  _hover={{ bg: "#FCD37B", color: "black" }}
-                                >
-                                  View
-                                </Button>
-                              </Link>
-                            </Td>
-                          </Tr>
-                        );
-                      })}
+                                View
+                              </Button>
+                            </Link>
+                          </Td>
+                        </Tr>
+                      );
+                    })
+                  )}
                 </Tbody>
               </Table>
             </TableContainer>
