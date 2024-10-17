@@ -453,17 +453,28 @@ function CollectionDetails() {
         ) : (
           <div className="w-full">
             {/* Back button and action buttons */}
-            <div className="flex items-center justify-between w-full pt-9">
-              <div className="hidden sm:block">
+
+            <div className="flex flex-row items-center justify-between w-full pt-9 gap-x-6">
+              <div className="flex-1 sm:flex-none hidden sm:block">
+                {/* Back Button Component */}
                 <BackButton />
               </div>
-              <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
-                <YellowButton methodName={() => toggleModal()}>
-                  Add NFT
-                </YellowButton>
-                <Link to={"/admin/collection/create"}>
-                  <YellowButton>Add Collection</YellowButton>
-                </Link>
+              <div className="flex flex-row justify-center w-full gap-x-6 text-wrap ">
+                <div className="w-full sm:w-auto flex-1">
+                  <button
+                    onClick={() => toggleModal()}
+                    className="bg-[#FCD37B] border-[#FCD37B] border rounded-[10px] px-6 py-3 text-black font-bold w-full hover:bg-[#D4A849] hover:border-[#D4A849]  "
+                  >
+                    Add NFT
+                  </button>
+                </div>
+                <div className="w-full sm:w-auto flex-1">
+                  <Link to={"/admin/collection/create"}>
+                    <button className="bg-[#FCD37B] border-[#FCD37B] border rounded-[10px] px-6 py-3 text-black font-bold w-full hover:bg-[#D4A849] hover:border-[#D4A849]">
+                      Add Collection
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -690,7 +701,7 @@ function CollectionDetails() {
                   {principalStringg}
                 </span>
               </h1>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-20 items-center justify-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-20 items-center justify-start">
                 {filteredList.length > 0 ? (
                   filteredList?.map((list, index) => (
                     <>

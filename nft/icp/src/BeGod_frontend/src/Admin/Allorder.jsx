@@ -19,33 +19,23 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { CopyIcon } from "@chakra-ui/icons";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
-function Users() {
+function Allorder() {
   const { backendActor } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [alluser, setalluser] = useState([]);
-  const [principal, setprincipal] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // New state for search input
+  const [allorder, setallorder] = useState([]);
 
-  const getallDUser = async () => {
+  const getallorder = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.getAllUsers();
-        console.log("getting all users", result);
-
-        if (result && result.length > 0 && result[0].length > 0) {
-          setalluser(result);
-          const userPrincipalArray = result[0][0];
-          const principalString = Principal.fromUint8Array(
-            userPrincipalArray._arr
-          ).toText();
-          console.log(principalString);
-          setprincipal(principalString);
-        } else {
-          console.log("No users found in the result");
-        }
+        const result = await backendActor?.getallOrders();
+        console.log(result);
+        setallorder(result);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching user details:", error);
+        console.error("Error fetching allorders:", error);
       }
     }
   };
@@ -53,32 +43,16 @@ function Users() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const loadStart = Date.now(); // Record the start time
-      await getallDUser();
-      const loadTime = Date.now() - loadStart;
 
-      // Ensure that the loading spinner runs for at least 3 seconds
-      const remainingTime = 3000 - loadTime;
-      if (remainingTime > 0) {
-        setTimeout(() => setLoading(false), remainingTime);
-      } else {
-        setLoading(false);
-      }
+      await getallorder();
     };
 
     fetchData();
   }, []);
 
-  // Filtered users based on the search term
-  const filteredUsers = alluser.filter(
-    (user) => user[3].toLowerCase().includes(searchTerm.toLowerCase()) // Assuming user[3] is the name
-  );
-
-  // Function to clear the search input
-  const clearSearch = () => {
-    setSearchTerm("");
+  const handleCopy = () => {
+    toast.success("Copied");
   };
-
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar md:w-full lg:w-[90%] lg:pt-20">
@@ -86,45 +60,6 @@ function Users() {
           color="white"
           className="flex flex-col items-center justify-center"
         >
-          {/* Search Box */}
-          <Box
-            w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
-            mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
-            mt="5%"
-            display="flex"
-            alignItems="center"
-          >
-            {loading ? (
-              <div className="w-full">
-                <Skeleton height={45} count={1} />
-              </div>
-            ) : (
-              <>
-                <Input
-                  placeholder="Search by Name"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} // Update search term on input change
-                  w="100%"
-                  h="45px"
-                  border="1px"
-                  borderColor="gray.600"
-                  bg="#161618"
-                  color="white"
-                  p="4"
-                  _placeholder={{ color: "gray.400" }}
-                />
-                <IconButton
-                  aria-label="Clear search"
-                  icon={<CloseIcon />}
-                  onClick={clearSearch}
-                  ml={2}
-                  colorScheme="red"
-                  variant="outline"
-                />
-              </>
-            )}
-          </Box>
-
           {/* Table */}
           <Box
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
@@ -141,10 +76,10 @@ function Users() {
                 <Thead bg="#FCD37B">
                   <Tr>
                     <Th textAlign="center" color="black" p={4} fontSize="md">
-                      Name
+                      Serial No.
                     </Th>
                     <Th textAlign="center" color="black" p={4} fontSize="md">
-                      Email
+                      Order Id
                     </Th>
                     <Th textAlign="center" color="black" p={4} fontSize="md">
                       Principal
@@ -161,17 +96,7 @@ function Users() {
                       .map((_, index) => (
                         <Tr key={index}>
                           <Td>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "10px",
-                              }}
-                            >
-                              <Skeleton circle={true} height={30} width={30} />
-                              <Skeleton height={20} width="150px" />{" "}
-                              {/* Name placeholder */}
-                            </div>
+                            <Skeleton height={20} width="80%" />
                           </Td>
                           <Td>
                             <Skeleton height={20} width="80%" />
@@ -180,24 +105,39 @@ function Users() {
                             <Skeleton height={20} width="60%" />
                           </Td>
                           <Td>
-                            <Skeleton height={20} width="40%" />
+                            <Skeleton height={20} width="60%" />
                           </Td>
                         </Tr>
                       ))
-                  ) : filteredUsers.length === 0 ? (
+                  ) : allorder.length === 0 ? (
                     <Tr>
                       <Td colSpan={4} textAlign="center" color="gray.400">
-                        No users found
+                        No order found
                       </Td>
                     </Tr>
                   ) : (
-                    filteredUsers.map((user, index) => {
-                      const userPrincipalArray = user[0];
+                    allorder.map((orderdata, index) => {
+                      const userPrincipalArray = orderdata.collectionCanisterId;
                       const principal = userPrincipalArray
                         ? Principal.fromUint8Array(
                             userPrincipalArray._arr
                           ).toText()
                         : null;
+
+                      const userorderArray = orderdata.accountIdentifier;
+                      const orderid = userorderArray
+                        ? Principal.fromUint8Array(userorderArray._arr).toText()
+                        : null;
+
+                      if (!orderid) {
+                        return (
+                          <Tr key={index}>
+                            <Td colSpan={4} textAlign="center" color="gray.400">
+                              No order found
+                            </Td>
+                          </Tr>
+                        );
+                      }
 
                       return (
                         <Tr
@@ -206,16 +146,7 @@ function Users() {
                         >
                           <Td textAlign="center">
                             <div className="flex items-center justify-center gap-4">
-                              <img
-                                src="/image/admin.png"
-                                alt=""
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  borderRadius: "50%",
-                                }}
-                              />
-                              {user[3]} {/* Display user's name */}
+                              {index + 1}
                             </div>
                           </Td>
                           <Td
@@ -223,20 +154,30 @@ function Users() {
                             wordBreak="break-all"
                             color="gray.200"
                           >
-                            {user[4]} {/* Display user's email */}
+                            {`${orderid.slice(0, 4)}...${orderid.slice(-4)}`}
+                            <CopyToClipboard text={orderid} onCopy={handleCopy}>
+                              <button className="ml-3">
+                                <CopyIcon />
+                              </button>
+                            </CopyToClipboard>
                           </Td>
                           <Td textAlign="center" color="white.200">
-                            {principal
-                              ? `${principal.slice(0, 5)}...${principal.slice(
-                                  principal.length - 6
-                                )}`
-                              : "No ID available"}{" "}
-                            {/* Display truncated principal ID */}
+                            {`${principal.slice(0, 4)}...${principal.slice(
+                              -4
+                            )}`}
+                            <CopyToClipboard
+                              text={principal}
+                              onCopy={handleCopy}
+                            >
+                              <button className="ml-3">
+                                <CopyIcon />
+                              </button>
+                            </CopyToClipboard>
                           </Td>
                           <Td textAlign="center">
                             <Link
-                              to={`/Admin/users/${principal}`}
-                              state={{ alluser }}
+                              to={`/Admin/activity/allorder/${principal}`}
+                              state={{ orderdata }}
                             >
                               <Button
                                 size="sm"
@@ -303,4 +244,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default Allorder;
