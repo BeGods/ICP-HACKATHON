@@ -103,10 +103,13 @@ const ScrollToCollections = () => {
 };
 
 ScrollToCollections();
-
+ const onClickClearDropDowns = ()=>{
+  setDropdownOpen(false);
+  setProfileDropDown(false);
+ }
 
   return (
-    <div className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`}>
+    <div className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`} onClick={onClickClearDropDowns}>
       {/* Mobile View */}
       <div className="relative flex items-center justify-between w-full gap-4 md:hidden">
         <Link to="/" className="flex pt-7">
@@ -115,7 +118,7 @@ ScrollToCollections();
         <div className="flex items-center justify-between">
           <div className="relative w-[130px] flex justify-center">
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={(e) => {e.stopPropagation();setDropdownOpen(!dropdownOpen)}}
               aria-expanded={dropdownOpen}
               className="text-[20px] font-[500] leading-[28.92px] text-[#FCD37B] flex justify-center items-center"
             >
@@ -163,7 +166,7 @@ ScrollToCollections();
           {/* Language Dropdown */}
           <div className="relative w-[130px] flex justify-center">
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={(e) => {e.stopPropagation(),setDropdownOpen(!dropdownOpen);setProfileDropDown(false)}}
               aria-expanded={dropdownOpen}
               className="text-[20px] font-[500] text-[#FCD37B] flex justify-center items-center"
             >
@@ -191,7 +194,7 @@ ScrollToCollections();
           {isAuthenticated ? (
             <div className="relative w-[180px] flex justify-center z-20">
               <button
-                onClick={() => setProfileDropDown(!profileDropDown)}
+                onClick={(e) => {e.stopPropagation(),setProfileDropDown(!profileDropDown);setDropdownOpen(false)}}
                 aria-expanded={profileDropDown}
                 className="rounded-md flex justify-center items-center gap-1 w-full h-full p-2 bg-[#000] text-white border border-gray-500"
               >

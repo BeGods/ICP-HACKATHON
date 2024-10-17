@@ -707,7 +707,7 @@ const onChangeFilterOption = (eachCollection) => {
   
 
   return (
-    <div className='font-caslon'>
+    <div className='font-caslon' onClick={()=>updateDropDownStatus(false)}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
@@ -772,14 +772,14 @@ const onChangeFilterOption = (eachCollection) => {
                 className={`text-[18px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "myorders" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={()=>onOptionChange("myorders")}
               >
-                My Orders
+                {t('myOrders')}
               </div> 
             </div>
             {allCollectionsList.length>0 && currentOption !== "myorders" && (
               <div className="relative z-10 flex items-center justify-between mt-5 md:w-full ">
                            
               <button
-                  onClick={()=>updateDropDownStatus(!isDisplayCollectionDropDown)}
+                  onClick={(e)=>{e.stopPropagation(),updateDropDownStatus(!isDisplayCollectionDropDown)}}
                   className={`rounded-full flex justify-center items-center gap-1 
                  min-w-[120px] h-[35px] sm:h-[40px]  md:w-[180px] p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 border-gray-800`}
               >
@@ -839,7 +839,7 @@ const onChangeFilterOption = (eachCollection) => {
               </button>
 
               {noCards ? (
-                <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
+                <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalble</h1>
               ):(
                 (isCardsLoading ? (
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
@@ -858,7 +858,7 @@ const onChangeFilterOption = (eachCollection) => {
                       )} 
                     </div>
                     ):(
-                      <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
+                      <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalble</h1>
                     )
                   )
                 ))
@@ -873,7 +873,7 @@ const onChangeFilterOption = (eachCollection) => {
             {/* Grid view for larger screens */}
            {currentOption !== "myorders" && (
              (noCards ? (
-              <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
+              <div className='hidden w-[90%] h-[70vh] sm:flex justify-center items-center '>
                 <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
               </div>
           ):(
@@ -897,7 +897,7 @@ const onChangeFilterOption = (eachCollection) => {
                     <>
                    
                   {selectedList.length === 0 ? (
-                    <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
+                    <div className='hidden w-[90%] h-[70vh] sm:flex justify-center items-center '>
                     <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
                   </div>
                   ):( 
@@ -940,8 +940,8 @@ const onChangeFilterOption = (eachCollection) => {
             </ul>
               ))
             ):(
-              <div className='w-[90%] min-h-[45vh] sm:my-10 ml-[10%] mb-8 flex justify-center items-center'>
-                <h1 className='text-[#FFD700] text-[22px] my-20'>Order History Found</h1>
+              <div className='w-[90%] min-h-[58vh] sm:my-10 ml-[6%] mb-8 flex justify-center items-center'>
+                <h1 className='text-[#FFD700] text-[22px] my-20'>No Orders Were Placed!</h1>
               </div>
             )}
              
