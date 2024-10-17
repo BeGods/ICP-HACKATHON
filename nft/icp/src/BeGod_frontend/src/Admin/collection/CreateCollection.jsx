@@ -39,7 +39,7 @@ const CreateCollection = () => {
   const { backendActor, canisterId } = useAuth();
   const [Ufile, setUFile] = useState([]);
   const [base64String, setBase64String] = useState("");
-  const [nfttype, setnfttype] = useState("rare");
+  const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
   const [nftquantity, setnftquantity] = useState();
   const [nftprice, setnftprice] = useState(0);
@@ -53,20 +53,9 @@ const CreateCollection = () => {
   const [mintimagebase, setmintimagebase] = useState();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [collColor, setCollColor] = useState("");
+  const [collColor, setCollColor] = useState("Green");
   const [nftcolor, setnftcolor] = useState("");
   const [Success, setsuccess] = useState(false);
-
-  // console.log(Date.now().toLocaleString());
-  // const {
-  //   nftType,
-  //   nftName,
-  //   nftQuantity,
-  //   nftPrice,
-  //   nftDescription,
-  //   nftImage,
-  //   nftImageURL,
-  // } = nftCardsList;
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
@@ -100,27 +89,6 @@ const CreateCollection = () => {
     return Actor.createActor(idlFactory, { agent, canisterId });
   };
 
-  // const handleFormSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const actor = createActor();
-  //   try {
-  //     const collectionResponse = await actor.add_collection_to_map(
-  //       principal_id
-  //     );
-  //     console.log("Collection created successfully:", collectionResponse);
-  //     for (const nft of nftRows) {
-  //       const nftResponse = await actor.addNFT({
-  //         id: nft.id,
-  //         description: nft.description,
-  //         collectionId: collectionResponse.collectionId,
-  //       });
-  //       console.log("NFT created successfully:", nftResponse);
-  //     }
-  //     navigate("/success");
-  //   } catch (error) {
-  //     console.error("Error creating collection or NFTs:", error);
-  //   }
-  // };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -156,14 +124,19 @@ const CreateCollection = () => {
     const file = files[0]; // Get the first uploaded file
     if (file) {
       try {
-        const options = {
-          maxSizeMB: 1,
-          maxWidthOrHeight: 800,
+        let options = {
+          maxSizeMB: 0.05, // 50KB
+          maxWidthOrHeight: 300,
           useWebWorker: true,
         };
 
-        const compressedFile = await imageCompression(file, options);
-        console.log("Compressed file:", compressedFile);
+        let compressedFile = await imageCompression(file, options);
+        while (compressedFile.size > 100 * 1024) {
+          options.maxSizeMB *= 0.9;
+          compressedFile = await imageCompression(file, options);
+        }
+
+        console.log("Compressed file size:", compressedFile.size);
 
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -177,19 +150,10 @@ const CreateCollection = () => {
     }
   };
 
-  // const getBase64 = (file) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
-
   const createExtData = async (name, base64String, description, collColor) => {
     try {
       const metadata = JSON.stringify({ description, collColor });
-      // console.log(name, base64String, metadata);
+      console.log(name, metadata);
       const report = await backendActor?.createExtCollection(
         name,
         base64String,
@@ -225,7 +189,8 @@ const CreateCollection = () => {
     nftimage,
     nftquantity,
     nftcolor,
-    nftPrice
+    nftPrice,
+    nftType
   ) => {
     try {
       // console.log("in mint", answ);
@@ -234,7 +199,7 @@ const CreateCollection = () => {
       const date = new Date();
       const formattedDate = date.toISOString();
       const metadata = JSON.stringify({
-        nfttype,
+        nftType,
         standard: "EXT V2",
         chain: "ICP",
         contractAddress: canisterId,
@@ -343,7 +308,7 @@ const CreateCollection = () => {
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
-
+  console.log(nftType);
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
       (eachNft) => eachNft.nftId !== nftId
@@ -385,20 +350,26 @@ const CreateCollection = () => {
             val.nftImage,
             val.nftQuantity,
             val.nftcolor,
-            val.nftPrice
+            val.nftPrice,
+            val.nftType
           );
           console.log(mintResult, "minResult");
           if (mintResult instanceof Error) {
             hasError = true;
             throw mintResult;
             toast.error(mintResult);
-          }
-          setLoading(false);
-          if (!hasError) {
+          } else {
             setsuccess(!Success);
             setTimeout(() => {
               navigate("/admin/collection");
             }, 2000);
+          }
+          setLoading(false);
+          if (!hasError) {
+            // setsuccess(!Success);
+            // setTimeout(() => {
+            //   navigate("/admin/collection");
+            // }, 2000);
           }
         });
       }
@@ -412,16 +383,19 @@ const CreateCollection = () => {
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
         {loading ? (
-          <div
-            style={{
-              display: "grid",
-              lineHeight: 3,
-              padding: "1rem",
-              marginBottom: "0.5rem",
-            }}
-          >
-            <Skeleton />
-            <Skeleton count={5} />
+          <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
+            {Array(6) // Generate skeleton loaders for each collection card
+              .fill()
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-[#29292C] w-full h-full px-10 py-6 flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border"
+                >
+                  <Skeleton circle width={160} height={160} />
+                  <Skeleton width={140} height={30} />
+                  <Skeleton width={140} height={30} />
+                </div>
+              ))}
           </div>
         ) : (
           <div className="w-full">
@@ -437,8 +411,17 @@ const CreateCollection = () => {
                         Collection Name:
                       </label>
                       <input
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // Check if the value is not just whitespace
+                          if (value.trim() !== "") {
+                            setName(value);
+                          } else {
+                            setName(""); // or handle as needed
+                          }
+                        }}
                         type="text"
+                        placeholder="Enter your Collection Name"
                         className="pl-4 rounded-md bg-[#29292C] h-[30px] md:h-[45px] w-full"
                       />
                     </div>
@@ -455,12 +438,21 @@ const CreateCollection = () => {
                   <label className="mt-[20px] w-[100%] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
                     Description:
                     <textarea
-                      onChange={(e) => setDescription(e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Check if the value is not just whitespace
+                        if (value.trim() !== "") {
+                          setDescription(value);
+                        } else {
+                          setDescription(""); // or handle as needed
+                        }
+                      }}
                       className="pl-4 w-[100%] h-[100px] bg-[#29292C] rounded-md resize-none p-2"
                       rows="8"
                       placeholder="Enter description here"
                     />
                   </label>
+
                   <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
                     Type color:
                     <select
@@ -481,16 +473,16 @@ const CreateCollection = () => {
                         Blue
                       </option>
                       <option
-                        value="Golden"
+                        value="Red"
                         className="text-[16px] text-[#8a8686]"
                       >
-                        Golden
+                        Red
                       </option>
                       <option
-                        value="Orange"
+                        value="Yellow"
                         className="text-[16px] text-[#8a8686]"
                       >
-                        Orange
+                        Yellow
                       </option>
                     </select>
                   </label>
@@ -519,7 +511,7 @@ const CreateCollection = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-col-3 gap-5">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-2">
                     {nftCardsList.map((eachNftItem) => (
                       <NftCardItem
                         nftDetails={eachNftItem}

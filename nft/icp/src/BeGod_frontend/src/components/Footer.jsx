@@ -47,9 +47,13 @@ const Footer = ({handleCurrentIndex}) => {
     dispatch(updateCurrentIndex(index));
     if(handleCurrentIndex){
         handleCurrentIndex(index);
+        window.scrollBy({ top: -500, behavior: 'smooth' });
+    }else{
+        navigate('/#collections');
     }
     
-    navigate("/#collections")
+    
+    
 
   }
 
@@ -79,15 +83,21 @@ const Footer = ({handleCurrentIndex}) => {
                         </div>
                         <h1 className='mt-2'>{t('categoriesText')}</h1>
                         <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12 overflow-auto'>
-                        {collections.length > 0 && (
+                        {collections.length > 0 ? (
                             collections.map((eachCollection)=>(
-                                    <button to="/#collections" className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>onClickCollection(eachCollection.index)}>
+                                    <div>
+                                        <button  className="flex items-center justify-start gap-2 sm:justify-center" onClick={()=>onClickCollection(eachCollection.index)}>
                                         <img src={eachCollection.image} alt={eachCollection.name} className="h-5 w-5 sm:h-6 sm:w-6 rounded-full" />
                                         <h1 className="underline text-md sm:text-base">{eachCollection.name}</h1>
                                     </button>
+                                    </div>
                                
 
                             ))
+                        ):(
+                            <div>
+                                <h1 className='text-xs' >No Collections Found</h1>
+                            </div>
                         )}
                          </div>
                         <div className='w-[100%] flex gap-16  items-center  justify-center  my-8'>

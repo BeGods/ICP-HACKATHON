@@ -210,7 +210,7 @@ const BuyNft = () => {
       parseInt(index),
       principal
     );
-    updateIsOwnedStatus(result[0][4]);
+    updateIsOwnedStatus(result[0][3].length === 0);
      console.log("buying nft details" , result);
     // console.log("buying nft details 0 1" , result[0][1]);
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
@@ -315,7 +315,7 @@ const BuyNft = () => {
               <CiStar className="object-cover w-full h-full" />
             </div>
             {nftCardLoading ? (
-              <SkeletonTheme baseColor="#202020" highlightColor="#444">
+              <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                 <div className="flex flex-col items-center justify-center">
                   <Skeleton count={1} width={100} height={50} />
                   <Skeleton count={1} width={70} height={20} />
@@ -339,50 +339,43 @@ const BuyNft = () => {
             <div>
               <div
                 className="w-full h-full rounded-lg shadow-lg"
-                style={{ boxShadow: "0px 0px 94px 36px #06B225" }}
+               
               >
                 {nftCardLoading ? (
-                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
+                  <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <div className="w-full h-full">
                       <Skeleton height={320} width={280} />
                     </div>
                   </SkeletonTheme>
                 ) : (
+                  <div  style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}>
                   <img
                     src={cardDetails?.cardImageUrl}
                     alt=""
                     className="object-cover w-full h-full rounded-lg shadow-lg"
                     style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
+                    
                   />
+                  </div>
+                 
                 )}
               </div>
-              {/* <div className='mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]' onClick={() => setbuyPopup(!buyPopup)}>
-                                <YellowButtonUserSide>{t('buyNow')}</YellowButtonUserSide>
-                            </div> */}
-              {nftCardLoading && isDisplayBuyNow ? (
-                <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#202020]">
-                  <SkeletonTheme baseColor="#202020" highlightColor="#444">
-                    <Skeleton count={1} width={178} height={40} />
-                  </SkeletonTheme>
-                </div>
-              ) : (
-                (isDisplayBuyNow && (
-                  <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
-                  <button
-                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                    disabled={nftCardLoading}
-                    onClick={onClickBuyButton}
-                  >
-                    Buy for {cardDetails.cardPrice / 100000000} ICP
-                  </button>
-                </div>
-                ))
+              {!isOwned && (
+                <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
+                <button
+                  className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                  disabled={nftCardLoading}
+                  onClick={onClickBuyButton}
+                >
+                  Buy for {cardDetails.cardPrice / 100000000} ICP
+                </button>
+              </div>
               )}
             </div>
           </div>
           <h1 className="w-[90%] mt-8 text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
             {nftCardLoading ? (
-              <SkeletonTheme baseColor="#202020" highlightColor="#444">
+              <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                 <Skeleton count={3} width="100%" height={20} />
               </SkeletonTheme>
             ) : (
@@ -395,14 +388,14 @@ const BuyNft = () => {
               Details
             </h1>
             {nftCardLoading ? (
-              <SkeletonTheme baseColor="#202020" highlightColor="#444">
+              <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                 <Skeleton count={5} height={20} />
               </SkeletonTheme>
             ) : (
               <>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{contactAddress}</h1>
-                  <h1>{cardDetails.contactAddress}</h1>
+                  <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{token}</h1>
@@ -416,10 +409,15 @@ const BuyNft = () => {
                   <h1>{chain}</h1>
                   <h1>{cardDetails?.chains[0]}</h1>
                 </div>
-                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                {
+                  cardDetails && cardDetails?.date && (
+                    <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{lastUpdated}</h1>
                   <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
                 </div>
+                  )
+                }
+                
               </>
             )}
           </div>
@@ -541,7 +539,7 @@ const BuyNft = () => {
                   ) : (
                     <>
                       <h1>{lastUpdated}</h1>
-                      <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
+                      <h1><ReactTimeAgo date={cardDetails?.date || 0} locale="en" /></h1>
                     </>
                   )}
                 </div>
@@ -562,8 +560,7 @@ const BuyNft = () => {
             </div>
             <div>
               {nftCardLoading ? (
-                <div className="h-[60%] w-[80%] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                <div className="mt-[40%] ml-[50%] shadow-lg rounded-lg mb-5"
                 >
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <Skeleton
@@ -577,7 +574,7 @@ const BuyNft = () => {
               ) : (
                 <div
                     className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
-                    style={{ boxShadow: `0px 0px 94px 36px ${collectionColor.toLowerCase()}` }}
+                    style={{ boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}` }}
                   >
 
                   <img
@@ -595,7 +592,9 @@ const BuyNft = () => {
           <div className="flex items-center justify-center xl:hidden  w-[100%] xl:w-[130%] lg:pl-[3%]">
             <img src="/Hero/celtic_hero.png" alt="" />
           </div>
-          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]">
+          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]"
+          
+          >
             <img src="/Hero/Mask group.png" alt="" />
           </div>
 
@@ -641,15 +640,15 @@ const BuyNft = () => {
         <Footer />
       </div>
       {buyPopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
+        <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen z-30">
           <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
             <div className="flex items-center justify-center h-screen">
               <div
-                className={`h-[50vh] md:h-[40vh] ${
+                className={`w-[90vw]  md:w-[60vw]   lg:w-[55vw] xl:w-[30vw] min-h-[28vh] md:min-h-[30vh] ${
                   currentBuyingStatus === buyingStatus.success
-                    ? "lg:h-[65vh]"
-                    : "lg:h-[40vh]"
-                } w-[70vw] lg:w-[25vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
+                    ? "lg:min-h-[35vh]"
+                    : "lg:min-h-[15vh] xl:min-h-[30vh]"
+                } bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
               >
                 <div className="relative flex items-center justify-end">
                   <button
@@ -670,7 +669,7 @@ const BuyNft = () => {
                
 
                 {!showError.show && currentBuyingStatus === buyingStatus.payment && (
-                  <div className="h-[80%] flex flex-col items-center justify-center mt-10">
+                  <div className="min-h-[80%] flex flex-col items-center justify-center mt-10">
                     <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
                         <div className="relative flex items-center justify-center ">
@@ -769,9 +768,9 @@ const BuyNft = () => {
                         className="w-[180px] h-[260px] drop-shadow-lg object-contain rounded-lg"
                         style={{ border: "3px solid #2d2d2d" }}
                       />
-                      <h1 className="flex items-center my-3 text-base font-extralight">
-                        Licence No- 828746888
-                        <CopyToClipboard text="828746888">
+                      <h1 className="flex items-center my-3 text-base font-extralight text-center">
+                        Token Id : {tokenId}
+                        <CopyToClipboard text={tokenId}>
                           <span className="ml-2 cursor-pointer text-slate-300">
                             <RiFileCopyLine />
                           </span>
@@ -790,7 +789,7 @@ const BuyNft = () => {
         </div>
       )}
       {sharePopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screenn">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div

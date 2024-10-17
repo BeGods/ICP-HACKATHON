@@ -2,53 +2,79 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./nftcard.css";
 
-const NftCard = ({ id, list }) => {
-  const [nftColor, setNftColor] = useState("");
+const NftCard = ({ id, list, collectiondata, quantity }) => {
+  const name = list[2]?.nonfungible?.name ?? "Name not found";
+  const priceBigInt = list[3]?.[0]?.toString() ?? "Price not found";
+  const price = Number(priceBigInt) / 100000000;
 
-  useEffect(() => {
-    if (list?.nonfungible?.metadata?.[0]?.json) {
-      const metadataJson = list.nonfungible.metadata[0].json;
-      const parsedMetadata = JSON.parse(metadataJson);
-      const nftColor = parsedMetadata.nftcolor;
-      setNftColor(nftColor);
-    }
-  }, [list]);
+  // Check if the price is a valid number and not NaN
+
+  const isValidPrice = typeof price === "number" && !isNaN(price) && price >= 0;
+  console.log(list);
+
+  const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";
+  const metadataJson = list[2]?.nonfungible?.metadata?.[0]?.json;
+  const metadata = metadataJson ? JSON.parse(metadataJson) : null;
+  const nftColor = metadata?.nftcolor ?? "Color not found";
+  const nftType = metadata?.nftType ?? "Type not found";
+  console.log(nftType);
 
   return (
     <div
-      className="nftcard-container"
+      className="rounded-lg flip-card"
       style={{
-        border: "5px solid",
-        borderColor: nftColor || "golden",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
-      <div className="flip-card-inner">
+      <div
+        className={`flip-card-inner border-3} ${
+          nftColor === "Golden"
+            ? "border-golden"
+            : nftColor === "silver"
+            ? "border-silver"
+            : nftColor === "bronze"
+            ? "border-bronze"
+            : "border-gray-100"
+        }`}
+      >
         {/* Front Side */}
         <div className="flip-card-front flex items-center justify-center">
           <img
-            src={list.nonfungible.thumbnail}
-            alt={`${list.nonfungible.name}`}
-            className="w-full h-full rounded-lg object-cover"
+            src={image}
+            alt={name}
+            className="w-[98%] h-[98%] rounded-lg object-cover"
           />
         </div>
         {/* Back Side */}
-        <div className="flip-card-back relative flex flex-col justify-center items-center text-white">
+        <div className="relative flex flex-col items-center justify-center text-white flip-card-back">
           <img
-            src={list.nonfungible.thumbnail}
-            alt={`${list.nonfungible.name}`}
-            className="object-cover blur-sm w-full h-full"
+            src={image}
+            alt={name}
+            className="object-cover blur-sm w-[98%] h-[98%]"
           />
-          <div className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-60 rounded-lg p-4">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-center">
-              {list.nonfungible.name}
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
+            <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">
+              Name: {name}
             </h1>
-            <h2 className="text-xs sm:text-lg mt-1 text-center">{id}</h2>
+            {isValidPrice && (
+              <h2 className="text-xs sm:text-lg mt-1 text-center">
+                Price: {price} ICP
+              </h2>
+            )}
+            <h2 className="text-xs sm:text-lg mt-1 text-center">
+              Type: {nftType}
+            </h2>
+
+            <h2 className="text-xs sm:text-lg mt-1 text-center">
+              Quantity: {quantity}
+            </h2>
             <Link
               to={`/Admin/collection/collectionDetails/${id}/nft/${id}`}
-              className="w-[50%]"
-              state={{ list }}
+              className="w-full flex justify-center items-center"
+              state={{ list, collectiondata }}
             >
-              <button className=" mt-4 w-full sm:w-[100%] h-10 sm:h-12 bg-blue-400 text-black border border-white shadow-lg transform transition-transform hover:scale-105 flex items-center justify-center rounded">
+              <button className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">
                 View Details
               </button>
             </Link>
