@@ -229,7 +229,7 @@ const BuyNft = () => {
     cardDetails?.metadata.forEach((item) => {
       const parsedData = JSON.parse(item.json);
       console.log(parsedData);
-      parsedMetadata.nftTypes.push(parsedData.nfttype);
+      parsedMetadata.nftTypes.push(parsedData.nftType);
       parsedMetadata.standards.push(parsedData.standard);
       parsedMetadata.chains.push(parsedData.chain);
       date = parsedData.date;
@@ -310,10 +310,8 @@ const BuyNft = () => {
 
         {/* for mobile screen */}
         <div className="max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center overflow-hidden ">
-          <div className="w-[80%] flex text-white justify-between items-center">
-            <div className="h-[2vh] w-[10%]">
-              <CiStar className="object-cover w-full h-full" />
-            </div>
+          <div className="w-[80%] flex text-white justify-center items-center">
+           
             {nftCardLoading ? (
               <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                 <div className="flex flex-col items-center justify-center">
@@ -331,9 +329,7 @@ const BuyNft = () => {
                 </h2>
               </div>
             )}
-            <div onClick={()=>updateSharePopup(!sharePopup)}>
-            <CiShare2 />
-            </div>
+            
           </div>
           <div className="flex items-center mt-16">
             <div>
@@ -348,7 +344,8 @@ const BuyNft = () => {
                     </div>
                   </SkeletonTheme>
                 ) : (
-                  <div  style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}>
+               
+                    <div  style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}>
                   <img
                     src={cardDetails?.cardImageUrl}
                     alt=""
@@ -356,9 +353,13 @@ const BuyNft = () => {
                     style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
                     
                   />
+                  
                   </div>
                  
                 )}
+                <div className="h-[20px]" onClick={()=>updateSharePopup(!sharePopup)}>
+                  <CiShare2 className="object-cover w-full h-full cursor-pointer mt-8" color="white" />
+                </div>
               </div>
               {!isOwned && (
                 <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
@@ -436,10 +437,8 @@ const BuyNft = () => {
         >
           <div className="hidden w-full sm:flex">
             <div className="mt-8 w-[50%] flex flex-col space-y-8 ml-[10%]">
-              <div className="flex justify-between w-full text-white ">
-                <div className="h-[20px]">
-                  <CiStar className="object-cover w-full h-full cursor-pointer" />
-                </div>
+              <div className="flex justify-center w-full text-white ">
+                
 
                 {nftCardLoading ? (
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
@@ -458,9 +457,7 @@ const BuyNft = () => {
                     </h2>
                   </div>
                 )}
-                <div className="h-[20px]" onClick={()=>updateSharePopup(!sharePopup)}>
-                  <CiShare2 className="object-cover w-full h-full cursor-pointer" />
-                </div>
+                
               </div>
               {nftCardLoading ? (
                 <SkeletonTheme baseColor="#161616" highlightColor="#202020">
@@ -558,9 +555,9 @@ const BuyNft = () => {
               )}
               
             </div>
-            <div>
+            <div className="flex w-[40%] ml-[20%] ">
               {nftCardLoading ? (
-                <div className="mt-[40%] ml-[50%] shadow-lg rounded-lg mb-5"
+                <div className="mt-[30%] shadow-lg rounded-lg mb-5"
                 >
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <Skeleton
@@ -572,8 +569,10 @@ const BuyNft = () => {
                   </SkeletonTheme>
                 </div>
               ) : (
+                <>
+                <div className="flex flex-col">
                 <div
-                    className="h-[20rem] w-[15rem] mt-[40%] ml-[50%] shadow-lg rounded-lg"
+                    className="h-[20rem]  mt-[40%] shadow-lg rounded-lg"
                     style={{ boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}` }}
                   >
 
@@ -583,7 +582,14 @@ const BuyNft = () => {
                     className="object-cover w-full h-full rounded-lg shadow-lg"
                     style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
                   />
+                  
                 </div>
+                <div className="h-[20px] mt-8" onClick={()=>updateSharePopup(!sharePopup)}>
+                <CiShare2 className="object-cover w-full h-full cursor-pointer" color="white" />
+              </div>
+                </div>
+                
+              </>
               )}
             </div>
           </div>
@@ -789,7 +795,7 @@ const BuyNft = () => {
         </div>
       )}
       {sharePopup && (
-        <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-50 w-screen h-screen">
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div

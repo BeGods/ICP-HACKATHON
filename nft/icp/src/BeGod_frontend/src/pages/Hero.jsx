@@ -100,9 +100,10 @@ const Hero = () => {
     const [toPrice,updateToPrice] = useState(undefined);
     const [currentDropDown,updateDropDown] = useState(dropdownItems.none);
     const [applyPriceRange,updateApplyPriceRange] = useState({isApply:false,from:NaN,to:NaN});
-    const [currentFilterOption,updateCurrentFilterOption] = useState(filterListOptions[0].optionId)
+    const [currentFilterOption,updateCurrentFilterOption] = useState(filterListOptions[0].optionId);
 
-    const onClickAnyFilter = (updatedFilter) => {
+
+      const onClickAnyFilter = (updatedFilter) => {
 
         console.log("updated filter", updatedFilter)
         if(updatedFilter === currentDropDown){
@@ -223,6 +224,7 @@ const Hero = () => {
 let index = -1;
 const fetchCollectionNfts = async (collectionId,color) => {
     const listedNfts = await backendActor?.listings(collectionId);
+    console.log("listings resut",listedNfts);
     index  = -1;
     if(listedNfts.length === 0){
         updateNoCardsStatus(true);
@@ -278,8 +280,23 @@ const getCollectionNfts = (collectionList,collectionId,color) => {
 
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
+function getScreenSize() {
+    const width = window.innerWidth;
+  
+    if (width >= 1024) {
+      return 'lg'; // Large screen
+    } else if (width >= 768) {
+      return 'md'; // Medium screen
+    } else if(width >=640){
+      return 'sm'; 
+    }else{
+        return "xs"
+    }
+  }
+
 
 const [filteredList, updateFilteredList] = useState(selectedCollectionNftCardsList);
+
 
 useEffect(() => {
 
@@ -303,7 +320,28 @@ useEffect(() => {
         
     }
 
+    
+
+    console.log("Updated list after all filters:", updatedList);
+    const screenSize = getScreenSize();
+   if(screenSize == "xs"){
+    if(currentCardType != cardTypeList[0].cardId || applyPriceRange.isApply || currentFilterOption !== filterListOptions[0].optionId){
+        if(updatedList.length>0){
+            toast.success(`${updatedList.length} Card${updatedList.length === 1 ? "":"s"} Found`);
+        }else{
+            toast.error("No Cards Found");
+        }
+    }
+   }
+       
+    updateFilteredList(updatedList);
+
+}, [currentCardType, applyPriceRange, selectedCollectionNftCardsList]);
+
+useEffect(()=>{
+    
     if (currentFilterOption !== filterListOptions[0].optionId) {
+        let updatedList = [...filteredList];
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
         } else if (currentFilterOption === filterListOptions[2].optionId) {
@@ -311,23 +349,11 @@ useEffect(() => {
         } else if (currentFilterOption === filterListOptions[3].optionId) {
             updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
         }
+        console.log("updated list after filter change",updatedList)
+        updateFilteredList(updatedList)
     }
-
-    console.log("Updated list after all filters:", updatedList);
-
-    if(currentCardType != cardTypeList[0].cardId || applyPriceRange.isApply || currentFilterOption !== filterListOptions[0].optionId){
-        if(updatedList.length>0){
-            toast.success(`${updatedList.length} Cards Found`);
-        }else{
-            toast.error("No Cards Found");
-        }
-    }
-       
-    updateFilteredList(updatedList);
-
-}, [currentCardType, applyPriceRange, currentFilterOption, selectedCollectionNftCardsList]);
-
-
+    
+},[currentFilterOption])
 
 console.log("filtered list after applying filters",filteredList)
     let count = 0;
@@ -462,8 +488,8 @@ console.log("filtered list after applying filters",filteredList)
                                 
                          ):(
                             <>
-                                <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
+                                <h1 className='text-center text-[44px]  sm:ml-0 sm:text-start sm:text-[54] lg:text-[64]  font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
+                                <h2 className='text-center sm:text-start w-[100%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
                             </>
                          )}
 
@@ -601,7 +627,7 @@ console.log("filtered list after applying filters",filteredList)
                            ):(
                             <div className="pb-10">
                             <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                              <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                              <div className="justify-around hidden gap-5 m-5 sm:grid md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                                 {Array.from({ length: 10 }).map((_, index) => (
                                   <Skeleton
                                     key={index}
@@ -629,7 +655,7 @@ console.log("filtered list after applying filters",filteredList)
                 <div className='fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden'>
                     <div className='w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]'>
                             <div className='flex items-center justify-center h-screen w-screen '>
-                                <div className={`h-[50vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto ${currentDropDown === dropdownItems.filter && "h-[60vh]"} `}>
+                                <div className={`h-[40vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto `}>
                                     <div className="flex items-center justify-end">
                                         <button
                                             className="text-[#FCD378] bottom-1 z-10"
@@ -683,7 +709,7 @@ console.log("filtered list after applying filters",filteredList)
                                                         }`} ICP)
                                             </button>
                                                 {currentDropDown === dropdownItems.price && (
-                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[100%] h-[150px] flex flex-col items-center justify-around'
+                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[100px] flex flex-col items-center justify-around'
                                                 onClick={(e)=>e.stopPropagation()}
                                                 >
                                                         <h1>Price in ICP</h1>
@@ -695,11 +721,11 @@ console.log("filtered list after applying filters",filteredList)
                                                             <input value={toPrice} onChange={(e)=> { updateToPrice(parseInt(e.target.value))}} placeholder='to' type='number' className='w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm'/>
                                                         </div>
                                                         <div className=''>
-                                                            <button className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${(isNaN(applyPriceRange.from)|| isNaN(applyPriceRange.to))?"opacity-20":"opacity-100"} `}
+                                                            <button className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] mr-3 rounded-full ${(isNaN(applyPriceRange.from)|| isNaN(applyPriceRange.to))?"opacity-20":"opacity-100"} `}
                                                                 disabled={isNaN(applyPriceRange.from) || isNaN(applyPriceRange.to)}
                                                                 onClick={()=>{onClickAnyFilter(dropdownItems.none);updateApplyPriceRange({isApply:false,from:NaN,to:NaN}); updateFromPrice(NaN); updateToPrice(NaN)}}
                                                             >Cancel</button>
-                                                            <button className={`w-20 border-none bg-[#FCD378] text-black h-6 rounded-full ${(isNaN(fromPrice) || isNaN(toPrice)) ? "opacity-20":"opacity-100"}`}
+                                                            <button className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] rounded-full ${(isNaN(fromPrice) || isNaN(toPrice)) ? "opacity-20":"opacity-100"}`}
                                                             onClick={()=>{
                                                                 onClickAnyFilter(dropdownItems.price);
                                                                 updateApplyPriceRange({isApply:true,from:fromPrice,to:toPrice});
@@ -723,12 +749,14 @@ console.log("filtered list after applying filters",filteredList)
                                                 {currentFilterOption}
                                             </button>
                                             {currentDropDown === dropdownItems.filter && (
-                                                    <ul className="absolute top-[60px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[100px] overflow-y-auto ">
+                                                // here the dropdown will be top , i because when dropdown is to bottom i am getting blur dropdown ,
+                                                //  if you want to test put top-60px in place of bottom-30 below
+                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[100px] overflow-y-auto ">
                                                         {filterListOptions.map((eachFilter,index)=>(
                                                             <>
                                                                 <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
                                                                 onClick={()=>{if(eachFilter.optionId != currentFilterOption){updateCurrentFilterOption(eachFilter.optionId); onClickAnyFilter(dropdownItems.filter)}}}>
-                                                                    <li key={eachFilter.optionId}>{eachFilter.displayText}</li>
+                                                                    <li key={eachFilter.optionId} className='h-[30px]'>{eachFilter.displayText}</li>
                                                                     {currentFilterOption === eachFilter.optionId && (
                                                                     <IoCheckmarkOutline />
                                                                     )}
