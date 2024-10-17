@@ -9,7 +9,7 @@ import { FaUserLarge } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDisplayWalletOptionsStatus } from "../../redux/infoSlice";
 import { FiActivity } from "react-icons/fi";
-const Navbar = ({ mobileView,landingPage }) => {
+const Navbar = ({ mobileView,landingPage  }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
@@ -103,10 +103,14 @@ const ScrollToCollections = () => {
 };
 
 ScrollToCollections();
+ const onClickClearDropDowns = ()=>{
+  setDropdownOpen(false);
+  setProfileDropDown(false);
+ }
 
 
   return (
-    <div className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`}>
+    <div className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`} onClick={onClickClearDropDowns}>
       {/* Mobile View */}
       <div className="relative flex items-center justify-between w-full gap-4 md:hidden">
         <Link to="/" className="flex pt-7">
@@ -115,7 +119,7 @@ ScrollToCollections();
         <div className="flex items-center justify-between">
           <div className="relative w-[130px] flex justify-center">
             <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={(e) => {e.stopPropagation();setDropdownOpen(!dropdownOpen)}}
               aria-expanded={dropdownOpen}
               className="text-[20px] font-[500] leading-[28.92px] text-[#FCD37B] flex justify-center items-center"
             >
@@ -162,14 +166,27 @@ ScrollToCollections();
           </button>
           {/* Language Dropdown */}
           <div className="relative w-[130px] flex justify-center">
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+          <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setDropdownOpen((prevState) => !prevState);
+                setProfileDropDown(false);
+                dispatch(
+                  updateDisplayWalletOptionsStatus({
+                    status: false,
+                    path: navigatingPath,
+                  })
+                );
+              }}
               aria-expanded={dropdownOpen}
               className="text-[20px] font-[500] text-[#FCD37B] flex justify-center items-center"
             >
-              {currentLanguage}{" "}
-              <span className="ml-2 text-sm">{dropdownOpen ? "▲" : "▼"}</span>
+              {currentLanguage}
+              <span className="ml-2 text-sm">
+                {dropdownOpen ? "▲" : "▼"}
+              </span>
             </button>
+
             {dropdownOpen && (
               <ul className="absolute left-0 mt-10 bg-slate-900 text-[#FCD378] rounded shadow-lg w-36 p-0 list-none">
                 {languages.map((eachLang) => (
@@ -191,7 +208,7 @@ ScrollToCollections();
           {isAuthenticated ? (
             <div className="relative w-[180px] flex justify-center z-20">
               <button
-                onClick={() => setProfileDropDown(!profileDropDown)}
+                onClick={(e) => {e.stopPropagation(),setProfileDropDown(!profileDropDown);setDropdownOpen(false)}}
                 aria-expanded={profileDropDown}
                 className="rounded-md flex justify-center items-center gap-1 w-full h-full p-2 bg-[#000] text-white border border-gray-500"
               >
@@ -259,12 +276,12 @@ ScrollToCollections();
                 <>
                   <button
                     onClick={() =>
-                      dispatch(
-                        updateDisplayWalletOptionsStatus({
-                          status: !iswalletOptionsOpen.status,
-                          path: navigatingPath,
-                        })
-                      )
+                    {dispatch(
+                      updateDisplayWalletOptionsStatus({
+                        status: !iswalletOptionsOpen.status,
+                        path: navigatingPath,
+                      })
+                    );setDropdownOpen(false)}
                     }
                     className="bg-[#FCD37B] font-bold text-black w-full h-full rounded-sm p-2 text-md hover:bg-[#000] hover:text-[#FCD37B]"
                   >

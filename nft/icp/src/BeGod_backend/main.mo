@@ -808,57 +808,106 @@ actor Main {
     };
 
     // USER MY COLLECTION
+    // public shared ({ caller = user }) func userNFTcollection(
+    //     _collectionCanisterId : Principal,
+    //     user : AccountIdentifier,
+    // ) : async Result.Result<{ boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)]; unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] }, CommonError> {
+    //     //  if (Principal.isAnonymous(Principal.fromText(user))) {
+    //     //     throw Error.reject("User is not authenticated");
+    //     // };
+
+    //     // Define the canister actor interface
+    //     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)];
+    //         getCollectionDetails : () -> async (Text, Text, Text);
+    //     };
+
+    //     // Fetch the collection name and details
+    //     let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+    //     // Fetch all NFTs in the collection
+    //     let allNFTs = await collectionCanisterActor.getAllNonFungibleTokenData();
+
+    //     // Fetch the listings (unbought NFTs)
+    //     let marketplaceListings = await listings(_collectionCanisterId);
+
+    //     var boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
+    //     var unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
+
+    //     // Iterate through all NFTs in the collection
+    //     for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
+    //         let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+
+    //         // Check if the NFT is listed in the marketplace (unbought)
+    //         let isListed = Array.find<(TokenIndex, TokenIdentifier, Listing, Metadata)>(
+    //             marketplaceListings,
+    //             func((listedIndex, _, _, _)) {
+    //                 listedIndex == tokenIndex;
+    //             },
+    //         );
+
+    //         if (nftOwner == user) {
+    //             // If the user owns the NFT, add it to the boughtNFTs list with its price
+    //             boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
+    //         } else if (isListed != null) {
+    //             // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list with its price
+    //             unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
+    //         };
+    //     };
+
+    //     return #ok({
+    //         boughtNFTs = boughtNFTs;
+    //         unboughtNFTs = unboughtNFTs;
+    //     });
+    // };
+
     public shared ({ caller = user }) func userNFTcollection(
-        _collectionCanisterId : Principal,
-        user : AccountIdentifier,
+    _collectionCanisterId : Principal,
+    user : AccountIdentifier,
     ) : async Result.Result<{ boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)]; unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] }, CommonError> {
-        //  if (Principal.isAnonymous(Principal.fromText(user))) {
-        //     throw Error.reject("User is not authenticated");
-        // };
+    // Define the canister actor interface
+    let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)];
+        getCollectionDetails : () -> async (Text, Text, Text);
+    };
 
-        // Define the canister actor interface
-        let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)];
-            getCollectionDetails : () -> async (Text, Text, Text);
+    // Fetch the collection name and details
+    let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+    // Fetch all NFTs in the collection
+    let allNFTs = await collectionCanisterActor.getAllNonFungibleTokenData();
+
+    // Fetch the listings (unbought NFTs)
+    let marketplaceListings = await listings(_collectionCanisterId);
+
+    var boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
+    var unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
+
+    // Iterate through all NFTs in the collection
+    for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
+        let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+
+        // Check if the NFT is listed in the marketplace (unbought)
+        let isListed = Array.find<(TokenIndex, TokenIdentifier, Listing)>(
+            marketplaceListings,
+            func((listedIndex, _, _)) {
+                listedIndex == tokenIndex;
+            },
+        ) != null;
+
+        if (nftOwner == user) {
+            // If the user owns the NFT, add it to the boughtNFTs list with its price
+            boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
+        } else if (isListed) {
+            // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list with its price
+            unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
         };
+    };
 
-        // Fetch the collection name and details
-        let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
-
-        // Fetch all NFTs in the collection
-        let allNFTs = await collectionCanisterActor.getAllNonFungibleTokenData();
-
-        // Fetch the listings (unbought NFTs)
-        let marketplaceListings = await listings(_collectionCanisterId);
-
-        var boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
-        var unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] = [];
-
-        // Iterate through all NFTs in the collection
-        for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
-            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
-
-            // Check if the NFT is listed in the marketplace (unbought)
-            let isListed = Array.find<(TokenIndex, TokenIdentifier, Listing, Metadata)>(
-                marketplaceListings,
-                func((listedIndex, _, _, _)) {
-                    listedIndex == tokenIndex;
-                },
-            );
-
-            if (nftOwner == user) {
-                // If the user owns the NFT, add it to the boughtNFTs list with its price
-                boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
-            } else if (isListed != null) {
-                // If the NFT is listed and the user does not own it, add it to the unboughtNFTs list with its price
-                unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
-            };
-        };
-
-        return #ok({
-            boughtNFTs = boughtNFTs;
-            unboughtNFTs = unboughtNFTs;
-        });
+    return #ok({
+        boughtNFTs = boughtNFTs;
+        unboughtNFTs = unboughtNFTs;
+    });
     };
 
     //User favorite NFTS from userNFTCollection
@@ -967,53 +1016,80 @@ actor Main {
     };
 
     //USER ACTIVITY
-    public shared func useractivity(_collectionCanisterId : Principal, buyerId : AccountIdentifier) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
-        let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            ext_marketplaceTransactions : () -> async [Transaction];
-        };
+    // public shared func useractivity(_collectionCanisterId : Principal, buyerId : AccountIdentifier) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
+    //     let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         ext_marketplaceTransactions : () -> async [Transaction];
+    //     };
 
-        // Retrieve transactions from the collection canister
-        let transactions = await transactionActor.ext_marketplaceTransactions();
+    //     // Retrieve transactions from the collection canister
+    //     let transactions = await transactionActor.ext_marketplaceTransactions();
 
-        var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+    //     var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
 
-        // Iterate through each transaction
-        for (transaction in transactions.vals()) {
-            if (transaction.buyer == buyerId) {
-                let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+    //     // Iterate through each transaction
+    //     for (transaction in transactions.vals()) {
+    //         if (transaction.buyer == buyerId) {
+    //             let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
 
-                // Fetch the collection details to get the name
-                let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-                    getCollectionDetails : () -> async (Text, Text, Text);
-                };
+    //             // Fetch the collection details to get the name
+    //             let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //                 getCollectionDetails : () -> async (Text, Text, Text);
+    //             };
 
-                let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+    //             let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
 
-                // Append the transformed transaction data
-                transformedTransactions := Array.append(
-                    transformedTransactions,
-                    [(transaction.token, tokenIdentifier, transaction, collectionName)],
-                );
-            };
-        };
+    //             // Append the transformed transaction data
+    //             transformedTransactions := Array.append(
+    //                 transformedTransactions,
+    //                 [(transaction.token, tokenIdentifier, transaction, collectionName)],
+    //             );
+    //         };
+    //     };
 
-        return transformedTransactions;
-        return transformedTransactions;
+    //     return transformedTransactions;
+    //     return transformedTransactions;
+    // };
+
+    public shared func useractivity(
+    _collectionCanisterId : Principal,
+    buyerId : AccountIdentifier
+    ) : async [(TokenIndex, TokenIdentifier, Text)] {
+    let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceTransactions : () -> async [Transaction];
     };
+
+    // Retrieve transactions from the collection canister
+    let transactions = await transactionActor.ext_marketplaceTransactions();
+
+    var userTransactions : [(TokenIndex, TokenIdentifier, Text)] = [];
+
+    // Iterate through each transaction
+    for (transaction in transactions.vals()) {
+        if (transaction.buyer == buyerId) {
+            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+
+            // Fetch only the collection name for each transaction instead of all collection details
+            let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+                getCollectionName : () -> async Text; // Assuming getCollectionName is a lightweight function returning only the name
+            };
+
+            // Fetch the collection name
+            let collectionName = await collectionCanisterActor.getCollectionName();
+
+            // Append only the necessary details for each transaction
+            userTransactions := Array.append(
+                userTransactions,
+                [(transaction.token, tokenIdentifier, collectionName)]
+            );
+        };
+    };
+
+    return userTransactions;
+    };
+
 
     //functions to get hard copy of cards
     // gethardcopy function
-    // Get all orders for a specific user based on their account identifier
-    public query func getuserorders(accountIdentifier: Principal) : async Result.Result<[Order], Text> {
-    let userOrders = Array.filter<Order>(orders, func (order: Order) : Bool {
-        order.accountIdentifier == accountIdentifier;
-    });
-    if (userOrders.size() == 0) {
-        return #err("No orders found for the provided account identifier.");
-    } else {
-        return #ok(userOrders);
-    }
-    };
     public shared func gethardcopy(
     accountIdentifier: Principal,
     uuid: Text,
@@ -1133,7 +1209,6 @@ actor Main {
     }
     };
 
-
     //remove existing orders
     public shared func removeOrder(
     accountIdentifier: Principal,
@@ -1159,10 +1234,11 @@ actor Main {
     };
     };  
 
-    //get all orders of users 
+    //get all orders of users (admin side)
     public query func getallOrders() : async [Order] {
     return orders;
     };
+
     // get order details for a specific order
     public query func orderDetails(
     accountIdentifier: Principal,
@@ -1184,6 +1260,17 @@ actor Main {
     };
     };
 
+    // Get all orders for a specific user based on their account identifier
+    public query func getuserorders(accountIdentifier: Principal) : async Result.Result<[Order], Text> {
+    let userOrders = Array.filter<Order>(orders, func (order: Order) : Bool {
+        order.accountIdentifier == accountIdentifier;
+    });
+    if (userOrders.size() == 0) {
+        return #err("No orders found for the provided account identifier.");
+    } else {
+        return #ok(userOrders);
+    }
+    };
 
 
     /* -------------------------------------------------------------------------- */
@@ -1199,24 +1286,61 @@ actor Main {
     };
 
     // Get the NFT listings and their corresponding prices, now including TokenIndex and TokenIdentifier
-    public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Listing, Metadata)] {
-        let priceListings = actor (Principal.toText(_collectionCanisterId)) : actor {
-            ext_marketplaceListings : () -> async [(TokenIndex, Listing, Metadata)];
-        };
+    // public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Listing, Metadata)] {
+    //     let priceListings = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         ext_marketplaceListings : () -> async [(TokenIndex, Listing, Metadata)];
+    //     };
 
-        // Retrieve listings from the collection canister
-        let listingData = await priceListings.ext_marketplaceListings();
+    //     // Retrieve listings from the collection canister
+    //     let listingData = await priceListings.ext_marketplaceListings();
 
-        // Transform listing data to include TokenIdentifier alongside TokenIndex
-        let transformedListingData = Array.map<(TokenIndex, Listing, Metadata), (TokenIndex, TokenIdentifier, Listing, Metadata)>(
-            listingData,
-            func((tokenIndex, listing, metadata) : (TokenIndex, Listing, Metadata)) : (TokenIndex, TokenIdentifier, Listing, Metadata) {
-                let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
-                return (tokenIndex, tokenIdentifier, listing, metadata);
-            },
-        );
+    //     // Transform listing data to include TokenIdentifier alongside TokenIndex
+    //     let transformedListingData = Array.map<(TokenIndex, Listing, Metadata), (TokenIndex, TokenIdentifier, Listing, Metadata)>(
+    //         listingData,
+    //         func((tokenIndex, listing, metadata) : (TokenIndex, Listing, Metadata)) : (TokenIndex, TokenIdentifier, Listing, Metadata) {
+    //             let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+    //             return (tokenIndex, tokenIdentifier, listing, metadata);
+    //         },
+    //     );
 
-        return transformedListingData;
+    //     return transformedListingData;
+    // }; 
+    // Get the NFT listings and their corresponding prices, now including TokenIndex and TokenIdentifier
+    // public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Listing)] {
+    // let priceListings = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //     ext_marketplaceListings : () -> async [(TokenIndex, Listing)];
+    // };
+
+    // // Retrieve listings from the collection canister
+    // let listingData = await priceListings.ext_marketplaceListings();
+
+    // // Transform listing data to include TokenIdentifier alongside TokenIndex
+    // let transformedListingData = Array.map<(TokenIndex, Listing), (TokenIndex, TokenIdentifier, Listing)>(
+    //     listingData,
+    //     func((tokenIndex, listing) : (TokenIndex, Listing)) : (TokenIndex, TokenIdentifier, Listing) {
+    //         let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+    //         return (tokenIndex, tokenIdentifier, listing);
+    //     },
+    // );
+
+    // return transformedListingData;
+    // }; 
+    public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Listing)] {
+    let priceListings = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceListings : () -> async [(TokenIndex, Listing)];
+    };
+
+    // Retrieve listings directly
+    let listingData = await priceListings.ext_marketplaceListings();
+    
+    // Transform data to include TokenIdentifier in a single pass
+    return Array.map<(TokenIndex, Listing), (TokenIndex, TokenIdentifier, Listing)>(
+        listingData,
+        func((tokenIndex, listing) : (TokenIndex, Listing)) : (TokenIndex, TokenIdentifier, Listing) {
+            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+            return (tokenIndex, tokenIdentifier, listing);
+        }
+    );
     };
 
     //purchase nft
