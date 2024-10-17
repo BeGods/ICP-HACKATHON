@@ -116,7 +116,7 @@ const NFTGallery = ({ currentCollection }) => {
           />
         </div>
       </div>
-      <div className={`justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
+      <div className={`justify-around hidden gap-5 m-5 sm:grid sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
         {currentItems && currentItems.map((eachCard, index) => {
           const img = eachCard[0];
          return(
@@ -156,7 +156,7 @@ const NFTGallery = ({ currentCollection }) => {
       </div>
 
       {/* Pagination Controls */}
-      <div className='hidden w-[86%] sm:flex justify-between items-center '>
+      <div className='hidden w-[100%] lg:w-[86%] sm:flex justify-between items-center '>
         <img
           src="/Hero/up.png"
           alt="Previous"

@@ -27,7 +27,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites,quantity,buttonStatus})
         }
       };
       
-    console.log("img",img)
+    // console.log("img",img)
     return (
 
         <div
