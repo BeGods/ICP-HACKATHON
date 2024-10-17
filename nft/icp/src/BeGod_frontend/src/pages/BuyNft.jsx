@@ -799,11 +799,11 @@ const BuyNft = () => {
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[50vh] md:h-[40vh] w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className="h-[50vh] md:h-[45vh] w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
             >
-              <div className="relative flex items-center justify-end">
+              <div className=" flex items-center justify-end">
                 <button
-                  className="text-[#ffffff] absolute bottom-1 top-1 z-10"
+                  className="text-[#ffffff]  bottom-1 top-1 z-10"
                   onClick={() => updateSharePopup(!sharePopup)}
                 >
                   <RxCross2 size={20} />
@@ -816,7 +816,7 @@ const BuyNft = () => {
                 {shareOptions.map((option, index) => {
                     const Button = option.button;
                     return (
-                      <div key={index} className="h-[60px] w-[80px] flex justify-center items-center">
+                      <div key={index} className="h-[60px] w-[65px] md:w-[80px] lg:w-[65px] lx:w-[80px] flex justify-center items-center">
                         <Button url="https://www.ccbp.in/" className="flex flex-col items-center justify-center">
                           {option.icon}
                           <span className="text-xs">{option.displayText}</span>
