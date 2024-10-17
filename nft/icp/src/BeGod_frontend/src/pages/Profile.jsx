@@ -669,6 +669,7 @@ const onChangeFilterOption = (eachCollection) => {
   if (eachCollection.index != currentDropDownOption) {
     updateDropDownOption(eachCollection.index);
     updateDropDownStatus(!isDisplayCollectionDropDown);
+    updateNoCardsStatus(false);
     setIsCardsLoading(true);
     getSelectedOptionCards(eachCollection.collectionId);
   }
