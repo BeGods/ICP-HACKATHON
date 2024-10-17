@@ -487,8 +487,8 @@ console.log("filtered list after applying filters",filteredList)
                                 
                          ):(
                             <>
-                                <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
+                                <h1 className='text-center text-[44px]  sm:ml-0 sm:text-start sm:text-[54] lg:text-[64]  font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
+                                <h2 className='text-center sm:text-start w-[100%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
                             </>
                          )}
 
