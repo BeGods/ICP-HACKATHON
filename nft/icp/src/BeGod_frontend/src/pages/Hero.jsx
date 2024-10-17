@@ -186,7 +186,24 @@ const Hero = () => {
             updateNoCollectionStatus(true);
             return; 
         }
-        const collectionItems = result[0][1];
+        const tempArray = [];
+        if (result && Array.isArray(result)) {
+          result.forEach((item) => {
+            if (item && item.length > 1) {
+              // console.log(item);
+              item[1].forEach((value) => {
+                // console.log(value);
+                if (value && value.length > 1) {
+                  tempArray.push(value);
+                }
+              });
+            }
+          });
+        }
+          console.log(tempArray);
+       
+        
+        const collectionItems = tempArray
       
         console.log("collection items" , collectionItems);
         const collections = [] 

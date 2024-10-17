@@ -9,12 +9,28 @@ export const fetchCollections = createAsyncThunk(
     if (collectionList.length === 0) {
       const result = await backendActor?.getAllCollections();
       const collections = [];
-
-      if (result.length === 0) {
-        return collections;
-      }
-
-      const collectionItems = result[0][1];
+      if(result.length === 0){
+        updateNoCollectionStatus(true);
+        return; 
+    }
+    const tempArray = [];
+    if (result && Array.isArray(result)) {
+      result.forEach((item) => {
+        if (item && item.length > 1) {
+          // console.log(item);
+          item[1].forEach((value) => {
+            // console.log(value);
+            if (value && value.length > 1) {
+              tempArray.push(value);
+            }
+          });
+        }
+      });
+    }
+      console.log(tempArray);
+   
+    
+    const collectionItems = tempArray
       console.log("Fetched collection items in Footer:", collectionItems);
 
       let i = 0;
