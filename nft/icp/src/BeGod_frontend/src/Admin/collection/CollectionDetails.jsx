@@ -454,7 +454,9 @@ function CollectionDetails() {
           <div className="w-full">
             {/* Back button and action buttons */}
             <div className="flex items-center justify-between w-full pt-9">
-              <BackButton />
+              <div className="hidden sm:block">
+                <BackButton />
+              </div>
               <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
                 <YellowButton methodName={() => toggleModal()}>
                   Add NFT

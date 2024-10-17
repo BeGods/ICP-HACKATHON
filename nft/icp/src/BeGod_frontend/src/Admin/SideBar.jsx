@@ -51,11 +51,10 @@ const sideBarData = [
 export default function SimpleSidebar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // Automatically close the sidebar on screen resize
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        onClose(); // Automatically close sidebar if screen is resized to >= 768px
+      if (window.innerWidth >= 1024) {
+        onClose(); // Close sidebar automatically if screen is resized to >= 1024px (desktop)
       }
     };
 
@@ -67,12 +66,12 @@ export default function SimpleSidebar() {
 
   return (
     <Box
-      h={{ base: "fit-content", md: "screen" }}
+      h={{ base: "fit-content", md: "full" }}
       bg={useColorModeValue("#161618", "#29292C")}
     >
       <SidebarContent
         onClose={onClose}
-        display={{ base: "none", md: "block" }}
+        display={{ base: "none", lg: "block" }} // Show sidebar on large screens (>= 1024px)
       />
       <Drawer
         isOpen={isOpen}
@@ -86,9 +85,10 @@ export default function SimpleSidebar() {
           <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
-      <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
+      <MobileNav display={{ base: "flex", lg: "none" }} onOpen={onOpen} />
+      {/* Content container */}
+      <Box ml={{ base: 0, lg: 60 }} p="4">
+        {/* Content goes here */}
       </Box>
     </Box>
   );
@@ -113,14 +113,14 @@ function SidebarContent({ onClose, ...rest }) {
   return (
     <Box
       bg={useColorModeValue("#29292C", "gray.900")}
-      w={{ base: "full", md: 60, "2xl": 80 }}
+      w={{ base: "full", lg: 60, "2xl": 80 }}
       pos="fixed"
       h="full"
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <CloseButton
-          display={{ base: "flex", md: "none" }}
+          display={{ base: "flex", lg: "none" }}
           color="white"
           onClick={onClose}
         />
@@ -247,8 +247,8 @@ NavItem.propTypes = {
 function MobileNav({ onOpen, ...rest }) {
   return (
     <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
+      ml={{ base: 0, lg: 60 }}
+      px={{ base: 4, lg: 24 }}
       height="20"
       alignItems="center"
       bg={useColorModeValue("#161618", "gray.900")}

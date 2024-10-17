@@ -14,7 +14,7 @@ import {
   IconButton,
   list,
 } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons"; // Import CloseIcon from Chakra UI
+import { CloseIcon } from "@chakra-ui/icons";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../utils/useAuthClient.jsx";
@@ -43,8 +43,10 @@ function Users() {
         console.log(result);
         if (result && result[0] && result[0][1]) {
           console.log(result[0][1]);
-
           checktranscations(result[0][1]);
+        } else {
+          console.log("No collection available");
+          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching collections:", error);
@@ -53,26 +55,22 @@ function Users() {
   };
 
   const checktranscations = async (Collection) => {
-    const listdata = []; // To store individual arrays from results
+    const listdata = [];
 
     for (let i = 0; i < Collection.length; i++) {
       const userPrincipalArray = Collection[i][1];
-
       try {
         const principalString = Principal.fromUint8Array(
           userPrincipalArray._arr
         );
         const result = await backendActor?.transactions(principalString);
-
-        // Check if result is valid and contains arrays
         if (result && Array.isArray(result) && result.length > 0) {
-          // Store each array individually in listdata
           result.forEach((transactionArray) => {
             if (
               Array.isArray(transactionArray) &&
               transactionArray.length > 0
             ) {
-              listdata.push(transactionArray); // Add individual array to listdata
+              listdata.push(transactionArray);
             }
           });
           console.log("Transaction data added:", result);
@@ -85,34 +83,21 @@ function Users() {
           userPrincipalArray,
           error
         );
-        // Do not add errors or empty data to listdata
       }
     }
-
-    // Update the state with accumulated successful transaction data
     if (listdata.length > 0) {
       setalldata(listdata);
-      setLoading(false);
       console.log("All successful individual arrays stored:", listdata);
     } else {
       console.log("No successful data to store.");
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     const fetchCollection = async () => {
       setLoading(true);
-      // const loadStart = Date.now(); // Record the start time
       await getCollection();
-      // const loadTime = Date.now() - loadStart;
-
-      // // Ensure that the loading spinner runs for at least 3 seconds
-      // const remainingTime = 3000 - loadTime;
-      // if (remainingTime > 0) {
-      //   setTimeout(() => setLoading(false), remainingTime);
-      // } else {
-      //   setLoading(false);
-      // }
     };
 
     fetchCollection();
@@ -129,7 +114,6 @@ function Users() {
           color="white"
           className="flex flex-col items-center justify-center"
         >
-          {/* Table */}
           <Box
             w={{ base: "90%", sm: "100%", md: "85%", "2xl": "90%" }}
             mx={{ base: "4%", sm: "8%", md: "7%", lg: "7%", "2xl": "10%" }}
@@ -162,122 +146,120 @@ function Users() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {loading
-                    ? Array(5)
-                        .fill("")
-                        .map((_, index) => (
-                          <Tr key={index}>
-                            <Td>
-                              <Skeleton height={20} width="80%" />
-                            </Td>
-                            <Td>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: "10px",
-                                }}
-                              >
-                                <Skeleton
-                                  circle={true}
-                                  height={30}
-                                  width={30}
-                                />
-                                <Skeleton height={20} width="150px" />{" "}
-                                {/* Name placeholder */}
-                              </div>
-                            </Td>
-                            <Td>
-                              <Skeleton height={20} width="80%" />
-                            </Td>
-                            <Td>
-                              <Skeleton height={20} width="60%" />
-                            </Td>
-                            <Td>
-                              <Skeleton height={20} width="40%" />
-                            </Td>
-                          </Tr>
-                        ))
-                    : alldata.map((user, index) => {
-                        // Calculate time in milliseconds and difference in days
-                        const timeInMilliseconds =
-                          Number(user[2]?.time) / 1000000;
-                        const transactionTime = new Date(timeInMilliseconds);
-                        const currentTime = new Date();
-                        const timeDifferenceInMilliseconds =
-                          currentTime - transactionTime;
-                        const daysDifference = Math.floor(
-                          timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)
-                        );
+                  {loading ? (
+                    Array(5)
+                      .fill("")
+                      .map((_, index) => (
+                        <Tr key={index}>
+                          <Td>
+                            <Skeleton height={20} width="80%" />
+                          </Td>
+                          <Td>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                              }}
+                            >
+                              <Skeleton circle={true} height={30} width={30} />
+                              <Skeleton height={20} width="150px" />
+                            </div>
+                          </Td>
+                          <Td>
+                            <Skeleton height={20} width="80%" />
+                          </Td>
+                          <Td>
+                            <Skeleton height={20} width="60%" />
+                          </Td>
+                          <Td>
+                            <Skeleton height={20} width="40%" />
+                          </Td>
+                        </Tr>
+                      ))
+                  ) : alldata.length > 0 ? (
+                    alldata.map((user, index) => {
+                      const timeInMilliseconds =
+                        Number(user[2]?.time) / 1000000;
+                      const transactionTime = new Date(timeInMilliseconds);
+                      const currentTime = new Date();
+                      const timeDifferenceInMilliseconds =
+                        currentTime - transactionTime;
+                      const daysDifference = Math.floor(
+                        timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)
+                      );
 
-                        return (
-                          <Tr
-                            key={index}
-                            bg={index % 2 === 0 ? "#333333" : "#282828444"}
+                      return (
+                        <Tr
+                          key={index}
+                          bg={index % 2 === 0 ? "#333333" : "#282828444"}
+                        >
+                          <Td
+                            textAlign="center"
+                            wordBreak="break-all"
+                            color="gray.200"
                           >
-                            <Td
-                              textAlign="center"
-                              wordBreak="break-all"
-                              color="gray.200"
-                            >
-                              {index + 1}
-                            </Td>
-                            <Td textAlign="center">
-                              <div className="flex items-center justify-center gap-4">
-                                <img
-                                  src="/image/admin.png"
-                                  alt=""
-                                  style={{
-                                    width: "30px",
-                                    height: "30px",
-                                    borderRadius: "50%",
-                                  }}
-                                />
-                                {`${user[1].slice(0, 4)}...${user[1].slice(
-                                  -4
-                                )}`}
-                                <CopyToClipboard
-                                  text={user[1]}
-                                  onCopy={handleCopy}
-                                >
-                                  <button className="ml-3">
-                                    <CopyIcon />
-                                  </button>
-                                </CopyToClipboard>
-                              </div>
-                            </Td>
-                            <Td
-                              textAlign="center"
-                              wordBreak="break-all"
-                              color="gray.200"
-                            >
-                              {`${user[2]?.buyer.slice(
-                                0,
-                                4
-                              )}...${user[2]?.buyer.slice(-4)}`}
+                            {index + 1}
+                          </Td>
+                          <Td textAlign="center">
+                            <div className="flex items-center justify-center gap-4">
+                              <img
+                                src="/image/admin.png"
+                                alt=""
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  borderRadius: "50%",
+                                }}
+                              />
+                              {`${user[1].slice(0, 4)}...${user[1].slice(-4)}`}
                               <CopyToClipboard
-                                text={user[2]?.buyer}
+                                text={user[1]}
                                 onCopy={handleCopy}
                               >
                                 <button className="ml-3">
                                   <CopyIcon />
                                 </button>
                               </CopyToClipboard>
-                            </Td>
-                            <Td textAlign="center" color="white.200">
-                              {Number(user[2].price) / 100000000} ICP
-                            </Td>
-                            <Td textAlign="center" color="white.200">
-                              {daysDifference} days ago
-                            </Td>
-                          </Tr>
-                        );
-                      })}
+                            </div>
+                          </Td>
+                          <Td
+                            textAlign="center"
+                            wordBreak="break-all"
+                            color="gray.200"
+                          >
+                            {`${user[2]?.buyer.slice(
+                              0,
+                              4
+                            )}...${user[2]?.buyer.slice(-4)}`}
+                            <CopyToClipboard
+                              text={user[2]?.buyer}
+                              onCopy={handleCopy}
+                            >
+                              <button className="ml-3">
+                                <CopyIcon />
+                              </button>
+                            </CopyToClipboard>
+                          </Td>
+                          <Td textAlign="center" color="white.200">
+                            {Number(user[2].price) / 100000000} ICP
+                          </Td>
+                          <Td textAlign="center" color="white.200">
+                            {daysDifference} days ago
+                          </Td>
+                        </Tr>
+                      );
+                    })
+                  ) : (
+                    <Tr>
+                      <Td colSpan={5} textAlign="center" color="gray.400">
+                        No transactions found
+                      </Td>
+                    </Tr>
+                  )}
                 </Tbody>
               </Table>
             </TableContainer>
-
-            {/* Pagination */}
             <Box
               mt="5%"
               display="flex"
