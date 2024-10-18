@@ -702,7 +702,7 @@ console.log("filtered list after applying filters",filteredList)
                                             <button
                                                 onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.type)}}
                                                 className={`rounded-md flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378]`}
+                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378] ${currentDropDown === dropdownItems.filter && "opacity-10"} `}
                                             >
                                                 <BiCategory />
                                                 Category
@@ -759,8 +759,8 @@ console.log("filtered list after applying filters",filteredList)
                                         <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                                         <button
                                                 onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.filter)}}
-                                                className=' absolute rounded-md flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border '
+                                                className={` absolute rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border ${currentDropDown === dropdownItems.type && "opacity-5"}  `}
                                             >
                                                 < RiArrowUpDownFill />
                                                 {currentFilterOption}
