@@ -12,7 +12,7 @@ const NftDetails = () => {
   const { backendActor } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [loading, setLoading] = useState(false); // To handle loading state
+  const [loading, setLoading] = useState(true); // To handle loading state
   const [tokenid, settokenid] = useState();
   const [singletokendata, setsingletokendata] = useState();
   const nftdata = location.state?.list;
@@ -102,39 +102,43 @@ const NftDetails = () => {
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
-      <div className="2xl:mt-[10vh]">
+      <div className="2xl:mt-[10vh] w-full sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] mx-auto">
         {/* Back Button */}
-        <div className="flex justify-start items-center mx-auto w-11/12 pt-9 mb-8 hover:cursor-pointer">
+        <div className="flex justify-start items-center w-full pt-9 mb-8 hover:cursor-pointer">
           <div className="hidden sm:block">
-            <BackButton />
+            {loading ? <Skeleton width={100} height={35} /> : <BackButton />}
           </div>
         </div>
 
         {/* NFT Details Section */}
-        <div className="flex flex-col sm:flex-row mt-10 sm:mt-0 sm:ml-10 lg:ml-20 gap-6">
+        <div className="flex flex-col md:flex-row mt-8 sm:mt-0 gap-6">
           {/* NFT Image */}
-          <div className="flex justify-center mb-4 sm:mb-0">
+          <div className="flex justify-start mb-4 sm:mb-0">
             {loading ? (
-              <Skeleton height={380} width={280} />
+              <Skeleton
+                height={350}
+                width={280}
+                className="sm:w-90 md:w-100 lg:w-96"
+              />
             ) : (
               <img
                 src={nftdata[2]?.nonfungible?.thumbnail ?? "Image not found"}
                 alt="NFT Thumbnail"
-                className="object-cover rounded-md w-full max-w-[280px] h-auto"
+                className="object-cover rounded-md w-full max-w-[80%] sm:max-w-[85%] md:max-w-[350px] lg:max-w-[400px] h-auto ml-[40px] sm:ml-0"
               />
             )}
           </div>
 
           {/* NFT Details Card */}
-          <div className="justify-center w-full sm:w-[50%] md:w-[60%] bg-[#29292c] mb-4 sm:mb-0  ml-[30%] sm:ml-0  rounded-md p-6 gap-4">
+          <div className="flex flex-col justify-center w-[95%] sm:w-[86%] md:w-[60%] lg:w-[50%] bg-[#29292c] mb-4 sm:mb-0 rounded-md p-6 gap-4 mx-auto sm:mx-0">
             {loading ? (
               <div className="flex flex-col gap-4">
-                <Skeleton width={150} height={25} />
-                <Skeleton width={180} height={25} />
-                <Skeleton width={120} height={25} />
-                <Skeleton width={200} height={25} />
-                <Skeleton width={100} height={25} />
-                <Skeleton width={80} height={25} />
+                <Skeleton className="h-[25px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%]" />
+                <Skeleton className="h-[25px] w-[85%] sm:w-[70%] md:w-[60%] lg:w-[50%]" />
+                <Skeleton className="h-[25px] w-[70%] sm:w-[60%] md:w-[50%] lg:w-[40%]" />
+                <Skeleton className="h-[25px] w-[75%] sm:w-[60%] md:w-[50%] lg:w-[40%]" />
+                <Skeleton className="h-[25px] w-[60%] sm:w-[50%] md:w-[40%] lg:w-[30%]" />
+                <Skeleton className="h-[25px] w-[55%] sm:w-[50%] md:w-[40%] lg:w-[30%]" />
               </div>
             ) : (
               <div className="flex flex-col gap-4">

@@ -125,7 +125,7 @@ const CreateCollection = () => {
     if (file) {
       try {
         let options = {
-          maxSizeMB: 0.05, // 50KB
+          maxSizeMB: 0.1, // 100KB
           maxWidthOrHeight: 300,
           useWebWorker: true,
         };

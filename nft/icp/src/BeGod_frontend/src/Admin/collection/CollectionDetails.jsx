@@ -453,28 +453,17 @@ function CollectionDetails() {
         ) : (
           <div className="w-full">
             {/* Back button and action buttons */}
-
-            <div className="flex flex-row items-center justify-between w-full pt-9 gap-x-6">
-              <div className="flex-1 sm:flex-none hidden sm:block">
-                {/* Back Button Component */}
+            <div className="flex flex-col-2 ">
+              <span className="hidden sm:block">
                 <BackButton />
-              </div>
-              <div className="flex flex-row justify-center w-full gap-x-6 text-wrap ">
-                <div className="w-full sm:w-auto flex-1">
-                  <button
-                    onClick={() => toggleModal()}
-                    className="bg-[#FCD37B] border-[#FCD37B] border rounded-[10px] px-6 py-3 text-black font-bold w-full hover:bg-[#D4A849] hover:border-[#D4A849]  "
-                  >
-                    Add NFT
-                  </button>
-                </div>
-                <div className="w-full sm:w-auto flex-1">
-                  <Link to={"/admin/collection/create"}>
-                    <button className="bg-[#FCD37B] border-[#FCD37B] border rounded-[10px] px-6 py-3 text-black font-bold w-full hover:bg-[#D4A849] hover:border-[#D4A849]">
-                      Add Collection
-                    </button>
-                  </Link>
-                </div>
+              </span>
+              <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
+                <YellowButton methodName={() => toggleModal()}>
+                  Add NFT
+                </YellowButton>
+                <Link to={"/admin/collection/create"}>
+                  <YellowButton>Add Collection</YellowButton>
+                </Link>
               </div>
             </div>
 
@@ -701,7 +690,7 @@ function CollectionDetails() {
                   {principalStringg}
                 </span>
               </h1>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-20 items-center justify-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 1.3xl:grid-cols-5 1.2xl:grid-cols-4  items-center justify-start">
                 {filteredList.length > 0 ? (
                   filteredList?.map((list, index) => (
                     <>
@@ -724,7 +713,7 @@ function CollectionDetails() {
 
             {modal && (
               <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
+                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(37,37,37,0.84)]">
                   <div className="flex items-center justify-center h-screen">
                     <Modal
                       toggleModal={toggleModal}
