@@ -160,6 +160,7 @@ const Hero = () => {
         setCurrentIndex(index);
         const currList = await fetchCollectionNfts(currentCollectionId,color)
         if(currList.length > 0){
+            updateFilteredList(currList);
             updateSelectedCollectionNftCardsList(currList);
         }else{
             updateNoCardsStatus(true);
@@ -186,7 +187,24 @@ const Hero = () => {
             updateNoCollectionStatus(true);
             return; 
         }
-        const collectionItems = result[0][1];
+        const tempArray = [];
+        if (result && Array.isArray(result)) {
+          result.forEach((item) => {
+            if (item && item.length > 1) {
+              // console.log(item);
+              item[1].forEach((value) => {
+                // console.log(value);
+                if (value && value.length > 1) {
+                  tempArray.push(value);
+                }
+              });
+            }
+          });
+        }
+          console.log(tempArray);
+       
+        
+        const collectionItems = tempArray
       
         console.log("collection items" , collectionItems);
         const collections = [] 
@@ -215,6 +233,7 @@ const Hero = () => {
         const color = collections[currentIndex].shadowColor;
         const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color);
         if(currentCollectionNfts.length>0){
+            updateFilteredList(currentCollectionNfts);
             updateSelectedCollectionNftCardsList(currentCollectionNfts);
         }
         
@@ -237,46 +256,38 @@ const fetchCollectionNfts = async (collectionId,color) => {
 
 };
 
-const getCollectionNfts = (collectionList,collectionId,color) => {
-    const tempList = [];
-    let tempIndex = 0;
-    for(let i=0;i<collectionList.length;i++){
-        const eachItem = collectionList[i];
-        console.log("each item before formating",eachItem);
-        const nftDetails = eachItem[3].nonfungible;
-        const image = nftDetails.thumbnail;
-        const name = nftDetails.name;
-        const sold = eachItem[2].price;
-        const ICP = parseInt(sold)/100000000;
-        const metadata = JSON.parse(nftDetails.metadata[0].json);
-        //  console.log(metadata,'metadata');
-        const nftType = metadata.nftType;
-        const borderColor = metadata.nftcolor;
-       // console.log("collection list before nft card",collections)
-        const nftCard= {
-            collectionId,
-            index:eachItem[0],
-            img1: image,
-            name,
-            sold,
-            ICP,
-            nftType,
-            borderColor,
-            collectionColor : color,
-        };
-        if(tempIndex === 0){
-            tempList.push([nftCard]);
-            tempIndex++;
-        }else if(tempList[tempIndex-1][0].name === nftCard.name){
-            tempList[tempIndex-1].push(nftCard);
-        }else{
-            tempList.push([nftCard]);
-            tempIndex++;
-        }
-    }
-    return tempList;
-};
-
+const getCollectionNfts = (collectionList, collectionId, color) => {
+    return collectionList.reduce((acc, eachItem) => {
+      const { nonfungible } = eachItem[3];
+      const { thumbnail: image, name } = nonfungible;
+      const sold = eachItem[2].price;
+      const ICP = parseInt(sold) / 100000000;
+      const metadata = JSON.parse(nonfungible.metadata[0].json);
+      const { nftType, nftcolor: borderColor } = metadata;
+  
+      const nftCard = {
+        collectionId,
+        index: eachItem[0],
+        img1: image,
+        name,
+        sold,
+        ICP,
+        nftType,
+        borderColor,
+        collectionColor: color,
+      };
+  
+      // Check if the last group of cards is the same as the current card
+      if (acc.length > 0 && acc[acc.length - 1][0].name === nftCard.name) {
+        acc[acc.length - 1].push(nftCard);
+      } else {
+        acc.push([nftCard]);
+      }
+  
+      return acc;
+    }, []);
+  };
+  
 
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
@@ -284,9 +295,9 @@ function getScreenSize() {
     const width = window.innerWidth;
   
     if (width >= 1024) {
-      return 'lg'; // Large screen
+      return 'lg';
     } else if (width >= 768) {
-      return 'md'; // Medium screen
+      return 'md'; 
     } else if(width >=640){
       return 'sm'; 
     }else{
@@ -338,19 +349,29 @@ useEffect(() => {
 
 }, [currentCardType, applyPriceRange, selectedCollectionNftCardsList]);
 
+const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
+
 useEffect(()=>{
     
     if (currentFilterOption !== filterListOptions[0].optionId) {
         let updatedList = [...filteredList];
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
+            updateRecentlyAddedStatus(true);
         } else if (currentFilterOption === filterListOptions[2].optionId) {
             updatedList = updatedList.sort((a, b) => a[0].ICP - b[0].ICP);
+            updateRecentlyAddedStatus(false);
         } else if (currentFilterOption === filterListOptions[3].optionId) {
             updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
+            updateRecentlyAddedStatus(false);
         }
         console.log("updated list after filter change",updatedList)
         updateFilteredList(updatedList)
+    }else if(isRecentlyAdded){
+        updateFilteredList([...filteredList].reverse());
+        updateRecentlyAddedStatus(false);
+    }else{
+        updateFilteredList([...filteredList]);
     }
     
 },[currentFilterOption])
@@ -685,7 +706,7 @@ console.log("filtered list after applying filters",filteredList)
                                             <button
                                                 onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.type)}}
                                                 className={`rounded-md flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378]`}
+                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378] ${currentDropDown === dropdownItems.filter && "opacity-10"} `}
                                             >
                                                 <BiCategory />
                                                 Category
@@ -742,8 +763,8 @@ console.log("filtered list after applying filters",filteredList)
                                         <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                                         <button
                                                 onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.filter)}}
-                                                className=' absolute rounded-md flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border '
+                                                className={` absolute rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border ${currentDropDown === dropdownItems.type && "opacity-5"}  `}
                                             >
                                                 < RiArrowUpDownFill />
                                                 {currentFilterOption}

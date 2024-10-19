@@ -345,7 +345,7 @@ const BuyNft = () => {
                   </SkeletonTheme>
                 ) : (
                
-                    <div  style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}>
+                    <div className="buy-nft-card"  style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}>
                   <img
                     src={cardDetails?.cardImageUrl}
                     alt=""
@@ -466,7 +466,7 @@ const BuyNft = () => {
                   </div>
                 </SkeletonTheme>
               ) : (
-                <h1 className="ml-[10%] w-[80%] text-center text-[24px] font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
+                <h1 className="ml-[10%] w-[80%] text-center  font-[500] leading-[28px] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0]">
                   {cardDetails?.cardDescription}
                 </h1>
               )}
@@ -572,8 +572,9 @@ const BuyNft = () => {
                 <>
                 <div className="flex flex-col">
                 <div
-                    className="h-[20rem]  mt-[40%] shadow-lg rounded-lg"
+                    className=" mt-[40%] shadow-lg rounded-lg buy-nft-card"
                     style={{ boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}` }}
+
                   >
 
                   <img
@@ -799,11 +800,11 @@ const BuyNft = () => {
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[50vh] md:h-[40vh] w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className="h-[50vh] md:h-[45vh] w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
             >
-              <div className="relative flex items-center justify-end">
+              <div className=" flex items-center justify-end">
                 <button
-                  className="text-[#ffffff] absolute bottom-1 top-1 z-10"
+                  className="text-[#ffffff]  bottom-1 top-1 z-10"
                   onClick={() => updateSharePopup(!sharePopup)}
                 >
                   <RxCross2 size={20} />
@@ -816,8 +817,8 @@ const BuyNft = () => {
                 {shareOptions.map((option, index) => {
                     const Button = option.button;
                     return (
-                      <div key={index} className="h-[60px] w-[80px] flex justify-center items-center">
-                        <Button url="https://www.ccbp.in/" className="flex flex-col items-center justify-center">
+                      <div key={index} className="h-[60px] w-[65px] md:w-[80px] lg:w-[65px] lx:w-[80px] flex justify-center items-center">
+                        <Button url={`https://ljk2g-uyaaa-aaaak-qi3hq-cai.icp0.io/${params}`} className="flex flex-col items-center justify-center">
                           {option.icon}
                           <span className="text-xs">{option.displayText}</span>
                         </Button>

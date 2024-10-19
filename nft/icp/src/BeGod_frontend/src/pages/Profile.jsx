@@ -355,24 +355,48 @@ const [profileUpdateInProcess,setProfileUpdateInProcess] = useState(false);
 
 
 
-const onClickUpdateUserDetails = async() => {
-    setProfileUpdateInProcess(true)
-  
-    let updatedName = userName === "" ? userDetails.name : userName;
-    let updatedEmail = email === "" ? userDetails.email : email;
-    let updatedTelegramUrl = telegramUrl === "" ? userDetails.telegramUrl : telegramUrl;
-    
-    
-    console.log("updated user details",updatedName,updatedEmail,updatedTelegramUrl);
 
+
+const isValidTelegramUsername = (telegramUrl) => {
+  const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/;
+  return usernameRegex.test(telegramUrl);
+};
+
+const onClickUpdateUserDetails = async() => {
+  setProfileUpdateInProcess(true);
+  console.log("user name",userName)
+  console.log("email id",email);
+  console.log("telegram",telegramUrl);
+  let updatedName = userName === undefined ? "No Name" : userName;
+  let updatedEmail = email === undefined ? "No Email" : email;
+  let updatedTelegramUrl = telegramUrl === "" ? "No Telegram" : telegramUrl;
+
+
+
+  // Validate Telegram username
+  if (updatedTelegramUrl && !isValidTelegramUsername(updatedTelegramUrl)) {
+    toast.error("Invalid Telegram username. It must be 5-32 characters long and can only contain letters, numbers, and underscores.");
+    setProfileUpdateInProcess(false); // Stop further processing
+    return;
+  }
+
+  console.log("updated user details", updatedName, updatedEmail, updatedTelegramUrl);
+
+   try{
     await backendActor?.updateUserDetails(Principal.fromText(principal),updatedName,updatedEmail,updatedTelegramUrl,[]);
     updateUserDetails({name:updatedName,email:updatedEmail,telegramUrl:updatedTelegramUrl});
     toast.success("Updated Successfully!")
-    setProfileUpdateInProcess(false);
     updateUserName("");
     updateEmail("");
     updateTelegramUrl("");
     updateEditProfileStatus(false);
+   }catch(error){
+    console.log(error)
+   }finally{
+    setProfileUpdateInProcess(false);
+   }
+    
+   
     // updateDisplayProfileUpdateSuccess(true);
   //  console.log("updatedUserDetails result",updateResult);
 }
@@ -382,9 +406,15 @@ useEffect(()=>{
 },[])
 
 useEffect(()=>{  
-  updateUserName(userDetails?.name);
-  updateEmail(userDetails?.email);
-  updateTelegramUrl(userDetails.telegramUrl);
+  if(userDetails?.name !== "No Name"){
+    updateUserName(userDetails.name);
+  }
+  if(userDetails?.email !== "No Email"){
+    updateEmail(userDetails?.email);
+  }
+  if(userDetails?.telegramUrl !== "No Telegram"){
+    updateTelegramUrl(userDetails.telegramUrl);
+  }
 
 },[userDetails])
 
@@ -669,6 +699,7 @@ const onChangeFilterOption = (eachCollection) => {
   if (eachCollection.index != currentDropDownOption) {
     updateDropDownOption(eachCollection.index);
     updateDropDownStatus(!isDisplayCollectionDropDown);
+    updateNoCardsStatus(false);
     setIsCardsLoading(true);
     getSelectedOptionCards(eachCollection.collectionId);
   }
@@ -747,7 +778,7 @@ const onChangeFilterOption = (eachCollection) => {
           <div className='flex items-center'>
             <div>
               <h1 className='text-[20px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>
-                {userDetails.name}
+                {userDetails.name === "" ? "No Name":(userDetails.name)}
               </h1>
               <h1 className='text-[13px] sm:text-[16px] font-[400] text-[#FFFFFF] leading-[20px] my-3 max-w-[190px] md:max-w-[220px]'>
                 {!isExpanded && userDetails.email.length > 34 ? (
@@ -762,7 +793,7 @@ const onChangeFilterOption = (eachCollection) => {
                   </>
                 ) : (
                   <>
-                    {userDetails.email}
+                    {userDetails.email === "" ? "No Email":(userDetails.email)}
                     {userDetails.email.length > 32 && (
                       <MdExpandLess
                         onClick={handleToggle}
@@ -1057,7 +1088,7 @@ const onChangeFilterOption = (eachCollection) => {
           <div className="flex items-center justify-center h-screen">
           <div className={`bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
-              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] xl:h-[70vh] xl:w-[60vw] "
+              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] xl:h-[73vh] xl:w-[60vw] "
               : currentOrderingStatus === buyingStatus.showCollection? "h-[50vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[60vw] lg:h-[45vh] xl:h-[60vh] xl:w-[40vw] "
               : "h-[30vh] w-[60vw] md:w-[40vw] md:h-[25vh] lg:w-[30vw] lg:h-[20vh] xl:h-[35vh] xl:w-[26vw]"
           }`}>
@@ -1145,7 +1176,7 @@ const onChangeFilterOption = (eachCollection) => {
                   </div>
                 </div>
                 <h1 className="mt-3 text-lg font-semibold">Address</h1>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-5">
                   <div className="flex flex-col w-[35%]">
                     <label className="relative text-sm font-extralight">
                       H No, St No
@@ -1216,8 +1247,8 @@ const onChangeFilterOption = (eachCollection) => {
                     </select>
                   </div>
                 </div>
-                <div className="relative flex items-center">
-                  <div className="flex flex-col w-[35%] mb-3 mr-9">
+                <div className="relative flex items-center mb-5">
+                  <div className="flex flex-col w-[35%] mr-9">
                     <label className="text-sm font-extralight">
                       Pincode
                       <span className="absolute text-red-700 -top-1">*</span>
@@ -1229,7 +1260,7 @@ const onChangeFilterOption = (eachCollection) => {
                       onChange={(e)=>updatePinCode(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-col w-[35%] mb-3 ml-2">
+                  <div className="flex flex-col w-[35%]  ml-2">
                     <label className="text-sm font-extralight">
                       Nearby LandMark(Optional)
                     </label>
