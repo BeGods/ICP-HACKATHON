@@ -54,7 +54,7 @@ const NftCard = ({ id, list, collectiondata, quantity }) => {
             className="object-cover blur-sm w-[98%] h-[98%]"
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
-            <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">
+            <h1 className="text-xl font-extrabold sm:text-2xl lg:text-xl">
               Name: {name}
             </h1>
             {isValidPrice && (
