@@ -6,6 +6,7 @@ import {
   claimBonusQuest,
   getLeaderboardSnapshot,
   getRandomValue,
+  updatePartnersInLastHr,
 } from "../services/general.services";
 import Stats from "../models/Stats.models";
 import { Team } from "../models/referral.models";
@@ -18,8 +19,9 @@ import {
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
 } from "../services/game.services";
-import milestones from "../models/milestones.models";
+import milestones, { IMilestone } from "../models/milestones.models";
 import partners from "../models/partners.models";
+import { validCountries } from "../utils/constants/variables";
 
 export const ping = async (req, res) => {
   try {
@@ -269,9 +271,10 @@ export const claimJoiningBonus = async (req, res) => {
     const userId = req.user._id;
 
     await User.findOneAndUpdate({ _id: userId }, { joiningBonus: true });
+
     await userMythologies.findOneAndUpdate(
-      { userId: userId },
-      { $inc: { multiColorOrbs: 3 } }
+      { userId: userId, "mythologies.name": "Greek" },
+      { $inc: { multiColorOrbs: 3, "mythologies.name": 2 } }
     );
 
     res.status(200).json({ message: "Joining bonus claimed successfully." });
@@ -400,18 +403,19 @@ export const test = async (req, res) => {
 export const getRewards = async (req, res) => {
   try {
     const userId = req.user._id;
-    const userMilestones = await milestones.findOne({ userId });
+    const playusperCred = req.user.playsuper;
+    const { country, lang } = req.query;
+    let playsuper;
+    let userMilestones = await milestones.findOne({ userId });
 
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
-    const timeElapsed = now - userMilestones.rewards.lastResetAt;
+    // playsuper partners
+    //! with and without auth token
+    //! filter by country and lang
+    //! also get claimed ones separetly
 
-    if (userMilestones.rewards.lastResetAt === 0 || timeElapsed > oneHour) {
-      userMilestones.rewards.rewardsInLastHr = [];
-      userMilestones.rewards.lastResetAt = now;
-      await userMilestones.save();
-    }
+    userMilestones = await updatePartnersInLastHr(userMilestones);
 
+    // our partners
     const activePartners = await partners
       .find()
       .lean()
@@ -419,6 +423,26 @@ export const getRewards = async (req, res) => {
 
     const claimedRewards = userMilestones.rewards.claimedRewards;
     const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
+
+    if (validCountries.includes(country)) {
+      const playsuperRewards = await fetchPlaySuperRewards(
+        country,
+        lang,
+        playusperCred
+      );
+      playsuper = playsuperRewards.map((reward) => {
+        const claimedReward = claimedRewards.find(
+          (claimed) => claimed.partnerId === reward.id
+        );
+
+        return {
+          ...reward,
+          partnerType: "playsuper",
+          tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+          isClaimed: claimedReward ? claimedReward.isClaimed : false,
+        };
+      });
+    }
 
     const ourpartners = activePartners.map((reward) => {
       const claimedReward = claimedRewards.find(
@@ -434,8 +458,12 @@ export const getRewards = async (req, res) => {
       };
     });
 
+    const playSuperItems = playsuper ? playsuper.slice(0, 10) : [];
+    const remainingSlots = 12 - playSuperItems.length;
+    const partnerItems = ourpartners.slice(0, remainingSlots);
+
     res.status(200).json({
-      rewards: [...ourpartners],
+      rewards: [...playSuperItems, ...partnerItems],
       rewardsClaimedInLastHr: rewardsClaimedInLastHr,
       bubbleLastClaimed: userMilestones.rewards.updatedAt,
     });
@@ -446,20 +474,6 @@ export const getRewards = async (req, res) => {
     });
   }
 };
-
-// const playsuperRewards = await fetchPlaySuperRewards();
-// const playsuper = playsuperRewards.map((reward) => {
-//   const claimedReward = claimedRewards.find(
-//     (claimed) => claimed.partnerId === reward.id
-//   );
-
-//   return {
-//     ...reward,
-//     partnerType: "playsuper",
-//     tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
-//     isClaimed: claimedReward ? claimedReward.isClaimed : false,
-//   };
-// });
 
 // playsuper
 export const generateOtp = async (req, res) => {

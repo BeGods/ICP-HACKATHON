@@ -7,9 +7,9 @@ const router = express.Router();
 
 // login
 router.post("/auth", authenticate);
-// router.post(
-//   "/test/f115d48c-4929-4190-b326-e50f228500c9/auth",
-//   testAuthenticate
-// );
+router.post(
+  "/test/f115d48c-4929-4190-b326-e50f228500c9/auth",
+  testAuthenticate
+);
 
 export default router;
