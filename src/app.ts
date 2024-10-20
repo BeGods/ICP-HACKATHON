@@ -8,16 +8,16 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const mongoSanitize = require("express-mongo-sanitize");
-const limiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 50,
-  message: "Too many requests from this IP, please try again later.",
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// const limiter = rateLimit({
+//   windowMs: 60 * 1000,
+//   max: 50,
+//   message: "Too many requests from this IP, please try again later.",
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
 app.use(express.json());
-app.use(limiter);
+// app.use(limiter);
 
 app.set("trust proxy", 1);
 app.use(

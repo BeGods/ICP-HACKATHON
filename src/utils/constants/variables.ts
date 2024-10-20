@@ -1,5 +1,6 @@
 // mythology order
 export const mythOrder = ["Greek", "Celtic", "Norse", "Egyptian"];
+export const validCountries = ["IND"];
 
 // default mythologies
 export const defaultMythologies = [
