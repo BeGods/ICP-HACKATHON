@@ -274,8 +274,11 @@ const onClickRemoveOrder = async () =>{
       }else if(updatedOption === "favorite"){
         if(selectedListType !== "favorite"){
           setIsCardsLoading(true)
-          await fetchFavoriteCards();
+          await fetchFavoriteCards(selectedList);
           updateSelectedListType(updatedOption)
+          setIsCardsLoading(false);
+        }else if(selectedList.length === 0){
+          updateNoCardsStatus(true)
         }
       }else if(updatedOption === "myorders"){
         await fetchOrderHistory();
@@ -285,39 +288,21 @@ const onClickRemoveOrder = async () =>{
 
   } 
  console.log("selected list",selectedList)
-  const fetchFavoriteCards = async() => {
+  const fetchFavoriteCards = async(selectedList) => {
     const result = await backendActor?.getFavorites(principal)
     console.log("resssssssult" , result);
     if(result.ok?.length>0){
 
-      const favItems = result.ok;
+      const favItems =new Set(result.ok);
 
-      let favCardslist = [];
-      console.log("selected list",selectedList)
-      favItems.map((eachFavToken)=>{
-       for(let i=0;i<selectedList.length;i++){
-        if(selectedList[i][0].tokenId === eachFavToken){
-          favCardslist.push(selectedList[i][0]);
-        }
-       }
-      })
-
-      // favItems.map((eachFavToken) => {
-      //   for (let i = 0; i < selectedList.length; i++) {
-      //     if (selectedList[i]?.tokenId === eachFavToken) {
-      //       favCardslist.push(selectedList[i]);
-      //     }
-      //   }
-      // });
-      
-
+     
+     // console.log("selected list",selectedList)
+     const favCardslist = selectedList
+     .map(item => item[0])
+     .filter(card => favItems.has(card.tokenId)); 
       console.log("favList",favCardslist)
-
-      setIsCardsLoading(false);
-
       updateSelectedList(favCardslist);
-
-
+      
     }else{
       console.log("no cards in fav")
       updateSelectedList([]);
@@ -535,7 +520,13 @@ const fetchCollections = async () => {
       return;
     }
     const currentSelectedCollection = allCollectionsList[currentDropDownOption];
-    await getSelectedOptionCards(currentSelectedCollection.collectionId);
+    const updatedCardsList = await getSelectedOptionCards(currentSelectedCollection.collectionId);
+    setIsCardsLoading(false);
+    if(updatedCardsList.length >0){
+      updateSelectedList(updatedCardsList);
+    }else{
+      updateNoCardsStatus(true);
+    }
 };
 
   const getSelectedOptionCards =  async(collectionId) => {
@@ -555,12 +546,8 @@ const fetchCollections = async () => {
    // console.log("not owned nfts",updatedNotOwnedNfts);
     updateRemainingNfts(updatedNotOwnedNfts.length);
     updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
-    setIsCardsLoading(false);
-    if(updatedCardsList.length >0){
-      updateSelectedList(updatedCardsList);
-    }else{
-      updateNoCardsStatus(true);
-    }
+    return updatedCardsList;
+    
     }
     
     
@@ -711,13 +698,24 @@ const addToFavorites = async (tokenId) => {
   setAreButtonsDisabled(false);
 };
 
-const onChangeFilterOption = (eachCollection) => {
+const onChangeFilterOption = async(eachCollection) => {
   if (eachCollection.index != currentDropDownOption) {
     updateDropDownOption(eachCollection.index);
     updateDropDownStatus(!isDisplayCollectionDropDown);
     updateNoCardsStatus(false);
     setIsCardsLoading(true);
-    getSelectedOptionCards(eachCollection.collectionId);
+    const updatedCardsList = await getSelectedOptionCards(eachCollection.collectionId);
+    setIsCardsLoading(false);
+    if(updatedCardsList.length >0){
+      if(currentOption === "favorite"){
+        await fetchFavoriteCards(updatedCardsList);
+        setIsCardsLoading(false);
+      }else{
+        updateSelectedList(updatedCardsList);
+      }
+    }else{
+      updateNoCardsStatus(true);
+    }
   }
   
  }
