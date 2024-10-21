@@ -1,0 +1,247 @@
+import React, { useContext, useEffect, useState } from "react";
+import { MyContext } from "../../context/context";
+import { useTranslation } from "react-i18next";
+import JigsawButton from "../../components/Buttons/JigsawBtn";
+import JigsawImage from "../../components/Cards/Jigsaw/JigsawCrd";
+import Header from "../../components/Common/Header";
+import {
+  ToggleLeft,
+  ToggleRight,
+} from "../../components/Common/SectionToggles";
+import { handleActiveParts } from "../../helpers/quests.helper";
+import AuthenticatePlaySuper from "../../components/Modals/AuthOTP";
+import { claimPlaysuperReward } from "../../utils/api";
+import { toast } from "react-toastify";
+import IconBtn from "../../components/Buttons/IconBtn";
+import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
+import RedeemHeader from "./Header";
+
+const tele = window.Telegram?.WebApp;
+
+const Redeem = (props) => {
+  const { t } = useTranslation();
+  const {
+    activeReward,
+    userData,
+    authToken,
+    setShowCard,
+    rewards,
+    setActiveReward,
+  } = useContext(MyContext);
+  const [showAuth, setShowAuth] = useState(false);
+  const [showToggles, setShowToggles] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+  const index = rewards.findIndex((item) => item._id === activeReward._id);
+  const [currIndex, setCurrIndex] = useState(index);
+  const currReward = rewards[currIndex];
+
+  const handleClick = () => {
+    if (userData.isPlaySuperVerified) {
+      handleRedeen(true);
+    } else {
+      setShowAuth(
+        <AuthenticatePlaySuper
+          handleClose={() => {
+            setShowCard(null);
+          }}
+        />
+      );
+    }
+  };
+
+  const handleJigsawBtn = () => {
+    if (currReward.tokensCollected === 12) {
+      setShowCard(
+        <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
+          <div className="relative w-full  shadow-lg card-shadow-white">
+            <img
+              src={`/assets/partners/320px-${currReward.category}.campaign.jpg`}
+              alt="campaign"
+              className="w-full h-full rounded-primary"
+              onClick={() => {
+                setShowCard(null);
+                setShowAuth(
+                  <AuthenticatePlaySuper
+                    handleClose={() => {
+                      setShowCard(null);
+                    }}
+                  />
+                );
+              }}
+            />
+            <IconBtn
+              isInfo={false}
+              activeMyth={4}
+              handleClick={() => {
+                setShowCard(null);
+              }}
+              align={4}
+            />
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const handleRedeen = async () => {
+    try {
+      if (currReward.partnerType === "playsuper") {
+        const reward = await claimPlaysuperReward(currReward.id, authToken);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("YOu failed");
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowToggles(true);
+    }, 300);
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        height: "100vh",
+        width: "100vw",
+      }}
+      className="flex flex-col h-screen overflow-hidden m-0"
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1,
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-other`}
+          style={{
+            backgroundImage: `url(/assets/uxui/1280px-fof.base.background.jpg)`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
+      {/* Header */}
+      <RedeemHeader
+        pieces={currReward.tokensCollected}
+        name={currReward.name}
+        bubble={currReward.category}
+        action={() => {
+          setShowCard(
+            <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
+              <div className="relative w-full  shadow-lg card-shadow-white">
+                <img
+                  src={`/assets/partners/320px-${currReward.category}.campaign.jpg`}
+                  alt="campaign"
+                  className="w-full h-full rounded-primary"
+                  onClick={() => {
+                    setShowCard(null);
+                  }}
+                />
+                <IconBtn
+                  isInfo={false}
+                  activeMyth={4}
+                  handleClick={() => {
+                    setShowCard(null);
+                  }}
+                  align={4}
+                />
+              </div>
+            </div>
+          );
+        }}
+      />
+      {/* Content */}
+      <div className="flex mt-7 justify-center items-center h-screen w-screen absolute mx-auto">
+        <div className={`flex items-center justify-center w-full h-full`}>
+          <div className="flex flex-col mt-[35px] gap-[28px] items-center justify-center w-full h-full">
+            <div
+              className={`card ${
+                flipped ? "flipped" : ""
+              } w-[70%] h-[55%] z-[99]`}
+            >
+              <div className="card__face card__face--front  relative flex justify-center items-center">
+                <JigsawImage
+                  imageUrl={`/assets/partners/320px-${currReward.category}.brand.jpg`}
+                  activeParts={handleActiveParts(currReward.tokensCollected)}
+                  handleClick={() => {
+                    if (currReward.tokensCollected === 12) {
+                      window.open("_blank", "dsifk");
+                    }
+                  }}
+                />
+                <IconBtn
+                  isInfo={true}
+                  activeMyth={4}
+                  handleClick={() => {
+                    setShowCard(null);
+                  }}
+                  align={0}
+                />
+              </div>
+              <div className="card__face card__face--back flex justify-center items-center">
+                <PartnerCard close={() => {}} />
+              </div>
+            </div>
+            <JigsawButton
+              handleClick={handleJigsawBtn}
+              activeMyth={4}
+              handleNext={() => {}}
+              handlePrev={() => {}}
+              faith={currReward.tokensCollected}
+              disableLeft={true}
+              t={t}
+            />
+          </div>
+
+          <div
+            onClick={() => {
+              tele.HapticFeedback.notificationOccurred("success");
+
+              setFlipped((prev) => !prev);
+            }}
+            className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
+          >
+            <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
+          </div>
+        </div>
+      </div>
+
+      {showToggles && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setCurrIndex((prev) => {
+                prev === 0 ? rewards.length - 1 : prev - 1;
+              });
+            }}
+            activeMyth={4}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              setCurrIndex((prev) => {
+                (prev + 1) % rewards.length;
+              });
+            }}
+            activeMyth={4}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Redeem;

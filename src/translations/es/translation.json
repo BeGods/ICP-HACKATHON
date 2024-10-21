@@ -13,13 +13,16 @@
     "celtic": "Céltico",
     "egyptian": "Egipcio",
     "greek": "Griego",
-    "norse": "Nórdico"
+    "norse": "Nórdico",
+    "dark": "Obscura"
   },
   "keywords": {
+    "orb": "Orbe",
     "orbs": "ORB(S)",
     "conversion": "Conversión",
     "discover": "Descubrir",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "Cargando"
   },
   "buttons": {
     "buy": "Comprar",
@@ -33,7 +36,10 @@
     "forges": "Forjas",
     "boosters": "Potenciadores",
     "quests": "Misiones",
-    "leaderboard": "Tabla de clasificación"
+    "leaderboard": "Tabla de clasificación",
+    "tower": "Torre",
+    "brand": "Marca",
+    "profile": "Perfil"
   },
   "boosters": [
     { "title": "Autómata", "desc": "Toca automáticamente" },
@@ -55,9 +61,15 @@
     "team": "Equipo",
     "guide": "GUÍA",
     "causes": "Causas",
+    "partners": "Parceiros",
     "partner": "Parceiros",
     "charity": "Caridad",
-    "rewards": "RECOMPENSAS"
+    "rewards": "RECOMPENSAS",
+    "task": "Tareas"
+  },
+  "tower": {
+    "tune": "¿Conoces la ♪ melodía ♪?",
+    "play": "¡Tócalo en el orden correcto!"
   },
   "elements": {
     "earth": "Tierra",
@@ -67,19 +79,27 @@
     "aether": "Éter"
   },
   "note": {
-    "text": "(Los rankings se actualizan cada hora)"
+    "text": "Actualización de la tabla de clasificación en",
+    "tower": "Toca ORBS para convertir",
+    "bonus": "Para ver promociones activas"
   },
   "bonus": {
-    "join": "BONO DE BIENVENIDA",
+    "join": "BONO BIENVENIDO",
     "box": "CAJA",
     "youwon": "¡GANASTE!",
     "win": "Ganar"
   },
   "tutorial": {
     "forge": { "title": "TOCA LAS FORJAS", "desc": "PARA GANAR ORB(S)" },
-    "quests": { "title": "RECLAMAR MISIONES", "desc": "COMPLETAR PARA GANAR $FAITH" },
-    "boosters": { "title": "ADQUIRIR BOOSTERS", "desc": "PARA RECOMPENSAS DEL JUEGO" },
-    "profile": { "title": "SELECCIONAR PARCEIROS", "desc": "PARA RECLAMAR PREMIOS" }
+    "quests": {
+      "title": "RECLAMAR MISIONES",
+      "desc": "COMPLETAR PARA GANAR $FAITH"
+    },
+    "boosters": {
+      "title": "ADQUIRIR BOOSTERS",
+      "desc": "PARA RECOMPENSAS DEL JUEGO"
+    },
+    "profile": { "title": "ELIGE TU PAÍS", "desc": "para desbloquear regalos" }
   },
   "quests": {
     "celtic": {
@@ -334,34 +354,34 @@
         "desc": "Necesitas más orbes para completar esta transacción."
       }
     },
-    "Booster_AutomataClaim": {
+    "Booster_Claim": {
       "success": {
-        "title": "¡Acelerador activado con éxito!",
-        "desc": "¡Tu autómata ahora está activo y en funcionamiento!"
+        "title": "¡Potenciador Logrado!",
+        "desc": "¡Ahora estás preparado para victorias épicas! ¡Ve y conquístalo!"
+      },
+      "error": {
+        "title": "¡Error al Reclamar el Potenciador!",
+        "desc": "¡Ups! Algo salió mal al reclamar tu potenciador. ¡Por favor, inténtalo de nuevo!"
       }
     },
-    "Booster_ShardsClaim": {
+    "Conversion_Multiplier": {
       "success": {
-        "title": "¡Acelerador activado con éxito!",
-        "desc": "¡Acelerador de fragmentos reclamado! Ahora multiplica tu poder de toque."
+        "title": "¡Melodía Coincidente!",
+        "desc": "¡Lo lograste! La clave es correcta y se ha aplicado el multiplicador!"
+      },
+      "error": {
+        "title": "Desajuste de Melodía!",
+        "desc": "La clave que ingresaste es incorrecta. Desafortunadamente, no se ha aplicado ningún multiplicador."
       }
     },
-    "Booster_InsufficientOrbs": {
+    "Tasks": {
+      "success": {
+        "title": "¡Tarea Completada con Éxito!",
+        "desc": "Bien hecho! Has ganado 3 MultiOrbes."
+      },
       "error": {
-        "title": "Reclamación de Acelerador no exitosa",
-        "desc": "Orbes MultiColor insuficientes para activar el acelerador."
-      }
-    },
-    "Booster_AutomataAlreadyClaim": {
-      "error": {
-        "title": "Reclamación de Acelerador no exitosa",
-        "desc": "La activación del acelerador falló. Por favor, intenta reclamar el autómata más tarde."
-      }
-    },
-    "Booster_ShardsAlreadyClaim": {
-      "error": {
-        "title": "Reclamación de Acelerador no exitosa",
-        "desc": "La activación del acelerador falló. Por favor, intenta multiplicar tu poder de toque de fragmentos más tarde."
+        "title": "Tarea Incompleta!",
+        "desc": "La tarea no pudo completarse. Por favor, intenta de nuevo para ganar tus recompensas."
       }
     },
     "Booster_Lost_Not_Available": {
@@ -423,9 +443,9 @@
       }
     },
     "ReferralCopy": {
-      "success": {
+      "sucess": {
         "title": "¡Enlace de referencia copiado!",
-        "desc": "Tu enlace de referencia ha sido copiado al portapapeles. ¡Compártelo con tus amigos!"
+        "desc": "¡Compártelo con tus amigos para reclamar 3 ORBs multicolores!"
       }
     },
     "TonConnect": {

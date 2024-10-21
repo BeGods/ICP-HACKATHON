@@ -13,13 +13,21 @@
     "celtic": "เคลติก",
     "egyptian": "อียิปต์",
     "greek": "กรีก",
-    "norse": "นอร์ส"
+    "norse": "นอร์ส",
+    "dark": "มืด"
+  },
+  "tower": {
+    "tune": "คุณรู้ ♪ ทำนอง ♪ ไหม?",
+    "play": "เล่นให้ถูกลำดับ!"
   },
   "keywords": {
+    "orb": "ออร์บ",
     "orbs": "ออร์บ",
     "conversion": "อัตราแลกเปลี่ยน",
     "discover": "ค้นพบ",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "กำลังโหลด"
+
   },
   "buttons": {
     "hire": "จ้าง",
@@ -33,7 +41,10 @@
     "forges": "โรงหลอม",
     "boosters": "บูสเตอร์",
     "quests": "เควสต์",
-    "leaderboard": "การจัดอันดับ"
+    "leaderboard": "การจัดอันดับ",
+    "tower": "หอคอย",
+    "brand": "แบรนด์",
+    "profile": "โปรไฟล์"
   },
   "boosters": [
     { "title": "ออโตมาตา", "desc": "แตะอัตโนมัติ" },
@@ -55,9 +66,11 @@
     "referrals": "การแนะนำ",
     "guide": "คู่มือ",
     "causes": "สาเหตุ",
+    "partners": "คู่ค้า",
     "partner": "คู่ค้า",
     "charity": "การกุศล",
-    "rewards": "รางวัล"
+    "rewards": "รางวัล",
+    "task": "ภารกิจ"
   },
   "elements": {
     "earth": "ดิน",
@@ -67,19 +80,22 @@
     "aether": "อีเธอร์"
   },
   "note": {
-    "text": "(การจัดอันดับจะอัปเดตทุกชั่วโมง)"
+    "text": "อัพเดตกระดานคะแนนใน",
+    "tower": "แตะ ออร์บ เพื่อแปลง", 
+    "bonus": "เพื่อดูโปรโมชั่นที่ใช้งานอยู่"
   },
   "bonus": {
-    "join": "โบนัสต้อนรับ",
+    "join": "โบนัส ต้อนรับ",
     "box": "กล่อง",
     "youwon": "คุณชนะแล้ว!",
     "win": "ชนะ"
   },
   "tutorial": {
-    "forge": { "title": "่แตะโรงหลอม", "desc": "เพื่อรับ ORB(S)" },
+    "forge": { "title": "่แตะโรงหลอม", "desc": "เพื่อรับ ออร์บ" },
     "quests": { "title": "รับเควส", "desc": "ทำให้เสร็จเพื่อรับ $FAITH" },
-    "boosters":  { "title": "รับบูสเตอร์", "desc": "สำหรับรางวัลเกม" },
-    "profile": { "title": "เลือกพันธมิตร", "desc": "เพื่อรับรางวัล"}
+    "boosters": { "title": "รับบูสเตอร์", "desc": "สำหรับรางวัลเกม" },
+    "profile": { "title": "เลือกประเทศของคุณ", "desc": "เพื่อปลดล็อกของขวัญ" },
+    "tower": { "title": "เลือก ออร์บ และแลกเปลี่ยน", "desc": "เพื่อรับบูสเตอร์" }
   },
   "quests": {
     "celtic": {
@@ -334,34 +350,34 @@
         "desc": "คุณต้องมี orb มากกว่านี้เพื่อทำธุรกรรมนี้ใหัสำเร็จ."
       }
     },
-    "Booster_AutomataClaim": {
+    "Booster_Claim": {
       "success": {
-        "title": "เปิดใช้งาน Booster สำเร็จ!",
-        "desc": "Automata ของคุณตอนนี้เปิดใช้งานและทำงานแล้ว!"
+        "title": "ได้รับบูสเตอร์เพิ่มพลังงาน!",
+        "desc": "คุณพร้อมสำหรับชัยชนะที่ยิ่งใหญ่แล้ว! ไปพิชิตมัน!"
+      },
+      "error": {
+        "title": "รับบูสเตอร์ไม่สำเร็จ!",
+        "desc": "เอ๊ะ! มีบางอย่างผิดปกติขณะรับบูสเตอร์ โปรดลองอีกครั้ง!"
       }
     },
-    "Booster_ShardsClaim": {
+    "Conversion_Multiplier": {
       "success": {
-        "title": "เปิดใช้งาน Booster สำเร็จ!",
-        "desc": "รับ Booster Shards แล้ว! ตอนนี้เพิ่มพลังการแตะของคุณ."
+        "title": "ผิดทำนอง!",
+        "desc": "คุณทำได้! คุณใส่ทำนองถูกต้องและได้ MultiOrbs สองเท่า!"
+      },
+      "error": {
+        "title": "ผิดทำนอง!",
+        "desc": "คุณใส่ทำนองผิด น่าเสียดายที่ไม่ได้ MultiOrbs สองเท่า"
       }
     },
-    "Booster_InsufficientOrbs": {
+    "Tasks": {
+      "success": {
+        "title": "ภารกิจเสร็จสมบูรณ์แล้ว",
+        "desc": "ทำได้ดี! คุณได้รับ 3 MultiOrbs"
+      },
       "error": {
-        "title": "การขอ Booster ไม่สำเร็จ",
-        "desc": "Orb หลายสีไม่เพียงพอในการเปิดใช้งาน Booster."
-      }
-    },
-    "Booster_AutomataAlreadyClaim": {
-      "error": {
-        "title": "การขอ Booster ไม่สำเร็จ",
-        "desc": "การเปิดใช้งาน Booster ล้มเหลว กรุณาลองขอ Automata ใหม่ในภายหลัง."
-      }
-    },
-    "Booster_ShardsAlreadyClaim": {
-      "error": {
-        "title": "การขอ Booster ไม่สำเร็จ",
-        "desc": "การเปิดใช้งาน Booster ล้มเหลว กรุณาลองเพิ่มพลังการแตะ Shards ของคุณในภายหลัง."
+        "title": "ภารกิจไม่สำเร็จ",
+        "desc": "ภารกิจไม่สำเร็จ โปรดลองอีกครั้งเพื่อรับรางวัล"
       }
     },
     "Booster_Lost_Not_Available": {

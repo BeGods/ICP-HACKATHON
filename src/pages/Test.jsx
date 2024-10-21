@@ -171,7 +171,7 @@
 // </div>;
 
 // import React from "react";
-// import { mythSections, mythSymbols } from "../../utils/variables";
+// import { mythSections, mythSymbols } from "../../utils/constants";
 
 // const ForgeHeader = ({
 //   activeMyth,
@@ -291,19 +291,8 @@
 
 // export default ForgeHeader;
 
-import React from "react";
-import PropTypes from "prop-types";
-
-function Test(props) {
-  return <div>Test</div>;
-}
-
-Test.propTypes = {};
-
-export default Test;
-
 // import React from "react";
-// import { mythSections, mythSymbols } from "../../utils/variables";
+// import { mythSections, mythSymbols } from "../../utils/constants";
 
 // const ForgeHeader = ({
 //   activeMyth,
@@ -392,7 +381,7 @@ export default Test;
 
 // import React, { useContext, useRef } from "react";
 // import { MyContext } from "../../context/context";
-// import { footerIcons, mythSections } from "../../utils/variables";
+// import { footerIcons, mythSections } from "../../utils/constants";
 // import ReactHowler from "react-howler";
 
 // const tele = window.Telegram?.WebApp;
@@ -515,3 +504,270 @@ export default Test;
 // };
 
 // export default Footer;
+
+// import React, { useContext } from "react";
+// import { MyContext } from "../../context/context";
+// import { mythSections } from "../../utils/constants";
+
+// const Header = ({ children }) => {
+//   const { activeMyth, section } = useContext(MyContext);
+//   return (
+//     <div
+//       style={{
+//         position: "relative",
+//         height: "12%",
+//         width: "100%",
+//       }}
+//       className="flex"
+//     >
+//       <div
+//         style={{
+//           backgroundImage: `url(/assets/uxui/fof.footer.rock2.png)`,
+//           backgroundRepeat: "no-repeat",
+//           transform: "rotate(180deg)",
+//           backgroundSize: "cover",
+//           backgroundPosition: "center center",
+//           position: "absolute",
+//           top: 0,
+//           left: 0,
+//           height: "100%",
+//           width: "100%",
+//           zIndex: -1,
+//         }}
+//         className={`filter-paper-${
+//           section === 3 || section === 9
+//             ? mythSections[8]
+//             : mythSections[activeMyth]
+//         } relative -mt-1`}
+//       />
+//       {children}
+//     </div>
+//   );
+// };
+
+// export default Header;
+
+{
+  /* <div className="bg-white h-screen">
+<div className="relative">
+  <img
+    src="/assets/uxui/fof.footer.rock2.png"
+    alt="paper"
+    className="rotate-180 w-full h-auto"
+  />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="bg-red-400 p-4">Hi</div>
+  </div>
+</div>
+<div className="relative">
+  <img
+    src="/assets/uxui/fof.footer.rock2.png"
+    alt="paper"
+    className="w-full bottom-0 h-auto"
+  />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="bg-red-400 p-4">Hi</div>
+  </div>
+</div>
+</div> */
+}
+
+// import Lottie from "lottie-react";
+// import React, { useRef, useState } from "react";
+// import animationData from "../../public/assets/fx/tower.json";
+
+// function Test(props) {
+//   const lottieRef = useRef(null);
+
+//   const handlePlay = () => {
+//     if (lottieRef.current) {
+//       lottieRef.current.setDirection(1);
+//       lottieRef.current.play();
+//     }
+//   };
+
+//   const handleReverse = () => {
+//     if (lottieRef.current) {
+//       lottieRef.current.setDirection(-1);
+//       lottieRef.current.play();
+//     }
+//   };
+
+//   return (
+//     <div className="bg-black h-screen w-scree flex flex-col justify-center items-center">
+//       <Lottie
+//         lottieRef={lottieRef}
+//         autoplay={false}
+//         loop={false}
+//         animationData={animationData}
+//         className="w-[15vw]"
+//       />
+
+//       <div className="flex gap-5 mt-10">
+//         <div onClick={handlePlay} className="bg-white text-black">
+//           Play
+//         </div>
+//         <div onClick={handleReverse} className="bg-white text-black">
+//           Reverse
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Test;
+
+// import React, { useState } from "react";
+
+// function Test(props) {
+//   const [plusOnes, setPlusOnes] = useState([]);
+
+//   const handlePlusOneEffect = (e) => {
+//     let x, y;
+
+//     if (e.type === "touchstart" || e.type === "touchend") {
+//       // Touch event handling
+//       x = e.touches[0]?.clientX || e.changedTouches[0]?.clientX;
+//       y = e.touches[0]?.clientY || e.changedTouches[0]?.clientY;
+//     } else {
+//       // Mouse event handling
+//       x = e.clientX;
+//       y = e.clientY;
+//     }
+
+//     const newPlusOne = { x, y, id: Date.now() };
+//     setPlusOnes((prev) => [...prev, newPlusOne]);
+
+//     setTimeout(() => {
+//       setPlusOnes((prev) =>
+//         prev.filter((plusOne) => plusOne.id !== newPlusOne.id)
+//       );
+//     }, 1000);
+//   };
+
+//   return (
+//     <div className="bg-black h-screen w-screen flex justify-center items-center">
+//       <div
+//         onMouseDown={(e) => handlePlusOneEffect(e)}
+//         onTouchStart={(e) => handlePlusOneEffect(e)}
+//         onTouchEnd={(e) => handlePlusOneEffect(e)}
+//         className="flex flex-col items-center justify-center bg-red-400 w-[84vw] h-[84vw] rounded-full"
+//       >
+//         {plusOnes.map((plusOne) => (
+//           <span
+//             key={plusOne.id}
+//             className="plus-one absolute mt-[120px]"
+//             style={{
+//               top: `${plusOne.y}px`,
+//               left: `${plusOne.x}px`,
+//               zIndex: 99,
+//             }}
+//           >
+//             250
+//           </span>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default Test;
+
+// import React, { useState } from "react";
+// import "../styles/flip.scss";
+
+// const Test = (props) => {
+//   const [flipped, setFlipped] = useState(false);
+
+//   return (
+// <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+//   <div className={`font-symbols text-[15vw]`}>
+//     <div className={`card ${flipped ? "flipped" : ""} text-black-contour`}>
+//       <div
+//         onClick={(e) => {
+//           setFlipped((prev) => !prev);
+//         }}
+//         className="card__face card__face--front bg-red-400 h-[10vh] w-[20vw] flex justify-center items-center"
+//       ></div>
+//       <div
+//         onClick={(e) => {
+//           setFlipped((prev) => !prev);
+//         }}
+//         className="card__face card__face--back bg-green-400 flex justify-center items-center"
+//       ></div>
+//     </div>
+//   </div>
+// </div>
+//   );
+// };
+
+// export default Test;
+
+import React, { useState } from "react";
+import "../styles/flip.scss";
+
+const Test = (props) => {
+  const [flipped, setFlipped] = useState(false);
+  return (
+    <div className="flex justify-center items-center h-screen w-screen bg-black">
+      <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+        <div className={`font-symbols text-[15vw]`}>
+          <div className={`orb ${flipped ? "flipped" : ""} text-black-contour`}>
+            <div
+              onClick={(e) => {
+                setFlipped((prev) => !prev);
+              }}
+              className="orb__face orb__face--front  flex justify-center items-center"
+            >
+              <div className="flex justify-center items-center w-full absolute  h-full">
+                <img
+                  src="/assets/uxui/240px-orb.multicolor.png"
+                  alt="multicolor"
+                  className="glow-box rounded-full"
+                />
+                <div className="absolute z-10">
+                  <div className="font-medium text-[44vw] text-white glow-text-black">
+                    3
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              onClick={(e) => {
+                setFlipped((prev) => !prev);
+              }}
+              className="orb__face orb__face--back flex justify-center items-center"
+            >
+              <div className="flex justify-center items-center w-full absolute  h-full glow-tap-greek">
+                <img
+                  src="/assets/uxui/240px-orb.base.png"
+                  alt="multicolor"
+                  className="filter-orbs-greek rounded-full"
+                />
+                <span
+                  className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+                >
+                  d
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="flex justify-center items-center w-full absolute  h-full">
+        <img
+          src="/assets/uxui/240px-orb.multicolor.png"
+          alt="multicolor"
+          className="glow-box rounded-full"
+        />
+        <div className="absolute z-10">
+          <div className="font-medium text-[44vw] text-white glow-text-black">
+            3
+          </div>
+        </div>
+      </div> */}
+    </div>
+  );
+};
+
+export default Test;

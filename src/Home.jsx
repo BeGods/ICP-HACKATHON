@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { fetchGameStats, fetchRewards } from "./utils/api";
-import Quests from "./pages/Quest/Quests";
-import Profile from "./pages/Profile";
-import Boosters from "./pages/Booster/Boosters";
+import i18next, { use } from "i18next";
+import { getRandomColor } from "./helpers/randomColor.helper";
 import { MyContext } from "./context/context";
-import Leaderboard from "./pages/Leaderboard";
-import { getRandomColor } from "./utils/randomColor";
+import Quests from "./pages/Quest/Page";
+import Profile from "./pages/Profile/Page";
+import Boosters from "./pages/Booster/Page";
+import Leaderboard from "./pages/Leaderboard/Page";
 import Loader from "./components/Common/Loader";
-import Forges from "./pages/Forge/Forge";
-import Gacha from "./pages/Gacha/Gacha";
-import Tower from "./pages/Tower/Tower";
-import JoinBonus from "./pages/JoinBonus";
-import Partners from "./pages/Partners";
-import Redeem from "./pages/Redeem";
-
+import Forges from "./pages/Forge/Page";
+import Gacha from "./pages/Gacha/Page";
+import Tower from "./pages/Tower/Page";
+import JoinBonus from "./pages/JoinBonus/Page";
+import Redeem from "./pages/Redeem/Redeem";
+import Footer from "./components/Common/Footer";
+import Gift from "./pages/Gift/Gift";
 const tele = window.Telegram?.WebApp;
 
-const Home = (props) => {
+const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [showCard, setShowCard] = useState(null);
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
   const [socialQuestData, setSocialQuestData] = useState(null);
@@ -29,22 +31,22 @@ const Home = (props) => {
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
-  const [showGlow, setShowGlow] = useState(null);
   const [platform, setPlatform] = useState(null);
   const [authToken, setAuthToken] = useState(null);
-  const [section, setSection] = useState(0);
+  const [section, setSection] = useState(1);
+  const [minimize, setMinimize] = useState(0);
 
   const sections = [
-    <Quests />,
-    <Forges />,
-    <Boosters />,
-    <Profile />,
-    <Leaderboard />,
-    <Gacha />,
-    <Tower />,
-    <JoinBonus />,
-    <Partners />,
-    <Redeem />,
+    <Forges />, // 0
+    <Quests />, // 1
+    <Boosters />, // 2
+    <Profile />, // 3
+    <Tower />, // 4
+    <Gift />, // 5
+    <Redeem />, // 6
+    <Leaderboard />, // 7
+    <Gacha />, // 8
+    <JoinBonus />, // 9
   ];
 
   // fetch all game data
@@ -60,15 +62,15 @@ const Home = (props) => {
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
       setKeysData(response?.towerKeys);
-      if (!response?.user.joiningBonus) {
-        setSection(7);
+      if (!response?.user?.joiningBonus) {
+        setSection(9);
       } else if (
-        response?.user.joiningBonus &&
+        response?.user?.joiningBonus &&
         response?.user.isEligibleToClaim
       ) {
-        setSection(5);
+        setSection(8);
       } else {
-        setSection(1);
+        setSection(0);
       }
       setTimeout(() => {
         setIsLoading(false);
@@ -83,17 +85,16 @@ const Home = (props) => {
   useEffect(() => {
     localStorage.setItem("avatarColor", getRandomColor());
 
-    // const token = localStorage.getItem("accessToken");
-    // (async () => {
-    //   if (token) {
-    //     setAuthToken(token);
-    //     await getGameData(token);
-    //   } else {
-    //     console.log("You are not authenticated.");
-    //     //! TODO:Add error toast
-    //   }
-    // })();
-
+    tele.CloudStorage.getItem("lang", (err, item) => {
+      (async () => {
+        if (item) {
+          i18next.changeLanguage(item);
+        } else {
+          console.log("Unable to fetch language.");
+          //! TODO:Add error toast
+        }
+      })();
+    });
     tele.CloudStorage.getItem("accessToken", (err, item) => {
       (async () => {
         if (item) {
@@ -105,7 +106,6 @@ const Home = (props) => {
         }
       })();
     });
-
     tele.CloudStorage.getItem("sound", (err, item) => {
       (async () => {
         if (item) {
@@ -121,6 +121,8 @@ const Home = (props) => {
   useEffect(() => {
     if (tele) {
       tele.setHeaderColor("#000000");
+      tele.setBackgroundColor("#000000");
+      tele.setBottomBarColor("#000000");
       setPlatform(tele.platform);
     }
   }, []);
@@ -154,8 +156,6 @@ const Home = (props) => {
               setActiveMyth,
               showBooster,
               setShowBooster,
-              showGlow,
-              setShowGlow,
               platform,
               authToken,
               keysData,
@@ -170,12 +170,22 @@ const Home = (props) => {
               rewardsClaimedInLastHr,
               enableSound,
               setEnableSound,
+              minimize,
+              setMinimize,
+              setShowCard,
             }}
-            ps
           >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-              <div key={item}>{section === item && sections[item]}</div>
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+              <div key={item}>
+                <>{section === item && sections[item]}</>
+              </div>
             ))}
+            {section != 7 && section != 10 && section != 9 && section != 8 && (
+              <Footer minimize={minimize} />
+            )}
+            {showCard && (
+              <div className="absolute z-50 h-screen w-screen">{showCard}</div>
+            )}
           </MyContext.Provider>
         </div>
       ) : (

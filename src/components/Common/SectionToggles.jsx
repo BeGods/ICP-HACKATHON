@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { mythSections } from "../../utils/variables";
+import { mythSections } from "../../utils/constants";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";

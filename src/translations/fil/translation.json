@@ -7,13 +7,16 @@
     "celtic": "Keltiko",
     "egyptian": "Ehipsiyo",
     "greek": "Griyego",
-    "norse": "Nórdikó"
+    "norse": "Nórdikó",
+    "dark": "Madilim"
   },
   "keywords": {
+    "orb": "Limunmon",
     "orbs": "Bato",
     "conversion": "Pagko-convert",
     "discover": "Tuklasin",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "Naglo-load..."
   },
   "buttons": {
     "hire": "Kumuhá",
@@ -27,7 +30,10 @@
     "forges": "Pandayan",
     "boosters": "Mga Tagapagpaangat",
     "quests": "Misyon",
-    "leaderboard": "Tablá"
+    "leaderboard": "Tablá",
+    "tower": "Tore",
+    "brand": "Tatak",
+    "profile": "Profile"
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
@@ -49,9 +55,11 @@
     "team": "Koponan",
     "guide": "GABAY",
     "causes": "Mga dahilan",
+    "partners": "Mga kasosyo",
     "partner": "Mga kasosyo",
     "charity": "Kawanggawa",
-    "rewards": "MGA GANTIMPALA"
+    "rewards": "MGA GANTIMPALA",
+    "task": "Mga Gawain"
   },
   "elements": {
     "earth": "Lupa",
@@ -61,19 +69,32 @@
     "aether": "Ether"
   },
   "note": {
-    "text": "(Ang mga ranggo ay ina-update bawat oras)"
+    "text": "Pag-update ng leaderboard sa",
+    "tower": "Tap ang ORBS para i-convert",
+    "bonus": "Upang makita ang mga aktibong promosyon"
+  },
+  "tower": {
+    "tune": "Alam mo ba ang ♪ himig ♪?",
+    "play": "Tugtugin ito sa tamang pagkakasunod-sunod!"
   },
   "bonus": {
-    "join": "BONUS NG PAGSALUBONG",
+    "join": "SUMALI BONUS",
     "box": "KAHON",
     "youwon": "NANALO KA!",
     "win": "Manalo"
   },
   "tutorial": {
     "forge": { "title": "TAPAIN ANG MGA PANDAY", "desc": "PARA KUMITA NG ORB(S)" },
-    "quests": { "title": "KUMUHA NG MGA MISYON", "desc": "KUMPLETUHIN PARA KUMITA NG $FAITH" },
-    "boosters": { "title": "KUMUHA NG BOOSTERS", "desc": "PARA SA MGA GANTIMPALA NG LARO" },
-    "profile": { "title": "PUMILI NG MGA KASARTENG", "desc": "PARA KUMUHA NG MGA PREMYO" }
+    "quests": {
+      "title": "KUMUHA NG MGA MISYON",
+      "desc": "KUMPLETUHIN PARA KUMITA NG $FAITH"
+    },
+    "boosters": {
+      "title": "KUMUHA NG BOOSTERS",
+      "desc": "PARA SA MGA GANTIMPALA NG LARO"
+    },
+    "profile": { "title": "PUMILI NG IYONG BANSA", "desc": "upang i-unlock ang mga regalo" },
+    "tower" : { "title": "PUMILI NG ORB AT I-CONVERT", "desc": "PARA MAKAHANAP NG BOOSTER" }
   },
   "quests": {
     "celtic": {
@@ -317,8 +338,14 @@
       }
     },
     "Convert": {
-      "success": { "title": "Matagumpay na Naconvert ang mga Orbs!", "desc": "Magaling! Ipagpatuloy mo lamang ang momentum!"},
-      "error": { "title": "Hindi Sapat ang mga Orbs", "desc": "Kailangan mo pa ng mas maraming Orbs para makumpleto ang transaksyong ito."}
+      "success": {
+        "title": "Matagumpay na Naconvert ang mga Orbs!",
+        "desc": "Magaling! Ipagpatuloy mo lamang ang momentum!"
+      },
+      "error": {
+        "title": "Hindi Sapat ang mga Orbs",
+        "desc": "Kailangan mo pa ng mas maraming Orbs para makumpleto ang transaksyong ito."
+      }
     },
     "Booster_AutomataClaim": {
       "success": {
@@ -350,46 +377,109 @@
         "desc": "Nabigong i-activate ang booster. Pakisubukang i-multiply ang iyong shards tapping power mamaya."
       }
     },
-    "Booster_Lost_Not_Available": { "error": {"title": "Walang Magagamit na Misyon", "desc": "Bumalik Bukas!"} }
-    },
-    "Quest_complete": {
-      "success": {"title": "Pagbati! Natapos mo ang Quest!", "desc": "Binabati kita! Natapos mo ang iyong quest."},
-      "error": { "title": "Nabigong Matapos ang Quest", "desc": "Nagkaroon ng problema sa pagtatapos ng quest. Siguraduhing kumpleto ang quest at subukang muli mamaya."}
-    },
-    "Quest_claim": {
-      "success": {"title": "Matagumpay na Nakamit ang Quest!", "desc": "Matagumpay mong nakuha ang misyon. Iagpatuloy mo lamang at upang makamit ang higit pang gantimpala!" },
+    "Booster_Lost_Not_Available": {
       "error": {
-        "title": "Hindi Sapat ang Bato para sa Pagkuha ng Misyon",
-        "desc": "Wala kang sapat na bato upang makuha ang misyon na ito. Mangyaring mangolekta ng higit pa at subukang muli."
+        "title": "Walang Magagamit na Misyon",
+        "desc": "Bumalik Bukas!"
       }
-    },
-    "Quest_claim_InsufficientOrbs": {
-      "error": { "title": "Hindi Sapat ang Orbs para sa Pagkuha ng Quest", "desc": "Wala kang sapat na Orbs upang makuha ang Quest na ito. Mangyaring mangolekta ng higit pa at subukang muli." }
-    },
-    "Quest_claim_AlreadyClaimed": {
-      "error":{"title": "Nakuha mo na ang Quest na ito", "desc": "Nakuha na ang quest na ito. Tingnan ang iyong mga aktibong quests para sa mga detalye."
     }
+  },
+  "Quest_complete": {
+    "success": {
+      "title": "Pagbati! Natapos mo ang Quest!",
+      "desc": "Binabati kita! Natapos mo ang iyong quest."
     },
-    "Quest_orb_claim": {
-      "success":{  "title": "Matagumpay na Nakuha ang mga Orbs!", "desc": "Matagumpay mong nakuha ang iyong mga Orbs. I-enjoy mo ang mga pinaghirapang premyo at magpatuloy sa pag-unlad!"
-      },
-      "error": { "title": "Hindi Matagumpay ang Pagkuha ng Orbs", "desc": "Nagkaroon ng problema sa pagkuha ng iyong mga Orbs. Pakisubukang muli mamaya."
+    "error": {
+      "title": "Nabigong Matapos ang Quest",
+      "desc": "Nagkaroon ng problema sa pagtatapos ng quest. Siguraduhing kumpleto ang quest at subukang muli mamaya."
     }
+  },
+  "Booster_Claim": {
+    "success": {
+      "title": "Nakamit ang Power Boost!",
+      "desc": "Naka-setup ka na para sa mga epikong tagumpay! Pumunta at sakupin ito!"
     },
-    "Quest_share": {
-      "success":{ "title": "Matagumpay na Nai-share ang Quest!", "desc": "Binabati kita! Matagumpay mong nai-share ang iyong quest at kumita ng dagdag na orb."
-      },
-      "error": { "title": "Nabigong I-share ang Misyon", "desc": "Nagkaroon ng problema sa pag-share ng iyong misyon. Pakisubukang muli mamaya." }
+    "error": {
+      "title": "Nabigong Kunin ang Booster!",
+      "desc": "Oops! May nangyaring mali habang kinukuha ang iyong booster. Pakisubukang muli!"
+    }
+  },
+  "Conversion_Multiplier": {
+    "success": {
+      "title": "Tugma ang Himig!",
+      "desc": "Nakuha mo! Tama ang susi, at naipatak ang multiplier!"
     },
-    "ReferralCopy": {
-      "success":{ "title": "Nakopya na ang Referral Link!", "desc": "Ang iyong referral link ay nakopya na sa clipboard. I-share ito sa iyong mga kaibigan!" }
+    "error": {
+      "title": "Hindi Tugma ang Himig",
+      "desc": "Ang susi na iyong ipinasok ay mali. Sa kasamaang palad, walang naipatang multiplier."
+    }
+  },
+  "Tasks": {
+    "success": {
+      "title": "Matagumpay na Nakumpleto ang Gawain!",
+      "desc": "Magaling! Nakuha mo ang 3 MultiOrbs."
     },
-    "TonConnect": {
-      "success":  { "title": "Matagumpay na Naikonekta ang Wallet!", "desc": "Ang iyong TON wallet ay naikonekta na." },
-      "error": {
-        "title": "Nabigong Kumonekta ang Wallet",
-        "desc": "Nagkaroon ng problema sa pagkonekta sa iyong TON wallet. Pakisubukang muli mamaya."
-      }
+    "error": {
+      "title": "Hindi Kumpletong Gawain",
+      "desc": "Hindi natapos ang gawain. Pakisubukang muli upang makuha ang iyong mga gantimpala."
+    }
+  },
+  "Quest_claim": {
+    "success": {
+      "title": "Matagumpay na Nakamit ang Quest!",
+      "desc": "Matagumpay mong nakuha ang misyon. Iagpatuloy mo lamang at upang makamit ang higit pang gantimpala!"
+    },
+    "error": {
+      "title": "Hindi Sapat ang Bato para sa Pagkuha ng Misyon",
+      "desc": "Wala kang sapat na bato upang makuha ang misyon na ito. Mangyaring mangolekta ng higit pa at subukang muli."
+    }
+  },
+  "Quest_claim_InsufficientOrbs": {
+    "error": {
+      "title": "Hindi Sapat ang Orbs para sa Pagkuha ng Quest",
+      "desc": "Wala kang sapat na Orbs upang makuha ang Quest na ito. Mangyaring mangolekta ng higit pa at subukang muli."
+    }
+  },
+  "Quest_claim_AlreadyClaimed": {
+    "error": {
+      "title": "Nakuha mo na ang Quest na ito",
+      "desc": "Nakuha na ang quest na ito. Tingnan ang iyong mga aktibong quests para sa mga detalye."
+    }
+  },
+  "Quest_orb_claim": {
+    "success": {
+      "title": "Matagumpay na Nakuha ang mga Orbs!",
+      "desc": "Matagumpay mong nakuha ang iyong mga Orbs. I-enjoy mo ang mga pinaghirapang premyo at magpatuloy sa pag-unlad!"
+    },
+    "error": {
+      "title": "Hindi Matagumpay ang Pagkuha ng Orbs",
+      "desc": "Nagkaroon ng problema sa pagkuha ng iyong mga Orbs. Pakisubukang muli mamaya."
+    }
+  },
+  "Quest_share": {
+    "success": {
+      "title": "Matagumpay na Nai-share ang Quest!",
+      "desc": "Binabati kita! Matagumpay mong nai-share ang iyong quest at kumita ng dagdag na orb."
+    },
+    "error": {
+      "title": "Nabigong I-share ang Misyon",
+      "desc": "Nagkaroon ng problema sa pag-share ng iyong misyon. Pakisubukang muli mamaya."
+    }
+  },
+  "ReferralCopy": {
+    "success": {
+      "title": "Nakopya na ang Referral Link!",
+      "desc": "Ang iyong referral link ay nakopya na sa clipboard. I-share ito sa iyong mga kaibigan!"
+    }
+  },
+  "TonConnect": {
+    "success": {
+      "title": "Matagumpay na Naikonekta ang Wallet!",
+      "desc": "Ang iyong TON wallet ay naikonekta na."
+    },
+    "error": {
+      "title": "Nabigong Kumonekta ang Wallet",
+      "desc": "Nagkaroon ng problema sa pagkonekta sa iyong TON wallet. Pakisubukang muli mamaya."
     }
   }
-
+}

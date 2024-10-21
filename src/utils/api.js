@@ -213,7 +213,7 @@ export const disconnectTonWallet = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/user/disconnectTon`;
 
   try {
-    const response = await axios.post(url, tonAddress, {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

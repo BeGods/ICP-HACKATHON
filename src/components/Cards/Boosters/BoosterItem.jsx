@@ -1,0 +1,79 @@
+import React, { useState } from "react";
+import { boosterIcon, mythSections } from "../../../utils/constants";
+import { ChevronRight, LockKeyhole } from "lucide-react";
+
+const BoosterItem = ({
+  isActive,
+  handleClick,
+  activeMyth,
+  t,
+  booster,
+  isGuideActive,
+}) => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  return (
+    <div
+      onClick={handleClick}
+      className={`flex gap-1 border  ${
+        booster === 0 && isGuideActive && "z-[60]"
+      }
+  ${
+    isActive
+      ? `border-${mythSections[activeMyth]}-primary text-white`
+      : "border-cardsGray text-cardsGray"
+  } ${
+        isActive && isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
+      } rounded-primary h-[90px] w-full bg-glass-black p-[15px] `}
+      onMouseDown={() => {
+        setIsClicked(true);
+      }}
+      onMouseUp={() => {
+        setIsClicked(false);
+      }}
+      onMouseLeave={() => {
+        setIsClicked(false);
+      }}
+      onTouchStart={() => {
+        setIsClicked(true);
+      }}
+      onTouchEnd={() => {
+        setIsClicked(false);
+      }}
+      onTouchCancel={() => {
+        setIsClicked(false);
+      }}
+    >
+      <div>
+        <div className={`font-symbols text-booster p-0 -mt-2 mr-2`}>
+          {booster > 5 ? <>p</> : <>{boosterIcon[booster]}</>}
+        </div>
+      </div>
+      <div className={`flex flex-col flex-grow justify-center -ml-1`}>
+        <h1 className="text-tertiary uppercase">
+          {t(`boosters.${booster}.title`)}
+        </h1>
+        <h2 className="text-tertiary">
+          {t(`boosters.${booster}.desc`)}{" "}
+          {booster === 6 && (
+            <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
+              L99*n
+            </span>
+          )}
+          <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
+            {booster != 6 && "L1-99"}
+          </span>
+        </h2>
+      </div>
+      <div className="flex justify-center items-center w-[8%] ">
+        {isActive ? (
+          <ChevronRight className="absolute" size={"30px"} />
+        ) : (
+          <LockKeyhole className="absolute" size={"30px"} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default BoosterItem;
