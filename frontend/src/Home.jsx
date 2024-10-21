@@ -31,7 +31,6 @@ const Home = () => {
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
-  const [showGlow, setShowGlow] = useState(null);
   const [platform, setPlatform] = useState(null);
   const [authToken, setAuthToken] = useState(null);
   const [section, setSection] = useState(1);
@@ -122,6 +121,8 @@ const Home = () => {
   useEffect(() => {
     if (tele) {
       tele.setHeaderColor("#000000");
+      tele.setBackgroundColor("#000000");
+      tele.setBottomBarColor("#000000");
       setPlatform(tele.platform);
     }
   }, []);
@@ -155,8 +156,6 @@ const Home = () => {
               setActiveMyth,
               showBooster,
               setShowBooster,
-              showGlow,
-              setShowGlow,
               platform,
               authToken,
               keysData,

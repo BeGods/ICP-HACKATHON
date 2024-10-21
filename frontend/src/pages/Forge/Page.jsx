@@ -39,8 +39,6 @@ const Forges = () => {
     setGameData,
     showBooster,
     setShowBooster,
-    showGlow,
-    setShowGlow,
     platform,
     authToken,
     setSection,
@@ -82,6 +80,7 @@ const Forges = () => {
     popupTime: 0,
     sessionTaps: 0,
   });
+  const [minimizeToggle, setMinimizeToggle] = useState(false);
   const [sessionActive, setSessionActive] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
   const [startOrbGlow, setstartOrbGlow] = useState(false);
@@ -100,7 +99,8 @@ const Forges = () => {
   const [isStarHolding, setIsStarHolding] = useState(0);
   const [showStarBoosters, setshowStarBoosters] = useState(false);
   const [randomReward, setRandomReward] = useState(null);
-  const [enableGuide, setEnableGuide] = useForgeGuide("tut1");
+  const [showToggles, setShowToggles] = useState(false);
+  const [enableGuide, setEnableGuide] = useForgeGuide("lpp1");
   const [minionPosition, setMinionPosition] = useState(true);
   const [showPartner, setShowPartner] = useState(false);
   const [count, setCount] = useState(0);
@@ -726,47 +726,27 @@ const Forges = () => {
   }, [mythStates]);
 
   useEffect(() => {
-    // show booster card
-    if (showBooster) {
-      setShowCard(
-        <BoosterClaim
-          activeCard={showBooster}
-          activeMyth={activeMyth}
-          mythData={mythStates[activeMyth]}
-          disableIcon={showBooster}
-          closeCard={() => setShowCard(null)}
-          Button={
-            <Download
-              size={"14vw"}
-              color="#ffd660"
-              onClick={() => {
-                setShowCard(null);
-                setShowBooster(null);
-              }}
-              className="scale-icon mt-2"
-            />
-          }
-        />
-      );
-    }
+    // triggerToggles
+    setTimeout(() => {
+      setMinimizeToggle(true);
+      setShowToggles(true);
+    }, 300);
 
-    if (showGlow) {
+    setTimeout(() => {
+      setGlowBooster(() => {
+        if (showBooster === "automata") {
+          return 2;
+        } else if (showBooster === "minion") {
+          return 1;
+        } else if (showBooster === "mythOrb") {
+          return 3;
+        }
+      });
       setTimeout(() => {
-        setGlowBooster(() => {
-          if (showGlow === "automata") {
-            return 2;
-          } else if (showGlow === "minion") {
-            return 1;
-          } else {
-            return 3;
-          }
-        });
-        setTimeout(() => {
-          setGlowBooster(0);
-          setShowGlow(null);
-        }, 500);
-      }, 1000);
-    }
+        setGlowBooster(0);
+        setShowBooster(null);
+      }, 500);
+    }, 1000);
 
     // disable backbutton
     hideBackButton(tele);
@@ -1103,41 +1083,13 @@ const Forges = () => {
       setShowCard(
         <ForgesGuide
           handleClick={() => {
+            setEnableGuide(false);
             setShowCard(null);
           }}
         />
       );
     }
   }, [enableGuide]);
-
-  useEffect(() => {
-    if (showBooster === "mythOrb") {
-      setShowCard(
-        <MilestoneCard
-          t={t}
-          isMulti={false}
-          isOrb={true}
-          isBlack={showBooster === "blackOrb"}
-          activeMyth={activeMyth}
-          isForge={showBooster}
-          closeCard={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setShowCard(null);
-            setShowBooster(null);
-          }}
-          handleClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setShowCard(null);
-            setShowBooster(null);
-            setGlowBooster(3);
-            setTimeout(() => {
-              setGlowBooster(0);
-            }, 500);
-          }}
-        />
-      );
-    }
-  }, [showBooster]);
 
   return (
     <>
@@ -1171,13 +1123,13 @@ const Forges = () => {
               backgroundPosition: "center center",
             }}
           />
-          {/* {minimize === 1 && (
+          {minimize === 1 && (
             <img
               src="/assets/uxui/480px-fof.forge.fx.png"
               alt="forge.fx"
-              className={`filter-orbs-${mythSections[activeMyth]} h-screen w-screen transition-all duration-500 ease-in-out scale-[110%]`}
+              className={`filter-fx-${mythSections[activeMyth]} -ml-0.5 h-screen w-screen transition-all duration-500 ease-in-out`}
             />
-          )} */}
+          )}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
@@ -1249,20 +1201,25 @@ const Forges = () => {
           )}
         </div>
         {/* Toggles */}
-        <ToggleRight
-          handleClick={() => {
-            setActiveMyth((prev) => (prev + 1) % 4);
-          }}
-          activeMyth={activeMyth}
-          minimize={minimize}
-        />
-        <ToggleLeft
-          handleClick={() => {
-            setActiveMyth((prev) => (prev - 1 + 4) % 4);
-          }}
-          activeMyth={activeMyth}
-          minimize={minimize}
-        />
+        {showToggles && (
+          <>
+            <ToggleRight
+              handleClick={() => {
+                setActiveMyth((prev) => (prev + 1) % 4);
+              }}
+              activeMyth={activeMyth}
+              minimize={minimize === 0 && minimizeToggle ? 2 : minimize}
+            />
+            <ToggleLeft
+              handleClick={() => {
+                setActiveMyth((prev) => (prev - 1 + 4) % 4);
+              }}
+              activeMyth={activeMyth}
+              minimize={minimize === 0 && minimizeToggle ? 2 : minimize}
+            />
+          </>
+        )}
+
         {showBlackOrb > 0 && (
           <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
             <div

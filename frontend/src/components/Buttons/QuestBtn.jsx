@@ -8,7 +8,6 @@ const QuestButton = ({
   isCompleted,
   activeMyth,
   action,
-  message,
   currQuest,
   lastQuest,
   faith,
@@ -41,34 +40,31 @@ const QuestButton = ({
         mythSections[activeMyth]
       }-primary bg-glass-black text-white rounded-primary z-10`}
     >
-      <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
+      {/* Left Arrow */}
+      <div className="flex justify-center items-center w-1/4  h-full">
         <CornerUpLeft
           color={currQuest === 0 ? `#707579` : "white"}
           className="h-icon-secondary w-icon-secondary"
           onClick={handlePrev}
         />
       </div>
+      {/* Click */}
       {isCompleted ? (
-        <div>
-          <div
-            className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text p-[5vw] rounded-full`}
-          >
-            <Check size={"7.5vw"} strokeWidth={5} />
-          </div>
-        </div>
-      ) : message === "Complete" ? (
         <div
-          onClick={action}
-          className={`text-${mythSections[activeMyth]}-text`}
+          className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text p-[5vw] rounded-full`}
         >
-          <CircleCheck size={"75px"} />
+          <Check size={"7.5vw"} strokeWidth={5} />
         </div>
       ) : (
-        <div onClick={action}>
-          <CircleCheck size={"75px"} />
+        <div
+          onClick={action}
+          className={`flex shadow-black shadow-2xl justify-center items-center border-[3px] p-[5vw] rounded-full`}
+        >
+          <Check size={"7.5vw"} strokeWidth={5} />
         </div>
       )}
-      <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
+      {/* Right Arrow */}
+      <div className="flex justify-center items-center w-1/4 h-full">
         <CornerUpRight
           color={currQuest !== lastQuest || faith !== 0 ? "white" : "#707579"}
           className="h-icon-secondary w-icon-secondary"
@@ -80,3 +76,13 @@ const QuestButton = ({
 };
 
 export default QuestButton;
+
+// <div
+//   onClick={action}
+//   className={`text-${mythSections[activeMyth]}-text`}
+// >
+//   <CircleCheck size={"75px"} />
+// </div>
+// <div onClick={action}>
+//   <CircleCheck size={"75px"} />
+// </div>

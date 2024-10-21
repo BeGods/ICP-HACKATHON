@@ -92,6 +92,7 @@ const Gacha = (props) => {
         return updatedData;
       });
     } else if (rewardType === "quest") {
+      setShowBooster("quest");
       const updatedQuestData = questsData.map((item) =>
         item._id === data._id
           ? { ...item, isQuestClaimed: true, isCompleted: true }

@@ -1,9 +1,16 @@
-import React, { useContext, useRef, useState } from "react";
-import { mythSymbols, mythologies, orbSounds } from "../../utils/constants";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  mythSections,
+  mythSymbols,
+  mythologies,
+  orbSounds,
+} from "../../utils/constants";
 import { CircleCheck, CircleX } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
+
+const tele = window.Telegram?.WebApp;
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",
@@ -17,7 +24,8 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { enableSound } = useContext(MyContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
-  const [playSound, setPlaySound] = useState(0);
+  const [showEffect, setShowEffect] = useState(null);
+  const [playSound, setPlaySound] = useState(null);
   const howlerRef = useRef(null);
 
   const handleKeys = () => {
@@ -66,7 +74,9 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             {t("tower.play")}
           </div>
           <div
-            className="relative flex justify-center items-center w-full h-full pointer-events-none"
+            className={`relative flex justify-center ${
+              showEffect && `glow-tap-${mythSections[showEffect - 1]}`
+            } items-center w-full h-full pointer-events-none`}
             style={{
               backgroundImage:
                 "url(/assets/uxui/480px-fof.background.aether1.png)",
@@ -79,20 +89,25 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             {mythologies.map((item, index) => (
               <div
                 onClick={() => {
-                  playAudio();
-                  setPlaySound(index);
-                  setClickedOrbs((prev) =>
-                    prev.includes(item) ? prev : [...prev, item]
-                  );
+                  if (clickedOrbs.length <= 6) {
+                    tele.HapticFeedback.notificationOccurred("success");
+                    playAudio();
+                    setPlaySound(index + 1);
+                    setShowEffect(index + 1);
+                    setTimeout(() => {
+                      setShowEffect(null);
+                    }, 500);
+                    setClickedOrbs((prev) =>
+                      prev.length <= 6 ? [...prev, item] : prev
+                    );
+                  }
                 }}
                 key={index}
                 className={`absolute ${orbPos[index]} pointer-events-auto z-50`}
               >
                 <div
-                  className={`flex relative text-center justify-center ${
-                    clickedOrbs.includes(item)
-                      ? "w-[12vw] glow-icon-lg-white"
-                      : "max-w-orb glow-icon-white"
+                  className={`flex relative transition-all duration-1000 glow-icon-${item.toLowerCase()} text-center justify-center ${
+                    showEffect - 1 === index ? "w-[12vw]" : "max-w-orb"
                   } items-center rounded-full `}
                 >
                   <img
@@ -102,12 +117,12 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   />
                   <span
                     className={`absolute z-1 font-symbols ${
-                      clickedOrbs.includes(item)
+                      showEffect - 1 === index
                         ? ` transition-all duration-1000 opacity-100 text-${item.toLowerCase()}-text`
                         : "text-white opacity-50"
                     } text-[30px] mt-1 text-black-sm-contour`}
                   >
-                    <>{mythSymbols[item.toLowerCase()]}</>{" "}
+                    <>{mythSymbols[item.toLowerCase()]}</>
                   </span>
                 </div>
               </div>
@@ -119,7 +134,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   setPlaySound(4);
                 }
                 setClickedOrbs((prev) =>
-                  prev.includes("MultiOrb") ? prev : [...prev, "MultiOrb"]
+                  prev.length <= 6 ? [...prev, "MultiOrb"] : prev
                 );
               }}
               className="flex items-center"
@@ -135,13 +150,57 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 mb-[26vw]">
+          <div className="absolute bottom-0">
             <CircleCheck
               size={"18vw"}
               color="white"
               onClick={handleKeys}
-              className="scale-icon"
+              className="scale-icon mb-[26vw]"
             />
+          </div>
+          <div className="absolute bottom-0 text-[14.2vw] text-white text-black-contour font-roboto flex gap-2">
+            <div
+              className={`${clickedOrbs.length === 0 ? "hidden" : ""} ${
+                clickedOrbs.length === 1 ? "scale-point" : ""
+              }`}
+            >
+              *
+            </div>
+            <div
+              className={`${clickedOrbs.length < 2 ? "hidden" : ""} ${
+                clickedOrbs.length === 2 ? "scale-point" : ""
+              }`}
+            >
+              *
+            </div>
+            <div
+              className={`${clickedOrbs.length < 3 ? "hidden" : ""} ${
+                clickedOrbs.length === 3 ? "scale-point" : ""
+              }`}
+            >
+              *
+            </div>
+            <div
+              className={`${clickedOrbs.length < 4 ? "hidden" : ""} ${
+                clickedOrbs.length === 4 ? "scale-point" : ""
+              }`}
+            >
+              *
+            </div>
+            <div
+              className={`${clickedOrbs.length < 5 ? "hidden" : ""} ${
+                clickedOrbs.length === 5 ? "scale-point" : ""
+              }`}
+            >
+              *
+            </div>
+            <div
+              className={`${clickedOrbs.length < 6 ? "hidden" : ""} ${
+                clickedOrbs.length === 6 ? "scale-point" : ""
+              }`}
+            >
+              *
+            </div>
           </div>
         </div>
       )}
@@ -149,7 +208,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
         {playSound != 0 && (
           <>
             <ReactHowler
-              src={`/assets/audio/fof.orb.${orbSounds[playSound]}.wav`}
+              src={`/assets/audio/fof.orb.${orbSounds[playSound - 1]}.wav`}
               playing={enableSound}
               preload={true}
               ref={howlerRef}

@@ -9,8 +9,11 @@ const tele = window.Telegram?.WebApp;
 const FooterItem = ({ enableSound, icon }) => {
   const howlerRef = useRef(null);
   const [flipped, setFlipped] = useState(false);
-  const { section, setSection, activeMyth, setActiveMyth } =
+  const { section, setSection, activeMyth, setActiveMyth, socialQuestData } =
     useContext(MyContext);
+  const countOfInCompleteQuests = socialQuestData.filter(
+    (item) => item.isCompleted === false
+  ).length;
 
   const playAudio = () => {
     if (howlerRef.current && enableSound) {
@@ -61,6 +64,11 @@ const FooterItem = ({ enableSound, icon }) => {
             >
               {footerIcons[footerArray[icon][1]]}
             </div>
+            {icon === 2 && !flipped && (
+              <div className="absolute flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-black text-white h-8 w-8 mt-2 -mr-3 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+                {countOfInCompleteQuests}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -76,14 +84,14 @@ const FooterItem = ({ enableSound, icon }) => {
     </>
   );
 };
-const Footer = ({ minimize }) => {
-  const { section, activeMyth, enableSound } = useContext(MyContext);
+const Footer = ({}) => {
+  const { section, activeMyth, enableSound, minimize } = useContext(MyContext);
 
   return (
     <div
-      className={`absolute  w-screen bottom-0 ${minimize === 2 && "maximize"} ${
+      className={`absolute w-screen bottom-0 ${minimize === 2 && "maximize"} ${
         minimize === 1 && "minimize"
-      } `}
+      }`}
     >
       <img
         src="/assets/uxui/1280px-fof.footer.png"
@@ -99,7 +107,7 @@ const Footer = ({ minimize }) => {
         }`}
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-[80%] flex justify-between text-white">
+        <div className="w-[70%] flex justify-between text-white">
           <FooterItem
             icon={0}
             section={section}

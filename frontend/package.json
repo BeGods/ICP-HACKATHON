@@ -31,8 +31,7 @@
     "react-toastify": "^10.0.5",
     "sass": "^1.77.8",
     "styled-components": "^6.1.12",
-    "use-image": "^1.1.1",
-    "vite-plugin-mkcert": "^1.17.6"
+    "use-image": "^1.1.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

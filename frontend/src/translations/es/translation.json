@@ -13,13 +13,16 @@
     "celtic": "Céltico",
     "egyptian": "Egipcio",
     "greek": "Griego",
-    "norse": "Nórdico"
+    "norse": "Nórdico",
+    "dark": "Obscura"
   },
   "keywords": {
+    "orb": "Orbe",
     "orbs": "ORB(S)",
     "conversion": "Conversión",
     "discover": "Descubrir",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "Cargando"
   },
   "buttons": {
     "buy": "Comprar",
@@ -33,7 +36,10 @@
     "forges": "Forjas",
     "boosters": "Potenciadores",
     "quests": "Misiones",
-    "leaderboard": "Tabla de clasificación"
+    "leaderboard": "Tabla de clasificación",
+    "tower": "Torre",
+    "brand": "Marca",
+    "profile": "Perfil"
   },
   "boosters": [
     { "title": "Autómata", "desc": "Toca automáticamente" },
@@ -55,13 +61,15 @@
     "team": "Equipo",
     "guide": "GUÍA",
     "causes": "Causas",
+    "partners": "Parceiros",
     "partner": "Parceiros",
     "charity": "Caridad",
-    "rewards": "RECOMPENSAS"
+    "rewards": "RECOMPENSAS",
+    "task": "Tareas"
   },
   "tower": {
     "tune": "¿Conoces la ♪ melodía ♪?",
-    "play": "¡Tócala en el orden correcto!"
+    "play": "¡Tócalo en el orden correcto!"
   },
   "elements": {
     "earth": "Tierra",
@@ -71,10 +79,12 @@
     "aether": "Éter"
   },
   "note": {
-    "text": "(Los rankings se actualizan cada hora)"
+    "text": "Actualización de la tabla de clasificación en",
+    "tower": "Toca ORBS para convertir",
+    "bonus": "Para ver promociones activas"
   },
   "bonus": {
-    "join": "BONO DE BIENVENIDA",
+    "join": "BONO BIENVENIDO",
     "box": "CAJA",
     "youwon": "¡GANASTE!",
     "win": "Ganar"
@@ -89,10 +99,7 @@
       "title": "ADQUIRIR BOOSTERS",
       "desc": "PARA RECOMPENSAS DEL JUEGO"
     },
-    "profile": {
-      "title": "SELECCIONAR PARCEIROS",
-      "desc": "PARA RECLAMAR PREMIOS"
-    }
+    "profile": { "title": "ELIGE TU PAÍS", "desc": "para desbloquear regalos" }
   },
   "quests": {
     "celtic": {

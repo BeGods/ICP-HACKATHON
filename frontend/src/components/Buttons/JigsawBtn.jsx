@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { mythSections } from "../../utils/constants";
-import { CornerUpLeft, CornerUpRight, Download } from "lucide-react";
+import { CornerUpLeft, CornerUpRight, Download, ThumbsUp } from "lucide-react";
 
 const JigsawButton = ({
   activeMyth,
@@ -34,13 +34,13 @@ const JigsawButton = ({
       onTouchCancel={() => {
         setIsClicked(false);
       }}
-      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto mt-[39px] ${
+      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto ${
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       } border ${
         faith != 12
           ? "border-borderGray"
           : `border-${mythSections[activeMyth]}-primary`
-      } bg-glass-black  rounded-primary  absolute top-0 left-0 right-0`}
+      } bg-glass-black  rounded-primary z-[99]  top-0 left-0 right-0`}
       style={{ top: "100%", transform: "translateY(-50%)" }}
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
@@ -50,12 +50,19 @@ const JigsawButton = ({
           onClick={handlePrev}
         />
       </div>
-      <div
+      {/* <div
         className={`text-button-primary uppercase px-2 ${
           faith < 12 ? "text-textGray" : "text-white"
         } `}
+      > */}
+      <div
+        className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black ${
+          faith < 12
+            ? "text-textGray border-borderDark"
+            : "text-white border-white"
+        }  w-[18vw] h-[18vw] border-[3px] rounded-full`}
       >
-        <Download size={"8vw"} />
+        <ThumbsUp size={"7.5vw"} />
       </div>
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight

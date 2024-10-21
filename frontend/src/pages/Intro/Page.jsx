@@ -78,6 +78,8 @@ const IntroPage = (props) => {
       })();
     });
 
+    tele.CloudStorage.removeItem("country_code");
+
     const handleUserInteraction = () => {
       playAudio();
       document.removeEventListener("click", handleUserInteraction);
@@ -211,7 +213,7 @@ const IntroPage = (props) => {
                 <img
                   src="/assets/logos/forgesoffaith.svg"
                   alt="fof"
-                  className="w-[200px] mt-6 fof-text-shadow"
+                  className="w-[200px] mt-6 begod-text-shadow"
                 />
               </div>
             </div>

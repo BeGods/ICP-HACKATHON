@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import ShareButton from "../../Buttons/ShareBtn";
 import IconBtn from "../../Buttons/IconBtn";
 import { mythSections } from "../../../utils/constants";
 import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
-const InfoCard = ({
-  t,
-  quest,
-  isShared,
-  handleClaimShareReward,
-  handleShowInfo,
-  activeMyth,
-}) => {
+const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   const { i18n } = useTranslation();
 
   const [platform, setPlatform] = useState(null);
@@ -56,14 +48,13 @@ const InfoCard = ({
           align={0}
         />
       )}
-
       <div className="flex w-full">
         <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
           <div className="text-left">
             <h1 className="text-paperHead font-bold uppercase">
               {t("keywords.discover")}
             </h1>
-            <h2 className={`-mt-1 text-tertiary font-medium uppercase`}>
+            <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
               {t(`mythologies.${mythSections[activeMyth]}`)}
             </h2>
           </div>

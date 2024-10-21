@@ -1,20 +1,26 @@
 import React, { useRef, useState } from "react";
-import { mythSections } from "../../utils/constants";
-import { Share2 } from "lucide-react";
+import { mythSections, mythSymbols } from "../../utils/constants";
+import { Share2, ThumbsUp } from "lucide-react";
 
-const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
+const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
   const [isClicked, setIsClicked] = useState(false);
+  const [showRedirect, setShowRedirect] = useState(true);
   let disableClick = useRef(false);
 
   return (
     <div
       onClick={() => {
-        if (disableClick.current === false) {
-          disableClick.current = true;
-          handleClaim();
-          setTimeout(() => {
-            disableClick.current = false;
-          }, 2000);
+        if (showRedirect) {
+          window.open(link, "_blank");
+          setShowRedirect(false);
+        } else {
+          if (disableClick.current === false) {
+            disableClick.current = true;
+            setTimeout(() => {
+              disableClick.current = false;
+            }, 2000);
+            handleClaim();
+          }
         }
       }}
       onMouseDown={() => {
@@ -54,9 +60,19 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
               />
             </div>
           </div>
-          <div>
-            <Share2 size={"8vw"} />
-          </div>
+          {showRedirect ? (
+            <div
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+            >
+              <Share2 size={"7.5vw"} color="white" />
+            </div>
+          ) : (
+            <div
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+            >
+              <ThumbsUp size={"7.5vw"} color="white" />
+            </div>
+          )}
           {isInfo ? (
             <div className="flex justify-center items-center w-1/4  h-full">
               <img
@@ -69,12 +85,19 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
             <div
               className={`flex justify-center items-center w-1/4 border-borderGray h-full`}
             >
-              <div className={`filter-orbs-${mythSections[activeMyth]}`}>
+              <div
+                className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeMyth]} `}
+              >
                 <img
-                  src={`/assets/uxui/240px-orb.base.png`}
+                  src="/assets/uxui/240px-orb.base.png"
                   alt="orb"
-                  className="w-[85%]"
+                  className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
                 />
+                <span
+                  className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-[30px] mt-1`}
+                >
+                  {mythSymbols[mythSections[activeMyth]]}
+                </span>
               </div>
             </div>
           )}
@@ -85,7 +108,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, t }) => {
             rounded-primary`}
         >
           <div className="flex justify-center items-center w-1/4 h-full"></div>
-          <Share2 size={"8vw"} />
+          <Share2 size={"7.5vw"} />
           <div className="flex justify-center items-center w-1/4  h-full"></div>
         </div>
       )}

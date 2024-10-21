@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { mythSections, mythologies } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants";
 import { MyContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
@@ -14,13 +14,23 @@ const MythInfoCard = ({ close }) => {
           <img
             src="/assets/cards/320px-info_background.jpg"
             alt="info card background"
-            className="w-full h-full object-cover rounded-primary"
+            className="w-full h-full object-cover rounded-primary z-10"
           />
-          <div className="absolute text-card top-0 w-full text-center text-paperHead font-bold mt-2 uppercase">
-            {mythologies[activeMyth]}
+
+          <div className="absolute inset-0 flex justify-center items-center z-20">
+            <img
+              src={`/assets/myth/mythology.greek.base.svg`}
+              alt="symbol"
+              className="opacity-40 symbol-svg w-3/4"
+            />
           </div>
+
+          <div className="absolute top-0 w-full text-center text-paperHead font-bold mt-2 uppercase z-30">
+            {t(`mythologies.${mythSections[activeMyth]}`)}
+          </div>
+
           <div
-            className={`absolute leading-[18px] text-para -mt-4 inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] ${
+            className={`absolute leading-[18px] text-para inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] z-30 ${
               (i18n.language === "hi" ||
                 i18n.language === "th" ||
                 i18n.language === "ru") &&
@@ -30,6 +40,7 @@ const MythInfoCard = ({ close }) => {
             {t(`descriptions.${mythSections[activeMyth]}`)}
           </div>
         </div>
+
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
       </div>
     </div>

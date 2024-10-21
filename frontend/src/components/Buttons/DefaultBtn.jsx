@@ -47,12 +47,21 @@ const DefaultBtn = ({
           : ` border text-white border-${mythSections[activeMyth]}-primary ${
               isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
             }`
-      } justify-between h-button-primary w-button-primary mt-[10px] mx-auto  bg-glass-black z-50 rounded-primary`}
+      } justify-between h-button-primary w-button-primary mt-[4px] mx-auto  bg-glass-black z-50 rounded-primary`}
     >
       <div className="flex justify-center items-center w-1/4 h-full"></div>
-      <div className="text-[40px] font-symbols z-10 uppercase">
-        {message === 0 ? "V" : message === 1 ? <Handshake size={"10vw"} /> : ""}
+      <div
+        className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
+      >
+        {message === 0 ? (
+          "V"
+        ) : message === 1 ? (
+          <Handshake size={"7.5vw"} />
+        ) : (
+          ""
+        )}
       </div>
+
       <div className="flex justify-center items-center w-1/4  h-full">
         {isBooster && (
           <div className="relative flex justify-center items-center">

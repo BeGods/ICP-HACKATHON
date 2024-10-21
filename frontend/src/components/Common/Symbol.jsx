@@ -4,9 +4,11 @@ const Symbol = ({ myth, isCard, showClaimEffect }) => {
   return (
     <div
       className={`relative  select-none pointer-events-none  flex justify-center items-center ${
-        isCard
+        isCard == 1
           ? "h-symbol-secondary w-symbol-secondary"
-          : "h-symbol-primary w-symbol-primary"
+          : isCard === 2
+          ? "h-symbol-primary w-symbol-primary"
+          : "h-[50vw] w-[50vw]"
       } bg-black border border-white rounded-full outline-[2px] transition-all duration-1000  z-50 ${
         showClaimEffect ? `glow-tap-${myth}` : `glow-symbol-${myth}`
       }`}

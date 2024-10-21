@@ -26,10 +26,10 @@ const ConvertInfo = ({ t, handleClick }) => {
             alt="card"
             className="w-full h-full object-cover rounded-primary"
           />
-          <div className="absolute top-0 w-full text-center text-[28px]  font-bold mt-2 uppercase">
-            {t(`keywords.conversion`)}
+          <div className="absolute top-0 w-full text-center text-[28px] font-bold mt-2 uppercase">
+            <div>{t(`keywords.conversion`)}</div>
           </div>
-          <div className="absolute inset-0 flex flex-col items-center mx-auto my-auto w-fit h-fit justify-center">
+          <div className="absolute inset-0 flex flex-col items-center mx-auto my-auto w-full h-full justify-center">
             <div className="flex flex-col h-fit">
               {Object.entries(mythSymbols)
                 .filter(([key, value]) => key !== "other")
@@ -37,7 +37,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                   <React.Fragment key={key}>
                     <div className="flex justify-center items-center gap-x-3 mt-2">
                       <div
-                        className={`flex relative text-center justify-center  items-center max-w-orb rounded-full glow-icon-${key}`}
+                        className={`flex relative text-center justify-center  items-center max-w-orb rounded-full glow-icon-black`}
                       >
                         <img
                           src="/assets/uxui/240px-orb.base.png"
@@ -45,17 +45,16 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-[30px] mt-1 `}
+                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-[30px] mt-1`}
                         >
                           {value}
                         </span>
                       </div>
-
                       <h1 className="text-[30px] font-semibold">
                         {value != 3 ? "+" : "|"}
                       </h1>
                       <div
-                        className={`flex relative text-center  justify-center items-center max-w-orb  rounded-full glow-icon-${key}`}
+                        className={`flex relative text-center  justify-center items-center max-w-orb rounded-full glow-icon-black`}
                       >
                         <img
                           src="/assets/uxui/240px-orb.base.png"
@@ -80,9 +79,9 @@ const ConvertInfo = ({ t, handleClick }) => {
                     </div>
                   </React.Fragment>
                 ))}
-              <div className="flex justify-center items-center gap-x-3 -ml-2.5 mt-2">
+              <div className="flex justify-center items-center gap-x-3 -ml-[15px] mt-2">
                 <div className="text-[28px] -ml-2.5">1,000</div>
-                <div className="text-[24px] font-medium">X</div>
+                <div className="text-[24px] font-roboto font-medium">X</div>
                 <div
                   className={`flex relative text-center justify-center items-center max-w-orb rounded-full glow-icon-black`}
                 >
@@ -112,6 +111,9 @@ const ConvertInfo = ({ t, handleClick }) => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="absolute bottom-0 w-full text-center text-paperSub font-bold pb-2 uppercase">
+            <div className="text-para font-medium">{t(`note.tower`)}</div>
           </div>
         </div>
         <IconBtn

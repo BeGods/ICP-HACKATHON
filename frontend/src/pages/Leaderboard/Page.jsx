@@ -5,7 +5,10 @@ import { fetchLeaderboard } from "../../utils/api";
 import { MyContext } from "../../context/context";
 import Avatar from "../../components/Common/Avatar";
 import { useTranslation } from "react-i18next";
-import { timeRemainingForHourToFinishUTC } from "../../helpers/leaderboard.helper";
+import {
+  timeRemainingForHourToFinishUTC,
+  formatRankOrbs,
+} from "../../helpers/leaderboard.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -63,7 +66,7 @@ const Leaderboard = (props) => {
           </div>
         </div>
         <div className="w-full text-secondary text-center pt-1">
-          {t(`note.text`)} {updateTimeLeft.minutes}min
+          ({t(`note.text`)} {updateTimeLeft.minutes}min)
         </div>
         {/* LEADERBOARD */}
         <div className="flex flex-col w-full flex-grow bg-black rounded-primary my-2">
@@ -74,10 +77,10 @@ const Leaderboard = (props) => {
             </h1>
             <h1>{t(`keywords.orbs`)}</h1>
           </div>
+
           {activeTab
             ? leaderboard.map((item, index) => (
                 <div className="">
-                  <div className="border-t border-borderDark w-[90%] mx-auto"></div>
                   <LeaderboardItem
                     key={index}
                     rank={index + 1}
@@ -97,23 +100,25 @@ const Leaderboard = (props) => {
         </div>
       </div>
       {/* FOOTER */}
-      <div className="flex items-center justify-between h-[80px] w-[95%] mx-auto mb-1 text-tertiary  border border-borderDark bg-black text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
-        <div className="flex justify-center items-center w-2/5 h-full">
-          {userData.overallRank}
-        </div>
-        <div className="flex items-center gap-4 w-full">
-          <div className="h-[35px] w-[35px]">
-            <Avatar
-              name={userData.telegramUsername}
-              className="h-full w-full"
-              profile={0}
-              color={avatarColor}
-            />
+      <div className="flex items-center h-[60px] w-[95%] mx-auto p-1 mb-2 text-tertiary border border-borderDark  text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
+        <div className="flex items-center justify-between w-full h-full rounded-primary bg-borderDark">
+          <div className="flex justify-center items-center w-2/5 h-full">
+            {userData.overallRank}
           </div>
-          <h1>{userData.telegramUsername}</h1>
-        </div>
-        <div className="flex flex-col justify-center items-center text-tertiary w-2/5 h-full">
-          <h1>{parseFloat(userData.totalOrbs.toFixed(3))}</h1>
+          <div className="flex items-center gap-4 w-full">
+            <div className="h-[35px] w-[35px]">
+              <Avatar
+                name={userData.telegramUsername}
+                className="h-full w-full"
+                profile={0}
+                color={avatarColor}
+              />
+            </div>
+            <h1>{userData.telegramUsername}</h1>
+          </div>
+          <div className="flex flex-col justify-center items-center text-tertiary w-2/5 h-full">
+            <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
+          </div>
         </div>
       </div>
     </div>

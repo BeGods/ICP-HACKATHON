@@ -10,10 +10,10 @@ const GiftItemCrd = ({ item }) => {
 
   return (
     <div
-      className={`flex gap-1 border 
+      className={`flex gap-1 border
 ${
   isClicked ? `glow-button-white` : ""
-} rounded-primary h-[90px] w-full bg-glass-black p-[15px] `}
+} rounded-primary h-[90px] w-full  bg-black border text-white p-[15px]`}
       onClick={() => {
         tele.HapticFeedback.notificationOccurred("success");
         setActiveReward(item);

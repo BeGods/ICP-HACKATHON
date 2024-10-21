@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Avatar from "../../components/Common/Avatar";
 import { MyContext } from "../../context/context";
-import { formatRankOrbs } from "../../helpers/game.helper";
+import { formatRankOrbs } from "../../helpers/leaderboard.helper";
 
 const LeaderboardItem = ({ rank, name, totalOrbs }) => {
   const { userData } = useContext(MyContext);
@@ -16,7 +16,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs }) => {
   return (
     <div
       className={`flex items-center ${
-        rank % 2 === 0 ? "" : "bg-gray-900"
+        rank % 2 === 0 ? "" : "bg-borderGray"
       } justify-between text-tertiary w-[98%] h-fit mx-auto text-white py-2`}
     >
       <div className="flex justify-center items-center w-[20%] h-full">

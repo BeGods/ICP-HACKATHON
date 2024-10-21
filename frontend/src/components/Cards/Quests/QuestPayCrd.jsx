@@ -7,7 +7,6 @@ import Button from "../../Buttons/DefaultBtn";
 import { MyContext } from "../../../context/context";
 
 function PayCard({
-  t,
   quest,
   handleShowPay,
   handlePay,
@@ -71,7 +70,6 @@ function PayCard({
     return deductedValues[mythName];
   };
   const getMultiOrbsDisplayValue = () => {
-    console.log(deductedValues.multiColorOrbs);
     return deductedValues.multiColorOrbs;
   };
 
@@ -174,7 +172,7 @@ function PayCard({
               >
                 <div>{quest?.questName}</div>
                 <div className="">
-                  <Symbol myth={mythSections[activeMyth]} isCard={true} />
+                  <Symbol myth={mythSections[activeMyth]} isCard={1} />
                 </div>
               </div>
             </div>

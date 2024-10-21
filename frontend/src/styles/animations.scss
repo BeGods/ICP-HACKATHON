@@ -419,3 +419,17 @@
     transform: translateX(-50%) translateY(0);
   }
 }
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+.skeleton {
+  background: #414141;
+  background: linear-gradient(110deg, #414141 8%, #f5f5f56a 25%, #414141 33%);
+  border-radius: 5px;
+  background-size: 200% 100%;
+  animation: 3s shine linear infinite;
+}

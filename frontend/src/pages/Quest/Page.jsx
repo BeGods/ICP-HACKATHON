@@ -12,7 +12,7 @@ import {
 } from "../../utils/api";
 
 import JigsawImage from "../../components/Cards/Jigsaw/JigsawCrd";
-import InfoCard from "../../components/Cards/Quests/QuestInfoCrd";
+import InfoCard from "../../components/Cards/Info/QuestInfoCrd";
 import PayCard from "../../components/Cards/Quests/QuestPayCrd";
 import OrbClaimCard from "../../components/Cards/Quests/QuestOrbCrd";
 import { useTranslation } from "react-i18next";
@@ -25,7 +25,6 @@ import QuestCard from "../../components/Cards/Quests/QuestCrd";
 import JigsawButton from "../../components/Buttons/JigsawBtn";
 import IconBtn from "../../components/Buttons/IconBtn";
 import QuestButton from "../../components/Buttons/QuestBtn";
-import MilestoneCard from "../../components/Cards/Reward/OrbRewardCrd";
 import SecretCard from "../../components/Cards/Info/WhitelistInfoCrd";
 import { showToast } from "../../components/Toast/Toast";
 import MythInfoCard from "../../components/Cards/Info/MythInfoCrd";
@@ -39,10 +38,9 @@ const tele = window.Telegram?.WebApp;
 const Quests = () => {
   const { t } = useTranslation();
   const [showClaimEffect, setShowClaimEffect] = useState(false);
-  const [showComplete, setShowComplete] = useState(false);
-  const [enableGuide, setEnableGuide] = useQuestGuide("tut2");
+  const [enableGuide, setEnableGuide] = useQuestGuide("rr");
+  const [showToggle, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
-
   const {
     questsData,
     setQuestsData,
@@ -53,6 +51,8 @@ const Quests = () => {
     authToken,
     setKeysData,
     setShowCard,
+    showBooster,
+    setShowBooster,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
@@ -73,31 +73,27 @@ const Quests = () => {
     return 0;
   });
 
-  const todaysQuest = quests.findIndex((item) => item.status === "Active");
-
   // completed quests
   const completedQuests = quests?.filter(
     (item) => item.isQuestClaimed === true
   );
-
   const lostQuests = quests?.filter(
     (item) => item.isQuestClaimed === false && item.status === "Inactive"
   );
-
+  const todaysQuest = quests.findIndex((item) => item.status === "Active");
   const [currQuest, setCurrQuest] = useState(todaysQuest);
   const quest = quests[currQuest];
-
   // secret quests
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
 
+  //* toggle handler functions
   const handlePrev = () => {
     if (currQuest > 0) {
       setCurrQuest((prev) => prev - 1);
     }
   };
-
   const handleNext = () => {
     const range =
       mythData[activeMyth].faith > 0 ? quests.length : quests.length - 1;
@@ -106,15 +102,21 @@ const Quests = () => {
     }
   };
 
+  //* state update handler
   const handeUpdateOnClaim = () => {
     // update quest data
     const updatedQuestData = questsData.map((item) =>
       item._id === quest._id ? { ...item, isQuestClaimed: true } : item
     );
 
-    const currQuest = questsData.filter((item) => item._id === quest._id);
-    const currQuestKeys = Object.keys(currQuest[0].requiredOrbs)
-      .map((item) => mythologies.indexOf(item))
+    const curr = questsData.filter((item) => item._id === quest._id);
+    const currQuestKeys = Object.keys(curr[0].requiredOrbs)
+      .map((myth) => {
+        const index = mythologies.indexOf(myth);
+        const count = curr[0].requiredOrbs[myth];
+
+        return index.toString().repeat(count);
+      })
       .join("");
 
     // update game data
@@ -142,40 +144,47 @@ const Quests = () => {
       }),
     };
 
-    setShowComplete(false);
     showToast("quest_claim_success");
     setQuestsData(updatedQuestData);
     setKeysData((prev) => [...prev, currQuestKeys]);
     setGameData(updatedGameData);
   };
 
-  const handleClaimShareReward = async (id) => {
+  //* claim quest handler
+  const handleClaimQuest = async () => {
     const questData = {
-      questId: id,
+      questId: quest._id,
+    };
+
+    try {
+      await claimQuest(questData, authToken);
+      return true;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "An unexpected error occurred";
+      setShowCard(null);
+      console.log(errorMessage);
+      showToast("quest_claim_error");
+      return false;
+    }
+  };
+
+  //* share reward handler
+  const handleClaimShareReward = async (id) => {
+    tele.HapticFeedback.notificationOccurred("success");
+
+    const questData = {
+      questId: quest._id,
     };
     try {
       await claimShareReward(questData, authToken);
-      setShowCard(
-        <MilestoneCard
-          t={t}
-          isMulti={true}
-          isOrb={true}
-          isBlack={false}
-          activeMyth={activeMyth}
-          closeCard={() => {
-            setShowCard(null);
-          }}
-          handleClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setShowCard(null);
-          }}
-        />
-      );
       showToast("quest_share_success");
 
       // update quest data
       const updatedQuestData = questsData.map((item) =>
-        item._id === id ? { ...item, isShared: true } : item
+        item._id === quest._id ? { ...item, isShared: true } : item
       );
 
       // update game data
@@ -196,36 +205,20 @@ const Quests = () => {
     }
   };
 
+  //* after claim reward handler
   const handleOrbClaimReward = async () => {
     const questData = {
       questId: quest._id,
     };
+
     try {
       await claimQuestOrbsReward(questData, authToken);
+      setCurrQuest(quests.length + 1);
       setShowCard(null);
-      setShowCard(
-        <MilestoneCard
-          t={t}
-          isOrb={true}
-          isBlack={false}
-          isForge={true}
-          activeMyth={activeMyth}
-          closeCard={() => {}}
-          handleClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setShowClaimEffect(true);
-            setTimeout(() => {
-              setShowClaimEffect(false);
-            }, 1000);
-            setShowCard(null);
-          }}
-        />
-      );
-
-      // update quest data
-      const updatedQuestData = questsData.map((item) =>
-        item._id === quest._id ? { ...item, isOrbClaimed: true } : item
-      );
+      setShowClaimEffect(true);
+      setTimeout(() => {
+        setShowClaimEffect(false);
+      }, 1000);
 
       // update game data
       const updatedGameData = {
@@ -239,7 +232,7 @@ const Quests = () => {
             : myth
         ),
       };
-      setQuestsData(updatedQuestData);
+
       setGameData(updatedGameData);
       showToast("orb_claim_success");
     } catch (error) {
@@ -252,124 +245,60 @@ const Quests = () => {
     }
   };
 
-  const handleCompleteQuest = async () => {
-    const questData = {
-      questId: quest._id,
-    };
+  //* action button
+  const handleButtonClick = () => {
+    setShowCard(
+      <PayCard
+        t={t}
+        quest={quest}
+        handlePay={handleClaimQuest}
+        handleShowPay={() => {
+          setShowCard(null);
+        }}
+        handleClaimEffect={() => {
+          setShowCard(
+            <OrbClaimCard
+              t={t}
+              quest={quest}
+              handleOrbClaimReward={handleOrbClaimReward}
+              handleShowClaim={() => {
+                setCurrQuest(quests.length + 1);
+                setShowCard(null);
+                setShowClaimEffect(true);
+                setTimeout(() => {
+                  setShowClaimEffect(false);
+                }, 1000);
+              }}
+              activeMyth={activeMyth}
+            />
+          );
 
-    if (!quest.isCompleted) {
-      try {
-        await completeQuest(questData, authToken);
-        setShowComplete(false);
-        setShowCard(
-          <PayCard
-            t={t}
-            quest={quest}
-            handlePay={handleClaimQuest}
-            handleShowPay={() => {
-              setShowCard(null);
-            }}
-            handleClaimEffect={() => {
-              setShowCard(
-                <OrbClaimCard
-                  t={t}
-                  quest={quest}
-                  handleOrbClaimReward={handleOrbClaimReward}
-                  handleShowClaim={() => {
-                    setShowCard(null);
-                    setShowClaimEffect(true);
-                    setTimeout(() => {
-                      setShowClaimEffect(false);
-                    }, 1000);
-                  }}
-                  activeMyth={activeMyth}
-                />
-              );
-              setShowCard(null);
-
-              handeUpdateOnClaim();
-            }}
-            activeMyth={activeMyth}
-          />
-        );
-
-        // update quest data
-        const updatedQuestData = questsData.map((item) =>
-          item._id === quest._id ? { ...item, isCompleted: true } : item
-        );
-
-        setQuestsData(updatedQuestData);
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.error ||
-          error.message ||
-          "An unexpected error occurred";
-        console.log(errorMessage);
-        console.log("quest_complete_error");
-      }
-    } else {
-      setShowCard(
-        <PayCard
-          t={t}
-          quest={quest}
-          handlePay={handleClaimQuest}
-          handleShowPay={() => {
-            setShowCard(null);
-          }}
-          handleClaimEffect={() => {
-            setShowCard(
-              <OrbClaimCard
-                t={t}
-                quest={quest}
-                handleOrbClaimReward={handleOrbClaimReward}
-                handleShowClaim={() => {
-                  setShowCard(null);
-                  setShowClaimEffect(true);
-                  setTimeout(() => {
-                    setShowClaimEffect(false);
-                  }, 1000);
-                }}
-                activeMyth={activeMyth}
-              />
-            );
-            setShowCard(null);
-
-            handeUpdateOnClaim();
-          }}
-          activeMyth={activeMyth}
-        />
-      );
-    }
-  };
-
-  const handleClaimQuest = async () => {
-    const questData = {
-      questId: quest._id,
-    };
-    try {
-      await claimQuest(questData, authToken);
-      return true;
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
-        "An unexpected error occurred";
-      setShowCard(null);
-      console.log(errorMessage);
-      showToast("quest_claim_error");
-      return false;
-    }
-  };
-
-  const handleRedirect = () => {
-    setShowComplete(true);
-    window.open(quest?.link, "_blank");
+          handeUpdateOnClaim();
+        }}
+        activeMyth={activeMyth}
+      />
+    );
   };
 
   useEffect(() => {
+    if (showBooster === "quest") {
+      setCurrQuest(quests.length + 1);
+      setTimeout(() => {
+        setShowClaimEffect(true);
+        setTimeout(() => {
+          setShowClaimEffect(false);
+          setShowBooster(null);
+        }, 1000);
+      }, 500);
+    }
+  }, [questsData, currQuest]);
+
+  useEffect(() => {
+    // enable guide
     if (enableGuide) {
       setShowCard(
         <QuestGuide
+          currQuest={quest}
           handleClick={() => {
             setShowCard(null);
           }}
@@ -378,7 +307,12 @@ const Quests = () => {
     }
   }, [enableGuide]);
 
-  useEffect(() => {}, [questsData]);
+  useEffect(() => {
+    // toggle effect
+    setTimeout(() => {
+      setShowToggles(true);
+    }, 300);
+  }, []);
 
   return (
     <div
@@ -414,6 +348,7 @@ const Quests = () => {
       </div>
       {/* Header */}
       <QuestHeader
+        quest={quest}
         activeMyth={activeMyth}
         todayQuest={todaysQuest}
         currQuest={currQuest}
@@ -434,127 +369,61 @@ const Quests = () => {
       />
 
       {/* Content */}
-      {/* <div className="flex justify-center items-center h-screen w-screen absolute mx-auto">
-        <div className={`card ${flipped ? "flipped" : ""}`}>
-          <div
-            onClick={(e) => {
-              setFlipped((prev) => !prev);
-            }}
-            className="card__face card__face--front bg-red-400 h-[10vh] w-[20vw] flex justify-center items-center"
-          ></div>
-          <div
-            onClick={(e) => {
-              setFlipped((prev) => !prev);
-            }}
-            className="card__face card__face--back bg-green-400 flex justify-center items-center"
-          ></div>
-        </div>
-      </div> */}
-      <div className="flex mt-7 justify-center items-center h-screen w-screen absolute mx-auto">
-        <div className={`flex items-center justify-center w-full h-full`}>
-          {currQuest < quests.length ? (
-            <QuestCard
-              quest={quest}
-              isGuideActive={enableGuide}
-              activeMyth={activeMyth}
-              completedQuests={completedQuests}
-              curr={currQuest}
-              showClaimEffect={showClaimEffect}
-              t={t}
-              handleClick={() => {
-                if (!enableGuide) {
-                  tele.HapticFeedback.notificationOccurred("success");
-                  setShowCard(
-                    <InfoCard
-                      t={t}
-                      isShared={quest?.isShared}
-                      quest={quest}
-                      handleClaimShareReward={() =>
-                        handleClaimShareReward(quest._id)
-                      }
-                      handleShowInfo={() => {
-                        setShowCard(null);
-                      }}
-                      activeMyth={activeMyth}
-                    />
-                  );
-                }
-              }}
-              ShareButton={
-                <ShareButton
-                  isShared={quest?.isShared}
-                  isInfo={true}
-                  handleClaimShareReward={() =>
-                    handleClaimShareReward(quest._id)
-                  }
-                  activeMyth={activeMyth}
-                  t={t}
-                />
-              }
-              InfoCard={
-                <InfoCard
-                  t={t}
-                  isShared={quest?.isShared}
-                  quest={quest}
-                  handleClaimShareReward={() =>
-                    handleClaimShareReward(quest._id)
-                  }
-                  handleShowInfo={() => {
-                    setShowCard(null);
-                  }}
-                  activeMyth={activeMyth}
-                />
-              }
-              Button={
-                quest.isCompleted || showComplete ? (
-                  <QuestButton
-                    handlePrev={handlePrev}
-                    handleNext={handleNext}
-                    message={"Complete"}
-                    isCompleted={quest?.isQuestClaimed}
-                    activeMyth={activeMyth}
-                    lastQuest={quests.length - 1}
-                    action={handleCompleteQuest}
-                    currQuest={currQuest}
-                    faith={mythData[activeMyth].faith}
-                    t={t}
-                  />
-                ) : (
-                  <QuestButton
-                    handlePrev={handlePrev}
-                    handleNext={handleNext}
-                    message={"claim"}
-                    isCompleted={quest?.isQuestClaimed}
-                    lastQuest={quests.length - 1}
-                    t={t}
-                    activeMyth={activeMyth}
-                    faith={mythData[activeMyth].faith}
-                    action={handleRedirect}
-                    currQuest={currQuest}
-                  />
-                )
-              }
-            />
-          ) : (
-            <div className="relative">
-              <div
-                handleClick={() => {
-                  setShowCard(
-                    <SecretCard
-                      t={t}
-                      isShared={secretQuests[0]?.isShared}
-                      quest={secretQuests[0]}
-                      handleClaimShareReward={() =>
-                        handleClaimShareReward(secretQuests[0]._id)
-                      }
-                      handleShowInfo={() => {
-                        setShowCard(null);
-                      }}
-                      activeMyth={activeMyth}
-                    />
-                  );
+      <div className="flex justify-center items-center h-screen w-screen absolute mx-auto">
+        {currQuest < quests.length ? (
+          <QuestCard
+            quest={quest}
+            isGuideActive={enableGuide}
+            activeMyth={activeMyth}
+            showClaimEffect={showClaimEffect}
+            t={t}
+            ShareButton={
+              <ShareButton
+                isShared={quest?.isShared}
+                isInfo={true}
+                handleClaim={handleClaimShareReward}
+                activeMyth={activeMyth}
+                link={"dhjh"}
+                t={t}
+              />
+            }
+            InfoCard={
+              <InfoCard
+                t={t}
+                isShared={quest?.isShared}
+                quest={quest}
+                handleClaimShareReward={() => handleClaimShareReward(quest._id)}
+                handleShowInfo={() => {
+                  setShowCard(null);
                 }}
-                className="h-full relative -mt-[66px]"
+                activeMyth={activeMyth}
+              />
+            }
+            Button={
+              <QuestButton
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+                isCompleted={quest?.isQuestClaimed}
+                activeMyth={activeMyth}
+                lastQuest={quests.length - 1}
+                action={handleButtonClick}
+                currQuest={currQuest}
+                faith={mythData[activeMyth].faith}
+                t={t}
+              />
+            }
+          />
+        ) : (
+          <div className="flex flex-col  mt-[12vh] gap-[28px] items-center justify-center w-full h-full">
+            <div
+              className={`card ${
+                flipped ? "flipped" : ""
+              } w-[70%] h-[55%] z-[99]`}
+            >
+              <div
+                className={`card__face card__face--front ${
+                  showClaimEffect && "scale-reward"
+                }  relative flex justify-center items-center`}
               >
                 <JigsawImage
                   handleClick={() => {}}
@@ -563,58 +432,88 @@ const Quests = () => {
                     gameData.mythologies[activeMyth].faith
                   )}
                 />
-                {gameData.mythologies[activeMyth].faith >= 12 && (
-                  <IconBtn
-                    isInfo={true}
-                    activeMyth={activeMyth}
-                    handleClick={() => {
-                      setShowCard(
-                        <SecretCard
-                          t={t}
-                          isShared={secretQuests[0]?.isShared}
-                          quest={secretQuests[0]}
-                          handleClaimShareReward={() =>
-                            handleClaimShareReward(secretQuests[0]._id)
-                          }
-                          handleShowInfo={() => {
-                            setShowCard(null);
-                          }}
-                          activeMyth={activeMyth}
-                        />
-                      );
-                    }}
-                    align={1}
-                  />
-                )}
+                <IconBtn
+                  isInfo={true}
+                  activeMyth={activeMyth}
+                  handleClick={() => {
+                    setShowCard(
+                      <SecretCard
+                        t={t}
+                        isShared={secretQuests[0]?.isShared}
+                        quest={secretQuests[0]}
+                        handleClaimShareReward={() =>
+                          handleClaimShareReward(secretQuests[0]._id)
+                        }
+                        handleShowInfo={() => {
+                          setShowCard(null);
+                        }}
+                        activeMyth={activeMyth}
+                      />
+                    );
+                  }}
+                  align={0}
+                />
               </div>
-              <JigsawButton
-                handleClick={() => {}}
-                activeMyth={activeMyth}
-                handleNext={handleNext}
-                handlePrev={handlePrev}
-                faith={gameData.mythologies[activeMyth].faith}
-                t={t}
-              />
+              <div className="card__face card__face--back flex justify-center items-center">
+                <SecretCard
+                  t={t}
+                  isShared={secretQuests[0]?.isShared}
+                  quest={secretQuests[0]}
+                  handleClaimShareReward={() =>
+                    handleClaimShareReward(secretQuests[0]._id)
+                  }
+                  handleShowInfo={() => {
+                    setShowCard(null);
+                  }}
+                  activeMyth={activeMyth}
+                />
+              </div>
             </div>
-          )}
-        </div>
+            <JigsawButton
+              handleClick={() => {}}
+              activeMyth={activeMyth}
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              faith={gameData.mythologies[activeMyth].faith}
+              t={t}
+            />
+          </div>
+        )}{" "}
+        {/* Flp trigger for Jigsaw */}
+        {currQuest === quests.length && (
+          <div
+            onClick={() => {
+              tele.HapticFeedback.notificationOccurred("success");
+              setFlipped((prev) => !prev);
+            }}
+            className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
+          >
+            <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
+          </div>
+        )}
       </div>
 
       {/* Toggles */}
-      <ToggleLeft
-        handleClick={() => {
-          setCurrQuest(0);
-          setActiveMyth((prev) => (prev - 1 + 4) % 4);
-        }}
-        activeMyth={activeMyth}
-      />
-      <ToggleRight
-        handleClick={() => {
-          setCurrQuest(0);
-          setActiveMyth((prev) => (prev + 1) % 4);
-        }}
-        activeMyth={activeMyth}
-      />
+      {showToggle && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setCurrQuest(0);
+              setActiveMyth((prev) => (prev - 1 + 4) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              setCurrQuest(0);
+              setActiveMyth((prev) => (prev + 1) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+        </>
+      )}
     </div>
   );
 };

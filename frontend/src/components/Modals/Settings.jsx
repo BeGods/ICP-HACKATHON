@@ -1,16 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
-import { ChevronRight } from "lucide-react";
+import { Globe, Volume2 } from "lucide-react";
 import { MyContext } from "../../context/context";
 import { country } from "../../utils/country";
 
 const tele = window.Telegram?.WebApp;
 
 const languages = [
-  { name: "Language", code: "" },
   { name: "English", code: "en" },
   { name: "हिन्दी", code: "hi" },
   { name: "Русский", code: "ru" },
@@ -21,71 +20,76 @@ const languages = [
 ];
 
 const SettingModal = ({ close }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { setSection } = useContext(MyContext);
-  const [lang, setLang] = useState(false);
+  const [countryCode, setCountryCode] = useState("NA");
+
+  useEffect(() => {
+    tele.CloudStorage.getItem("country_code", (err, item) => {
+      if (item) {
+        setCountryCode(item);
+      }
+    });
+  }, []);
+
   const handleLanuageChange = (e) => {
-    if (e.target.value == "") {
-      i18next.changeLanguage("en");
-    } else {
-      i18next.changeLanguage(e.target.value);
-      tele.CloudStorage.setItem("lang", e.target.value);
-    }
+    const langCode = e.target.value === "" ? "en" : e.target.value;
+    i18next.changeLanguage(langCode);
+    tele.CloudStorage.setItem("lang", langCode);
   };
 
-  const handleApply = () => {
-    close();
-  };
-
-  const handleEnableGuide = () => {
-    tele.HapticFeedback.notificationOccurred("success");
-
-    tele.CloudStorage.removeItem("g1");
-    tele.CloudStorage.removeItem("g2");
-    tele.CloudStorage.removeItem("g3");
-    tele.CloudStorage.removeItem("g4");
-    close();
-    setSection(0);
+  const handleSettingChange = (e) => {
+    const selectedCountry = e.target.value;
+    setCountryCode(selectedCountry);
+    tele.CloudStorage.setItem("country_code", selectedCountry);
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
-      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[14vh] card-shadow-white p-4">
+      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[28vh] card-shadow-white p-4">
         <IconBtn align={0} handleClick={close} activeMyth={4} />
-        <select
-          value={lang}
-          onChange={handleLanuageChange}
-          className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
-        >
-          {languages.map((language) => (
-            <option key={language.code} value={language.code}>
-              {language.name}
-            </option>
-          ))}
-        </select>
-        <select className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary">
-          {country.map((ctx) => (
-            <option key={ctx.code} value={ctx.code}>
-              {ctx.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex w-full">
+          <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
+            文A
+          </div>
+          <div className="w-full">
+            <select
+              value={i18n.language}
+              onChange={handleLanuageChange}
+              className="bg-black font-medium text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
+            >
+              {languages.map((language) => (
+                <option key={language.code} value={language.code}>
+                  {language.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="flex w-full">
+          <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
+            <Globe />
+          </div>
+          <div className="w-full">
+            <select
+              value={countryCode}
+              onChange={handleSettingChange}
+              className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
+            >
+              {country.map((ctx) => (
+                <option key={ctx.code} value={ctx.code}>
+                  {ctx.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
-          <div>🔈</div>
+          <div className="flex justify-start -ml-3">
+            <Volume2 />
+          </div>
           <ToggleSwitch />
-        </div>
-        <div
-          onClick={handleEnableGuide}
-          className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4"
-        >
-          <div> {t(`profile.guide`)}</div>
-          <ChevronRight />
-        </div>
-        <div
-          onClick={handleApply}
-          className="w-full bg-white text-black text-center text-xl rounded-md py-2 mt-6"
-        >
-          {t(`profile.apply`)}
         </div>
       </div>
     </div>
@@ -93,3 +97,24 @@ const SettingModal = ({ close }) => {
 };
 
 export default SettingModal;
+
+// const handleEnableGuide = () => {
+//   tele.HapticFeedback.notificationOccurred("success");
+
+//   tele.CloudStorage.removeItem("g1");
+//   tele.CloudStorage.removeItem("g2");
+//   tele.CloudStorage.removeItem("g3");
+//   tele.CloudStorage.removeItem("g4");
+//   close();
+//   setSection(0);
+// };
+
+{
+  /* <div
+          onClick={handleEnableGuide}
+          className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4"
+        >
+          <div> {t(`profile.guide`)}</div>
+          <ChevronRight />
+        </div> */
+}
