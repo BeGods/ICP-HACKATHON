@@ -261,24 +261,30 @@ const onClickRemoveOrder = async () =>{
 
   const [currentDropDownOption , updateDropDownOption] = useState(0);
 
-
+  const [selectedListType , updateSelectedListType] = useState(currentOption);
   const onOptionChange = async(updatedOption) => {
     updateCurrentOption(updatedOption)
     if(updatedOption !== currentOption){
       updateNoCardsStatus(false);
+      
       if(updatedOption === "mycollection"){
         setIsCardsLoading(true)
         await fetchCollections();
+        updateSelectedListType(updatedOption)
       }else if(updatedOption === "favorite"){
-        setIsCardsLoading(true)
-        await fetchFavoriteCards();
+        if(selectedListType !== "favorite"){
+          setIsCardsLoading(true)
+          await fetchFavoriteCards();
+          updateSelectedListType(updatedOption)
+        }
       }else if(updatedOption === "myorders"){
         await fetchOrderHistory();
       }
     }
+    console.log("selected list type",selectedListType)
 
   } 
-
+ console.log("selected list",selectedList)
   const fetchFavoriteCards = async() => {
     const result = await backendActor?.getFavorites(principal)
     console.log("resssssssult" , result);
@@ -287,6 +293,7 @@ const onClickRemoveOrder = async () =>{
       const favItems = result.ok;
 
       let favCardslist = [];
+      console.log("selected list",selectedList)
       favItems.map((eachFavToken)=>{
        for(let i=0;i<selectedList.length;i++){
         if(selectedList[i][0].tokenId === eachFavToken){
@@ -294,6 +301,15 @@ const onClickRemoveOrder = async () =>{
         }
        }
       })
+
+      // favItems.map((eachFavToken) => {
+      //   for (let i = 0; i < selectedList.length; i++) {
+      //     if (selectedList[i]?.tokenId === eachFavToken) {
+      //       favCardslist.push(selectedList[i]);
+      //     }
+      //   }
+      // });
+      
 
       console.log("favList",favCardslist)
 
