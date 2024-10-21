@@ -201,7 +201,7 @@ const BuyNft = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  });
+  },[]);
 
   const fetchCardDetails = async () => {
     console.log(collectionId, index);
@@ -290,10 +290,19 @@ const BuyNft = () => {
 
   useEffect(() => {
     fetchCollectionDetails();
+    
   }, []);
 
+  if(buyPopup){
+    document.body.style.overflow="hidden"
+  }else{
+    document.body.style.overflow = "auto"
+  }
+
+ 
+
   return (
-    <div className={`font-caslon ${buyPopup && "fixed"}`}>
+    <div className={`font-caslon}`}>
       <div
         style={{
           backgroundImage: `url('/Hero/smoke 1.png')`,
@@ -651,15 +660,11 @@ const BuyNft = () => {
           <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
             <div className="flex items-center justify-center h-screen">
               <div
-                className={`w-[90vw]  md:w-[60vw]   lg:w-[55vw] xl:w-[30vw] min-h-[28vh] md:min-h-[30vh] ${
-                  currentBuyingStatus === buyingStatus.success
-                    ? "lg:min-h-[35vh]"
-                    : "lg:min-h-[15vh] xl:min-h-[30vh]"
-                } bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg`}
+                className={`w-[90vw]  md:w-[60vw]   lg:w-[55vw] xl:w-[30vw] ] bg-[#111] text-white font-caslon p-5 pb-10 rounded-md  drop-shadow-lg`}
               >
-                <div className="relative flex items-center justify-end">
+                <div className=" flex items-center justify-end">
                   <button
-                    className="text-[#ffffff] absolute bottom-1 top-1 z-10"
+                    className="text-[#ffffff]   z-10"
                     onClick={() => toggleBuyPopup()}
                   >
                     <RxCross2 size={20} />
@@ -667,7 +672,7 @@ const BuyNft = () => {
                 </div>
                   {
                     (showError.show) && (
-                    <div className="h-[80%] flex flex-col items-center justify-center mt-10">
+                    <div className=" flex flex-col items-center justify-center">
                         <h1 className="text-3xl text-red-500">Error !</h1>
                         <p className="my-2 text-xl">{showError.msg}</p>
                     </div>
@@ -676,7 +681,7 @@ const BuyNft = () => {
                
 
                 {!showError.show && currentBuyingStatus === buyingStatus.payment && (
-                  <div className="min-h-[80%] flex flex-col items-center justify-center mt-10">
+                  <div className="flex flex-col items-center justify-center">
                     <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
                         <div className="relative flex items-center justify-center ">
@@ -800,7 +805,7 @@ const BuyNft = () => {
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[50vh] md:h-[45vh] w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className=" w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 pb-8 rounded-md  drop-shadow-lg "
             >
               <div className=" flex items-center justify-end">
                 <button

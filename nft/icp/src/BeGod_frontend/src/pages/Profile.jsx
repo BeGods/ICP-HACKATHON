@@ -742,9 +742,15 @@ const onChangeFilterOption = (eachCollection) => {
     setIsExpanded(!isExpanded); // Toggle the expanded state
   };
 
+  if(isDisplayEditProfile || placeOrderPopup){
+    document.body.style.overflow = "hidden"
+  }else{
+    document.body.style.overflow = "auto"
+  }
+
 
   return (
-    <div className='font-caslon' onClick={()=>updateDropDownStatus(false)}>
+    <div className={`font-caslon w-full`} onClick={()=>updateDropDownStatus(false)}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
@@ -784,10 +790,10 @@ const onChangeFilterOption = (eachCollection) => {
                 {!isExpanded && userDetails.email.length > 34 ? (
                   <>
                     <span className='flex items-center'>
-                      {userDetails.email.slice(0, 32)}...
+                      {userDetails.email.slice(0, 28)}...
                       <MdExpandMore
                         onClick={handleToggle}
-                        style={{ cursor: "pointer", display: "inline" }}
+                        style={{ cursor: "pointer" }}
                       />
                     </span>
                   </>
@@ -944,7 +950,7 @@ const onChangeFilterOption = (eachCollection) => {
             {/* Grid view for larger screens */}
            {currentOption !== "myorders" && (
              (noCards ? (
-              <div className='hidden w-[90%] h-[70vh] sm:flex justify-center items-center '>
+              <div className='hidden w-[90%] h-[80vh] sm:flex justify-center items-center '>
                 <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
               </div>
           ):(
@@ -993,7 +999,7 @@ const onChangeFilterOption = (eachCollection) => {
           ))
            )}
            {currentOption === "myorders" && (
-            <div className='w-[97%] min-h-[70vh] sm:my-10  mb-8 '>
+            <div className='w-[97%] min-h-[80vh] sm:my-10  mb-8 '>
             <ul className='w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-md lg:text-xl bg-[#FCD37B1A] m-0  grid grid-cols-3  items-center mb-[21px]'>
                   <li className='flex justify-center items-center'>Order Id</li>
                   <li className='flex justify-center items-center'>Collection</li>
@@ -1031,18 +1037,10 @@ const onChangeFilterOption = (eachCollection) => {
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[40vh] w-[90vw] md:h-[45vh]  lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className="w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 md:p-8 rounded-md overflow-y-auto drop-shadow-lg "
             >
-              {/* <div className="relative flex items-center justify-end">
-                <button
-                  className="text-[#ffffff] absolute bottom-1 top-1 z-10"
-                  onClick={() => updateEditProfileStatus(false)}
-                >
-                  <RxCross2 size={20} />
-                </button>
-              </div> */}
                 <div>
-                  <div className='mt-10 mb-5'>
+                  <div className=' mb-5'>
                 <div className='flex flex-col mb-3'>
                   <label className='lg:text-lg'>Name</label>
                   <input onChange={(e)=>updateUserName(e.target.value)} type='text' placeholder='Enter your name' className='pl-2 bg-transparent border border-white h-[30px] text-[13px] rounded-sm ' value={userName}/>
@@ -1088,8 +1086,8 @@ const onChangeFilterOption = (eachCollection) => {
           <div className="flex items-center justify-center h-screen">
           <div className={`bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
-              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] xl:h-[73vh] xl:w-[60vw] "
-              : currentOrderingStatus === buyingStatus.showCollection? "h-[50vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[60vw] lg:h-[45vh] xl:h-[60vh] xl:w-[40vw] "
+              ? "w-[95vw] md:w-[95vw]  lg:w-[80vw]  xl:w-[60vw] "
+              : currentOrderingStatus === buyingStatus.showCollection? " w-[95vw] md:w-[50vw]  lg:w-[60vw] xl:w-[40vw] "
               : "h-[30vh] w-[60vw] md:w-[40vw] md:h-[25vh] lg:w-[30vw] lg:h-[20vh] xl:h-[35vh] xl:w-[26vw]"
           }`}>
              {!placeOrderLoading && (
@@ -1247,8 +1245,8 @@ const onChangeFilterOption = (eachCollection) => {
                     </select>
                   </div>
                 </div>
-                <div className="relative flex items-center mb-5">
-                  <div className="flex flex-col w-[35%] mr-9">
+                <div className="relative flex items-center justify-between mb-5">
+                  <div className="flex flex-col w-[35%]">
                     <label className="text-sm font-extralight">
                       Pincode
                       <span className="absolute text-red-700 -top-1">*</span>
@@ -1260,9 +1258,9 @@ const onChangeFilterOption = (eachCollection) => {
                       onChange={(e)=>updatePinCode(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-col w-[35%]  ml-2">
+                  <div className="flex flex-col w-[35%] ">
                     <label className="text-sm font-extralight">
-                      Nearby LandMark(Optional)
+                      Nearby Landmark
                     </label>
                     <input
                       type="text" 
@@ -1270,6 +1268,9 @@ const onChangeFilterOption = (eachCollection) => {
                       value={landMark}
                       onChange={(e)=>updateLandMark(e.target.value)}
                     />
+                  </div>
+                  <div className="flex flex-col w-[20%] relative">
+                   
                   </div>
                 </div>
                 <div className="">
