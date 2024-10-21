@@ -44,6 +44,7 @@
     "mongoose": "^8.4.5",
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
+    "publitio_js_sdk": "^1.1.5",
     "xss-clean": "^0.1.4"
   }
 }

@@ -35,7 +35,7 @@ router.get(
 );
 
 // bonus
-router.get("/bonus/daily", authMiddleware, claimDailyBonus);
+router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);
 router.get("/bonus/dail", authMiddleware, validDailyHackBonus, claimDailyBonus);
 router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 
@@ -65,6 +65,8 @@ router.get(
   "/f115d48c-4929-4190-b326-e50f228500c7/update/quest",
   deactivateQuest
 );
+
+router.get("/store/test");
 
 // announcements
 // router.post("/announcements", authMiddleware, updateAnnouncement);

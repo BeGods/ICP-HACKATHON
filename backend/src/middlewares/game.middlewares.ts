@@ -173,14 +173,20 @@ export const validateOrbsConversion = async (req, res, next) => {
     const completedQuests = quests.filter(
       (item) => item.isQuestClaimed === true && !item.isKeyClaimed
     );
-    const towerKeys = completedQuests.map((item) => {
-      const indexes = Object.keys(item.requiredOrbs)
-        .map((myth) => mythOrder.indexOf(myth))
-        .join("");
 
-      return indexes;
-    });
-    const towerId = completedQuests.map((item) => item._id);
+    let towerKeys = null;
+
+    if (towerKeys) {
+      towerKeys = completedQuests?.map((item) => {
+        const indexes = Object.keys(item.requiredOrbs)
+          .map((myth) => mythOrder.indexOf(myth))
+          .join("");
+
+        return indexes;
+      });
+    }
+
+    const towerId = completedQuests?.map((item) => item._id);
 
     const requestedMyth = data[0].mythologies.find(
       (item) => item.name === mythologyName
@@ -192,8 +198,8 @@ export const validateOrbsConversion = async (req, res, next) => {
     }
 
     // check if exists in claimedQuest
-    if (key && towerKeys.includes(key)) {
-      req.isValidKey = towerId[towerKeys.indexOf(key)];
+    if (towerKeys && key && towerKeys?.includes(key)) {
+      req.isValidKey = towerId[towerKeys?.indexOf(key)];
     } else {
       req.isValidKey = null;
     }
@@ -202,6 +208,8 @@ export const validateOrbsConversion = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.log(error);
+
     res.status(400).json({ message: error.message });
   }
 };
