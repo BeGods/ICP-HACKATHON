@@ -52,11 +52,11 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
             }}
             className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary  bg-glass-black z-50 text-white  rounded-primary`}
           >
-            <div className="flex justify-center items-center w-[30%]  h-full  border-r border-borderGray">
+            <div className="flex justify-center items-center w-[30%]  h-full">
               <h1
                 className={`text-xl text-${mythSections[activeMyth]}-text text-button-primary rounded-full  w-full flex justify-center items-center`}
               >
-                L
+                Lvl{" "}
                 {activeCard === "automata"
                   ? mythData.automataPaylvl + 1
                   : activeCard === "minion"
@@ -66,16 +66,12 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
                   : 1}
               </h1>
             </div>
-            <div className="text-button-primary uppercase">
-              {activeCard == "burst" ? (
-                <div className="text-[40px] font-symbols z-10 uppercase">V</div>
-              ) : (
-                <>
-                  <Handshake size={"10vw"} />
-                </>
-              )}
+            <div
+              className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
+            >
+              <div>V</div>
             </div>
-            <div className="flex relative justify-center items-center w-[30%] h-full pr-1 border-l border-borderGray">
+            <div className="flex relative justify-center items-center w-[30%] h-full pr-1">
               <img
                 src={`/assets/uxui/240px-orb.multicolor.png`}
                 alt="orb"

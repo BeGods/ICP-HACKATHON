@@ -14,23 +14,23 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
         }}
         className="h-full z-20"
       >
-        <Symbol myth={mythSections[activeMyth]} isCard={false} />
+        <Symbol myth={mythSections[activeMyth]} isCard={2} />
       </div>
     </div>
   );
 };
 const BottomChild = ({ activeMyth, gameData }) => {
   return (
-    <div className="flex justify-center -mt-[4vh]">
+    <div className="flex justify-center -mt-[4vh] px-7">
       <div
-        className={`flex text-num pl-6 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-button-primary bg-black z-10 rounded-primary transform skew-x-12`}
+        className={`flex text-num pl-3 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
-        L{gameData.automatalvl + 1}
+        Lvl {gameData.automatalvl + 1}
       </div>
       <div
-        className={`flex text-num pr-6 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-button-primary bg-black z-10 rounded-primary transform -skew-x-12`}
+        className={`flex text-num pr-3 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
-        L{gameData.shardslvl}
+        Lvl {gameData.shardslvl}
       </div>
     </div>
   );
@@ -40,12 +40,12 @@ const TopChild = ({ activeMyth }) => {
   return (
     <div className="absolute flex w-full justify-between top-0 z-50 text-white">
       <div
-        className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
+        className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
         n
       </div>
       <div
-        className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
+        className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
         m
       </div>

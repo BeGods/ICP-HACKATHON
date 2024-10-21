@@ -13,13 +13,16 @@
     "celtic": "Celtic",
     "egyptian": "Egyptian",
     "greek": "Greek",
-    "norse": "Norse"
+    "norse": "Norse",
+    "dark": "Dark"
   },
   "keywords": {
+    "orb": "Orb",
     "orbs": "ORB(S)",
     "conversion": "Conversion",
     "discover": "Discover",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "Loading"
   },
   "buttons": {
     "buy": "Buy",
@@ -31,13 +34,16 @@
   },
   "tower": {
     "tune": "Do you know the ♪ tune ♪?",
-    "play": "Play in the right order"
+    "play": "Play it the right order!"
   },
   "sections": {
-    "forges": "Forges",
-    "boosters": "Booster",
+    "forges": "Forge",
+    "boosters": "Boosters",
     "quests": "Quests",
-    "leaderboard": "Leaderboard"
+    "leaderboard": "Leaderboard",
+    "tower": "Tower",
+    "brand": "Brand",
+    "profile": "Profile"
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
@@ -59,15 +65,19 @@
     "team": "Team",
     "guide": "Guide",
     "causes": "Causes",
-    "partner": "Partners",
+    "partners": "Partners",
+    "partner": "Partner",
     "charity": "Charity",
-    "rewards": "Rewards"
+    "rewards": "Rewards",
+    "task": "Task"
   },
   "note": {
-    "text": "Leader board update in"
+    "text": "Leader board update in",
+    "tower": "Tap ORBS to convert", 
+    "bonus": "To see active promotion"
   },
   "bonus": {
-    "join": "JOINING BONUS",
+    "join": "WELCOME BONUS",
     "box": "BOX",
     "youwon": "YOU WON!",
     "win": "Win"
@@ -83,7 +93,8 @@
     "forge": { "title": "TAP FORGES", "desc": "TO EARN ORB(S)" },
     "quests": { "title": "CLAIM QUESTS", "desc": "COMPLETE TO EARN $FAITH" },
     "boosters": { "title": "ACQUIRE BOOSTERS", "desc": "FOR GAME REWARDS" },
-    "profile": { "title": "SELECT PARTNERS", "desc": "TO CLAIM PRIZES" }
+    "profile": { "title": "CHOOSE YOUR COUNTRY", "desc": "TO UNLOCK GIFTS" },
+    "tower" : { "title": "CHOOSE ORB & CONVERT", "desc": "TO AFFORD BOOSTER" }
   },
   "quests": {
     "celtic": {

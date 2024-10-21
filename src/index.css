@@ -98,15 +98,27 @@
     saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
 
   /* Filters for Orbs */
-  --filter-celtic-orb: brightness(100%) invert(5%) sepia(12%) saturate(1237%)
+  --filter-celtic-orb: brightness(90%) invert(3%) sepia(27%) saturate(1237%)
     hue-rotate(48deg) brightness(90%) contrast(104%);
-  --filter-egyptian-orb: brightness(150%) invert(20%) sepia(20%) saturate(2000%)
-    hue-rotate(16deg) contrast(104%);
-  --filter-greek-orb: brightness(100%) invert(5%) sepia(13%) saturate(1537%)
-    hue-rotate(-65deg) brightness(90%) contrast(104%);
-  --filter-norse-orb: brightness(100%) invert(10%) sepia(15%) saturate(1237%)
+  --filter-egyptian-orb: brightness(140%) invert(5%) sepia(36%) saturate(1000%)
+    hue-rotate(16deg)  contrast(104%);
+  --filter-greek-orb: brightness(80%) invert(3%) sepia(27) saturate(360%)
+    hue-rotate(-50deg) brightness(90%) contrast(104%);
+  --filter-norse-orb: brightness(90%) invert(3%) sepia(27%) saturate(1237%)
     hue-rotate(171deg) brightness(90%) contrast(104%);
-  --filter-white-orb: brightness(100%) invert(5%) saturate(137%)
+  --filter-white-orb: brightness(90%) invert(5%) saturate(137%)
+    brightness(220%) contrast(104%);
+
+  /* Filters for fx */
+    --filter-celtic-fx: brightness(100%) invert(5%) sepia(36%) saturate(1237%)
+    hue-rotate(48deg) brightness(90%) contrast(104%);
+  --filter-egyptian-fx: brightness(150%) invert(20%) sepia(36%) saturate(2000%)
+    hue-rotate(16deg) contrast(104%);
+  --filter-greek-fx: brightness(100%) invert(5%) sepia(36%) saturate(1537%)
+    hue-rotate(-65deg) brightness(90%) contrast(104%);
+  --filter-norse-fx: brightness(100%) invert(10%) sepia(36%) saturate(1237%)
+    hue-rotate(171deg) brightness(90%) contrast(104%);
+  --filter-white-fx: brightness(100%) invert(5%) saturate(137%)
     brightness(220%) contrast(104%);
 
   /* Filters for Paper */
@@ -203,13 +215,13 @@ body {
 }
 
 /* Multicolor Gradient */
-/* .gradient-multi {
+.gradient-multi {
   background: var(--multi-linear-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
-} */
+}
 
 /* .fof-text-shadow {
   -webkit-text-stroke: 1px black; 

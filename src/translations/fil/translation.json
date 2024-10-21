@@ -7,13 +7,16 @@
     "celtic": "Keltiko",
     "egyptian": "Ehipsiyo",
     "greek": "Griyego",
-    "norse": "Nórdikó"
+    "norse": "Nórdikó",
+    "dark": "Madilim"
   },
   "keywords": {
+    "orb": "Limunmon",
     "orbs": "Bato",
     "conversion": "Pagko-convert",
     "discover": "Tuklasin",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "Naglo-load..."
   },
   "buttons": {
     "hire": "Kumuhá",
@@ -27,7 +30,10 @@
     "forges": "Pandayan",
     "boosters": "Mga Tagapagpaangat",
     "quests": "Misyon",
-    "leaderboard": "Tablá"
+    "leaderboard": "Tablá",
+    "tower": "Tore",
+    "brand": "Tatak",
+    "profile": "Profile"
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
@@ -49,9 +55,11 @@
     "team": "Koponan",
     "guide": "GABAY",
     "causes": "Mga dahilan",
+    "partners": "Mga kasosyo",
     "partner": "Mga kasosyo",
     "charity": "Kawanggawa",
-    "rewards": "MGA GANTIMPALA"
+    "rewards": "MGA GANTIMPALA",
+    "task": "Mga Gawain"
   },
   "elements": {
     "earth": "Lupa",
@@ -61,23 +69,22 @@
     "aether": "Ether"
   },
   "note": {
-    "text": "(Ang mga ranggo ay ina-update bawat oras)"
+    "text": "Pag-update ng leaderboard sa",
+    "tower": "Tap ang ORBS para i-convert",
+    "bonus": "Upang makita ang mga aktibong promosyon"
   },
   "tower": {
     "tune": "Alam mo ba ang ♪ himig ♪?",
-    "play": "I-play ito sa tamang pagkakasunod-sunod!"
+    "play": "Tugtugin ito sa tamang pagkakasunod-sunod!"
   },
   "bonus": {
-    "join": "BONUS NG PAGSALUBONG",
+    "join": "SUMALI BONUS",
     "box": "KAHON",
     "youwon": "NANALO KA!",
     "win": "Manalo"
   },
   "tutorial": {
-    "forge": {
-      "title": "TAPAIN ANG MGA PANDAY",
-      "desc": "PARA KUMITA NG ORB(S)"
-    },
+    "forge": { "title": "TAPAIN ANG MGA PANDAY", "desc": "PARA KUMITA NG ORB(S)" },
     "quests": {
       "title": "KUMUHA NG MGA MISYON",
       "desc": "KUMPLETUHIN PARA KUMITA NG $FAITH"
@@ -86,10 +93,8 @@
       "title": "KUMUHA NG BOOSTERS",
       "desc": "PARA SA MGA GANTIMPALA NG LARO"
     },
-    "profile": {
-      "title": "PUMILI NG MGA KASARTENG",
-      "desc": "PARA KUMUHA NG MGA PREMYO"
-    }
+    "profile": { "title": "PUMILI NG IYONG BANSA", "desc": "upang i-unlock ang mga regalo" },
+    "tower" : { "title": "PUMILI NG ORB AT I-CONVERT", "desc": "PARA MAKAHANAP NG BOOSTER" }
   },
   "quests": {
     "celtic": {

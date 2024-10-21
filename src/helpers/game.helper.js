@@ -23,16 +23,3 @@ export const handleGeneratePopTime = (counter) => {
   const randomTime = downTime + randomOffset;
   return randomTime;
 };
-
-export const formatRankOrbs = (num) => {
-  if (num < 1000) {
-    return num.toString();
-  }
-
-  const numStr = num.toString();
-
-  const thousands = numStr.slice(0, -3); // before the last three digits
-  const remainder = numStr.slice(-3).replace(/^0+/, ""); // last three digits
-
-  return `${thousands},${remainder}`;
-};

@@ -1,53 +1,65 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-import { elementNames, mythSections, mythologies } from "../../utils/constants";
+import {
+  elementNames,
+  elements,
+  mythSections,
+  mythologies,
+} from "../../utils/constants";
+import { useTranslation } from "react-i18next";
 
-const sectionNames = {
-  0: "Forge",
-  1: "Quests",
-  2: "Boosters",
-  3: "Profile",
-  4: "Tower",
-  5: "Partners",
-  6: "Rewards",
-};
-
-const Header = ({ TopChild, CenterChild, BottomChild }) => {
+const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
   const { activeMyth, section } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
+  const { t } = useTranslation();
+
+  const sectionNames = {
+    0: [t("sections.forges"), t(`elements.${elements[activeMyth]}`)],
+    1: [t("sections.quests"), t(`mythologies.${mythSections[activeMyth]}`)],
+    2: [t("sections.boosters"), t(`mythologies.${mythSections[activeMyth]}`)],
+    3: [t("sections.profile"), t("profile.task")],
+    4: [t("sections.tower"), t("mythologies.dark")],
+    5: [t("profile.partners"), t("profile.charity")],
+    6: [t("profile.partner"), , RedeemHead],
+  };
 
   useEffect(() => {
-    if (section === 1 || section === 2 || section === 4 || section == 0) {
-      const interval = setInterval(() => {
-        setChangeText((prevText) => !prevText);
-      }, 1500);
-      return () => clearInterval(interval);
-    }
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className={`relative`}>
-      {changeText ? (
-        <div
-          className={`text-head -mt-2 mx-auto w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
-        >
-          {sectionNames[section]}
-        </div>
-      ) : (
-        <div
-          className={`text-head -mt-2 mx-auto w-full text-center top-0 absolute z-30 text-${
-            section === 4 ? "black" : mythSections[activeMyth]
-          }-text ${
-            section === 4 ? "text-white-lg-contour" : "text-black-lg-contour"
-          } uppercase`}
-        >
-          {section === 4
-            ? "DARK"
-            : section === 0
-            ? elementNames[activeMyth]
-            : mythologies[activeMyth]}
-        </div>
-      )}
+    <div className="relative">
+      <div className={` ${section === 0 && "hidden"}`}>
+        {changeText ? (
+          <div
+            className={`text-head -mt-1 mx-auto w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
+          >
+            {sectionNames[section][0]}
+          </div>
+        ) : (
+          <div
+            className={`text-head -mt-1 mx-auto w-full text-center top-0 absolute z-30 uppercase
+    ${section === 4 ? "text-black text-white-lg-contour" : ""}
+    ${
+      section === 0 || section === 1 || section === 2
+        ? `text-${mythSections[activeMyth]}-text text-black-lg-contour`
+        : ""
+    }
+    ${
+      section !== 4 && section !== 0 && section !== 1 && section !== 2
+        ? "text-white text-black-lg-contour"
+        : ""
+    }
+  `}
+          >
+            {sectionNames[section][1]}
+          </div>
+        )}
+      </div>
+
       <div className="relative flex justify-center w-full h-auto">
         <img
           src="/assets/uxui/1280px-fof.footer.png"

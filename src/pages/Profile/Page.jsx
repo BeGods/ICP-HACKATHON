@@ -1,12 +1,15 @@
-import { useTonAddress, useTonConnectModal } from "@tonconnect/ui-react";
-import { Settings } from "lucide-react";
+import {
+  useTonAddress,
+  useTonConnectModal,
+  useTonConnectUI,
+} from "@tonconnect/ui-react";
+import { Settings, Wallet } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
 import SettingModal from "../../components/Modals/Settings";
 import { showToast } from "../../components/Toast/Toast";
 import MilestoneCard from "../../components/Cards/Reward/OrbRewardCrd";
-import { connectTonWallet } from "../../utils/api";
 import { ProfileGuide } from "../../components/Common/Tutorials";
 import { useProfileGuide } from "../../hooks/Tutorial";
 import ProfileHeader from "./Header";
@@ -15,22 +18,23 @@ import {
   ToggleRight,
   ToggleLeft,
 } from "../../components/Common/SectionToggles";
+import { connectTonWallet, disconnectTonWallet } from "../../utils/api";
+import WalletModal from "../../components/Modals/WalletModal";
 
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
   const { t } = useTranslation();
-  const { userData, socialQuestData, authToken, setShowCard } =
+  const { state, open } = useTonConnectModal();
+  const [tonConnectUI] = useTonConnectUI();
+  const userFriendlyAddress = useTonAddress();
+  const { userData, setUserData, socialQuestData, setShowCard, authToken } =
     useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
-  const userFriendlyAddress = useTonAddress();
-  const [enableGuide, setEnableGuide] = useProfileGuide("tut4");
-  const { state } = useTonConnectModal();
+  const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
   const [currState, setCurrState] = useState(0);
   const totalSections = Math.ceil(socialQuestData.length / 3);
-  const quests = socialQuestData.sort((a, b) => a.isCompleted - b.isCompleted);
-
-  console.log(quests);
+  const [showToggles, setShowToggles] = useState(false);
 
   const handleCopyLink = async () => {
     tele.HapticFeedback.notificationOccurred("success");
@@ -44,7 +48,11 @@ const Profile = (props) => {
   const handleConnectTon = async () => {
     try {
       await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
-      localStorage.setItem("tonConnected", "true");
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: userFriendlyAddress,
+      }));
+
       showToast("ton_connect_success");
     } catch (error) {
       const errorMessage =
@@ -52,32 +60,69 @@ const Profile = (props) => {
         error.response.data.message ||
         error.message ||
         "An unexpected error occurred";
+
+      console.log(errorMessage);
+      showToast("ton_connect_error");
+    }
+  };
+
+  const handleDisconnectTon = async () => {
+    try {
+      await disconnectTonWallet(authToken);
+      tonConnectUI.disconnect();
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: null,
+      }));
+      showToast("ton_connect_success");
+    } catch (error) {
+      console.log(error);
+
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+
       console.log(errorMessage);
       showToast("ton_connect_error");
     }
   };
 
   useEffect(() => {
-    if (
-      state.closeReason == "wallet-selected" &&
-      state.status == "closed" &&
-      !localStorage.getItem("tonConnected")
-    ) {
-      handleConnectTon();
-    }
+    setTimeout(() => {
+      if (
+        state.closeReason === "wallet-selected" &&
+        state.status === "closed" &&
+        (userData.tonAddress === null || !userData.tonAddress)
+      ) {
+        handleConnectTon();
+      }
+    });
   }, [state]);
 
   useEffect(() => {
-    if (enableGuide) {
-      setShowCard(
-        <ProfileGuide
-          handleClick={() => {
-            setShowCard(null);
-          }}
-        />
-      );
-    }
+    setShowCard(
+      <ProfileGuide
+        currQuest={socialQuestData[0]}
+        handleClick={() => {
+          setShowCard(
+            <SettingModal
+              close={() => {
+                setShowCard(null);
+              }}
+            />
+          );
+        }}
+      />
+    );
   }, [enableGuide]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowToggles(true);
+    }, 300);
+  }, []);
 
   return (
     <div
@@ -118,7 +163,31 @@ const Profile = (props) => {
         handleClick={handleCopyLink}
       />
       <div className="flex relative flex-grow justify-center items-start top-0">
-        <div className={`flex w-full justify-end top-0 `}>
+        <div className={`flex relative w-full justify-end top-0 `}>
+          <div
+            onClick={() =>
+              userData.tonAddress
+                ? setShowCard(
+                    <WalletModal
+                      disconnect={handleDisconnectTon}
+                      userData={userData}
+                      close={() => {
+                        setShowCard(null);
+                      }}
+                    />
+                  )
+                : open()
+            }
+            className="flex justify-center items-center bg-black h-[60px] w-[60px] ml-[35px] z-50 rounded-full mt-2"
+          >
+            <Wallet
+              color={userData.tonAddress ? "white" : "gray"}
+              size={"35px"}
+            />
+          </div>
+          <div className="flex flex-grow text-primary text-black-lg-contour text-gold justify-center items-end uppercase">
+            {userData.telegramUsername}
+          </div>
           <div
             onClick={() => {
               setShowCard(
@@ -136,15 +205,27 @@ const Profile = (props) => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-start items-center absolute h-[70%] w-full bottom-0 px-2.5">
-        <div className="flex min-h-[60%] w-[75%] flex-col gap-[15px]">
+      <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
+        <div className="flex w-[75%] min-h-[40vh] flex-col gap-y-[15px]">
           {socialQuestData
-            .sort((a, b) => b.isQuestClaimed - a.isQuestClaimed)
+            .sort((a, b) => a.isCompleted - b.isCompleted)
             .slice(currState, currState + 3)
             .map((quest, index) => {
               return (
                 <div key={index}>
                   <TaskItem
+                    showWallet={() => {
+                      open();
+                    }}
+                    showSetting={() => {
+                      setShowCard(
+                        <SettingModal
+                          close={() => {
+                            setShowCard(null);
+                          }}
+                        />
+                      );
+                    }}
                     quest={quest}
                     claimCard={() => {
                       setShowCard(
@@ -170,7 +251,7 @@ const Profile = (props) => {
         </div>
       </div>
 
-      <div className="flex absolute bottom-[15%] gap-3 justify-center items-center w-full">
+      <div className="flex absolute bottom-[15%] pb-6 gap-3 justify-center items-center w-full">
         {Array.from({ length: totalSections }, (_, index) => (
           <div
             onClick={() => {
@@ -185,24 +266,30 @@ const Profile = (props) => {
       </div>
 
       {/* Toggles */}
-      <ToggleLeft
-        handleClick={() => {
-          setCurrState((prev) => {
-            const newState = prev - 3;
-            return newState < 0 ? (totalSections - 1) * 3 : newState;
-          });
-        }}
-        activeMyth={4}
-      />
-      <ToggleRight
-        handleClick={() => {
-          setCurrState((prev) => {
-            const newState = prev + 3;
-            return newState >= socialQuestData.length ? 0 : newState;
-          });
-        }}
-        activeMyth={4}
-      />
+      {showToggles && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setCurrState((prev) => {
+                const newState = prev - 3;
+                return newState < 0 ? (totalSections - 1) * 3 : newState;
+              });
+            }}
+            activeMyth={4}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              setCurrState((prev) => {
+                const newState = prev + 3;
+                return newState >= socialQuestData.length ? 0 : newState;
+              });
+            }}
+            activeMyth={4}
+          />
+        </>
+      )}
     </div>
   );
 };

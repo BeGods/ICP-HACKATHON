@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { MyContext } from "../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 export const useForgeGuide = (key) => {
   const [enableGuide, setEnableGuide] = useState(false);
+  const { setShowCard } = useContext(MyContext);
 
   useEffect(() => {
     tele.CloudStorage.getItem(key, (err, item) => {
@@ -11,6 +13,7 @@ export const useForgeGuide = (key) => {
         setEnableGuide(true);
         const timeoutId = setTimeout(() => {
           setEnableGuide(false);
+          setShowCard(null);
           tele.CloudStorage.setItem(key, 1);
         }, 4000);
 
@@ -79,6 +82,28 @@ export const useProfileGuide = (key) => {
         setTimeout(() => {
           setEnableGuide(false);
           tele.CloudStorage.setItem(key, 4);
+        }, 4000);
+      }
+    });
+  }, []);
+
+  return [enableGuide, setEnableGuide];
+};
+
+export const useTowerGuide = (key) => {
+  const [enableGuide, setEnableGuide] = useState(false);
+  const { setShowCard } = useContext(MyContext);
+
+  useEffect(() => {
+    tele.CloudStorage.getItem(key, (err, item) => {
+      if (!item) {
+        console.log("jkdf");
+
+        setEnableGuide(true);
+        setTimeout(() => {
+          setEnableGuide(false);
+          setShowCard(null);
+          tele.CloudStorage.setItem(key, 5);
         }, 4000);
       }
     });

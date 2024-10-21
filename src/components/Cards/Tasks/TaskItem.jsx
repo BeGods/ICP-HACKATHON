@@ -6,10 +6,15 @@ import { claimSocialTask } from "../../../utils/api";
 
 const tele = window.Telegram?.WebApp;
 
-const TaskItem = ({ quest }) => {
+const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const { authToken, socialQuestData, setSocialQuestData, setGameData } =
-    useContext(MyContext);
+  const {
+    gameData,
+    authToken,
+    socialQuestData,
+    setSocialQuestData,
+    setGameData,
+  } = useContext(MyContext);
   const [claim, setClaim] = useState(false);
   const disableClick = useRef(false);
 
@@ -49,8 +54,25 @@ const TaskItem = ({ quest }) => {
         tele.HapticFeedback.notificationOccurred("success");
 
         if (!quest.isCompleted && claim === false) {
-          window.open(quest?.link, "_blank");
-          setClaim(true);
+          if (quest._id == "6716097630689b65b6b384ef") {
+            tele.CloudStorage.getItem("country_code", (err, item) => {
+              if (!item) {
+                showSetting();
+              } else {
+                setClaim(true);
+              }
+            });
+          } else if (quest._id == "67149c7623f2cb422578ae3e") {
+            if (userData.tonAddress) {
+              setClaim(true);
+            } else {
+              showWallet();
+            }
+          } else {
+            setClaim(true);
+
+            window.open(quest?.link, "_blank");
+          }
         } else if (!quest.isCompleted && claim === true) {
           handleClaimTask();
         }
@@ -94,13 +116,17 @@ ${
       </div>
       <div className="flex justify-center items-center w-[8%] ">
         {quest.isCompleted ? (
-          <Check color="white" />
+          <div className="flex justify-center items-center h-[30px] w-[30px] p-1 bg-white rounded-full">
+            <Check strokeWidth={3} color="black" />
+          </div>
         ) : (
           <>
             {!claim ? (
               <ChevronRight className="absolute" size={"30px"} color="white" />
             ) : (
-              <Download className="absolute" size={"30px"} color="white" />
+              <div className="flex justify-center items-center h-[30px] w-[30px] p-1 border-2 rounded-full">
+                <Check strokeWidth={3} color="white" />
+              </div>
             )}
           </>
         )}

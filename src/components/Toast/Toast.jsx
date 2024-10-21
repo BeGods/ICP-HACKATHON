@@ -276,8 +276,8 @@ export const showToast = (type) => {
     case "convert_key_success":
       toast.error(
         <ToastMesg
-          title={t("toasts.Conversion_Multiplier.error.title")}
-          desc={t("toasts.Conversion_Multiplier.error.desc")}
+          title={t("toasts.Conversion_Multiplier.success.title")}
+          desc={t("toasts.Conversion_Multiplier.success.desc")}
           status={"success"}
         />,
         {

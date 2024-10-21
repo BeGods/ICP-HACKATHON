@@ -55,18 +55,13 @@ const BoosterItem = ({
         </h1>
         <h2 className="text-tertiary">
           {t(`boosters.${booster}.desc`)}{" "}
-          {booster === 1 && (
-            <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-              200%
-            </span>
-          )}
           {booster === 6 && (
             <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-              L99
+              L99*n
             </span>
           )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-            {booster != 1 && booster != 6 && "L1-99"}
+            {booster != 6 && "L1-99"}
           </span>
         </h2>
       </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import {
   claimAutomataBooster,
@@ -20,7 +20,6 @@ import MythInfoCard from "../../components/Cards/Info/MythInfoCrd";
 import BoosterHeader from "./Header";
 import { useBoosterGuide } from "../../hooks/Tutorial";
 import { toast } from "react-toastify";
-import IconBtn from "../../components/Buttons/IconBtn";
 
 const tele = window.Telegram?.WebApp;
 
@@ -32,12 +31,13 @@ const Boosters = () => {
     setSection,
     activeMyth,
     setActiveMyth,
-    setShowGlow,
     authToken,
     setShowCard,
+    setShowBooster,
   } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
+  const [showToggles, setShowToggles] = useState(false);
   let guideTimeoutId = useRef(null);
   const disableRef = useRef(false);
 
@@ -69,7 +69,7 @@ const Boosters = () => {
         setShowCard(null);
         disableRef.current = false;
         showToast("booster_success");
-        setShowGlow("automata");
+        setShowBooster("automata");
         setSection(0);
       } catch (error) {
         disableRef.current = false;
@@ -105,7 +105,7 @@ const Boosters = () => {
   };
 
   const [enableGuide, setEnableGuide] = useBoosterGuide(
-    "tut3",
+    "lp2",
     handleClaimAutomata,
     handleCardChange,
     guideTimeoutId
@@ -152,7 +152,7 @@ const Boosters = () => {
 
         setShowCard(null);
         showToast("booster_success");
-        setShowGlow("minion");
+        setShowBooster("minion");
         setSection(0);
         disableRef.current === false;
       } catch (error) {
@@ -208,6 +208,12 @@ const Boosters = () => {
 
   useEffect(() => {}, [gameData]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShowToggles(true);
+    }, 300);
+  }, []);
+
   return (
     <div
       style={{
@@ -260,17 +266,18 @@ const Boosters = () => {
 
       {/* BOOSTER CARDS */}
       <div className="flex justify-center h-screen w-screen absolute mx-auto">
-        <div className=" w-full absolute top-0 mt-[17.75vh] mr-[8.5vw] right-0">
+        {/* <div className=" w-full absolute top-0 mt-[17.75vh] mr-[8.5vw] right-0">
           <IconBtn
             isInfo={true}
             handleClick={() => {}}
             activeMyth={4}
             align={2}
           />
-        </div>
+        </div> */}
         <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
           {/* AUTOMATA */}
           <BoosterItem
+            isGuideActive={enableGuide}
             isActive={!mythData.isAutomataActive}
             handleClick={() => {
               tele.HapticFeedback.notificationOccurred("success");
@@ -295,7 +302,6 @@ const Boosters = () => {
             activeMyth={activeMyth}
             t={t}
             booster={0}
-            isGuideActive={enableGuide}
           />
           {/* SHARDS BOOSTER */}
           <BoosterItem
@@ -351,7 +357,7 @@ const Boosters = () => {
                   />
                 );
               } else {
-                toast.success("Locked");
+                toast.error("Locked");
               }
             }}
             isGuideActive={enableGuide}
@@ -363,22 +369,28 @@ const Boosters = () => {
       </div>
 
       {/* Toggles */}
-      <ToggleLeft
-        handleClick={() => {
-          setActiveMyth((prev) => (prev - 1 + 4) % 4);
-        }}
-        activeMyth={activeMyth}
-      />
-      <ToggleRight
-        handleClick={() => {
-          if (activeMyth < 4) {
-            setActiveMyth((prev) => (prev + 1) % 4);
-          } else {
-            setSection(6);
-          }
-        }}
-        activeMyth={activeMyth}
-      />
+      {showToggles && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setActiveMyth((prev) => (prev - 1 + 4) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              if (activeMyth < 4) {
+                setActiveMyth((prev) => (prev + 1) % 4);
+              } else {
+                setSection(6);
+              }
+            }}
+            activeMyth={activeMyth}
+          />
+        </>
+      )}
     </div>
   );
 };

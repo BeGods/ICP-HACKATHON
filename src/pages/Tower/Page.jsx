@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { convertOrbs } from "../../utils/api";
 import { MyContext } from "../../context/context";
-import ConvertButton from "../../components/Buttons/ConvertBtn";
 import ConvertInfo from "../../components/Cards/Info/ConvertInfoCrd";
 import { useTranslation } from "react-i18next";
 import {
   mythologies,
-  mythSections,
   mythSymbols,
   wheel,
   wheelNames,
@@ -17,6 +15,8 @@ import ReactHowler from "react-howler";
 import { Repeat2 } from "lucide-react";
 import ConvertClaimCard from "./ClaimTune";
 import TowerHeader from "./Header";
+import { TowerGuide } from "../../components/Common/Tutorials";
+import { useTowerGuide } from "../../hooks/Tutorial";
 
 const tele = window.Telegram?.WebApp;
 
@@ -30,12 +30,11 @@ const orbPos = [
 const Tower = () => {
   const { t } = useTranslation();
   const [showInfo, setShowInfo] = useState(false);
-  const [toggleClick, setToggleClick] = useState(false);
+  const [showGlow, setShowGlow] = useState(false);
   const [sessionOrbs, setSessionOrbs] = useState(0);
   const {
     setGameData,
     gameData,
-    activeMyth,
     authToken,
     keysData,
     setKeysData,
@@ -48,6 +47,7 @@ const Tower = () => {
   const mythData = gameData.mythologies.filter(
     (item) => item.name.toLowerCase() === wheel[myth]
   )[0];
+  const [enableGuide, setEnableGuide] = useTowerGuide("jdio");
   const [showHand, setShowHand] = useState(false);
   const handTimeoutRef = useRef(false);
 
@@ -58,6 +58,10 @@ const Tower = () => {
     if (keysData.includes(key) && key) {
       showToast("convert_key_success");
     }
+    setShowGlow(true);
+    setTimeout(() => {
+      setShowGlow(false);
+    }, 1000);
     if (myth !== 0) {
       const mythologyName = {
         mythologyName: mythData.name,
@@ -110,16 +114,18 @@ const Tower = () => {
     }
   };
 
-  const handleClick = () => {
-    setToggleClick(true);
-    setTimeout(() => {
-      setToggleClick(false);
-    }, 500);
-  };
-
-  // useEffect(() => {
-  //   setShowCard(<TuneGuide />);
-  // }, []);
+  useEffect(() => {
+    if (enableGuide) {
+      setShowCard(
+        <TowerGuide
+          handleClick={() => {
+            setMyth(1);
+            setShowCard(null);
+          }}
+        />
+      );
+    }
+  }, [enableGuide]);
 
   return (
     <div
@@ -155,13 +161,14 @@ const Tower = () => {
       </div>
       {/* Header */}
       <TowerHeader
+        showGlow={showGlow}
         myth={myth}
         t={t}
         gameData={gameData}
         mythData={mythData}
         sessionOrbs={sessionOrbs}
       />
-      <div className="flex relative h-fit w-full justify-center bg-red-400 items-center">
+      <div className="flex relative max-h-[16vw] w-full justify-center items-center z-[99]">
         {!showInfo && (
           <IconBtn
             isInfo={true}
@@ -217,12 +224,13 @@ const Tower = () => {
               className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
             >
               <div
-                className={`p-[6vw] border flex justify-center items-center rounded-full ${
+                className={`p-[5.5vw] border flex justify-center items-center rounded-full ${
                   myth === 0 ? "bg-black" : `bg-${wheel[myth]}-text`
                 }`}
               >
                 <Repeat2
                   strokeWidth={3}
+                  size={"7.5vw"}
                   color={`${myth === 0 ? "white" : `white`}`}
                 />
               </div>
@@ -231,7 +239,7 @@ const Tower = () => {
         </div>
       </div>
 
-      <div className="absolute  flex justify-center items-center h-full w-full z-10">
+      <div className="absolute  flex justify-center items-center h-full w-full">
         <div
           className="relative flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
@@ -327,7 +335,7 @@ const Tower = () => {
       <div className="absolute">
         <ReactHowler
           src="/assets/audio/fof.tower.background01.wav"
-          playing={enableSound && activeMyth >= 4}
+          playing={enableSound}
           preload={true}
           loop
         />

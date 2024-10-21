@@ -14,7 +14,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
         }}
         className="h-full z-20"
       >
-        <Symbol myth={mythSections[activeMyth]} isCard={false} />
+        <Symbol myth={mythSections[activeMyth]} isCard={2} />
       </div>
     </div>
   );
@@ -24,32 +24,42 @@ const BottomChild = ({
   activeMyth,
   currQuest,
   todayQuest,
-  lostQuests,
   completedQuests,
+  lostQuests,
+  quest,
 }) => {
   return (
-    <div className="flex justify-center -mt-[4vh]">
+    <div className="flex justify-center -mt-[4vh] px-7">
       <div
-        className={`flex text-num pl-6 text-black-lg-contour ${
-          currQuest < todayQuest
-            ? `text-${mythSections[activeMyth]}-text`
-            : "text-white"
-        } items-center border border-${
+        className={`flex text-num pl-3 text-black-lg-contour items-center border  border-${
           mythSections[activeMyth]
-        }-primary justify-start h-button-primary w-button-primary bg-black z-10 rounded-primary transform skew-x-12`}
+        }-primary justify-start ${
+          !quest?.isQuestClaimed
+            ? `text-${mythSections[activeMyth]}-text glow-button-${mythSections[activeMyth]}`
+            : "text-white"
+        } justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
         {lostQuests.length}
       </div>
       <div
-        className={`flex text-num pr-6 text-black-lg-contour  ${
-          currQuest > todayQuest
-            ? `text-${mythSections[activeMyth]}-text`
+        className={`flex text-num pr-3 ${
+          quest?.isQuestClaimed
+            ? ` glow-button-${mythSections[activeMyth]}`
             : "text-white"
-        }  items-center border border-${
+        }  text-black-lg-contour items-center border border-${
           mythSections[activeMyth]
-        }-primary justify-end h-button-primary w-button-primary bg-black z-10 rounded-primary transform -skew-x-12`}
+        }-primary justify-end h-button-primary w-full text-white bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
-        {completedQuests.length}/12
+        {completedQuests.length}
+        <span
+          className={`${
+            currQuest > todayQuest
+              ? `text-${mythSections[activeMyth]}-text`
+              : "text-white"
+          }`}
+        >
+          /12
+        </span>
       </div>
     </div>
   );
@@ -59,12 +69,12 @@ const TopChild = ({ activeMyth }) => {
   return (
     <div className="absolute flex w-full justify-between top-0 z-50 text-white">
       <div
-        className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
+        className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
         i
       </div>
       <div
-        className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[13vw] mt-0.5 text-[50px] transition-all duration-1000`}
+        className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
         j
       </div>
@@ -80,6 +90,7 @@ const QuestHeader = ({
   lostQuests,
   todayQuest,
   completedQuests,
+  quest,
 }) => {
   return (
     <Header
@@ -92,6 +103,7 @@ const QuestHeader = ({
           lostQuests={lostQuests}
           todayQuest={todayQuest}
           activeMyth={activeMyth}
+          quest={quest}
         />
       }
       CenterChild={
@@ -102,53 +114,3 @@ const QuestHeader = ({
 };
 
 export default QuestHeader;
-
-{
-  /* <div className="flex justify-between w-full">
-<div
-  className={`text-head -mt-2 mx-auto  w-full text-center top-0 absolute z-50 text-white text-black-lg-contour uppercase`}
->
-  QUESTS
-</div>
-<div className="relative flex justify-center w-full">
-
-  <div className="relative">
-    <img
-      src="/assets/uxui/390px-header-new.png"
-      alt="left"
-      className={`left-0 h-[36vw] filter-${mythSections[activeMyth]}`}
-    />
-    <div className="absolute flex w-full justify-center top-0 z-50"></div>
-    <div className="absolute flex w-full justify-center  rotate-6 bottom-0 z-50">
-      <div
-        className={`text-num transition-all italic text-black-lg-contour custom-skew  -mb-[8vw] mr-[18vw] duration-1000 text-white`}
-      >
-        5
-      </div>
-    </div>
-  </div>
-
-  <div className="absolute">
-    <Symbol
-      myth={mythSections[activeMyth]}
-      showClaimEffect={showClaimEffect}
-      isCard={false}
-    />
-  </div>
-
-  <img
-    src="/assets/uxui/390px-header-new.png"
-    alt="left"
-    className={`right-0 transform scale-x-[-1]  h-[36vw] filter-${mythSections[activeMyth]}`}
-  />
-  <div className="absolute flex w-full justify-center top-0 z-50"></div>
-  <div className="absolute flex w-full justify-center  -mb-[8vw] ml-[70vw] italic bottom-0 z-50">
-    <div
-      className={`text-num text-black-lg-contour transition-all text-right -rotate-6 duration-1000 text-white`}
-    >
-      2
-    </div>
-  </div>
-</div>
-</div> */
-}

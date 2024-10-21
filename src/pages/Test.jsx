@@ -673,30 +673,99 @@
 
 // export default Test;
 
+// import React, { useState } from "react";
+// import "../styles/flip.scss";
+
+// const Test = (props) => {
+//   const [flipped, setFlipped] = useState(false);
+
+//   return (
+// <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+//   <div className={`font-symbols text-[15vw]`}>
+//     <div className={`card ${flipped ? "flipped" : ""} text-black-contour`}>
+//       <div
+//         onClick={(e) => {
+//           setFlipped((prev) => !prev);
+//         }}
+//         className="card__face card__face--front bg-red-400 h-[10vh] w-[20vw] flex justify-center items-center"
+//       ></div>
+//       <div
+//         onClick={(e) => {
+//           setFlipped((prev) => !prev);
+//         }}
+//         className="card__face card__face--back bg-green-400 flex justify-center items-center"
+//       ></div>
+//     </div>
+//   </div>
+// </div>
+//   );
+// };
+
+// export default Test;
+
 import React, { useState } from "react";
 import "../styles/flip.scss";
 
 const Test = (props) => {
   const [flipped, setFlipped] = useState(false);
-
   return (
-    <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
-      <div className={`font-symbols text-[15vw]`}>
-        <div className={`card ${flipped ? "flipped" : ""} text-black-contour`}>
-          <div
-            onClick={(e) => {
-              setFlipped((prev) => !prev);
-            }}
-            className="card__face card__face--front bg-red-400 h-[10vh] w-[20vw] flex justify-center items-center"
-          ></div>
-          <div
-            onClick={(e) => {
-              setFlipped((prev) => !prev);
-            }}
-            className="card__face card__face--back bg-green-400 flex justify-center items-center"
-          ></div>
+    <div className="flex justify-center items-center h-screen w-screen bg-black">
+      <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+        <div className={`font-symbols text-[15vw]`}>
+          <div className={`orb ${flipped ? "flipped" : ""} text-black-contour`}>
+            <div
+              onClick={(e) => {
+                setFlipped((prev) => !prev);
+              }}
+              className="orb__face orb__face--front  flex justify-center items-center"
+            >
+              <div className="flex justify-center items-center w-full absolute  h-full">
+                <img
+                  src="/assets/uxui/240px-orb.multicolor.png"
+                  alt="multicolor"
+                  className="glow-box rounded-full"
+                />
+                <div className="absolute z-10">
+                  <div className="font-medium text-[44vw] text-white glow-text-black">
+                    3
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              onClick={(e) => {
+                setFlipped((prev) => !prev);
+              }}
+              className="orb__face orb__face--back flex justify-center items-center"
+            >
+              <div className="flex justify-center items-center w-full absolute  h-full glow-tap-greek">
+                <img
+                  src="/assets/uxui/240px-orb.base.png"
+                  alt="multicolor"
+                  className="filter-orbs-greek rounded-full"
+                />
+                <span
+                  className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+                >
+                  d
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      {/* <div className="flex justify-center items-center w-full absolute  h-full">
+        <img
+          src="/assets/uxui/240px-orb.multicolor.png"
+          alt="multicolor"
+          className="glow-box rounded-full"
+        />
+        <div className="absolute z-10">
+          <div className="font-medium text-[44vw] text-white glow-text-black">
+            3
+          </div>
+        </div>
+      </div> */}
     </div>
   );
 };
