@@ -35,9 +35,9 @@ router.get(
 );
 
 // bonus
-router.get("/bonus/daily", authMiddleware, claimDailyBonus);
-router.get("/bonus/dail", authMiddleware, claimDailyBonus);
-router.get("/bonus/join", authMiddleware, claimJoiningBonus);
+router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);
+router.get("/bonus/dail", authMiddleware, validDailyHackBonus, claimDailyBonus);
+router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 
 // playsuper
 router.post("/playsuper/otp", authMiddleware, generateOtp);

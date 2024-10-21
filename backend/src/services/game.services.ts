@@ -45,7 +45,7 @@ export const fetchUserGameStats = async (userId) => {
             },
             {
               $addFields: {
-                isCompleted: {
+                isQuestClaimed: {
                   $cond: {
                     if: { $gt: [{ $size: "$milestones" }, 0] },
                     then: true,
@@ -117,9 +117,6 @@ export const fetchUserGameStats = async (userId) => {
               $addFields: {
                 isOrbClaimed: {
                   $arrayElemAt: ["$claimedQuestData.orbClaimed", 0],
-                },
-                isQuestClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
                 },
                 isKeyClaimed: {
                   $arrayElemAt: ["$claimedQuestData.isKeyClaimed", 0],

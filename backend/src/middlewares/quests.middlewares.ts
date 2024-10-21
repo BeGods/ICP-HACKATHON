@@ -22,39 +22,8 @@ export const verifyValidQuest = async (req, res, next) => {
     }
 
     // Check if user has already claimed this quest
-    if (validQuest.isCompleted) {
-      throw new Error("Quest already completed.");
-    }
-
-    req.quest = validQuest;
-    next();
-  } catch (error) {
-    console.log(error);
-
-    res.status(400).json({ error: error.message });
-  }
-};
-
-export const verifyQuestClaim = async (req, res, next) => {
-  try {
-    const { questId } = req.body;
-    const userId = req.user._id;
-
-    // Check if the questId is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(questId)) {
-      throw new Error("Invalid quest Id.");
-    }
-
-    const validQuest = await questAggregator(userId, questId);
-
-    // Check if the questId exists
-    if (!validQuest) {
-      return res.status(404).json({ message: "Please complete the quest" });
-    }
-
-    // Check if user has already claimed this quest
     if (validQuest.isClaimed) {
-      throw new Error("Quest already claimed.");
+      throw new Error("Quest already completed.");
     }
 
     // Check if user has enough orbs
@@ -66,6 +35,7 @@ export const verifyQuestClaim = async (req, res, next) => {
       orbValues[mythology.name] = mythology.orbs;
     });
 
+    // error if not match
     if (!areObjectsEqual(orbValues, validQuest.requiredOrbs)) {
       throw new Error("Insufficient orbs to claim this quest.");
     }
@@ -76,54 +46,11 @@ export const verifyQuestClaim = async (req, res, next) => {
 
     req.quest = validQuest;
     req.mythData = currMyth;
+
     next();
   } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+    console.log(error);
 
-export const verifyValidLostQuest = async (req, res, next) => {
-  try {
-    const { questId } = req.body;
-    const userId = req.user._id;
-
-    // Check if the questId is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(questId)) {
-      throw new Error("Invalid quest Id.");
-    }
-
-    const validQuest = await questAggregator(userId, questId);
-
-    // Check if the questId exists
-    if (!validQuest) {
-      return res.status(404).json({ message: "Quest not found." });
-    }
-
-    // Check if user has already claimed this quest
-    if (validQuest.isClaimed) {
-      throw new Error("Quest already claimed.");
-    }
-
-    // Check if user has enough orbs
-    const orbValues = {};
-
-    const userOrbsData = await userMythologies.findOne({ userId: userId });
-
-    if (userOrbsData.multiColorOrbs < 1) {
-      throw new Error("Insufficient multiColorOrbs to claim this booster.");
-    }
-
-    userOrbsData.mythologies.forEach((mythology) => {
-      orbValues[mythology.name] = mythology.orbs;
-    });
-
-    if (!areObjectsEqual(orbValues, validQuest.requiredOrbs)) {
-      throw new Error("Insufficient orbs to claim this quest.");
-    }
-
-    req.quest = validQuest;
-    next();
-  } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
@@ -159,9 +86,6 @@ export const verifyValidShareClaim = async (req, res, next) => {
     const validShareReq = await milestones.findOne({ userId: userId });
 
     // Check if task is not completed
-    // if (!validShareReq) {
-    //   throw new Error("Invalid request. Quest does not exist.");
-    // }
     if (validShareReq) {
       const sharedQuestExists = validShareReq?.sharedQuests.includes(questId);
 
@@ -176,3 +100,49 @@ export const verifyValidShareClaim = async (req, res, next) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+// export const verifyValidLostQuest = async (req, res, next) => {
+//   try {
+//     const { questId } = req.body;
+//     const userId = req.user._id;
+
+//     // Check if the questId is a valid ObjectId
+//     if (!mongoose.Types.ObjectId.isValid(questId)) {
+//       throw new Error("Invalid quest Id.");
+//     }
+
+//     const validQuest = await questAggregator(userId, questId);
+
+//     // Check if the questId exists
+//     if (!validQuest) {
+//       return res.status(404).json({ message: "Quest not found." });
+//     }
+
+//     // Check if user has already claimed this quest
+//     if (validQuest.isClaimed) {
+//       throw new Error("Quest already claimed.");
+//     }
+
+//     // Check if user has enough orbs
+//     const orbValues = {};
+
+//     const userOrbsData = await userMythologies.findOne({ userId: userId });
+
+//     if (userOrbsData.multiColorOrbs < 1) {
+//       throw new Error("Insufficient multiColorOrbs to claim this booster.");
+//     }
+
+//     userOrbsData.mythologies.forEach((mythology) => {
+//       orbValues[mythology.name] = mythology.orbs;
+//     });
+
+//     if (!areObjectsEqual(orbValues, validQuest.requiredOrbs)) {
+//       throw new Error("Insufficient orbs to claim this quest.");
+//     }
+
+//     req.quest = validQuest;
+//     next();
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// };
