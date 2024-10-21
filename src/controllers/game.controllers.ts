@@ -309,7 +309,7 @@ export const getGameStats = async (req, res) => {
     };
     const userData = {
       telegramUsername: user.telegramUsername,
-      profile: user.profile,
+      tonAddress: user.tonAddress,
       isPremium: user.isPremium,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
@@ -339,12 +339,16 @@ export const getGameStats = async (req, res) => {
     );
     const towerKeys = completedQuests.map((item) => {
       const indexes = Object.keys(item.requiredOrbs)
-        .map((myth) => mythOrder.indexOf(myth))
+        .map((myth) => {
+          const index = mythOrder.indexOf(myth);
+          const count = item.requiredOrbs[myth];
+
+          return index.toString().repeat(count);
+        })
         .join("");
 
       return indexes;
     });
-
     res.status(200).json({
       user: userData,
       stats: {

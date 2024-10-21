@@ -217,66 +217,6 @@ export const claimBonusQuest = async (userId) => {
                 let: { questId: "$_id", userId: "$$userId" },
                 pipeline: [
                   {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$userId", "$$userId"] },
-                          { $in: ["$$questId", "$claimedQuests.taskId"] },
-                        ],
-                      },
-                    },
-                  },
-                ],
-                as: "milestones",
-              },
-            },
-            {
-              $addFields: {
-                isCompleted: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$milestones" }, 0] },
-                    then: true,
-                    else: false,
-                  },
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "milestones",
-                let: { questId: "$_id", userId: "$$userId" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$userId", "$$userId"] },
-                          { $in: ["$$questId", "$sharedQuests"] },
-                        ],
-                      },
-                    },
-                  },
-                ],
-                as: "sharedMilestones",
-              },
-            },
-            {
-              $addFields: {
-                isShared: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$sharedMilestones" }, 0] },
-                    then: true,
-                    else: false,
-                  },
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "milestones",
-                let: { questId: "$_id", userId: "$$userId" },
-                pipeline: [
-                  {
                     $unwind: "$claimedQuests",
                   },
                   {
@@ -289,12 +229,6 @@ export const claimBonusQuest = async (userId) => {
                       },
                     },
                   },
-                  {
-                    $project: {
-                      orbClaimed: "$claimedQuests.orbClaimed",
-                      questClaimed: "$claimedQuests.questClaimed",
-                    },
-                  },
                 ],
                 as: "claimedQuestData",
               },
@@ -302,14 +236,16 @@ export const claimBonusQuest = async (userId) => {
             {
               $addFields: {
                 isQuestClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
+                  $cond: {
+                    if: { $gt: [{ $size: "$claimedQuestData" }, 0] },
+                    then: true,
+                    else: false,
+                  },
                 },
               },
             },
             {
               $project: {
-                milestones: 0,
-                sharedMilestones: 0,
                 claimedQuestData: 0,
                 updatedAt: 0,
                 createdAt: 0,
@@ -329,9 +265,7 @@ export const claimBonusQuest = async (userId) => {
               cond: {
                 $and: [
                   { $eq: ["$$quest.status", "Active"] },
-                  {
-                    $eq: [{ $ifNull: ["$$quest.isQuestClaimed", null] }, null],
-                  },
+                  { $eq: ["$$quest.isQuestClaimed", false] },
                   { $eq: [{ $ifNull: ["$$quest.secret", null] }, null] },
                 ],
               },
@@ -344,7 +278,11 @@ export const claimBonusQuest = async (userId) => {
 
     const quests = await milestones.aggregate(pipeline).exec();
 
-    const unClaimedActiveQuests = quests[0].quests;
+    const unClaimedActiveQuests = quests[0].quests.filter(
+      (item) => item.mythology !== "Other"
+    );
+
+    console.log(unClaimedActiveQuests);
 
     const randomQuest =
       unClaimedActiveQuests[
@@ -366,21 +304,6 @@ export const claimBonusQuest = async (userId) => {
             claimedQuests: {
               taskId: new mongoose.Types.ObjectId(randomQuest._id),
             },
-          },
-        },
-        {
-          new: true,
-        }
-      );
-
-      await milestones.findOneAndUpdate(
-        {
-          userId: userId,
-          "claimedQuests.taskId": new mongoose.Types.ObjectId(randomQuest._id),
-        },
-        {
-          $set: {
-            "claimedQuests.$.questClaimed": true,
           },
         },
         {
@@ -444,24 +367,20 @@ export const checkBonus = async (user) => {
   }
 };
 
-// export const testRandomValues = () => {
-//   const trials = 100000;
-//   const results = { A: 0, B: 0, C: 0, D: 0 };
+export const updatePartnersInLastHr = async (userMilestones) => {
+  try {
+    const now = Date.now();
+    const oneHour = 60 * 60 * 1000;
+    const timeElapsed = now - userMilestones.rewards.lastResetAt;
 
-//   for (let i = 0; i < trials; i++) {
-//     const selectedValue = getRandomValue([
-//       { value: "A", probability: 0.125 },
-//       { value: "B", probability: 0.125 },
-//       { value: "C", probability: 0.25 },
-//       { value: "D", probability: 0.5 },
-//     ]);
+    if (userMilestones.rewards.lastResetAt === 0 || timeElapsed > oneHour) {
+      userMilestones.rewards.rewardsInLastHr = [];
+      userMilestones.rewards.lastResetAt = now;
+      await userMilestones.save();
+    }
 
-//     results[selectedValue]++;
-//   }
-
-//   console.log("Results after " + trials + " trials:");
-//   console.log("A: " + (results["A"] / trials) * 100 + "%");
-//   console.log("B: " + (results["B"] / trials) * 100 + "%");
-//   console.log("C: " + (results["C"] / trials) * 100 + "%");
-//   console.log("D: " + (results["D"] / trials) * 100 + "%");
-// };
+    return userMilestones;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

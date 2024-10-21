@@ -1,19 +1,14 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
-  claimLostQuest,
   claimOrbOnShare,
   claimQuest,
   claimQuestShare,
   claimSocialQuest,
-  completeQuest,
   createQuest,
-  unClaimedQuests,
 } from "../controllers/quests.controllers";
 import {
   verifyCompletedQuest,
-  verifyQuestClaim,
-  verifyValidLostQuest,
   verifyValidQuest,
   verifyValidShareClaim,
 } from "../middlewares/quests.middlewares";
@@ -21,22 +16,7 @@ const router = express.Router();
 
 // quests
 router.post("/quests/create", authMiddleware, createQuest);
-router.post(
-  "/quests/complete",
-  authMiddleware,
-  verifyValidQuest,
-  completeQuest
-);
-router.post("/quests/claim", authMiddleware, verifyQuestClaim, claimQuest);
-
-// lost quests
-router.get("/quests/lost", authMiddleware, unClaimedQuests);
-router.post(
-  "/quests/claim/lost",
-  authMiddleware,
-  verifyValidLostQuest,
-  claimLostQuest
-);
+router.post("/quests/claim", authMiddleware, verifyValidQuest, claimQuest);
 
 // other social quests
 router.post(
@@ -46,7 +26,7 @@ router.post(
   claimSocialQuest
 );
 
-// extra orb-reward
+// extra orb reward
 router.post(
   "/quests/claim/share",
   authMiddleware,
@@ -61,5 +41,14 @@ router.post(
   verifyValidShareClaim,
   claimQuestShare
 );
+
+// lost quests
+// router.get("/quests/lost", authMiddleware, unClaimedQuests);
+// router.post(
+//   "/quests/claim/lost",
+//   authMiddleware,
+//   verifyValidLostQuest,
+//   claimLostQuest
+// );
 
 export default router;

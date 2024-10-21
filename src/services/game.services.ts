@@ -45,7 +45,7 @@ export const fetchUserGameStats = async (userId) => {
             },
             {
               $addFields: {
-                isCompleted: {
+                isQuestClaimed: {
                   $cond: {
                     if: { $gt: [{ $size: "$milestones" }, 0] },
                     then: true,
@@ -118,9 +118,6 @@ export const fetchUserGameStats = async (userId) => {
                 isOrbClaimed: {
                   $arrayElemAt: ["$claimedQuestData.orbClaimed", 0],
                 },
-                isQuestClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.questClaimed", 0],
-                },
                 isKeyClaimed: {
                   $arrayElemAt: ["$claimedQuestData.isKeyClaimed", 0],
                 },
@@ -143,18 +140,7 @@ export const fetchUserGameStats = async (userId) => {
       },
       {
         $addFields: {
-          quests: {
-            $filter: {
-              input: "$allQuests",
-              as: "quest",
-              cond: {
-                $or: [
-                  { $eq: ["$$quest.status", "Active"] },
-                  { $eq: ["$$quest.isQuestClaimed", true] },
-                ],
-              },
-            },
-          },
+          quests: "$allQuests",
         },
       },
       { $project: { allQuests: 0 } },
@@ -449,18 +435,29 @@ export const fetchUserData = async (userId) => {
   } catch (error) {}
 };
 
-export const fetchPlaySuperRewards = async () => {
+export const fetchPlaySuperRewards = async (
+  country: string,
+  lang: string,
+  playsuperCred: { isVerified: boolean; token: string }
+) => {
   try {
-    const result = await axios.get("https://dev.playsuper.club/rewards", {
+    const headers: { [key: string]: string } = {
+      accept: "application/json",
+      "x-language": lang,
+      "x-api-key":
+        "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+    };
+
+    if (playsuperCred?.isVerified) {
+      headers.Authorization = `Bearer ${playsuperCred.token}`;
+    }
+
+    const result = await axios.get(`https://dev.playsuper.club/rewards`, {
       params: {
         coinId: "ee61658e-532b-4a69-a99a-6b5287bc54cf",
+        country: country,
       },
-      headers: {
-        accept: "application/json",
-        "x-language": "en",
-        "x-api-key":
-          "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
-      },
+      headers: headers,
     });
 
     const rewards = result.data.data.data.map(

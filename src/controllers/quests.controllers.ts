@@ -28,13 +28,13 @@ export const claimQuest = async (req, res) => {
 
     // Add to claimed quests
     await milestones.findOneAndUpdate(
-      { userId: userId._id, "claimedQuests.taskId": quest.taskId },
+      { userId: userId },
       {
-        $set: { "claimedQuests.$.questClaimed": true },
+        $push: {
+          claimedQuests: { taskId: new mongoose.Types.ObjectId(quest.taskId) },
+        },
       },
-      {
-        new: true,
-      }
+      { upsert: true }
     );
 
     // deduct required orbs
@@ -122,14 +122,14 @@ export const claimSocialQuest = async (req, res) => {
     await userMythologies.findOneAndUpdate(
       { userId: userId },
       {
-        $inc: { multiColorOrbs: 3 },
+        $inc: { multiColorOrbs: quest.requiredOrbs.multiOrbs },
       }
     );
 
     const newOrbTransaction = new OrbsTransactions({
       userId: userId,
       source: "quests",
-      orbs: { multiColorOrbs: 3 },
+      orbs: { multiColorOrbs: quest.requiredOrbs.multiOrbs },
     });
     await newOrbTransaction.save();
 
