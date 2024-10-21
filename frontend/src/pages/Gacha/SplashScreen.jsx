@@ -3,13 +3,15 @@ import {
   mythElementNames,
   mythologies,
   wheelNames,
-} from "../../utils/variables";
+} from "../../utils/constants";
 import Confetti from "react-confetti";
 import { ThumbsUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import ReactHowler from "react-howler";
+import MappedOrbs from "../../components/Common/MappedOrbs";
+import Symbol from "../../components/Common/Symbol";
 
 const tele = window.Telegram?.WebApp;
 
@@ -22,7 +24,9 @@ const SplashScreen = ({ reward, exploitReward }) => {
   const [showYouScale, setShowYouScale] = useState(0);
   const [showWon, setShowWon] = useState(false);
   const [showHand, setShowHand] = useState(false);
-  const [play, setPlay] = useState(true);
+  const [flipped, setFlipped] = useState(false);
+  const [playFlip, setPlayFlip] = useState(false);
+  const [play, setPlay] = useState(false);
   let redirectTimoutId = useRef();
 
   const playConfetti = () => {
@@ -34,17 +38,12 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
   const handleClick = (reward) => {
     tele.HapticFeedback.notificationOccurred("success");
-    if (reward.type === "mythOrb") {
-      setActiveMyth(mythologies.indexOf(reward.mythology));
-      setSection(1);
-    } else if (reward.type === "quest") {
+    if (reward.type === "quest") {
       setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-      setSection(0);
-    } else if (reward.type === "automata" || reward.type === "minion") {
-      setActiveMyth(mythologies.indexOf(reward.mythology));
       setSection(1);
-    } else if (reward.type === "blackOrb") {
-      setSection(6);
+    } else {
+      setActiveMyth(mythologies.indexOf(reward.mythology));
+      setSection(0);
     }
   };
 
@@ -64,11 +63,14 @@ const SplashScreen = ({ reward, exploitReward }) => {
       setTimeout(() => {
         setShowScale(150);
         setTimeout(() => {
+          if (exploitReward.length === 0 || !exploitReward) {
+            setPlayFlip(true);
+          }
           setShowScale(100);
           setShowHand(true);
           redirectTimoutId.current = setTimeout(() => {
             handleClick(currReward);
-          }, 3000);
+          }, 6000);
         }, 500);
       }, 500);
     }
@@ -90,7 +92,10 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
           if (index === lastThreeRewards.length) {
             setTimeout(() => {
-              handleClick(lastThreeRewards[index - 1]);
+              setPlayFlip(true);
+              setTimeout(() => {
+                handleClick(lastThreeRewards[index - 1]);
+              }, 3000);
             }, 1000);
             clearInterval(interval);
           }
@@ -100,6 +105,15 @@ const SplashScreen = ({ reward, exploitReward }) => {
       }
     }, 2500);
   }, []);
+
+  useEffect(() => {
+    if (playFlip) {
+      const interval = setInterval(() => {
+        setFlipped((prev) => !prev);
+      }, 1500);
+      return () => clearInterval(interval);
+    }
+  }, [playFlip]);
 
   return (
     <div className="w-screen h-screen relative bg-black">
@@ -118,7 +132,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
           left: 0,
         }}
       ></div>
-      {/* Content */}
+      {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
         {t("bonus.youwon")
           .split(" ")
@@ -142,17 +156,37 @@ const SplashScreen = ({ reward, exploitReward }) => {
             </>
           ))}
       </div>
-      <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl">
+      <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
         <div
-          onClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setSection(1);
-          }}
-          className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[85vw]  mx-auto icon-black-contour`}
+          className={`flex relative flex-col items-center cursor-pointer mt-5 z-50 card ${
+            flipped ? "flipped" : ""
+          }`}
         >
-          {currReward.type === "mythOrb"
-            ? defaultIcons[currReward.mythology]
-            : defaultIcons[currReward.type]}
+          <div className="card__face card__face--front flex justify-center items-center">
+            <div
+              onClick={() => {
+                tele.HapticFeedback.notificationOccurred("success");
+                setSection(0);
+              }}
+              className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[55vw]  mx-auto icon-black-contour`}
+            >
+              {currReward.type === "mythOrb"
+                ? defaultIcons[currReward.mythology]
+                : defaultIcons[currReward.type]}
+            </div>
+          </div>
+          <div className="card__face card__face--back flex justify-center items-center">
+            {currReward.type === "mythOrb" || currReward.type === "blackOrb" ? (
+              <OrbCard reward={currReward} />
+            ) : currReward.type === "automata" ||
+              currReward.type === "minion" ? (
+              <BoosterCard reward={currReward} />
+            ) : (
+              <QuestCard reward={currReward} />
+            )}
+
+            {/* <BoosterCard reward={currReward} /> */}
+          </div>
         </div>
       </div>
       <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0 text-[9vw] text-gold uppercase z-20">
@@ -200,6 +234,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
           style={{ zIndex: 10, position: "fixed", top: 0, left: 0 }}
         />
       )}
+      {/* Audios */}
       <ReactHowler
         src="/assets/audio/fof.gatcha.win.wav"
         playing={play && enableSound}
@@ -213,3 +248,95 @@ const SplashScreen = ({ reward, exploitReward }) => {
 };
 
 export default SplashScreen;
+
+const OrbCard = ({ reward }) => {
+  const currReward = reward.type === "mythOrb" ? reward.mythology : reward.type;
+  return (
+    <div
+      className={`flex justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
+    >
+      <img
+        src="/assets/uxui/240px-orb.base.png"
+        alt="orb"
+        className={`filter-orbs-${currReward.toLowerCase()} rounded-full`}
+      />
+      <span
+        className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+      >
+        {defaultIcons[currReward]}
+      </span>
+    </div>
+  );
+};
+
+const BoosterCard = ({ reward }) => {
+  return (
+    <div className="relative h-full -mt-8 w-[72%] flex items-center justify-center rounded-primary card-shadow-white">
+      <div
+        className={`absolute inset-0 rounded-[15px]`}
+        style={{
+          backgroundImage: `url(/assets/cards/320px-${
+            reward.type === "minion" ? "alchemist" : reward.type
+          }.jpg)`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center center ",
+        }}
+      />
+    </div>
+  );
+};
+
+const QuestCard = ({ reward }) => {
+  return (
+    <div className="relative w-[72%] rounded-lg shadow-lg -mt-8 flex flex-col z-50">
+      <div className="relative card-shadow-white">
+        {/* Card Image */}
+        <img
+          src={`/assets/cards/320px-${reward.quest.mythology.toLowerCase()}.quest.${
+            reward.quest.type
+          }.jpg`}
+          alt="card"
+          className="w-full h-full mx-auto rounded-[15px]"
+        />
+        {/* Close Button */}
+        <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
+          <div className="flex w-full">
+            <div className="m-2 z-50">
+              <MappedOrbs quest={reward.quest} />
+            </div>
+          </div>
+          <div
+            className={`flex relative items-center h-[19%] uppercase card-shadow-white-${reward.quest} text-white`}
+          >
+            <div
+              style={{
+                backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center center",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                height: "100%",
+                width: "100%",
+              }}
+              className={`filter-paper-${reward.quest.mythology.toLowerCase()} rounded-b-[15px]`}
+            />
+            <div
+              className={`flex justify-between w-full h-full items-center glow-text-quest px-3 z-10`}
+            >
+              <div>{reward.quest.questName}</div>
+              <div className="">
+                <Symbol
+                  myth={reward.quest.mythology.toLowerCase()}
+                  isCard={1}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -129,6 +129,17 @@
   }
 }
 
+@keyframes bubble-spin { 
+  100% { 
+      -webkit-transform: rotate(360deg); 
+      transform:rotate(360deg); 
+  } 
+}
+
+.bubble-spin-effect{
+  animation:bubble-spin 4s linear infinite;
+}
+
 
 
 // Scale and Glow Animations
@@ -161,6 +172,7 @@
 .scale-wheel-glow {
   @include scale-and-glow(scale-wheel-glow-animation, black, 5px, 50px);
 }
+
 
 // Scale in and out Animations
 .scale-symbol {
@@ -293,6 +305,14 @@
   @include slideY(slide-down-animation, 0%, 100%);
 }
 
+.minimize-head{
+  @include slideY(slide-up-head-animation, 0%, -100%);
+}
+
+.maximize-head{
+  @include slideY(slide--head-animation, -100%, 0%);
+}
+
 .maximize{
   @include slideY(slide-up-animation, 100%, 0%);
 }
@@ -398,4 +418,18 @@
   100% {
     transform: translateX(-50%) translateY(0);
   }
+}
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+.skeleton {
+  background: #414141;
+  background: linear-gradient(110deg, #414141 8%, #f5f5f56a 25%, #414141 33%);
+  border-radius: 5px;
+  background-size: 200% 100%;
+  animation: 3s shine linear infinite;
 }

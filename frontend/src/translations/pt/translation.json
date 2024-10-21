@@ -13,13 +13,16 @@
     "celtic": "Céltico",
     "egyptian": "Egípcio",
     "greek": "Grego",
-    "norse": "Nórdico"
+    "norse": "Nórdico",
+    "dark": "Obscura"
   },
   "keywords": {
+    "orb": "Orbe",
     "orbs": "ORB(S)",
     "conversion": "Conversão",
     "discover": "Descobrir",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "load": "Carregando..."
   },
   "buttons": {
     "buy": "Comprar",
@@ -33,7 +36,10 @@
     "forges": "Forjas",
     "boosters": "Impulsionadores",
     "quests": "Missões",
-    "leaderboard": "Classificação"
+    "leaderboard": "Classificação",
+    "tower": "Torre",
+    "brand": "Marca",
+    "profile": "Perfil"
   },
   "boosters": [
     { "title": "Autômata", "desc": "Toque automático" },
@@ -55,9 +61,11 @@
     "team": "Equipe",
     "guide": "GUIA",
     "causes": "Causas",
+    "partners": "Parceiros",
     "partner": "Parceiros",
     "charity": "Caridad",
-    "rewards": "RECOMPENSAS"
+    "rewards": "RECOMPENSAS",
+    "task": "Tarefas"
   },
   "elements": {
     "earth": "Terra",
@@ -67,19 +75,32 @@
     "aether": "Éter"
   },
   "note": {
-    "text": "(Los rankings são atualizados a cada hora)"
+    "text": "Atualização da classificação em",
+    "tower": "Toque nas ORBS para converter",
+    "bonus": "Para ver promoções ativas"
+  },
+  "tower": {
+    "tune": "Você conhece a ♪ melodia ♪?",
+    "play": "Toque na ordem certa!"
   },
   "bonus": {
-    "join": "BÔNUS DE BOAS-VINDAS",
+    "join": "BÔNUS BOAS-VINDAS",
     "box": "CAIXA",
     "youwon": "VOCÊ VENCEU!",
     "win": "Ganhar"
   },
   "tutorial": {
     "forge": { "title": "TOCA NAS FORJAS", "desc": "PARA GANHAR ORB(S)" },
-    "quests": { "title": "RECLAMAR MISSÕES", "desc": "COMPLETAR PARA GANHAR $FAITH" },
-    "boosters": { "title": "ADQUIRIR BOOSTERS", "desc": "PARA RECOMPENSAS DO JOGO" },
-    "profile": { "title": "SELECIONAR PARCEIROS", "desc": "PARA RECLAMAR PRÊMIOS" }
+    "quests": {
+      "title": "RECLAMAR MISSÕES",
+      "desc": "COMPLETAR PARA GANHAR $FAITH"
+    },
+    "boosters": {
+      "title": "ADQUIRIR BOOSTERS",
+      "desc": "PARA RECOMPENSAS DO JOGO"
+    },
+    "profile": { "title": "ESCOLHA SEU PAÍS", "desc": "para desbloquear prêmios" },
+    "tower": { "title": "ELIGE ORB Y CONVIERTE", "desc": "PARA CONSEGUIR POTENCIADORES" }
   },
   "quests": {
     "celtic": {
@@ -336,40 +357,34 @@
         "desc": "Você precisa de mais orbes para completar esta transação."
       }
     },
-    "Booster_AutomataClaim": {
+    "Booster_Claim": {
       "success": {
-        "title": "Booster ativado com sucesso!",
-        "desc": "Seu automata está agora ativo e funcionando!"
+        "title": "Potencializador Conquistado!",
+        "desc": "Você agora está equipado para vitórias épicas! Vá e conquiste!"
+      },
+      "error": {
+        "title": "Falha ao Reivindicar o Potencializador!",
+        "desc": "Ops! Algo deu errado ao reivindicar seu potencializador. Por favor, tente novamente!"
       }
     },
-    "Booster_ShardsClaim": {
+    "Conversion_Multiplier": {
       "success": {
-        "title": "Booster ativado com sucesso!",
-        "desc": "Booster de fragmentos reivindicado! Agora multiplique seu poder de toques."
+        "title": "Melodia Correspondente!",
+        "desc": "Você conseguiu! A chave está correta e o multiplicador foi aplicado!"
+      },
+      "error": {
+        "title": "Desajuste de Melodia!",
+        "desc": "A chave que você inseriu está incorreta. Infelizmente, nenhum multiplicador foi aplicado"
       }
     },
-    "Booster_InsufficientOrbs": {
+    "Tasks": {
+      "success": {
+        "title": "Tarefa Concluída com Sucesso!",
+        "desc": "Muito bem! Você ganhou 3 MultiOrbs."
+      },
       "error": {
-        "title": "Reivindicação do Booster não foi bem-sucedida",
-        "desc": "Orbes MultiColor insuficientes para ativar o booster."
-      }
-    },
-    "Booster_AutomataAlreadyClaim": {
-      "error": {
-        "title": "Reivindicação do Booster não foi bem-sucedida",
-        "desc": "Ativação do booster falhou. Tente reivindicar o automata mais tarde."
-      }
-    },
-    "Booster_ShardsAlreadyClaim": {
-      "error": {
-        "title": "Reivindicação do Booster não foi bem-sucedida",
-        "desc": "Ativação do booster falhou. Tente multiplicar seu poder de toques de fragmentos mais tarde."
-      }
-    },
-    "Booster_Lost_Not_Available": {
-      "error": {
-        "title": "Missão não disponível",
-        "desc": "Volte amanhã!"
+        "title": "Tarefa Incompleta!",
+        "desc": "A tarefa não pôde ser concluída. Por favor, tente novamente para ganhar suas recompensas."
       }
     },
     "Quest_complete": {
@@ -427,7 +442,7 @@
     "ReferralCopy": {
       "success": {
         "title": "Link de referência copiado!",
-        "desc": "Seu link de referência foi copiado para a área de transferência. Compartilhe com seus amigos!"
+        "desc": "Compartilhe com seus amigos para ganhar 3 ORBs multicolor!"
       }
     },
     "TonConnect": {

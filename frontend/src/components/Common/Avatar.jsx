@@ -1,4 +1,5 @@
 import React from "react";
+import { mythSections } from "../../utils/constants";
 
 const colors = [
   "bg-red-500",
@@ -10,20 +11,27 @@ const colors = [
 ];
 
 const getRandomColor = () => {
-  return colors[Math.floor(Math.random() * colors.length)];
+  return mythSections[Math.floor(Math.random() * mythSections.length)];
 };
 
-const Avatar = ({ name, profile, color }) => {
+const Avatar = ({ name, color }) => {
   const firstLetter = name.charAt(0).toUpperCase();
   const avatarColor = color ? color : getRandomColor();
 
   return (
     <div
-      className={`w-full h-full flex items-center justify-center text-white ${
-        profile == 1 ? "text-2xl" : "text-lg"
-      } font-bold rounded-full ${avatarColor}`}
+      className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
     >
-      {firstLetter}
+      <img
+        src="/assets/uxui/240px-orb.base.png"
+        alt="orb"
+        className={`filter-orbs-${avatarColor} overflow-hidden max-w-[10vw]`}
+      />
+      <span
+        className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[25px] mt-1 opacity-50`}
+      >
+        {firstLetter}
+      </span>
     </div>
   );
 };
