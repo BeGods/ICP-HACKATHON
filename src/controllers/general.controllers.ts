@@ -274,128 +274,17 @@ export const claimJoiningBonus = async (req, res) => {
 
     await userMythologies.findOneAndUpdate(
       { userId: userId, "mythologies.name": "Greek" },
-      { $inc: { multiColorOrbs: 3, "mythologies.name": 2 } }
+      { $inc: { multiColorOrbs: 3, "mythologies.$.orbs": 2 } }
     );
 
     res.status(200).json({ message: "Joining bonus claimed successfully." });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
     });
-  }
-};
-
-export const test = async (req, res) => {
-  try {
-    const user = req.user;
-
-    const pipeline = [
-      {
-        $lookup: {
-          from: "quests",
-          pipeline: [
-            {
-              $lookup: {
-                from: "milestones",
-                let: {
-                  questId: "$_id",
-                  userId: new mongoose.Types.ObjectId(user._id),
-                },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [{ $eq: ["$userId", "$$userId"] }],
-                      },
-                    },
-                  },
-                  {
-                    $project: {
-                      claimedQuest: {
-                        $filter: {
-                          input: "$claimedQuests",
-                          as: "cq",
-                          cond: { $eq: ["$$cq.taskId", "$$questId"] },
-                        },
-                      },
-                    },
-                  },
-                ],
-                as: "milestoneData",
-              },
-            },
-            {
-              $addFields: {
-                isCompleted: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$milestoneData.claimedQuest" }, 0] },
-                    then: true,
-                    else: false,
-                  },
-                },
-                isQuestClaimed: {
-                  $cond: {
-                    if: {
-                      $and: [
-                        { $gt: [{ $size: "$milestoneData.claimedQuest" }, 0] },
-                        {
-                          $arrayElemAt: [
-                            "$milestoneData.claimedQuest.questClaimed",
-                            0,
-                          ],
-                        },
-                      ],
-                    },
-                    then: true,
-                    else: false,
-                  },
-                },
-              },
-            },
-            {
-              $sort: { createdAt: -1 as -1 },
-            },
-            {
-              $project: {
-                milestoneData: 0,
-                updatedAt: 0,
-                createdAt: 0,
-                __v: 0,
-              },
-            },
-          ],
-          as: "allQuests",
-        },
-      },
-      {
-        $addFields: {
-          quests: {
-            $filter: {
-              input: "$allQuests",
-              as: "quest",
-              cond: {
-                $and: [
-                  { $eq: ["$$quest.status", "Active"] },
-                  {
-                    $eq: [{ $ifNull: ["$$quest.secret", null] }, null],
-                  },
-                  { $eq: ["$$quest.isQuestClaimed", false] },
-                ],
-              },
-            },
-          },
-        },
-      },
-      { $project: { allQuests: 0 } },
-    ];
-
-    const data = await milestones.aggregate(pipeline).exec();
-
-    res.status(200).json({ data: data[0].quests });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -463,7 +352,7 @@ export const getRewards = async (req, res) => {
     const partnerItems = ourpartners.slice(0, remainingSlots);
 
     res.status(200).json({
-      rewards: [...playSuperItems, ...partnerItems],
+      rewards: partnerItems,
       rewardsClaimedInLastHr: rewardsClaimedInLastHr,
       bubbleLastClaimed: userMilestones.rewards.updatedAt,
     });
