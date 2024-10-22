@@ -115,7 +115,7 @@ const Activity = () => {
                 </div>
               </SkeletonTheme>
             ) : noActivity ? (
-              <div className="h-[40vh] flex items-center justify-center">
+              <div className="h-[65vh] flex items-center justify-center">
                 <h1 className="text-[#FCD378] text-2xl">No Activity Found</h1>
               </div>
             ) : (

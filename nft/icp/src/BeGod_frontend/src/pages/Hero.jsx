@@ -242,8 +242,9 @@ const Hero = () => {
 };
 let index = -1;
 const fetchCollectionNfts = async (collectionId,color) => {
+   try{
     const listedNfts = await backendActor?.listings(collectionId);
-    console.log("listings resut",listedNfts);
+      console.log("listings resut",listedNfts);
     index  = -1;
     if(listedNfts.length === 0){
         updateNoCardsStatus(true);
@@ -252,6 +253,11 @@ const fetchCollectionNfts = async (collectionId,color) => {
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId,color);
     console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
+   }catch{
+    updateNoCardsStatus(true);
+    return;
+   }
+  
    
 
 };
@@ -354,7 +360,7 @@ const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
 useEffect(()=>{
     
     if (currentFilterOption !== filterListOptions[0].optionId) {
-        let updatedList = [...filteredList];
+        let updatedList = [...selectedCollectionNftCardsList];
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
             updateRecentlyAddedStatus(true);
@@ -730,7 +736,7 @@ console.log("filtered list after applying filters",filteredList)
                                                         }`} ICP)
                                             </button>
                                                 {currentDropDown === dropdownItems.price && (
-                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[100px] flex flex-col items-center justify-around'
+                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[120px] flex flex-col items-center justify-around'
                                                 onClick={(e)=>e.stopPropagation()}
                                                 >
                                                         <h1>Price in ICP</h1>
@@ -772,7 +778,7 @@ console.log("filtered list after applying filters",filteredList)
                                             {currentDropDown === dropdownItems.filter && (
                                                 // here the dropdown will be top , i because when dropdown is to bottom i am getting blur dropdown ,
                                                 //  if you want to test put top-60px in place of bottom-30 below
-                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[100px] overflow-y-auto ">
+                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[150px] overflow-y-auto ">
                                                         {filterListOptions.map((eachFilter,index)=>(
                                                             <>
                                                                 <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
