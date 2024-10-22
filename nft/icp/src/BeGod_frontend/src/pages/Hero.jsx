@@ -242,8 +242,9 @@ const Hero = () => {
 };
 let index = -1;
 const fetchCollectionNfts = async (collectionId,color) => {
+   try{
     const listedNfts = await backendActor?.listings(collectionId);
-    console.log("listings resut",listedNfts);
+      console.log("listings resut",listedNfts);
     index  = -1;
     if(listedNfts.length === 0){
         updateNoCardsStatus(true);
@@ -252,6 +253,11 @@ const fetchCollectionNfts = async (collectionId,color) => {
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId,color);
     console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
+   }catch{
+    updateNoCardsStatus(true);
+    return;
+   }
+  
    
 
 };

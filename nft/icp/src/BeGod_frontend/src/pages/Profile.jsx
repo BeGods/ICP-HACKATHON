@@ -288,7 +288,7 @@ const onClickRemoveOrder = async () =>{
 
   } 
  console.log("selected list",selectedList)
-  const fetchFavoriteCards = async(selectedList) => {
+  const fetchFavoriteCards = async(currList) => {
     const result = await backendActor?.getFavorites(principal)
     console.log("resssssssult" , result);
     if(result.ok?.length>0){
@@ -297,7 +297,7 @@ const onClickRemoveOrder = async () =>{
 
      
      // console.log("selected list",selectedList)
-     const favCardslist = selectedList
+     const favCardslist = currList
      .map(item => item[0])
      .filter(card => favItems.has(card.tokenId)); 
       console.log("favList",favCardslist)
@@ -522,7 +522,7 @@ const fetchCollections = async () => {
     const currentSelectedCollection = allCollectionsList[currentDropDownOption];
     const updatedCardsList = await getSelectedOptionCards(currentSelectedCollection.collectionId);
     setIsCardsLoading(false);
-    if(updatedCardsList.length >0){
+    if(updatedCardsList?.length >0){
       updateSelectedList(updatedCardsList);
     }else{
       updateNoCardsStatus(true);
@@ -537,18 +537,23 @@ const fetchCollections = async () => {
     const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
    // console.log("not owned nfts after fetching",notOwnedNfts);
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
-   // console.log("owned nfts",updatedOwnedList);
-    updatedCardsList = updatedOwnedList;
-    if(updatedCardsList.length == 0){
-      updateNoCardsStatus(true);
-    }else{
-      const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
+   console.log("owned nfts",updatedOwnedList);
+    
+    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
    // console.log("not owned nfts",updatedNotOwnedNfts);
     updateRemainingNfts(updatedNotOwnedNfts.length);
-    updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
-    return updatedCardsList;
-    
+  
+    if(updatedOwnedList.length == 0){
+      updateSelectedList([]);
+      return []
+    }else{
+      updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
+      return updatedCardsList;
     }
+    
+    
+    
+    
     
     
 
@@ -705,17 +710,18 @@ const onChangeFilterOption = async(eachCollection) => {
     updateNoCardsStatus(false);
     setIsCardsLoading(true);
     const updatedCardsList = await getSelectedOptionCards(eachCollection.collectionId);
-    setIsCardsLoading(false);
-    if(updatedCardsList.length >0){
+    
+    if(updatedCardsList?.length >0){
       if(currentOption === "favorite"){
         await fetchFavoriteCards(updatedCardsList);
-        setIsCardsLoading(false);
       }else{
         updateSelectedList(updatedCardsList);
       }
     }else{
       updateNoCardsStatus(true);
+      
     }
+    setIsCardsLoading(false);
   }
   
  }
