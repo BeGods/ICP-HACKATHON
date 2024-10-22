@@ -68,44 +68,90 @@ function Users() {
     }
   };
 
-  const checktranscations = async (Collection) => {
-    const listdata = [];
+  // const checktranscations = async (Collection) => {
+  //   const listdata = [];
 
-    for (let i = 0; i < Collection.length; i++) {
-      const userPrincipalArray = Collection[i][1];
-      try {
-        const principalString = Principal.fromUint8Array(
-          userPrincipalArray._arr
-        );
-        const result = await backendActor?.transactions(principalString);
-        if (result && Array.isArray(result) && result.length > 0) {
-          result.forEach((transactionArray) => {
-            if (
-              Array.isArray(transactionArray) &&
-              transactionArray.length > 0
-            ) {
-              listdata.push(transactionArray);
-            }
-          });
-          console.log("Transaction data added:", result);
-        } else {
-          console.log("No valid data for principal:", principalString);
+  //   for (let i = 0; i < Collection.length; i++) {
+  //     const userPrincipalArray = Collection[i][1];
+  //     try {
+  //       const principalString = Principal.fromUint8Array(
+  //         userPrincipalArray._arr
+  //       );
+  //       const result = await backendActor?.transactions(principalString);
+  //       if (result && Array.isArray(result) && result.length > 0) {
+  //         result.forEach((transactionArray) => {
+  //           if (
+  //             Array.isArray(transactionArray) &&
+  //             transactionArray.length > 0
+  //           ) {
+  //             listdata.push(transactionArray);
+  //           }
+  //         });
+  //         console.log("Transaction data added:", result);
+  //       } else {
+  //         console.log("No valid data for principal:", principalString);
+  //       }
+  //     } catch (error) {
+  //       console.log(
+  //         "Error fetching transactions for principal:",
+  //         userPrincipalArray,
+  //         error
+  //       );
+  //     }
+  //   }
+  //   if (listdata.length > 0) {
+  //     setalldata(listdata);
+  //     console.log("All successful individual arrays stored:", listdata);
+  //   } else {
+  //     console.log("No successful data to store.");
+  //   }
+  //   setLoading(false);
+  // };
+
+  const checktranscations = async (Collection) => {
+    try {
+      const transactionPromises = Collection.map(async (item) => {
+        const userPrincipalArray = item[1];
+
+        try {
+          const principalString = Principal.fromUint8Array(
+            userPrincipalArray._arr
+          );
+          const result = await backendActor?.transactions(principalString);
+
+          if (result && Array.isArray(result) && result.length > 0) {
+            return result.filter(
+              (transactionArray) =>
+                Array.isArray(transactionArray) && transactionArray.length > 0
+            );
+          } else {
+            console.log("No valid data for principal:", principalString);
+            return [];
+          }
+        } catch (error) {
+          console.log(
+            "Error fetching transactions for principal:",
+            userPrincipalArray,
+            error
+          );
+          return [];
         }
-      } catch (error) {
-        console.log(
-          "Error fetching transactions for principal:",
-          userPrincipalArray,
-          error
-        );
+      });
+
+      const allResults = await Promise.all(transactionPromises);
+      const listdata = allResults.flat();
+
+      if (listdata.length > 0) {
+        setalldata(listdata);
+        console.log("All successful individual arrays stored:", listdata);
+      } else {
+        console.log("No successful data to store.");
       }
+    } catch (error) {
+      console.error("Error in checkTransactions:", error);
+    } finally {
+      setLoading(false);
     }
-    if (listdata.length > 0) {
-      setalldata(listdata);
-      console.log("All successful individual arrays stored:", listdata);
-    } else {
-      console.log("No successful data to store.");
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
