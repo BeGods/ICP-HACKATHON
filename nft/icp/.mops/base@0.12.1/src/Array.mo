@@ -858,6 +858,7 @@ module {
   public func take<T>(array : [T], length : Int) : [T] {
     let len = Prim.abs(length);
     let size = array.size();
+    
     let resSize = if (len < size) { len } else { size };
     let start : Nat = if (length > 0) 0 else size - resSize;
     subArray(array, start, resSize)
