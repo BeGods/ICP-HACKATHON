@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from "../utils/useAuthClient.jsx";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BiCategory } from "react-icons/bi";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { CiDollar } from "react-icons/ci";
@@ -21,6 +21,7 @@ import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { GrPowerReset } from "react-icons/gr";
 import toast from 'react-hot-toast';
+import { updateCurrentIndex } from '../redux/infoSlice.js';
 
 
 const cardTypeList = [
@@ -80,12 +81,12 @@ const Hero = () => {
     
     const visibleButtons = 4; 
     let start = 0;
-    if(currentIndex >= visibleButtons){
-        start = currentIndex+1-visibleButtons
+    if(currentIndex >= visibleButtons-1){
+        start = currentIndex+2-visibleButtons
     } 
     const [startIndex,setStartIndex] = useState(start);
 
-    const allCollectionsList = useSelector((state)=>state.info.collectionList); 
+    // const allCollectionsList = useSelector((state)=>state.info.collectionList); 
 
    // console.log("collection List frist time",allCollectionsList);
 
@@ -129,10 +130,10 @@ const Hero = () => {
     const [isDisplayFiltersPopup,updateFiltersDisplayStatus] = useState(false);
    
   
-    
+    const dispatch = useDispatch();
 
     const handleCurrentIndex  = async(index) => {
-
+        
         if(index >= visibleButtons-1 && index >= startIndex) {
             if(index != collections.length-1){
                 setStartIndex(index+2 - visibleButtons);
@@ -160,10 +161,15 @@ const Hero = () => {
         setCurrentIndex(index);
         const currList = await fetchCollectionNfts(currentCollectionId,color)
         if(currList.length > 0){
+            updateFilteredList(currList);
             updateSelectedCollectionNftCardsList(currList);
         }else{
+            updateSelectedCollectionNftCardsList([]);
             updateNoCardsStatus(true);
         }
+       
+         dispatch(updateCurrentIndex(index));
+        
     }
 
   
@@ -186,7 +192,24 @@ const Hero = () => {
             updateNoCollectionStatus(true);
             return; 
         }
-        const collectionItems = result[0][1];
+        const tempArray = [];
+        if (result && Array.isArray(result)) {
+          result.forEach((item) => {
+            if (item && item.length > 1) {
+              // console.log(item);
+              item[1].forEach((value) => {
+                // console.log(value);
+                if (value && value.length > 1) {
+                  tempArray.push(value);
+                }
+              });
+            }
+          });
+        }
+          console.log(tempArray);
+       
+        
+        const collectionItems = tempArray
       
         console.log("collection items" , collectionItems);
         const collections = [] 
@@ -215,6 +238,7 @@ const Hero = () => {
         const color = collections[currentIndex].shadowColor;
         const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color);
         if(currentCollectionNfts.length>0){
+            updateFilteredList(currentCollectionNfts);
             updateSelectedCollectionNftCardsList(currentCollectionNfts);
         }
         
@@ -223,59 +247,60 @@ const Hero = () => {
 };
 let index = -1;
 const fetchCollectionNfts = async (collectionId,color) => {
+   try{
     const listedNfts = await backendActor?.listings(collectionId);
+      console.log("listings resut",listedNfts);
     index  = -1;
     if(listedNfts.length === 0){
+        updateSelectedCollectionNftCardsList([]);
         updateNoCardsStatus(true);
         return [];
     }
     const fetchedNfts = getCollectionNfts(listedNfts,collectionId,color);
     console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
+   }catch{
+    updateSelectedCollectionNftCardsList([]);
+    updateNoCardsStatus(true);
+    return;
+   }
+  
    
 
 };
 
-const getCollectionNfts = (collectionList,collectionId,color) => {
-    const tempList = [];
-    let tempIndex = 0;
-    for(let i=0;i<collectionList.length;i++){
-        const eachItem = collectionList[i];
-        console.log("each item before formating",eachItem);
-        const nftDetails = eachItem[3].nonfungible;
-        const image = nftDetails.thumbnail;
-        const name = nftDetails.name;
-        const sold = eachItem[2].price;
-        const ICP = parseInt(sold)/100000000;
-        const metadata = JSON.parse(nftDetails.metadata[0].json);
-        //  console.log(metadata,'metadata');
-        const nftType = metadata.nftType;
-        const borderColor = metadata.nftcolor;
-       // console.log("collection list before nft card",collections)
-        const nftCard= {
-            collectionId,
-            index:eachItem[0],
-            img1: image,
-            name,
-            sold,
-            ICP,
-            nftType,
-            borderColor,
-            collectionColor : color,
-        };
-        if(tempIndex === 0){
-            tempList.push([nftCard]);
-            tempIndex++;
-        }else if(tempList[tempIndex-1][0].name === nftCard.name){
-            tempList[tempIndex-1].push(nftCard);
-        }else{
-            tempList.push([nftCard]);
-            tempIndex++;
-        }
-    }
-    return tempList;
-};
-
+const getCollectionNfts = (collectionList, collectionId, color) => {
+    return collectionList.reduce((acc, eachItem) => {
+      const { nonfungible } = eachItem[3];
+      const { thumbnail: image, name } = nonfungible;
+      const sold = eachItem[2].price;
+      const ICP = parseInt(sold) / 100000000;
+      const metadata = JSON.parse(nonfungible.metadata[0].json);
+      const { nftType, nftcolor: borderColor } = metadata;
+  
+      const nftCard = {
+        collectionId,
+        index: eachItem[0],
+        img1: image,
+        name,
+        sold,
+        ICP,
+        nftType,
+        borderColor,
+        collectionColor: color,
+      };
+  
+      // Check if the last group of cards is the same as the current card
+      if (acc.length > 0 && acc[acc.length - 1][0].name === nftCard.name) {
+        acc[acc.length - 1].push(nftCard);
+      } else {
+        acc.push([nftCard]);
+      }
+  
+      return acc;
+    }, []);
+  };
+  
 
 //  console.log("collection data", currentCollectionData)
 // console.log("collection list" , collections)
@@ -283,9 +308,9 @@ function getScreenSize() {
     const width = window.innerWidth;
   
     if (width >= 1024) {
-      return 'lg'; // Large screen
+      return 'lg';
     } else if (width >= 768) {
-      return 'md'; // Medium screen
+      return 'md'; 
     } else if(width >=640){
       return 'sm'; 
     }else{
@@ -337,19 +362,29 @@ useEffect(() => {
 
 }, [currentCardType, applyPriceRange, selectedCollectionNftCardsList]);
 
+const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
+
 useEffect(()=>{
     
     if (currentFilterOption !== filterListOptions[0].optionId) {
-        let updatedList = [...filteredList];
+        let updatedList = [...selectedCollectionNftCardsList];
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
+            updateRecentlyAddedStatus(true);
         } else if (currentFilterOption === filterListOptions[2].optionId) {
             updatedList = updatedList.sort((a, b) => a[0].ICP - b[0].ICP);
+            updateRecentlyAddedStatus(false);
         } else if (currentFilterOption === filterListOptions[3].optionId) {
             updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
+            updateRecentlyAddedStatus(false);
         }
         console.log("updated list after filter change",updatedList)
         updateFilteredList(updatedList)
+    }else if(isRecentlyAdded){
+        updateFilteredList([...filteredList].reverse());
+        updateRecentlyAddedStatus(false);
+    }else{
+        updateFilteredList([...filteredList]);
     }
     
 },[currentFilterOption])
@@ -390,7 +425,7 @@ console.log("filtered list after applying filters",filteredList)
                     <Navbar mobileView={mobileViewHandler} landingPage={true} />
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
-                    <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[50px] md:h-[130px] xl:h-[160px] 2xl:h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
+                    <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center  leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
                         {mainHeading}
                     </h1>
                     <h2 className='text-[16px] md:text-[24px] leading-tight font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] text-center'>
@@ -487,8 +522,8 @@ console.log("filtered list after applying filters",filteredList)
                                 
                          ):(
                             <>
-                                <h1 className='sm:ml-0 text-[64px] font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
-                                <h2 className='text-center sm:text-start w-[90%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
+                                <h1 className='text-center text-[44px]  sm:ml-0 sm:text-start sm:text-[54] lg:text-[64]  font-[400] leading-[54px] custom-text-border'>{collections[currentIndex].name}</h1>
+                                <h2 className='text-center sm:text-start w-[100%] lg:w-[70%]'>{[collections[currentIndex].description]}</h2>
                             </>
                          )}
 
@@ -620,8 +655,8 @@ console.log("filtered list after applying filters",filteredList)
                             <NFTGallery currentCollection={filteredList}  />
                         ) : (
                             noCards || (selectedCollectionNftCardsList.length>0 && filteredList.length===0) ? (
-                              <div className='w-[100%] h-[220px] flex items-center justify-center'>
-                                    <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
+                              <div className='w-[100%] h-[42vh] flex items-center justify-center'>
+                                    <h1 className='text-[#FCD37B] text-4xl'>No cards found.</h1>
                               </div>
                            ):(
                             <div className="pb-10">
@@ -684,7 +719,7 @@ console.log("filtered list after applying filters",filteredList)
                                             <button
                                                 onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.type)}}
                                                 className={`rounded-md flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378]`}
+                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378] ${currentDropDown === dropdownItems.filter && "opacity-10"} `}
                                             >
                                                 <BiCategory />
                                                 Category
@@ -708,7 +743,7 @@ console.log("filtered list after applying filters",filteredList)
                                                         }`} ICP)
                                             </button>
                                                 {currentDropDown === dropdownItems.price && (
-                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[100px] flex flex-col items-center justify-around'
+                                                <div className='absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[120px] flex flex-col items-center justify-around'
                                                 onClick={(e)=>e.stopPropagation()}
                                                 >
                                                         <h1>Price in ICP</h1>
@@ -741,8 +776,8 @@ console.log("filtered list after applying filters",filteredList)
                                         <span className='relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 '>Filter & Sort</span>
                                         <button
                                                 onClick={(e)=>{e.stopPropagation();onClickAnyFilter(dropdownItems.filter)}}
-                                                className=' absolute rounded-md flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border '
+                                                className={` absolute rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border ${currentDropDown === dropdownItems.type && "opacity-5"}  `}
                                             >
                                                 < RiArrowUpDownFill />
                                                 {currentFilterOption}
@@ -750,7 +785,7 @@ console.log("filtered list after applying filters",filteredList)
                                             {currentDropDown === dropdownItems.filter && (
                                                 // here the dropdown will be top , i because when dropdown is to bottom i am getting blur dropdown ,
                                                 //  if you want to test put top-60px in place of bottom-30 below
-                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[100px] overflow-y-auto ">
+                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[150px] overflow-y-auto ">
                                                         {filterListOptions.map((eachFilter,index)=>(
                                                             <>
                                                                 <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'

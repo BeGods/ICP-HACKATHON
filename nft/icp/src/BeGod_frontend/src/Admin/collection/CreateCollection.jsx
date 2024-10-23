@@ -125,7 +125,7 @@ const CreateCollection = () => {
     if (file) {
       try {
         let options = {
-          maxSizeMB: 0.05, // 50KB
+          maxSizeMB: 0.1, // 100KB
           maxWidthOrHeight: 300,
           useWebWorker: true,
         };
@@ -321,11 +321,10 @@ const CreateCollection = () => {
     togglewarning();
     finalcall();
   };
-
   const finalcall = async () => {
-    setLoading(true); // Start loading
-    let hasError = false; // Flag to track if an error occurs
-
+    setLoading(true);
+    let hasError = false;
+    let errorShown = false;
     try {
       const answ = await createExtData(
         name,
@@ -335,47 +334,61 @@ const CreateCollection = () => {
       );
       if (answ instanceof Error) {
         hasError = true;
-        toast.error(answ);
+        if (!errorShown) {
+          toast.error("Error in creating collection: " + answ);
+          errorShown = true;
+        }
         throw answ;
       }
-
-      console.log(nftCardsList, "nftCardsList nftCardsList");
       setcanId(answ);
       if (nftCardsList && nftCardsList.length > 0) {
-        nftCardsList.map((val, key) => {
-          const mintResult = mintNFT(
-            answ,
-            val.nftName,
-            val.nftDescription,
-            val.nftImage,
-            val.nftQuantity,
-            val.nftcolor,
-            val.nftPrice,
-            val.nftType
-          );
-          console.log(mintResult, "minResult");
-          if (mintResult instanceof Error) {
+        for (let val of nftCardsList) {
+          try {
+            const mintResult = await mintNFT(
+              answ,
+              val.nftName,
+              val.nftDescription,
+              val.nftImage,
+              val.nftQuantity,
+              val.nftcolor,
+              val.nftPrice,
+              val.nftType
+            );
+            console.log(mintResult, "mintResult");
+            if (mintResult instanceof Error) {
+              hasError = true;
+              if (!errorShown) {
+                toast.error("Error in minting NFT: " + mintResult);
+                errorShown = true;
+              }
+              throw mintResult;
+            } else {
+              setsuccess(!Success);
+            }
+          } catch (mintError) {
             hasError = true;
-            throw mintResult;
-            toast.error(mintResult);
-          } else {
-            setsuccess(!Success);
-            setTimeout(() => {
-              navigate("/admin/collection");
-            }, 2000);
+            if (!errorShown) {
+              console.error("Error in minting NFT: ", mintError);
+              toast.error("Error in minting NFT: " + mintError);
+              errorShown = true;
+            }
+            break;
           }
-          setLoading(false);
-          if (!hasError) {
-            // setsuccess(!Success);
-            // setTimeout(() => {
-            //   navigate("/admin/collection");
-            // }, 2000);
-          }
-        });
+        }
+      }
+      if (!hasError) {
+        setTimeout(() => {
+          navigate("/admin/collection");
+        }, 2000);
       }
     } catch (error) {
-      console.error("Error in final call: ", error);
-      toast.error("Error in final call");
+      if (!errorShown) {
+        console.error("Error in final call: ", error);
+        toast.error("Error in final call: " + error);
+        errorShown = true;
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

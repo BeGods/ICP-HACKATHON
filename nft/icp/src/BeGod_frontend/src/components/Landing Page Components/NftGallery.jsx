@@ -142,7 +142,7 @@ const NFTGallery = ({ currentCollection }) => {
                 <h2 className="mt-2 text-lg capitalize sm:text-xl">Type : {img.nftType}</h2>
                 <h2 className="mt-2 text-lg capitalize sm:text-xl">Quantity : {eachCard.length}</h2>
                 <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
-                <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 px-1 rounded-sm bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                   {t('buyNow')}
                 </Link>
 
@@ -161,14 +161,14 @@ const NFTGallery = ({ currentCollection }) => {
           src="/Hero/up.png"
           alt="Previous"
           onClick={handlePreviousPage}
-          className={`hover:cursor-pointer  -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer  -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
 
         <img
           src="/Hero/down.png"
           alt="Next"
           onClick={handleNextPage}
-          className={`hover:cursor-pointer -rotate-90 ${(currentPage + 1) * itemsPerPage >= currentCollection.length ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer -rotate-90 ${(currentPage + 1) * itemsPerPage >= currentCollection.length ? 'opacity-50 cursor-not-allowed' : ''}`}
         />
       </div>
     </div>

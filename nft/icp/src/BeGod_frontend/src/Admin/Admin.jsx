@@ -11,6 +11,8 @@ import CreateCollection from "./collection/CreateCollection";
 import UserDetails from "./UserDetails";
 import PageNotFound from "./PageNotFound";
 import Useractivity from "./Useractivity";
+import Allorder from "./Allorder";
+import AllorderDetails from "./AllorderDetails";
 
 function Admin() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,6 +58,8 @@ function Admin() {
           <Route path="/users/:id" element={<UserDetails />} />
           <Route path="*" element={<PageNotFound />} />
           <Route path="/activity" element={<Useractivity />} />
+          <Route path="/activity/allorder/" element={<Allorder />} />
+          <Route path="/activity/allorder/:id" element={<AllorderDetails />} />
         </Routes>
       </div>
     </div>

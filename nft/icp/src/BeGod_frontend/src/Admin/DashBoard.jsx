@@ -21,9 +21,12 @@ function DashBoard() {
       navigate("/login");
     } else {
       const fetching = async () => {
-        await getTotalNFT();
-        await getTotalUser();
-        await getallcollection();
+        // await getTotalNFT();
+        // await getTotalUser();
+        // await getallcollection();
+        // setloading(false);
+        setloading(true);
+        await Promise.all([getTotalNFT(), getTotalUser(), getallcollection()]);
         setloading(false);
       };
       fetching();

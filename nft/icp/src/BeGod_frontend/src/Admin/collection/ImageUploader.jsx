@@ -12,22 +12,19 @@ function ImageUploader(props) {
 
   // Rendering previews and sending both files and previews to parent
   useEffect(() => {
-    if (!files) return;
-    let tmp = [];
-    for (let i = 0; i < files.length; i++) {
-      tmp.push(URL.createObjectURL(files[i]));
-    }
-    const objectUrls = tmp;
-    setPreviews(objectUrls);
+    if (!files || files.length === 0) return;
 
+    // Create preview URLs for each file
+    const objectUrls = Array.from(files).map((file) =>
+      URL.createObjectURL(file)
+    );
+    setPreviews(objectUrls);
     captureUploadedNftImageFile(files);
 
-    // free memory
-    for (let i = 0; i < objectUrls.length; i++) {
-      return () => {
-        URL.revokeObjectURL(objectUrls[i]);
-      };
-    }
+    // Cleanup function to revoke object URLs and free memory
+    return () => {
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
   }, [files]);
 
   useEffect(() => {

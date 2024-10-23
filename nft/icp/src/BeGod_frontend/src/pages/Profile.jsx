@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import YellowButton from '../components/button/YellowButton';
 import { useAuth } from '../utils/useAuthClient';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -25,7 +25,9 @@ import { FaTelegram } from "react-icons/fa6";
 import { RiFileCopyLine } from 'react-icons/ri';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import FadeLoader from "react-spinners/FadeLoader"
-
+import { MdExpandMore } from "react-icons/md";
+import { MdExpandLess } from "react-icons/md";
+import { updateCurrentIndex } from '../redux/infoSlice';
 
 const buyingStatus = {
    initial : "INITIAL",
@@ -67,6 +69,11 @@ const Profile = () => {
       console.log(principal,'principal')
      }
   },[isAuthenticated]);
+
+  const dispatch = useDispatch();
+ useEffect(()=>{
+  dispatch(updateCurrentIndex(0));
+ })
 
 
 const [placeOrderPopup , setplaceOrderPopup] = useState(false);
@@ -146,7 +153,7 @@ const onClickOrder = async (orderType) => {
   // Validate email next
   if (
     orderEmail.trim() === "" ||
-    !/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail)
+    !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(orderEmail)
   ) {
     toast.error("Please enter a valid email address.");
     return;
@@ -260,47 +267,48 @@ const onClickRemoveOrder = async () =>{
 
   const [currentDropDownOption , updateDropDownOption] = useState(0);
 
-
+  const [selectedListType , updateSelectedListType] = useState(currentOption);
   const onOptionChange = async(updatedOption) => {
     updateCurrentOption(updatedOption)
     if(updatedOption !== currentOption){
       updateNoCardsStatus(false);
+      
       if(updatedOption === "mycollection"){
         setIsCardsLoading(true)
         await fetchCollections();
+        updateSelectedListType(updatedOption)
       }else if(updatedOption === "favorite"){
-        setIsCardsLoading(true)
-        await fetchFavoriteCards();
+        if(selectedListType !== "favorite"){
+          setIsCardsLoading(true)
+          await fetchFavoriteCards(selectedList);
+          updateSelectedListType(updatedOption)
+          setIsCardsLoading(false);
+        }else if(selectedList.length === 0){
+          updateNoCardsStatus(true)
+        }
       }else if(updatedOption === "myorders"){
         await fetchOrderHistory();
       }
     }
+    console.log("selected list type",selectedListType)
 
   } 
-
-  const fetchFavoriteCards = async() => {
+ console.log("selected list",selectedList)
+  const fetchFavoriteCards = async(currList) => {
     const result = await backendActor?.getFavorites(principal)
     console.log("resssssssult" , result);
     if(result.ok?.length>0){
 
-      const favItems = result.ok;
+      const favItems =new Set(result.ok);
 
-      let favCardslist = [];
-      favItems.map((eachFavToken)=>{
-       for(let i=0;i<selectedList.length;i++){
-        if(selectedList[i][0].tokenId === eachFavToken){
-          favCardslist.push(selectedList[i][0]);
-        }
-       }
-      })
-
+     
+     // console.log("selected list",selectedList)
+     const favCardslist = currList
+     .map(item => item[0])
+     .filter(card => favItems.has(card.tokenId)); 
       console.log("favList",favCardslist)
-
-      setIsCardsLoading(false);
-
       updateSelectedList(favCardslist);
-
-
+      
     }else{
       console.log("no cards in fav")
       updateSelectedList([]);
@@ -354,24 +362,48 @@ const [profileUpdateInProcess,setProfileUpdateInProcess] = useState(false);
 
 
 
-const onClickUpdateUserDetails = async() => {
-    setProfileUpdateInProcess(true)
-  
-    let updatedName = userName === "" ? userDetails.name : userName;
-    let updatedEmail = email === "" ? userDetails.email : email;
-    let updatedTelegramUrl = telegramUrl === "" ? userDetails.telegramUrl : telegramUrl;
-    
-    
-    console.log("updated user details",updatedName,updatedEmail,updatedTelegramUrl);
 
+
+const isValidTelegramUsername = (telegramUrl) => {
+  const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/;
+  return usernameRegex.test(telegramUrl);
+};
+
+const onClickUpdateUserDetails = async() => {
+  setProfileUpdateInProcess(true);
+  console.log("user name",userName)
+  console.log("email id",email);
+  console.log("telegram",telegramUrl);
+  let updatedName = userName === undefined ? "No Name" : userName;
+  let updatedEmail = email === undefined ? "No Email" : email;
+  let updatedTelegramUrl = telegramUrl === undefined || telegramUrl === "" ? "No Telegram" : telegramUrl;
+
+
+
+  // Validate Telegram username
+  if (updatedTelegramUrl && updatedTelegramUrl != "No Telegram" && !isValidTelegramUsername(updatedTelegramUrl)) {
+    toast.error("Invalid Telegram username. It must be 5-32 characters long and can only contain letters, numbers, and underscores.");
+    setProfileUpdateInProcess(false); // Stop further processing
+    return;
+  }
+
+  console.log("updated user details", updatedName, updatedEmail, updatedTelegramUrl);
+
+   try{
     await backendActor?.updateUserDetails(Principal.fromText(principal),updatedName,updatedEmail,updatedTelegramUrl,[]);
     updateUserDetails({name:updatedName,email:updatedEmail,telegramUrl:updatedTelegramUrl});
     toast.success("Updated Successfully!")
-    setProfileUpdateInProcess(false);
     updateUserName("");
     updateEmail("");
     updateTelegramUrl("");
     updateEditProfileStatus(false);
+   }catch(error){
+    console.log(error)
+   }finally{
+    setProfileUpdateInProcess(false);
+   }
+    
+   
     // updateDisplayProfileUpdateSuccess(true);
   //  console.log("updatedUserDetails result",updateResult);
 }
@@ -381,9 +413,15 @@ useEffect(()=>{
 },[])
 
 useEffect(()=>{  
-  updateUserName(userDetails?.name);
-  updateEmail(userDetails?.email);
-  updateTelegramUrl(userDetails.telegramUrl);
+  if(userDetails?.name !== "No Name"){
+    updateUserName(userDetails.name);
+  }
+  if(userDetails?.email !== "No Email"){
+    updateEmail(userDetails?.email);
+  }
+  if(userDetails?.telegramUrl !== "No Telegram"){
+    updateTelegramUrl(userDetails.telegramUrl);
+  }
 
 },[userDetails])
 
@@ -488,7 +526,13 @@ const fetchCollections = async () => {
       return;
     }
     const currentSelectedCollection = allCollectionsList[currentDropDownOption];
-    await getSelectedOptionCards(currentSelectedCollection.collectionId);
+    const updatedCardsList = await getSelectedOptionCards(currentSelectedCollection.collectionId);
+    setIsCardsLoading(false);
+    if(updatedCardsList?.length >0){
+      updateSelectedList(updatedCardsList);
+    }else{
+      updateNoCardsStatus(true);
+    }
 };
 
   const getSelectedOptionCards =  async(collectionId) => {
@@ -499,22 +543,23 @@ const fetchCollections = async () => {
     const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
    // console.log("not owned nfts after fetching",notOwnedNfts);
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
-   // console.log("owned nfts",updatedOwnedList);
-    updatedCardsList = updatedOwnedList;
-    if(updatedCardsList.length == 0){
-      updateNoCardsStatus(true);
-    }else{
-      const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
+   console.log("owned nfts",updatedOwnedList);
+    
+    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
    // console.log("not owned nfts",updatedNotOwnedNfts);
     updateRemainingNfts(updatedNotOwnedNfts.length);
-    updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
-    setIsCardsLoading(false);
-    if(updatedCardsList.length >0){
-      updateSelectedList(updatedCardsList);
+  
+    if(updatedOwnedList.length == 0){
+      updateSelectedList([]);
+      return []
     }else{
-      updateNoCardsStatus(true);
+      updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
+      return updatedCardsList;
     }
-    }
+    
+    
+    
+    
     
     
 
@@ -664,12 +709,25 @@ const addToFavorites = async (tokenId) => {
   setAreButtonsDisabled(false);
 };
 
-const onChangeFilterOption = (eachCollection) => {
+const onChangeFilterOption = async(eachCollection) => {
   if (eachCollection.index != currentDropDownOption) {
     updateDropDownOption(eachCollection.index);
     updateDropDownStatus(!isDisplayCollectionDropDown);
+    updateNoCardsStatus(false);
     setIsCardsLoading(true);
-    getSelectedOptionCards(eachCollection.collectionId);
+    const updatedCardsList = await getSelectedOptionCards(eachCollection.collectionId);
+    
+    if(updatedCardsList?.length >0){
+      if(currentOption === "favorite"){
+        await fetchFavoriteCards(updatedCardsList);
+      }else{
+        updateSelectedList(updatedCardsList);
+      }
+    }else{
+      updateNoCardsStatus(true);
+      
+    }
+    setIsCardsLoading(false);
   }
   
  }
@@ -704,54 +762,99 @@ const onChangeFilterOption = (eachCollection) => {
     updateOrderingStatus(buyingStatus.deliveryInfo); 
     setplaceOrderPopup(true); 
   }
-  
+  const [isExpanded, setIsExpanded] = useState(false); // State to handle expansion
+
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded); // Toggle the expanded state
+  };
+
+  if(isDisplayEditProfile || placeOrderPopup){
+    document.body.style.overflow = "hidden"
+  }else{
+    document.body.style.overflow = "auto"
+  }
+
 
   return (
-    <div className='font-caslon'>
+    <div className={`font-caslon w-full`} onClick={()=>updateDropDownStatus(false)}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
         <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
-          <div className='w-full lg:w-[30%]'>
-            <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[40px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
-            
-              {!isUserDetailsLoadging && (
-                <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
-                <div className='flex flex-col items-center'>
-                  <img src="/image/Frame.png" alt="" />
-                  <div className='mt-5'>
-                    <a href={userDetails.telegramUrl} target="_blank"><FaTelegram size={25} color='#24A1DE' /></a>
-                  </div>
-                </div>
-                <div>       
-                    <div className='flex items-center'>
-                      <div>
-                      <h1 className='text-[20px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>
-                       {userDetails.name}
-                          </h1>
-                            <h1 className='text-[13px] sm:text-[16px] font-[400] text-[#FFFFFF] leading-[40px]'>{userDetails.email}</h1>
-                        </div>
-                      </div>
-                {/* <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Wallet ID: 581918156</h2>
-                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px]'>Balance: 200 ICP</h2> */}
-                <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px] flex items-center'>User Id: {principal.slice(0,4)}....{principal.slice(-4)}
-
-                <CopyToClipboard text={principal}>
-                <span className="ml-2 cursor-pointer text-slate-300" onClick={()=>toast.success("Copied")}>
-                            <RiFileCopyLine />
-                          </span>
-                        </CopyToClipboard>    
-                </h2>
-                    
-                <button
-            onClick={()=>updateEditProfileStatus(true)}
-            className=' flex items-center justify-center mt-4 w-[130px]  h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>Edit Profile
-            </button>
+        <div className='w-full lg:w-[400px]'>
+    <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[40px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
+    {!isUserDetailsLoadging && (
+      <div className='flex gap-8 mt-[5%] lg:mt-[2%] lg:ml-[2%]'>
+        <div className='flex flex-col items-center'>
+          <img src="/image/Frame.png" alt="" />
+          <div className='mt-5'>
+            {userDetails.telegramUrl === "No Telegram" ? (
+              <div className="relative group">
+                <FaTelegram size={25} color='#C5E8F2' style={{ opacity: 0.5 }} />
+                <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[180px] lg:w-[220px] text-center py-1 rounded text-xs transition-opacity duration-300">
+                  Add your telegram user name!
+                </span>
               </div>
-              </div>
-              )}
-            
-            
+            ) : (
+              <a
+                href={`https://t.me/${userDetails.telegramUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative group"
+              >
+                <FaTelegram size={25} color='#24A1DE' />
+              </a>
+            )}
           </div>
+        </div>
+        <div className='max-w-[200px]'>       
+          <div className='flex items-center'>
+            <div>
+              <h1 className='text-[20px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px]'>
+                {userDetails.name === "" ? "No Name":(userDetails.name)}
+              </h1>
+              <h1 className='text-[13px] sm:text-[16px] font-[400] text-[#FFFFFF] leading-[20px] my-3 max-w-[190px] md:max-w-[220px]'>
+                {!isExpanded && userDetails.email.length > 34 ? (
+                  <>
+                    <span className='flex items-center'>
+                      {userDetails.email.slice(0, 28)}...
+                      <MdExpandMore
+                        onClick={handleToggle}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    {userDetails.email === "" ? "No Email":(userDetails.email)}
+                    {userDetails.email.length > 32 && (
+                      <MdExpandLess
+                        onClick={handleToggle}
+                        style={{ cursor: "pointer", display: "inline" }} 
+                      />
+                    )}
+                  </>
+                )}
+              </h1>
+              <h2 className='ext-[20px] sm:text-[22px] font-[400] text-[#FFFFFF] leading-[25px] flex items-center'>
+                User Id: {principal.slice(0,4)}....{principal.slice(-4)}
+                <CopyToClipboard text={principal}>
+                  <span className="ml-2 cursor-pointer text-slate-300" onClick={()=>toast.success("Copied")}>
+                    <RiFileCopyLine />
+                  </span>
+                </CopyToClipboard>    
+              </h2>
+              <button
+                onClick={()=>updateEditProfileStatus(true)}
+                className='flex items-center justify-center mt-4 w-[130px] h-[30px] sm:w-[100px] sm:h-[28px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon rounded-sm'>
+                Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+
 
           <div className='w-full lg:w-[70%]'>
             <div className='flex items-center justify-center gap-[10%] mt-8 lg:mt-0 mb-10 md:mb-1'>
@@ -772,14 +875,14 @@ const onChangeFilterOption = (eachCollection) => {
                 className={`text-[18px] sm:text-[32px] font-[400] text-[#FFFFFF] leading-[40px] cursor-pointer ${currentOption === "myorders" ? 'border-b-4 border-[#FFD700]' : ''}`}
                 onClick={()=>onOptionChange("myorders")}
               >
-                My Orders
+                {t('myOrders')}
               </div> 
             </div>
             {allCollectionsList.length>0 && currentOption !== "myorders" && (
               <div className="relative z-10 flex items-center justify-between mt-5 md:w-full ">
                            
               <button
-                  onClick={()=>updateDropDownStatus(!isDisplayCollectionDropDown)}
+                  onClick={(e)=>{e.stopPropagation(),updateDropDownStatus(!isDisplayCollectionDropDown)}}
                   className={`rounded-full flex justify-center items-center gap-1 
                  min-w-[120px] h-[35px] sm:h-[40px]  md:w-[180px] p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 border-gray-800`}
               >
@@ -839,7 +942,7 @@ const onChangeFilterOption = (eachCollection) => {
               </button>
 
               {noCards ? (
-                <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
+                <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalble</h1>
               ):(
                 (isCardsLoading ? (
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
@@ -858,7 +961,7 @@ const onChangeFilterOption = (eachCollection) => {
                       )} 
                     </div>
                     ):(
-                      <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalbe</h1>
+                      <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalble</h1>
                     )
                   )
                 ))
@@ -873,7 +976,7 @@ const onChangeFilterOption = (eachCollection) => {
             {/* Grid view for larger screens */}
            {currentOption !== "myorders" && (
              (noCards ? (
-              <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
+              <div className='hidden w-[90%] h-[80vh] sm:flex justify-center items-center '>
                 <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
               </div>
           ):(
@@ -897,7 +1000,7 @@ const onChangeFilterOption = (eachCollection) => {
                     <>
                    
                   {selectedList.length === 0 ? (
-                    <div className='hidden w-[90%] h-[65vh] sm:flex justify-center items-center '>
+                    <div className='hidden w-[90%] h-[70vh] sm:flex justify-center items-center '>
                     <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
                   </div>
                   ):( 
@@ -922,8 +1025,8 @@ const onChangeFilterOption = (eachCollection) => {
           ))
            )}
            {currentOption === "myorders" && (
-            <div className='w-[97%] min-h-[65vh] sm:my-10  mb-8 '>
-            <ul className='w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-sm lg:text-lg bg-[#FCD37B1A] m-0  grid grid-cols-3  items-center mb-[21px]'>
+            <div className='w-[97%] min-h-[80vh] sm:my-10  mb-8 '>
+            <ul className='w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-md lg:text-xl bg-[#FCD37B1A] m-0  grid grid-cols-3  items-center mb-[21px]'>
                   <li className='flex justify-center items-center'>Order Id</li>
                   <li className='flex justify-center items-center'>Collection</li>
                   <li className='flex justify-center items-center'>Details</li>
@@ -931,7 +1034,7 @@ const onChangeFilterOption = (eachCollection) => {
             <div>
             {orderHistory.length>0 ?(
               orderHistory.map((eachOrder)=>(
-                <ul key={eachOrder.orderId} className='w-[100%] h-[75px] lg:h-[100px] text-[#FCD378] text-sm bg-[#FCD37B1A] m-0  grid grid-cols-3 items-center mb-[21px] overflow-x-auto'>
+                <ul key={eachOrder.orderId} className='w-[100%] h-[75px] lg:h-[100px] text-[#FCD378] text-md md:text-lg bg-[#FCD37B1A] m-0  grid grid-cols-3 items-center mb-[21px] overflow-x-auto'>
                 <li className='flex justify-center items-center'>{eachOrder.orderId}</li>
                 <li className='flex justify-center items-center'>{eachOrder.collectionName}</li>
                 <li className='flex justify-center items-center'><button className='text-[#000000] bg-[#FCD378] px-2 rounded-sm' 
@@ -940,8 +1043,8 @@ const onChangeFilterOption = (eachCollection) => {
             </ul>
               ))
             ):(
-              <div className='w-[90%] min-h-[45vh] sm:my-10 ml-[10%] mb-8 flex justify-center items-center'>
-                <h1 className='text-[#FFD700] text-[22px] my-20'>Order History Found</h1>
+              <div className='w-[90%] min-h-[58vh] sm:my-10 ml-[6%] mb-8 flex justify-center items-center'>
+                <h1 className='text-[#FFD700] text-[22px] my-20'>No Orders Were Placed!</h1>
               </div>
             )}
              
@@ -960,29 +1063,21 @@ const onChangeFilterOption = (eachCollection) => {
         <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
           <div className="flex items-center justify-center h-screen">
             <div
-              className="h-[40vh] w-[90vw] md:h-[40vh]  lg:w-[30vw] bg-[#111] text-white font-caslon p-5 rounded-md overflow-y-auto drop-shadow-lg "
+              className="w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 md:p-8 rounded-md overflow-y-auto drop-shadow-lg "
             >
-              {/* <div className="relative flex items-center justify-end">
-                <button
-                  className="text-[#ffffff] absolute bottom-1 top-1 z-10"
-                  onClick={() => updateEditProfileStatus(false)}
-                >
-                  <RxCross2 size={20} />
-                </button>
-              </div> */}
                 <div>
-                  <div className='mt-10 mb-5'>
-                <div className='flex flex-col mb-1'>
-                  <label>Name</label>
+                  <div className=' mb-5'>
+                <div className='flex flex-col mb-3'>
+                  <label className='lg:text-lg'>Name</label>
                   <input onChange={(e)=>updateUserName(e.target.value)} type='text' placeholder='Enter your name' className='pl-2 bg-transparent border border-white h-[30px] text-[13px] rounded-sm ' value={userName}/>
                 </div>
-                <div className='flex flex-col'>
-                  <label>Email</label>
-                  <input onChange={(e)=>updateEmail(e.target.value)} type='email' placeholder='Enter your email' className='pl-2 bg-transparent border border-white h-[30px] text-[13px] rounded-sm' value={email} />
+                <div className='flex flex-col mb-3'>
+                  <label className='lg:text-lg'>Email</label>
+                  <input onChange={(e)=>updateEmail(e.target.value)} type='email' placeholder='Enter your email' className='pl-2 bg-transparent border border-white h-[30px] text-[13px]  lg:text-md rounded-sm' value={email} />
                 </div>
-                <div className='flex flex-col'>
-                  <label>Telegram</label>
-                  <input onChange={(e)=>updateTelegramUrl(e.target.value)} type='text' placeholder='Enter your telegram link' className='pl-2 bg-transparent border border-white h-[30px] text-[13px] rounded-sm' value={telegramUrl} />
+                <div className='flex flex-col mb-3'>
+                  <label className='lg:text-lg'>Telegram</label>
+                  <input onChange={(e)=>updateTelegramUrl(e.target.value)} type='text' placeholder='Enter your telegram user name' className='pl-2 bg-transparent border border-white h-[30px] text-[13px]  lg:text-md rounded-sm' value={telegramUrl} />
                 </div>
               </div>
               <div className='flex items-center justify-center'>
@@ -1017,8 +1112,8 @@ const onChangeFilterOption = (eachCollection) => {
           <div className="flex items-center justify-center h-screen">
           <div className={`bg-[#111] text-white font-caslon p-3 md:p-8 rounded-md overflow-y-auto drop-shadow-lg ${
             currentOrderingStatus === buyingStatus.deliveryInfo
-              ? "w-[95vw] md:w-[95vw] md:h-[50vh] lg:w-[80vw] lg:h-[40vh] xl:h-[70vh] xl:w-[60vw] "
-              : currentOrderingStatus === buyingStatus.showCollection? "h-[50vh] w-[95vw] md:w-[50vw] md:h-[50vh] lg:w-[60vw] lg:h-[45vh] xl:h-[60vh] xl:w-[40vw] "
+              ? "w-[95vw] md:w-[95vw]  lg:w-[80vw]  xl:w-[60vw] "
+              : currentOrderingStatus === buyingStatus.showCollection? " w-[95vw] md:w-[50vw]  lg:w-[60vw] xl:w-[40vw] "
               : "h-[30vh] w-[60vw] md:w-[40vw] md:h-[25vh] lg:w-[30vw] lg:h-[20vh] xl:h-[35vh] xl:w-[26vw]"
           }`}>
              {!placeOrderLoading && (
@@ -1105,7 +1200,7 @@ const onChangeFilterOption = (eachCollection) => {
                   </div>
                 </div>
                 <h1 className="mt-3 text-lg font-semibold">Address</h1>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-5">
                   <div className="flex flex-col w-[35%]">
                     <label className="relative text-sm font-extralight">
                       H No, St No
@@ -1176,8 +1271,8 @@ const onChangeFilterOption = (eachCollection) => {
                     </select>
                   </div>
                 </div>
-                <div className="relative flex items-center">
-                  <div className="flex flex-col w-[35%] mb-3 mr-9">
+                <div className="relative flex items-center justify-between mb-5">
+                  <div className="flex flex-col w-[35%]">
                     <label className="text-sm font-extralight">
                       Pincode
                       <span className="absolute text-red-700 -top-1">*</span>
@@ -1189,9 +1284,9 @@ const onChangeFilterOption = (eachCollection) => {
                       onChange={(e)=>updatePinCode(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-col w-[35%] mb-3 ml-2">
+                  <div className="flex flex-col w-[35%] ">
                     <label className="text-sm font-extralight">
-                      Nearby LandMark(Optional)
+                      Nearby Landmark
                     </label>
                     <input
                       type="text" 
@@ -1199,6 +1294,9 @@ const onChangeFilterOption = (eachCollection) => {
                       value={landMark}
                       onChange={(e)=>updateLandMark(e.target.value)}
                     />
+                  </div>
+                  <div className="flex flex-col w-[20%] relative">
+                   
                   </div>
                 </div>
                 <div className="">

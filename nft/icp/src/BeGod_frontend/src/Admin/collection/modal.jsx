@@ -64,12 +64,20 @@ const Modal = (props) => {
     const file = files[0];
     if (file) {
       try {
-        const options = {
-          maxSizeMB: 0.05,
+        let options = {
+          maxSizeMB: 0.1,
           maxWidthOrHeight: 300,
           useWebWorker: true,
         };
-        const compressedFile = await imageCompression(file, options);
+        let compressedFile = await imageCompression(file, options);
+
+        while (compressedFile.size > 100 * 1024) {
+          options.maxSizeMB *= 0.9;
+          compressedFile = await imageCompression(file, options);
+        }
+
+        console.log("Compressed file size:", compressedFile.size);
+
         const reader = new FileReader();
         reader.onloadend = () => setNftImage(reader.result);
         reader.readAsDataURL(compressedFile);

@@ -453,10 +453,10 @@ function CollectionDetails() {
         ) : (
           <div className="w-full">
             {/* Back button and action buttons */}
-            <div className="flex items-center justify-between w-full pt-9">
-              <div className="hidden sm:block">
+            <div className="flex flex-col-2 ">
+              <span className="hidden sm:block">
                 <BackButton />
-              </div>
+              </span>
               <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
                 <YellowButton methodName={() => toggleModal()}>
                   Add NFT
@@ -690,7 +690,7 @@ function CollectionDetails() {
                   {principalStringg}
                 </span>
               </h1>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-20 items-center justify-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 1.3xl:grid-cols-5 1.2xl:grid-cols-4  items-center justify-start">
                 {filteredList.length > 0 ? (
                   filteredList?.map((list, index) => (
                     <>
@@ -713,7 +713,7 @@ function CollectionDetails() {
 
             {modal && (
               <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(49,49,49,0.8)]">
+                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(37,37,37,0.84)]">
                   <div className="flex items-center justify-center h-screen">
                     <Modal
                       toggleModal={toggleModal}

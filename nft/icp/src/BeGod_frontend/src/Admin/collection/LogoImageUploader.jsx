@@ -12,21 +12,17 @@ function LogoImageUploader({ captureUploadedFiles }) {
 
   // rendering previews
   useEffect(() => {
-    if (!files) return;
-    let tmp = [];
-    for (let i = 0; i < files.length; i++) {
-      tmp.push(URL.createObjectURL(files[i]));
-    }
-    const objectUrls = tmp;
+    if (!files || files.length === 0) return;
+    // Create preview URLs for each file
+    const objectUrls = Array.from(files).map((file) =>
+      URL.createObjectURL(file)
+    );
     setPreviews(objectUrls);
-
-    // free memory
-    for (let i = 0; i < objectUrls.length; i++) {
-      return () => {
-        URL.revokeObjectURL(objectUrls[i]);
-      };
-    }
     setFileType("file");
+    // Cleanup function to revoke all object URLs and free memory
+    return () => {
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
   }, [files]);
 
   useEffect(() => {

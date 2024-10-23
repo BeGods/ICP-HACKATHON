@@ -18,11 +18,27 @@ function Collection() {
       try {
         const result = await backendActor?.getAllCollections();
         console.log(result);
-        if (result && result[0] && result[0][1]) {
-          setColl(result[0][1]);
+        const tempArray = [];
+        if (result && Array.isArray(result)) {
+          result.forEach((item) => {
+            if (item && item.length > 1) {
+              // console.log(item);
+              item[1].forEach((value) => {
+                // console.log(value);
+                if (value && value.length > 1) {
+                  tempArray.push(value);
+                }
+              });
+            }
+          });
+
+          console.log(tempArray);
+          setColl(tempArray);
         }
       } catch (error) {
         console.error("Error fetching collections:", error);
+      } finally {
+        setLoading(false); // Make sure to stop loading state
       }
     }
   };
@@ -38,7 +54,7 @@ function Collection() {
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
-      <div className="w-[90%] h-screen overscroll-none overflow-hidden pt-10 px-10 pb-8 no-scrollbar 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
+      <div className="w-[90%] h-screen overscroll-none overflow-scroll pt-10 px-10 pb-8 no-scrollbar 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
         {/* Flex container for back button and collection buttons */}
         <div className="flex justify-between items-center w-full mb-6 mt-5">
           {/* Back button (hidden on small screens) */}
