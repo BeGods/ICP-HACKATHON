@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import YellowButton from '../components/button/YellowButton';
 import { useAuth } from '../utils/useAuthClient';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -27,6 +27,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import FadeLoader from "react-spinners/FadeLoader"
 import { MdExpandMore } from "react-icons/md";
 import { MdExpandLess } from "react-icons/md";
+import { updateCurrentIndex } from '../redux/infoSlice';
 
 const buyingStatus = {
    initial : "INITIAL",
@@ -68,6 +69,11 @@ const Profile = () => {
       console.log(principal,'principal')
      }
   },[isAuthenticated]);
+
+  const dispatch = useDispatch();
+ useEffect(()=>{
+  dispatch(updateCurrentIndex(0));
+ })
 
 
 const [placeOrderPopup , setplaceOrderPopup] = useState(false);
@@ -147,7 +153,7 @@ const onClickOrder = async (orderType) => {
   // Validate email next
   if (
     orderEmail.trim() === "" ||
-    !/^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/.test(orderEmail)
+    !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(orderEmail)
   ) {
     toast.error("Please enter a valid email address.");
     return;
@@ -370,12 +376,12 @@ const onClickUpdateUserDetails = async() => {
   console.log("telegram",telegramUrl);
   let updatedName = userName === undefined ? "No Name" : userName;
   let updatedEmail = email === undefined ? "No Email" : email;
-  let updatedTelegramUrl = telegramUrl === "" ? "No Telegram" : telegramUrl;
+  let updatedTelegramUrl = telegramUrl === undefined || telegramUrl === "" ? "No Telegram" : telegramUrl;
 
 
 
   // Validate Telegram username
-  if (updatedTelegramUrl && !isValidTelegramUsername(updatedTelegramUrl)) {
+  if (updatedTelegramUrl && updatedTelegramUrl != "No Telegram" && !isValidTelegramUsername(updatedTelegramUrl)) {
     toast.error("Invalid Telegram username. It must be 5-32 characters long and can only contain letters, numbers, and underscores.");
     setProfileUpdateInProcess(false); // Stop further processing
     return;
