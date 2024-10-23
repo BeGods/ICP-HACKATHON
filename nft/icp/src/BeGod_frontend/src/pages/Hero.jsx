@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from "../utils/useAuthClient.jsx";
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BiCategory } from "react-icons/bi";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { CiDollar } from "react-icons/ci";
@@ -21,6 +21,7 @@ import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { GrPowerReset } from "react-icons/gr";
 import toast from 'react-hot-toast';
+import { updateCurrentIndex } from '../redux/infoSlice.js';
 
 
 const cardTypeList = [
@@ -80,12 +81,12 @@ const Hero = () => {
     
     const visibleButtons = 4; 
     let start = 0;
-    if(currentIndex >= visibleButtons){
-        start = currentIndex+1-visibleButtons
+    if(currentIndex >= visibleButtons-1){
+        start = currentIndex+2-visibleButtons
     } 
     const [startIndex,setStartIndex] = useState(start);
 
-    const allCollectionsList = useSelector((state)=>state.info.collectionList); 
+    // const allCollectionsList = useSelector((state)=>state.info.collectionList); 
 
    // console.log("collection List frist time",allCollectionsList);
 
@@ -129,10 +130,10 @@ const Hero = () => {
     const [isDisplayFiltersPopup,updateFiltersDisplayStatus] = useState(false);
    
   
-    
+    const dispatch = useDispatch();
 
     const handleCurrentIndex  = async(index) => {
-
+        
         if(index >= visibleButtons-1 && index >= startIndex) {
             if(index != collections.length-1){
                 setStartIndex(index+2 - visibleButtons);
@@ -163,8 +164,12 @@ const Hero = () => {
             updateFilteredList(currList);
             updateSelectedCollectionNftCardsList(currList);
         }else{
+            updateSelectedCollectionNftCardsList([]);
             updateNoCardsStatus(true);
         }
+       
+         dispatch(updateCurrentIndex(index));
+        
     }
 
   
@@ -247,6 +252,7 @@ const fetchCollectionNfts = async (collectionId,color) => {
       console.log("listings resut",listedNfts);
     index  = -1;
     if(listedNfts.length === 0){
+        updateSelectedCollectionNftCardsList([]);
         updateNoCardsStatus(true);
         return [];
     }
@@ -254,6 +260,7 @@ const fetchCollectionNfts = async (collectionId,color) => {
     console.log("fetched nfts of a collection",fetchedNfts)
     return fetchedNfts;
    }catch{
+    updateSelectedCollectionNftCardsList([]);
     updateNoCardsStatus(true);
     return;
    }
@@ -418,7 +425,7 @@ console.log("filtered list after applying filters",filteredList)
                     <Navbar mobileView={mobileViewHandler} landingPage={true} />
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
-                    <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center h-[50px] md:h-[130px] xl:h-[160px] 2xl:h-[180px] leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
+                    <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center  leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
                         {mainHeading}
                     </h1>
                     <h2 className='text-[16px] md:text-[24px] leading-tight font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] text-center'>
@@ -648,8 +655,8 @@ console.log("filtered list after applying filters",filteredList)
                             <NFTGallery currentCollection={filteredList}  />
                         ) : (
                             noCards || (selectedCollectionNftCardsList.length>0 && filteredList.length===0) ? (
-                              <div className='w-[100%] h-[220px] flex items-center justify-center'>
-                                    <h1 className='text-[#FCD37B] text-6xl'>No cards found.</h1>
+                              <div className='w-[100%] h-[42vh] flex items-center justify-center'>
+                                    <h1 className='text-[#FCD37B] text-4xl'>No cards found.</h1>
                               </div>
                            ):(
                             <div className="pb-10">
