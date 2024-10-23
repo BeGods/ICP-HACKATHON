@@ -82,7 +82,7 @@ const Footer = ({handleCurrentIndex}) => {
                             </div>
                         </div>
                         <h1 className='mt-2'>{t('categoriesText')}</h1>
-                        <div className='flex flex-col gap-4 -mt-1 md:flex-row sm:gap-x-12 overflow-auto'>
+                        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 -mt-1 sm:gap-x-12 '>
                         {collections.length > 0 ? (
                             collections.map((eachCollection)=>(
                                     <div>

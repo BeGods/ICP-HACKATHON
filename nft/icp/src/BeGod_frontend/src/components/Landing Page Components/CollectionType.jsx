@@ -55,7 +55,7 @@ const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons,
                     src="/Hero/up.png"
                     alt="Up"
                     onClick={upHandler}
-                    className={`hover:cursor-pointer ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
+                    className={`lg:h-[80px] hover:cursor-pointer ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
                 />
             </div>
 
@@ -83,7 +83,13 @@ const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons,
                         <div className='absolute h-[90%] bottom-0 right-0'>
                             <img src="/Hero/corner-small-left-bottom 4.png" alt="" className='h-full object-cover' />
                         </div>
-                        <h1 className='text-lg font-[400] text-white z-10' style={{fontFamily:'MyCustomFont'}}>{collection.name}</h1>
+                        <h1
+  className='text-lg text-center font-[400] text-white z-10'
+  
+>
+{collection.name.length > 10 ? collection.name.slice(0,9)+"...": collection.name}
+</h1>
+
                     </div>
                 ))}
             </div>
@@ -125,7 +131,7 @@ const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons,
                     src="/Hero/down.png"
                     alt="Down"
                     onClick={downHandler}
-                    className={`hover:cursor-pointer ${currentIndex >= collections.length - 1 ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
+                    className={` lg:h-[80px] hover:cursor-pointer ${currentIndex >= collections.length - 1 ? 'opacity-50 cursor-not-allowed' : ''} -rotate-90 lg:rotate-0`}
                 />
             </div>
         </div>

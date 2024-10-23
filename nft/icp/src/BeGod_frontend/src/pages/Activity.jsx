@@ -3,13 +3,14 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Navbar from '../components/Landing Page Components/Navbar';
 import Footer from '../components/Footer';
 import { useAuth } from '../utils/useAuthClient';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import ReactTimeAgo from 'react-time-ago';
 import { useNavigate } from 'react-router-dom';
+import { updateCurrentIndex } from '../redux/infoSlice';
 
 const Activity = () => {
   const { principal, backendActor } = useAuth();
@@ -19,7 +20,7 @@ const Activity = () => {
   const [noActivity, updateNoActivityStatus] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
-
+  
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -29,6 +30,10 @@ const Activity = () => {
     }
   }, [isAuthenticated]);
 
+  const dispatch = useDispatch();
+ useEffect(()=>{
+  dispatch(updateCurrentIndex(0));
+ })
   // Fetch user activity
   useEffect(() => {
     fetchUserActivity();
