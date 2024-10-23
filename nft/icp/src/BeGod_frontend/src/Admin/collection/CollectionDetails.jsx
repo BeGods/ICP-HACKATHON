@@ -153,6 +153,8 @@ function CollectionDetails() {
       await getAllCollectionNFT(principal);
     } catch (error) {
       console.error("Error fetching NFTs:", error);
+      toast.error("Error fetching NFTs");
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -205,10 +207,17 @@ function CollectionDetails() {
       console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftprice) * 100000000);
       console.log(es8_price, "price");
+      // if (result && result.length > 0) {
+      //   result.map((val, key) => {
+      //     getNftTokenId(principal, val[1], es8_price);
+      //   });
+      // }
       if (result && result.length > 0) {
-        result.map((val, key) => {
-          getNftTokenId(principal, val[1], es8_price);
-        });
+        await Promise.all(
+          result.map((val) => getNftTokenId(principal, val[1], es8_price))
+        );
+      } else {
+        throw new Error("Minting failed");
       }
     } catch (error) {
       console.error("Error minting NFT:", error);
@@ -259,19 +268,19 @@ function CollectionDetails() {
   const getListing = async (principal) => {
     try {
       console.log(principal);
-      toast("Featching NFTs,Please Wait! ...", {
-        icon: "⚠️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
+      // toast("Featching NFTs,Please Wait! ...", {
+      //   icon: "⚠️",
+      //   style: {
+      //     borderRadius: "10px",
+      //     background: "#333",
+      //     color: "#fff",
+      //   },
+      // });
       const result = await backendActor?.listings(principal);
       console.log("Listing", result);
 
-      fetchNFTs();
-      setLoading(false);
+      // fetchNFTs();
+      // setLoading(false);
     } catch (error) {
       console.error("Error fetching listing:", error);
       toast.error("Error fetching listing");
@@ -308,6 +317,18 @@ function CollectionDetails() {
         toast.error(mintResult);
       } else {
         toast.success("NFT added");
+        console.log("count");
+        toast("Fetching NFTs, Please Wait! ...", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+
+        // Fetch the updated list of NFTs
+        await fetchNFTs();
       }
     } catch (error) {
       console.error("Error in get added nft: ", error);
