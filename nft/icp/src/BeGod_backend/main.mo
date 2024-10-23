@@ -1,60 +1,67 @@
 //functions list:
 
+// System Functions:
+// 1. preupgrade
+// 2. postupgrade
+// 3. fetchCycles
+
 // Collection-related Functions:
-// 1. add_collection_to_map
-// 2. remove_collection_to_map
-// 3. createExtCollection
-// 4. getUserCollectionDetails
-// 5. getUserCollections
-// 6. getAllCollections
-// 7. totalcollections
-// 8. getAllCollectionNFTs
-// 9. getSingleCollectionDetails
-// 10. getAllNFTsAcrossAllCollections
+// 4. add_collection_to_map
+// 5. remove_collection_to_map
+// 6. createExtCollection
+// 7. getUserCollectionDetails
+// 8. getUserCollections
+// 9. getAllCollections
+// 10. totalcollections
+// 11. getAllCollectionNFTs
+// 12. getSingleCollectionDetails
+// 13. getAllNFTsAcrossAllCollections
 
 // NFT-related Functions:
-// 11. getNftTokenId
-// 12. mintExtNonFungible
-// 13. mintExtFungible
-// 14. getNonFungibleTokens
-// 15. getSingleNonFungibleTokens
-// 16. getFungibleTokens
-// 17. getTotalNFTs
+// 14. getNftTokenId
+// 15. mintExtNonFungible
+// 16. mintExtFungible
+// 17. getFungibleTokens
+// 18. getNonFungibleTokens
+// 19. getSingleNonFungibleTokens
+// 20. getTotalNFTs
 
 // User-related Functions:
-// 18. create_user
-// 19. updateUserDetails
-// 20. getUserDetails
-// 21. getAllUsers
-// 22. getTotalUsers
-// 23. userNFTcollection
-// 24. addToFavorites
-// 25. removeFromFavorites
-// 26. getFavorites
-// 27. useractivity
+// 21. create_user
+// 22. updateUserDetails
+// 23. getUserDetails
+// 24. getAllUsers
+// 25. getTotalUsers
+// 26. userNFTcollection
+// 27. addToFavorites
+// 28. removeFromFavorites
+// 29. getFavorites
+// 30. useractivity
 
 // Order-related Functions:
-// 28. gethardcopy
-// 29. updateOrder
-// 30. removeOrder
-// 31. getallOrders
+// 31. gethardcopy
+// 32. updateOrder
+// 33. removeOrder
+// 34. getallOrders
+// 35. orderDetails
+// 36. getuserorders
 
 // Marketplace-related Functions:
-// 32. listprice
-// 33. listings
-// 34. purchaseNft
-// 35. settlepurchase
-// 36. transactions
-// 37. marketstats
-// 38. transfer_balance
-// 39. balance_settelment
-// 40. balance_nft_settelment
-// 41. all_settelment
-// 42. send_balance_and_nft
+// 37. listprice
+// 38. listings
+// 39. purchaseNft
+// 40. settlepurchase
+// 41. transactions
+// 42. marketstats
+// 43. transfer_balance
+// 44. balance_settelment
+// 45. balance_nft_settelment
+// 46. all_settelment
+// 47. send_balance_and_nft
 
 // Miscellaneous Functions:
-// 43. getDeposits
-// 44. fetchAvailableCycles
+// 48. getDeposits
+
 
 import ExtTokenClass "../EXT-V2/ext_v2/v2";
 import Cycles "mo:base/ExperimentalCycles";
@@ -78,9 +85,11 @@ import Types "../EXT-V2/Types";
 import UsersTypes "./Users/Types";
 import V2 "../EXT-V2/ext_v2/v2";
 import HashMap "mo:base/HashMap";
+import Hash "mo:base/Hash";
 import Queue "../EXT-V2/motoko/util/Queue";
 import ExtCommon "../EXT-V2/motoko/ext/Common";
 import _owners "../EXT-V2/ext_v2/v2";
+import Pagin "pagin";
 
 actor Main {
 
@@ -187,20 +196,19 @@ actor Main {
     };
 
     type Order = {
-    id: Nat;
-    accountIdentifier: Principal;
-    uuid: Text;                  
-    collectionCanisterId: Principal; 
-    phone: Text;
-    email: Text;                 
-    address: Text;
-    city: Text;
-    country: Text;
-    pincode: Text;
-    landmark: ?Text;
-    orderTime: Time.Time;
+        id : Nat;
+        accountIdentifier : Principal;
+        uuid : Text;
+        collectionCanisterId : Principal;
+        phone : Text;
+        email : Text;
+        address : Text;
+        city : Text;
+        country : Text;
+        pincode : Text;
+        landmark : ?Text;
+        orderTime : Time.Time;
     };
-
 
     //Exttypes
     type Time = Time.Time;
@@ -208,12 +216,22 @@ actor Main {
     //type User = ExtCore.User;
     type CommonError = ExtCore.CommonError;
     type MetadataLegacy = ExtCommon.Metadata;
+
+    /* -------------------------------------------------------------------------- */
+    /*                         Data Maps                                          */
+    /* -------------------------------------------------------------------------- */
+
+
     // Maps user and the collection canisterIds they create
     private var usersCollectionMap = TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>(Principal.equal, Principal.hash);
-    //  Maps related to Campaigns
+    private stable var stableusersCollectionMap : [(Principal, [(Time.Time, Principal)])] = [];
 
     // Stores details about the tokens coming into this vault
-    private stable var deposits : [Deposit] = [];
+    private stable var deposits : [Deposit] = []; 
+
+    // favorites data structure
+    private var _favorites : HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]> = HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]>(0, AID.equal, AID.hash);
+    private stable var stableFavorites : [(AccountIdentifier, [(TokenIdentifier)])] = [];
 
     //DB to store user related data
     private stable var usersArray : [User] = [];
@@ -222,23 +240,55 @@ actor Main {
     private var userDetailsMap : TrieMap.TrieMap<Principal, UserDetails> = TrieMap.TrieMap<Principal, UserDetails>(Principal.equal, Principal.hash);
 
     //DB to store order related details
-    private stable var orders: [Order] = [];
-    private stable var orderIdCounter: Nat = 0;
+    private stable var orders : [Order] = [];
+    private stable var orderIdCounter : Nat = 0;
 
-    //available cycles for backend cansiter
-    public shared func fetchAvailableCycles(canisterId : Principal) : async ?Nat {
-        let targetCanister = actor (Principal.toText(canisterId)) : actor {
-            getCycleBalance : () -> async Nat;
-        };
+    /* -------------------------------------------------------------------------- */
+    /*                         SYSTEM FUNCTIONS                                   */
+    /* -------------------------------------------------------------------------- */
 
-        try {
-            let cycleBalance = await targetCanister.getCycleBalance();
-            Debug.print("Cycle balance for canister: " # Principal.toText(canisterId) # " is: " # Nat.toText(cycleBalance));
-            return ?cycleBalance;
-        } catch (e) {
-            Debug.print("Failed to retrieve cycle balance for canister: " # Principal.toText(canisterId));
-            return null;
-        };
+    system func preupgrade() {
+        stableusersCollectionMap := Iter.toArray(usersCollectionMap.entries());
+        stableFavorites := Iter.toArray(_favorites.entries());
+        
+    };
+
+    system func postupgrade(){
+        usersCollectionMap := TrieMap.fromEntries(stableusersCollectionMap.vals(),Principal.equal,Principal.hash);
+        _favorites := HashMap.fromIter<AccountIdentifier, [(TokenIdentifier)]>(
+        stableFavorites.vals(),
+        10,
+        AID.equal,
+        AID.hash
+        ); 
+        
+    };
+ 
+    public shared func fetchCycles() : async Nat {
+        let balance = Cycles.balance(); // Fetch the current cycle balance
+        Debug.print("Current cycle balance: " # Nat.toText(balance)); // Print the cycle balance
+        return balance; // Return the cycle balance
+    };
+
+    let IC = actor "aaaaa-aa" : actor {
+    canister_status : { canister_id : Principal } -> async {
+    settings : { controllers : [Principal] }
+    };
+    };
+
+    public shared(msg) func isController(canister_id : Principal,principal_id : Principal) : async Bool {
+    let status = await IC.canister_status({ canister_id = canister_id });
+    return contains(status.settings.controllers, principal_id);
+    };
+
+    func contains(arr: [Principal], value: Principal): Bool {
+    var found = false;
+    for (item in arr.vals()) {
+    if (item == value) {
+        found := true;
+    };
+    };
+    return found;
     };
 
     /* -------------------------------------------------------------------------- */
@@ -250,9 +300,6 @@ actor Main {
         // if (Principal.isAnonymous(user)) {
         //     throw Error.reject("User is not authenticated");
         // };
-        if (Principal.isAnonymous(user)) {
-            throw Error.reject("User is not authenticated");
-        };
         let userCollections = usersCollectionMap.get(user);
         switch (userCollections) {
             case null {
@@ -319,6 +366,7 @@ actor Main {
         };
         await collectionCanisterActor.setMinter(user);
         await collectionCanisterActor.ext_setCollectionMetadata(_title, _symbol, _metadata);
+    
         // Updating the userCollectionMap
         let collections = usersCollectionMap.get(user);
         switch (collections) {
@@ -335,7 +383,7 @@ actor Main {
         };
 
     };
-
+    
     // Getting Collection Metadata
     public shared ({ caller = user }) func getUserCollectionDetails() : async ?[(Time.Time, Principal, Text, Text, Text)] {
         let collections = usersCollectionMap.get(user);
@@ -362,40 +410,113 @@ actor Main {
         return usersCollectionMap.get(user);
     };
 
-    // Getting all the collections ever created(only gets the canisterIds)
-    public shared func getAllCollections() : async [(Principal, [(Time.Time, Principal, Text, Text, Text)])] {
-        var result : [(Principal, [(Time.Time, Principal, Text, Text, Text)])] = [];
+    // // Getting all the collections ever created(only gets the canisterIds)
+    // public shared func getAllCollections() : async [(Principal, [(Time.Time, Principal, Text, Text, Text)])] {
+    //     var result : [(Principal, [(Time.Time, Principal, Text, Text, Text)])] = [];
 
-        // Iterate through all entries in usersCollectionMap
-        for ((userPrincipal, collections) in usersCollectionMap.entries()) {
-            var collectionDetails : [(Time.Time, Principal, Text, Text, Text)] = [];
+    //     // Iterate through all entries in usersCollectionMap
+    //     for ((userPrincipal, collections) in usersCollectionMap.entries()) {
+    //         var collectionDetails : [(Time.Time, Principal, Text, Text, Text)] = [];
 
-            // Iterate through each collection the user has
-            for ((time, collectionCanisterId) in collections.vals()) {
-                // Try-catch block to handle potential errors while fetching collection metadata
-                try {
-                    let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
-                        getCollectionDetails : () -> async (Text, Text, Text); // Assuming it returns (name, symbol, metadata)
-                    };
+    //         // Iterate through each collection the user has
+    //         for ((time, collectionCanisterId) in collections.vals()) {
+    //             // Try-catch block to handle potential errors while fetching collection metadata
+    //             try {
+    //                 let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+    //                     getCollectionDetails : () -> async (Text, Text, Text); // Assuming it returns (name, symbol, metadata)
+    //                 };
 
-                    // Fetch the collection details (name, symbol, metadata)
-                    let (collectionName, collectionSymbol, collectionMetadata) = await collectionCanisterActor.getCollectionDetails();
+    //                 // Fetch the collection details (name, symbol, metadata)
+    //                 let (collectionName, collectionSymbol, collectionMetadata) = await collectionCanisterActor.getCollectionDetails();
 
-                    // Add collection with its name, symbol, and metadata to the list
-                    collectionDetails := Array.append(collectionDetails, [(time, collectionCanisterId, collectionName, collectionSymbol, collectionMetadata)]);
-                } catch (e) {
-                    Debug.print("Error fetching collection details for canister: " # Principal.toText(collectionCanisterId));
-                    // Handle failure by appending the collection with placeholder values
-                    collectionDetails := Array.append(collectionDetails, [(time, collectionCanisterId, "Unknown Collection", "Unknown Symbol", "Unknown Metadata")]);
+    //                 // Add collection with its name, symbol, and metadata to the list
+    //                 collectionDetails := Array.append(collectionDetails, [(time, collectionCanisterId, collectionName, collectionSymbol, collectionMetadata)]);
+    //             } catch (e) {
+    //                 Debug.print("Error fetching collection details for canister: " # Principal.toText(collectionCanisterId));
+    //                 // Handle failure by appending the collection with placeholder values
+    //                 collectionDetails := Array.append(collectionDetails, [(time, collectionCanisterId, "Unknown Collection", "Unknown Symbol", "Unknown Metadata")]);
+    //             };
+    //         };
+
+    //         // Append user's collections to the result
+    //         result := Array.append(result, [(userPrincipal, collectionDetails)]);
+    //     };
+
+    //     return result;
+    // };
+
+    // public shared func getAllCollections() : async [(Principal, Time.Time, Principal, Text, Text, Text)] {
+    // var result : [(Principal, Time.Time, Principal, Text, Text, Text)] = [];
+
+    // // Iterate through all entries in usersCollectionMap
+    // for ((userPrincipal, collections) in usersCollectionMap.entries()) {
+    //     // Iterate through each collection the user has
+    //     for ((time, collectionCanisterId) in collections.vals()) {
+    //         // Try-catch block to handle potential errors while fetching collection metadata
+    //         try {
+    //             let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+    //                 getCollectionDetails : () -> async (Text, Text, Text); // Assuming it returns (name, symbol, metadata)
+    //             };
+
+    //             // Fetch the collection details (name, symbol, metadata)
+    //             let (collectionName, collectionSymbol, collectionMetadata) = await collectionCanisterActor.getCollectionDetails();
+
+    //             // Add collection with its name, symbol, and metadata to the result as a separate object
+    //             result := Array.append(result, [(userPrincipal, time, collectionCanisterId, collectionName, collectionSymbol, collectionMetadata)]);
+    //         } catch (e) {
+    //             Debug.print("Error fetching collection details for canister: " # Principal.toText(collectionCanisterId));
+    //             // Handle failure by appending the collection with placeholder values
+    //             result := Array.append(result, [(userPrincipal, time, collectionCanisterId, "Unknown Collection", "Unknown Symbol", "Unknown Metadata")]);
+    //         };
+    //     };
+    // };
+
+    // return result;
+    // };
+
+    // Paginated version of getAllCollections
+    public shared func getAllCollections(chunkSize: Nat, pageNo: Nat) : async Result.Result<{data: [(Principal, Time.Time, Principal, Text, Text, Text)]; current_page: Nat; total_pages: Nat}, Text> {
+    var result : [(Principal, Time.Time, Principal, Text, Text, Text)] = [];
+
+    // Iterate through all entries in usersCollectionMap
+    for ((userPrincipal, collections) in usersCollectionMap.entries()) {
+        // Iterate through each collection the user has
+        for ((time, collectionCanisterId) in collections.vals()) {
+            // Try-catch block to handle potential errors while fetching collection metadata
+            try {
+                let collectionCanisterActor = actor (Principal.toText(collectionCanisterId)) : actor {
+                    getCollectionDetails : () -> async (Text, Text, Text); // Assuming it returns (name, symbol, metadata)
                 };
+
+                // Fetch the collection details (name, symbol, metadata)
+                let (collectionName, collectionSymbol, collectionMetadata) = await collectionCanisterActor.getCollectionDetails();
+
+                // Add collection with its name, symbol, and metadata to the result as a separate object
+                result := Array.append(result, [(userPrincipal, time, collectionCanisterId, collectionName, collectionSymbol, collectionMetadata)]);
+            } catch (e) {
+                Debug.print("Error fetching collection details for canister: " # Principal.toText(collectionCanisterId));
+                // Handle failure by appending the collection with placeholder values
+                result := Array.append(result, [(userPrincipal, time, collectionCanisterId, "Unknown Collection", "Unknown Symbol", "Unknown Metadata")]);
             };
-
-            // Append user's collections to the result
-            result := Array.append(result, [(userPrincipal, collectionDetails)]);
         };
-
-        return result;
     };
+
+    // Paginate the result
+    let index_pages = Pagin.paginate(result, chunkSize);
+    
+    if (index_pages.size() < pageNo) {
+        return #err("Page not found");
+    };
+    
+    if (index_pages.size() == 0) {
+        return #err("No collections found");
+    };
+    
+    let collection_page = index_pages[pageNo];
+
+    return #ok({data = collection_page; current_page = pageNo + 1; total_pages = index_pages.size()});
+};
+
 
     //getTotalCollection
     public shared ({ caller = user }) func totalcollections() : async Nat {
@@ -450,6 +571,7 @@ actor Main {
 
         return allNFTs; // Return the aggregated list of NFTs
     };
+
 
     //GET SINGLE COLLECTION DETAILS
     // Function to get all NFT details within a specific collection and the count of total NFTs
@@ -762,42 +884,100 @@ actor Main {
     };
 
     //get all users (list of users for admin side )
-    public shared query ({ caller = user }) func getAllUsers() : async [(Principal, Nat, Time.Time, Text, Text, ?Blob)] {
-        // if (Principal.isAnonymous(user)) {
-        //     throw Error.reject("User is not authenticated");
-        // };
-        // Map over the usersArray and extract the relevant fields
-        let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
-            usersArray,
-            func(u : User) : (Principal, Nat, Time.Time, Text, Text, ?Blob) {
-                // Fetch user details from the userDetailsMap
-                let userDetails = userDetailsMap.get(u.accountIdentifier);
+    // public shared query ({ caller = user }) func getAllUsers() : async [(Principal, Nat, Time.Time, Text, Text, ?Blob)] {
+    //     // if (Principal.isAnonymous(user)) {
+    //     //     throw Error.reject("User is not authenticated");
+    //     // };
+    //     // Map over the usersArray and extract the relevant fields
+    //     let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
+    //         usersArray,
+    //         func(u : User) : (Principal, Nat, Time.Time, Text, Text, ?Blob) {
+    //             // Fetch user details from the userDetailsMap
+    //             let userDetails = userDetailsMap.get(u.accountIdentifier);
 
-                // Determine the name to return (if not found, return "No Name")
-                let name = switch (userDetails) {
-                    case (null) "No Name"; // Default to "No Name" if details are not found
-                    case (?details) details.name; // Return the user's name if available
-                };
+    //             // Determine the name to return (if not found, return "No Name")
+    //             let name = switch (userDetails) {
+    //                 case (null) "No Name"; // Default to "No Name" if details are not found
+    //                 case (?details) details.name; // Return the user's name if available
+    //             };
 
-                // Determine the email to return (if not found, return "No Email")
-                let email = switch (userDetails) {
-                    case (null) "No Email"; // Default to "No Email" if details are not found
-                    case (?details) details.email; // Return the user's email if available
-                };
+    //             // Determine the email to return (if not found, return "No Email")
+    //             let email = switch (userDetails) {
+    //                 case (null) "No Email"; // Default to "No Email" if details are not found
+    //                 case (?details) details.email; // Return the user's email if available
+    //             };
 
-                // Get the profile picture, if available
-                let profilePic = switch (userDetails) {
-                    case (null) null; // No details found
-                    case (?details) details.profilepic; // Return the profile picture if available
-                };
+    //             // Get the profile picture, if available
+    //             let profilePic = switch (userDetails) {
+    //                 case (null) null; // No details found
+    //                 case (?details) details.profilepic; // Return the profile picture if available
+    //             };
 
-                // Return the user details including the profile picture
-                return (u.accountIdentifier, u.id, u.createdAt, name, email, profilePic);
-            },
-        );
+    //             // Return the user details including the profile picture
+    //             return (u.accountIdentifier, u.id, u.createdAt, name, email, profilePic);
+    //         },
+    //     );
 
-        return allUsersDetails;
+    //     return allUsersDetails;
+    // };
+
+    public shared query ({ caller = user }) func getAllUsers(chunkSize : Nat, pageNo : Nat) : async Result.Result<{data : [(Principal, Nat, Time.Time, Text, Text, ?Blob)]; current_page : Nat; total_pages : Nat}, Text> {
+    // if (Principal.isAnonymous(user)) {
+    //     throw Error.reject("User is not authenticated");
+    // };
+
+    // Map over the usersArray and extract the relevant fields
+    let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
+        usersArray,
+        func(u : User) : (Principal, Nat, Time.Time, Text, Text, ?Blob) {
+            // Fetch user details from the userDetailsMap
+            let userDetails = userDetailsMap.get(u.accountIdentifier);
+
+            // Determine the name to return (if not found, return "No Name")
+            let name = switch (userDetails) {
+                case (null) "No Name"; // Default to "No Name" if details are not found
+                case (?details) details.name; // Return the user's name if available
+            };
+
+            // Determine the email to return (if not found, return "No Email")
+            let email = switch (userDetails) {
+                case (null) "No Email"; // Default to "No Email" if details are not found
+                case (?details) details.email; // Return the user's email if available
+            };
+
+            // Get the profile picture, if available
+            let profilePic = switch (userDetails) {
+                case (null) null; // No details found
+                case (?details) details.profilepic; // Return the profile picture if available
+            };
+
+            // Return the user details including the profile picture
+            return (u.accountIdentifier, u.id, u.createdAt, name, email, profilePic);
+        }
+    );
+
+    // Paginate the results
+    let index_pages = Pagin.paginate<(Principal, Nat, Time.Time, Text, Text, ?Blob)>(allUsersDetails, chunkSize);
+
+    // Error handling for invalid page numbers or empty data
+    if (index_pages.size() < pageNo) {
+        return #err("Page not found");
     };
+
+    if (index_pages.size() == 0) {
+        return #err("No users found");
+    };
+
+    let users_page = index_pages[pageNo];
+
+    // Return the paginated result
+    return #ok({
+        data = users_page;
+        current_page = pageNo + 1;
+        total_pages = index_pages.size();
+    });
+    };
+
 
     // Function to get the total number of users
     public shared query ({ caller = user }) func getTotalUsers() : async Nat {
@@ -806,6 +986,7 @@ actor Main {
         // };
         return usersArray.size();
     };
+
 
     // USER MY COLLECTION
     public shared ({ caller = user }) func userNFTcollection(
@@ -859,12 +1040,9 @@ actor Main {
             boughtNFTs = boughtNFTs;
             unboughtNFTs = unboughtNFTs;
         });
-    };
+    };   
 
     //User favorite NFTS from userNFTCollection
-
-    // favorites data structure
-    private var _favorites : HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]> = HashMap.HashMap<AccountIdentifier, [(TokenIdentifier)]>(0, AID.equal, AID.hash);
 
     // Function to add a token to the user's favorites
     func _addToFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : () {
@@ -966,225 +1144,352 @@ actor Main {
         };
     };
 
+    // public shared query func getFavorites(user: AccountIdentifier, chunkSize: Nat, pageNo: Nat) : async Result.Result<{data: [TokenIdentifier]; current_page: Nat; total_pages: Nat}, CommonError> {
+    // // Check if the user has any favorites
+    // switch (_favorites.get(user)) {
+    //     case (?favorites) {
+    //         // Paginate the favorites
+    //         let paginatedFavorites = Pagin.paginate<TokenIdentifier>(favorites, chunkSize);
+
+    //         // Check if the page exists
+    //         if (paginatedFavorites.size() < pageNo) {
+    //             return #err(#Other("Page not found"));
+    //         };
+
+    //         // Return the paginated favorites for the requested page
+    //         let favoritesPage = paginatedFavorites[pageNo];
+
+    //         return #ok({
+    //             data = favoritesPage;
+    //             current_page = pageNo + 1;
+    //             total_pages = paginatedFavorites.size();
+    //         });
+    //     };
+    //     case (_) {
+    //         // Return an error if no favorites are found for the user
+    //         return #err(#Other("No favorites found for this user"));
+    //     };
+    // };
+    // };
+
+
     //USER ACTIVITY
-    public shared func useractivity(_collectionCanisterId : Principal, buyerId : AccountIdentifier) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
-        let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            ext_marketplaceTransactions : () -> async [Transaction];
-        };
+    // public shared func useractivity(_collectionCanisterId : Principal, buyerId : AccountIdentifier) : async [(TokenIndex, TokenIdentifier, Transaction, Text)] {
+    //     let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         ext_marketplaceTransactions : () -> async [Transaction];
+    //     };
 
-        // Retrieve transactions from the collection canister
-        let transactions = await transactionActor.ext_marketplaceTransactions();
+    //     // Retrieve transactions from the collection canister
+    //     let transactions = await transactionActor.ext_marketplaceTransactions();
 
-        var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+    //     var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
 
-        // Iterate through each transaction
-        for (transaction in transactions.vals()) {
-            if (transaction.buyer == buyerId) {
-                let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+    //     // Iterate through each transaction
+    //     for (transaction in transactions.vals()) {
+    //         if (transaction.buyer == buyerId) {
+    //             let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
 
-                // Fetch the collection details to get the name
-                let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-                    getCollectionDetails : () -> async (Text, Text, Text);
-                };
+    //             // Fetch the collection details to get the name
+    //             let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //                 getCollectionDetails : () -> async (Text, Text, Text);
+    //             };
 
-                let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+    //             let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
 
-                // Append the transformed transaction data
-                transformedTransactions := Array.append(
-                    transformedTransactions,
-                    [(transaction.token, tokenIdentifier, transaction, collectionName)],
-                );
-            };
-        };
+    //             // Append the transformed transaction data
+    //             transformedTransactions := Array.append(
+    //                 transformedTransactions,
+    //                 [(transaction.token, tokenIdentifier, transaction, collectionName)],
+    //             );
+    //         };
+    //     };
 
-        return transformedTransactions;
-        return transformedTransactions;
+    //     return transformedTransactions;
+    //     // return transformedTransactions;
+    // };
+
+    public shared func useractivity(_collectionCanisterId : Principal, buyerId : AccountIdentifier, chunkSize : Nat, pageNo : Nat) : async Result.Result<{data : [(TokenIndex, TokenIdentifier, Transaction, Text)]; current_page : Nat; total_pages : Nat}, Text> {
+    let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceTransactions : () -> async [Transaction];
     };
+
+    // Retrieve transactions from the collection canister
+    let transactions = await transactionActor.ext_marketplaceTransactions();
+
+    var transformedTransactions : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+
+    // Iterate through each transaction
+    for (transaction in transactions.vals()) {
+        if (transaction.buyer == buyerId) {
+            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+
+            // Fetch the collection details to get the name
+            let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+                getCollectionDetails : () -> async (Text, Text, Text);
+            };
+
+            let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+            // Append the transformed transaction data
+            transformedTransactions := Array.append(
+                transformedTransactions,
+                [(transaction.token, tokenIdentifier, transaction, collectionName)],
+            );
+        };
+    };
+
+    // Paginate the transformed transactions
+    let index_pages = Pagin.paginate<(TokenIndex, TokenIdentifier, Transaction, Text)>(transformedTransactions, chunkSize);
+
+    if (index_pages.size() < pageNo) {
+        return #err("Page not found");
+    };
+
+    if (index_pages.size() == 0) {
+        return #err("No transactions found");
+    };
+
+    let transaction_page = index_pages[pageNo];
+
+    return #ok({
+        data = transaction_page;
+        current_page = pageNo + 1;
+        total_pages = index_pages.size();
+    });
+    };
+
 
     //functions to get hard copy of cards
     // gethardcopy function
-    // Get all orders for a specific user based on their account identifier
-    public query func getuserorders(accountIdentifier: Principal) : async Result.Result<[Order], Text> {
-    let userOrders = Array.filter<Order>(orders, func (order: Order) : Bool {
-        order.accountIdentifier == accountIdentifier;
-    });
-    if (userOrders.size() == 0) {
-        return #err("No orders found for the provided account identifier.");
-    } else {
-        return #ok(userOrders);
-    }
-    };
     public shared func gethardcopy(
-    accountIdentifier: Principal,
-    uuid: Text,
-    collectionCanisterId: Principal, // Added collectionCanisterId parameter
-    phone: Text,
-    email: Text, // Make email a required parameter
-    address: Text,
-    city: Text,
-    country: Text,
-    pincode: Text,
-    landmark: ?Text
+        accountIdentifier : Principal,
+        uuid : Text,
+        collectionCanisterId : Principal, // Added collectionCanisterId parameter
+        phone : Text,
+        email : Text, // Make email a required parameter
+        address : Text,
+        city : Text,
+        country : Text,
+        pincode : Text,
+        landmark : ?Text,
     ) : async Result.Result<Text, Text> {
-    // Validate required fields
-    if (phone == "") {
-        return #err("Phone number is required.");
-    };
-    if (address == "") {
-        return #err("Address is required.");
-    };
-    if (city == "") {
-        return #err("City is required.");
-    };
-    if (country == "") {
-        return #err("Country is required.");
-    };
-    if (pincode == "") {
-        return #err("Pincode is required.");
-    };
-
-    // Find the user by the provided account identifier
-    let existingUser = Array.find<User>(usersArray, func (u: User) : Bool {
-        u.accountIdentifier == accountIdentifier;
-    });
-
-    // If user is not found, return an error
-    switch (existingUser) {
-        case (null) {
-            return #err("User not found. Please create a user before placing an order.");
+        // Validate required fields
+        if (phone == "") {
+            return #err("Phone number is required.");
         };
-        case (?foundUser) {
-            // Generate a unique order ID
-            let newOrderId = orderIdCounter + 1;
-            orderIdCounter := newOrderId;
+        if (address == "") {
+            return #err("Address is required.");
+        };
+        if (city == "") {
+            return #err("City is required.");
+        };
+        if (country == "") {
+            return #err("Country is required.");
+        };
+        if (pincode == "") {
+            return #err("Pincode is required.");
+        };
 
-            // Create a new order linked to the user's account with the provided email
-            let newOrder: Order = {
-                id = newOrderId;
-                accountIdentifier = foundUser.accountIdentifier;
-                uuid = uuid;
-                collectionCanisterId = collectionCanisterId; // Set collection canister ID
-                phone = phone;
-                email = email; // Use the provided email directly
-                address = address;
-                city = city;
-                country = country;
-                pincode = pincode;
-                landmark = landmark; // Optional field
-                orderTime = Time.now();
+        // Find the user by the provided account identifier
+        let existingUser = Array.find<User>(
+            usersArray,
+            func(u : User) : Bool {
+                u.accountIdentifier == accountIdentifier;
+            },
+        );
+
+        // If user is not found, return an error
+        switch (existingUser) {
+            case (null) {
+                return #err("User not found. Please create a user before placing an order.");
             };
+            case (?foundUser) {
+                // Generate a unique order ID
+                let newOrderId = orderIdCounter + 1;
+                orderIdCounter := newOrderId;
 
-            // Add the new order to the stable orders array
-            orders := Array.append(orders, [newOrder]);
+                // Create a new order linked to the user's account with the provided email
+                let newOrder : Order = {
+                    id = newOrderId;
+                    accountIdentifier = foundUser.accountIdentifier;
+                    uuid = uuid;
+                    collectionCanisterId = collectionCanisterId; // Set collection canister ID
+                    phone = phone;
+                    email = email; // Use the provided email directly
+                    address = address;
+                    city = city;
+                    country = country;
+                    pincode = pincode;
+                    landmark = landmark; // Optional field
+                    orderTime = Time.now();
+                };
 
-            // Return success with orderId and message
-            return #ok("Order placed successfully for user with UUID: " # uuid # ". Order ID: " # Nat.toText(newOrderId));
+                // Add the new order to the stable orders array
+                orders := Array.append(orders, [newOrder]);
+
+                // Return success with orderId and message
+                return #ok("Order placed successfully for user with UUID: " # uuid # ". Order ID: " # Nat.toText(newOrderId));
+            };
         };
     };
-    };
-
 
     //update existing order details
     public shared func updateOrder(
-    accountIdentifier: Principal,
-    orderId: Nat,
-    phone: Text,
-    email: Text, 
-    address: Text,
-    city: Text,
-    country: Text,
-    pincode: Text,
-    landmark: ?Text
-    ) : async Result.Result<Text, Text> {   
-    var orderFound = false;
+        accountIdentifier : Principal,
+        orderId : Nat,
+        phone : Text,
+        email : Text,
+        address : Text,
+        city : Text,
+        country : Text,
+        pincode : Text,
+        landmark : ?Text,
+    ) : async Result.Result<Text, Text> {
+        var orderFound = false;
 
-    // Create a new array where the order is updated if found
-    let updatedOrders = Array.map<Order, Order>(orders, func (order: Order) : Order {
-        if (order.id == orderId and order.accountIdentifier == accountIdentifier) {
-            orderFound := true; // Mark that the order was found
+        // Create a new array where the order is updated if found
+        let updatedOrders = Array.map<Order, Order>(
+            orders,
+            func(order : Order) : Order {
+                if (order.id == orderId and order.accountIdentifier == accountIdentifier) {
+                    orderFound := true; // Mark that the order was found
 
-            // Return the updated order with new values
-            return {
-                id = order.id;
-                accountIdentifier = order.accountIdentifier;
-                uuid = order.uuid;
-                collectionCanisterId = order.collectionCanisterId;
-                phone = phone; // Update phone
-                email = email; // Use the provided email directly
-                address = address; // Update address
-                city = city; // Update city
-                country = country; // Update country
-                pincode = pincode; // Update pincode
-                landmark = landmark; // Update landmark (optional)
-                orderTime = order.orderTime; // Keep the original order time
-            };
+                    // Return the updated order with new values
+                    return {
+                        id = order.id;
+                        accountIdentifier = order.accountIdentifier;
+                        uuid = order.uuid;
+                        collectionCanisterId = order.collectionCanisterId;
+                        phone = phone; // Update phone
+                        email = email; // Use the provided email directly
+                        address = address; // Update address
+                        city = city; // Update city
+                        country = country; // Update country
+                        pincode = pincode; // Update pincode
+                        landmark = landmark; // Update landmark (optional)
+                        orderTime = order.orderTime; // Keep the original order time
+                    };
+                } else {
+                    // Return the unchanged order
+                    return order; // Ensure the unchanged order is returned
+                };
+            },
+        );
+
+        // If the order was updated, update the orders array
+        if (orderFound) {
+            orders := updatedOrders; // Update the global orders array
+            return #ok("Order updated successfully.");
         } else {
-            // Return the unchanged order
-            return order; // Ensure the unchanged order is returned
-        }
-    });
-
-    // If the order was updated, update the orders array
-    if (orderFound) {
-        orders := updatedOrders; // Update the global orders array
-        return #ok("Order updated successfully.");
-    } else {
-        return #err("Order not found for the provided account identifier and order ID.");
-    }
+            return #err("Order not found for the provided account identifier and order ID.");
+        };
     };
-
 
     //remove existing orders
     public shared func removeOrder(
-    accountIdentifier: Principal,
-    orderId: Nat
+        accountIdentifier : Principal,
+        orderId : Nat,
     ) : async Result.Result<Text, Text> {
-    var orderRemoved = false;
+        var orderRemoved = false;
 
-    // Create a new array with the order removed
-    let updatedOrders = Array.filter<Order>(orders, func (order: Order) : Bool {
-        if (order.id == orderId and order.accountIdentifier == accountIdentifier) {
-            orderRemoved := true; // Mark that the order was found and removed
-            return false; // Exclude this order from the new array
-        };
-        true; // Keep all other orders
-    });
+        // Create a new array with the order removed
+        let updatedOrders = Array.filter<Order>(
+            orders,
+            func(order : Order) : Bool {
+                if (order.id == orderId and order.accountIdentifier == accountIdentifier) {
+                    orderRemoved := true; // Mark that the order was found and removed
+                    return false; // Exclude this order from the new array
+                };
+                true; // Keep all other orders
+            },
+        );
 
-    // If the order was removed, update the orders array
-    if (orderRemoved) {
-        orders := updatedOrders;
-        return #ok("Order removed successfully.");
-    } else {
-        return #err("Order not found for the provided account identifier and order ID.");
-    };
-    };  
-
-    //get all orders of users 
-    public query func getallOrders() : async [Order] {
-    return orders;
-    };
-    // get order details for a specific order
-    public query func orderDetails(
-    accountIdentifier: Principal,
-    orderId: Nat
-    ) : async Result.Result<Order, Text> {
-    // Search for the order that matches the provided account identifier and order ID
-    let foundOrder = Array.find<Order>(orders, func (order: Order) : Bool {
-        order.id == orderId and order.accountIdentifier == accountIdentifier;
-    });
-
-    // If the order is found, return the order details
-    switch (foundOrder) {
-        case (null) {
+        // If the order was removed, update the orders array
+        if (orderRemoved) {
+            orders := updatedOrders;
+            return #ok("Order removed successfully.");
+        } else {
             return #err("Order not found for the provided account identifier and order ID.");
         };
-        case (?order) {
-            return #ok(order); // Return the found order details
+    };
+
+    //get all orders of users (admin side)
+    // public query func getallOrders() : async [Order] {
+    //     return orders;
+    // };
+
+    public query func getallOrders(chunkSize : Nat, pageNo : Nat) : async Result.Result<{data : [Order]; current_page : Nat; total_pages : Nat}, Text> {
+    let allOrders = orders;
+    let index_pages = Pagin.paginate<Order>(allOrders, chunkSize);
+
+    if (index_pages.size() < pageNo) {
+        return #err("Page not found");
+    };
+
+    if (index_pages.size() == 0) {
+        return #err("No orders found");
+    };
+
+    let order_page = index_pages[pageNo];
+    if (allOrders.size() == 0) {
+        return #err("No orders found");
+    } else {
+        return #ok({
+            data = order_page;
+            current_page = pageNo + 1;
+            total_pages = index_pages.size();
+        });
+    };
+    };
+
+
+    // get order details for a specific order
+    public query func orderDetails(
+        accountIdentifier : Principal,
+        orderId : Nat,
+    ) : async Result.Result<Order, Text> {
+        // Search for the order that matches the provided account identifier and order ID
+        let foundOrder = Array.find<Order>(
+            orders,
+            func(order : Order) : Bool {
+                order.id == orderId and order.accountIdentifier == accountIdentifier;
+            },
+        );
+
+        // If the order is found, return the order details
+        switch (foundOrder) {
+            case (null) {
+                return #err("Order not found for the provided account identifier and order ID.");
+            };
+            case (?order) {
+                return #ok(order); // Return the found order details
+            };
         };
     };
+
+    // Get all orders for a specific user based on their account identifier
+    public query func getuserorders(accountIdentifier : Principal , chunkSize : Nat , pageNo : Nat) : async Result.Result<{data : [Order]; current_page : Nat; total_pages : Nat}, Text> {
+        let userOrders = Array.filter<Order>(
+            orders,
+            func(order : Order) : Bool {
+                order.accountIdentifier == accountIdentifier;
+            },
+        );
+
+        let index_pages =  Pagin.paginate<Order>(userOrders, chunkSize);
+        if (index_pages.size() < pageNo) {
+            throw Error.reject("Page not found");
+        };
+        if (index_pages.size() == 0) {
+            throw Error.reject("No users found");
+        };
+        let order_page = index_pages[pageNo];
+        if (userOrders.size() == 0) {
+            return #err("No orders found for the provided account identifier.");
+        } else {
+            return #ok({data = order_page ; current_page = pageNo + 1 ; total_pages = index_pages.size() });
+        };
     };
-
-
 
     /* -------------------------------------------------------------------------- */
     /*                                  MARKETPLACE                               */
@@ -1197,9 +1502,9 @@ actor Main {
         };
         return await priceactor.ext_marketplaceList(msg.caller, request);
     };
-
-    // Get the NFT listings and their corresponding prices, now including TokenIndex and TokenIdentifier
-    public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Listing, Metadata)] {
+    
+    //Get the NFT listings and their corresponding prices, now including TokenIndex and TokenIdentifier
+     public shared func listings(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Listing, Metadata)] {
         let priceListings = actor (Principal.toText(_collectionCanisterId)) : actor {
             ext_marketplaceListings : () -> async [(TokenIndex, Listing, Metadata)];
         };
@@ -1217,7 +1522,7 @@ actor Main {
         );
 
         return transformedListingData;
-    };
+    };   
 
     //purchase nft
     public shared func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
@@ -1236,25 +1541,66 @@ actor Main {
     };
 
     // Get the transaction details
-    public shared func transactions(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Transaction)] {
-        let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            ext_marketplaceTransactions : () -> async [Transaction];
-        };
+    // public shared func transactions(_collectionCanisterId : Principal) : async [(TokenIndex, TokenIdentifier, Transaction)] {
+    //     let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //         ext_marketplaceTransactions : () -> async [Transaction];
+    //     };
 
-        // Retrieve transactions from the collection canister
-        let transactions = await transactionActor.ext_marketplaceTransactions();
+    //     // Retrieve transactions from the collection canister
+    //     let transactions = await transactionActor.ext_marketplaceTransactions();
 
-        // Transform transaction data to include TokenIdentifier alongside TokenIndex
-        let transformedTransactions = Array.map<Transaction, (TokenIndex, TokenIdentifier, Transaction)>(
-            transactions,
-            func(transaction : Transaction) : (TokenIndex, TokenIdentifier, Transaction) {
-                let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
-                return (transaction.token, tokenIdentifier, transaction);
-            },
-        );
+    //     // Transform transaction data to include TokenIdentifier alongside TokenIndex
+    //     let transformedTransactions = Array.map<Transaction, (TokenIndex, TokenIdentifier, Transaction)>(
+    //         transactions,
+    //         func(transaction : Transaction) : (TokenIndex, TokenIdentifier, Transaction) {
+    //             let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+    //             return (transaction.token, tokenIdentifier, transaction);
+    //         },
+    //     );
 
-        return transformedTransactions;
+    //     return transformedTransactions;
+    // };
+
+    public shared func transactions(_collectionCanisterId : Principal, chunkSize : Nat, pageNo : Nat) : async Result.Result<{data : [(TokenIndex, TokenIdentifier, Transaction)]; current_page : Nat; total_pages : Nat}, Text> {
+    let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceTransactions : () -> async [Transaction];
     };
+
+    // Retrieve transactions from the collection canister
+    let transactions = await transactionActor.ext_marketplaceTransactions();
+
+    // Transform transaction data to include TokenIdentifier alongside TokenIndex
+    let transformedTransactions = Array.map<Transaction, (TokenIndex, TokenIdentifier, Transaction)>(
+        transactions,
+        func(transaction : Transaction) : (TokenIndex, TokenIdentifier, Transaction) {
+            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
+            return (transaction.token, tokenIdentifier, transaction);
+        },
+    );
+
+    // Paginate the transformed transactions
+    let index_pages = Pagin.paginate<(TokenIndex, TokenIdentifier, Transaction)>(transformedTransactions, chunkSize);
+
+    if (index_pages.size() < pageNo) {
+        return #err("Page not found");
+    };
+
+    if (index_pages.size() == 0) {
+        return #err("No transactions found");
+    };
+
+    let transaction_page = index_pages[(pageNo)];
+    if (transformedTransactions.size() == 0) {
+        return #err("No transactions found");
+    } else {
+        return #ok({
+            data = transaction_page;
+            current_page = pageNo + 1;
+            total_pages = index_pages.size();
+        });
+    };
+    };
+
 
     //get marketplace stats
     public shared func marketstats(_collectionCanisterId : Principal) : async (Nat64, Nat64, Nat64, Nat64, Nat, Nat, Nat) {
@@ -1373,6 +1719,6 @@ actor Main {
             let errorMessage = "Unexpected Transfer Failed: " # Error.message(err);
             return #err(#Other(errorMessage));
         };
-    }; 
+    };
 
 };
