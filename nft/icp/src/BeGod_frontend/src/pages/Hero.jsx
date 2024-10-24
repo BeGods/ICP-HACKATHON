@@ -321,8 +321,6 @@ useEffect(() => {
             const cardType = eachItem.nftType.toLowerCase();
             return currType === cardType;
         });
-        
-        
     }
 
 
@@ -346,17 +344,21 @@ useEffect(() => {
         }
     }
    }
-       
+    
+   if(currentFilterOption !== filterListOptions[0].optionId){
+    filterAndSort(updatedList);
+   }else{
     updateFilteredList(updatedList);
+   }
+    
 
 }, [currentCardType, applyPriceRange, selectedCollectionNftCardsList]);
 
 const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
 
-useEffect(()=>{
-    
+const filterAndSort = (list)=>{
     if (currentFilterOption !== filterListOptions[0].optionId) {
-        let updatedList = [...selectedCollectionNftCardsList];
+        let updatedList = [...list];
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
             updateRecentlyAddedStatus(true);
@@ -376,6 +378,10 @@ useEffect(()=>{
         updateFilteredList([...filteredList]);
     }
     
+}
+
+useEffect(()=>{
+    filterAndSort(selectedCollectionNftCardsList)
 },[currentFilterOption])
 
 console.log("filtered list after applying filters",filteredList)
