@@ -28,6 +28,7 @@ import FadeLoader from "react-spinners/FadeLoader"
 import { MdExpandMore } from "react-icons/md";
 import { MdExpandLess } from "react-icons/md";
 import { updateCurrentIndex } from '../redux/infoSlice';
+import { LiaSearchSolid } from "react-icons/lia";
 
 const buyingStatus = {
    initial : "INITIAL",
@@ -59,7 +60,9 @@ const Profile = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [remainingNftsCount,updateRemainingNfts] = useState([]);
-  const [areButtonsDisabled, setAreButtonsDisabled] = useState(false);
+  const [areButtonsDisabled, setAreButtonsDisabled] = useState(false); 
+
+  const [searchInput,updateSearchInput] = useState("");
 
 
   useEffect(()=>{
@@ -287,6 +290,7 @@ const onClickRemoveOrder = async () =>{
           updateNoCardsStatus(true)
         }
       }else if(updatedOption === "myorders"){
+        updateSearchInput("");
         await fetchOrderHistory();
       }
     }
@@ -447,20 +451,29 @@ const fetchUserDetails= async () => {
 
 
 const [orderHistory,updateOrderHistory] = useState([]);
+
+// const orders_per_page = 5;
+//   const [current_page,updateCurrentPage] = useState(0);
+//   const [total_pages,updateTotalPages] = useState(0);
 useEffect(()=>{
   fetchOrderHistory();
 },[])
-   
+// const chunkSize = 2;
 const fetchOrderHistory = async () => {
+  console.log("before")
   const result = await backendActor?.getuserorders(Principal.fromText(principal));
+  console.log("after")
   console.log("result in my orders", result);
 
-  let historyResponse;
+  let historyResponse=[];
   const updatedOrderHistory = [];
   
   if(result.ok){
-    historyResponse = result.ok
+    historyResponse = result.ok;
+    // const total_pages = result.ok.total_pages;
+   // updateTotalPages(parseInt(result.ok.total_pages));
   }else{
+    updateFilteredOrderHistory([]);
     updateOrderHistory([]);
     return;
   }
@@ -483,10 +496,14 @@ const fetchOrderHistory = async () => {
 
     updatedOrderHistory.push(updatedOrder);
   });
-
+ 
   updateOrderHistory(updatedOrderHistory);
   console.log("order history", updatedOrderHistory);
 };
+
+const onChangeSearchInput = (currentSearchText)=>{
+  updateSearchInput(currentSearchText);
+}
 
 
 
@@ -775,12 +792,18 @@ const onChangeFilterOption = async(eachCollection) => {
   }
 
 
+  
+  const filteredOrderedHistory = orderHistory.filter((eachOrder) => 
+    eachOrder.collectionName.toLowerCase().includes(searchInput.toLowerCase())
+  );
+  
+
   return (
     <div className={`font-caslon w-full`} onClick={()=>updateDropDownStatus(false)}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
         <Navbar />
-        <div className='max-w-[1920px] mx-auto pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
-        <div className='w-full lg:w-[400px]'>
+        <div className='max-w-[1920px] mx-auto md:pl-[3%] mt-[5%] sm:mt-[3%] flex flex-col lg:flex-row'>
+        <div className='w-full lg:w-[400px]  '>
     <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[40px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
     {!isUserDetailsLoadging && (
       <div className='flex gap-8 mt-[5%] lg:mt-[2%] lg:ml-[2%]'>
@@ -879,7 +902,7 @@ const onChangeFilterOption = async(eachCollection) => {
               </div> 
             </div>
             {allCollectionsList.length>0 && currentOption !== "myorders" && (
-              <div className="relative z-10 flex items-center justify-between mt-5 md:w-full ">
+              <div className="relative z-10 flex items-center justify-between mt-5 ml-4 md:w-full ">
                            
               <button
                   onClick={(e)=>{e.stopPropagation(),updateDropDownStatus(!isDisplayCollectionDropDown)}}
@@ -935,10 +958,10 @@ const onChangeFilterOption = async(eachCollection) => {
             {/* Small screen view for single image display with prev and next buttons */}
             
             {currentOption !== "myorders" && (
-              <div className='z-0 flex items-center justify-between mt-8 sm:hidden'>
+              <div className='z-0 flex items-center justify-between mt-8 mb-10 sm:hidden'>
               
               <button onClick={handlePrev}>
-                <img src="/Hero/up.png" alt="Previous" className='w-10 h-10 -rotate-90' />
+                <img src="/Hero/up.png" alt="Previous" className='w-14 h-14 -rotate-90' />
               </button>
 
               {noCards ? (
@@ -952,7 +975,7 @@ const onChangeFilterOption = async(eachCollection) => {
               </SkeletonTheme>
                 ):(
                   (
-                    selectedList.length>0 ? (
+                    selectedList && selectedList.length>0 ? (
                       <div>
                        {currentOption === "mycollection" ? (
                          <NftCard img={selectedList[currentIndex][0]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={selectedList[currentIndex].length} buttonStatus = {areButtonsDisabled} /> 
@@ -968,7 +991,7 @@ const onChangeFilterOption = async(eachCollection) => {
               )}
               
               <button onClick={handleNext}>
-                <img src="/Hero/down.png" alt="Next" className='w-10 h-10 -rotate-90' />
+                <img src="/Hero/down.png" alt="Next" className='w-14 h-14 -rotate-90' />
               </button>
             </div>
             )}
@@ -1006,7 +1029,7 @@ const onChangeFilterOption = async(eachCollection) => {
                   ):( 
                     <>
                     <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
-                    {selectedList.length > 0 && selectedList.map((img, index) => (
+                    {selectedList && selectedList.length > 0 && selectedList.map((img, index) => (
                       <div className='w-full rounded-lg flip-card'>
                         {currentOption === "mycollection" ? (
                           <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} buttonStatus = {areButtonsDisabled} />
@@ -1025,15 +1048,27 @@ const onChangeFilterOption = async(eachCollection) => {
           ))
            )}
            {currentOption === "myorders" && (
-            <div className='w-[97%] min-h-[80vh] sm:my-10  mb-8 '>
+            <div className='w-[97%] min-h-[80vh] sm:my-10  mb-8 pl-[3%] '>
+              <div className='mb-5 flex justify-end '>
+                <div className=' border border-[#FCD378] w-full sm:w-[300px] h-[33px] flex items-center'>
+                  <input type='search'
+                   className=' px-2 text-[#FCD378]  outline-none bg-transparent w-[90%]
+                   placeholder-[#FCD378] placeholder-opacity-55 rounded-[2px]
+                   ' 
+                   placeholder='Enter collection name' 
+                   onChange={(e)=>onChangeSearchInput(e.target.value)} 
+                   />
+                   <LiaSearchSolid color='#FCD378' size={17} />
+                  </div>
+              </div>
             <ul className='w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-md lg:text-xl bg-[#FCD37B1A] m-0  grid grid-cols-3  items-center mb-[21px]'>
                   <li className='flex justify-center items-center'>Order Id</li>
                   <li className='flex justify-center items-center'>Collection</li>
                   <li className='flex justify-center items-center'>Details</li>
             </ul>
             <div>
-            {orderHistory.length>0 ?(
-              orderHistory.map((eachOrder)=>(
+            {filteredOrderedHistory.length>0 ?(
+              filteredOrderedHistory.map((eachOrder)=>(
                 <ul key={eachOrder.orderId} className='w-[100%] h-[75px] lg:h-[100px] text-[#FCD378] text-md md:text-lg bg-[#FCD37B1A] m-0  grid grid-cols-3 items-center mb-[21px] overflow-x-auto'>
                 <li className='flex justify-center items-center'>{eachOrder.orderId}</li>
                 <li className='flex justify-center items-center'>{eachOrder.collectionName}</li>
@@ -1042,6 +1077,7 @@ const onChangeFilterOption = async(eachCollection) => {
                 >view details</button></li>
             </ul>
               ))
+            
             ):(
               <div className='w-[90%] min-h-[58vh] sm:my-10 ml-[6%] mb-8 flex justify-center items-center'>
                 <h1 className='text-[#FFD700] text-[22px] my-20'>No Orders Were Placed!</h1>
