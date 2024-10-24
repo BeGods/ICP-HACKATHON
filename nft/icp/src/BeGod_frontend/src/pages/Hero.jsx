@@ -417,7 +417,6 @@ console.log("filtered list after applying filters",filteredList)
     
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
-        // onClick={onClickFilterContainer}
         <div className='w-[100%] md:w-[99.6%] lg:w-[100%] font-caslon isDisplayFiltersPopup ' onClick={onClickFilterContainer}>
             <div className='relative'>
                 <HeroSlider />
@@ -783,9 +782,8 @@ console.log("filtered list after applying filters",filteredList)
                                                 {currentFilterOption}
                                             </button>
                                             {currentDropDown === dropdownItems.filter && (
-                                                // here the dropdown will be top , i because when dropdown is to bottom i am getting blur dropdown ,
-                                                //  if you want to test put top-60px in place of bottom-30 below
-                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[150px] overflow-y-auto ">
+                                               
+                                                    <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
                                                         {filterListOptions.map((eachFilter,index)=>(
                                                             <>
                                                                 <div key={eachFilter.optionId} className='flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900'
