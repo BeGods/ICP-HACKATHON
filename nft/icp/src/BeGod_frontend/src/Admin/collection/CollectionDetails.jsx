@@ -48,19 +48,19 @@ const dropdownItems = {
 
 const filterListOptions = [
   {
-    optionId: "DEFAULT",
+    optionId: "Default",
     displayText: "Default",
   },
   {
-    optionId: "RecentlyAdded",
+    optionId: "Recently Added",
     displayText: "Recently Added",
   },
   {
-    optionId: "LowToHigh",
+    optionId: "Low to High",
     displayText: "Price : Low to High",
   },
   {
-    optionId: "HighToLow",
+    optionId: "Hight to Low",
     displayText: "Price : Hight to Low",
   },
 ];
@@ -153,6 +153,8 @@ function CollectionDetails() {
       await getAllCollectionNFT(principal);
     } catch (error) {
       console.error("Error fetching NFTs:", error);
+      toast.error("Error fetching NFTs");
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -205,10 +207,17 @@ function CollectionDetails() {
       console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftprice) * 100000000);
       console.log(es8_price, "price");
+      // if (result && result.length > 0) {
+      //   result.map((val, key) => {
+      //     getNftTokenId(principal, val[1], es8_price);
+      //   });
+      // }
       if (result && result.length > 0) {
-        result.map((val, key) => {
-          getNftTokenId(principal, val[1], es8_price);
-        });
+        await Promise.all(
+          result.map((val) => getNftTokenId(principal, val[1], es8_price))
+        );
+      } else {
+        throw new Error("Minting failed");
       }
     } catch (error) {
       console.error("Error minting NFT:", error);
@@ -259,19 +268,19 @@ function CollectionDetails() {
   const getListing = async (principal) => {
     try {
       console.log(principal);
-      toast("Featching NFTs,Please Wait! ...", {
-        icon: "⚠️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
+      // toast("Featching NFTs,Please Wait! ...", {
+      //   icon: "⚠️",
+      //   style: {
+      //     borderRadius: "10px",
+      //     background: "#333",
+      //     color: "#fff",
+      //   },
+      // });
       const result = await backendActor?.listings(principal);
       console.log("Listing", result);
 
-      fetchNFTs();
-      setLoading(false);
+      // fetchNFTs();
+      // setLoading(false);
     } catch (error) {
       console.error("Error fetching listing:", error);
       toast.error("Error fetching listing");
@@ -308,6 +317,18 @@ function CollectionDetails() {
         toast.error(mintResult);
       } else {
         toast.success("NFT added");
+        console.log("count");
+        toast("Fetching NFTs, Please Wait! ...", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+
+        // Fetch the updated list of NFTs
+        await fetchNFTs();
       }
     } catch (error) {
       console.error("Error in get added nft: ", error);
@@ -381,7 +402,7 @@ function CollectionDetails() {
         updatedList = updatedList.sort((a, b) => {
           const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
           const priceA = Number(priceBigIntA) / 100000000;
-
+          ``;
           const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
           const priceB = Number(priceBigIntB) / 100000000;
           return priceA - priceB;
@@ -415,10 +436,16 @@ function CollectionDetails() {
   }
 
   console.log("formated list", nftList);
+  const onClickFilterContainer = () => {
+    updateDropDown(dropdownItems.none);
+  };
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
-      <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
+      <div
+        onClick={onClickFilterContainer}
+        className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20"
+      >
         {loading ? (
           <div>
             {/* Skeleton for Back button and action buttons */}
@@ -494,7 +521,7 @@ function CollectionDetails() {
 
             {/* NFT list section */}
             <div className="hidden sm:flex items-center justify-between text-[12px] md:text-sm lg:text-base ml-2">
-              <div className="relative min-w-[160px] md:min-w-[180px]   flex justify-center lg:mr-5">
+              <div className="relative min-w-[160px] md:min-w-[180px] flex justify-center lg:mr-5">
                 {currentDropDown === dropdownItems.type && (
                   <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
                     {cardTypeList.map((eachType, index) => (
@@ -522,42 +549,51 @@ function CollectionDetails() {
                   </ul>
                 )}
                 <button
-                  onClick={() => onClickAnyFilter(dropdownItems.type)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClickAnyFilter(dropdownItems.type);
+                  }}
                   className={`rounded-full flex justify-center items-center gap-1 
-                                    w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
-                                      currentDropDown === dropdownItems.type
-                                        ? "border-[#FCD378]"
-                                        : " border-gray-800"
-                                    }`}
+                                     h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
+                                       currentDropDown === dropdownItems.type
+                                         ? "border-[#FCD378]"
+                                         : " border-gray-800"
+                                     }`}
                 >
                   <BiCategory />
                   Category ({currentCardType.charAt(0)}
                   {currentCardType.slice(1).toLowerCase()})
                 </button>
               </div>
-              <div className="relative min-w-[160px] md:min-w-[180px]  flex justify-center">
+              <div className="relative   flex justify-center">
                 <button
-                  onClick={() => onClickAnyFilter(dropdownItems.price)}
-                  className={`rounded-full flex justify-center items-center gap-1 w-full
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClickAnyFilter(dropdownItems.price);
+                  }}
+                  className={`rounded-full flex justify-center items-center gap-1 
                                      p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
                                        currentDropDown === dropdownItems.price
                                          ? "border-[#FCD378]"
                                          : " border-gray-800"
                                      }`}
                 >
-                  <CiDollar size={20} />
+                  <CiDollar size={22} />
                   Price (
                   {`${
                     !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
                       ? `${applyPriceRange.from} - ${applyPriceRange.to} `
                       : ""
                   }`}{" "}
-                  ICP )
+                  ICP)
                 </button>
                 {currentDropDown === dropdownItems.price && (
-                  <div className="absolute top-10 -left-3 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[120%] h-[150px] flex flex-col items-center justify-around">
+                  <div
+                    className="absolute top-10 border border-[#FCD378] mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 h-[150px] flex flex-col items-center justify-around"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <h1>Price in ICP</h1>
-                    <div className="flex flex-col items-center lg:flex-row">
+                    <div className="flex flex-col items-center md:flex-row">
                       <input
                         value={fromPrice}
                         onChange={(e) => {
@@ -565,7 +601,7 @@ function CollectionDetails() {
                         }}
                         placeholder="From"
                         type="number"
-                        className="w-20 mb:2 lg:mb-0 lg:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
+                        className="w-20 mb:2 md:mb-0 md:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
                       />
                       <input
                         value={toPrice}
@@ -582,7 +618,7 @@ function CollectionDetails() {
                         className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${
                           isNaN(applyPriceRange.from) ||
                           isNaN(applyPriceRange.to)
-                            ? "opacity-20"
+                            ? "opacity-30"
                             : "opacity-100"
                         } `}
                         disabled={
@@ -605,7 +641,7 @@ function CollectionDetails() {
                       <button
                         className={`w-20 border-none bg-[#FCD378] text-black h-6 rounded-full ${
                           isNaN(fromPrice) || isNaN(toPrice)
-                            ? "opacity-20"
+                            ? "opacity-30"
                             : "opacity-100"
                         }`}
                         onClick={() => {
@@ -629,7 +665,10 @@ function CollectionDetails() {
                   Filter & Sort
                 </span>
                 <button
-                  onClick={() => onClickAnyFilter(dropdownItems.filter)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClickAnyFilter(dropdownItems.filter);
+                  }}
                   className={` absolute rounded-full flex justify-center items-center gap-1 
                                     w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
                                       currentDropDown === dropdownItems.filter
@@ -724,10 +763,12 @@ function CollectionDetails() {
               </div>
             )}
             {isDisplayFiltersPopup && (
-              <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen">
+              <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden">
                 <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
                   <div className="flex items-center justify-center h-screen w-screen ">
-                    <div className="h-[50vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto ">
+                    <div
+                      className={`h-[40vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto `}
+                    >
                       <div className="flex items-center justify-end">
                         <button
                           className="text-[#FCD378] bottom-1 z-10"
@@ -739,7 +780,7 @@ function CollectionDetails() {
                       <div className="flex flex-col items-center justify-around h-[80%] text-[16px]">
                         <div className="relative w-full flex justify-center">
                           {currentDropDown === dropdownItems.type && (
-                            <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
+                            <ul className="absolute top-10 left-0 mt-2 bg-black border border-[#FCD378] text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
                               {cardTypeList.map((eachType, index) => (
                                 <>
                                   <div
@@ -767,14 +808,16 @@ function CollectionDetails() {
                             </ul>
                           )}
                           <button
-                            onClick={() => onClickAnyFilter(dropdownItems.type)}
-                            className={`rounded-full flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onClickAnyFilter(dropdownItems.type);
+                            }}
+                            className={`rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378] ${
                                                   currentDropDown ===
-                                                  dropdownItems.type
-                                                    ? "border-[#FCD378]"
-                                                    : " border-gray-800"
-                                                }`}
+                                                    dropdownItems.filter &&
+                                                  "opacity-10"
+                                                } `}
                           >
                             <BiCategory />
                             Category ({currentCardType.charAt(0)}
@@ -783,16 +826,12 @@ function CollectionDetails() {
                         </div>
                         <div className="relative w-full  flex justify-center">
                           <button
-                            onClick={() =>
-                              onClickAnyFilter(dropdownItems.price)
-                            }
-                            className={`rounded-full flex justify-center items-center gap-1 w-[100%]
-                                                p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
-                                                  currentDropDown ===
-                                                  dropdownItems.price
-                                                    ? "border-[#FCD378]"
-                                                    : " border-gray-800"
-                                                }`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onClickAnyFilter(dropdownItems.price);
+                            }}
+                            className={`rounded-md flex justify-center items-center gap-1 w-[100%]
+                                                p-2 bg-[#000] text-[#FCD378]  border border-[#FCD378]`}
                           >
                             <CiDollar size={20} />
                             Price (
@@ -802,10 +841,13 @@ function CollectionDetails() {
                                 ? `${applyPriceRange.from} - ${applyPriceRange.to} `
                                 : ""
                             }`}{" "}
-                            ICP )
+                            ICP)
                           </button>
                           {currentDropDown === dropdownItems.price && (
-                            <div className="absolute top-10 -left-1 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 w-[100%] h-[150px] flex flex-col items-center justify-around">
+                            <div
+                              className="absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[120px] flex flex-col items-center justify-around"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <h1>Price in ICP</h1>
                               <div className="flex items-center">
                                 <input
@@ -829,7 +871,7 @@ function CollectionDetails() {
                               </div>
                               <div className="">
                                 <button
-                                  className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${
+                                  className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] mr-3 rounded-full ${
                                     isNaN(applyPriceRange.from) ||
                                     isNaN(applyPriceRange.to)
                                       ? "opacity-20"
@@ -853,7 +895,7 @@ function CollectionDetails() {
                                   Cancel
                                 </button>
                                 <button
-                                  className={`w-20 border-none bg-[#FCD378] text-black h-6 rounded-full ${
+                                  className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] rounded-full ${
                                     isNaN(fromPrice) || isNaN(toPrice)
                                       ? "opacity-20"
                                       : "opacity-100"
@@ -879,22 +921,22 @@ function CollectionDetails() {
                             Filter & Sort
                           </span>
                           <button
-                            onClick={() =>
-                              onClickAnyFilter(dropdownItems.filter)
-                            }
-                            className={` absolute rounded-full flex justify-center items-center gap-1 
-                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onClickAnyFilter(dropdownItems.filter);
+                            }}
+                            className={` absolute rounded-md flex justify-center items-center gap-1 
+                                                w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border ${
                                                   currentDropDown ===
-                                                  dropdownItems.filter
-                                                    ? "border-[#FCD378]"
-                                                    : " border-gray-800"
-                                                }`}
+                                                    dropdownItems.type &&
+                                                  "opacity-5"
+                                                }  `}
                           >
                             <RiArrowUpDownFill />
                             {currentFilterOption}
                           </button>
                           {currentDropDown === dropdownItems.filter && (
-                            <ul className="absolute top-[60px] left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                            <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
                               {filterListOptions.map((eachFilter, index) => (
                                 <>
                                   <div
@@ -912,7 +954,10 @@ function CollectionDetails() {
                                       }
                                     }}
                                   >
-                                    <li key={eachFilter.optionId}>
+                                    <li
+                                      key={eachFilter.optionId}
+                                      className="h-[30px]"
+                                    >
                                       {eachFilter.displayText}
                                     </li>
                                     {currentFilterOption ===

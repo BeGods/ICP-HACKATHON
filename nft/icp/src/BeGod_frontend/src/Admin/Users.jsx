@@ -19,30 +19,40 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import { SkeletonTheme } from "react-loading-skeleton";
+import toast from "react-hot-toast";
 
 function Users() {
   const { backendActor } = useAuth();
   const [loading, setLoading] = useState(false);
   const [alluser, setalluser] = useState([]);
   const [principal, setprincipal] = useState([]);
+  let [currentpage, setcurrentpage] = useState(1);
+  const [totalpage, settotalpage] = useState();
   const [searchTerm, setSearchTerm] = useState(""); // New state for search input
 
   const getallDUser = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.getAllUsers();
+        const result = await backendActor?.getAllUsers(5, currentpage - 1);
         console.log("getting all users", result);
 
-        if (result && result.length > 0 && result[0].length > 0) {
-          setalluser(result);
-          const userPrincipalArray = result[0][0];
-          const principalString = Principal.fromUint8Array(
-            userPrincipalArray._arr
-          ).toText();
-          console.log(principalString);
-          setprincipal(principalString);
+        // if (result && result.length > 0 && result[0].length > 0) {
+        //   setalluser(result.ok.data);
+        //   const userPrincipalArray = result.ok.data[];
+        //   const principalString = Principal.fromUint8Array(
+        //     userPrincipalArray._arr
+        //   ).toText();
+        //   console.log(principalString);
+        //   setprincipal(principalString);
+        // } else {
+        //   console.log("No users found in the result");
+        // }
+        if (result.err === "No orders found") {
+          setalluser([]);
         } else {
-          console.log("No users found in the result");
+          setalluser(result.ok.data);
+          setcurrentpage(Number(result.ok.current_page));
+          settotalpage(Number(result.ok.total_pages));
         }
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -77,6 +87,20 @@ function Users() {
   // Function to clear the search input
   const clearSearch = () => {
     setSearchTerm("");
+  };
+  const leftfunction = async () => {
+    if (currentpage == 1) {
+      toast.error("You are in first page");
+    }
+    currentpage = currentpage - 1;
+    await getallDUser();
+  };
+  const rightfunction = async () => {
+    if (currentpage > totalpage) {
+      toast.error("You are in last page");
+    }
+    currentpage = currentpage + 1;
+    await getallDUser();
   };
 
   return (
@@ -236,7 +260,7 @@ function Users() {
                           <Td textAlign="center">
                             <Link
                               to={`/Admin/users/${principal}`}
-                              state={{ alluser }}
+                              state={{ user }}
                             >
                               <Button
                                 size="sm"
@@ -273,6 +297,7 @@ function Users() {
                 border="1px"
                 borderColor="gray.500"
                 _hover={{ bg: "black" }}
+                onClick={leftfunction}
               >
                 &lt;
               </Button>
@@ -283,7 +308,7 @@ function Users() {
                 borderColor="black"
                 _hover={{ bg: "#D4A849" }}
               >
-                1
+                {currentpage}
               </Button>
               <Button
                 ml="2"
@@ -292,6 +317,7 @@ function Users() {
                 border="1px"
                 borderColor="gray.500"
                 _hover={{ bg: "black" }}
+                onClick={rightfunction}
               >
                 &gt;
               </Button>
