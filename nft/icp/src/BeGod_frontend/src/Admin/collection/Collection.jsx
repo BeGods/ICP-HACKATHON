@@ -17,7 +17,7 @@ function Collection() {
     if (backendActor) {
       try {
         const result = await backendActor?.getAllCollections();
-        console.log(result);
+
         const tempArray = [];
         if (result && Array.isArray(result)) {
           result.forEach((item) => {
@@ -35,6 +35,7 @@ function Collection() {
           console.log(tempArray);
           setColl(tempArray);
         }
+        // setColl(result.ok.data);
       } catch (error) {
         console.error("Error fetching collections:", error);
       } finally {

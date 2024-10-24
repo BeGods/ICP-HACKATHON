@@ -12,7 +12,7 @@ const UserDetails = () => {
   const [loading, setLoading] = useState(true); // Loading state for skeletons
   const { backendActor } = useAuth();
   const location = useLocation();
-  const { alluser } = location.state || {};
+  const { user } = location.state || {};
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,8 +20,9 @@ const UserDetails = () => {
   const [image, setImage] = useState("");
   const [principal, setPrincipal] = useState("");
   const [userId, setUserId] = useState("");
+  console.log(user);
 
-  const userPrincipalArray = alluser[0][0];
+  const userPrincipalArray = user[0];
   const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
 
   const getUserDetail = async (principalString) => {
@@ -29,6 +30,7 @@ const UserDetails = () => {
       try {
         const result = await backendActor?.getUserDetails(principalString);
         setData(result);
+        console.log(data);
 
         const userPrincipalArray = result.ok[0];
         const principalStringg = Principal.fromUint8Array(

@@ -225,10 +225,18 @@ const CreateCollection = () => {
       console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
       console.log(es8_price, "price");
+      // if (result && result.length > 0) {
+      //   result.map((val, key) => {
+      //     getNftTokenId(answ, val[1], es8_price);
+      //   });
+      // }
+
       if (result && result.length > 0) {
-        result.map((val, key) => {
-          getNftTokenId(answ, val[1], es8_price);
-        });
+        await Promise.all(
+          result.map((val) => getNftTokenId(answ, val[1], es8_price))
+        );
+      } else {
+        throw new Error("Minting failed");
       }
 
       // if (result) {
