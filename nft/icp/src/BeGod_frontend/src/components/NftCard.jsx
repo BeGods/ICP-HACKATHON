@@ -31,7 +31,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites,quantity,buttonStatus})
     return (
 
         <div
-            className={`rounded-lg flip-card ${!img.isOwned && "filter grayscale"}`}
+            className={`rounded-lg flip-card ${!img.isOwned && "filter grayscale"} `}
             style={{
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
