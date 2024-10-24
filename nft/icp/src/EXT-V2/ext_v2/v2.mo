@@ -1829,12 +1829,43 @@ actor class EXTNFT(init_owner : Principal) = this {
 
   func _ext_internalMarketplaceListings() : [(TokenIndex, Listing, Metadata)] {
     var results : [(TokenIndex, Listing, Metadata)] = [];
-    for (a in _tokenListing.entries()) {
-      results := Array.append(results, [(a.0, a.1, Option.unwrap(_extGetTokenMetadata(a.0)))]);
-    };
-    results;
-  };
 
+    for (a in _tokenListing.entries()) {
+      // Get the metadata for the current token
+      let metadata = Option.unwrap(_extGetTokenMetadata(a.0));
+
+      // Only proceed if the token is non-fungible
+      switch(metadata) {
+        case (#nonfungible(nftData)) {
+          let nameExists = Array.find<((TokenIndex, Listing, Metadata))>(
+            results,
+            func(entry) {
+              switch (entry.2) {
+                case (#nonfungible(existingNftData)) {
+                  return existingNftData.name == nftData.name;
+                };
+                case (_) {
+                  return false;
+                };
+              }
+            }
+          );
+
+          // If name doesn't exist, append the current listing
+          if (nameExists == null) {
+            results := Array.append(results, [(a.0, a.1, metadata)]);
+          };
+
+        };
+        case (_) {
+          // If it's not non-fungible, append it as usual
+          results := Array.append(results, [(a.0, a.1, metadata)]);
+        };
+      };
+    };
+    
+    results;
+};
   
   func _ext_internalMetadata(token : TokenIdentifier) : Result.Result<Metadata, CommonError> {
     if (ExtCore.TokenIdentifier.isPrincipal(token, Principal.fromActor(this)) == false) {
