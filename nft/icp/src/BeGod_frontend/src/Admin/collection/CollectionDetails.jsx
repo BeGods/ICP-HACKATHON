@@ -113,7 +113,7 @@ function CollectionDetails() {
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
 
-      const result = await backendActor?.getAllCollectionNFTs(principalString,2,0);
+      const result = await backendActor?.getAllCollectionNFTs(principalString,10,0);
       console.log("NFT collection:", result);
       setnftList(result.ok.data);
     } catch (error) {
