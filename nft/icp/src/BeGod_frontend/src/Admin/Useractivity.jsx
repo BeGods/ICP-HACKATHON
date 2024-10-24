@@ -36,6 +36,8 @@ function Users() {
   const [alldata, setalldata] = useState([]);
   const [copiedtokenid, setcopiedtokenid] = useState("");
   const [coll, setColl] = useState([]);
+  let [currentpage, setcurrentpage] = useState(1);
+  const [totalpage, settotalpage] = useState();
 
   const getCollection = async () => {
     setLoading(true);
@@ -62,6 +64,9 @@ function Users() {
           setColl(tempArray);
           checktranscations(tempArray);
         }
+        // setColl(result.ok.data);
+        // checktranscations(result.ok.data);
+        // console.log(result.ok.data);
       } catch (error) {
         console.error("Error fetching collections:", error);
       }
@@ -108,56 +113,82 @@ function Users() {
   //   setLoading(false);
   // };
 
-  const checktranscations = async (Collection) => {
-    try {
-      const transactionPromises = Collection.map(async (item) => {
-        const userPrincipalArray = item[1];
+  // const checktranscations = async (Collection) => {
+  //   try {
+  //     const transactionPromises = Collection.map(async (item) => {
+  //       const userPrincipalArray = item[1];
+  //       console.log(item);
 
-        try {
-          const principalString = Principal.fromUint8Array(
-            userPrincipalArray._arr
-          );
-          const result = await backendActor?.transactions(principalString);
+  //       try {
+  //         const principalString = Principal.fromUint8Array(
+  //           userPrincipalArray._arr
+  //         );
+  //         const result = await backendActor?.alltransactions(
+  //           principalString,
+  //           10,
+  //           0
+  //         );
 
-          if (result && Array.isArray(result) && result.length > 0) {
-            return result.filter(
-              (transactionArray) =>
-                Array.isArray(transactionArray) && transactionArray.length > 0
-            );
-          } else {
-            console.log("No valid data for principal:", principalString);
-            return [];
-          }
-        } catch (error) {
-          console.log(
-            "Error fetching transactions for principal:",
-            userPrincipalArray,
-            error
-          );
-          return [];
+  //         if (result && Array.isArray(result) && result.length > 0) {
+  //           return result.filter(
+  //             (transactionArray) =>
+  //               Array.isArray(transactionArray) && transactionArray.length > 0
+  //           );
+  //         } else {
+  //           console.log("No valid data for principal:", principalString);
+  //           return [];
+  //         }
+  //       } catch (error) {
+  //         console.log(
+  //           "Error fetching transactions for principal:",
+  //           userPrincipalArray,
+  //           error
+  //         );
+  //         return [];
+  //       }
+  //     });
+
+  //     const allResults = await Promise.all(transactionPromises);
+  //     const listdata = allResults.flat();
+
+  //     if (listdata.length > 0) {
+  //       setalldata(listdata);
+  //       console.log("All successful individual arrays stored:", listdata);
+  //     } else {
+  //       console.log("No successful data to store.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error in checkTransactions:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const gettransactions = async () => {
+    if (backendActor) {
+      try {
+        const result = await backendActor?.alltransactions(5, currentpage - 1);
+        console.log("getting all transactions", result);
+
+        if (result.err === "No transactions found") {
+          setalldata([]); // Set to an empty array if no transactions found
+        } else {
+          setalldata(result.ok.data);
+          setcurrentpage(Number(result.ok.current_page));
+          settotalpage(Number(result.ok.total_pages));
         }
-      });
-
-      const allResults = await Promise.all(transactionPromises);
-      const listdata = allResults.flat();
-
-      if (listdata.length > 0) {
-        setalldata(listdata);
-        console.log("All successful individual arrays stored:", listdata);
-      } else {
-        console.log("No successful data to store.");
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error in checkTransactions:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchCollection = async () => {
       setLoading(true);
-      await getCollection();
+      await gettransactions();
     };
 
     fetchCollection();
@@ -165,6 +196,21 @@ function Users() {
 
   const handleCopy = () => {
     toast.success("Copied");
+  };
+
+  const leftfunction = async () => {
+    if (currentpage == 1) {
+      toast.error("You are in first page");
+    }
+    currentpage = currentpage - 1;
+    await gettransactions();
+  };
+  const rightfunction = async () => {
+    if (currentpage > totalpage) {
+      toast.error("You are in last page");
+    }
+    currentpage = currentpage + 1;
+    await gettransactions();
   };
 
   return (
@@ -386,6 +432,7 @@ function Users() {
                 border="1px"
                 borderColor="gray.500"
                 _hover={{ bg: "black" }}
+                onClick={leftfunction}
               >
                 &lt;
               </Button>
@@ -396,7 +443,7 @@ function Users() {
                 borderColor="black"
                 _hover={{ bg: "#D4A849" }}
               >
-                1
+                {currentpage}
               </Button>
               <Button
                 ml="2"
@@ -405,6 +452,7 @@ function Users() {
                 border="1px"
                 borderColor="gray.500"
                 _hover={{ bg: "black" }}
+                onClick={rightfunction}
               >
                 &gt;
               </Button>

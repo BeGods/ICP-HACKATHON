@@ -8,34 +8,42 @@ import {
   Th,
   Td,
   TableContainer,
-  Input,
   Box,
   Button,
-  IconButton,
 } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
+import { CopyIcon } from "@chakra-ui/icons";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import { SkeletonTheme } from "react-loading-skeleton";
-import { CopyIcon } from "@chakra-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 function Allorder() {
   const { backendActor } = useAuth();
   const [loading, setLoading] = useState(false);
   const [allorder, setallorder] = useState([]);
+  let [currentpage, setcurrentpage] = useState(1);
+  const [totalpage, settotalpage] = useState();
 
   const getallorder = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.getallOrders();
+        const result = await backendActor?.getallOrders(10, currentpage - 1);
         console.log(result);
-        setallorder(result);
-        setLoading(false);
+
+        if (result.err === "No orders found") {
+          setallorder([]); // Set to an empty array if no orders found
+        } else {
+          setallorder(Array.isArray(result.ok.data) ? result.ok.data : []);
+          setcurrentpage(Number(result.ok.current_page));
+          settotalpage(Number(result.ok.total_pages));
+        }
       } catch (error) {
         console.error("Error fetching allorders:", error);
+        setallorder([]);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -43,7 +51,6 @@ function Allorder() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-
       await getallorder();
     };
 
@@ -53,6 +60,21 @@ function Allorder() {
   const handleCopy = () => {
     toast.success("Copied");
   };
+  const leftfunction = async () => {
+    if (currentpage == 1) {
+      toast.error("You are in first page");
+    }
+    currentpage = currentpage - 1;
+    await getallorder();
+  };
+  const rightfunction = async () => {
+    if (currentpage > totalpage) {
+      toast.error("You are in last page");
+    }
+    currentpage = currentpage + 1;
+    await getallorder();
+  };
+
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar md:w-full lg:w-[90%] lg:pt-20">
@@ -109,13 +131,14 @@ function Allorder() {
                           </Td>
                         </Tr>
                       ))
-                  ) : allorder.length === 0 ? (
+                  ) : Array.isArray(allorder) && allorder.length === 0 ? (
                     <Tr>
                       <Td colSpan={4} textAlign="center" color="gray.400">
                         No order found
                       </Td>
                     </Tr>
                   ) : (
+                    Array.isArray(allorder) &&
                     allorder.map((orderdata, index) => {
                       const userPrincipalArray = orderdata.collectionCanisterId;
                       const principal = userPrincipalArray
@@ -144,11 +167,7 @@ function Allorder() {
                           key={index}
                           bg={index % 2 === 0 ? "#333333" : "#282828"}
                         >
-                          <Td textAlign="center">
-                            <div className="flex items-center justify-center gap-4">
-                              {index + 1}
-                            </div>
-                          </Td>
+                          <Td textAlign="center">{index + 1}</Td>
                           <Td
                             textAlign="center"
                             wordBreak="break-all"
@@ -214,6 +233,7 @@ function Allorder() {
                 border="1px"
                 borderColor="gray.500"
                 _hover={{ bg: "black" }}
+                onClick={leftfunction}
               >
                 &lt;
               </Button>
@@ -224,7 +244,7 @@ function Allorder() {
                 borderColor="black"
                 _hover={{ bg: "#D4A849" }}
               >
-                1
+                {currentpage}
               </Button>
               <Button
                 ml="2"
@@ -233,6 +253,7 @@ function Allorder() {
                 border="1px"
                 borderColor="gray.500"
                 _hover={{ bg: "black" }}
+                onClick={rightfunction}
               >
                 &gt;
               </Button>
