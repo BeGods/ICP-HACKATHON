@@ -29,7 +29,7 @@ function Allorder() {
   const getallorder = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.getallOrders(10, currentpage - 1);
+        const result = await backendActor?.getallOrders(5, currentpage - 1);
         console.log(result);
 
         if (result.err === "No orders found") {
