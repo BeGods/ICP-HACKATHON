@@ -113,35 +113,9 @@ function CollectionDetails() {
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
 
-      const result = await backendActor?.getAllCollectionNFTs(principalString);
+      const result = await backendActor?.getAllCollectionNFTs(principalString,2,0);
       console.log("NFT collection:", result);
-      const formatedList = [];
-      let tempIndex = 0;
-      for (let i = 0; i < result.length; i++) {
-        const eachItem = result[i];
-        const currentCardName =
-          eachItem[2]?.nonfungible?.name ?? "Name not found";
-
-        if (tempIndex === 0) {
-          formatedList.push([eachItem]);
-          tempIndex++;
-        } else if (
-          formatedList[tempIndex - 1][0][2]?.nonfungible?.name ===
-          currentCardName
-        ) {
-          formatedList[tempIndex - 1].push(eachItem);
-        } else {
-          formatedList.push([eachItem]);
-          tempIndex++;
-        }
-        console.log(
-          "current name ",
-          currentCardName,
-          "formated list",
-          formatedList
-        );
-      }
-      setnftList(formatedList);
+      setnftList(result.ok.data);
     } catch (error) {
       console.error("Error fetching get all collection NFT:", error);
     }
@@ -370,8 +344,8 @@ function CollectionDetails() {
 
     if (currentCardType !== cardTypeList[0].cardId) {
       updatedList = updatedList.filter((eachItem) => {
-        console.log("each item", eachItem[0]);
-        const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
+        console.log("each item", eachItem);
+        const metadataJson = eachItem[2]?.nonfungible?.metadata?.[0]?.json;
         const metadata = JSON.parse(metadataJson);
         const nftType = metadata?.nftType;
         return nftType.toLowerCase() === currentCardType.toLowerCase();
@@ -381,7 +355,7 @@ function CollectionDetails() {
     if (applyPriceRange.isApply) {
       updatedList = updatedList.filter((eachItem) => {
         const priceBigInt =
-          eachItem[0][3]?.[0]?.toString() ?? "Price not found";
+          eachItem[3]?.[0]?.toString() ?? "Price not found";
         const price = Number(priceBigInt) / 100000000;
         console.log(
           "From price:",
@@ -400,19 +374,19 @@ function CollectionDetails() {
         updatedList = updatedList.reverse();
       } else if (currentFilterOption === filterListOptions[2].optionId) {
         updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntA = a[3]?.[0]?.toString() ?? "Price not found";
           const priceA = Number(priceBigIntA) / 100000000;
           ``;
-          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntB = b[3]?.[0]?.toString() ?? "Price not found";
           const priceB = Number(priceBigIntB) / 100000000;
           return priceA - priceB;
         });
       } else if (currentFilterOption === filterListOptions[3].optionId) {
         updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntA = a[3]?.[0]?.toString() ?? "Price not found";
           const priceA = Number(priceBigIntA) / 100000000;
 
-          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntB = b[3]?.[0]?.toString() ?? "Price not found";
           const priceB = Number(priceBigIntB) / 100000000;
           return priceB - priceA;
         });
@@ -735,10 +709,9 @@ function CollectionDetails() {
                     <>
                       <NftCard
                         id={principalStringg}
-                        list={list[0]}
+                        list={list}
                         key={index}
                         collectiondata={collectiondata}
-                        quantity={list.length}
                       />
                     </>
                   ))

@@ -473,7 +473,6 @@ const fetchOrderHistory = async () => {
     // const total_pages = result.ok.total_pages;
    // updateTotalPages(parseInt(result.ok.total_pages));
   }else{
-    updateFilteredOrderHistory([]);
     updateOrderHistory([]);
     return;
   }
@@ -554,11 +553,13 @@ const fetchCollections = async () => {
 
   const getSelectedOptionCards =  async(collectionId) => {
     let updatedCardsList = [];
+    console.log("before profile function")
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
+    console.log("profile result",collectionDetailsResult)
     const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
-   // console.log("owned nfts after fetching",ownedNfts);
+    console.log("owned nfts after fetching",ownedNfts);
     const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
-   // console.log("not owned nfts after fetching",notOwnedNfts);
+    console.log("not owned nfts after fetching",notOwnedNfts);
     const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
    console.log("owned nfts",updatedOwnedList);
     
@@ -627,15 +628,7 @@ const fetchCollections = async () => {
                 collectionColor : allCollectionsList[currentDropDownOption].collectionColor,
                 price : parseInt(eachCard[5][0])/100000000
              }
-             if(tempIndex === 0){
-              formatedList.push([tempcard]);
-              tempIndex++;
-              }else if(formatedList[tempIndex-1][0].cardName === tempcard.cardName){
-                  formatedList[tempIndex-1].push(tempcard);
-              }else{
-                  formatedList.push([tempcard]);
-                  tempIndex++;
-              }
+             formatedList.push([tempcard])
 
       }
 

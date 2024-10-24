@@ -184,11 +184,12 @@ const Activity = () => {
                 </div>
                 )
               })}
-            <div className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === total_pages ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === 1} 
+            <button className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === total_pages ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === total_pages} 
               onClick={onClickNext}
+             
             >
               <GrFormNext />
-            </div>
+            </button>
           </div>
           )}
         </div>
