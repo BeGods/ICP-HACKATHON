@@ -264,13 +264,11 @@ const fetchCollectionNfts = async (collectionId,color) => {
     updateNoCardsStatus(true);
     return;
    }
-  
-   
 
 };
 
 const getCollectionNfts = (collectionList, collectionId, color) => {
-    return collectionList.reduce((acc, eachItem) => {
+    return collectionList.map((eachItem) => {
       const { nonfungible } = eachItem[3];
       const { thumbnail: image, name } = nonfungible;
       const sold = eachItem[2].price;
@@ -289,16 +287,8 @@ const getCollectionNfts = (collectionList, collectionId, color) => {
         borderColor,
         collectionColor: color,
       };
-  
-      // Check if the last group of cards is the same as the current card
-      if (acc.length > 0 && acc[acc.length - 1][0].name === nftCard.name) {
-        acc[acc.length - 1].push(nftCard);
-      } else {
-        acc.push([nftCard]);
-      }
-  
-      return acc;
-    }, []);
+    return nftCard
+    });
   };
   
 
@@ -323,23 +313,20 @@ const [filteredList, updateFilteredList] = useState(selectedCollectionNftCardsLi
 
 
 useEffect(() => {
-
     let updatedList = [...selectedCollectionNftCardsList];
 
     if (currentCardType !== cardTypeList[0].cardId) {
         const currType = currentCardType.toLowerCase();
         updatedList = updatedList.filter((eachItem) => {
-            const cardType = eachItem[0].nftType.toLowerCase();
+            const cardType = eachItem.nftType.toLowerCase();
             return currType === cardType;
         });
-        
-        
     }
 
 
     if (applyPriceRange.isApply) {
         updatedList = updatedList.filter((eachItem) => {
-            return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
+            return applyPriceRange.from <= eachItem.ICP && eachItem.ICP <= applyPriceRange.to;
         });
         
     }
@@ -357,25 +344,29 @@ useEffect(() => {
         }
     }
    }
-       
+    
+   if(currentFilterOption !== filterListOptions[0].optionId){
+    filterAndSort(updatedList);
+   }else{
     updateFilteredList(updatedList);
+   }
+    
 
 }, [currentCardType, applyPriceRange, selectedCollectionNftCardsList]);
 
 const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
 
-useEffect(()=>{
-    
+const filterAndSort = (list)=>{
     if (currentFilterOption !== filterListOptions[0].optionId) {
-        let updatedList = [...selectedCollectionNftCardsList];
+        let updatedList = [...list];
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
             updateRecentlyAddedStatus(true);
         } else if (currentFilterOption === filterListOptions[2].optionId) {
-            updatedList = updatedList.sort((a, b) => a[0].ICP - b[0].ICP);
+            updatedList = updatedList.sort((a, b) => a.ICP - b.ICP);
             updateRecentlyAddedStatus(false);
         } else if (currentFilterOption === filterListOptions[3].optionId) {
-            updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
+            updatedList = updatedList.sort((a, b) => b.ICP - a.ICP);
             updateRecentlyAddedStatus(false);
         }
         console.log("updated list after filter change",updatedList)
@@ -387,6 +378,10 @@ useEffect(()=>{
         updateFilteredList([...filteredList]);
     }
     
+}
+
+useEffect(()=>{
+    filterAndSort(selectedCollectionNftCardsList)
 },[currentFilterOption])
 
 console.log("filtered list after applying filters",filteredList)
@@ -451,7 +446,7 @@ console.log("filtered list after applying filters",filteredList)
                 {/* Collection details and its nfts part */}
                 {noCollections ? (
                     <div className='w-full h-[50vh] flex items-center justify-center'>
-                        <h1 className='text-[50px] text-[#FCD37B]'>No Collections Found</h1>
+                        <h1 className='text-[33px] md:text-[50px] text-[#FCD37B] text-center'>No Collections Found</h1>
                     </div>
                 ):(
                     <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
