@@ -113,18 +113,18 @@ const NftDetails = () => {
         {/* NFT Details Section */}
         <div className="flex flex-col md:flex-row mt-8 sm:mt-0 gap-6">
           {/* NFT Image */}
-          <div className="flex justify-start mb-4 sm:mb-0">
+          <div className="flex justify-start mb-4 sm:mb-0 w-full sm:w-[35%]">
             {loading ? (
               <Skeleton
-                height={350}
-                width={280}
-                className="sm:w-90 md:w-100 lg:w-96"
+                height="100%" // Use percentage for skeleton height
+                width="100%"
+                className="w-full max-w-[80%] sm:max-w-[85%] md:max-w-[90%] aspect-square"
               />
             ) : (
               <img
                 src={nftdata[2]?.nonfungible?.thumbnail ?? "Image not found"}
                 alt="NFT Thumbnail"
-                className="object-cover rounded-md w-full max-w-[80%] sm:max-w-[85%] md:max-w-[350px] lg:max-w-[400px] h-auto ml-[40px] sm:ml-0"
+                className="object-cover rounded-md w-full max-w-[80%] sm:max-w-[85%] md:max-w-[90%] aspect-square h-auto"
               />
             )}
           </div>

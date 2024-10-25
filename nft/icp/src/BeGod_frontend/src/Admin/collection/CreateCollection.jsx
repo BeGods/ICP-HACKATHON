@@ -93,7 +93,7 @@ const CreateCollection = () => {
     e.preventDefault();
 
     // Form validation checks
-    if (!name || !description || !Ufile) {
+    if (!name && !description && !Ufile) {
       toast.error("Please fill in all required fields.");
       return;
     }
