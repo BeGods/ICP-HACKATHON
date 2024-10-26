@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
+  elements,
   mythSections,
   mythSymbols,
   mythologies,
@@ -21,12 +22,14 @@ const orbPos = [
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { t } = useTranslation();
-  const { enableSound } = useContext(MyContext);
+  const { enableSound, assets } = useContext(MyContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
   const [showEffect, setShowEffect] = useState(null);
-  const [playSound, setPlaySound] = useState(null);
+  const [playSound, setPlaySound] = useState(0);
   const howlerRef = useRef(null);
+
+  console.log(playSound);
 
   const handleKeys = () => {
     const selectedKeys = clickedOrbs
@@ -78,8 +81,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               showEffect && `glow-tap-${mythSections[showEffect - 1]}`
             } items-center w-full h-full pointer-events-none`}
             style={{
-              backgroundImage:
-                "url(/assets/uxui/480px-fof.background.aether1.png)",
+              backgroundImage: `url(${assets.uxui.tower})`,
               backgroundSize: "contain",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -111,7 +113,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   } items-center rounded-full `}
                 >
                   <img
-                    src="/assets/uxui/240px-orb.base.png"
+                    src={`${assets.uxui.baseorb}`}
                     alt="orb"
                     className={`filter-orbs-${item.toLowerCase()} `}
                   />
@@ -130,11 +132,11 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             <div
               onClick={() => {
                 playAudio();
-                if (!prev.includes("MultiOrb")) {
+                if (!prev.includes("multiorb")) {
                   setPlaySound(4);
                 }
                 setClickedOrbs((prev) =>
-                  prev.length <= 6 ? [...prev, "MultiOrb"] : prev
+                  prev.length <= 6 ? [...prev, "multiorb"] : prev
                 );
               }}
               className="flex items-center"
@@ -146,7 +148,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                     : "w-[15vw] glow-icon-white"
                 } items-center rounded-full `}
               >
-                <img src="/assets/uxui/240px-orb.multicolor.png" alt="orb" />
+                <img src={`${assets.uxui.multiorb}`} alt="orb" />
               </div>
             </div>
           </div>
@@ -208,11 +210,11 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
         {playSound != 0 && (
           <>
             <ReactHowler
-              src={`/assets/audio/fof.orb.${orbSounds[playSound - 1]}.wav`}
+              src={assets.audio[`orb.${elements[playSound - 1]}`]}
               playing={enableSound}
               preload={true}
               ref={howlerRef}
-              onEnd={() => setPlaySound(false)}
+              onEnd={() => setPlaySound(0)}
             />
           </>
         )}

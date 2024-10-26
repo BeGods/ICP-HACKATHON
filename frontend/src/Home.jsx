@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGameStats, fetchRewards } from "./utils/api";
+import { fetchGameStats, fetchProfilePhoto, fetchRewards } from "./utils/api";
 import i18next, { use } from "i18next";
 import { getRandomColor } from "./helpers/randomColor.helper";
 import { MyContext } from "./context/context";
@@ -15,6 +15,8 @@ import JoinBonus from "./pages/JoinBonus/Page";
 import Redeem from "./pages/Redeem/Redeem";
 import Footer from "./components/Common/Footer";
 import Gift from "./pages/Gift/Gift";
+import assets from "./assets/assets.json";
+import { showToast } from "./components/Toast/Toast";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -35,6 +37,8 @@ const Home = () => {
   const [authToken, setAuthToken] = useState(null);
   const [section, setSection] = useState(1);
   const [minimize, setMinimize] = useState(0);
+  const [country, setCountry] = useState(null);
+  const [lang, setLang] = useState(null);
 
   const sections = [
     <Forges />, // 0
@@ -49,21 +53,47 @@ const Home = () => {
     <JoinBonus />, // 9
   ];
 
+  const getProfilePhoto = async (token) => {
+    try {
+      const response = await fetchProfilePhoto(token);
+      if (response.avatarUrl) {
+        setUserData((prev) => ({
+          ...prev,
+          avatarUrl: response.avatarUrl,
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+      showToast("default");
+    }
+  };
+
+  const getPartnersData = async () => {
+    try {
+      const rewardsData = await fetchRewards(lang, country, authToken);
+      setRewards(rewardsData?.rewards);
+      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
+      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
+    } catch (error) {
+      console.log(error);
+      showToast("default");
+    }
+  };
+
   // fetch all game data
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
-      const rewardsData = await fetchRewards(token);
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setSocialQuestData(response?.extraQuests);
       setUserData(response?.user);
-      setRewards(rewardsData?.rewards);
-      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
-      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
       setKeysData(response?.towerKeys);
       if (!response?.user?.joiningBonus) {
         setSection(9);
+        (async () => {
+          await getProfilePhoto(token);
+        })();
       } else if (
         response?.user?.joiningBonus &&
         response?.user.isEligibleToClaim
@@ -77,7 +107,7 @@ const Home = () => {
       }, 2000);
     } catch (error) {
       console.log(error);
-      //! TODO: Add toast for error
+      showToast("default");
     }
   };
 
@@ -85,13 +115,23 @@ const Home = () => {
   useEffect(() => {
     localStorage.setItem("avatarColor", getRandomColor());
 
+    tele.CloudStorage.getItem("country_code", (err, item) => {
+      (async () => {
+        if (item) {
+          setCountry(item);
+        } else {
+          setCountry("NA");
+        }
+      })();
+    });
+
     tele.CloudStorage.getItem("lang", (err, item) => {
       (async () => {
         if (item) {
+          setLang(item);
           i18next.changeLanguage(item);
         } else {
           console.log("Unable to fetch language.");
-          //! TODO:Add error toast
         }
       })();
     });
@@ -102,7 +142,7 @@ const Home = () => {
           await getGameData(item);
         } else {
           console.log("You are not authenticated.");
-          //! TODO:Add error toast
+          showToast("default");
         }
       })();
     });
@@ -112,11 +152,16 @@ const Home = () => {
           setEnableSound(false);
         } else {
           console.log("Unable to fetch sound.");
-          //! TODO:Add error toast
         }
       })();
     });
   }, []);
+
+  useEffect(() => {
+    if (country && lang && authToken) {
+      (async () => await getPartnersData())();
+    }
+  }, [country, lang, authToken]);
 
   useEffect(() => {
     if (tele) {
@@ -173,6 +218,7 @@ const Home = () => {
               minimize,
               setMinimize,
               setShowCard,
+              assets,
             }}
           >
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (

@@ -9,8 +9,14 @@ const tele = window.Telegram?.WebApp;
 const FooterItem = ({ enableSound, icon }) => {
   const howlerRef = useRef(null);
   const [flipped, setFlipped] = useState(false);
-  const { section, setSection, activeMyth, setActiveMyth, socialQuestData } =
-    useContext(MyContext);
+  const {
+    section,
+    setSection,
+    activeMyth,
+    setActiveMyth,
+    socialQuestData,
+    assets,
+  } = useContext(MyContext);
   const countOfInCompleteQuests = socialQuestData.filter(
     (item) => item.isCompleted === false
   ).length;
@@ -65,7 +71,7 @@ const FooterItem = ({ enableSound, icon }) => {
               {footerIcons[footerArray[icon][1]]}
             </div>
             {icon === 2 && !flipped && (
-              <div className="absolute flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-black text-white h-8 w-8 mt-2 -mr-3 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+              <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-black text-white h-8 w-8 mt-2 -mr-3 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
                 {countOfInCompleteQuests}
               </div>
             )}
@@ -74,7 +80,7 @@ const FooterItem = ({ enableSound, icon }) => {
       </div>
       <div className="absolute">
         <ReactHowler
-          src="/assets/audio/fof.menu01.wav"
+          src={assets.audio.menu}
           playing={false}
           preload={true}
           ref={howlerRef}
@@ -85,7 +91,8 @@ const FooterItem = ({ enableSound, icon }) => {
   );
 };
 const Footer = ({}) => {
-  const { section, activeMyth, enableSound, minimize } = useContext(MyContext);
+  const { section, activeMyth, enableSound, minimize, assets } =
+    useContext(MyContext);
 
   return (
     <div
@@ -94,7 +101,7 @@ const Footer = ({}) => {
       }`}
     >
       <img
-        src="/assets/uxui/1280px-fof.footer.png"
+        src={assets.uxui.paper}
         alt="paper"
         className={`w-full h-auto filter-paper-${
           section === 3 ||

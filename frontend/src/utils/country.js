@@ -79,3 +79,5 @@ export const country = [
   { name: "Zambia", code: "ZMB" },
   { name: "Zimbabwe", code: "ZWE" },
 ];
+
+export const validCountry = ["IND"];

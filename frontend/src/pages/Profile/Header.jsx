@@ -29,7 +29,7 @@ const TopChild = ({ handleClick }) => {
 
 const BottomChild = ({ userData }) => {
   return (
-    <div className="flex justify-center -mt-[4vh] px-7">
+    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
         className={`flex text-num pl-3 text-black-lg-contour text-white items-center border justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
@@ -45,6 +45,7 @@ const BottomChild = ({ userData }) => {
 };
 
 const CenterChild = ({ userData }) => {
+  const { assets, platform } = useContext(MyContext);
   return (
     <div className="flex absolute justify-center w-full ">
       {/* Orb */}
@@ -53,10 +54,27 @@ const CenterChild = ({ userData }) => {
         className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
-          src="/assets/uxui/240px-orb.base.png"
+          src={
+            userData.avatarUrl
+              ? `https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`
+              : `${assets.uxui.baseorb}`
+          }
           alt="base-orb"
-          className={`filter-orbs-black w-full h-full`}
+          className={`filter-orbs-black w-full h-full rounded-full`}
         />
+        {!userData.avatarUrl && (
+          <div
+            className={`z-1 flex justify-center items-start tetx-white  text-[22vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+          >
+            <div
+              className={`uppercase ${
+                platform === "ios" ? "mt-2" : "mt-4"
+              } text-white`}
+            >
+              {userData.telegramUsername[0]}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

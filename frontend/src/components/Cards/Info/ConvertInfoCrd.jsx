@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { mythSymbols } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
+import { MyContext } from "../../../context/context";
 
 const ConvertInfo = ({ t, handleClick }) => {
+  const { assets } = useContext(MyContext);
   const [activeColor, setActiveColor] = useState(0);
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const activeColorRef = useRef(activeColor);
@@ -22,7 +24,7 @@ const ConvertInfo = ({ t, handleClick }) => {
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
-            src="/assets/cards/320px-info_background.jpg"
+            src={assets.uxui.info}
             alt="card"
             className="w-full h-full object-cover rounded-primary"
           />
@@ -40,7 +42,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                         className={`flex relative text-center justify-center  items-center max-w-orb rounded-full glow-icon-black`}
                       >
                         <img
-                          src="/assets/uxui/240px-orb.base.png"
+                          src={assets.uxui.baseorb}
                           alt={`${key} orb`}
                           className={`filter-orbs-${key}`}
                         />
@@ -57,7 +59,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                         className={`flex relative text-center  justify-center items-center max-w-orb rounded-full glow-icon-black`}
                       >
                         <img
-                          src="/assets/uxui/240px-orb.base.png"
+                          src={assets.uxui.baseorb}
                           alt={`${key} orb`}
                           className={`filter-orbs-${key}`}
                         />
@@ -71,10 +73,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                       <div
                         className={`flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black`}
                       >
-                        <img
-                          src="/assets/uxui/240px-orb.multicolor.png"
-                          alt="multi orb"
-                        />
+                        <img src={assets.uxui.multiorb} alt="multi orb" />
                       </div>
                     </div>
                   </React.Fragment>
@@ -86,7 +85,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                   className={`flex relative text-center justify-center items-center max-w-orb rounded-full glow-icon-black`}
                 >
                   <img
-                    src="/assets/uxui/240px-orb.base.png"
+                    src={assets.uxui.baseorb}
                     alt={`gray orb`}
                     className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
                   />
@@ -102,7 +101,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                 <div
                   className={`flex relative text-center justify-end items-center max-w-orb -mr-2 rounded-full glow-icon-black`}
                 >
-                  <img src="/assets/uxui/240px-orb.base.png" alt={`gray orb`} />
+                  <img src={assets.uxui.baseorb} alt={`gray orb`} />
                   <span
                     className={`absolute z-1 text-[30px] opacity-50 orb-symbol-shadow  mt-1  mr-1 font-symbols text-white `}
                   >

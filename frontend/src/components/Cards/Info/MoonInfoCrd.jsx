@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
+import { MyContext } from "../../../context/context";
 
 const MoonInfoCard = ({ handleClick }) => {
+  const { assets } = useContext(MyContext);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
-            src="/assets/cards/320px-info_moon.jpg"
+            src={assets.uxui.infomoon}
             alt="info card background"
             className="w-full h-full object-cover rounded-primary z-10"
           />

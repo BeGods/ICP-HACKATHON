@@ -1,10 +1,11 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { mythSections } from "../../utils/constants";
 import { calculateRemainingTime } from "../../helpers/booster.helper";
-import { Handshake } from "lucide-react";
+import { MyContext } from "../../context/context";
 
-const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
+const BoosterBtn = ({ activeCard, mythData, handleClaim, t }) => {
   let disableClick = useRef(false);
+  const { assets, activeMyth } = useContext(MyContext);
 
   return (
     <div className="relative mt-[10px]">
@@ -58,9 +59,9 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
               >
                 Lvl{" "}
                 {activeCard === "automata"
-                  ? mythData.automataPaylvl + 1
+                  ? mythData.automatalvl + 1
                   : activeCard === "minion"
-                  ? mythData.shardsPaylvl + 1
+                  ? mythData.shardslvl + 1
                   : activeCard === "burst"
                   ? mythData.burstlvl + 1
                   : 1}
@@ -73,7 +74,7 @@ const BoosterBtn = ({ activeCard, mythData, activeMyth, handleClaim, t }) => {
             </div>
             <div className="flex relative justify-center items-center w-[30%] h-full pr-1">
               <img
-                src={`/assets/uxui/240px-orb.multicolor.png`}
+                src={`${assets.uxui.multiorb}`}
                 alt="orb"
                 className="p-1.5"
               />

@@ -15,7 +15,7 @@ const CenterChild = ({
   orbGlow,
   platform,
 }) => {
-  const { setSection } = useContext(MyContext);
+  const { setSection, assets } = useContext(MyContext);
 
   return (
     <div
@@ -41,11 +41,11 @@ const CenterChild = ({
         >
           <div
             style={{ height: `${height}%` }}
-            className={`absolute bottom-0 opacity-20 w-full transition-all duration-500 bg-${mythSections[activeMyth]}-text z-10`}
+            className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 bg-${mythSections[activeMyth]}-text z-10`}
           ></div>
         </div>
         <img
-          src="/assets/uxui/240px-orb.base.png"
+          src={assets.uxui.baseorb}
           alt="base-orb"
           className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
         />
@@ -132,7 +132,11 @@ const BottomChild = ({ shards, orbs, activeMyth, glowShards }) => {
   }, [glowShards, showEffect]);
 
   return (
-    <div className="flex justify-center -mt-[4vh] px-7 w-full">
+    <div
+      className={`flex bar-flipped ${
+        showEffect && "bar-flipped"
+      } justify-center -mt-[4vh] px-7 w-full`}
+    >
       <div
         className={`flex ${
           showEffect &&

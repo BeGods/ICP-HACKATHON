@@ -34,6 +34,7 @@ const Boosters = () => {
     authToken,
     setShowCard,
     setShowBooster,
+    assets,
   } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
@@ -96,7 +97,6 @@ const Boosters = () => {
             activeCard={"automata"}
             mythData={mythData}
             handleClaim={handleClaimAutomata}
-            activeMyth={activeMyth}
             t={t}
           />
         }
@@ -239,7 +239,7 @@ const Boosters = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/1280px-fof.base.background.jpg)`,
+            backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -266,14 +266,6 @@ const Boosters = () => {
 
       {/* BOOSTER CARDS */}
       <div className="flex justify-center h-screen w-screen absolute mx-auto">
-        {/* <div className=" w-full absolute top-0 mt-[17.75vh] mr-[8.5vw] right-0">
-          <IconBtn
-            isInfo={true}
-            handleClick={() => {}}
-            activeMyth={4}
-            align={2}
-          />
-        </div> */}
         <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
           {/* AUTOMATA */}
           <BoosterItem

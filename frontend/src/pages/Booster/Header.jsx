@@ -21,16 +21,16 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
 };
 const BottomChild = ({ activeMyth, gameData }) => {
   return (
-    <div className="flex justify-center -mt-[4vh] px-7">
+    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
         className={`flex text-num pl-3 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
-        Lvl {gameData.automatalvl + 1}
+        Lvl {gameData.shardslvl}
       </div>
       <div
         className={`flex text-num pr-3 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
-        Lvl {gameData.shardslvl}
+        Lvl {gameData.automatalvl + 1}
       </div>
     </div>
   );
@@ -42,12 +42,12 @@ const TopChild = ({ activeMyth }) => {
       <div
         className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
-        n
+        m
       </div>
       <div
         className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
-        m
+        n
       </div>
     </div>
   );

@@ -703,69 +703,141 @@
 
 // export default Test;
 
-import React, { useState } from "react";
-import "../styles/flip.scss";
+// import React, { useState } from "react";
+// import "../styles/flip.scss";
 
-const Test = (props) => {
-  const [flipped, setFlipped] = useState(false);
+// const Test = (props) => {
+//   const [flipped, setFlipped] = useState(false);
+//   return (
+//     <div className="flex justify-center items-center h-screen w-screen bg-black">
+//       <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+//         <div className={`font-symbols text-[15vw]`}>
+//           <div className={`orb ${flipped ? "flipped" : ""} text-black-contour`}>
+//             <div
+//               onClick={(e) => {
+//                 setFlipped((prev) => !prev);
+//               }}
+//               className="orb__face orb__face--front  flex justify-center items-center"
+//             >
+//               <div className="flex justify-center items-center w-full absolute  h-full">
+//                 <img
+//                   src="/assets/uxui/240px-orb.multicolor.png"
+//                   alt="multicolor"
+//                   className="glow-box rounded-full"
+//                 />
+//                 <div className="absolute z-10">
+//                   <div className="font-medium text-[44vw] text-white glow-text-black">
+//                     3
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//             <div
+//               onClick={(e) => {
+//                 setFlipped((prev) => !prev);
+//               }}
+//               className="orb__face orb__face--back flex justify-center items-center"
+//             >
+//               <div className="flex justify-center items-center w-full absolute  h-full glow-tap-greek">
+//                 <img
+//                   src="/assets/uxui/240px-orb.base.png"
+//                   alt="multicolor"
+//                   className="filter-orbs-greek rounded-full"
+//                 />
+//                 <span
+//                   className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+//                 >
+//                   d
+//                 </span>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       {/* <div className="flex justify-center items-center w-full absolute  h-full">
+//         <img
+//           src="/assets/uxui/240px-orb.multicolor.png"
+//           alt="multicolor"
+//           className="glow-box rounded-full"
+//         />
+//         <div className="absolute z-10">
+//           <div className="font-medium text-[44vw] text-white glow-text-black">
+//             3
+//           </div>
+//         </div>
+//       </div> */}
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+import React, { useState } from "react";
+
+const Test = () => {
+  const [swipeCount, setSwipeCount] = useState({ left: 0, right: 0 });
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [lastDirection, setLastDirection] = useState(null);
+  const [directionChangeCount, setDirectionChangeCount] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    if (touchStartX === null) return;
+
+    const touchX = e.touches[0].clientX;
+    const deltaX = touchX - touchStartX;
+
+    // right swipe
+    if (deltaX > 20) {
+      setSwipeCount((prev) => ({ ...prev, right: prev.right + 1 }));
+
+      // direction left to right
+      if (lastDirection === "left") {
+        setDirectionChangeCount((count) => count + 1);
+      }
+      setLastDirection("right");
+      setTouchStartX(touchX);
+
+      // left swipe
+    } else if (deltaX < -20) {
+      setSwipeCount((prev) => ({ ...prev, left: prev.left + 1 }));
+
+      // direction right to left
+      if (lastDirection === "right") {
+        setDirectionChangeCount((count) => count + 1);
+      }
+      setLastDirection("left");
+      setTouchStartX(touchX);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setSwipeCount({ left: 0, right: 0 });
+    setTouchStartX(null);
+    setLastDirection(null);
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen w-screen bg-black">
-      <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
-        <div className={`font-symbols text-[15vw]`}>
-          <div className={`orb ${flipped ? "flipped" : ""} text-black-contour`}>
-            <div
-              onClick={(e) => {
-                setFlipped((prev) => !prev);
-              }}
-              className="orb__face orb__face--front  flex justify-center items-center"
-            >
-              <div className="flex justify-center items-center w-full absolute  h-full">
-                <img
-                  src="/assets/uxui/240px-orb.multicolor.png"
-                  alt="multicolor"
-                  className="glow-box rounded-full"
-                />
-                <div className="absolute z-10">
-                  <div className="font-medium text-[44vw] text-white glow-text-black">
-                    3
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              onClick={(e) => {
-                setFlipped((prev) => !prev);
-              }}
-              className="orb__face orb__face--back flex justify-center items-center"
-            >
-              <div className="flex justify-center items-center w-full absolute  h-full glow-tap-greek">
-                <img
-                  src="/assets/uxui/240px-orb.base.png"
-                  alt="multicolor"
-                  className="filter-orbs-greek rounded-full"
-                />
-                <span
-                  className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
-                >
-                  d
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
+      }}
+    >
+      <div>
+        <p>Left swipes: {swipeCount.left}</p>
+        <p>Right swipes: {swipeCount.right}</p>
+        <p>Swipe count: {directionChangeCount}</p>
       </div>
-      {/* <div className="flex justify-center items-center w-full absolute  h-full">
-        <img
-          src="/assets/uxui/240px-orb.multicolor.png"
-          alt="multicolor"
-          className="glow-box rounded-full"
-        />
-        <div className="absolute z-10">
-          <div className="font-medium text-[44vw] text-white glow-text-black">
-            3
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

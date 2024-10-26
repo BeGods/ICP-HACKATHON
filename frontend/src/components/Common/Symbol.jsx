@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { MyContext } from "../../context/context";
 
 const Symbol = ({ myth, isCard, showClaimEffect }) => {
+  const { assets } = useContext(MyContext);
   return (
     <div
       className={`relative  select-none pointer-events-none  flex justify-center items-center ${
@@ -16,14 +18,14 @@ const Symbol = ({ myth, isCard, showClaimEffect }) => {
       <div className={`flex justify-center items-center absolute z-10  `}>
         <div className={`w-[65%] h-[65%] glow-symbol-${myth}`}>
           <img
-            src={`/assets/uxui/240px-orb.base.png`}
+            src={assets.uxui.baseorb}
             alt="orb"
             className={`w-full h-full filter-orbs-${myth} `}
           />
         </div>
       </div>
       <img
-        src={`/assets/myth/mythology.${myth}.base.svg`}
+        src={assets.symbols[myth]}
         alt="symbol"
         className="h-[100%] w-[100%] absolute z-20"
       />

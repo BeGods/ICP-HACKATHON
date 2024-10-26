@@ -21,6 +21,7 @@ const Gacha = (props) => {
     setShowBooster,
     authToken,
     enableSound,
+    assets,
   } = useContext(MyContext);
   const lottieRef = useRef(null);
   const [reward, setReward] = useState(null);
@@ -244,7 +245,7 @@ const Gacha = (props) => {
           className="flex flex-grow justify-center items-center relative w-full h-full"
         >
           <img
-            src="/assets/uxui/320px-pandora.png"
+            src={`${assets.uxui.pandora}`}
             alt="pandora"
             className={`w-fit h-fit transition-transform duration-1000 ${
               showScale
@@ -297,7 +298,7 @@ const Gacha = (props) => {
         )}
         {spinSound && (
           <ReactHowler
-            src="/assets/audio/fof.gacha.spin.wav"
+            src={`${assets.audio.gachaSpin}`}
             playing={enableSound}
             preload={true}
             loop

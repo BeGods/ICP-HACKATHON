@@ -29,7 +29,7 @@ const BottomChild = ({
   quest,
 }) => {
   return (
-    <div className="flex justify-center -mt-[4vh] px-7">
+    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
         className={`flex text-num pl-3 text-black-lg-contour items-center border  border-${
           mythSections[activeMyth]
