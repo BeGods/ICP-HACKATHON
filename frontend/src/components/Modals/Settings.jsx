@@ -3,9 +3,10 @@ import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
-import { Globe, Volume2 } from "lucide-react";
+import { Globe, Volume2, VolumeX } from "lucide-react";
 import { MyContext } from "../../context/context";
 import { country } from "../../utils/country";
+import { fetchRewards } from "../../utils/api";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,8 +22,26 @@ const languages = [
 
 const SettingModal = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { setSection } = useContext(MyContext);
+  const {
+    setSection,
+    setRewards,
+    setRewardsClaimedInLastHr,
+    authToken,
+    enableSound,
+  } = useContext(MyContext);
   const [countryCode, setCountryCode] = useState("NA");
+  const [isChanged, setIsChanged] = useState(false);
+
+  const getPartnersData = async (lang, country) => {
+    try {
+      const rewardsData = await fetchRewards(lang, country, authToken);
+      setRewards(rewardsData?.rewards);
+      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
+      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     tele.CloudStorage.getItem("country_code", (err, item) => {
@@ -32,22 +51,31 @@ const SettingModal = ({ close }) => {
     });
   }, []);
 
-  const handleLanuageChange = (e) => {
+  const handleLanguageChange = (e) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
+    setIsChanged(true);
     i18next.changeLanguage(langCode);
     tele.CloudStorage.setItem("lang", langCode);
   };
 
   const handleSettingChange = (e) => {
+    setIsChanged(true);
     const selectedCountry = e.target.value;
     setCountryCode(selectedCountry);
     tele.CloudStorage.setItem("country_code", selectedCountry);
   };
 
+  const handleClose = () => {
+    close();
+    if (isChanged) {
+      getPartnersData(i18n.language, countryCode);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
       <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[28vh] card-shadow-white p-4">
-        <IconBtn align={0} handleClick={close} activeMyth={4} />
+        <IconBtn align={0} handleClick={handleClose} activeMyth={4} />
         <div className="flex w-full">
           <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
             文A
@@ -55,7 +83,7 @@ const SettingModal = ({ close }) => {
           <div className="w-full">
             <select
               value={i18n.language}
-              onChange={handleLanuageChange}
+              onChange={handleLanguageChange}
               className="bg-black font-medium text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
             >
               {languages.map((language) => (
@@ -87,7 +115,7 @@ const SettingModal = ({ close }) => {
 
         <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
           <div className="flex justify-start -ml-3">
-            <Volume2 />
+            {enableSound ? <Volume2 /> : <VolumeX />}
           </div>
           <ToggleSwitch />
         </div>

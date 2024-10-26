@@ -7,7 +7,7 @@ import MoonInfoCard from "../../components/Cards/Info/MoonInfoCrd";
 const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ platform, myth }) => {
-  const { setShowCard } = useContext(MyContext);
+  const { setShowCard, assets } = useContext(MyContext);
 
   return (
     <div
@@ -29,7 +29,7 @@ const CenterChild = ({ platform, myth }) => {
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
         >
           <img
-            src="/assets/uxui/240px-orb.base.png"
+            src={`${assets.uxui.baseorb}`}
             alt="base-orb"
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
@@ -46,7 +46,7 @@ const CenterChild = ({ platform, myth }) => {
           className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
         >
           <img
-            src="/assets/uxui/240px-orb.base.png"
+            src={`${assets.uxui.baseorb}`}
             alt="base-orb"
             className={`filter-orbs-black w-full h-full`}
           />
@@ -64,6 +64,7 @@ const CenterChild = ({ platform, myth }) => {
 };
 
 const TopChild = ({ myth }) => {
+  const { assets } = useContext(MyContext);
   return (
     <div className="absolute flex w-full justify-between top-0 z-50">
       <div className="ml-[8vw]">
@@ -88,7 +89,7 @@ const TopChild = ({ myth }) => {
       </div>
       <div className="flex relative text-center justify-center items-center w-[11vw] h-[11vw] mt-[14px] glow-icon-white mr-[8vw] rounded-full">
         <img
-          src="/assets/uxui/240px-orb.multicolor.png"
+          src={`${assets.uxui.multiorb}`}
           alt="multiOrb"
           className="w-full h-full"
         />
@@ -99,7 +100,7 @@ const TopChild = ({ myth }) => {
 
 const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
   return (
-    <div className="flex justify-center -mt-[4vh] px-7">
+    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
         className={`flex  ${
           myth === 0 || showGlow

@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import ShareButton from "../../Buttons/ShareBtn";
 import IconBtn from "../../Buttons/IconBtn";
 import { mythSections } from "../../../utils/constants";
+import { MyContext } from "../../../context/context";
 
 const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
+  const { assets } = useContext(MyContext);
   return (
     <div
       onClick={() => {
         close();
       }}
       style={{
-        backgroundImage: `url(/assets/cards/320px-info_background.jpg)`,
+        backgroundImage: `url(${assets.uxui.info})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",

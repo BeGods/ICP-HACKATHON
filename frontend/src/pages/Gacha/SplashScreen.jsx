@@ -12,6 +12,7 @@ import { MyContext } from "../../context/context";
 import ReactHowler from "react-howler";
 import MappedOrbs from "../../components/Common/MappedOrbs";
 import Symbol from "../../components/Common/Symbol";
+import assets from "../../assets/assets.json";
 
 const tele = window.Telegram?.WebApp;
 
@@ -121,7 +122,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
       <div
         className="absolute animate-spin-slow scale-150 z-0"
         style={{
-          background: "url(/assets/fx/star.light.jpg)",
+          background: `url(${assets.uxui.startlight})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           backgroundPosition: "center center",
@@ -236,7 +237,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
       )}
       {/* Audios */}
       <ReactHowler
-        src="/assets/audio/fof.gatcha.win.wav"
+        src={`${assets.audio.gachaWin}`}
         playing={play && enableSound}
         preload={true}
         onEnd={() => {
@@ -256,7 +257,7 @@ const OrbCard = ({ reward }) => {
       className={`flex justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
     >
       <img
-        src="/assets/uxui/240px-orb.base.png"
+        src={`${assets.uxui.baseorb}`}
         alt="orb"
         className={`filter-orbs-${currReward.toLowerCase()} rounded-full`}
       />
@@ -275,9 +276,11 @@ const BoosterCard = ({ reward }) => {
       <div
         className={`absolute inset-0 rounded-[15px]`}
         style={{
-          backgroundImage: `url(/assets/cards/320px-${
-            reward.type === "minion" ? "alchemist" : reward.type
-          }.jpg)`,
+          backgroundImage: `url(${
+            assets.boosters[
+              reward.type === "minion" ? "alchemist" : reward.type
+            ]
+          })`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center center ",
@@ -293,9 +296,11 @@ const QuestCard = ({ reward }) => {
       <div className="relative card-shadow-white">
         {/* Card Image */}
         <img
-          src={`/assets/cards/320px-${reward.quest.mythology.toLowerCase()}.quest.${
-            reward.quest.type
-          }.jpg`}
+          src={
+            assets.questCards?.[reward.quest.mythology.toLowerCase()]?.[
+              reward.quest.type
+            ]
+          }
           alt="card"
           className="w-full h-full mx-auto rounded-[15px]"
         />
@@ -311,7 +316,7 @@ const QuestCard = ({ reward }) => {
           >
             <div
               style={{
-                backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                backgroundImage: `url(${assets.uxui.paper})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",

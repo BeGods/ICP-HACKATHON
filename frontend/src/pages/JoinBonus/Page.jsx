@@ -9,7 +9,7 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setGameData, setSection, authToken } = useContext(MyContext);
+  const { setGameData, setSection, authToken, assets } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -54,7 +54,7 @@ const JoinBonus = (props) => {
         });
       } catch (error) {
         console.log(error);
-        //!TODO :  add toast
+        showToast("default");
       }
     }
   };
@@ -80,7 +80,7 @@ const JoinBonus = (props) => {
       <div
         className="absolute animate-spin-slow scale-150 z-0"
         style={{
-          background: "url(/assets/fx/star.light.jpg)",
+          background: `url(${assets.uxui.startlight})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           backgroundPosition: "center center",
@@ -107,7 +107,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--front  flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute  h-full">
                     <img
-                      src="/assets/uxui/240px-orb.multicolor.png"
+                      src={`${assets.uxui.mulitorb}`}
                       alt="multicolor"
                       className="glow-box rounded-full"
                     />
@@ -116,7 +116,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--back flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
                     <img
-                      src="/assets/uxui/240px-orb.base.png"
+                      src={`${assets.uxui.baseorb}`}
                       alt="orb"
                       className="filter-orbs-greek rounded-full"
                     />

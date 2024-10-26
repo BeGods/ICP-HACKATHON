@@ -20,13 +20,11 @@ import BoosterClaim from "../../components/Cards/Boosters/BoosterCrd";
 import BoosterButtom from "../../components/Buttons/BoosterBtn";
 import { showToast } from "../../components/Toast/Toast";
 import { ForgesGuide } from "../../components/Common/Tutorials";
-import MilestoneCard from "../../components/Cards/Reward/OrbRewardCrd";
 import { hideBackButton } from "../../utils/teleBackButton";
 import { useForgeGuide } from "../../hooks/Tutorial";
 import { handleGeneratePopTime } from "../../helpers/game.helper";
 import ForgeHeader from "./Header";
 import gsap from "gsap";
-import { Download } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -51,6 +49,7 @@ const Forges = () => {
     minimize,
     setMinimize,
     setShowCard,
+    assets,
   } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -1117,7 +1116,7 @@ const Forges = () => {
           <div
             className={`absolute top-0 left-0 h-full w-full filter-orbs-${mythSections[activeMyth]}`}
             style={{
-              backgroundImage: `url(/assets/uxui/480px-fof.forge.png)`,
+              backgroundImage: `url(${assets.uxui.forgebg})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundPosition: "center center",
@@ -1125,7 +1124,7 @@ const Forges = () => {
           />
           {minimize === 1 && (
             <img
-              src="/assets/uxui/480px-fof.forge.fx.png"
+              src={`${assets.uxui.forgefx}`}
               alt="forge.fx"
               className={`filter-fx-${mythSections[activeMyth]} -ml-0.5 h-screen w-screen transition-all duration-500 ease-in-out`}
             />
@@ -1227,7 +1226,7 @@ const Forges = () => {
                 isStarHolding ? "w-[24vw]" : "w-[14vw]"
               } glow-box-${mythSections[activeMyth]}  ${
                 isStarHolding === 1 && "star-beam-active"
-              } ${isStarHolding === 2 && "star-beam-inactive"} -mb-5`}
+              } ${isStarHolding === 2 && "star-beam-inactive"} -mb-8`}
             ></div>
             <div className="relative">
               <div
@@ -1259,7 +1258,7 @@ const Forges = () => {
                   isStarHolding === 1 && "mt-4"
                 } mx-auto my-auto text-white text-tertiary text-black-contour`}
               >
-                L{mythStates[activeMyth].burstlvl}
+                Lvl {mythStates[activeMyth].burstlvl}
               </div>
             </div>
           </div>
@@ -1272,9 +1271,9 @@ const Forges = () => {
                 showStarBoosters === 1 && "popup"
               } bottom-0 select-none left-0 -mb-2.5 minion-button`}
             >
-              <div className="relative">
+              <div className="relative -scale-x-100">
                 <img
-                  src="/assets/cards/160px-minion.png"
+                  src={`${assets.boosters.alchemistPop}`}
                   alt="dwarf"
                   className="w-full h-full select-none pointer-events-none "
                 />
@@ -1301,7 +1300,7 @@ const Forges = () => {
             >
               <div className="relative">
                 <img
-                  src="/assets/cards/160px-automata.png"
+                  src={`${assets.boosters.automataPop}`}
                   alt="dwarf"
                   className="w-full h-full select-none pointer-events-none "
                 />
@@ -1395,7 +1394,7 @@ const Forges = () => {
           >
             <div className={`relative ${minionPosition && "-scale-x-100"}`}>
               <img
-                src="/assets/cards/160px-alchemist.png"
+                src={`${assets.boosters.alchemistPop}`}
                 alt="dwarf"
                 className="w-full h-full select-none pointer-events-none "
               />
@@ -1404,14 +1403,14 @@ const Forges = () => {
         )}
         <div className="absolute">
           <ReactHowler
-            src="/assets/audio/fof.forges.background01.wav"
+            src={`${assets.audio.forgeBg}`}
             playing={enableSound && activeMyth < 4}
             preload={true}
             loop
           />
           {(isStarHold.current === true || isMinionHold.current === true) && (
             <ReactHowler
-              src="/assets/audio/fof.alchemist.grunt.long.wav"
+              src={`${assets.audio.alchemistLong}`}
               playing={
                 enableSound &&
                 (isStarHold.current === true || isMinionHold.current === true)
@@ -1423,7 +1422,7 @@ const Forges = () => {
 
           {isStarHold.current === true && (
             <ReactHowler
-              src="/assets/audio/fof.automata.pulse.long.wav"
+              src={`${assets.audio.automataLong}`}
               playing={enableSound && isStarHold.current === true}
               preload={true}
               html5={true}

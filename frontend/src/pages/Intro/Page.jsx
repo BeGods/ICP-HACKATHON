@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { authenticate } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import assets from "../../assets/assets.json";
 import ReactHowler from "react-howler";
 import Captcha from "../../components/Captcha/Captcha";
 
@@ -73,7 +74,6 @@ const IntroPage = (props) => {
           setEnableSound(false);
         } else {
           console.log("Unable to fetch sound.");
-          //! TODO:Add error toast
         }
       })();
     });
@@ -136,7 +136,7 @@ const IntroPage = (props) => {
         // TMA desktop view
         <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
           <img
-            src="/assets/uxui/320px-begods.telegram.qrcode.png"
+            src={assets.logos.fofQr}
             alt="qr"
             className="rounded-3xl h-1/2 fof-text-shadow"
           />
@@ -196,7 +196,7 @@ const IntroPage = (props) => {
         // TMA mobile view
         <div
           style={{
-            background: "url(/assets/uxui/480px-fof.intro.png)",
+            background: `url(${assets.uxui.intro})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -211,7 +211,7 @@ const IntroPage = (props) => {
             <div className="flex justify-center items-center w-full leading-tight">
               <div className="relative">
                 <img
-                  src="/assets/logos/forgesoffaith.svg"
+                  src={assets.logos.fof}
                   alt="fof"
                   className="w-[200px] mt-6 begod-text-shadow"
                 />
@@ -220,7 +220,7 @@ const IntroPage = (props) => {
             <div className="flex flex-grow"></div>
             <div className="flex justify-center items-center">
               <img
-                src="/assets/logos/battle.gods.black.svg"
+                src={assets.logos.begodsBlack}
                 alt="logo"
                 className="w-[65px] h-[75px] mb-6 begod-text-shadow"
               />
@@ -235,7 +235,7 @@ const IntroPage = (props) => {
       )}
 
       <ReactHowler
-        src="/assets/audio/fof.music.intro.mp3"
+        src={assets.audio.fofIntro}
         playing={!disableDesktop && enableSound}
         preload={true}
         loop

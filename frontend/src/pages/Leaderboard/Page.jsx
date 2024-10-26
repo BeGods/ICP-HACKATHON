@@ -86,6 +86,7 @@ const Leaderboard = (props) => {
                     rank={index + 1}
                     name={item.telegramUsername}
                     totalOrbs={item.totalOrbs}
+                    imageUrl={item.profileImage}
                   />
                 </div>
               ))
@@ -107,12 +108,20 @@ const Leaderboard = (props) => {
           </div>
           <div className="flex items-center gap-4 w-full">
             <div className="h-[35px] w-[35px]">
-              <Avatar
-                name={userData.telegramUsername}
-                className="h-full w-full"
-                profile={0}
-                color={avatarColor}
-              />
+              {userData.avatarUrl ? (
+                <img
+                  src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                  alt="profile-image"
+                  className="rounded-full"
+                />
+              ) : (
+                <Avatar
+                  name={userData.telegramUsername}
+                  className="h-full w-full"
+                  profile={0}
+                  color={avatarColor}
+                />
+              )}
             </div>
             <h1>{userData.telegramUsername}</h1>
           </div>

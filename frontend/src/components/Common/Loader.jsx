@@ -2,6 +2,7 @@ import Lottie from "lottie-react";
 import React from "react";
 import animationData from "../../../public/assets/fx/loader.json";
 import { useTranslation } from "react-i18next";
+import assets from "../../assets/assets.json";
 
 const Loader = (props) => {
   const { t } = useTranslation();
@@ -9,7 +10,7 @@ const Loader = (props) => {
     <div className="bg-black flex flex-col justify-center items-center h-screen w-screen">
       <div className="w-[75%] flex flex-col justify-between h-full mb-4 scale-loader-gold-glow">
         <img
-          src="/assets/logos/battle.gods.black.svg"
+          src={assets.logos.begodsBlack}
           alt="black-gods"
           className="h-full w-full"
         />
