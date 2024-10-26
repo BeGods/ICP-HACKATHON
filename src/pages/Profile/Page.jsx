@@ -28,8 +28,14 @@ const Profile = (props) => {
   const { state, open } = useTonConnectModal();
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
-  const { userData, setUserData, socialQuestData, setShowCard, authToken } =
-    useContext(MyContext);
+  const {
+    userData,
+    setUserData,
+    socialQuestData,
+    setShowCard,
+    authToken,
+    assets,
+  } = useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
   const [currState, setCurrState] = useState(0);
@@ -102,20 +108,22 @@ const Profile = (props) => {
   }, [state]);
 
   useEffect(() => {
-    setShowCard(
-      <ProfileGuide
-        currQuest={socialQuestData[0]}
-        handleClick={() => {
-          setShowCard(
-            <SettingModal
-              close={() => {
-                setShowCard(null);
-              }}
-            />
-          );
-        }}
-      />
-    );
+    if (enableGuide) {
+      setShowCard(
+        <ProfileGuide
+          currQuest={socialQuestData[0]}
+          handleClick={() => {
+            setShowCard(
+              <SettingModal
+                close={() => {
+                  setShowCard(null);
+                }}
+              />
+            );
+          }}
+        />
+      );
+    }
   }, [enableGuide]);
 
   useEffect(() => {
@@ -149,7 +157,7 @@ const Profile = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/assets/uxui/1280px-fof.base.background.jpg)`,
+            backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",

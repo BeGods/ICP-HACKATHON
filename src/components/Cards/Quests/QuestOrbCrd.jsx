@@ -6,6 +6,7 @@ import IconBtn from "../../Buttons/IconBtn";
 import MappedOrbs from "../../Common/MappedOrbs";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
+import Confetti from "react-confetti";
 
 const OrbCard = ({ activeMyth }) => {
   return (
@@ -27,11 +28,20 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { enableSound } = useContext(MyContext);
+  const { enableSound, assets } = useContext(MyContext);
   const [flipped, setFlipped] = useState(false);
   const [playSound, setPlaySound] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const playConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000);
+  };
 
   useEffect(() => {
+    playConfetti();
     setPlaySound(true);
     const interval = setInterval(() => {
       setFlipped((prev) => !prev);
@@ -50,7 +60,7 @@ const OrbClaimCard = ({
             className="card__face card__face--front relative card-shadow-white  flex justify-center items-center"
           >
             <img
-              src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}.jpg`}
+              src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
               alt="card"
               className="w-full h-full mx-auto rounded-[15px]"
             />
@@ -72,7 +82,7 @@ const OrbClaimCard = ({
               >
                 <div
                   style={{
-                    backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                    backgroundImage: `url(${assets.uxui.paper})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     backgroundPosition: "center center",
@@ -111,18 +121,25 @@ const OrbClaimCard = ({
           handleClaim={handleOrbClaimReward}
           activeMyth={activeMyth}
           t={t}
-          link={quest?.link}
+          link={quest?.link[0]}
         />
       </div>
       {playSound && (
         <ReactHowler
-          src={`/assets/audio/fof.quest.win.wav`}
-          playing={enableSound}
+          src={assets.audio.questWin}
+          playing={enableSound && playSound}
           loop={false}
           preload={true}
           onEnd={() => {
             setPlaySound(false);
           }}
+        />
+      )}
+      {showConfetti && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          style={{ zIndex: 10, position: "fixed", top: 0, left: 0 }}
         />
       )}
     </div>

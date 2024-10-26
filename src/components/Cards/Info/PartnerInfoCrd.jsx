@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { MyContext } from "../../../context/context";
 
 const PartnerCard = ({ close }) => {
-  const { activeReward } = useContext(MyContext);
+  const { activeReward, assets } = useContext(MyContext);
   const { i18n } = useTranslation();
 
   return (
@@ -14,7 +14,7 @@ const PartnerCard = ({ close }) => {
         close();
       }}
       style={{
-        backgroundImage: `url(/assets/cards/320px-info_background.jpg)`,
+        backgroundImage: `url(${assets.uxui.basebg})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",
@@ -25,7 +25,7 @@ const PartnerCard = ({ close }) => {
     >
       <div className="relative w-full h-full text-card">
         <img
-          src="/assets/cards/320px-info_background.jpg"
+          src={assets.uxui.info}
           alt="info card background"
           className="w-full h-full object-cover rounded-primary"
         />

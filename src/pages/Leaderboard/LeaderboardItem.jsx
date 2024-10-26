@@ -3,7 +3,7 @@ import Avatar from "../../components/Common/Avatar";
 import { MyContext } from "../../context/context";
 import { formatRankOrbs } from "../../helpers/leaderboard.helper";
 
-const LeaderboardItem = ({ rank, name, totalOrbs }) => {
+const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl }) => {
   const { userData } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(null);
 
@@ -24,12 +24,20 @@ const LeaderboardItem = ({ rank, name, totalOrbs }) => {
       </div>
       <div className="flex gap-3 items-center  w-full">
         <div className="h-[35px] w-[35px]">
-          <Avatar
-            name={name}
-            className="h-full w-full"
-            profile={0}
-            color={avatarColor}
-          />
+          {imageUrl ? (
+            <img
+              src={`https://media.publit.io/file/UserAvatars/${imageUrl}.jpg`}
+              alt="profile-image"
+              className="rounded-full"
+            />
+          ) : (
+            <Avatar
+              name={name}
+              className="h-full w-full"
+              profile={0}
+              color={avatarColor}
+            />
+          )}
         </div>
         <h1>{name.length > 20 ? name.slice(0, 20) + "..." : name}</h1>
       </div>

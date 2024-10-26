@@ -14,7 +14,7 @@ function PayCard({
   handleClaimEffect,
   isBooster,
 }) {
-  const { gameData } = useContext(MyContext);
+  const { gameData, assets } = useContext(MyContext);
   const [deduct, setDeduct] = useState(false);
   const [scale, setScale] = useState(false);
   const [showNum, setShowNum] = useState(false);
@@ -81,7 +81,7 @@ function PayCard({
             className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white} `}
           >
             <img
-              src="/assets/uxui/240px-orb.multicolor.png"
+              src={assets.uxui.multiorb}
               alt="orb"
               className={`glow-icon-white max-w-[10vw]`}
             />
@@ -101,7 +101,7 @@ function PayCard({
                 className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name.toLowerCase()}`}
               >
                 <img
-                  src="/assets/uxui/240px-orb.base.png"
+                  src={assets.uxui.baseorb}
                   alt="orb"
                   className={`filter-orbs-${item.name.toLowerCase()}`}
                 />
@@ -133,7 +133,7 @@ function PayCard({
           <div className="absolute  bg-black h-full w-full z-10 opacity-50 rounded-xl"></div>
           {/* Card Image */}
           <img
-            src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}.jpg`}
+            src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
             alt="card"
             className="w-full h-full mx-auto grayscale rounded-[15px]"
           />
@@ -155,7 +155,7 @@ function PayCard({
             >
               <div
                 style={{
-                  backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                  backgroundImage: `url(${assets.uxui.paper})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center center",

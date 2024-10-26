@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/constants";
 import { Handshake } from "lucide-react";
+import { MyContext } from "../../context/context";
 
 const DefaultBtn = ({
   message,
@@ -9,6 +10,7 @@ const DefaultBtn = ({
   isGold,
   isBooster,
 }) => {
+  const { assets } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
   let disableClick = useRef(false);
 
@@ -65,11 +67,7 @@ const DefaultBtn = ({
       <div className="flex justify-center items-center w-1/4  h-full">
         {isBooster && (
           <div className="relative flex justify-center items-center">
-            <img
-              src={`/assets/uxui/240px-orb.multicolor.png`}
-              alt="orb"
-              className="p-1.5"
-            />
+            <img src={`${assets.uxui.multiorb}`} alt="orb" className="p-1.5" />
             <div className="absolute z-10">
               <div className="font-medium text-[40px] text-white glow-text-black">
                 1

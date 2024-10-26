@@ -19,7 +19,7 @@ const TopChild = () => {
 
 const BottomChild = ({ partners }) => {
   return (
-    <div className="flex justify-center -mt-[4vh] px-7">
+    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
         className={`flex glow-button-white text-num pl-3 text-black-lg-contour text-white items-center border  justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
@@ -35,7 +35,7 @@ const BottomChild = ({ partners }) => {
 };
 
 const CenterChild = () => {
-  const { platform } = useContext(MyContext);
+  const { platform, assets } = useContext(MyContext);
   return (
     <div className="flex absolute justify-center w-full">
       <div
@@ -43,7 +43,7 @@ const CenterChild = () => {
         className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
       >
         <img
-          src="/assets/uxui/240px-orb.base.png"
+          src={`${assets.uxui.baseorb}`}
           alt="base-orb"
           className={`filter-orbs-black w-full h-full`}
         />

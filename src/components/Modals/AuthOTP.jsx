@@ -21,12 +21,10 @@ const AuthOTP = ({ handleClose }) => {
   const handleVerifyOtp = async () => {
     try {
       await verifyOtp(phoneNo, otp, authToken);
-      setUserData((prevState) => {
-        return {
-          ...prevState,
-          isPlaysuperVerified: true,
-        };
-      });
+      setUserData((prevState) => ({
+        ...prevState,
+        isPlaysuperVerified: true,
+      }));
       handleClose();
     } catch (error) {
       console.log(error);

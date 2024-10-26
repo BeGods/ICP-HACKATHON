@@ -373,7 +373,7 @@ export const showToast = (type) => {
         <ToastMesg
           title={t("toasts.default.error.title")}
           desc={t("toasts.default.error.desc")}
-          status={"other"}
+          status={"fail"}
         />,
         {
           icon: false,

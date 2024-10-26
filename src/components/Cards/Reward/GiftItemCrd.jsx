@@ -40,17 +40,17 @@ ${
     >
       <div className="w-[20%] flex justify-start items-center">
         <img
-          src={`/assets/partners/160px-${item.category}.bubble.png`}
+          src={`/assets/partners/160px-${item?.category}.bubble.png`}
           alt="partner"
           className="rounded-full"
         />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
-        <h1 className="text-tertiary uppercase">{item.name}</h1>
+        <h1 className="text-tertiary uppercase">{item?.name}</h1>
         <h2 className="text-tertiary">
-          {item.description.length > 20
-            ? item.description.slice(0, 20) + "..."
-            : item.description}
+          {item?.description?.length > 20
+            ? item?.description?.slice(0, 20) + "..."
+            : item?.description}
         </h2>
       </div>
       <div className="flex justify-center items-center w-[8%] ">

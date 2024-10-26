@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { mythSections } from "../../../utils/constants";
 import { useTranslation } from "react-i18next";
+import { MyContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   const { i18n } = useTranslation();
-
+  const { assets } = useContext(MyContext);
   const [platform, setPlatform] = useState(null);
 
   useEffect(() => {
@@ -23,11 +24,10 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   return (
     <div
       style={{
-        backgroundImage: `url(/assets/cards/320px-info_background.jpg)`,
+        backgroundImage: `url(${assets.uxui.info})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",
-
         top: 0,
         left: 0,
       }}
@@ -62,7 +62,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
       </div>
       <div className="flex -mt-[5px]">
         <img
-          src={`/assets/cards/188px-${mythSections[activeMyth]}.quest.${quest?.type}_info_painting.jpg`}
+          src={assets.questFrames?.[mythSections[activeMyth]]?.[quest?.type]}
           alt="info_painting"
           className="w-[82%] mx-auto card-shadow-black"
         />

@@ -4,6 +4,7 @@ import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { MyContext } from "../../context/context";
 import MappedOrbs from "./MappedOrbs";
 import TaskItem from "../Cards/Tasks/TaskItem";
+import assets from "../../assets/assets.json";
 
 export const ForgesGuide = ({ handleClick }) => {
   const { t } = useTranslation();
@@ -69,9 +70,11 @@ export const QuestGuide = ({ handleClick, currQuest }) => {
         <div className="relative w-[90%] mx-auto -mt-[10vh]">
           {/* Card Image */}
           <img
-            src={`/assets/cards/320px-${currQuest.mythology.toLowerCase()}.quest.${
-              currQuest.type
-            }.jpg`}
+            src={
+              assets.questCards?.[currQuest.mythology.toLowerCase()]?.[
+                currQuest?.type
+              ]
+            }
             alt="card"
             className="w-full h-full mx-auto rounded-[15px]"
           />
@@ -87,7 +90,7 @@ export const QuestGuide = ({ handleClick, currQuest }) => {
             >
               <div
                 style={{
-                  backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                  backgroundImage: `url(${assets.uxui.paper})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
@@ -184,8 +187,7 @@ export const TowerGuide = ({ handleClick }) => {
         <div
           className="relative flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
-            backgroundImage:
-              "url(/assets/uxui/480px-fof.background.aether1.png)",
+            backgroundImage: `url(${assets.uxui.tower})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",

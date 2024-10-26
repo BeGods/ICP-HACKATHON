@@ -3,7 +3,6 @@ import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
 import JigsawButton from "../../components/Buttons/JigsawBtn";
 import JigsawImage from "../../components/Cards/Jigsaw/JigsawCrd";
-import Header from "../../components/Common/Header";
 import {
   ToggleLeft,
   ToggleRight,
@@ -11,7 +10,6 @@ import {
 import { handleActiveParts } from "../../helpers/quests.helper";
 import AuthenticatePlaySuper from "../../components/Modals/AuthOTP";
 import { claimPlaysuperReward } from "../../utils/api";
-import { toast } from "react-toastify";
 import IconBtn from "../../components/Buttons/IconBtn";
 import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";
@@ -20,15 +18,8 @@ const tele = window.Telegram?.WebApp;
 
 const Redeem = (props) => {
   const { t } = useTranslation();
-  const {
-    activeReward,
-    userData,
-    authToken,
-    setShowCard,
-    rewards,
-    setActiveReward,
-  } = useContext(MyContext);
-  const [showAuth, setShowAuth] = useState(false);
+  const { activeReward, userData, authToken, setShowCard, rewards, assets } =
+    useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const index = rewards.findIndex((item) => item._id === activeReward._id);
@@ -37,9 +28,9 @@ const Redeem = (props) => {
 
   const handleClick = () => {
     if (userData.isPlaySuperVerified) {
-      handleRedeen(true);
+      handleRedeen();
     } else {
-      setShowAuth(
+      setShowCard(
         <AuthenticatePlaySuper
           handleClose={() => {
             setShowCard(null);
@@ -49,8 +40,22 @@ const Redeem = (props) => {
     }
   };
 
+  const handleRedeen = async () => {
+    try {
+      if (currReward.partnerType === "playsuper") {
+        const reward = await claimPlaysuperReward(currReward.id, authToken);
+        console.log(reward);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleJigsawBtn = () => {
-    if (currReward.tokensCollected === 12) {
+    if (
+      currReward.tokensCollected === 12 &&
+      currReward.partnerType === "custom"
+    ) {
       setShowCard(
         <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
           <div className="relative w-full  shadow-lg card-shadow-white">
@@ -59,8 +64,7 @@ const Redeem = (props) => {
               alt="campaign"
               className="w-full h-full rounded-primary"
               onClick={() => {
-                setShowCard(null);
-                setShowAuth(
+                setShowCard(
                   <AuthenticatePlaySuper
                     handleClose={() => {
                       setShowCard(null);
@@ -80,17 +84,11 @@ const Redeem = (props) => {
           </div>
         </div>
       );
-    }
-  };
-
-  const handleRedeen = async () => {
-    try {
-      if (currReward.partnerType === "playsuper") {
-        const reward = await claimPlaysuperReward(currReward.id, authToken);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("YOu failed");
+    } else if (
+      currReward.tokensCollected === 12 &&
+      currReward.partnerType === "playsuper"
+    ) {
+      handleRedeen();
     }
   };
 
@@ -125,7 +123,7 @@ const Redeem = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/assets/uxui/1280px-fof.base.background.jpg)`,
+            backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -195,11 +193,11 @@ const Redeem = (props) => {
               </div>
             </div>
             <JigsawButton
-              handleClick={handleJigsawBtn}
+              handleClick={handleClick}
               activeMyth={4}
               handleNext={() => {}}
               handlePrev={() => {}}
-              faith={currReward.tokensCollected}
+              faith={12}
               disableLeft={true}
               t={t}
             />
@@ -217,24 +215,21 @@ const Redeem = (props) => {
           </div>
         </div>
       </div>
-
       {showToggles && (
         <>
           <ToggleLeft
             minimize={2}
             handleClick={() => {
-              setCurrIndex((prev) => {
-                prev === 0 ? rewards.length - 1 : prev - 1;
-              });
+              setCurrIndex((prev) =>
+                prev === 0 ? rewards.length - 1 : prev - 1
+              );
             }}
             activeMyth={4}
           />
           <ToggleRight
             minimize={2}
             handleClick={() => {
-              setCurrIndex((prev) => {
-                (prev + 1) % rewards.length;
-              });
+              setCurrIndex((prev) => (prev + 1) % rewards.length);
             }}
             activeMyth={4}
           />

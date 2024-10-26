@@ -6,7 +6,7 @@ import { MyContext } from "../../context/context";
 
 export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound } = useContext(MyContext);
+  const { enableSound, assets } = useContext(MyContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -50,7 +50,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
         <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
       </div>
       <ReactHowler
-        src="/assets/audio/fof.side.button.wav"
+        src={assets.audio.toggle}
         playing={false}
         ref={howlerRef}
         html5={true}
@@ -61,7 +61,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
 
 export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound } = useContext(MyContext);
+  const { enableSound, assets } = useContext(MyContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -102,7 +102,7 @@ export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
         <ChevronsRight color="white" className="h-[30px] w-[30px]" />
       </div>
       <ReactHowler
-        src="/assets/audio/fof.side.button.wav"
+        src={assets.audio.toggle}
         playing={false}
         ref={howlerRef}
         html5={true}
