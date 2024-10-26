@@ -31,8 +31,8 @@ const rankSchema = new Schema(
       required: true,
     },
     telegramUsername: { type: String, unique: true },
-    profile: {
-      avatarUrl: { type: String },
+    profileImage: {
+      type: String,
     },
     totalOrbs: Number,
   },

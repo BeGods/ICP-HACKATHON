@@ -2,7 +2,7 @@ import config from "./config/config";
 import app from "./app";
 import connectMongo from "./config/database/mongo";
 
-const PORT = 4000;
+const PORT = 3000;
 
 connectMongo();
 
