@@ -57,7 +57,7 @@ export const getLeaderboardSnapshot = async () => {
         $project: {
           userId: "$_id",
           telegramUsername: "$userDetails.telegramUsername",
-          profileImage: "$userDetails.profile.avatarUrl",
+          profileImage: "$userDetails.profile.avatarUrl", // Adjusted this line
           totalOrbs: 1,
           squadOwner: "$userDetails.squadOwner",
         },

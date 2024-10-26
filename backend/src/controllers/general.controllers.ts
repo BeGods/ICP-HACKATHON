@@ -10,16 +10,16 @@ import {
 } from "../services/general.services";
 import Stats from "../models/Stats.models";
 import { Team } from "../models/referral.models";
-import mongoose from "mongoose";
 import userMythologies from "../models/mythologies.models";
 import {
   claimPlaysuperReward,
+  fetchPlaysuperOrders,
   fetchPlaySuperRewards,
   getPlaysuperOtp,
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
 } from "../services/game.services";
-import milestones, { IMilestone } from "../models/milestones.models";
+import milestones from "../models/milestones.models";
 import partners from "../models/partners.models";
 import { validCountries } from "../utils/constants/variables";
 
@@ -201,19 +201,6 @@ export const updateAnnouncement = async (req, res) => {
   }
 };
 
-export const generateRandomBonus = async (req, res) => {
-  try {
-    // testRandomValues();
-    const result = getRandomValue();
-    res.status(200).json({ result: result });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-    });
-  }
-};
-
 export const claimDailyBonus = async (req, res) => {
   try {
     const user = req.user;
@@ -245,17 +232,15 @@ export const claimDailyBonus = async (req, res) => {
       );
     }
 
-    // if (result === "blackOrb") {
-    //   bonusReward = await claimBonusOrb(result, user._id);
-    // } else if (result === "mythOrb") {
-    //   bonusReward = await claimBonusOrb(result, user._id);
-    // } else if (result === "booster") {
-    //   bonusReward = await claimBonusBooster(user._id);
-    // } else if (result === "quest") {
-    //   bonusReward = await claimBonusQuest(user._id);
-    // }
-
-    bonusReward = await claimBonusQuest(user._id);
+    if (result === "blackOrb") {
+      bonusReward = await claimBonusOrb(result, user._id);
+    } else if (result === "mythOrb") {
+      bonusReward = await claimBonusOrb(result, user._id);
+    } else if (result === "booster") {
+      bonusReward = await claimBonusBooster(user._id);
+    } else if (result === "quest") {
+      bonusReward = await claimBonusQuest(user._id);
+    }
 
     res.status(200).json({ reward: bonusReward });
   } catch (error) {
@@ -288,71 +273,112 @@ export const claimJoiningBonus = async (req, res) => {
   }
 };
 
-// rewards
 export const getRewards = async (req, res) => {
   try {
     const userId = req.user._id;
     const playusperCred = req.user.playsuper;
     const { country, lang } = req.query;
-    let playsuper;
+
     let userMilestones = await milestones.findOne({ userId });
-
-    // playsuper partners
-    //! with and without auth token
-    //! filter by country and lang
-    //! also get claimed ones separetly
-
     userMilestones = await updatePartnersInLastHr(userMilestones);
 
-    // our partners
+    const claimedRewards = userMilestones.rewards.claimedRewards;
+    const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
+
     const activePartners = await partners
       .find()
       .lean()
       .select("-__v -createdAt -updatedAt");
 
-    const claimedRewards = userMilestones.rewards.claimedRewards;
-    const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
+    let playsuper = [];
+    let activeCustomPartners = [];
+    let claimedCustomPartners = [];
 
-    if (validCountries.includes(country)) {
-      const playsuperRewards = await fetchPlaySuperRewards(
-        country,
-        lang,
-        playusperCred
-      );
-      playsuper = playsuperRewards.map((reward) => {
-        const claimedReward = claimedRewards.find(
-          (claimed) => claimed.partnerId === reward.id
-        );
+    // playsuper partners
+    // if (validCountries.includes(country)) {
+    //   const playsuperRewards = await fetchPlaySuperRewards(
+    //     country,
+    //     lang,
+    //     playusperCred
+    //   );
 
-        return {
-          ...reward,
-          partnerType: "playsuper",
-          tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
-          isClaimed: claimedReward ? claimedReward.isClaimed : false,
-        };
-      });
-    }
+    //   playsuper = playsuperRewards.map((reward) => {
+    //     const claimedReward = claimedRewards.find(
+    //       (claimed) => claimed.partnerId === reward.id
+    //     );
 
-    const ourpartners = activePartners.map((reward) => {
+    //     const tokensCollected = claimedReward
+    //       ? claimedReward.tokensCollected
+    //       : 0;
+    //     const isClaimed = claimedReward ? claimedReward.isClaimed : false;
+
+    //     return {
+    //       ...reward,
+    //       partnerType: "playsuper",
+    //       tokensCollected,
+    //       isClaimed,
+    //     };
+    //   });
+    // }
+
+    // inhlouse partners
+    const ourPartners = activePartners.map((reward) => {
       const claimedReward = claimedRewards.find(
         (claimed) => claimed.partnerId == reward._id.toString()
       );
+
+      const tokensCollected = claimedReward ? claimedReward.tokensCollected : 0;
+      const isClaimed = claimedReward ? claimedReward.isClaimed : false;
 
       return {
         ...reward,
         id: reward._id,
         partnerType: "custom",
-        tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
-        isClaimed: claimedReward ? claimedReward.isClaimed : false,
+        tokensCollected,
+        isClaimed,
       };
     });
 
-    const playSuperItems = playsuper ? playsuper.slice(0, 10) : [];
+    // active and orders
+    activeCustomPartners = ourPartners.filter(
+      (item) => item.tokensCollected < 12
+    );
+    claimedCustomPartners = ourPartners.filter(
+      (item) => item.tokensCollected === 12
+    );
+
+    // manage number of parters
+    const playSuperItems = playsuper.slice(0, 9);
     const remainingSlots = 12 - playSuperItems.length;
-    const partnerItems = ourpartners.slice(0, remainingSlots);
+    const partnerItems = activeCustomPartners.slice(0, remainingSlots);
+
+    const claimedPlaysuperOrders = [];
+
+    // playsuper orders
+    // const playsuperOrders = await fetchPlaysuperOrders(lang, playusperCred.key);
+    // const claimedPlaysuperOrders = playsuperOrders
+    //   .filter((reward) =>
+    //     claimedRewards.some(
+    //       (claimed) => claimed.partnerId === reward._id.toString()
+    //     )
+    //   )
+    //   .map((reward) => {
+    //     const claimedReward = claimedRewards.find(
+    //       (claimed) => claimed.partnerId === reward._id.toString()
+    //     );
+
+    //     return {
+    //       ...reward,
+    //       id: reward._id,
+    //       partnerType: "playsuper",
+    //       tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+    //       isClaimed: claimedReward ? claimedReward.isClaimed : false,
+    //     };
+    //   });
 
     res.status(200).json({
-      rewards: partnerItems,
+      rewards: [...playSuperItems, ...partnerItems],
+      claimedRewards: [...claimedPlaysuperOrders, ...claimedCustomPartners],
       rewardsClaimedInLastHr: rewardsClaimedInLastHr,
       bubbleLastClaimed: userMilestones.rewards.updatedAt,
     });
@@ -392,6 +418,7 @@ export const resendOtp = async (req, res) => {
     });
   }
 };
+
 export const verifyOtp = async (req, res) => {
   try {
     const userId = req.user._id;

@@ -4,8 +4,6 @@ import mongoose, { Schema, model, Document } from "mongoose";
 interface IBooster {
   shardslvl: number;
   automatalvl: number;
-  shardsPaylvl: number;
-  automataPaylvl: number;
   burstlvl: number;
   shardsLastClaimedAt: number;
   isShardsClaimActive: boolean;
@@ -89,14 +87,6 @@ const mythologySchema = new Schema({
       default: 1,
     },
     burstlvl: {
-      type: Number,
-      default: 1,
-    },
-    automataPaylvl: {
-      type: Number,
-      default: 0,
-    },
-    shardsPaylvl: {
       type: Number,
       default: 1,
     },

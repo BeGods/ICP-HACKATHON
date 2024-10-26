@@ -23,6 +23,11 @@ import {
   validJoinBonusReq,
   validPlaysuperRedeem,
 } from "../middlewares/general.middlewares";
+import {
+  getFolders,
+  getProfilePhotoUrl,
+  storeImage,
+} from "../controllers/storage.controllers";
 
 // ping
 router.get("/ping", ping);
@@ -42,6 +47,7 @@ router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
 // playsuper
 router.post("/playsuper/otp", authMiddleware, generateOtp);
 router.post("/playsuper/resendOtp", authMiddleware, resendOtp);
+router.post("/playsuper/orders", authMiddleware, resendOtp);
 router.post("/playsuper/verify", authMiddleware, verifyOtp);
 router.post(
   "/playsuper/redeem",
@@ -66,7 +72,7 @@ router.get(
   deactivateQuest
 );
 
-router.get("/store/test");
+router.get("/profile/avatar", authMiddleware, storeImage);
 
 // announcements
 // router.post("/announcements", authMiddleware, updateAnnouncement);
