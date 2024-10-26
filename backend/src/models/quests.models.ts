@@ -26,7 +26,7 @@ const questSchema = new Schema(
       default: "default",
     },
     link: {
-      type: String,
+      type: [String],
     },
     mythology: {
       type: String,

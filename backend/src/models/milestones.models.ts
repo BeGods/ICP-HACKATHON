@@ -42,10 +42,6 @@ const milestoneSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Quests",
       },
-      questClaimed: {
-        type: Boolean,
-        default: false,
-      },
       isKeyClaimed: {
         type: Boolean,
         default: false,
