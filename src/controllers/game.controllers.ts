@@ -22,6 +22,7 @@ import { checkBonus } from "../services/general.services";
 import { mythOrder } from "../utils/constants/variables";
 import milestones from "../models/milestones.models";
 import User from "../models/user.models";
+import CryptoJs from "crypto-js";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -80,8 +81,13 @@ export const startTapSession = async (req, res) => {
 
 export const claimTapSession = async (req, res) => {
   try {
+    const secretKey = "K/;|&t%(pX)%2@k|?1t^#GY;!w7:(PY<";
     const userId = req.user;
-    let { taps, minionTaps, mythologyName, bubbleSession } = req.body;
+    const hashedData = req.body.data;
+    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
+    let { taps, minionTaps, mythologyName, bubbleSession } = JSON.parse(
+      decryptedData.toString(CryptoJs.enc.Utf8)
+    );
 
     // get mythDta
     const userMythology = (await userMythologies.findOne({
@@ -311,6 +317,7 @@ export const getGameStats = async (req, res) => {
       telegramUsername: user.telegramUsername,
       tonAddress: user.tonAddress,
       isPremium: user.isPremium,
+      avatarUrl: user.profile.avatarUrl,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
@@ -319,8 +326,6 @@ export const getGameStats = async (req, res) => {
       isPlaySuperVerified: user.playsuper.isVerified,
       ...memberData,
     };
-
-    // const lostQuests = await unClaimedQuests(userId);
 
     const otherQuest = userMythologiesData.quests.filter(
       (item) => item.mythology === "Other"
@@ -362,7 +367,6 @@ export const getGameStats = async (req, res) => {
       quests: quests,
       extraQuests: otherQuest,
       towerKeys: towerKeys,
-      // lostQuests: lostQuests,
     });
   } catch (error) {
     console.log(error.message);
@@ -379,8 +383,7 @@ export const claimShardsBooster = async (req, res) => {
 
     const userMyth = req.userMyth;
 
-    userMyth.boosters.shardsPaylvl += 1;
-    userMyth.boosters.shardslvl = userMyth.boosters.shardsPaylvl;
+    userMyth.boosters.shardslvl += 1;
     userMyth.boosters.isShardsClaimActive = false;
     userMyth.boosters.shardsLastClaimedAt = Date.now();
 
@@ -395,14 +398,6 @@ export const claimShardsBooster = async (req, res) => {
     const updatedBoosterData = updatedMythData.mythologies.filter(
       (item) => item.name === userMyth.name
     )[0].boosters;
-
-    //!TODO: use select instead of doing this
-    // const { _id, createdAt, updatedAt, __v, ...cleanedData } = updatedMythData;
-    // cleanedData.mythologies = cleanedData.mythologies.map(
-    //   ({ _id, ...rest }) => rest
-    // );
-
-    // delete cleanedData.userId;
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
@@ -429,8 +424,7 @@ export const claimAutomata = async (req, res) => {
     const userId = req.user;
     const userMyth = req.userMyth;
 
-    userMyth.boosters.automataPaylvl += 1;
-    userMyth.boosters.automatalvl = userMyth.boosters.automataPaylvl;
+    userMyth.boosters.automatalvl += 1;
     userMyth.boosters.isAutomataActive = true;
     userMyth.boosters.automataLastClaimedAt = Date.now();
     userMyth.boosters.automataStartTime = Date.now();
