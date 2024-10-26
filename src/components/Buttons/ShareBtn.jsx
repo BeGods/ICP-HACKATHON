@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { mythSections, mythSymbols } from "../../utils/constants";
 import { Share2, ThumbsUp } from "lucide-react";
+import { MyContext } from "../../context/context";
 
 const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
+  const { assets } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
   const [showRedirect, setShowRedirect] = useState(true);
   let disableClick = useRef(false);
@@ -76,7 +78,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
           {isInfo ? (
             <div className="flex justify-center items-center w-1/4  h-full">
               <img
-                src={`/assets/uxui/240px-orb.multicolor.png`}
+                src={`${assets.uxui.multiorb}`}
                 alt="orb"
                 className="w-[85%]"
               />
@@ -89,7 +91,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
                 className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeMyth]} `}
               >
                 <img
-                  src="/assets/uxui/240px-orb.base.png"
+                  src={`${assets.audio.baseorb}`}
                   alt="orb"
                   className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
                 />

@@ -9,7 +9,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
-  const { activeMyth, section } = useContext(MyContext);
+  const { activeMyth, section, assets } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
   const { t } = useTranslation();
 
@@ -20,7 +20,7 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
     3: [t("sections.profile"), t("profile.task")],
     4: [t("sections.tower"), t("mythologies.dark")],
     5: [t("profile.partners"), t("profile.charity")],
-    6: [t("profile.partner"), , RedeemHead],
+    6: [t("profile.partner"), RedeemHead],
   };
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
 
       <div className="relative flex justify-center w-full h-auto">
         <img
-          src="/assets/uxui/1280px-fof.footer.png"
+          src={assets.uxui.paper}
           alt="paper"
           className={`w-full h-auto rotate-180 filter-paper-${
             section === 3 ||

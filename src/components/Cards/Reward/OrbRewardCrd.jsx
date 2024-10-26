@@ -22,7 +22,7 @@ const MilestoneCard = ({
   t,
 }) => {
   const [disableSound, setDisableSound] = useState(true);
-  const { enableSound } = useContext(MyContext);
+  const { enableSound, assets } = useContext(MyContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,7 +36,7 @@ const MilestoneCard = ({
         <div
           className="absolute inset-0 filter-card rounded-[15px]"
           style={{
-            backgroundImage: `url(/assets/cards/320px-info_background.jpg)`,
+            backgroundImage: `url(${assets.uxui.info})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center ",
@@ -57,7 +57,7 @@ const MilestoneCard = ({
                 className={`flex absolute  text-center justify-center items-center h-full w-[72%] glow-symbol-black`}
               >
                 <img
-                  src="/assets/uxui/240px-orb.multicolor.png"
+                  src={assets.uxui.multiorb}
                   alt="orb"
                   className={`w-full rounded-full orb`}
                 />
@@ -70,7 +70,7 @@ const MilestoneCard = ({
               >
                 <div className="relative w-full h-full flex justify-center items-center">
                   <img
-                    src="/assets/uxui/240px-orb.base.png"
+                    src={assets.uxui.baseorb}
                     alt="orb"
                     className={`w-full filter-orbs-${
                       isBlack ? "black" : mythSections[activeMyth]
@@ -102,7 +102,7 @@ const MilestoneCard = ({
             >
               <div
                 style={{
-                  backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                  backgroundImage: `url(${assets.uxui.paper})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
@@ -146,7 +146,7 @@ const MilestoneCard = ({
       />
       {disableSound && (
         <ReactHowler
-          src={`/assets/audio/fof.orb.wav`}
+          src={assets.audio.fofOrb}
           playing={enableSound}
           html5={true}
         />

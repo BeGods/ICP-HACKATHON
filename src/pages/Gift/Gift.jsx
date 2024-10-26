@@ -8,7 +8,7 @@ import {
 } from "../../components/Common/SectionToggles";
 
 const Gift = (props) => {
-  const { rewards } = useContext(MyContext);
+  const { rewards, assets } = useContext(MyContext);
   const [currState, setCurrState] = useState(0);
   const [showToggles, setShowToggles] = useState(false);
   const totalSections = Math.ceil(rewards.length / 3);
@@ -44,7 +44,7 @@ const Gift = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(/assets/uxui/1280px-fof.base.background.jpg)`,
+            backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",

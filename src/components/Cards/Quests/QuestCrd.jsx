@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { mythSections } from "../../../utils/constants";
 import MappedOrbs from "../../Common/MappedOrbs";
 import Symbol from "../../Common/Symbol";
 import IconBtn from "../../Buttons/IconBtn";
+import { MyContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
@@ -15,6 +16,7 @@ const QuestCard = ({
   InfoCard,
   isGuideActive,
 }) => {
+  const { assets } = useContext(MyContext);
   const [flipped, setFlipped] = useState(false);
   const [buttonFlip, setButtonFlip] = useState(false);
 
@@ -40,7 +42,7 @@ const QuestCard = ({
             } rounded-[15px]`}
           >
             <img
-              src={`/assets/cards/320px-${mythSections[activeMyth]}.quest.${quest?.type}.jpg`}
+              src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
               alt="card"
               className={`w-full h-full ${
                 !quest.isQuestClaimed && "grayscale"
@@ -62,7 +64,7 @@ const QuestCard = ({
               >
                 <div
                   style={{
-                    backgroundImage: `url(/assets/uxui/fof.footer.rock3.png)`,
+                    backgroundImage: `url(${assets.uxui.paper})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     backgroundPosition: "center center",

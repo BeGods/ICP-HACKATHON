@@ -40,8 +40,10 @@ const Tower = () => {
     setKeysData,
     enableSound,
     setShowCard,
+    assets,
   } = useContext(MyContext);
   const [myth, setMyth] = useState(0);
+  const [showClaim, setShowClaim] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
   const [scaleOrb, setScaleOrb] = useState(null);
   const mythData = gameData.mythologies.filter(
@@ -152,7 +154,7 @@ const Tower = () => {
         <div
           className={`absolute top-0 left-0 h-screen w-screen pointer-events-none`}
           style={{
-            backgroundImage: `url(/assets/uxui/480px-fof.intro.png)`,
+            backgroundImage: `url(${assets.uxui.intro})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "contain",
             backgroundPosition: "center center",
@@ -243,20 +245,19 @@ const Tower = () => {
         <div
           className="relative flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
-            backgroundImage:
-              "url(/assets/uxui/480px-fof.background.aether1.png)",
+            backgroundImage: `url(${assets.uxui.tower})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
         ></div>
       </div>
-
+      {/* `url(/assets/uxui/480px-fof.background.${wheelNames[myth]}1.png)` */}
       <div className="absolute flex justify-center items-center h-full w-full z-50">
         <div
           className="relative flex justify-center items-center w-full h-full pointer-events-none"
           style={{
-            backgroundImage: `url(/assets/uxui/480px-fof.background.${wheelNames[myth]}1.png)`,
+            backgroundImage: `url(${assets.uxui[`dial-${wheelNames[myth]}`]})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -283,7 +284,7 @@ const Tower = () => {
                 } scale-orb-${item.toLowerCase()} items-center rounded-full `}
               >
                 <img
-                  src="/assets/uxui/240px-orb.base.png"
+                  src={`${assets.uxui.baseorb}`}
                   alt="orb"
                   className={`filter-orbs-${item.toLowerCase()} `}
                 />
@@ -307,10 +308,12 @@ const Tower = () => {
                   clearTimeout(handTimeoutRef.current);
                   handTimeoutRef.current = null;
                 }
+                setShowClaim(true);
                 setShowCard(
                   <ConvertClaimCard
                     keysData={keysData}
                     handleClose={() => {
+                      setShowClaim(false);
                       setShowCard(null);
                     }}
                     handleSubmit={handleOrbsConversion}
@@ -334,8 +337,8 @@ const Tower = () => {
 
       <div className="absolute">
         <ReactHowler
-          src="/assets/audio/fof.tower.background01.wav"
-          playing={enableSound}
+          src={`${assets.audio.towerBg}`}
+          playing={enableSound && !showClaim}
           preload={true}
           loop
         />

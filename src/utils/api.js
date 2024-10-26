@@ -1,4 +1,5 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
 export const authenticate = async (userData, referralCode) => {
   let url = `${import.meta.env.VITE_API_URL}/auth`;
@@ -17,6 +18,22 @@ export const authenticate = async (userData, referralCode) => {
 
 export const fetchGameStats = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/game/stats`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchProfilePhoto = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/profile/avatar`;
 
   try {
     const response = await axios.get(url, {
@@ -259,13 +276,21 @@ export const claimBurst = async (result, accessToken) => {
 
 export const updateGameData = async (gameData, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/game/claimTapSession`;
-
+  const secretKey = "K/;|&t%(pX)%2@k|?1t^#GY;!w7:(PY<";
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
   try {
-    const response = await axios.post(url, gameData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await axios.post(
+      url,
+      { data: hashedData },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
@@ -387,8 +412,26 @@ export const claimSocialTask = async (data, accessToken) => {
   }
 };
 
-export const fetchRewards = async (accessToken) => {
+export const fetchRewards = async (
+  lang = null,
+  country = "NA",
+  accessToken
+) => {
   let url = `${import.meta.env.VITE_API_URL}/partners`;
+
+  let queryParams = [];
+
+  if (country !== "NA") {
+    queryParams.push(`country=${country}`);
+  }
+
+  if (lang) {
+    queryParams.push(`lang=${lang}`);
+  }
+
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
+  }
 
   try {
     const response = await axios.get(url, {

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { mythSymbols } from "../../utils/constants";
+import { MyContext } from "../../context/context";
 
 const MappedOrbs = ({ quest, showNum }) => {
+  const { assets } = useContext(MyContext);
   return (
     <div className="flex w-full gap-[3px]">
       {Object.entries(quest.requiredOrbs).map(([key, value], index) => (
@@ -14,7 +16,7 @@ const MappedOrbs = ({ quest, showNum }) => {
                     className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${key.toLowerCase()} `}
                   >
                     <img
-                      src="/assets/uxui/240px-orb.multicolor.png"
+                      src={assets.uxui.multiorb}
                       alt="orb"
                       className={`filter-orbs-${key.toLowerCase()} max-w-[10vw]`}
                     />
@@ -30,7 +32,7 @@ const MappedOrbs = ({ quest, showNum }) => {
                     className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${key.toLowerCase()} `}
                   >
                     <img
-                      src="/assets/uxui/240px-orb.base.png"
+                      src={assets.uxui.baseorb}
                       alt="orb"
                       className={`filter-orbs-${key.toLowerCase()} overflow-hidden max-w-[10vw]`}
                     />

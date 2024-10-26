@@ -101,11 +101,7 @@ ${
       }}
     >
       <div className="w-[20%] flex justify-start items-center">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/242px-Telegram_2019_Logo.svg.png"
-          alt="telegram"
-          className="w-full"
-        />
+        <img src={quest.type} alt="telegram" className="w-full" />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
         <h1 className="text-tertiary uppercase">{quest.questName}</h1>

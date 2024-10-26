@@ -5,7 +5,7 @@ import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";
 
 const ConvertButton = ({ handleNext, handlePrev, action, myth }) => {
-  const { enableSound } = useContext(MyContext);
+  const { enableSound, assets } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
   const [playSound, setPlaySound] = useState(false);
   const howlerRef = useRef(null);
@@ -67,7 +67,7 @@ const ConvertButton = ({ handleNext, handlePrev, action, myth }) => {
       <div className="absolute">
         {playSound && (
           <ReactHowler
-            src="/assets/audio/fof.tower.lock.wav"
+            src={`${assets.audio.towerButton}`}
             playing={enableSound}
             preload={true}
             ref={howlerRef}

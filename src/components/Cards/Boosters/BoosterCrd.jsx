@@ -1,18 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { mythSections } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
+import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
 
-const BoosterClaim = ({
-  activeCard,
-  activeMyth,
-  Button,
-  closeCard,
-  disableIcon,
-  disabelClick,
-}) => {
-  const { gameData, section, enableSound } = useContext(MyContext);
+const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
+  const { gameData, section, enableSound, assets, setActiveMyth, activeMyth } =
+    useContext(MyContext);
+
+  useEffect(() => {}, [activeMyth]);
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
@@ -22,7 +19,7 @@ const BoosterClaim = ({
             <div
               className={`flex relative text-center justify-center max-w-orb p-0.5 items-center rounded-full glow-icon-white`}
             >
-              <img src="/assets/uxui/240px-orb.multicolor.png" alt="orb" />
+              <img src={assets.uxui.multiorb} alt="orb" />
             </div>
             <div
               className={`font-fof text-[28px] font-normal text-white text-black-sm-contour transition-all duration-1000`}
@@ -36,9 +33,11 @@ const BoosterClaim = ({
         <div
           className={`absolute inset-0 rounded-[15px]`}
           style={{
-            backgroundImage: `url(/assets/cards/320px-${
-              activeCard === "minion" ? "alchemist" : activeCard
-            }.jpg)`,
+            backgroundImage: `${`url(${
+              assets.boosters[
+                `${activeCard === "minion" ? "alchemist" : activeCard}Card`
+              ]
+            })`}`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center ",
@@ -59,7 +58,7 @@ const BoosterClaim = ({
             >
               <div
                 style={{
-                  backgroundImage: `url(/assets/uxui/fof.footer.paper.png)`,
+                  backgroundImage: `url(${assets.uxui.paper})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center center",
@@ -84,16 +83,34 @@ const BoosterClaim = ({
       </div>
       {Button}
       <ReactHowler
-        src={`/assets/audio/fof.${
-          activeCard === "automata"
-            ? "automata.pulse"
-            : activeCard === "minion"
-            ? "alchemist.grunt"
-            : ""
-        }.short.wav`}
+        src={
+          assets.audio[
+            activeCard === "automata"
+              ? "automataShort"
+              : activeCard === "minion"
+              ? "alchemistShort"
+              : ""
+          ]
+        }
         playing={enableSound}
         preload={true}
       />
+      <>
+        <ToggleLeft
+          minimize={2}
+          handleClick={() => {
+            setActiveMyth((prev) => (prev - 1 + 4) % 4);
+          }}
+          activeMyth={activeMyth}
+        />
+        <ToggleRight
+          minimize={2}
+          handleClick={() => {
+            setActiveMyth((prev) => (prev + 1) % 4);
+          }}
+          activeMyth={activeMyth}
+        />
+      </>
     </div>
   );
 };

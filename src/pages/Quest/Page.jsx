@@ -8,7 +8,6 @@ import {
   claimQuest,
   claimQuestOrbsReward,
   claimShareReward,
-  completeQuest,
 } from "../../utils/api";
 
 import JigsawImage from "../../components/Cards/Jigsaw/JigsawCrd";
@@ -53,6 +52,7 @@ const Quests = () => {
     setShowCard,
     showBooster,
     setShowBooster,
+    assets,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
@@ -87,6 +87,8 @@ const Quests = () => {
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
+
+  console.log(quest);
 
   //* toggle handler functions
   const handlePrev = () => {
@@ -339,7 +341,7 @@ const Quests = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
           style={{
-            backgroundImage: `url(/assets/uxui/1280px-fof.base.background.jpg)`,
+            backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -379,11 +381,12 @@ const Quests = () => {
             t={t}
             ShareButton={
               <ShareButton
+                isOrbClaimCard={true}
                 isShared={quest?.isShared}
                 isInfo={true}
                 handleClaim={handleClaimShareReward}
                 activeMyth={activeMyth}
-                link={"dhjh"}
+                link={quest.link[1]}
                 t={t}
               />
             }
@@ -427,7 +430,7 @@ const Quests = () => {
               >
                 <JigsawImage
                   handleClick={() => {}}
-                  imageUrl={`/assets/cards/320px-${mythSections[activeMyth]}.whitelist.wood.jpg`}
+                  imageUrl={assets.whitelist[mythSections[activeMyth]]}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith
                   )}
