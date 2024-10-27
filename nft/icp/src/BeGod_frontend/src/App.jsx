@@ -9,6 +9,7 @@ import Hero from "./pages/Hero";
 import BuyNft from "./pages/BuyNft";
 import PageNotFound from "./Admin/PageNotFound";
 import Activity from "./pages/Activity";
+import UnauthorizedPage from "./Admin/UnauthorizedPage";
 
 // Introduce a manual delay for testing
 const simulateNetworkDelay = (ms) => {
@@ -36,6 +37,7 @@ function App() {
           <Route path="/Nft/:Nftname/buy" element={<BuyNft />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/*" element={<Admin />} />
+          <Route path="/unauth/*" element={<UnauthorizedPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>

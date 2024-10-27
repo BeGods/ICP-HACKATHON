@@ -44,9 +44,7 @@ const NFTGallery = ({ currentCollection }) => {
 
   useEffect(() => {
     const updateImagesPerSet = () => {
-      if (window.innerWidth >= 650) { // md and above
-        setItemsPerPage(8);
-      } else { // below md
+      if (window.innerWidth <= 650) { // md and above
         setItemsPerPage(1);
       }
     };
@@ -116,7 +114,7 @@ const NFTGallery = ({ currentCollection }) => {
         </div>
       </div>
       <div className={`justify-around hidden gap-5 m-5 sm:grid sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
-        {currentItems && currentItems.map((img, index) => {
+        {currentCollection.map((img, index) => {
          return(
           <div className="rounded-lg flip-card " key={index}>
           <div className={`flip-card-inner border-3 ${
@@ -153,21 +151,7 @@ const NFTGallery = ({ currentCollection }) => {
       </div>
 
       {/* Pagination Controls */}
-      <div className='hidden w-[100%] lg:w-[86%] sm:flex justify-between items-center '>
-        <img
-          src="/Hero/up.png"
-          alt="Previous"
-          onClick={handlePreviousPage}
-          className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer  -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-        />
-
-        <img
-          src="/Hero/down.png"
-          alt="Next"
-          onClick={handleNextPage}
-          className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer -rotate-90 ${(currentPage + 1) * itemsPerPage >= currentCollection.length ? 'opacity-50 cursor-not-allowed' : ''}`}
-        />
-      </div>
+    
     </div>
   );
 };

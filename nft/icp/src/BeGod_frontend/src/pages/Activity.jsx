@@ -107,7 +107,7 @@ const Activity = () => {
         }}
       >
         <Navbar />
-        <div className="p-[10px] min-h-[70vh] w-full lg:p-[70px] pb-[33px] ">
+        <div className="p-[10px] min-h-[90vh] w-full lg:p-[70px] pb-[33px] ">
           <h1 className="text-3xl text-center mb-3 lg:text-5xl text-[#FCD378] lg:mb-5 lg:text-start">Activity</h1>
           <ul className="w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-sm lg:text-lg bg-[#FCD37B1A] m-0 pl-[0px]  grid grid-cols-4 items-center mb-[21px]">
             <li className='text-center '>Collection</li>

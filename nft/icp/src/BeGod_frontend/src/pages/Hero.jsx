@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '../components/Landing Page Components/Navbar'
 import YellowButton from '../components/button/YellowButton'
 import { Link } from 'react-router-dom';
@@ -159,7 +159,7 @@ const Hero = () => {
         updateNoCardsStatus(false)
         updateSelectedCollectionNftCardsList([]);
         setCurrentIndex(index);
-        const currList = await fetchCollectionNfts(currentCollectionId,color)
+        const currList = await fetchCollectionNfts(currentCollectionId,color,"indexchange")
         if(currList.length > 0){
             updateFilteredList(currList);
             updateSelectedCollectionNftCardsList(currList);
@@ -236,7 +236,7 @@ const Hero = () => {
         
         const currentCollectionId = collections[currentIndex].collectionId;
         const color = collections[currentIndex].shadowColor;
-        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color);
+        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color,"start");
         if(currentCollectionNfts.length>0){
             updateFilteredList(currentCollectionNfts);
             updateSelectedCollectionNftCardsList(currentCollectionNfts);
@@ -246,11 +246,50 @@ const Hero = () => {
         //console.log(currentCollectionNfts)
 };
 let index = -1;
-const fetchCollectionNfts = async (collectionId,color) => {
+const itemsPerPage = 5;
+const [currentPage,updateCurrentPage] = useState(1);
+const [totalPages,updateTotalPages] = useState(1);
+
+const isFirstRender = useRef(true);
+
+useEffect(()=>{
+    if (isFirstRender.current) {
+        // Skip the first render
+        isFirstRender.current = false;
+        return;
+      }
+      onUpdateCurrentPage();
+
+},[currentPage])
+
+const onUpdateCurrentPage =async ()=>{
+    const currentCollectionId = collections[currentIndex].collectionId;
+    const color = collections[currentIndex].shadowColor;
+    const currList = await fetchCollectionNfts(currentCollectionId,color,"pagechange")
+    if(currList.length > 0){
+        updateFilteredList(currList);
+        updateSelectedCollectionNftCardsList(currList);
+    }else{
+        updateSelectedCollectionNftCardsList([]);
+        updateNoCardsStatus(true);
+    }
+}
+
+const [pageNo,updatedPageNo] = useState(1)
+const fetchCollectionNfts = async (collectionId,color,origin) => {
+
+    let pageNo = currentPage-1;
+    updatedPageNo(pageNo+1)
+    if(origin === "indexchange"){
+        pageNo = 0;
+        updatedPageNo(1)
+    }
    try{
-    const listedNfts = await backendActor?.listings(collectionId);
-      console.log("listings resut",listedNfts);
+    const result = await backendActor?.plistings(collectionId,itemsPerPage,pageNo);
+      console.log("listings resut",result);
     index  = -1;
+    const listedNfts = result?.ok?.data;
+    updateTotalPages(parseInt(result?.ok?.total_pages))
     if(listedNfts.length === 0){
         updateSelectedCollectionNftCardsList([]);
         updateNoCardsStatus(true);
@@ -409,6 +448,23 @@ console.log("filtered list after applying filters",filteredList)
           document.body.style.overflow = 'auto';
         };
       }, [isDisplayFiltersPopup]);
+
+
+
+      const onNavigate  = async(type,index) => {
+        console.log("next")
+        updateNoCardsStatus(false)
+        updateSelectedCollectionNftCardsList([]);
+        if(type === "next"){
+            updateCurrentPage(currentPage+1)
+        }else if(type === "previous") {
+            updateCurrentPage(currentPage-1)
+        }else{
+            console.log("inddddddddddddex",index)
+            updateCurrentPage(index)
+        }
+       
+      }
     
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -646,7 +702,45 @@ console.log("filtered list after applying filters",filteredList)
                      )}
                       </div>
                         {filteredList.length >0? (
+                            <>
                             <NFTGallery currentCollection={filteredList}  />
+                            {totalPages == 1 && (
+                                <div className='mt-20'></div>
+                            )}
+                            {totalPages > 1 && (
+                                <div className='hidden w-[100%] lg:w-[86%] xl:w-[98%] sm:flex justify-between items-center '>
+                                <button disabled={currentPage === 1} >
+                                <img
+                                src="/Hero/up.png"
+                                alt="Previous"
+                                onClick={()=>onNavigate("previous",currentIndex)}
+                                className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer  -rotate-90 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                <div className='flex items-center'>
+                                {Array.from({length:totalPages}).map((_,index)=>{
+                                    return (
+                                    <div className={`size-9 border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+                                        ${pageNo === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"}
+                                    `}
+                                    onClick={()=>onNavigate("none",index+1)}
+                                    > 
+                                    <h1 >{index+1}</h1>
+                                    </div>
+                                    )
+                                })}
+                                </div>
+                                <button disabled={currentPage >= totalPages} >
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                                onClick={()=>onNavigate("next",currentIndex)}
+                                className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer -rotate-90 ${(currentPage >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                            </div>
+                            )}
+                            </>
                         ) : (
                             noCards || (selectedCollectionNftCardsList.length>0 && filteredList.length===0) ? (
                               <div className='w-[100%] h-[42vh] flex items-center justify-center'>

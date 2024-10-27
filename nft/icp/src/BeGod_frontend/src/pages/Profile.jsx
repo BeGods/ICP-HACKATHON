@@ -629,7 +629,7 @@ const fetchCollections = async () => {
                 price : parseInt(eachCard[5][0])/100000000
              }
              formatedList.push([tempcard])
-
+ 
       }
 
       return formatedList;
