@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const NFTGallery = ({ currentCollection }) => {
-  // console.log("current collection in nft gallery",currentCollection);
+   console.log("current collection in nft gallery",currentCollection);
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);
@@ -71,8 +71,8 @@ const NFTGallery = ({ currentCollection }) => {
           />
         </div>
         <div className={`w-[90%] flex img-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
-          {currentItems && currentItems.map((eachCard, index) => {
-            const img = eachCard[0];
+          {currentItems && currentItems.map((img, index) => {
+            console.log("img",img.borderColor);
             return(
               <div className="rounded-lg flip-card" key={index}>
               <div className={`flip-card-inner border-3 ${
@@ -94,7 +94,6 @@ const NFTGallery = ({ currentCollection }) => {
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
                     <h1 className="text-xl font-extrabold sm:text-3xl">{img.name}</h1>
                     <h2 className="mt-2 text-lg capitalize sm:text-xl">Type: {img.nftType}</h2>
-                    <h2 className="mt-2 text-lg capitalize sm:text-xl">Quantity :{eachCard.length+1}</h2>
                     <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
                     <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                       {t('buyNow')}
@@ -117,8 +116,7 @@ const NFTGallery = ({ currentCollection }) => {
         </div>
       </div>
       <div className={`justify-around hidden gap-5 m-5 sm:grid sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
-        {currentItems && currentItems.map((eachCard, index) => {
-          const img = eachCard[0];
+        {currentItems && currentItems.map((img, index) => {
          return(
           <div className="rounded-lg flip-card " key={index}>
           <div className={`flip-card-inner border-3 ${
@@ -140,7 +138,6 @@ const NFTGallery = ({ currentCollection }) => {
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
                 <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">{img.name}</h1>
                 <h2 className="mt-2 text-lg capitalize sm:text-xl">Type : {img.nftType}</h2>
-                <h2 className="mt-2 text-lg capitalize sm:text-xl">Quantity : {eachCard.length}</h2>
                 <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
                 <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 px-2 py-1 rounded-sm bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                   {t('buyNow')}
