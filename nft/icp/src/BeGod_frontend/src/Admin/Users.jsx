@@ -33,7 +33,7 @@ function Users() {
   const getallDUser = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.getAllUsers(5, currentpage - 1);
+        const result = await backendActor?.getAllUsers(1, currentpage - 1);
         console.log("getting all users", result);
 
         // if (result && result.length > 0 && result[0].length > 0) {
@@ -47,7 +47,7 @@ function Users() {
         // } else {
         //   console.log("No users found in the result");
         // }
-        if (result.err === "No orders found") {
+        if (result.err === "No users found") {
           setalluser([]);
         } else {
           setalluser(result.ok.data);
@@ -290,17 +290,19 @@ function Users() {
               alignItems="center"
               justifyContent="center"
             >
-              <Button
-                mr="2"
-                bg="#161618"
-                color="white"
-                border="1px"
-                borderColor="gray.500"
-                _hover={{ bg: "black" }}
-                onClick={leftfunction}
-              >
-                &lt;
-              </Button>
+              {currentpage > 1 && (
+                <Button
+                  mr="2"
+                  bg="#161618"
+                  color="white"
+                  border="1px"
+                  borderColor="gray.500"
+                  _hover={{ bg: "black" }}
+                  onClick={leftfunction}
+                >
+                  &lt;
+                </Button>
+              )}
               <Button
                 bg="#FCD37B"
                 color="black"
@@ -310,17 +312,19 @@ function Users() {
               >
                 {currentpage}
               </Button>
-              <Button
-                ml="2"
-                bg="#161618"
-                color="white"
-                border="1px"
-                borderColor="gray.500"
-                _hover={{ bg: "black" }}
-                onClick={rightfunction}
-              >
-                &gt;
-              </Button>
+              {currentpage < totalpage && (
+                <Button
+                  ml="2"
+                  bg="#161618"
+                  color="white"
+                  border="1px"
+                  borderColor="gray.500"
+                  _hover={{ bg: "black" }}
+                  onClick={rightfunction}
+                >
+                  &gt;
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>

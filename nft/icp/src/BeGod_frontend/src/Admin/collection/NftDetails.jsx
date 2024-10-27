@@ -16,8 +16,9 @@ const NftDetails = () => {
   const [tokenid, settokenid] = useState();
   const [singletokendata, setsingletokendata] = useState();
   const nftdata = location.state?.list;
-  const { list, collectiondata } = location.state || {};
-  console.log(list);
+  const { collectiondata } = location.state || {};
+  console.log(nftdata); //
+  console.log(collectiondata);
 
   const tokenindex = nftdata?.[0];
   const userid = nftdata?.[1];
@@ -27,31 +28,12 @@ const NftDetails = () => {
 
   const metadataJson = nftdata[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
-  console.log(nftdata[1]);
 
   const collid = collectiondata[1];
 
-  const getListing = async (collid) => {
-    setLoading(true);
-    try {
-      console.log(collid);
-      const userPrincipalArray = collid;
-
-      const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
-
-      const result = await backendActor?.listings(principalString);
-      console.log("Listing", result);
-      settokenid(result);
-    } catch (error) {
-      console.error("Error fetching listing:", error);
-
-      return error; // Return error
-    }
-  };
   const getdata = async (collid, tokenindex, userid) => {
     setLoading(true);
     try {
-      console.log(collid);
       const userPrincipalArray = collid;
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
@@ -72,7 +54,6 @@ const NftDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getListing(collid);
         await getdata(collid, tokenindex, userid);
         setLoading(false);
       } catch (error) {
@@ -90,47 +71,42 @@ const NftDetails = () => {
       </div>
     );
   }
-  console.log(tokenid);
-
   const identifier = tokenid?.[0]?.[1] || "null";
-  console.log("Identifier:", identifier);
 
-  console.log(singletokendata);
   const owner = singletokendata?.[0]?.[1];
   const isOwned = singletokendata?.[0]?.[4];
-  console.log(owner, isOwned);
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="2xl:mt-[10vh] w-full sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] mx-auto">
         {/* Back Button */}
-        <div className="flex justify-start items-center w-full pt-9 mb-8 hover:cursor-pointer">
+        <div className="flex justify-start items-center w-full pt-9 mb-5 hover:cursor-pointer">
           <div className="hidden sm:block">
             {loading ? <Skeleton width={100} height={35} /> : <BackButton />}
           </div>
         </div>
 
         {/* NFT Details Section */}
-        <div className="flex flex-col md:flex-row mt-8 sm:mt-0 gap-6">
+        <div className="flex flex-col md:flex-row mt-12 sm:mt-0 gap-8">
           {/* NFT Image */}
-          <div className="flex justify-start mb-4 sm:mb-0 w-full sm:w-[35%]">
+          <div className="flex justify-center md:justify-start mb-6 md:mb-0 w-full sm:w-[50%] md:w-[40%]">
             {loading ? (
               <Skeleton
-                height="100%" // Use percentage for skeleton height
+                height="100%" // Set to "100%" to fill available space
                 width="100%"
-                className="w-full max-w-[80%] sm:max-w-[85%] md:max-w-[90%] aspect-square"
+                className="rounded-md w-full max-w-[85%] sm:max-w-[90%] md:max-w-[95%] aspect-square"
               />
             ) : (
               <img
                 src={nftdata[2]?.nonfungible?.thumbnail ?? "Image not found"}
                 alt="NFT Thumbnail"
-                className="object-cover rounded-md w-full max-w-[80%] sm:max-w-[85%] md:max-w-[90%] aspect-square h-auto"
+                className="object-cover rounded-md w-full max-w-[85%] sm:max-w-[90%] md:max-w-[95%] aspect-square"
               />
             )}
           </div>
 
           {/* NFT Details Card */}
-          <div className="flex flex-col justify-center w-[95%] sm:w-[86%] md:w-[60%] lg:w-[50%] bg-[#29292c] mb-4 sm:mb-0 rounded-md p-6 gap-4 mx-auto sm:mx-0">
+          <div className="flex flex-col justify-center w-[95%] md:w-[60%] lg:w-[50%] bg-[#29292c] mb-4 md:mb-0 rounded-md p-6 gap-4 mx-4 sm:mx-auto">
             {loading ? (
               <div className="flex flex-col gap-4">
                 <Skeleton className="h-[25px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%]" />
