@@ -3,7 +3,8 @@ import Navbar from '../components/Landing Page Components/Navbar'
 import YellowButton from '../components/button/YellowButton'
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
-import NFTGallery from '../components/Landing Page Components/NftGallery';
+// import NFTGallery from '../components/Landing Page Components/NftGallery';
+import NFTGallery from '../components/Landing Page Components/NftGalleryTest.jsx';
 import HeroSlider from '../components/Landing Page Components/HeroSlider';
 import Collections from '../components/Landing Page Components/CollectionType';
 import { useTranslation } from 'react-i18next';
@@ -452,6 +453,7 @@ console.log("filtered list after applying filters",filteredList)
 
 
       const onNavigate  = async(type,index) => {
+        
         console.log("next")
         updateNoCardsStatus(false)
         updateSelectedCollectionNftCardsList([]);
@@ -463,7 +465,13 @@ console.log("filtered list after applying filters",filteredList)
             console.log("inddddddddddddex",index)
             updateCurrentPage(index)
         }
-       
+
+        const device = getScreenSize();
+        if(device == "xs" || device == "sm"){
+            document.getElementById("filter").scrollIntoView({ behavior: "smooth"});
+        }
+        
+    
       }
     
     return (
@@ -681,7 +689,8 @@ console.log("filtered list after applying filters",filteredList)
                                     )}
                             </div>
                         </div>
-                      <div className='flex items-center  mt-5'>
+                        <div id='filter' className='mb-3'></div>
+                      <div  className='flex items-center  mt-5'>
                       <button
                             className={`rounded-full flex justify-center items-center w-[120px] h-[35px] gap-1 
                             p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 ml-5 mr-2 sm:hidden`}
@@ -707,39 +716,6 @@ console.log("filtered list after applying filters",filteredList)
                             {totalPages == 1 && (
                                 <div className='mt-20'></div>
                             )}
-                            {totalPages > 1 && (
-                                <div className='hidden w-[100%] lg:w-[86%] xl:w-[98%] sm:flex justify-between items-center '>
-                                <button disabled={currentPage === 1} >
-                                <img
-                                src="/Hero/up.png"
-                                alt="Previous"
-                                onClick={()=>onNavigate("previous",currentIndex)}
-                                className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer  -rotate-90 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                />
-                                </button>
-                                <div className='flex items-center'>
-                                {Array.from({length:totalPages}).map((_,index)=>{
-                                    return (
-                                    <div className={`size-9 border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
-                                        ${pageNo === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"}
-                                    `}
-                                    onClick={()=>onNavigate("none",index+1)}
-                                    > 
-                                    <h1 >{index+1}</h1>
-                                    </div>
-                                    )
-                                })}
-                                </div>
-                                <button disabled={currentPage >= totalPages} >
-                                <img
-                                src="/Hero/down.png"
-                                alt="Next"
-                                onClick={()=>onNavigate("next",currentIndex)}
-                                className={`lg:h-[80px] lg:mb-[48px] hover:cursor-pointer -rotate-90 ${(currentPage >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                />
-                                </button>
-                            </div>
-                            )}
                             </>
                         ) : (
                             noCards || (selectedCollectionNftCardsList.length>0 && filteredList.length===0) ? (
@@ -759,13 +735,62 @@ console.log("filtered list after applying filters",filteredList)
                                   />
                                 ))}
                               </div>
-                              <div className='flex justify-center items-center mt-3 md:hidden'>
-                                <Skeleton count={1} width={210} height={300} />
+                              <div className="justify-around m-5 gap-4 grid grid-cols-2 sm:hidden ">
+                                {Array.from({ length: 10 }).map((_, index) => (
+                                  <Skeleton
+                                    key={index}
+                                    count={1}
+                                    width="100%"
+                                    height={250}
+                                  />
+                                ))}
                               </div>
+                              {/* <div className='flex justify-center items-center mt-3 md:hidden'>
+                                <Skeleton count={1} width={210} height={300} />
+                              </div> */}
+                              
                             </SkeletonTheme>
                           </div>
                            )
                         )}
+                        {totalPages > 1 && (
+                                <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
+                                <button disabled={currentPage === 1} className='' >
+                                <img
+                                src="/Hero/up.png"
+                                alt="Previous"
+                                onClick={()=>onNavigate("previous",currentIndex)}
+                                className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
+                                {Array.from({length:totalPages}).map((_,index)=>{
+                                    return (
+                                    <div  key={index} 
+                                   
+                                    className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+                                        ${pageNo === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
+                                    `}
+                                    onClick={() => {
+                                            onNavigate("none", index + 1);
+                                        }}
+                                    > 
+                                    <h1>{index+1}</h1>
+                                    </div>
+                                    )
+                                })}
+                                </div>
+                                <button disabled={currentPage >= totalPages} className='' >
+                                    {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                                onClick={()=>{onNavigate("next",currentIndex)}}
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                            </div>
+                            )}
                     </div>
                 </div>
                 )}

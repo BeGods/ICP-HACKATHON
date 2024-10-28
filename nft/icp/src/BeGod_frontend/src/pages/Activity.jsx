@@ -173,17 +173,18 @@ const Activity = () => {
             <button className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === 1 ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === 1} onClick={onClickPrev}>
               <GrFormPrevious />
             </button>
-              {Array.from({length:total_pages}).map((_,index)=>{
-                return (
-                  <div className={`size-9 border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+              <div className=' flex items-center justify-start max-w-[80%] overflow-x-auto'>
+              {Array.from({length:total_pages}).map((_,index)=>(
+                  <div className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
                     ${current_page === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent"}
                 `}
                 onClick={()=>updateCurrentPage(index+1)}
                 > 
                 <h1>{index+1}</h1>
                 </div>
-                )
-              })}
+                
+              ))}
+              </div>
             <button className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === total_pages ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === total_pages} 
               onClick={onClickNext}
              
