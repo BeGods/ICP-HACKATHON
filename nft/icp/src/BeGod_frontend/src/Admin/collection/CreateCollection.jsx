@@ -90,18 +90,19 @@ const CreateCollection = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     // Form validation checks
-    if (!name || !description || !Ufile) {
+    if (!name || !description || !Ufile || nftCardsList.length === 0) {
       toast.error("Please fill in all required fields.");
       return;
     }
-    // Ensure at least one NFT card is added
-    else if (nftCardsList.length === 0) {
-      toast.error("Please add at least one NFT card.");
-      return;
-    } else {
+    // // Ensure at least one NFT card is added
+    // else if (nftCardsList.length === 0) {
+    //   toast.error("Please add at least one NFT card.");
+    //   return;
+    // }
+    else {
       togglewarning();
     }
   };
@@ -316,7 +317,7 @@ const CreateCollection = () => {
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
-  console.log(nftType);
+
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
       (eachNft) => eachNft.nftId !== nftId
@@ -432,13 +433,20 @@ const CreateCollection = () => {
                         Collection Name:
                       </label>
                       <input
+                        value={name}
                         onChange={(e) => {
-                          const value = e.target.value;
-                          // Check if the value is not just whitespace
-                          if (value.trim() !== "") {
-                            setName(value);
+                          let value = e.target.value;
+                          if (/^[a-zA-Z0-9 ]*$/.test(value)) {
+                            value = value.trimStart();
+                            if (value.trim() !== "") {
+                              setName(value);
+                            } else {
+                              setName("");
+                            }
                           } else {
-                            setName(""); // or handle as needed
+                            toast.error(
+                              "Only letters and numbers are allowed."
+                            );
                           }
                         }}
                         type="text"
