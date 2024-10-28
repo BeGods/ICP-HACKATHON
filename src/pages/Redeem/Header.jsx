@@ -20,12 +20,12 @@ const BottomChild = ({ pieces }) => {
   return (
     <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
-        className={`flex text-num pl-3 text-black-lg-contour text-white items-center border  justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
+        className={`flex text-num pl-[18px] text-black-lg-contour text-white items-center border  justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
         1
       </div>
       <div
-        className={`flex text-num pr-3 text-black-lg-contour text-white items-center border  justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
+        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border  justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
         {pieces}/12
       </div>

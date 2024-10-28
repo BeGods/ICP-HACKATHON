@@ -31,7 +31,7 @@ const BottomChild = ({
   return (
     <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
-        className={`flex text-num pl-3 text-black-lg-contour items-center border  border-${
+        className={`flex text-num pl-[18px] text-black-lg-contour items-center border  border-${
           mythSections[activeMyth]
         }-primary justify-start ${
           !quest?.isQuestClaimed
@@ -42,7 +42,7 @@ const BottomChild = ({
         {lostQuests.length}
       </div>
       <div
-        className={`flex text-num pr-3 ${
+        className={`flex text-num pr-[18px] ${
           quest?.isQuestClaimed
             ? ` glow-button-${mythSections[activeMyth]}`
             : "text-white"

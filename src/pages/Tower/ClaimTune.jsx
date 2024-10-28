@@ -4,7 +4,6 @@ import {
   mythSections,
   mythSymbols,
   mythologies,
-  orbSounds,
 } from "../../utils/constants";
 import { CircleCheck, CircleX } from "lucide-react";
 import ReactHowler from "react-howler";
@@ -29,12 +28,11 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const [playSound, setPlaySound] = useState(0);
   const howlerRef = useRef(null);
 
-  console.log(playSound);
-
   const handleKeys = () => {
     const selectedKeys = clickedOrbs
       .map((item) => mythologies.indexOf(item))
       .join("");
+
     handleClose();
     handleSubmit(selectedKeys);
   };
@@ -132,21 +130,21 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             <div
               onClick={() => {
                 playAudio();
-                if (!prev.includes("multiorb")) {
-                  setPlaySound(4);
-                }
+
+                setPlaySound(-1);
+
                 setClickedOrbs((prev) =>
                   prev.length <= 6 ? [...prev, "multiorb"] : prev
                 );
               }}
-              className="flex items-center"
+              className="flex items-center z-50 pointer-events-auto"
             >
               <div
                 className={`flex relative text-center ml-1 justify-center ${
-                  clickedOrbs.includes("MultiOrb")
+                  clickedOrbs.includes("multiorb")
                     ? "w-[17vw] glow-icon-lg-white"
                     : "w-[15vw] glow-icon-white"
-                } items-center rounded-full `}
+                } items-center rounded-full z-50 `}
               >
                 <img src={`${assets.uxui.multiorb}`} alt="orb" />
               </div>
@@ -210,7 +208,11 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
         {playSound != 0 && (
           <>
             <ReactHowler
-              src={assets.audio[`orb.${elements[playSound - 1]}`]}
+              src={
+                assets.audio[
+                  `orb.${playSound >= 0 ? elements[playSound - 1] : "multi"}`
+                ]
+              }
               playing={enableSound}
               preload={true}
               ref={howlerRef}
