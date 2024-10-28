@@ -22,7 +22,7 @@
     "conversion": "Conversão",
     "discover": "Descobrir",
     "whitelist": "Whitelist",
-    "load": "Carregando..."
+    "load": "Carregando"
   },
   "buttons": {
     "buy": "Comprar",
@@ -42,7 +42,7 @@
     "profile": "Perfil"
   },
   "boosters": [
-    { "title": "Autômata", "desc": "Toque automático" }, { "title": "Missões Perdidas", "desc": "Energia 200%" }, { "title": "Alquimista", "desc": "Toque duplo" },
+    { "title": "Autômata", "desc": "Toque automático" }, { "title": "Missões", "desc": "Energia 200%" }, { "title": "Alquimista", "desc": "Toque duplo" },
     {},
     {},
     {},

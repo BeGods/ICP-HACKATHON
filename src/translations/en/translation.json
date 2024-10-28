@@ -47,7 +47,7 @@
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
-    { "title": "Lost Quests", "desc": "Energy" },
+    { "title": "Quests", "desc": "Energy" },
     { "title": "Alchemist", "desc": "Increase tap" },
     {},
     {},

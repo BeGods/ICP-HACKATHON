@@ -9,7 +9,9 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
   const { gameData, section, enableSound, assets, setActiveMyth, activeMyth } =
     useContext(MyContext);
 
-  useEffect(() => {}, [activeMyth]);
+  console.log(
+    assets.boosters[`${activeCard === "minion" ? "alchemist" : activeCard}Card`]
+  );
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
@@ -89,7 +91,7 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
               ? "automataShort"
               : activeCard === "minion"
               ? "alchemistShort"
-              : ""
+              : "automataShor"
           ]
         }
         playing={enableSound}

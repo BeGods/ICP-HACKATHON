@@ -266,7 +266,7 @@ const Boosters = () => {
 
       {/* BOOSTER CARDS */}
       <div className="flex justify-center h-screen w-screen absolute mx-auto">
-        <div className="flex flex-col w-[70%] items-center justify-center gap-[15px]">
+        <div className="flex flex-col w-[70%] pt-[5vh] items-center justify-center gap-[10px]">
           {/* AUTOMATA */}
           <BoosterItem
             isGuideActive={enableGuide}
@@ -321,6 +321,19 @@ const Boosters = () => {
             activeMyth={activeMyth}
             t={t}
             booster={2}
+          />
+
+          {/* Quest */}
+          <BoosterItem
+            isGuideActive={enableGuide}
+            isActive={true}
+            handleClick={() => {
+              tele.HapticFeedback.notificationOccurred("success");
+              setSection(1);
+            }}
+            activeMyth={activeMyth}
+            t={t}
+            booster={1}
           />
           {/* BURST */}
           <BoosterItem

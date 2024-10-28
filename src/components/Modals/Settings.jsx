@@ -3,10 +3,20 @@ import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
-import { Globe, Volume2, VolumeX } from "lucide-react";
+import { ChevronRight, Globe, Volume2, VolumeX, Wallet } from "lucide-react";
 import { MyContext } from "../../context/context";
 import { country } from "../../utils/country";
-import { fetchRewards } from "../../utils/api";
+import {
+  connectTonWallet,
+  disconnectTonWallet,
+  fetchRewards,
+} from "../../utils/api";
+import {
+  useTonAddress,
+  useTonConnectModal,
+  useTonConnectUI,
+} from "@tonconnect/ui-react";
+import { showToast } from "../Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,14 +31,18 @@ const languages = [
 ];
 
 const SettingModal = ({ close }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const {
-    setSection,
     setRewards,
     setRewardsClaimedInLastHr,
     authToken,
     enableSound,
+    setUserData,
+    userData,
   } = useContext(MyContext);
+  const [tonConnectUI] = useTonConnectUI();
+  const userFriendlyAddress = useTonAddress();
+  const { state, open } = useTonConnectModal();
   const [countryCode, setCountryCode] = useState("NA");
   const [isChanged, setIsChanged] = useState(false);
 
@@ -65,6 +79,64 @@ const SettingModal = ({ close }) => {
     tele.CloudStorage.setItem("country_code", selectedCountry);
   };
 
+  const handleConnectTon = async () => {
+    try {
+      await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: userFriendlyAddress,
+      }));
+
+      showToast("ton_connect_success");
+    } catch (error) {
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+
+      console.log(errorMessage);
+      showToast("ton_connect_error");
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        state.closeReason === "wallet-selected" &&
+        state.status === "closed" &&
+        (userData.tonAddress === null || !userData.tonAddress)
+      ) {
+        handleConnectTon();
+      }
+    });
+  }, [state]);
+
+  const handleDisconnectTon = async () => {
+    try {
+      await disconnectTonWallet(authToken);
+      tonConnectUI.disconnect();
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: null,
+      }));
+      showToast("ton_connect_success");
+    } catch (error) {
+      console.log(error);
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("ton_connect_error");
+    }
+  };
+
+  // useEffect(() => {
+  //   handleDisconnectTon();
+  // }, []);
+
   const handleClose = () => {
     close();
     if (isChanged) {
@@ -76,6 +148,24 @@ const SettingModal = ({ close }) => {
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
       <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[28vh] card-shadow-white p-4">
         <IconBtn align={0} handleClick={handleClose} activeMyth={4} />
+        <div className="flex w-full">
+          <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
+            <Globe />
+          </div>
+          <div className="w-full">
+            <select
+              value={countryCode}
+              onChange={handleSettingChange}
+              className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
+            >
+              {country.map((ctx) => (
+                <option key={ctx.code} value={ctx.code}>
+                  {ctx.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         <div className="flex w-full">
           <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
             文A
@@ -94,23 +184,26 @@ const SettingModal = ({ close }) => {
             </select>
           </div>
         </div>
-        <div className="flex w-full">
-          <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
-            <Globe />
+
+        <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
+          <div className="flex justify-start -ml-3">
+            <Wallet />
           </div>
-          <div className="w-full">
-            <select
-              value={countryCode}
-              onChange={handleSettingChange}
-              className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
+          {userData.tonAddress ? (
+            <div className="flex items-center w-full justify-end">
+              {userData.tonAddress.length > 10
+                ? `${userData.tonAddress.slice(0, 25)}...`
+                : userData.tonAddress}
+            </div>
+          ) : (
+            <div
+              onClick={() => open()}
+              className="flex items-center w-full justify-end"
             >
-              {country.map((ctx) => (
-                <option key={ctx.code} value={ctx.code}>
-                  {ctx.name}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div>Connect</div>
+              <ChevronRight size={"20px"} />
+            </div>
+          )}
         </div>
 
         <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
@@ -146,3 +239,26 @@ export default SettingModal;
           <ChevronRight />
         </div> */
 }
+
+// const handleDisconnectTon = async () => {
+//   try {
+//     await disconnectTonWallet(authToken);
+//     tonConnectUI.disconnect();
+//     setUserData((prev) => ({
+//       ...prev,
+//       tonAddress: null,
+//     }));
+//     showToast("ton_connect_success");
+//   } catch (error) {
+//     console.log(error);
+
+//     const errorMessage =
+//       error.response.data.error ||
+//       error.response.data.message ||
+//       error.message ||
+//       "An unexpected error occurred";
+
+//     console.log(errorMessage);
+//     showToast("ton_connect_error");
+//   }
+// };

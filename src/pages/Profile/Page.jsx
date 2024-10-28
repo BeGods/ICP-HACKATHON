@@ -18,24 +18,14 @@ import {
   ToggleRight,
   ToggleLeft,
 } from "../../components/Common/SectionToggles";
-import { connectTonWallet, disconnectTonWallet } from "../../utils/api";
-import WalletModal from "../../components/Modals/WalletModal";
 
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
   const { t } = useTranslation();
-  const { state, open } = useTonConnectModal();
-  const [tonConnectUI] = useTonConnectUI();
-  const userFriendlyAddress = useTonAddress();
-  const {
-    userData,
-    setUserData,
-    socialQuestData,
-    setShowCard,
-    authToken,
-    assets,
-  } = useContext(MyContext);
+  const { open } = useTonConnectModal();
+  const { userData, socialQuestData, setShowCard, assets } =
+    useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
   const [currState, setCurrState] = useState(0);
@@ -50,62 +40,6 @@ const Profile = (props) => {
     );
     showToast("copy_link");
   };
-
-  const handleConnectTon = async () => {
-    try {
-      await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: userFriendlyAddress,
-      }));
-
-      showToast("ton_connect_success");
-    } catch (error) {
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-
-      console.log(errorMessage);
-      showToast("ton_connect_error");
-    }
-  };
-
-  const handleDisconnectTon = async () => {
-    try {
-      await disconnectTonWallet(authToken);
-      tonConnectUI.disconnect();
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: null,
-      }));
-      showToast("ton_connect_success");
-    } catch (error) {
-      console.log(error);
-
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-
-      console.log(errorMessage);
-      showToast("ton_connect_error");
-    }
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (
-        state.closeReason === "wallet-selected" &&
-        state.status === "closed" &&
-        (userData.tonAddress === null || !userData.tonAddress)
-      ) {
-        handleConnectTon();
-      }
-    });
-  }, [state]);
 
   useEffect(() => {
     if (enableGuide) {
@@ -170,32 +104,13 @@ const Profile = (props) => {
         avatarColor={avatarColor}
         handleClick={handleCopyLink}
       />
+
+      <div className="flex mt-[23vh] mx-auto right-1/2 -mr-[10vw] text-primary absolute text-black-lg-contour text-gold">
+        {userData.telegramUsername.charAt(0).toUpperCase() +
+          userData.telegramUsername.slice(1).toLowerCase()}
+      </div>
       <div className="flex relative flex-grow justify-center items-start top-0">
         <div className={`flex relative w-full justify-end top-0 `}>
-          <div
-            onClick={() =>
-              userData.tonAddress
-                ? setShowCard(
-                    <WalletModal
-                      disconnect={handleDisconnectTon}
-                      userData={userData}
-                      close={() => {
-                        setShowCard(null);
-                      }}
-                    />
-                  )
-                : open()
-            }
-            className="flex justify-center items-center bg-black h-[60px] w-[60px] ml-[35px] z-50 rounded-full mt-2"
-          >
-            <Wallet
-              color={userData.tonAddress ? "white" : "gray"}
-              size={"35px"}
-            />
-          </div>
-          <div className="flex flex-grow text-primary text-black-lg-contour text-gold justify-center items-end uppercase">
-            {userData.telegramUsername}
-          </div>
           <div
             onClick={() => {
               setShowCard(

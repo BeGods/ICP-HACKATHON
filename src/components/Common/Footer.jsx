@@ -38,7 +38,9 @@ const FooterItem = ({ enableSound, icon }) => {
       setSection(0);
     } else {
       setSection(footerArray[icon][curr]);
-      setFlipped((prev) => !prev);
+      if (icon !== 0) {
+        setFlipped((prev) => !prev);
+      }
     }
     if (activeMyth >= 4) {
       setActiveMyth(0);
@@ -55,6 +57,7 @@ const FooterItem = ({ enableSound, icon }) => {
             <div
               onClick={(e) => {
                 handleFlip(e);
+
                 handleSectionChange(0);
               }}
               className="ficon__face ficon__face--front font-symbols flex justify-center items-center"

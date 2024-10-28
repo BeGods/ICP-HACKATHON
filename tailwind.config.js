@@ -97,7 +97,7 @@ export default {
         "orb-secondary": "45px",
         "orb-tertiary": "45px",
         booster: "50px",
-        num: "9vw",
+        num: "10vw",
         head: "33px",
         paperHead: "7.65vw",
         paperSub: "6.5vw",

@@ -13,7 +13,7 @@ const MappedOrbs = ({ quest, showNum }) => {
               {Array.from({ length: value }, (_, index) => (
                 <div key={index}>
                   <div
-                    className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${key.toLowerCase()} `}
+                    className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white `}
                   >
                     <img
                       src={assets.uxui.multiorb}
