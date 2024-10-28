@@ -9,7 +9,7 @@ import Hero from "./pages/Hero";
 import BuyNft from "./pages/BuyNft";
 import PageNotFound from "./Admin/PageNotFound";
 import Activity from "./pages/Activity";
-import UnauthorizedPage from "./Admin/UnauthorizedPage";
+import UnauthorizedPage from "./Admin/collection/UnauthorizedPage";
 
 // Introduce a manual delay for testing
 const simulateNetworkDelay = (ms) => {
@@ -39,6 +39,7 @@ function App() {
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/unauth/*" element={<UnauthorizedPage />} />
           <Route path="*" element={<PageNotFound />} />
+          <Route path="/unauth" element={<UnauthorizedPage />} />
         </Routes>
       </Suspense>
     </div>

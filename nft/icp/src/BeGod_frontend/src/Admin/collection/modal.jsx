@@ -156,12 +156,16 @@ const Modal = (props) => {
             <input
               value={nftName}
               onChange={(e) => {
-                const value = e.target.value;
-                // Set the state only if the input is not just whitespace
-                if (value.trim() !== "") {
-                  setNftName(value);
+                let value = e.target.value;
+                if (/^[a-zA-Z0-9 ]*$/.test(value)) {
+                  value = value.trimStart();
+                  if (value.trim() !== "") {
+                    setNftName(value);
+                  } else {
+                    setNftName("");
+                  }
                 } else {
-                  setNftName(""); // or handle as needed
+                  toast.error("Only letters and numbers are allowed.");
                 }
               }}
               type="text"

@@ -13,6 +13,7 @@ import PageNotFound from "./PageNotFound";
 import Useractivity from "./Useractivity";
 import Allorder from "./Allorder";
 import AllorderDetails from "./AllorderDetails";
+import UnauthorizedPage from "./collection/UnauthorizedPage";
 
 function Admin() {
   const [isOpen, setIsOpen] = useState(false);

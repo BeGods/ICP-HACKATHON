@@ -246,7 +246,7 @@ const Hero = () => {
         //console.log(currentCollectionNfts)
 };
 let index = -1;
-const itemsPerPage = 5;
+const itemsPerPage = 10;
 const [currentPage,updateCurrentPage] = useState(1);
 const [totalPages,updateTotalPages] = useState(1);
 

@@ -16,6 +16,7 @@ import { RiArrowUpDownFill } from "react-icons/ri";
 import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkOutline } from "react-icons/io5";
+import { Box, Button } from "@chakra-ui/react";
 
 const cardTypeList = [
   {
@@ -75,6 +76,8 @@ function CollectionDetails() {
   const [nftimage, setnftimage] = useState("");
   const [nftdescription, setnftdescription] = useState("");
   const [nftcolor, setnftcolor] = useState("");
+  let [currentpage, setcurrentpage] = useState(1);
+  const [totalpage, settotalpage] = useState();
   const [loading, setLoading] = useState(false);
   const { backendActor, canisterId } = useAuth();
   const { id } = useParams();
@@ -89,15 +92,17 @@ function CollectionDetails() {
   if (!collectiondata) {
     return <p>No NFT data available</p>;
   }
+  // const currentpage = 2;
+  // const totalpage = 5;
 
   const jsonString = collectiondata[4];
   const parsedData = JSON.parse(jsonString);
   const colldescription = parsedData.description;
   const colcolor = parsedData.collColor;
-  console.log(colcolor, "this is colle");
-  console.log(colldescription);
+  // console.log(colcolor, "this is colle");
+  // console.log(colldescription);
 
-  console.log(collectiondata?.[1].toString());
+  // console.log(collectiondata?.[1].toString());
 
   // // getAllCollectionNFTs
   const principal = collectiondata?.[1];
@@ -105,7 +110,7 @@ function CollectionDetails() {
   const principalStringg = Principal.fromUint8Array(
     userPrincipalArrayy._arr
   ).toText();
-  console.log(principalStringg);
+  // console.log(principalStringg);
 
   const getAllCollectionNFT = async (principal) => {
     try {
@@ -113,9 +118,41 @@ function CollectionDetails() {
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
 
-      const result = await backendActor?.getAllCollectionNFTs(principalString,10,0);
+      const result = await backendActor?.getAllCollectionNFTs(
+        principalString,
+        5,
+        currentpage - 1
+      );
       console.log("NFT collection:", result);
-      setnftList(result.ok.data);
+      const formatedList = [];
+      let tempIndex = 0;
+      for (let i = 0; i < result.ok.data.length; i++) {
+        const eachItem = result.ok.data[i];
+        const currentCardName =
+          eachItem[2]?.nonfungible?.name ?? "Name not found";
+
+        if (tempIndex === 0) {
+          formatedList.push([eachItem]);
+          tempIndex++;
+        } else if (
+          formatedList[tempIndex - 1][0][2]?.nonfungible?.name ===
+          currentCardName
+        ) {
+          formatedList[tempIndex - 1].push(eachItem);
+        } else {
+          formatedList.push([eachItem]);
+          tempIndex++;
+        }
+        // console.log(
+        //   "current name ",
+        //   currentCardName,
+        //   "formated list",
+        //   formatedList
+        // );
+      }
+      setnftList(formatedList);
+      setcurrentpage(Number(result.ok.current_page));
+      settotalpage(Number(result.ok.total_pages));
     } catch (error) {
       console.error("Error fetching get all collection NFT:", error);
     }
@@ -149,10 +186,10 @@ function CollectionDetails() {
     nftType
   ) => {
     try {
-      console.log("in mint", principalStringg);
+      // console.log("in mint", principalStringg);
       const principalString = principalStringg;
       const principal = Principal.fromText(principalString);
-      console.log(principal);
+      // console.log(principal);
       const date = new Date();
       const formattedDate = date.toISOString();
       const metadata = JSON.stringify({
@@ -178,9 +215,9 @@ function CollectionDetails() {
         Number(nftquantity)
       );
 
-      console.log(result, "nft mint data");
+      // console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftprice) * 100000000);
-      console.log(es8_price, "price");
+      // console.log(es8_price, "price");
       // if (result && result.length > 0) {
       //   result.map((val, key) => {
       //     getNftTokenId(principal, val[1], es8_price);
@@ -202,10 +239,10 @@ function CollectionDetails() {
 
   const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
     try {
-      console.log(principal, nftIdentifier, nftprice);
+      // console.log(principal, nftIdentifier, nftprice);
       // const principall = Principal.fromText(principal);
       const res = await listPrice(principal, nftIdentifier, nftprice);
-      console.log(res, "res data");
+      // console.log(res, "res data");
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
@@ -226,7 +263,7 @@ function CollectionDetails() {
       };
       const result = await backendActor?.listprice(principal, request);
       if (result) {
-        console.log("List Price Result:", result);
+        // console.log("List Price Result:", result);
         await getListing(principal);
       } else {
         throw new Error("listprice is not working");
@@ -251,7 +288,7 @@ function CollectionDetails() {
       //   },
       // });
       const result = await backendActor?.listings(principal);
-      console.log("Listing", result);
+      // console.log("Listing", result);
 
       // fetchNFTs();
       // setLoading(false);
@@ -291,7 +328,6 @@ function CollectionDetails() {
         toast.error(mintResult);
       } else {
         toast.success("NFT added");
-        console.log("count");
         toast("Fetching NFTs, Please Wait! ...", {
           icon: "⚠️",
           style: {
@@ -326,7 +362,7 @@ function CollectionDetails() {
   );
 
   const onClickAnyFilter = (updatedFilter) => {
-    console.log("updated filter", updatedFilter);
+    // console.log("updated filter", updatedFilter);
     if (updatedFilter === currentDropDown) {
       updateDropDown(dropdownItems.none);
       return;
@@ -344,8 +380,8 @@ function CollectionDetails() {
 
     if (currentCardType !== cardTypeList[0].cardId) {
       updatedList = updatedList.filter((eachItem) => {
-        console.log("each item", eachItem);
-        const metadataJson = eachItem[2]?.nonfungible?.metadata?.[0]?.json;
+        // console.log("each item", eachItem[0]);
+        const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
         const metadata = JSON.parse(metadataJson);
         const nftType = metadata?.nftType;
         return nftType.toLowerCase() === currentCardType.toLowerCase();
@@ -355,16 +391,16 @@ function CollectionDetails() {
     if (applyPriceRange.isApply) {
       updatedList = updatedList.filter((eachItem) => {
         const priceBigInt =
-          eachItem[3]?.[0]?.toString() ?? "Price not found";
+          eachItem[0][3]?.[0]?.toString() ?? "Price not found";
         const price = Number(priceBigInt) / 100000000;
-        console.log(
-          "From price:",
-          applyPriceRange.from,
-          "Card price:",
-          price,
-          "To price:",
-          applyPriceRange.to
-        );
+        // console.log(
+        //   "From price:",
+        //   applyPriceRange.from,
+        //   "Card price:",
+        //   price,
+        //   "To price:",
+        //   applyPriceRange.to
+        // );
         return applyPriceRange.from <= price && price <= applyPriceRange.to;
       });
     }
@@ -374,30 +410,30 @@ function CollectionDetails() {
         updatedList = updatedList.reverse();
       } else if (currentFilterOption === filterListOptions[2].optionId) {
         updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
           const priceA = Number(priceBigIntA) / 100000000;
           ``;
-          const priceBigIntB = b[3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
           const priceB = Number(priceBigIntB) / 100000000;
           return priceA - priceB;
         });
       } else if (currentFilterOption === filterListOptions[3].optionId) {
         updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
           const priceA = Number(priceBigIntA) / 100000000;
 
-          const priceBigIntB = b[3]?.[0]?.toString() ?? "Price not found";
+          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
           const priceB = Number(priceBigIntB) / 100000000;
           return priceB - priceA;
         });
       }
     }
 
-    console.log("Updated list after all filters:", updatedList);
+    // console.log("Updated list after all filters:", updatedList);
     updateFilteredList(updatedList);
   }, [nftList, currentCardType, applyPriceRange, currentFilterOption]);
 
-  console.log("filtered list after applying filters", filteredList);
+  // console.log("filtered list after applying filters", filteredList);
   let count = 0;
   if (currentCardType !== cardTypeList[0].cardId) {
     count++;
@@ -409,553 +445,624 @@ function CollectionDetails() {
     count++;
   }
 
-  console.log("formated list", nftList);
+  // console.log("formated list", nftList);
   const onClickFilterContainer = () => {
     updateDropDown(dropdownItems.none);
   };
+  const leftfunction = async () => {
+    if (currentpage == 1) {
+      toast.error("You are in first page");
+    }
+    currentpage = currentpage - 1;
+    await getAllCollectionNFT();
+  };
+  const rightfunction = async () => {
+    if (currentpage > totalpage) {
+      toast.error("You are in last page");
+    }
+    currentpage = currentpage + 1;
+    await getAllCollectionNFT();
+  };
 
   return (
-    <SkeletonTheme baseColor="#202020" highlightColor="#282828">
-      <div
-        onClick={onClickFilterContainer}
-        className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20"
-      >
-        {loading ? (
-          <div>
-            {/* Skeleton for Back button and action buttons */}
-            <div className="flex justify-between items-center mb-6">
-              <Skeleton width={100} height={40} />
-              <Skeleton width={120} height={40} />
-            </div>
-
-            {/* Skeleton for Collection Details */}
-            <div className="flex flex-col md:flex-row items-center bg-[#282828] p-10 rounded-md mb-10">
-              <Skeleton circle={true} width={128} height={128} />
-              <div className="flex flex-col space-y-4 ml-8">
-                <Skeleton width={200} height={30} />
-                <Skeleton width={250} height={20} />
-                <Skeleton width={250} height={20} />
+    <>
+      <SkeletonTheme baseColor="#202020" highlightColor="#282828">
+        <div
+          onClick={onClickFilterContainer}
+          className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20"
+        >
+          {loading ? (
+            <div>
+              {/* Skeleton for Back button and action buttons */}
+              <div className="flex justify-between items-center mb-6">
+                <Skeleton width={100} height={40} />
+                <Skeleton width={120} height={40} />
               </div>
-            </div>
 
-            {/* Skeleton for NFT Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3">
-              {Array(6)
-                .fill()
-                .map((_, index) => (
-                  <div key={index} className="flex flex-col space-y-3">
-                    <Skeleton height={200} />
-                    <Skeleton width="80%" height={20} />
-                    <Skeleton width="60%" height={20} />
-                  </div>
-                ))}
-            </div>
-          </div>
-        ) : (
-          <div className="w-full">
-            {/* Back button and action buttons */}
-            <div className="flex flex-col-2 ">
-              <span className="hidden sm:block">
-                <BackButton />
-              </span>
-              <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
-                <YellowButton methodName={() => toggleModal()}>
-                  Add NFT
-                </YellowButton>
-                <Link to={"/admin/collection/create"}>
-                  <YellowButton>Add Collection</YellowButton>
-                </Link>
-              </div>
-            </div>
-
-            {/* Collection details section */}
-            <div className="flex flex-col md:flex-row gap-x-8 items-center bg-[#29292c] w-full p-10 text-[#FFFFFF] rounded-md my-10 justify-between">
-              <img
-                className="w-32 h-32"
-                src={collectiondata[3]}
-                alt={collectiondata[2]}
-              />
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <h1 className="text-sm font-semibold md:text-3xl">
-                    {collectiondata[2]}
-                  </h1>
+              {/* Skeleton for Collection Details */}
+              <div className="flex flex-col md:flex-row items-center bg-[#282828] p-10 rounded-md mb-10">
+                <Skeleton circle={true} width={128} height={128} />
+                <div className="flex flex-col space-y-4 ml-8">
+                  <Skeleton width={200} height={30} />
+                  <Skeleton width={250} height={20} />
+                  <Skeleton width={250} height={20} />
                 </div>
-                <p className="text-sm font-normal font-Quicksand md:text-xl">
-                  {colldescription}
-                </p>
-                <h3 className="text-sm font-bold font-Quicksand md:text-xl">
-                  Collection ID - {principalStringg}
-                </h3>
-                <h3 className="text-sm font-bold font-Quicksand md:text-xl">
-                  Collection Color - {colcolor}
-                </h3>
+              </div>
+
+              {/* Skeleton for NFT Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3">
+                {Array(6)
+                  .fill()
+                  .map((_, index) => (
+                    <div key={index} className="flex flex-col space-y-3">
+                      <Skeleton height={200} />
+                      <Skeleton width="80%" height={20} />
+                      <Skeleton width="60%" height={20} />
+                    </div>
+                  ))}
               </div>
             </div>
+          ) : (
+            <div className="w-full">
+              {/* Back button and action buttons */}
+              <div className="flex flex-col-2 ">
+                <span className="hidden sm:block">
+                  <BackButton />
+                </span>
+                <div className="flex justify-end w-full ml-auto lg:-ml-12 gap-x-6 md:ml-0 sm:ml-auto">
+                  <YellowButton methodName={() => toggleModal()}>
+                    Add NFT
+                  </YellowButton>
+                  <Link to={"/admin/collection/create"}>
+                    <YellowButton>Add Collection</YellowButton>
+                  </Link>
+                </div>
+              </div>
 
-            {/* NFT list section */}
-            <div className="hidden sm:flex items-center justify-between text-[12px] md:text-sm lg:text-base ml-2">
-              <div className="relative min-w-[160px] md:min-w-[180px] flex justify-center lg:mr-5">
-                {currentDropDown === dropdownItems.type && (
-                  <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
-                    {cardTypeList.map((eachType, index) => (
-                      <>
-                        <div
-                          key={eachType.cardId}
-                          className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
-                          onClick={() => {
-                            if (eachType.cardId != currentCardType) {
-                              updateCardType(eachType.cardId);
-                              onClickAnyFilter(dropdownItems.type);
-                            }
-                          }}
-                        >
-                          <li key={eachType.cardId}>{eachType.displayText}</li>
-                          {currentCardType === eachType.cardId && (
-                            <IoCheckmarkOutline />
+              {/* Collection details section */}
+              <div className="flex flex-col md:flex-row gap-x-8 items-center bg-[#29292c] w-full p-10 text-[#FFFFFF] rounded-md my-10 justify-between">
+                <img
+                  className="w-32 h-32"
+                  src={collectiondata[3]}
+                  alt={collectiondata[2]}
+                />
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <h1 className="text-sm font-semibold md:text-3xl">
+                      {collectiondata[2]}
+                    </h1>
+                  </div>
+                  <p className="text-sm font-normal font-Quicksand md:text-xl">
+                    {colldescription}
+                  </p>
+                  <h3 className="text-sm font-bold font-Quicksand md:text-xl">
+                    Collection ID - {principalStringg}
+                  </h3>
+                  <h3 className="text-sm font-bold font-Quicksand md:text-xl">
+                    Collection Color - {colcolor}
+                  </h3>
+                </div>
+              </div>
+
+              {/* NFT list section */}
+              <div className="hidden sm:flex items-center justify-between text-[12px] md:text-sm lg:text-base ml-2">
+                <div className="relative min-w-[160px] md:min-w-[180px] flex justify-center lg:mr-5">
+                  {currentDropDown === dropdownItems.type && (
+                    <ul className="absolute top-10 left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                      {cardTypeList.map((eachType, index) => (
+                        <>
+                          <div
+                            key={eachType.cardId}
+                            className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
+                            onClick={() => {
+                              if (eachType.cardId != currentCardType) {
+                                updateCardType(eachType.cardId);
+                                onClickAnyFilter(dropdownItems.type);
+                              }
+                            }}
+                          >
+                            <li key={eachType.cardId}>
+                              {eachType.displayText}
+                            </li>
+                            {currentCardType === eachType.cardId && (
+                              <IoCheckmarkOutline />
+                            )}
+                          </div>
+                          {index != cardTypeList.length - 1 && (
+                            <hr className="my-1 border-t border-[#FCD378]" />
                           )}
-                        </div>
-                        {index != cardTypeList.length - 1 && (
-                          <hr className="my-1 border-t border-[#FCD378]" />
-                        )}
-                      </>
-                    ))}
-                  </ul>
-                )}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClickAnyFilter(dropdownItems.type);
-                  }}
-                  className={`rounded-full flex justify-center items-center gap-1 
+                        </>
+                      ))}
+                    </ul>
+                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClickAnyFilter(dropdownItems.type);
+                    }}
+                    className={`rounded-full flex justify-center items-center gap-1 
                                      h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
                                        currentDropDown === dropdownItems.type
                                          ? "border-[#FCD378]"
                                          : " border-gray-800"
                                      }`}
-                >
-                  <BiCategory />
-                  Category ({currentCardType.charAt(0)}
-                  {currentCardType.slice(1).toLowerCase()})
-                </button>
-              </div>
-              <div className="relative   flex justify-center">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClickAnyFilter(dropdownItems.price);
-                  }}
-                  className={`rounded-full flex justify-center items-center gap-1 
+                  >
+                    <BiCategory />
+                    Category ({currentCardType.charAt(0)}
+                    {currentCardType.slice(1).toLowerCase()})
+                  </button>
+                </div>
+                <div className="relative   flex justify-center">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClickAnyFilter(dropdownItems.price);
+                    }}
+                    className={`rounded-full flex justify-center items-center gap-1 
                                      p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
                                        currentDropDown === dropdownItems.price
                                          ? "border-[#FCD378]"
                                          : " border-gray-800"
                                      }`}
-                >
-                  <CiDollar size={22} />
-                  Price (
-                  {`${
-                    !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
-                      ? `${applyPriceRange.from} - ${applyPriceRange.to} `
-                      : ""
-                  }`}{" "}
-                  ICP)
-                </button>
-                {currentDropDown === dropdownItems.price && (
-                  <div
-                    className="absolute top-10 border border-[#FCD378] mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 h-[150px] flex flex-col items-center justify-around"
-                    onClick={(e) => e.stopPropagation()}
                   >
-                    <h1>Price in ICP</h1>
-                    <div className="flex flex-col items-center md:flex-row">
-                      <input
-                        value={fromPrice}
-                        onChange={(e) => {
-                          updateFromPrice(parseInt(e.target.value));
-                        }}
-                        placeholder="From"
-                        type="number"
-                        className="w-20 mb:2 md:mb-0 md:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
-                      />
-                      <input
-                        value={toPrice}
-                        onChange={(e) => {
-                          updateToPrice(parseInt(e.target.value));
-                        }}
-                        placeholder="to"
-                        type="number"
-                        className="w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
-                      />
+                    <CiDollar size={22} />
+                    Price (
+                    {`${
+                      !isNaN(applyPriceRange.from) && !isNaN(applyPriceRange.to)
+                        ? `${applyPriceRange.from} - ${applyPriceRange.to} `
+                        : ""
+                    }`}{" "}
+                    ICP)
+                  </button>
+                  {currentDropDown === dropdownItems.price && (
+                    <div
+                      className="absolute top-10 border border-[#FCD378] mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-4 z-50 h-[150px] flex flex-col items-center justify-around"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <h1>Price in ICP</h1>
+                      <div className="flex flex-col items-center md:flex-row">
+                        <input
+                          value={fromPrice}
+                          onChange={(e) => {
+                            updateFromPrice(parseInt(e.target.value));
+                          }}
+                          placeholder="From"
+                          type="number"
+                          className="w-20 mb:2 md:mb-0 md:mr-3 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
+                        />
+                        <input
+                          value={toPrice}
+                          onChange={(e) => {
+                            updateToPrice(parseInt(e.target.value));
+                          }}
+                          placeholder="to"
+                          type="number"
+                          className="w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
+                        />
+                      </div>
+                      <div className="">
+                        <button
+                          className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${
+                            isNaN(applyPriceRange.from) ||
+                            isNaN(applyPriceRange.to)
+                              ? "opacity-30"
+                              : "opacity-100"
+                          } `}
+                          disabled={
+                            isNaN(applyPriceRange.from) ||
+                            isNaN(applyPriceRange.to)
+                          }
+                          onClick={() => {
+                            onClickAnyFilter(dropdownItems.none);
+                            updateApplyPriceRange({
+                              isApply: false,
+                              from: NaN,
+                              to: NaN,
+                            });
+                            updateFromPrice(NaN);
+                            updateToPrice(NaN);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className={`w-20 border-none bg-[#FCD378] text-black h-6 rounded-full ${
+                            isNaN(fromPrice) || isNaN(toPrice)
+                              ? "opacity-30"
+                              : "opacity-100"
+                          }`}
+                          onClick={() => {
+                            onClickAnyFilter(dropdownItems.price);
+                            updateApplyPriceRange({
+                              isApply: true,
+                              from: fromPrice,
+                              to: toPrice,
+                            });
+                          }}
+                          disabled={isNaN(fromPrice) || isNaN(toPrice)}
+                        >
+                          Apply
+                        </button>
+                      </div>
                     </div>
-                    <div className="">
-                      <button
-                        className={`w-20 border-none bg-[#FCD378] text-black h-6 mr-3 rounded-full ${
-                          isNaN(applyPriceRange.from) ||
-                          isNaN(applyPriceRange.to)
-                            ? "opacity-30"
-                            : "opacity-100"
-                        } `}
-                        disabled={
-                          isNaN(applyPriceRange.from) ||
-                          isNaN(applyPriceRange.to)
-                        }
-                        onClick={() => {
-                          onClickAnyFilter(dropdownItems.none);
-                          updateApplyPriceRange({
-                            isApply: false,
-                            from: NaN,
-                            to: NaN,
-                          });
-                          updateFromPrice(NaN);
-                          updateToPrice(NaN);
-                        }}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        className={`w-20 border-none bg-[#FCD378] text-black h-6 rounded-full ${
-                          isNaN(fromPrice) || isNaN(toPrice)
-                            ? "opacity-30"
-                            : "opacity-100"
-                        }`}
-                        onClick={() => {
-                          onClickAnyFilter(dropdownItems.price);
-                          updateApplyPriceRange({
-                            isApply: true,
-                            from: fromPrice,
-                            to: toPrice,
-                          });
-                        }}
-                        disabled={isNaN(fromPrice) || isNaN(toPrice)}
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className=" relative lg:ml-auto mr-2 lg:mr-20 w-[160px] h-[40px] md:w-[180px] bottom-6">
-                <span className="relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 ">
-                  Filter & Sort
-                </span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClickAnyFilter(dropdownItems.filter);
-                  }}
-                  className={` absolute rounded-full flex justify-center items-center gap-1 
+                  )}
+                </div>
+                <div className=" relative lg:ml-auto mr-2 lg:mr-20 w-[160px] h-[40px] md:w-[180px] bottom-6">
+                  <span className="relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 ">
+                    Filter & Sort
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClickAnyFilter(dropdownItems.filter);
+                    }}
+                    className={` absolute rounded-full flex justify-center items-center gap-1 
                                     w-full h-full p-2 bg-[#000] text-[#FCD378]  hover:border-[#FCD378] border-2 ${
                                       currentDropDown === dropdownItems.filter
                                         ? "border-[#FCD378]"
                                         : " border-gray-800"
                                     }`}
-                >
-                  <RiArrowUpDownFill />
-                  {currentFilterOption}
-                </button>
-                {currentDropDown === dropdownItems.filter && (
-                  <ul className="absolute top-[60px] left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
-                    {filterListOptions.map((eachFilter, index) => (
-                      <>
-                        <div
-                          key={eachFilter.optionId}
-                          className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
-                          onClick={() => {
-                            if (eachFilter.optionId != currentFilterOption) {
-                              updateCurrentFilterOption(eachFilter.optionId);
-                              onClickAnyFilter(dropdownItems.filter);
-                            }
-                          }}
-                        >
-                          <li key={eachFilter.optionId}>
-                            {eachFilter.displayText}
-                          </li>
-                          {currentFilterOption === eachFilter.optionId && (
-                            <IoCheckmarkOutline />
+                  >
+                    <RiArrowUpDownFill />
+                    {currentFilterOption}
+                  </button>
+                  {currentDropDown === dropdownItems.filter && (
+                    <ul className="absolute top-[60px] left-0 mt-2 bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[160px] overflow-y-auto ">
+                      {filterListOptions.map((eachFilter, index) => (
+                        <>
+                          <div
+                            key={eachFilter.optionId}
+                            className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
+                            onClick={() => {
+                              if (eachFilter.optionId != currentFilterOption) {
+                                updateCurrentFilterOption(eachFilter.optionId);
+                                onClickAnyFilter(dropdownItems.filter);
+                              }
+                            }}
+                          >
+                            <li key={eachFilter.optionId}>
+                              {eachFilter.displayText}
+                            </li>
+                            {currentFilterOption === eachFilter.optionId && (
+                              <IoCheckmarkOutline />
+                            )}
+                          </div>
+                          {index != filterListOptions.length - 1 && (
+                            <hr className="my-1 border-t border-[#FCD378]" />
                           )}
-                        </div>
-                        {index != filterListOptions.length - 1 && (
-                          <hr className="my-1 border-t border-[#FCD378]" />
-                        )}
-                      </>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-            <button
-              className={`rounded-full flex justify-center items-center w-[120px] h-[35px] mt-5 gap-1 
-                  p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 ml-auto mr-5 sm:hidden`}
-              onClick={() => updateFiltersDisplayStatus(true)}
-            >
-              <LuFilter />
-              Filters
-              {count > 0 && (
-                <span className="size-5 border-none bg-gray-800 rounded-full flex justify-center items-center pt-0.5 ">
-                  {count}
-                </span>
-              )}
-            </button>
-            <div className="w-full pb-12 text-white">
-              <h1 className="text-xl my-4">
-                List of all NFT Collection -{" "}
-                <span className="font-bold text-green-500">
-                  {principalStringg}
-                </span>
-              </h1>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 1.3xl:grid-cols-5 1.2xl:grid-cols-4  items-center justify-start">
-                {filteredList.length > 0 ? (
-                  filteredList?.map((list, index) => (
-                    <>
-                      <NftCard
-                        id={principalStringg}
-                        list={list}
-                        key={index}
-                        collectiondata={collectiondata}
-                      />
-                    </>
-                  ))
-                ) : (
-                  <div className="flex justify-center items-center">
-                    <h1>No Cards Found</h1>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {modal && (
-              <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(37,37,37,0.84)]">
-                  <div className="flex items-center justify-center h-screen">
-                    <Modal
-                      toggleModal={toggleModal}
-                      getAddedNftDetails={getAddedNftDetails}
-                    />
-                  </div>
+                        </>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
-            )}
-            {isDisplayFiltersPopup && (
-              <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden">
-                <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
-                  <div className="flex items-center justify-center h-screen w-screen ">
-                    <div
-                      className={`h-[40vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto `}
+              <button
+                className={`rounded-full flex justify-center items-center w-[120px] h-[35px] mt-5 gap-1 
+                  p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 ml-auto mr-5 sm:hidden`}
+                onClick={() => updateFiltersDisplayStatus(true)}
+              >
+                <LuFilter />
+                Filters
+                {count > 0 && (
+                  <span className="size-5 border-none bg-gray-800 rounded-full flex justify-center items-center pt-0.5 ">
+                    {count}
+                  </span>
+                )}
+              </button>
+              <div className="w-full pb-12 text-white">
+                <h1 className="text-xl my-4">
+                  List of all NFT Collection -{" "}
+                  <span className="font-bold text-green-500">
+                    {principalStringg}
+                  </span>
+                </h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 1.3xl:grid-cols-5 1.2xl:grid-cols-4  items-center justify-start">
+                  {filteredList.length > 0 ? (
+                    filteredList?.map((list, index) => (
+                      <>
+                        <NftCard
+                          id={principalStringg}
+                          list={list[0]}
+                          key={index}
+                          collectiondata={collectiondata}
+                          quantity={list.length}
+                        />
+                      </>
+                    ))
+                  ) : (
+                    <div className="flex justify-center items-center">
+                      <h1>No Cards Found</h1>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Pagination */}
+              <div>
+                <Box
+                  mt="5%"
+                  display="flex"
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {currentpage > 1 && (
+                    <Button
+                      mr="2"
+                      bg="#161618"
+                      color="white"
+                      border="1px"
+                      borderColor="gray.500"
+                      _hover={{ bg: "black" }}
+                      onClick={leftfunction}
                     >
-                      <div className="flex items-center justify-end">
-                        <button
-                          className="text-[#FCD378] bottom-1 z-10"
-                          onClick={() => updateFiltersDisplayStatus(false)}
-                        >
-                          <RxCross2 size={20} />
-                        </button>
-                      </div>
-                      <div className="flex flex-col items-center justify-around h-[80%] text-[16px]">
-                        <div className="relative w-full flex justify-center">
-                          {currentDropDown === dropdownItems.type && (
-                            <ul className="absolute top-10 left-0 mt-2 bg-black border border-[#FCD378] text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
-                              {cardTypeList.map((eachType, index) => (
-                                <>
-                                  <div
-                                    key={eachType.cardId}
-                                    className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
-                                    onClick={() => {
-                                      if (eachType.cardId != currentCardType) {
-                                        updateCardType(eachType.cardId);
-                                        onClickAnyFilter(dropdownItems.type);
-                                      }
-                                    }}
-                                  >
-                                    <li key={eachType.cardId}>
-                                      {eachType.displayText}
-                                    </li>
-                                    {currentCardType === eachType.cardId && (
-                                      <IoCheckmarkOutline />
-                                    )}
-                                  </div>
-                                  {index != cardTypeList.length - 1 && (
-                                    <hr className="my-1 border-t border-[#FCD378]" />
-                                  )}
-                                </>
-                              ))}
-                            </ul>
-                          )}
+                      &lt;
+                    </Button>
+                  )}
+                  <Button
+                    bg="#FCD37B"
+                    color="black"
+                    border="1px"
+                    borderColor="black"
+                    _hover={{ bg: "#D4A849" }}
+                  >
+                    {currentpage}
+                  </Button>
+                  {currentpage < totalpage && (
+                    <Button
+                      ml="2"
+                      bg="#161618"
+                      color="white"
+                      border="1px"
+                      borderColor="gray.500"
+                      _hover={{ bg: "black" }}
+                      onClick={rightfunction}
+                    >
+                      &gt;
+                    </Button>
+                  )}
+                </Box>
+              </div>
+
+              {modal && (
+                <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
+                  <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(37,37,37,0.84)]">
+                    <div className="flex items-center justify-center h-screen">
+                      <Modal
+                        toggleModal={toggleModal}
+                        getAddedNftDetails={getAddedNftDetails}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              {isDisplayFiltersPopup && (
+                <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden">
+                  <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+                    <div className="flex items-center justify-center h-screen w-screen ">
+                      <div
+                        className={`h-[40vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto `}
+                      >
+                        <div className="flex items-center justify-end">
                           <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onClickAnyFilter(dropdownItems.type);
-                            }}
-                            className={`rounded-md flex justify-center items-center gap-1 
+                            className="text-[#FCD378] bottom-1 z-10"
+                            onClick={() => updateFiltersDisplayStatus(false)}
+                          >
+                            <RxCross2 size={20} />
+                          </button>
+                        </div>
+                        <div className="flex flex-col items-center justify-around h-[80%] text-[16px]">
+                          <div className="relative w-full flex justify-center">
+                            {currentDropDown === dropdownItems.type && (
+                              <ul className="absolute top-10 left-0 mt-2 bg-black border border-[#FCD378] text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
+                                {cardTypeList.map((eachType, index) => (
+                                  <>
+                                    <div
+                                      key={eachType.cardId}
+                                      className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
+                                      onClick={() => {
+                                        if (
+                                          eachType.cardId != currentCardType
+                                        ) {
+                                          updateCardType(eachType.cardId);
+                                          onClickAnyFilter(dropdownItems.type);
+                                        }
+                                      }}
+                                    >
+                                      <li key={eachType.cardId}>
+                                        {eachType.displayText}
+                                      </li>
+                                      {currentCardType === eachType.cardId && (
+                                        <IoCheckmarkOutline />
+                                      )}
+                                    </div>
+                                    {index != cardTypeList.length - 1 && (
+                                      <hr className="my-1 border-t border-[#FCD378]" />
+                                    )}
+                                  </>
+                                ))}
+                              </ul>
+                            )}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClickAnyFilter(dropdownItems.type);
+                              }}
+                              className={`rounded-md flex justify-center items-center gap-1 
                                                 w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378] ${
                                                   currentDropDown ===
                                                     dropdownItems.filter &&
                                                   "opacity-10"
                                                 } `}
-                          >
-                            <BiCategory />
-                            Category ({currentCardType.charAt(0)}
-                            {currentCardType.slice(1).toLowerCase()})
-                          </button>
-                        </div>
-                        <div className="relative w-full  flex justify-center">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onClickAnyFilter(dropdownItems.price);
-                            }}
-                            className={`rounded-md flex justify-center items-center gap-1 w-[100%]
-                                                p-2 bg-[#000] text-[#FCD378]  border border-[#FCD378]`}
-                          >
-                            <CiDollar size={20} />
-                            Price (
-                            {`${
-                              !isNaN(applyPriceRange.from) &&
-                              !isNaN(applyPriceRange.to)
-                                ? `${applyPriceRange.from} - ${applyPriceRange.to} `
-                                : ""
-                            }`}{" "}
-                            ICP)
-                          </button>
-                          {currentDropDown === dropdownItems.price && (
-                            <div
-                              className="absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[120px] flex flex-col items-center justify-around"
-                              onClick={(e) => e.stopPropagation()}
                             >
-                              <h1>Price in ICP</h1>
-                              <div className="flex items-center">
-                                <input
-                                  value={fromPrice}
-                                  onChange={(e) => {
-                                    updateFromPrice(parseInt(e.target.value));
-                                  }}
-                                  placeholder="From"
-                                  type="number"
-                                  className="w-20 mr-2 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
-                                />
-                                <input
-                                  value={toPrice}
-                                  onChange={(e) => {
-                                    updateToPrice(parseInt(e.target.value));
-                                  }}
-                                  placeholder="to"
-                                  type="number"
-                                  className="w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
-                                />
+                              <BiCategory />
+                              Category ({currentCardType.charAt(0)}
+                              {currentCardType.slice(1).toLowerCase()})
+                            </button>
+                          </div>
+                          <div className="relative w-full  flex justify-center">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClickAnyFilter(dropdownItems.price);
+                              }}
+                              className={`rounded-md flex justify-center items-center gap-1 w-[100%]
+                                                p-2 bg-[#000] text-[#FCD378]  border border-[#FCD378]`}
+                            >
+                              <CiDollar size={20} />
+                              Price (
+                              {`${
+                                !isNaN(applyPriceRange.from) &&
+                                !isNaN(applyPriceRange.to)
+                                  ? `${applyPriceRange.from} - ${applyPriceRange.to} `
+                                  : ""
+                              }`}{" "}
+                              ICP)
+                            </button>
+                            {currentDropDown === dropdownItems.price && (
+                              <div
+                                className="absolute top-10  mt-2 border border-[#FCD378] bg-black text-[#FCD378] rounded shadow-lg  p-1 z-50 w-[100%] h-[120px] flex flex-col items-center justify-around"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <h1>Price in ICP</h1>
+                                <div className="flex items-center">
+                                  <input
+                                    value={fromPrice}
+                                    onChange={(e) => {
+                                      updateFromPrice(parseInt(e.target.value));
+                                    }}
+                                    placeholder="From"
+                                    type="number"
+                                    className="w-20 mr-2 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
+                                  />
+                                  <input
+                                    value={toPrice}
+                                    onChange={(e) => {
+                                      updateToPrice(parseInt(e.target.value));
+                                    }}
+                                    placeholder="to"
+                                    type="number"
+                                    className="w-20 rounded-sm border text-[#FCD378] border-[#FCD378] bg-transparent outline-none p-1 text-sm"
+                                  />
+                                </div>
+                                <div className="">
+                                  <button
+                                    className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] mr-3 rounded-full ${
+                                      isNaN(applyPriceRange.from) ||
+                                      isNaN(applyPriceRange.to)
+                                        ? "opacity-20"
+                                        : "opacity-100"
+                                    } `}
+                                    disabled={
+                                      isNaN(applyPriceRange.from) ||
+                                      isNaN(applyPriceRange.to)
+                                    }
+                                    onClick={() => {
+                                      onClickAnyFilter(dropdownItems.none);
+                                      updateApplyPriceRange({
+                                        isApply: false,
+                                        from: NaN,
+                                        to: NaN,
+                                      });
+                                      updateFromPrice(NaN);
+                                      updateToPrice(NaN);
+                                    }}
+                                  >
+                                    Cancel
+                                  </button>
+                                  <button
+                                    className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] rounded-full ${
+                                      isNaN(fromPrice) || isNaN(toPrice)
+                                        ? "opacity-20"
+                                        : "opacity-100"
+                                    }`}
+                                    onClick={() => {
+                                      onClickAnyFilter(dropdownItems.price);
+                                      updateApplyPriceRange({
+                                        isApply: true,
+                                        from: fromPrice,
+                                        to: toPrice,
+                                      });
+                                    }}
+                                    disabled={
+                                      isNaN(fromPrice) || isNaN(toPrice)
+                                    }
+                                  >
+                                    Apply
+                                  </button>
+                                </div>
                               </div>
-                              <div className="">
-                                <button
-                                  className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] mr-3 rounded-full ${
-                                    isNaN(applyPriceRange.from) ||
-                                    isNaN(applyPriceRange.to)
-                                      ? "opacity-20"
-                                      : "opacity-100"
-                                  } `}
-                                  disabled={
-                                    isNaN(applyPriceRange.from) ||
-                                    isNaN(applyPriceRange.to)
-                                  }
-                                  onClick={() => {
-                                    onClickAnyFilter(dropdownItems.none);
-                                    updateApplyPriceRange({
-                                      isApply: false,
-                                      from: NaN,
-                                      to: NaN,
-                                    });
-                                    updateFromPrice(NaN);
-                                    updateToPrice(NaN);
-                                  }}
-                                >
-                                  Cancel
-                                </button>
-                                <button
-                                  className={`w-[80px] border-none bg-[#FCD378] text-black h-[24px] rounded-full ${
-                                    isNaN(fromPrice) || isNaN(toPrice)
-                                      ? "opacity-20"
-                                      : "opacity-100"
-                                  }`}
-                                  onClick={() => {
-                                    onClickAnyFilter(dropdownItems.price);
-                                    updateApplyPriceRange({
-                                      isApply: true,
-                                      from: fromPrice,
-                                      to: toPrice,
-                                    });
-                                  }}
-                                  disabled={isNaN(fromPrice) || isNaN(toPrice)}
-                                >
-                                  Apply
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="relative  h-[40px] w-full bottom-5 ">
-                          <span className="relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 ">
-                            Filter & Sort
-                          </span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onClickAnyFilter(dropdownItems.filter);
-                            }}
-                            className={` absolute rounded-md flex justify-center items-center gap-1 
+                            )}
+                          </div>
+                          <div className="relative  h-[40px] w-full bottom-5 ">
+                            <span className="relative top-3 text-xs bg-gray-800 text-[#FCD378] rounded-full px-2 z-10 left-5 ">
+                              Filter & Sort
+                            </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClickAnyFilter(dropdownItems.filter);
+                              }}
+                              className={` absolute rounded-md flex justify-center items-center gap-1 
                                                 w-full h-full p-2 bg-[#000] text-[#FCD378]  border-[#FCD378] border ${
                                                   currentDropDown ===
                                                     dropdownItems.type &&
                                                   "opacity-5"
                                                 }  `}
-                          >
-                            <RiArrowUpDownFill />
-                            {currentFilterOption}
-                          </button>
-                          {currentDropDown === dropdownItems.filter && (
-                            <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
-                              {filterListOptions.map((eachFilter, index) => (
-                                <>
-                                  <div
-                                    key={eachFilter.optionId}
-                                    className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
-                                    onClick={() => {
-                                      if (
-                                        eachFilter.optionId !=
-                                        currentFilterOption
-                                      ) {
-                                        updateCurrentFilterOption(
-                                          eachFilter.optionId
-                                        );
-                                        onClickAnyFilter(dropdownItems.filter);
-                                      }
-                                    }}
-                                  >
-                                    <li
+                            >
+                              <RiArrowUpDownFill />
+                              {currentFilterOption}
+                            </button>
+                            {currentDropDown === dropdownItems.filter && (
+                              <ul className="absolute bottom-[30px] left-0 mt-2 border border-[#FCD378]  bg-black text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
+                                {filterListOptions.map((eachFilter, index) => (
+                                  <>
+                                    <div
                                       key={eachFilter.optionId}
-                                      className="h-[30px]"
+                                      className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
+                                      onClick={() => {
+                                        if (
+                                          eachFilter.optionId !=
+                                          currentFilterOption
+                                        ) {
+                                          updateCurrentFilterOption(
+                                            eachFilter.optionId
+                                          );
+                                          onClickAnyFilter(
+                                            dropdownItems.filter
+                                          );
+                                        }
+                                      }}
                                     >
-                                      {eachFilter.displayText}
-                                    </li>
-                                    {currentFilterOption ===
-                                      eachFilter.optionId && (
-                                      <IoCheckmarkOutline />
+                                      <li
+                                        key={eachFilter.optionId}
+                                        className="h-[30px]"
+                                      >
+                                        {eachFilter.displayText}
+                                      </li>
+                                      {currentFilterOption ===
+                                        eachFilter.optionId && (
+                                        <IoCheckmarkOutline />
+                                      )}
+                                    </div>
+                                    {index != filterListOptions.length - 1 && (
+                                      <hr className="my-1 border-t border-[#FCD378]" />
                                     )}
-                                  </div>
-                                  {index != filterListOptions.length - 1 && (
-                                    <hr className="my-1 border-t border-[#FCD378]" />
-                                  )}
-                                </>
-                              ))}
-                            </ul>
-                          )}
+                                  </>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </SkeletonTheme>
+              )}
+            </div>
+          )}
+        </div>
+      </SkeletonTheme>
+    </>
   );
 }
 
