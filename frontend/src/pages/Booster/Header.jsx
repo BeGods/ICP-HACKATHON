@@ -23,14 +23,15 @@ const BottomChild = ({ activeMyth, gameData }) => {
   return (
     <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
-        className={`flex text-num pl-3 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
+        className={`flex text-num pl-[18px] text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
-        Lvl {gameData.shardslvl}
+        <span className="text-[7vw] pr-1 -mb-1">Lvl</span> {gameData.shardslvl}
       </div>
       <div
-        className={`flex text-num pr-3 text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
+        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
-        Lvl {gameData.automatalvl + 1}
+        <span className="text-[7vw] pr-1 -mb-1">Lvl</span>{" "}
+        {gameData.automatalvl + 1}
       </div>
     </div>
   );

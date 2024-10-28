@@ -42,7 +42,7 @@
     "profile": "Perfil"
   },
   "boosters": [
-    { "title": "Autómata", "desc": "Toca automáticamente" }, { "title": "Misiones Perdidas", "desc": "Energía 200%" }, { "title": "Alquimista", "desc": "Doble toque" }, 
+    { "title": "Autómata", "desc": "Toca automáticamente" }, { "title": "Misiones", "desc": "Energía 200%" }, { "title": "Alquimista", "desc": "Doble toque" }, 
     {},
     {},
     {},

@@ -60,8 +60,13 @@ const BoosterItem = ({
               L99*n
             </span>
           )}
+          {booster === 1 && (
+            <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
+              200%
+            </span>
+          )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-            {booster != 6 && "L1-99"}
+            {booster != 6 && booster != 1 && "L1-99"}
           </span>
         </h2>
       </div>
