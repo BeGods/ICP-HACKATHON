@@ -39,13 +39,23 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
               </div>
               {showMinion && (
                 <div
-                  className={`text-${mythSections[activeMyth]}-text ml-4 text-center text-black-contour bottom-0 right-0  w-full text-tertiary -mt-1`}
+                  className={`text-${mythSections[activeMyth]}-text ml-4  flex justify-center items-center text-center text-black-contour bottom-0 right-0  w-full text-tertiary -mt-1`}
                 >
-                  {!toggleValue
-                    ? calculateRemainingTime(
+                  {!toggleValue ? (
+                    <>
+                      -
+                      {calculateRemainingTime(
                         mythStates[activeMyth].shardsLastClaimedAt
-                      )
-                    : "L" + mythStates[activeMyth].shardslvl}
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[15px] pr-1">Lvl</span>
+                      <div className="text-tertiary">
+                        {mythStates[activeMyth].shardslvl}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -76,13 +86,23 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                 </div>
                 {showAutomata && (
                   <div
-                    className={`text-${mythSections[activeMyth]}-text w-full text-center text-black-contour bottom-0 right-0 text-tertiary -mt-1 mr-3`}
+                    className={`text-${mythSections[activeMyth]}-text flex items-center justify-center w-full text-black-contour bottom-0 right-0 text-tertiary -mt-1 mr-3`}
                   >
-                    {!toggleValue
-                      ? calculateRemainingTime(
+                    {!toggleValue ? (
+                      <>
+                        -
+                        {calculateRemainingTime(
                           mythStates[activeMyth].automataStartTime
-                        )
-                      : "L" + mythStates[activeMyth].automatalvl}
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-[15px] pr-1">Lvl</span>{" "}
+                        <div className="text-tertiary">
+                          {mythStates[activeMyth].automatalvl}
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </div>

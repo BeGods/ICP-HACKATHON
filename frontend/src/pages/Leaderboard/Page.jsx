@@ -102,7 +102,7 @@ const Leaderboard = (props) => {
       </div>
       {/* FOOTER */}
       <div className="flex items-center h-[60px] w-[95%] mx-auto p-1 mb-2 text-tertiary border border-borderDark  text-white  rounded-primary fixed bottom-0 left-0 right-0 box-border">
-        <div className="flex items-center justify-between w-full h-full rounded-primary bg-borderDark">
+        <div className="flex items-center justify-between w-full h-full rounded-primary bg-black">
           <div className="flex justify-center items-center w-2/5 h-full">
             {userData.overallRank}
           </div>

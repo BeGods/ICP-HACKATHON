@@ -159,7 +159,7 @@ const IntroPage = (props) => {
             </div>
             <div
               onClick={() => {
-                window.open("@BeGods_bot", "_blank");
+                window.open("https://t.me/begods_games", "_blank");
               }}
             >
               <img
@@ -181,7 +181,7 @@ const IntroPage = (props) => {
             </div>
             <div
               onClick={() => {
-                window.open("https://discord.gg/Ac7h7huthN", "_blank");
+                window.open("https://discord.com/invite/Ac7h7huthN", "_blank");
               }}
             >
               <img

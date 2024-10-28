@@ -108,7 +108,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
             : `glow-button-${mythSections[myth - 1]} border-${
                 mythSections[myth - 1]
               }-primary`
-        } text-num pl-3 text-black-lg-contour transition-all duration-1000 text-white items-center border justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
+        } text-num pl-[18px] text-black-lg-contour transition-all duration-1000 text-white items-center border justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
         {myth !== 0 ? (
           <>{gameData?.mythologies[myth - 1]?.orbs - sessionOrbs * 2}</>
@@ -119,7 +119,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
       <div
         className={`flex ${
           showGlow && "glow-button-white"
-        } text-num pr-3 text-black-lg-contour transition-all duration-1000 text-white items-center border justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
+        } text-num pr-[18px] text-black-lg-contour transition-all duration-1000 text-white items-center border justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
         {gameData.multiColorOrbs}
       </div>
