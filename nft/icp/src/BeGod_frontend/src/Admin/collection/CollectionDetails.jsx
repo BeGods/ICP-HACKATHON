@@ -730,6 +730,7 @@ function CollectionDetails() {
                     <Modal
                       toggleModal={toggleModal}
                       getAddedNftDetails={getAddedNftDetails}
+                      type = "add"
                     />
                   </div>
                 </div>
