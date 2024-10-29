@@ -186,7 +186,7 @@
 img {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transform: translateZ(0); /* Ensure hardware acceleration is triggered */
+  transform: translateZ(0); 
 }
 
 body {
@@ -236,9 +236,9 @@ body {
 .bouncing-ball {
   width: 50px;
   height: 50px;
-  background-color: red; /* Change to your desired color */
-  border-radius: 50%; /* Make it a circle */
-  position: absolute; /* Positioning for animation */
+  background-color: red; 
+  border-radius: 50%; 
+  position: absolute; 
 }
 
 .custom-skew {
