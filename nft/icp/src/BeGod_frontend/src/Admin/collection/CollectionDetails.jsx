@@ -120,7 +120,7 @@ function CollectionDetails() {
 
       const result = await backendActor?.getAllCollectionNFTs(
         principalString,
-        5,
+        1,
         currentpage - 1
       );
       console.log("NFT collection:", result);
@@ -454,14 +454,14 @@ function CollectionDetails() {
       toast.error("You are in first page");
     }
     currentpage = currentpage - 1;
-    await getAllCollectionNFT();
+    await getAllCollectionNFT(principal);
   };
   const rightfunction = async () => {
     if (currentpage > totalpage) {
       toast.error("You are in last page");
     }
     currentpage = currentpage + 1;
-    await getAllCollectionNFT();
+    await getAllCollectionNFT(principal);
   };
 
   return (
