@@ -9,10 +9,6 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
   const { gameData, section, enableSound, assets, setActiveMyth, activeMyth } =
     useContext(MyContext);
 
-  console.log(
-    assets.boosters[`${activeCard === "minion" ? "alchemist" : activeCard}Card`]
-  );
-
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {section === 2 && (
@@ -84,19 +80,19 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
         </div>
       </div>
       {Button}
-      <ReactHowler
-        src={
-          assets.audio[
-            activeCard === "automata"
-              ? "automataShort"
-              : activeCard === "minion"
-              ? "alchemistShort"
-              : "automataShor"
-          ]
-        }
-        playing={enableSound}
-        preload={true}
-      />
+      {assets.audio &&
+        (activeCard === "automata" || activeCard === "minion") && (
+          <ReactHowler
+            src={
+              assets.audio[
+                activeCard === "automata" ? "automataShort" : "alchemistShort"
+              ]
+            }
+            playing={enableSound}
+            preload={true}
+          />
+        )}
+
       <>
         <ToggleLeft
           minimize={2}
