@@ -29,8 +29,6 @@
     "react-image-mosaic": "^2.3.0",
     "react-konva": "^18.2.10",
     "react-router-dom": "^6.24.1",
-    "react-swipeable": "^7.0.1",
-    "react-swipeable-views": "^0.14.0",
     "react-toastify": "^10.0.5",
     "sass": "^1.77.8",
     "styled-components": "^6.1.12",

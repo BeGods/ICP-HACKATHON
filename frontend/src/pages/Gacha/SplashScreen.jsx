@@ -42,6 +42,9 @@ const SplashScreen = ({ reward, exploitReward }) => {
     if (reward.type === "quest") {
       setActiveMyth(mythologies.indexOf(reward.quest.mythology));
       setSection(1);
+    } else if (reward.type === "blackOrb") {
+      setActiveMyth(0);
+      setSection(0);
     } else {
       setActiveMyth(mythologies.indexOf(reward.mythology));
       setSection(0);
@@ -185,8 +188,6 @@ const SplashScreen = ({ reward, exploitReward }) => {
             ) : (
               <QuestCard reward={currReward} />
             )}
-
-            {/* <BoosterCard reward={currReward} /> */}
           </div>
         </div>
       </div>
@@ -211,13 +212,13 @@ const SplashScreen = ({ reward, exploitReward }) => {
                 t(
                   `elements.${mythElementNames[
                     currReward.mythology
-                  ].toLowerCase()}`
+                  ]?.toLowerCase()}`
                 ) +
                 " " +
-                t("keywords.orbs")
+                t("keywords.orb")
               }`
             : currReward.type === "blackOrb"
-            ? `${t("elements.aether") + " " + t("keywords.orbs")}`
+            ? `${t("elements.aether") + " " + t("keywords.orb")}`
             : currReward.type === "quest"
             ? `${t("sections.quests")}`
             : `1 ${
