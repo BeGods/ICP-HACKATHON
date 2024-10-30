@@ -69,7 +69,10 @@
     "partner": "Partner",
     "charity": "Charity",
     "rewards": "Rewards",
-    "task": "Task"
+    "task": "Task",
+    "connect": "Connect",
+    "follow": "Follow",
+    "select": "Select"
   },
   "note": {
     "text": "Leader board update in",

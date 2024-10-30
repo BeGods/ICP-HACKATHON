@@ -3,6 +3,7 @@ import { Check, ChevronRight, Download } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { MyContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api";
+import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
@@ -16,6 +17,7 @@ const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
     setGameData,
   } = useContext(MyContext);
   const [claim, setClaim] = useState(false);
+  const { t } = useTranslation();
   const disableClick = useRef(false);
 
   const handleClaimTask = async () => {
@@ -104,7 +106,9 @@ ${
         <img src={quest.type} alt="telegram" className="w-full" />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
-        <h1 className="text-tertiary uppercase">{quest.questName}</h1>
+        <h1 className="text-tertiary uppercase">
+          {t(`profile.${quest.questName.toLowerCase()}`)}
+        </h1>
         <h2 className="text-tertiary">
           +{quest.requiredOrbs.multiOrbs}
           <span className="pl-2 gradient-multi">Multi ORB(S)</span>

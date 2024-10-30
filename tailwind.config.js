@@ -17,6 +17,7 @@ export default {
     "bg-egyptian-primary",
     "bg-greek-primary",
     "bg-norse-primary",
+    "bg-black",
 
     "bg-celtic-text",
     "bg-egyptian-text",

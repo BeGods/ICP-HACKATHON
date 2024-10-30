@@ -4,7 +4,6 @@ import { mythSections } from "../../../utils/constants";
 import ShareButton from "../../Buttons/ShareBtn";
 import IconBtn from "../../Buttons/IconBtn";
 import MappedOrbs from "../../Common/MappedOrbs";
-import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
 import Confetti from "react-confetti";
 
@@ -30,7 +29,6 @@ const OrbClaimCard = ({
 }) => {
   const { enableSound, assets } = useContext(MyContext);
   const [flipped, setFlipped] = useState(false);
-  const [playSound, setPlaySound] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const playConfetti = () => {
@@ -42,7 +40,6 @@ const OrbClaimCard = ({
 
   useEffect(() => {
     playConfetti();
-    setPlaySound(true);
     const interval = setInterval(() => {
       setFlipped((prev) => !prev);
     }, 2500);
@@ -124,17 +121,7 @@ const OrbClaimCard = ({
           link={quest?.link[0]}
         />
       </div>
-      {playSound && (
-        <ReactHowler
-          src={assets.audio.questWin}
-          playing={enableSound && playSound}
-          loop={false}
-          preload={true}
-          onEnd={() => {
-            setPlaySound(false);
-          }}
-        />
-      )}
+
       {showConfetti && (
         <Confetti
           width={window.innerWidth}

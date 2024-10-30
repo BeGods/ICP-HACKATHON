@@ -62,56 +62,10 @@ export const QuestGuide = ({ handleClick, currQuest }) => {
       </div>
       <div
         onClick={handleClick}
-        className="flex relative flex-grow font-symbols items-center text-white "
+        className="flex relative flex-grow font-symbols items-center z-[99] text-white "
       >
-        <div className="font-symbols absolute text-white text-[30vw] z-50 ml-[25vw] scale-point">
+        <div className="font-symbols  text-white text-[40vw]  top-5 scale-point">
           b
-        </div>
-        <div className="relative w-[90%] mx-auto -mt-[10vh]">
-          {/* Card Image */}
-          <img
-            src={
-              assets.questCards?.[currQuest.mythology.toLowerCase()]?.[
-                currQuest?.type
-              ]
-            }
-            alt="card"
-            className="w-full h-full mx-auto rounded-[15px]"
-          />
-          {/* Close Button */}
-          <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
-            <div className="flex w-full">
-              <div className="m-2 z-50">
-                <MappedOrbs quest={currQuest} />
-              </div>
-            </div>
-            <div
-              className={`flex relative items-center h-[19%] uppercase card-shadow-white-${currQuest.quest} text-white`}
-            >
-              <div
-                style={{
-                  backgroundImage: `url(${assets.uxui.paper})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  height: "100%",
-                  width: "100%",
-                }}
-                className={`filter-paper-${currQuest.mythology.toLowerCase()} rounded-b-[15px]`}
-              />
-              <div
-                className={`flex justify-between w-full h-full items-center glow-text-quest px-3 z-10`}
-              >
-                <div>{currQuest.questName}</div>
-                <div className="">
-                  <Symbol myth={currQuest.mythology.toLowerCase()} isCard={1} />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div className="h-[12%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">

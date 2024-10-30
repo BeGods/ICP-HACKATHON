@@ -63,7 +63,10 @@
     "partner": "Parceiros",
     "charity": "Caridad",
     "rewards": "RECOMPENSAS",
-    "task": "Tareas"
+    "task": "Tareas",
+    "connect": "Conectar",
+    "follow": "Seguir",
+    "select": "Seleccionar"
   },
   "tower": {
     "tune": "¿Conoces la ♪ melodía ♪?",

@@ -70,7 +70,10 @@
     "partner": "คู่ค้า",
     "charity": "การกุศล",
     "rewards": "รางวัล",
-    "task": "ภารกิจ"
+    "task": "ภารกิจ",
+    "connect": "เชื่อมต่อ",
+    "follow": "ติดตาม",
+    "select": "เลือก"
   },
   "elements": {
     "earth": "ดิน",
