@@ -382,7 +382,7 @@ const Boosters = () => {
         </div>
       </div>
 
-      {mythData.isEligibleForBurst && (
+      {gameData.mythologies[activeMyth].isEligibleForBurst && (
         <div className="absolute bottom-0 w-full mb-[15vh]">
           <CarouselBtn
             icon={"k"}
