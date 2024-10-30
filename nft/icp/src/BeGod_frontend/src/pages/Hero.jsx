@@ -133,6 +133,8 @@ const Hero = () => {
   
     const dispatch = useDispatch();
 
+    const [inProgress,updateInProgressStatus] = useState(false);
+
     const handleCurrentIndex  = async(index) => {
         
         if(index >= visibleButtons-1 && index >= startIndex) {
@@ -157,7 +159,8 @@ const Hero = () => {
         if(currentCollectionId === collections[currentIndex].collectionId) {
             return;
         }
-        updateNoCardsStatus(false)
+        updateNoCardsStatus(false);
+        updateInProgressStatus(true);
         updateSelectedCollectionNftCardsList([]);
         setCurrentIndex(index);
         currentPage.current = 1;
@@ -171,7 +174,7 @@ const Hero = () => {
         }
 
         
-       
+        updateInProgressStatus(false)
          dispatch(updateCurrentIndex(index));
         
     }
@@ -224,17 +227,25 @@ const Hero = () => {
            // console.log("each card ---------- item",eachItem)
             const jsonData = JSON.parse(eachItem[4]);
 
-           // console.log("json -------------- data",jsonData)
+            console.log("json -------------- data",jsonData)
+
+            let color =jsonData.collColor ;
+            if(color === "Yellow") {
+                color = "#FFB300"
+            }
+
             const colItem = {
                 index : i,
                 collectionId : eachItem[1],
                 name : eachItem[2],
-                shadowColor : jsonData.collColor,
+                shadowColor : color,
                 description:jsonData.description
             }
             i++;
             collections.push(colItem);
         })
+
+        console.log("final collection",collections)
         
         setCollections(collections);
         
@@ -364,7 +375,7 @@ useEffect(() => {
 
     console.log("Updated list after all filters:", updatedList);
     const screenSize = getScreenSize();
-   if(screenSize == "xs"){
+   if(screenSize == "xs" && !inProgress){
     if(currentCardType != cardTypeList[0].cardId || applyPriceRange.isApply || currentFilterOption !== filterListOptions[0].optionId){
         if(updatedList.length>0){
             toast.success(`${updatedList.length} Card${updatedList.length === 1 ? "":"s"} Found`);
@@ -388,6 +399,7 @@ const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
 const filterAndSort = (list)=>{
     if (currentFilterOption !== filterListOptions[0].optionId) {
         let updatedList = [...list];
+        console.log("updated list in filter")
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
             updateRecentlyAddedStatus(true);
@@ -399,6 +411,9 @@ const filterAndSort = (list)=>{
             updateRecentlyAddedStatus(false);
         }
         console.log("updated list after filter change",updatedList)
+        if(isRecentlyAdded){
+            updatedList = updatedList.reverse();
+        }
         updateFilteredList(updatedList)
     }else if(isRecentlyAdded){
         updateFilteredList([...filteredList].reverse());
@@ -410,7 +425,7 @@ const filterAndSort = (list)=>{
 }
 
 useEffect(()=>{
-    filterAndSort(selectedCollectionNftCardsList)
+    filterAndSort(filteredList)
 },[currentFilterOption])
 
 console.log("filtered list after applying filters",filteredList)

@@ -27,7 +27,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites,quantity,buttonStatus})
         }
       };
       
-    // console.log("img",img)
+     console.log("img",img)
     return (
 
         <div
@@ -56,7 +56,7 @@ const NftCard = ({img,removeFromFavorites,addToFavorites,quantity,buttonStatus})
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
                         <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">{img.cardName}</h1>
                         <h2 className="mt-2 text-lg sm:text-xl">Type : {img.cardType.charAt(0).toUpperCase()}{img.cardType.slice(1)}</h2>
-                        {quantity > 1 && <h2 className="mt-2 text-lg sm:text-xl">Quantity : {quantity}</h2>}
+                        {/* {quantity > 1 && <h2 className="mt-2 text-lg sm:text-xl">Quantity : {quantity}</h2>} */}
                         {/* <h2 className="mt-2 text-lg sm:text-xl">Sold: {img.sold}/100</h2> */}
                         {!img.isOwned && (<h2 className="mt-1 text-lg sm:text-xl">{img.price} ICP</h2>)}
                         {img.isOwned ? (
