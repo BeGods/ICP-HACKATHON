@@ -78,8 +78,6 @@ const IntroPage = (props) => {
       })();
     });
 
-    tele.CloudStorage.removeItem("country_code");
-
     const handleUserInteraction = () => {
       playAudio();
       document.removeEventListener("click", handleUserInteraction);

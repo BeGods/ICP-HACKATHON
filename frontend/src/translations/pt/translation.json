@@ -63,7 +63,10 @@
     "partner": "Parceiros",
     "charity": "Caridad",
     "rewards": "RECOMPENSAS",
-    "task": "Tarefas"
+    "task": "Tarefas",
+    "connect": "Conectar",
+    "follow": "Seguir",
+    "select": "Selecionar"
   },
   "elements": {
     "earth": "Terra",

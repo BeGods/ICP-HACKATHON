@@ -59,7 +59,10 @@
     "partner": "Mga kasosyo",
     "charity": "Kawanggawa",
     "rewards": "MGA GANTIMPALA",
-    "task": "Mga Gawain"
+    "task": "Mga Gawain",
+    "follow": "Sumunod",
+    "connect": "Kumonekta",
+    "select": "Piliin"
   },
   "elements": {
     "earth": "Lupa",

@@ -37,8 +37,8 @@ export const formatRankOrbs = (num) => {
   remainder = remainder.padStart(3, "0");
 
   if (remainder === "000") {
-    return `${thousands},0`;
+    return `${thousands}.0`;
   } else {
-    return `${thousands},${remainder}`;
+    return `${thousands}.${remainder}`;
   }
 };

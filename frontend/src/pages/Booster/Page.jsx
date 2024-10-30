@@ -20,6 +20,7 @@ import MythInfoCard from "../../components/Cards/Info/MythInfoCrd";
 import BoosterHeader from "./Header";
 import { useBoosterGuide } from "../../hooks/Tutorial";
 import { toast } from "react-toastify";
+import CarouselBtn from "../../components/Buttons/CarouselBtn";
 
 const tele = window.Telegram?.WebApp;
 
@@ -39,6 +40,7 @@ const Boosters = () => {
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
   const [showToggles, setShowToggles] = useState(false);
+  const [currState, setCurrState] = useState(0);
   let guideTimeoutId = useRef(null);
   const disableRef = useRef(false);
 
@@ -265,113 +267,141 @@ const Boosters = () => {
       />
 
       {/* BOOSTER CARDS */}
-      <div className="flex justify-center h-screen w-screen absolute mx-auto">
-        <div className="flex flex-col w-[70%] pt-[5vh] items-center justify-center gap-[10px]">
-          {/* AUTOMATA */}
-          <BoosterItem
-            isGuideActive={enableGuide}
-            isActive={!mythData.isAutomataActive}
-            handleClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
-              setShowCard(
-                <BoosterClaim
-                  activeCard={"automata"}
-                  activeMyth={activeMyth}
-                  mythData={mythData}
-                  closeCard={() => setShowCard(null)}
-                  Button={
-                    <BoosterBtn
+      <div className="flex flex-col items-center justify-center h-screen w-screen absolute mx-auto">
+        <div className="flex flex-col w-[70%] min-h-[40vh] items-center justify-start gap-[15px]">
+          {currState === 0 ? (
+            <>
+              {/* AUTOMATA */}
+              <BoosterItem
+                isGuideActive={enableGuide}
+                isActive={!mythData.isAutomataActive}
+                handleClick={() => {
+                  tele.HapticFeedback.notificationOccurred("success");
+                  setShowCard(
+                    <BoosterClaim
                       activeCard={"automata"}
-                      mythData={mythData}
-                      handleClaim={handleClaimAutomata}
                       activeMyth={activeMyth}
-                      t={t}
+                      mythData={mythData}
+                      closeCard={() => setShowCard(null)}
+                      Button={
+                        <BoosterBtn
+                          activeCard={"automata"}
+                          mythData={mythData}
+                          handleClaim={handleClaimAutomata}
+                          activeMyth={activeMyth}
+                          t={t}
+                        />
+                      }
                     />
-                  }
-                />
-              );
-            }}
-            activeMyth={activeMyth}
-            t={t}
-            booster={0}
-          />
-          {/* SHARDS BOOSTER */}
-          <BoosterItem
-            isActive={mythData.isShardsClaimActive}
-            handleClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
-              setShowCard(
-                <BoosterClaim
-                  activeCard={"minion"}
-                  activeMyth={activeMyth}
-                  mythData={mythData}
-                  closeCard={() => setShowCard(null)}
-                  Button={
-                    <BoosterBtn
+                  );
+                }}
+                activeMyth={activeMyth}
+                t={t}
+                booster={0}
+              />
+              {/* SHARDS BOOSTER */}
+              <BoosterItem
+                isActive={mythData.isShardsClaimActive}
+                handleClick={() => {
+                  tele.HapticFeedback.notificationOccurred("success");
+                  setShowCard(
+                    <BoosterClaim
                       activeCard={"minion"}
-                      mythData={mythData}
-                      handleClaim={handleClaimShards}
                       activeMyth={activeMyth}
-                      t={t}
+                      mythData={mythData}
+                      closeCard={() => setShowCard(null)}
+                      Button={
+                        <BoosterBtn
+                          activeCard={"minion"}
+                          mythData={mythData}
+                          handleClaim={handleClaimShards}
+                          activeMyth={activeMyth}
+                          t={t}
+                        />
+                      }
                     />
-                  }
-                />
-              );
-            }}
-            activeMyth={activeMyth}
-            t={t}
-            booster={2}
-          />
-
-          {/* Quest */}
-          <BoosterItem
-            isGuideActive={enableGuide}
-            isActive={true}
-            handleClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
-              setSection(1);
-            }}
-            activeMyth={activeMyth}
-            t={t}
-            booster={1}
-          />
-          {/* BURST */}
-          <BoosterItem
-            isActive={
-              !gameData.mythologies[activeMyth].boosters.isBurstActive &&
-              gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
-            }
-            handleClick={() => {
-              if (gameData.mythologies[activeMyth].isEligibleForBurst) {
-                tele.HapticFeedback.notificationOccurred("success");
-                setShowCard(
-                  <BoosterClaim
-                    activeCard={"burst"}
-                    activeMyth={activeMyth}
-                    mythData={mythData}
-                    closeCard={() => setShowCard(null)}
-                    Button={
-                      <BoosterBtn
+                  );
+                }}
+                activeMyth={activeMyth}
+                t={t}
+                booster={2}
+              />
+              {/* Quest */}
+              <BoosterItem
+                isGuideActive={enableGuide}
+                isActive={true}
+                handleClick={() => {
+                  tele.HapticFeedback.notificationOccurred("success");
+                  setSection(1);
+                }}
+                activeMyth={activeMyth}
+                t={t}
+                booster={1}
+              />
+            </>
+          ) : (
+            <>
+              {/* BURST */}
+              <BoosterItem
+                isActive={
+                  !gameData.mythologies[activeMyth].boosters.isBurstActive &&
+                  gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
+                }
+                handleClick={() => {
+                  if (gameData.mythologies[activeMyth].isEligibleForBurst) {
+                    tele.HapticFeedback.notificationOccurred("success");
+                    setShowCard(
+                      <BoosterClaim
                         activeCard={"burst"}
-                        mythData={mythData}
-                        handleClaim={handleClaimBurst}
                         activeMyth={activeMyth}
-                        t={t}
+                        mythData={mythData}
+                        closeCard={() => setShowCard(null)}
+                        Button={
+                          <BoosterBtn
+                            activeCard={"burst"}
+                            mythData={mythData}
+                            handleClaim={handleClaimBurst}
+                            activeMyth={activeMyth}
+                            t={t}
+                          />
+                        }
                       />
-                    }
-                  />
-                );
-              } else {
-                toast.error("Locked");
-              }
-            }}
-            isGuideActive={enableGuide}
-            activeMyth={activeMyth}
-            t={t}
-            booster={6}
-          />
+                    );
+                  } else {
+                    toast.error("Locked");
+                  }
+                }}
+                mythData={mythData}
+                isGuideActive={enableGuide}
+                activeMyth={activeMyth}
+                t={t}
+                booster={6}
+              />
+            </>
+          )}
         </div>
       </div>
+
+      {mythData.isEligibleForBurst && (
+        <div className="absolute bottom-0 w-full mb-[15vh]">
+          <CarouselBtn
+            icon={"k"}
+            currState={currState}
+            lastState={1}
+            activeMyth={activeMyth}
+            handlePrev={() => {
+              tele.HapticFeedback.notificationOccurred("success");
+
+              setCurrState((prev) => (prev === 1 ? prev - 1 : prev));
+            }}
+            handleNext={() => {
+              tele.HapticFeedback.notificationOccurred("success");
+
+              setCurrState((prev) => (prev === 0 ? prev + 1 : prev));
+            }}
+          />
+        </div>
+      )}
 
       {/* Toggles */}
       {showToggles && (
