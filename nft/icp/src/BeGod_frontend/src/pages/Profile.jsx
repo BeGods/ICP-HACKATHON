@@ -308,7 +308,7 @@ const onClickRemoveOrder = async () =>{
      
      // console.log("selected list",selectedList)
      const favCardslist = currList
-     .map(item => item[0])
+     .map(item => item)
      .filter(card => favItems.has(card.tokenId)); 
       console.log("favList",favCardslist)
       updateSelectedList(favCardslist);
@@ -542,7 +542,9 @@ const fetchCollections = async () => {
       return;
     }
     const currentSelectedCollection = allCollectionsList[currentDropDownOption];
+    console.log("updated cards list before")
     const updatedCardsList = await getSelectedOptionCards(currentSelectedCollection.collectionId);
+    console.log("updated cards after" , updatedCardsList);
     setIsCardsLoading(false);
     if(updatedCardsList?.length >0){
       updateSelectedList(updatedCardsList);
@@ -572,20 +574,12 @@ const fetchCollections = async () => {
       return []
     }else{
       updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
+      console.log("all cards",updatedCardsList)
       return updatedCardsList;
     }
-    
-    
-    
-    
-    
-    
-
   }
 
   const getUpdatedList= async(collectionId,cardsList,ownedList,isOwned)=>{
-
-      
       console.log("cards list",cardsList)
       const formatedList = [];
       let tempIndex = 0;
@@ -596,8 +590,8 @@ const fetchCollections = async () => {
         let skipCard = false;
         if(!isOwned){
           console.log("owned list in getUpdatedlist",ownedList)
-          for(let i = 0; i< ownedList.length;i++) {
-            if(ownedList[i][0].cardName === cardDetails.name){
+          for(let j = 0; j< ownedList.length;j++) {
+            if(ownedList[j].cardName === cardDetails.name){
               skipCard = true;
               continue;
             }
@@ -628,7 +622,7 @@ const fetchCollections = async () => {
                 collectionColor : allCollectionsList[currentDropDownOption].collectionColor,
                 price : parseInt(eachCard[5][0])/100000000
              }
-             formatedList.push([tempcard])
+             formatedList.push(tempcard)
  
       }
 
@@ -668,8 +662,9 @@ const fetchCollections = async () => {
       updateSelectedList(updatedFavList);
     }else{
       const modifiedSelectedList = selectedList.map((eachItem)=>{
-        if(eachItem[0].tokenId === tokenId){
-          return  [{...eachItem[0],isFavourite:false},...eachItem.slice(1)];
+        if(eachItem.tokenId === tokenId){
+          return {...eachItem,isFavourite : false}
+          
         }
         return eachItem;
        })
@@ -706,12 +701,11 @@ const addToFavorites = async (tokenId) => {
 
   const result = await resultPromise;
 
-  const modifiedSelectedList = selectedList.map((eachItem) => {
-    const eachCard = eachItem[0];
+  const modifiedSelectedList = selectedList.map((eachCard) => {
     if (eachCard.tokenId === tokenId) {
-      return [{ ...eachCard, isFavourite: true }, ...eachItem.slice(1)];
+      return {...eachCard,isFavourite : true}
     }
-    return eachItem;
+    return eachCard;
   });
 
   updateSelectedList(modifiedSelectedList);
@@ -971,7 +965,7 @@ const onChangeFilterOption = async(eachCollection) => {
                     selectedList && selectedList.length>0 ? (
                       <div>
                        {currentOption === "mycollection" ? (
-                         <NftCard img={selectedList[currentIndex][0]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={selectedList[currentIndex].length} buttonStatus = {areButtonsDisabled} /> 
+                         <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={0} buttonStatus = {areButtonsDisabled} /> 
                       ):(
                         <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled}/> 
                       )} 
@@ -1025,7 +1019,7 @@ const onChangeFilterOption = async(eachCollection) => {
                     {selectedList && selectedList.length > 0 && selectedList.map((img, index) => (
                       <div className='w-full rounded-lg flip-card'>
                         {currentOption === "mycollection" ? (
-                          <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} buttonStatus = {areButtonsDisabled} />
+                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {0} buttonStatus = {areButtonsDisabled} />
                         ):(
                           <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled} />
                         )}

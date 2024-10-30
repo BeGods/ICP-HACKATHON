@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const NFTGallery = ({ currentCollection }) => {
-   console.log("current collection in nft gallery",currentCollection);
+  // console.log("current collection in nft gallery",currentCollection);
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);

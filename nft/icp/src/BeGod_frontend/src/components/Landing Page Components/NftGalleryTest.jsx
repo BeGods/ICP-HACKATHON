@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 
 const NFTGallery = ({ currentCollection }) => {
-   console.log("current collection in nft gallery",currentCollection);
+  // console.log("current collection in nft gallery",currentCollection);
   const [currentPage, setCurrentPage] = useState(0);
   // const itemsPerPage = 1; // Show 8 images per page
   const [itemsPerPage, setItemsPerPage] = useState(1);
@@ -56,7 +56,7 @@ const NFTGallery = ({ currentCollection }) => {
     return () => window.removeEventListener('resize', updateImagesPerSet);
   }, []);
 
-  console.log("current collection in nft gallery",currentCollection);
+  // console.log("current collection in nft gallery",currentCollection);
   return (
     <div className='min-h-[70vh] md:min-h-[50vh] '>
       <div className='flex items-center ml-[2vw] mt-7 mr-[2vw] justify-between flex-wrap sm:hidden'>

@@ -117,7 +117,7 @@ function CollectionDetails() {
       const userPrincipalArray = principal;
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
-
+      console.log("before")
       const result = await backendActor?.getAllCollectionNFTs(
         principalString,
         5,
@@ -823,70 +823,72 @@ function CollectionDetails() {
                 </Box>
               </div>
 
-            {modal && (
-              <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
-                <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(37,37,37,0.84)]">
-                  <div className="flex items-center justify-center h-screen">
-                    <Modal
-                      toggleModal={toggleModal}
-                      getAddedNftDetails={getAddedNftDetails}
-                      type = "add"
-                    />
+              {modal && (
+                <div className="fixed top-0 bottom-0 left-0 right-0 w-screen h-screen">
+                  <div className="w-screen h-screen top-0 left-0 right-0 bottom-0 fixed bg-[rgba(37,37,37,0.84)]">
+                    <div className="flex items-center justify-center h-screen">
+                      <Modal
+                        toggleModal={toggleModal}
+                        getAddedNftDetails={getAddedNftDetails}
+                        type="add"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {isDisplayFiltersPopup && (
-              <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden">
-                <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
-                  <div className="flex items-center justify-center h-screen w-screen ">
-                    <div
-                      className={`h-[40vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto `}
-                    >
-                      <div className="flex items-center justify-end">
-                        <button
-                          className="text-[#FCD378] bottom-1 z-10"
-                          onClick={() => updateFiltersDisplayStatus(false)}
-                        >
-                          <RxCross2 size={20} />
-                        </button>
-                      </div>
-                      <div className="flex flex-col items-center justify-around h-[80%] text-[16px]">
-                        <div className="relative w-full flex justify-center">
-                          {currentDropDown === dropdownItems.type && (
-                            <ul className="absolute top-10 left-0 mt-2 bg-black border border-[#FCD378] text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
-                              {cardTypeList.map((eachType, index) => (
-                                <>
-                                  <div
-                                    key={eachType.cardId}
-                                    className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
-                                    onClick={() => {
-                                      if (eachType.cardId != currentCardType) {
-                                        updateCardType(eachType.cardId);
-                                        onClickAnyFilter(dropdownItems.type);
-                                      }
-                                    }}
-                                  >
-                                    <li key={eachType.cardId}>
-                                      {eachType.displayText}
-                                    </li>
-                                    {currentCardType === eachType.cardId && (
-                                      <IoCheckmarkOutline />
-                                    )}
-                                  </div>
-                                  {index != cardTypeList.length - 1 && (
-                                    <hr className="my-1 border-t border-[#FCD378]" />
-                                  )}
-                                </>
-                              ))}
-                            </ul>
-                          )}
+              )}
+              {isDisplayFiltersPopup && (
+                <div className="fixed top-0 bottom-0 left-0 right-0 z-20 w-screen h-screen md:hidden">
+                  <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+                    <div className="flex items-center justify-center h-screen w-screen ">
+                      <div
+                        className={`h-[40vh] w-[90vw] bg-[#111] rounded-md p-5 overflow-auto `}
+                      >
+                        <div className="flex items-center justify-end">
                           <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onClickAnyFilter(dropdownItems.type);
-                            }}
-                            className={`rounded-md flex justify-center items-center gap-1 
+                            className="text-[#FCD378] bottom-1 z-10"
+                            onClick={() => updateFiltersDisplayStatus(false)}
+                          >
+                            <RxCross2 size={20} />
+                          </button>
+                        </div>
+                        <div className="flex flex-col items-center justify-around h-[80%] text-[16px]">
+                          <div className="relative w-full flex justify-center">
+                            {currentDropDown === dropdownItems.type && (
+                              <ul className="absolute top-10 left-0 mt-2 bg-black border border-[#FCD378] text-[#FCD378] rounded shadow-lg  p-0 list-none z-50 w-full h-[130px] overflow-y-auto ">
+                                {cardTypeList.map((eachType, index) => (
+                                  <>
+                                    <div
+                                      key={eachType.cardId}
+                                      className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-purple-900"
+                                      onClick={() => {
+                                        if (
+                                          eachType.cardId != currentCardType
+                                        ) {
+                                          updateCardType(eachType.cardId);
+                                          onClickAnyFilter(dropdownItems.type);
+                                        }
+                                      }}
+                                    >
+                                      <li key={eachType.cardId}>
+                                        {eachType.displayText}
+                                      </li>
+                                      {currentCardType === eachType.cardId && (
+                                        <IoCheckmarkOutline />
+                                      )}
+                                    </div>
+                                    {index != cardTypeList.length - 1 && (
+                                      <hr className="my-1 border-t border-[#FCD378]" />
+                                    )}
+                                  </>
+                                ))}
+                              </ul>
+                            )}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onClickAnyFilter(dropdownItems.type);
+                              }}
+                              className={`rounded-md flex justify-center items-center gap-1 
                                                 w-full h-full p-2 bg-[#000]  text-[#FCD378]  hover:border-[#FCD378] border border-[#FCD378] ${
                                                   currentDropDown ===
                                                     dropdownItems.filter &&

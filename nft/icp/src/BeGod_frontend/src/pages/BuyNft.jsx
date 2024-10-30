@@ -38,6 +38,7 @@ const BuyNft = () => {
   const [cardDetails, setCardDetails] = useState({});
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const location = useLocation();
+  console.log("url",location)
   const params = new URLSearchParams(location.search);
   const collectionId = params.get("collectionId");
   let collectionColor = params.get("type");
@@ -823,7 +824,7 @@ const BuyNft = () => {
                     const Button = option.button;
                     return (
                       <div key={index} className="h-[60px] w-[65px] md:w-[80px] lg:w-[65px] lx:w-[80px] flex justify-center items-center">
-                        <Button url={`https://ljk2g-uyaaa-aaaak-qi3hq-cai.icp0.io/${params}`} className="flex flex-col items-center justify-center">
+                        <Button url={`https://ljk2g-uyaaa-aaaak-qi3hq-cai.icp0.io/${location.pathname}?${params}`} className="flex flex-col items-center justify-center">
                           {option.icon}
                           <span className="text-xs">{option.displayText}</span>
                         </Button>

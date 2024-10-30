@@ -252,6 +252,7 @@ body {
   backface-visibility: hidden;
   border-style: none;
   border-width: 0px;
+  background-color: transparent;
 }
 
 .flip-card-back {

@@ -160,7 +160,8 @@ const Hero = () => {
         updateNoCardsStatus(false)
         updateSelectedCollectionNftCardsList([]);
         setCurrentIndex(index);
-        const currList = await fetchCollectionNfts(currentCollectionId,color,"indexchange")
+        currentPage.current = 1;
+        const currList = await fetchCollectionNfts(currentCollectionId,color)
         if(currList.length > 0){
             updateFilteredList(currList);
             updateSelectedCollectionNftCardsList(currList);
@@ -168,6 +169,8 @@ const Hero = () => {
             updateSelectedCollectionNftCardsList([]);
             updateNoCardsStatus(true);
         }
+
+        
        
          dispatch(updateCurrentIndex(index));
         
@@ -237,7 +240,7 @@ const Hero = () => {
         
         const currentCollectionId = collections[currentIndex].collectionId;
         const color = collections[currentIndex].shadowColor;
-        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color,"start");
+        const currentCollectionNfts = await fetchCollectionNfts(currentCollectionId,color);
         if(currentCollectionNfts.length>0){
             updateFilteredList(currentCollectionNfts);
             updateSelectedCollectionNftCardsList(currentCollectionNfts);
@@ -248,25 +251,18 @@ const Hero = () => {
 };
 let index = -1;
 const itemsPerPage = 10;
-const [currentPage,updateCurrentPage] = useState(1);
+// const [currentPage,updateCurrentPage] = useState(1);
 const [totalPages,updateTotalPages] = useState(1);
 
-const isFirstRender = useRef(true);
 
-useEffect(()=>{
-    if (isFirstRender.current) {
-        // Skip the first render
-        isFirstRender.current = false;
-        return;
-      }
-      onUpdateCurrentPage();
+const currentPage  = useRef(1);
 
-},[currentPage])
+
 
 const onUpdateCurrentPage =async ()=>{
     const currentCollectionId = collections[currentIndex].collectionId;
     const color = collections[currentIndex].shadowColor;
-    const currList = await fetchCollectionNfts(currentCollectionId,color,"pagechange")
+    const currList = await fetchCollectionNfts(currentCollectionId,color)
     if(currList.length > 0){
         updateFilteredList(currList);
         updateSelectedCollectionNftCardsList(currList);
@@ -276,17 +272,10 @@ const onUpdateCurrentPage =async ()=>{
     }
 }
 
-const [pageNo,updatedPageNo] = useState(1)
-const fetchCollectionNfts = async (collectionId,color,origin) => {
+const fetchCollectionNfts = async (collectionId,color) => {
 
-    let pageNo = currentPage-1;
-    updatedPageNo(pageNo+1)
-    if(origin === "indexchange"){
-        pageNo = 0;
-        updatedPageNo(1)
-    }
    try{
-    const result = await backendActor?.plistings(collectionId,itemsPerPage,pageNo);
+    const result = await backendActor?.plistings(collectionId,itemsPerPage,currentPage.current-1);
       console.log("listings resut",result);
     index  = -1;
     const listedNfts = result?.ok?.data;
@@ -458,14 +447,15 @@ console.log("filtered list after applying filters",filteredList)
         updateNoCardsStatus(false)
         updateSelectedCollectionNftCardsList([]);
         if(type === "next"){
-            updateCurrentPage(currentPage+1)
+            currentPage.current = currentPage.current+1
         }else if(type === "previous") {
-            updateCurrentPage(currentPage-1)
+            currentPage.current = currentPage.current-1
         }else{
             console.log("inddddddddddddex",index)
-            updateCurrentPage(index)
+            currentPage.current = index
         }
 
+        onUpdateCurrentPage();
         const device = getScreenSize();
         if(device == "xs" || device == "sm"){
             document.getElementById("filter").scrollIntoView({ behavior: "smooth"});
@@ -473,6 +463,12 @@ console.log("filtered list after applying filters",filteredList)
         
     
       }
+
+      const onNavigateToCollection = () => {
+            document.getElementById("collections").scrollIntoView({ behavior: "smooth"});
+      }
+
+      console.log("current page",currentPage)
     
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -483,7 +479,7 @@ console.log("filtered list after applying filters",filteredList)
                     <Navbar mobileView={mobileViewHandler} landingPage={true} />
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
-                    <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center  leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
+                    <h1  className="h-[70px] md:h-[180px] text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center  leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
                         {mainHeading}
                     </h1>
                     <h2 className='text-[16px] md:text-[24px] leading-tight font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] text-center'>
@@ -755,21 +751,32 @@ console.log("filtered list after applying filters",filteredList)
                         )}
                         {totalPages > 1 && (
                                 <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
-                                <button disabled={currentPage === 1} className='' >
-                                <img
-                                src="/Hero/up.png"
-                                alt="Previous"
-                                onClick={()=>onNavigate("previous",currentIndex)}
-                                className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                />
-                                </button>
+                                {currentPage.current > 1 && (
+                                     <button onClick={()=>onNavigate("previous",currentIndex)} >
+                                     <img
+                                     src="/Hero/up.png"
+                                     alt="Previous"
+                                     className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                     />
+                                     </button>
+                                )}
+                                {currentPage.current === 1 && (
+                                    <button disabled={true} >
+                                    <img
+                                    src="/Hero/up.png"
+                                    alt="Previous"
+                                    onClick={()=>onNavigate("previous",currentIndex)}
+                                    className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    />
+                                    </button>
+                                )}
                                 <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
                                 {Array.from({length:totalPages}).map((_,index)=>{
                                     return (
                                     <div  key={index} 
                                    
                                     className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
-                                        ${pageNo === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
+                                        ${currentPage.current === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
                                     `}
                                     onClick={() => {
                                             onNavigate("none", index + 1);
@@ -780,15 +787,29 @@ console.log("filtered list after applying filters",filteredList)
                                     )
                                 })}
                                 </div>
-                                <button disabled={currentPage >= totalPages} className='' >
+                                {currentPage.current < totalPages && (
+                                    <button  onClick={()=>{onNavigate("next",currentIndex)}} className='' >
                                     {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
                                 <img
                                 src="/Hero/down.png"
                                 alt="Next"
-                                onClick={()=>{onNavigate("next",currentIndex)}}
-                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                               
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 />
                                 </button>
+                                
+                                )}
+                                {currentPage.current>=totalPages && (
+                                    <button disabled={true}  >
+                                    {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                               
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                )}
                             </div>
                             )}
                     </div>
