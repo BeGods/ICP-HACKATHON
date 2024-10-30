@@ -1,9 +1,5 @@
-import {
-  useTonAddress,
-  useTonConnectModal,
-  useTonConnectUI,
-} from "@tonconnect/ui-react";
-import { Settings, Wallet } from "lucide-react";
+import { useTonConnectModal } from "@tonconnect/ui-react";
+import { Settings } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
@@ -14,10 +10,8 @@ import { ProfileGuide } from "../../components/Common/Tutorials";
 import { useProfileGuide } from "../../hooks/Tutorial";
 import ProfileHeader from "./Header";
 import TaskItem from "../../components/Cards/Tasks/TaskItem";
-import {
-  ToggleRight,
-  ToggleLeft,
-} from "../../components/Common/SectionToggles";
+
+import CarouselBtn from "../../components/Buttons/CarouselBtn";
 
 const tele = window.Telegram?.WebApp;
 
@@ -30,6 +24,7 @@ const Profile = (props) => {
   const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
   const [currState, setCurrState] = useState(0);
   const totalSections = Math.ceil(socialQuestData.length / 3);
+
   const [showToggles, setShowToggles] = useState(false);
 
   const handleCopyLink = async () => {
@@ -174,22 +169,31 @@ const Profile = (props) => {
         </div>
       </div>
 
-      <div className="flex absolute bottom-[15%] pb-6 gap-3 justify-center items-center w-full">
-        {Array.from({ length: totalSections }, (_, index) => (
-          <div
-            onClick={() => {
-              setCurrState(index * 3);
-            }}
-            key={index}
-            className={`h-3.5 w-3.5 ${
-              Math.floor(currState / 3) === index ? "bg-white" : "border"
-            } rounded-full`}
-          ></div>
-        ))}
+      <div className="absolute bottom-0 w-full mb-[15vh]">
+        <CarouselBtn
+          icon={0}
+          currState={currState}
+          activeMyth={4}
+          lastState={totalSections + 1}
+          handlePrev={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+            setCurrState((prev) => {
+              const newState = prev - 3;
+              return newState < 0 ? prev : newState;
+            });
+          }}
+          handleNext={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+            setCurrState((prev) => {
+              const newState = prev + 3;
+              return newState >= socialQuestData.length ? prev : newState;
+            });
+          }}
+        />
       </div>
 
       {/* Toggles */}
-      {showToggles && (
+      {/* {showToggles && (
         <>
           <ToggleLeft
             minimize={2}
@@ -212,7 +216,7 @@ const Profile = (props) => {
             activeMyth={4}
           />
         </>
-      )}
+      )} */}
     </div>
   );
 };
