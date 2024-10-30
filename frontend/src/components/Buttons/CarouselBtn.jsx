@@ -11,7 +11,6 @@ const CarouselBtn = ({
   icon,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
-  console.log(currState, lastState);
 
   return (
     <div
