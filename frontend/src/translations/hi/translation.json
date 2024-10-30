@@ -69,7 +69,10 @@
     "partner": "भागीदार",
     "charity": "दान",
     "rewards": "पुरस्कार",
-    "task": "कार्य"
+    "task": "कार्य",
+    "connect": "कनेक्ट करें",
+    "follow": "जुड़ें",
+    "select": "चयन करें"
   },
   "elements": {
     "earth": "पृथ्वी",

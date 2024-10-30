@@ -24,7 +24,7 @@ const BoosterItem = ({
       : "border-cardsGray text-cardsGray"
   } ${
         isActive && isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-      } rounded-primary h-[90px] w-full bg-glass-black p-[15px] `}
+      } rounded-primary h-[90px] w-full bg-glass-black p-[15px]`}
       onMouseDown={() => {
         setIsClicked(true);
       }}
@@ -57,7 +57,7 @@ const BoosterItem = ({
           {t(`boosters.${booster}.desc`)}{" "}
           {booster === 6 && (
             <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-              L99*n
+              Lvl 99*n
             </span>
           )}
           {booster === 1 && (
@@ -66,7 +66,7 @@ const BoosterItem = ({
             </span>
           )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-            {booster != 6 && booster != 1 && "L1-99"}
+            {booster != 6 && booster != 1 && "Lvl 1-99"}
           </span>
         </h2>
       </div>

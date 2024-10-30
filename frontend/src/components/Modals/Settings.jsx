@@ -3,7 +3,14 @@ import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import ToggleSwitch from "../Common/ToggleSwitch";
-import { ChevronRight, Globe, Volume2, VolumeX, Wallet } from "lucide-react";
+import {
+  Check,
+  ChevronRight,
+  Globe,
+  Volume2,
+  VolumeX,
+  Wallet,
+} from "lucide-react";
 import { MyContext } from "../../context/context";
 import { country } from "../../utils/country";
 import {
@@ -133,10 +140,6 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  // useEffect(() => {
-  //   handleDisconnectTon();
-  // }, []);
-
   const handleClose = () => {
     close();
     if (isChanged) {
@@ -211,6 +214,12 @@ const SettingModal = ({ close }) => {
             {enableSound ? <Volume2 /> : <VolumeX />}
           </div>
           <ToggleSwitch />
+        </div>
+        <div
+          onClick={handleClose}
+          className="bg-white w-full flex justify-center items-center py-2.5 mt-3 rounded-md"
+        >
+          <Check strokeWidth={4} size={"25px"} />
         </div>
       </div>
     </div>
