@@ -215,7 +215,10 @@ const SettingModal = ({ close }) => {
           </div>
           <ToggleSwitch />
         </div>
-        <div className="bg-white w-full flex justify-center items-center py-2.5 mt-3 rounded-md">
+        <div
+          onClick={handleClose}
+          className="bg-white w-full flex justify-center items-center py-2.5 mt-3 rounded-md"
+        >
           <Check strokeWidth={4} size={"25px"} />
         </div>
       </div>

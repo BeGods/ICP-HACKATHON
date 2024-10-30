@@ -191,32 +191,6 @@ const Profile = (props) => {
           }}
         />
       </div>
-
-      {/* Toggles */}
-      {/* {showToggles && (
-        <>
-          <ToggleLeft
-            minimize={2}
-            handleClick={() => {
-              setCurrState((prev) => {
-                const newState = prev - 3;
-                return newState < 0 ? (totalSections - 1) * 3 : newState;
-              });
-            }}
-            activeMyth={4}
-          />
-          <ToggleRight
-            minimize={2}
-            handleClick={() => {
-              setCurrState((prev) => {
-                const newState = prev + 3;
-                return newState >= socialQuestData.length ? 0 : newState;
-              });
-            }}
-            activeMyth={4}
-          />
-        </>
-      )} */}
     </div>
   );
 };
