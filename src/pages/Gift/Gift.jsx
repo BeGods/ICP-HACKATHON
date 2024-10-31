@@ -6,6 +6,7 @@ import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
+import GiftCarousel from "../../components/Carousel/GiftCarousel";
 
 const Gift = (props) => {
   const { rewards, assets } = useContext(MyContext);
@@ -55,26 +56,11 @@ const Gift = (props) => {
       <GiftHeader partners={rewards.length} />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] flex-col gap-y-[15px]">
-          {rewards.slice(currState, currState + 3).map((item) => {
+          {/* {rewards.slice(currState, currState + 3).map((item) => {
             return <GiftItemCrd key={item.id} item={item} />;
-          })}
+          })} */}
+          <GiftCarousel rewards={rewards} />
         </div>
-      </div>
-
-      <div className="flex absolute bottom-[15%] pb-6 gap-3 justify-center items-center pt-5 w-full">
-        {Array.from({ length: totalSections }, (_, index) => (
-          <div
-            onClick={() => {
-              setCurrState(index * 3);
-            }}
-            key={index}
-            className={`h-3.5 w-3.5 ${
-              Math.floor(currState / 3) === index
-                ? "bg-white"
-                : "border border-white"
-            } rounded-full`}
-          ></div>
-        ))}
       </div>
 
       {/* Toggles */}

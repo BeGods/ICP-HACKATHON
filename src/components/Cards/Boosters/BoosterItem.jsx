@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { boosterIcon, mythSections } from "../../../utils/constants";
-import { ChevronRight, LockKeyhole } from "lucide-react";
 
 const BoosterItem = ({
   isActive,
@@ -57,7 +56,7 @@ const BoosterItem = ({
           {t(`boosters.${booster}.desc`)}{" "}
           {booster === 6 && (
             <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-              Lvl 99*n
+              Lvl 1000*n
             </span>
           )}
           {booster === 1 && (
@@ -69,13 +68,6 @@ const BoosterItem = ({
             {booster != 6 && booster != 1 && "Lvl 1-99"}
           </span>
         </h2>
-      </div>
-      <div className="flex justify-center items-center w-[8%] ">
-        {isActive ? (
-          <ChevronRight className="absolute" size={"30px"} />
-        ) : (
-          <LockKeyhole className="absolute" size={"30px"} />
-        )}
       </div>
     </div>
   );
