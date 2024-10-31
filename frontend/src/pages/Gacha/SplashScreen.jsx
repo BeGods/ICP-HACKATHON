@@ -125,7 +125,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
       <div
         className="absolute animate-spin-slow scale-150 z-0"
         style={{
-          background: `url(${assets.uxui.startlight})`,
+          background: `url(${assets.uxui.starlight})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "contain",
           backgroundPosition: "center center",
