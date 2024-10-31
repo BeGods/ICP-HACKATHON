@@ -5,13 +5,10 @@ import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
 import SettingModal from "../../components/Modals/Settings";
 import { showToast } from "../../components/Toast/Toast";
-import MilestoneCard from "../../components/Cards/Reward/OrbRewardCrd";
 import { ProfileGuide } from "../../components/Common/Tutorials";
 import { useProfileGuide } from "../../hooks/Tutorial";
 import ProfileHeader from "./Header";
-import TaskItem from "../../components/Cards/Tasks/TaskItem";
-
-import CarouselBtn from "../../components/Buttons/CarouselBtn";
+import TaskCarousel from "../../components/Carousel/TaskCarousel";
 
 const tele = window.Telegram?.WebApp;
 
@@ -22,9 +19,6 @@ const Profile = (props) => {
     useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
-  const [currState, setCurrState] = useState(0);
-  const totalSections = Math.ceil(socialQuestData.length / 3);
-
   const [showToggles, setShowToggles] = useState(false);
 
   const handleCopyLink = async () => {
@@ -100,7 +94,10 @@ const Profile = (props) => {
         handleClick={handleCopyLink}
       />
 
-      <div className="flex mt-[23vh] mx-auto right-1/2 -mr-[10vw] text-primary absolute text-black-lg-contour text-gold">
+      <div
+        className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
+        style={{ top: "23vh", left: "50%", transform: "translateX(-50%)" }}
+      >
         {userData.telegramUsername.charAt(0).toUpperCase() +
           userData.telegramUsername.slice(1).toLowerCase()}
       </div>
@@ -124,72 +121,9 @@ const Profile = (props) => {
       </div>
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="flex w-[75%] min-h-[40vh] flex-col gap-y-[15px]">
-          {socialQuestData
-            .sort((a, b) => a.isCompleted - b.isCompleted)
-            .slice(currState, currState + 3)
-            .map((quest, index) => {
-              return (
-                <div key={index}>
-                  <TaskItem
-                    showWallet={() => {
-                      open();
-                    }}
-                    showSetting={() => {
-                      setShowCard(
-                        <SettingModal
-                          close={() => {
-                            setShowCard(null);
-                          }}
-                        />
-                      );
-                    }}
-                    quest={quest}
-                    claimCard={() => {
-                      setShowCard(
-                        <MilestoneCard
-                          t={t}
-                          isMulti={true}
-                          isOrb={true}
-                          isBlack={false}
-                          activeMyth={4}
-                          isForge={true}
-                          closeCard={() => {}}
-                          handleClick={() => {
-                            tele.HapticFeedback.notificationOccurred("success");
-                            setShowCard(null);
-                          }}
-                        />
-                      );
-                    }}
-                  />
-                </div>
-              );
-            })}
+        <div className="flex w-[75%] min-h-[60vh] flex-col">
+          <TaskCarousel quests={socialQuestData} />
         </div>
-      </div>
-
-      <div className="absolute bottom-0 w-full mb-[15vh]">
-        <CarouselBtn
-          icon={0}
-          currState={currState}
-          activeMyth={4}
-          lastState={totalSections + 1}
-          handlePrev={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setCurrState((prev) => {
-              const newState = prev - 3;
-              return newState < 0 ? prev : newState;
-            });
-          }}
-          handleNext={() => {
-            tele.HapticFeedback.notificationOccurred("success");
-            setCurrState((prev) => {
-              const newState = prev + 3;
-              return newState >= socialQuestData.length ? prev : newState;
-            });
-          }}
-        />
       </div>
     </div>
   );
