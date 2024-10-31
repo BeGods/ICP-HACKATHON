@@ -94,7 +94,10 @@ const Profile = (props) => {
         handleClick={handleCopyLink}
       />
 
-      <div className="flex mt-[23vh] mx-auto right-1/2 -mr-[10vw] text-primary absolute text-black-lg-contour text-gold">
+      <div
+        className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
+        style={{ top: "23vh", left: "50%", transform: "translateX(-50%)" }}
+      >
         {userData.telegramUsername.charAt(0).toUpperCase() +
           userData.telegramUsername.slice(1).toLowerCase()}
       </div>
