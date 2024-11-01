@@ -441,7 +441,7 @@ console.log("filtered list after applying filters",filteredList)
     }
     useEffect(() => {
         if (isDisplayFiltersPopup) {
-          
+
           document.body.style.overflow = 'hidden';
         } else {
           

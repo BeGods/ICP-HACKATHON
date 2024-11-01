@@ -93,7 +93,7 @@ const NFTGallery = ({ currentCollection }) => {
          ))}
        
       </div>
-      <div className={`justify-around hidden gap-5 m-5 sm:grid sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
+      <div className={`justify-around hidden m-5 sm:grid sm:grid-cols-3 md:ml-14 lg:ml-5 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
         {currentCollection.map((img, index) => {
          return(
           <div className="rounded-lg flip-card " key={index}>
