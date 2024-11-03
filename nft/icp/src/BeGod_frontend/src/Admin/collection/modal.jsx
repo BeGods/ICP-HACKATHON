@@ -4,33 +4,45 @@ import ImageUploader from "./ImageUploader";
 import toast from "react-hot-toast";
 import YellowButton from "../../components/button/YellowButton";
 import imageCompression from "browser-image-compression";
-
+import { v4 as uuidv4 } from 'uuid';
 const Modal = (props) => {
-  const { getAddedNftDetails } = props;
-  const [nftId, setNftId] = useState("");
-  const [nftName, setNftName] = useState("");
-  const [nftType, setNftType] = useState("Common");
-  const [nftQuantity, setNftQuantity] = useState();
-  const [nftPrice, setPrice] = useState();
-  const [nftDescription, setNftDescription] = useState("");
-  const [nftImage, setNftImage] = useState();
-  const [nftImageURL, setNftImageURL] = useState("");
-  const { toggleModal } = props;
-  const [nftcolor, setnftcolor] = useState("Golden");
+  const { getAddedNftDetails ,getUpdatedNftDetails,cardDetails , type ,toggleModal } = props;
+  // console.log(cardDetails)
+  // console.log("type",type)
+ // const [nftId, setNftId] = useState("");
+ const [nftName, setNftName] = useState(type === "edit" ? cardDetails.nftName : "");
+  const [nftType, setNftType] = useState(type === "edit" ? cardDetails.nftType : "Common");
+  const [nftQuantity, setNftQuantity] = useState(type === "edit" ? cardDetails.nftQuantity : "");
+  const [nftPrice, setPrice] = useState(type === "edit" ? cardDetails.nftPrice : "");
+  const [nftDescription, setNftDescription] = useState(type === "edit" ? cardDetails.nftDescription : "");
+  const [nftImage, setNftImage] = useState(type === "edit" ? cardDetails.nftImage : "");
+  const [nftImageURL, setNftImageURL] = useState(type === "edit" ? cardDetails.nftImageURL : "");
+  const [nftcolor, setnftcolor] = useState(type === "edit" ? cardDetails.nftcolor : "Golden");
 
-  const nnftid = () => {
-    const value = Math.floor(Math.random() * 1000000);
-    setNftId(value);
-  };
 
-  useEffect(() => {
-    nnftid();
-  }, []);
+  const [hideImageUpload,updateHideImageUploadStatus] = useState(false)
+
+  // const [nftName, setNftName] = useState("");
+  // const [nftType, setNftType] = useState("Common");
+  // const [nftQuantity, setNftQuantity] = useState();
+  // const [nftPrice, setPrice] = useState();
+  // const [nftDescription, setNftDescription] = useState("");
+  // const [nftImage, setNftImage] = useState();
+  // const [nftImageURL, setNftImageURL] = useState("");
+  // const [nftcolor, setnftcolor] = useState("Golden");
+
+  // const nnftid = () => {
+  //   const value = Math.floor(Math.random() * 1000000);
+  //   setNftId(value);
+  // };
+
+  // useEffect(() => {
+  //   nnftid();
+  // }, []);
 
   const onClickAddButton = () => {
     // event.preventDefault();
     if (
-      nftId &&
       nftName &&
       nftType &&
       nftQuantity &&
@@ -41,7 +53,7 @@ const Modal = (props) => {
       nftcolor
     ) {
       const nftDetails = {
-        nftId,
+        nftId : uuidv4(),
         nftName,
         nftType,
         nftQuantity,
@@ -59,6 +71,38 @@ const Modal = (props) => {
       toast.error("Enter All NFT Card Details");
     }
   };
+  const onClickSaveButton = () => {
+    // event.preventDefault();
+    if (
+      nftName &&
+      nftType &&
+      nftQuantity &&
+      nftPrice &&
+      nftDescription &&
+      nftImage &&
+      nftImageURL &&
+      nftcolor
+    ) {
+      const nftDetails = {
+        nftId : cardDetails.nftId,
+        nftName,
+        nftType,
+        nftQuantity,
+        nftImage,
+        nftImageURL,
+        nftPrice,
+        nftDescription,
+        nftcolor,
+      };
+      console.log("nft details", nftDetails);
+      getUpdatedNftDetails(nftDetails);
+      toggleModal();
+      toast.success("Card updated!");
+    } else {
+      toast.error("Enter All NFT Card Details");
+    }
+  };
+
 
   const captureUploadedNftImageFile = async (files) => {
     const file = files[0];
@@ -92,6 +136,11 @@ const Modal = (props) => {
     console.log(nftImageURL);
     // console.log("img", files);
   };
+
+
+  // console.log(nftName)
+  // console.log(nftType)
+  // console.log(nftQuantity)
 
   return (
     <div className="add_new_nft_popup_bg_container">
@@ -172,10 +221,29 @@ const Modal = (props) => {
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             Image
-            <ImageUploader
-              captureUploadedNftImage={captureUploadedNftImage}
-              captureUploadedNftImageFile={captureUploadedNftImageFile}
+           {(type  === "add" || hideImageUpload) ? (
+             <ImageUploader
+             captureUploadedNftImage={captureUploadedNftImage}
+             captureUploadedNftImageFile={captureUploadedNftImageFile}
+           />
+           ):(
+            <div
+            className="relative w-[50px] h-[50px] md:h-[70px] m-0"
+          >
+            <img
+              src={nftImage}
+              alt="Selected"
+              className="object-cover w-full h-full rounded-lg"
             />
+            <button
+              onClick={()=>updateHideImageUploadStatus(true)}
+              className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
+            >
+              <RxCross2 className="text-black" size={15} />
+            </button>
+          </div>
+           )}
+           
           </label>
         </div>
 
@@ -241,8 +309,10 @@ const Modal = (props) => {
           </label>
         </div>
         <div className="flex justify-center mt-2 md:mt-3">
-          <YellowButton methodName={() => onClickAddButton()}>Add</YellowButton>
+         {type === "add" && ( <YellowButton methodName={() => onClickAddButton()}>Add</YellowButton>)}
+         {type === "edit" && ( <YellowButton methodName={() => onClickSaveButton()}>Save</YellowButton>)}
           {/* <button
+
             type="submit"
             className="h-[38px] w-[150px] border-0 bg-[#FCD37B] text-[#000000] rounded-sm"
             onClick={onClickAddButton}

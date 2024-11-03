@@ -37,6 +37,7 @@ function App() {
           <Route path="/Nft/:Nftname/buy" element={<BuyNft />} />
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin/*" element={<Admin />} />
+          <Route path="/unauth/*" element={<UnauthorizedPage />} />
           <Route path="*" element={<PageNotFound />} />
           <Route path="/unauth" element={<UnauthorizedPage />} />
         </Routes>

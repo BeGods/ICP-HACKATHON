@@ -212,6 +212,7 @@ body {
   height: 280px; /* Height for desktop */
   flex-shrink: 0;
   margin-bottom: 20px;
+ 
 }
 .buy-nft-card{
   width: 250px; /* Width for desktop */
@@ -252,6 +253,7 @@ body {
   backface-visibility: hidden;
   border-style: none;
   border-width: 0px;
+  background-color: transparent;
 }
 
 .flip-card-back {
@@ -262,8 +264,10 @@ body {
 @media (max-width: 640px) {
   /* Mobile screen size */
   .flip-card {
-    width: 250px; /* Reduced width for mobile */
-    height: 350px; /* Reduced height for mobile */
+    width: 47vw; /* Reduced width for mobile */
+    min-height: 350px; /* Reduced height for mobile */
+    margin-bottom: 10px;
+    
   }
   .buy-nft-card{
     width: 250px; /* Width for desktop */
@@ -275,6 +279,12 @@ body {
 
   .flip-card-back .absolute {
     font-size: 14px; /* Adjust button font size for mobile */
+  }
+}
+
+@media (max-width: 450px){
+  .flip-card{
+    min-height: 230px;
   }
 }
 
@@ -485,6 +495,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 3px;
+  height: 3px;
 }
 ::-webkit-scrollbar-track {
   background-color: black;

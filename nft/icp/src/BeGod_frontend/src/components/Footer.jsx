@@ -47,7 +47,7 @@ const Footer = ({handleCurrentIndex}) => {
     dispatch(updateCurrentIndex(index));
     if(handleCurrentIndex){
         handleCurrentIndex(index);
-        window.scrollBy({ top: -500, behavior: 'smooth' });
+        document.getElementById("collections").scrollIntoView({ behavior: "smooth"});
     }else{
         navigate('/#collections');
     }

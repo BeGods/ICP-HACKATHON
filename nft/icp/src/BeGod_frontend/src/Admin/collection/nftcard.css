@@ -48,7 +48,6 @@
 
 /* Styles for the front face */
 .flip-card-front {
-  background: #ffc728; /* Background color */
   display: flex;
   align-items: center;
   justify-content: center;

@@ -117,7 +117,7 @@ function CollectionDetails() {
       const userPrincipalArray = principal;
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
-
+      console.log("before")
       const result = await backendActor?.getAllCollectionNFTs(
         principalString,
         5,
@@ -830,6 +830,7 @@ function CollectionDetails() {
                       <Modal
                         toggleModal={toggleModal}
                         getAddedNftDetails={getAddedNftDetails}
+                        type="add"
                       />
                     </div>
                   </div>

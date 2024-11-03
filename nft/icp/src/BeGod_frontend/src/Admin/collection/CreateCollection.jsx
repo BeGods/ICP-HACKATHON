@@ -318,6 +318,29 @@ const CreateCollection = () => {
     setnftcolor(nftDetails.nftcolor);
   };
 
+  const getUpdatedNftDetails = (nftDetails) => {
+    console.log("updated card details",nftDetails)
+    const id = nftDetails.nftId;
+    const updatedList = nftCardsList.map((eachCard)=>{
+      if(id === eachCard.nftId){
+        console.log(id ,"  ",eachCard.nftId)
+        return nftDetails;
+      }
+      return eachCard;
+    })
+    setNftCardsList(updatedList)
+
+    setnfttype(nftDetails.nftType);
+    setnftname(nftDetails.nftName);
+    setnftquantity(nftDetails.nftQuantity);
+    setnftprice(nftDetails.nftPrice);
+    setnftdescription(nftDetails.nftDescription);
+    setnftimage(nftDetails.nftImage);
+    setnftcolor(nftDetails.nftcolor);
+  };
+  
+
+
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
       (eachNft) => eachNft.nftId !== nftId
@@ -401,6 +424,16 @@ const CreateCollection = () => {
     }
   };
 
+  const [currentItemCardDetails,updateCurrentItemDetails] = useState({});
+  const [type,updateType] = useState("add"); 
+
+  const onClickEdit = (nftId) =>{  
+    const nftDetails = nftCardsList.filter((eachNft)=>(eachNft.nftId === nftId));
+    updateCurrentItemDetails(nftDetails[0]);
+    updateType("edit")
+    toggleModal();
+  }
+
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
@@ -425,7 +458,7 @@ const CreateCollection = () => {
             <div className="my-8">
               <h1 className="text-3xl text-white ">Create Collection</h1>
               <div className="flex flex-col md:flex-row gap-x-8 items-center  w-full  px-1 py-2 text-[#FFFFFF] justify-start rounded-md">
-                <form className="flex flex-col w-full gap-2 mt-4 space-y-4">
+                <div className="flex flex-col w-full gap-2 mt-4 space-y-4">
                   {/* Collection Name and Max Limit */}
                   <div className="flex flex-col items-center justify-center w-full sm:flex-row sm:gap-4 md:flex-row md:gap-4">
                     <div className="flex flex-col w-full sm:w-1/2">
@@ -529,7 +562,7 @@ const CreateCollection = () => {
                       <button
                         type="button"
                         className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
-                        onClick={toggleModal}
+                        onClick={()=> {updateType("add");toggleModal()}}
                       >
                         Add New
                       </button>
@@ -546,6 +579,7 @@ const CreateCollection = () => {
                         nftDetails={eachNftItem}
                         key={eachNftItem.nftId}
                         deleteNft={deleteNft}
+                        onClickEdit = {onClickEdit}
                       />
                     ))}
                   </div>
@@ -590,12 +624,15 @@ const CreateCollection = () => {
                           <Modal
                             toggleModal={toggleModal}
                             getAddedNftDetails={getAddedNftDetails}
+                            getUpdatedNftDetails={getUpdatedNftDetails}
+                            cardDetails = {currentItemCardDetails}
+                            type = {type}
                           />
                         </div>
                       </div>
                     </div>
                   )}
-                </form>
+                </div>
               </div>
             </div>
           </div>
