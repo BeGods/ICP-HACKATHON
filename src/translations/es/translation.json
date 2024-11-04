@@ -46,7 +46,9 @@
     {},
     {},
     {},
-    { "title": "Explosión", "desc": "Presión de Apretar" }
+    { "title": "Explosión", "desc": "Presión de Apretar" },
+    { "title": "Automata Pack", "desc": "4X Automata" }
+
   ],
   "profile": {
     "premium": "Premium",

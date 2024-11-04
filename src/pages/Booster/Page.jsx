@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import {
+  claimAutoAutomata,
   claimAutomataBooster,
   claimBurstBooster,
   claimShardsBooster,
@@ -60,6 +61,51 @@ const Boosters = () => {
                   }
                 : item
             ),
+          };
+
+          return updatedData;
+        });
+        setShowCard(null);
+        disableRef.current = false;
+        showToast("booster_success");
+        setShowBooster("automata");
+        setSection(0);
+      } catch (error) {
+        disableRef.current = false;
+        setShowCard(null);
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred";
+        console.log(errorMessage);
+        showToast("booster_error");
+      }
+    }
+  };
+
+  const handleClaimAutoAutomata = async () => {
+    if (disableRef.current === false) {
+      disableRef.current = true;
+
+      try {
+        await claimAutoAutomata(authToken);
+
+        setGameData((prevData) => {
+          const now = Date.now();
+
+          const updatedData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs - 1,
+            mythologies: prevData.mythologies.map((item) => ({
+              ...item,
+              boosters: {
+                ...item.boosters,
+                automatalvl: item.boosters.automatalvl + 1,
+                isAutomataActive: true,
+                automataLastClaimedAt: now,
+                automataStartTime: now,
+              },
+            })),
           };
 
           return updatedData;
@@ -268,6 +314,7 @@ const Boosters = () => {
             handleClaimAutomata={handleClaimAutomata}
             handleClaimShards={handleClaimShards}
             handleClaimBurst={handleClaimBurst}
+            handleClaimAutoAutomata={handleClaimAutoAutomata}
             mythData={mythData}
             enableGuide={enableGuide}
           />

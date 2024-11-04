@@ -3,8 +3,6 @@ import "../../styles/carousel.scss";
 import { useTranslation } from "react-i18next";
 import GiftItemCrd from "../Cards/Reward/GiftItemCrd";
 
-const tele = window.Telegram?.WebApp;
-
 const GiftCarousel = ({ rewards }) => {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,7 +16,7 @@ const GiftCarousel = ({ rewards }) => {
 
     if (deltaY > 50 && currentIndex > 0) {
       setCurrentIndex((prevIndex) => prevIndex - 1);
-    } else if (deltaY < -50 && currentIndex < rewards.length - 1) {
+    } else if (deltaY < -50 && currentIndex < rewards.length - 3) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -30,36 +28,39 @@ const GiftCarousel = ({ rewards }) => {
       onTouchEnd={handleTouchEnd}
     >
       <div className="carousel">
-        {rewards.map((item, index) => {
+        {rewards.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
-          const offset = index - currentIndex;
-
-          if (currentIndex === 0 && index === rewards.length - 1) {
+          if (index === 0) {
             className += " previous";
-          } else if (currentIndex === rewards.length - 1 && index === 0) {
-            className += " next";
-          } else if (offset === 0) {
+          } else if (index === 1) {
             className += " active";
-          } else if (
-            offset === 1 ||
-            (currentIndex === rewards.length - 1 &&
-              offset === -rewards.length + 1)
-          ) {
+          } else if (index === 2) {
             className += " next";
-          } else if (
-            offset === -1 ||
-            (currentIndex === 0 && offset === rewards.length - 1)
-          ) {
-            className += " previous";
           }
 
           return (
-            <div className={className} key={index}>
+            <div className={className} key={currentIndex + index}>
               <GiftItemCrd key={item.id} item={item} />
             </div>
           );
         })}
       </div>
+      {currentIndex < rewards.length - 3 && (
+        <div
+          onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
+          className="absolute bottom-[20%] w-full"
+        >
+          <div className="arrows-down"></div>
+        </div>
+      )}
+      {rewards.length > 3 && currentIndex >= rewards.length - 3 && (
+        <div
+          onClick={() => setCurrentIndex(0)}
+          className="absolute bottom-[20%] w-full"
+        >
+          <div className="arrows-up"></div>
+        </div>
+      )}
     </div>
   );
 };

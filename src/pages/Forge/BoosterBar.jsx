@@ -29,11 +29,13 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                   }
                   setShowMinion((prev) => !prev);
                 }}
-                className={`font-symbols transition-all duration-500 ${
+                className={`font-symbols glow-icon-${
+                  mythSections[activeMyth]
+                } transition-all duration-500 ${
                   glowBooster === 1
                     ? `scale-150 text-${mythSections[activeMyth]}-text`
                     : "text-white"
-                } text-black-contour text-[50px] p-0 ml-2 `}
+                }  text-[50px] p-0 ml-2 `}
               >
                 m
               </div>
@@ -76,11 +78,13 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                     setToggleValue((prev) => !prev);
                     setShowAutomata((prev) => !prev);
                   }}
-                  className={`font-symbols transition-all duration-250 ${
+                  className={`font-symbols transition-all duration-250 glow-icon-${
+                    mythSections[activeMyth]
+                  } ${
                     glowBooster === 2
                       ? `scale-150 text-${mythSections[activeMyth]}-text`
                       : "text-white"
-                  } text-black-contour text-[50px] p-0 mr-2`}
+                  } text-[50px] p-0 mr-2`}
                 >
                   n
                 </div>

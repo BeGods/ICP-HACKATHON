@@ -46,7 +46,8 @@
     {},
     {},
     {},
-    { "title": "Взрыв", "desc": "Давление Сжатия" }
+    { "title": "Взрыв", "desc": "Давление Сжатия" },
+    { "title": "Automata Pack", "desc": "4X Automata" }
   ],
   "profile": {
     "premium": "Премиум",

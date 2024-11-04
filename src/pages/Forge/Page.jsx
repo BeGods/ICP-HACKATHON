@@ -22,7 +22,10 @@ import { showToast } from "../../components/Toast/Toast";
 import { ForgesGuide } from "../../components/Common/Tutorials";
 import { hideBackButton } from "../../utils/teleBackButton";
 import { useForgeGuide } from "../../hooks/Tutorial";
-import { handleGeneratePopTime } from "../../helpers/game.helper";
+import {
+  getPhaseByDate,
+  handleGeneratePopTime,
+} from "../../helpers/game.helper";
 import ForgeHeader from "./Header";
 import gsap from "gsap";
 
@@ -382,9 +385,15 @@ const Forges = () => {
 
   // update black orbs
   const updateBlackOrbStatus = () => {
+    const currPhase = getPhaseByDate(new Date());
+    let blackOrbPhaseBonus = 1;
+
+    if (currPhase === 4) {
+      blackOrbPhaseBonus = 2;
+    }
     setGameData((prev) => ({
       ...prev,
-      blackOrbs: prev.blackOrbs + 1,
+      blackOrbs: (prev.blackOrbs + 1) * blackOrbPhaseBonus,
     }));
   };
 
@@ -814,50 +823,36 @@ const Forges = () => {
       }, 9000);
     }
     if (isStarHolding === 1) {
-      intervalId = setInterval(() => {
-        if (platform !== "ios") {
-          window.navigator.vibrate(100);
-        }
-        if (platform === "ios") {
-          tele.HapticFeedback.impactOccurred("light");
-        }
-        setCount((prev) => prev + 1);
+      const orbIntervalId = setInterval(() => {
         setMythStates((prevData) => {
           return prevData.map((item, index) => {
-            const multiplier =
-              mythStates[activeMyth].burstlvl +
-              (!mythStates[activeMyth].isShardsClaimActive
-                ? mythStates[activeMyth].shardslvl
-                : 0) +
-              (mythStates[activeMyth].isAutomataActive
-                ? mythStates[activeMyth].automatalvl
-                : 0);
-            let newShards = Math.floor(item.shards + 9.8 * multiplier);
-            let newOrbs = 0;
             if (index === activeMyth) {
-              if (newShards >= 1000) {
-                orbChangeEffect();
-
-                newOrbs += Math.floor(newShards / 1000);
-                newShards = newShards % 1000;
-              }
-              if (!mythStates[activeMyth].isShardsClaimActive) {
-                handlePlusMinon(50, 800);
-              }
-              if (mythStates[activeMyth].isAutomataActive) {
-                handlePlusAutomata(300, 800);
-              }
               return {
                 ...item,
-
-                shards: newShards,
-                orbs: item.orbs + newOrbs,
+                orbs: item.orbs + mythStates[activeMyth].burstlvl,
               };
             }
             return item;
           });
         });
+      }, 1000);
+
+      const actionIntervalId = setInterval(() => {
+        if (platform !== "ios") {
+          window.navigator.vibrate(100);
+        } else if (platform === "ios") {
+          tele.HapticFeedback.impactOccurred("light");
+        }
+
+        setCount((prev) => prev + 1);
+        handlePlusMinon(50, 800);
+        handlePlusAutomata(300, 800);
       }, 100);
+
+      return () => {
+        clearInterval(orbIntervalId);
+        clearInterval(actionIntervalId);
+      };
     } else {
       clearInterval(intervalId);
     }

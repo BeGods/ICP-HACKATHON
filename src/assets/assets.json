@@ -15,7 +15,8 @@
         "pandora": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/320px-pandora.png",
         "info": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg",
         "infomoon":"https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-moon.jpg",
-        "starlight": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/star.light.jpg"
+        "starlight": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/star.light.jpg",
+        "gameEnd": "/assets/cards/320px.fof.whitelist.jpg"
     },
     "logos": {
         "captcha" : "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-frogdog.captcha.png",

@@ -98,31 +98,31 @@ function PayCard({
           {gameData.mythologies.map((item, index) => (
             <div key={index} className="flex gap-1 items-center">
               <div
-                className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name.toLowerCase()}`}
+                className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name?.toLowerCase()}`}
               >
                 <img
                   src={assets.uxui.baseorb}
                   alt="orb"
-                  className={`filter-orbs-${item.name.toLowerCase()}`}
+                  className={`filter-orbs-${item.name?.toLowerCase()}`}
                 />
                 <span
                   className={`absolute z-1 font-symbols  text-[30px] mt-1 text-black-sm-contour transition-all duration-1000 ${
                     scale
-                      ? `transform scale-150 transition-transform duration-1000 opacity-100 text-${item.name.toLowerCase()}-text`
+                      ? `transform scale-150 transition-transform duration-1000 opacity-100 text-${item.name?.toLowerCase()}-text`
                       : "text-white opacity-50"
                   }`}
                 >
-                  <>{mythSymbols[item.name.toLowerCase()]}</>
+                  <>{mythSymbols[item.name?.toLowerCase()]}</>
                 </span>
               </div>
               <div
                 className={`font-fof text-[28px] font-normal  text-black-sm-contour transition-all duration-1000 ${
                   deduct
-                    ? `text-${item.name.toLowerCase()}-text scale-150`
+                    ? `text-${item.name?.toLowerCase()}-text scale-150`
                     : "text-white"
                 }`}
               >
-                {getDisplayValue(item.name)}
+                {getDisplayValue(item?.name)}
               </div>
             </div>
           ))}

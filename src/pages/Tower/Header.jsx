@@ -3,6 +3,7 @@ import { mythSections, mythSymbols, wheel } from "../../utils/constants";
 import { MyContext } from "../../context/context";
 import Header from "../../components/Common/Header";
 import MoonInfoCard from "../../components/Cards/Info/MoonInfoCrd";
+import { getPhaseByDate } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -23,7 +24,6 @@ const CenterChild = ({ platform, myth }) => {
       }}
       className="flex absolute justify-center w-full mt-1"
     >
-      {/* Orb */}
       {myth !== 0 ? (
         <div
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
@@ -36,27 +36,39 @@ const CenterChild = ({ platform, myth }) => {
           <span
             className={`absolute z-1 font-symbols opacity-100 text-white text-[28vw] ${
               platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
-            } opacity-50 orb-symbol-shadow`}
+            } opacity-50  orb-symbol-shadow`}
           >
             {mythSymbols[wheel[myth]]}
           </span>
         </div>
       ) : (
-        <div
-          className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-0.5 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
-        >
-          <img
-            src={`${assets.uxui.baseorb}`}
-            alt="base-orb"
-            className={`filter-orbs-black w-full h-full`}
-          />
-          <span
-            className={`absolute z-1 font-symbols  text-white text-[28vw] ${
-              platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
-            } opacity-50 orb-symbol-shadow`}
-          >
-            {mythSymbols["other"]}
-          </span>
+        <div className={`z-20 glow-icon-white`}>
+          <div className="moon-phases">
+            <div className="moon">
+              <div
+                className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full y`}
+              >
+                <div
+                  style={{ height: `100%` }}
+                  className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 phase phase-${getPhaseByDate(
+                    new Date()
+                  )} z-10`}
+                ></div>
+              </div>
+              <img
+                src={`${assets.uxui.baseorb}`}
+                alt="moon-phase"
+                className="moon-base"
+              />
+              <span
+                className={`absolute z-1 font-symbols text-white-contour  text-black/90 text-[28vw] ${
+                  platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
+                } orb-symbol-shadow z-50`}
+              >
+                {mythSymbols["other"]}
+              </span>
+            </div>
+          </div>
         </div>
       )}
     </div>

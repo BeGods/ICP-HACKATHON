@@ -29,13 +29,14 @@ const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
       try {
         await claimSocialTask({ questId: quest._id }, authToken);
         const updatedQuestData = socialQuestData.map((item) =>
-          item._id === quest._id ? { ...item, isCompleted: true } : item
+          item._id === quest._id ? { ...item, isQuestClaimed: true } : item
         );
         const updatedGameData = {
           ...gameData,
           multiColorOrbs:
             gameData.multiColorOrbs + quest.requiredOrbs.multiOrbs,
         };
+        setClaim(false);
         setGameData(updatedGameData);
         setSocialQuestData(updatedQuestData);
         showToast("task_success");
@@ -115,7 +116,7 @@ ${
         </h2>
       </div>
       <div className="flex justify-center items-center w-[8%] ">
-        {quest.isCompleted ? (
+        {quest.isQuestClaimed ? (
           <div className="flex justify-center items-center h-[30px] w-[30px] p-1 bg-white rounded-full">
             <Check strokeWidth={3} color="black" />
           </div>
