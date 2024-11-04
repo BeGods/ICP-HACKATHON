@@ -50,11 +50,6 @@ const JigsawButton = ({
           onClick={handlePrev}
         />
       </div>
-      {/* <div
-        className={`text-button-primary uppercase px-2 ${
-          faith < 12 ? "text-textGray" : "text-white"
-        } `}
-      > */}
       <div
         className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black ${
           faith < 12

@@ -23,12 +23,21 @@ const BottomChild = ({ activeMyth, gameData }) => {
   return (
     <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
       <div
-        className={`flex text-num pl-[18px] text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
+        className={`flex text-num pl-[18px] text-black-lg-contour text-white items-center border border-${
+          mythSections[activeMyth]
+        }-primary ${
+          !gameData.isShardsClaimActive &&
+          `glow-button-${mythSections[activeMyth]}`
+        } justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
       >
         <span className="text-[7vw] pr-1 -mb-1">Lvl</span> {gameData.shardslvl}
       </div>
       <div
-        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border border-${mythSections[activeMyth]}-primary justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
+        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border border-${
+          mythSections[activeMyth]
+        }-primary ${
+          gameData.isAutomataActive && `glow-button-${mythSections[activeMyth]}`
+        } justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
       >
         <span className="text-[7vw] pr-1 -mb-1">Lvl</span>{" "}
         {gameData.automatalvl + 1}
@@ -37,16 +46,21 @@ const BottomChild = ({ activeMyth, gameData }) => {
   );
 };
 
-const TopChild = ({ activeMyth }) => {
+const TopChild = ({ activeMyth, gameData }) => {
   return (
     <div className="absolute flex w-full justify-between top-0 z-50 text-white">
       <div
-        className={`font-symbols glow-icon-${mythSections[activeMyth]} ml-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
+        className={`font-symbols ${
+          !gameData.isShardsClaimActive &&
+          `glow-icon-${mythSections[activeMyth]}`
+        }  ml-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
         m
       </div>
       <div
-        className={`font-symbols glow-icon-${mythSections[activeMyth]} mr-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
+        className={`font-symbols ${
+          gameData.isAutomataActive && `glow-icon-${mythSections[activeMyth]}`
+        }  mr-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
       >
         n
       </div>
@@ -58,7 +72,7 @@ const BoosterHeader = ({ activeMyth, showSymbol, gameData }) => {
   return (
     <Header
       handleClick={showSymbol}
-      TopChild={<TopChild activeMyth={activeMyth} />}
+      TopChild={<TopChild activeMyth={activeMyth} gameData={gameData} />}
       BottomChild={<BottomChild activeMyth={activeMyth} gameData={gameData} />}
       CenterChild={
         <CenterChild activeMyth={activeMyth} showSymbol={showSymbol} />

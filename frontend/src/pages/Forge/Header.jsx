@@ -52,11 +52,11 @@ const CenterChild = ({
         <div
           className={`z-1 flex justify-center items-start font-symbols ${
             glowReward
-              ? `text-${mythSections[activeMyth]}-text opacity-100`
+              ? `text-${mythSections[activeMyth]}-text`
               : showBlackOrb === 1
-              ? "text-white opacity-100"
-              : "text-white opacity-50"
-          } text-[28vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+              ? "text-white"
+              : "text-white"
+          } text-[28vw] transition-all duration-1000 myth-glow-greek text-black-md-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
           <div className={`${platform === "ios" ? "mt-1" : "mt-2"}`}>
             {mythSymbols[mythSections[activeMyth]]}

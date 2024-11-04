@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import GiftHeader from "./Header";
-import GiftItemCrd from "../../components/Cards/Reward/GiftItemCrd";
 import {
   ToggleLeft,
   ToggleRight,
@@ -9,10 +8,8 @@ import {
 import GiftCarousel from "../../components/Carousel/GiftCarousel";
 
 const Gift = (props) => {
-  const { rewards, assets } = useContext(MyContext);
-  const [currState, setCurrState] = useState(0);
+  const { rewards, assets, setSection } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
-  const totalSections = Math.ceil(rewards.length / 3);
 
   useEffect(() => {
     setTimeout(() => {
@@ -69,20 +66,14 @@ const Gift = (props) => {
           <ToggleLeft
             minimize={2}
             handleClick={() => {
-              setCurrState((prev) => {
-                const newState = prev - 3;
-                return newState < 0 ? (totalSections - 1) * 3 : newState;
-              });
+              setSection(3);
             }}
             activeMyth={4}
           />
           <ToggleRight
             minimize={2}
             handleClick={() => {
-              setCurrState((prev) => {
-                const newState = prev + 3;
-                return newState >= rewards.length ? 0 : newState;
-              });
+              setSection(3);
             }}
             activeMyth={4}
           />

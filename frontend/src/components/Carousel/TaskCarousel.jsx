@@ -21,7 +21,7 @@ const TaskCarousel = ({ quests }) => {
 
     if (deltaY > 50 && currentIndex > 0) {
       setCurrentIndex((prevIndex) => prevIndex - 1);
-    } else if (deltaY < -50 && currentIndex < quests.length - 1) {
+    } else if (deltaY < -50 && currentIndex < quests.length - 3) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -33,65 +33,71 @@ const TaskCarousel = ({ quests }) => {
       onTouchEnd={handleTouchEnd}
     >
       <div className="carousel">
-        {quests.map((item, index) => {
-          let className = "carousel__item";
-          const offset = index - currentIndex;
+        {quests
+          .sort((a, b) => a.isQuestClaimed - b.isQuestClaimed)
+          .slice(currentIndex, currentIndex + 3)
+          .map((item, index) => {
+            let className = "carousel__item";
+            if (index === 0) {
+              className += " previous";
+            } else if (index === 1) {
+              className += " active";
+            } else if (index === 2) {
+              className += " next";
+            }
 
-          if (currentIndex === 0 && index === quests.length - 1) {
-            className += " previous";
-          } else if (currentIndex === quests.length - 1 && index === 0) {
-            className += " next";
-          } else if (offset === 0) {
-            className += " active";
-          } else if (
-            offset === 1 ||
-            (currentIndex === quests.length - 1 &&
-              offset === -quests.length + 1)
-          ) {
-            className += " next";
-          } else if (
-            offset === -1 ||
-            (currentIndex === 0 && offset === quests.length - 1)
-          ) {
-            className += " previous";
-          }
-
-          return (
-            <div className={className} key={index}>
-              <TaskItem
-                showWallet={() => {}}
-                showSetting={() => {
-                  setShowCard(
-                    <SettingModal
-                      close={() => {
-                        setShowCard(null);
-                      }}
-                    />
-                  );
-                }}
-                quest={item}
-                claimCard={() => {
-                  setShowCard(
-                    <MilestoneCard
-                      t={t}
-                      isMulti={true}
-                      isOrb={true}
-                      isBlack={false}
-                      activeMyth={4}
-                      isForge={true}
-                      closeCard={() => {}}
-                      handleClick={() => {
-                        tele.HapticFeedback.notificationOccurred("success");
-                        setShowCard(null);
-                      }}
-                    />
-                  );
-                }}
-              />
-            </div>
-          );
-        })}
+            return (
+              <div className={className} key={currentIndex + index}>
+                <TaskItem
+                  showWallet={() => {}}
+                  showSetting={() => {
+                    setShowCard(
+                      <SettingModal
+                        close={() => {
+                          setShowCard(null);
+                        }}
+                      />
+                    );
+                  }}
+                  quest={item}
+                  claimCard={() => {
+                    setShowCard(
+                      <MilestoneCard
+                        t={t}
+                        isMulti={true}
+                        isOrb={true}
+                        isBlack={false}
+                        activeMyth={4}
+                        isForge={true}
+                        closeCard={() => {}}
+                        handleClick={() => {
+                          tele.HapticFeedback.notificationOccurred("success");
+                          setShowCard(null);
+                        }}
+                      />
+                    );
+                  }}
+                />
+              </div>
+            );
+          })}
       </div>
+      {currentIndex < quests.length - 3 && (
+        <div
+          onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
+          className="absolute bottom-[20%] w-full"
+        >
+          <div className="arrows-down"></div>
+        </div>
+      )}
+      {quests.length > 3 && currentIndex >= quests.length - 3 && (
+        <div
+          onClick={() => setCurrentIndex(0)}
+          className="absolute bottom-[20%] w-full"
+        >
+          <div className="arrows-up"></div>
+        </div>
+      )}
     </div>
   );
 };

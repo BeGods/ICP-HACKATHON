@@ -31,6 +31,7 @@ import QuestHeader from "./Header";
 import { useQuestGuide } from "../../hooks/Tutorial";
 import { QuestGuide } from "../../components/Common/Tutorials";
 import ShareButton from "../../components/Buttons/ShareBtn";
+import GameEndCrd from "../../components/Cards/Reward/GameEnd";
 
 const tele = window.Telegram?.WebApp;
 
@@ -350,6 +351,7 @@ const Quests = () => {
       </div>
       {/* Header */}
       <QuestHeader
+        totalQuests={quests}
         quest={quest}
         activeMyth={activeMyth}
         todayQuest={todaysQuest}
@@ -473,7 +475,17 @@ const Quests = () => {
               </div>
             </div>
             <JigsawButton
-              handleClick={() => {}}
+              handleClick={() => {
+                if (gameData.mythologies[activeMyth].faith >= 12) {
+                  setShowCard(
+                    <GameEndCrd
+                      handleClick={() => {
+                        setShowCard(null);
+                      }}
+                    />
+                  );
+                }
+              }}
               activeMyth={activeMyth}
               handleNext={handleNext}
               handlePrev={handlePrev}

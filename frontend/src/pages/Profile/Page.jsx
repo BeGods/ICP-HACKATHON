@@ -9,13 +9,15 @@ import { ProfileGuide } from "../../components/Common/Tutorials";
 import { useProfileGuide } from "../../hooks/Tutorial";
 import ProfileHeader from "./Header";
 import TaskCarousel from "../../components/Carousel/TaskCarousel";
+import {
+  ToggleLeft,
+  ToggleRight,
+} from "../../components/Common/SectionToggles";
 
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
-  const { t } = useTranslation();
-  const { open } = useTonConnectModal();
-  const { userData, socialQuestData, setShowCard, assets } =
+  const { userData, socialQuestData, setShowCard, assets, setSection } =
     useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
@@ -96,7 +98,7 @@ const Profile = (props) => {
 
       <div
         className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
-        style={{ top: "23vh", left: "50%", transform: "translateX(-50%)" }}
+        style={{ top: "22vh", left: "50%", transform: "translateX(-50%)" }}
       >
         {userData.telegramUsername.charAt(0).toUpperCase() +
           userData.telegramUsername.slice(1).toLowerCase()}
@@ -125,6 +127,25 @@ const Profile = (props) => {
           <TaskCarousel quests={socialQuestData} />
         </div>
       </div>
+
+      {showToggles && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setSection(5);
+            }}
+            activeMyth={4}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              setSection(5);
+            }}
+            activeMyth={4}
+          />
+        </>
+      )}
     </div>
   );
 };

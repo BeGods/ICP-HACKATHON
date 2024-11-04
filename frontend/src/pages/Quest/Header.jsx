@@ -23,10 +23,10 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
 const BottomChild = ({
   activeMyth,
   currQuest,
-  todayQuest,
   completedQuests,
   lostQuests,
   quest,
+  totalQuests,
 }) => {
   return (
     <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
@@ -34,7 +34,7 @@ const BottomChild = ({
         className={`flex text-num pl-[18px] text-black-lg-contour items-center border  border-${
           mythSections[activeMyth]
         }-primary justify-start ${
-          !quest?.isQuestClaimed
+          !quest?.isQuestClaimed && currQuest < totalQuests.length
             ? `text-${mythSections[activeMyth]}-text glow-button-${mythSections[activeMyth]}`
             : "text-white"
         } justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
@@ -43,7 +43,7 @@ const BottomChild = ({
       </div>
       <div
         className={`flex text-num pr-[18px] ${
-          quest?.isQuestClaimed
+          quest?.isQuestClaimed || currQuest >= totalQuests.length
             ? ` glow-button-${mythSections[activeMyth]}`
             : "text-white"
         }  text-black-lg-contour items-center border border-${
@@ -53,7 +53,7 @@ const BottomChild = ({
         {completedQuests.length}
         <span
           className={`${
-            currQuest > todayQuest
+            quest?.isQuestClaimed || currQuest >= totalQuests.length
               ? `text-${mythSections[activeMyth]}-text`
               : "text-white"
           }`}
@@ -88,9 +88,9 @@ const QuestHeader = ({
   showClaimEffect,
   currQuest,
   lostQuests,
-  todayQuest,
   completedQuests,
   quest,
+  totalQuests,
 }) => {
   return (
     <Header
@@ -101,9 +101,9 @@ const QuestHeader = ({
           completedQuests={completedQuests}
           currQuest={currQuest}
           lostQuests={lostQuests}
-          todayQuest={todayQuest}
           activeMyth={activeMyth}
           quest={quest}
+          totalQuests={totalQuests}
         />
       }
       CenterChild={

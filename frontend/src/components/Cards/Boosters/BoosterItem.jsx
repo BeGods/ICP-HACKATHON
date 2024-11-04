@@ -16,12 +16,11 @@ const BoosterItem = ({
       onClick={handleClick}
       className={`flex gap-1 border  ${
         booster === 0 && isGuideActive && "z-[60]"
-      }
-  ${
-    isActive
-      ? `border-${mythSections[activeMyth]}-primary text-white`
-      : "border-cardsGray text-cardsGray"
-  } ${
+      } ${
+        booster === 7
+          ? "border-multiColor"
+          : `border-${mythSections[activeMyth]}-primary`
+      } text-white ${
         isActive && isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       } rounded-primary h-[90px] w-full bg-glass-black p-[15px]`}
       onMouseDown={() => {
@@ -44,8 +43,14 @@ const BoosterItem = ({
       }}
     >
       <div>
-        <div className={`font-symbols text-booster p-0 -mt-2 mr-2`}>
-          {booster > 5 ? <>p</> : <>{boosterIcon[booster]}</>}
+        <div
+          className={`font-symbols ${
+            (!isActive || booster === 1) &&
+            booster !== 7 &&
+            `glow-icon-${mythSections[activeMyth]}`
+          } ${booster === 7 && "gradient-multi"} text-booster p-0 -mt-2 mr-2`}
+        >
+          {boosterIcon[booster]}
         </div>
       </div>
       <div className={`flex flex-col flex-grow justify-center -ml-1`}>
@@ -65,7 +70,7 @@ const BoosterItem = ({
             </span>
           )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-            {booster != 6 && booster != 1 && "Lvl 1-99"}
+            {booster != 6 && booster != 7 && booster != 1 && "Lvl 1-99"}
           </span>
         </h2>
       </div>

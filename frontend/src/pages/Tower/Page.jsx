@@ -17,6 +17,7 @@ import ConvertClaimCard from "./ClaimTune";
 import TowerHeader from "./Header";
 import { TowerGuide } from "../../components/Common/Tutorials";
 import { useTowerGuide } from "../../hooks/Tutorial";
+import { getPhaseByDate } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -47,7 +48,7 @@ const Tower = () => {
   const [showEffect, setShowEffect] = useState(false);
   const [scaleOrb, setScaleOrb] = useState(null);
   const mythData = gameData.mythologies.filter(
-    (item) => item.name.toLowerCase() === wheel[myth]
+    (item) => item.name?.toLowerCase() === wheel[myth]
   )[0];
   const [enableGuide, setEnableGuide] = useTowerGuide("jdio");
   const [showHand, setShowHand] = useState(false);
@@ -60,6 +61,7 @@ const Tower = () => {
     if (keysData.includes(key) && key) {
       showToast("convert_key_success");
     }
+
     setShowGlow(true);
     setTimeout(() => {
       setShowGlow(false);
@@ -73,14 +75,24 @@ const Tower = () => {
       try {
         await convertOrbs(mythologyName, authToken);
 
+        const currPhase = getPhaseByDate(new Date());
+        let blackOrbPhaseBonus = 1;
+        let phaseBonus = 1;
+
+        if (mythologies[currPhase] === mythData.name) {
+          phaseBonus = 2;
+        } else if (currPhase === 4) {
+          blackOrbPhaseBonus = 2;
+        }
+
         let blackOrb = 0;
         let multiColorOrbs =
           gameData.multiColorOrbs +
-          sessionOrbs * (keysData.includes(key) ? 2 : 1);
+          sessionOrbs * (keysData.includes(key) ? 2 : 1) * phaseBonus;
 
         if (multiColorOrbs >= 500) {
           multiColorOrbs /= 500;
-          blackOrb = multiColorOrbs % 500;
+          blackOrb = (multiColorOrbs % 500) * blackOrbPhaseBonus;
         }
 
         const updatedGameData = {

@@ -1,11 +1,20 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { mythSections } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
 import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
+import BoosterBtn from "../../Buttons/BoosterBtn";
 
-const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
+const BoosterClaim = ({
+  activeCard,
+  handleClaim,
+  t,
+  mythData,
+  closeCard,
+  disableIcon,
+  isAutoPay,
+}) => {
   const { gameData, section, enableSound, assets, setActiveMyth, activeMyth } =
     useContext(MyContext);
 
@@ -52,7 +61,7 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
               />
             )}
             <div
-              className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic text-white`}
+              className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
             >
               <div
                 style={{
@@ -68,7 +77,11 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
                 }}
                 className={`rounded-b-primary filter-paper-${mythSections[activeMyth]}`}
               />
-              <div className="flex justify-center text-[60px] w-full h-full items-center px-3 z-10 font-symbols glow-text-black">
+              <div
+                className={`flex justify-center ${
+                  isAutoPay ? "gradient-multi" : "text-white  glow-text-black"
+                } text-[60px] w-full h-full items-center px-3 z-10 font-symbols`}
+              >
                 {activeCard === "automata"
                   ? "n"
                   : activeCard === "minion"
@@ -79,7 +92,14 @@ const BoosterClaim = ({ activeCard, Button, closeCard, disableIcon }) => {
           </div>
         </div>
       </div>
-      {Button}
+      <BoosterBtn
+        isAutoPay={isAutoPay}
+        activeCard={activeCard}
+        mythData={mythData}
+        handleClaim={handleClaim}
+        activeMyth={activeMyth}
+        t={t}
+      />
       {assets.audio &&
         (activeCard === "automata" || activeCard === "minion") && (
           <ReactHowler

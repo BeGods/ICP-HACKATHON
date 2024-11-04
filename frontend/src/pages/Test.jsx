@@ -772,71 +772,111 @@
 
 // export default Test;
 
-import React, { useState } from "react";
+// import React, { useState } from "react";
+
+// const Test = () => {
+//   const [swipeCount, setSwipeCount] = useState({ left: 0, right: 0 });
+//   const [touchStartX, setTouchStartX] = useState(null);
+//   const [lastDirection, setLastDirection] = useState(null);
+//   const [directionChangeCount, setDirectionChangeCount] = useState(0);
+
+//   const handleTouchStart = (e) => {
+//     setTouchStartX(e.touches[0].clientX);
+//   };
+
+//   const handleTouchMove = (e) => {
+//     if (touchStartX === null) return;
+
+//     const touchX = e.touches[0].clientX;
+//     const deltaX = touchX - touchStartX;
+
+//     // right swipe
+//     if (deltaX > 20) {
+//       setSwipeCount((prev) => ({ ...prev, right: prev.right + 1 }));
+
+//       // direction left to right
+//       if (lastDirection === "left") {
+//         setDirectionChangeCount((count) => count + 1);
+//       }
+//       setLastDirection("right");
+//       setTouchStartX(touchX);
+
+//       // left swipe
+//     } else if (deltaX < -20) {
+//       setSwipeCount((prev) => ({ ...prev, left: prev.left + 1 }));
+
+//       // direction right to left
+//       if (lastDirection === "right") {
+//         setDirectionChangeCount((count) => count + 1);
+//       }
+//       setLastDirection("left");
+//       setTouchStartX(touchX);
+//     }
+//   };
+
+//   const handleTouchEnd = () => {
+//     setSwipeCount({ left: 0, right: 0 });
+//     setTouchStartX(null);
+//     setLastDirection(null);
+//   };
+
+//   return (
+//     <div
+//       onTouchStart={handleTouchStart}
+//       onTouchMove={handleTouchMove}
+//       onTouchEnd={handleTouchEnd}
+//       style={{
+//         height: "100vh",
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         backgroundColor: "#f5f5f5",
+//       }}
+//     >
+//       <div>
+//         <p>Left swipes: {swipeCount.left}</p>
+//         <p>Right swipes: {swipeCount.right}</p>
+//         <p>Swipe count: {directionChangeCount}</p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+import React, { useEffect, useState } from "react";
+
+const moonPhases = [
+  "new",
+  "waxing-crescent",
+  "first-quarter",
+  "waxing-gibbous",
+  "full",
+  "waning-gibbous",
+  "last-quarter",
+  "waning-crescent",
+];
 
 const Test = () => {
-  const [swipeCount, setSwipeCount] = useState({ left: 0, right: 0 });
-  const [touchStartX, setTouchStartX] = useState(null);
-  const [lastDirection, setLastDirection] = useState(null);
-  const [directionChangeCount, setDirectionChangeCount] = useState(0);
-
-  const handleTouchStart = (e) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    if (touchStartX === null) return;
-
-    const touchX = e.touches[0].clientX;
-    const deltaX = touchX - touchStartX;
-
-    // right swipe
-    if (deltaX > 20) {
-      setSwipeCount((prev) => ({ ...prev, right: prev.right + 1 }));
-
-      // direction left to right
-      if (lastDirection === "left") {
-        setDirectionChangeCount((count) => count + 1);
-      }
-      setLastDirection("right");
-      setTouchStartX(touchX);
-
-      // left swipe
-    } else if (deltaX < -20) {
-      setSwipeCount((prev) => ({ ...prev, left: prev.left + 1 }));
-
-      // direction right to left
-      if (lastDirection === "right") {
-        setDirectionChangeCount((count) => count + 1);
-      }
-      setLastDirection("left");
-      setTouchStartX(touchX);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setSwipeCount({ left: 0, right: 0 });
-    setTouchStartX(null);
-    setLastDirection(null);
-  };
+  const [phase, setPhase] = useState(3);
 
   return (
-    <div
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#f5f5f5",
-      }}
-    >
-      <div>
-        <p>Left swipes: {swipeCount.left}</p>
-        <p>Right swipes: {swipeCount.right}</p>
-        <p>Swipe count: {directionChangeCount}</p>
+    <div className="bg-white h-screen w-screen flex justify-center items-center">
+      <div className="moon-phases">
+        <div className="moon">
+          <div
+            className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full y`}
+          >
+            <div
+              style={{ height: `100%` }}
+              className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 phase phase-${phase} z-10`}
+            ></div>
+          </div>
+          <img
+            src="https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png"
+            alt="moon-phase"
+            className="moon-base"
+          />
+        </div>
       </div>
     </div>
   );
