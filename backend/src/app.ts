@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-import routes from "./router";
+import { fofRoutes, rorRoutes } from "./router";
 import helmet from "helmet";
 import xss from "xss-clean";
 import hpp from "hpp";
@@ -34,6 +34,7 @@ app.use(morgan("tiny"));
 app.use(xss());
 app.use(hpp());
 
-app.use("/api/v1", routes);
+app.use("/api/v1", fofRoutes);
+app.use("/api/v2", rorRoutes);
 
 export default app;

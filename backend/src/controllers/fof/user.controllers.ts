@@ -1,4 +1,4 @@
-import User from "../models/user.models";
+import User from "../../models/user.models";
 
 export const connectTonWallet = async (req, res) => {
   try {

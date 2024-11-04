@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 import {
   calculateAutomataEarnings,
   calculateEnergy,
-} from "../utils/helpers/game.helpers";
-import userMythologies from "../models/mythologies.models";
+  getPhaseByDate,
+} from "../../utils/helpers/game.helpers";
+import userMythologies from "../../models/mythologies.models";
 const axios = require("axios");
 
 export const fetchUserGameStats = async (userId) => {
@@ -130,7 +131,6 @@ export const fetchUserGameStats = async (userId) => {
                 sharedMilestones: 0,
                 claimedQuestData: 0,
                 updatedAt: 0,
-                createdAt: 0,
                 __v: 0,
               },
             },
@@ -248,6 +248,14 @@ export const disableActiveBurst = (mythology) => {
 export const updateMythologies = (mythologies) => {
   try {
     let updatedBlackOrb = 0;
+
+    let blackOrbPhaseBonus = 1;
+    const currPhase = getPhaseByDate(new Date());
+
+    if (currPhase === 4) {
+      blackOrbPhaseBonus = 2;
+    }
+
     const updatedMythologyData = mythologies.map((mythology) => {
       const restoredEnergy = calculateEnergy(
         Date.now(),
@@ -281,9 +289,9 @@ export const updateMythologies = (mythologies) => {
       }
 
       if (mythology.orbs >= 1000) {
-        updatedBlackOrb += Math.floor(mythology.orbs / 1000);
+        updatedBlackOrb +=
+          Math.floor(mythology.orbs / 1000) * blackOrbPhaseBonus;
         mythology.orbs = mythology.orbs % 1000;
-        console.log("yes bro it was activated");
         mythology.boosters.isBurstActive = true;
       }
 

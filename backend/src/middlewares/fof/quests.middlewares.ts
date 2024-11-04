@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import userMythologies from "../models/mythologies.models";
-import { areObjectsEqual } from "../utils/helpers/helpers";
-import { questAggregator } from "../services/quest.services";
-import milestones from "../models/milestones.models";
+import userMythologies from "../../models/mythologies.models";
+import { areObjectsEqual } from "../../utils/helpers/helpers";
+import { questAggregator } from "../../services/fof/quest.services";
+import milestones from "../../models/milestones.models";
 
 export const verifyValidQuest = async (req, res, next) => {
   try {

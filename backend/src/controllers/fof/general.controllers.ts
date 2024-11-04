@@ -1,5 +1,5 @@
-import User from "../models/user.models";
-import ranks from "../models/ranks.models";
+import User from "../../models/user.models";
+import ranks from "../../models/ranks.models";
 import {
   claimBonusBooster,
   claimBonusOrb,
@@ -7,10 +7,10 @@ import {
   getLeaderboardSnapshot,
   getRandomValue,
   updatePartnersInLastHr,
-} from "../services/general.services";
-import Stats from "../models/Stats.models";
-import { Team } from "../models/referral.models";
-import userMythologies from "../models/mythologies.models";
+} from "../../services/fof/general.services";
+import Stats from "../../models/Stats.models";
+import { Team } from "../../models/referral.models";
+import userMythologies from "../../models/mythologies.models";
 import {
   claimPlaysuperReward,
   fetchPlaysuperOrders,
@@ -18,10 +18,10 @@ import {
   getPlaysuperOtp,
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
-} from "../services/game.services";
-import milestones from "../models/milestones.models";
-import partners from "../models/partners.models";
-import { validCountries } from "../utils/constants/variables";
+} from "../../services/fof/game.services";
+import milestones from "../../models/milestones.models";
+import partners from "../../models/partners.models";
+import { validCountries } from "../../utils/constants/variables";
 
 export const ping = async (req, res) => {
   try {
@@ -513,6 +513,20 @@ export const clearRewardsInLastHr = async (req, res) => {
     ]);
 
     res.status(200).json({ message: "rewardsInLastHr is cleared." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const getTotalUsers = async (req, res) => {
+  try {
+    const totalUsers = await Stats.findOne({ statId: "fof" });
+    res.status(200).json({ totalUsers: totalUsers.totalUsers });
   } catch (error) {
     console.log(error);
 

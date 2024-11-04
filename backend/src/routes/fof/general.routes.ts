@@ -11,23 +11,24 @@ import {
   createPartner,
   clearRewardsInLastHr,
   redeemPlayuperReward,
-} from "../controllers/general.controllers";
+  getTotalUsers,
+} from "../../controllers/fof/general.controllers";
 import express from "express";
 import cron from "node-cron";
 const router = express.Router();
-import { authMiddleware } from "../middlewares/auth.middlewares";
-import { deactivateQuest } from "../controllers/quests.controllers";
+import { authMiddleware } from "../../middlewares/auth.middlewares";
+import { deactivateQuest } from "../../controllers/fof/quests.controllers";
 import {
   validDailyBonusReq,
   validDailyHackBonus,
   validJoinBonusReq,
   validPlaysuperRedeem,
-} from "../middlewares/general.middlewares";
+} from "../../middlewares/fof/general.middlewares";
 import {
   getFolders,
   getProfilePhotoUrl,
   storeImage,
-} from "../controllers/storage.controllers";
+} from "../../controllers/storage.controllers";
 
 // ping
 router.get("/ping", ping);
@@ -38,6 +39,8 @@ router.get(
   "/f115d48c-4929-4190-b326-e50f228500c7/update/rewardsInLastHr",
   updateRanks
 );
+
+router.get("/f115d48c-4929-4190-b326-e50f228500c7/totalUsers", getTotalUsers);
 
 // bonus
 router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);
@@ -79,6 +82,7 @@ router.get("/profile/avatar", authMiddleware, storeImage);
 
 // Schedule cron job for leaderboard update every hour
 cron.schedule("0 * * * *", updateRanks);
+router.get("/f115d48c-4929-4190-b326-e50f228500c7/leaderboard", updateRanks);
 
 // deactivate quest
 // cron.schedule("0 * * * *", deactivateQuest);
