@@ -23,3 +23,15 @@ export const handleGeneratePopTime = (counter) => {
   const randomTime = downTime + randomOffset;
   return randomTime;
 };
+
+export const getPhaseByDate = (date = new Date()) => {
+  const startDate = new Date(Date.UTC(2023, 0, 1)); // January 1, 2023 in UTC
+
+  // Calculate the difference in days
+  const diffInTime = date.getTime() - startDate.getTime();
+  const diffInDays = Math.floor(diffInTime / (1000 * 60 * 60 * 24));
+
+  const phase = diffInDays % 5;
+
+  return phase + 1;
+};

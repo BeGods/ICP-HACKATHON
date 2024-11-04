@@ -75,7 +75,8 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             {t("tower.play")}
           </div>
           <div
-            className={`relative flex justify-center ${
+            className={`relative flex justify-center
+              ${showEffect === -1 && "glow-tap-white"} ${
               showEffect && `glow-tap-${mythSections[showEffect - 1]}`
             } items-center w-full h-full pointer-events-none`}
             style={{
@@ -132,6 +133,10 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                 playAudio();
 
                 setPlaySound(-1);
+                setShowEffect(-1);
+                setTimeout(() => {
+                  setShowEffect(null);
+                }, 500);
 
                 setClickedOrbs((prev) =>
                   prev.length <= 6 ? [...prev, "multiorb"] : prev
@@ -141,7 +146,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             >
               <div
                 className={`flex relative text-center ml-1 justify-center ${
-                  clickedOrbs.includes("multiorb")
+                  showEffect === -1
                     ? "w-[17vw] glow-icon-lg-white"
                     : "w-[15vw] glow-icon-white"
                 } items-center rounded-full z-50 `}

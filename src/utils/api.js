@@ -210,6 +210,26 @@ export const claimAutomataBooster = async (mythologyName, accessToken) => {
   }
 };
 
+export const claimAutoAutomata = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/booster/autoClaim/automata`;
+
+  try {
+    const response = await axios.post(
+      url,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const connectTonWallet = async (tonAddress, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/user/connectTon`;
 

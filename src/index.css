@@ -223,6 +223,25 @@ body {
   color: transparent;
 }
 
+.border-multiColor {
+  position: relative; /* Position context for pseudo-element */
+  border-radius: 15px; /* Apply border-radius here */
+  padding: 16px; /* Padding for inner content */
+  overflow: hidden; /* Ensures no overflow from pseudo-element */
+}
+
+.border-multiColor::before {
+  content: '';
+  position: absolute; /* Position relative to the parent */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid transparent; /* Border style needed for the image */
+  border-image: linear-gradient(90deg, #001aff 32.59%, #16ffd5 47.32%, #42ff00 60.71%, #ccff00 74.78%, #ffb800 87.17%, #ff0000 99.55%);
+  border-image-slice: 1; /* Ensures the gradient covers the border area */
+  pointer-events: none; /* Prevents interaction with the border */
+}
 /* .fof-text-shadow {
   -webkit-text-stroke: 1px black; 
   color: var(--game-text-color); 
