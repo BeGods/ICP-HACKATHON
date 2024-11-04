@@ -1,27 +1,32 @@
-import { calculateEnergy } from "../utils/helpers/game.helpers";
+import {
+  calculateEnergy,
+  getAutomataStartTimes,
+  getPhaseByDate,
+  isWithinOneMinute,
+} from "../../utils/helpers/game.helpers";
 import userMythologies, {
   IMyth,
   IUserMyths,
-} from "../models/mythologies.models";
+} from "../../models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
-} from "../models/transactions.models";
+} from "../../models/transactions.models";
 import {
   validateBooster,
   validateAutomata,
   updateMythologies,
   fetchUserGameStats,
-} from "../services/game.services";
-import { defaultMythologies } from "../utils/constants/variables";
+} from "../../services/fof/game.services";
+import { defaultMythologies } from "../../utils/constants/variables";
 import { Document } from "mongodb";
-import ranks from "../models/ranks.models";
-import { Team } from "../models/referral.models";
-import Stats from "../models/Stats.models";
-import { checkBonus } from "../services/general.services";
-import { mythOrder } from "../utils/constants/variables";
-import milestones from "../models/milestones.models";
-import User from "../models/user.models";
+import ranks from "../../models/ranks.models";
+import { Team } from "../../models/referral.models";
+import Stats from "../../models/Stats.models";
+import { checkBonus } from "../../services/fof/general.services";
+import { mythOrder } from "../../utils/constants/variables";
+import milestones from "../../models/milestones.models";
+import User from "../../models/user.models";
 import CryptoJs from "crypto-js";
 
 export const startTapSession = async (req, res) => {
@@ -137,6 +142,12 @@ export const claimTapSession = async (req, res) => {
 
     // define flags
     let blackOrbs = 0;
+    let blackOrbPhaseBonus = 1;
+    const currPhase = getPhaseByDate(new Date());
+
+    if (currPhase === 4) {
+      blackOrbPhaseBonus = 2;
+    }
 
     // update shards
     if (mythData.shards >= 1000) {
@@ -147,7 +158,7 @@ export const claimTapSession = async (req, res) => {
     // update orbs
     if (mythData.orbs >= 1000) {
       mythData.boosters.isBurstActive = true;
-      blackOrbs += Math.floor(mythData.orbs / 1000);
+      blackOrbs += Math.floor(mythData.orbs / 1000) * blackOrbPhaseBonus;
       mythData.orbs = mythData.orbs % 1000;
     }
 
@@ -327,9 +338,12 @@ export const getGameStats = async (req, res) => {
       ...memberData,
     };
 
-    const otherQuest = userMythologiesData.quests.filter(
-      (item) => item.mythology === "Other"
-    );
+    const otherQuest = userMythologiesData.quests
+      .filter((item) => item.mythology === "Other")
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
 
     const quests = userMythologiesData.quests
       .filter((item) => item.mythology !== "Other")
@@ -360,6 +374,12 @@ export const getGameStats = async (req, res) => {
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
         blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
         whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
+        isAutoPayActive:
+          userMythologiesData.userMythologies[0].autoPay
+            ?.isAutomataAutoPayEnabled ?? false,
+        autoPayExpiry:
+          userMythologiesData.userMythologies[0].autoPay
+            ?.automataAutoPayExpiration ?? 0,
         mythologies: completeMythologies.sort(
           (a, b) => mythOrder.indexOf(a.name) - mythOrder.indexOf(b.name)
         ),
@@ -403,7 +423,7 @@ export const claimShardsBooster = async (req, res) => {
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
       source: "boosters",
-      orbs: { [userMyth.name]: 1 },
+      orbs: { MultiOrb: 1 },
     });
     await newOrbsTransaction.save();
 
@@ -421,39 +441,105 @@ export const claimShardsBooster = async (req, res) => {
 
 export const claimAutomata = async (req, res) => {
   try {
-    const userId = req.user;
-    const userMyth = req.userMyth;
+    const { user, userMyth, mythData } = req;
+    const now = Date.now();
+    let enableAutoPay = mythData.autoPay;
 
     userMyth.boosters.automatalvl += 1;
     userMyth.boosters.isAutomataActive = true;
-    userMyth.boosters.automataLastClaimedAt = Date.now();
-    userMyth.boosters.automataStartTime = Date.now();
+    userMyth.boosters.automataLastClaimedAt = now;
+    userMyth.boosters.automataStartTime = now;
 
-    const updatedMythData = (await userMythologies
+    if (!mythData.autoPay.isAutomataAutoPayEnabled) {
+      const automataStartTimes = getAutomataStartTimes(mythData.mythologies);
+
+      automataStartTimes.push(now);
+      if (isWithinOneMinute(automataStartTimes)) {
+        enableAutoPay.isAutomataAutoPayEnabled = true;
+      }
+    }
+
+    if (enableAutoPay.automataAutoPayExpiration <= now) {
+      enableAutoPay.automataAutoPayExpiration = now;
+    }
+
+    const updatedMythData = await userMythologies
       .findOneAndUpdate(
-        { userId, "mythologies.name": userMyth.name },
-        { $inc: { multiColorOrbs: -1 }, $set: { "mythologies.$": userMyth } },
+        { userId: user, "mythologies.name": userMyth.name },
+        {
+          $inc: { multiColorOrbs: -1 },
+          $set: {
+            "mythologies.$": userMyth,
+            "autoPay.isAutomataAutoPayEnabled":
+              enableAutoPay.isAutomataAutoPayEnabled,
+            "autoPay.automataAutoPayExpiration": now,
+          },
+        },
         { new: true }
       )
-      .select("-__v -createdAt -updatedAt _id")) as Document;
+      .select("-__v -createdAt -updatedAt -_id");
 
-    const updatedBoosterData = updatedMythData.mythologies.filter(
+    const updatedBoosterData = updatedMythData.mythologies.find(
       (item) => item.name === userMyth.name
-    )[0].boosters;
+    ).boosters;
 
-    // maintain transaction
-    const newOrbsTransaction = new OrbsTransactions({
-      userId: userId,
+    await new OrbsTransactions({
+      userId: user,
       source: "automata",
-      orbs: { [userMyth.name]: 1 },
-    });
-    await newOrbsTransaction.save();
+      orbs: { MultiOrb: 1 },
+    }).save();
 
     res.status(200).json({
       message: "Automata claimed successfully.",
       updatedBooster: updatedBoosterData,
     });
   } catch (error) {
+    console.error("Claim automata error:", error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimAutoAutomata = async (req, res) => {
+  try {
+    const { user, mythData } = req;
+    const now = Date.now();
+
+    mythData.mythologies.forEach((mythology) => {
+      mythology.boosters.automatalvl += 1;
+      mythology.boosters.isAutomataActive = true;
+      mythology.boosters.automataLastClaimedAt = now;
+      mythology.boosters.automataStartTime = now;
+    });
+
+    await userMythologies
+      .findOneAndUpdate(
+        { userId: user._id },
+        {
+          $inc: { multiColorOrbs: -3 },
+          $set: {
+            mythologies: mythData.mythologies,
+            "autoPay.automataAutoPayExpiration": now,
+          },
+        },
+        { new: true }
+      )
+      .select("-__v -createdAt -updatedAt -_id");
+
+    await new OrbsTransactions({
+      userId: user,
+      source: "automata",
+      orbs: { MulitOrb: 3 },
+    }).save();
+
+    res.status(200).json({
+      message: "Automata claimed successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -486,7 +572,7 @@ export const claimBurst = async (req, res) => {
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
       source: "burst",
-      orbs: { [userMyth.name]: 3 },
+      orbs: { MulitOrb: 3 },
     });
 
     await newOrbsTransaction.save();
@@ -511,12 +597,21 @@ export const convertOrbs = async (req, res) => {
     const userMyth = req.userMyth;
     const isValidKey = req.isValidKey;
     const { mythologyName, convertedOrbs } = req.body;
+    const currPhase = getPhaseByDate(new Date());
+    let blackOrbPhaseBonus = 1;
+    let phaseBonus = 1;
 
-    let updatedMultiOrbs = convertedOrbs / (isValidKey ? 1 : 2);
+    if (mythOrder[currPhase] === mythologyName) {
+      phaseBonus = 2;
+    } else if (currPhase === 4) {
+      blackOrbPhaseBonus = 2;
+    }
+
+    let updatedMultiOrbs = (convertedOrbs / (isValidKey ? 1 : 2)) * phaseBonus;
     let blackOrbs = 0;
 
     if (userMyth.multiColorOrbs + updatedMultiOrbs >= 500) {
-      blackOrbs += Math.floor(updatedMultiOrbs / 500);
+      blackOrbs += Math.floor(updatedMultiOrbs / 500) * blackOrbPhaseBonus;
       updatedMultiOrbs = updatedMultiOrbs % 500;
     }
 
@@ -567,17 +662,10 @@ export const claimStarBonus = async (req, res) => {
     const holdTimeInSession =
       Math.round(session / 10) > 9 ? 9 : Math.round(session / 10);
 
-    const multiplier =
-      userMyth.burstlvl +
-      (!userMyth.boosters.isShardsClaimActive
-        ? userMyth.boosters.shardslvl
-        : 0) +
-      (userMyth.boosters.isAutomataActive ? userMyth.boosters.automatalvl : 0);
-
-    const updatedShards = holdTimeInSession * 99 * multiplier;
+    const updatedOrbs = holdTimeInSession * userMyth.boosters.burstlvl;
 
     userMyth.boosters.isBurstActive = false;
-    userMyth.shards += updatedShards;
+    userMyth.orbs += updatedOrbs;
 
     if (userMyth.isEligibleForBurst === true) {
       await userMythologies.findOneAndUpdate(
@@ -589,7 +677,7 @@ export const claimStarBonus = async (req, res) => {
     } else {
       userMyth.boosters.isBurstActiveToClaim = true;
       userMyth.isEligibleForBurst = true;
-      userMyth.burstActiveAt = Date.now();
+      userMyth.boosters.burstActiveAt = Date.now();
 
       await userMythologies.findOneAndUpdate(
         { userId: userId, "mythologies.name": userMyth.name },
@@ -601,6 +689,8 @@ export const claimStarBonus = async (req, res) => {
 
     res.status(200).json({ message: "Star bonus claimed" });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,

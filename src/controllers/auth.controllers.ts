@@ -7,7 +7,7 @@ import {
   addTeamMember,
   createDefaultUserMyth,
   addNewUser,
-} from "../services/user.services";
+} from "../services/fof/user.services";
 
 export const authenticate = async (req, res) => {
   try {
