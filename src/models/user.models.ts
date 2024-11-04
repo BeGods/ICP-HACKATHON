@@ -9,6 +9,10 @@ export interface IUser extends Document {
   tonAddress: string;
   exploitCount: number;
   premiumReferralCount: number;
+  gameSession: {
+    gameHrStartAt: Number;
+    dailyGameQuota: Number;
+  };
   joiningBonus: boolean;
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
@@ -32,6 +36,16 @@ const userSchema = new Schema<IUser>(
     telegramUsername: { type: String, unique: true, sparse: true },
     isPremium: { type: Boolean },
     joiningBonus: { type: Boolean, default: false },
+    gameSession: {
+      gameHrStartAt: {
+        type: Number,
+        default: () => new Date().setHours(9, 0, 0, 0),
+      },
+      dailyGameQuota: {
+        type: Number,
+        default: 0,
+      },
+    },
     role: {
       type: String,
       enum: ["user", "admin", "partner"],

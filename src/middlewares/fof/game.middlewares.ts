@@ -2,13 +2,12 @@ import {
   fetchUserData,
   validateAutomata,
   validateBooster,
-} from "../services/game.services";
+} from "../../services/fof/game.services";
 import userMythologies, {
   IMyth,
   IUserMyths,
-} from "../models/mythologies.models";
-import { calculateAutomataEarnings } from "../utils/helpers/game.helpers";
-import { mythOrder } from "../utils/constants/variables";
+} from "../../models/mythologies.models";
+import { mythOrder } from "../../utils/constants/variables";
 
 export const validShardsBoosterReq = async (req, res, next) => {
   try {
@@ -101,8 +100,53 @@ export const validAutomataReq = async (req, res, next) => {
     }
 
     req.userMyth = requestedMyth;
+    req.mythData = userMythologiesData;
     next();
   } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const validAutoAutomataReq = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    const userMythologiesData = (await userMythologies.findOne({
+      userId,
+    })) as IUserMyths;
+
+    if (!userMythologiesData) {
+      throw new Error("Insufficient orbs to claim automata.");
+    }
+
+    if (!userMythologiesData.autoPay.isAutomataAutoPayEnabled) {
+      return res
+        .status(404)
+        .json({ message: `You are not eligible for auto pay.` });
+    }
+
+    // Check sufficient orbs to claim automata
+    if (userMythologiesData.multiColorOrbs < 3) {
+      throw new Error("Insufficient multiColorOrbs to claim this automata.");
+    }
+
+    const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
+
+    if (
+      userMythologiesData.autoPay.automataAutoPayExpiration - Date.now() >
+      millisecondsIn24Hours
+    ) {
+      throw new Error(
+        "Your previous automata has not expired yet. Please try again later."
+      );
+    }
+
+    req.mythData = userMythologiesData;
+
+    next();
+  } catch (error) {
+    console.log(error);
+
     res.status(400).json({ message: error.message });
   }
 };
@@ -151,6 +195,7 @@ export const validateBurstReq = async (req, res, next) => {
     }
 
     req.userMyth = requestedMyth;
+
     next();
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -265,11 +310,6 @@ export const validateStarClaim = async (req, res, next) => {
         .status(404)
         .json({ message: `Mythology ${mythologyName} not found.` });
     }
-
-    requestedMyth.shards += calculateAutomataEarnings(
-      requestedMyth.boosters.automataLastClaimedAt,
-      requestedMyth.boosters.automatalvl
-    );
 
     if (requestedMyth.boosters.isBurstActive) {
       req.userMyth = requestedMyth;

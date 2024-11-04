@@ -1,10 +1,11 @@
 import AuthRoutes from "./routes/auth.routes";
-import GeneralRoutes from "./routes/general.routes";
-import GameRoutes from "./routes/game.routes";
-import QuestsRoutes from "./routes/quests.routes";
-import UserRoutes from "./routes/user.routes";
+import GeneralRoutes from "./routes/fof/general.routes";
+import GameRoutes from "./routes/fof/game.routes";
+import QuestsRoutes from "./routes/fof/quests.routes";
+import UserRoutes from "./routes/fof/user.routes";
+import RorGameRoutes from "./routes/ror/game.routes";
 
-const routes = [
+export const fofRoutes = [
   AuthRoutes,
   GeneralRoutes,
   GameRoutes,
@@ -12,4 +13,4 @@ const routes = [
   UserRoutes,
 ];
 
-export default routes;
+export const rorRoutes = [RorGameRoutes];
