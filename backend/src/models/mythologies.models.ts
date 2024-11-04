@@ -31,6 +31,10 @@ export interface IMyth extends Document {
 export interface IUserMyths extends Document {
   mythologies: IMyth[];
   multiColorOrbs: number;
+  autoPay: {
+    isAutomataAutoPayEnabled: boolean;
+    automataAutoPayExpiration: number;
+  };
 }
 
 const mythologySchema = new Schema({
@@ -162,6 +166,16 @@ const userMythologySchema = new Schema(
       type: Number,
       default: 0,
       required: true,
+    },
+    autoPay: {
+      isAutomataAutoPayEnabled: {
+        type: Boolean,
+        default: false,
+      },
+      automataAutoPayExpiration: {
+        type: Number,
+        default: 0,
+      },
     },
   },
   { timestamps: true }

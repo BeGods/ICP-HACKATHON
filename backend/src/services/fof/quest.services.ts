@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import quest from "../models/quests.models";
+import quest from "../../models/quests.models";
 
 export const questAggregator = async (userId, questId) => {
   try {
