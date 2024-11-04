@@ -52,7 +52,9 @@
     {},
     {},
     {},
-    { "title": "विस्फोट", "desc": "पावर प्रेस डाउन" }
+    { "title": "विस्फोट", "desc": "पावर प्रेस डाउन" },
+    { "title": "Automata Pack", "desc": "4X Automata" }
+
   ],
   "profile": {
     "premium": "प्रीमियम",

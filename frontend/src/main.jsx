@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./styles/main.scss";
 import "./styles/animations.scss";
+import "./styles/arrow.scss";
+import "./styles/moon.scss";
 import "./index.css";
 import "./styles/toast.css";
 import { ToastContainer } from "react-toastify";

@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 const MythInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
   const { activeMyth, assets } = useContext(MyContext);
-  console.log(assets.symbols[mythSections[activeMyth]]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">

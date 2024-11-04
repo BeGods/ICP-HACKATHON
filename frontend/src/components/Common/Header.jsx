@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-import {
-  elementNames,
-  elements,
-  mythSections,
-  mythologies,
-} from "../../utils/constants";
+import { elements, mythSections } from "../../utils/constants";
 import { useTranslation } from "react-i18next";
 
 const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
@@ -17,7 +12,7 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
     0: [t("sections.forges"), t(`elements.${elements[activeMyth]}`)],
     1: [t("sections.quests"), t(`mythologies.${mythSections[activeMyth]}`)],
     2: [t("sections.boosters"), t(`mythologies.${mythSections[activeMyth]}`)],
-    3: [t("sections.profile"), t("profile.task")],
+    3: [t("sections.profile"), t("sections.profile")],
     4: [t("sections.tower"), t("mythologies.dark")],
     5: [t("profile.partners"), t("profile.charity")],
     6: [t("profile.partner"), RedeemHead],
@@ -42,18 +37,18 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
         ) : (
           <div
             className={`text-head -mt-1 mx-auto w-full text-center top-0 absolute z-30 uppercase
-    ${section === 4 ? "text-black text-white-lg-contour" : ""}
-    ${
-      section === 0 || section === 1 || section === 2
-        ? `text-${mythSections[activeMyth]}-text text-black-lg-contour`
-        : ""
-    }
-    ${
-      section !== 4 && section !== 0 && section !== 1 && section !== 2
-        ? "text-white text-black-lg-contour"
-        : ""
-    }
-  `}
+           ${section === 4 ? "text-black text-white-lg-contour" : ""}
+           ${
+             section === 0 || section === 1 || section === 2
+               ? `text-${mythSections[activeMyth]}-text text-black-lg-contour`
+               : ""
+           }
+           ${
+             section !== 4 && section !== 0 && section !== 1 && section !== 2
+               ? "text-white text-black-lg-contour"
+               : ""
+           }
+         `}
           >
             {sectionNames[section][1]}
           </div>

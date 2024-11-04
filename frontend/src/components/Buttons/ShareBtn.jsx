@@ -91,7 +91,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
                 className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeMyth]} `}
               >
                 <img
-                  src={`${assets.audio.baseorb}`}
+                  src={`${assets.uxui.baseorb}`}
                   alt="orb"
                   className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
                 />

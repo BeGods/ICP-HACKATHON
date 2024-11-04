@@ -1,14 +1,15 @@
 import React, { useContext, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
-import { footerArray, footerIcons, mythSections } from "../../utils/constants";
+import { footerIcons, mythSections } from "../../utils/constants";
 import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
 
+const redirect = [0, 2, 4, 3];
+
 const tele = window.Telegram?.WebApp;
 
-const FooterItem = ({ enableSound, icon }) => {
+const FooterItem = ({ enableSound, icon, avatarColor }) => {
   const howlerRef = useRef(null);
-  const [flipped, setFlipped] = useState(false);
   const {
     section,
     setSection,
@@ -16,32 +17,23 @@ const FooterItem = ({ enableSound, icon }) => {
     setActiveMyth,
     socialQuestData,
     assets,
+    userData,
   } = useContext(MyContext);
   const countOfInCompleteQuests = socialQuestData.filter(
-    (item) => item.isCompleted === false
+    (item) => item.isQuestClaimed === false
   ).length;
 
   const playAudio = () => {
+    tele.HapticFeedback.notificationOccurred("success");
+
     if (howlerRef.current && enableSound) {
       howlerRef.current.stop();
       howlerRef.current.play();
     }
   };
 
-  const handleFlip = (e) => {
-    tele.HapticFeedback.notificationOccurred("success");
-    playAudio();
-  };
-
   const handleSectionChange = (curr) => {
-    if (footerArray[icon][curr] == 4 && icon === 1 && section !== 0) {
-      setSection(0);
-    } else {
-      setSection(footerArray[icon][curr]);
-      if (icon !== 0) {
-        setFlipped((prev) => !prev);
-      }
-    }
+    setSection(curr);
     if (activeMyth >= 4) {
       setActiveMyth(0);
     }
@@ -49,53 +41,98 @@ const FooterItem = ({ enableSound, icon }) => {
 
   return (
     <>
-      <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
-        <div className={`font-symbols text-[15vw]`}>
-          <div
-            className={`ficon ${flipped ? "flipped" : ""} text-black-contour`}
+      {icon < 3 ? (
+        <div
+          className="flex  flex-col items-center cursor-pointer z-50"
+          onClick={(e) => {
+            e.preventDefault();
+            playAudio();
+            handleSectionChange(redirect[icon]);
+          }}
+          style={{ minWidth: "80px" }}
+        >
+          <h1
+            className={`font-symbols ${
+              section === redirect[icon]
+                ? `${
+                    activeMyth < 4 && section !== 4
+                      ? `glow-icon-${mythSections[activeMyth]}`
+                      : `glow-icon-white text-black-contour`
+                  }`
+                : `text-black-contour`
+            }`}
+            style={{
+              fontSize: section === redirect[icon] ? "65px" : "60px",
+              transition: "font-size 0.3s ease",
+            }}
           >
-            <div
-              onClick={(e) => {
-                handleFlip(e);
-
-                handleSectionChange(0);
-              }}
-              className="ficon__face ficon__face--front font-symbols flex justify-center items-center"
-            >
-              {footerIcons[footerArray[icon][0]]}
-            </div>
-            <div
-              onClick={(e) => {
-                handleFlip(e);
-                handleSectionChange(1);
-              }}
-              className="ficon__face ficon__face--back font-symbols flex justify-center items-center"
-            >
-              {footerIcons[footerArray[icon][1]]}
-            </div>
-            {icon === 2 && !flipped && (
-              <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-black text-white h-8 w-8 mt-2 -mr-3 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
-                {countOfInCompleteQuests}
-              </div>
-            )}
-          </div>
+            {footerIcons[icon]}
+          </h1>
         </div>
-      </div>
-      <div className="absolute">
-        <ReactHowler
-          src={assets.audio.menu}
-          playing={false}
-          preload={true}
-          ref={howlerRef}
-          html5={true}
-        />
-      </div>
+      ) : (
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            playAudio();
+            handleSectionChange(icon);
+          }}
+        >
+          {userData.avatarUrl ? (
+            <div
+              className="flex flex-col items-center cursor-pointer z-50 h-full mb-3.5 transition-all duration-500"
+              style={{ minWidth: "80px" }}
+            >
+              <img
+                src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                alt="profile-image"
+                className={`w-[65px] ${
+                  (section === redirect[icon] || section === 5) &&
+                  "scale-110 glow-icon-white"
+                } border border-black  rounded-full`}
+              />
+            </div>
+          ) : (
+            <>
+              <div
+                className={`flex relative text-center mb-3.5 justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
+              >
+                <img
+                  src="/assets/uxui/240px-orb.base.png"
+                  alt="orb"
+                  className={`filter-orbs-${avatarColor} overflow-hidden max-w-[65px]`}
+                />
+                <span
+                  className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}
+                >
+                  {userData.telegramUsername.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+      {icon === 3 && (
+        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-black text-white h-8 w-8 mb-[66px] mr-1 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+          {countOfInCompleteQuests}
+        </div>
+      )}
+
+      <ReactHowler
+        src={assets.audio.menu}
+        playing={false}
+        preload={true}
+        ref={howlerRef}
+        html5={true}
+      />
     </>
   );
 };
 const Footer = ({}) => {
   const { section, activeMyth, enableSound, minimize, assets } =
     useContext(MyContext);
+  const [avatarColor, setAvatarColor] = useState(() => {
+    return localStorage.getItem("avatarColor");
+  });
 
   return (
     <div
@@ -116,27 +153,16 @@ const Footer = ({}) => {
             : mythSections[activeMyth]
         }`}
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-[70%] flex justify-between text-white">
+
+      <div className="transition-all absolute duration-1000 items-end h-[12%] z-50 w-full flex -mt-1 justify-between text-white">
+        {footerIcons.map((item, index) => (
           <FooterItem
-            icon={0}
-            section={section}
+            key={index}
             enableSound={enableSound}
-            activeMyth={activeMyth}
+            icon={index}
+            avatarColor={avatarColor}
           />
-          <FooterItem
-            icon={1}
-            section={section}
-            enableSound={enableSound}
-            activeMyth={activeMyth}
-          />
-          <FooterItem
-            icon={2}
-            section={section}
-            enableSound={enableSound}
-            activeMyth={activeMyth}
-          />
-        </div>
+        ))}
       </div>
     </div>
   );
