@@ -184,10 +184,7 @@ export const ProfileGuide = ({ handleClick, currQuest }) => {
         onClick={handleClick}
         className="flex relative flex-grow items-center text-white "
       >
-        <div className="h-full mx-auto w-[70%] pt-[2.5vh]">
-          <TaskItem quest={currQuest} claimCard={() => {}} />
-        </div>
-        <div className="font-symbols absolute text-white text-[24vw] z-50 -mt-[35vw]  ml-[40vw] scale-point">
+        <div className="font-symbols  text-white text-[40vw]  top-5 scale-point">
           b
         </div>
       </div>

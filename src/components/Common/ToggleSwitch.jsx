@@ -21,7 +21,7 @@ const ToggleSwitch = () => {
   return (
     <div className="flex gap-2 justify-center items-center">
       <h2 className="text-secondary">ON</h2>
-      <label className="relative inline-block w-12 h-6">
+      <label className="relative inline-block w-11 h-6">
         <input
           type="checkbox"
           checked={!enableSound}
@@ -35,7 +35,7 @@ const ToggleSwitch = () => {
         >
           <div
             className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow transform transition-transform duration-300 ${
-              !enableSound ? "translate-x-6" : ""
+              !enableSound ? "translate-x-5" : ""
             }`}
           ></div>
         </div>

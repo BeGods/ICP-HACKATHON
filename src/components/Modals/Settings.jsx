@@ -38,7 +38,7 @@ const languages = [
 ];
 
 const SettingModal = ({ close }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const {
     setRewards,
     setRewardsClaimedInLastHr,
@@ -201,19 +201,22 @@ const SettingModal = ({ close }) => {
           ) : (
             <div
               onClick={() => open()}
-              className="flex items-center w-full justify-end"
+              className="flex items-center w-full justify-between"
             >
-              <div>Connect</div>
+              <div className="pl-3">{t("profile.connect")} Wallet</div>
               <ChevronRight size={"20px"} />
             </div>
           )}
         </div>
 
-        <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
+        <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
           <div className="flex justify-start -ml-3">
             {enableSound ? <Volume2 /> : <VolumeX />}
           </div>
-          <ToggleSwitch />
+          <div className="flex justify-between w-full">
+            <div className="pl-3">Audio</div>
+            <ToggleSwitch />
+          </div>
         </div>
         <div
           onClick={handleClose}
