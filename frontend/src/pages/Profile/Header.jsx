@@ -3,7 +3,7 @@ import Header from "../../components/Common/Header";
 import { MyContext } from "../../context/context";
 import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
 
-const TopChild = ({ handleClick }) => {
+const TopChild = () => {
   const { setSection } = useContext(MyContext);
 
   return (

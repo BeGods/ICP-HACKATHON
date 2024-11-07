@@ -77,12 +77,12 @@
   );
   --multi-linear-gradient: linear-gradient(
     90deg,
-    #001aff 32.59%,
-    #16ffd5 47.32%,
-    #42ff00 60.71%,
-    #ccff00 74.78%,
-    #ffb800 87.17%,
-    #ff0000 99.55%
+    #001aff 18%,
+    #16ffd5 32%,
+    #42ff00 48%,
+    #ccff00 62%,
+    #ffb800 78%,
+    #ff0000 100%
   );
 
   /* Filters for Backgrounds */
@@ -238,7 +238,7 @@ body {
   right: 0;
   bottom: 0;
   border: 1px solid transparent; /* Border style needed for the image */
-  border-image: linear-gradient(90deg, #001aff 32.59%, #16ffd5 47.32%, #42ff00 60.71%, #ccff00 74.78%, #ffb800 87.17%, #ff0000 99.55%);
+  border-image: linear-gradient(90deg, #001aff 18%, #16ffd5 32%, #42ff00 48%, #ccff00 62%, #ffb800 78%, #ff0000 100%);
   border-image-slice: 1; /* Ensures the gradient covers the border area */
   pointer-events: none; /* Prevents interaction with the border */
 }

@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState } from "react";
-import { Check, ChevronRight, Download } from "lucide-react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { MyContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api";
@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
-const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
+const TaskItem = ({ quest, showSetting, showWallet }) => {
   const [isClicked, setIsClicked] = useState(false);
   const {
     gameData,
@@ -15,10 +15,33 @@ const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
     socialQuestData,
     setSocialQuestData,
     setGameData,
+    userData,
   } = useContext(MyContext);
   const [claim, setClaim] = useState(false);
+  const [countryCode, setCountryCode] = useState(null);
   const { t } = useTranslation();
   const disableClick = useRef(false);
+
+  useEffect(() => {
+    if (quest._id === "6716097630689b65b6b384ef") {
+      tele.CloudStorage.getItem("country_code", (err, item) => {
+        if (!err && item) {
+          setCountryCode(item);
+        } else {
+          setCountryCode(null);
+        }
+      });
+    }
+  }, [quest._id]);
+
+  const handleCopyLink = async () => {
+    tele.HapticFeedback.notificationOccurred("success");
+
+    await navigator.clipboard.writeText(
+      `https://t.me/BeGods_bot/forgesoffaith?startapp=${userData.referralCode}`
+    );
+    showToast("copy_link");
+  };
 
   const handleClaimTask = async () => {
     if (disableClick.current === false) {
@@ -56,7 +79,9 @@ const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
       onClick={() => {
         tele.HapticFeedback.notificationOccurred("success");
 
-        if (!quest.isCompleted && claim === false) {
+        if (quest._id == "fjkddfakj138338huadla") {
+          handleCopyLink();
+        } else if (!quest.isQuestClaimed && claim === false) {
           if (quest._id == "6716097630689b65b6b384ef") {
             tele.CloudStorage.getItem("country_code", (err, item) => {
               if (!item) {
@@ -65,7 +90,7 @@ const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
                 setClaim(true);
               }
             });
-          } else if (quest._id == "67149c7623f2cb422578ae3e") {
+          } else if (quest._id == "672b42311767ca93a22805b1") {
             if (userData.tonAddress) {
               setClaim(true);
             } else {
@@ -76,7 +101,7 @@ const TaskItem = ({ quest, showSetting, showWallet, userData }) => {
 
             window.open(quest?.link, "_blank");
           }
-        } else if (!quest.isCompleted && claim === true) {
+        } else if (!quest.isQuestClaimed && claim === true) {
           handleClaimTask();
         }
       }}
@@ -108,7 +133,10 @@ ${
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
         <h1 className="text-tertiary uppercase">
-          {t(`profile.${quest.questName.toLowerCase()}`)}
+          {quest._id == "6716097630689b65b6b384ef" &&
+          (!countryCode || countryCode !== "NA")
+            ? countryCode
+            : t(`profile.${quest.questName.toLowerCase()}`)}
         </h1>
         <h2 className="text-tertiary">
           +{quest.requiredOrbs.multiOrbs}

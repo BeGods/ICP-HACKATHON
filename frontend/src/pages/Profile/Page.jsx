@@ -1,10 +1,7 @@
-import { useTonConnectModal } from "@tonconnect/ui-react";
 import { Settings } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-import { useTranslation } from "react-i18next";
 import SettingModal from "../../components/Modals/Settings";
-import { showToast } from "../../components/Toast/Toast";
 import { ProfileGuide } from "../../components/Common/Tutorials";
 import { useProfileGuide } from "../../hooks/Tutorial";
 import ProfileHeader from "./Header";
@@ -14,23 +11,12 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 
-const tele = window.Telegram?.WebApp;
-
 const Profile = (props) => {
   const { userData, socialQuestData, setShowCard, assets, setSection } =
     useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
   const [showToggles, setShowToggles] = useState(false);
-
-  const handleCopyLink = async () => {
-    tele.HapticFeedback.notificationOccurred("success");
-
-    await navigator.clipboard.writeText(
-      `https://t.me/BeGods_bot/forgesoffaith?startapp=${userData.referralCode}`
-    );
-    showToast("copy_link");
-  };
 
   useEffect(() => {
     if (enableGuide) {
@@ -90,12 +76,7 @@ const Profile = (props) => {
         />
       </div>
       {/* Header */}
-      <ProfileHeader
-        userData={userData}
-        avatarColor={avatarColor}
-        handleClick={handleCopyLink}
-      />
-
+      <ProfileHeader userData={userData} avatarColor={avatarColor} />
       <div
         className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
         style={{ top: "22vh", left: "50%", transform: "translateX(-50%)" }}
