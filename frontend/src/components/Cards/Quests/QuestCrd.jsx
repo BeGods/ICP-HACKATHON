@@ -22,9 +22,6 @@ const QuestCard = ({
 
   return (
     <div className="w-[70%] mt-[7vh] relative flex flex-col gap-2 justify-center items-center mx-auto">
-      {!isGuideActive && (
-        <IconBtn isInfo={true} activeMyth={activeMyth} align={1} />
-      )}
       <div className={`card ${flipped ? "flipped" : ""}`}>
         <div
           onClick={(e) => {
@@ -58,6 +55,9 @@ const QuestCard = ({
                     <MappedOrbs quest={quest} />
                   </div>
                 </div>
+                {!isGuideActive && (
+                  <IconBtn isInfo={true} activeMyth={activeMyth} align={1} />
+                )}
               </div>
               <div
                 className={`flex relative items-center h-[19%] uppercase glow-text-quest text-white`}

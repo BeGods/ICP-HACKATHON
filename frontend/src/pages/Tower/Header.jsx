@@ -34,7 +34,7 @@ const CenterChild = ({ platform, myth }) => {
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
           <span
-            className={`absolute z-1 font-symbols opacity-100 text-white text-[28vw] ${
+            className={`absolute tex-black-icon-contour z-1 font-symbols opacity-100 text-white text-[28vw] ${
               platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
             } opacity-50  orb-symbol-shadow`}
           >
@@ -61,7 +61,7 @@ const CenterChild = ({ platform, myth }) => {
                 className="moon-base"
               />
               <span
-                className={`absolute z-1 font-symbols text-white-contour  text-black/90 text-[28vw] ${
+                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[28vw] ${
                   platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
                 } orb-symbol-shadow z-50`}
               >

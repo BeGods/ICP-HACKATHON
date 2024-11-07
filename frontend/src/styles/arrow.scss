@@ -74,13 +74,13 @@ body {
 
 @keyframes arrows {
   0% {
-    border-left: math.div($size, 3) solid rgba(188, 187, 187, 0.41);
-    border-bottom: math.div($size, 3) solid rgba(188, 187, 187, 0.41);
+    border-left: math.div($size, 3) solid rgb(188, 187, 187);
+    border-bottom: math.div($size, 3) solid rgb(188, 187, 187);
     transform: translate(math.div($size, -6), math.div($size * 4, -6)) rotate(-45deg);
   }
   10%, 90% {
-    border-left: math.div($size, 3) solid rgba(188, 187, 187, 0.41);
-    border-bottom: math.div($size, 3) solid rgba(188, 187, 187, 0.41);
+    border-left: math.div($size, 3) solid rgb(188, 187, 187);
+    border-bottom: math.div($size, 3) solid rgb(188, 187, 187);
   }
   50% {
     border-left: math.div($size, 3) solid rgba(0, 0, 0, $peakopacity);
@@ -88,8 +88,8 @@ body {
     transform: translate(math.div($size, -6), 0px) rotate(-45deg);
   }
   100% {
-    border-left: math.div($size, 3) solid rgba(188, 187, 187, 0.41);
-    border-bottom: math.div($size, 3) solid rgba(188, 187, 187, 0.41);
+    border-left: math.div($size, 3) solid rgb(188, 187, 187);
+    border-bottom: math.div($size, 3) solid rgb(188, 187, 187);
     transform: translate(math.div($size, -6), math.div($size * 4, 6)) rotate(-45deg);
   }
 }

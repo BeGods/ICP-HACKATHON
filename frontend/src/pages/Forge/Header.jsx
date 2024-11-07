@@ -56,7 +56,7 @@ const CenterChild = ({
               : showBlackOrb === 1
               ? "text-white"
               : "text-white"
-          } text-[28vw] transition-all duration-1000 myth-glow-greek text-black-md-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+          } text-[28vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
           <div className={`${platform === "ios" ? "mt-1" : "mt-2"}`}>
             {mythSymbols[mythSections[activeMyth]]}
