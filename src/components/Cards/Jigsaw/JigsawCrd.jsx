@@ -11,8 +11,6 @@ const JigsawImage = ({ imageUrl, activeParts, handleClick }) => {
   });
   const gap = 1;
 
-  // We cant set the h & w on Stage to 100% it only takes px values so we have to
-  // find the parent container's w and h and then manually set those !
   useEffect(() => {
     if (divRef.current?.offsetHeight && divRef.current?.offsetWidth) {
       setDimensions({

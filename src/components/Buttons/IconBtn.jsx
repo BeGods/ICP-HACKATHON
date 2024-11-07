@@ -10,7 +10,7 @@ const tele = window.Telegram?.WebApp;
 
 const alignBasedOnCard = [
   "-mt-[28px] ml-[52px]",
-  "-mt-[4vh] ml-[14vw]",
+  "-mt-[4vh] ml-[7vw]",
   "mr-[60px] mt-2",
   "-mt-[5px] ml-[90px]",
   "mr-[60px] -mt-8",
