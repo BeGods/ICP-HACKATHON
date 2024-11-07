@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,27 @@ const TaskCarousel = ({ quests }) => {
     }
   };
 
+  useEffect(() => {
+    const exists = quests.some(
+      (quest) => quest._id === "fjkddfakj138338huadla"
+    );
+
+    if (!exists) {
+      quests.unshift({
+        _id: "fjkddfakj138338huadla",
+        questName: "invite",
+        description: "Follow our official account",
+        type: "https://i.postimg.cc/9ffPNzps/invite-1.png",
+        link: "fgfd",
+        mythology: "Other",
+        status: "Active",
+        requiredOrbs: {
+          multiOrbs: 3,
+        },
+      });
+    }
+  }, []);
+
   return (
     <div
       className="wrapper h-[60vh]"
@@ -34,7 +55,27 @@ const TaskCarousel = ({ quests }) => {
     >
       <div className="carousel">
         {quests
-          .sort((a, b) => a.isQuestClaimed - b.isQuestClaimed)
+          .sort((a, b) => {
+            if (a._id === "fjkddfakj138338huadla") return -1;
+            if (b._id === "fjkddfakj138338huadla") return 1;
+
+            if (a.isQuestClaimed !== b.isQuestClaimed) {
+              return a.isQuestClaimed - b.isQuestClaimed;
+            }
+
+            if (
+              a.requiredOrbs.multiOrbs === 5 &&
+              b.requiredOrbs.multiOrbs !== 5
+            )
+              return -1;
+            if (
+              a.requiredOrbs.multiOrbs !== 5 &&
+              b.requiredOrbs.multiOrbs === 5
+            )
+              return 1;
+
+            return 0;
+          })
           .slice(currentIndex, currentIndex + 3)
           .map((item, index) => {
             let className = "carousel__item";
@@ -60,23 +101,6 @@ const TaskCarousel = ({ quests }) => {
                     );
                   }}
                   quest={item}
-                  claimCard={() => {
-                    setShowCard(
-                      <MilestoneCard
-                        t={t}
-                        isMulti={true}
-                        isOrb={true}
-                        isBlack={false}
-                        activeMyth={4}
-                        isForge={true}
-                        closeCard={() => {}}
-                        handleClick={() => {
-                          tele.HapticFeedback.notificationOccurred("success");
-                          setShowCard(null);
-                        }}
-                      />
-                    );
-                  }}
                 />
               </div>
             );

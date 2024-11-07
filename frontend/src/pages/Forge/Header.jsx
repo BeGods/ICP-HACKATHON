@@ -120,7 +120,6 @@ const TopChild = ({
 };
 const BottomChild = ({ shards, orbs, activeMyth, glowShards }) => {
   const [showEffect, setShowEffect] = useState(false);
-  //  bar-flipped
 
   useEffect(() => {
     if (glowShards) {

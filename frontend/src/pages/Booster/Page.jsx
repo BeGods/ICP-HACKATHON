@@ -20,6 +20,7 @@ import MythInfoCard from "../../components/Cards/Info/MythInfoCrd";
 import BoosterHeader from "./Header";
 import { useBoosterGuide } from "../../hooks/Tutorial";
 import BoosterCarousel from "../../components/Carousel/BoosterCarousel";
+import ReactHowler from "react-howler";
 
 const Boosters = () => {
   const { t } = useTranslation();
@@ -33,6 +34,7 @@ const Boosters = () => {
     setShowCard,
     setShowBooster,
     assets,
+    enableSound,
   } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
@@ -320,6 +322,14 @@ const Boosters = () => {
           />
         </div>
       </div>
+
+      <ReactHowler
+        src={assets.audio.forgeBg}
+        playing={enableSound}
+        loop
+        preload={true}
+        html5={true}
+      />
 
       {/* Toggles */}
       {showToggles && (

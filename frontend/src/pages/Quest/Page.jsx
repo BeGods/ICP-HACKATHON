@@ -32,6 +32,7 @@ import { useQuestGuide } from "../../hooks/Tutorial";
 import { QuestGuide } from "../../components/Common/Tutorials";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import GameEndCrd from "../../components/Cards/Reward/GameEnd";
+import ReactHowler from "react-howler";
 
 const tele = window.Telegram?.WebApp;
 
@@ -54,6 +55,7 @@ const Quests = () => {
     showBooster,
     setShowBooster,
     assets,
+    enableSound,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
@@ -507,6 +509,14 @@ const Quests = () => {
           </div>
         )}
       </div>
+
+      <ReactHowler
+        src={assets.audio.forgeBg}
+        playing={enableSound}
+        loop
+        preload={true}
+        html5={true}
+      />
 
       {/* Toggles */}
       {showToggle && (
