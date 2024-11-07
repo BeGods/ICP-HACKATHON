@@ -843,43 +843,54 @@
 // };
 
 // export default Test;
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 
-const moonPhases = [
-  "new",
-  "waxing-crescent",
-  "first-quarter",
-  "waxing-gibbous",
-  "full",
-  "waning-gibbous",
-  "last-quarter",
-  "waning-crescent",
-];
+// const moonPhases = [
+//   "new",
+//   "waxing-crescent",
+//   "first-quarter",
+//   "waxing-gibbous",
+//   "full",
+//   "waning-gibbous",
+//   "last-quarter",
+//   "waning-crescent",
+// ];
 
-const Test = () => {
-  const [phase, setPhase] = useState(3);
+// const Test = () => {
+//   const [phase, setPhase] = useState(3);
 
-  return (
-    <div className="bg-white h-screen w-screen flex justify-center items-center">
-      <div className="moon-phases">
-        <div className="moon">
-          <div
-            className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full y`}
-          >
-            <div
-              style={{ height: `100%` }}
-              className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 phase phase-${phase} z-10`}
-            ></div>
-          </div>
-          <img
-            src="https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png"
-            alt="moon-phase"
-            className="moon-base"
-          />
-        </div>
-      </div>
-    </div>
-  );
+//   return (
+//     <div className="bg-white h-screen w-screen flex justify-center items-center">
+//       <div className="moon-phases">
+//         <div className="moon">
+//           <div
+//             className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full y`}
+//           >
+//             <div
+//               style={{ height: `100%` }}
+//               className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 phase phase-${phase} z-10`}
+//             ></div>
+//           </div>
+//           <img
+//             src="https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png"
+//             alt="moon-phase"
+//             className="moon-base"
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+import React from "react";
+import PropTypes from "prop-types";
+
+const Test = (props) => {
+  return <div>Test</div>;
 };
+
+Test.propTypes = {};
 
 export default Test;

@@ -49,7 +49,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             playAudio();
             handleSectionChange(redirect[icon]);
           }}
-          style={{ minWidth: "80px" }}
+          style={{ minWidth: "70px" }}
         >
           <h1
             className={`font-symbols ${
@@ -80,12 +80,12 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
           {userData.avatarUrl ? (
             <div
               className="flex flex-col items-center cursor-pointer z-50 h-full mb-3.5 transition-all duration-500"
-              style={{ minWidth: "80px" }}
+              style={{ minWidth: "70px" }}
             >
               <img
                 src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
                 alt="profile-image"
-                className={`w-[65px] ${
+                className={`w-[16vw] ${
                   (section === redirect[icon] || section === 5) &&
                   "scale-110 glow-icon-white"
                 } border border-black  rounded-full`}
@@ -112,7 +112,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
       {icon === 3 && (
-        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[66px] mr-1 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[8vh] mr-1 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
           {countOfInCompleteQuests}
         </div>
       )}
