@@ -810,6 +810,8 @@ const Forges = () => {
         setshowStarBoosters(2);
         setShowBlackOrb(2);
         setMinimize(2);
+        setOrbGlow(false);
+        setTapGlow(false);
         handleUpdateStarStatus();
         if (disableStarTimeout.current) {
           clearTimeout(disableStarTimeout.current);
@@ -1230,6 +1232,8 @@ const Forges = () => {
                   setIsStarHolding(1);
                   isStarHold.current = true;
                   setshowStarBoosters(1);
+                  setOrbGlow(true);
+                  setTapGlow(true);
                 }}
                 onTouchEnd={() => {
                   setIsStarHolding(2);
