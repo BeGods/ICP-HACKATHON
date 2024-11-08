@@ -1,6 +1,9 @@
 import React, { useContext, useRef } from "react";
 import { mythSections } from "../../utils/constants";
-import { calculateRemainingTime } from "../../helpers/booster.helper";
+import {
+  calculateRemainingTime,
+  hasTimeElapsed,
+} from "../../helpers/booster.helper";
 import { MyContext } from "../../context/context";
 import { Lock } from "lucide-react";
 
@@ -14,7 +17,8 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
       <div className="relative z-50">
         {activeCard === "automata" &&
         isAutoPay &&
-        calculateRemainingTime(gameData.autoPayExpiry) > 0 ? (
+        calculateRemainingTime(gameData.autoPayExpiry) &&
+        !hasTimeElapsed(gameData.autoPayExpiry) > 0 ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}
           >
@@ -25,7 +29,9 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
-        ) : activeCard === "automata" && mythData?.isAutomataActive ? (
+        ) : activeCard === "automata" &&
+          mythData?.isAutomataActive &&
+          !hasTimeElapsed(mythData.automataStartTime) ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}
           >
@@ -35,7 +41,9 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
-        ) : activeCard === "minion" && !mythData?.isShardsClaimActive ? (
+        ) : activeCard === "minion" &&
+          !mythData?.isShardsClaimActive &&
+          !hasTimeElapsed(mythData.shardsLastClaimedAt) ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
           >
@@ -56,7 +64,9 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
-        ) : activeCard === "burst" && !mythData?.isBurstActiveToClaim ? (
+        ) : activeCard === "burst" &&
+          !mythData?.isBurstActiveToClaim &&
+          !hasTimeElapsed(mythData.burstActiveAt) ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
           >
