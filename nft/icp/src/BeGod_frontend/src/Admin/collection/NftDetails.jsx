@@ -8,7 +8,7 @@ import { useAuth } from "../../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 
 const NftDetails = () => {
-  const { id } = useParams();
+  const { collectionId, nftId } = useParams();
   const { backendActor } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,6 +19,7 @@ const NftDetails = () => {
   const { collectiondata } = location.state || {};
   console.log(nftdata); //
   console.log(collectiondata);
+  console.log(nftId);
 
   const tokenindex = nftdata?.[0];
   const userid = nftdata?.[1];
@@ -28,6 +29,7 @@ const NftDetails = () => {
 
   const metadataJson = nftdata[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
+  console.log(metadata);
 
   const collid = collectiondata[1];
 
@@ -71,7 +73,6 @@ const NftDetails = () => {
       </div>
     );
   }
-  const identifier = tokenid?.[0]?.[1] || "null";
 
   const owner = singletokendata?.[0]?.[1];
   const isOwned = singletokendata?.[0]?.[4];
@@ -89,7 +90,7 @@ const NftDetails = () => {
         {/* NFT Details Section */}
         <div className="flex flex-col md:flex-row mt-12 sm:mt-0 gap-8">
           {/* NFT Image */}
-          <div className="flex justify-center md:justify-start mb-6 md:mb-0 w-full sm:w-[50%] md:w-[40%]">
+          <div className="flex justify-center md:justify-start mb-6 md:mb-0 w-full sm:w-[60%] md:w-[40%]">
             {loading ? (
               <Skeleton
                 height="100%" // Set to "100%" to fill available space
@@ -130,7 +131,7 @@ const NftDetails = () => {
                 </p>
                 <p className="text-white text-lg">
                   <span className="font-semibold">NFT ID: </span>
-                  <span className="text-yellow-500">{identifier || id}</span>
+                  <span className="text-yellow-500">{nftId || identifier}</span>
                 </p>
                 <p className="text-white text-lg">
                   <span className="font-semibold">Owner: </span>
@@ -140,6 +141,20 @@ const NftDetails = () => {
                   <span className="font-semibold">Price: </span>
                   <span>{price || "Not Listed"} ICP</span>
                 </p>
+
+                <p className="text-white text-lg">
+                  <span className="font-semibold">Nft Season: </span>
+                  <span>{metadata?.nftSeason || "Null"}</span>
+                </p>
+                <p className="text-white text-lg">
+                  <span className="font-semibold">Nft Type: </span>
+                  <span>{metadata?.newtype || "Null"}</span>
+                </p>
+                <p className="text-white text-lg">
+                  <span className="font-semibold">Nft Rarity: </span>
+                  <span>{metadata?.nftType ? "Yes" : "No"}</span>
+                </p>
+
                 <p className="text-white text-lg">
                   <span className="font-semibold">Listed: </span>
                   <span>{isOwned ? "Yes" : "No"}</span>

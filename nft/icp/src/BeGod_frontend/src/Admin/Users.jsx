@@ -33,7 +33,7 @@ function Users() {
   const getallDUser = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.getAllUsers(1, currentpage - 1);
+        const result = await backendActor?.getAllUsers(10, currentpage - 1);
         console.log("getting all users", result);
 
         // if (result && result.length > 0 && result[0].length > 0) {

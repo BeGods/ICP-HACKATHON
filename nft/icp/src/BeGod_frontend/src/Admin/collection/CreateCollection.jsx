@@ -191,7 +191,10 @@ const CreateCollection = () => {
     nftquantity,
     nftcolor,
     nftPrice,
-    nftType
+    nftType,
+    arstistname,
+    newtype,
+    nftSeason
   ) => {
     try {
       // console.log("in mint", answ);
@@ -206,6 +209,9 @@ const CreateCollection = () => {
         contractAddress: canisterId,
         nftcolor,
         date: formattedDate,
+        arstistname,
+        newtype,
+        nftSeason,
       });
 
       const metadataContainer = {
@@ -361,7 +367,10 @@ const CreateCollection = () => {
               val.nftQuantity,
               val.nftcolor,
               val.nftPrice,
-              val.nftType
+              val.nftType,
+              val.arstistname,
+              val.newtype,
+              val.nftSeason
             );
             console.log(mintResult, "mintResult");
             if (mintResult instanceof Error) {

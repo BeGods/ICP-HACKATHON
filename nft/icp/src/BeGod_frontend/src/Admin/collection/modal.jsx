@@ -17,6 +17,9 @@ const Modal = (props) => {
   const [nftImageURL, setNftImageURL] = useState("");
   const { toggleModal } = props;
   const [nftcolor, setnftcolor] = useState("Golden");
+  const [arstistname, setartistName] = useState("");
+  const [newtype, setnewtype] = useState("Quest");
+  const [nftSeason, setnftSeason] = useState("Stone Age");
 
   const nnftid = () => {
     const value = Math.floor(Math.random() * 1000000);
@@ -38,7 +41,10 @@ const Modal = (props) => {
       nftDescription &&
       nftImage &&
       nftImageURL &&
-      nftcolor
+      nftcolor &&
+      arstistname &&
+      newtype &&
+      nftSeason
     ) {
       const nftDetails = {
         nftId,
@@ -50,6 +56,9 @@ const Modal = (props) => {
         nftPrice,
         nftDescription,
         nftcolor,
+        arstistname,
+        newtype,
+        nftSeason,
       };
       console.log("nft details", nftDetails);
       getAddedNftDetails(nftDetails);
@@ -126,25 +135,81 @@ const Modal = (props) => {
           </label>
         </div>
 
-        <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
+        <div className="mt-1 flex flex-col sm:flex-row sm:gap-2 md:flex-row md:gap-2 w-full h-[120px] md:h-[60px] mb-0">
           <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
-            Type:
+            NFT Rarity:
             <select
               className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
               value={nftType}
               onChange={(e) => setNftType(e.target.value)}
             >
-              <option value="common" className="text-[16px] text-[#8a8686]">
-                Common
+              <option value="divine" className="text-[16px] text-[#8a8686]">
+                Divine
               </option>
-              <option value="mythic" className="text-[16px] text-[#8a8686]">
-                Mythic
+              <option value="Mythical" className="text-[16px] text-[#8a8686]">
+                Mythical
               </option>
               <option value="rare" className="text-[16px] text-[#8a8686]">
                 Rare
               </option>
               <option value="uncommon" className="text-[16px] text-[#8a8686]">
                 Uncommon
+              </option>
+              <option value="common" className="text-[16px] text-[#8a8686]">
+                Common
+              </option>
+              <option value="Promo" className="text-[16px] text-[#8a8686]">
+                Promo
+              </option>
+              <option value="Misc" className="text-[16px] text-[#8a8686]">
+                Misc
+              </option>
+            </select>
+          </label>
+
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px] ">
+            Artist Name:
+            <input
+              value={arstistname}
+              onChange={(e) => {
+                let value = e.target.value;
+                if (/^[a-zA-Z0-9 ]*$/.test(value)) {
+                  value = value.trimStart();
+                  if (value.trim() !== "") {
+                    setartistName(value);
+                  } else {
+                    setartistName("");
+                  }
+                } else {
+                  toast.error("Only letters and numbers are allowed.");
+                }
+              }}
+              type="text"
+              placeholder="Enter Artist Name"
+              className="pl-4 rounded-md h-[60px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
+            />
+          </label>
+        </div>
+
+        <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+            NFT Type:
+            <select
+              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
+              value={newtype}
+              onChange={(e) => setnewtype(e.target.value)}
+            >
+              <option value="Quest" className="text-[16px] text-[#8a8686]">
+                Quest
+              </option>
+              <option value="Char" className="text-[16px] text-[#8a8686]">
+                Char
+              </option>
+              <option value="Item" className="text-[16px] text-[#8a8686]">
+                Item
+              </option>
+              <option value="Asset" className="text-[16px] text-[#8a8686]">
+                Asset
               </option>
             </select>
           </label>
@@ -179,6 +244,49 @@ const Modal = (props) => {
           </label>
         </div>
 
+        <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+            NFT Season:
+            <select
+              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
+              value={nftSeason}
+              onChange={(e) => setnftSeason(e.target.value)}
+            >
+              <option value="Stone Age" className="text-[16px] text-[#8a8686]">
+                Stone Age
+              </option>
+              <option value="Golden Age" className="text-[16px] text-[#8a8686]">
+                Golden Age
+              </option>
+              <option value="Silver Age" className="text-[16px] text-[#8a8686]">
+                Silver Age
+              </option>
+              <option value="Bronze Age" className="text-[16px] text-[#8a8686]">
+                Bronze Age
+              </option>
+            </select>
+          </label>
+
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+            Border Color:
+            <select
+              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
+              value={nftcolor}
+              onChange={(e) => setnftcolor(e.target.value)}
+            >
+              <option value="golden" className="text-[16px] text-[#8a8686]">
+                Golden
+              </option>
+              <option value="silver" className="text-[16px] text-[#8a8686]">
+                Silver
+              </option>
+              <option value="bronze" className="text-[16px] text-[#8a8686]">
+                Bronze
+              </option>
+            </select>
+          </label>
+        </div>
+
         <div className="mt-1">
           <label className="mt-[20px] w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
             Price (in ICP)
@@ -197,26 +305,6 @@ const Modal = (props) => {
               min="1"
               className="pl-4 w-[100%] h-[38px] bg-[#29292C] rounded-md text-[16px] text-[#8a8686]"
             />
-          </label>
-        </div>
-        <div className="mt-1">
-          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
-            Type:
-            <select
-              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
-              value={nftcolor}
-              onChange={(e) => setnftcolor(e.target.value)}
-            >
-              <option value="golden" className="text-[16px] text-[#8a8686]">
-                Golden
-              </option>
-              <option value="silver" className="text-[16px] text-[#8a8686]">
-                Silver
-              </option>
-              <option value="bronze" className="text-[16px] text-[#8a8686]">
-                Bronze
-              </option>
-            </select>
           </label>
         </div>
 

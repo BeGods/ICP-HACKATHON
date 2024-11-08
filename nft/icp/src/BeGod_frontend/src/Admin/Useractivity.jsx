@@ -167,7 +167,7 @@ function Users() {
   const gettransactions = async () => {
     if (backendActor) {
       try {
-        const result = await backendActor?.alltransactions(5, currentpage - 1);
+        const result = await backendActor?.alltransactions(10, currentpage - 1);
         console.log("getting all transactions", result);
 
         if (result.err === "No transactions found") {

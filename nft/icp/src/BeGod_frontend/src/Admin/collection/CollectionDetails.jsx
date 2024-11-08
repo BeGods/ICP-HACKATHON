@@ -87,7 +87,7 @@ function CollectionDetails() {
   const toggleModal = () => {
     setModal(!modal);
   };
-  console.log(collectiondata);
+  // console.log(collectiondata);
 
   if (!collectiondata) {
     return <p>No NFT data available</p>;
@@ -120,39 +120,40 @@ function CollectionDetails() {
 
       const result = await backendActor?.getAllCollectionNFTs(
         principalString,
-        1,
+        5,
         currentpage - 1
       );
       console.log("NFT collection:", result);
       const formatedList = [];
-      let tempIndex = 0;
-      for (let i = 0; i < result.ok.data.length; i++) {
-        const eachItem = result.ok.data[i];
-        const currentCardName =
-          eachItem[2]?.nonfungible?.name ?? "Name not found";
 
-        if (tempIndex === 0) {
-          formatedList.push([eachItem]);
-          tempIndex++;
-        } else if (
-          formatedList[tempIndex - 1][0][2]?.nonfungible?.name ===
-          currentCardName
-        ) {
-          formatedList[tempIndex - 1].push(eachItem);
-        } else {
-          formatedList.push([eachItem]);
-          tempIndex++;
+      if (result && result.ok && result.ok.data && result.ok.data.length > 0) {
+        let tempIndex = 0;
+        for (let i = 0; i < result.ok.data.length; i++) {
+          const eachItem = result.ok.data[i];
+          const currentCardName =
+            eachItem[2]?.nonfungible?.name ?? "Name not found";
+
+          if (tempIndex === 0) {
+            formatedList.push([eachItem]);
+            tempIndex++;
+          } else if (
+            formatedList[tempIndex - 1][0][2]?.nonfungible?.name ===
+            currentCardName
+          ) {
+            formatedList[tempIndex - 1].push(eachItem);
+          } else {
+            formatedList.push([eachItem]);
+            tempIndex++;
+          }
         }
-        // console.log(
-        //   "current name ",
-        //   currentCardName,
-        //   "formated list",
-        //   formatedList
-        // );
+        console.log("Formatted list:", formatedList);
+      } else {
+        console.log("No valid data found in result.");
       }
+
       setnftList(formatedList);
-      setcurrentpage(Number(result.ok.current_page));
-      settotalpage(Number(result.ok.total_pages));
+      setcurrentpage(Number(result?.ok?.current_page) || 1);
+      settotalpage(Number(result?.ok?.total_pages) || 0);
     } catch (error) {
       console.error("Error fetching get all collection NFT:", error);
     }
@@ -183,7 +184,10 @@ function CollectionDetails() {
     nftquantity,
     nftcolor,
     nftprice,
-    nftType
+    nftType,
+    artistname,
+    newtype,
+    nftSeason
   ) => {
     try {
       // console.log("in mint", principalStringg);
@@ -199,6 +203,9 @@ function CollectionDetails() {
         contractAddress: canisterId,
         nftcolor,
         date: formattedDate,
+        artistname,
+        newtype,
+        nftSeason,
       });
 
       const metadataContainer = {
@@ -215,9 +222,9 @@ function CollectionDetails() {
         Number(nftquantity)
       );
 
-      // console.log(result, "nft mint data");
+      console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftprice) * 100000000);
-      // console.log(es8_price, "price");
+      console.log(es8_price, "price");
       // if (result && result.length > 0) {
       //   result.map((val, key) => {
       //     getNftTokenId(principal, val[1], es8_price);
@@ -239,7 +246,7 @@ function CollectionDetails() {
 
   const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
     try {
-      // console.log(principal, nftIdentifier, nftprice);
+      console.log(principal, nftIdentifier, nftprice);
       // const principall = Principal.fromText(principal);
       const res = await listPrice(principal, nftIdentifier, nftprice);
       // console.log(res, "res data");
@@ -263,7 +270,7 @@ function CollectionDetails() {
       };
       const result = await backendActor?.listprice(principal, request);
       if (result) {
-        // console.log("List Price Result:", result);
+        console.log("List Price Result:", result);
         await getListing(principal);
       } else {
         throw new Error("listprice is not working");
@@ -288,7 +295,7 @@ function CollectionDetails() {
       //   },
       // });
       const result = await backendActor?.listings(principal);
-      // console.log("Listing", result);
+      console.log("Listing", result);
 
       // fetchNFTs();
       // setLoading(false);
@@ -321,7 +328,10 @@ function CollectionDetails() {
         nftDetails.nftQuantity,
         nftDetails.nftcolor,
         nftDetails.nftPrice,
-        nftDetails.nftType
+        nftDetails.nftType,
+        nftDetails.artistname,
+        nftDetails.newtype,
+        nftDetails.nftSeason
       );
 
       if (mintResult instanceof Error) {
@@ -449,14 +459,14 @@ function CollectionDetails() {
   const onClickFilterContainer = () => {
     updateDropDown(dropdownItems.none);
   };
-  const leftfunction = async () => {
+  const leftfunction = async (principal) => {
     if (currentpage == 1) {
       toast.error("You are in first page");
     }
     currentpage = currentpage - 1;
     await getAllCollectionNFT(principal);
   };
-  const rightfunction = async () => {
+  const rightfunction = async (principal) => {
     if (currentpage > totalpage) {
       toast.error("You are in last page");
     }
