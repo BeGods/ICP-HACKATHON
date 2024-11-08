@@ -325,16 +325,16 @@ const CreateCollection = () => {
   };
 
   const getUpdatedNftDetails = (nftDetails) => {
-    console.log("updated card details",nftDetails)
+    console.log("updated card details", nftDetails);
     const id = nftDetails.nftId;
-    const updatedList = nftCardsList.map((eachCard)=>{
-      if(id === eachCard.nftId){
-        console.log(id ,"  ",eachCard.nftId)
+    const updatedList = nftCardsList.map((eachCard) => {
+      if (id === eachCard.nftId) {
+        console.log(id, "  ", eachCard.nftId);
         return nftDetails;
       }
       return eachCard;
-    })
-    setNftCardsList(updatedList)
+    });
+    setNftCardsList(updatedList);
 
     setnfttype(nftDetails.nftType);
     setnftname(nftDetails.nftName);
@@ -344,8 +344,8 @@ const CreateCollection = () => {
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
-  
 
+  console.log(nftCardsList);
 
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
@@ -433,15 +433,17 @@ const CreateCollection = () => {
     }
   };
 
-  const [currentItemCardDetails,updateCurrentItemDetails] = useState({});
-  const [type,updateType] = useState("add"); 
+  const [currentItemCardDetails, updateCurrentItemDetails] = useState({});
+  const [type, updateType] = useState("add");
 
-  const onClickEdit = (nftId) =>{  
-    const nftDetails = nftCardsList.filter((eachNft)=>(eachNft.nftId === nftId));
+  const onClickEdit = (nftId) => {
+    const nftDetails = nftCardsList.filter(
+      (eachNft) => eachNft.nftId === nftId
+    );
     updateCurrentItemDetails(nftDetails[0]);
-    updateType("edit")
+    updateType("edit");
     toggleModal();
-  }
+  };
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
@@ -571,7 +573,10 @@ const CreateCollection = () => {
                       <button
                         type="button"
                         className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
-                        onClick={()=> {updateType("add");toggleModal()}}
+                        onClick={() => {
+                          updateType("add");
+                          toggleModal();
+                        }}
                       >
                         Add New
                       </button>
@@ -588,7 +593,7 @@ const CreateCollection = () => {
                         nftDetails={eachNftItem}
                         key={eachNftItem.nftId}
                         deleteNft={deleteNft}
-                        onClickEdit = {onClickEdit}
+                        onClickEdit={onClickEdit}
                       />
                     ))}
                   </div>
@@ -634,8 +639,8 @@ const CreateCollection = () => {
                             toggleModal={toggleModal}
                             getAddedNftDetails={getAddedNftDetails}
                             getUpdatedNftDetails={getUpdatedNftDetails}
-                            cardDetails = {currentItemCardDetails}
-                            type = {type}
+                            cardDetails={currentItemCardDetails}
+                            type={type}
                           />
                         </div>
                       </div>

@@ -40,6 +40,9 @@ const Modal = (props) => {
   const [nftcolor, setnftcolor] = useState(
     type === "edit" ? cardDetails.nftcolor : "Golden"
   );
+  const [arstistname, setartistName] = useState("");
+  const [newtype, setnewtype] = useState("Quest");
+  const [nftSeason, setnftSeason] = useState("Stone Age");
 
   const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
 
@@ -85,7 +88,7 @@ const Modal = (props) => {
         nftcolor,
       };
       console.log("nft details", nftDetails);
-      getUpdatedNftDetails(nftDetails);
+      getAddedNftDetails(nftDetails);
       toggleModal();
       toast.success("Card updated!");
     } else {
