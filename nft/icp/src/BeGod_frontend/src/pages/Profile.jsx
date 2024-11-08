@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navbar from '../components/Landing Page Components/Navbar';
 import Footer from '../components/Footer';
 import NftCard from '../components/NftCard';
@@ -308,7 +308,7 @@ const onClickRemoveOrder = async () =>{
      
      // console.log("selected list",selectedList)
      const favCardslist = currList
-     .map(item => item[0])
+     .map(item => item)
      .filter(card => favItems.has(card.tokenId)); 
       console.log("favList",favCardslist)
       updateSelectedList(favCardslist);
@@ -542,7 +542,9 @@ const fetchCollections = async () => {
       return;
     }
     const currentSelectedCollection = allCollectionsList[currentDropDownOption];
+    console.log("updated cards list before")
     const updatedCardsList = await getSelectedOptionCards(currentSelectedCollection.collectionId);
+    console.log("updated cards after" , updatedCardsList);
     setIsCardsLoading(false);
     if(updatedCardsList?.length >0){
       updateSelectedList(updatedCardsList);
@@ -550,11 +552,17 @@ const fetchCollections = async () => {
       updateNoCardsStatus(true);
     }
 };
+const itemsPerPage = 5;
+// const [currentPage,updateCurrentPage] = useState(1);
+const [totalPages,updateTotalPages] = useState(1);
+
+
+const currentPage  = useRef(1);
 
   const getSelectedOptionCards =  async(collectionId) => {
     let updatedCardsList = [];
     console.log("before profile function")
-    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal)
+    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal,itemsPerPage,currentPage.current-1)
     console.log("profile result",collectionDetailsResult)
     const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
     console.log("owned nfts after fetching",ownedNfts);
@@ -572,20 +580,12 @@ const fetchCollections = async () => {
       return []
     }else{
       updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
+      console.log("all cards",updatedCardsList)
       return updatedCardsList;
     }
-    
-    
-    
-    
-    
-    
-
   }
 
   const getUpdatedList= async(collectionId,cardsList,ownedList,isOwned)=>{
-
-      
       console.log("cards list",cardsList)
       const formatedList = [];
       let tempIndex = 0;
@@ -596,8 +596,8 @@ const fetchCollections = async () => {
         let skipCard = false;
         if(!isOwned){
           console.log("owned list in getUpdatedlist",ownedList)
-          for(let i = 0; i< ownedList.length;i++) {
-            if(ownedList[i][0].cardName === cardDetails.name){
+          for(let j = 0; j< ownedList.length;j++) {
+            if(ownedList[j].cardName === cardDetails.name){
               skipCard = true;
               continue;
             }
@@ -628,8 +628,8 @@ const fetchCollections = async () => {
                 collectionColor : allCollectionsList[currentDropDownOption].collectionColor,
                 price : parseInt(eachCard[5][0])/100000000
              }
-             formatedList.push([tempcard])
-
+             formatedList.push(tempcard)
+ 
       }
 
       return formatedList;
@@ -668,8 +668,9 @@ const fetchCollections = async () => {
       updateSelectedList(updatedFavList);
     }else{
       const modifiedSelectedList = selectedList.map((eachItem)=>{
-        if(eachItem[0].tokenId === tokenId){
-          return  [{...eachItem[0],isFavourite:false},...eachItem.slice(1)];
+        if(eachItem.tokenId === tokenId){
+          return {...eachItem,isFavourite : false}
+          
         }
         return eachItem;
        })
@@ -706,12 +707,11 @@ const addToFavorites = async (tokenId) => {
 
   const result = await resultPromise;
 
-  const modifiedSelectedList = selectedList.map((eachItem) => {
-    const eachCard = eachItem[0];
+  const modifiedSelectedList = selectedList.map((eachCard) => {
     if (eachCard.tokenId === tokenId) {
-      return [{ ...eachCard, isFavourite: true }, ...eachItem.slice(1)];
+      return {...eachCard,isFavourite : true}
     }
-    return eachItem;
+    return eachCard;
   });
 
   updateSelectedList(modifiedSelectedList);
@@ -789,8 +789,32 @@ const onChangeFilterOption = async(eachCollection) => {
   const filteredOrderedHistory = orderHistory.filter((eachOrder) => 
     eachOrder.collectionName.toLowerCase().includes(searchInput.toLowerCase())
   );
-  
 
+  const onNavigate  = async(type,index) => {
+        
+    console.log("next")
+    // updateNoCardsStatus(false)
+    // updateSelectedCollectionNftCardsList([]);
+    // if(type === "next"){
+    //     currentPage.current = currentPage.current+1
+    // }else if(type === "previous") {
+    //     currentPage.current = currentPage.current-1
+    // }else{
+    //     console.log("inddddddddddddex",index)
+    //     currentPage.current = index
+    // }
+
+    // onUpdateCurrentPage();
+    // const device = getScreenSize();
+    // if(device == "xs" || device == "sm"){
+    //     document.getElementById("filter").scrollIntoView({ behavior: "smooth"});
+    // }
+    
+
+  }
+
+  
+console.log("selected list",selectedList)
   return (
     <div className={`font-caslon w-full`} onClick={()=>updateDropDownStatus(false)}>
       <div style={{ backgroundImage: `url('/Hero/smoke 1.png')`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundPosition: "center", }}>
@@ -895,7 +919,7 @@ const onChangeFilterOption = async(eachCollection) => {
               </div> 
             </div>
             {allCollectionsList.length>0 && currentOption !== "myorders" && (
-              <div className="relative z-10 flex items-center justify-between mt-5 ml-4 md:w-full ">
+              <div className="relative z-10 flex items-center justify-between mt-5 ml-4">
                            
               <button
                   onClick={(e)=>{e.stopPropagation(),updateDropDownStatus(!isDisplayCollectionDropDown)}}
@@ -922,7 +946,7 @@ const onChangeFilterOption = async(eachCollection) => {
                       </ul>
                   )}
                 {currentOption === "mycollection" && !isCardsLoading && (
-                      <div className='flex flex-col items-center mr-5 md:items-end lg:mr-20'>
+                      <div className='flex flex-col items-center mr-5 md:items-end  lg:mr-20'>
                       <div className='flex items-center justify-end '>
                           
                             {isPlaced(allCollectionsList[currentDropDownOption].collectionId)?(
@@ -952,45 +976,38 @@ const onChangeFilterOption = async(eachCollection) => {
             
             {currentOption !== "myorders" && (
               <div className='z-0 flex items-center justify-between mt-8 mb-10 sm:hidden'>
-              
-              <button onClick={handlePrev}>
-                <img src="/Hero/up.png" alt="Previous" className='w-14 h-14 -rotate-90' />
-              </button>
+             
 
               {noCards ? (
-                <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalble</h1>
+                 <div className='w-full'>
+                 <h1 className='text-[#FFD700] text-[22px] my-20 text-center'>No Cards Availalble</h1>
+               </div>
               ):(
-                (isCardsLoading ? (
-                  <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                  <div className='mb-8'>
-                      <Skeleton count={1} width={250} height={350} />
-                  </div>
-              </SkeletonTheme>
-                ):(
+                ( !isCardsLoading && 
+
                   (
                     selectedList && selectedList.length>0 ? (
-                      <div>
-                       {currentOption === "mycollection" ? (
-                         <NftCard img={selectedList[currentIndex][0]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={selectedList[currentIndex].length} buttonStatus = {areButtonsDisabled} /> 
-                      ):(
-                        <NftCard img={selectedList[currentIndex]} key={currentIndex} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled}/> 
-                      )} 
-                    </div>
+                      <div className='w-full flex  ml-[2vw] mt-7 mr-[2vw] justify-between flex-wrap sm:hidden'>
+                      {selectedList.map((eachItem)=>(
+                         <NftCard img={eachItem} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity={0} buttonStatus = {areButtonsDisabled} /> 
+                      ))}
+                      </div>
                     ):(
-                      <h1 className='text-[#FFD700] text-[22px] my-20'>No Cards Availalble</h1>
+                      <div className='w-full'>
+                        <h1 className='text-[#FFD700] text-[22px] my-20 text-center'>No Cards Availalble</h1>
+                      </div>
                     )
                   )
-                ))
+                )
               )}
               
-              <button onClick={handleNext}>
-                <img src="/Hero/down.png" alt="Next" className='w-14 h-14 -rotate-90' />
-              </button>
+      
             </div>
             )}
           
             {/* Grid view for larger screens */}
-           {currentOption !== "myorders" && (
+            <div>
+            {currentOption !== "myorders" && (
              (noCards ? (
               <div className='hidden w-[90%] h-[80vh] sm:flex justify-center items-center '>
                 <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
@@ -999,33 +1016,58 @@ const onChangeFilterOption = async(eachCollection) => {
             
              (isCardsLoading ? (
                       <div className="pb-10">
-                      <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                        <div className="justify-around hidden gap-5 m-5 md:grid md:grid-cols-3 xl:grid-cols-4">
+                        <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                        <div className="justify-around  gap-5 m-5  hidden xl:grid xl:grid-cols-4">
                           {Array.from({ length: 10 }).map((_, index) => (
                             <Skeleton
                               key={index}
                               count={1}
-                              width={210}
-                              height={300}
+                              width={200}
+                              height={310}
                             />
                           ))}
                         </div>
                       </SkeletonTheme>
+                      <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                        <div className="justify-around  gap-5 m-5  hidden sm:grid  sm:grid-cols-3 xl:hidden">
+                          {Array.from({ length: 10 }).map((_, index) => (
+                            <Skeleton
+                              key={index}
+                              count={1}
+                              width={180}
+                              height={280}
+                            />
+                          ))}
+                        </div>
+                      </SkeletonTheme>
+                      <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                        <div className="justify-around  gap-5 m-5 grid grid-cols-2 sm:hidden">
+                          {Array.from({ length: 10 }).map((_, index) => (
+                            <Skeleton
+                              key={index}
+                              count={1}
+                              width={150}
+                              height={250}
+                            />
+                          ))}
+                        </div>
+                      </SkeletonTheme>
+                      
                       </div>
                   ):(
                     <>
                    
                   {selectedList.length === 0 ? (
-                    <div className='hidden w-[90%] h-[70vh] sm:flex justify-center items-center '>
-                    <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
-                  </div>
+                    <div className='hidden w-[90%] h-[70vh] sm:flex justify-center items-center'>
+                        <h1 className='text-[#FFD700] text-[40px]'>No Cards Available</h1>
+                    </div>
                   ):( 
                     <>
-                    <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-24 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+                    <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-4 mt-8 sm:mx-10 mb-8'>
                     {selectedList && selectedList.length > 0 && selectedList.map((img, index) => (
                       <div className='w-full rounded-lg flip-card'>
                         {currentOption === "mycollection" ? (
-                          <NftCard img={img[0]} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {img.length} buttonStatus = {areButtonsDisabled} />
+                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {0} buttonStatus = {areButtonsDisabled} />
                         ):(
                           <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled} />
                         )}
@@ -1040,6 +1082,8 @@ const onChangeFilterOption = async(eachCollection) => {
                   ))
           ))
            )}
+            </div>
+           
            {currentOption === "myorders" && (
             <div className='w-[97%] min-h-[80vh] sm:my-10  mb-8 pl-[3%] '>
               <div className='mb-5 flex justify-end '>
@@ -1083,7 +1127,71 @@ const onChangeFilterOption = async(eachCollection) => {
           </div>
         </div>
       </div>
-
+        {currentOption === "mycollection" && (
+           (totalPages > 1 && (
+            <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
+            {currentPage.current > 1 && (
+                 <button onClick={()=>onNavigate("previous",currentIndex)} >
+                 <img
+                 src="/Hero/up.png"
+                 alt="Previous"
+                 className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                 />
+                 </button>
+            )}
+            (currentPage.current === 1 && (
+                <button disabled={true} >
+                <img
+                src="/Hero/up.png"
+                alt="Previous"
+                onClick={()=>onNavigate("previous",currentIndex)}
+                className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                />
+                </button>
+            ))
+            <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
+            {Array.from({length:totalPages}).map((_,index)=>{
+                return (
+                <div  key={index} 
+               
+                className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+                    ${currentPage.current === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
+                `}
+                onClick={() => {
+                        onNavigate("none", index + 1);
+                    }}
+                > 
+                <h1>{index+1}</h1>
+                </div>
+                )
+            })}
+            </div>
+            {currentPage.current < totalPages && (
+                <button  onClick={()=>{onNavigate("next",currentIndex)}} className='' >
+                {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+            <img
+            src="/Hero/down.png"
+            alt="Next"
+           
+            className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            />
+            </button>
+            
+            )}
+            {currentPage.current>=totalPages && (
+                <button disabled={true}  >
+                {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+            <img
+            src="/Hero/down.png"
+            alt="Next"
+           
+            className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            />
+            </button>
+            )}
+        </div>
+        ))
+        )}
       <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative overflow-hidden bg-center bg-cover'>
         <Footer />
       </div>

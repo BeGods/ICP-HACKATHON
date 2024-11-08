@@ -56,64 +56,44 @@ const NFTGallery = ({ currentCollection }) => {
     return () => window.removeEventListener('resize', updateImagesPerSet);
   }, []);
 
-  console.log("current collection in nft gallery",currentCollection);
+  // console.log("current collection in nft gallery",currentCollection);
   return (
-    <div>
-      <div className='flex items-center justify-center sm:hidden'>
-        <div>
-          <img
-            src="/Hero/up.png"
-            alt="Previous"
-            onClick={handlePreviousPage}
-            className={`mb-[48px] hover:cursor-pointer -rotate-90 ${currentPage === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-          />
-        </div>
-        <div className={`w-[90%] flex img-center justify-center mt-12 mb-12 sm:hidden ${animationClass}`}>
-          {currentItems && currentItems.map((img, index) => {
-            console.log("img",img.borderColor);
-            return(
-              <div className="rounded-lg flip-card" key={index}>
-              <div className={`flip-card-inner border-3 ${
-            img.borderColor === 'Golden'
-              ? 'border-golden'
-              : img.borderColor === 'silver'
-              ? 'border-silver'
-              : img.borderColor === 'bronze'
-              ? 'border-bronze'
-              : 'border-gray-100'
-          }`}>
-                {/* Front Side */}
-                <div className="flex items-center justify-center flip-card-front">
-                  <img src={img.img1} alt={`NFT ${index + 1}`} className="w-[100%] h-[100%] rounded-lg object-cover" />
-                </div>
-                {/* Back Side */}
-                <div className="relative flex flex-col items-center justify-center text-white flip-card-back">
-                  <img src={img.img1} alt={`NFT ${index + 1}`} className="object-cover blur-sm w-[100%] h-[100%]" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
-                    <h1 className="text-xl font-extrabold sm:text-3xl">{img.name}</h1>
-                    <h2 className="mt-2 text-lg capitalize sm:text-xl">Type: {img.nftType}</h2>
-                    <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
-                    <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
-                      {t('buyNow')}
-                    </Link>
-                  </div>
+    <div className='min-h-[70vh] md:min-h-[50vh] '>
+      <div className='flex items-center ml-[2vw] mt-7 mr-[2vw] justify-between flex-wrap sm:hidden'>
+     
+         {currentCollection.map((img,index)=>(
+           <div className="rounded-lg flip-card" key={index}>
+            <div className={`flip-card-inner border-3 ${
+          img.borderColor === 'Golden'
+            ? 'border-golden'
+            : img.borderColor === 'silver'
+            ? 'border-silver'
+            : img.borderColor === 'bronze'
+            ? 'border-bronze'
+            : 'border-gray-100'
+        }`}>
+              {/* Front Side */}
+              <div className="flex items-center justify-center flip-card-front">
+                <img src={img.img1} alt={`NFT ${index + 1}`} className="w-[100%] h-[100%] rounded-lg object-cover" />
+              </div>
+              {/* Back Side */}
+              <div className="relative flex flex-col items-center justify-center text-white flip-card-back">
+                <img src={img.img1} alt={`NFT ${index + 1}`} className="object-cover blur-sm w-[100%] h-[100%]" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
+                  <h1 className="text-xl font-extrabold sm:text-3xl">{img.name}</h1>
+                  <h2 className="mt-2 text-lg capitalize sm:text-xl">Type: {img.nftType}</h2>
+                  <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
+                  <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
+                    {t('buyNow')}
+                  </Link>
                 </div>
               </div>
             </div>
-            )
-            
-})}
-        </div>
-        <div>
-          <img
-            src="/Hero/down.png"
-            alt="Next"
-            onClick={handleNextPage}
-            className={`mb-[48px] hover:cursor-pointer -rotate-90 ${(currentPage + 1) * itemsPerPage >= currentCollection.length ? 'opacity-50 cursor-not-allowed' : ''}`}
-          />
-        </div>
+         </div>
+         ))}
+       
       </div>
-      <div className={`justify-around hidden gap-5 m-5 sm:grid sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
+      <div className={`justify-around hidden m-5 sm:grid sm:grid-cols-3 md:ml-14 lg:ml-5 xl:grid-cols-4 2xl:grid-cols-5 ${animationClass}`}>
         {currentCollection.map((img, index) => {
          return(
           <div className="rounded-lg flip-card " key={index}>
