@@ -1119,13 +1119,13 @@ const Forges = () => {
               backgroundPosition: "center center",
             }}
           />
-          {minimize === 1 && (
+          {/* {minimize === 1 && (
             <img
               src={`${assets.uxui.forgefx}`}
               alt="forge.fx"
               className={`filter-fx-${mythSections[activeMyth]} -ml-0.5 h-screen w-screen transition-all duration-500 ease-in-out`}
             />
-          )}
+          )} */}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
