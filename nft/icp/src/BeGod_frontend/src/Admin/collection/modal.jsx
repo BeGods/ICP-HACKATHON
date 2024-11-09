@@ -74,7 +74,10 @@ const Modal = (props) => {
       nftDescription &&
       nftImage &&
       nftImageURL &&
-      nftcolor
+      nftcolor &&
+      arstistname &&
+      newtype &&
+      nftSeason
     ) {
       const nftDetails = {
         nftId: uuidv4(),
@@ -86,6 +89,9 @@ const Modal = (props) => {
         nftPrice,
         nftDescription,
         nftcolor,
+        arstistname,
+        newtype,
+        nftSeason,
       };
       console.log("nft details", nftDetails);
       getAddedNftDetails(nftDetails);
@@ -105,7 +111,10 @@ const Modal = (props) => {
       nftDescription &&
       nftImage &&
       nftImageURL &&
-      nftcolor
+      nftcolor &&
+      arstistname &&
+      newtype &&
+      nftSeason
     ) {
       const nftDetails = {
         nftId: cardDetails.nftId,
@@ -117,6 +126,9 @@ const Modal = (props) => {
         nftPrice,
         nftDescription,
         nftcolor,
+        arstistname,
+        newtype,
+        nftSeason,
       };
       console.log("nft details", nftDetails);
       getUpdatedNftDetails(nftDetails);
