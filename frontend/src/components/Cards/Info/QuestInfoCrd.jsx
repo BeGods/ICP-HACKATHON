@@ -38,7 +38,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
           isInfo={false}
           activeMyth={activeMyth}
           handleClick={handleShowInfo}
-          align={5}
+          align={6}
         />
       ) : (
         <IconBtn
