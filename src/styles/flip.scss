@@ -6,10 +6,13 @@
   cursor: pointer;
   transition: 0.5s ease-in-out;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
   transform: rotateY(0);
 
   &.flipped {
     transform: rotateY(0.5turn);
+    -webkit-transform: rotateY(-0.5turn); /* Add webkit prefix */
   }
 
   .ficon__face {
@@ -20,9 +23,11 @@
     height: 100%;
     backface-visibility: hidden;
     transition: 0.5s ease-in-out;
+    -webkit-backface-visibility: hidden; /* Add webkit prefix */
 
     &--back {
       transform: rotateY(0.5turn);
+      -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
     }
   }
 }
@@ -35,10 +40,13 @@
   cursor: pointer;
   transition: 0.5s ease-in-out;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
   transform: rotateY(0);
 
   &.flipped {
     transform: rotateY(0.5turn);
+    -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
   }
 
   .card__face {
@@ -52,6 +60,7 @@
 
     &--back {
       transform: rotateY(0.5turn);
+      -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
     }
   }
 }
@@ -63,10 +72,13 @@
   color: white;
   cursor: pointer;
   transition: 0.5s ease-in-out;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
   transform-style: preserve-3d;
   transform: rotateY(0);
 
   &.flipped {
+    -webkit-transform: rotateX(-0.5turn); /* Add webkit prefix */
     transform: rotateX(-0.5turn);
   }
 
@@ -76,10 +88,12 @@
     left: 0;
     width: 100%;
     height: 100%;
+    -webkit-backface-visibility: hidden; /* Add webkit prefix */
     backface-visibility: hidden;
     transition: 0.5s ease-in-out;
 
     &--back {
+      -webkit-transform: rotateX(-0.5turn); /* Add webkit prefix */
       transform: rotateX(-0.5turn);
     }
   }
@@ -97,9 +111,12 @@
   cursor: pointer;
   transition: 0.5s ease-in-out;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
   transform: rotateY(0);
 
   &.flipped {
+    -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
     transform: rotateY(0.5turn);
   }
 
@@ -109,11 +126,13 @@
     left: 0;
     width: 100%;
     height: 100%;
+   -webkit-backface-visibility: hidden; /* Add webkit prefix */
     backface-visibility: hidden;
     transition: 0.5s ease-in-out;
 
     &--back {
       transform: rotateY(0.5turn);
+      -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
     }
   }
 }

@@ -55,7 +55,7 @@ const QuestCard = ({
                     <MappedOrbs quest={quest} />
                   </div>
                 </div>
-                {!isGuideActive && (
+                {!isGuideActive && !flipped && (
                   <IconBtn isInfo={true} activeMyth={activeMyth} align={1} />
                 )}
               </div>
@@ -106,7 +106,11 @@ const QuestCard = ({
         </div>
       </div>
       <div className={`button ${buttonFlip ? "flipped" : ""}`}>
-        <div className="button__face button__face--front flex justify-center items-center">
+        <div
+          className={`button__face button__face--front ${
+            flipped && "-mt-2"
+          } flex justify-center items-center`}
+        >
           {Button}
         </div>
         <div className="button__face button__face--back z-50 flex justify-center items-center">

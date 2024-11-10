@@ -86,7 +86,7 @@ const CenterChild = ({ userData }) => {
             <div
               className={`uppercase ${
                 platform === "ios" ? "mt-2" : "mt-4"
-              } text-white opacity-50`}
+              } text-white opacity-70`}
             >
               {userData.telegramUsername[0]}
             </div>
