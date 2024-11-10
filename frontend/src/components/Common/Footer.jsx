@@ -18,6 +18,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     socialQuestData,
     assets,
     userData,
+    platform,
   } = useContext(MyContext);
   const countOfInCompleteQuests = socialQuestData.filter(
     (item) => item.isQuestClaimed === false
@@ -62,7 +63,10 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 : `text-black-contour`
             }`}
             style={{
-              fontSize: section === redirect[icon] ? "65px" : "60px",
+              fontSize:
+                section === redirect[icon] && platform !== "ios"
+                  ? "65px"
+                  : "55px",
               transition: "font-size 0.3s ease",
             }}
           >
@@ -128,7 +132,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
   );
 };
 const Footer = ({}) => {
-  const { section, activeMyth, enableSound, minimize, assets } =
+  const { section, activeMyth, enableSound, minimize, assets, platform } =
     useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
@@ -154,7 +158,11 @@ const Footer = ({}) => {
         }`}
       />
 
-      <div className="transition-all absolute duration-1000 items-end h-[12%] z-50 w-full flex -mt-1 justify-between text-white">
+      <div
+        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
+          platform === "ios" ? "-mt-3.5" : "-mt-2"
+        }`}
+      >
         {footerIcons.map((item, index) => (
           <FooterItem
             key={index}
