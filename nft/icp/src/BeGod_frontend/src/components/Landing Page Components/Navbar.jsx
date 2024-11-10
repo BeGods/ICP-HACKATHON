@@ -294,7 +294,7 @@ ScrollToCollections();
                         onClick={() => login("ic", navigatingPath)}
                       >
                         <img
-                          src="https://i.ibb.co/8gNN3v1/icp.png"
+                          src="Hero/icp_logo.png"
                           alt="Internet Identity"
                           className="mr-4 rounded-full size-6"
                         />
@@ -306,11 +306,11 @@ ScrollToCollections();
                         onClick={() => login("nffid", navigatingPath)}
                       >
                         <img
-                          src="https://i.ibb.co/Y8ZMXhn/image.png"
-                          alt="Nfid"
+                          src="Hero/nfid_logo.png"
+                          alt="NFID"
                           className="mr-4 rounded-full size-6"
                         />
-                        Nfid
+                        NFID
                       </li>
                       <hr className="my-0 border-t border-[#FCD378]" />
                       <li
@@ -318,7 +318,7 @@ ScrollToCollections();
                         onClick={() => login("stoic", navigatingPath)}
                       >
                         <img
-                          src="https://i.ibb.co/sm6rrPD/image.png"
+                          src="Hero/bifinity_logo.png"
                           alt="Stoic"
                           className="mr-4 rounded-full size-6"
                         />
@@ -330,7 +330,7 @@ ScrollToCollections();
                         onClick={() => login("plug", navigatingPath)}
                       >
                         <img
-                          src="https://docs.plugwallet.ooo/imgs/logo.png"
+                          src="Hero/plug_logo.png"
                           alt="Plug"
                           className="mr-4 rounded-full size-6"
                         />
@@ -490,7 +490,7 @@ ScrollToCollections();
                   onClick={() => login("ic", navigatingPath)}
                 >
                   <img
-                    src="https://i.ibb.co/8gNN3v1/icp.png"
+                    src="Hero/icp_logo.png"
                     alt="Internet Identity"
                     className="mr-4 rounded-full size-8"
                   />{" "}
@@ -501,8 +501,8 @@ ScrollToCollections();
                   onClick={() => login("nfid", navigatingPath)}
                 >
                   <img
-                    src="https://i.ibb.co/Y8ZMXhn/image.png"
-                    alt="Nfid"
+                    src="Hero/nfid_logo.png"
+                    alt="NFID"
                     className="mr-4 rounded-full size-8"
                   />{" "}
                   Nfid
@@ -512,7 +512,7 @@ ScrollToCollections();
                   onClick={() => login("stoic", navigatingPath)}
                 >
                   <img
-                    src="https://i.ibb.co/sm6rrPD/image.png"
+                    src="Hero/bifinity_logo.png"
                     alt="Stoic"
                     className="mr-4 rounded-full size-8"
                   />{" "}
@@ -523,7 +523,7 @@ ScrollToCollections();
                   onClick={() => plugConnectMobile()}
                 >
                   <img
-                    src="https://docs.plugwallet.ooo/imgs/logo.png"
+                    src="Hero/plug_logo.png"
                     alt="Plug"
                     className="mr-4 rounded-full size-8"
                   />{" "}
