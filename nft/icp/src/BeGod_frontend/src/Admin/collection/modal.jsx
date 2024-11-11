@@ -217,7 +217,7 @@ const Modal = (props) => {
     console.log(nftFullImageURL);
     // console.log("img", files);
   };
-  console.log(nftFullImage, nftFullImageURL);
+  // console.log(nftFullImage, nftFullImageURL);
 
   return (
     <div className="add_new_nft_popup_bg_container">
