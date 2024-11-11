@@ -240,9 +240,9 @@ const BuyNft = () => {
       artist = parsedData.arstistname;
       type = parsedData.newtype;
       season = parsedData.nftSeason;
-      fullImg = parsedData.nftFullImageURL;
+      fullImg = parsedData.nftFullImage;
     });
-
+console.log("full img",fullImg)
     const updatedCardDetails = {
       cardName: cardDetails?.name,
       cardType: parsedMetadata?.nftTypes,
