@@ -87,7 +87,7 @@ const Modal = (props) => {
       arstistname &&
       newtype &&
       nftSeason &&
-      nftFullImageURL
+      nftFullImage
     ) {
       const nftDetails = {
         nftId: uuidv4(),
@@ -102,7 +102,7 @@ const Modal = (props) => {
         arstistname,
         newtype,
         nftSeason,
-        nftFullImageURL,
+        nftFullImage,
       };
       console.log("nft details", nftDetails);
       getAddedNftDetails(nftDetails);
@@ -126,7 +126,7 @@ const Modal = (props) => {
       arstistname &&
       newtype &&
       nftSeason &&
-      nftFullImageURL
+      nftFullImage
     ) {
       const nftDetails = {
         nftId: cardDetails.nftId,
@@ -141,7 +141,7 @@ const Modal = (props) => {
         arstistname,
         newtype,
         nftSeason,
-        nftFullImageURL,
+        nftFullImage,
       };
       console.log("nft details", nftDetails);
       getUpdatedNftDetails(nftDetails);
@@ -157,13 +157,13 @@ const Modal = (props) => {
     if (file) {
       try {
         let options = {
-          maxSizeMB: 0.1,
+          maxSizeMB: 0.06,
           maxWidthOrHeight: 300,
           useWebWorker: true,
         };
         let compressedFile = await imageCompression(file, options);
 
-        while (compressedFile.size > 100 * 1024) {
+        while (compressedFile.size > 60 * 1024) {
           options.maxSizeMB *= 0.9;
           compressedFile = await imageCompression(file, options);
         }
@@ -337,15 +337,17 @@ const Modal = (props) => {
               value={nftQuantity}
               onChange={(e) => {
                 const value = e.target.value;
-                if (value < 0) {
+                // Check if value is a positive integer (natural number)
+                if (/^[1-9][0-9]*$/.test(value)) {
+                  setNftQuantity(value);
+                } else {
                   toast.error("Enter a valid natural number greater than 0");
                   setNftQuantity("");
-                } else {
-                  setNftQuantity(value);
                 }
               }}
               type="number"
               min="1"
+              pattern="[1-9][0-9]*"
               className="pl-4 rounded-md h-[38px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
             />
           </label>
