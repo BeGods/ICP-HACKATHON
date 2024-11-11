@@ -361,15 +361,6 @@ function Users() {
                           </Td>
                           <Td textAlign="center">
                             <div className="flex items-center justify-center gap-4">
-                              <img
-                                src="/image/admin.png"
-                                alt=""
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  borderRadius: "50%",
-                                }}
-                              />
                               {`${user[1].slice(0, 4)}...${user[1].slice(-4)}`}
                               <CopyToClipboard
                                 text={user[1]}

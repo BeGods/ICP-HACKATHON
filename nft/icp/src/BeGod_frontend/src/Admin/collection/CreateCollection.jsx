@@ -194,7 +194,8 @@ const CreateCollection = () => {
     nftType,
     arstistname,
     newtype,
-    nftSeason
+    nftSeason,
+    nftFullImageURL
   ) => {
     try {
       // console.log("in mint", answ);
@@ -212,6 +213,7 @@ const CreateCollection = () => {
         arstistname,
         newtype,
         nftSeason,
+        nftFullImageURL,
       });
 
       const metadataContainer = {
@@ -393,7 +395,8 @@ const CreateCollection = () => {
               val.nftType,
               val.arstistname,
               val.newtype,
-              val.nftSeason
+              val.nftSeason,
+              val.nftFullImageURL
             );
             console.log(mintResult, "mintResult");
             if (mintResult instanceof Error) {

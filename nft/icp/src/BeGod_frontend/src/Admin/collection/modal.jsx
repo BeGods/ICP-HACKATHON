@@ -40,9 +40,18 @@ const Modal = (props) => {
   const [nftcolor, setnftcolor] = useState(
     type === "edit" ? cardDetails.nftcolor : "Golden"
   );
-  const [arstistname, setartistName] = useState("");
-  const [newtype, setnewtype] = useState("Quest");
-  const [nftSeason, setnftSeason] = useState("Stone Age");
+  const [arstistname, setartistName] = useState(
+    type === "edit" ? cardDetails.arstistname : ""
+  );
+  const [newtype, setnewtype] = useState(
+    type === "edit" ? cardDetails.newtype : "Quest"
+  );
+  const [nftSeason, setnftSeason] = useState(
+    type === "edit" ? cardDetails.nftSeason : "Stone Age"
+  );
+
+  const [nftFullImage, setNftFullImage] = useState("");
+  const [nftFullImageURL, setNftFullImageURL] = useState("");
 
   const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
 
@@ -77,7 +86,8 @@ const Modal = (props) => {
       nftcolor &&
       arstistname &&
       newtype &&
-      nftSeason
+      nftSeason &&
+      nftFullImageURL
     ) {
       const nftDetails = {
         nftId: uuidv4(),
@@ -92,6 +102,7 @@ const Modal = (props) => {
         arstistname,
         newtype,
         nftSeason,
+        nftFullImageURL,
       };
       console.log("nft details", nftDetails);
       getAddedNftDetails(nftDetails);
@@ -114,7 +125,8 @@ const Modal = (props) => {
       nftcolor &&
       arstistname &&
       newtype &&
-      nftSeason
+      nftSeason &&
+      nftFullImageURL
     ) {
       const nftDetails = {
         nftId: cardDetails.nftId,
@@ -129,6 +141,7 @@ const Modal = (props) => {
         arstistname,
         newtype,
         nftSeason,
+        nftFullImageURL,
       };
       console.log("nft details", nftDetails);
       getUpdatedNftDetails(nftDetails);
@@ -172,13 +185,39 @@ const Modal = (props) => {
     // console.log("img", files);
   };
 
-  // console.log(nftName)
-  // console.log(nftType)
-  // console.log(nftQuantity)
+  const captureUploadedNftFullImageFile = async (files) => {
+    const file = files[0];
+    if (file) {
+      try {
+        let options = {
+          maxSizeMB: 0.08,
+          maxWidthOrHeight: 300,
+          useWebWorker: true,
+        };
+        let compressedFile = await imageCompression(file, options);
 
-  // console.log(nftName)
-  // console.log(nftType)
-  // console.log(nftQuantity)
+        while (compressedFile.size > 80 * 1024) {
+          options.maxSizeMB *= 0.9;
+          compressedFile = await imageCompression(file, options);
+        }
+
+        console.log("Compressed file size:", compressedFile.size);
+
+        const reader = new FileReader();
+        reader.onloadend = () => setNftFullImage(reader.result);
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error("Error during file compression:", error);
+      }
+    }
+  };
+
+  const captureUploadedNftFullImage = (pic) => {
+    setNftFullImageURL(pic);
+    console.log(nftFullImageURL);
+    // console.log("img", files);
+  };
+  console.log(nftFullImage, nftFullImageURL);
 
   return (
     <div className="add_new_nft_popup_bg_container">
@@ -230,7 +269,7 @@ const Modal = (props) => {
               <option value="rare" className="text-[16px] text-[#8a8686]">
                 Rare
               </option>
-              <option value="uncommon" className="text-[16px] text-[#8a8686]">
+              <option value="Uncommon" className="text-[16px] text-[#8a8686]">
                 Uncommon
               </option>
               <option value="common" className="text-[16px] text-[#8a8686]">
@@ -335,6 +374,59 @@ const Modal = (props) => {
                 </button>
               </div>
             )}
+          </label>
+        </div>
+
+        <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            Full Image
+            <ImageUploader
+              captureUploadedNftImage={captureUploadedNftFullImage}
+              captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+            />
+          </label>
+        </div>
+
+        <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+            NFT Season:
+            <select
+              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
+              value={nftSeason}
+              onChange={(e) => setnftSeason(e.target.value)}
+            >
+              <option value="Stone Age" className="text-[16px] text-[#8a8686]">
+                Stone Age
+              </option>
+              <option value="Golden Age" className="text-[16px] text-[#8a8686]">
+                Golden Age
+              </option>
+              <option value="Silver Age" className="text-[16px] text-[#8a8686]">
+                Silver Age
+              </option>
+              <option value="Bronze Age" className="text-[16px] text-[#8a8686]">
+                Bronze Age
+              </option>
+            </select>
+          </label>
+
+          <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
+            Border Color:
+            <select
+              className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
+              value={nftcolor}
+              onChange={(e) => setnftcolor(e.target.value)}
+            >
+              <option value="golden" className="text-[16px] text-[#8a8686]">
+                Golden
+              </option>
+              <option value="silver" className="text-[16px] text-[#8a8686]">
+                Silver
+              </option>
+              <option value="bronze" className="text-[16px] text-[#8a8686]">
+                Bronze
+              </option>
+            </select>
           </label>
         </div>
 

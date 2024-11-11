@@ -77,7 +77,7 @@ function CollectionDetails() {
   const [nftdescription, setnftdescription] = useState("");
   const [nftcolor, setnftcolor] = useState("");
   let [currentpage, setcurrentpage] = useState(1);
-  const [totalpage, settotalpage] = useState();
+  const [totalpage, settotalpage] = useState(0);
   const [loading, setLoading] = useState(false);
   const { backendActor, canisterId } = useAuth();
   const { id } = useParams();
@@ -92,7 +92,7 @@ function CollectionDetails() {
   if (!collectiondata) {
     return <p>No NFT data available</p>;
   }
-  // const currentpage = 2;
+  // let currentpage = 2;
   // const totalpage = 5;
 
   const jsonString = collectiondata[4];
@@ -112,15 +112,17 @@ function CollectionDetails() {
   ).toText();
   // console.log(principalStringg);
 
-  const getAllCollectionNFT = async (principal) => {
+  const getAllCollectionNFT = async (principal, currentpage) => {
+    console.log(currentpage);
     try {
       const userPrincipalArray = principal;
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
-      console.log("before")
+      console.log("before");
+      console.log(principal);
       const result = await backendActor?.getAllCollectionNFTs(
         principalString,
-        5,
+        10,
         currentpage - 1
       );
       console.log("NFT collection:", result);
@@ -162,7 +164,7 @@ function CollectionDetails() {
   const fetchNFTs = async () => {
     setLoading(true);
     try {
-      await getAllCollectionNFT(principal);
+      await getAllCollectionNFT(principal, currentpage);
     } catch (error) {
       console.error("Error fetching NFTs:", error);
       toast.error("Error fetching NFTs");
@@ -174,7 +176,7 @@ function CollectionDetails() {
 
   useEffect(() => {
     fetchNFTs();
-  }, [principal]);
+  }, [currentpage]);
 
   const mintNFT = async (
     principalStringg,
@@ -271,7 +273,7 @@ function CollectionDetails() {
       const result = await backendActor?.listprice(principal, request);
       if (result) {
         console.log("List Price Result:", result);
-        await getListing(principal);
+        // await getListing(principal);
       } else {
         throw new Error("listprice is not working");
         toast.error("listprice is not working");
@@ -286,6 +288,7 @@ function CollectionDetails() {
   const getListing = async (principal) => {
     try {
       console.log(principal);
+      const principalString = Principal.fromUint8Array(principal._arr);
       // toast("Featching NFTs,Please Wait! ...", {
       //   icon: "⚠️",
       //   style: {
@@ -294,7 +297,7 @@ function CollectionDetails() {
       //     color: "#fff",
       //   },
       // });
-      const result = await backendActor?.listings(principal);
+      const result = await backendActor?.listings(principalString);
       console.log("Listing", result);
 
       // fetchNFTs();
@@ -337,6 +340,7 @@ function CollectionDetails() {
       if (mintResult instanceof Error) {
         toast.error(mintResult);
       } else {
+        await getListing(principal);
         toast.success("NFT added");
         toast("Fetching NFTs, Please Wait! ...", {
           icon: "⚠️",
@@ -459,19 +463,23 @@ function CollectionDetails() {
   const onClickFilterContainer = () => {
     updateDropDown(dropdownItems.none);
   };
-  const leftfunction = async (principal) => {
-    if (currentpage == 1) {
+  const leftfunction = async () => {
+    if (currentpage == 0) {
       toast.error("You are in first page");
     }
-    currentpage = currentpage - 1;
-    await getAllCollectionNFT(principal);
+    // currentpage = currentpage - 1;
+    setcurrentpage((currentpage) => currentpage - 1);
+    // await fetchNFTs();
+    // await getAllCollectionNFT(principal, currentpage);
   };
-  const rightfunction = async (principal) => {
+  const rightfunction = async () => {
     if (currentpage > totalpage) {
       toast.error("You are in last page");
     }
-    currentpage = currentpage + 1;
-    await getAllCollectionNFT(principal);
+    setcurrentpage((currentpage) => currentpage + 1);
+    // await fetchNFTs();
+    // await getAllCollectionNFT(principal, currentpage);
+    console.log("clicked");
   };
 
   return (
