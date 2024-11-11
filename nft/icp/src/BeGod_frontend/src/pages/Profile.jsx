@@ -552,7 +552,7 @@ const fetchCollections = async () => {
       updateNoCardsStatus(true);
     }
 };
-const itemsPerPage = 5;
+const itemsPerPage = 10;
 // const [currentPage,updateCurrentPage] = useState(1);
 const [totalPages,updateTotalPages] = useState(1);
 
@@ -823,14 +823,14 @@ console.log("selected list",selectedList)
         <div className='w-full lg:w-[400px]  '>
     <h1 className='text-center lg:text-start text-[#FFFFFF] text-[32px] sm:text-[40px] leading-[60px] font-[400]'>{t('myProfile')}</h1>
     {!isUserDetailsLoadging && (
-      <div className='flex gap-8 mt-[5%] lg:mt-[2%] lg:ml-[2%]'>
+      <div className='flex gap-8 mt-[5%] lg:mt-[2%] ml-[2%]'>
         <div className='flex flex-col items-center'>
           <img src="/image/Frame.png" alt="" />
           <div className='mt-5'>
             {userDetails.telegramUrl === "No Telegram" ? (
               <div className="relative group">
                 <FaTelegram size={25} color='#C5E8F2' style={{ opacity: 0.5 }} />
-                <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[180px] lg:w-[220px] text-center py-1 rounded text-xs transition-opacity duration-300">
+                <span className="absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-[#000000] text-[#FCD378] w-[90px] md:w-[180px] lg:w-[220px] text-center py-1 rounded text-xs transition-opacity duration-300">
                   Add your telegram user name!
                 </span>
               </div>
@@ -1017,14 +1017,16 @@ console.log("selected list",selectedList)
              (isCardsLoading ? (
                       <div className="pb-10">
                         <SkeletonTheme baseColor="#161616" highlightColor="#202020">
-                        <div className="justify-around  gap-5 m-5  hidden xl:grid xl:grid-cols-4">
+                        <div className="justify-between  hidden xl:grid xl:grid-cols-4">
                           {Array.from({ length: 10 }).map((_, index) => (
-                            <Skeleton
+                            <div className='mb-10 mr-0'>
+                              <Skeleton
                               key={index}
                               count={1}
-                              width={200}
-                              height={310}
+                              width={210}
+                              height={300}
                             />
+                            </div>
                           ))}
                         </div>
                       </SkeletonTheme>
@@ -1063,7 +1065,20 @@ console.log("selected list",selectedList)
                     </div>
                   ):( 
                     <>
-                    <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+                     {/* if there using grid then remove border right property for filp-card class in index.css */}
+                    {/* <div className='hidden w-[90%] min-h-[65vh] sm:grid sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-10 lg:gap-4 mt-8 sm:mx-10 mb-8'>
+                    {selectedList && selectedList.length > 0 && selectedList.map((img, index) => (
+                      <div className='w-full rounded-lg flip-card'>
+                        {currentOption === "mycollection" ? (
+                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} quantity = {0} buttonStatus = {areButtonsDisabled} />
+                        ):(
+                          <NftCard img={img} key={index} removeFromFavorites={removeFromFavorites} addToFavorites = {addToFavorites} buttonStatus = {areButtonsDisabled} />
+                        )}
+                      </div>
+                    ))}
+                  
+                  </div> */}
+                  <div className='hidden w-[90%] min-h-[65vh] sm:flex flex-wrap mt-8 sm:mx-10 mb-8'>
                     {selectedList && selectedList.length > 0 && selectedList.map((img, index) => (
                       <div className='w-full rounded-lg flip-card'>
                         {currentOption === "mycollection" ? (
@@ -1078,6 +1093,69 @@ console.log("selected list",selectedList)
                   
                   </>
                   )}
+                  {totalPages > 1 && (
+                                <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
+                                {currentPage.current > 1 && (
+                                     <button onClick={()=>onNavigate("previous",currentIndex)} >
+                                     <img
+                                     src="/Hero/up.png"
+                                     alt="Previous"
+                                     className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                     />
+                                     </button>
+                                )}
+                                {currentPage.current === 1 && (
+                                    <button disabled={true} >
+                                    <img
+                                    src="/Hero/up.png"
+                                    alt="Previous"
+                                    onClick={()=>onNavigate("previous",currentIndex)}
+                                    className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    />
+                                    </button>
+                                )}
+                                <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
+                                {Array.from({length:totalPages}).map((_,index)=>{
+                                    return (
+                                    <div  key={index} 
+                                   
+                                    className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+                                        ${currentPage.current === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
+                                    `}
+                                    onClick={() => {
+                                            onNavigate("none", index + 1);
+                                        }}
+                                    > 
+                                    <h1>{index+1}</h1>
+                                    </div>
+                                    )
+                                })}
+                                </div>
+                                {currentPage.current < totalPages && (
+                                    <button  onClick={()=>{onNavigate("next",currentIndex)}} className='' >
+                                    {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                               
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                
+                                )}
+                                {currentPage.current>=totalPages && (
+                                    <button disabled={true}  >
+                                    {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                               
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                )}
+                            </div>
+                            )}
                   </>
                   ))
           ))
