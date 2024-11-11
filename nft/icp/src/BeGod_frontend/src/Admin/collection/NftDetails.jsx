@@ -8,7 +8,7 @@ import { useAuth } from "../../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 
 const NftDetails = () => {
-  const { id } = useParams();
+  const { collectionId, nftId } = useParams();
   const { backendActor } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,6 +19,7 @@ const NftDetails = () => {
   const { collectiondata } = location.state || {};
   console.log(nftdata); //
   console.log(collectiondata);
+  console.log(nftId);
 
   const tokenindex = nftdata?.[0];
   const userid = nftdata?.[1];
@@ -28,6 +29,7 @@ const NftDetails = () => {
 
   const metadataJson = nftdata[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
+  console.log(metadata);
 
   const collid = collectiondata[1];
 
@@ -71,7 +73,6 @@ const NftDetails = () => {
       </div>
     );
   }
-  const identifier = tokenid?.[0]?.[1] || "null";
 
   const owner = singletokendata?.[0]?.[1];
   const isOwned = singletokendata?.[0]?.[4];
@@ -87,9 +88,9 @@ const NftDetails = () => {
         </div>
 
         {/* NFT Details Section */}
-        <div className="flex flex-col md:flex-row mt-12 sm:mt-0 gap-8">
+        <div className="flex flex-col md:flex-row mt-12 sm:mt-0 ">
           {/* NFT Image */}
-          <div className="flex justify-center md:justify-start mb-6 md:mb-0 w-full sm:w-[50%] md:w-[40%]">
+          <div className="flex justify-center md:justify-start mb-6 md:mb-0 w-full sm:w-[60%] md:w-[50%]">
             {loading ? (
               <Skeleton
                 height="100%" // Set to "100%" to fill available space
@@ -106,9 +107,9 @@ const NftDetails = () => {
           </div>
 
           {/* NFT Details Card */}
-          <div className="flex flex-col justify-center w-[95%] md:w-[60%] lg:w-[50%] bg-[#29292c] mb-4 md:mb-0 rounded-md p-6 gap-4 mx-4 sm:mx-auto">
+          <div className="flex flex-col justify-center w-[95%] md:w-[60%] lg:w-[60%] bg-[#29292c] mb-4 md:mb-0 rounded-md p-6 gap-4 mx-4 sm:mx-auto">
             {loading ? (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
                 <Skeleton className="h-[25px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%]" />
                 <Skeleton className="h-[25px] w-[85%] sm:w-[70%] md:w-[60%] lg:w-[50%]" />
                 <Skeleton className="h-[25px] w-[70%] sm:w-[60%] md:w-[50%] lg:w-[40%]" />
@@ -130,7 +131,7 @@ const NftDetails = () => {
                 </p>
                 <p className="text-white text-lg">
                   <span className="font-semibold">NFT ID: </span>
-                  <span className="text-yellow-500">{identifier || id}</span>
+                  <span className="text-yellow-500">{nftId || identifier}</span>
                 </p>
                 <p className="text-white text-lg">
                   <span className="font-semibold">Owner: </span>
@@ -139,11 +140,29 @@ const NftDetails = () => {
                 <p className="text-white text-lg">
                   <span className="font-semibold">Price: </span>
                   <span>{price || "Not Listed"} ICP</span>
+                  <span className="font-semibold ml-12 ">Nft Type: </span>
+                  <span className="mr-1">{metadata?.nftType || "Null"}</span>
                 </p>
                 <p className="text-white text-lg">
+                  <span className="font-semibold">Nft Season: </span>
+                  <span>{metadata?.nftSeason || "Null"}</span>
+                </p>
+
+                {/* <p className="text-white text-lg">
+                  <span className="font-semibold ml-3 mr-1">Nft Type: </span>
+                  <span>{metadata?.nftType || "Null"}</span>
+                </p> */}
+                <p className="text-white text-lg">
+                  <span className="font-semibold ">Nft Rarity: </span>
+                  <span>{metadata?.newtype || "Null"}</span>
+                  <span className="font-semibold ml-12">Listed: </span>
+                  <span className="mr-1">{isOwned ? "Yes" : "No"}</span>
+                </p>
+
+                {/* <p className="text-white text-lg">
                   <span className="font-semibold">Listed: </span>
                   <span>{isOwned ? "Yes" : "No"}</span>
-                </p>
+                </p> */}
               </div>
             )}
           </div>
