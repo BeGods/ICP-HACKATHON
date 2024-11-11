@@ -552,7 +552,7 @@ const fetchCollections = async () => {
       updateNoCardsStatus(true);
     }
 };
-const itemsPerPage = 5;
+const itemsPerPage = 20;
 // const [currentPage,updateCurrentPage] = useState(1);
 const [totalPages,updateTotalPages] = useState(1);
 
