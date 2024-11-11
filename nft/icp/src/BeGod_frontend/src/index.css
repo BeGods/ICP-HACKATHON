@@ -211,7 +211,8 @@ body {
   width: 190px; /* Width for desktop */
   height: 280px; /* Height for desktop */
   flex-shrink: 0;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  margin-right: 30px;
  
 }
 .buy-nft-card{
@@ -222,6 +223,8 @@ body {
   .flip-card {
     width: 170px;
     height: 210px;
+    margin-bottom: 30x;
+    margin-right: 30px;
   }
   .buy-nft-card{
     width: 280px; /* Width for desktop */
@@ -267,6 +270,7 @@ body {
     width: 47vw; /* Reduced width for mobile */
     min-height: 350px; /* Reduced height for mobile */
     margin-bottom: 10px;
+    margin-right: 0px;
     
   }
   .buy-nft-card{
