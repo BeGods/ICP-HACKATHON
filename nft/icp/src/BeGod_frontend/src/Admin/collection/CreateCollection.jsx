@@ -195,7 +195,7 @@ const CreateCollection = () => {
     arstistname,
     newtype,
     nftSeason,
-    nftFullImageURL
+    nftFullImage
   ) => {
     try {
       // console.log("in mint", answ);
@@ -213,7 +213,7 @@ const CreateCollection = () => {
         arstistname,
         newtype,
         nftSeason,
-        nftFullImageURL,
+        nftFullImage,
       });
 
       const metadataContainer = {
@@ -290,7 +290,6 @@ const CreateCollection = () => {
       const result = await backendActor?.listprice(principal, request);
       if (result) {
         console.log("List Price Result:", result);
-        await getListing(principal);
       } else {
         throw new Error("listprice is not working");
         toast.error("listprice is not working");
@@ -298,18 +297,6 @@ const CreateCollection = () => {
     } catch (error) {
       console.error("Error listing price:", error);
       toast.error("Error listing price");
-      return error; // Return error
-    }
-  };
-
-  const getListing = async (principal) => {
-    try {
-      console.log(principal);
-      const result = await backendActor?.listings(principal);
-      console.log("Listing", result);
-    } catch (error) {
-      console.error("Error fetching listing:", error);
-      toast.error("Error fetching listing");
       return error; // Return error
     }
   };
@@ -361,6 +348,19 @@ const CreateCollection = () => {
     togglewarning();
     finalcall();
   };
+  const getListing = async (answ) => {
+    try {
+      console.log("called");
+      const principalString = answ;
+      const principal = Principal.fromText(principalString);
+      const result = await backendActor?.listings(principal);
+      console.log("Listing", result);
+    } catch (error) {
+      console.error("Error fetching listing:", error);
+      toast.error("Error fetching listing");
+      return error; // Return error
+    }
+  };
   const finalcall = async () => {
     setLoading(true);
     let hasError = false;
@@ -396,7 +396,7 @@ const CreateCollection = () => {
               val.arstistname,
               val.newtype,
               val.nftSeason,
-              val.nftFullImageURL
+              val.nftFullImage
             );
             console.log(mintResult, "mintResult");
             if (mintResult instanceof Error) {
@@ -405,6 +405,7 @@ const CreateCollection = () => {
                 toast.error("Error in minting NFT: " + mintResult);
                 errorShown = true;
               }
+
               throw mintResult;
             } else {
               setsuccess(!Success);
@@ -432,6 +433,8 @@ const CreateCollection = () => {
         errorShown = true;
       }
     } finally {
+      console.log("run");
+      await getListing(canId);
       setLoading(false);
     }
   };
