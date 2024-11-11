@@ -198,6 +198,9 @@ const BuyNft = () => {
     chain,
     lastUpdated,
     buyNow,
+    artistName,
+    nftType,
+    nftSeason
   } = t("buyNowDetails");
 
   useEffect(() => {
@@ -226,7 +229,7 @@ const BuyNft = () => {
     const cardDetails = result[0][2].nonfungible;
     // const metadata = JSON.parse(cardDetails.metadata[0].json);
     const cardPrice = parseInt(result[0][3]);
-    let date;
+    let date,artist,type,season,fullImg;
     cardDetails?.metadata.forEach((item) => {
       const parsedData = JSON.parse(item.json);
       console.log(parsedData);
@@ -234,6 +237,10 @@ const BuyNft = () => {
       parsedMetadata.standards.push(parsedData.standard);
       parsedMetadata.chains.push(parsedData.chain);
       date = parsedData.date;
+      artist = parsedData.arstistname;
+      type = parsedData.newtype;
+      season = parsedData.nftSeason;
+      fullImg = parsedData.nftFullImageURL;
     });
 
     const updatedCardDetails = {
@@ -246,6 +253,10 @@ const BuyNft = () => {
       chains: parsedMetadata.chains,
       date : date,
       contactAddress:principal,
+      artist,
+      type,
+      season,
+      fullImg
     };
     console.log("updated Card Details", updatedCardDetails)
     setCardDetails(updatedCardDetails);
@@ -300,7 +311,7 @@ const BuyNft = () => {
     document.body.style.overflow = "auto"
   }
 
- 
+ const [isDisplayFullImage,updateDisplayFullImage] = useState(false);
 
   return (
     <div className={`font-caslon}`}>
@@ -367,8 +378,11 @@ const BuyNft = () => {
                   </div>
                  
                 )}
-                <div className="h-[20px]" onClick={()=>updateSharePopup(!sharePopup)}>
-                  <CiShare2 className="object-cover w-full h-full cursor-pointer mt-8" color="white" />
+                <div className="flex justify-center items-center mt-4 ">
+                <button onClick={()=>updateDisplayFullImage(true)} className="h-35px px-3 bg-transparent border border-[#ffffff] text-[#ffffff] rounded">view image</button>
+                </div>
+                <div className="h-[20px]  mt-4" onClick={()=>updateSharePopup(!sharePopup)}>
+                  <CiShare2 className="object-cover w-full h-full cursor-pointer" color="white" />
                 </div>
               </div>
               {!isOwned && (
@@ -404,6 +418,18 @@ const BuyNft = () => {
               </SkeletonTheme>
             ) : (
               <>
+              <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{artistName}</h1>
+                  <h1>{cardDetails?.artist}</h1>
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{nftType}</h1>
+                  <h1>{cardDetails?.type}</h1>
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  <h1>{nftSeason}</h1>
+                  <h1>{cardDetails?.season}</h1>
+                </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{contactAddress}</h1>
                   <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
@@ -485,6 +511,45 @@ const BuyNft = () => {
                 <h1 className="text-[24px] font-[500] leading-[28px] text-[#FFFFFF]">
                   {detailsText}
                 </h1>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  {nftCardLoading ? (
+                    <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                      <Skeleton count={1} width={140} height={20} />
+                      <Skeleton count={1} width={140} height={20} />
+                    </SkeletonTheme>
+                  ) : (
+                    <>
+                      <h1>{artistName}</h1>
+                      <h1>{cardDetails?.artist}</h1>
+                    </>
+                  )}
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  {nftCardLoading ? (
+                    <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                      <Skeleton count={1} width={140} height={20} />
+                      <Skeleton count={1} width={140} height={20} />
+                    </SkeletonTheme>
+                  ) : (
+                    <>
+                      <h1>{nftType}</h1>
+                      <h1>{cardDetails?.type}</h1>
+                    </>
+                  )}
+                </div>
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                  {nftCardLoading ? (
+                    <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                      <Skeleton count={1} width={140} height={20} />
+                      <Skeleton count={1} width={140} height={20} />
+                    </SkeletonTheme>
+                  ) : (
+                    <>
+                      <h1>{nftSeason}</h1>
+                      <h1>{cardDetails?.season}</h1>
+                    </>
+                  )}
+                </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   {nftCardLoading ? (
                     <SkeletonTheme baseColor="#161616" highlightColor="#202020">
@@ -594,10 +659,13 @@ const BuyNft = () => {
                     style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
                   />
                   
-                </div>
-                <div className="h-[20px] mt-8" onClick={()=>updateSharePopup(!sharePopup)}>
+                </div >
+                <div className="flex justify-center items-center  mt-8">
+                <button onClick={()=>updateDisplayFullImage(true)} className="h-35px px-3 bg-transparent border border-[#ffffff] text-[#ffffff] mr-2 rounded">view image</button>
+                <div className="h-[20px]" onClick={()=>updateSharePopup(!sharePopup)}>
                 <CiShare2 className="object-cover w-full h-full cursor-pointer" color="white" />
               </div>
+                </div>
                 </div>
                 
               </>
@@ -838,6 +906,32 @@ const BuyNft = () => {
     </div>
   </div>
         
+      )}
+      {isDisplayFullImage && (
+        <div className="fixed top-0 bottom-0 left-0 right-0 z-50 w-screen h-screen">
+        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+          <div className="flex items-center justify-center h-screen">
+            <div
+              className=" w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 pb-8 rounded-md  drop-shadow-lg "
+            >
+              <div className=" flex items-center justify-end">
+                <button
+                  className="text-[#ffffff]  bottom-1 top-1 z-10"
+                  onClick={() => updateDisplayFullImage(false)}
+                >
+                  <RxCross2 size={20} />
+                </button>
+                
+              </div>
+
+             <div className="flex justify-center items-center">
+             <img src={cardDetails?.fullImg} />
+             </div>
+            
+          </div> 
+        </div>
+    </div>
+  </div>
       )}
       <ToastContainer />
     </div>
