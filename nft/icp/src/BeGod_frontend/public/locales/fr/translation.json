@@ -35,7 +35,10 @@
             "tokenStandard": "Standard de Jeton",
             "chain": "Chaîne",
             "lastUpdated": "Dernière mise à jour",
-            "buyNow" : "Acheter Maintenant"
+            "buyNow" : "Acheter Maintenant",
+            "artistName": "Artiste",
+            "nftType": "Type",
+            "nftSeason": "Saison"
         },
         "myProfile": "Mon Profil",
         "myCollection": "Ma Collection",

@@ -34,7 +34,10 @@
         "tokenStandard" : "Token Standard",
         "chain" : "Chain",
         "lastUpdated" : "Last Updated",
-        "buyNow" : "Buy Now"
+        "buyNow" : "Buy Now",
+        "artistName":"Artist",
+        "nftType" : "Type",
+        "nftSeason":"Season"
     },
     "myProfile" : "MY PROFILE",
     "myCollection" : "My Collection",

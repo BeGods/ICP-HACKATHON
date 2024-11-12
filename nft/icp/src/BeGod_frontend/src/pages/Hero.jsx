@@ -27,26 +27,39 @@ import { updateCurrentIndex } from '../redux/infoSlice.js';
 
 const cardTypeList = [
     {
-        cardId :"ALL" ,
-        displayText:"All"
+        cardId: "ALL",
+        displayText: "All"
     },
     {
-        cardId : "COMMON",
-        displayText : "Common"
+        cardId: "DIVINE",
+        displayText: "Divine"
     },
     {
-        cardId : "MYTHIC" ,
-        displayText:"Mythic"
+        cardId: "MYTHICAL",
+        displayText: "Mythical"
     },
     {
-        cardId : "RARE" ,
-        displayText:"Rare"
+        cardId: "RARE",
+        displayText: "Rare"
     },
     {
-        cardId : "UNCOMMON",
-        displayText:"Uncommon"
+        cardId: "UNCOMMON",
+        displayText: "Uncommon"
     },
-]
+    {
+        cardId: "COMMON",
+        displayText: "Common"
+    },
+    {
+        cardId: "PROMO",
+        displayText: "Promo"
+    },
+    {
+        cardId: "MISC",
+        displayText: "Misc"
+    }
+];
+
 const dropdownItems = {
     none : "NONE",
     type : "TYPE",
@@ -136,7 +149,7 @@ const Hero = () => {
     const [inProgress,updateInProgressStatus] = useState(false);
 
     const handleCurrentIndex  = async(index) => {
-        
+        updateTotalPages(1);
         if(index >= visibleButtons-1 && index >= startIndex) {
             if(index != collections.length-1){
                 setStartIndex(index+2 - visibleButtons);
@@ -764,7 +777,7 @@ console.log("filtered list after applying filters",filteredList)
                           </div>
                            )
                         )}
-                        {totalPages > 1 && (
+                        {totalPages > 1 &&  (
                                 <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
                                 {currentPage.current > 1 && (
                                      <button onClick={()=>onNavigate("previous",currentIndex)} >

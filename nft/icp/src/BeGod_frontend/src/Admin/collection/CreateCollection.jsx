@@ -191,7 +191,11 @@ const CreateCollection = () => {
     nftquantity,
     nftcolor,
     nftPrice,
-    nftType
+    nftType,
+    arstistname,
+    newtype,
+    nftSeason,
+    nftFullImage
   ) => {
     try {
       // console.log("in mint", answ);
@@ -206,6 +210,10 @@ const CreateCollection = () => {
         contractAddress: canisterId,
         nftcolor,
         date: formattedDate,
+        arstistname,
+        newtype,
+        nftSeason,
+        nftFullImage,
       });
 
       const metadataContainer = {
@@ -282,7 +290,6 @@ const CreateCollection = () => {
       const result = await backendActor?.listprice(principal, request);
       if (result) {
         console.log("List Price Result:", result);
-        await getListing(principal);
       } else {
         throw new Error("listprice is not working");
         toast.error("listprice is not working");
@@ -290,18 +297,6 @@ const CreateCollection = () => {
     } catch (error) {
       console.error("Error listing price:", error);
       toast.error("Error listing price");
-      return error; // Return error
-    }
-  };
-
-  const getListing = async (principal) => {
-    try {
-      console.log(principal);
-      const result = await backendActor?.listings(principal);
-      console.log("Listing", result);
-    } catch (error) {
-      console.error("Error fetching listing:", error);
-      toast.error("Error fetching listing");
       return error; // Return error
     }
   };
@@ -319,16 +314,16 @@ const CreateCollection = () => {
   };
 
   const getUpdatedNftDetails = (nftDetails) => {
-    console.log("updated card details",nftDetails)
+    console.log("updated card details", nftDetails);
     const id = nftDetails.nftId;
-    const updatedList = nftCardsList.map((eachCard)=>{
-      if(id === eachCard.nftId){
-        console.log(id ,"  ",eachCard.nftId)
+    const updatedList = nftCardsList.map((eachCard) => {
+      if (id === eachCard.nftId) {
+        console.log(id, "  ", eachCard.nftId);
         return nftDetails;
       }
       return eachCard;
-    })
-    setNftCardsList(updatedList)
+    });
+    setNftCardsList(updatedList);
 
     setnfttype(nftDetails.nftType);
     setnftname(nftDetails.nftName);
@@ -338,8 +333,8 @@ const CreateCollection = () => {
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
-  
 
+  console.log(nftCardsList);
 
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
@@ -352,6 +347,19 @@ const CreateCollection = () => {
     console.log("upload clicked");
     togglewarning();
     finalcall();
+  };
+  const getListing = async (answ) => {
+    try {
+      console.log("called");
+      const principalString = answ;
+      const principal = Principal.fromText(principalString);
+      const result = await backendActor?.listings(principal);
+      console.log("Listing", result);
+    } catch (error) {
+      console.error("Error fetching listing:", error);
+      toast.error("Error fetching listing");
+      return error; // Return error
+    }
   };
   const finalcall = async () => {
     setLoading(true);
@@ -384,7 +392,11 @@ const CreateCollection = () => {
               val.nftQuantity,
               val.nftcolor,
               val.nftPrice,
-              val.nftType
+              val.nftType,
+              val.arstistname,
+              val.newtype,
+              val.nftSeason,
+              val.nftFullImage
             );
             console.log(mintResult, "mintResult");
             if (mintResult instanceof Error) {
@@ -393,6 +405,7 @@ const CreateCollection = () => {
                 toast.error("Error in minting NFT: " + mintResult);
                 errorShown = true;
               }
+
               throw mintResult;
             } else {
               setsuccess(!Success);
@@ -420,19 +433,23 @@ const CreateCollection = () => {
         errorShown = true;
       }
     } finally {
+      console.log("run");
+      await getListing(canId);
       setLoading(false);
     }
   };
 
-  const [currentItemCardDetails,updateCurrentItemDetails] = useState({});
-  const [type,updateType] = useState("add"); 
+  const [currentItemCardDetails, updateCurrentItemDetails] = useState({});
+  const [type, updateType] = useState("add");
 
-  const onClickEdit = (nftId) =>{  
-    const nftDetails = nftCardsList.filter((eachNft)=>(eachNft.nftId === nftId));
+  const onClickEdit = (nftId) => {
+    const nftDetails = nftCardsList.filter(
+      (eachNft) => eachNft.nftId === nftId
+    );
     updateCurrentItemDetails(nftDetails[0]);
-    updateType("edit")
+    updateType("edit");
     toggleModal();
-  }
+  };
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
@@ -562,7 +579,10 @@ const CreateCollection = () => {
                       <button
                         type="button"
                         className="add_new_button flex items-center justify-center px-6 py-2 bg-transperent text-white border border-[#d1b471] rounded-l-full rounded-r-none h-[40px] w-[180px] "
-                        onClick={()=> {updateType("add");toggleModal()}}
+                        onClick={() => {
+                          updateType("add");
+                          toggleModal();
+                        }}
                       >
                         Add New
                       </button>
@@ -579,7 +599,7 @@ const CreateCollection = () => {
                         nftDetails={eachNftItem}
                         key={eachNftItem.nftId}
                         deleteNft={deleteNft}
-                        onClickEdit = {onClickEdit}
+                        onClickEdit={onClickEdit}
                       />
                     ))}
                   </div>
@@ -625,8 +645,8 @@ const CreateCollection = () => {
                             toggleModal={toggleModal}
                             getAddedNftDetails={getAddedNftDetails}
                             getUpdatedNftDetails={getUpdatedNftDetails}
-                            cardDetails = {currentItemCardDetails}
-                            type = {type}
+                            cardDetails={currentItemCardDetails}
+                            type={type}
                           />
                         </div>
                       </div>
