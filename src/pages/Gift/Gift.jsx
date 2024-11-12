@@ -53,9 +53,6 @@ const Gift = (props) => {
       <GiftHeader partners={rewards.length} />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] flex-col gap-y-[15px]">
-          {/* {rewards.slice(currState, currState + 3).map((item) => {
-            return <GiftItemCrd key={item.id} item={item} />;
-          })} */}
           <GiftCarousel rewards={rewards} />
         </div>
       </div>

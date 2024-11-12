@@ -40,7 +40,7 @@ ${
     >
       <div className="w-[20%] flex justify-start items-center">
         <img
-          src={`/assets/partners/160px-${item?.category}.bubble.png`}
+          src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${item?.category}.bubble.png`}
           alt="partner"
           className="rounded-full"
         />

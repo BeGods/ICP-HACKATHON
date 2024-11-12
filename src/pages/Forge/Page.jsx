@@ -1187,7 +1187,7 @@ const Forges = () => {
               <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
                 <div className="bubble-spin-effect">
                   <img
-                    src={`/assets/partners/160px-${randomReward.category}.bubble.png`}
+                    src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.category}.bubble.png`}
                     alt="icon"
                     className="pointer-events-none h-20 w-20 rounded-full"
                   />
