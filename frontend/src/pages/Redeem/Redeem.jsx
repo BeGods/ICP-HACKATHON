@@ -13,6 +13,7 @@ import { claimPlaysuperReward } from "../../utils/api";
 import IconBtn from "../../components/Buttons/IconBtn";
 import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";
+import { ExternalLink } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -22,6 +23,7 @@ const Redeem = (props) => {
     useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
+  const [showLink, setShowLink] = useState(false);
   const index = rewards.findIndex((item) => item._id === activeReward._id);
   const [currIndex, setCurrIndex] = useState(index);
   const currReward = rewards[currIndex];
@@ -60,7 +62,7 @@ const Redeem = (props) => {
         <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
           <div className="relative w-full  shadow-lg card-shadow-white">
             <img
-              src={`/assets/partners/320px-${currReward.category}.campaign.jpg`}
+              src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.campaign.jpg`}
               alt="campaign"
               className="w-full h-full rounded-primary"
               onClick={() => {
@@ -97,6 +99,12 @@ const Redeem = (props) => {
       setShowToggles(true);
     }, 300);
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowLink((prev) => !prev);
+    }, 1000);
+  }, [flipped]);
 
   return (
     <div
@@ -140,7 +148,7 @@ const Redeem = (props) => {
             <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
               <div className="relative w-full  shadow-lg card-shadow-white">
                 <img
-                  src={`/assets/partners/320px-${currReward.category}.campaign.jpg`}
+                  src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.campaign.jpg`}
                   alt="campaign"
                   className="w-full h-full rounded-primary"
                   onClick={() => {
@@ -171,7 +179,7 @@ const Redeem = (props) => {
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
-                  imageUrl={`/assets/partners/320px-${currReward.category}.brand.jpg`}
+                  imageUrl={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.brand.jpg`}
                   activeParts={handleActiveParts(currReward.tokensCollected)}
                   handleClick={() => {
                     if (currReward.tokensCollected === 12) {
@@ -212,6 +220,20 @@ const Redeem = (props) => {
             className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
           >
             <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
+            {showLink && (
+              <div
+                onClick={() => {
+                  window.open(
+                    `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.campaign.jpg`,
+                    "_blank"
+                  );
+                }}
+                className="flex z-50 justify-center items-center bottom-0 text-paperSub absolute w-full mb-7 uppercase underline"
+              >
+                <div>Checkout</div>
+                <ExternalLink />
+              </div>
+            )}
           </div>
         </div>
       </div>
