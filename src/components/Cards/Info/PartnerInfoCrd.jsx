@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { MyContext } from "../../../context/context";
 
 const PartnerCard = ({ close }) => {
-  const { activeReward, assets } = useContext(MyContext);
+  const { activeReward, assets, platform } = useContext(MyContext);
   const { i18n } = useTranslation();
 
   return (
@@ -44,7 +44,11 @@ const PartnerCard = ({ close }) => {
           {activeReward.metadata.campaignDetails}
         </div>
       </div>
-      <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={0} />
+      {platform === "ios" ? (
+        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={6} />
+      ) : (
+        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={0} />
+      )}
     </div>
   );
 };

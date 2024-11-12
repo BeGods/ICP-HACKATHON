@@ -64,7 +64,6 @@ const Home = () => {
       }
     } catch (error) {
       console.log(error);
-      showToast("default");
     }
   };
 
