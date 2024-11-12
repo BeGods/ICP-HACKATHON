@@ -418,6 +418,7 @@ function Users() {
                 </Tbody>
               </Table>
             </TableContainer>
+            {/* Pagination */}
             <Box
               mt="5%"
               display="flex"
@@ -425,17 +426,19 @@ function Users() {
               alignItems="center"
               justifyContent="center"
             >
-              <Button
-                mr="2"
-                bg="#161618"
-                color="white"
-                border="1px"
-                borderColor="gray.500"
-                _hover={{ bg: "black" }}
-                onClick={leftfunction}
-              >
-                &lt;
-              </Button>
+              {currentpage > 1 && (
+                <Button
+                  mr="2"
+                  bg="#161618"
+                  color="white"
+                  border="1px"
+                  borderColor="gray.500"
+                  _hover={{ bg: "black" }}
+                  onClick={leftfunction}
+                >
+                  &lt;
+                </Button>
+              )}
               <Button
                 bg="#FCD37B"
                 color="black"
@@ -445,17 +448,19 @@ function Users() {
               >
                 {currentpage}
               </Button>
-              <Button
-                ml="2"
-                bg="#161618"
-                color="white"
-                border="1px"
-                borderColor="gray.500"
-                _hover={{ bg: "black" }}
-                onClick={rightfunction}
-              >
-                &gt;
-              </Button>
+              {currentpage < totalpage && (
+                <Button
+                  ml="2"
+                  bg="#161618"
+                  color="white"
+                  border="1px"
+                  borderColor="gray.500"
+                  _hover={{ bg: "black" }}
+                  onClick={rightfunction}
+                >
+                  &gt;
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>

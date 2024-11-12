@@ -105,7 +105,7 @@ const Collections = ({ collections,handleCurrentIndex,startIndex,visibleButtons,
                         className='cursor-pointer relative w-[50%] h-[55px] bg-[#4A4A4A] flex items-center justify-center gap-4 transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl hover:-translate-y-2 border-2 border-transparent hover:border-transparent'
                         style={{
                             backgroundColor: collection.index === currentIndex ? collection.shadowColor : "inherit",
-                            boxShadow: collection.index === currentIndex ? `0 0 30px 10px ${collection.shadowColor}` : "",
+                            boxShadow: collection.index === currentIndex ? `0 0 60px 10px ${collection.shadowColor}` : "",
                         }}
                     >
                         <div className='absolute h-[90%] top-0 left-0'>

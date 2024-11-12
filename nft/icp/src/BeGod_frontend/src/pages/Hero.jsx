@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '../components/Landing Page Components/Navbar'
 import YellowButton from '../components/button/YellowButton'
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
-import NFTGallery from '../components/Landing Page Components/NftGallery';
+// import NFTGallery from '../components/Landing Page Components/NftGallery';
+import NFTGallery from '../components/Landing Page Components/NftGalleryTest.jsx';
 import HeroSlider from '../components/Landing Page Components/HeroSlider';
 import Collections from '../components/Landing Page Components/CollectionType';
 import { useTranslation } from 'react-i18next';
@@ -132,6 +133,8 @@ const Hero = () => {
   
     const dispatch = useDispatch();
 
+    const [inProgress,updateInProgressStatus] = useState(false);
+
     const handleCurrentIndex  = async(index) => {
         
         if(index >= visibleButtons-1 && index >= startIndex) {
@@ -156,9 +159,11 @@ const Hero = () => {
         if(currentCollectionId === collections[currentIndex].collectionId) {
             return;
         }
-        updateNoCardsStatus(false)
+        updateNoCardsStatus(false);
+        updateInProgressStatus(true);
         updateSelectedCollectionNftCardsList([]);
         setCurrentIndex(index);
+        currentPage.current = 1;
         const currList = await fetchCollectionNfts(currentCollectionId,color)
         if(currList.length > 0){
             updateFilteredList(currList);
@@ -167,7 +172,9 @@ const Hero = () => {
             updateSelectedCollectionNftCardsList([]);
             updateNoCardsStatus(true);
         }
-       
+
+        
+        updateInProgressStatus(false)
          dispatch(updateCurrentIndex(index));
         
     }
@@ -220,17 +227,25 @@ const Hero = () => {
            // console.log("each card ---------- item",eachItem)
             const jsonData = JSON.parse(eachItem[4]);
 
-           // console.log("json -------------- data",jsonData)
+            console.log("json -------------- data",jsonData)
+
+            let color =jsonData.collColor ;
+            if(color === "Yellow") {
+                color = "#FFB300"
+            }
+
             const colItem = {
                 index : i,
                 collectionId : eachItem[1],
                 name : eachItem[2],
-                shadowColor : jsonData.collColor,
+                shadowColor : color,
                 description:jsonData.description
             }
             i++;
             collections.push(colItem);
         })
+
+        console.log("final collection",collections)
         
         setCollections(collections);
         
@@ -246,11 +261,36 @@ const Hero = () => {
         //console.log(currentCollectionNfts)
 };
 let index = -1;
+const itemsPerPage = 10;
+// const [currentPage,updateCurrentPage] = useState(1);
+const [totalPages,updateTotalPages] = useState(1);
+
+
+const currentPage  = useRef(1);
+
+
+
+const onUpdateCurrentPage =async ()=>{
+    const currentCollectionId = collections[currentIndex].collectionId;
+    const color = collections[currentIndex].shadowColor;
+    const currList = await fetchCollectionNfts(currentCollectionId,color)
+    if(currList.length > 0){
+        updateFilteredList(currList);
+        updateSelectedCollectionNftCardsList(currList);
+    }else{
+        updateSelectedCollectionNftCardsList([]);
+        updateNoCardsStatus(true);
+    }
+}
+
 const fetchCollectionNfts = async (collectionId,color) => {
+
    try{
-    const listedNfts = await backendActor?.listings(collectionId);
-      console.log("listings resut",listedNfts);
+    const result = await backendActor?.plistings(collectionId,itemsPerPage,currentPage.current-1);
+      console.log("listings resut",result);
     index  = -1;
+    const listedNfts = result?.ok?.data;
+    updateTotalPages(parseInt(result?.ok?.total_pages))
     if(listedNfts.length === 0){
         updateSelectedCollectionNftCardsList([]);
         updateNoCardsStatus(true);
@@ -264,13 +304,11 @@ const fetchCollectionNfts = async (collectionId,color) => {
     updateNoCardsStatus(true);
     return;
    }
-  
-   
 
 };
 
 const getCollectionNfts = (collectionList, collectionId, color) => {
-    return collectionList.reduce((acc, eachItem) => {
+    return collectionList.map((eachItem) => {
       const { nonfungible } = eachItem[3];
       const { thumbnail: image, name } = nonfungible;
       const sold = eachItem[2].price;
@@ -289,16 +327,8 @@ const getCollectionNfts = (collectionList, collectionId, color) => {
         borderColor,
         collectionColor: color,
       };
-  
-      // Check if the last group of cards is the same as the current card
-      if (acc.length > 0 && acc[acc.length - 1][0].name === nftCard.name) {
-        acc[acc.length - 1].push(nftCard);
-      } else {
-        acc.push([nftCard]);
-      }
-  
-      return acc;
-    }, []);
+    return nftCard
+    });
   };
   
 
@@ -323,23 +353,20 @@ const [filteredList, updateFilteredList] = useState(selectedCollectionNftCardsLi
 
 
 useEffect(() => {
-
     let updatedList = [...selectedCollectionNftCardsList];
 
     if (currentCardType !== cardTypeList[0].cardId) {
         const currType = currentCardType.toLowerCase();
         updatedList = updatedList.filter((eachItem) => {
-            const cardType = eachItem[0].nftType.toLowerCase();
+            const cardType = eachItem.nftType.toLowerCase();
             return currType === cardType;
         });
-        
-        
     }
 
 
     if (applyPriceRange.isApply) {
         updatedList = updatedList.filter((eachItem) => {
-            return applyPriceRange.from <= eachItem[0].ICP && eachItem[0].ICP <= applyPriceRange.to;
+            return applyPriceRange.from <= eachItem.ICP && eachItem.ICP <= applyPriceRange.to;
         });
         
     }
@@ -348,7 +375,7 @@ useEffect(() => {
 
     console.log("Updated list after all filters:", updatedList);
     const screenSize = getScreenSize();
-   if(screenSize == "xs"){
+   if(screenSize == "xs" && !inProgress){
     if(currentCardType != cardTypeList[0].cardId || applyPriceRange.isApply || currentFilterOption !== filterListOptions[0].optionId){
         if(updatedList.length>0){
             toast.success(`${updatedList.length} Card${updatedList.length === 1 ? "":"s"} Found`);
@@ -357,28 +384,36 @@ useEffect(() => {
         }
     }
    }
-       
+    
+   if(currentFilterOption !== filterListOptions[0].optionId){
+    filterAndSort(updatedList);
+   }else{
     updateFilteredList(updatedList);
+   }
+    
 
 }, [currentCardType, applyPriceRange, selectedCollectionNftCardsList]);
 
 const [isRecentlyAdded,updateRecentlyAddedStatus] = useState(false);
 
-useEffect(()=>{
-    
+const filterAndSort = (list)=>{
     if (currentFilterOption !== filterListOptions[0].optionId) {
-        let updatedList = [...selectedCollectionNftCardsList];
+        let updatedList = [...list];
+        console.log("updated list in filter")
         if (currentFilterOption === filterListOptions[1].optionId) {
             updatedList = updatedList.reverse();
             updateRecentlyAddedStatus(true);
         } else if (currentFilterOption === filterListOptions[2].optionId) {
-            updatedList = updatedList.sort((a, b) => a[0].ICP - b[0].ICP);
+            updatedList = updatedList.sort((a, b) => a.ICP - b.ICP);
             updateRecentlyAddedStatus(false);
         } else if (currentFilterOption === filterListOptions[3].optionId) {
-            updatedList = updatedList.sort((a, b) => b[0].ICP - a[0].ICP);
+            updatedList = updatedList.sort((a, b) => b.ICP - a.ICP);
             updateRecentlyAddedStatus(false);
         }
         console.log("updated list after filter change",updatedList)
+        if(isRecentlyAdded){
+            updatedList = updatedList.reverse();
+        }
         updateFilteredList(updatedList)
     }else if(isRecentlyAdded){
         updateFilteredList([...filteredList].reverse());
@@ -387,6 +422,10 @@ useEffect(()=>{
         updateFilteredList([...filteredList]);
     }
     
+}
+
+useEffect(()=>{
+    filterAndSort(filteredList)
 },[currentFilterOption])
 
 console.log("filtered list after applying filters",filteredList)
@@ -402,7 +441,7 @@ console.log("filtered list after applying filters",filteredList)
     }
     useEffect(() => {
         if (isDisplayFiltersPopup) {
-          
+
           document.body.style.overflow = 'hidden';
         } else {
           
@@ -414,6 +453,37 @@ console.log("filtered list after applying filters",filteredList)
           document.body.style.overflow = 'auto';
         };
       }, [isDisplayFiltersPopup]);
+
+
+
+      const onNavigate  = async(type,index) => {
+        
+        console.log("next")
+        updateNoCardsStatus(false)
+        updateSelectedCollectionNftCardsList([]);
+        if(type === "next"){
+            currentPage.current = currentPage.current+1
+        }else if(type === "previous") {
+            currentPage.current = currentPage.current-1
+        }else{
+            console.log("inddddddddddddex",index)
+            currentPage.current = index
+        }
+
+        onUpdateCurrentPage();
+        const device = getScreenSize();
+        if(device == "xs" || device == "sm"){
+            document.getElementById("filter").scrollIntoView({ behavior: "smooth"});
+        }
+        
+    
+      }
+
+      const onNavigateToCollection = () => {
+            document.getElementById("collections").scrollIntoView({ behavior: "smooth"});
+      }
+
+      console.log("current page",currentPage)
     
     return (
         // for medium devices width is 99.6% because in ipad air width is little overflowing
@@ -424,7 +494,7 @@ console.log("filtered list after applying filters",filteredList)
                     <Navbar mobileView={mobileViewHandler} landingPage={true} />
                 </div>
                 <div  className={`w-full flex items-center justify-center flex-col space-y-8 py-8 absolute top-60 ${mobileView?"z-0":"z-10"}`}>
-                    <h1  className="text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center  leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
+                    <h1  className="h-[70px] md:h-[180px] text-[40px] md:text-[80px] xl:text-[100px] 2xl:text-[128px] flex items-center justify-center  leading-none font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] custom-text-border text-center">
                         {mainHeading}
                     </h1>
                     <h2 className='text-[16px] md:text-[24px] leading-tight font-[500] text-transparent bg-clip-text bg-gradient-to-r from-[#FBCEA0] via-[#FFF9F2] to-[#FBCEA0] text-center'>
@@ -451,7 +521,7 @@ console.log("filtered list after applying filters",filteredList)
                 {/* Collection details and its nfts part */}
                 {noCollections ? (
                     <div className='w-full h-[50vh] flex items-center justify-center'>
-                        <h1 className='text-[50px] text-[#FCD37B]'>No Collections Found</h1>
+                        <h1 className='text-[33px] md:text-[50px] text-[#FCD37B] text-center'>No Collections Found</h1>
                     </div>
                 ):(
                     <div className='max-w-[1920px] mx-auto relative  flex flex-col lg:flex-row'>
@@ -630,7 +700,8 @@ console.log("filtered list after applying filters",filteredList)
                                     )}
                             </div>
                         </div>
-                      <div className='flex items-center  mt-5'>
+                        <div id='filter' className='mb-3'></div>
+                      <div  className='flex items-center  mt-5'>
                       <button
                             className={`rounded-full flex justify-center items-center w-[120px] h-[35px] gap-1 
                             p-2 bg-[#000] text-[#FCD378] border-2 border-gray-800 ml-5 mr-2 sm:hidden`}
@@ -651,7 +722,12 @@ console.log("filtered list after applying filters",filteredList)
                      )}
                       </div>
                         {filteredList.length >0? (
+                            <>
                             <NFTGallery currentCollection={filteredList}  />
+                            {totalPages == 1 && (
+                                <div className='mt-20'></div>
+                            )}
+                            </>
                         ) : (
                             noCards || (selectedCollectionNftCardsList.length>0 && filteredList.length===0) ? (
                               <div className='w-[100%] h-[42vh] flex items-center justify-center'>
@@ -670,13 +746,87 @@ console.log("filtered list after applying filters",filteredList)
                                   />
                                 ))}
                               </div>
-                              <div className='flex justify-center items-center mt-3 md:hidden'>
-                                <Skeleton count={1} width={210} height={300} />
+                              <div className="justify-around m-5 gap-4 grid grid-cols-2 sm:hidden ">
+                                {Array.from({ length: 10 }).map((_, index) => (
+                                  <Skeleton
+                                    key={index}
+                                    count={1}
+                                    width="100%"
+                                    height={250}
+                                  />
+                                ))}
                               </div>
+                              {/* <div className='flex justify-center items-center mt-3 md:hidden'>
+                                <Skeleton count={1} width={210} height={300} />
+                              </div> */}
+                              
                             </SkeletonTheme>
                           </div>
                            )
                         )}
+                        {totalPages > 1 && (
+                                <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
+                                {currentPage.current > 1 && (
+                                     <button onClick={()=>onNavigate("previous",currentIndex)} >
+                                     <img
+                                     src="/Hero/up.png"
+                                     alt="Previous"
+                                     className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                     />
+                                     </button>
+                                )}
+                                {currentPage.current === 1 && (
+                                    <button disabled={true} >
+                                    <img
+                                    src="/Hero/up.png"
+                                    alt="Previous"
+                                    onClick={()=>onNavigate("previous",currentIndex)}
+                                    className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    />
+                                    </button>
+                                )}
+                                <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
+                                {Array.from({length:totalPages}).map((_,index)=>{
+                                    return (
+                                    <div  key={index} 
+                                   
+                                    className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+                                        ${currentPage.current === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
+                                    `}
+                                    onClick={() => {
+                                            onNavigate("none", index + 1);
+                                        }}
+                                    > 
+                                    <h1>{index+1}</h1>
+                                    </div>
+                                    )
+                                })}
+                                </div>
+                                {currentPage.current < totalPages && (
+                                    <button  onClick={()=>{onNavigate("next",currentIndex)}} className='' >
+                                    {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                               
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                
+                                )}
+                                {currentPage.current>=totalPages && (
+                                    <button disabled={true}  >
+                                    {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+                                <img
+                                src="/Hero/down.png"
+                                alt="Next"
+                               
+                                className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                />
+                                </button>
+                                )}
+                            </div>
+                            )}
                     </div>
                 </div>
                 )}

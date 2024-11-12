@@ -107,7 +107,7 @@ const Activity = () => {
         }}
       >
         <Navbar />
-        <div className="p-[10px] min-h-[70vh] w-full lg:p-[70px] pb-[33px] ">
+        <div className="p-[10px] min-h-[90vh] w-full lg:p-[70px] pb-[33px] ">
           <h1 className="text-3xl text-center mb-3 lg:text-5xl text-[#FCD378] lg:mb-5 lg:text-start">Activity</h1>
           <ul className="w-[100%] h-[50px] lg:h-[40px] text-[#FCD378] text-sm lg:text-lg bg-[#FCD37B1A] m-0 pl-[0px]  grid grid-cols-4 items-center mb-[21px]">
             <li className='text-center '>Collection</li>
@@ -173,22 +173,24 @@ const Activity = () => {
             <button className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === 1 ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === 1} onClick={onClickPrev}>
               <GrFormPrevious />
             </button>
-              {Array.from({length:total_pages}).map((_,index)=>{
-                return (
-                  <div className={`size-9 border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
+              <div className=' flex items-center justify-start max-w-[80%] overflow-x-auto'>
+              {Array.from({length:total_pages}).map((_,index)=>(
+                  <div className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
                     ${current_page === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent"}
                 `}
                 onClick={()=>updateCurrentPage(index+1)}
                 > 
                 <h1>{index+1}</h1>
                 </div>
-                )
-              })}
-            <div className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === total_pages ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === 1} 
+                
+              ))}
+              </div>
+            <button className={`size-6 rounded-sm bg-[#FCD378] text-[#000000] flex justify-center items-center  ${current_page === total_pages ? "opacity-30 cursor-not-allowed":"cursor-pointer"}`} disabled={current_page === total_pages} 
               onClick={onClickNext}
+             
             >
               <GrFormNext />
-            </div>
+            </button>
           </div>
           )}
         </div>

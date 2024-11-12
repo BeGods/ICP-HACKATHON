@@ -24,8 +24,10 @@
     "@funded-labs/plug-mobile-sdk": "^0.1.3",
     "@reduxjs/toolkit": "^2.2.7",
     "antd": "^5.20.5",
+    "assert": "^2.1.0",
     "browser-image-compression": "^2.0.2",
     "country-state-city": "^3.2.1",
+    "crypto-browserify": "^3.12.1",
     "framer-motion": "^11.3.29",
     "i18next": "^23.15.1",
     "i18next-browser-languagedetector": "^8.0.0",
@@ -49,7 +51,12 @@
     "react-spinners": "^0.14.1",
     "react-time-ago": "^7.3.3",
     "react-toastify": "^10.0.5",
+    "stream-browserify": "^3.0.0",
     "swiper": "^11.1.12",
     "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10",
+    "vite-plugin-optimizer": "^1.4.3"
   }
 }
