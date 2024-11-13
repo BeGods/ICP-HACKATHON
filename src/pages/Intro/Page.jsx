@@ -24,6 +24,7 @@ const IntroPage = (props) => {
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
+        tele.disableVerticalSwipes();
         tele.setHeaderColor("#000000");
         tele.setBackgroundColor("#000000");
         tele.setBottomBarColor("#000000");

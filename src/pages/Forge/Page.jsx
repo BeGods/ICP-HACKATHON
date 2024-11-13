@@ -847,8 +847,8 @@ const Forges = () => {
         }
 
         setCount((prev) => prev + 1);
-        handlePlusMinon(50, 800);
-        handlePlusAutomata(300, 800);
+        handlePlusMinon(70, 800);
+        handlePlusAutomata(290, 800);
       }, 100);
 
       return () => {
@@ -1316,7 +1316,11 @@ const Forges = () => {
                   zIndex: 99,
                 }}
               >
-                +{mythStates[activeMyth].automatalvl * (isStarHolding ? 2 : 1)}
+                +
+                {mythStates[activeMyth].automatalvl === 0
+                  ? 1
+                  : mythStates[activeMyth].automatalvl *
+                    (isStarHolding ? 2 : 1)}
               </span>
             ))}
           </div>
