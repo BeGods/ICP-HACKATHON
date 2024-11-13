@@ -24,6 +24,7 @@ import WarningModal from "./WarningModal.jsx";
 import SuccessModal from "./SuccessModal.jsx";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
+import Createcollectionloader from "./Createcollectionloader.jsx";
 
 const CreateCollection = () => {
   const navigate = useNavigate();
@@ -56,6 +57,8 @@ const CreateCollection = () => {
   const [collColor, setCollColor] = useState("Green");
   const [nftcolor, setnftcolor] = useState("");
   const [Success, setsuccess] = useState(false);
+  const [done, setDone] = useState(0);
+  const [totalnft, settotalnft] = useState();
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
@@ -119,20 +122,20 @@ const CreateCollection = () => {
   };
 
   const handleFiles = async (files) => {
-    console.log("Uploaded files:", files);
+    // console.log("Uploaded files:", files);
     setUFile(files);
 
     const file = files[0]; // Get the first uploaded file
     if (file) {
       try {
         let options = {
-          maxSizeMB: 0.1, // 100KB
+          maxSizeMB: 0.06, // 60KB
           maxWidthOrHeight: 300,
           useWebWorker: true,
         };
 
         let compressedFile = await imageCompression(file, options);
-        while (compressedFile.size > 100 * 1024) {
+        while (compressedFile.size > 60 * 1024) {
           options.maxSizeMB *= 0.9;
           compressedFile = await imageCompression(file, options);
         }
@@ -152,9 +155,11 @@ const CreateCollection = () => {
   };
 
   const createExtData = async (name, base64String, description, collColor) => {
+    let n = nftCardsList.length;
+    settotalnft(n);
     try {
       const metadata = JSON.stringify({ description, collColor });
-      console.log(name, metadata);
+      // console.log(name, metadata);
       const report = await backendActor?.createExtCollection(
         name,
         base64String,
@@ -230,23 +235,26 @@ const CreateCollection = () => {
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );
+      setDone((done) => done + 1);
 
       console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-      console.log(es8_price, "price");
-      // if (result && result.length > 0) {
-      //   result.map((val, key) => {
-      //     getNftTokenId(answ, val[1], es8_price);
-      //   });
-      // }
-
+      // console.log(es8_price, "price");
       if (result && result.length > 0) {
-        await Promise.all(
-          result.map((val) => getNftTokenId(answ, val[1], es8_price))
-        );
-      } else {
-        throw new Error("Minting failed");
+        result.map((val, key) => {
+          // console.log(key, "in mint");
+          // console.log(val);
+          getNftTokenId(answ, val[1], es8_price);
+        });
       }
+
+      // if (result && result.length > 0) {
+      //   await Promise.all(
+      //     result.map((val) => getNftTokenId(answ, val[1], es8_price))
+      //   );
+      // } else {
+      //   throw new Error("Minting failed");
+      // }
 
       // if (result) {
       //   setTokenId(result[0]);
@@ -265,7 +273,7 @@ const CreateCollection = () => {
 
   const getNftTokenId = async (answ, nftIdentifier, nftprice) => {
     try {
-      console.log(answ, nftIdentifier, nftprice);
+      // console.log(answ, nftIdentifier, nftprice);
       const principal = Principal.fromText(answ);
       const res = await listPrice(principal, nftIdentifier, nftprice);
       console.log(res, "res data");
@@ -318,7 +326,7 @@ const CreateCollection = () => {
     const id = nftDetails.nftId;
     const updatedList = nftCardsList.map((eachCard) => {
       if (id === eachCard.nftId) {
-        console.log(id, "  ", eachCard.nftId);
+        // console.log(id, "  ", eachCard.nftId);
         return nftDetails;
       }
       return eachCard;
@@ -334,8 +342,6 @@ const CreateCollection = () => {
     setnftcolor(nftDetails.nftcolor);
   };
 
-  console.log(nftCardsList);
-
   const deleteNft = (nftId) => {
     const updatedNFtList = nftCardsList.filter(
       (eachNft) => eachNft.nftId !== nftId
@@ -348,19 +354,7 @@ const CreateCollection = () => {
     togglewarning();
     finalcall();
   };
-  const getListing = async (answ) => {
-    try {
-      console.log("called");
-      const principalString = answ;
-      const principal = Principal.fromText(principalString);
-      const result = await backendActor?.listings(principal);
-      console.log("Listing", result);
-    } catch (error) {
-      console.error("Error fetching listing:", error);
-      toast.error("Error fetching listing");
-      return error; // Return error
-    }
-  };
+
   const finalcall = async () => {
     setLoading(true);
     let hasError = false;
@@ -433,11 +427,24 @@ const CreateCollection = () => {
         errorShown = true;
       }
     } finally {
-      console.log("run");
-      await getListing(canId);
+      // await getListing(canId);
       setLoading(false);
     }
   };
+
+  // const getListing = async (canId) => {
+  //   try {
+  //     console.log("called");
+  //     const principalString = canId;
+  //     const principal = Principal.fromText(principalString);
+  //     const result = await backendActor?.listings(principal);
+  //     console.log("Listing", result);
+  //   } catch (error) {
+  //     console.error("Error fetching listing:", error);
+  //     toast.error("Error fetching listing");
+  //     return error; // Return error
+  //   }
+  // };
 
   const [currentItemCardDetails, updateCurrentItemDetails] = useState({});
   const [type, updateType] = useState("add");
@@ -450,26 +457,44 @@ const CreateCollection = () => {
     updateType("edit");
     toggleModal();
   };
+  // const total = 27;
+  // const [done, setDone] = useState(3);
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setDone((prevDone) => {
+  //       if (prevDone >= total) {
+  //         clearInterval(interval);
+  //         return total;
+  //       }
+  //       return prevDone + 1;
+  //     });
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, [total]);
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#444">
       <div className="w-[90%] overflow-y-scroll pt-10 px-10 pb-8 h-screen no-scrollbar  no-scroll 2xl:ml-[7%] md:w-full lg:w-[90%] lg:pt-20">
+        {/* <Createcollectionloader done={done} total={total} /> */}
         {loading ? (
-          <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
-            {Array(6) // Generate skeleton loaders for each collection card
-              .fill()
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className="bg-[#29292C] w-full h-full px-10 py-6 flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border"
-                >
-                  <Skeleton circle width={160} height={160} />
-                  <Skeleton width={140} height={30} />
-                  <Skeleton width={140} height={30} />
-                </div>
-              ))}
-          </div>
+          <Createcollectionloader done={done} total={totalnft} />
         ) : (
+          // <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
+          //   {Array(6) // Generate skeleton loaders for each collection card
+          //     .fill()
+          //     .map((_, index) => (
+          //       <div
+          //         key={index}
+          //         className="bg-[#29292C] w-full h-full px-10 py-6 flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border"
+          //       >
+          //         <Skeleton circle width={160} height={160} />
+          //         <Skeleton width={140} height={30} />
+          //         <Skeleton width={140} height={30} />
+          //       </div>
+          //     ))}
+          // </div>
           <div className="w-full">
             <BackButton />
             <div className="my-8">
@@ -612,12 +637,6 @@ const CreateCollection = () => {
                     >
                       Cancel
                     </button>
-
-                    {/* {loading && (
-                    <div className="spinner-container">
-                      <div className="spinner"></div>
-                    </div>
-                  )} */}
 
                     <button
                       type="button"

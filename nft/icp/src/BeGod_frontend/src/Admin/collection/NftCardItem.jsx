@@ -2,7 +2,7 @@ import { RxCross2 } from "react-icons/rx";
 import { GrFormEdit } from "react-icons/gr";
 
 const NftCardItem = (props) => {
-  const { deleteNft, nftDetails ,onClickEdit } = props;
+  const { deleteNft, nftDetails, onClickEdit } = props;
   const {
     nftId,
     nftDescription,
@@ -20,7 +20,7 @@ const NftCardItem = (props) => {
         <img
           src={nftImage}
           alt="NFT"
-          className="object-cover w-full md:w-[40%] h-32 rounded-lg"
+          className="object-contain w-full md:w-[40%] h-32 rounded-lg"
         />
 
         {/* NFT Details Section */}
@@ -42,14 +42,14 @@ const NftCardItem = (props) => {
         </div>
       </div>
 
-     {/*Edit Button*/}
-       <button
+      {/*Edit Button*/}
+      <button
         className="absolute top-2 right-9 flex items-center justify-center w-6 h-6 bg-white rounded-full hover:bg-gray-300 transition duration-150"
         onClick={() => onClickEdit(nftId)}
       >
         <GrFormEdit className="text-black" size={15} />
       </button>
-        {/* Delete Button */}
+      {/* Delete Button */}
       <button
         className="absolute top-2 right-2 flex items-center justify-center w-6 h-6 bg-white rounded-full hover:bg-gray-300 transition duration-150"
         onClick={() => deleteNft(nftId)}

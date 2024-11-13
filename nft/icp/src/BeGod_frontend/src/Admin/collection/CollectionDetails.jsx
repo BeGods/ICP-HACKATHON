@@ -113,19 +113,19 @@ function CollectionDetails() {
   // console.log(principalStringg);
 
   const getAllCollectionNFT = async (principal, currentpage) => {
-    console.log(currentpage);
+    // console.log(currentpage);
     try {
       const userPrincipalArray = principal;
 
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
-      console.log("before");
-      console.log(principal);
+      // console.log("before");
+      // console.log(principal);
       const result = await backendActor?.getAllCollectionNFTs(
         principalString,
         10,
         currentpage - 1
       );
-      console.log("NFT collection:", result);
+      // console.log("NFT collection:", result);
       const formatedList = [];
 
       if (result && result.ok && result.ok.data && result.ok.data.length > 0) {
@@ -226,7 +226,7 @@ function CollectionDetails() {
 
       console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftprice) * 100000000);
-      console.log(es8_price, "price");
+      // console.log(es8_price, "price");
       // if (result && result.length > 0) {
       //   result.map((val, key) => {
       //     getNftTokenId(principal, val[1], es8_price);
@@ -248,7 +248,7 @@ function CollectionDetails() {
 
   const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
     try {
-      console.log(principal, nftIdentifier, nftprice);
+      // console.log(principal, nftIdentifier, nftprice);
       // const principall = Principal.fromText(principal);
       const res = await listPrice(principal, nftIdentifier, nftprice);
       // console.log(res, "res data");
@@ -261,6 +261,7 @@ function CollectionDetails() {
 
   const listPrice = async (principal, tokenidentifier, price) => {
     try {
+      // console.log("called");
       const finalPrice = price;
 
       const priceE8s = finalPrice ? finalPrice : null;
@@ -287,7 +288,7 @@ function CollectionDetails() {
 
   const getListing = async (principal) => {
     try {
-      console.log(principal);
+      // console.log(principal);
       const principalString = Principal.fromUint8Array(principal._arr);
       // toast("Featching NFTs,Please Wait! ...", {
       //   icon: "⚠️",
@@ -340,7 +341,7 @@ function CollectionDetails() {
       if (mintResult instanceof Error) {
         toast.error(mintResult);
       } else {
-        await getListing(principal);
+        // await getListing(principal);
         toast.success("NFT added");
         toast("Fetching NFTs, Please Wait! ...", {
           icon: "⚠️",
@@ -479,7 +480,7 @@ function CollectionDetails() {
     setcurrentpage((currentpage) => currentpage + 1);
     // await fetchNFTs();
     // await getAllCollectionNFT(principal, currentpage);
-    console.log("clicked");
+    // console.log("clicked");
   };
 
   return (
