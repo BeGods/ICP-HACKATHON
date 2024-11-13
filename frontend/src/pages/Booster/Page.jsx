@@ -43,6 +43,8 @@ const Boosters = () => {
   const disableRef = useRef(false);
 
   const handleClaimAutomata = async () => {
+    console.log("func", activeMyth);
+
     if (disableRef.current === false) {
       disableRef.current = true;
       const mythologyName = {
@@ -63,51 +65,6 @@ const Boosters = () => {
                   }
                 : item
             ),
-          };
-
-          return updatedData;
-        });
-        setShowCard(null);
-        disableRef.current = false;
-        showToast("booster_success");
-        setShowBooster("automata");
-        setSection(0);
-      } catch (error) {
-        disableRef.current = false;
-        setShowCard(null);
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          "An unexpected error occurred";
-        console.log(errorMessage);
-        showToast("booster_error");
-      }
-    }
-  };
-
-  const handleClaimAutoAutomata = async () => {
-    if (disableRef.current === false) {
-      disableRef.current = true;
-
-      try {
-        await claimAutoAutomata(authToken);
-
-        setGameData((prevData) => {
-          const now = Date.now();
-
-          const updatedData = {
-            ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 1,
-            mythologies: prevData.mythologies.map((item) => ({
-              ...item,
-              boosters: {
-                ...item.boosters,
-                automatalvl: item.boosters.automatalvl + 1,
-                isAutomataActive: true,
-                automataLastClaimedAt: now,
-                automataStartTime: now,
-              },
-            })),
           };
 
           return updatedData;
@@ -170,89 +127,6 @@ const Boosters = () => {
     }
   }, [enableGuide]);
 
-  const handleClaimShards = async () => {
-    if (disableRef.current === false) {
-      disableRef.current === true;
-      const mythologyName = {
-        mythologyName: mythologies[activeMyth],
-      };
-      try {
-        const response = await claimShardsBooster(mythologyName, authToken);
-        setGameData((prevData) => {
-          const updatedData = {
-            ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 1,
-            mythologies: prevData.mythologies.map((item) =>
-              item.name === mythologies[activeMyth]
-                ? {
-                    ...item,
-                    boosters: response.updatedBooster,
-                  }
-                : item
-            ),
-          };
-
-          return updatedData;
-        });
-
-        setShowCard(null);
-        showToast("booster_success");
-        setShowBooster("minion");
-        setSection(0);
-        disableRef.current === false;
-      } catch (error) {
-        setShowCard(null);
-        disableRef.current === false;
-        const errorMessage =
-          error.response.data.error ||
-          error.response.data.message ||
-          error.message ||
-          "An unexpected error occurred";
-        console.log(errorMessage);
-        showToast("booster_error");
-      }
-    }
-  };
-
-  const handleClaimBurst = async () => {
-    const mythologyName = {
-      mythologyName: mythologies[activeMyth],
-    };
-    try {
-      const response = await claimBurstBooster(mythologyName, authToken);
-
-      setGameData((prevData) => {
-        const updatedData = {
-          ...prevData,
-          multiColorOrbs: prevData.multiColorOrbs - 3,
-          mythologies: prevData.mythologies.map((item) =>
-            item.name === mythologies[activeMyth]
-              ? {
-                  ...item,
-                  boosters: response.updatedBooster,
-                }
-              : item
-          ),
-        };
-
-        return updatedData;
-      });
-      setShowCard(null);
-      showToast("booster_success");
-      setSection(0);
-    } catch (error) {
-      setShowCard(null);
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "An unexpected error occurred";
-      console.log(errorMessage);
-      showToast("booster_error");
-    }
-  };
-
-  useEffect(() => {}, [gameData]);
-
   useEffect(() => {
     setTimeout(() => {
       setShowToggles(true);
@@ -312,14 +186,7 @@ const Boosters = () => {
       {/* BOOSTER CARDS */}
       <div className="flex flex-col items-center justify-center h-screen w-screen absolute mx-auto">
         <div className="flex flex-col w-[70%] items-center justify-start gap-[15px]">
-          <BoosterCarousel
-            handleClaimAutomata={handleClaimAutomata}
-            handleClaimShards={handleClaimShards}
-            handleClaimBurst={handleClaimBurst}
-            handleClaimAutoAutomata={handleClaimAutoAutomata}
-            mythData={mythData}
-            enableGuide={enableGuide}
-          />
+          <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
         </div>
       </div>
 

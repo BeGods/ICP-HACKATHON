@@ -4,18 +4,10 @@ import { MyContext } from "../../context/context";
 import BoosterClaim from "../Cards/Boosters/BoosterCrd";
 import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
-import BoosterBtn from "../Buttons/BoosterBtn";
 
 const tele = window.Telegram?.WebApp;
 
-const BoosterCarousel = ({
-  enableGuide,
-  mythData,
-  handleClaimAutomata,
-  handleClaimShards,
-  handleClaimBurst,
-  handleClaimAutoAutomata,
-}) => {
+const BoosterCarousel = ({ enableGuide, mythData }) => {
   const { t } = useTranslation();
   const { setShowCard, activeMyth, gameData, setSection } =
     useContext(MyContext);
@@ -103,20 +95,12 @@ const BoosterCarousel = ({
   }, [activeMyth, enableGuide, mythData, gameData]);
 
   const handleBoosterClick = (activeCard, isAutoPay) => {
-    tele.HapticFeedback.notificationOccurred("success");
-    const handleClaim = {
-      automata: isAutoPay ? handleClaimAutoAutomata : handleClaimAutomata,
-      minion: handleClaimShards,
-      burst: handleClaimBurst,
-    }[activeCard];
-
     setShowCard(
       <BoosterClaim
         isAutoPay={isAutoPay}
         activeCard={activeCard}
         activeMyth={activeMyth}
         mythData={mythData}
-        handleClaim={handleClaim}
         closeCard={() => setShowCard(null)}
         t={t}
       />

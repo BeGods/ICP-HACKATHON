@@ -1,22 +1,222 @@
-import React, { useContext } from "react";
-import { mythSections } from "../../../utils/constants";
+import React, { useContext, useRef } from "react";
+import { mythologies, mythSections } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
 import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
 import BoosterBtn from "../../Buttons/BoosterBtn";
+import { showToast } from "../../Toast/Toast";
+import {
+  claimAutoAutomata,
+  claimAutomataBooster,
+  claimBurstBooster,
+  claimShardsBooster,
+} from "../../../utils/api";
+
+const tele = window.Telegram?.WebApp;
 
 const BoosterClaim = ({
   activeCard,
-  handleClaim,
   t,
   mythData,
   closeCard,
   disableIcon,
   isAutoPay,
 }) => {
-  const { gameData, section, enableSound, assets, setActiveMyth, activeMyth } =
-    useContext(MyContext);
+  const {
+    gameData,
+    section,
+    setSection,
+    setGameData,
+    setShowBooster,
+    enableSound,
+    assets,
+    setActiveMyth,
+    activeMyth,
+    authToken,
+    setShowCard,
+  } = useContext(MyContext);
+  const disableRef = useRef(false);
+
+  const handleClaimShards = async () => {
+    if (disableRef.current === false) {
+      disableRef.current === true;
+      const mythologyName = {
+        mythologyName: mythologies[activeMyth],
+      };
+      try {
+        const response = await claimShardsBooster(mythologyName, authToken);
+        setGameData((prevData) => {
+          const updatedData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs - 1,
+            mythologies: prevData.mythologies.map((item) =>
+              item.name === mythologies[activeMyth]
+                ? {
+                    ...item,
+                    boosters: response.updatedBooster,
+                  }
+                : item
+            ),
+          };
+
+          return updatedData;
+        });
+
+        setShowCard(null);
+        showToast("booster_success");
+        setShowBooster("minion");
+        setSection(0);
+        disableRef.current === false;
+      } catch (error) {
+        setShowCard(null);
+        disableRef.current === false;
+        const errorMessage =
+          error.response.data.error ||
+          error.response.data.message ||
+          error.message ||
+          "An unexpected error occurred";
+        console.log(errorMessage);
+        showToast("booster_error");
+      }
+    }
+  };
+
+  const handleClaimBurst = async () => {
+    const mythologyName = {
+      mythologyName: mythologies[activeMyth],
+    };
+    try {
+      const response = await claimBurstBooster(mythologyName, authToken);
+
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          multiColorOrbs: prevData.multiColorOrbs - 3,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === mythologies[activeMyth]
+              ? {
+                  ...item,
+                  boosters: response.updatedBooster,
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+      setShowCard(null);
+      showToast("booster_success");
+      setSection(0);
+    } catch (error) {
+      setShowCard(null);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("booster_error");
+    }
+  };
+
+  const handleClaimAutomata = async () => {
+    if (disableRef.current === false) {
+      disableRef.current = true;
+      const mythologyName = {
+        mythologyName: mythologies[activeMyth],
+      };
+      try {
+        const response = await claimAutomataBooster(mythologyName, authToken);
+
+        setGameData((prevData) => {
+          const updatedData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs - 1,
+            mythologies: prevData.mythologies.map((item) =>
+              item.name === mythologies[activeMyth]
+                ? {
+                    ...item,
+                    boosters: response.updatedBooster,
+                  }
+                : item
+            ),
+          };
+
+          return updatedData;
+        });
+        setShowCard(null);
+        disableRef.current = false;
+        showToast("booster_success");
+        setShowBooster("automata");
+        setSection(0);
+      } catch (error) {
+        disableRef.current = false;
+        setShowCard(null);
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred";
+        console.log(errorMessage);
+        showToast("booster_error");
+      }
+    }
+  };
+
+  const handleClaimAutoAutomata = async () => {
+    if (disableRef.current === false) {
+      disableRef.current = true;
+
+      try {
+        await claimAutoAutomata(authToken);
+
+        setGameData((prevData) => {
+          const now = Date.now();
+
+          const updatedData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs - 1,
+            mythologies: prevData.mythologies.map((item) => ({
+              ...item,
+              boosters: {
+                ...item.boosters,
+                automatalvl: item.boosters.automatalvl + 1,
+                isAutomataActive: true,
+                automataLastClaimedAt: now,
+                automataStartTime: now,
+              },
+            })),
+          };
+
+          return updatedData;
+        });
+        setShowCard(null);
+        disableRef.current = false;
+        showToast("booster_success");
+        setShowBooster("automata");
+        setSection(0);
+      } catch (error) {
+        disableRef.current = false;
+        setShowCard(null);
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred";
+        console.log(errorMessage);
+        showToast("booster_error");
+      }
+    }
+  };
+
+  const handleButton = () => {
+    tele.HapticFeedback.notificationOccurred("success");
+    const handleClaim = {
+      automata: isAutoPay ? handleClaimAutoAutomata : handleClaimAutomata,
+      minion: handleClaimShards,
+      burst: handleClaimBurst,
+    }[activeCard];
+
+    return handleClaim();
+  };
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
@@ -96,7 +296,7 @@ const BoosterClaim = ({
         isAutoPay={isAutoPay}
         activeCard={activeCard}
         mythData={mythData}
-        handleClaim={handleClaim}
+        handleClaim={handleButton}
         activeMyth={activeMyth}
         t={t}
       />
