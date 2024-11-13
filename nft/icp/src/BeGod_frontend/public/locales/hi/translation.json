@@ -34,7 +34,10 @@
     "tokenStandard": "टोकन मानक",
     "chain": "श्रृंखला",
     "lastUpdated": "अंतिम अपडेट",
-    "buyNow": "अभी खरीदें"
+    "buyNow": "अभी खरीदें",
+    "artistName": "कलाकार",
+    "nftType": "प्रकार",
+    "nftSeason": "ऋतु"
     },
     "myProfile": "मेरा प्रोफ़ाइल",
     "myCollection": "मेरा संग्रह",
