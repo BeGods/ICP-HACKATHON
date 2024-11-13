@@ -213,9 +213,8 @@ body {
   flex-shrink: 0;
   margin-bottom: 30px;
   margin-right: 30px;
- 
 }
-.buy-nft-card{
+.buy-nft-card {
   width: 250px; /* Width for desktop */
   height: 330px; /* Height for desktop */
 }
@@ -226,7 +225,7 @@ body {
     margin-bottom: 30x;
     margin-right: 30px;
   }
-  .buy-nft-card{
+  .buy-nft-card {
     width: 280px; /* Width for desktop */
     height: 330px; /* Height for desktop */
   }
@@ -271,13 +270,12 @@ body {
     min-height: 350px; /* Reduced height for mobile */
     margin-bottom: 10px;
     margin-right: 0px;
-    
   }
-  .buy-nft-card{
+  .buy-nft-card {
     width: 250px; /* Width for desktop */
     height: 330px; /* Height for desktop */
   }
-  .flip-card-inner{
+  .flip-card-inner {
     min-height: 100%;
   }
 
@@ -286,8 +284,8 @@ body {
   }
 }
 
-@media (max-width: 450px){
-  .flip-card{
+@media (max-width: 450px) {
+  .flip-card {
     min-height: 230px;
   }
 }
@@ -505,7 +503,7 @@ body {
   background-color: black;
 }
 ::-webkit-scrollbar-thumb {
-  background: #FCD378;
+  background: #fcd378;
   border-radius: 100px;
 }
 
@@ -560,4 +558,47 @@ body {
 .border-bronze {
   border: 5px solid #cd7f32;
   border-radius: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Rotating Circle Animation */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Circular Text Animation */
+.circular-text {
+  position: absolute;
+  animation: rotateText 1s linear infinite;
+}
+
+/* Keyframes */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateText {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
 }
