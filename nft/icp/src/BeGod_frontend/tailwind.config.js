@@ -12,6 +12,17 @@ export default {
         "1.2xl": "1200px", // Custom breakpoint for 1200px
         "1.5md": "900px",
       },
+      animation: {
+        spin: "spin 1s linear infinite",
+      },
+      colors: {
+        baseColor: "#202020",
+        highlightColor: "#444",
+      },
+      borderColor: {
+        custom: "#202020",
+        "t-custom": "#444",
+      },
     },
   },
   plugins: [],

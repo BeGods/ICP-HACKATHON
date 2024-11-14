@@ -190,13 +190,13 @@ const Modal = (props) => {
     if (file) {
       try {
         let options = {
-          maxSizeMB: 0.08,
-          maxWidthOrHeight: 300,
+          maxSizeMB: 0.06,
+          maxWidthOrHeight: 200,
           useWebWorker: true,
         };
         let compressedFile = await imageCompression(file, options);
 
-        while (compressedFile.size > 80 * 1024) {
+        while (compressedFile.size > 60 * 1024) {
           options.maxSizeMB *= 0.9;
           compressedFile = await imageCompression(file, options);
         }
