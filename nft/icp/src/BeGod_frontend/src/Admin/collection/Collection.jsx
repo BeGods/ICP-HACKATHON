@@ -6,6 +6,8 @@ import { useAuth } from "../../utils/useAuthClient.jsx";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { FaTrashAlt } from "react-icons/fa";
+import { Principal } from "@dfinity/principal";
 
 function Collection() {
   const { backendActor } = useAuth();
@@ -52,6 +54,38 @@ function Collection() {
 
     fetchCollection();
   }, [backendActor]);
+
+  const deletecollection = async (id) => {
+    setLoading(true);
+    console.log("deleted");
+    const principalString = Principal.fromUint8Array(id._arr);
+    if (backendActor) {
+      try {
+        const result = await backendActor?.remove_collection_to_map(
+          principalString
+        );
+        console.log(result);
+      } catch (error) {
+        console.error("Error fetching delete collections:", error);
+      } finally {
+        setLoading(false); // Make sure to stop loading state
+        await getCollection();
+      }
+    }
+  };
+
+  // const demoCollections = [
+  //   [
+  //     1,
+  //     "Demo Description 1",
+  //     "Collection 1",
+  //     "https://via.placeholder.com/150",
+  //   ],
+  // ];
+
+  // Replace `coll` with demoCollections when testing
+  // const coll = demoCollections;
+  // const loading = false; // Set loading to false to render demo data
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
@@ -101,8 +135,20 @@ function Collection() {
                   >
                     <div
                       key={index}
-                      className="bg-[#29292C] w-full h-full px-10 py-6 text-white flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border hover:border-[#FCD37B]"
+                      className="relative bg-[#29292C] w-full h-full px-10 py-6 text-white flex flex-col justify-center items-center gap-y-4 rounded-md border-transparent border hover:border-[#FCD37B]"
                     >
+                      <div className="absolute top-4 right-4">
+                        <button
+                          className="text-white hover:text-red-600 transition-colors duration-300"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            deletecollection(collectiondata[1]);
+                          }}
+                        >
+                          <FaTrashAlt className="w-6 h-6" />
+                        </button>
+                      </div>
+
                       <img
                         className="w-28 h-28 sm:h-40 sm:w-40"
                         src={collectiondata[3]}
