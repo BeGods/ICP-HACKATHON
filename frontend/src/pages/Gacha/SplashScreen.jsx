@@ -121,21 +121,6 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
   return (
     <div className="w-screen h-screen relative bg-black">
-      {/* Background Paper */}
-      <div
-        className="absolute animate-spin-slow scale-150 z-0"
-        style={{
-          background: `url(${assets.uxui.starlight})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "contain",
-          backgroundPosition: "center center",
-          height: "100vh",
-          width: "100vw",
-          position: "fixed",
-          top: 0,
-          left: 0,
-        }}
-      ></div>
       {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
         {t("bonus.youwon")
@@ -279,7 +264,7 @@ const BoosterCard = ({ reward }) => {
         style={{
           backgroundImage: `url(${
             assets.boosters[
-              reward.type === "minion" ? "alchemist" : reward.type
+              `${reward.type === "minion" ? "alchemist" : reward.type}Card`
             ]
           })`,
           backgroundRepeat: "no-repeat",

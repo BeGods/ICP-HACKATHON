@@ -195,10 +195,10 @@ const IntroPage = (props) => {
         // TMA mobile view
         <div
           style={{
-            background: `url(${assets.uxui.intro})`,
+            background: `url(/assets/uxui/intro.jpg)`,
+            backgroundPosition: "50% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            backgroundPosition: "center center",
             height: "100vh",
             width: "100vw",
             position: "fixed",
@@ -206,18 +206,18 @@ const IntroPage = (props) => {
             left: 0,
           }}
         >
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-screen ">
             <div className="flex justify-center items-center w-full leading-tight">
-              <div className="relative">
+              <div className="relative z-[100]">
                 <img
                   src={assets.logos.fof}
                   alt="fof"
-                  className="w-[200px] mt-6 begod-text-shadow"
+                  className="w-[200px] mt-6 fof-text-shadow"
                 />
               </div>
             </div>
             <div className="flex flex-grow"></div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center  z-[100]">
               <img
                 src={assets.logos.begodsBlack}
                 alt="logo"
@@ -225,6 +225,16 @@ const IntroPage = (props) => {
               />
             </div>
           </div>
+          <img
+            src={assets.uxui.shadow}
+            alt="shadow"
+            className="absolute top-0 rotate-180 w-full h-auto z-[99]"
+          />
+          <img
+            src={assets.uxui.shadow}
+            alt="shadow"
+            className="absolute bottom-0 w-full h-auto z-[99]"
+          />
         </div>
       )}
       {showCaptcha && (

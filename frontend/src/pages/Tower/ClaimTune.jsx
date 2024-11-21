@@ -121,7 +121,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                       showEffect - 1 === index
                         ? ` transition-all duration-1000 opacity-100 text-${item.toLowerCase()}-text`
                         : "text-white opacity-50"
-                    } text-[30px] mt-1 text-black-sm-contour`}
+                    } text-primary mt-1 text-black-sm-contour`}
                   >
                     <>{mythSymbols[item.toLowerCase()]}</>
                   </span>

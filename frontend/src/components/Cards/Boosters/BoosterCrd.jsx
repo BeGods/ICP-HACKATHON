@@ -12,6 +12,7 @@ import {
   claimBurstBooster,
   claimShardsBooster,
 } from "../../../utils/api";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -220,6 +221,10 @@ const BoosterClaim = ({
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
+      <div
+        onClick={handleButton}
+        className="absolute  w-[72%] h-[50%] mt-10 cursor-pointer z-50 rounded-primary"
+      ></div>
       {section === 2 && (
         <div className="flex gap-3 absolute bottom-5">
           <div className="flex gap-1 items-center">
@@ -236,9 +241,9 @@ const BoosterClaim = ({
           </div>
         </div>
       )}
-      <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
+      <div className="relative w-[72%] h-[55%] mt-[70px] flex items-center justify-center rounded-primary card-shadow-white">
         <div
-          className={`absolute inset-0 rounded-[15px]`}
+          className={`absolute inset-0 rounded-primary`}
           style={{
             backgroundImage: `${`url(${
               assets.boosters[
@@ -251,7 +256,7 @@ const BoosterClaim = ({
           }}
         />
         <div className="relative h-full w-full flex flex-col items-center">
-          <div className="flex relative flex-col justify-center items-center h-full w-full">
+          <div className="flex z-50 relative flex-col justify-center items-center h-full w-full">
             {!disableIcon && (
               <IconBtn
                 isInfo={false}

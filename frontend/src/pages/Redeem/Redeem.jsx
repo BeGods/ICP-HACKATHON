@@ -103,7 +103,7 @@ const Redeem = (props) => {
   useEffect(() => {
     setTimeout(() => {
       setShowLink((prev) => !prev);
-    }, 1000);
+    }, 400);
   }, [flipped]);
 
   return (

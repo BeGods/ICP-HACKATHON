@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import Header from "../../components/Common/Header";
+import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
+import { useTranslation } from "react-i18next";
 
 const TopChild = () => {
   return (
@@ -30,42 +30,68 @@ const BottomChild = ({ partners }) => {
       >
         0
       </div>
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4 z-50">
+        <div className={`font-symbols  text-iconLg text-black-lg-contour`}>
+          2
+        </div>
+        <div className={`font-symbols text-iconLg text-black-contour`}>3</div>
+      </div>
     </div>
   );
 };
 
-const CenterChild = () => {
+const CenterChild = (props) => {
   const { platform, assets } = useContext(MyContext);
+
   return (
-    <div className="flex absolute justify-center w-full">
+    <div className="flex absolute justify-center w-full z-20 top-0 -mt-1">
       <div
-        onClick={() => {}}
-        className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
+        onClick={() => {
+          tele.HapticFeedback.notificationOccurred("success");
+          setSection(4);
+        }}
+        className={`flex text-center justify-center h-symbol-primary w-symbol-primary overflow-hidden items-center rounded-full`}
       >
         <img
-          src={`${assets.uxui.baseorb}`}
+          src={assets.uxui.baseorb}
           alt="base-orb"
-          className={`filter-orbs-black w-full h-full`}
+          className={`w-full h-full`}
         />
-        <span
-          className={`absolute z-1 font-symbols text-white text-[30vw] ${
-            platform === "ios" ? "mt-8 ml-2" : "mt-10 ml-2"
-          }  opacity-50 orb-symbol-shadow`}
+        <div
+          className={`z-1 opacity-50 flex justify-center items-start font-symbols text-white text-[22vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
-          3
-        </span>
+          <div className={`${platform === "ios" ? "mt-4 ml-2" : "mt-5 ml-2"}`}>
+            3
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 const GiftHeader = ({ partners }) => {
+  const [changeText, setChangeText] = useState(true);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <Header
-      BottomChild={<BottomChild partners={partners} />}
-      TopChild={<TopChild />}
-      CenterChild={<CenterChild />}
-    />
+    <div>
+      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+        <div
+          className={`text-primary text-white -mt-2 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+        >
+          {changeText ? t("profile.partners") : t("profile.charity")}
+        </div>
+        <BottomChild partners={partners} />
+        <CenterChild />
+      </div>
+    </div>
   );
 };
 

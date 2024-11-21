@@ -12,18 +12,27 @@ export const timeRemainingForHourToFinishUTC = () => {
   };
 };
 
-// export const formatRankOrbs = (num) => {
-//   if (num < 1000) {
-//     return num.toString();
-//   }
+export const formatTwoNums = (num) => {
+  if (num > 9) {
+    return num.toString();
+  }
 
-//   const numStr = num.toString();
+  const updatedNo = "0" + num.toString();
+  return updatedNo;
+};
 
-//   const thousands = numStr.slice(0, -3); // before the last three digits
-//   const remainder = numStr.slice(-3).replace(/^0+/, ""); // last three digits
+export const formatThreeNums = (num) => {
+  if (num > 99) {
+    return num.toString();
+  }
 
-//   return `${thousands},${remainder}`;
-// };
+  if (num < 10) {
+    num = "00" + num.toString();
+  } else if (num < 99) {
+    num = "0" + num.toString();
+  }
+  return num;
+};
 
 export const formatRankOrbs = (num) => {
   if (num < 1000) {

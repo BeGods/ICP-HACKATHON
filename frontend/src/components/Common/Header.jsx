@@ -30,13 +30,13 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
       <div className={` ${section === 0 && "hidden"}`}>
         {changeText ? (
           <div
-            className={`text-head -mt-1 mx-auto w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
+            className={`text-head -mt-2 mx-auto w-full text-center top-0 absolute z-30 text-white text-black-lg-contour uppercase`}
           >
             {sectionNames[section][0]}
           </div>
         ) : (
           <div
-            className={`text-head -mt-1 mx-auto w-full text-center top-0 absolute z-30 uppercase
+            className={`text-head -mt-3 mx-auto w-full text-center top-0 absolute z-30 uppercase
            ${section === 4 ? "text-black text-white-lg-contour" : ""}
            ${
              section === 0 || section === 1 || section === 2
@@ -54,7 +54,6 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
           </div>
         )}
       </div>
-
       <div className="relative flex justify-center w-full h-auto">
         <img
           src={assets.uxui.paper}
@@ -69,6 +68,7 @@ const Header = ({ TopChild, CenterChild, BottomChild, RedeemHead }) => {
               : mythSections[activeMyth]
           }`}
         />
+
         {/* Orb */}
         {CenterChild}
       </div>

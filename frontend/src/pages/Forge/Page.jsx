@@ -20,7 +20,6 @@ import BoosterClaim from "../../components/Cards/Boosters/BoosterCrd";
 import BoosterButtom from "../../components/Buttons/BoosterBtn";
 import { showToast } from "../../components/Toast/Toast";
 import { ForgesGuide } from "../../components/Common/Tutorials";
-import { hideBackButton } from "../../utils/teleBackButton";
 import { useForgeGuide } from "../../hooks/Tutorial";
 import {
   getPhaseByDate,
@@ -102,7 +101,8 @@ const Forges = () => {
   const [showStarBoosters, setshowStarBoosters] = useState(false);
   const [randomReward, setRandomReward] = useState(null);
   const [showToggles, setShowToggles] = useState(false);
-  const [enableGuide, setEnableGuide] = useForgeGuide("lpp1");
+  const [enableGuide, setEnableGuide] = useForgeGuide("guide10");
+  const [currGuide, setCurrGuide] = useState(0);
   const [minionPosition, setMinionPosition] = useState(true);
   const [showPartner, setShowPartner] = useState(false);
   const [count, setCount] = useState(0);
@@ -756,9 +756,6 @@ const Forges = () => {
       }, 500);
     }, 1000);
 
-    // disable backbutton
-    hideBackButton(tele);
-
     // handle increment energy every second
     const interval = setInterval(() => {
       setMythStates((prevStates) => {
@@ -1078,14 +1075,54 @@ const Forges = () => {
     if (enableGuide) {
       setShowCard(
         <ForgesGuide
+          currTut={currGuide}
+          Header={
+            <ForgeHeader
+              showTut={currGuide}
+              activeMyth={activeMyth}
+              t={t}
+              minimize={minimize}
+              platform={platform}
+              orbGlow={orbGlow}
+              tapGlow={tapGlow}
+              showBlackOrb={showBlackOrb}
+              glowBooster={glowBooster}
+              glowShards={glowShards}
+              glowReward={glowReward}
+              glowSymbol={glowSymbol}
+              orbs={orbs}
+              mythData={mythStates[activeMyth]}
+              shards={mythStates[activeMyth].shards}
+            />
+          }
+          Toggles={
+            <>
+              <ToggleRight
+                handleClick={() => {
+                  setActiveMyth((prev) => (prev + 1) % 4);
+                }}
+                activeMyth={activeMyth}
+              />
+              <ToggleLeft
+                handleClick={() => {
+                  setActiveMyth((prev) => (prev - 1 + 4) % 4);
+                }}
+                activeMyth={activeMyth}
+              />
+            </>
+          }
           handleClick={() => {
-            setEnableGuide(false);
-            setShowCard(null);
+            if (currGuide < 4) {
+              setCurrGuide((prev) => prev + 1);
+            } else {
+              setEnableGuide(false);
+              setShowCard(null);
+            }
           }}
         />
       );
     }
-  }, [enableGuide]);
+  }, [enableGuide, currGuide]);
 
   return (
     <>
@@ -1283,9 +1320,8 @@ const Forges = () => {
                 key={plusOne.id}
                 className={`plus-one glow-text-${mythSections[activeMyth]}`}
                 style={{
-                  top: `${plusOne.y}px`,
-                  left: `${plusOne.x}px`,
-
+                  bottom: `-12vh`,
+                  left: `8vw`,
                   zIndex: 99,
                 }}
               >
@@ -1310,9 +1346,8 @@ const Forges = () => {
                 key={plusOne.id}
                 className={`plus-one glow-text-${mythSections[activeMyth]}`}
                 style={{
-                  top: `${plusOne.y}px`,
-                  left: `${plusOne.x}px`,
-
+                  bottom: `-12vh`,
+                  right: `8vw`,
                   zIndex: 99,
                 }}
               >
@@ -1404,6 +1439,11 @@ const Forges = () => {
             </div>
           </div>
         )}
+        <img
+          src={assets.uxui.shadow}
+          alt="shadow"
+          className={`absolute bottom-0 w-full h-auto`}
+        />
         <div className="absolute">
           <ReactHowler
             src={`${assets.audio.forgeBg}`}

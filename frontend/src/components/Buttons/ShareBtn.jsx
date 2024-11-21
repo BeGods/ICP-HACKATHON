@@ -49,7 +49,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
         <div
           className={`flex items-center  mt-[10px] justify-between ${
             isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-          }  border border-black h-button-primary w-button-primary mx-auto  bg-${
+          }  border border-black h-button-secondary w-button-primary mx-auto  bg-${
             mythSections[activeMyth]
           } z-50 text-white  rounded-primary`}
         >
@@ -96,7 +96,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
                   className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
                 />
                 <span
-                  className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-[30px] mt-1`}
+                  className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-primary mt-1`}
                 >
                   {mythSymbols[mythSections[activeMyth]]}
                 </span>
