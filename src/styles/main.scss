@@ -234,23 +234,32 @@ text-shadow:
 }
 
 .fof-text-shadow{
-  filter: drop-shadow(0 0 1.5px #ffff00)
-          drop-shadow(0 0 1px #ffff00)
-          drop-shadow(0 0 1px #FFD660)
-          drop-shadow(0 0 1px #d34c1f)
-          drop-shadow(0 0 1.5px #ff4000);
+  filter: drop-shadow(0 0 2px #FFD660)
+          drop-shadow(0 0 2px #FFD660);
 }
 
 .begod-text-shadow{
-  filter: drop-shadow(0 0 5px #FFD660)
+  filter: drop-shadow(0 0 2px #FFD660)
+          drop-shadow(0 0 2px #FFD660);
 }
 
 .hexagon{
-
   aspect-ratio: 1/cos(30deg);
   clip-path: polygon(50% -50%, 100% 50%, 50% 150%, 0 50%);
 }
 
 .symbol-svg{
   fill: red;
+}
+
+.leaderboard-first{
+background-color: gold;
+}
+
+.leaderboard-second{
+  background-color: #9a9999;
+}
+
+.leaderboard-third{
+  background-color:  #684522;
 }

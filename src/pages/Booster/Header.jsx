@@ -1,12 +1,14 @@
+import React, { useEffect, useState } from "react";
 import { mythSections } from "../../utils/constants";
 import Symbol from "../../components/Common/Symbol";
-import Header from "../../components/Common/Header";
+import { useTranslation } from "react-i18next";
+import { formatTwoNums } from "../../helpers/leaderboard.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ activeMyth, showSymbol }) => {
   return (
-    <div className="flex absolute justify-center w-full mt-1 z-20">
+    <div className="flex absolute justify-center w-full top-0 -mt-1 z-20">
       <div
         onClick={() => {
           tele.HapticFeedback.notificationOccurred("success");
@@ -19,65 +21,77 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
     </div>
   );
 };
+
 const BottomChild = ({ activeMyth, gameData }) => {
   return (
-    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
-      <div
-        className={`flex text-num pl-[18px] text-black-lg-contour text-white items-center border border-${
-          mythSections[activeMyth]
-        }-primary ${
-          !gameData.isShardsClaimActive &&
-          `glow-button-${mythSections[activeMyth]}`
-        } justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
-      >
-        <span className="text-[7vw] pr-1 -mb-1">Lvl</span> {gameData.shardslvl}
+    <div className="flex relative justify-center px-2 -mt-3">
+      <div className="flex w-full px-7">
+        <div
+          className={`flex border-${mythSections[activeMyth]}-primary  ${
+            !gameData.isShardsClaimActive &&
+            `glow-button-${mythSections[activeMyth]}`
+          }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary font-medium pl-headSides">
+            {formatTwoNums(gameData.shardslvl)}
+          </div>
+        </div>
+        <div
+          className={`flex justify-end ${
+            gameData.isAutomataActive &&
+            `glow-button-${mythSections[activeMyth]}`
+          } border-${
+            mythSections[activeMyth]
+          }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary font-medium pr-headSides">
+            {formatTwoNums(gameData.automatalvl + 1)}
+          </div>
+        </div>
       </div>
-      <div
-        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border border-${
-          mythSections[activeMyth]
-        }-primary ${
-          gameData.isAutomataActive && `glow-button-${mythSections[activeMyth]}`
-        } justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
-      >
-        <span className="text-[7vw] pr-1 -mb-1">Lvl</span>{" "}
-        {gameData.automatalvl + 1}
-      </div>
-    </div>
-  );
-};
-
-const TopChild = ({ activeMyth, gameData }) => {
-  return (
-    <div className="absolute flex w-full justify-between top-0 z-50 text-white">
-      <div
-        className={`font-symbols ${
-          !gameData.isShardsClaimActive &&
-          `glow-icon-${mythSections[activeMyth]}`
-        }  ml-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
-      >
-        m
-      </div>
-      <div
-        className={`font-symbols ${
-          gameData.isAutomataActive && `glow-icon-${mythSections[activeMyth]}`
-        }  mr-[8vw] mt-0.5 text-[12vw] transition-all duration-1000`}
-      >
-        n
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          className={`font-symbols  text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
+        >
+          9
+        </div>
+        <div
+          className={`font-symbols text-iconLg text-black-contour  text-${mythSections[activeMyth]}-text`}
+        >
+          n
+        </div>
       </div>
     </div>
   );
 };
 
 const BoosterHeader = ({ activeMyth, showSymbol, gameData }) => {
+  const [changeText, setChangeText] = useState(true);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <Header
-      handleClick={showSymbol}
-      TopChild={<TopChild activeMyth={activeMyth} gameData={gameData} />}
-      BottomChild={<BottomChild activeMyth={activeMyth} gameData={gameData} />}
-      CenterChild={
+    <div>
+      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+        <div
+          className={`text-primary ${
+            changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
+          } -mt-2 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+        >
+          {changeText
+            ? t("sections.boosters")
+            : t(`mythologies.${mythSections[activeMyth]}`)}
+        </div>
+        <BottomChild activeMyth={activeMyth} gameData={gameData} />
         <CenterChild activeMyth={activeMyth} showSymbol={showSymbol} />
-      }
-    />
+      </div>
+    </div>
   );
 };
 

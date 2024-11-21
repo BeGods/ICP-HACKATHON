@@ -15,19 +15,17 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
   //TODO: this can be improved
   return (
     <div
-      className={`flex w-full justify-between absolute top-0 mt-[5px] z-50 transition-all duration-250`}
+      className={`flex w-full justify-between absolute bottom-0 -mb-0.5 z-50 transition-all duration-250`}
     >
       <div>
         {!mythStates[activeMyth].isShardsClaimActive &&
           !hasTimeElapsed(mythStates[activeMyth].shardsLastClaimedAt) && (
-            <div className="flex items-center leading-tight flex-col relative h-fit ">
+            <div className="flex items-center leading-tight flex-col relative h-fit shake-booster">
               <div
                 onClick={() => {
                   tele.HapticFeedback.notificationOccurred("success");
-                  if (showMinion) {
-                    setToggleValue((prev) => !prev);
-                  }
-                  setShowMinion((prev) => !prev);
+
+                  setToggleValue((prev) => !prev);
                 }}
                 className={`font-symbols glow-icon-${
                   mythSections[activeMyth]
@@ -35,31 +33,30 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                   glowBooster === 1
                     ? `scale-150 text-${mythSections[activeMyth]}-text`
                     : "text-white"
-                }  text-[50px] p-0 ml-2 `}
+                }  text-iconLg p-0 ml-2 `}
               >
-                m
+                9
               </div>
-              {showMinion && (
-                <div
-                  className={`text-${mythSections[activeMyth]}-text ml-4  flex justify-center items-center text-center text-black-contour bottom-0 right-0  w-full text-tertiary -mt-1`}
-                >
-                  {!toggleValue ? (
-                    <>
-                      -
-                      {calculateRemainingTime(
-                        mythStates[activeMyth].shardsLastClaimedAt
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <span className="text-[15px] pr-1">Lvl</span>
-                      <div className="text-tertiary">
-                        {mythStates[activeMyth].shardslvl}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+
+              <div
+                className={`text-${mythSections[activeMyth]}-text ml-2  flex justify-center items-center text-center text-black-contour bottom-0 right-0  w-full text-tertiary -mt-2`}
+              >
+                {!toggleValue ? (
+                  <>
+                    {" "}
+                    <div className="text-tertiary">
+                      x{mythStates[activeMyth].shardslvl}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    -
+                    {calculateRemainingTime(
+                      mythStates[activeMyth].shardsLastClaimedAt
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           )}
       </div>
@@ -67,16 +64,12 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
         <div>
           {mythStates[activeMyth].isAutomataActive &&
             !hasTimeElapsed(mythStates[activeMyth].automataStartTime) && (
-              <div className="flex items-center leading-tight flex-col relative h-fit ">
+              <div className="flex items-center leading-tight flex-col relative h-fit shake-booster">
                 <div
                   onClick={() => {
                     tele.HapticFeedback.notificationOccurred("success");
 
-                    if (showAutomata) {
-                      setToggleValue((prev) => !prev);
-                    }
                     setToggleValue((prev) => !prev);
-                    setShowAutomata((prev) => !prev);
                   }}
                   className={`font-symbols transition-all duration-250 glow-icon-${
                     mythSections[activeMyth]
@@ -84,31 +77,29 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                     glowBooster === 2
                       ? `scale-150 text-${mythSections[activeMyth]}-text`
                       : "text-white"
-                  } text-[50px] p-0 mr-2`}
+                  } text-iconLg p-0 mr-2`}
                 >
                   n
                 </div>
-                {showAutomata && (
-                  <div
-                    className={`text-${mythSections[activeMyth]}-text flex items-center justify-center w-full text-black-contour bottom-0 right-0 text-tertiary -mt-1 mr-3`}
-                  >
-                    {!toggleValue ? (
-                      <>
-                        -
-                        {calculateRemainingTime(
-                          mythStates[activeMyth].automataStartTime
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-[15px] pr-1">Lvl</span>{" "}
-                        <div className="text-tertiary">
-                          {mythStates[activeMyth].automatalvl}
-                        </div>
-                      </>
-                    )}
-                  </div>
-                )}
+
+                <div
+                  className={`text-${mythSections[activeMyth]}-text flex items-center justify-center w-full text-black-contour bottom-0 right-0 text-tertiary -mt-2 mr-3`}
+                >
+                  {!toggleValue ? (
+                    <>
+                      <div className="text-tertiary">
+                        x{mythStates[activeMyth].automatalvl}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      -
+                      {calculateRemainingTime(
+                        mythStates[activeMyth].automataStartTime
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             )}
         </div>

@@ -1,0 +1,84 @@
+import React, { useContext, useEffect, useState } from "react";
+import { MyContext } from "../../context/context";
+import { ThumbsUp } from "lucide-react";
+
+const tele = window.Telegram?.WebApp;
+
+const StreakBonus = (props) => {
+  const { assets, setSection, activeReward } = useContext(MyContext);
+  const [changeText, setChangeText] = useState(true);
+  const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
+      <div className="flex flex-col w-full h-full items-center">
+        {/* Heading */}
+        <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
+          <div className="text-gold text-[60px] font-symbols">t</div>
+          <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+            {changeText ? "Streak" : "Bonus"}
+          </h1>
+        </div>
+        {/* Main */}
+        <div className="flex justify-center items-center w-full absolute  h-full">
+          <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+            <div className={``}>
+              <div className={`orb ${flipped ? "flipped" : ""}`}>
+                <div className="orb__face orb__face--front  flex justify-center items-center">
+                  <div className="flex justify-center items-center w-full absolute  h-full">
+                    <img
+                      src={`/assets/partners/160px-${activeReward.category}.bubble.png`}
+                      alt="multicolor"
+                      className="glow-box rounded-full h-[55vw] w-[55vw]"
+                    />
+                  </div>
+                </div>
+                <div className="orb__face orb__face--back flex justify-center items-center">
+                  <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
+                    <img
+                      src={`${assets.uxui.baseorb}`}
+                      alt="orb"
+                      className="filter-orbs-greek rounded-full"
+                    />
+                    <span
+                      className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+                    >
+                      d
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Bottom */}
+        <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
+        <div
+          onClick={() => {
+            tele.HapticFeedback.notificationOccurred("success");
+            setSection(6);
+          }}
+          className="flex absolute items-start bottom-[92px] justify-center w-full"
+        >
+          <ThumbsUp
+            size={"18vw"}
+            color="#FFD660"
+            className="mx-auto drop-shadow-xl scale-more"
+          />
+        </div>
+        <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
+          VOUCHER
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StreakBonus;

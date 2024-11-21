@@ -572,6 +572,7 @@
 </div> */
 }
 
+import { ThumbsUp } from "lucide-react";
 // import Lottie from "lottie-react";
 // import React, { useRef, useState } from "react";
 // import animationData from "../../public/assets/fx/tower.json";
@@ -884,13 +885,142 @@
 
 // export default Test;
 
-import React from "react";
-import PropTypes from "prop-types";
+// import React from "react";
+// import PropTypes from "prop-types";
+
+// const Test = (props) => {
+//   return <div>Test</div>;
+// };
+
+// Test.propTypes = {};
+
+// export default Test;
+
+// import React, { useState, useEffect } from "react";
+// import assets from "../assets/assets.json";
+
+// const Test = () => {
+//   const images = [
+//     assets.symbols.greek,
+//     assets.symbols.celtic,
+//     assets.symbols.norse,
+//     assets.symbols.egyptian,
+//   ];
+//   const [currentIndex, setCurrentIndex] = useState(0);
+
+//   useEffect(() => {
+//     const autoSlide = setInterval(() => {
+//       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+//     }, 1000);
+//     return () => clearInterval(autoSlide);
+//   }, []);
+
+//   return (
+//     <div className="relative bg-black h-screen w-screen flex justify-center items-center overflow-hidden">
+//       <div className="carousel-load transition-all duration-500 flex justify-center items-center">
+//         {images.map((src, index) => {
+//           let position = "behind";
+
+//           if (index === currentIndex) {
+//             position = "active";
+//           } else if (
+//             index ===
+//             (currentIndex - 1 + images.length) % images.length
+//           ) {
+//             position = "previous";
+//           } else if (index === (currentIndex + 1) % images.length) {
+//             position = "next";
+//           }
+
+//           return (
+//             <img
+//               key={index}
+//               src={src}
+//               alt={`Slide ${index}`}
+//               className={`carousel-load__item ${position}`}
+//             />
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+import React, { useEffect, useState } from "react";
+import assets from "../assets/assets.json";
 
 const Test = (props) => {
-  return <div>Test</div>;
-};
+  const [changeText, setChangeText] = useState(true);
+  const [flipped, setFlipped] = useState(false);
 
-Test.propTypes = {};
+  const handleClick = () => {};
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
+      <div className="flex flex-col w-full h-full items-center">
+        {/* Heading */}
+        <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
+          <div className="text-gold text-[60px] font-symbols">t</div>
+          <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+            {changeText ? "Streak" : "Bonus"}
+          </h1>
+        </div>
+        {/* Main */}
+        <div className="flex justify-center items-center w-full absolute  h-full">
+          <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+            <div className={``}>
+              <div className={`orb ${flipped ? "flipped" : ""}`}>
+                <div className="orb__face orb__face--front  flex justify-center items-center">
+                  <div className="flex justify-center items-center w-full absolute  h-full">
+                    <img
+                      src={`/assets/partners/160px-chirpley.bubble.png`}
+                      alt="multicolor"
+                      className="glow-box rounded-full h-[55vw] w-[55vw]"
+                    />
+                  </div>
+                </div>
+                <div className="orb__face orb__face--back flex justify-center items-center">
+                  <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
+                    <img
+                      src={`${assets.uxui.baseorb}`}
+                      alt="orb"
+                      className="filter-orbs-greek rounded-full"
+                    />
+                    <span
+                      className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+                    >
+                      d
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Bottom */}
+        <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
+        <div className="flex absolute items-start bottom-[92px] justify-center w-full">
+          <ThumbsUp
+            size={"18vw"}
+            color="#FFD660"
+            className="mx-auto drop-shadow-xl scale-more"
+          />
+        </div>
+        <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
+          VOUCHER
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Test;

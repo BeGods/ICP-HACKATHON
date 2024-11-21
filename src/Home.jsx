@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchGameStats, fetchProfilePhoto, fetchRewards } from "./utils/api";
+import {
+  claimStreakBonus,
+  fetchGameStats,
+  fetchProfilePhoto,
+  fetchRewards,
+} from "./utils/api";
 import i18next, { use } from "i18next";
 import { getRandomColor } from "./helpers/randomColor.helper";
 import { MyContext } from "./context/context";
@@ -17,6 +22,7 @@ import Footer from "./components/Common/Footer";
 import Gift from "./pages/Gift/Gift";
 import assets from "./assets/assets.json";
 import { showToast } from "./components/Toast/Toast";
+import StreakBonus from "./pages/Streak/StreakBonus";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -37,7 +43,7 @@ const Home = () => {
   const [authToken, setAuthToken] = useState(null);
   const [section, setSection] = useState(1);
   const [minimize, setMinimize] = useState(0);
-  const [country, setCountry] = useState(null);
+  const [country, setCountry] = useState("NA");
   const [lang, setLang] = useState(null);
 
   const sections = [
@@ -51,6 +57,7 @@ const Home = () => {
     <Leaderboard />, // 7
     <Gacha />, // 8
     <JoinBonus />, // 9
+    <StreakBonus />, // 10
   ];
 
   const getProfilePhoto = async (token) => {
@@ -79,6 +86,20 @@ const Home = () => {
     }
   };
 
+  const getStreakBonus = async (token) => {
+    try {
+      const rewardsData = await claimStreakBonus(token);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+      setActiveReward(rewardsData.reward);
+      setSection(10);
+    } catch (error) {
+      console.log(error);
+      showToast("default");
+    }
+  };
+
   // fetch all game data
   const getGameData = async (token) => {
     try {
@@ -90,6 +111,9 @@ const Home = () => {
       setKeysData(response?.towerKeys);
       if (!response?.user?.joiningBonus) {
         setSection(9);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -98,12 +122,19 @@ const Home = () => {
         response?.user.isEligibleToClaim
       ) {
         setSection(8);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      } else if (response?.user?.isStreakActive) {
+        (async () => {
+          await getStreakBonus(token);
+        })();
       } else {
         setSection(0);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
       }
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
     } catch (error) {
       console.log(error);
       showToast("default");
@@ -218,6 +249,8 @@ const Home = () => {
               setMinimize,
               setShowCard,
               assets,
+              country,
+              setCountry,
             }}
           >
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (

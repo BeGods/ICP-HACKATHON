@@ -11,11 +11,7 @@ export const useForgeGuide = (key) => {
     tele.CloudStorage.getItem(key, (err, item) => {
       if (!item) {
         setEnableGuide(true);
-        const timeoutId = setTimeout(() => {
-          setEnableGuide(false);
-          setShowCard(null);
-          tele.CloudStorage.setItem(key, 1);
-        }, 4000);
+        tele.CloudStorage.setItem(key, 1);
 
         return () => clearTimeout(timeoutId);
       }
@@ -79,10 +75,7 @@ export const useProfileGuide = (key) => {
     tele.CloudStorage.getItem(key, (err, item) => {
       if (!item) {
         setEnableGuide(true);
-        setTimeout(() => {
-          setEnableGuide(false);
-          tele.CloudStorage.setItem(key, 4);
-        }, 4000);
+        tele.CloudStorage.setItem(key, 4);
       }
     });
   }, []);
@@ -97,14 +90,9 @@ export const useTowerGuide = (key) => {
   useEffect(() => {
     tele.CloudStorage.getItem(key, (err, item) => {
       if (!item) {
-        console.log("jkdf");
-
         setEnableGuide(true);
-        setTimeout(() => {
-          setEnableGuide(false);
-          setShowCard(null);
-          tele.CloudStorage.setItem(key, 5);
-        }, 4000);
+
+        tele.CloudStorage.setItem(key, 5);
       }
     });
   }, []);

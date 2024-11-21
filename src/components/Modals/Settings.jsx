@@ -12,7 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { MyContext } from "../../context/context";
-import { country } from "../../utils/country";
+import { countries } from "../../utils/country";
 import {
   connectTonWallet,
   disconnectTonWallet,
@@ -46,11 +46,12 @@ const SettingModal = ({ close }) => {
     enableSound,
     setUserData,
     userData,
+    country,
+    setCountry,
   } = useContext(MyContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const { state, open } = useTonConnectModal();
-  const [countryCode, setCountryCode] = useState("NA");
   const [isChanged, setIsChanged] = useState(false);
 
   const getPartnersData = async (lang, country) => {
@@ -64,14 +65,6 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  useEffect(() => {
-    tele.CloudStorage.getItem("country_code", (err, item) => {
-      if (item) {
-        setCountryCode(item);
-      }
-    });
-  }, []);
-
   const handleLanguageChange = (e) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
     setIsChanged(true);
@@ -82,7 +75,7 @@ const SettingModal = ({ close }) => {
   const handleSettingChange = (e) => {
     setIsChanged(true);
     const selectedCountry = e.target.value;
-    setCountryCode(selectedCountry);
+    setCountry(selectedCountry);
     tele.CloudStorage.setItem("country_code", selectedCountry);
   };
 
@@ -143,7 +136,7 @@ const SettingModal = ({ close }) => {
   const handleClose = () => {
     close();
     if (isChanged) {
-      getPartnersData(i18n.language, countryCode);
+      getPartnersData(i18n.language, country);
     }
   };
 
@@ -157,11 +150,11 @@ const SettingModal = ({ close }) => {
           </div>
           <div className="w-full">
             <select
-              value={countryCode}
+              value={country}
               onChange={handleSettingChange}
               className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
             >
-              {country.map((ctx) => (
+              {countries.map((ctx) => (
                 <option key={ctx.code} value={ctx.code}>
                   {ctx.name}
                 </option>

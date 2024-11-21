@@ -1,72 +1,72 @@
 import { useContext, useState } from "react";
-import Header from "../../components/Common/Header";
 import { MyContext } from "../../context/context";
-import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
+import { formatTwoNums } from "../../helpers/leaderboard.helper";
 
-const TopChild = () => {
-  const { setSection } = useContext(MyContext);
+const BottomChild = ({ userData, showGuide }) => {
+  const { rewards, setSection } = useContext(MyContext);
 
   return (
-    <div className="absolute flex w-full justify-between top-0 z-50">
-      <div
-        onClick={() => {
-          setSection(5);
-        }}
-        className="flex flex-col items-end justify-between h-full mt-1 ml-[8vw] z-10"
-      >
-        <div className="font-symbols text-white text-[12vw] text-black-lg-contour">
-          t
+    <div className="flex relative justify-center px-2 -mt-3">
+      <div className="flex w-full px-7">
+        <div
+          className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-[27px] pl-headSides">
+            {formatTwoNums(rewards?.length ?? 0)}
+          </div>
+        </div>
+        <div
+          className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+        >
+          <div className="text-[27px] pr-headSides">
+            {userData?.overallRank === 0 ? 1 : userData?.overallRank}
+          </div>
         </div>
       </div>
-      <div
-        onClick={() => {
-          setSection(7);
-        }}
-        className="flex flex-col text-black-lg-contour items-end justify-between h-full mt-1 mr-[8vw] z-10"
-      >
-        <div className="font-symbols text-white text-[12vw]">r</div>
-      </div>
-    </div>
-  );
-};
-
-const BottomChild = ({ userData }) => {
-  const { rewards } = useContext(MyContext);
-
-  return (
-    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
-      <div
-        className={`flex text-num pl-[18px] text-black-lg-contour text-white items-center border justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
-      >
-        {rewards.length}
-      </div>
-      <div
-        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
-      >
-        {userData.overallRank === 0 ? 1 : userData.overallRank}
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          onClick={() => {
+            setSection(5);
+          }}
+          className={`font-symbols  ${
+            showGuide === 1 && "tut-shake"
+          } text-iconLg text-black-lg-contour text-white z-50`}
+        >
+          t
+        </div>
+        <div
+          onClick={() => {
+            setSection(7);
+          }}
+          className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
+        >
+          r
+        </div>
       </div>
     </div>
   );
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard } = useContext(MyContext);
+  const { assets, platform, setShowCard, setSection } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
+
   return (
-    <div className="flex absolute justify-center w-full">
+    <div className="flex absolute top-0 -mt-1 justify-center w-full">
       <div
         onClick={() => {
-          setShowCard(
-            <ProfileInfoCard
-              close={() => {
-                setShowCard(null);
-              }}
-            />
-          );
+          setSection(7);
+          // setShowCard(
+          //   <ProfileInfoCard
+          //     close={() => {
+          //       setShowCard(null);
+          //     }}
+          //   />
+          // );
         }}
-        className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
+        className={`z-20 flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
           src={
@@ -81,7 +81,7 @@ const CenterChild = ({ userData }) => {
         />
         {!userData.avatarUrl && (
           <div
-            className={`z-1 flex justify-center items-start tetx-white  text-[22vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+            className={`z-1 flex justify-center items-start text-white  text-[22vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
           >
             <div
               className={`uppercase ${
@@ -97,15 +97,23 @@ const CenterChild = ({ userData }) => {
   );
 };
 
-const ProfileHeader = ({ userData, avatarColor, handleClick }) => {
+const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
   return (
-    <Header
-      BottomChild={<BottomChild userData={userData} />}
-      TopChild={<TopChild handleClick={handleClick} />}
-      CenterChild={
+    <div>
+      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+        <div
+          className={`text-primary -mt-2 text-center top-0 text-white text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+        >
+          Profile
+        </div>
+        <BottomChild
+          userData={userData}
+          handleClick={handleClick}
+          showGuide={showGuide}
+        />
         <CenterChild userData={userData} avatarColor={avatarColor} />
-      }
-    />
+      </div>
+    </div>
   );
 };
 

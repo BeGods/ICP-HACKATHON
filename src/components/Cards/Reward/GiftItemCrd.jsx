@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { MyContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
@@ -54,7 +54,13 @@ ${
         </h2>
       </div>
       <div className="flex justify-center items-center w-[8%] ">
-        <ChevronRight className="absolute" size={"30px"} color="white" />
+        {item.tokensCollected >= 12 ? (
+          <div className="flex justify-center items-center h-[30px] w-[30px] p-1 border-2 rounded-full">
+            <Check strokeWidth={3} color="white" />
+          </div>
+        ) : (
+          <ChevronRight className="absolute" size={"30px"} color="white" />
+        )}
       </div>
     </div>
   );

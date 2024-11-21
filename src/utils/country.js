@@ -1,4 +1,4 @@
-export const country = [
+export const countries = [
   { name: "Global", code: "NA" },
   { name: "Afghanistan", code: "AFG" },
   { name: "Argentina", code: "ARG" },

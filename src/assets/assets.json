@@ -3,6 +3,9 @@
         "multiorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.multicolor.png",
         "baseorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png",
         "basebg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.base.background.jpg",
+        "rorspash" : "/assets/uxui/ror.splash.png",
+        "fofsplash" : "/assets/uxui/fof.splash.png",
+        "fofbg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.base.background.jpg",
         "forgefx": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.forge.fx.png",
         "forgebg": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.forge.png",
         "paper": "/assets/uxui/1160px-fof.footer.rock.png",
@@ -16,13 +19,14 @@
         "info": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg",
         "infomoon":"https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-moon.jpg",
         "starlight": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/star.light.jpg",
-        "gameEnd": "/assets/cards/320px.fof.whitelist.jpg"
+        "gameEnd": "/assets/cards/320px.fof.whitelist.jpg",
+        "shadow": "/assets/uxui/1280px-fof.base.shadow.png"
     },
     "logos": {
         "captcha" : "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-frogdog.captcha.png",
         "begodsBlack": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.black.svg",
         "fofQr": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-begods.telegram.qrcode.png",
-        "fof": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/forgesoffaith.svg"
+        "fof": "/assets/logos/forgesoffaith.svg"
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.greek.base.svg",

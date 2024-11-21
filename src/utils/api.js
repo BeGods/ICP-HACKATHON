@@ -553,3 +553,19 @@ export const claimPlaysuperReward = async (rewardId, accessToken) => {
     throw error;
   }
 };
+
+export const claimStreakBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};

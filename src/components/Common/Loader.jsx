@@ -1,8 +1,7 @@
-import Lottie from "lottie-react";
 import React from "react";
-import animationData from "../../../public/assets/fx/loader.json";
 import { useTranslation } from "react-i18next";
 import assets from "../../assets/assets.json";
+import LoadRoll from "../Fx/LoadRoll";
 
 const Loader = (props) => {
   const { t } = useTranslation();
@@ -14,17 +13,12 @@ const Loader = (props) => {
           alt="black-gods"
           className="h-full w-full"
         />
-        <div>
-          <Lottie
-            autoplay
-            loop
-            animationData={animationData}
-            className="w-full h-full"
-          />
-        </div>
-        <div className="w-full text-center font-fof text-secondary uppercase text-white">
-          {t("keywords.load")}...
-        </div>
+      </div>
+      <div className="flex justify-center w-full">
+        <LoadRoll />
+      </div>
+      <div className="w-full text-center font-fof text-secondary uppercase text-white">
+        {t("keywords.load")}...
       </div>
     </div>
   );
