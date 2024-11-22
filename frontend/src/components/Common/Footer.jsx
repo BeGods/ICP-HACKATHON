@@ -160,12 +160,6 @@ const Footer = ({}) => {
         }`}
       />
 
-      <img
-        src={assets.uxui.shadow}
-        alt="shdaow"
-        className={`absolute bottom-0 w-full h-auto`}
-      />
-
       <div
         className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
           platform === "ios" ? "-mt-3.5" : "mt-0.5"

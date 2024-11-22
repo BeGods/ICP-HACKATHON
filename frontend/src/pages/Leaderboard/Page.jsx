@@ -165,7 +165,7 @@ const Leaderboard = (props) => {
       {activeTab ? (
         <div className="flex flex-grow justify-center">
           {isLoading && (
-            <div className="flex font-semibold items-end w-[90%] gap-2">
+            <div className="flex items-end w-[90%] gap-2">
               {leaderboard.slice(0, 3).map((item, index) => {
                 const newIndex = index === 0 ? 1 : index === 1 ? 0 : 2;
                 return (
@@ -176,9 +176,11 @@ const Leaderboard = (props) => {
                     }}
                     className={`flex leaderboard-${util[newIndex]} relative justify-center items-center rise-up-${util[newIndex]} w-full uppercase`}
                   >
-                    <div className="flex flex-col w-full justify-center text-center text-white text-black-contour absolute bottom-0">
-                      <h1 className="text-[50px] -mb-5">{newIndex + 1}</h1>
-                      <h2 className="text-tertiary ">
+                    <div className="flex flex-col w-full justify-center text-center text-white absolute -bottom-1">
+                      <h1 className="text-[50px] -mb-5 font-mono font-bold  text-black-contour">
+                        {newIndex + 1}
+                      </h1>
+                      <h2 className="text-tertiary font-normal">
                         {formatRankOrbs(item.totalOrbs)}
                       </h2>
                     </div>

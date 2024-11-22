@@ -8,14 +8,12 @@ import {
 const tele = window.Telegram?.WebApp;
 
 const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
-  const [showMinion, setShowMinion] = useState(false);
-  const [showAutomata, setShowAutomata] = useState(false);
   const [toggleValue, setToggleValue] = useState(true);
 
   //TODO: this can be improved
   return (
     <div
-      className={`flex w-full justify-between absolute bottom-0 -mb-0.5 z-50 transition-all duration-250`}
+      className={`flex w-full justify-between absolute bottom-0 -mb-0.5 z-0 transition-all duration-250`}
     >
       <div>
         {!mythStates[activeMyth].isShardsClaimActive &&
@@ -33,11 +31,10 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                   glowBooster === 1
                     ? `scale-150 text-${mythSections[activeMyth]}-text`
                     : "text-white"
-                }  text-iconLg p-0 ml-2 `}
+                }  text-iconLg p-0 ml-2`}
               >
                 9
               </div>
-
               <div
                 className={`text-${mythSections[activeMyth]}-text ml-2  flex justify-center items-center text-center text-black-contour bottom-0 right-0  w-full text-tertiary -mt-2`}
               >
@@ -68,7 +65,6 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
                 <div
                   onClick={() => {
                     tele.HapticFeedback.notificationOccurred("success");
-
                     setToggleValue((prev) => !prev);
                   }}
                   className={`font-symbols transition-all duration-250 glow-icon-${

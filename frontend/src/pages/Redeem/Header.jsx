@@ -9,12 +9,12 @@ const BottomChild = ({ pieces }) => {
         <div
           className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-[27px] pl-headSides">{formatTwoNums(1)}</div>
+          <div className="text-primary pl-headSides">{formatTwoNums(1)}</div>
         </div>
         <div
           className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
-          <div className="text-[27px] pr-headSides">
+          <div className="text-primary pr-headSides">
             {formatTwoNums(pieces)}/12
           </div>
         </div>

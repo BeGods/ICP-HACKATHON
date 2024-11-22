@@ -11,14 +11,14 @@ const BottomChild = ({ userData, showGuide }) => {
         <div
           className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-[27px] pl-headSides">
+          <div className="text-primary pl-headSides">
             {formatTwoNums(rewards?.length ?? 0)}
           </div>
         </div>
         <div
           className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
-          <div className="text-[27px] pr-headSides">
+          <div className="text-primary pr-headSides">
             {userData?.overallRank === 0 ? 1 : userData?.overallRank}
           </div>
         </div>
@@ -57,14 +57,13 @@ const CenterChild = ({ userData }) => {
     <div className="flex absolute top-0 -mt-1 justify-center w-full">
       <div
         onClick={() => {
-          setSection(7);
-          // setShowCard(
-          //   <ProfileInfoCard
-          //     close={() => {
-          //       setShowCard(null);
-          //     }}
-          //   />
-          // );
+          setShowCard(
+            <ProfileInfoCard
+              close={() => {
+                setShowCard(null);
+              }}
+            />
+          );
         }}
         className={`z-20 flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >

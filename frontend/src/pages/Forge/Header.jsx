@@ -120,18 +120,18 @@ const BottomChild = ({
         <div
           className={`font-symbols text-black-lg-contour text-iconLg ${
             showTut == 0 && "tut-shake"
-          } ${(glowSymbol || glowBooster === 3) && `scale-[150%]`}  text-${
+          } ${glowShards && `scale-125`}   text-${
             mythSections[activeMyth]
-          }-text`}
+          }-text transition-all duration-500`}
         >
           l
         </div>
         <div
           className={`font-symbols text-black-lg-contour text-iconLg ${
-            (glowSymbol || glowBooster === 3) && `scale-[150%]`
+            (glowSymbol || glowBooster === 3) && `scale-125`
           } ${showTut == 1 && "tut-shake"} text-${
             mythSections[activeMyth]
-          }-text`}
+          }-text transition-all duration-500`}
         >
           {mythSymbols[mythSections[activeMyth]]}
         </div>
@@ -156,7 +156,6 @@ const ForgeHeader = ({
   minimize,
   showTut,
 }) => {
-  const { assets } = useContext(MyContext);
   const height = Math.min(
     100,
     Math.max(0, (mythData.energy / mythData.energyLimit) * 100)
@@ -175,7 +174,9 @@ const ForgeHeader = ({
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-primary ${
+          className={`text-primary ${minimize == 1 && "minimize-head"} ${
+            minimize == 2 && "maximize-head"
+          } ${
             changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
           } -mt-2 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
