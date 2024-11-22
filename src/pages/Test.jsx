@@ -948,79 +948,125 @@ import { ThumbsUp } from "lucide-react";
 
 // export default Test;
 
-import React, { useEffect, useState } from "react";
-import assets from "../assets/assets.json";
+// import React, { useEffect, useState } from "react";
+// import assets from "../assets/assets.json";
 
-const Test = (props) => {
-  const [changeText, setChangeText] = useState(true);
-  const [flipped, setFlipped] = useState(false);
+// const Test = (props) => {
+//   const [changeText, setChangeText] = useState(true);
+//   const [flipped, setFlipped] = useState(false);
 
-  const handleClick = () => {};
+//   const handleClick = () => {};
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setChangeText((prevText) => !prevText);
+//     }, 1500);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   return (
+//     <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
+//       <div className="flex flex-col w-full h-full items-center">
+//         {/* Heading */}
+//         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
+//           <div className="text-gold text-[60px] font-symbols">t</div>
+//           <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+//             {changeText ? "Streak" : "Bonus"}
+//           </h1>
+//         </div>
+//         {/* Main */}
+//         <div className="flex justify-center items-center w-full absolute  h-full">
+//           <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+//             <div className={``}>
+//               <div className={`orb ${flipped ? "flipped" : ""}`}>
+//                 <div className="orb__face orb__face--front  flex justify-center items-center">
+//                   <div className="flex justify-center items-center w-full absolute  h-full">
+//                     <img
+//                       src={`/assets/partners/160px-chirpley.bubble.png`}
+//                       alt="multicolor"
+//                       className="glow-box rounded-full h-[55vw] w-[55vw]"
+//                     />
+//                   </div>
+//                 </div>
+//                 <div className="orb__face orb__face--back flex justify-center items-center">
+//                   <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
+//                     <img
+//                       src={`${assets.uxui.baseorb}`}
+//                       alt="orb"
+//                       className="filter-orbs-greek rounded-full"
+//                     />
+//                     <span
+//                       className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+//                     >
+//                       d
+//                     </span>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//         {/* Bottom */}
+//         <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
+//         <div className="flex absolute items-start bottom-[92px] justify-center w-full">
+//           <ThumbsUp
+//             size={"18vw"}
+//             color="#FFD660"
+//             className="mx-auto drop-shadow-xl scale-more"
+//           />
+//         </div>
+//         <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
+//           VOUCHER
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+import React, { useEffect } from "react";
+import confetti from "canvas-confetti";
+
+const Test = () => {
+  const playConfetti = () => {
+    const defaults = {
+      spread: 360,
+      ticks: 100,
+      gravity: 0,
+      decay: 0.94,
+      startVelocity: 20,
+      colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+    };
+
+    function shoot() {
+      confetti({
+        ...defaults,
+        particleCount: 40,
+        scalar: 1.2,
+        shapes: ["star"],
+      });
+
+      confetti({
+        ...defaults,
+        particleCount: 10,
+        scalar: 0.75,
+        shapes: ["circle"],
+      });
+    }
+
+    setTimeout(shoot, 0);
+    setTimeout(shoot, 100);
+    setTimeout(shoot, 200);
+    setTimeout(shoot, 300);
+    setTimeout(shoot, 400);
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setChangeText((prevText) => !prevText);
-    }, 1500);
-    return () => clearInterval(interval);
+    playConfetti();
   }, []);
 
-  return (
-    <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
-      <div className="flex flex-col w-full h-full items-center">
-        {/* Heading */}
-        <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
-          <div className="text-gold text-[60px] font-symbols">t</div>
-          <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
-            {changeText ? "Streak" : "Bonus"}
-          </h1>
-        </div>
-        {/* Main */}
-        <div className="flex justify-center items-center w-full absolute  h-full">
-          <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
-            <div className={``}>
-              <div className={`orb ${flipped ? "flipped" : ""}`}>
-                <div className="orb__face orb__face--front  flex justify-center items-center">
-                  <div className="flex justify-center items-center w-full absolute  h-full">
-                    <img
-                      src={`/assets/partners/160px-chirpley.bubble.png`}
-                      alt="multicolor"
-                      className="glow-box rounded-full h-[55vw] w-[55vw]"
-                    />
-                  </div>
-                </div>
-                <div className="orb__face orb__face--back flex justify-center items-center">
-                  <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
-                    <img
-                      src={`${assets.uxui.baseorb}`}
-                      alt="orb"
-                      className="filter-orbs-greek rounded-full"
-                    />
-                    <span
-                      className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
-                    >
-                      d
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Bottom */}
-        <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
-        <div className="flex absolute items-start bottom-[92px] justify-center w-full">
-          <ThumbsUp
-            size={"18vw"}
-            color="#FFD660"
-            className="mx-auto drop-shadow-xl scale-more"
-          />
-        </div>
-        <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
-          VOUCHER
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="h-screen w-screen bg-black">Test</div>;
 };
 
 export default Test;

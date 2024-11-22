@@ -225,16 +225,6 @@ const IntroPage = (props) => {
               />
             </div>
           </div>
-          <img
-            src={assets.uxui.shadow}
-            alt="shadow"
-            className="absolute top-0 rotate-180 w-full h-auto z-[99]"
-          />
-          <img
-            src={assets.uxui.shadow}
-            alt="shadow"
-            className="absolute bottom-0 w-full h-auto z-[99]"
-          />
         </div>
       )}
       {showCaptcha && (

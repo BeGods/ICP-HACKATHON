@@ -1156,13 +1156,6 @@ const Forges = () => {
               backgroundPosition: "center center",
             }}
           />
-          {/* {minimize === 1 && (
-            <img
-              src={`${assets.uxui.forgefx}`}
-              alt="forge.fx"
-              className={`filter-fx-${mythSections[activeMyth]} -ml-0.5 h-screen w-screen transition-all duration-500 ease-in-out`}
-            />
-          )} */}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
@@ -1203,7 +1196,7 @@ const Forges = () => {
             {plusOnes.map((plusOne) => (
               <span
                 key={plusOne.id}
-                className={`plus-one glow-text-${mythSections[activeMyth]}`}
+                className={`plus-one glow-text-${mythSections[activeMyth]} `}
                 style={{
                   top: `${plusOne.y}px`,
                   left: `${plusOne.x}px`,
@@ -1218,7 +1211,6 @@ const Forges = () => {
             ))}
             <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
           </div>
-
           {showPartner && (
             <div className="h-[155vw] -mt-8 w-full absolute">
               <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
@@ -1226,7 +1218,7 @@ const Forges = () => {
                   <img
                     src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.category}.bubble.png`}
                     alt="icon"
-                    className="pointer-events-none h-20 w-20 rounded-full"
+                    className="pointer-events-none h-20 w-20 rounded-full z-50"
                   />
                 </div>
               </div>
@@ -1311,7 +1303,7 @@ const Forges = () => {
                 <img
                   src={`${assets.boosters.alchemistPop}`}
                   alt="dwarf"
-                  className="w-full h-full select-none pointer-events-none "
+                  className="w-full h-full select-none pointer-events-none z-50"
                 />
               </div>
             </div>
@@ -1434,16 +1426,11 @@ const Forges = () => {
               <img
                 src={`${assets.boosters.alchemistPop}`}
                 alt="dwarf"
-                className="w-full h-full select-none pointer-events-none "
+                className="w-full h-full select-none pointer-events-none z-50"
               />
             </div>
           </div>
         )}
-        <img
-          src={assets.uxui.shadow}
-          alt="shadow"
-          className={`absolute bottom-0 w-full h-auto`}
-        />
         <div className="absolute">
           <ReactHowler
             src={`${assets.audio.forgeBg}`}
@@ -1462,7 +1449,6 @@ const Forges = () => {
               html5={true}
             />
           )}
-
           {isStarHold.current === true && (
             <ReactHowler
               src={`${assets.audio.automataLong}`}
