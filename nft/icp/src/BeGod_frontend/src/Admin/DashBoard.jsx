@@ -6,6 +6,8 @@ import { setUser } from "../redux/authSlice.js";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { canisterId } from "../../../declarations/BeGod_backend";
+import { Principal } from "@dfinity/principal";
 
 function DashBoard() {
   const { backendActor } = useAuth();
