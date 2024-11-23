@@ -338,7 +338,7 @@ export const useAuthClient = () => {
           };
 
           dispatch(setUser(userObject.principal));
-          navigate("/admin/dashboard");
+          // navigate("/admin/dashboard");
         }
       } catch (error) {
         console.error("Login error:", error);

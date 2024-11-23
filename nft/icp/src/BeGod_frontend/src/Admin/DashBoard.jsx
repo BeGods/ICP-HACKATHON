@@ -6,15 +6,41 @@ import { setUser } from "../redux/authSlice.js";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { canisterId } from "../../../declarations/BeGod_backend";
+import { Principal } from "@dfinity/principal";
 
 function DashBoard() {
-  const { backendActor } = useAuth();
+  const { backendActor, principal } = useAuth();
   const [user, setUser] = useState();
   const [nfts, setnfts] = useState();
   const [collections, setcollections] = useState();
   const navigate = useNavigate();
   const [loading, setloading] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth);
+  // const id = "by2qo-zmyos-ozods-23ahw-likuj-gcp67-bcaot-2tafy-zgps2-vo6ms-qqe";
+
+  const checkingAdminId = async () => {
+    setloading(true);
+    if (backendActor) {
+      try {
+        const principalString = canisterId;
+        const canister = Principal.fromText(principalString);
+        const principalid = Principal.fromText(principal);
+        const result = await backendActor?.isController(canister, principalid);
+        console.log(result);
+        if (result == true) {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Error fetching collections:", error);
+      }
+    }
+  };
+  useEffect(() => {
+    checkingAdminId();
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
