@@ -1,21 +1,22 @@
-import { useContext, useEffect, useState } from "react";
-import { MyContext } from "../context/context";
+import { useEffect, useState } from "react";
+import { setTutKey, validateTutCookie } from "../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 export const useForgeGuide = (key) => {
   const [enableGuide, setEnableGuide] = useState(false);
-  const { setShowCard } = useContext(MyContext);
+
+  const checkTutExists = async () => {
+    const itExists = await validateTutCookie(tele, key);
+    if (!itExists) {
+      setEnableGuide(true);
+      setTutKey(tele, key, 1);
+      return () => clearTimeout(timeoutId);
+    }
+  };
 
   useEffect(() => {
-    tele.CloudStorage.getItem(key, (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-        tele.CloudStorage.setItem(key, 1);
-
-        return () => clearTimeout(timeoutId);
-      }
-    });
+    (async () => await checkTutExists())();
   }, []);
 
   return [enableGuide, setEnableGuide];
@@ -24,16 +25,19 @@ export const useForgeGuide = (key) => {
 export const useQuestGuide = (key) => {
   const [enableGuide, setEnableGuide] = useState(false);
 
+  const checkTutExists = async () => {
+    const itExists = await validateTutCookie(tele, key);
+    if (!itExists) {
+      setEnableGuide(true);
+      setTimeout(() => {
+        setEnableGuide(false);
+        setTutKey(tele, key, 2);
+      }, 3500);
+    }
+  };
+
   useEffect(() => {
-    tele.CloudStorage.getItem(key, (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-        setTimeout(() => {
-          setEnableGuide(false);
-          tele.CloudStorage.setItem(key, 2);
-        }, 3500);
-      }
-    });
+    (async () => await checkTutExists())();
   }, []);
 
   return [enableGuide, setEnableGuide];
@@ -47,22 +51,25 @@ export const useBoosterGuide = (
 ) => {
   const [enableGuide, setEnableGuide] = useState(false);
 
+  const checkTutExists = async () => {
+    const itExists = await validateTutCookie(tele, key);
+    if (!itExists) {
+      setEnableGuide(true);
+      setTimeout(() => {
+        setEnableGuide(false);
+        handleActiveCard();
+        setTutKey(tele, key, 3);
+        guideTimeoutId.current = setTimeout(() => {
+          handleClaimAutomata();
+          guideTimeoutId.current = null;
+          clearTimeout(guideTimeoutId);
+        }, 1500);
+      }, 2500);
+    }
+  };
+
   useEffect(() => {
-    tele.CloudStorage.getItem(key, (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-        setTimeout(() => {
-          setEnableGuide(false);
-          handleActiveCard();
-          tele.CloudStorage.setItem(key, 3);
-          guideTimeoutId.current = setTimeout(() => {
-            handleClaimAutomata();
-            guideTimeoutId.current = null;
-            clearTimeout(guideTimeoutId);
-          }, 1500);
-        }, 2500);
-      }
-    });
+    (async () => await checkTutExists())();
   }, []);
 
   return [enableGuide, setEnableGuide];
@@ -71,13 +78,16 @@ export const useBoosterGuide = (
 export const useProfileGuide = (key) => {
   const [enableGuide, setEnableGuide] = useState(false);
 
+  const checkTutExists = async () => {
+    const itExists = await validateTutCookie(tele, key);
+    if (!itExists) {
+      setEnableGuide(true);
+      setTutKey(tele, key, 4);
+    }
+  };
+
   useEffect(() => {
-    tele.CloudStorage.getItem(key, (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-        tele.CloudStorage.setItem(key, 4);
-      }
-    });
+    (async () => await checkTutExists())();
   }, []);
 
   return [enableGuide, setEnableGuide];
@@ -85,16 +95,17 @@ export const useProfileGuide = (key) => {
 
 export const useTowerGuide = (key) => {
   const [enableGuide, setEnableGuide] = useState(false);
-  const { setShowCard } = useContext(MyContext);
+
+  const checkTutExists = async () => {
+    const itExists = await validateTutCookie(tele, key);
+    if (!itExists) {
+      setEnableGuide(true);
+      setTutKey(tele, key, 5);
+    }
+  };
 
   useEffect(() => {
-    tele.CloudStorage.getItem(key, (err, item) => {
-      if (!item) {
-        setEnableGuide(true);
-
-        tele.CloudStorage.setItem(key, 5);
-      }
-    });
+    (async () => await checkTutExists())();
   }, []);
 
   return [enableGuide, setEnableGuide];

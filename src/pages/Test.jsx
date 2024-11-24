@@ -1025,48 +1025,88 @@ import { ThumbsUp } from "lucide-react";
 
 // export default Test;
 
-import React, { useEffect } from "react";
-import confetti from "canvas-confetti";
+// import React, { useEffect } from "react";
+// import confetti from "canvas-confetti";
 
-const Test = () => {
-  const playConfetti = () => {
-    const defaults = {
-      spread: 360,
-      ticks: 100,
-      gravity: 0,
-      decay: 0.94,
-      startVelocity: 20,
-      colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
-    };
+// const Test = () => {
+//   const playConfetti = () => {
+//     const defaults = {
+//       spread: 360,
+//       ticks: 100,
+//       gravity: 0,
+//       decay: 0.94,
+//       startVelocity: 20,
+//       colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+//     };
 
-    function shoot() {
-      confetti({
-        ...defaults,
-        particleCount: 40,
-        scalar: 1.2,
-        shapes: ["star"],
-      });
+//     function shoot() {
+//       confetti({
+//         ...defaults,
+//         particleCount: 40,
+//         scalar: 1.2,
+//         shapes: ["star"],
+//       });
 
-      confetti({
-        ...defaults,
-        particleCount: 10,
-        scalar: 0.75,
-        shapes: ["circle"],
-      });
-    }
+//       confetti({
+//         ...defaults,
+//         particleCount: 10,
+//         scalar: 0.75,
+//         shapes: ["circle"],
+//       });
+//     }
 
-    setTimeout(shoot, 0);
-    setTimeout(shoot, 100);
-    setTimeout(shoot, 200);
-    setTimeout(shoot, 300);
-    setTimeout(shoot, 400);
-  };
+//     setTimeout(shoot, 0);
+//     setTimeout(shoot, 100);
+//     setTimeout(shoot, 200);
+//     setTimeout(shoot, 300);
+//     setTimeout(shoot, 400);
+//   };
 
-  useEffect(() => {
-    playConfetti();
-  }, []);
+//   useEffect(() => {
+//     playConfetti();
+//   }, []);
 
-  return <div className="h-screen w-screen bg-black">Test</div>;
+//   return <div className="h-screen w-screen bg-black">Test</div>;
+// };
+
+// export default Test;
+
+import React from "react";
+
+const Test = (props) => {
+  return (
+    <div className="relative h-screen w-screen bg-black">
+      <img
+        src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/frogdog.games.black.svg"
+        alt="fof"
+        className="w-full opacity-55"
+      />
+      <div className="flex flex-col mx-auto w-4/5 text-white">
+        <div className="w-full pt-4">
+          <div>Select Country</div>
+          <div className="border p-2.5 rounded-[15px]">
+            <select className="bg-black text-white mt-2 w-full text-tertiary">
+              <option key={2} value={""}>
+                fdfd
+              </option>
+            </select>
+          </div>
+        </div>
+        <div className="w-full pt-4">
+          <div>Enter Mobile Number</div>
+          <input
+            type="text"
+            name=""
+            id=""
+            className="bg-inherit outline-none p-3 mt-2 border rounded-[15px] w-full"
+          />
+        </div>
+        <div className="flex justify-center text-xl text-black font-semibold bg-white mt-4 py-2.5 rounded-[15px]">
+          Submit
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Test;

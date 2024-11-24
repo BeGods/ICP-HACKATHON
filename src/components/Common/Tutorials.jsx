@@ -7,7 +7,6 @@ import { mythSections, mythSymbols } from "../../utils/constants";
 
 export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
   const { activeMyth, assets } = useContext(MyContext);
-  const { t } = useTranslation();
 
   return (
     <>

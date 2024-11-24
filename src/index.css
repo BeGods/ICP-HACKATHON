@@ -101,16 +101,16 @@
   --filter-celtic-orb: brightness(90%) invert(3%) sepia(27%) saturate(1237%)
     hue-rotate(48deg) brightness(90%) contrast(104%);
   --filter-egyptian-orb: brightness(140%) invert(5%) sepia(36%) saturate(1000%)
-    hue-rotate(16deg)  contrast(104%);
+    hue-rotate(16deg) contrast(104%);
   --filter-greek-orb: brightness(80%) invert(3%) sepia(27) saturate(360%)
     hue-rotate(-50deg) brightness(90%) contrast(104%);
   --filter-norse-orb: brightness(90%) invert(3%) sepia(27%) saturate(1237%)
     hue-rotate(171deg) brightness(90%) contrast(104%);
-  --filter-white-orb: brightness(90%) invert(5%) saturate(137%)
-    brightness(220%) contrast(104%);
+  --filter-white-orb: brightness(90%) invert(5%) saturate(137%) brightness(220%)
+    contrast(104%);
 
   /* Filters for fx */
-    --filter-celtic-fx: brightness(100%) invert(5%) sepia(36%) saturate(1237%)
+  --filter-celtic-fx: brightness(100%) invert(5%) sepia(36%) saturate(1237%)
     hue-rotate(48deg) brightness(90%) contrast(104%);
   --filter-egyptian-fx: brightness(150%) invert(20%) sepia(36%) saturate(2000%)
     hue-rotate(16deg) contrast(104%);
@@ -118,8 +118,8 @@
     hue-rotate(-65deg) brightness(90%) contrast(104%);
   --filter-norse-fx: brightness(100%) invert(10%) sepia(36%) saturate(1237%)
     hue-rotate(171deg) brightness(90%) contrast(104%);
-  --filter-white-fx: brightness(100%) invert(5%) saturate(137%)
-    brightness(220%) contrast(104%);
+  --filter-white-fx: brightness(100%) invert(5%) saturate(137%) brightness(220%)
+    contrast(104%);
 
   /* Filters for Paper */
   --filter-celtic-paper: brightness(100%) invert(5%) sepia(12%) saturate(1237%)
@@ -186,7 +186,7 @@
 img {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transform: translateZ(0); 
+  transform: translateZ(0);
 }
 
 body {
@@ -231,14 +231,22 @@ body {
 }
 
 .border-multiColor::before {
-  content: '';
+  content: "";
   position: absolute; /* Position relative to the parent */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   border: 1px solid transparent; /* Border style needed for the image */
-  border-image: linear-gradient(90deg, #001aff 18%, #16ffd5 32%, #42ff00 48%, #ccff00 62%, #ffb800 78%, #ff0000 100%);
+  border-image: linear-gradient(
+    90deg,
+    #001aff 18%,
+    #16ffd5 32%,
+    #42ff00 48%,
+    #ccff00 62%,
+    #ffb800 78%,
+    #ff0000 100%
+  );
   border-image-slice: 1; /* Ensures the gradient covers the border area */
   pointer-events: none; /* Prevents interaction with the border */
 }
@@ -255,9 +263,9 @@ body {
 .bouncing-ball {
   width: 50px;
   height: 50px;
-  background-color: red; 
-  border-radius: 50%; 
-  position: absolute; 
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
 }
 
 .custom-skew {

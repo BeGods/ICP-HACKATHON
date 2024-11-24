@@ -2,21 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
 
-const TopChild = () => {
-  return (
-    <div className="absolute flex w-full justify-between top-0 z-50">
-      <div className="flex flex-col items-end justify-between h-full mt-1 ml-[8vw] z-10">
-        <div className="font-symbols text-white text-[12vw] text-black-lg-contour">
-          3
-        </div>
-      </div>
-      <div className="flex flex-col text-black-lg-contour items-end justify-between h-full mt-1 mr-[8vw] z-10">
-        <div className="font-symbols text-white text-[12vw]">2</div>
-      </div>
-    </div>
-  );
-};
-
 const BottomChild = ({ partners }) => {
   return (
     <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
@@ -84,7 +69,7 @@ const GiftHeader = ({ partners }) => {
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-primary text-white -mt-2 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+          className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
           {changeText ? t("profile.partners") : t("profile.charity")}
         </div>
