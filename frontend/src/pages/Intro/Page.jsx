@@ -4,6 +4,11 @@ import { useNavigate } from "react-router-dom";
 import assets from "../../assets/assets.json";
 import ReactHowler from "react-howler";
 import Captcha from "../../components/Captcha/Captcha";
+import {
+  setAuthCookie,
+  setLangCookie,
+  validateSoundCookie,
+} from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,6 +26,7 @@ const IntroPage = (props) => {
     if (tele) {
       try {
         await tele.ready();
+
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
@@ -40,7 +46,7 @@ const IntroPage = (props) => {
           if (param.includes("FDG")) {
             setReferralCode(param);
           } else {
-            tele.CloudStorage.setItem("lang", param);
+            setLangCookie(tele, param);
           }
         } else {
           console.log("No user found in Telegram data");
@@ -58,26 +64,21 @@ const IntroPage = (props) => {
     try {
       const response = await authenticate(userData, referralCode);
       localStorage.setItem("accessToken", response.data.token);
-      tele.CloudStorage.setItem("accessToken", response.data.token);
-
+      await setAuthCookie(tele, response.data.token);
       navigate("/home");
     } catch (error) {
       console.error("Authentication Error: ", error);
     }
   };
 
+  const checkSoundActive = async () => {
+    const isSoundActive = await validateSoundCookie(tele);
+    setEnableSound(isSoundActive);
+  };
+
   useEffect(() => {
     getUserData();
-
-    tele.CloudStorage.getItem("sound", (err, item) => {
-      (async () => {
-        if (item) {
-          setEnableSound(false);
-        } else {
-          console.log("Unable to fetch sound.");
-        }
-      })();
-    });
+    checkSoundActive();
 
     const handleUserInteraction = () => {
       playAudio();
@@ -99,9 +100,6 @@ const IntroPage = (props) => {
       platform === "macos" ||
       platform === "windows" ||
       platform === "tdesktop" ||
-      platform === "web" ||
-      platform === "weba" ||
-      platform === "unknown" ||
       !platform
     ) {
       setDisableDestop(true);

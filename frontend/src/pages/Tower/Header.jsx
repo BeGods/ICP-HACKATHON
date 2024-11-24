@@ -134,7 +134,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
           </>
         )}
         <div
-          className={`flex relative text-center justify-center items-center w-[17.5vw] h-[17.5vw] mt-[14px]  rounded-full`}
+          className={`flex relative text-center justify-center items-center w-[15.4vw] h-[15.4vw] mt-[17px]  rounded-full`}
         >
           <img
             src={`${assets.uxui.multiorb}`}
@@ -163,11 +163,11 @@ const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow }) => {
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-primary ${
+          className={`text-sectionHead ${
             changeText
               ? `text-white text-black-lg-contour`
               : `text-black text-white-lg-contour`
-          } -mt-2 text-center top-0  uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+          } -mt-2.5 text-center top-0  uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
           {changeText ? t("sections.tower") : t("mythologies.dark")}
         </div>

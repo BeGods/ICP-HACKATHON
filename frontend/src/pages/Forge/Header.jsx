@@ -174,11 +174,11 @@ const ForgeHeader = ({
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-primary ${minimize == 1 && "minimize-head"} ${
+          className={`text-sectionHead ${minimize == 1 && "minimize-head"} ${
             minimize == 2 && "maximize-head"
           } ${
             changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
-          } -mt-2 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+          } -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
           {changeText
             ? t("sections.forges")

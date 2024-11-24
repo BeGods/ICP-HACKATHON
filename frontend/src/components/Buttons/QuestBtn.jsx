@@ -34,7 +34,7 @@ const QuestButton = ({
       onTouchCancel={() => {
         setIsClicked(false);
       }}
-      className={`flex items-center justify-between h-button-secondary mt-[6px] w-button-primary mx-auto ${
+      className={`flex items-center justify-between h-button-primary mt-[6px] w-button-primary mx-auto ${
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       }  border border-${
         mythSections[activeMyth]

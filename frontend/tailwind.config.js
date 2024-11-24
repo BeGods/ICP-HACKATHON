@@ -89,7 +89,7 @@ export default {
         primary: "20px",
       },
       fontSize: {
-        primary: "30px",
+        primary: "10vw",
         secondary: "14px",
         para: "4.3vw",
         tertiary: "18px",
@@ -98,13 +98,14 @@ export default {
         "orb-secondary": "45px",
         "orb-tertiary": "45px",
         booster: "50px",
+        sectionHead: "8.5vw",
         num: "9vw",
         numHead: "9vw",
         head: "30px",
         paperHead: "7.65vw",
         paperSub: "6.5vw",
         icon: "50px",
-        iconLg: "16vw",
+        iconLg: "15vw",
       },
       width: {
         "icon-primary": "55px",
@@ -128,7 +129,7 @@ export default {
         orb: "10vw",
       },
       padding: {
-        headSides: "9vw",
+        headSides: "7vw",
       },
     },
   },

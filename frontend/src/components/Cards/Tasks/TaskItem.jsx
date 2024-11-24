@@ -5,6 +5,7 @@ import { MyContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
+import { validateCountryCode } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -72,13 +73,12 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
           handleCopyLink();
         } else if (!quest.isQuestClaimed && claim === false) {
           if (quest._id == "6716097630689b65b6b384ef") {
-            tele.CloudStorage.getItem("country_code", (err, item) => {
-              if (!item) {
-                showSetting();
-              } else {
-                setClaim(true);
-              }
-            });
+            const isCountryActive = validateCountryCode(tele);
+            if (isCountryActive) {
+              showSetting();
+            } else {
+              setClaim(true);
+            }
           } else if (quest._id == "672b42311767ca93a22805b1") {
             if (userData.tonAddress) {
               setClaim(true);

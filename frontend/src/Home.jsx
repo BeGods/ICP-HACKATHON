@@ -23,6 +23,12 @@ import Gift from "./pages/Gift/Gift";
 import assets from "./assets/assets.json";
 import { showToast } from "./components/Toast/Toast";
 import StreakBonus from "./pages/Streak/StreakBonus";
+import {
+  validateAuth,
+  validateCountryCode,
+  validateLang,
+  validateSoundCookie,
+} from "./helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -141,50 +147,27 @@ const Home = () => {
     }
   };
 
-  // set initial cookies
-  useEffect(() => {
+  const syncAllCookies = async () => {
     localStorage.setItem("avatarColor", getRandomColor());
+    const activeCountry = await validateCountryCode(tele);
+    const currLang = await validateLang(tele);
+    const isAuth = await validateAuth(tele);
+    const isSoundActive = await validateSoundCookie(tele);
+    i18next.changeLanguage(currLang);
+    setCountry(activeCountry);
+    setLang(currLang);
+    setEnableSound(isSoundActive);
+    setAuthToken(isAuth);
 
-    tele.CloudStorage.getItem("country_code", (err, item) => {
-      (async () => {
-        if (item) {
-          setCountry(item);
-        } else {
-          setCountry("NA");
-        }
-      })();
-    });
+    if (isAuth) {
+      (async () => await getGameData(isAuth))();
+    } else {
+      // showToast("default");
+    }
+  };
 
-    tele.CloudStorage.getItem("lang", (err, item) => {
-      (async () => {
-        if (item) {
-          setLang(item);
-          i18next.changeLanguage(item);
-        } else {
-          console.log("Unable to fetch language.");
-        }
-      })();
-    });
-    tele.CloudStorage.getItem("accessToken", (err, item) => {
-      (async () => {
-        if (item) {
-          setAuthToken(item);
-          await getGameData(item);
-        } else {
-          console.log("You are not authenticated.");
-          showToast("default");
-        }
-      })();
-    });
-    tele.CloudStorage.getItem("sound", (err, item) => {
-      (async () => {
-        if (item) {
-          setEnableSound(false);
-        } else {
-          console.log("Unable to fetch sound.");
-        }
-      })();
-    });
+  useEffect(() => {
+    syncAllCookies();
   }, []);
 
   useEffect(() => {
@@ -216,7 +199,7 @@ const Home = () => {
   return (
     <div>
       {!isLoading ? (
-        <div className="h-screen w-screen bg-white select-none font-fof">
+        <div className="h-[100svh] w-screen bg-white select-none font-fof">
           <MyContext.Provider
             value={{
               gameData,

@@ -24,6 +24,7 @@ import {
   useTonConnectUI,
 } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
+import { setCountryCookie, setLangCookie } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -69,14 +70,14 @@ const SettingModal = ({ close }) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
     setIsChanged(true);
     i18next.changeLanguage(langCode);
-    tele.CloudStorage.setItem("lang", langCode);
+    setLangCookie(tele, langCode);
   };
 
   const handleSettingChange = (e) => {
     setIsChanged(true);
     const selectedCountry = e.target.value;
     setCountry(selectedCountry);
-    tele.CloudStorage.setItem("country_code", selectedCountry);
+    setCountryCookie(tele, selectedCountry);
   };
 
   const handleConnectTon = async () => {
