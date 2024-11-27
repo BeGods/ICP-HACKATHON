@@ -5,6 +5,7 @@ import {
   getPhaseByDate,
 } from "../../utils/helpers/game.helpers";
 import userMythologies from "../../models/mythologies.models";
+import config from "../../config/config";
 const axios = require("axios");
 
 export const fetchUserGameStats = async (userId) => {
@@ -438,18 +439,16 @@ export const fetchUserData = async (userId) => {
 export const getPlaysuperOtp = async (mobileNumber) => {
   try {
     await axios.post(
-      "https://dev.playsuper.club/player/request-otp",
-      { phone: `+91${mobileNumber}` },
+      `${config.playsuper.PS_API_URL}/player/request-otp`,
+      { phone: `${mobileNumber}` },
       {
         headers: {
           accept: "application/json",
-          "x-api-key":
-            "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+          "x-api-key": `${config.playsuper.PS_API_KEY}`,
         },
       }
     );
   } catch (error) {
-    // Log the error message and response data if available
     console.error("Error message:", error.message);
 
     if (error.response) {
@@ -468,13 +467,12 @@ export const getPlaysuperOtp = async (mobileNumber) => {
 export const resendPlaysuperOtp = async (mobileNumber) => {
   try {
     const result = await axios.post(
-      "https://dev.playsuper.club/player/resend-otp",
+      `${config.playsuper.PS_API_URL}/player/resend-otp`,
       { phone: mobileNumber },
       {
         headers: {
           accept: "application/json",
-          "x-api-key":
-            "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+          "x-api-key": `${config.playsuper.PS_API_KEY}`,
         },
       }
     );
@@ -489,19 +487,20 @@ export const resendPlaysuperOtp = async (mobileNumber) => {
 export const verifyPlaysuperOtp = async (mobileNumber, otp) => {
   try {
     const result = await axios.post(
-      "https://dev.playsuper.club/player/login",
-      { phone: `+91${mobileNumber}`, otp: otp },
+      `${config.playsuper.PS_API_URL}/player/login`,
+      { phone: `${mobileNumber}`, otp: otp },
       {
         headers: {
           accept: "application/json",
-          "x-api-key":
-            "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+          "x-api-key": `${config.playsuper.PS_API_KEY}`,
         },
       }
     );
 
     return result;
   } catch (error) {
+    console.log(error);
+
     throw new Error("Error in verifying otp from playsuper");
   }
 };
@@ -515,19 +514,21 @@ export const fetchPlaySuperRewards = async (
     const headers: { [key: string]: string } = {
       accept: "application/json",
       "x-language": lang,
-      "x-api-key":
-        "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+      "x-api-key": `${config.playsuper.PS_API_KEY}`,
     };
 
     if (playsuperCred?.isVerified && playsuperCred) {
       headers.Authorization = `Bearer ${playsuperCred.key}`;
     }
+    let url = `${config.playsuper.PS_API_URL}/rewards`;
 
-    const result = await axios.get(`https://dev.playsuper.club/rewards`, {
-      params: {
-        coinId: "ee61658e-532b-4a69-a99a-6b5287bc54cf",
-        country: country,
-      },
+    const params = {
+      coinId: `${config.playsuper.PS_COIN_ID}`,
+      ...(country && { country }),
+    };
+
+    const result = await axios.get(url, {
+      params: params,
       headers: headers,
     });
 
@@ -538,7 +539,7 @@ export const fetchPlaySuperRewards = async (
 
     return rewards;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     throw new Error("Error in fetching rewards from playsuper");
   }
 };
@@ -551,17 +552,19 @@ export const fetchPlaysuperOrders = async (lang, playsuperToken) => {
     const headers: { [key: string]: string } = {
       accept: "application/json",
       "x-language": lang,
-      "x-api-key":
-        "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+      "x-api-key": `${config.playsuper.PS_API_KEY}`,
       Authorization: `Bearer ${playsuperToken}`,
     };
 
-    const result = await axios.get(`https://dev.playsuper.club/player/orders`, {
-      params: {
-        limit: 25,
-      },
-      headers: headers,
-    });
+    const result = await axios.get(
+      `${config.playsuper.PS_API_URL}/player/orders`,
+      {
+        params: {
+          limit: 25,
+        },
+        headers: headers,
+      }
+    );
 
     return result.data.data.data;
   } catch (error) {
@@ -573,15 +576,14 @@ export const fetchPlaysuperOrders = async (lang, playsuperToken) => {
 const distributeCoins = async (authToken) => {
   try {
     const response = await axios.post(
-      "https://dev.playsuper.club/coins/ee61658e-532b-4a69-a99a-6b5287bc54cf/distribute",
+      `${config.playsuper.PS_API_URL}/coins/${config.playsuper.PS_COIN_ID}/distribute`,
       {
         amount: 100,
       },
       {
         headers: {
           accept: "*/*",
-          "x-api-key":
-            "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+          "x-api-key": `${config.playsuper.PS_API_KEY}`,
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
@@ -599,28 +601,24 @@ const distributeCoins = async (authToken) => {
 const purchaseReward = async (rewardId, authToken) => {
   try {
     const response = await axios.post(
-      "https://dev.playsuper.club/rewards/purchase",
+      `${config.playsuper.PS_API_URL}/rewards/purchase`,
       {
         rewardId: rewardId,
-        coinId: "ee61658e-532b-4a69-a99a-6b5287bc54cf",
+        coinId: `${config.playsuper.PS_COIN_ID}`,
       },
       {
         headers: {
           accept: "application/json",
-          "x-api-key":
-            "8fefe0eceb81735144601b8ce31dd640c37136b9706ccd1955de963cb9cad5ec",
+          "x-api-key": `${config.playsuper.PS_API_KEY}`,
           Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
       }
     );
 
-    console.log(response);
-
     return response.data;
   } catch (error) {
-    // console.log("purchase err", error);
-
+    console.log("purchase err", error);
     throw new Error(error.response ? error.response.data : error.message);
   }
 };
@@ -633,5 +631,59 @@ export const claimPlaysuperReward = async (rewardId, authToken) => {
     return purchaseResponse;
   } catch (error) {
     console.error("Error in one of the requests:", error.message);
+    throw new Error(error.response ? error.response.data : error.message);
+  }
+};
+
+export const checkStreakIsActive = async (lastClaimedAt) => {
+  try {
+    if (lastClaimedAt === 0) {
+      return true;
+    }
+
+    const now = new Date();
+    const lastClaimedDate = new Date(lastClaimedAt);
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    let result = false;
+
+    const lastClaimedMidnight = new Date(
+      lastClaimedDate.getFullYear(),
+      lastClaimedDate.getMonth(),
+      lastClaimedDate.getDate()
+    );
+
+    // check if already claimed today
+    if (lastClaimedMidnight.getTime() === today.getTime()) {
+      return false;
+    }
+
+    // check if it was claimed yesterday
+    if (
+      lastClaimedMidnight.getTime() !== yesterday.getTime() &&
+      yesterday.getTime() != 0
+    ) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error in one of the requests:", error.message);
+    throw new Error(error.response ? error.response.data : error.message);
+  }
+};
+
+export const checkPlaysuperExpiry = async (playsuperData) => {
+  try {
+    const createdDate = new Date(playsuperData.createdAt).getTime();
+    const currentDate = new Date().getTime();
+    const diffInMs = currentDate - createdDate;
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    return diffInDays > 28;
+  } catch (error) {
+    console.error("Error", error.message);
+    return false;
   }
 };
