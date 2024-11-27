@@ -47,7 +47,7 @@
     {},
     {},
     { "title": "Взрыв", "desc": "Давление Сжатия" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "Пакет Автоматов", "desc": "4X Автоматы" }
   ],
   "profile": {
     "premium": "Премиум",
@@ -67,7 +67,9 @@
     "task": "Задачи",
     "connect": "соединить",
     "follow": "следовать",
-    "select": "Выбрать"
+    "select": "Выбрать",
+    "music": "Музыка",
+    "wallet": "Кошелек"
   },
   "elements": {
     "earth": "Земля",
@@ -92,14 +94,16 @@
     "win": "победить"
   },
   "tutorial": {
-    "forge": { "title": "ТАПНИ НА КОВКИ", "desc": "ЧТОБЫ ЗАРАБОТАТЬ ORB(Ы)" },
-    "quests": {
-      "title": "ЗАЯВИТЬ МИССИИ",
-      "desc": "ЗАВЕРШИТЕ, ЧТОБЫ ЗАРАБОТАТЬ $FAITH"
-    },
-    "boosters": { "title": "ПОЛУЧИТЬ УСКОРИТЕЛИ", "desc": "ДЛЯ НАГРАД В ИГРЕ" },
-    "profile": { "title": "ВЫБЕРИТЕ СВОЮ СТРАНУ", "desc": "чтобы разблокировать подарки" },
-    "tower": { "title": "ESCOLHA ORB E CONVERTA", "desc": "PARA OBTER PODERES" }
+    "forgeShard": { "title": "Нажмите, чтобы заработать осколки", "desc": "" },
+    "forgeOrbs": { "title": "1 Орб = 1,000 Осколков", "desc": "" },
+    "forgeBubble": { "title": "Лопайте пузырь, чтобы получить Подарки", "desc": "" },
+    "forgeMinion": { "title": "Ловите и удерживайте 2x осколки", "desc": "" },
+    "forgeExplore": { "title": "Исследовать +еще", "desc": "" },
+    "quests": { "title": "Выполнить Квесты", "desc": "Заработать $faith" },
+    "boosters": { "title": "ПОЛУЧИТЬ УСКОРИТЕЛИ", "desc": "заработать $вера" },
+    "profileTask": { "title": "Выполнить Задания", "desc": "Для внутриигровых наград" },
+    "gift" : { "title": "Посмотреть Партнёров", "desc": "" },
+    "tower" : { "title": "Превратить Орбы", "desc": "" }
   },
   "quests": {
     "celtic": {

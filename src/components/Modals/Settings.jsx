@@ -36,6 +36,7 @@ const languages = [
   { name: "Português", code: "pt" },
   { name: "Español", code: "es" },
   { name: "Filipino", code: "fil" },
+  { name: "မြန်မာ", code: "my" },
 ];
 
 const SettingModal = ({ close }) => {
@@ -58,7 +59,7 @@ const SettingModal = ({ close }) => {
   const getPartnersData = async (lang, country) => {
     try {
       const rewardsData = await fetchRewards(lang, country, authToken);
-      setRewards(rewardsData?.rewards);
+      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
     } catch (error) {
@@ -197,7 +198,9 @@ const SettingModal = ({ close }) => {
               onClick={() => open()}
               className="flex items-center w-full justify-between"
             >
-              <div className="pl-3">{t("profile.connect")} Wallet</div>
+              <div className="pl-3">
+                {t("profile.connect") + " " + t("profile.wallet")}{" "}
+              </div>
               <ChevronRight size={"20px"} />
             </div>
           )}
@@ -208,7 +211,7 @@ const SettingModal = ({ close }) => {
             {enableSound ? <Volume2 /> : <VolumeX />}
           </div>
           <div className="flex justify-between w-full">
-            <div className="pl-3">Audio</div>
+            <div className="pl-3">{t("profile.music")}</div>
             <ToggleSwitch />
           </div>
         </div>

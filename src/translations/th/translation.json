@@ -54,7 +54,7 @@
     {},
     {},
     { "title": "ระเบิด", "desc": "กดค้าง" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "ชุด ออโตมาตา", "desc": "4X ออโตมาตา" }
   ],
   "profile": {
     "premium": "พรีเมียม",
@@ -74,7 +74,9 @@
     "task": "ภารกิจ",
     "connect": "เชื่อมต่อ",
     "follow": "ติดตาม",
-    "select": "เลือก"
+    "select": "เลือก",
+    "music": "ดนตรี",
+    "wallet": "กระเป๋าสตางค์"
   },
   "elements": {
     "earth": "ดิน",
@@ -95,11 +97,16 @@
     "win": "ชนะ"
   },
   "tutorial": {
-    "forge": { "title": "่แตะโรงหลอม", "desc": "เพื่อรับ ออร์บ" },
-    "quests": { "title": "รับเควส", "desc": "ทำให้เสร็จเพื่อรับ $FAITH" },
-    "boosters": { "title": "รับบูสเตอร์", "desc": "สำหรับรางวัลเกม" },
-    "profile": { "title": "เลือกประเทศของคุณ", "desc": "เพื่อปลดล็อกของขวัญ" },
-    "tower": { "title": "เลือก ออร์บ และแลกเปลี่ยน", "desc": "เพื่อรับบูสเตอร์" }
+    "forgeShard": { "title": "แตะ เพื่อรับ ชาร์ด", "desc": "" },
+    "forgeOrbs": { "title": "1 ออร์บ = 1,000 ชาร์ด", "desc": "" },
+    "forgeBubble": { "title": "แตะ ฟอง เพื่อรับ ของขวัญ", "desc": "" },
+    "forgeMinion": { "title": "จับและถือ 2x ชิ้นส่วน", "desc": "" },
+    "forgeExplore": { "title": "สำรวจ +เพิ่มเติม", "desc": "" },
+    "quests": { "title": "ทำเควสให้เสร็จ", "desc": "รับ $faith" },
+    "boosters": { "title": "รับบูสเตอร์", "desc": "รับ $faith" },
+    "profileTask": { "title": "ทำภารกิจให้เสร็จ", "desc": "เพื่อรับรางวัลในเกม" },
+    "gift" : { "title": "ดูพันธมิตร", "desc": "" },
+    "tower" : { "title": "แปลงออร์บ", "desc": "" }
   },
   "quests": {
     "celtic": {

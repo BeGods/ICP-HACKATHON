@@ -7,18 +7,20 @@ const Loader = (props) => {
   const { t } = useTranslation();
   return (
     <div className="bg-black flex flex-col justify-center items-center h-screen w-screen">
-      <div className="w-[75%] flex flex-col justify-between h-full mb-4 scale-loader-gold-glow">
+      <div className="w-[75%] flex flex-col justify-between h-full scale-loader-gold-glow">
         <img
           src={assets.logos.begodsBlack}
           alt="black-gods"
-          className="h-full w-full"
+          className="h-full w-full -mt-16"
         />
       </div>
-      <div className="flex justify-center w-full">
-        <LoadRoll />
-      </div>
-      <div className="w-full text-center font-fof text-secondary uppercase text-white">
-        {t("keywords.load")}...
+      <div className="absolute w-screen bottom-0">
+        <div className="flex justify-center w-full">
+          <LoadRoll />
+        </div>
+        <div className=" w-full text-center font-fof text-secondary uppercase text-white">
+          {t("keywords.load")}...
+        </div>
       </div>
     </div>
   );

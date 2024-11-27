@@ -118,7 +118,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
       {icon === 3 && (
-        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[8vh] mr-1 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[7.5vh] mr-2 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
           {countOfInCompleteQuests}
         </div>
       )}
@@ -162,7 +162,7 @@ const Footer = ({}) => {
 
       <div
         className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
-          platform === "ios" ? "-mt-3.5" : "mt-0.5"
+          platform === "ios" ? "-mt-3" : "-mt-0.5"
         }`}
       >
         {footerIcons.map((item, index) => (

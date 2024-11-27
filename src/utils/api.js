@@ -486,7 +486,7 @@ export const fetchOTP = async (mobileNumber, accessToken) => {
   }
 };
 
-export const verifyOtp = async (mobileNumber, otp, accessToken) => {
+export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/playsuper/verify`;
 
   try {
@@ -494,6 +494,7 @@ export const verifyOtp = async (mobileNumber, otp, accessToken) => {
       url,
       {
         mobileNumber: mobileNumber,
+        name: name,
         otp: otp,
       },
       {

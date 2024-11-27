@@ -4,22 +4,30 @@ import { useTranslation } from "react-i18next";
 
 const BottomChild = ({ partners }) => {
   return (
-    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
-      <div
-        className={`flex glow-button-white text-num pl-[18px] text-black-lg-contour text-white items-center border  justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
-      >
-        {partners}
+    <div className="flex relative justify-center px-2 -mt-3">
+      <div className="flex w-full px-7">
+        <div
+          className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary pl-headSides">{partners}</div>
+        </div>
+        <div
+          className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+        >
+          <div className="text-primary pr-headSides">0</div>
+        </div>
       </div>
-      <div
-        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
-      >
-        0
-      </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4 z-50">
-        <div className={`font-symbols  text-iconLg text-black-lg-contour`}>
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          className={`font-symbols  text-iconLg text-black-lg-contour text-white z-50`}
+        >
           2
         </div>
-        <div className={`font-symbols text-iconLg text-black-contour`}>3</div>
+        <div
+          className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
+        >
+          3
+        </div>
       </div>
     </div>
   );

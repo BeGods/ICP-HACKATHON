@@ -5,7 +5,8 @@ import { ThumbsUp } from "lucide-react";
 const tele = window.Telegram?.WebApp;
 
 const StreakBonus = (props) => {
-  const { assets, setSection, activeReward } = useContext(MyContext);
+  const { assets, setSection, activeReward, setActiveReward, rewards } =
+    useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
   const [flipped, setFlipped] = useState(false);
 
@@ -34,7 +35,7 @@ const StreakBonus = (props) => {
                 <div className="orb__face orb__face--front  flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute  h-full">
                     <img
-                      src={`/assets/partners/160px-${activeReward.category}.bubble.png`}
+                      src={`/assets/partners/160px-${activeReward.metadata.campaignCoverImage}.bubble.png`}
                       alt="multicolor"
                       className="glow-box rounded-full h-[55vw] w-[55vw]"
                     />
@@ -63,6 +64,9 @@ const StreakBonus = (props) => {
         <div
           onClick={() => {
             tele.HapticFeedback.notificationOccurred("success");
+            setActiveReward(
+              rewards.find((item) => item.id == activeReward._id)
+            );
             setSection(6);
           }}
           className="flex absolute items-start bottom-[92px] justify-center w-full"

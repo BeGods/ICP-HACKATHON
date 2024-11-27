@@ -18,7 +18,7 @@ const Profile = (props) => {
   const { userData, socialQuestData, setShowCard, assets, setSection } =
     useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
-  const [enableGuide, setEnableGuide] = useProfileGuide("guidex04");
+  const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
 
   useEffect(() => {

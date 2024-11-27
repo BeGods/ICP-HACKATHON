@@ -50,7 +50,7 @@ const Tower = () => {
   const mythData = gameData.mythologies.filter(
     (item) => item.name?.toLowerCase() === wheel[myth]
   )[0];
-  const [enableGuide, setEnableGuide] = useTowerGuide("guideT");
+  const [enableGuide, setEnableGuide] = useTowerGuide("tutorial02");
   const [showHand, setShowHand] = useState(false);
   const handTimeoutRef = useRef(false);
 

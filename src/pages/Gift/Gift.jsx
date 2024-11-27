@@ -7,7 +7,7 @@ import {
 } from "../../components/Common/SectionToggles";
 import GiftCarousel from "../../components/Carousel/GiftCarousel";
 
-const Gift = (props) => {
+const Gift = () => {
   const { rewards, assets, setSection } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
 

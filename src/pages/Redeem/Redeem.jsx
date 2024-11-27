@@ -14,83 +14,82 @@ import IconBtn from "../../components/Buttons/IconBtn";
 import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";
 import { ExternalLink } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const tele = window.Telegram?.WebApp;
 
 const Redeem = (props) => {
   const { t } = useTranslation();
-  const { activeReward, userData, authToken, setShowCard, rewards, assets } =
-    useContext(MyContext);
+  const {
+    activeReward,
+    userData,
+    authToken,
+    setShowCard,
+    assets,
+    setSection,
+    rewards,
+    setRewards,
+  } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
-  const [showLink, setShowLink] = useState(false);
-  const index = rewards.findIndex((item) => item._id === activeReward._id);
+  const [showLink, setShowLink] = useState(true);
+  const index = rewards.findIndex((item) => item.id === activeReward.id);
   const [currIndex, setCurrIndex] = useState(index);
   const currReward = rewards[currIndex];
+
+  const triggerConfetti = () => {
+    const end = Date.now() + 3 * 1000; // 3 seconds
+    const colors = ["#bb0000", "#ffffff"];
+
+    (function frame() {
+      confetti({
+        particleCount: 2,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors,
+      });
+      confetti({
+        particleCount: 2,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors,
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    })();
+  };
 
   const handleClick = () => {
     if (userData.isPlaySuperVerified) {
       handleRedeen();
     } else {
-      setShowCard(
-        <AuthenticatePlaySuper
-          handleClose={() => {
-            setShowCard(null);
-          }}
-        />
-      );
+      setSection(11);
     }
   };
 
   const handleRedeen = async () => {
     try {
       if (currReward.partnerType === "playsuper") {
-        const reward = await claimPlaysuperReward(currReward.id, authToken);
-        console.log(reward);
+        const response = await claimPlaysuperReward(currReward.id, authToken);
+        triggerConfetti();
+        setRewards((prevRewards) =>
+          prevRewards.map((reward) =>
+            reward.id === currReward.id
+              ? {
+                  ...reward,
+                  couponCode: response.couponCode,
+                  isClaimed: true,
+                }
+              : reward
+          )
+        );
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const handleJigsawBtn = () => {
-    if (
-      currReward.tokensCollected === 12 &&
-      currReward.partnerType === "custom"
-    ) {
-      setShowCard(
-        <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
-          <div className="relative w-full  shadow-lg card-shadow-white">
-            <img
-              src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.campaign.jpg`}
-              alt="campaign"
-              className="w-full h-full rounded-primary"
-              onClick={() => {
-                setShowCard(
-                  <AuthenticatePlaySuper
-                    handleClose={() => {
-                      setShowCard(null);
-                    }}
-                  />
-                );
-              }}
-            />
-            <IconBtn
-              isInfo={false}
-              activeMyth={4}
-              handleClick={() => {
-                setShowCard(null);
-              }}
-              align={4}
-            />
-          </div>
-        </div>
-      );
-    } else if (
-      currReward.tokensCollected === 12 &&
-      currReward.partnerType === "playsuper"
-    ) {
-      handleRedeen();
     }
   };
 
@@ -140,9 +139,14 @@ const Redeem = (props) => {
       </div>
       {/* Header */}
       <RedeemHeader
+        currIndex={currIndex}
         pieces={currReward.tokensCollected}
-        name={currReward.name}
-        bubble={currReward.category}
+        name={currReward.metadata.brandName}
+        bubble={
+          currReward.partnerType == "playsuper"
+            ? `${currReward.metadata.campaignCoverImage}`
+            : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
+        }
         action={() => {
           setShowCard(
             <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
@@ -179,11 +183,18 @@ const Redeem = (props) => {
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
-                  imageUrl={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.brand.jpg`}
+                  imageUrl={
+                    currReward.partnerType == "playsuper"
+                      ? `${currReward.metadata.campaignAssets.bannerView}`
+                      : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.jpg`
+                  }
                   activeParts={handleActiveParts(currReward.tokensCollected)}
                   handleClick={() => {
                     if (currReward.tokensCollected === 12) {
-                      window.open("_blank", "dsifk");
+                      window.open(
+                        "_blank",
+                        `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`
+                      );
                     }
                   }}
                 />
@@ -200,21 +211,51 @@ const Redeem = (props) => {
                 <PartnerCard close={() => {}} />
               </div>
             </div>
-            <JigsawButton
-              handleClick={handleClick}
-              activeMyth={4}
-              handleNext={() => {}}
-              handlePrev={() => {}}
-              faith={12}
-              disableLeft={true}
-              t={t}
-            />
-          </div>
 
+            {currReward.isClaimed &&
+            userData.isPlaySuperVerified &&
+            currReward.partnerType === "playsuper" ? (
+              <div
+                className={`flex text-[20px] font-roboto text-white items-center justify-center h-button-primary w-button-primary mx-auto border border-white bg-glass-black  rounded-primary   top-0 left-0 right-0`}
+                style={{ top: "100%", transform: "translateY(-50%)" }}
+              >
+                {currReward.couponCode}
+              </div>
+            ) : currReward.tokensCollected === 12 &&
+              currReward.partnerType === "custom" ? (
+              <JigsawButton
+                handleClick={() => {
+                  window.open(
+                    `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`,
+                    "_blank"
+                  );
+                }}
+                activeMyth={4}
+                handleNext={() => {}}
+                handlePrev={() => {}}
+                faith={currReward.tokensCollected}
+                disableLeft={true}
+                t={t}
+              />
+            ) : (
+              <JigsawButton
+                handleClick={() => {
+                  if (currReward.tokensCollected) {
+                    handleClick();
+                  }
+                }}
+                activeMyth={4}
+                handleNext={() => {}}
+                handlePrev={() => {}}
+                faith={currReward.tokensCollected}
+                disableLeft={true}
+                t={t}
+              />
+            )}
+          </div>
           <div
             onClick={() => {
               tele.HapticFeedback.notificationOccurred("success");
-
               setFlipped((prev) => !prev);
             }}
             className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
@@ -224,7 +265,9 @@ const Redeem = (props) => {
               <div
                 onClick={() => {
                   window.open(
-                    `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.campaign.jpg`,
+                    currReward.partnerType == "playsuper"
+                      ? `${currReward.metadata.campaignAssets.bannerView}`
+                      : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
                     "_blank"
                   );
                 }}
