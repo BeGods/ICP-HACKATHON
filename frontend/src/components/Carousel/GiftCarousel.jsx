@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import "../../styles/carousel.scss";
-import { useTranslation } from "react-i18next";
 import GiftItemCrd from "../Cards/Reward/GiftItemCrd";
 
 const GiftCarousel = ({ rewards }) => {
-  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
 

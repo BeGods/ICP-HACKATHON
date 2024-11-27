@@ -29,6 +29,7 @@ import {
   validateLang,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
+import OnboardPage from "./pages/Onboard/Page";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -39,7 +40,7 @@ const Home = () => {
   const [socialQuestData, setSocialQuestData] = useState(null);
   const [enableSound, setEnableSound] = useState(true);
   const [keysData, setKeysData] = useState(null);
-  const [rewards, setRewards] = useState(null);
+  const [rewards, setRewards] = useState([]);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [activeReward, setActiveReward] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -51,6 +52,40 @@ const Home = () => {
   const [minimize, setMinimize] = useState(0);
   const [country, setCountry] = useState("NA");
   const [lang, setLang] = useState(null);
+  const initalStates = {
+    gameData,
+    setGameData,
+    questsData,
+    setQuestsData,
+    userData,
+    setUserData,
+    section,
+    setSection,
+    activeMyth,
+    setActiveMyth,
+    showBooster,
+    setShowBooster,
+    platform,
+    authToken,
+    keysData,
+    setKeysData,
+    socialQuestData,
+    setSocialQuestData,
+    rewards,
+    setRewards,
+    activeReward,
+    setActiveReward,
+    setRewardsClaimedInLastHr,
+    rewardsClaimedInLastHr,
+    enableSound,
+    setEnableSound,
+    minimize,
+    setMinimize,
+    setShowCard,
+    assets,
+    country,
+    setCountry,
+  };
 
   const sections = [
     <Forges />, // 0
@@ -64,6 +99,7 @@ const Home = () => {
     <Gacha />, // 8
     <JoinBonus />, // 9
     <StreakBonus />, // 10
+    <OnboardPage />, // 11
   ];
 
   const getProfilePhoto = async (token) => {
@@ -83,7 +119,7 @@ const Home = () => {
   const getPartnersData = async () => {
     try {
       const rewardsData = await fetchRewards(lang, country, authToken);
-      setRewards(rewardsData?.rewards);
+      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
     } catch (error) {
@@ -98,6 +134,7 @@ const Home = () => {
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
+
       setActiveReward(rewardsData.reward);
       setSection(10);
     } catch (error) {
@@ -200,50 +237,17 @@ const Home = () => {
     <div>
       {!isLoading ? (
         <div className="h-[100svh] w-screen bg-white select-none font-fof">
-          <MyContext.Provider
-            value={{
-              gameData,
-              setGameData,
-              questsData,
-              setQuestsData,
-              userData,
-              setUserData,
-              section,
-              setSection,
-              activeMyth,
-              setActiveMyth,
-              showBooster,
-              setShowBooster,
-              platform,
-              authToken,
-              keysData,
-              setKeysData,
-              socialQuestData,
-              setSocialQuestData,
-              rewards,
-              setRewards,
-              activeReward,
-              setActiveReward,
-              setRewardsClaimedInLastHr,
-              rewardsClaimedInLastHr,
-              enableSound,
-              setEnableSound,
-              minimize,
-              setMinimize,
-              setShowCard,
-              assets,
-              country,
-              setCountry,
-            }}
-          >
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+          <MyContext.Provider value={initalStates}>
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => (
               <div key={item}>
                 <>{section === item && sections[item]}</>
               </div>
             ))}
-            {section != 7 && section != 10 && section != 9 && section != 8 && (
-              <Footer minimize={minimize} />
-            )}
+            {section != 7 &&
+              section != 10 &&
+              section != 9 &&
+              section != 8 &&
+              section != 11 && <Footer minimize={minimize} />}
             {showCard && (
               <div className="absolute z-50 h-screen w-screen">{showCard}</div>
             )}

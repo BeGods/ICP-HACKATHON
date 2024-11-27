@@ -2,20 +2,22 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatTwoNums } from "../../helpers/leaderboard.helper";
 
-const BottomChild = ({ pieces }) => {
+const BottomChild = ({ pieces, currIndex }) => {
   return (
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full px-7">
         <div
           className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary pl-headSides">{formatTwoNums(1)}</div>
+          <div className="text-primary pl-headSides">
+            {formatTwoNums(currIndex + 1)}
+          </div>
         </div>
         <div
           className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
           <div className="text-primary pr-headSides">
-            {formatTwoNums(pieces)}/12
+            {formatTwoNums(pieces)}
           </div>
         </div>
       </div>
@@ -40,19 +42,19 @@ const CenterChild = ({ name, bubble, action }) => {
     <div className="flex absolute justify-center w-full top-0 -mt-1 z-20">
       {/* Orb */}
       <div
-        className={`z-20 flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
+        className={`z-20 bg-white flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
       >
         <img
-          src={`/assets/partners/160px-${bubble}.bubble.png`}
+          src={bubble}
           alt="base-orb"
-          className={`filter-orbs-black w-full h-full`}
+          className={`filter-orbs-black w-full`}
         />
       </div>
     </div>
   );
 };
 
-const RedeemHeader = ({ pieces, name, bubble, action }) => {
+const RedeemHeader = ({ pieces, name, bubble, action, currIndex }) => {
   const [changeText, setChangeText] = useState(true);
   const { t } = useTranslation();
 
@@ -71,7 +73,7 @@ const RedeemHeader = ({ pieces, name, bubble, action }) => {
         >
           {changeText ? t("profile.partner") : name}
         </div>
-        <BottomChild pieces={pieces} />
+        <BottomChild pieces={pieces} currIndex={currIndex} />
         <CenterChild bubble={bubble} name={name} action={action} />
       </div>
     </div>

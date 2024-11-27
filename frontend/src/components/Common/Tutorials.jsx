@@ -7,6 +7,7 @@ import { mythSections, mythSymbols } from "../../utils/constants";
 
 export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
   const { activeMyth, assets } = useContext(MyContext);
+  const { t, i18n } = useTranslation();
 
   return (
     <>
@@ -22,12 +23,18 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
             </div>
           </div>
           <div className="h-[13%] flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
-            <div className="flex flex-col justify-center items-center text-primary leading-9">
-              Tap to earn <br />{" "}
-              <div className={`text-${mythSections[activeMyth]}-text`}>
-                shards
+            {i18n.language === "en" ? (
+              <div className="flex flex-col justify-center items-center text-primary leading-9">
+                Tap to earn <br />{" "}
+                <div className={`text-${mythSections[activeMyth]}-text`}>
+                  shards
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center text-primary leading-9">
+                {t("tutorial.forgeShard.title")}
+              </div>
+            )}
           </div>
         </div>
       ) : currTut == 1 ? (
@@ -42,16 +49,22 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
             </div>
           </div>
           <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
-            <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
-              <div>
-                1{" "}
-                <span className={`text-${mythSections[activeMyth]}-text`}>
-                  Orb
-                </span>{" "}
-                =
+            {i18n.language === "en" ? (
+              <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
+                <div>
+                  1{" "}
+                  <span className={`text-${mythSections[activeMyth]}-text`}>
+                    Orb
+                  </span>{" "}
+                  =
+                </div>
+                <div>1,000 shards</div>
               </div>
-              <div>1,000 shards</div>
-            </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center text-primary leading-9">
+                {t("tutorial.forgeOrbs.title")}
+              </div>
+            )}
           </div>
         </div>
       ) : currTut == 2 ? (
@@ -65,30 +78,42 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
             </div>
           </div>
           <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
-            <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
-              <div>Explore</div>
-              <div className={`text-${mythSections[activeMyth]}-text`}>
-                +more
+            {i18n.language === "en" ? (
+              <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
+                <div>Explore</div>
+                <div className={`text-${mythSections[activeMyth]}-text`}>
+                  +more
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center text-primary leading-9">
+                {t("tutorial.forgeExplore.title")}
+              </div>
+            )}
           </div>
           {Toggles}
         </div>
       ) : currTut == 3 ? (
         <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
           <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
-            <div className="flex flex-col text-primary leading-9">
-              <div>Catch & hold</div>
-              <div className="flex justify-center w-full gap-3">
-                <div
-                  className={`relative text-${mythSections[activeMyth]}-text`}
-                >
-                  <span className="text-[40px]">2</span>{" "}
-                  <span className="text-[25px] pl-1 absolute">x</span>{" "}
+            {i18n.language === "en" ? (
+              <div className="flex flex-col text-primary leading-9">
+                <div>Catch & hold</div>
+                <div className="flex justify-center w-full gap-3">
+                  <div
+                    className={`relative text-${mythSections[activeMyth]}-text`}
+                  >
+                    <span className="text-[40px]">2</span>{" "}
+                    <span className="text-[25px] pl-1 absolute">x</span>{" "}
+                  </div>
+                  <div className="pl-4">shards</div>
                 </div>
-                <div className="pl-4">shards</div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center text-primary leading-9">
+                {t("tutorial.forgeMinion.title")}
+              </div>
+            )}
           </div>
           <div
             onClick={handleClick}
@@ -109,16 +134,22 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
       ) : (
         <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
           <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
-            <div className="flex flex-col text-primary leading-9">
-              <div>Pop Bubble</div>
-              <div className="flex justify-center w-full gap-3">
-                <div
-                  className={`relative text-${mythSections[activeMyth]}-text`}
-                >
-                  to earn Gifts
+            {i18n.language === "en" ? (
+              <div className="flex flex-col text-primary leading-9">
+                <div>Pop Bubble</div>
+                <div className="flex justify-center w-full gap-3">
+                  <div
+                    className={`relative text-${mythSections[activeMyth]}-text`}
+                  >
+                    to earn Gifts
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center text-primary leading-9">
+                {t("tutorial.forgeBubble.title")}
+              </div>
+            )}
           </div>
           <div
             onClick={handleClick}
@@ -139,7 +170,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
   );
 };
 
-export const QuestGuide = ({ handleClick, currQuest }) => {
+export const QuestGuide = ({ handleClick }) => {
   const { activeMyth } = useContext(MyContext);
   const { t } = useTranslation();
 
@@ -153,17 +184,23 @@ export const QuestGuide = ({ handleClick, currQuest }) => {
             i
           </span>
           <div>
-            {"Complete quests".split(" ").map((word, index) => (
-              <span
-                key={index}
-                style={{ display: "block" }}
-                className={`${
-                  index == 1 && `text-${mythSections[activeMyth]}-text`
-                }`}
-              >
-                {word}
-              </span>
-            ))}
+            {t("tutorial.quests.title")
+              .split(" ")
+              .map((word, index, words) => (
+                <span
+                  key={index}
+                  style={{
+                    display: index === words.length - 1 ? "block" : "inline",
+                  }}
+                  className={`${
+                    index === words.length - 1
+                      ? `text-${mythSections[activeMyth]}-text`
+                      : ""
+                  }`}
+                >
+                  {word}{" "}
+                </span>
+              ))}
           </div>
         </div>
       </div>
@@ -176,8 +213,23 @@ export const QuestGuide = ({ handleClick, currQuest }) => {
         </div>
       </div>
       <div className="h-[13%] flex flex-col text-primary leading-9 justify-end items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
-        <div>earn</div>
-        <div className={`text-${mythSections[activeMyth]}-text`}>$faith</div>
+        {t("tutorial.quests.desc")
+          .split(" ")
+          .map((text, index) => (
+            <span
+              key={index}
+              style={{
+                display: index === text.length - 1 ? "block" : "inline",
+              }}
+              className={`${
+                index === text.length - 1
+                  ? `text-${mythSections[activeMyth]}-text`
+                  : ""
+              }`}
+            >
+              {text}{" "}
+            </span>
+          ))}
       </div>
     </div>
   );
@@ -223,16 +275,31 @@ export const BoosterGuide = ({ handleClick }) => {
       </div>
       <div className="h-[13%] flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col justify-center items-center text-primary leading-9">
-          <div>For Ingame</div>
-          <div className={`text-${mythSections[activeMyth]}-text`}>rewards</div>
+          {t("tutorial.boosters.desc")
+            .split(" ")
+            .map((text, index) => (
+              <span
+                key={index}
+                style={{
+                  display: index === text.length - 1 ? "block" : "inline",
+                }}
+                className={`${
+                  index === text.length - 1
+                    ? `text-${mythSections[activeMyth]}-text`
+                    : ""
+                }`}
+              >
+                {text}{" "}
+              </span>
+            ))}
         </div>
       </div>
     </div>
   );
 };
 
-export const TowerGuide = ({ handleClick, Header, currGuide }) => {
-  const { activeMyth, assets } = useContext(MyContext);
+export const TowerGuide = ({ handleClick }) => {
+  const { assets, activeMyth } = useContext(MyContext);
   const { t } = useTranslation();
   const [activeColor, setActiveColor] = useState(0);
   const myths = ["greek", "celtic", "norse", "egyptian"];
@@ -253,7 +320,19 @@ export const TowerGuide = ({ handleClick, Header, currGuide }) => {
             x
           </span>
           <div>
-            convert <br /> orbs
+            {t("tutorial.tower.title")
+              .split(" ")
+              .map((word, index) => (
+                <span
+                  key={index}
+                  style={{ display: "block" }}
+                  className={`${
+                    index == 1 && `text-${mythSections[activeMyth]}-text`
+                  }`}
+                >
+                  {word}
+                </span>
+              ))}
           </div>
         </div>
       </div>
@@ -317,11 +396,19 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
             <div className="flex flex-col text-[11vw] mt-2 leading-9">
               <span className="font-symbols text-[50px] pb-3">0</span>
               <div className="uppercase">
-                {"Complete Tasks".split(" ").map((word, index) => (
-                  <span key={index} style={{ display: "block" }}>
-                    {word}
-                  </span>
-                ))}
+                {t("tutorial.profileTask.title")
+                  .split(" ")
+                  .map((word, index, words) => (
+                    <span
+                      key={index}
+                      style={{
+                        display:
+                          index === words.length - 1 ? "block" : "inline",
+                      }}
+                    >
+                      {word}{" "}
+                    </span>
+                  ))}
               </div>
             </div>
           </div>
@@ -335,8 +422,7 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
           </div>
           <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
             <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
-              <div>For Ingame</div>
-              <div>rewards</div>
+              {t("tutorial.profileTask.desc")}
             </div>
           </div>
         </div>
@@ -353,8 +439,18 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
           </div>
           <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
             <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
-              <div>Checkout</div>
-              <div>Partners</div>
+              {t("tutorial.gift.title")
+                .split(" ")
+                .map((text, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      display: index === text.length - 1 ? "block" : "inline",
+                    }}
+                  >
+                    {text}{" "}
+                  </span>
+                ))}
             </div>
           </div>
           {Toggles}
@@ -363,24 +459,3 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
     </>
   );
 };
-
-{
-  /* <div
-onClick={handleClick}
-className="fixed inset-0 backdrop-blur-[3px] flex  flex-col items-center z-50"
->
-<div className="w-full">{Header}</div>
-<div className="flex flex-grow justify-center items-center">
-  <div className="relative mt-[4vh] text-card">
-    <img
-      src={assets.uxui.infomoon}
-      alt="info card background"
-      className="object-contain rounded-primary z-10"
-    />
-  </div>
-</div>
-<div className="h-[20%] text-primary flex justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
-  Double your rewards
-</div>
-</div> */
-}

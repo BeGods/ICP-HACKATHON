@@ -10,19 +10,19 @@
     "norse": "Norse mythology unveils a fantastical realm of swirling realms and legendary beasts, where valiant heroes embark on daring quests against looming shadows. Epic sagas brim with magical artifacts and cosmic trees that bridge worlds, while fierce battles echo through the ages. Enigmatic creatures roam the landscapes, and the air crackles with ancient magic. Themes of bravery, sacrifice, and the inexorable dance of fate intertwine, creating a vivid tapestry of wonder and peril that captivates the imagination."
   },
   "mythologies": {
-    "celtic": "Celtic",
-    "egyptian": "Egyptian",
-    "greek": "Greek",
-    "norse": "Norse",
+    "celtic": "ဆဲလ်တစ်",
+    "egyptian": "အီဂျစ်",
+    "greek": "ဂရိ",
+    "norse": "နော်ဝေး",
     "dark": "Dark"
   },
   "keywords": {
     "orb": "Orb",
     "orbs": "ORB(S)",
-    "conversion": "Conversion",
-    "discover": "Discover",
+    "conversion": "စကားဝိုင်း",
+    "discover": "ရှာဖွေမှု",
     "whitelist": "Whitelist",
-    "load": "Loading"
+    "load": "လုပ်ဆောင်နေသည်"
   },
   "buttons": {
     "buy": "Buy",
@@ -33,79 +33,79 @@
     "shared": "Shared"
   },
   "tower": {
-    "tune": "Do you know the ♪ tune ♪?",
-    "play": "Play it the right order!"
+    "tune": "တေးသွားရဲ့  ♪ သံစဥ် ♪ ကို သင်သိလား? ",
+    "play": "အစဥ်တကျ ဖြစ်အောင်ထားပါ။"
   },
   "sections": {
-    "forges": "Forge",
-    "boosters": "Boosters",
+    "forges": "ပန်းပဲထုသည်",
+    "boosters": "စွမ်းအားတိုးမြှင့်ခြင်း",
     "quests": "Quests",
-    "leaderboard": "Leaderboard",
-    "tower": "Tower",
+    "leaderboard": "ဦးဆောင်မှုဇယား",
+    "tower": "တာဝါ",
     "brand": "Brand",
-    "profile": "Profile"
+    "profile": "ပရိုဖိုင်း"
   },
   "boosters": [
-    { "title": "Automata", "desc": "Auto tap" },
-    { "title": "Quests", "desc": "Energy" },
-    { "title": "Alchemist", "desc": "Increase tap" },
+    { "title": "အလိုအလျောက်လုပ်ဆောင်မှု", "desc": "အလိုအလျောက်နှိပ်ခြင်း" },
+    { "title": "ပျောက်ဆုံးသွားသောစူးစမ်းမှု", "desc": "အင်အား" },
+    { "title": "အဂ္ဂရိတ်ဆရာ", "desc": "နှစ်ကြိမ်ထိခြင်း" },
     {},
     {},
     {},
-    { "title": "Burst", "desc": "Power Press" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "ပေါက်ကွဲသည်", "desc": "ပါဝါနှိပ်ပါ" },
+    { "title": "အော်တိုမေတာပက့်ခ်", "desc": "4X အော်တိုမေတာ" }
   ],
   "profile": {
-    "premium": "Premium",
-    "invite": "Invite",
-    "squad": "Squad",
-    "player": "Player",
-    "name": "Name",
-    "apply": "Apply",
-    "referrals": "Referrals",
-    "team": "Team",
-    "guide": "Guide",
+    "premium": "ပရီမီယမ်",
+    "invite": "ဖိတ်ခေါ်ခြင်း",
+    "squad": "အဖွဲ့",
+    "player": "ကစားသမား",
+    "name": "အမည်",
+    "apply": "ရွေးခြယ်သည်",
+    "referrals": "refferals",
+    "team": "အသင်း",
+    "guide": "လမ်းညွှန်",
     "causes": "Causes",
-    "partners": "Partners",
-    "partner": "Partner",
-    "charity": "Charity",
-    "rewards": "Rewards",
-    "task": "Task",
-    "connect": "Connect",
-    "follow": "Follow",
-    "select": "Select",
-    "music": "Music",
-    "wallet": "Wallet"
+    "partners": "ပါတနာများ",
+    "partner": "ပါတနာများ",
+    "charity": "ပရဟိတ",
+    "rewards": "ဆုလာဘ်",
+    "task": "တာဝန်",
+    "connect": "ဆက်သွယ်ရန်",
+    "follow": "လုပ်ပါ",
+    "select": "‌ရွေးခြယ်သည်",
+    "music": "ဂီတ",
+    "wallet": "ပိုက်ဆံကတ်"
   },
   "note": {
-    "text": "Leader board update in",
-    "tower": "Tap ORBS to convert", 
-    "bonus": "To see active promotion"
+    "text": "ဦးဆောင်မှုဇယားကို update လုပ်မည်",
+    "tower": "ORBS ကို နှိပ်ပြီး လဲလှယ်ပါ",
+    "bonus": "active promotion ကြည့်ရန်"
   },
   "bonus": {
-    "join": "WELCOME BONUS",
-    "box": "BOX",
-    "youwon": "YOU WON!",
-    "win": "Win"
+    "join": " ကြိုဆိုခြင်းလက်ဆောင်",
+    "box": "သေတ္တာ",
+    "youwon": "သင်နိုင်ပြီ!",
+    "win": "အနိုင်ရသည်"
   },
   "elements": {
-    "earth": "Earth",
-    "air": "Air",
-    "fire": "Fire",
-    "water": "Water",
-    "aether": "Aether"
+    "earth": "မြေ",
+    "air": "လေ",
+    "fire": "‌ရေ",
+    "water": "‌ရေ",
+    "aether": "လေထု"
   },
   "tutorial": {
-    "forgeShard": { "title": "Tap to earn shards", "desc": "" },
-    "forgeOrbs": { "title": "1 Orb = 1,000 shards", "desc": "" },
-    "forgeBubble": { "title": "Pop Bubble to earn Gifts", "desc": "" },
-    "forgeMinion": { "title": "Catch & hold 2x shards", "desc": "" },
-    "forgeExplore": { "title": "Explore +more", "desc": "" },
-    "quests": { "title": "Complete Quests", "desc": "Earn $faith"  },
-    "boosters": { "title": "ACQUIRE BOOSTERS", "desc": "Earn $faith" },
-    "profileTask": { "title": "Complete Tasks", "desc": "For Ingame rewards"  },
-    "gift" : { "title": "Checkout Partners", "desc": "" },
-    "tower" : { "title": "Convert Orbs", "desc": "" }
+    "forgeShard": { "title": "ခလုတ်ကိုနှိပ်ပြီး Shard များရယူပါ", "desc": "" },
+    "forgeOrbs": { "title": "1 အော်ဘ် = 1,000 အစိတ်အပိုင်း", "desc": "" },
+    "forgeBubble": { "title": "ဘူးပွိုင့်ဖုတ်၍ အရာရှိများရယူပါ", "desc": "" },
+    "forgeMinion": { "title": "Shard 2x ကိုဖမ်းပြီး Holding လုပ်ပါ", "desc": "" },
+    "forgeExplore": { "title": "စုံစမ်းမေးမြန်းရန် +တိုးချဲ့", "desc": "" },
+    "quests": { "title": "မစ်ရှင်များ ပြီးမြောက်ပါ", "desc": "$faith ရယူပါ" },
+    "boosters": { "title": "BOOSTERS တပ်ဆင်ပါ", "desc": "$faith ရယူပါ" },
+    "profileTask": { "title": "အလုပ်များ ပြီးမြောက်ပါ", "desc": "ဂိမ်းအတွင်းဆုချီးမြှင့်မှုများအတွက်" },
+    "gift": { "title": "အဖွဲ့ဝင်များကိုကြည့်ပါ", "desc": "" },
+    "tower": { "title": "အော်ဘ်များကိုပြောင်းရန်", "desc": "" }
   },
   "quests": {
     "celtic": {
@@ -343,124 +343,75 @@
   },
   "toasts": {
     "default": {
-      "error": {
-        "title": "Unable to Connect to Server",
-        "desc": "Something went wrong. Please refresh or try again in a few moments."
-      }
+      "error": { "title": "ဆာဗာနှင့်မချိတ်ဆက်နိုင်ပါ",  "desc": "တခုခုမှားယွင်းနေသည် ၊  refresh သို့ ခေတ္တစောင့်ဆိုင်းပြီး ပြန်ကြိုးစားပါ" }
+     
     },
     "Convert": {
-      "success": {
-        "title": "Orbs Successfully Converted!",
-        "desc": "Well done! Keep the momentum going!"
-      },
-      "error": {
-        "title": "Insufficient Orbs",
-        "desc": "You need more orbs to complete this transaction."
-      }
+      "success": { "title": "Orbs အောင်မြင်စွာလဲလှယ်ပြီးပြီ!", "desc": "တော်တယ်။ momentum ဆက်ထိန်းထားမယ်!" }
+      ,
+      "error":{ "title": "Orbs လုံ လောက်မှု မရှိပါ။ "
+      , "desc": "လွှဲပြောင်းမှု အောင်မြင်ရန် Orbs ထပ် လိုအပ်သည်။" }
+      
     },
     "Booster_Claim": {
-      "success": {
-        "title": "Power Boost Achieved!",
-        "desc": "You're now equipped for epic wins! Go conquer it!"
-      },
-      "error": {
-        "title": "Booster Claim Failed!",
-        "desc": "Oops! Something went wrong while claiming your booster. Please try again!"
-      }
+      "success": { "title": "Power တိုးခြင်းအောင်မြင်သည်!", "desc": "သင်အခု အထူးအောင်မြင်မှုများအတွက် ပြင်ဆင်ထားပါပြီ! သွားပြီး ဂုဏ်ယူပါ!" },
+      "error": { "title": "Boosterရယူမှု မအောင်မြင်ပါ!", "desc":
+       "Oops! Booster ရယူ ရာတွင် အခက်အခဲ ဖြစ်နေ သည်။ ထပ်မံကြိုးစားလိုက်ပါ!" }
     },
     "Conversion_Multiplier": {
       "success": {
-        "title": "Tune Matched!",
-        "desc": "You got it! The key is correct, and the multiplier has been applied!"
+        "title": "သံစဥ် ညှိခြင်း အောင်မြင်သည်!",
+       "desc": "သင်အောင်မြင်ပါပြီ။ ကီးမှန်ကန်ပြီး တိုးချဲ့ မှု အကျိုးသက်ရောက်ပြီ!"
       },
       "error": {
-        "title": "Tune Mismatch!",
-        "desc": "The key you entered is incorrect. Unfortunately, no multiplier has been applied."
+        "title": "သံစဥ်ညှိခြင်း မှားယွင်းသည်။", 
+        "desc" : "သင်ချိန်သော ကီး မမှန်ပါ။ ကံမကောင်း အကြောင်း မလှ သဖြင့် တိုးချဲ့ ခြင်း အကျိုးသက်ရောက်မှု မရှိပါ။ "
       }
     },
     "Tasks": {
       "success": {
-        "title": "Task Completed Successfully!",
-        "desc": "Well done! You've earned 3 MultiOrbs."
+        "title" : "Task အောင်မြင်စွာ ပြီးဆုံးသွားပြီ။!", 
+       "desc": "သိပ်တော်တာပဲ။ သင် MultiOrbs 3ခု တောင် ရပြီ။"
       },
       "error": {
-        "title": "Task Incomplete!",
-        "desc": "The task could not be completed. Please try again to earn your rewards."
+        "title": "Taskမပြီး မြောက်ပါ။",
+        "desc": "Task မပြီးဆုံးသေးပါ။ ထပ်မံကြိုးစားပြီး သင့်ဆုလာဘ် ကို ရယူပါ။"
       }
     },
     "Booster_Lost_Not_Available": {
-      "error": {
-        "title": "Quest Not Available",
-        "desc": "Comeback Tomorrow!"
-      }
+      "error": { "title": "Quest မရှိ သေးပါ",
+      "desc": "မနက်ဖြန် ထပ်လာပါ!" }
+     
     },
     "Quest_complete": {
-      "success": {
-        "title": "Congratulations! Quest Completed!",
-        "desc": "Congratulations! You've completed the quest."
-      },
-      "error": {
-        "title": "Quest Completion Failed",
-        "desc": "There was an issue completing the quest. Please ensure the quest is fully completed and try again later."
-      }
+      "success": { "title": "Quest အောင်မြင်သွားလို့ ဂုဏ်ယူပါတယ်!", "desc": "ဂုဏ်ယူပါတယ် Quest ကို သင် အောင်မြင်သွားပြီ။" },
+      "error": { "title": "Quest မအောင်မြင်ပါ","desc": "Quest အောင်မြင်ဖို့ ပြဿနာ ရှိနေတယ်။ quest ပြီးမြှောက်ကြောင်း သေချာအောင်လုပ်ပြီး ထပ်ကြိုးစားလိုက်ပါဦး" }
     },
     "Quest_claim": {
-      "success": {
-        "title": "Quest Successfully Claimed!",
-        "desc": "You've successfully claimed the quest.  Keep going to unlock more rewards!"
-      },
-      "error": {
-        "title": "Insufficient Orbs for Quest Claim",
-        "desc": "You don’t have enough orbs to claim this quest. Please collect more and try again."
-      }
+      "success": { "title": "တာဝန်ပြီးမြောက်သွားပါပြီ!","desc": "သင်အောင်မြင်စွာ တာဝန်ကို ရယူပြီးပါပြီ။ ဆုများရရှိရန် ဆက်လက်ဆောင်ရွက်ပါ!" },
+      "error":{ "title": "Quest ရယူဖို့ orbs လုံ လောက်မှု မရှိပါ ", "desc": "Quest ရယူဖို့ သင့်မှာ orbs လုံ လောက်မှု မရှိပါ။ ကျေးဇူးပြုပြီး ထပ်မံ စုဆောင်း လိုက်ပါဦး" }
     },
     "Quest_claim_InsufficientOrbs": {
-      "error": {
-        "title": "Insufficient Orbs for Quest Claim",
-        "desc": "You don’t have enough orbs to claim this quest. Please collect more and try again."
-      }
+      "error": { "title": "Quest ရယူဖို့ orbs လုံ လောက်မှု မရှိပါ ", "desc": "Quest ရယူဖို့ သင့်မှာ orbs လုံ လောက်မှု မရှိပါ။ ကျေးဇူးပြုပြီး ထပ်မံ စုဆောင်း လိုက်ပါဦး" }
     },
     "Quest_claim_AlreadyClaimed": {
-      "error": {
-        "title": "Quest Already Claimed",
-        "desc": "You’ve already claimed this quest. Check your active quests for details."
-      }
+      "error": { "title": "Quest လက်ခံပြီးပြီ။ ", "desc": "သင် quest လက်ခံပြီးပြီ သင့်ရဲ့ quest မှာ အသေးစိတ်လေ့လာပါ"}
     },
     "Quest_orb_claim": {
-      "success": {
-        "title": "Orbs Successfully Claimed!",
-        "desc": "You've successfully claimed your orbs. Enjoy your rewards and keep progressing!"
-      },
-      "error": {
-        "title": "Orbs Claim Failed",
-        "desc": "There was an issue claiming your orbs. Please try again later."
-      }
+      "success": { "title": "Orbs အောင်မြင်စွာ လက်ခံပြီးပြီ!", "desc": "သင့် orbs များ အောင်မြင်စွာ လက်ခံပြီးပြီ။သင့် ဆုလာဘ် ကိုခံစားပြီး ဆက်လက်ကြိုးစားပါ။ !" },
+      "error": { "title": "Orbs ရယူခြင်း မအောင်မြင်ပါ။", "desc": "Orbs ရယူ ရာ တွင် အခက်အခဲ ရှိနေသည်။ ထပ်မံကြိုးစားပါ။ " }
     },
     "Quest_share": {
-      "success": {
-        "title": "Quest Successfully Shared!",
-        "desc": "Congratulations! You've successfully shared your quest and earned an extra orb."
-      },
-      "error": {
-        "title": "Quest Share Failed",
-        "desc": "There was an issue sharing your quest. Please try again later."
-      }
+      "success": { "title": "Questအောင်မြင်စွာ ရှဲယ်ပြီးပြီ!", "desc": "ဂုဏ်ယူပါတယ်! သင့် quest ကို အောင်မြင်စွာ ရှဲယ် ပြီးပြီ။ Orb တခု အပို သင်ရရှိသည်။" },
+      "error": { "title": "Quest ဝေမျှခြင်းမအောင်မြင်ပါ။ ", "desc":
+      "သင့် quest ဝေမျှ ရာတွင် အခက်အခဲ ဖြစ်နေသည်။ကျေးဇူးပြုပြီး ထပ်မံကြိုးစားပါ။ " }
     },
     "ReferralCopy": {
-      "success": {
-        "title": "Referral Link Copied!",
-        "desc": "Share it with your friends to claim 3 multicolor ORBs!"
-      }
+      "success": { "title": "Referral Link ကူးပြီးပြီ။!", "desc": "သင့်သူငယ်ချင်း ကိုဝေမျှပြီး ‌ရောင်စုံ orbs 3 ခု ရယူပါ!" }
     },
     "TonConnect": {
-      "success": {
-        "title": "Wallet Connected Successfully!",
-        "desc": "Your TON wallet has been connected."
-      },
-      "error": {
-        "title": "Wallet Connection Failed",
-        "desc": "There was an issue connecting to your TON wallet. Please try again later."
-      }
+      "success": { "title": "Wallet ချိတ်ဆက် မှုအောင်မြင်သည်။", "desc": "သင့် TON wallet ချိတ်ဆက်ပြီးပြီ။" },
+      "error": { "title": "Wallet ချိတ်ဆက်မှုမအောင်မြင်ပါ။", "desc": "သင့် Ton Wallet နှင့် ချိတ်ဆက်ရာ အခက်အခဲ ရှိနေသည်။ထပ်မံကြိုးစားလိုက်ပါ။" }
     }
   }
 }

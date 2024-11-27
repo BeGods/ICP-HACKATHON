@@ -69,12 +69,6 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       />,
     ];
 
-    // if (gameData.mythologies[activeMyth].isEligibleForBurst) {
-    //   newItems.push(
-
-    //   );
-    // }
-
     if (gameData.isAutoPayActive) {
       newItems.push(
         <BoosterItem

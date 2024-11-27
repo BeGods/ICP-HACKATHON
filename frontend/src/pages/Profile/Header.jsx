@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { MyContext } from "../../context/context";
 import { formatTwoNums } from "../../helpers/leaderboard.helper";
+import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
 
 const BottomChild = ({ userData, showGuide }) => {
   const { rewards, setSection } = useContext(MyContext);
@@ -48,7 +49,7 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard, setSection } = useContext(MyContext);
+  const { assets, platform, setShowCard } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });

@@ -1071,9 +1071,41 @@ import { ThumbsUp } from "lucide-react";
 
 // export default Test;
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { countries } from "../utils/country";
 
-const Test = (props) => {
+const Test = () => {
+  const [phone, setPhone] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState({
+    name: "India",
+    code: "IND",
+    flag: "🇮🇳",
+    dialCode: "+91",
+  });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const availableCountries = countries.filter(
+    (country) => country.code !== "NA"
+  );
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsDropdownOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="relative h-screen w-screen bg-black">
       <img
@@ -1081,32 +1113,80 @@ const Test = (props) => {
         alt="fof"
         className="w-full opacity-55"
       />
-      <div className="flex flex-col mx-auto w-4/5 text-white">
-        <div className="w-full pt-4">
-          <div>Select Country</div>
-          <div className="border p-2.5 rounded-[15px]">
-            <select className="bg-black text-white mt-2 w-full text-tertiary">
-              <option key={2} value={""}>
-                fdfd
-              </option>
-            </select>
+      {/* Form */}
+      <div
+        className="flex flex-col mx-auto w-4/5 text-white mt-10"
+        ref={dropdownRef}
+      >
+        <div className="text-lg">Connect with us!</div>
+        <div className="flex gap-2 mt-2 text-[4vw]">
+          <div
+            className="flex justify-center rounded-[10px] items-center gap-1 w-[38%] bg-gray-800 cursor-pointer relative"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <h1>{selectedCountry.flag}</h1>
+            <h1>{selectedCountry.dialCode}</h1>
+            <h1 className="text-[3vw]">▼</h1>
+          </div>
+          <div className="w-full py-3 border-gray-400 border rounded-[10px]">
+            <input
+              type="number"
+              className="w-full px-2 h-full bg-inherit outline-none"
+              placeholder="Phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
           </div>
         </div>
-        <div className="w-full pt-4">
-          <div>Enter Mobile Number</div>
-          <input
-            type="text"
-            name=""
-            id=""
-            className="bg-inherit outline-none p-3 mt-2 border rounded-[15px] w-full"
-          />
+        {/* Dropdown */}
+        {isDropdownOpen && (
+          <div className="absolute mt-2 w-fit max-h-[200px] overflow-auto bg-white text-black rounded-lg z-10">
+            {availableCountries.map((country) => (
+              <div
+                key={country.code}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                onClick={() => handleCountrySelect(country)}
+              >
+                <span>{country.flag}</span>
+                <span>
+                  {country.name.length > 20
+                    ? `${country.name.slice(0, 20)}...`
+                    : country.name}
+                </span>
+                <span>{country.dialCode}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex mt-4 gap-2 w-full justify-center items-center text-gray-200">
+          <input type="checkbox" name="terms" id="terms" />
+          <div className="text-[3vw]">Accept Terms & Conditions</div>
         </div>
-        <div className="flex justify-center text-xl text-black font-semibold bg-white mt-4 py-2.5 rounded-[15px]">
-          Submit
+        <div className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6">
+          Next
         </div>
+      </div>
+
+      <div className="absolute w-full flex justify-center text-[3vw] text-gray-600 bottom-0 mb-2">
+        <span className="pr-1 underline cursor-pointer">Privary Policy</span> |
+        @Frogdog Games 2024
       </div>
     </div>
   );
 };
 
 export default Test;
+{
+  /* <div className="flex flex-col h-full">
+          {teleCountry.map((country, index) => {
+            console.log(`flag-icon-${country.alpha_2_code.toLowerCase()}`);
+            return (
+              <span
+                key={index}
+                className={`flag-icon flag-icon-${country.alpha_2_code.toLowerCase()}`}
+                style={{ marginRight: "10px", width: "24px", height: "16px" }}
+              ></span>
+            );
+          })}
+        </div> */
+}

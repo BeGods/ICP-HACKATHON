@@ -192,5 +192,5 @@ export const validateTutCookie = async (tele, key) => {
       return cookieItem;
     }
   }
-  return "en";
+  return null;
 };

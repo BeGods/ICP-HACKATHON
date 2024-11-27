@@ -39,7 +39,7 @@ const tele = window.Telegram?.WebApp;
 const Quests = () => {
   const { t } = useTranslation();
   const [showClaimEffect, setShowClaimEffect] = useState(false);
-  const [enableGuide, setEnableGuide] = useQuestGuide("rr");
+  const [enableGuide, setEnableGuide] = useQuestGuide("tutorial05");
   const [showToggle, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const {
@@ -90,8 +90,6 @@ const Quests = () => {
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ]?.filter((item) => item?.secret === true);
-
-  console.log(quest);
 
   //* toggle handler functions
   const handlePrev = () => {

@@ -11,7 +11,7 @@ const tele = window.Telegram?.WebApp;
 const alignBasedOnCard = [
   "-mt-[3vh] ml-[10vw]",
   "-mt-[3vh] ml-[5vw]",
-  "mt-[10vh] mr-[60px]",
+  "mt-[9.5vh] mr-[60px]",
   "-mt-[5px] ml-[90px]",
   "mr-[60px] -mt-8",
   "mt-[18vh] -ml-[12vw]",
@@ -39,7 +39,7 @@ const IconBtn = ({ isInfo, handleClick, align }) => {
       {isInfo ? (
         <div className="bg-black flex justify-center items-center w-[40px] h-[40px] z-20 rounded-full">
           <h1
-            className={`text-white italic mr-1 text-primary`}
+            className={`text-white italic mr-1 text-[30px]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊

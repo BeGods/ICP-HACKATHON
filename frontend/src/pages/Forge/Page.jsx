@@ -101,7 +101,7 @@ const Forges = () => {
   const [showStarBoosters, setshowStarBoosters] = useState(false);
   const [randomReward, setRandomReward] = useState(null);
   const [showToggles, setShowToggles] = useState(false);
-  const [enableGuide, setEnableGuide] = useForgeGuide("guide10");
+  const [enableGuide, setEnableGuide] = useForgeGuide("tutorial01");
   const [currGuide, setCurrGuide] = useState(0);
   const [minionPosition, setMinionPosition] = useState(true);
   const [showPartner, setShowPartner] = useState(false);
@@ -1215,9 +1215,13 @@ const Forges = () => {
               <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
                 <div className="bubble-spin-effect">
                   <img
-                    src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.category}.bubble.png`}
+                    src={
+                      randomReward.partnerType == "playsuper"
+                        ? `${randomReward.metadata.campaignCoverImage}`
+                        : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.metadata.campaignCoverImage}.bubble.png`
+                    }
                     alt="icon"
-                    className="pointer-events-none h-20 w-20 rounded-full z-50"
+                    className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
                   />
                 </div>
               </div>

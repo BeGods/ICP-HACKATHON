@@ -100,6 +100,9 @@ const IntroPage = (props) => {
       platform === "macos" ||
       platform === "windows" ||
       platform === "tdesktop" ||
+      platform === "web" ||
+      platform === "weba" ||
+      platform === "unknown" ||
       !platform
     ) {
       setDisableDestop(true);
