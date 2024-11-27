@@ -1,71 +1,90 @@
-import { useContext } from "react";
-import Header from "../../components/Common/Header";
+import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-
-const TopChild = () => {
-  return (
-    <div className="absolute flex w-full justify-between top-0 z-50">
-      <div className="flex flex-col items-end justify-between h-full mt-1 ml-[8vw] z-10">
-        <div className="font-symbols text-white text-[12vw] text-black-lg-contour">
-          3
-        </div>
-      </div>
-      <div className="flex flex-col text-black-lg-contour items-end justify-between h-full mt-1 mr-[8vw] z-10">
-        <div className="font-symbols text-white text-[12vw]">2</div>
-      </div>
-    </div>
-  );
-};
+import { useTranslation } from "react-i18next";
 
 const BottomChild = ({ partners }) => {
   return (
-    <div className="flex bar-flipped justify-center -mt-[4vh] px-7">
-      <div
-        className={`flex glow-button-white text-num pl-[18px] text-black-lg-contour text-white items-center border  justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
-      >
-        {partners}
+    <div className="flex relative justify-center px-2 -mt-3">
+      <div className="flex w-full px-7">
+        <div
+          className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary pl-headSides">{partners}</div>
+        </div>
+        <div
+          className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+        >
+          <div className="text-primary pr-headSides">0</div>
+        </div>
       </div>
-      <div
-        className={`flex text-num pr-[18px] text-black-lg-contour text-white items-center border justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
-      >
-        0
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          className={`font-symbols  text-iconLg text-black-lg-contour text-white z-50`}
+        >
+          2
+        </div>
+        <div
+          className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
+        >
+          3
+        </div>
       </div>
     </div>
   );
 };
 
-const CenterChild = () => {
+const CenterChild = (props) => {
   const { platform, assets } = useContext(MyContext);
+
   return (
-    <div className="flex absolute justify-center w-full">
+    <div className="flex absolute justify-center w-full z-20 top-0 -mt-1">
       <div
-        onClick={() => {}}
-        className={`z-20 flex text-center glow-icon-white justify-center h-[36vw] w-[36vw] mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
+        onClick={() => {
+          tele.HapticFeedback.notificationOccurred("success");
+          setSection(4);
+        }}
+        className={`flex text-center justify-center h-symbol-primary w-symbol-primary overflow-hidden items-center rounded-full`}
       >
         <img
-          src={`${assets.uxui.baseorb}`}
+          src={assets.uxui.baseorb}
           alt="base-orb"
-          className={`filter-orbs-black w-full h-full`}
+          className={`w-full h-full`}
         />
-        <span
-          className={`absolute z-1 font-symbols text-white text-[30vw] ${
-            platform === "ios" ? "mt-8 ml-2" : "mt-10 ml-2"
-          }  opacity-50 orb-symbol-shadow`}
+        <div
+          className={`z-1 opacity-50 flex justify-center items-start font-symbols text-white text-[22vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
-          3
-        </span>
+          <div className={`${platform === "ios" ? "mt-4 ml-2" : "mt-5 ml-2"}`}>
+            3
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 const GiftHeader = ({ partners }) => {
+  const [changeText, setChangeText] = useState(true);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <Header
-      BottomChild={<BottomChild partners={partners} />}
-      TopChild={<TopChild />}
-      CenterChild={<CenterChild />}
-    />
+    <div>
+      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+        <div
+          className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+        >
+          {changeText ? t("profile.partners") : t("profile.charity")}
+        </div>
+        <BottomChild partners={partners} />
+        <CenterChild />
+      </div>
+    </div>
   );
 };
 

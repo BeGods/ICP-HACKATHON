@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { elements, mythSections, mythSymbols } from "../../utils/constants";
 import { MyContext } from "../../context/context";
-import Header from "../../components/Common/Header";
 import { useTranslation } from "react-i18next";
+import { formatThreeNums } from "../../helpers/leaderboard.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -14,26 +14,25 @@ const CenterChild = ({
   activeMyth,
   orbGlow,
   platform,
+  mythData,
 }) => {
   const { setSection, assets } = useContext(MyContext);
 
   return (
-    <div
-      onClick={() => {
-        tele.HapticFeedback.notificationOccurred("success");
-        setSection(4);
-      }}
-      className="flex absolute justify-center w-full z-20 mt-1"
-    >
+    <div className="flex absolute justify-center w-full z-20 top-0 -mt-1">
       <div
-        className={`flex text-center justify-center h-[36vw] w-[36vw] overflow-hidden items-center rounded-full outline outline-${
+        onClick={() => {
+          tele.HapticFeedback.notificationOccurred("success");
+          setSection(4);
+        }}
+        className={`flex text-center justify-center h-symbol-primary w-symbol-primary overflow-hidden items-center rounded-full outline outline-${
           mythSections[activeMyth]
         }-primary transition-all duration-1000 ${
           orbGlow
             ? `glow-tap-${mythSections[activeMyth]} outline-[2px]`
             : `glow-icon-${mythSections[activeMyth]}`
-        } ${tapGlow ? "scale-[125%] outline-[2px]" : ""} ${
-          glowReward ? "scale-[125%] outline-[2px]" : ""
+        } ${tapGlow ? "scale-[115%] outline-[2px]" : ""} ${
+          glowReward ? "scale-[115%] outline-[2px]" : ""
         }`}
       >
         <div
@@ -51,14 +50,16 @@ const CenterChild = ({
         />
         <div
           className={`z-1 flex justify-center items-start font-symbols ${
+            mythData.disabled && "opacity-25"
+          } ${
             glowReward
               ? `text-${mythSections[activeMyth]}-text`
               : showBlackOrb === 1
               ? "text-white"
               : "text-white"
-          } text-[28vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+          } text-[22vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
-          <div className={`${platform === "ios" ? "-mt-0.5" : "mt-2"}`}>
+          <div className={`${platform === "ios" ? "-mt-1" : "mt-4"}`}>
             {mythSymbols[mythSections[activeMyth]]}
           </div>
         </div>
@@ -67,58 +68,15 @@ const CenterChild = ({
   );
 };
 
-const TopChild = ({
+const BottomChild = ({
+  shards,
+  orbs,
   activeMyth,
   glowShards,
   glowBooster,
   glowSymbol,
-  minimize,
+  showTut,
 }) => {
-  const [changeText, setChangeText] = useState(true);
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setChangeText((prevText) => !prevText);
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="absolute flex w-full justify-between top-0 z-50">
-      <div
-        className={`font-symbols ml-[8vw] text-black-md-contour ${
-          glowShards && `scale-150`
-        }  text-[12vw] transition-all duration-1000 text-${
-          mythSections[activeMyth]
-        }-text`}
-      >
-        l
-      </div>
-      <div
-        className={`font-symbols mr-[8vw] text-black-lg-contour ${
-          (glowSymbol || glowBooster === 3) && `scale-[150%]`
-        } text-[12vw] transition-all duration-1000 text-${
-          mythSections[activeMyth]
-        }-text`}
-      >
-        {mythSymbols[mythSections[activeMyth]]}
-      </div>
-      <div
-        className={`text-head -mt-1 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit  mx-auto ${
-          changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
-        } ${minimize === 1 && "minimize-head"} ${
-          minimize === 2 && "maximize-head"
-        }`}
-      >
-        {changeText
-          ? t("sections.forges")
-          : t(`elements.${elements[activeMyth]}`)}
-      </div>
-    </div>
-  );
-};
-const BottomChild = ({ shards, orbs, activeMyth, glowShards }) => {
   const [showEffect, setShowEffect] = useState(false);
 
   useEffect(() => {
@@ -131,30 +89,52 @@ const BottomChild = ({ shards, orbs, activeMyth, glowShards }) => {
   }, [glowShards, showEffect]);
 
   return (
-    <div
-      className={`flex bar-flipped ${
-        showEffect && "bar-flipped"
-      } justify-center -mt-[4vh] px-7 w-full`}
-    >
-      <div
-        className={`flex ${
-          showEffect &&
-          `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
-        } text-num pl-[18px] text-black-lg-contour text-white items-center border border-${
-          mythSections[activeMyth]
-        }-primary justify-start h-button-primary w-full bg-black z-10 rounded-primary transform skew-x-[18deg]`}
-      >
-        {shards}
+    <div className="flex relative justify-center px-2 -mt-3">
+      <div className="flex w-full px-7">
+        <div
+          className={`flex  ${
+            showEffect &&
+            `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
+          }  border-${
+            mythSections[activeMyth]
+          }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary font-medium pl-headSides">
+            {formatThreeNums(shards)}
+          </div>
+        </div>
+        <div
+          className={`flex  justify-end ${
+            showEffect &&
+            `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
+          }  border-${
+            mythSections[activeMyth]
+          }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary font-medium pr-headSides">
+            {formatThreeNums(orbs)}
+          </div>
+        </div>
       </div>
-      <div
-        className={`flex ${
-          showEffect &&
-          `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
-        } text-num pr-[18px] text-black-lg-contour text-white items-center border border-${
-          mythSections[activeMyth]
-        }-primary justify-end h-button-primary w-full bg-black z-10 rounded-primary transform -skew-x-[18deg]`}
-      >
-        {orbs}
+      <div className="flex justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          className={`font-symbols text-black-lg-contour text-iconLg ${
+            showTut == 0 && "tut-shake"
+          } ${glowShards && `scale-125`}   text-${
+            mythSections[activeMyth]
+          }-text transition-all duration-500`}
+        >
+          l
+        </div>
+        <div
+          className={`font-symbols text-black-lg-contour text-iconLg ${
+            (glowSymbol || glowBooster === 3) && `scale-125`
+          } ${showTut == 1 && "tut-shake"} text-${
+            mythSections[activeMyth]
+          }-text transition-all duration-500`}
+        >
+          {mythSymbols[mythSections[activeMyth]]}
+        </div>
       </div>
     </div>
   );
@@ -174,25 +154,46 @@ const ForgeHeader = ({
   glowSymbol,
   glowBooster,
   minimize,
+  showTut,
 }) => {
   const height = Math.min(
     100,
     Math.max(0, (mythData.energy / mythData.energyLimit) * 100)
   );
+  const [changeText, setChangeText] = useState(true);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <Header
-      TopChild={
-        <TopChild
-          glowBooster={glowBooster}
-          glowSymbol={glowSymbol}
+    <div>
+      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+        <div
+          className={`text-sectionHead ${minimize == 1 && "minimize-head"} ${
+            minimize == 2 && "maximize-head"
+          } ${
+            changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
+          } -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+        >
+          {changeText
+            ? t("sections.forges")
+            : t(`elements.${elements[activeMyth]}`)}
+        </div>
+        <BottomChild
           shards={shards}
+          orbs={orbs}
           activeMyth={activeMyth}
           glowShards={glowShards}
+          showTut={showTut}
+          glowBooster={glowBooster}
+          glowSymbol={glowSymbol}
           minimize={minimize}
         />
-      }
-      CenterChild={
         <CenterChild
           height={height}
           tapGlow={tapGlow}
@@ -201,17 +202,10 @@ const ForgeHeader = ({
           orbGlow={orbGlow}
           platform={platform}
           activeMyth={activeMyth}
+          mythData={mythData}
         />
-      }
-      BottomChild={
-        <BottomChild
-          shards={shards}
-          orbs={orbs}
-          activeMyth={activeMyth}
-          glowShards={glowShards}
-        />
-      }
-    />
+      </div>
+    </div>
   );
 };
 

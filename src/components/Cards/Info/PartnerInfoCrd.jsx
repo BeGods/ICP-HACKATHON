@@ -6,42 +6,32 @@ import { MyContext } from "../../../context/context";
 
 const PartnerCard = ({ close }) => {
   const { activeReward, assets, platform } = useContext(MyContext);
-  const { i18n } = useTranslation();
 
   return (
     <div
-      onClick={() => {
-        close();
-      }}
       style={{
-        backgroundImage: `url(${assets.uxui.basebg})`,
+        backgroundImage: `url(${assets.uxui.info})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",
         top: 0,
         left: 0,
       }}
-      className="flex flex-col rounded-[15px] items-center gap-4 card-shadow-black h-full"
+      className="flex flex-col rounded-[15px] w-full h-full items-center gap-4 card-shadow-black"
     >
-      <div className="relative w-full h-full text-card">
-        <img
-          src={assets.uxui.info}
-          alt="info card background"
-          className="w-full h-full object-cover rounded-primary"
-        />
-        <div className="absolute text-card top-0 w-full text-center text-[28px] font-bold mt-2 uppercase">
-          {activeReward.name}
-        </div>
-        <div
-          className={`absolute leading-[18px] text-[16px] inset-0 w-[85%] mx-auto flex flex-col items-center justify-center font-[550] ${
-            (i18n.language === "hi" ||
-              i18n.language === "th" ||
-              i18n.language === "ru") &&
-            "font-normal"
-          }`}
-        >
-          {activeReward.description} <br /> <br />{" "}
-          {activeReward.metadata.campaignDetails}
+      <div className="flex w-full relative">
+        <div className="w-full h-full absolute flex flex-col leading-tight justify-start items-center flex-grow  text-card pt-[10px]">
+          <div className="flex flex-col text-center">
+            <h1 className="text-paperHead font-bold uppercase">
+              {activeReward.metadata.brandName}
+            </h1>
+            <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
+              {activeReward.metadata.brandCategory}
+            </h2>
+          </div>
+          <div className="h-full w-full text-center px-3 pt-2">
+            {activeReward.metadata.howToRedeem.replace(/<\/?p>/g, "")}
+          </div>
         </div>
       </div>
       {platform === "ios" ? (

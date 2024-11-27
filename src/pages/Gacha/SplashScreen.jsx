@@ -4,7 +4,7 @@ import {
   mythologies,
   wheelNames,
 } from "../../utils/constants";
-import Confetti from "react-confetti";
+import confetti from "canvas-confetti";
 import { ThumbsUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -19,7 +19,6 @@ const tele = window.Telegram?.WebApp;
 const SplashScreen = ({ reward, exploitReward }) => {
   const { t } = useTranslation();
   const { setSection, setActiveMyth, enableSound } = useContext(MyContext);
-  const [runConfetti, setRunConfetti] = useState(false);
   const [currReward, setCurrReward] = useState(reward);
   const [showScale, setShowScale] = useState(0);
   const [showYouScale, setShowYouScale] = useState(0);
@@ -31,10 +30,35 @@ const SplashScreen = ({ reward, exploitReward }) => {
   let redirectTimoutId = useRef();
 
   const playConfetti = () => {
-    setRunConfetti(true);
-    setTimeout(() => {
-      setRunConfetti(false);
-    }, 3000);
+    const defaults = {
+      spread: 360,
+      ticks: 80,
+      gravity: 0,
+      decay: 0.94,
+      startVelocity: 20,
+      colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+    };
+
+    function shoot() {
+      confetti({
+        ...defaults,
+        particleCount: 40,
+        scalar: 1.2,
+        shapes: ["star"],
+      });
+
+      confetti({
+        ...defaults,
+        particleCount: 10,
+        scalar: 0.75,
+        shapes: ["circle"],
+      });
+    }
+
+    setTimeout(shoot, 0);
+    setTimeout(shoot, 100);
+    setTimeout(shoot, 200);
+    setTimeout(shoot, 300);
   };
 
   const handleClick = (reward) => {
@@ -121,21 +145,6 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
   return (
     <div className="w-screen h-screen relative bg-black">
-      {/* Background Paper */}
-      <div
-        className="absolute animate-spin-slow scale-150 z-0"
-        style={{
-          background: `url(${assets.uxui.starlight})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "contain",
-          backgroundPosition: "center center",
-          height: "100vh",
-          width: "100vw",
-          position: "fixed",
-          top: 0,
-          left: 0,
-        }}
-      ></div>
       {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
         {t("bonus.youwon")
@@ -228,14 +237,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
               }`}
         </h1>
       </div>
-      {/* Confetti */}
-      {runConfetti && (
-        <Confetti
-          width={window.innerWidth}
-          height={window.innerHeight}
-          style={{ zIndex: 10, position: "fixed", top: 0, left: 0 }}
-        />
-      )}
+
       {/* Audios */}
       <ReactHowler
         src={`${assets.audio.gachaWin}`}
@@ -279,7 +281,7 @@ const BoosterCard = ({ reward }) => {
         style={{
           backgroundImage: `url(${
             assets.boosters[
-              reward.type === "minion" ? "alchemist" : reward.type
+              `${reward.type === "minion" ? "alchemist" : reward.type}Card`
             ]
           })`,
           backgroundRepeat: "no-repeat",

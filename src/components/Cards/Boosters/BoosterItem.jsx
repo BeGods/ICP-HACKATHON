@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { boosterIcon, mythSections } from "../../../utils/constants";
+import { MyContext } from "../../../context/context";
 
 const BoosterItem = ({
   isActive,
@@ -9,14 +10,17 @@ const BoosterItem = ({
   booster,
   isGuideActive,
 }) => {
+  const { gameData } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
 
   return (
     <div
       onClick={handleClick}
-      className={`flex gap-1 border  ${
-        booster === 0 && isGuideActive && "z-[60]"
-      } ${
+      className={`flex gap-1 border ${
+        !gameData.mythologies[activeMyth].isEligibleForBurst &&
+        booster === 6 &&
+        "grayscale"
+      } ${booster === 0 && isGuideActive && "z-[60]"} ${
         booster === 7
           ? "border-multiColor"
           : `border-${mythSections[activeMyth]}-primary`
@@ -45,15 +49,31 @@ const BoosterItem = ({
       <div>
         <div
           className={`font-symbols ${
+            gameData.mythologies[activeMyth].isEligibleForBurst &&
+            booster === 6 &&
+            !isActive &&
+            `glow-icon-${mythSections[activeMyth]}`
+          } ${
             (!isActive || booster === 1) &&
             booster !== 7 &&
+            booster !== 6 &&
             `glow-icon-${mythSections[activeMyth]}`
-          } ${booster === 7 && "gradient-multi"} text-booster p-0 -mt-2 mr-2`}
+          } ${booster === 7 && "gradient-multi"}  ${
+            booster === 6 &&
+            !gameData.mythologies[activeMyth].isEligibleForBurst &&
+            `text-gray-400`
+          } text-booster p-0 -mt-2 mr-2`}
         >
           {boosterIcon[booster]}
         </div>
       </div>
-      <div className={`flex flex-col flex-grow justify-center -ml-1`}>
+      <div
+        className={`flex flex-col ${
+          !gameData.mythologies[activeMyth].isEligibleForBurst &&
+          booster === 6 &&
+          "text-gray-400"
+        } flex-grow justify-center -ml-1`}
+      >
         <h1 className="text-tertiary uppercase">
           {t(`boosters.${booster}.title`)}
         </h1>
@@ -61,7 +81,7 @@ const BoosterItem = ({
           {t(`boosters.${booster}.desc`)}{" "}
           {booster === 6 && (
             <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-              Lvl 1000*n
+              1000*n
             </span>
           )}
           {booster === 1 && (
@@ -70,7 +90,7 @@ const BoosterItem = ({
             </span>
           )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-            {booster != 6 && booster != 7 && booster != 1 && "Lvl 1-99"}
+            {booster != 6 && booster != 7 && booster != 1 && "Max. 99"}
           </span>
         </h2>
       </div>

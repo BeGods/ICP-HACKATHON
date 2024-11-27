@@ -1,5 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { MyContext } from "../../context/context";
+import { setSoundStatus } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -10,9 +11,9 @@ const ToggleSwitch = () => {
     setEnableSound((prev) => {
       const newValue = !prev;
       if (newValue) {
-        tele.CloudStorage.removeItem("sound");
+        setSoundStatus(tele, true);
       } else {
-        tele.CloudStorage.setItem("sound", true);
+        setSoundStatus(tele, false);
       }
       return newValue;
     });

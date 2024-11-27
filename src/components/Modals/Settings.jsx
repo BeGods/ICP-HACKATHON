@@ -12,7 +12,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { MyContext } from "../../context/context";
-import { country } from "../../utils/country";
+import { countries } from "../../utils/country";
 import {
   connectTonWallet,
   disconnectTonWallet,
@@ -24,6 +24,7 @@ import {
   useTonConnectUI,
 } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
+import { setCountryCookie, setLangCookie } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -35,6 +36,7 @@ const languages = [
   { name: "Português", code: "pt" },
   { name: "Español", code: "es" },
   { name: "Filipino", code: "fil" },
+  { name: "မြန်မာ", code: "my" },
 ];
 
 const SettingModal = ({ close }) => {
@@ -46,17 +48,18 @@ const SettingModal = ({ close }) => {
     enableSound,
     setUserData,
     userData,
+    country,
+    setCountry,
   } = useContext(MyContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const { state, open } = useTonConnectModal();
-  const [countryCode, setCountryCode] = useState("NA");
   const [isChanged, setIsChanged] = useState(false);
 
   const getPartnersData = async (lang, country) => {
     try {
       const rewardsData = await fetchRewards(lang, country, authToken);
-      setRewards(rewardsData?.rewards);
+      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
     } catch (error) {
@@ -64,26 +67,18 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  useEffect(() => {
-    tele.CloudStorage.getItem("country_code", (err, item) => {
-      if (item) {
-        setCountryCode(item);
-      }
-    });
-  }, []);
-
   const handleLanguageChange = (e) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
     setIsChanged(true);
     i18next.changeLanguage(langCode);
-    tele.CloudStorage.setItem("lang", langCode);
+    setLangCookie(tele, langCode);
   };
 
   const handleSettingChange = (e) => {
     setIsChanged(true);
     const selectedCountry = e.target.value;
-    setCountryCode(selectedCountry);
-    tele.CloudStorage.setItem("country_code", selectedCountry);
+    setCountry(selectedCountry);
+    setCountryCookie(tele, selectedCountry);
   };
 
   const handleConnectTon = async () => {
@@ -143,7 +138,7 @@ const SettingModal = ({ close }) => {
   const handleClose = () => {
     close();
     if (isChanged) {
-      getPartnersData(i18n.language, countryCode);
+      getPartnersData(i18n.language, country);
     }
   };
 
@@ -157,11 +152,11 @@ const SettingModal = ({ close }) => {
           </div>
           <div className="w-full">
             <select
-              value={countryCode}
+              value={country}
               onChange={handleSettingChange}
               className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
             >
-              {country.map((ctx) => (
+              {countries.map((ctx) => (
                 <option key={ctx.code} value={ctx.code}>
                   {ctx.name}
                 </option>
@@ -203,7 +198,9 @@ const SettingModal = ({ close }) => {
               onClick={() => open()}
               className="flex items-center w-full justify-between"
             >
-              <div className="pl-3">{t("profile.connect")} Wallet</div>
+              <div className="pl-3">
+                {t("profile.connect") + " " + t("profile.wallet")}{" "}
+              </div>
               <ChevronRight size={"20px"} />
             </div>
           )}
@@ -214,7 +211,7 @@ const SettingModal = ({ close }) => {
             {enableSound ? <Volume2 /> : <VolumeX />}
           </div>
           <div className="flex justify-between w-full">
-            <div className="pl-3">Audio</div>
+            <div className="pl-3">{t("profile.music")}</div>
             <ToggleSwitch />
           </div>
         </div>

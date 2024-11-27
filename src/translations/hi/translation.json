@@ -53,7 +53,7 @@
     {},
     {},
     { "title": "विस्फोट", "desc": "पावर प्रेस डाउन" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    {"title": "ऑटोमेटा पैक", "desc": "4X ऑटोमेटा" }
 
   ],
   "profile": {
@@ -74,7 +74,9 @@
     "task": "कार्य",
     "connect": "कनेक्ट करें",
     "follow": "जुड़ें",
-    "select": "चयन करें"
+    "select": "चयन करें",
+    "music": "संगीत",
+    "wallet": "वॉलेट"
   },
   "elements": {
     "earth": "पृथ्वी",
@@ -95,17 +97,19 @@
     "win": "जिते"
   },
   "tutorial": {
-    "forge": { "title": "टैप फोर्ज", "desc": "ORB(S) अर्जित करने के लिए" },
-    "quests": {
-      "title": "दावा खोजें",
-      "desc": "$FAITH अर्जित करने के लिए इसे पूरा करें"
-    },
+    "forgeShard": { "title": "शार्ड्स अर्जित करने के लिए टैप करें", "desc": "" },
+    "forgeOrbs": { "title": "1 गोलक = 1,000 टुकड़े", "desc": "" },
+    "forgeBubble": { "title": "उपहार पाने के लिए बबल फोड़ें", "desc": "" },
+    "forgeMinion": { "title": "2x शार्ड्स को पकड़ें और रखें", "desc": "" },
+    "forgeExplore": { "title": "अधिक खोजें", "desc": "" },
+    "quests": { "title": "पूरा करें Quests", "desc": "$faith कमाएँ" },
     "boosters": {
-      "title": "बूस्टर प्राप्त करें",
-      "desc": "खेल पुरस्कार के लिए"
+      "title": "बूस्टर पाएं",
+      "desc": "कामये $faith"
     },
-    "profile": { "title": "अपना देश चुनें", "desc": "उपहार अनलॉक करने के लिए" },
-    "tower": { "title": "ORB चुनें और कन्वर्ट करें", "desc": "बूस्टर खरीदने के लिए" }
+    "profileTask": { "title": "कार्य पूर्ण करें", "desc": "इनगेम पुरस्कार के लिए" },
+    "gift" : { "title": "चेकआउट भागीदार", "desc": "" },
+    "tower" : { "title": "ऑर्ब्स परिवर्तित", "desc": "" }
   },
   "quests": {
     "celtic": {

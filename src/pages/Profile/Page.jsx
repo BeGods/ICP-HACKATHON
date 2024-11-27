@@ -10,24 +10,86 @@ import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
+import { hideBackButton } from "../../utils/teleBackButton";
+
+const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
   const { userData, socialQuestData, setShowCard, assets, setSection } =
     useContext(MyContext);
   const avatarColor = localStorage.getItem("avatarColor");
-  const [enableGuide, setEnableGuide] = useProfileGuide("lp4");
+  const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
 
   useEffect(() => {
     if (enableGuide) {
       setShowCard(
         <ProfileGuide
+          Header={
+            <ProfileHeader
+              showGuide={0}
+              userData={userData}
+              avatarColor={avatarColor}
+            />
+          }
+          currGuide={0}
+          Toggles={
+            <>
+              <ToggleLeft
+                minimize={2}
+                handleClick={() => {
+                  setSection(5);
+                }}
+                activeMyth={4}
+              />
+              <ToggleRight
+                minimize={2}
+                handleClick={() => {
+                  setSection(5);
+                }}
+                activeMyth={4}
+              />
+            </>
+          }
           currQuest={socialQuestData[0]}
           handleClick={() => {
             setShowCard(
               <SettingModal
                 close={() => {
-                  setShowCard(null);
+                  setShowCard(
+                    <ProfileGuide
+                      Header={
+                        <ProfileHeader
+                          showGuide={1}
+                          userData={userData}
+                          avatarColor={avatarColor}
+                        />
+                      }
+                      currGuide={1}
+                      Toggles={
+                        <>
+                          <ToggleLeft
+                            minimize={2}
+                            handleClick={() => {
+                              setSection(5);
+                            }}
+                            activeMyth={4}
+                          />
+                          <ToggleRight
+                            minimize={2}
+                            handleClick={() => {
+                              setSection(5);
+                            }}
+                            activeMyth={4}
+                          />
+                        </>
+                      }
+                      currQuest={socialQuestData[0]}
+                      handleClick={() => {
+                        setShowCard(null);
+                      }}
+                    />
+                  );
                 }}
               />
             );
@@ -38,6 +100,9 @@ const Profile = (props) => {
   }, [enableGuide]);
 
   useEffect(() => {
+    // disable backbutton
+    hideBackButton(tele);
+
     setTimeout(() => {
       setShowToggles(true);
     }, 300);
@@ -96,9 +161,9 @@ const Profile = (props) => {
                 />
               );
             }}
-            className="flex justify-center items-center bg-black h-[60px] w-[60px] mr-[35px] z-50 rounded-full mt-2"
+            className="flex justify-center items-center bg-black  w-[45px] h-[45px] mr-[35px] z-50 rounded-full mt-[9.5vh]"
           >
-            <Settings color="white" size={"35px"} />
+            <Settings color="white" size={"25px"} />
           </div>
         </div>
       </div>

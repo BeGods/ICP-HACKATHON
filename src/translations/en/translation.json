@@ -73,7 +73,9 @@
     "task": "Task",
     "connect": "Connect",
     "follow": "Follow",
-    "select": "Select"
+    "select": "Select",
+    "music": "Music",
+    "wallet": "Wallet"
   },
   "note": {
     "text": "Leader board update in",
@@ -94,11 +96,16 @@
     "aether": "Aether"
   },
   "tutorial": {
-    "forge": { "title": "TAP FORGES", "desc": "TO EARN ORB(S)" },
-    "quests": { "title": "CLAIM QUESTS", "desc": "COMPLETE TO EARN $FAITH" },
-    "boosters": { "title": "ACQUIRE BOOSTERS", "desc": "FOR GAME REWARDS" },
-    "profile": { "title": "CHOOSE YOUR COUNTRY", "desc": "TO UNLOCK GIFTS" },
-    "tower" : { "title": "CHOOSE ORB & CONVERT", "desc": "TO AFFORD BOOSTER" }
+    "forgeShard": { "title": "Tap to earn shards", "desc": "" },
+    "forgeOrbs": { "title": "1 Orb = 1,000 shards", "desc": "" },
+    "forgeBubble": { "title": "Pop Bubble to earn Gifts", "desc": "" },
+    "forgeMinion": { "title": "Catch & hold 2x shards", "desc": "" },
+    "forgeExplore": { "title": "Explore +more", "desc": "" },
+    "quests": { "title": "Complete Quests", "desc": "Earn $faith"  },
+    "boosters": { "title": "ACQUIRE BOOSTERS", "desc": "Earn $faith" },
+    "profileTask": { "title": "Complete Tasks", "desc": "For Ingame rewards"  },
+    "gift" : { "title": "Checkout Partners", "desc": "" },
+    "tower" : { "title": "Convert Orbs", "desc": "" }
   },
   "quests": {
     "celtic": {

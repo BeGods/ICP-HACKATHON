@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
-import {
-  claimAutoAutomata,
-  claimAutomataBooster,
-  claimBurstBooster,
-  claimShardsBooster,
-} from "../../utils/api";
+import { claimAutomataBooster } from "../../utils/api";
 import { useTranslation } from "react-i18next";
 import {
   ToggleLeft,
@@ -43,8 +38,6 @@ const Boosters = () => {
   const disableRef = useRef(false);
 
   const handleClaimAutomata = async () => {
-    console.log("func", activeMyth);
-
     if (disableRef.current === false) {
       disableRef.current = true;
       const mythologyName = {
@@ -107,7 +100,7 @@ const Boosters = () => {
   };
 
   const [enableGuide, setEnableGuide] = useBoosterGuide(
-    "lp2",
+    "tutorial03",
     handleClaimAutomata,
     handleCardChange,
     guideTimeoutId
