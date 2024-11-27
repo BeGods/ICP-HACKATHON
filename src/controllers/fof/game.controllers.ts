@@ -17,6 +17,8 @@ import {
   validateAutomata,
   updateMythologies,
   fetchUserGameStats,
+  checkStreakIsActive,
+  checkPlaysuperExpiry,
 } from "../../services/fof/game.services";
 import { defaultMythologies } from "../../utils/constants/variables";
 import { Document } from "mongodb";
@@ -26,7 +28,7 @@ import Stats from "../../models/Stats.models";
 import { checkBonus } from "../../services/fof/general.services";
 import { mythOrder } from "../../utils/constants/variables";
 import milestones from "../../models/milestones.models";
-import User from "../../models/user.models";
+import User, { IUser } from "../../models/user.models";
 import CryptoJs from "crypto-js";
 
 export const startTapSession = async (req, res) => {
@@ -306,12 +308,26 @@ export const getGameStats = async (req, res) => {
     }
 
     const isEligibleToClaim = await checkBonus(user);
+    const isStreakActive = await checkStreakIsActive(user.streakBonus);
+    const hasPlaysuperExpired = await checkPlaysuperExpiry(user.playsuper);
+
+    const updates: Partial<IUser> = {};
 
     if (isEligibleToClaim) {
-      await User.findOneAndUpdate(
-        { _id: req.user._id },
-        { $set: { exploitCount: 0 } }
-      );
+      updates.exploitCount = 0;
+    }
+
+    if (user.playsuper.isVerified && hasPlaysuperExpired) {
+      user.playsuper.isVerified = false;
+      updates.playsuper = {
+        isVerified: false,
+        key: null,
+        createdAt: null,
+      };
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await User.findOneAndUpdate({ _id: req.user._id }, { $set: updates });
     }
 
     // get totalMembers
@@ -324,6 +340,7 @@ export const getGameStats = async (req, res) => {
       squadCount: members?.members.length ?? 0,
       squadTotalOrbs: members?.totalOrbs ?? 0,
     };
+
     const userData = {
       telegramUsername: user.telegramUsername,
       tonAddress: user.tonAddress,
@@ -333,6 +350,7 @@ export const getGameStats = async (req, res) => {
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
       isEligibleToClaim: isEligibleToClaim,
+      isStreakActive: isStreakActive,
       joiningBonus: user.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,
       ...memberData,
@@ -368,6 +386,7 @@ export const getGameStats = async (req, res) => {
 
       return indexes;
     });
+
     res.status(200).json({
       user: userData,
       stats: {

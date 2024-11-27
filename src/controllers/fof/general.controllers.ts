@@ -273,6 +273,82 @@ export const claimJoiningBonus = async (req, res) => {
   }
 };
 
+export const claimStreakBonus = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = req.user;
+
+    const userMilestones = await milestones.findOne({ userId: userId });
+    const activePartners = await partners.find({});
+    const userRewards = userMilestones.rewards.claimedRewards;
+
+    const claimedRewards = userRewards
+      .filter((item) => item.tokensCollected == 12)
+      .map((item) => item.partnerId.toString());
+
+    const availablePartners = activePartners.filter(
+      (item) => !claimedRewards.includes(item._id.toString())
+    );
+
+    if (availablePartners.length === 0) {
+      res.status(200).json({ reward: "fdg" });
+    }
+
+    const randomPartner = Math.floor(Math.random() * availablePartners.length);
+    const partnerExists = userRewards.find(
+      (item) =>
+        item.partnerId == availablePartners[randomPartner]._id.toString()
+    );
+
+    if (partnerExists) {
+      await milestones.findOneAndUpdate(
+        {
+          userId,
+          "rewards.claimedRewards.partnerId":
+            availablePartners[randomPartner]._id.toString(),
+        },
+        {
+          $set: { "rewards.updatedAt": Date.now() },
+          $inc: { "rewards.claimedRewards.$.tokensCollected": 1 },
+        },
+        {
+          new: true,
+        }
+      );
+    } else {
+      await userMilestones.updateOne(
+        {
+          $set: {
+            "rewards.updatedAt": Date.now(),
+          },
+          $push: {
+            "rewards.claimedRewards": {
+              partnerId: availablePartners[randomPartner]._id.toString(),
+              type: "custom",
+              isClaimed: false,
+              tokensCollected: 1,
+            },
+          },
+        },
+        { new: true }
+      );
+    }
+
+    res.status(200).json({
+      reward: availablePartners[randomPartner],
+    });
+
+    user.streakBonus = Date.now();
+    user.save();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
 export const getRewards = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -295,31 +371,31 @@ export const getRewards = async (req, res) => {
     let claimedCustomPartners = [];
 
     // playsuper partners
-    // if (validCountries.includes(country)) {
-    //   const playsuperRewards = await fetchPlaySuperRewards(
-    //     country,
-    //     lang,
-    //     playusperCred
-    //   );
+    if (validCountries.includes(country)) {
+      const playsuperRewards = await fetchPlaySuperRewards(
+        country,
+        lang,
+        playusperCred
+      );
 
-    //   playsuper = playsuperRewards.map((reward) => {
-    //     const claimedReward = claimedRewards.find(
-    //       (claimed) => claimed.partnerId === reward.id
-    //     );
+      playsuper = playsuperRewards.map((reward) => {
+        const claimedReward = claimedRewards.find(
+          (claimed) => claimed.partnerId === reward.id
+        );
 
-    //     const tokensCollected = claimedReward
-    //       ? claimedReward.tokensCollected
-    //       : 0;
-    //     const isClaimed = claimedReward ? claimedReward.isClaimed : false;
+        const tokensCollected = claimedReward
+          ? claimedReward.tokensCollected
+          : 0;
+        const isClaimed = claimedReward ? claimedReward.isClaimed : false;
 
-    //     return {
-    //       ...reward,
-    //       partnerType: "playsuper",
-    //       tokensCollected,
-    //       isClaimed,
-    //     };
-    //   });
-    // }
+        return {
+          ...reward,
+          partnerType: "playsuper",
+          tokensCollected,
+          isClaimed,
+        };
+      });
+    }
 
     // inhlouse partners
     const ourPartners = activePartners.map((reward) => {
@@ -339,10 +415,12 @@ export const getRewards = async (req, res) => {
       };
     });
 
-    // active and orders
+    //? till here I have fetched and mapped the custom-playsuper partners
+    // active - custom
     activeCustomPartners = ourPartners.filter(
       (item) => item.tokensCollected < 12
     );
+    // completed - playsuper
     claimedCustomPartners = ourPartners.filter(
       (item) => item.tokensCollected === 12
     );
@@ -352,29 +430,26 @@ export const getRewards = async (req, res) => {
     const remainingSlots = 12 - playSuperItems.length;
     const partnerItems = activeCustomPartners.slice(0, remainingSlots);
 
-    const claimedPlaysuperOrders = [];
-
     // playsuper orders
-    // const playsuperOrders = await fetchPlaysuperOrders(lang, playusperCred.key);
-    // const claimedPlaysuperOrders = playsuperOrders
-    //   .filter((reward) =>
-    //     claimedRewards.some(
-    //       (claimed) => claimed.partnerId === reward._id.toString()
-    //     )
-    //   )
-    //   .map((reward) => {
-    //     const claimedReward = claimedRewards.find(
-    //       (claimed) => claimed.partnerId === reward._id.toString()
-    //     );
+    const playsuperOrders = await fetchPlaysuperOrders(lang, playusperCred.key);
 
-    //     return {
-    //       ...reward,
-    //       id: reward._id,
-    //       partnerType: "playsuper",
-    //       tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
-    //       isClaimed: claimedReward ? claimedReward.isClaimed : false,
-    //     };
-    //   });
+    const claimedPlaysuperOrders = playsuperOrders
+      .filter((reward) =>
+        claimedRewards.some((claimed) => reward.rewardId === claimed.partnerId)
+      )
+      .map((reward) => {
+        const claimedReward = claimedRewards.find(
+          (claimed) => claimed.partnerId === reward.rewardId
+        );
+
+        return {
+          ...reward,
+          id: reward.rewardId,
+          partnerType: "playsuper",
+          tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+          isClaimed: claimedReward ? claimedReward.isClaimed : false,
+        };
+      });
 
     res.status(200).json({
       rewards: [...playSuperItems, ...partnerItems],
@@ -383,6 +458,8 @@ export const getRewards = async (req, res) => {
       bubbleLastClaimed: userMilestones.rewards.updatedAt,
     });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -422,7 +499,7 @@ export const resendOtp = async (req, res) => {
 export const verifyOtp = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { mobileNumber, otp } = req.body;
+    const { mobileNumber, name, otp } = req.body;
 
     const response = await verifyPlaysuperOtp(mobileNumber, otp);
 
@@ -430,12 +507,14 @@ export const verifyOtp = async (req, res) => {
       { _id: userId },
       {
         $set: {
+          name: name,
+          phoneNumber: mobileNumber,
           "playsuper.isVerified": true,
           "playsuper.key": response.data.access_token,
           "playsuper.createdAt": Date.now(),
         },
       },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
     if (!user) {
@@ -461,7 +540,8 @@ export const redeemPlayuperReward = async (req, res) => {
     const reward = await claimPlaysuperReward(rewardId, user.playsuper.key);
 
     updatedPartner.isClaimed = true;
-    updatedPartner.couponCode = reward.couponCode;
+    updatedPartner.orderId = reward.data.orderId;
+    // updatedPartner.couponCode = reward.couponCode;
 
     if (reward) {
       await milestones.findOneAndUpdate(
@@ -474,7 +554,9 @@ export const redeemPlayuperReward = async (req, res) => {
       );
     }
 
-    res.status(200).json({ message: "Reward claimed successfully!" });
+    res.status(200).json({
+      couponCode: reward.data.couponCode,
+    });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",

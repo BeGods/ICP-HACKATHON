@@ -73,7 +73,7 @@ export const claimQuest = async (req, res) => {
         update: {
           $inc: {
             "mythologies.$.faith": 1,
-            "mythologies.$.energyLimit": 1000,
+            "mythologies.$.energyLimit": 200,
           },
         },
       },
@@ -112,7 +112,6 @@ export const claimSocialQuest = async (req, res) => {
         $push: {
           claimedQuests: {
             taskId: quest.taskId,
-            questClaimed: true,
           },
         },
       },

@@ -3,16 +3,19 @@ import mongoose, { Schema, model, Document } from "mongoose";
 export interface IUser extends Document {
   telegramId?: string;
   telegramUsername?: string;
+  name: string;
   isPremium?: boolean;
   role: "user" | "admin" | "partner";
   directReferralCount: number;
   tonAddress: string;
   exploitCount: number;
   premiumReferralCount: number;
+  phoneNumber: string;
   gameSession: {
     gameHrStartAt: Number;
     dailyGameQuota: Number;
   };
+  streakBonus: Number;
   joiningBonus: boolean;
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
@@ -45,6 +48,12 @@ const userSchema = new Schema<IUser>(
         type: Number,
         default: 0,
       },
+    },
+    phoneNumber: {
+      type: String,
+    },
+    name: {
+      type: String,
     },
     role: {
       type: String,
@@ -94,6 +103,10 @@ const userSchema = new Schema<IUser>(
     },
     dailyBonusClaimedAt: {
       type: Date,
+      default: 0,
+    },
+    streakBonus: {
+      type: Number,
       default: 0,
     },
     announcements: {

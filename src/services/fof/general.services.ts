@@ -282,8 +282,6 @@ export const claimBonusQuest = async (userId) => {
       (item) => item.mythology !== "Other"
     );
 
-    console.log(unClaimedActiveQuests);
-
     const randomQuest =
       unClaimedActiveQuests[
         Math.floor(Math.random() * unClaimedActiveQuests.length)
