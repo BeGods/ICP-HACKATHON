@@ -23,6 +23,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
   const countOfInCompleteQuests = socialQuestData.filter(
     (item) => item.isQuestClaimed === false
   ).length;
+  const [clickEffect, setClickEffect] = useState(false);
 
   const playAudio = () => {
     tele.HapticFeedback.notificationOccurred("success");
@@ -44,16 +45,24 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     <>
       {icon < 3 ? (
         <div
-          className="flex  flex-col items-center cursor-pointer z-50"
+          className={`flex flex-colitems-center cursor-pointer z-50`}
           onClick={(e) => {
             e.preventDefault();
             playAudio();
             handleSectionChange(redirect[icon]);
+            setClickEffect(true);
+            setTimeout(() => {
+              setClickEffect(false);
+            }, 500);
           }}
-          style={{ minWidth: "70px" }}
+          style={{ minWidth: "60px" }}
         >
           <h1
             className={`font-symbols ${
+              clickEffect && "click-effect"
+            }  text-iconLg  ${
+              section === redirect[icon] && platform !== "ios" && "pb-[3px]"
+            } ${
               section === redirect[icon]
                 ? `${
                     activeMyth < 4 && section !== 4
@@ -62,13 +71,6 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                   }`
                 : `text-black-contour`
             }`}
-            style={{
-              fontSize:
-                section === redirect[icon] && platform !== "ios"
-                  ? "65px"
-                  : "55px",
-              transition: "font-size 0.3s ease",
-            }}
           >
             {footerIcons[icon]}
           </h1>
@@ -89,7 +91,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
               <img
                 src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
                 alt="profile-image"
-                className={`w-[16vw] ${
+                className={`w-[16.5vw] ${
                   (section === redirect[icon] || section === 5) &&
                   "scale-110 glow-icon-white"
                 } border border-black  rounded-full`}
@@ -116,7 +118,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
       {icon === 3 && (
-        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[8vh] mr-1 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[7.5vh] mr-2 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
           {countOfInCompleteQuests}
         </div>
       )}
@@ -160,7 +162,7 @@ const Footer = ({}) => {
 
       <div
         className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
-          platform === "ios" ? "-mt-3.5" : "-mt-2"
+          platform === "ios" ? "-mt-3" : "-mt-0.5"
         }`}
       >
         {footerIcons.map((item, index) => (

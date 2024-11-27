@@ -47,7 +47,7 @@
     {},
     {},
     { "title": "Explosão", "desc": "Pressão de Apertar" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "Pacote de Autômatos", "desc": "Autômatos 4X" }
   ],
   "profile": {
     "premium": "Premium",
@@ -67,7 +67,9 @@
     "task": "Tarefas",
     "connect": "Conectar",
     "follow": "Seguir",
-    "select": "Selecionar"
+    "select": "Selecionar",
+    "music": "Música",
+    "wallet": "Carteira"
   },
   "elements": {
     "earth": "Terra",
@@ -92,17 +94,19 @@
     "win": "Ganhar"
   },
   "tutorial": {
-    "forge": { "title": "TOCA NAS FORJAS", "desc": "PARA GANHAR ORB(S)" },
-    "quests": {
-      "title": "RECLAMAR MISSÕES",
-      "desc": "COMPLETAR PARA GANHAR $FAITH"
-    },
+    "forgeShard": { "title": "Toque para ganhar fragmentos", "desc": "" },
+    "forgeOrbs": { "title": "1 Orb = 1,000 Fragmentos", "desc": "" },
+    "forgeBubble": { "title": "Estourar bolha para ganhar Presentes", "desc": "" },
+    "forgeMinion": { "title": "Capturar e manter 2x fragmentos", "desc": "" },
+    "forgeExplore": { "title": "Explorar +mais", "desc": "" },
+    "quests": { "title": "Completar Missões", "desc": "Ganhe $faith" },
     "boosters": {
       "title": "ADQUIRIR BOOSTERS",
-      "desc": "PARA RECOMPENSAS DO JOGO"
+      "desc": "Ganhar $fé"
     },
-    "profile": { "title": "ESCOLHA SEU PAÍS", "desc": "para desbloquear prêmios" },
-    "tower": { "title": "ELIGE ORB Y CONVIERTE", "desc": "PARA CONSEGUIR POTENCIADORES" }
+    "profileTask": { "title": "Completar Tarefas", "desc": "Para recompensas no jogo" },
+    "gift" : { "title": "Ver Parceiros", "desc": "" },
+    "tower" : { "title": "Converter Orbes", "desc": "" }
   },
   "quests": {
     "celtic": {

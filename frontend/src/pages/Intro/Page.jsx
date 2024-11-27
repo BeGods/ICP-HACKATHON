@@ -4,6 +4,11 @@ import { useNavigate } from "react-router-dom";
 import assets from "../../assets/assets.json";
 import ReactHowler from "react-howler";
 import Captcha from "../../components/Captcha/Captcha";
+import {
+  setAuthCookie,
+  setLangCookie,
+  validateSoundCookie,
+} from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,6 +26,7 @@ const IntroPage = (props) => {
     if (tele) {
       try {
         await tele.ready();
+
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
@@ -40,7 +46,7 @@ const IntroPage = (props) => {
           if (param.includes("FDG")) {
             setReferralCode(param);
           } else {
-            tele.CloudStorage.setItem("lang", param);
+            setLangCookie(tele, param);
           }
         } else {
           console.log("No user found in Telegram data");
@@ -58,26 +64,21 @@ const IntroPage = (props) => {
     try {
       const response = await authenticate(userData, referralCode);
       localStorage.setItem("accessToken", response.data.token);
-      tele.CloudStorage.setItem("accessToken", response.data.token);
-
+      await setAuthCookie(tele, response.data.token);
       navigate("/home");
     } catch (error) {
       console.error("Authentication Error: ", error);
     }
   };
 
+  const checkSoundActive = async () => {
+    const isSoundActive = await validateSoundCookie(tele);
+    setEnableSound(isSoundActive);
+  };
+
   useEffect(() => {
     getUserData();
-
-    tele.CloudStorage.getItem("sound", (err, item) => {
-      (async () => {
-        if (item) {
-          setEnableSound(false);
-        } else {
-          console.log("Unable to fetch sound.");
-        }
-      })();
-    });
+    checkSoundActive();
 
     const handleUserInteraction = () => {
       playAudio();
@@ -195,10 +196,10 @@ const IntroPage = (props) => {
         // TMA mobile view
         <div
           style={{
-            background: `url(${assets.uxui.intro})`,
+            background: `url(/assets/uxui/intro.jpg)`,
+            backgroundPosition: "50% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            backgroundPosition: "center center",
             height: "100vh",
             width: "100vw",
             position: "fixed",
@@ -206,18 +207,18 @@ const IntroPage = (props) => {
             left: 0,
           }}
         >
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-screen ">
             <div className="flex justify-center items-center w-full leading-tight">
-              <div className="relative">
+              <div className="relative z-[100]">
                 <img
                   src={assets.logos.fof}
                   alt="fof"
-                  className="w-[200px] mt-6 begod-text-shadow"
+                  className="w-[200px] mt-6 fof-text-shadow"
                 />
               </div>
             </div>
             <div className="flex flex-grow"></div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center  z-[100]">
               <img
                 src={assets.logos.begodsBlack}
                 alt="logo"

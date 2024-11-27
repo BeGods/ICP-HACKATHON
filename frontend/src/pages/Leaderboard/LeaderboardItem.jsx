@@ -17,7 +17,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl }) => {
     <div
       className={`flex items-center ${
         rank % 2 === 0 ? "" : "bg-borderGray"
-      } justify-between text-tertiary w-[98%] h-fit mx-auto text-white py-2`}
+      } justify-between font-medium text-tertiary w-[98%] h-fit mx-auto text-white py-2`}
     >
       <div className="flex justify-center items-center w-[20%] h-full">
         {rank}
@@ -39,7 +39,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl }) => {
             />
           )}
         </div>
-        <h1>{name.length > 20 ? name.slice(0, 20) + "..." : name}</h1>
+        <h1>{name.length > 20 ? name.slice(0, 20) : name}</h1>
       </div>
       <div className="flex flex-col justify-center items-center text-tertiary w-[25%] h-full">
         <h1>{formatRankOrbs(totalOrbs)}</h1>

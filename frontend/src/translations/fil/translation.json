@@ -43,7 +43,7 @@
     {},
     {},
     { "title": "Pagbabalik", "desc": "Puwersa ng Pagsisikip" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "Pakete ng mga Awtomata", "desc": "4X Awtomata" }
   ],
   "profile": {
     "premium": "Premium",
@@ -63,7 +63,9 @@
     "task": "Mga Gawain",
     "follow": "Sumunod",
     "connect": "Kumonekta",
-    "select": "Piliin"
+    "select": "Piliin",
+    "music": "Musika",
+    "wallet": "Pitaka"
   },
   "elements": {
     "earth": "Lupa",
@@ -88,17 +90,19 @@
     "win": "Manalo"
   },
   "tutorial": {
-    "forge": { "title": "TAPAIN ANG MGA PANDAY", "desc": "PARA KUMITA NG ORB(S)" },
-    "quests": {
-      "title": "KUMUHA NG MGA MISYON",
-      "desc": "KUMPLETUHIN PARA KUMITA NG $FAITH"
-    },
+    "forgeShard": { "title": "Tapikin upang kumita ng mga shard", "desc": "" },
+    "forgeOrbs": { "title": "1 Orb = 1,000 Piraso", "desc": "" },
+    "forgeBubble": { "title": "Pumutok ng bula upang kumita ng mga Regalo", "desc": "" },
+    "forgeMinion": { "title": "Hulihin at hawakan ang 2x shard", "desc": "" },
+    "forgeExplore": { "title": "Mag-explore +dagdag", "desc": "" },
+    "quests": { "title": "Kumpletuhin ang mga Misyon", "desc": "Kumita ng $faith" },
     "boosters": {
       "title": "KUMUHA NG BOOSTERS",
-      "desc": "PARA SA MGA GANTIMPALA NG LARO"
+      "desc": "Kumita ng $faith"
     },
-    "profile": { "title": "PUMILI NG IYONG BANSA", "desc": "upang i-unlock ang mga regalo" },
-    "tower" : { "title": "PUMILI NG ORB AT I-CONVERT", "desc": "PARA MAKAHANAP NG BOOSTER" }
+    "profileTask": { "title": "Kumpletuhin ang mga Gawain", "desc": "Para sa mga gantimpala sa laro" },
+    "gift" : { "title": "Tingnan ang mga Kasosyo", "desc": "" },
+    "tower" : { "title": "I-convert ang Orbs", "desc": "" }
   },
   "quests": {
     "celtic": {

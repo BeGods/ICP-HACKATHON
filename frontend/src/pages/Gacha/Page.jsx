@@ -2,12 +2,12 @@ import Lottie from "lottie-react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import animationData from "../../../public/assets/fx/gacha.json";
 import { fetchDailyBonus, fetchExploitDailyBonus } from "../../utils/api";
-
 import { Crown, LoaderPinwheel } from "lucide-react";
 import { MyContext } from "../../context/context";
 import ReactHowler from "react-howler";
 import SplashScreen from "./SplashScreen";
 import { useTranslation } from "react-i18next";
+import GachaRoll from "../../components/Fx/GachaRoll";
 
 const tele = window.Telegram?.WebApp;
 
@@ -26,7 +26,7 @@ const Gacha = (props) => {
   const lottieRef = useRef(null);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
-  const [showSpin, setShowSpin] = useState(true);
+  const [showSpin, setShowSpin] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
   const [showScale, setShowScale] = useState(false);
   const [changeText, setChangeText] = useState("Win");
@@ -143,7 +143,6 @@ const Gacha = (props) => {
             : response.reward?.quest
         );
         setTimeout(() => {
-          setShowSpin(false);
           setSpinSound(false);
           setReward(response.reward);
           setShowFlash(true);
@@ -186,11 +185,7 @@ const Gacha = (props) => {
   };
 
   const handlePlay = () => {
-    if (lottieRef.current) {
-      setSpinSound(true);
-      lottieRef.current.play();
-      lottieRef.current.setSpeed(3);
-    }
+    setSpinSound(true);
   };
 
   useEffect(() => {
@@ -253,16 +248,8 @@ const Gacha = (props) => {
                 : "glow-box scale-box -mt-10"
             }`}
           />
-          <div className="absolute -mt-10">
-            {showSpin && (
-              <Lottie
-                lottieRef={lottieRef}
-                autoplay={false}
-                loop
-                animationData={animationData}
-                className={`w-[90vw] ${showScale && "scale-125"}`}
-              />
-            )}
+          <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
+            <GachaRoll showSpin={spinSound} />
           </div>
         </div>
         {/* Bottom */}

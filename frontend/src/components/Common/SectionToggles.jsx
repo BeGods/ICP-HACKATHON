@@ -33,11 +33,11 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
         minimize === 2 && "slide-inside-left"
       } ${
         minimize === 1 && "slide-away-left"
-      }  top-1/2 -mt-6 justify-center items-center w-[15%]  z-40`}
+      } absolute justify-center items-center top-1/2 -mt-4 w-[15%] z-40`}
     >
       <div
         onClick={handleButtonClick}
-        className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer  ${
+        className={`bg-glass-black p-[6px] rounded-full cursor-pointer  ${
           isButtonClicked
             ? `glow-button-${
                 mythSections[activeMyth] === "other"
@@ -85,7 +85,7 @@ export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
     <div
       className={`flex right-0 ${minimize === 2 && "slide-inside-right"} ${
         minimize === 1 && "slide-away-right"
-      }  top-1/2 -mt-6 absolute justify-center items-center w-[15%] z-40`}
+      }  absolute justify-center items-center top-1/2 -mt-4 w-[15%] z-40`}
     >
       <div
         onClick={handleButtonClick}

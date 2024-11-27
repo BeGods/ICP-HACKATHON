@@ -8,7 +8,6 @@ import SettingModal from "../Modals/Settings";
 const tele = window.Telegram?.WebApp;
 
 const TaskCarousel = ({ quests }) => {
-  const { t } = useTranslation();
   const { setShowCard } = useContext(MyContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);

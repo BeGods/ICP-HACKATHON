@@ -9,9 +9,9 @@ import { X } from "lucide-react";
 const tele = window.Telegram?.WebApp;
 
 const alignBasedOnCard = [
-  "-mt-[28px] ml-[52px]",
-  "-mt-[4vh] ml-[7vw]",
-  "mr-[60px] mt-2",
+  "-mt-[3vh] ml-[10vw]",
+  "-mt-[3vh] ml-[5vw]",
+  "mt-[9.5vh] mr-[60px]",
   "-mt-[5px] ml-[90px]",
   "mr-[60px] -mt-8",
   "mt-[18vh] -ml-[12vw]",
@@ -37,17 +37,17 @@ const IconBtn = ({ isInfo, handleClick, align }) => {
       className={`absolute  flex w-full justify-end top-0 ${alignBasedOnCard[align]} `}
     >
       {isInfo ? (
-        <div className="bg-black flex justify-center items-center h-[60px] w-[60px] z-20 rounded-full">
+        <div className="bg-black flex justify-center items-center w-[40px] h-[40px] z-20 rounded-full">
           <h1
-            className={`text-white italic mr-1 text-[2.5rem]`}
+            className={`text-white italic mr-1 text-[30px]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
           </h1>
         </div>
       ) : (
-        <div className="flex justify-center items-center bg-black h-[60px] w-[60px] z-50 rounded-full">
-          <X color="white" size={"40px"} />
+        <div className="flex justify-center items-center bg-black w-[40px] h-[40px] z-50 rounded-full">
+          <X color="white" size={"30px"} />
         </div>
       )}
     </div>

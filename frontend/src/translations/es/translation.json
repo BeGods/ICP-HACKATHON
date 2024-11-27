@@ -47,7 +47,7 @@
     {},
     {},
     { "title": "Explosión", "desc": "Presión de Apretar" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "Paquete de Autómatas", "desc": "Autómatas 4X" }
 
   ],
   "profile": {
@@ -68,7 +68,9 @@
     "task": "Tareas",
     "connect": "Conectar",
     "follow": "Seguir",
-    "select": "Seleccionar"
+    "select": "Seleccionar",
+    "music": "Música",
+    "wallet": "Billetera"
   },
   "tower": {
     "tune": "¿Conoces la ♪ melodía ♪?",
@@ -93,16 +95,19 @@
     "win": "Ganar"
   },
   "tutorial": {
-    "forge": { "title": "TOCA LAS FORJAS", "desc": "PARA GANAR ORB(S)" },
-    "quests": {
-      "title": "RECLAMAR MISIONES",
-      "desc": "COMPLETAR PARA GANAR $FAITH"
-    },
+    "forgeShard": { "title": "Toca para ganar fragmentos", "desc": "" },
+    "forgeOrbs": { "title": "1 Orb = 1,000 Fragmentos", "desc": "" },
+    "forgeBubble": { "title": "Estallar burbuja para ganar Regalos", "desc": "" },
+    "forgeMinion": { "title": "Atrapar y mantener 2x fragmentos", "desc": "" },
+    "forgeExplore": { "title": "Explorar +más", "desc": "" },
+    "quests": { "title": "Completar Misiones", "desc": "Ganar $faith" },
     "boosters": {
       "title": "ADQUIRIR BOOSTERS",
-      "desc": "PARA RECOMPENSAS DEL JUEGO"
+      "desc": "Ganar $fe"
     },
-    "profile": { "title": "ELIGE TU PAÍS", "desc": "para desbloquear regalos" }
+    "profileTask": { "title": "Completar Tareas", "desc": "Por recompensas dentro del juego" },
+    "gift" : { "title": "Ver Socios", "desc": "" },
+    "tower" : { "title": "Convertir Orbes", "desc": "" }
   },
   "quests": {
     "celtic": {

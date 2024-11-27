@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { mythSections } from "../../../utils/constants";
 import { MyContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";

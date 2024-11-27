@@ -52,27 +52,22 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         t={t}
         booster={1}
       />,
+      <BoosterItem
+        key="burst"
+        index={3}
+        currentIndex={currentIndex}
+        isActive={
+          !gameData.mythologies[activeMyth].boosters.isBurstActive ||
+          gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
+        }
+        handleClick={() => handleBoosterClick("burst", false)}
+        mythData={mythData}
+        isGuideActive={enableGuide}
+        activeMyth={activeMyth}
+        t={t}
+        booster={6}
+      />,
     ];
-
-    if (gameData.mythologies[activeMyth].isEligibleForBurst) {
-      newItems.push(
-        <BoosterItem
-          key="burst"
-          index={3}
-          currentIndex={currentIndex}
-          isActive={
-            !gameData.mythologies[activeMyth].boosters.isBurstActive ||
-            gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
-          }
-          handleClick={() => handleBoosterClick("burst", false)}
-          mythData={mythData}
-          isGuideActive={enableGuide}
-          activeMyth={activeMyth}
-          t={t}
-          booster={6}
-        />
-      );
-    }
 
     if (gameData.isAutoPayActive) {
       newItems.push(

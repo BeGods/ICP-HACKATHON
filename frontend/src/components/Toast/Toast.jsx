@@ -179,24 +179,6 @@ export const showToast = (type) => {
         }
       );
       break;
-      toast.error(
-        <ToastMesg
-          title={t("toasts.default.error.title")}
-          desc={t("toasts.default.error.desc")}
-          status={"fail"}
-        />,
-        {
-          icon: false,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        }
-      );
-      break;
     case "booster_success":
       toast.success(
         <ToastMesg
@@ -354,6 +336,82 @@ export const showToast = (type) => {
         <ToastMesg
           title={t("toasts.TonConnect.error.title")}
           desc={t("toasts.TonConnect.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "phone_success":
+      toast.success(
+        <ToastMesg
+          title={"Thank you!"}
+          desc={"Mobile verified successfully!"}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "phone_fail_error":
+      toast.error(
+        <ToastMesg
+          title={"Failed to verify."}
+          desc={"There was some problem in verifying phone number."}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "phone_valid_error":
+      toast.error(
+        <ToastMesg
+          title={"Invalid Mobile Number!"}
+          desc={"Please provide valid number."}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "name_error":
+      toast.error(
+        <ToastMesg
+          title={"Invalid Name!"}
+          desc={"Please provide valid name."}
           status={"fail"}
         />,
         {

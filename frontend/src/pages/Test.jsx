@@ -572,6 +572,7 @@
 </div> */
 }
 
+import { ThumbsUp } from "lucide-react";
 // import Lottie from "lottie-react";
 // import React, { useRef, useState } from "react";
 // import animationData from "../../public/assets/fx/tower.json";
@@ -884,13 +885,308 @@
 
 // export default Test;
 
-import React from "react";
-import PropTypes from "prop-types";
+// import React from "react";
+// import PropTypes from "prop-types";
 
-const Test = (props) => {
-  return <div>Test</div>;
+// const Test = (props) => {
+//   return <div>Test</div>;
+// };
+
+// Test.propTypes = {};
+
+// export default Test;
+
+// import React, { useState, useEffect } from "react";
+// import assets from "../assets/assets.json";
+
+// const Test = () => {
+//   const images = [
+//     assets.symbols.greek,
+//     assets.symbols.celtic,
+//     assets.symbols.norse,
+//     assets.symbols.egyptian,
+//   ];
+//   const [currentIndex, setCurrentIndex] = useState(0);
+
+//   useEffect(() => {
+//     const autoSlide = setInterval(() => {
+//       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+//     }, 1000);
+//     return () => clearInterval(autoSlide);
+//   }, []);
+
+//   return (
+//     <div className="relative bg-black h-screen w-screen flex justify-center items-center overflow-hidden">
+//       <div className="carousel-load transition-all duration-500 flex justify-center items-center">
+//         {images.map((src, index) => {
+//           let position = "behind";
+
+//           if (index === currentIndex) {
+//             position = "active";
+//           } else if (
+//             index ===
+//             (currentIndex - 1 + images.length) % images.length
+//           ) {
+//             position = "previous";
+//           } else if (index === (currentIndex + 1) % images.length) {
+//             position = "next";
+//           }
+
+//           return (
+//             <img
+//               key={index}
+//               src={src}
+//               alt={`Slide ${index}`}
+//               className={`carousel-load__item ${position}`}
+//             />
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+// import React, { useEffect, useState } from "react";
+// import assets from "../assets/assets.json";
+
+// const Test = (props) => {
+//   const [changeText, setChangeText] = useState(true);
+//   const [flipped, setFlipped] = useState(false);
+
+//   const handleClick = () => {};
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setChangeText((prevText) => !prevText);
+//     }, 1500);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   return (
+//     <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
+//       <div className="flex flex-col w-full h-full items-center">
+//         {/* Heading */}
+//         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
+//           <div className="text-gold text-[60px] font-symbols">t</div>
+//           <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+//             {changeText ? "Streak" : "Bonus"}
+//           </h1>
+//         </div>
+//         {/* Main */}
+//         <div className="flex justify-center items-center w-full absolute  h-full">
+//           <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
+//             <div className={``}>
+//               <div className={`orb ${flipped ? "flipped" : ""}`}>
+//                 <div className="orb__face orb__face--front  flex justify-center items-center">
+//                   <div className="flex justify-center items-center w-full absolute  h-full">
+//                     <img
+//                       src={`/assets/partners/160px-chirpley.bubble.png`}
+//                       alt="multicolor"
+//                       className="glow-box rounded-full h-[55vw] w-[55vw]"
+//                     />
+//                   </div>
+//                 </div>
+//                 <div className="orb__face orb__face--back flex justify-center items-center">
+//                   <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
+//                     <img
+//                       src={`${assets.uxui.baseorb}`}
+//                       alt="orb"
+//                       className="filter-orbs-greek rounded-full"
+//                     />
+//                     <span
+//                       className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
+//                     >
+//                       d
+//                     </span>
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//         {/* Bottom */}
+//         <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
+//         <div className="flex absolute items-start bottom-[92px] justify-center w-full">
+//           <ThumbsUp
+//             size={"18vw"}
+//             color="#FFD660"
+//             className="mx-auto drop-shadow-xl scale-more"
+//           />
+//         </div>
+//         <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
+//           VOUCHER
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Test;
+
+// import React, { useEffect } from "react";
+// import confetti from "canvas-confetti";
+
+// const Test = () => {
+//   const playConfetti = () => {
+//     const defaults = {
+//       spread: 360,
+//       ticks: 100,
+//       gravity: 0,
+//       decay: 0.94,
+//       startVelocity: 20,
+//       colors: ["FFE400", "FFBD00", "E89400", "FFCA6C", "FDFFB8"],
+//     };
+
+//     function shoot() {
+//       confetti({
+//         ...defaults,
+//         particleCount: 40,
+//         scalar: 1.2,
+//         shapes: ["star"],
+//       });
+
+//       confetti({
+//         ...defaults,
+//         particleCount: 10,
+//         scalar: 0.75,
+//         shapes: ["circle"],
+//       });
+//     }
+
+//     setTimeout(shoot, 0);
+//     setTimeout(shoot, 100);
+//     setTimeout(shoot, 200);
+//     setTimeout(shoot, 300);
+//     setTimeout(shoot, 400);
+//   };
+
+//   useEffect(() => {
+//     playConfetti();
+//   }, []);
+
+//   return <div className="h-screen w-screen bg-black">Test</div>;
+// };
+
+// export default Test;
+
+import React, { useState, useEffect, useRef } from "react";
+import { countries } from "../utils/country";
+
+const Test = () => {
+  const [phone, setPhone] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState({
+    name: "India",
+    code: "IND",
+    flag: "🇮🇳",
+    dialCode: "+91",
+  });
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const availableCountries = countries.filter(
+    (country) => country.code !== "NA"
+  );
+
+  const handleCountrySelect = (country) => {
+    setSelectedCountry(country);
+    setIsDropdownOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div className="relative h-screen w-screen bg-black">
+      <img
+        src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/frogdog.games.black.svg"
+        alt="fof"
+        className="w-full opacity-55"
+      />
+      {/* Form */}
+      <div
+        className="flex flex-col mx-auto w-4/5 text-white mt-10"
+        ref={dropdownRef}
+      >
+        <div className="text-lg">Connect with us!</div>
+        <div className="flex gap-2 mt-2 text-[4vw]">
+          <div
+            className="flex justify-center rounded-[10px] items-center gap-1 w-[38%] bg-gray-800 cursor-pointer relative"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <h1>{selectedCountry.flag}</h1>
+            <h1>{selectedCountry.dialCode}</h1>
+            <h1 className="text-[3vw]">▼</h1>
+          </div>
+          <div className="w-full py-3 border-gray-400 border rounded-[10px]">
+            <input
+              type="number"
+              className="w-full px-2 h-full bg-inherit outline-none"
+              placeholder="Phone number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </div>
+        </div>
+        {/* Dropdown */}
+        {isDropdownOpen && (
+          <div className="absolute mt-2 w-fit max-h-[200px] overflow-auto bg-white text-black rounded-lg z-10">
+            {availableCountries.map((country) => (
+              <div
+                key={country.code}
+                className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                onClick={() => handleCountrySelect(country)}
+              >
+                <span>{country.flag}</span>
+                <span>
+                  {country.name.length > 20
+                    ? `${country.name.slice(0, 20)}...`
+                    : country.name}
+                </span>
+                <span>{country.dialCode}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex mt-4 gap-2 w-full justify-center items-center text-gray-200">
+          <input type="checkbox" name="terms" id="terms" />
+          <div className="text-[3vw]">Accept Terms & Conditions</div>
+        </div>
+        <div className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6">
+          Next
+        </div>
+      </div>
+
+      <div className="absolute w-full flex justify-center text-[3vw] text-gray-600 bottom-0 mb-2">
+        <span className="pr-1 underline cursor-pointer">Privary Policy</span> |
+        @Frogdog Games 2024
+      </div>
+    </div>
+  );
 };
 
-Test.propTypes = {};
-
 export default Test;
+{
+  /* <div className="flex flex-col h-full">
+          {teleCountry.map((country, index) => {
+            console.log(`flag-icon-${country.alpha_2_code.toLowerCase()}`);
+            return (
+              <span
+                key={index}
+                className={`flag-icon flag-icon-${country.alpha_2_code.toLowerCase()}`}
+                style={{ marginRight: "10px", width: "24px", height: "16px" }}
+              ></span>
+            );
+          })}
+        </div> */
+}

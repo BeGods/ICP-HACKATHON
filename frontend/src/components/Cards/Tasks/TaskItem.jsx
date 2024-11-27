@@ -4,6 +4,8 @@ import { showToast } from "../../Toast/Toast";
 import { MyContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api";
 import { useTranslation } from "react-i18next";
+import { countries } from "../../../utils/country";
+import { validateCountryCode } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -16,23 +18,11 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
     setSocialQuestData,
     setGameData,
     userData,
+    country,
   } = useContext(MyContext);
   const [claim, setClaim] = useState(false);
-  const [countryCode, setCountryCode] = useState(null);
   const { t } = useTranslation();
   const disableClick = useRef(false);
-
-  useEffect(() => {
-    if (quest._id === "6716097630689b65b6b384ef") {
-      tele.CloudStorage.getItem("country_code", (err, item) => {
-        if (!err && item) {
-          setCountryCode(item);
-        } else {
-          setCountryCode(null);
-        }
-      });
-    }
-  }, [quest._id]);
 
   const handleCopyLink = async () => {
     tele.HapticFeedback.notificationOccurred("success");
@@ -83,13 +73,12 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
           handleCopyLink();
         } else if (!quest.isQuestClaimed && claim === false) {
           if (quest._id == "6716097630689b65b6b384ef") {
-            tele.CloudStorage.getItem("country_code", (err, item) => {
-              if (!item) {
-                showSetting();
-              } else {
-                setClaim(true);
-              }
-            });
+            const isCountryActive = validateCountryCode(tele);
+            if (isCountryActive) {
+              showSetting();
+            } else {
+              setClaim(true);
+            }
           } else if (quest._id == "672b42311767ca93a22805b1") {
             if (userData.tonAddress) {
               setClaim(true);
@@ -134,8 +123,9 @@ ${
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
         <h1 className="text-tertiary uppercase">
           {quest._id == "6716097630689b65b6b384ef" &&
-          (!countryCode || countryCode !== "NA")
-            ? countryCode
+          country &&
+          country !== "NA"
+            ? countries.find((item) => item.code === country).name
             : t(`profile.${quest.questName.toLowerCase()}`)}
         </h1>
         <h2 className="text-tertiary">

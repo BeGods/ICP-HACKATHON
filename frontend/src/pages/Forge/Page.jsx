@@ -20,7 +20,6 @@ import BoosterClaim from "../../components/Cards/Boosters/BoosterCrd";
 import BoosterButtom from "../../components/Buttons/BoosterBtn";
 import { showToast } from "../../components/Toast/Toast";
 import { ForgesGuide } from "../../components/Common/Tutorials";
-import { hideBackButton } from "../../utils/teleBackButton";
 import { useForgeGuide } from "../../hooks/Tutorial";
 import {
   getPhaseByDate,
@@ -102,7 +101,8 @@ const Forges = () => {
   const [showStarBoosters, setshowStarBoosters] = useState(false);
   const [randomReward, setRandomReward] = useState(null);
   const [showToggles, setShowToggles] = useState(false);
-  const [enableGuide, setEnableGuide] = useForgeGuide("lpp1");
+  const [enableGuide, setEnableGuide] = useForgeGuide("tutorial01");
+  const [currGuide, setCurrGuide] = useState(0);
   const [minionPosition, setMinionPosition] = useState(true);
   const [showPartner, setShowPartner] = useState(false);
   const [count, setCount] = useState(0);
@@ -756,9 +756,6 @@ const Forges = () => {
       }, 500);
     }, 1000);
 
-    // disable backbutton
-    hideBackButton(tele);
-
     // handle increment energy every second
     const interval = setInterval(() => {
       setMythStates((prevStates) => {
@@ -1078,23 +1075,62 @@ const Forges = () => {
     if (enableGuide) {
       setShowCard(
         <ForgesGuide
+          currTut={currGuide}
+          Header={
+            <ForgeHeader
+              showTut={currGuide}
+              activeMyth={activeMyth}
+              t={t}
+              minimize={minimize}
+              platform={platform}
+              orbGlow={orbGlow}
+              tapGlow={tapGlow}
+              showBlackOrb={showBlackOrb}
+              glowBooster={glowBooster}
+              glowShards={glowShards}
+              glowReward={glowReward}
+              glowSymbol={glowSymbol}
+              orbs={orbs}
+              mythData={mythStates[activeMyth]}
+              shards={mythStates[activeMyth].shards}
+            />
+          }
+          Toggles={
+            <>
+              <ToggleRight
+                handleClick={() => {
+                  setActiveMyth((prev) => (prev + 1) % 4);
+                }}
+                activeMyth={activeMyth}
+              />
+              <ToggleLeft
+                handleClick={() => {
+                  setActiveMyth((prev) => (prev - 1 + 4) % 4);
+                }}
+                activeMyth={activeMyth}
+              />
+            </>
+          }
           handleClick={() => {
-            setEnableGuide(false);
-            setShowCard(null);
+            if (currGuide < 4) {
+              setCurrGuide((prev) => prev + 1);
+            } else {
+              setEnableGuide(false);
+              setShowCard(null);
+            }
           }}
         />
       );
     }
-  }, [enableGuide]);
+  }, [enableGuide, currGuide]);
 
   return (
     <>
       <div
         style={{
-          position: "fixed",
           top: 0,
           left: 0,
-          height: "100vh",
+          height: "100svh",
           width: "100vw",
         }}
         className="flex flex-col h-screen overflow-hidden m-0"
@@ -1119,13 +1155,6 @@ const Forges = () => {
               backgroundPosition: "center center",
             }}
           />
-          {/* {minimize === 1 && (
-            <img
-              src={`${assets.uxui.forgefx}`}
-              alt="forge.fx"
-              className={`filter-fx-${mythSections[activeMyth]} -ml-0.5 h-screen w-screen transition-all duration-500 ease-in-out`}
-            />
-          )} */}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
@@ -1166,7 +1195,7 @@ const Forges = () => {
             {plusOnes.map((plusOne) => (
               <span
                 key={plusOne.id}
-                className={`plus-one glow-text-${mythSections[activeMyth]}`}
+                className={`plus-one glow-text-${mythSections[activeMyth]} `}
                 style={{
                   top: `${plusOne.y}px`,
                   left: `${plusOne.x}px`,
@@ -1181,15 +1210,18 @@ const Forges = () => {
             ))}
             <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
           </div>
-
           {showPartner && (
             <div className="h-[155vw] -mt-8 w-full absolute">
               <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
                 <div className="bubble-spin-effect">
                   <img
-                    src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.category}.bubble.png`}
+                    src={
+                      randomReward.partnerType == "playsuper"
+                        ? `${randomReward.metadata.campaignCoverImage}`
+                        : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.metadata.campaignCoverImage}.bubble.png`
+                    }
                     alt="icon"
-                    className="pointer-events-none h-20 w-20 rounded-full"
+                    className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
                   />
                 </div>
               </div>
@@ -1274,7 +1306,7 @@ const Forges = () => {
                 <img
                   src={`${assets.boosters.alchemistPop}`}
                   alt="dwarf"
-                  className="w-full h-full select-none pointer-events-none "
+                  className="w-full h-full select-none pointer-events-none z-50"
                 />
               </div>
             </div>
@@ -1283,9 +1315,8 @@ const Forges = () => {
                 key={plusOne.id}
                 className={`plus-one glow-text-${mythSections[activeMyth]}`}
                 style={{
-                  top: `${plusOne.y}px`,
-                  left: `${plusOne.x}px`,
-
+                  bottom: `-12vh`,
+                  left: `8vw`,
                   zIndex: 99,
                 }}
               >
@@ -1310,9 +1341,8 @@ const Forges = () => {
                 key={plusOne.id}
                 className={`plus-one glow-text-${mythSections[activeMyth]}`}
                 style={{
-                  top: `${plusOne.y}px`,
-                  left: `${plusOne.x}px`,
-
+                  bottom: `-12vh`,
+                  right: `8vw`,
                   zIndex: 99,
                 }}
               >
@@ -1399,7 +1429,7 @@ const Forges = () => {
               <img
                 src={`${assets.boosters.alchemistPop}`}
                 alt="dwarf"
-                className="w-full h-full select-none pointer-events-none "
+                className="w-full h-full select-none pointer-events-none z-50"
               />
             </div>
           </div>
@@ -1422,7 +1452,6 @@ const Forges = () => {
               html5={true}
             />
           )}
-
           {isStarHold.current === true && (
             <ReactHowler
               src={`${assets.audio.automataLong}`}

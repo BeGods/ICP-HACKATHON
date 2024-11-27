@@ -50,7 +50,7 @@ const Tower = () => {
   const mythData = gameData.mythologies.filter(
     (item) => item.name?.toLowerCase() === wheel[myth]
   )[0];
-  const [enableGuide, setEnableGuide] = useTowerGuide("jdio");
+  const [enableGuide, setEnableGuide] = useTowerGuide("tutorial02");
   const [showHand, setShowHand] = useState(false);
   const handTimeoutRef = useRef(false);
 
@@ -132,6 +132,17 @@ const Tower = () => {
     if (enableGuide) {
       setShowCard(
         <TowerGuide
+          currGuide={0}
+          Header={
+            <TowerHeader
+              showGlow={showGlow}
+              myth={myth}
+              t={t}
+              gameData={gameData}
+              mythData={mythData}
+              sessionOrbs={sessionOrbs}
+            />
+          }
           handleClick={() => {
             setMyth(1);
             setShowCard(null);
@@ -166,10 +177,10 @@ const Tower = () => {
         <div
           className={`absolute top-0 left-0 h-screen w-screen pointer-events-none`}
           style={{
-            backgroundImage: `url(${assets.uxui.intro})`,
+            backgroundImage: `url(/assets/uxui/intro.jpg)`,
             backgroundRepeat: "no-repeat",
-            backgroundSize: "contain",
-            backgroundPosition: "center center",
+            backgroundSize: "cover",
+            backgroundPosition: "50% 0%",
           }}
         />
       </div>
@@ -264,7 +275,7 @@ const Tower = () => {
           }}
         ></div>
       </div>
-      {/* `url(/assets/uxui/480px-fof.background.${wheelNames[myth]}1.png)` */}
+
       <div className="absolute flex justify-center items-center h-full w-full z-50">
         <div
           className="relative flex justify-center items-center w-full h-full pointer-events-none"
@@ -302,7 +313,7 @@ const Tower = () => {
                 />
                 <span
                   className={`absolute z-1 font-symbols text-white opacity-50 ${
-                    scaleOrb == index ? "text-[35px]" : "text-[30px]"
+                    scaleOrb == index ? "text-[35px]" : "text-primary"
                   }  mt-1 text-black-sm-contour`}
                 >
                   <>{mythSymbols[item.toLowerCase()]}</>{" "}
