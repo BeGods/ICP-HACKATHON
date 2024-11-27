@@ -91,6 +91,10 @@ const milestoneSchema = new Schema({
           type: String,
           default: "",
         },
+        orderId: {
+          type: String,
+          default: "",
+        },
         claimedAt: {
           type: Date,
           default: Date.now,

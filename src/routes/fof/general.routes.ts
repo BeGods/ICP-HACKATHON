@@ -12,6 +12,7 @@ import {
   clearRewardsInLastHr,
   redeemPlayuperReward,
   getTotalUsers,
+  claimStreakBonus,
 } from "../../controllers/fof/general.controllers";
 import express from "express";
 import cron from "node-cron";
@@ -19,16 +20,15 @@ const router = express.Router();
 import { authMiddleware } from "../../middlewares/auth.middlewares";
 import { deactivateQuest } from "../../controllers/fof/quests.controllers";
 import {
+  validateStreakBonus,
   validDailyBonusReq,
   validDailyHackBonus,
   validJoinBonusReq,
+  validMobileNo,
+  validOnboardInput,
   validPlaysuperRedeem,
 } from "../../middlewares/fof/general.middlewares";
-import {
-  getFolders,
-  getProfilePhotoUrl,
-  storeImage,
-} from "../../controllers/storage.controllers";
+import { storeImage } from "../../controllers/storage.controllers";
 
 // ping
 router.get("/ping", ping);
@@ -46,12 +46,18 @@ router.get("/f115d48c-4929-4190-b326-e50f228500c7/totalUsers", getTotalUsers);
 router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);
 router.get("/bonus/dail", authMiddleware, validDailyHackBonus, claimDailyBonus);
 router.get("/bonus/join", authMiddleware, validJoinBonusReq, claimJoiningBonus);
+router.get(
+  "/bonus/streak",
+  authMiddleware,
+  validateStreakBonus,
+  claimStreakBonus
+);
 
 // playsuper
-router.post("/playsuper/otp", authMiddleware, generateOtp);
-router.post("/playsuper/resendOtp", authMiddleware, resendOtp);
+router.post("/playsuper/otp", authMiddleware, validMobileNo, generateOtp);
+router.post("/playsuper/resendOtp", authMiddleware, validMobileNo, resendOtp);
 router.post("/playsuper/orders", authMiddleware, resendOtp);
-router.post("/playsuper/verify", authMiddleware, verifyOtp);
+router.post("/playsuper/verify", authMiddleware, validOnboardInput, verifyOtp);
 router.post(
   "/playsuper/redeem",
   authMiddleware,
@@ -76,7 +82,7 @@ router.get(
 );
 
 router.get("/profile/avatar", authMiddleware, storeImage);
-
+// router.get("/test/script", runProfileScript);
 // announcements
 // router.post("/announcements", authMiddleware, updateAnnouncement);
 
