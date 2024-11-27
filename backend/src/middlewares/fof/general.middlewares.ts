@@ -102,6 +102,51 @@ export const validJoinBonusReq = async (req, res, next) => {
   }
 };
 
+export const validateStreakBonus = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const now = new Date();
+    const lastClaimedDate = new Date(user.streakBonus);
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const lastClaimedMidnight = new Date(
+      lastClaimedDate.getFullYear(),
+      lastClaimedDate.getMonth(),
+      lastClaimedDate.getDate()
+    );
+
+    // edge case : 0
+    if (user.streakBonus === 0) {
+      user.streakBonus = Date.now();
+      next();
+      return;
+    }
+
+    // check if already claimed today
+    if (lastClaimedMidnight.getTime() === today.getTime()) {
+      throw new Error("You have already claimed the streak bonus today.");
+    }
+
+    // check if it was claimed yesterday
+    if (
+      lastClaimedMidnight.getTime() !== yesterday.getTime() &&
+      yesterday.getTime() != 0
+    ) {
+      throw new Error(
+        "You are not eligible to claim. Streak must be continuous."
+      );
+    }
+
+    user.streakBonus = Date.now();
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 export const validPlaysuperRedeem = async (req, res, next) => {
   try {
     const userId = req.user._id;
@@ -126,6 +171,40 @@ export const validPlaysuperRedeem = async (req, res, next) => {
     }
 
     req.partner = partnerReward;
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const validMobileNo = async (req, res, next) => {
+  try {
+    const { mobileNumber } = req.body;
+
+    if (mobileNumber.length < 10) {
+      throw new Error("Invalid mobile number.");
+    }
+
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const validOnboardInput = async (req, res, next) => {
+  try {
+    const { mobileNumber, name, otp } = req.body;
+
+    if (mobileNumber.length < 10) {
+      throw new Error("Invalid mobile number.");
+    }
+    if (name.length === 0 || name == "" || !name) {
+      throw new Error("Invalid name.");
+    }
+
+    if (otp.length === 0) {
+      throw new Error("Invalid otp.");
+    }
     next();
   } catch (error) {
     res.status(400).json({ error: error.message });
