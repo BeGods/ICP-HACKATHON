@@ -14,8 +14,8 @@ const tele = window.Telegram?.WebApp;
 const UserAvatar = ({ user, index }) => {
   const { assets, platform } = useContext(MyContext);
   const util = {
-    0: "first",
-    1: "second",
+    0: "second",
+    1: "first",
     2: "third",
   };
   const [avatarColor, setAvatarColor] = useState(() => {
@@ -70,8 +70,8 @@ const Leaderboard = (props) => {
   const [squad, setSquad] = useState([]);
   const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
-    0: "first",
-    1: "second",
+    0: "second",
+    1: "first",
     2: "third",
   };
 
@@ -166,28 +166,29 @@ const Leaderboard = (props) => {
         <div className="flex flex-grow justify-center">
           {isLoading && (
             <div className="flex items-end w-[90%] gap-2">
-              {leaderboard.slice(0, 3).map((item, index) => {
-                const newIndex = index === 0 ? 1 : index === 1 ? 0 : 2;
-                return (
-                  <div
-                    style={{
-                      boxShadow:
-                        "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
-                    }}
-                    className={`flex leaderboard-${util[newIndex]} relative justify-center items-center rise-up-${util[newIndex]} w-full uppercase`}
-                  >
-                    <div className="flex flex-col w-full justify-center text-center text-white absolute -bottom-1">
-                      <h1 className="text-[50px] -mb-5 font-mono font-bold  text-black-contour">
-                        {newIndex + 1}
-                      </h1>
-                      <h2 className="text-tertiary font-normal">
-                        {formatRankOrbs(item.totalOrbs)}
-                      </h2>
+              {[leaderboard[1], leaderboard[0], leaderboard[2]].map(
+                (item, index) => {
+                  return (
+                    <div
+                      style={{
+                        boxShadow:
+                          "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
+                      }}
+                      className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
+                    >
+                      <div className="flex flex-col w-full justify-center text-center text-white absolute -bottom-1">
+                        <h1 className="text-[50px] -mb-5 font-mono font-bold text-black-contour">
+                          {index + 1}
+                        </h1>
+                        <h2 className="text-tertiary font-normal">
+                          {formatRankOrbs(item.totalOrbs)}
+                        </h2>
+                      </div>
+                      <UserAvatar user={item} index={index} />
                     </div>
-                    <UserAvatar user={item} index={newIndex} />
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
             </div>
           )}
         </div>
