@@ -196,7 +196,7 @@ const IntroPage = (props) => {
         // TMA mobile view
         <div
           style={{
-            background: `url(/assets/uxui/intro.jpg)`,
+            background: `url(${assets.uxui.intro})`,
             backgroundPosition: "50% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
