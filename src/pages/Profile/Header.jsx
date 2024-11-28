@@ -77,7 +77,7 @@ const CenterChild = ({ userData }) => {
           alt="base-orb"
           className={`${
             !userData.avatarUrl && `filter-orbs-${avatarColor}`
-          } w-full h-full rounded-full`}
+          } w-full h-full rounded-full pointer-events-none`}
         />
         {!userData.avatarUrl && (
           <div
