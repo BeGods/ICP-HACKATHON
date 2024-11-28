@@ -1,6 +1,6 @@
-import milestones from "../../models/milestones.models";
-import userMythologies from "../../models/mythologies.models";
-import { OrbsTransactions } from "../../models/transactions.models";
+import milestones from "../models/milestones.models";
+import userMythologies from "../models/mythologies.models";
+import { OrbsTransactions } from "../models/transactions.models";
 import mongoose from "mongoose";
 
 export const getLeaderboardSnapshot = async () => {

@@ -3,9 +3,9 @@ import {
   calculateAutomataEarnings,
   calculateEnergy,
   getPhaseByDate,
-} from "../../utils/helpers/game.helpers";
-import userMythologies from "../../models/mythologies.models";
-import config from "../../config/config";
+} from "../utils/helpers/game.helpers";
+import userMythologies from "../models/mythologies.models";
+import config from "../config/config";
 const axios = require("axios");
 
 export const fetchUserGameStats = async (userId) => {

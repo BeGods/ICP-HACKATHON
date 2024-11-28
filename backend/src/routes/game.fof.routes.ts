@@ -1,4 +1,4 @@
-import { authMiddleware } from "../../middlewares/auth.middlewares";
+import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   startTapSession,
   claimTapSession,
@@ -10,7 +10,7 @@ import {
   updateGameData,
   claimBurst,
   claimAutoAutomata,
-} from "../../controllers/fof/game.controllers";
+} from "../controllers/game.fof.controllers";
 import express from "express";
 import {
   validAutoAutomataReq,
@@ -19,7 +19,7 @@ import {
   validateBurstReq,
   validateOrbsConversion,
   validateStarClaim,
-} from "../../middlewares/fof/game.middlewares";
+} from "../middlewares/game.fof.middlewares";
 const router = express.Router();
 
 // stats

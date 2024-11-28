@@ -1,4 +1,4 @@
-import milestones, { IClaimedReward } from "../../models/milestones.models";
+import milestones, { IClaimedReward } from "../models/milestones.models";
 
 export const validDailyBonusReq = async (req, res, next) => {
   try {

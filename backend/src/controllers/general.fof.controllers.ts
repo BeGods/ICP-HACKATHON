@@ -1,5 +1,5 @@
-import User from "../../models/user.models";
-import ranks from "../../models/ranks.models";
+import User from "../models/user.models";
+import ranks from "../models/ranks.models";
 import {
   claimBonusBooster,
   claimBonusOrb,
@@ -7,10 +7,10 @@ import {
   getLeaderboardSnapshot,
   getRandomValue,
   updatePartnersInLastHr,
-} from "../../services/fof/general.services";
-import Stats from "../../models/Stats.models";
-import { Team } from "../../models/referral.models";
-import userMythologies from "../../models/mythologies.models";
+} from "../services/general.fof.services";
+import Stats from "../models/Stats.models";
+import { Team } from "../models/referral.models";
+import userMythologies from "../models/mythologies.models";
 import {
   claimPlaysuperReward,
   fetchPlaysuperOrders,
@@ -18,10 +18,10 @@ import {
   getPlaysuperOtp,
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
-} from "../../services/fof/game.services";
-import milestones from "../../models/milestones.models";
-import partners from "../../models/partners.models";
-import { validCountries } from "../../utils/constants/variables";
+} from "../services/game.fof.services";
+import milestones from "../models/milestones.models";
+import partners from "../models/partners.models";
+import { validCountries } from "../utils/constants/variables";
 
 export const ping = async (req, res) => {
   try {
@@ -291,7 +291,10 @@ export const claimStreakBonus = async (req, res) => {
     );
 
     if (availablePartners.length === 0) {
+      user.streakBonus = Date.now();
+      user.save();
       res.status(200).json({ reward: "fdg" });
+      return;
     }
 
     const randomPartner = Math.floor(Math.random() * availablePartners.length);

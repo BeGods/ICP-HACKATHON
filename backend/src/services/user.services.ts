@@ -1,7 +1,7 @@
-import milestones from "../../models/milestones.models";
-import userMythologies from "../../models/mythologies.models";
-import { Team, Referral } from "../../models/referral.models";
-import User from "../../models/user.models";
+import milestones from "../models/milestones.models";
+import userMythologies from "../models/mythologies.models";
+import { Team, Referral } from "../models/referral.models";
+import User from "../models/user.models";
 
 export const addNewUser = async (userData) => {
   try {
