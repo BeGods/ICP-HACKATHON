@@ -1,6 +1,4 @@
-import Lottie from "lottie-react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import animationData from "../../../public/assets/fx/gacha.json";
 import { fetchDailyBonus, fetchExploitDailyBonus } from "../../utils/api";
 import { Crown, LoaderPinwheel } from "lucide-react";
 import { MyContext } from "../../context/context";
