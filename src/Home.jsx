@@ -135,8 +135,12 @@ const Home = () => {
         setIsLoading(false);
       }, 2000);
 
-      setActiveReward(rewardsData.reward);
-      setSection(10);
+      if (rewardsData.reward === "fdg") {
+        setSection(0);
+      } else {
+        setActiveReward(rewardsData.reward);
+        setSection(10);
+      }
     } catch (error) {
       console.log(error);
       showToast("default");
@@ -199,7 +203,7 @@ const Home = () => {
     if (isAuth) {
       (async () => await getGameData(isAuth))();
     } else {
-      // showToast("default");
+      showToast("default");
     }
   };
 
