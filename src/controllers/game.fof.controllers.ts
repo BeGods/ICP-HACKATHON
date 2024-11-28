@@ -3,15 +3,15 @@ import {
   getAutomataStartTimes,
   getPhaseByDate,
   isWithinOneMinute,
-} from "../../utils/helpers/game.helpers";
+} from "../utils/helpers/game.helpers";
 import userMythologies, {
   IMyth,
   IUserMyths,
-} from "../../models/mythologies.models";
+} from "../models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
-} from "../../models/transactions.models";
+} from "../models/transactions.models";
 import {
   validateBooster,
   validateAutomata,
@@ -19,16 +19,16 @@ import {
   fetchUserGameStats,
   checkStreakIsActive,
   checkPlaysuperExpiry,
-} from "../../services/fof/game.services";
-import { defaultMythologies } from "../../utils/constants/variables";
+} from "../services/game.fof.services";
+import { defaultMythologies } from "../utils/constants/variables";
 import { Document } from "mongodb";
-import ranks from "../../models/ranks.models";
-import { Team } from "../../models/referral.models";
-import Stats from "../../models/Stats.models";
-import { checkBonus } from "../../services/fof/general.services";
-import { mythOrder } from "../../utils/constants/variables";
-import milestones from "../../models/milestones.models";
-import User, { IUser } from "../../models/user.models";
+import ranks from "../models/ranks.models";
+import { Team } from "../models/referral.models";
+import Stats from "../models/Stats.models";
+import { checkBonus } from "../services/general.fof.services";
+import { mythOrder } from "../utils/constants/variables";
+import milestones from "../models/milestones.models";
+import User, { IUser } from "../models/user.models";
 import CryptoJs from "crypto-js";
 
 export const startTapSession = async (req, res) => {
@@ -349,7 +349,7 @@ export const getGameStats = async (req, res) => {
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
-      isEligibleToClaim: isEligibleToClaim,
+      isEligibleToClaim: true,
       isStreakActive: isStreakActive,
       joiningBonus: user.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,

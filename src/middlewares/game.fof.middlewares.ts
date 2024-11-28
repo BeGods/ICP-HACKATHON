@@ -2,12 +2,12 @@ import {
   fetchUserData,
   validateAutomata,
   validateBooster,
-} from "../../services/fof/game.services";
+} from "../services/game.fof.services";
 import userMythologies, {
   IMyth,
   IUserMyths,
-} from "../../models/mythologies.models";
-import { mythOrder } from "../../utils/constants/variables";
+} from "../models/mythologies.models";
+import { mythOrder } from "../utils/constants/variables";
 
 export const validShardsBoosterReq = async (req, res, next) => {
   try {
