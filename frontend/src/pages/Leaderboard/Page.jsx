@@ -40,7 +40,7 @@ const UserAvatar = ({ user, index }) => {
           alt="base-orb"
           className={`${
             !user?.profileImage && `filter-orbs-${avatarColor}`
-          } w-full h-full rounded-full p-[5px] `}
+          } w-full h-full rounded-full p-[5px] pointer-events-none`}
         />
         {!user?.profileImage && (
           <div
@@ -168,6 +168,7 @@ const Leaderboard = (props) => {
             <div className="flex items-end w-[90%] gap-2">
               {[leaderboard[1], leaderboard[0], leaderboard[2]].map(
                 (item, index) => {
+                  const positions = [2, 1, 3];
                   return (
                     <div
                       style={{
@@ -178,7 +179,7 @@ const Leaderboard = (props) => {
                     >
                       <div className="flex flex-col w-full justify-center text-center text-white absolute -bottom-1">
                         <h1 className="text-[50px] -mb-5 font-mono font-bold text-black-contour">
-                          {index + 1}
+                          {positions[index]}
                         </h1>
                         <h2 className="text-tertiary font-normal">
                           {formatRankOrbs(item.totalOrbs)}
