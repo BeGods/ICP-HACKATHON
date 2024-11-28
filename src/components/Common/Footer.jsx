@@ -45,7 +45,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     <>
       {icon < 3 ? (
         <div
-          className={`flex flex-colitems-center cursor-pointer z-50`}
+          className={`flex flex-col items-center cursor-pointer z-50`}
           onClick={(e) => {
             e.preventDefault();
             playAudio();
@@ -94,7 +94,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 className={`w-[16.5vw] ${
                   (section === redirect[icon] || section === 5) &&
                   "scale-110 glow-icon-white"
-                } border border-black  rounded-full`}
+                } border border-black  rounded-full pointer-events-none`}
               />
             </div>
           ) : (
@@ -105,7 +105,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 <img
                   src="/assets/uxui/240px-orb.base.png"
                   alt="orb"
-                  className={`filter-orbs-${avatarColor} overflow-hidden max-w-[65px]`}
+                  className={`filter-orbs-${avatarColor} overflow-hidden max-w-[65px] pointer-events-none`}
                 />
                 <span
                   className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}

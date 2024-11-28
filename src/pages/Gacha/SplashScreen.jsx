@@ -98,7 +98,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
           setShowHand(true);
           redirectTimoutId.current = setTimeout(() => {
             handleClick(currReward);
-          }, 6000);
+          }, 4000);
         }, 500);
       }, 500);
     }
