@@ -11,7 +11,6 @@ import {
   claimBurst,
   claimAutoAutomata,
 } from "../controllers/game.fof.controllers";
-import express from "express";
 import {
   validAutoAutomataReq,
   validAutomataReq,
@@ -20,6 +19,7 @@ import {
   validateOrbsConversion,
   validateStarClaim,
 } from "../middlewares/game.fof.middlewares";
+import express from "express";
 const router = express.Router();
 
 // stats

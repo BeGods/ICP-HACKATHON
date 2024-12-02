@@ -98,7 +98,6 @@ export const getRandomValue = () => {
 };
 
 // Bonus rewards
-
 export const claimBonusOrb = async (reward, userId) => {
   try {
     if (reward === "blackOrb") {
@@ -327,7 +326,7 @@ export const claimBonusQuest = async (userId) => {
 
 export const checkBonus = async (user) => {
   try {
-    const dailyBonusClaimed = user.dailyBonusClaimedAt;
+    const dailyBonusClaimed = user.bonus.fof.dailyBonusClaimedAt;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -361,6 +360,7 @@ export const checkBonus = async (user) => {
       return true;
     }
   } catch (error) {
+    console.log(error);
     throw new Error(error.message);
   }
 };

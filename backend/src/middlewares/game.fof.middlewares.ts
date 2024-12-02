@@ -259,35 +259,6 @@ export const validateOrbsConversion = async (req, res, next) => {
   }
 };
 
-// export const validateOrbsConversion = async (req, res, next) => {
-//   try {
-//     const userId = req.user;
-//     const { mythologyName } = req.body;
-
-//     const userMythologiesData = (await userMythologies.findOne({
-//       userId,
-//     })) as IUserMyths;
-
-//     if (!userMythologiesData) {
-//       throw new Error("User mythologies not found.");
-//     }
-
-//     const requestedMyth = userMythologiesData.mythologies.find(
-//       (item) => item.name === mythologyName
-//     ) as IMyth;
-
-//     if (requestedMyth.orbs < 2) {
-//       throw new Error("Insufficient orbs to make this transaction.");
-//     }
-
-//     req.userMyth = requestedMyth;
-
-//     next();
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// };
-
 export const validateStarClaim = async (req, res, next) => {
   try {
     const userId = req.user;

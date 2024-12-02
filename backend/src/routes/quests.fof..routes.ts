@@ -5,7 +5,6 @@ import {
   claimQuest,
   claimQuestShare,
   claimSocialQuest,
-  createQuest,
 } from "../controllers/quests.fof.controllers";
 import {
   verifyCompletedQuest,
@@ -15,7 +14,6 @@ import {
 const router = express.Router();
 
 // quests
-router.post("/quests/create", authMiddleware, createQuest);
 router.post("/quests/claim", authMiddleware, verifyValidQuest, claimQuest);
 
 // other social quests
