@@ -69,21 +69,21 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       />,
     ];
 
-    // if (gameData.isAutoPayActive) {
-    newItems.push(
-      <BoosterItem
-        key="automata"
-        index={0}
-        currentIndex={currentIndex}
-        isGuideActive={enableGuide}
-        isActive={true}
-        handleClick={() => handleBoosterClick("automata", true)}
-        activeMyth={activeMyth}
-        t={t}
-        booster={7}
-      />
-    );
-    // }
+    if (gameData.isAutoPayActive) {
+      newItems.push(
+        <BoosterItem
+          key="automata"
+          index={0}
+          currentIndex={currentIndex}
+          isGuideActive={enableGuide}
+          isActive={true}
+          handleClick={() => handleBoosterClick("automata", true)}
+          activeMyth={activeMyth}
+          t={t}
+          booster={7}
+        />
+      );
+    }
 
     setItems(newItems);
     setCurrentIndex(0);
@@ -148,7 +148,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[25%] w-full"
+          className="absolute bottom-[20%] w-full"
         >
           <div className="arrows-down"></div>
         </div>
