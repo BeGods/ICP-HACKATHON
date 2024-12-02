@@ -1,9 +1,9 @@
-import milestones, { IClaimedReward } from "../../models/milestones.models";
+import milestones, { IClaimedReward } from "../models/milestones.models";
 
 export const validDailyBonusReq = async (req, res, next) => {
   try {
     const user = req.user;
-    const dailyBonusClaimed = user.dailyBonusClaimedAt;
+    const dailyBonusClaimed = user.bonus.fof.dailyBonusClaimedAt;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -44,8 +44,8 @@ export const validDailyBonusReq = async (req, res, next) => {
 export const validDailyHackBonus = async (req, res, next) => {
   try {
     const user = req.user;
-    const dailyBonusClaimed = user.dailyBonusClaimedAt;
-    const exploitCount = user.exploitCount;
+    const dailyBonusClaimed = user.bonus.fof.dailyBonusClaimedAt;
+    const exploitCount = user.bonus.fof.exploitCount;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -92,7 +92,7 @@ export const validJoinBonusReq = async (req, res, next) => {
   try {
     const user = req.user;
 
-    if (user.joiningBonus) {
+    if (user.bonus.fof.joiningBonus) {
       throw Error("You have already claimed joining bonus!");
     } else {
       next();
@@ -105,44 +105,27 @@ export const validJoinBonusReq = async (req, res, next) => {
 export const validateStreakBonus = async (req, res, next) => {
   try {
     const user = req.user;
+    const { bonus } = user;
     const now = new Date();
-    const lastClaimedDate = new Date(user.streakBonus);
+    const lastClaimedDate = new Date(bonus.fof.streakBonus.claimedAt);
+    lastClaimedDate.setHours(0, 0, 0, 0);
 
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-
-    const lastClaimedMidnight = new Date(
-      lastClaimedDate.getFullYear(),
-      lastClaimedDate.getMonth(),
-      lastClaimedDate.getDate()
-    );
-
-    // edge case : 0
-    if (user.streakBonus === 0) {
-      user.streakBonus = Date.now();
-      next();
-      return;
+    // already claimed
+    if (lastClaimedDate.getTime() === now.getTime()) {
+      throw Error("You are not eligible to claim bonus.");
     }
 
-    // check if already claimed today
-    if (lastClaimedMidnight.getTime() === today.getTime()) {
-      throw new Error("You have already claimed the streak bonus today.");
+    // not active
+    if (!bonus.fof.streakBonus.isActive) {
+      throw Error("Invalid request. Bonus already claimed");
     }
 
-    // check if it was claimed yesterday
-    if (
-      lastClaimedMidnight.getTime() !== yesterday.getTime() &&
-      yesterday.getTime() != 0
-    ) {
-      throw new Error(
-        "You are not eligible to claim. Streak must be continuous."
-      );
-    }
-
-    user.streakBonus = Date.now();
+    bonus.fof.streakBonus.isActive = false;
+    bonus.fof.streakBonus.streakCount += 1;
+    bonus.fof.streakBonus.claimedAt = Date.now();
     next();
   } catch (error) {
+    console.error("Error in validateStreakBonus:", error.message);
     res.status(400).json({ error: error.message });
   }
 };
