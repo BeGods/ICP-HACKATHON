@@ -57,7 +57,7 @@ const TaskCarousel = ({ quests }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[25%] w-full z-50"
+          className="absolute top-[26%] w-full z-50 mr-[2vw]"
         >
           <div className="arrows-up"></div>
         </div>
@@ -118,7 +118,7 @@ const TaskCarousel = ({ quests }) => {
       {currentIndex < quests.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[25%] w-full"
+          className="absolute bottom-[24%] w-full"
         >
           <div className="arrows-down"></div>
         </div>
