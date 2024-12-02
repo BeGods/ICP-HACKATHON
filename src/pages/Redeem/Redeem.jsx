@@ -8,18 +8,17 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import { handleActiveParts } from "../../helpers/quests.helper";
-import AuthenticatePlaySuper from "../../components/Modals/AuthOTP";
 import { claimPlaysuperReward } from "../../utils/api";
 import IconBtn from "../../components/Buttons/IconBtn";
 import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";
 import { ExternalLink } from "lucide-react";
 import confetti from "canvas-confetti";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
 const Redeem = (props) => {
-  const { t } = useTranslation();
   const {
     activeReward,
     userData,
@@ -29,6 +28,8 @@ const Redeem = (props) => {
     setSection,
     rewards,
     setRewards,
+    triggerConf,
+    setTriggerConf,
   } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -38,7 +39,7 @@ const Redeem = (props) => {
   const currReward = rewards[currIndex];
 
   const triggerConfetti = () => {
-    const end = Date.now() + 3 * 1000; // 3 seconds
+    const end = Date.now() + 3 * 1000;
     const colors = ["#bb0000", "#ffffff"];
 
     (function frame() {
@@ -64,10 +65,17 @@ const Redeem = (props) => {
   };
 
   const handleClick = () => {
-    if (userData.isPlaySuperVerified) {
-      handleRedeen();
+    if (activeReward.partnerType == "playsuper") {
+      if (userData.isPlaySuperVerified) {
+        handleRedeen();
+      } else {
+        setSection(11);
+      }
     } else {
-      setSection(11);
+      window.open(
+        `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`,
+        "_blank"
+      );
     }
   };
 
@@ -75,7 +83,7 @@ const Redeem = (props) => {
     try {
       if (currReward.partnerType === "playsuper") {
         const response = await claimPlaysuperReward(currReward.id, authToken);
-        triggerConfetti();
+        showToast("voucher_success");
         setRewards((prevRewards) =>
           prevRewards.map((reward) =>
             reward.id === currReward.id
@@ -89,11 +97,18 @@ const Redeem = (props) => {
         );
       }
     } catch (error) {
+      showToast("voucher_error");
       console.log(error);
     }
   };
 
   useEffect(() => {
+    if (triggerConf) {
+      triggerConfetti();
+      setTimeout(() => {
+        setTriggerConf(false);
+      }, 3000);
+    }
     setTimeout(() => {
       setShowToggles(true);
     }, 300);
@@ -140,6 +155,7 @@ const Redeem = (props) => {
       {/* Header */}
       <RedeemHeader
         currIndex={currIndex}
+        isCharity={currReward.isCharity}
         pieces={currReward.tokensCollected}
         name={currReward.metadata.brandName}
         bubble={
@@ -212,6 +228,7 @@ const Redeem = (props) => {
               </div>
             </div>
 
+            {/* Jigsaw Button */}
             {currReward.isClaimed &&
             userData.isPlaySuperVerified &&
             currReward.partnerType === "playsuper" ? (
@@ -221,35 +238,14 @@ const Redeem = (props) => {
               >
                 {currReward.couponCode}
               </div>
-            ) : currReward.tokensCollected === 12 &&
-              currReward.partnerType === "custom" ? (
-              <JigsawButton
-                handleClick={() => {
-                  window.open(
-                    `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`,
-                    "_blank"
-                  );
-                }}
-                activeMyth={4}
-                handleNext={() => {}}
-                handlePrev={() => {}}
-                faith={currReward.tokensCollected}
-                disableLeft={true}
-                t={t}
-              />
             ) : (
               <JigsawButton
-                handleClick={() => {
-                  if (currReward.tokensCollected) {
-                    handleClick();
-                  }
-                }}
+                handleClick={handleClick}
                 activeMyth={4}
                 handleNext={() => {}}
                 handlePrev={() => {}}
                 faith={currReward.tokensCollected}
                 disableLeft={true}
-                t={t}
               />
             )}
           </div>

@@ -74,6 +74,12 @@
     "water": "Apoy",
     "aether": "Ether"
   },
+  "misc": {
+    "name": "Pangalan",
+    "enterOTP": "Ipasok ang OTP",
+    "phone": "Numero ng Telepono",
+    "day": "Araw"
+  },
   "note": {
     "text": "Pag-update ng leaderboard sa",
     "tower": "Tap ang ORBS para i-convert",
@@ -92,17 +98,26 @@
   "tutorial": {
     "forgeShard": { "title": "Tapikin upang kumita ng mga shard", "desc": "" },
     "forgeOrbs": { "title": "1 Orb = 1,000 Piraso", "desc": "" },
-    "forgeBubble": { "title": "Pumutok ng bula upang kumita ng mga Regalo", "desc": "" },
+    "forgeBubble": {
+      "title": "Pumutok ng bula upang kumita ng mga Regalo",
+      "desc": ""
+    },
     "forgeMinion": { "title": "Hulihin at hawakan ang 2x shard", "desc": "" },
     "forgeExplore": { "title": "Mag-explore +dagdag", "desc": "" },
-    "quests": { "title": "Kumpletuhin ang mga Misyon", "desc": "Kumita ng $faith" },
+    "quests": {
+      "title": "Kumpletuhin ang mga Misyon",
+      "desc": "Kumita ng $faith"
+    },
     "boosters": {
       "title": "KUMUHA NG BOOSTERS",
       "desc": "Kumita ng $faith"
     },
-    "profileTask": { "title": "Kumpletuhin ang mga Gawain", "desc": "Para sa mga gantimpala sa laro" },
-    "gift" : { "title": "Tingnan ang mga Kasosyo", "desc": "" },
-    "tower" : { "title": "I-convert ang Orbs", "desc": "" }
+    "profileTask": {
+      "title": "Kumpletuhin ang mga Gawain",
+      "desc": "Para sa mga gantimpala sa laro"
+    },
+    "gift": { "title": "Tingnan ang mga Kasosyo", "desc": "" },
+    "tower": { "title": "I-convert ang Orbs", "desc": "" }
   },
   "quests": {
     "celtic": {
@@ -488,6 +503,36 @@
     "error": {
       "title": "Nabigong Kumonekta ang Wallet",
       "desc": "Nagkaroon ng problema sa pagkonekta sa iyong TON wallet. Pakisubukang muli mamaya."
+    }
+  },
+  "InputValidate": {
+    "success": {
+      "title": "OTP Ipinadala!",
+      "desc": "Matagumpay na naipadala ang OTP."
+    },
+    "error": {
+      "title": "Maling Input!",
+      "desc": "Mangyaring punan ng tama ang lahat ng kinakailangang mga field."
+    }
+  },
+  "OnboardSuccess": {
+    "success": {
+      "title": "Na-verify ang OTP!",
+      "desc": "Salamat sa pagkonekta sa FrogDog Games!"
+    },
+    "error": {
+      "title": "Hindi Tamang OTP!",
+      "desc": "Pakipasok ang tamang OTP."
+    }
+  },
+  "Voucher": {
+    "success": {
+      "title": "Pagbati! Naharap na ang Regalo",
+      "desc": "Matagumpay mong nakuha ang iyong voucher."
+  },
+    "error": {
+      "title": "Congratulations! Gift Unlocked",
+      "desc": "Your voucher is successfully claimed."
     }
   }
 }

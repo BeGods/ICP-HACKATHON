@@ -12,7 +12,6 @@ import {
   claimBurstBooster,
   claimShardsBooster,
 } from "../../../utils/api";
-import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -290,7 +289,7 @@ const BoosterClaim = ({
                 {activeCard === "automata"
                   ? "n"
                   : activeCard === "minion"
-                  ? "m"
+                  ? "9"
                   : "s"}
               </div>
             </div>

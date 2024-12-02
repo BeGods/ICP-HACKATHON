@@ -21,12 +21,12 @@ const BottomChild = ({ partners }) => {
         <div
           className={`font-symbols  text-iconLg text-black-lg-contour text-white z-50`}
         >
-          2
+          3
         </div>
         <div
           className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
         >
-          3
+          2
         </div>
       </div>
     </div>

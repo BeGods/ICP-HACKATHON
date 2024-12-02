@@ -25,6 +25,16 @@ const GiftCarousel = ({ rewards }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {rewards.length > 3 && currentIndex >= 1 && (
+        <div
+          onClick={() => {
+            setCurrentIndex((prevIndex) => prevIndex - 1);
+          }}
+          className="absolute top-[25%] w-full z-50"
+        >
+          <div className="arrows-up"></div>
+        </div>
+      )}
       <div className="carousel">
         {rewards.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
@@ -46,17 +56,9 @@ const GiftCarousel = ({ rewards }) => {
       {currentIndex < rewards.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[20%] w-full"
+          className="absolute bottom-[25%] w-full"
         >
           <div className="arrows-down"></div>
-        </div>
-      )}
-      {rewards.length > 3 && currentIndex >= rewards.length - 3 && (
-        <div
-          onClick={() => setCurrentIndex(0)}
-          className="absolute bottom-[20%] w-full"
-        >
-          <div className="arrows-up"></div>
         </div>
       )}
     </div>

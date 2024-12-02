@@ -9,6 +9,7 @@ import {
   setLangCookie,
   validateSoundCookie,
 } from "../../helpers/cookie.helper";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -30,10 +31,20 @@ const IntroPage = (props) => {
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
+        tele.addToHomeScreen();
+        tele.lockOrientation();
+        tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();
         tele.setHeaderColor("#000000");
         tele.setBackgroundColor("#000000");
         tele.setBottomBarColor("#000000");
+        // tele.LocationManager.init(function () {
+        //   window.Telegram.WebApp.LocationManager.getLocation(function (
+        //     locationData
+        //   ) {
+        //     toast.success(locationData);
+        //   });
+        // });
 
         if (user) {
           const userData = {
@@ -65,7 +76,9 @@ const IntroPage = (props) => {
       const response = await authenticate(userData, referralCode);
       localStorage.setItem("accessToken", response.data.token);
       await setAuthCookie(tele, response.data.token);
-      navigate("/home");
+      setTimeout(() => {
+        navigate("/home");
+      }, 3000);
     } catch (error) {
       console.error("Authentication Error: ", error);
     }
@@ -108,9 +121,10 @@ const IntroPage = (props) => {
       setDisableDestop(true);
     } else {
       setDisableDestop(false);
-      setTimeout(() => {
-        setShowCaptcha(true);
-      }, 3000);
+      (async () => await auth())();
+      // setTimeout(() => {
+      //   setShowCaptcha(true);
+      // }, 3000);
     }
     if (platform === "ios") {
       document.body.style.position = "fixed";
@@ -196,7 +210,7 @@ const IntroPage = (props) => {
         // TMA mobile view
         <div
           style={{
-            background: `url(${assets.uxui.intro})`,
+            background: `url(${assets.uxui.fofsplash})`,
             backgroundPosition: "50% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",

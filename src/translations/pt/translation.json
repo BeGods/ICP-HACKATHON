@@ -34,7 +34,7 @@
   },
   "sections": {
     "forges": "Forjas",
-    "boosters": "Boosters",
+    "boosters": "Potenciadores",
     "quests": "Missões",
     "leaderboard": "Classificação",
     "tower": "Torre",
@@ -42,7 +42,9 @@
     "profile": "Perfil"
   },
   "boosters": [
-    { "title": "Autômata", "desc": "Toque automático" }, { "title": "Missões", "desc": "Energia 200%" }, { "title": "Alquimista", "desc": "Toque duplo" },
+    { "title": "Autômata", "desc": "Toque automático" },
+    { "title": "Missões", "desc": "Energia 200%" },
+    { "title": "Alquimista", "desc": "Toque duplo" },
     {},
     {},
     {},
@@ -78,6 +80,12 @@
     "fire": "Fogo",
     "aether": "Éter"
   },
+  "misc": {
+    "name": "Nome",
+    "enterOTP": "Inserir OTP",
+    "phone": "Número de telefone",
+    "day": "Dia"
+  },
   "note": {
     "text": "Atualização da classificação em",
     "tower": "Toque nas ORBS para converter",
@@ -96,7 +104,10 @@
   "tutorial": {
     "forgeShard": { "title": "Toque para ganhar fragmentos", "desc": "" },
     "forgeOrbs": { "title": "1 Orb = 1,000 Fragmentos", "desc": "" },
-    "forgeBubble": { "title": "Estourar bolha para ganhar Presentes", "desc": "" },
+    "forgeBubble": {
+      "title": "Estourar bolha para ganhar Presentes",
+      "desc": ""
+    },
     "forgeMinion": { "title": "Capturar e manter 2x fragmentos", "desc": "" },
     "forgeExplore": { "title": "Explorar +mais", "desc": "" },
     "quests": { "title": "Completar Missões", "desc": "Ganhe $faith" },
@@ -104,9 +115,12 @@
       "title": "ADQUIRIR BOOSTERS",
       "desc": "Ganhar $fé"
     },
-    "profileTask": { "title": "Completar Tarefas", "desc": "Para recompensas no jogo" },
-    "gift" : { "title": "Ver Parceiros", "desc": "" },
-    "tower" : { "title": "Converter Orbes", "desc": "" }
+    "profileTask": {
+      "title": "Completar Tarefas",
+      "desc": "Para recompensas no jogo"
+    },
+    "gift": { "title": "Ver Parceiros", "desc": "" },
+    "tower": { "title": "Converter Orbes", "desc": "" }
   },
   "quests": {
     "celtic": {
@@ -345,7 +359,6 @@
       }
     }
   },
-
   "toasts": {
     "default": {
       "error": {
@@ -460,6 +473,36 @@
         "title": "Falha na conexão da carteira",
         "desc": "Houve um problema ao conectar-se à sua carteira TON. Tente novamente mais tarde."
       }
+    },
+    "InputValidate": {
+      "success": {
+        "title": "OTP Enviado!",
+        "desc": "OTP enviado com sucesso."
+      },
+      "error": {
+        "title": "Entrada inválida!",
+        "desc": "Por favor, preencha corretamente todos os campos obrigatórios."
+      }
+    },
+    "OnboardSuccess": {
+      "success": {
+        "title": "OTP Verificado!",
+        "desc": "Obrigado por se conectar com o FrogDog Games!"
+      },
+      "error": {
+        "title": "OTP inválido!",
+        "desc": "Por favor, insira o OTP correto."
+      }
+    },
+    "Voucher": {
+      "success": {
+        "title": "Parabéns! Presente desbloqueado",
+        "desc": "Seu voucher foi resgatado com sucesso."
+    },
+      "error": {
+        "title": "Operação Falhada: Peças Incompletas",
+        "desc": "Complete as 12 peças para desbloquear seu voucher."
+    }    
     }
   }
 }

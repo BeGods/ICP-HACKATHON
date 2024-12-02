@@ -64,7 +64,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
         <img
           src={assets.questFrames?.[mythSections[activeMyth]]?.[quest?.type]}
           alt="info_painting"
-          className="w-[82%] mx-auto card-shadow-black"
+          className="w-[82%] mx-auto card-shadow-black pointer-events-none"
         />
       </div>
       <div
@@ -82,13 +82,3 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
 };
 
 export default InfoCard;
-
-{
-  /* <ShareButton
-isShared={isShared}
-isInfo={true}
-handleClaim={handleClaimShareReward}
-activeMyth={activeMyth}
-t={t}
-/> */
-}

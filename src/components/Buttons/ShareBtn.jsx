@@ -12,16 +12,18 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
   return (
     <div
       onClick={() => {
-        if (showRedirect) {
-          window.open(link, "_blank");
-          setShowRedirect(false);
-        } else {
-          if (disableClick.current === false) {
-            disableClick.current = true;
-            setTimeout(() => {
-              disableClick.current = false;
-            }, 2000);
-            handleClaim();
+        if (!isShared) {
+          if (showRedirect) {
+            window.open(link, "_blank");
+            setShowRedirect(false);
+          } else {
+            if (disableClick.current === false) {
+              disableClick.current = true;
+              setTimeout(() => {
+                disableClick.current = false;
+              }, 2000);
+              handleClaim();
+            }
           }
         }
       }}
@@ -49,11 +51,11 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
         <div
           className={`flex items-center  mt-[10px] justify-between ${
             isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-          }  border border-black h-button-secondary w-button-primary mx-auto  bg-${
+          }  border border-black h-[30px] w-[180px] mx-auto  bg-${
             mythSections[activeMyth]
           } z-50 text-white  rounded-primary`}
         >
-          <div className="flex justify-center items-center w-1/4 h-full">
+          <div className="flex justify-center items-center h-full">
             <div className="flex justify-center items-center w-[40px] h-[40px]  bg-black rounded-full">
               <img
                 src={`https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png`}
@@ -64,19 +66,19 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
           </div>
           {showRedirect ? (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[3vw] rounded-full`}
             >
-              <Share2 size={"7.5vw"} color="white" />
+              <Share2 size={"9vw"} color="white" />
             </div>
           ) : (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[3vw] rounded-full`}
             >
-              <ThumbsUp size={"7.5vw"} color="white" />
+              <ThumbsUp size={"9vw"} color="white" />
             </div>
           )}
           {isInfo ? (
-            <div className="flex justify-center items-center w-1/4  h-full">
+            <div className="flex justify-end items-center w-1/4  h-full">
               <img
                 src={`${assets.uxui.multiorb}`}
                 alt="orb"
@@ -96,7 +98,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
                   className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
                 />
                 <span
-                  className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-primary mt-1`}
+                  className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-symbol-sm mt-1`}
                 >
                   {mythSymbols[mythSections[activeMyth]]}
                 </span>

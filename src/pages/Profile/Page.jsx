@@ -142,13 +142,7 @@ const Profile = (props) => {
       </div>
       {/* Header */}
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
-      <div
-        className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
-        style={{ top: "22vh", left: "50%", transform: "translateX(-50%)" }}
-      >
-        {userData.telegramUsername.charAt(0).toUpperCase() +
-          userData.telegramUsername.slice(1).toLowerCase()}
-      </div>
+
       <div className="flex relative flex-grow justify-center items-start top-0">
         <div className={`flex relative w-full justify-end top-0 `}>
           <div
@@ -174,7 +168,7 @@ const Profile = (props) => {
         </div>
       </div>
 
-      {showToggles && (
+      {/* {showToggles && (
         <>
           <ToggleLeft
             minimize={2}
@@ -191,9 +185,19 @@ const Profile = (props) => {
             activeMyth={4}
           />
         </>
-      )}
+      )} */}
     </div>
   );
 };
 
 export default Profile;
+
+{
+  /* <div
+className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
+style={{ top: "22vh", left: "50%", transform: "translateX(-50%)" }}
+>
+{userData.telegramUsername.charAt(0).toUpperCase() +
+  userData.telegramUsername.slice(1).toLowerCase()}
+</div> */
+}

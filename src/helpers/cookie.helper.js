@@ -50,13 +50,10 @@ export const setSoundStatus = async (tele, toRemove) => {
     if (toRemove) {
       tele.CloudStorage.removeItem("sound");
     } else {
-      tele.CloudStorage.setItem("sound", true);
+      tele.CloudStorage.setItem("sound", false);
     }
   } else {
-    const cookieItem = localStorage.getItem("sound");
-    if (cookieItem) {
-      return cookieItem;
-    }
+    localStorage.setItem("sound", toRemove);
   }
 };
 

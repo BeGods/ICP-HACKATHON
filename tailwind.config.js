@@ -90,6 +90,7 @@ export default {
       },
       fontSize: {
         primary: "10vw",
+        "symbol-sm": "8vw",
         secondary: "14px",
         para: "4.3vw",
         tertiary: "18px",

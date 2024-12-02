@@ -77,9 +77,15 @@
     "music": "Music",
     "wallet": "Wallet"
   },
+  "misc": {
+    "name": "Name",
+    "enterOTP": "Enter OTP",
+    "phone": "Phone Number",
+    "day": "Day"
+  },
   "note": {
     "text": "Leader board update in",
-    "tower": "Tap ORBS to convert", 
+    "tower": "Tap ORBS to convert",
     "bonus": "To see active promotion"
   },
   "bonus": {
@@ -101,11 +107,11 @@
     "forgeBubble": { "title": "Pop Bubble to earn Gifts", "desc": "" },
     "forgeMinion": { "title": "Catch & hold 2x shards", "desc": "" },
     "forgeExplore": { "title": "Explore +more", "desc": "" },
-    "quests": { "title": "Complete Quests", "desc": "Earn $faith"  },
+    "quests": { "title": "Complete Quests", "desc": "Earn $faith" },
     "boosters": { "title": "ACQUIRE BOOSTERS", "desc": "Earn $faith" },
-    "profileTask": { "title": "Complete Tasks", "desc": "For Ingame rewards"  },
-    "gift" : { "title": "Checkout Partners", "desc": "" },
-    "tower" : { "title": "Convert Orbs", "desc": "" }
+    "profileTask": { "title": "Complete Tasks", "desc": "For Ingame rewards" },
+    "gift": { "title": "Checkout Partners", "desc": "" },
+    "tower": { "title": "Convert Orbs", "desc": "" }
   },
   "quests": {
     "celtic": {
@@ -461,6 +467,36 @@
         "title": "Wallet Connection Failed",
         "desc": "There was an issue connecting to your TON wallet. Please try again later."
       }
+    },
+    "InputValidate": {
+      "success": {
+        "title": "OTP Sent!",
+        "desc": "OTP sent successfully."
+      },
+      "error": {
+        "title": "Invalid Input!",
+        "desc": "Please fill in all required fields correctly."
+      }
+    },
+    "OnboardSuccess": {
+      "success": {
+        "title": "OTP Verified!",
+        "desc": "Thank you for connecting with FrogDog!"
+      },
+      "error": {
+        "title": "Invalid OTP!",
+        "desc": "Please enter the correct OTP."
+      }
+    },
+    "Voucher": {
+      "success": {
+        "title": "Congratulations! Gift Unlocked",
+        "desc": "Your voucher is successfully claimed."
+      },
+      "error": {
+        "title": "Claim Failed: Pieces Incomplete",
+        "desc": "Finish all 12 pieces to unlock your voucher."
+}
     }
   }
 }

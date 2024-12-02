@@ -37,7 +37,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                 .filter(([key, value]) => key !== "other")
                 .map(([key, value], index) => (
                   <React.Fragment key={key}>
-                    <div className="flex justify-center items-center gap-x-3 mt-2">
+                    <div className="flex justify-center items-center gap-x-3">
                       <div
                         className={`flex relative text-center justify-center  items-center max-w-orb rounded-full glow-icon-black`}
                       >
@@ -47,7 +47,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-primary mt-1`}
+                          className={`absolute  opacity-50 orb-symbol-shadow  z-1 flex justify-center items-center font-symbols text-white text-symbol-sm mt-1`}
                         >
                           {value}
                         </span>
@@ -64,7 +64,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                           className={`filter-orbs-${key}`}
                         />
                         <span
-                          className={`absolute z-1 text-primary  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
+                          className={`absolute z-1 text-symbol-sm  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white `}
                         >
                           {value}
                         </span>
@@ -78,7 +78,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                     </div>
                   </React.Fragment>
                 ))}
-              <div className="flex justify-center items-center gap-x-3 -ml-[15px] mt-2">
+              <div className="flex justify-center items-center gap-x-3 -ml-[15px]">
                 <div className="text-[28px] -ml-2.5">1,000</div>
                 <div className="text-[24px] font-roboto font-medium">X</div>
                 <div
@@ -92,7 +92,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                   <span
                     className={`absolute z-1  justify-center items-center font-symbols text-white `}
                   >
-                    <div className="text-primary transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                    <div className="text-symbol-sm transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
                       {mythSymbols[myths[activeColor]]}
                     </div>
                   </span>
@@ -103,7 +103,7 @@ const ConvertInfo = ({ t, handleClick }) => {
                 >
                   <img src={assets.uxui.baseorb} alt={`gray orb`} />
                   <span
-                    className={`absolute z-1 text-primary opacity-50 orb-symbol-shadow  mt-1  mr-1 font-symbols text-white `}
+                    className={`absolute z-1 text-symbol-sm opacity-50 orb-symbol-shadow  mt-1  mr-1 font-symbols text-white `}
                   >
                     g
                   </span>

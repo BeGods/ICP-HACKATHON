@@ -69,21 +69,21 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       />,
     ];
 
-    if (gameData.isAutoPayActive) {
-      newItems.push(
-        <BoosterItem
-          key="automata"
-          index={0}
-          currentIndex={currentIndex}
-          isGuideActive={enableGuide}
-          isActive={true}
-          handleClick={() => handleBoosterClick("automata", true)}
-          activeMyth={activeMyth}
-          t={t}
-          booster={7}
-        />
-      );
-    }
+    // if (gameData.isAutoPayActive) {
+    newItems.push(
+      <BoosterItem
+        key="automata"
+        index={0}
+        currentIndex={currentIndex}
+        isGuideActive={enableGuide}
+        isActive={true}
+        handleClick={() => handleBoosterClick("automata", true)}
+        activeMyth={activeMyth}
+        t={t}
+        booster={7}
+      />
+    );
+    // }
 
     setItems(newItems);
     setCurrentIndex(0);
@@ -121,6 +121,17 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {items.length > 3 && currentIndex >= 1 && (
+        <div
+          onClick={() => {
+            setCurrentIndex((prevIndex) => prevIndex - 1);
+          }}
+          className="absolute top-[25%] w-full z-50"
+        >
+          <div className="arrows-up"></div>
+        </div>
+      )}
+
       <div className="carousel">
         {items.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
@@ -137,17 +148,9 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[20%] w-full"
+          className="absolute bottom-[25%] w-full"
         >
           <div className="arrows-down"></div>
-        </div>
-      )}
-      {items.length > 3 && currentIndex >= items.length - 3 && (
-        <div
-          onClick={() => setCurrentIndex(0)}
-          className="absolute bottom-[20%] w-full"
-        >
-          <div className="arrows-up"></div>
         </div>
       )}
     </div>

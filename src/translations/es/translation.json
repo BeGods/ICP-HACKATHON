@@ -34,7 +34,7 @@
   },
   "sections": {
     "forges": "Forjas",
-    "boosters": "Boosters",
+    "boosters": "Potenciadores",
     "quests": "Misiones",
     "leaderboard": "Tabla de clasificación",
     "tower": "Torre",
@@ -42,13 +42,14 @@
     "profile": "Perfil"
   },
   "boosters": [
-    { "title": "Autómata", "desc": "Toca automáticamente" }, { "title": "Misiones", "desc": "Energía 200%" }, { "title": "Alquimista", "desc": "Doble toque" }, 
+    { "title": "Autómata", "desc": "Toca automáticamente" },
+    { "title": "Misiones", "desc": "Energía 200%" },
+    { "title": "Alquimista", "desc": "Doble toque" },
     {},
     {},
     {},
     { "title": "Explosión", "desc": "Presión de Apretar" },
     { "title": "Paquete de Autómatas", "desc": "Autómatas 4X" }
-
   ],
   "profile": {
     "premium": "Premium",
@@ -83,6 +84,12 @@
     "water": "Agua",
     "aether": "Éter"
   },
+  "misc": {
+    "name": "Nombre",
+    "enterOTP": "Ingrese OTP",
+    "phone": "Número de teléfono",
+    "day": "Dia"
+  },
   "note": {
     "text": "Actualización de la tabla de clasificación en",
     "tower": "Toca ORBS para convertir",
@@ -97,7 +104,10 @@
   "tutorial": {
     "forgeShard": { "title": "Toca para ganar fragmentos", "desc": "" },
     "forgeOrbs": { "title": "1 Orb = 1,000 Fragmentos", "desc": "" },
-    "forgeBubble": { "title": "Estallar burbuja para ganar Regalos", "desc": "" },
+    "forgeBubble": {
+      "title": "Estallar burbuja para ganar Regalos",
+      "desc": ""
+    },
     "forgeMinion": { "title": "Atrapar y mantener 2x fragmentos", "desc": "" },
     "forgeExplore": { "title": "Explorar +más", "desc": "" },
     "quests": { "title": "Completar Misiones", "desc": "Ganar $faith" },
@@ -105,9 +115,12 @@
       "title": "ADQUIRIR BOOSTERS",
       "desc": "Ganar $fe"
     },
-    "profileTask": { "title": "Completar Tareas", "desc": "Por recompensas dentro del juego" },
-    "gift" : { "title": "Ver Socios", "desc": "" },
-    "tower" : { "title": "Convertir Orbes", "desc": "" }
+    "profileTask": {
+      "title": "Completar Tareas",
+      "desc": "Por recompensas dentro del juego"
+    },
+    "gift": { "title": "Ver Socios", "desc": "" },
+    "tower": { "title": "Convertir Orbes", "desc": "" }
   },
   "quests": {
     "celtic": {
@@ -465,6 +478,36 @@
         "title": "Error en la conexión de la billetera",
         "desc": "Hubo un problema al conectar con tu billetera TON. Por favor, intenta de nuevo más tarde."
       }
+    },
+    "InputValidate": {
+      "success": {
+        "title": "¡OTP Enviado!",
+        "desc": "OTP enviado con éxito."
+      },
+      "error": {
+        "title": "¡Entrada no válida!",
+        "desc": "Por favor, complete correctamente todos los campos obligatorios."
+      }
+    },
+    "OnboardSuccess": {
+      "success": {
+        "title": "¡OTP Verificado!",
+        "desc": "¡Gracias por conectarte con FrogDog Games!"
+      },
+      "error": {
+        "title": "¡OTP inválido!",
+        "desc": "Por favor ingrese el OTP correcto."
+      }
+    },
+    "Voucher": {
+      "success": {
+        "title": "¡Felicitationes! Regalo desbloqueado",
+        "desc": "Tu cupón ha sido reclamado con éxito."
+    },
+      "error": {
+        "title": "Reclamación fallida: Piezas incompletas",
+        "desc": "Termina las 12 piezas para desbloquear tu cupón."
+    }    
     }
   }
 }

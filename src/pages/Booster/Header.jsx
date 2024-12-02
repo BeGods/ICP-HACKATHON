@@ -32,7 +32,9 @@ const BottomChild = ({ activeMyth, gameData }) => {
             `glow-button-${mythSections[activeMyth]}`
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary font-medium pl-headSides">
+          <div className="flex items-center text-primary font-medium pl-headSides">
+            <span className="font-roboto font-normal text-[6vw] pr-1">x</span>
+
             {formatTwoNums(gameData.shardslvl)}
           </div>
         </div>
@@ -44,8 +46,9 @@ const BottomChild = ({ activeMyth, gameData }) => {
             mythSections[activeMyth]
           }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary font-medium pr-headSides">
-            {formatTwoNums(gameData.automatalvl + 1)}
+          <div className="flex items-center text-primary font-medium pr-headSides">
+            {formatTwoNums(gameData.automatalvl + 1)}{" "}
+            <span className="font-roboto font-normal text-[6vw] pl-1">x</span>
           </div>
         </div>
       </div>

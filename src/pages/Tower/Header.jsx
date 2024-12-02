@@ -35,8 +35,8 @@ const CenterChild = ({ platform, myth }) => {
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
           <span
-            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[28vw] ${
-              platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
+            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[26vw] ${
+              platform === "ios" ? "mt-8 ml-2" : "mt-5 ml-2"
             } opacity-70  orb-symbol-shadow`}
           >
             {mythSymbols[wheel[myth]]}

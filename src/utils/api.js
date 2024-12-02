@@ -296,7 +296,7 @@ export const claimBurst = async (result, accessToken) => {
 
 export const updateGameData = async (gameData, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/game/claimTapSession`;
-  const secretKey = "K/;|&t%(pX)%2@k|?1t^#GY;!w7:(PY<";
+  const secretKey = import.meta.env.VITE_HASH_KEY;
   const hashedData = CryptoJS.AES.encrypt(
     JSON.stringify(gameData),
     secretKey
@@ -555,8 +555,18 @@ export const claimPlaysuperReward = async (rewardId, accessToken) => {
   }
 };
 
-export const claimStreakBonus = async (accessToken) => {
+export const claimStreakBonus = async (accessToken, country) => {
   let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
+
+  let queryParams = [];
+
+  if (country !== "NA" || country !== "NA") {
+    queryParams.push(`country=${country}`);
+  }
+
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join("&")}`;
+  }
 
   try {
     const response = await axios.get(url, {

@@ -118,7 +118,7 @@ ${
       }}
     >
       <div className="w-[20%] flex justify-start items-center">
-        <img src={quest.type} alt="telegram" className="w-full" />
+        <img src={quest.type} alt="task-icon" className="w-fullb grayscale" />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
         <h1 className="text-tertiary uppercase">
@@ -130,7 +130,7 @@ ${
         </h1>
         <h2 className="text-tertiary">
           +{quest.requiredOrbs.multiOrbs}
-          <span className="pl-2 gradient-multi">Multi ORB(S)</span>
+          <span className="pl-1 gradient-multi">ORB(S)</span>
         </h2>
       </div>
       <div className="flex justify-center items-center w-[8%] ">

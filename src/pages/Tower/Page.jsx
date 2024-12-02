@@ -177,7 +177,7 @@ const Tower = () => {
         <div
           className={`absolute top-0 left-0 h-screen w-screen pointer-events-none`}
           style={{
-            backgroundImage: `url(/assets/uxui/intro.jpg)`,
+            backgroundImage: `url(/assets/uxui/fof.splash.png)`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "50% 0%",
@@ -264,9 +264,9 @@ const Tower = () => {
         </div>
       </div>
 
-      <div className="absolute  flex justify-center items-center h-full w-full">
+      <div className="absolute flex justify-center items-center h-full w-full">
         <div
-          className="relative flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
+          className="relative scale-110 flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
             backgroundImage: `url(${assets.uxui.tower})`,
             backgroundSize: "contain",
@@ -278,7 +278,7 @@ const Tower = () => {
 
       <div className="absolute flex justify-center items-center h-full w-full z-50">
         <div
-          className="relative flex justify-center items-center w-full h-full pointer-events-none"
+          className="relative scale-110 flex justify-center items-center w-full h-full pointer-events-none"
           style={{
             backgroundImage: `url(${assets.uxui[`dial-${wheelNames[myth]}`]})`,
             backgroundSize: "contain",
@@ -313,7 +313,7 @@ const Tower = () => {
                 />
                 <span
                   className={`absolute z-1 font-symbols text-white opacity-50 ${
-                    scaleOrb == index ? "text-[35px]" : "text-primary"
+                    scaleOrb == index ? "text-[9vw]" : "text-symbol-sm"
                   }  mt-1 text-black-sm-contour`}
                 >
                   <>{mythSymbols[item.toLowerCase()]}</>{" "}

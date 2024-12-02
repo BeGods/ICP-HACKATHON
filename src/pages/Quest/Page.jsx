@@ -9,7 +9,6 @@ import {
   claimQuestOrbsReward,
   claimShareReward,
 } from "../../utils/api";
-
 import JigsawImage from "../../components/Cards/Jigsaw/JigsawCrd";
 import InfoCard from "../../components/Cards/Info/QuestInfoCrd";
 import PayCard from "../../components/Cards/Quests/QuestPayCrd";

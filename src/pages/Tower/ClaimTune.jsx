@@ -78,7 +78,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             className={`relative flex justify-center
               ${showEffect === -1 && "glow-tap-white"} ${
               showEffect && `glow-tap-${mythSections[showEffect - 1]}`
-            } items-center w-full h-full pointer-events-none`}
+            } scale-110 items-center w-full h-full pointer-events-none`}
             style={{
               backgroundImage: `url(${assets.uxui.tower})`,
               backgroundSize: "contain",
@@ -121,7 +121,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                       showEffect - 1 === index
                         ? ` transition-all duration-1000 opacity-100 text-${item.toLowerCase()}-text`
                         : "text-white opacity-50"
-                    } text-primary mt-1 text-black-sm-contour`}
+                    } text-symbol-sm mt-1 text-black-sm-contour`}
                   >
                     <>{mythSymbols[item.toLowerCase()]}</>
                   </span>

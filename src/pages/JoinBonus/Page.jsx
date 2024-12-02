@@ -11,6 +11,7 @@ const JoinBonus = (props) => {
   const { t } = useTranslation();
   const { setGameData, setSection, authToken, assets } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
+  const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const bonusText = t("bonus.join").split(" ");
@@ -61,10 +62,13 @@ const JoinBonus = (props) => {
 
   useEffect(() => {
     playConfetti();
+    setTimeout(() => {
+      setDisableHand(false);
+    }, 2000);
 
     setTimeout(() => {
       handleClaimBonus();
-    }, 5000);
+    }, 4000);
   }, []);
 
   useEffect(() => {
@@ -142,6 +146,11 @@ const JoinBonus = (props) => {
             color="#FFD660"
             className="mx-auto drop-shadow-xl scale-more"
           />
+          {disableHand && (
+            <div className="font-symbols scale-point z-10 mx-auto my-auto absolute ml-4 mt-6 text-white text-[60px] text-black-contour">
+              b
+            </div>
+          )}
         </div>
         <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
           {changeText ? "3 Multi Orbs" : "2 Fire Orbs"}

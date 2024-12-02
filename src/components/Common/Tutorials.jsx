@@ -22,7 +22,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
               b
             </div>
           </div>
-          <div className="h-[13%] flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[13%] maximize flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col justify-center items-center text-primary leading-9">
                 Tap to earn <br />{" "}
@@ -48,7 +48,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
               b
             </div>
           </div>
-          <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[13%] maximize flex justify-center items-end  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
                 <div>
@@ -77,7 +77,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
               b
             </div>
           </div>
-          <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+          <div className="h-[13%] maximize flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
                 <div>Explore</div>
@@ -95,7 +95,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
         </div>
       ) : currTut == 3 ? (
         <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
-          <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col text-primary leading-9">
                 <div>Catch & hold</div>
@@ -133,7 +133,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
         </div>
       ) : (
         <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
-          <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col text-primary leading-9">
                 <div>Pop Bubble</div>
@@ -176,7 +176,7 @@ export const QuestGuide = ({ handleClick }) => {
 
   return (
     <div className="fixed inset-0 flex  flex-col items-center z-50">
-      <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+      <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col text-[11vw] mt-2 leading-9">
           <span
             className={`font-symbols text-[50px] pb-3 lowercase glow-icon-${mythSections[activeMyth]}`}
@@ -212,7 +212,7 @@ export const QuestGuide = ({ handleClick }) => {
           b
         </div>
       </div>
-      <div className="h-[13%] flex flex-col text-primary leading-9 justify-end items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+      <div className="h-[13%] maximize flex flex-col text-primary leading-9 justify-end items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
         {t("tutorial.quests.desc")
           .split(" ")
           .map((text, index) => (
@@ -241,7 +241,7 @@ export const BoosterGuide = ({ handleClick }) => {
 
   return (
     <div className="fixed inset-0 flex flex-col items-center z-50">
-      <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+      <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col text-[11vw] leading-9">
           <span
             className={`font-symbols glow-icon-${mythSections[activeMyth]} text-[50px] lowercase pt-2 pb-4`}
@@ -273,7 +273,7 @@ export const BoosterGuide = ({ handleClick }) => {
           b
         </div>
       </div>
-      <div className="h-[13%] flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+      <div className="h-[13%] maximize flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col justify-center items-center text-primary leading-9">
           {t("tutorial.boosters.desc")
             .split(" ")
@@ -314,7 +314,7 @@ export const TowerGuide = ({ handleClick }) => {
 
   return (
     <div className="fixed inset-0 backdrop-blur-[3px] flex  flex-col items-center z-50">
-      <div className="h-[20%] flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+      <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col text-[11vw] leading-9">
           <span className={`font-symbols  text-[50px] lowercase pt-2 pb-4`}>
             x
@@ -342,7 +342,7 @@ export const TowerGuide = ({ handleClick }) => {
         className="absolute flex justify-center items-center h-full w-full"
       >
         <div
-          className="relative flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
+          className="relative scale-110 flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
             backgroundImage: `url(${assets.uxui.tower})`,
             backgroundSize: "contain",
@@ -355,7 +355,7 @@ export const TowerGuide = ({ handleClick }) => {
           </div>
         </div>
       </div>
-      <div className="h-[13%] flex justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+      <div className="h-[13%] maximize flex justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="text-primary">2</div>
         <div className="text-[20px] font-roboto font-semibold px-1">x</div>
         <div
@@ -392,7 +392,7 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
     <>
       {currGuide === 0 ? (
         <div className="fixed inset-0  flex  flex-col items-center z-50">
-          <div className="h-[20%] pb-2 w-screen bg-black text-white text-center">
+          <div className="h-[20%] maximize-head pb-2 w-screen bg-black text-white text-center">
             <div className="flex flex-col text-[11vw] mt-2 leading-9">
               <span className="font-symbols text-[50px] pb-3">0</span>
               <div className="uppercase">
@@ -414,13 +414,13 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
           </div>
           <div
             onClick={handleClick}
-            className="flex relative flex-grow items-center text-white "
+            className="flex relative flex-grow items-center text-white"
           >
             <div className="font-symbols  text-white text-[40vw]  top-5 scale-point">
               b
             </div>
           </div>
-          <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+          <div className="h-[13%] maximize flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
             <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
               {t("tutorial.profileTask.desc")}
             </div>
@@ -431,13 +431,13 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
           <div className="w-full">{Header}</div>
           <div
             onClick={handleClick}
-            className="flex relative flex-grow font-symbols justify-start  w-full items-center z-[99] text-white "
+            className="flex relative flex-grow font-symbols justify-start  w-full items-start z-[99] text-white "
           >
-            <div className="font-symbols text-white text-[20vw] left-0 mt-[16vh] ml-[8vw] scale-point">
+            <div className="font-symbols text-white text-[20vw] left-0 ml-[8vw] scale-point">
               b
             </div>
           </div>
-          <div className="h-[13%] flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
+          <div className="h-[13%] maximize flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
             <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
               {t("tutorial.gift.title")
                 .split(" ")

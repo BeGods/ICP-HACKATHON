@@ -350,11 +350,11 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "phone_success":
+    case "form_success":
       toast.success(
         <ToastMesg
-          title={"Thank you!"}
-          desc={"Mobile verified successfully!"}
+          title={t("toasts.InputValidate.success.title")}
+          desc={t("toasts.InputValidate.success.desc")}
           status={"success"}
         />,
         {
@@ -369,11 +369,11 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "phone_fail_error":
+    case "form_error":
       toast.error(
         <ToastMesg
-          title={"Failed to verify."}
-          desc={"There was some problem in verifying phone number."}
+          title={t("toasts.InputValidate.error.title")}
+          desc={t("toasts.InputValidate.error.desc")}
           status={"fail"}
         />,
         {
@@ -388,11 +388,30 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "phone_valid_error":
+    case "onboard_success":
       toast.error(
         <ToastMesg
-          title={"Invalid Mobile Number!"}
-          desc={"Please provide valid number."}
+          title={t("toasts.OnboardSuccess.success.title")}
+          desc={t("toasts.OnboardSuccess.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "onboard_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.OnboardSuccess.error.title")}
+          desc={t("toasts.OnboardSuccess.error.desc")}
           status={"fail"}
         />,
         {
@@ -407,11 +426,30 @@ export const showToast = (type) => {
         }
       );
       break;
-    case "name_error":
+    case "voucher_success":
       toast.error(
         <ToastMesg
-          title={"Invalid Name!"}
-          desc={"Please provide valid name."}
+          title={t("toasts.Voucher.success.title")}
+          desc={t("toasts.Voucher.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "voucher_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Voucher.error.title")}
+          desc={t("toasts.Voucher.error.desc")}
           status={"fail"}
         />,
         {
