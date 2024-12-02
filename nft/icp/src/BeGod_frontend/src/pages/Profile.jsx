@@ -552,7 +552,7 @@ const fetchCollections = async () => {
       updateNoCardsStatus(true);
     }
 };
-const itemsPerPage = 20;
+const itemsPerPage = 26;
 // const [currentPage,updateCurrentPage] = useState(1);
 const [totalPages,updateTotalPages] = useState(1);
 
@@ -562,27 +562,33 @@ const currentPage  = useRef(1);
   const getSelectedOptionCards =  async(collectionId) => {
     let updatedCardsList = [];
     console.log("before profile function")
-    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal,itemsPerPage,currentPage.current-1)
-    console.log("profile result",collectionDetailsResult)
-    const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
-    console.log("owned nfts after fetching",ownedNfts);
-    const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
-    console.log("not owned nfts after fetching",notOwnedNfts);
-    const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
-   console.log("owned nfts",updatedOwnedList);
-    
-    const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
-   // console.log("not owned nfts",updatedNotOwnedNfts);
-    updateRemainingNfts(updatedNotOwnedNfts.length);
-  
-    if(updatedOwnedList.length == 0){
+    const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal,itemsPerPage,0)
+    if(collectionDetailsResult.err){
       updateSelectedList([]);
       return []
     }else{
-      updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
-      console.log("all cards",updatedCardsList)
-      return updatedCardsList;
+      console.log("profile result",collectionDetailsResult)
+      const ownedNfts = collectionDetailsResult.ok.boughtNFTs;
+      console.log("owned nfts after fetching",ownedNfts);
+      const notOwnedNfts = collectionDetailsResult.ok.unboughtNFTs;
+      console.log("not owned nfts after fetching",notOwnedNfts);
+      const updatedOwnedList = await getUpdatedList(collectionId,ownedNfts,[],true);
+     console.log("owned nfts",updatedOwnedList);
+      
+      const updatedNotOwnedNfts = await getUpdatedList(collectionId,notOwnedNfts,updatedOwnedList,false);
+     // console.log("not owned nfts",updatedNotOwnedNfts);
+      updateRemainingNfts(updatedNotOwnedNfts.length);
+    
+      if(updatedOwnedList.length == 0){
+        updateSelectedList([]);
+        return []
+      }else{
+        updatedCardsList = [...updatedOwnedList,...updatedNotOwnedNfts];
+        console.log("all cards",updatedCardsList)
+        return updatedCardsList;
+      }
     }
+   
   }
 
   const getUpdatedList= async(collectionId,cardsList,ownedList,isOwned)=>{
@@ -813,6 +819,58 @@ const onChangeFilterOption = async(eachCollection) => {
 
   }
 
+//   {currentOption === "mycollection" && (
+//     (totalPages > 1 && (
+//      <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
+//      {currentPage.current >= 1 && (
+//           <button onClick={()=>onNavigate("previous",currentIndex)} >
+//           <img
+//           src="/Hero/up.png"
+//           alt="Previous"
+//           className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+//           />
+//           </button>
+//      )}
+//      (currentPage.current === 0 && (
+//          <button disabled={true} >
+//          <img
+//          src="/Hero/up.png"
+//          alt="Previous"
+//          onClick={()=>onNavigate("previous",currentIndex)}
+//          className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+//          />
+//          </button>
+//      ))
+//      <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
+     
+//      </div>
+//      {currentPage.current < totalPages && (
+//          <button  onClick={()=>{onNavigate("next",currentIndex)}} className='' >
+//          {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+//      <img
+//      src="/Hero/down.png"
+//      alt="Next"
+    
+//      className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+//      />
+//      </button>
+     
+//      )}
+//      {currentPage.current>=totalPages && (
+//          <button disabled={true}  >
+//          {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
+//      <img
+//      src="/Hero/down.png"
+//      alt="Next"
+    
+//      className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
+//      />
+//      </button>
+//      )}
+//  </div>
+//  ))
+//  )}
+
   
 console.log("selected list",selectedList)
   return (
@@ -962,7 +1020,7 @@ console.log("selected list",selectedList)
                               </button>
                               
                                 <span className={`absolute bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 hidden group-hover:opacity-100 group-hover:block bg-[#000000] text-[#FCD378] w-[180px] lg:w-[250px] text-center py-1 rounded text-xs`}>
-                                Buy remaining {remainingNftsCount} nfts to place order!
+                                Buy remaining nfts to place order!
                               </span>
                               
                             </div>
@@ -1205,71 +1263,7 @@ console.log("selected list",selectedList)
           </div>
         </div>
       </div>
-        {currentOption === "mycollection" && (
-           (totalPages > 1 && (
-            <div className=' w-[100%] lg:w-[86%] my-20 lg:my-1 xl:w-[98%] flex justify-between items-center '>
-            {currentPage.current > 1 && (
-                 <button onClick={()=>onNavigate("previous",currentIndex)} >
-                 <img
-                 src="/Hero/up.png"
-                 alt="Previous"
-                 className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                 />
-                 </button>
-            )}
-            (currentPage.current === 1 && (
-                <button disabled={true} >
-                <img
-                src="/Hero/up.png"
-                alt="Previous"
-                onClick={()=>onNavigate("previous",currentIndex)}
-                className={`h-[80px]  hover:cursor-pointer  -rotate-90 ${currentPage.current === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                />
-                </button>
-            ))
-            <div className='flex items-center justify-start max-w-[70%]  overflow-x-scroll scroll-smooth '>
-            {Array.from({length:totalPages}).map((_,index)=>{
-                return (
-                <div  key={index} 
-               
-                className={`min-w-[36px] min-h-[36px] border border-[#FCD378]  flex items-center justify-center mx-2 rounded cursor-pointer
-                    ${currentPage.current === index+1 ? "bg-[#FCD378] text-[#000000] ":"bg-transparent text-[#FCD378]"} }
-                `}
-                onClick={() => {
-                        onNavigate("none", index + 1);
-                    }}
-                > 
-                <h1>{index+1}</h1>
-                </div>
-                )
-            })}
-            </div>
-            {currentPage.current < totalPages && (
-                <button  onClick={()=>{onNavigate("next",currentIndex)}} className='' >
-                {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
-            <img
-            src="/Hero/down.png"
-            alt="Next"
-           
-            className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
-            />
-            </button>
-            
-            )}
-            {currentPage.current>=totalPages && (
-                <button disabled={true}  >
-                {/* <div onClick={document.getElementById("filter").scrollIntoView({ behavior: "smooth" })}></div> */}
-            <img
-            src="/Hero/down.png"
-            alt="Next"
-           
-            className={` h-[80px] mb-3  hover:cursor-pointer -rotate-90 ${(currentPage.current >= totalPages) ? 'opacity-50 cursor-not-allowed' : ''}`}
-            />
-            </button>
-            )}
-        </div>
-        ))
-        )}
+      
       <div style={{backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: "no-repeat" }} className='relative overflow-hidden bg-center bg-cover'>
         <Footer />
       </div>
