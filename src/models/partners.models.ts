@@ -8,6 +8,7 @@ const partnerSchema = new Schema(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     brandName: { type: String, required: true },
+    isCharity: { type: Boolean },
     metadata: {
       brandName: { type: String, required: true },
       howToRedeem: { type: String, required: true },

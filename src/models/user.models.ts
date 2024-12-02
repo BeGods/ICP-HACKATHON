@@ -6,17 +6,26 @@ export interface IUser extends Document {
   name: string;
   isPremium?: boolean;
   role: "user" | "admin" | "partner";
+  bonus: {
+    fof: {
+      dailyBonusClaimedAt: Date;
+      exploitCount: number;
+      streakBonus: {
+        isActive: boolean;
+        claimedAt: number;
+        streakCount: number;
+      };
+      joiningBonus: boolean;
+    };
+  };
   directReferralCount: number;
   tonAddress: string;
-  exploitCount: number;
   premiumReferralCount: number;
   phoneNumber: string;
   gameSession: {
-    gameHrStartAt: Number;
-    dailyGameQuota: Number;
+    gameHrStartAt: number;
+    dailyGameQuota: number;
   };
-  streakBonus: Number;
-  joiningBonus: boolean;
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
   referralCode: string;
@@ -29,8 +38,8 @@ export interface IUser extends Document {
     key: string;
     createdAt: Date;
   };
-  dailyBonusClaimedAt: Date;
   announcements: number;
+  lastLoginAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -38,7 +47,33 @@ const userSchema = new Schema<IUser>(
     telegramId: { type: String, unique: true, sparse: true },
     telegramUsername: { type: String, unique: true, sparse: true },
     isPremium: { type: Boolean },
-    joiningBonus: { type: Boolean, default: false },
+    bonus: {
+      fof: {
+        exploitCount: {
+          type: Number,
+          default: 0,
+        },
+        joiningBonus: { type: Boolean, default: false },
+        streakBonus: {
+          isActive: {
+            type: Boolean,
+            default: false,
+          },
+          claimedAt: {
+            type: Number,
+            default: 0,
+          },
+          streakCount: {
+            type: Number,
+            default: 0,
+          },
+        },
+        dailyBonusClaimedAt: {
+          type: Date,
+          default: 0,
+        },
+      },
+    },
     gameSession: {
       gameHrStartAt: {
         type: Number,
@@ -66,10 +101,6 @@ const userSchema = new Schema<IUser>(
       sparse: true,
     },
     directReferralCount: {
-      type: Number,
-      default: 0,
-    },
-    exploitCount: {
       type: Number,
       default: 0,
     },
@@ -101,14 +132,6 @@ const userSchema = new Schema<IUser>(
         default: Date.now(),
       },
     },
-    dailyBonusClaimedAt: {
-      type: Date,
-      default: 0,
-    },
-    streakBonus: {
-      type: Number,
-      default: 0,
-    },
     announcements: {
       type: Number,
       default: 0,
@@ -123,7 +146,12 @@ const userSchema = new Schema<IUser>(
         type: Date,
       },
     },
+    lastLoginAt: {
+      type: Date,
+      default: null, // Tracks the user's last login time
+    },
   },
+
   { timestamps: true }
 );
 
