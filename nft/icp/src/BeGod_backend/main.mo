@@ -7,7 +7,7 @@
 
 // Collection-related Functions:
 // 4. add_collection_to_map
-// 5. remove_collection_to_map
+// 5. removeCollection
 // 6. createExtCollection
 // 7. getUserCollectionDetails
 // 8. getUserCollections
@@ -333,33 +333,72 @@ actor Main {
     };
 
     //remove any collection from collection map
-    public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {
-        if (Principal.isAnonymous(user)) {
-            throw Error.reject("User is not authenticated");
-        };
-        let canisterId = Principal.fromActor(Main);
-        // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId,user);
+    // public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {
+    //     if (Principal.isAnonymous(user)) {
+    //         throw Error.reject("User is not authenticated");
+    //     };
+    //     let canisterId = Principal.fromActor(Main);
+    //     // Check if the caller is one of the controllers
+    //     let controllerResult = await isController(canisterId,user);
     
-        if (controllerResult == false) {
-        return ("Unauthorized: Only admins can delete a collection.");
-        };
+    //     if (controllerResult == false) {
+    //     return ("Unauthorized: Only admins can delete a collection.");
+    //     };
 
-        let userCollections = usersCollectionMap.get(user);
-        switch (userCollections) {
-            case null {
-                return "There are no collections added yet!";
+    //     let userCollections = usersCollectionMap.get(user);
+    //     switch (userCollections) {
+    //         case null {
+    //             return "There are no collections added yet!";
+    //         };
+    //         case (?collections) {
+    //             // Convert the array to a list for easier manipulation
+    //             let collectionsList = List.fromArray(collections);
+    //             // Filter out the collection to be removed
+    //             let newList = List.filter<(Time.Time, Principal)>(collectionsList, func((_, collId)) { collId != collection_id });
+    //             // Convert the updated list back to an array and update the map
+    //             usersCollectionMap.put(user, List.toArray(newList));
+    //             return "Collection removed";
+    //         };
+    //     };
+    // };
+
+    public shared ({ caller = user }) func removeCollection(collection_id: Principal): async Text {
+    if (Principal.isAnonymous(user)) {
+        throw Error.reject("User is not authenticated");
+    };
+
+    let canisterId = Principal.fromActor(Main);
+
+    // Check if the caller is one of the controllers (admin check)
+    let controllerResult = await isController(canisterId, user);
+    if (controllerResult == false) {
+        return "Unauthorized: Only admins can delete a collection.";
+    };
+
+    var found = false;
+
+    // Iterate through all entries in usersCollectionMap
+    for ((userPrincipal, collections) in usersCollectionMap.entries()) {
+        var updatedCollections = List.filter<(Time.Time, Principal)>(List.fromArray(collections), func((_, collId)) {
+            if (collId == collection_id) {
+                found := true;
+                return false; // Exclude the target collection
             };
-            case (?collections) {
-                // Convert the array to a list for easier manipulation
-                let collectionsList = List.fromArray(collections);
-                // Filter out the collection to be removed
-                let newList = List.filter<(Time.Time, Principal)>(collectionsList, func((_, collId)) { collId != collection_id });
-                // Convert the updated list back to an array and update the map
-                usersCollectionMap.put(user, List.toArray(newList));
-                return "Collection removed";
-            };
+            return true;
+        });
+
+        // Update the map for this user if a collection was removed
+        if (found) {
+            usersCollectionMap.put(userPrincipal, List.toArray(updatedCollections));
         };
+    };
+
+    // Return appropriate response based on whether the collection was found
+    if (found) {
+        return "Collection removed successfully.";
+    } else {
+        return "Collection not found.";
+    };
     };
 
     // Collection creation
