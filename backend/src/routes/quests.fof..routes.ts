@@ -1,21 +1,19 @@
 import express from "express";
-import { authMiddleware } from "../../middlewares/auth.middlewares";
+import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   claimOrbOnShare,
   claimQuest,
   claimQuestShare,
   claimSocialQuest,
-  createQuest,
-} from "../../controllers/fof/quests.controllers";
+} from "../controllers/quests.fof.controllers";
 import {
   verifyCompletedQuest,
   verifyValidQuest,
   verifyValidShareClaim,
-} from "../../middlewares/fof/quests.middlewares";
+} from "../middlewares/quests.fof.middlewares";
 const router = express.Router();
 
 // quests
-router.post("/quests/create", authMiddleware, createQuest);
 router.post("/quests/claim", authMiddleware, verifyValidQuest, claimQuest);
 
 // other social quests

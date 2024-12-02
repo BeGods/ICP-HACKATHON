@@ -3,33 +3,34 @@ import {
   getAutomataStartTimes,
   getPhaseByDate,
   isWithinOneMinute,
-} from "../../utils/helpers/game.helpers";
+} from "../utils/helpers/game.helpers";
 import userMythologies, {
   IMyth,
   IUserMyths,
-} from "../../models/mythologies.models";
+} from "../models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
-} from "../../models/transactions.models";
+} from "../models/transactions.models";
 import {
   validateBooster,
   validateAutomata,
   updateMythologies,
   fetchUserGameStats,
   checkStreakIsActive,
-  checkPlaysuperExpiry,
-} from "../../services/fof/game.services";
-import { defaultMythologies } from "../../utils/constants/variables";
+} from "../services/game.fof.services";
+import { checkPlaysuperExpiry } from "../services/playsuper.services";
+import { defaultMythologies } from "../utils/constants/variables";
 import { Document } from "mongodb";
-import ranks from "../../models/ranks.models";
-import { Team } from "../../models/referral.models";
-import Stats from "../../models/Stats.models";
-import { checkBonus } from "../../services/fof/general.services";
-import { mythOrder } from "../../utils/constants/variables";
-import milestones from "../../models/milestones.models";
-import User, { IUser } from "../../models/user.models";
+import ranks from "../models/ranks.models";
+import { Team } from "../models/referral.models";
+import Stats from "../models/Stats.models";
+import { checkBonus } from "../services/general.fof.services";
+import { mythOrder } from "../utils/constants/variables";
+import milestones from "../models/milestones.models";
+import User, { IUser } from "../models/user.models";
 import CryptoJs from "crypto-js";
+import config from "../config/config";
 
 export const startTapSession = async (req, res) => {
   try {
@@ -88,7 +89,7 @@ export const startTapSession = async (req, res) => {
 
 export const claimTapSession = async (req, res) => {
   try {
-    const secretKey = "K/;|&t%(pX)%2@k|?1t^#GY;!w7:(PY<";
+    const secretKey = config.security.HASH_KEY;
     const userId = req.user;
     const hashedData = req.body.data;
     const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
@@ -308,13 +309,40 @@ export const getGameStats = async (req, res) => {
     }
 
     const isEligibleToClaim = await checkBonus(user);
-    const isStreakActive = await checkStreakIsActive(user.streakBonus);
+    const isStreakActive = await checkStreakIsActive(
+      user.lastLoginAt || 0,
+      user.bonus.fof.streakBonus.claimedAt
+    );
+
     const hasPlaysuperExpired = await checkPlaysuperExpiry(user.playsuper);
 
     const updates: Partial<IUser> = {};
 
     if (isEligibleToClaim) {
-      updates.exploitCount = 0;
+      updates["bonus.fof.exploitCount"] = 0;
+    }
+
+    if (isStreakActive && !user.bonus.fof.streakBonus.isActive) {
+      updates["bonus.fof.streakBonus.isActive"] = true;
+    }
+
+    // track daily login
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const lastLoginDate = new Date(user.lastLoginAt || 0);
+    lastLoginDate.setHours(0, 0, 0, 0);
+
+    // if not consecutive day - reset streak
+    const differenceInDays =
+      (now.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (differenceInDays > 1) {
+      updates["bonus.fof.streakBonus.streakCount"] = 1;
+    }
+
+    if (lastLoginDate.getTime() !== now.getTime()) {
+      updates["lastLoginAt"] = new Date();
     }
 
     if (user.playsuper.isVerified && hasPlaysuperExpired) {
@@ -351,7 +379,8 @@ export const getGameStats = async (req, res) => {
       referralCode: user.referralCode,
       isEligibleToClaim: isEligibleToClaim,
       isStreakActive: isStreakActive,
-      joiningBonus: user.joiningBonus,
+      streakCount: user.bonus.fof.streakBonus.streakCount,
+      joiningBonus: user.bonus.fof.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,
       ...memberData,
     };

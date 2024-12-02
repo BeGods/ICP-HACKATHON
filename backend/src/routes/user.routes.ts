@@ -1,8 +1,8 @@
-import { authMiddleware } from "../../middlewares/auth.middlewares";
+import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   connectTonWallet,
   disconnectTonWallet,
-} from "../../controllers/fof/user.controllers";
+} from "../controllers/user.controllers";
 import express from "express";
 
 const router = express.Router();

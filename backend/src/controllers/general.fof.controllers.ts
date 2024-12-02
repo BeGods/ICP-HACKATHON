@@ -1,5 +1,5 @@
-import User from "../../models/user.models";
-import ranks from "../../models/ranks.models";
+import User from "../models/user.models";
+import ranks from "../models/ranks.models";
 import {
   claimBonusBooster,
   claimBonusOrb,
@@ -7,10 +7,10 @@ import {
   getLeaderboardSnapshot,
   getRandomValue,
   updatePartnersInLastHr,
-} from "../../services/fof/general.services";
-import Stats from "../../models/Stats.models";
-import { Team } from "../../models/referral.models";
-import userMythologies from "../../models/mythologies.models";
+} from "../services/general.fof.services";
+import Stats from "../models/Stats.models";
+import { Team } from "../models/referral.models";
+import userMythologies from "../models/mythologies.models";
 import {
   claimPlaysuperReward,
   fetchPlaysuperOrders,
@@ -18,10 +18,10 @@ import {
   getPlaysuperOtp,
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
-} from "../../services/fof/game.services";
-import milestones from "../../models/milestones.models";
-import partners from "../../models/partners.models";
-import { validCountries } from "../../utils/constants/variables";
+} from "../services/playsuper.services";
+import milestones from "../models/milestones.models";
+import partners from "../models/partners.models";
+import { validCountries } from "../utils/constants/variables";
 
 export const ping = async (req, res) => {
   try {
@@ -215,8 +215,8 @@ export const claimDailyBonus = async (req, res) => {
         { _id: user._id },
         {
           $set: {
-            dailyBonusClaimedAt: currTimeInUTC,
-            exploitCount: 0,
+            "bonus.fof.dailyBonusClaimedAt": currTimeInUTC,
+            "bonus.fof.exploitCount": 0,
           },
         }
       );
@@ -225,9 +225,9 @@ export const claimDailyBonus = async (req, res) => {
         { _id: user._id },
         {
           $set: {
-            dailyBonusClaimedAt: currTimeInUTC,
+            "bonus.fof.dailyBonusClaimedAt": currTimeInUTC,
           },
-          $inc: { exploitCount: 1 },
+          $inc: { "bonus.fof.exploitCount": 1 },
         }
       );
     }
@@ -255,7 +255,10 @@ export const claimJoiningBonus = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    await User.findOneAndUpdate({ _id: userId }, { joiningBonus: true });
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { "bonus.fof.joiningBonus": true }
+    );
 
     await userMythologies.findOneAndUpdate(
       { userId: userId, "mythologies.name": "Greek" },
@@ -277,27 +280,55 @@ export const claimStreakBonus = async (req, res) => {
   try {
     const userId = req.user._id;
     const user = req.user;
+    const playusperCred = req.user.playsuper;
+    const { country } = req.query;
 
     const userMilestones = await milestones.findOne({ userId: userId });
-    const activePartners = await partners.find({});
+    const activePartners = await partners.find().lean();
     const userRewards = userMilestones.rewards.claimedRewards;
+
+    let playsuper = [];
+
+    if (validCountries.includes(country)) {
+      const playsuperRewards = await fetchPlaySuperRewards(
+        country,
+        "en",
+        playusperCred
+      );
+
+      playsuper = playsuperRewards.map((reward) => {
+        return {
+          ...reward,
+          partnerType: "playsuper",
+        };
+      });
+    }
 
     const claimedRewards = userRewards
       .filter((item) => item.tokensCollected == 12)
       .map((item) => item.partnerId.toString());
 
-    const availablePartners = activePartners.filter(
-      (item) => !claimedRewards.includes(item._id.toString())
-    );
+    const filteredCustomRewards = activePartners
+      .filter(
+        (item) =>
+          !claimedRewards.includes(item._id.toString()) && !item.isCharity
+      )
+      .map((item) => ({
+        ...item,
+        id: item._id,
+      }));
+
+    const availablePartners = [...filteredCustomRewards, ...playsuper];
 
     if (availablePartners.length === 0) {
+      user.save();
       res.status(200).json({ reward: "fdg" });
+      return;
     }
 
     const randomPartner = Math.floor(Math.random() * availablePartners.length);
     const partnerExists = userRewards.find(
-      (item) =>
-        item.partnerId == availablePartners[randomPartner]._id.toString()
+      (item) => item.partnerId == availablePartners[randomPartner].id.toString()
     );
 
     if (partnerExists) {
@@ -305,7 +336,7 @@ export const claimStreakBonus = async (req, res) => {
         {
           userId,
           "rewards.claimedRewards.partnerId":
-            availablePartners[randomPartner]._id.toString(),
+            availablePartners[randomPartner].id.toString(),
         },
         {
           $set: { "rewards.updatedAt": Date.now() },
@@ -323,8 +354,11 @@ export const claimStreakBonus = async (req, res) => {
           },
           $push: {
             "rewards.claimedRewards": {
-              partnerId: availablePartners[randomPartner]._id.toString(),
-              type: "custom",
+              partnerId: availablePartners[randomPartner].id.toString(),
+              type:
+                availablePartners[randomPartner].partnerType == "playsuper"
+                  ? "playsuper"
+                  : "custom",
               isClaimed: false,
               tokensCollected: 1,
             },
@@ -338,7 +372,6 @@ export const claimStreakBonus = async (req, res) => {
       reward: availablePartners[randomPartner],
     });
 
-    user.streakBonus = Date.now();
     user.save();
   } catch (error) {
     console.log(error);
@@ -609,6 +642,46 @@ export const getTotalUsers = async (req, res) => {
   try {
     const totalUsers = await Stats.findOne({ statId: "fof" });
     res.status(200).json({ totalUsers: totalUsers.totalUsers });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const migrateDb = async (req, res) => {
+  try {
+    await User.updateMany({}, [
+      {
+        $set: {
+          bonus: {
+            fof: {
+              exploitCount: "$exploitCount",
+              joiningBonus: "$joiningBonus",
+              streakBonus: {
+                isActive: false,
+                claimedAt: 0,
+                streakCount: 0,
+              },
+              dailyBonusClaimedAt: "$dailyBonusClaimedAt",
+            },
+          },
+        },
+      },
+      {
+        $unset: [
+          "exploitCount",
+          "joiningBonus",
+          "streakBonus",
+          "dailyBonusClaimedAt",
+        ],
+      },
+    ]);
+
+    res.status(200).json({ data: "done" });
   } catch (error) {
     console.log(error);
 
