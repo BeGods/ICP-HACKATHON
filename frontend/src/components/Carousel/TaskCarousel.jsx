@@ -52,6 +52,16 @@ const TaskCarousel = ({ quests }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {quests.length > 3 && currentIndex >= 1 && (
+        <div
+          onClick={() => {
+            setCurrentIndex((prevIndex) => prevIndex - 1);
+          }}
+          className="absolute top-[25%] w-full z-50"
+        >
+          <div className="arrows-up"></div>
+        </div>
+      )}
       <div className="carousel">
         {quests
           .sort((a, b) => {
@@ -108,17 +118,9 @@ const TaskCarousel = ({ quests }) => {
       {currentIndex < quests.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[20%] w-full"
+          className="absolute bottom-[25%] w-full"
         >
           <div className="arrows-down"></div>
-        </div>
-      )}
-      {quests.length > 3 && currentIndex >= quests.length - 3 && (
-        <div
-          onClick={() => setCurrentIndex(0)}
-          className="absolute bottom-[20%] w-full"
-        >
-          <div className="arrows-up"></div>
         </div>
       )}
     </div>

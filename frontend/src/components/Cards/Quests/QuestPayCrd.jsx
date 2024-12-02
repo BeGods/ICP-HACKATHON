@@ -106,7 +106,7 @@ function PayCard({
                   className={`filter-orbs-${item.name?.toLowerCase()}`}
                 />
                 <span
-                  className={`absolute z-1 font-symbols  text-primary mt-1 text-black-sm-contour transition-all duration-1000 ${
+                  className={`absolute z-1 font-symbols  text-symbol-sm mt-1 text-black-sm-contour transition-all duration-1000 ${
                     scale
                       ? `transform scale-150 transition-transform duration-1000 opacity-100 text-${item.name?.toLowerCase()}-text`
                       : "text-white opacity-50"

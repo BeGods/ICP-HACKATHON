@@ -1,4 +1,4 @@
-import { Check, CornerUpLeft, CornerUpRight } from "lucide-react";
+import { CornerUpLeft, CornerUpRight } from "lucide-react";
 import React, { useState } from "react";
 import { mythSections } from "../../utils/constants";
 

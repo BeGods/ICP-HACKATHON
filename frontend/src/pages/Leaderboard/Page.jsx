@@ -168,7 +168,23 @@ const Leaderboard = (props) => {
             <div className="flex items-end w-[90%] gap-2">
               {[leaderboard[1], leaderboard[0], leaderboard[2]].map(
                 (item, index) => {
-                  const positions = [2, 1, 3];
+                  const positions = [
+                    {
+                      pos: 2,
+                      size: 50,
+                      align: 5,
+                    },
+                    {
+                      pos: 1,
+                      size: 100,
+                      align: 10,
+                    },
+                    {
+                      pos: 3,
+                      size: 50,
+                      align: 5,
+                    },
+                  ];
                   return (
                     <div
                       style={{
@@ -177,13 +193,13 @@ const Leaderboard = (props) => {
                       }}
                       className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
-                      <div className="flex flex-col w-full justify-center text-center text-white absolute -bottom-1">
-                        <h1 className="text-[50px] -mb-5 font-mono font-bold text-black-contour">
-                          {positions[index]}
-                        </h1>
-                        <h2 className="text-tertiary font-normal">
-                          {formatRankOrbs(item.totalOrbs)}
-                        </h2>
+                      <div
+                        className={`flex text-[${positions[index].size}px] mt-12 h-fit text-white font-mono font-bold text-black-contour`}
+                      >
+                        {positions[index].pos}
+                      </div>
+                      <div className="absolute text-white -bottom-1 text-tertiary font-normal">
+                        {formatRankOrbs(item.totalOrbs)}
                       </div>
                       <UserAvatar user={item} index={index} />
                     </div>

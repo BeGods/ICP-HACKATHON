@@ -39,6 +39,7 @@ const Home = () => {
   const [questsData, setQuestsData] = useState(null);
   const [socialQuestData, setSocialQuestData] = useState(null);
   const [enableSound, setEnableSound] = useState(true);
+  const [triggerConf, setTriggerConf] = useState(false);
   const [keysData, setKeysData] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
@@ -85,6 +86,8 @@ const Home = () => {
     assets,
     country,
     setCountry,
+    triggerConf,
+    setTriggerConf,
   };
 
   const sections = [
@@ -130,7 +133,8 @@ const Home = () => {
 
   const getStreakBonus = async (token) => {
     try {
-      const rewardsData = await claimStreakBonus(token);
+      const activeCountry = await validateCountryCode(tele);
+      const rewardsData = await claimStreakBonus(token, activeCountry);
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
@@ -160,7 +164,7 @@ const Home = () => {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -171,7 +175,7 @@ const Home = () => {
         setSection(8);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
       } else if (response?.user?.isStreakActive) {
         (async () => {
           await getStreakBonus(token);
@@ -180,7 +184,7 @@ const Home = () => {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       console.log(error);
@@ -194,10 +198,11 @@ const Home = () => {
     const currLang = await validateLang(tele);
     const isAuth = await validateAuth(tele);
     const isSoundActive = await validateSoundCookie(tele);
+
     i18next.changeLanguage(currLang);
     setCountry(activeCountry);
     setLang(currLang);
-    setEnableSound(isSoundActive);
+    setEnableSound(JSON.parse(isSoundActive));
     setAuthToken(isAuth);
 
     if (isAuth) {

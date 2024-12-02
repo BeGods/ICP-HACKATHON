@@ -76,13 +76,3 @@ const QuestButton = ({
 };
 
 export default QuestButton;
-
-// <div
-//   onClick={action}
-//   className={`text-${mythSections[activeMyth]}-text`}
-// >
-//   <CircleCheck size={"75px"} />
-// </div>
-// <div onClick={action}>
-//   <CircleCheck size={"75px"} />
-// </div>

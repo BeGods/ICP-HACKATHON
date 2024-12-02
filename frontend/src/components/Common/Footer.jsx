@@ -103,7 +103,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 className={`flex relative text-center mb-3.5 justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
               >
                 <img
-                  src="/assets/uxui/240px-orb.base.png"
+                  src={assets.uxui.baseorb}
                   alt="orb"
                   className={`filter-orbs-${avatarColor} overflow-hidden max-w-[65px] pointer-events-none`}
                 />

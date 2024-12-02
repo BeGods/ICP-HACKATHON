@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import Home from "./Home";
 import IntroPage from "./pages/Intro/Page";
-import OnboardPage from "./pages/Onboard/Page";
 
 function App() {
   return (

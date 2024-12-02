@@ -47,16 +47,24 @@ const CenterChild = ({ name, bubble, action }) => {
         <img
           src={bubble}
           alt="base-orb"
-          className={`filter-orbs-black w-full`}
+          className={`filter-orbs-black w-full pointer-events-none`}
         />
       </div>
     </div>
   );
 };
 
-const RedeemHeader = ({ pieces, name, bubble, action, currIndex }) => {
+const RedeemHeader = ({
+  pieces,
+  name,
+  bubble,
+  action,
+  currIndex,
+  isCharity,
+}) => {
   const [changeText, setChangeText] = useState(true);
   const { t } = useTranslation();
+  const currSection = isCharity ? t("profile.charity") : t("profile.partner");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -71,7 +79,7 @@ const RedeemHeader = ({ pieces, name, bubble, action, currIndex }) => {
         <div
           className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
-          {changeText ? t("profile.partner") : name}
+          {changeText ? currSection : name}
         </div>
         <BottomChild pieces={pieces} currIndex={currIndex} />
         <CenterChild bubble={bubble} name={name} action={action} />

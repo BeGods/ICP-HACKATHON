@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import { formatTwoNums } from "../../helpers/leaderboard.helper";
 import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
+import { useTranslation } from "react-i18next";
 
 const BottomChild = ({ userData, showGuide }) => {
   const { rewards, setSection } = useContext(MyContext);
@@ -98,13 +99,31 @@ const CenterChild = ({ userData }) => {
 };
 
 const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
+  const [changeText, setChangeText] = useState(true);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-sectionHead -mt-2.5 text-center top-0 text-white text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+          className={`text-sectionHead -mt-2.5 text-center top-0 text-white text-black-lg-contour  absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
-          Profile
+          {changeText ? (
+            <div className="uppercase">{t("profile.task")}</div>
+          ) : (
+            <div className="text-gold">
+              {(
+                userData.telegramUsername.charAt(0).toUpperCase() +
+                userData.telegramUsername.slice(1).toLowerCase()
+              ).slice(0, 12)}
+            </div>
+          )}
         </div>
         <BottomChild
           userData={userData}

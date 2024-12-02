@@ -52,6 +52,7 @@ const Forges = () => {
     setMinimize,
     setShowCard,
     assets,
+    setTriggerConf,
   } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -1020,6 +1021,9 @@ const Forges = () => {
 
             const updatedRewards = rewards.map((reward) => {
               if (reward.id === randomReward.id) {
+                if (reward.tokensCollected + 1 === 12) {
+                  setTriggerConf(true);
+                }
                 return {
                   ...reward,
                   tokensCollected: reward.tokensCollected + 1,

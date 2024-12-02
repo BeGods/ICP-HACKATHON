@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { countries } from "../../utils/country";
-import { fetchOTP, fetchRewards, verifyOtp } from "../../utils/api";
+import {
+  fetchOTP,
+  fetchResendOTP,
+  fetchRewards,
+  verifyOtp,
+} from "../../utils/api";
 import { MyContext } from "../../context/context";
 import { showToast } from "../../components/Toast/Toast";
+import { useTranslation } from "react-i18next";
 
 const OnboardPage = (props) => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
+  const { t } = useTranslation();
   const [showVerify, setShowVerify] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState({
     name: "India",
@@ -15,6 +22,7 @@ const OnboardPage = (props) => {
     dialCode: "+91",
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [countDown, setCountDown] = useState(15);
   const {
     authToken,
     setUserData,
@@ -74,32 +82,49 @@ const OnboardPage = (props) => {
   };
 
   const handleGenerateOtp = async () => {
-    if (phone.length != 10) {
-      showToast("phone_valid_error");
-      return;
-    }
-    if (name.length == 0 || name === "" || !name) {
-      showToast("name_error");
+    if (phone.length !== 10 || name.length === 0 || name === "" || !name) {
+      showToast("form_error");
       return;
     }
 
-    setShowVerify(true);
     try {
       await fetchOTP(selectedCountry.dialCode + phone, authToken);
+      showToast("form_success");
+      setShowVerify(true);
+      let interval = setInterval(() => {
+        setCountDown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (phone.length !== 10) {
+      showToast("form_error");
+      return;
+    }
+
+    try {
+      await fetchResendOTP(selectedCountry.dialCode + phone, authToken);
+      showToast("form_success");
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleVerifyOtp = async () => {
-    if (phone.length != 10) {
+    if (phone.length != 10 || name.length == 0 || name === "" || !name) {
       showToast("phone_valid_error");
       return;
     }
-    if (name.length == 0 || name === "" || !name) {
-      showToast("name_error");
-      return;
-    }
+
     try {
       await verifyOtp(
         selectedCountry.dialCode + phone,
@@ -108,7 +133,7 @@ const OnboardPage = (props) => {
         authToken
       );
       setSection(0);
-      showToast("phone_success");
+      showToast("onboard_success");
       setUserData((prevState) => ({
         ...prevState,
         isPlaySuperVerified: true,
@@ -116,7 +141,7 @@ const OnboardPage = (props) => {
       (async () => await getPartnersData())();
     } catch (error) {
       console.log(error);
-      showToast("phone_fail_error");
+      showToast("onboard_error");
     }
   };
 
@@ -135,99 +160,123 @@ const OnboardPage = (props) => {
         className="w-full opacity-55 pt-4"
       />
       {/* Form */}
-      {showVerify ? (
-        <div className="flex flex-col mx-auto w-5/6 text-white mt-10">
-          <div className="text-lg">Enter OTP</div>
-          <div className="flex justify-center mt-4">
-            {otp.map((digit, index) => (
-              <input
-                ref={index === 0 ? firstInputRef : null}
-                key={index}
-                id={`otp-input-${index}`}
-                type="text"
-                maxLength={1}
-                className="w-12 bg-gray-800 h-12 text-4xl border border-gray-600 rounded mx-1 text-center"
-                value={digit}
-                onChange={(event) => handleChange(index, event)}
-                onKeyDown={(event) => handleKeyDown(index, event)}
-              />
-            ))}
-          </div>
-          <div
-            onClick={handleVerifyOtp}
-            className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6"
-          >
-            Verify
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col mx-auto w-5/6 text-white mt-10">
-          <div className="text-lg">Enter Details</div>
-          <div className="w-full mt-1 py-3 border-gray-400 border rounded-[10px]">
-            <input
-              type="text"
-              className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2 mt-2 text-[4vw]">
-            <div
-              className="flex justify-center rounded-[10px] items-center gap-1 w-[38%] bg-gray-800 cursor-pointer relative"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <h1>{selectedCountry.flag}</h1>
-              <h1>{selectedCountry.dialCode}</h1>
-              <h1 className="text-[3vw]">▼</h1>
+      <div className="flex flex-col h-full">
+        <div className="flex flex-grow h-full">
+          {showVerify ? (
+            <div className="flex flex-col mx-auto w-5/6 text-white mt-10">
+              <div className="text-lg">{t("misc.enterOTP")}</div>
+              <div className="flex justify-center mt-4">
+                {otp.map((digit, index) => (
+                  <input
+                    ref={index === 0 ? firstInputRef : null}
+                    key={index}
+                    id={`otp-input-${index}`}
+                    type="text"
+                    maxLength={1}
+                    className="w-12 bg-gray-800 outline-white/20 h-12 text-4xl border border-gray-600 rounded mx-1 text-center"
+                    value={digit}
+                    onChange={(event) => handleChange(index, event)}
+                    onKeyDown={(event) => handleKeyDown(index, event)}
+                  />
+                ))}
+              </div>
+              <div
+                onClick={handleVerifyOtp}
+                className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6"
+              >
+                Verify
+              </div>
+              <div
+                onClick={() => {
+                  if (countDown === 0) {
+                    handleResendOtp();
+                  }
+                }}
+                className="flex cursor-pointer justify-center mt-6 w-full font-medium text-secondary"
+              >
+                {countDown != 0 ? (
+                  <div className="pl-2">{countDown}s</div>
+                ) : countDown < 0 ? (
+                  <div></div>
+                ) : (
+                  <div>Resend OTP</div>
+                )}
+              </div>
             </div>
-            <div className="w-full py-3 border-gray-400 border rounded-[10px]">
-              <input
-                type="number"
-                className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
-                placeholder="Phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-          </div>
-          {isDropdownOpen && (
-            <div
-              className="absolute mt-2 w-fit max-h-[200px] overflow-auto bg-white text-black rounded-lg z-10"
-              ref={dropdownRef}
-            >
-              {availableCountries.map((country) => (
+          ) : (
+            <div className="flex flex-col mx-auto w-5/6 text-white mt-10">
+              <div className="w-full mt-1 h-[7vh] border-gray-400 border-2 rounded-[10px]">
+                <input
+                  type="text"
+                  className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
+                  placeholder={t("misc.name")}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div className="flex  h-[7vh] gap-2 mt-2 text-[4vw]">
                 <div
-                  key={country.code}
-                  className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
-                  onClick={() => handleCountrySelect(country)}
+                  className="flex justify-center rounded-[10px] items-center gap-1 w-[38%] bg-gray-800 cursor-pointer relative"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  <span>{country.flag}</span>
-                  <span>
-                    {country.name.length > 20
-                      ? `${country.name.slice(0, 20)}...`
-                      : country.name}
-                  </span>
-                  <span>{country.dialCode}</span>
+                  <h1>{selectedCountry.flag}</h1>
+                  <h1>{selectedCountry.dialCode}</h1>
+                  <h1 className="text-[3vw]">▼</h1>
                 </div>
-              ))}
+                <div className="w-full py-3 border-gray-400 border-2 rounded-[10px]">
+                  <input
+                    type="number"
+                    className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
+                    placeholder={t("misc.phone")}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+              </div>
+              {isDropdownOpen && (
+                <div
+                  className="absolute mt-2 w-fit max-h-[200px] overflow-auto bg-white text-black rounded-lg z-10"
+                  ref={dropdownRef}
+                >
+                  {availableCountries.map((country) => (
+                    <div
+                      key={country.code}
+                      className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                      onClick={() => handleCountrySelect(country)}
+                    >
+                      <span>{country.flag}</span>
+                      <span>
+                        {country.name.length > 20
+                          ? `${country.name.slice(0, 20)}...`
+                          : country.name}
+                      </span>
+                      <span>{country.dialCode}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="flex mt-4 gap-2 w-full justify-center items-center text-gray-200">
+                <input
+                  type="checkbox"
+                  name="terms"
+                  id="terms"
+                  className="-mt-1"
+                />
+                <div className="text-[3vw]">Accept Terms & Conditions</div>
+              </div>
+              <div
+                onClick={handleGenerateOtp}
+                className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6"
+              >
+                Next
+              </div>
             </div>
           )}
-          <div className="flex mt-4 gap-2 w-full justify-center items-center text-gray-200">
-            <input type="checkbox" name="terms" id="terms" className="-mt-1" />
-            <div className="text-[3vw]">Accept Terms & Conditions</div>
-          </div>
-          <div
-            onClick={handleGenerateOtp}
-            className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6"
-          >
-            Next
-          </div>
         </div>
-      )}
-      <div className="absolute w-full flex justify-center text-[3vw] text-gray-600 bottom-0 mb-2">
-        <span className="pr-1 underline cursor-pointer">Privacy Policy</span> |
-        @Frogdog Games 2024
+        <div className=" w-full h-full flex justify-center text-[3vw] text-gray-600">
+          <span className="pr-1 underline cursor-pointer">Privacy Policy</span>{" "}
+          | @Frogdog Games 2024
+        </div>
       </div>
     </div>
   );

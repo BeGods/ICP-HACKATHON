@@ -21,7 +21,6 @@ const Gacha = (props) => {
     enableSound,
     assets,
   } = useContext(MyContext);
-  const lottieRef = useRef(null);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
   const [showSpin, setShowSpin] = useState(false);

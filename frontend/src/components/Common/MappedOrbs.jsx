@@ -41,7 +41,7 @@ const MappedOrbs = ({ quest, showNum }) => {
                         showNum
                           ? `transform scale-150 transition-transform duration-1000 opacity-100 text-${key.toLowerCase()}-text`
                           : "text-white"
-                      }  font-symbols  text-primary mt-1 opacity-50`}
+                      }  font-symbols  text-symbol-sm mt-1 opacity-50`}
                     >
                       {mythSymbols[key.toLowerCase()]}
                     </span>
