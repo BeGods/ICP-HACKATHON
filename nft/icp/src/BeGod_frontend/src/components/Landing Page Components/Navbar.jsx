@@ -296,7 +296,7 @@ ScrollToCollections();
                         <img
                           src="Hero/icp_logo.png"
                           alt="Internet Identity"
-                          className="mr-4 rounded-full size-6"
+                          className="mr-4 rounded-full size-5 ml-0.5"
                         />
                         Internet Identity
                       </li>
