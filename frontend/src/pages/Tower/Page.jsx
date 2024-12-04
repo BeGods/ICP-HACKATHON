@@ -18,6 +18,8 @@ import TowerHeader from "./Header";
 import { TowerGuide } from "../../components/Common/Tutorials";
 import { useTowerGuide } from "../../hooks/Tutorial";
 import { getPhaseByDate } from "../../helpers/game.helper";
+import { trackComponentView, trackEvent } from "../../utils/ga";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -42,6 +44,7 @@ const Tower = () => {
     enableSound,
     setShowCard,
     assets,
+    enableHaptic,
   } = useContext(MyContext);
   const [myth, setMyth] = useState(0);
   const [showClaim, setShowClaim] = useState(false);
@@ -74,6 +77,12 @@ const Tower = () => {
       };
       try {
         await convertOrbs(mythologyName, authToken);
+
+        if (!keysData.includes(key) && key) {
+          trackEvent("purchase", "convert_orbs_tune", "success_tune");
+        } else {
+          trackEvent("purchase", "convert_orbs", "success");
+        }
 
         const currPhase = getPhaseByDate(new Date());
         let blackOrbPhaseBonus = 1;
@@ -152,6 +161,10 @@ const Tower = () => {
     }
   }, [enableGuide]);
 
+  useEffect(() => {
+    trackComponentView("tower");
+  }, []);
+
   return (
     <div
       style={{
@@ -216,12 +229,12 @@ const Tower = () => {
       </div>
 
       {/* Wheel */}
-      <div className="flex  flex-col items-center justify-center w-full">
+      <div className="flex flex-col items-center justify-center w-full">
         <div className="absolute h-full flex justify-center items-end bottom-[15%]">
           {myth !== 0 && (
             <div
               onClick={() => {
-                tele.HapticFeedback.notificationOccurred("success");
+                handleClickHaptic(tele, enableHaptic);
 
                 if (myth !== 0) {
                   setShowEffect(true);
@@ -264,7 +277,7 @@ const Tower = () => {
         </div>
       </div>
 
-      <div className="absolute flex justify-center items-center h-full w-full">
+      <div className="absolute  flex justify-center items-center h-full w-full">
         <div
           className="relative scale-110 flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
@@ -295,7 +308,7 @@ const Tower = () => {
                 setScaleOrb(null);
               }}
               onClick={() => {
-                tele.HapticFeedback.notificationOccurred("success");
+                handleClickHaptic(tele, enableHaptic);
                 setMyth(index + 1);
               }}
               key={index}

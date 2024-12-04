@@ -104,7 +104,7 @@
     hue-rotate(16deg) contrast(104%);
   --filter-greek-orb: brightness(80%) invert(3%) sepia(27) saturate(360%)
     hue-rotate(-50deg) brightness(90%) contrast(104%);
-  --filter-norse-orb: brightness(90%) invert(3%) sepia(27%) saturate(1237%)
+  --filter-norse-orb: brightness(80%) invert(3%) sepia(27%) saturate(1237%)
     hue-rotate(171deg) brightness(90%) contrast(104%);
   --filter-white-orb: brightness(90%) invert(5%) saturate(137%) brightness(220%)
     contrast(104%);

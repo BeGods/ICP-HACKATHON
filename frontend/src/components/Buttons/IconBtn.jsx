@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { X } from "lucide-react";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { MyContext } from "../../context/context";
 
 // mr-[55px] mt-7 - convert info
 // -mt-6 ml-6 - jigsaw info
@@ -19,9 +21,10 @@ const alignBasedOnCard = [
 ];
 const IconBtn = ({ isInfo, handleClick, align }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const { enableHaptic } = useContext(MyContext);
 
   const handleButtonClick = () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
 
     setIsButtonClicked(true);
 

@@ -1,17 +1,20 @@
 import { mythSections } from "../../utils/constants";
 import Symbol from "../../components/Common/Symbol";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { formatTwoNums } from "../../helpers/leaderboard.helper";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { MyContext } from "../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ activeMyth, showSymbol }) => {
+  const { enableHaptic } = useContext(MyContext);
   return (
     <div className="flex absolute justify-center w-full top-0 -mt-1 z-20">
       <div
         onClick={() => {
-          tele.HapticFeedback.notificationOccurred("success");
+          handleClickHaptic(tele, enableHaptic);
           showSymbol();
         }}
         className="h-full z-20"

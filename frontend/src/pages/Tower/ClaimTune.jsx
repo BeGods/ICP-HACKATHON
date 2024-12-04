@@ -9,6 +9,7 @@ import { CircleCheck, CircleX } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,7 +22,7 @@ const orbPos = [
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { t } = useTranslation();
-  const { enableSound, assets } = useContext(MyContext);
+  const { enableSound, assets, enableHaptic } = useContext(MyContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
   const [showEffect, setShowEffect] = useState(null);
@@ -91,7 +92,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               <div
                 onClick={() => {
                   if (clickedOrbs.length <= 6) {
-                    tele.HapticFeedback.notificationOccurred("success");
+                    handleClickHaptic(tele, enableHaptic);
                     playAudio();
                     setPlaySound(index + 1);
                     setShowEffect(index + 1);

@@ -4,12 +4,13 @@ import { MyContext } from "../../context/context";
 import BoosterClaim from "../Cards/Boosters/BoosterCrd";
 import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const BoosterCarousel = ({ enableGuide, mythData }) => {
   const { t } = useTranslation();
-  const { setShowCard, activeMyth, gameData, setSection } =
+  const { setShowCard, activeMyth, gameData, setSection, enableHaptic } =
     useContext(MyContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
@@ -45,7 +46,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         isGuideActive={enableGuide}
         isActive={true}
         handleClick={() => {
-          tele.HapticFeedback.notificationOccurred("success");
+          handleClickHaptic(tele, enableHaptic);
           setSection(1);
         }}
         activeMyth={activeMyth}

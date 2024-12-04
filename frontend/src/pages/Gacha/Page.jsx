@@ -6,6 +6,8 @@ import ReactHowler from "react-howler";
 import SplashScreen from "./SplashScreen";
 import { useTranslation } from "react-i18next";
 import GachaRoll from "../../components/Fx/GachaRoll";
+import { trackEvent } from "../../utils/ga";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -19,6 +21,7 @@ const Gacha = (props) => {
     setShowBooster,
     authToken,
     enableSound,
+    enableHaptic,
     assets,
   } = useContext(MyContext);
   const [reward, setReward] = useState(null);
@@ -118,7 +121,7 @@ const Gacha = (props) => {
   };
 
   const claimDailyBonus = async () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
 
     if (claimRef.current === true) {
       return;
@@ -143,6 +146,7 @@ const Gacha = (props) => {
           setSpinSound(false);
           setReward(response.reward);
           setShowFlash(true);
+          trackEvent("rewards", "claim_daily_reward", "success");
         }, 2000);
       } else {
         console.error("No reward in response:", response);
@@ -229,7 +233,7 @@ const Gacha = (props) => {
         {/* Main */}
         <div
           onClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
+            handleClickHaptic(tele, enableHaptic);
             if (showScale) {
               exploitDailyBonus();
             }

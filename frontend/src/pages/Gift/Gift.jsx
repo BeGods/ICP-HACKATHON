@@ -6,12 +6,14 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import GiftCarousel from "../../components/Carousel/GiftCarousel";
+import { trackComponentView } from "../../utils/ga";
 
 const Gift = () => {
   const { rewards, assets, setSection } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
 
   useEffect(() => {
+    trackComponentView("gifts");
     setTimeout(() => {
       setShowToggles(true);
     }, 300);

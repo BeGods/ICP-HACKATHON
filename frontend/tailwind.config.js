@@ -130,7 +130,7 @@ export default {
         orb: "10vw",
       },
       padding: {
-        headSides: "7vw",
+        headSides: "5.5vw",
       },
     },
   },

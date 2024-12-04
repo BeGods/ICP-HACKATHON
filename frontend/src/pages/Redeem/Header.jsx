@@ -10,14 +10,14 @@ const BottomChild = ({ pieces, currIndex }) => {
           className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="text-primary pl-headSides">
-            {formatTwoNums(currIndex + 1)}
+            {/* {formatTwoNums(currIndex + 1)} */}
           </div>
         </div>
         <div
           className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
           <div className="text-primary pr-headSides">
-            {formatTwoNums(pieces)}
+            {/* {formatTwoNums(pieces)} */}
           </div>
         </div>
       </div>
@@ -64,7 +64,6 @@ const RedeemHeader = ({
 }) => {
   const [changeText, setChangeText] = useState(true);
   const { t } = useTranslation();
-  const currSection = isCharity ? t("profile.charity") : t("profile.partner");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -79,7 +78,7 @@ const RedeemHeader = ({
         <div
           className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
-          {changeText ? currSection : name}
+          {changeText ? t("sections.gifts") : t("sections.voucher")}
         </div>
         <BottomChild pieces={pieces} currIndex={currIndex} />
         <CenterChild bubble={bubble} name={name} action={action} />

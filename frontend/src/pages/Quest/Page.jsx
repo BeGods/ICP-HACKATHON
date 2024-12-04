@@ -32,6 +32,8 @@ import { QuestGuide } from "../../components/Common/Tutorials";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import GameEndCrd from "../../components/Cards/Reward/GameEnd";
 import ReactHowler from "react-howler";
+import { trackComponentView, trackEvent } from "../../utils/ga";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -55,6 +57,7 @@ const Quests = () => {
     setShowBooster,
     assets,
     enableSound,
+    enableHaptic,
   } = useContext(MyContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
@@ -160,6 +163,7 @@ const Quests = () => {
 
     try {
       await claimQuest(questData, authToken);
+      trackEvent("purchase", "claim_quest", "success");
       return true;
     } catch (error) {
       const errorMessage =
@@ -175,13 +179,14 @@ const Quests = () => {
 
   //* share reward handler
   const handleClaimShareReward = async (id) => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
 
     const questData = {
       questId: quest._id,
     };
     try {
       await claimShareReward(questData, authToken);
+      trackEvent("rewards", "claim_quest_info_reward", "success");
       showToast("quest_share_success");
 
       // update quest data
@@ -310,6 +315,9 @@ const Quests = () => {
   }, [enableGuide]);
 
   useEffect(() => {
+    // ga
+    trackComponentView("quests");
+
     // toggle effect
     setTimeout(() => {
       setShowToggles(true);
@@ -497,7 +505,7 @@ const Quests = () => {
         {currQuest === quests.length && (
           <div
             onClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
+              handleClickHaptic(tele, enableHaptic);
               setFlipped((prev) => !prev);
             }}
             className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"

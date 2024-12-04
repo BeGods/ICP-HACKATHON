@@ -5,26 +5,15 @@ import MoonInfoCard from "../../components/Cards/Info/MoonInfoCrd";
 import { getPhaseByDate } from "../../helpers/game.helper";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../helpers/leaderboard.helper";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ platform, myth }) => {
-  const { setShowCard, assets } = useContext(MyContext);
+  const { setShowCard, assets, enableHaptic } = useContext(MyContext);
 
   return (
-    <div
-      onClick={() => {
-        tele.HapticFeedback.notificationOccurred("success");
-        setShowCard(
-          <MoonInfoCard
-            handleClick={() => {
-              setShowCard(null);
-            }}
-          />
-        );
-      }}
-      className="flex absolute top-0 justify-center w-full -mt-1"
-    >
+    <div className="flex absolute justify-center w-full z-[60] top-0 -mt-1">
       {myth !== 0 ? (
         <div
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
@@ -43,7 +32,19 @@ const CenterChild = ({ platform, myth }) => {
           </span>
         </div>
       ) : (
-        <div className={`z-20 glow-icon-white`}>
+        <div
+          onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
+            setShowCard(
+              <MoonInfoCard
+                handleClick={() => {
+                  setShowCard(null);
+                }}
+              />
+            );
+          }}
+          className={`z-20 glow-icon-white`}
+        >
           <div className="moon-phases">
             <div className="moon">
               <div
@@ -134,7 +135,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
           </>
         )}
         <div
-          className={`flex relative text-center justify-center items-center w-[15.4vw] h-[15.4vw] mt-[17px]  rounded-full`}
+          className={`flex relative text-center justify-center items-center w-[15vw] h-[15vw] mt-[16px]  rounded-full`}
         >
           <img
             src={`${assets.uxui.multiorb}`}
@@ -167,7 +168,7 @@ const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow }) => {
             changeText
               ? `text-white text-black-lg-contour`
               : `text-black text-white-lg-contour`
-          } -mt-2.5 text-center top-0  uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+          } -mt-2.5 text-center top-0  uppercase absolute inset-0 z-[90] w-fit h-fit mx-auto`}
         >
           {changeText ? t("sections.tower") : t("mythologies.dark")}
         </div>

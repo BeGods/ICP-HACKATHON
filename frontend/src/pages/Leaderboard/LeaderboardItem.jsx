@@ -15,8 +15,9 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl }) => {
 
   return (
     <div
+      key={rank}
       className={`flex items-center ${
-        rank % 2 === 0 ? "" : "bg-borderGray"
+        rank % 2 === 0 ? "bg-borderGray" : ""
       } justify-between font-medium text-tertiary w-[98%] h-fit mx-auto text-white py-2`}
     >
       <div className="flex justify-center items-center w-[20%] h-full">

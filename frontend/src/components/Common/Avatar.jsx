@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { mythSections } from "../../utils/constants";
+import { MyContext } from "../../context/context";
 
 const colors = [
   "bg-red-500",
@@ -15,6 +16,7 @@ const getRandomColor = () => {
 };
 
 const Avatar = ({ name, color }) => {
+  const { assets } = useContext(MyContext);
   const firstLetter = name.charAt(0).toUpperCase();
   const avatarColor = color ? color : getRandomColor();
 
@@ -23,7 +25,7 @@ const Avatar = ({ name, color }) => {
       className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
     >
       <img
-        src="/assets/uxui/240px-orb.base.png"
+        src={assets.uxui.baseorb}
         alt="orb"
         className={`filter-orbs-${avatarColor} overflow-hidden max-w-[10vw]`}
       />

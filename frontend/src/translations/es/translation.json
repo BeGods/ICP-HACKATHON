@@ -39,7 +39,9 @@
     "leaderboard": "Tabla de clasificación",
     "tower": "Torre",
     "brand": "Marca",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "gifts": "Regalos",
+    "voucher": "Vales"
   },
   "boosters": [
     { "title": "Autómata", "desc": "Toca automáticamente" },
@@ -88,7 +90,13 @@
     "name": "Nombre",
     "enterOTP": "Ingrese OTP",
     "phone": "Número de teléfono",
-    "day": "Dia"
+    "day": "Dia",
+    "verify": "Verificar",
+    "resendOTP": "Reenviar OTP",
+    "getOTP": "Obtener OTP",
+    "terms": "Aceptar Términos y Condiciones",
+    "policy": "Política de Privacidad",
+    "haptic": "Hápticos"
   },
   "note": {
     "text": "Actualización de la tabla de clasificación en",

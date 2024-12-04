@@ -8,6 +8,7 @@ import {
   formatRankOrbs,
   timeRemainingForHourToFinishUTC,
 } from "../../helpers/leaderboard.helper";
+import { trackComponentView } from "../../utils/ga";
 
 const tele = window.Telegram?.WebApp;
 
@@ -62,7 +63,7 @@ const UserAvatar = ({ user, index }) => {
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, assets } = useContext(MyContext);
+  const { setSection, authToken, assets, userData } = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const avatarColor = localStorage.getItem("avatarColor");
@@ -89,6 +90,7 @@ const Leaderboard = (props) => {
   };
 
   useEffect(() => {
+    trackComponentView("leaderboard");
     toggleBackButton(tele, () => {
       setSection(3);
     });
@@ -171,22 +173,24 @@ const Leaderboard = (props) => {
                   const positions = [
                     {
                       pos: 2,
-                      size: 50,
+                      size: "text-[60px]",
                       align: 5,
                     },
                     {
                       pos: 1,
-                      size: 100,
+                      size: "text-[100px]",
                       align: 10,
                     },
                     {
                       pos: 3,
-                      size: 50,
+                      size: "text-[50px]",
                       align: 5,
                     },
                   ];
+
                   return (
                     <div
+                      key={index}
                       style={{
                         boxShadow:
                           "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
@@ -194,7 +198,7 @@ const Leaderboard = (props) => {
                       className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
                       <div
-                        className={`flex text-[${positions[index].size}px] mt-12 h-fit text-white font-mono font-bold text-black-contour`}
+                        className={`flex text-[${positions[index].size}] ${positions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
                         {positions[index].pos}
                       </div>
@@ -223,17 +227,48 @@ const Leaderboard = (props) => {
             <h1>{t(`keywords.orbs`)}</h1>
           </div>
           <div className="overflow-auto">
-            {leaderboard.map((item, index) => (
-              <div className="">
+            {leaderboard.slice(3).map((item, index) => (
+              <div key={index} className="">
                 <LeaderboardItem
                   key={index}
-                  rank={index + 1}
+                  rank={index + 4}
                   name={item.telegramUsername}
                   totalOrbs={item.totalOrbs}
                   imageUrl={item.profileImage}
                 />
               </div>
             ))}
+          </div>
+          <div className="flex border rounded-primary absolute bottom-0 bg-black w-full h-[8vh]">
+            <div className="flex text-white justify-center items-center w-[20%] h-full">
+              {userData.overallRank}
+            </div>
+            <div className="flex gap-3 items-center  w-full">
+              <div className="h-[35px] w-[35px]">
+                {userData.avatarUrl ? (
+                  <img
+                    src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                    alt="profile-image"
+                    className="rounded-full"
+                  />
+                ) : (
+                  <Avatar
+                    name={userData.telegramUsername}
+                    className="h-full w-full"
+                    profile={0}
+                    color={avatarColor}
+                  />
+                )}
+              </div>
+              <h1 className="text-white">
+                {userData.telegramUsername.length > 20
+                  ? userData.telegramUsername.slice(0, 20)
+                  : userData.telegramUsername}
+              </h1>
+            </div>
+            <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
+              <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
+            </div>
           </div>
         </div>
       ) : (

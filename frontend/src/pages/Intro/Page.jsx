@@ -9,7 +9,7 @@ import {
   setLangCookie,
   validateSoundCookie,
 } from "../../helpers/cookie.helper";
-import { toast } from "react-toastify";
+import { trackComponentView } from "../../utils/ga";
 
 const tele = window.Telegram?.WebApp;
 
@@ -18,6 +18,7 @@ const IntroPage = (props) => {
   const [userData, setUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [showCaptcha, setShowCaptcha] = useState(false);
+  const [fadeout, setFadeout] = useState(false);
   const [platform, setPlatform] = useState(null);
   const [enableSound, setEnableSound] = useState(true);
   const [disableDesktop, setDisableDestop] = useState(false);
@@ -77,7 +78,10 @@ const IntroPage = (props) => {
       localStorage.setItem("accessToken", response.data.token);
       await setAuthCookie(tele, response.data.token);
       setTimeout(() => {
-        navigate("/home");
+        setFadeout(true);
+        setTimeout(() => {
+          // navigate("/home");
+        }, 2000);
       }, 3000);
     } catch (error) {
       console.error("Authentication Error: ", error);
@@ -86,10 +90,11 @@ const IntroPage = (props) => {
 
   const checkSoundActive = async () => {
     const isSoundActive = await validateSoundCookie(tele);
-    setEnableSound(isSoundActive);
+    setEnableSound(JSON.parse(isSoundActive));
   };
 
   useEffect(() => {
+    trackComponentView("landing_page");
     getUserData();
     checkSoundActive();
 
@@ -109,22 +114,20 @@ const IntroPage = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log(platform);
+
     if (
       platform === "macos" ||
       platform === "windows" ||
       platform === "tdesktop" ||
       platform === "web" ||
       platform === "weba" ||
-      platform === "unknown" ||
-      !platform
+      platform === "unknown"
     ) {
       setDisableDestop(true);
     } else {
       setDisableDestop(false);
       (async () => await auth())();
-      // setTimeout(() => {
-      //   setShowCaptcha(true);
-      // }, 3000);
     }
     if (platform === "ios") {
       document.body.style.position = "fixed";
@@ -227,35 +230,50 @@ const IntroPage = (props) => {
                 <img
                   src={assets.logos.fof}
                   alt="fof"
-                  className="w-[200px] mt-6 fof-text-shadow"
+                  className="w-[200px] mt-6 fof-text-shadow pointer-events-none"
                 />
               </div>
             </div>
+            <div className="absolute fade-in scale-110">
+              <img
+                src={assets.uxui.tower}
+                alt="tower"
+                className="fof-text-shadow"
+              />
+            </div>
             <div className="flex flex-grow"></div>
-            <div className="flex justify-center items-center  z-[100]">
+            <div
+              className={`flex ${
+                fadeout && "fade-out"
+              } justify-center items-center z-[100]`}
+            >
               <img
                 src={assets.logos.begodsBlack}
                 alt="logo"
-                className="w-[65px] h-[75px] mb-6 begod-text-shadow"
+                className="w-[65px] h-[75px] mb-6 begod-text-shadow pointer-events-none"
               />
             </div>
           </div>
         </div>
       )}
-      {showCaptcha && (
-        <div className="absolute h-screen w-screen z-50">
-          <Captcha auth={auth} />
-        </div>
-      )}
 
-      <ReactHowler
-        src={assets.audio.fofIntro}
-        playing={!disableDesktop && enableSound}
-        preload={true}
-        loop
-      />
+      <div className="absolute">
+        <ReactHowler
+          src={assets.audio.fofIntro}
+          playing={!disableDesktop && enableSound}
+          preload={true}
+          loop
+        />
+      </div>
     </div>
   );
 };
 
 export default IntroPage;
+{
+  /* {showCaptcha && (
+        <div className="absolute h-screen w-screen z-50">
+          <Captcha auth={auth} />
+        </div>
+      )} */
+}
