@@ -80,7 +80,7 @@ const IntroPage = (props) => {
       setTimeout(() => {
         setFadeout(true);
         setTimeout(() => {
-          // navigate("/home");
+          navigate("/home");
         }, 2000);
       }, 3000);
     } catch (error) {
