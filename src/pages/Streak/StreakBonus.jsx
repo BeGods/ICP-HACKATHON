@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import { ThumbsUp } from "lucide-react";
 import { t } from "i18next";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -14,6 +15,7 @@ const StreakBonus = (props) => {
     setActiveReward,
     setRewards,
     setTriggerConf,
+    enableHaptic,
   } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
   const [flipped, setFlipped] = useState(false);
@@ -108,7 +110,7 @@ const StreakBonus = (props) => {
         <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
         <div
           onClick={() => {
-            tele.HapticFeedback.notificationOccurred("success");
+            handleClickHaptic(tele, enableHaptic);
             updateRewards();
             setSection(6);
           }}

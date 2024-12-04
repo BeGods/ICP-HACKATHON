@@ -6,6 +6,7 @@ import { claimSocialTask } from "../../../utils/api";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
 import { validateCountryCode } from "../../../helpers/cookie.helper";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -19,13 +20,14 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
     setGameData,
     userData,
     country,
+    enableHaptic,
   } = useContext(MyContext);
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
   const disableClick = useRef(false);
 
   const handleCopyLink = async () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
 
     await navigator.clipboard.writeText(
       `https://t.me/BeGods_bot/forgesoffaith?startapp=${userData.referralCode}`
@@ -67,7 +69,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
   return (
     <div
       onClick={() => {
-        tele.HapticFeedback.notificationOccurred("success");
+        handleClickHaptic(tele, enableHaptic);
 
         if (quest._id == "fjkddfakj138338huadla") {
           handleCopyLink();

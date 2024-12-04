@@ -33,7 +33,9 @@
     "leaderboard": "Tablá",
     "tower": "Tore",
     "brand": "Tatak",
-    "profile": "Profile"
+    "profile": "Profile",
+    "gifts": "Mga Regalo",
+    "voucher": "Mga Kupon"
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
@@ -78,7 +80,13 @@
     "name": "Pangalan",
     "enterOTP": "Ipasok ang OTP",
     "phone": "Numero ng Telepono",
-    "day": "Araw"
+    "day": "Araw",
+    "verify": "I-verify",
+    "resendOTP": "Ipadala muli ang OTP",
+    "getOTP": "Kunin ang OTP",
+    "terms": "Tanggapin ang Mga Termino at Kundisyon",
+    "policy": "Patakaran sa Pagkapribado",
+    "haptic": "Hapti"
   },
   "note": {
     "text": "Pag-update ng leaderboard sa",

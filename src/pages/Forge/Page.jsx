@@ -27,6 +27,11 @@ import {
 } from "../../helpers/game.helper";
 import ForgeHeader from "./Header";
 import gsap from "gsap";
+import { trackComponentView, trackEvent } from "../../utils/ga";
+import {
+  handleClickHaptic,
+  handleTapHaptic,
+} from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -53,6 +58,7 @@ const Forges = () => {
     setShowCard,
     assets,
     setTriggerConf,
+    enableHaptic,
   } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => ({
     orbs: myth.orbs,
@@ -227,6 +233,8 @@ const Forges = () => {
         },
         authToken
       );
+      trackEvent("action", "tap_session", "success");
+
       setRandomReward(null);
 
       setMythStates((prevState) => {
@@ -258,6 +266,7 @@ const Forges = () => {
         },
         authToken
       );
+      trackEvent("action", "star_captured", "success");
       setCount(0);
       setMythStates((prevState) => {
         return prevState.map((item, index) => {
@@ -343,6 +352,7 @@ const Forges = () => {
     };
     try {
       const response = await claimShardsBooster(mythologyName, authToken);
+      trackEvent("purchase", "claim_alchemist", "success");
       setGameData((prevData) => {
         const updatedData = {
           ...prevData,
@@ -462,12 +472,8 @@ const Forges = () => {
     let disableSubmit = false;
 
     if (energy > 0 && !isStarHolding) {
-      if (platform !== "ios") {
-        window.navigator.vibrate(25);
-      }
-      if (platform === "ios") {
-        tele.HapticFeedback.impactOccurred("light");
-      }
+      handleTapHaptic(tele, platform, enableHaptic, 25);
+
       handlePlusOneEffect(e);
 
       let reachedBlackOrb = false;
@@ -561,6 +567,7 @@ const Forges = () => {
         }
       } else if (isActive) {
         if (!maxHoldTimeoutId.current && isHolding) {
+          trackEvent("action", "alchemist_captured", "success");
           if (holdTimeoutId.current) {
             clearTimeout(holdTimeoutId.current);
             holdTimeoutId.current = null;
@@ -735,6 +742,8 @@ const Forges = () => {
   }, [mythStates]);
 
   useEffect(() => {
+    // ga
+    trackComponentView("forge");
     // triggerToggles
     setTimeout(() => {
       setMinimizeToggle(true);
@@ -838,11 +847,7 @@ const Forges = () => {
       }, 1000);
 
       const actionIntervalId = setInterval(() => {
-        if (platform !== "ios") {
-          window.navigator.vibrate(100);
-        } else if (platform === "ios") {
-          tele.HapticFeedback.impactOccurred("light");
-        }
+        handleTapHaptic(tele, platform, enableHaptic, 100);
 
         setCount((prev) => prev + 1);
         handlePlusMinon(70, 800);
@@ -998,12 +1003,7 @@ const Forges = () => {
       let holdTimeoutId;
 
       const stopAnimationAndScale = () => {
-        if (platform !== "ios") {
-          window.navigator.vibrate(1000);
-        }
-        if (platform === "ios") {
-          tele.HapticFeedback.impactOccurred("light");
-        }
+        handleTapHaptic(tele, platform, enableHaptic, 1000);
         cancelAnimationFrame(animationFrameId.current);
         gsap.to(ball, { scale: 1.5, duration: 0.2 });
 
@@ -1031,7 +1031,7 @@ const Forges = () => {
               }
               return reward;
             });
-
+            trackEvent("action", "bubble_captured", "success");
             setRewards(updatedRewards);
             setActiveReward(incrementedReward);
             setSection(6);
@@ -1376,7 +1376,7 @@ const Forges = () => {
                         <Button
                           message={1}
                           handleClick={() => {
-                            tele.HapticFeedback.notificationOccurred("success");
+                            handleClickHaptic(tele, enableHaptic);
                             setGlowBooster(1);
                             setTimeout(() => {
                               setGlowBooster(0);
@@ -1398,27 +1398,18 @@ const Forges = () => {
                     }
                   />
                 );
-                if (platform !== "ios") {
-                  window.navigator.vibrate(500);
-                }
-                if (platform === "ios") {
-                  tele.HapticFeedback.impactOccurred("light");
-                }
+                handleTapHaptic(tele, platform, enableHaptic, 500);
               } else {
                 if (activeCard === "minion") {
                   isMinionHold.current = true;
                   setIsHolding(true);
-                  if (platform !== "ios") {
-                    window.navigator.vibrate(1000);
-                  }
-                  if (platform === "ios") {
-                    tele.HapticFeedback.impactOccurred("light");
-                  }
+                  handleTapHaptic(tele, platform, enableHaptic, 1000);
                 }
               }
             }}
             onTouchEnd={() => {
               setIsHolding(false);
+
               isMinionHold.current = false;
             }}
             className={`absolute  ${

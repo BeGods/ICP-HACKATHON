@@ -1,11 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-import { formatTwoNums } from "../../helpers/leaderboard.helper";
 import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
 import { useTranslation } from "react-i18next";
 
 const BottomChild = ({ userData, showGuide }) => {
   const { rewards, setSection } = useContext(MyContext);
+  const [showEffect, setShowEffect] = useState(true);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <div className="flex relative justify-center px-2 -mt-3">
@@ -14,14 +24,14 @@ const BottomChild = ({ userData, showGuide }) => {
           className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="text-primary pl-headSides">
-            {formatTwoNums(rewards?.length ?? 0)}
+            {/* {formatTwoNums(rewards?.length ?? 0)} */}
           </div>
         </div>
         <div
           className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
           <div className="text-primary pr-headSides">
-            {userData?.overallRank === 0 ? 1 : userData?.overallRank}
+            {/* {userData?.overallRank === 0 ? 1 : userData?.overallRank} */}
           </div>
         </div>
       </div>
@@ -34,7 +44,7 @@ const BottomChild = ({ userData, showGuide }) => {
             showGuide === 1 && "tut-shake"
           } text-iconLg text-black-lg-contour text-white z-50`}
         >
-          t
+          <span className={`${showEffect && "pulse-text"}`}>t</span>
         </div>
         <div
           onClick={() => {
@@ -42,7 +52,7 @@ const BottomChild = ({ userData, showGuide }) => {
           }}
           className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
         >
-          r
+          <span className={`${showEffect && "pulse-text"}`}>r</span>
         </div>
       </div>
     </div>

@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { MyContext } from "../../context/context";
-
 import { mythSections, mythSymbols } from "../../utils/constants";
 
 export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
@@ -453,7 +451,6 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
                 ))}
             </div>
           </div>
-          {Toggles}
         </div>
       )}
     </>

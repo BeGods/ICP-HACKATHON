@@ -24,12 +24,14 @@ import assets from "./assets/assets.json";
 import { showToast } from "./components/Toast/Toast";
 import StreakBonus from "./pages/Streak/StreakBonus";
 import {
+  fetchHapticStatus,
   validateAuth,
   validateCountryCode,
   validateLang,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
 import OnboardPage from "./pages/Onboard/Page";
+import { getDeviceAndOS, trackEvent } from "./utils/ga";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -39,6 +41,7 @@ const Home = () => {
   const [questsData, setQuestsData] = useState(null);
   const [socialQuestData, setSocialQuestData] = useState(null);
   const [enableSound, setEnableSound] = useState(true);
+  const [enableHaptic, setEnableHaptic] = useState(true);
   const [triggerConf, setTriggerConf] = useState(false);
   const [keysData, setKeysData] = useState(null);
   const [rewards, setRewards] = useState([]);
@@ -88,8 +91,9 @@ const Home = () => {
     setCountry,
     triggerConf,
     setTriggerConf,
+    enableHaptic,
+    setEnableHaptic,
   };
-
   const sections = [
     <Forges />, // 0
     <Quests />, // 1
@@ -135,6 +139,7 @@ const Home = () => {
     try {
       const activeCountry = await validateCountryCode(tele);
       const rewardsData = await claimStreakBonus(token, activeCountry);
+      trackEvent("rewards", "claim_streak_reward", "success");
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
@@ -155,16 +160,18 @@ const Home = () => {
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
+
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setSocialQuestData(response?.extraQuests);
+      setCountry(response?.user.country);
       setUserData(response?.user);
       setKeysData(response?.towerKeys);
       if (!response?.user?.joiningBonus) {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000);
+        }, 3000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -175,7 +182,7 @@ const Home = () => {
         setSection(8);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000);
+        }, 3000);
       } else if (response?.user?.isStreakActive) {
         (async () => {
           await getStreakBonus(token);
@@ -184,7 +191,7 @@ const Home = () => {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 1000);
+        }, 3000);
       }
     } catch (error) {
       console.log(error);
@@ -194,16 +201,19 @@ const Home = () => {
 
   const syncAllCookies = async () => {
     localStorage.setItem("avatarColor", getRandomColor());
-    const activeCountry = await validateCountryCode(tele);
     const currLang = await validateLang(tele);
     const isAuth = await validateAuth(tele);
     const isSoundActive = await validateSoundCookie(tele);
+    const isHapticActive = await fetchHapticStatus(tele);
 
     i18next.changeLanguage(currLang);
-    setCountry(activeCountry);
+    setEnableHaptic(isHapticActive);
     setLang(currLang);
     setEnableSound(JSON.parse(isSoundActive));
     setAuthToken(isAuth);
+
+    const device = getDeviceAndOS(tele.platform);
+    trackEvent("device", device, "success");
 
     if (isAuth) {
       (async () => await getGameData(isAuth))();

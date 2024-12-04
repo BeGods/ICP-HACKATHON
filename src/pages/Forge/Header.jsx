@@ -3,6 +3,7 @@ import { elements, mythSections, mythSymbols } from "../../utils/constants";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../helpers/leaderboard.helper";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -16,13 +17,13 @@ const CenterChild = ({
   platform,
   mythData,
 }) => {
-  const { setSection, assets } = useContext(MyContext);
+  const { setSection, assets, enableHaptic } = useContext(MyContext);
 
   return (
     <div className="flex absolute justify-center w-full z-20 top-0 -mt-1">
       <div
         onClick={() => {
-          tele.HapticFeedback.notificationOccurred("success");
+          handleClickHaptic(tele, enableHaptic);
           setSection(4);
         }}
         className={`flex text-center justify-center h-symbol-primary w-symbol-primary overflow-hidden items-center rounded-full outline outline-${

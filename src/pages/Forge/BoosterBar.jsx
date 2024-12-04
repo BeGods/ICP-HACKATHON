@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { mythSections } from "../../utils/constants";
 import {
   calculateRemainingTime,
   hasTimeElapsed,
 } from "../../helpers/booster.helper";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { MyContext } from "../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
+  const { enableHaptic } = useContext(MyContext);
   const [toggleValue, setToggleValue] = useState(true);
 
   //TODO: this can be improved
@@ -21,7 +24,7 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
             <div className="flex items-center leading-tight flex-col relative h-fit shake-booster">
               <div
                 onClick={() => {
-                  tele.HapticFeedback.notificationOccurred("success");
+                  handleClickHaptic(tele, enableHaptic);
 
                   setToggleValue((prev) => !prev);
                 }}
@@ -64,7 +67,7 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
               <div className="flex items-center leading-tight flex-col relative h-fit shake-booster">
                 <div
                   onClick={() => {
-                    tele.HapticFeedback.notificationOccurred("success");
+                    handleClickHaptic(tele, enableHaptic);
                     setToggleValue((prev) => !prev);
                   }}
                   className={`font-symbols transition-all duration-250 glow-icon-${

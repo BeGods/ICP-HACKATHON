@@ -15,6 +15,7 @@ import RedeemHeader from "./Header";
 import { ExternalLink } from "lucide-react";
 import confetti from "canvas-confetti";
 import { showToast } from "../../components/Toast/Toast";
+import { trackComponentView } from "../../utils/ga";
 
 const tele = window.Telegram?.WebApp;
 
@@ -103,6 +104,8 @@ const Redeem = (props) => {
   };
 
   useEffect(() => {
+    trackComponentView("partner");
+
     if (triggerConf) {
       triggerConfetti();
       setTimeout(() => {
@@ -251,7 +254,7 @@ const Redeem = (props) => {
           </div>
           <div
             onClick={() => {
-              tele.HapticFeedback.notificationOccurred("success");
+              handleClickHapti(tele);
               setFlipped((prev) => !prev);
             }}
             className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"

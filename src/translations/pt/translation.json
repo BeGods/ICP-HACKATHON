@@ -39,7 +39,9 @@
     "leaderboard": "Classificação",
     "tower": "Torre",
     "brand": "Marca",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "gifts": "Presentes",
+    "voucher": "Vales"
   },
   "boosters": [
     { "title": "Autômata", "desc": "Toque automático" },
@@ -84,7 +86,13 @@
     "name": "Nome",
     "enterOTP": "Inserir OTP",
     "phone": "Número de telefone",
-    "day": "Dia"
+    "day": "Dia",
+    "verify": "Verificar",
+    "resendOTP": "Reenviar OTP",
+    "getOTP": "Obter OTP",
+    "terms": "Aceitar Termos e Condições",
+    "policy": "Política de Privacidade",
+    "haptic": "Hápticos"
   },
   "note": {
     "text": "Atualização da classificação em",

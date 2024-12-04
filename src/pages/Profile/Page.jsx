@@ -11,6 +11,7 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import { hideBackButton } from "../../utils/teleBackButton";
+import { trackComponentView } from "../../utils/ga";
 
 const tele = window.Telegram?.WebApp;
 
@@ -53,46 +54,7 @@ const Profile = (props) => {
           }
           currQuest={socialQuestData[0]}
           handleClick={() => {
-            setShowCard(
-              <SettingModal
-                close={() => {
-                  setShowCard(
-                    <ProfileGuide
-                      Header={
-                        <ProfileHeader
-                          showGuide={1}
-                          userData={userData}
-                          avatarColor={avatarColor}
-                        />
-                      }
-                      currGuide={1}
-                      Toggles={
-                        <>
-                          <ToggleLeft
-                            minimize={2}
-                            handleClick={() => {
-                              setSection(5);
-                            }}
-                            activeMyth={4}
-                          />
-                          <ToggleRight
-                            minimize={2}
-                            handleClick={() => {
-                              setSection(5);
-                            }}
-                            activeMyth={4}
-                          />
-                        </>
-                      }
-                      currQuest={socialQuestData[0]}
-                      handleClick={() => {
-                        setShowCard(null);
-                      }}
-                    />
-                  );
-                }}
-              />
-            );
+            setShowCard(null);
           }}
         />
       );
@@ -100,6 +62,9 @@ const Profile = (props) => {
   }, [enableGuide]);
 
   useEffect(() => {
+    // ga
+    trackComponentView("profile");
+
     // disable backbutton
     hideBackButton(tele);
 
@@ -167,37 +132,8 @@ const Profile = (props) => {
           <TaskCarousel quests={socialQuestData} />
         </div>
       </div>
-
-      {/* {showToggles && (
-        <>
-          <ToggleLeft
-            minimize={2}
-            handleClick={() => {
-              setSection(5);
-            }}
-            activeMyth={4}
-          />
-          <ToggleRight
-            minimize={2}
-            handleClick={() => {
-              setSection(5);
-            }}
-            activeMyth={4}
-          />
-        </>
-      )} */}
     </div>
   );
 };
 
 export default Profile;
-
-{
-  /* <div
-className="flex items-center justify-center absolute text-primary text-black-lg-contour text-gold"
-style={{ top: "22vh", left: "50%", transform: "translateX(-50%)" }}
->
-{userData.telegramUsername.charAt(0).toUpperCase() +
-  userData.telegramUsername.slice(1).toLowerCase()}
-</div> */
-}

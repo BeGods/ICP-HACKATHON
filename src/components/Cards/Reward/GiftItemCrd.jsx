@@ -1,11 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { MyContext } from "../../../context/context";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const GiftItemCrd = ({ item }) => {
-  const { setActiveReward, setSection } = useContext(MyContext);
+  const { setActiveReward, setSection, enableHaptic } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -16,7 +17,7 @@ ${
 } rounded-primary h-[90px] w-full  bg-glass-black border text-white p-[15px]`}
       onClick={(e) => {
         e.preventDefault();
-        tele.HapticFeedback.notificationOccurred("success");
+        handleClickHaptic(tele, enableHaptic);
         setActiveReward(item);
         setSection(6);
       }}

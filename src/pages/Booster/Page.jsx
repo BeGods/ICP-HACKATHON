@@ -16,6 +16,7 @@ import BoosterHeader from "./Header";
 import { useBoosterGuide } from "../../hooks/Tutorial";
 import BoosterCarousel from "../../components/Carousel/BoosterCarousel";
 import ReactHowler from "react-howler";
+import { trackComponentView, trackEvent } from "../../utils/ga";
 
 const Boosters = () => {
   const { t } = useTranslation();
@@ -45,6 +46,7 @@ const Boosters = () => {
       };
       try {
         const response = await claimAutomataBooster(mythologyName, authToken);
+        trackEvent("purchase", "claim_automata", "success");
 
         setGameData((prevData) => {
           const updatedData = {
@@ -121,6 +123,7 @@ const Boosters = () => {
   }, [enableGuide]);
 
   useEffect(() => {
+    trackComponentView("boosters");
     setTimeout(() => {
       setShowToggles(true);
     }, 300);

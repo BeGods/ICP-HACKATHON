@@ -12,6 +12,8 @@ import {
   claimBurstBooster,
   claimShardsBooster,
 } from "../../../utils/api";
+import { trackEvent } from "../../../utils/ga";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -35,6 +37,7 @@ const BoosterClaim = ({
     activeMyth,
     authToken,
     setShowCard,
+    enableHaptic,
   } = useContext(MyContext);
   const disableRef = useRef(false);
 
@@ -46,6 +49,7 @@ const BoosterClaim = ({
       };
       try {
         const response = await claimShardsBooster(mythologyName, authToken);
+        trackEvent("purchase", "claim_alchemist", "success");
         setGameData((prevData) => {
           const updatedData = {
             ...prevData,
@@ -88,6 +92,7 @@ const BoosterClaim = ({
     };
     try {
       const response = await claimBurstBooster(mythologyName, authToken);
+      trackEvent("purchase", "claim_burst", "success");
 
       setGameData((prevData) => {
         const updatedData = {
@@ -127,6 +132,7 @@ const BoosterClaim = ({
       };
       try {
         const response = await claimAutomataBooster(mythologyName, authToken);
+        trackEvent("purchase", "claim_automata", "success");
 
         setGameData((prevData) => {
           const updatedData = {
@@ -168,6 +174,7 @@ const BoosterClaim = ({
 
       try {
         await claimAutoAutomata(authToken);
+        trackEvent("purchase", "claim_auto_automata", "success");
 
         setGameData((prevData) => {
           const now = Date.now();
@@ -208,7 +215,7 @@ const BoosterClaim = ({
   };
 
   const handleButton = () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
     const handleClaim = {
       automata: isAutoPay ? handleClaimAutoAutomata : handleClaimAutomata,
       minion: handleClaimShards,

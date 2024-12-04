@@ -580,3 +580,25 @@ export const claimStreakBonus = async (accessToken, country) => {
     throw error;
   }
 };
+
+export const updateCountry = async (country, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/user/country`;
+
+  try {
+    const response = await axios.post(
+      url,
+      {
+        country: country,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};

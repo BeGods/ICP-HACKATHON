@@ -4,6 +4,7 @@ import MappedOrbs from "../../Common/MappedOrbs";
 import Symbol from "../../Common/Symbol";
 import IconBtn from "../../Buttons/IconBtn";
 import { MyContext } from "../../../context/context";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -16,7 +17,7 @@ const QuestCard = ({
   InfoCard,
   isGuideActive,
 }) => {
-  const { assets } = useContext(MyContext);
+  const { assets, enableHaptic } = useContext(MyContext);
   const [flipped, setFlipped] = useState(false);
   const [buttonFlip, setButtonFlip] = useState(false);
 
@@ -25,7 +26,7 @@ const QuestCard = ({
       <div className={`card ${flipped ? "flipped" : ""}`}>
         <div
           onClick={(e) => {
-            tele.HapticFeedback.notificationOccurred("success");
+            handleClickHaptic(tele, enableHaptic);
             setFlipped((prev) => !prev);
             setTimeout(() => {
               setButtonFlip((prev) => !prev);
@@ -93,7 +94,7 @@ const QuestCard = ({
         </div>
         <div
           onClick={(e) => {
-            tele.HapticFeedback.notificationOccurred("success");
+            handleClickHaptic(tele, enableHaptic);
 
             setFlipped((prev) => !prev);
             setTimeout(() => {

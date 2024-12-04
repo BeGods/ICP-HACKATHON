@@ -13,12 +13,14 @@ import ReactHowler from "react-howler";
 import MappedOrbs from "../../components/Common/MappedOrbs";
 import Symbol from "../../components/Common/Symbol";
 import assets from "../../assets/assets.json";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const SplashScreen = ({ reward, exploitReward }) => {
   const { t } = useTranslation();
-  const { setSection, setActiveMyth, enableSound } = useContext(MyContext);
+  const { setSection, setActiveMyth, enableSound, enableHaptic } =
+    useContext(MyContext);
   const [currReward, setCurrReward] = useState(reward);
   const [showScale, setShowScale] = useState(0);
   const [showYouScale, setShowYouScale] = useState(0);
@@ -62,7 +64,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
   };
 
   const handleClick = (reward) => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
     if (reward.type === "quest") {
       setActiveMyth(mythologies.indexOf(reward.quest.mythology));
       setSection(1);
@@ -178,7 +180,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
           <div className="card__face card__face--front flex justify-center items-center">
             <div
               onClick={() => {
-                tele.HapticFeedback.notificationOccurred("success");
+                handleClickHaptic(tele, enableHaptic);
                 setSection(0);
               }}
               className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[55vw]  mx-auto icon-black-contour`}

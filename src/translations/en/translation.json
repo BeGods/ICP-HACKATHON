@@ -43,7 +43,9 @@
     "leaderboard": "Leaderboard",
     "tower": "Tower",
     "brand": "Brand",
-    "profile": "Profile"
+    "profile": "Profile",
+    "gifts": "Gifts",
+    "voucher": "Vouchers"
   },
   "boosters": [
     { "title": "Automata", "desc": "Auto tap" },
@@ -81,7 +83,13 @@
     "name": "Name",
     "enterOTP": "Enter OTP",
     "phone": "Phone Number",
-    "day": "Day"
+    "day": "Day",
+    "verify": "Verify",
+    "resendOTP": "Resend OTP",
+    "getOTP": "Get OTP",
+    "terms": "Accept Terms & Conditions",
+    "policy": "Privacy Policy",
+    "haptic": "Haptics"
   },
   "note": {
     "text": "Leader board update in",

@@ -9,7 +9,7 @@ export const setAuthCookie = async (tele, token) => {
   }
 };
 
-// set auth
+// set lang
 export const setLangCookie = async (tele, langCode) => {
   await tele.ready();
 
@@ -190,4 +190,84 @@ export const validateTutCookie = async (tele, key) => {
     }
   }
   return null;
+};
+
+// haptic on click
+export const fetchHapticStatus = async (tele) => {
+  await tele.ready();
+  if (tele.platform === "ios" || tele.android === "android") {
+    return new Promise((resolve) => {
+      tele.CloudStorage.getItem("disableHaptic", (err, item) => {
+        if (err) {
+          resolve(true);
+        } else {
+          if (item) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        }
+      });
+    });
+  }
+
+  return true;
+};
+
+// haptic on click
+export const handleClickHaptic = (tele, isActive) => {
+  if (isActive) {
+    tele.HapticFeedback.notificationOccurred("success");
+  }
+};
+
+// haptic on tap
+export const handleTapHaptic = (tele, platform, isActive, value) => {
+  if (isActive) {
+    if (platform !== "ios") {
+      window.navigator.vibrate(value);
+    }
+    if (platform === "ios") {
+      tele.HapticFeedback.impactOccurred("light");
+    }
+  }
+};
+
+// set auth
+export const setHapticCookie = async (tele) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.android === "android") {
+    tele.CloudStorage.setItem("disableHaptic", true);
+  } else {
+    localStorage.setItem("disableHaptic", true);
+  }
+};
+
+export const deleteHapticCookie = async (tele) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.android === "android") {
+    tele.CloudStorage.removeItem("disableHaptic");
+  } else {
+    localStorage.removeItem("disableHaptic");
+  }
+};
+
+export const clearAllGuideCookie = async (tele) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.android === "android") {
+    tele.CloudStorage.removeItem("tutorial01");
+    tele.CloudStorage.removeItem("tutorial02");
+    tele.CloudStorage.removeItem("tutorial03");
+    tele.CloudStorage.removeItem("tutorial04");
+    tele.CloudStorage.removeItem("tutorial05");
+  } else {
+    localStorage.removeItem("tutorial01");
+    localStorage.removeItem("tutorial02");
+    localStorage.removeItem("tutorial03");
+    localStorage.removeItem("tutorial04");
+    localStorage.removeItem("tutorial05");
+  }
 };

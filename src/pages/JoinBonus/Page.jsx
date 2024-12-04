@@ -4,12 +4,15 @@ import { fetchJoiningBonus } from "../../utils/api";
 import { MyContext } from "../../context/context";
 import Confetti from "react-confetti";
 import { ThumbsUp } from "lucide-react";
+import { trackEvent } from "../../utils/ga";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setGameData, setSection, authToken, assets } = useContext(MyContext);
+  const { setGameData, setSection, authToken, assets, enableHaptic } =
+    useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -26,11 +29,12 @@ const JoinBonus = (props) => {
 
   const handleClaimBonus = async () => {
     if (disableRef.current === false) {
-      tele.HapticFeedback.notificationOccurred("success");
+      handleClickHaptic(tele, enableHaptic);
       disableRef.current = true;
 
       try {
         await fetchJoiningBonus(authToken);
+        trackEvent("rewards", "claim_join_reward", "success");
         setTimeout(() => {
           setSection(0);
         }, 1000);

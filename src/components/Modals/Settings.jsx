@@ -7,6 +7,9 @@ import {
   Check,
   ChevronRight,
   Globe,
+  Map,
+  Vibrate,
+  VibrateOff,
   Volume2,
   VolumeX,
   Wallet,
@@ -17,6 +20,7 @@ import {
   connectTonWallet,
   disconnectTonWallet,
   fetchRewards,
+  updateCountry,
 } from "../../utils/api";
 import {
   useTonAddress,
@@ -24,7 +28,15 @@ import {
   useTonConnectUI,
 } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
-import { setCountryCookie, setLangCookie } from "../../helpers/cookie.helper";
+import {
+  clearAllGuideCookie,
+  deleteHapticCookie,
+  setCountryCookie,
+  setHapticCookie,
+  setLangCookie,
+  setSoundStatus,
+} from "../../helpers/cookie.helper";
+import { trackEvent } from "../../utils/ga";
 
 const tele = window.Telegram?.WebApp;
 
@@ -46,15 +58,44 @@ const SettingModal = ({ close }) => {
     setRewardsClaimedInLastHr,
     authToken,
     enableSound,
+    setEnableSound,
     setUserData,
     userData,
     country,
     setCountry,
+    enableHaptic,
+    setEnableHaptic,
+    setSection,
   } = useContext(MyContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const { state, open } = useTonConnectModal();
   const [isChanged, setIsChanged] = useState(false);
+
+  const handleSoundToggle = () => {
+    setEnableSound((prev) => {
+      const newValue = !prev;
+      if (newValue) {
+        setSoundStatus(tele, true);
+      } else {
+        setSoundStatus(tele, false);
+      }
+      return newValue;
+    });
+  };
+
+  const handleHapticsToggle = () => {
+    setEnableHaptic((prev) => {
+      const newValue = !prev;
+      if (newValue) {
+        deleteHapticCookie(tele);
+        return true;
+      } else {
+        setHapticCookie(tele);
+        return false;
+      }
+    });
+  };
 
   const getPartnersData = async (lang, country) => {
     try {
@@ -70,6 +111,7 @@ const SettingModal = ({ close }) => {
   const handleLanguageChange = (e) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
     setIsChanged(true);
+    trackEvent("misc", `language_${langCode}`, `success_${langCode}`);
     i18next.changeLanguage(langCode);
     setLangCookie(tele, langCode);
   };
@@ -77,13 +119,29 @@ const SettingModal = ({ close }) => {
   const handleSettingChange = (e) => {
     setIsChanged(true);
     const selectedCountry = e.target.value;
+
     setCountry(selectedCountry);
+    handleUpdateCountry(selectedCountry);
     setCountryCookie(tele, selectedCountry);
+    trackEvent(
+      "misc",
+      `country_${selectedCountry}`,
+      `success_${selectedCountry}`
+    );
+  };
+
+  const handleUpdateCountry = async (updatedCountry) => {
+    try {
+      const response = await updateCountry(updatedCountry, authToken);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleConnectTon = async () => {
     try {
       await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
+      trackEvent("misc", "connect_wallet", "success");
       setUserData((prev) => ({
         ...prev,
         tonAddress: userFriendlyAddress,
@@ -100,6 +158,12 @@ const SettingModal = ({ close }) => {
       console.log(errorMessage);
       showToast("ton_connect_error");
     }
+  };
+
+  const handleEnableGuide = () => {
+    clearAllGuideCookie(tele);
+    close();
+    setSection(0);
   };
 
   useEffect(() => {
@@ -144,7 +208,7 @@ const SettingModal = ({ close }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
-      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[28vh] card-shadow-white p-4">
+      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[12vh] card-shadow-white p-4">
         <IconBtn align={0} handleClick={handleClose} activeMyth={4} />
         <div className="flex w-full">
           <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
@@ -212,9 +276,39 @@ const SettingModal = ({ close }) => {
           </div>
           <div className="flex justify-between w-full">
             <div className="pl-3">{t("profile.music")}</div>
-            <ToggleSwitch />
+            <ToggleSwitch
+              handleToggle={handleSoundToggle}
+              isActive={enableSound}
+            />
           </div>
         </div>
+
+        <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
+          <div className="flex justify-start -ml-3">
+            {enableHaptic ? <Vibrate /> : <VibrateOff />}
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="pl-3">{t("misc.haptic")}</div>
+            <ToggleSwitch
+              handleToggle={handleHapticsToggle}
+              isActive={enableHaptic}
+            />
+          </div>
+        </div>
+
+        <div
+          onClick={handleEnableGuide}
+          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
+        >
+          <div className="flex justify-start -ml-3">
+            <Map />
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="pl-3">{t("profile.guide")}</div>
+            <ChevronRight />
+          </div>
+        </div>
+
         <div
           onClick={handleClose}
           className="bg-white w-full flex justify-center items-center py-2.5 mt-3 rounded-md"
@@ -227,47 +321,3 @@ const SettingModal = ({ close }) => {
 };
 
 export default SettingModal;
-
-// const handleEnableGuide = () => {
-//   tele.HapticFeedback.notificationOccurred("success");
-
-//   tele.CloudStorage.removeItem("g1");
-//   tele.CloudStorage.removeItem("g2");
-//   tele.CloudStorage.removeItem("g3");
-//   tele.CloudStorage.removeItem("g4");
-//   close();
-//   setSection(0);
-// };
-
-{
-  /* <div
-          onClick={handleEnableGuide}
-          className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4"
-        >
-          <div> {t(`profile.guide`)}</div>
-          <ChevronRight />
-        </div> */
-}
-
-// const handleDisconnectTon = async () => {
-//   try {
-//     await disconnectTonWallet(authToken);
-//     tonConnectUI.disconnect();
-//     setUserData((prev) => ({
-//       ...prev,
-//       tonAddress: null,
-//     }));
-//     showToast("ton_connect_success");
-//   } catch (error) {
-//     console.log(error);
-
-//     const errorMessage =
-//       error.response.data.error ||
-//       error.response.data.message ||
-//       error.message ||
-//       "An unexpected error occurred";
-
-//     console.log(errorMessage);
-//     showToast("ton_connect_error");
-//   }
-// };

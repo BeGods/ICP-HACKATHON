@@ -3,6 +3,7 @@ import { MyContext } from "../../context/context";
 import { footerIcons, mythSections } from "../../utils/constants";
 import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const redirect = [0, 2, 4, 3];
 
@@ -19,6 +20,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     assets,
     userData,
     platform,
+    enableHaptic,
   } = useContext(MyContext);
   const countOfInCompleteQuests = socialQuestData.filter(
     (item) => item.isQuestClaimed === false
@@ -26,7 +28,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
   const [clickEffect, setClickEffect] = useState(false);
 
   const playAudio = () => {
-    tele.HapticFeedback.notificationOccurred("success");
+    handleClickHaptic(tele, enableHaptic);
 
     if (howlerRef.current && enableSound) {
       howlerRef.current.stop();
@@ -85,7 +87,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         >
           {userData.avatarUrl ? (
             <div
-              className="flex flex-col items-center cursor-pointer z-50 h-full mb-3.5 transition-all duration-500"
+              className="flex flex-col items-center cursor-pointer z-50 h-full mb-4 transition-all duration-500"
               style={{ minWidth: "70px" }}
             >
               <img
@@ -118,7 +120,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
       {icon === 3 && (
-        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[7.5vh] mr-2 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[7.5vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
           {countOfInCompleteQuests}
         </div>
       )}

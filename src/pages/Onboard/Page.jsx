@@ -9,6 +9,7 @@ import {
 import { MyContext } from "../../context/context";
 import { showToast } from "../../components/Toast/Toast";
 import { useTranslation } from "react-i18next";
+import { trackComponentView } from "../../utils/ga";
 
 const OnboardPage = (props) => {
   const [phone, setPhone] = useState("");
@@ -132,6 +133,7 @@ const OnboardPage = (props) => {
         otp.join(""),
         authToken
       );
+      trackEvent("misc", "mobile_verified", "success");
       setSection(0);
       showToast("onboard_success");
       setUserData((prevState) => ({
@@ -146,6 +148,7 @@ const OnboardPage = (props) => {
   };
 
   useEffect(() => {
+    trackComponentView("onboard_form");
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
@@ -184,7 +187,7 @@ const OnboardPage = (props) => {
                 onClick={handleVerifyOtp}
                 className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6"
               >
-                Verify
+                {t("misc.verify")}
               </div>
               <div
                 onClick={() => {
@@ -199,7 +202,7 @@ const OnboardPage = (props) => {
                 ) : countDown < 0 ? (
                   <div></div>
                 ) : (
-                  <div>Resend OTP</div>
+                  <div>{t("misc.resendOTP")}</div>
                 )}
               </div>
             </div>
@@ -262,19 +265,21 @@ const OnboardPage = (props) => {
                   id="terms"
                   className="-mt-1"
                 />
-                <div className="text-[3vw]">Accept Terms & Conditions</div>
+                <div className="text-[3vw]">{t("misc.terms")}</div>
               </div>
               <div
                 onClick={handleGenerateOtp}
                 className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-[10px] mt-6"
               >
-                Next
+                {t("misc.getOTP")}
               </div>
             </div>
           )}
         </div>
         <div className=" w-full h-full flex justify-center text-[3vw] text-gray-600">
-          <span className="pr-1 underline cursor-pointer">Privacy Policy</span>{" "}
+          <span className="pr-1 underline cursor-pointer">
+            {t("misc.policy")}
+          </span>{" "}
           | @Frogdog Games 2024
         </div>
       </div>
