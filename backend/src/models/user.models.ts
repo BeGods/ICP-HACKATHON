@@ -39,6 +39,7 @@ export interface IUser extends Document {
     createdAt: Date;
   };
   announcements: number;
+  country: string;
   lastLoginAt: Date;
 }
 
@@ -146,9 +147,12 @@ const userSchema = new Schema<IUser>(
         type: Date,
       },
     },
+    country: {
+      type: String,
+    },
     lastLoginAt: {
       type: Date,
-      default: null, // Tracks the user's last login time
+      default: null,
     },
   },
 
