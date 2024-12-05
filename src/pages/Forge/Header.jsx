@@ -37,7 +37,7 @@ const CenterChild = ({
         }`}
       >
         <div
-          className={`absolute z-10 h-full w-[36vw] overflow-hidden rounded-full outline outline-${mythSections[activeMyth]}-primary`}
+          className={`absolute z-10 h-symbol-primary w-symbol-primary overflow-hidden rounded-full outline outline-${mythSections[activeMyth]}-primary`}
         >
           <div
             style={{ height: `${height}%` }}

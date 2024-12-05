@@ -3,7 +3,6 @@ import { authenticate } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import assets from "../../assets/assets.json";
 import ReactHowler from "react-howler";
-import Captcha from "../../components/Captcha/Captcha";
 import {
   setAuthCookie,
   setLangCookie,
@@ -116,19 +115,19 @@ const IntroPage = (props) => {
   useEffect(() => {
     console.log(platform);
 
-    if (
-      platform === "macos" ||
-      platform === "windows" ||
-      platform === "tdesktop" ||
-      platform === "web" ||
-      platform === "weba" ||
-      platform === "unknown"
-    ) {
-      setDisableDestop(true);
-    } else {
-      setDisableDestop(false);
-      (async () => await auth())();
-    }
+    // if (
+    //   platform === "macos" ||
+    //   platform === "windows" ||
+    //   platform === "tdesktop" ||
+    //   platform === "web" ||
+    //   platform === "weba" ||
+    //   platform === "unknown"
+    // ) {
+    //   setDisableDestop(true);
+    // } else {
+    //   setDisableDestop(false);
+    //   (async () => await auth())();
+    // }
     if (platform === "ios") {
       document.body.style.position = "fixed";
       document.body.style.top = 0;
@@ -234,7 +233,7 @@ const IntroPage = (props) => {
                 />
               </div>
             </div>
-            <div className="absolute fade-in scale-110">
+            <div className="flex items-center justify-center h-screen absolute fade-in scale-110">
               <img
                 src={assets.uxui.tower}
                 alt="tower"
@@ -270,10 +269,3 @@ const IntroPage = (props) => {
 };
 
 export default IntroPage;
-{
-  /* {showCaptcha && (
-        <div className="absolute h-screen w-screen z-50">
-          <Captcha auth={auth} />
-        </div>
-      )} */
-}

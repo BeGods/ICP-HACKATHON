@@ -13,7 +13,6 @@ const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
   const { enableHaptic } = useContext(MyContext);
   const [toggleValue, setToggleValue] = useState(true);
 
-  //TODO: this can be improved
   return (
     <div
       className={`flex w-full justify-between absolute bottom-0 -mb-0.5 z-0 transition-all duration-250`}

@@ -195,6 +195,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+  -webkit-transform-style: preserve-3d; /* Ensures Safari handles 3D properly */
+  -webkit-backface-visibility: hidden; /* Improves rendering stability */
 }
 
 .jigsaw::before {
@@ -278,4 +280,16 @@ body {
 
 .react-phone-input-container .country-list .country {
   color: black; /* Change dropdown text color to black */
+}
+
+.disable-scroll-bar::-webkit-scrollbar {
+  overflow: auto;
+
+  /* For Firefox */
+  scrollbar-width: none;
+
+  /* For IE and Edge */
+  -ms-overflow-style: none;
+  width: 0;
+  height: 0;
 }

@@ -51,7 +51,7 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
         <div
           className={`flex items-center  mt-[10px] justify-between ${
             isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-          }  border border-black h-[30px] w-[180px] mx-auto  bg-${
+          }  border border-black h-button-primary w-button-primary mx-auto  bg-${
             mythSections[activeMyth]
           } z-50 text-white  rounded-primary`}
         >
@@ -66,15 +66,15 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
           </div>
           {showRedirect ? (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[3vw] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
             >
-              <Share2 size={"9vw"} color="white" />
+              <Share2 size={"7.5vw"} color="white" />
             </div>
           ) : (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[3vw] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
             >
-              <ThumbsUp size={"9vw"} color="white" />
+              <ThumbsUp size={"7.5vw"} color="white" />
             </div>
           )}
           {isInfo ? (

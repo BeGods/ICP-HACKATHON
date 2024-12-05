@@ -39,7 +39,7 @@ const Loader = (props) => {
             />
           </div>
         </div>
-        <div className="absolute  scale-110">
+        <div className="flex items-center justify-center absolute h-screen  scale-110">
           <img
             src={assets.uxui.tower}
             alt="tower"
