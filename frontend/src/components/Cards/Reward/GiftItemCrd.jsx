@@ -40,7 +40,7 @@ ${
         setIsClicked(false);
       }}
     >
-      <div className="w-[20%]  rounded-full flex justify-start items-center">
+      <div className="w-[22%] rounded-full flex justify-start items-center">
         <img
           src={
             item.partnerType == "playsuper"

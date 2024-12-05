@@ -93,7 +93,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
         </div>
       ) : currTut == 3 ? (
         <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
-          <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[20vh] max-h-[20vh] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col text-primary leading-9">
                 <div>Catch & hold</div>
@@ -117,7 +117,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
             onClick={handleClick}
             className="flex relative flex-grow font-symbols justify-end  w-full items-end z-[99] text-white "
           >
-            <div className="font-symbols text-white text-[14vw] mr-[10vw] mb-[2vh] scale-once">
+            <div className="font-symbols text-white text-[14vw] mr-[10vw] mb-[2vh] scale-once-hold">
               b
             </div>
           </div>
@@ -131,7 +131,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
         </div>
       ) : (
         <div className="fixed inset-0 backdrop-blur-[3px] flex flex-col items-center z-50">
-          <div className="h-[20%] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[20vh] max-h-[20vh] maximize-head flex justify-center items-center  top-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col text-primary leading-9">
                 <div>Pop Bubble</div>
@@ -204,12 +204,8 @@ export const QuestGuide = ({ handleClick }) => {
       </div>
       <div
         onClick={handleClick}
-        className="flex relative flex-grow font-symbols items-center z-[99] text-white "
-      >
-        <div className="font-symbols  text-white text-[40vw]  top-5 scale-point">
-          b
-        </div>
-      </div>
+        className="flex w-full pointer-events-auto cursor-pointer relative flex-grow font-symbols items-center z-[99] text-white "
+      ></div>
       <div className="h-[13%] maximize flex flex-col text-primary leading-9 justify-end items-center  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
         {t("tutorial.quests.desc")
           .split(" ")
@@ -265,12 +261,8 @@ export const BoosterGuide = ({ handleClick }) => {
       </div>
       <div
         onClick={handleClick}
-        className="flex relative flex-grow font-symbols items-center z-[99] text-white "
-      >
-        <div className="font-symbols  text-white text-[40vw] mt-32 scale-point">
-          b
-        </div>
-      </div>
+        className="flex pointer-events-auto cursor-pointer w-full relative flex-grow font-symbols items-center z-[99] text-white "
+      ></div>
       <div className="h-[13%] maximize flex flex-col justify-end items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
         <div className="flex flex-col justify-center items-center text-primary leading-9">
           {t("tutorial.boosters.desc")
@@ -412,12 +404,8 @@ export const ProfileGuide = ({ handleClick, currGuide, Toggles, Header }) => {
           </div>
           <div
             onClick={handleClick}
-            className="flex relative flex-grow items-center text-white"
-          >
-            <div className="font-symbols  text-white text-[40vw]  top-5 scale-point">
-              b
-            </div>
-          </div>
+            className="flex w-full  relative pointer-events-auto cursor-pointer flex-grow items-center text-white"
+          ></div>
           <div className="h-[13%] maximize flex justify-center items-end  bottom-0 px-10 w-screen bg-black text-white text-center uppercase">
             <div className="flex flex-col justify-center items-center text-primary break-words leading-9">
               {t("tutorial.profileTask.desc")}

@@ -1,3 +1,5 @@
+import { isSafari } from "../utils/device.info";
+
 // set auth
 export const setAuthCookie = async (tele, token) => {
   await tele.ready();
@@ -224,7 +226,7 @@ export const handleClickHaptic = (tele, isActive) => {
 // haptic on tap
 export const handleTapHaptic = (tele, platform, isActive, value) => {
   if (isActive) {
-    if (platform !== "ios") {
+    if (platform !== "ios" && !isSafari()) {
       window.navigator.vibrate(value);
     }
     if (platform === "ios") {

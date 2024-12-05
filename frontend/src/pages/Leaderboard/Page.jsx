@@ -226,7 +226,7 @@ const Leaderboard = (props) => {
             </h1>
             <h1>{t(`keywords.orbs`)}</h1>
           </div>
-          <div className="overflow-auto">
+          <div className="pb-[9vh] overflow-auto disable-scroll-bar">
             {leaderboard.slice(3).map((item, index) => (
               <div key={index} className="">
                 <LeaderboardItem
@@ -239,35 +239,37 @@ const Leaderboard = (props) => {
               </div>
             ))}
           </div>
-          <div className="flex border rounded-primary absolute bottom-0 bg-black w-full h-[8vh]">
-            <div className="flex text-white justify-center items-center w-[20%] h-full">
-              {userData.overallRank}
-            </div>
-            <div className="flex gap-3 items-center  w-full">
-              <div className="h-[35px] w-[35px]">
-                {userData.avatarUrl ? (
-                  <img
-                    src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
-                    alt="profile-image"
-                    className="rounded-full"
-                  />
-                ) : (
-                  <Avatar
-                    name={userData.telegramUsername}
-                    className="h-full w-full"
-                    profile={0}
-                    color={avatarColor}
-                  />
-                )}
+          <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
+            <div className="flex border rounded-primary bg-black justify-center w-full">
+              <div className="flex text-white justify-center items-center w-[20%] h-full">
+                {userData.overallRank}
               </div>
-              <h1 className="text-white">
-                {userData.telegramUsername.length > 20
-                  ? userData.telegramUsername.slice(0, 20)
-                  : userData.telegramUsername}
-              </h1>
-            </div>
-            <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
-              <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
+              <div className="flex gap-3 items-center  w-full">
+                <div className="h-[35px] w-[35px]">
+                  {userData.avatarUrl ? (
+                    <img
+                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      alt="profile-image"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <Avatar
+                      name={userData.telegramUsername}
+                      className="h-full w-full"
+                      profile={0}
+                      color={avatarColor}
+                    />
+                  )}
+                </div>
+                <h1 className="text-white">
+                  {userData.telegramUsername.length > 20
+                    ? userData.telegramUsername.slice(0, 20)
+                    : userData.telegramUsername}
+                </h1>
+              </div>
+              <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
+                <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
+              </div>
             </div>
           </div>
         </div>

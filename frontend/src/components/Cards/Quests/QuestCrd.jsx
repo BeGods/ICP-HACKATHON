@@ -35,7 +35,7 @@ const QuestCard = ({
           className="card__face card__face--front relative"
         >
           <div
-            className={`relative card-shadow-black ${
+            className={`relative h-full card-shadow-black ${
               isGuideActive && "z-[60]"
             }   ${
               quest.isQuestClaimed &&
