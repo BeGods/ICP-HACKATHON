@@ -1,4 +1,6 @@
 import {
+  getDailyActiveUsers,
+  getDailyUsers,
   getTotalUsers,
   migrateDb,
   ping,
@@ -19,6 +21,8 @@ router.get("/ping", ping);
 
 // get total routes
 router.get(`/${config.security.ADMIN_KEY}/totalUsers`, getTotalUsers);
+router.get(`/${config.security.ADMIN_KEY}/dailyUsers`, getDailyUsers);
+router.get(`/${config.security.ADMIN_KEY}/activeUsers`, getDailyActiveUsers);
 router.get(`/${config.security.ADMIN_KEY}/migrate`, migrateDb);
 
 // manually update leaderboard
