@@ -691,3 +691,55 @@ export const migrateDb = async (req, res) => {
     });
   }
 };
+
+export const getDailyUsers = async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const query = {
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    };
+
+    const count = await User.countDocuments(query);
+    res.status(200).json({ totalUsers: count });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const getDailyActiveUsers = async (req, res) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const query = {
+      lastLoginAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    };
+
+    const count = await User.countDocuments(query);
+    res.status(200).json({ totalUsers: count });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};

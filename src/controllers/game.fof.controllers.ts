@@ -326,6 +326,12 @@ export const getGameStats = async (req, res) => {
       updates["bonus.fof.streakBonus.isActive"] = true;
     }
 
+    if (!user.partOfGames || !Array.isArray(user.partOfGames)) {
+      updates.partOfGames = ["fof"];
+    } else if (!user.partOfGames.includes("fof")) {
+      updates.partOfGames = [...user.partOfGames, "fof"];
+    }
+
     // track daily login
     const now = new Date();
     now.setHours(0, 0, 0, 0);
