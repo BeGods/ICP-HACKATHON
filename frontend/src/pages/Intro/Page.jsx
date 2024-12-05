@@ -115,19 +115,19 @@ const IntroPage = (props) => {
   useEffect(() => {
     console.log(platform);
 
-    // if (
-    //   platform === "macos" ||
-    //   platform === "windows" ||
-    //   platform === "tdesktop" ||
-    //   platform === "web" ||
-    //   platform === "weba" ||
-    //   platform === "unknown"
-    // ) {
-    //   setDisableDestop(true);
-    // } else {
-    //   setDisableDestop(false);
-    //   (async () => await auth())();
-    // }
+    if (
+      platform === "macos" ||
+      platform === "windows" ||
+      platform === "tdesktop" ||
+      platform === "web" ||
+      platform === "weba" ||
+      platform === "unknown"
+    ) {
+      setDisableDestop(true);
+    } else {
+      setDisableDestop(false);
+      (async () => await auth())();
+    }
     if (platform === "ios") {
       document.body.style.position = "fixed";
       document.body.style.top = 0;
@@ -237,7 +237,7 @@ const IntroPage = (props) => {
               <img
                 src={assets.uxui.tower}
                 alt="tower"
-                className="fof-text-shadow"
+                className="fof-text-shadow -mt-6"
               />
             </div>
             <div className="flex flex-grow"></div>

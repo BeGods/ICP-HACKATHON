@@ -24,12 +24,11 @@ const Loader = (props) => {
         backgroundSize: "cover",
         height: "100vh",
         width: "100vw",
-        position: "fixed",
         top: 0,
         left: 0,
       }}
     >
-      <div className="flex flex-col h-screen ">
+      <div className="flex flex-col h-screen">
         <div className="flex justify-center items-center w-full leading-tight">
           <div className="relative z-[100]">
             <img
@@ -39,7 +38,7 @@ const Loader = (props) => {
             />
           </div>
         </div>
-        <div className="flex items-center justify-center absolute h-screen  scale-110">
+        <div className="absolute items-center justify-center h-screen scale-110">
           <img
             src={assets.uxui.tower}
             alt="tower"
