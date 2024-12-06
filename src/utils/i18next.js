@@ -7,6 +7,7 @@ import Thai from "../translations/th/translation.json";
 import Portugese from "../translations/pt/translation.json";
 import Russian from "../translations/ru/translation.json";
 import Fillipino from "../translations/fil/translation.json";
+import Myanmar from "../translations/my/translation.json";
 
 i18next.use(initReactI18next).init({
   lng: "en",
@@ -35,6 +36,9 @@ i18next.use(initReactI18next).init({
     },
     fil: {
       translation: Fillipino,
+    },
+    my: {
+      translation: Myanmar,
     },
   },
 });
