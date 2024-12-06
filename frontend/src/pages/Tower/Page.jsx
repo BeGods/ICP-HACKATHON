@@ -190,7 +190,7 @@ const Tower = () => {
         <div
           className={`absolute top-0 left-0 h-screen w-screen pointer-events-none`}
           style={{
-            backgroundImage: `url(/assets/uxui/fof.splash.png)`,
+            backgroundImage: `url(${assets.uxui.fofsplash})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "50% 0%",

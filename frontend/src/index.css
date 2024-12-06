@@ -144,38 +144,6 @@
 }
 
 @font-face {
-  font-family: "Celtic";
-  src: url("/assets/fonts/begods-celtic.woff2") format("woff2"),
-    url("/assets/fonts/begods-celtic.woff2") format("woff2");
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Egyptian";
-  src: url("/assets/fonts/begods-egyptian.woff2") format("woff2"),
-    url("/assets/fonts/begods-egyptian.woff2") format("woff2");
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Greek";
-  src: url("/assets/fonts/begods-greek.woff2") format("woff2"),
-    url("/assets/fonts/begods-greek.woff2") format("woff2");
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Norse";
-  src: url("/assets/fonts/begods-norse.woff2") format("woff2"),
-    url("/assets/fonts/begods-norse.woff2") format("woff2");
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "FOF";
   src: url("/assets/fonts/begods-forges.of.faith.woff2") format("woff2"),
     url("/assets/fonts/begods-forges.of.faith.woff2") format("woff2");
@@ -195,8 +163,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  -webkit-transform-style: preserve-3d; /* Ensures Safari handles 3D properly */
-  -webkit-backface-visibility: hidden; /* Improves rendering stability */
 }
 
 .jigsaw::before {
