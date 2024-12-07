@@ -38,7 +38,7 @@ const CenterChild = (props) => {
   const { platform, assets, enableHaptic } = useContext(MyContext);
 
   return (
-    <div className="flex absolute justify-center w-full z-20 top-0 -mt-1">
+    <div className="flex absolute justify-center w-full z-20 top-0 ">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -77,11 +77,11 @@ const GiftHeader = ({ partners }) => {
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
+        {/* <div
           className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
           {changeText ? t("sections.gifts") : t("sections.voucher")}
-        </div>
+        </div> */}
         <BottomChild partners={partners} />
         <CenterChild />
       </div>

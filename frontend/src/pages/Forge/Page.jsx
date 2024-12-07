@@ -258,6 +258,8 @@ const Forges = () => {
   };
 
   const handleUpdateStarStatus = async () => {
+    setCount(0);
+    setIsStarHolding(0);
     try {
       await claimBurst(
         {
@@ -267,7 +269,6 @@ const Forges = () => {
         authToken
       );
       trackEvent("action", "star_captured", "success");
-      setCount(0);
       setMythStates((prevState) => {
         return prevState.map((item, index) => {
           if (index === activeMyth) {
@@ -280,10 +281,8 @@ const Forges = () => {
           return item;
         });
       });
-
       console.log("Star claimed successfully.");
     } catch (error) {
-      setCount(0);
       console.log(error);
     }
   };
@@ -624,17 +623,6 @@ const Forges = () => {
         popupTime: 0,
         counter: 0,
       }));
-      setMythStates((prevData) => {
-        return prevData.map((item, index) => {
-          if (index === activeMyth) {
-            return {
-              ...item,
-              disabled: true,
-            };
-          }
-          return item;
-        });
-      });
       setTimeout(() => {
         setMythStates((prevData) => {
           return prevData.map((item, index) => {
@@ -828,6 +816,7 @@ const Forges = () => {
           setShowBlackOrb(0);
           setshowStarBoosters(0);
           isStarHold.current = false;
+          isStarHolding(0);
         }, 500);
       }, 9000);
     }

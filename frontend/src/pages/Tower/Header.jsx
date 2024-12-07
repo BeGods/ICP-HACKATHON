@@ -13,7 +13,7 @@ const CenterChild = ({ platform, myth }) => {
   const { setShowCard, assets, enableHaptic } = useContext(MyContext);
 
   return (
-    <div className="flex absolute justify-center w-full z-[60] top-0 -mt-1">
+    <div className="flex absolute justify-center w-full z-[60] top-0">
       {myth !== 0 ? (
         <div
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
@@ -163,7 +163,7 @@ const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow }) => {
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
+        {/* <div
           className={`text-sectionHead ${
             changeText
               ? `text-white text-black-lg-contour`
@@ -171,7 +171,7 @@ const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow }) => {
           } -mt-2.5 text-center top-0  uppercase absolute inset-0 z-[90] w-fit h-fit mx-auto`}
         >
           {changeText ? t("sections.tower") : t("mythologies.dark")}
-        </div>
+        </div> */}
         <BottomChild
           showGlow={showGlow}
           gameData={gameData}

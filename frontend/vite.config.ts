@@ -12,4 +12,8 @@ export default defineConfig({
   optimizeDeps: {
     include: ["konva"],
   },
+  server: {
+    host: true,
+    port: 5173,
+  },
 });

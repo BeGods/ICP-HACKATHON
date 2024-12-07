@@ -22,7 +22,7 @@ const QuestCard = ({
   const [buttonFlip, setButtonFlip] = useState(false);
 
   return (
-    <div className="w-[70%] mt-[7vh] relative flex flex-col gap-2 justify-center items-center mx-auto">
+    <div className="w-[70%] mt-[5vh] relative flex flex-col gap-2 justify-center items-center mx-auto">
       <div className={`card ${flipped ? "flipped" : ""}`}>
         <div
           onClick={(e) => {
