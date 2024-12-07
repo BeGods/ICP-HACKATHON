@@ -134,24 +134,28 @@ const Leaderboard = (props) => {
         />
       </div>
 
-      <div className="flex text-[8vw] mt-[6vh] absolute z-50 text-black font-symbols justify-between w-screen">
+      <div className="flex mt-[7vh] absolute z-50 text-black font-symbols justify-between w-screen">
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
             setSection(3);
           }}
-          className="w-1/6 px-3 rounded-r-full text-right bg-white"
+          className="flex p-1 justify-end items-center w-1/5 bg-white rounded-r-full h-[6vh]"
         >
-          0
+          <div className="flex justify-center items-center bg-black text-white h-[5.5vh] w-[5.5vh] text-[5vw] rounded-full">
+            0
+          </div>
         </div>
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
             setSection(0);
           }}
-          className="w-1/6 px-3 rounded-l-full text-left bg-white"
+          className="flex p-1 justify-start items-center w-1/5 bg-white rounded-l-full h-[6vh]"
         >
-          z
+          <div className="flex justify-center items-center bg-black text-white h-[5.5vh] w-[5.5vh] text-[5vw] rounded-full">
+            z
+          </div>
         </div>
       </div>
 

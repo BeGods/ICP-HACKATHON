@@ -78,7 +78,7 @@ const Loader = (props) => {
             </div>
           ))}
           <p
-            className={`font-fof text-black-contour text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+            className={`font-fof mt-4 text-black-contour text-white text-center w-full top-[75%] absolute text-lg font-medium`}
           >
             ⚜️“For I walk by faith, not by sight”⚜️
           </p>

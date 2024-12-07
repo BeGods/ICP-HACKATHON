@@ -271,7 +271,7 @@ const IntroPage = (props) => {
                 </div>
               ))}
               <p
-                className={`font-fof text-black-contour fade-in-intro text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+                className={`font-fof mt-4 text-black-contour fade-in-intro text-white text-center w-full top-[75%] absolute text-lg font-medium`}
               >
                 ⚜️“For I walk by faith, not by sight”⚜️
               </p>

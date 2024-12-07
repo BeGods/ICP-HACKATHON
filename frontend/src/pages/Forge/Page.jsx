@@ -60,25 +60,26 @@ const Forges = () => {
     setTriggerConf,
     enableHaptic,
   } = useContext(MyContext);
-  const initialState = gameData.mythologies.map((myth) => ({
-    orbs: myth.orbs,
-    shards: myth.shards,
-    minionTaps: 0,
-    energy: myth.energy,
-    energyLimit: myth.energyLimit,
-    currShards: 0,
-    burstlvl: myth.boosters.burstlvl,
-    shardslvl: myth.boosters.shardslvl,
-    shardsPaylvl: myth.boosters.shardsPaylvl,
-    automatalvl: myth.boosters.automatalvl,
-    isShardsClaimActive: myth.boosters.isShardsClaimActive,
-    automataStartTime: myth.boosters.automataStartTime,
-    isAutomataActive: myth.boosters.isAutomataActive,
-    shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
-    isBurstActive: myth.boosters.isBurstActive,
-    isEligibleForBurst: myth.isEligibleForBurst,
-    disabled: false,
-  }));
+  const initialState = gameData.mythologies.map((myth) => {
+    return {
+      orbs: myth.orbs,
+      shards: myth.shards,
+      minionTaps: 0,
+      energy: myth.energy,
+      energyLimit: myth.energyLimit,
+      currShards: 0,
+      burstlvl: myth.boosters.burstlvl,
+      shardslvl: myth.boosters.shardslvl,
+      automatalvl: myth.boosters.automatalvl,
+      isShardsClaimActive: myth.boosters.isShardsClaimActive,
+      automataStartTime: myth.boosters.automataStartTime,
+      isAutomataActive: myth.boosters.isAutomataActive,
+      shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
+      isBurstActive: myth.boosters.isBurstActive,
+      isEligibleForBurst: myth.isEligibleForBurst,
+      disabled: false,
+    };
+  });
   const [showBlackOrb, setShowBlackOrb] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
   const [mythStates, setMythStates] = useState(initialState);
@@ -623,6 +624,17 @@ const Forges = () => {
         popupTime: 0,
         counter: 0,
       }));
+      setMythStates((prevData) => {
+        return prevData.map((item, index) => {
+          if (index === activeMyth) {
+            return {
+              ...item,
+              disabled: true,
+            };
+          }
+          return item;
+        });
+      });
       setTimeout(() => {
         setMythStates((prevData) => {
           return prevData.map((item, index) => {
@@ -665,6 +677,7 @@ const Forges = () => {
             let newShards =
               newState[index].shards + newState[index].automatalvl;
             let newOrbs = newState[index].orbs;
+            let burstActive = newState[index].isBurstActive;
 
             // Logic to convert shards to orbs
             if (newShards >= 1000) {
@@ -678,8 +691,8 @@ const Forges = () => {
 
             if (newOrbs >= 1000) {
               newOrbs = newOrbs % 1000;
+              burstActive = true;
               handleUpdateMythology();
-              setShowBlackOrb(1);
               updateBlackOrbStatus();
             }
 
@@ -687,6 +700,7 @@ const Forges = () => {
               ...newState[index],
               shards: newShards,
               orbs: newOrbs,
+              isBurstActive: burstActive,
             };
 
             return newState;
@@ -827,7 +841,7 @@ const Forges = () => {
             if (index === activeMyth) {
               return {
                 ...item,
-                orbs: item.orbs + mythStates[activeMyth].burstlvl,
+                orbs: item.orbs + mythStates[activeMyth].burstlvl + 1,
               };
             }
             return item;
