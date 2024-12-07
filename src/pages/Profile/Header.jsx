@@ -2,9 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
 import { useTranslation } from "react-i18next";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
 
 const BottomChild = ({ userData, showGuide }) => {
-  const { rewards, setSection } = useContext(MyContext);
+  const { rewards, setSection, enableHaptic } = useContext(MyContext);
   const [showEffect, setShowEffect] = useState(true);
 
   useEffect(() => {
@@ -37,7 +40,11 @@ const BottomChild = ({ userData, showGuide }) => {
       </div>
       <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
         <div
+          style={{
+            "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+          }}
           onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
             setSection(5);
           }}
           className={`font-symbols  ${
@@ -47,7 +54,11 @@ const BottomChild = ({ userData, showGuide }) => {
           <span className={`${showEffect && "pulse-text"}`}>t</span>
         </div>
         <div
+          style={{
+            "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+          }}
           onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
             setSection(7);
           }}
           className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
@@ -60,15 +71,16 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard } = useContext(MyContext);
+  const { assets, platform, setShowCard, enableHaptic } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
 
   return (
-    <div className="flex absolute top-0 -mt-1 justify-center w-full">
+    <div className="flex absolute top-0 justify-center w-full">
       <div
         onClick={() => {
+          handleClickHaptic(tele, enableHaptic);
           setShowCard(
             <ProfileInfoCard
               close={() => {
@@ -121,7 +133,7 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
+        {/* <div
           className={`text-sectionHead -mt-2.5 text-center top-0 text-white text-black-lg-contour  absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
           {changeText ? (
@@ -134,7 +146,7 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
               ).slice(0, 12)}
             </div>
           )}
-        </div>
+        </div> */}
         <BottomChild
           userData={userData}
           handleClick={handleClick}

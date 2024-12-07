@@ -39,7 +39,7 @@ const BottomChild = ({ pieces, currIndex }) => {
 
 const CenterChild = ({ name, bubble, action }) => {
   return (
-    <div className="flex absolute justify-center w-full top-0 -mt-1 z-20">
+    <div className="flex absolute justify-center w-full top-0 z-20">
       {/* Orb */}
       <div
         className={`z-20 bg-white flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
@@ -75,11 +75,11 @@ const RedeemHeader = ({
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
+        {/* <div
           className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
           {changeText ? t("sections.gifts") : t("sections.voucher")}
-        </div>
+        </div> */}
         <BottomChild pieces={pieces} currIndex={currIndex} />
         <CenterChild bubble={bubble} name={name} action={action} />
       </div>

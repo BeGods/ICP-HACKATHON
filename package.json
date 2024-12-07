@@ -12,6 +12,7 @@
     "docker:build": "docker build . -t forges-of-faith-frontend"
   },
   "dependencies": {
+    "@tauri-apps/plugin-haptics": "^2.0.0",
     "@tonconnect/ui-react": "^2.0.6",
     "@vitejs/plugin-legacy": "^5.4.1",
     "axios": "^1.7.2",
@@ -36,6 +37,7 @@
     "use-image": "^1.1.1"
   },
   "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",

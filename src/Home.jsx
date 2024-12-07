@@ -191,7 +191,7 @@ const Home = () => {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 3000);
+        }, 4000);
       }
     } catch (error) {
       console.log(error);

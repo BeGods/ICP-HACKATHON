@@ -117,7 +117,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
             onClick={handleClick}
             className="flex relative flex-grow font-symbols justify-end  w-full items-end z-[99] text-white "
           >
-            <div className="font-symbols text-white text-[14vw] mr-[10vw] mb-[2vh] scale-once-hold">
+            <div className="font-symbols absolute text-white text-[20vw] mb-[2vh] move-hand">
               b
             </div>
           </div>
@@ -153,7 +153,8 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
             onClick={handleClick}
             className="flex w-full  relative flex-grow font-symbols justify-center items-center  ml-[10vw] z-[99] text-white "
           >
-            <div className="font-symbols text-white text-[20vw] mr-[6vw] scale-once-hold text-black-contour">
+            {/* <div className="absolute -mt-[8vh] mr-[10vw] rounded-full pulse-text h-[10vw] w-[10vw]"></div> */}
+            <div className="font-symbols text-white text-[20vw] -mt-[4vh] mr-[6vw] scale-once-hold  text-black-contour">
               b
             </div>
           </div>

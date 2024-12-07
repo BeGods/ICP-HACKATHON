@@ -9,8 +9,16 @@ import {
   validateSoundCookie,
 } from "../../helpers/cookie.helper";
 import { trackComponentView } from "../../utils/ga";
+import { mythologies, mythSymbols } from "../../utils/constants";
 
 const tele = window.Telegram?.WebApp;
+
+const orbPos = [
+  "mt-[45vw] mr-[32vw]",
+  "-ml-[52vw] -mt-[17vw]",
+  "-mt-[45vw] ml-[32vw]",
+  "mt-[18vw] ml-[52vw]",
+];
 
 const IntroPage = (props) => {
   const navigate = useNavigate();
@@ -31,7 +39,7 @@ const IntroPage = (props) => {
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
-        tele.addToHomeScreen();
+        // tele.addToHomeScreen();
         tele.lockOrientation();
         tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();
@@ -113,8 +121,6 @@ const IntroPage = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(platform);
-
     if (
       platform === "macos" ||
       platform === "windows" ||
@@ -233,12 +239,42 @@ const IntroPage = (props) => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-center h-screen absolute fade-in scale-110">
-              <img
-                src={assets.uxui.tower}
-                alt="tower"
-                className="fof-text-shadow -mt-6"
-              />
+            <div className="absolute -mt-6 fade-in-intro scale-110 flex justify-center items-center h-full w-full">
+              <div
+                className="relative flex justify-center items-center w-full h-full pointer-events-none"
+                style={{
+                  backgroundImage: `url(${assets.uxui.tower})`,
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              ></div>
+              {mythologies.map((item, index) => (
+                <div
+                  key={index}
+                  className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
+                >
+                  <div
+                    className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}
+                  >
+                    <img
+                      src={`${assets.uxui.baseorb}`}
+                      alt="orb"
+                      className={`filter-orbs-${item.toLowerCase()}`}
+                    />
+                    <span
+                      className={`absolute text-symbol-sm z-1 font-symbols text-white opacity-50 mt-1 text-black-sm-contour`}
+                    >
+                      <>{mythSymbols[item.toLowerCase()]}</>{" "}
+                    </span>
+                  </div>
+                </div>
+              ))}
+              <p
+                className={`font-fof text-black-contour fade-in-intro text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+              >
+                ⚜️“For I walk by faith, not by sight”⚜️
+              </p>
             </div>
             <div className="flex flex-grow"></div>
             <div

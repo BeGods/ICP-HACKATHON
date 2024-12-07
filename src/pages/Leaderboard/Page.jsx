@@ -9,6 +9,7 @@ import {
   timeRemainingForHourToFinishUTC,
 } from "../../helpers/leaderboard.helper";
 import { trackComponentView } from "../../utils/ga";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -24,7 +25,7 @@ const UserAvatar = ({ user, index }) => {
   });
 
   return (
-    <div className="absolute rounded-full w-[31vw] h-[31vw] bg-white top-0 -mt-[15vw]">
+    <div className="absolute rounded-full min-w-[31vw] min-h-[31vw] bg-white top-0 -mt-[15vw]">
       <div
         style={{
           boxShadow:
@@ -63,7 +64,8 @@ const UserAvatar = ({ user, index }) => {
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, assets, userData } = useContext(MyContext);
+  const { setSection, authToken, assets, userData, enableHaptic } =
+    useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const avatarColor = localStorage.getItem("avatarColor");
@@ -130,6 +132,27 @@ const Leaderboard = (props) => {
             backgroundPosition: "center center",
           }}
         />
+      </div>
+
+      <div className="flex text-[8vw] mt-[6vh] absolute z-50 text-black font-symbols justify-between w-screen">
+        <div
+          onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
+            setSection(3);
+          }}
+          className="w-1/6 px-3 rounded-r-full text-right bg-white"
+        >
+          0
+        </div>
+        <div
+          onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
+            setSection(0);
+          }}
+          className="w-1/6 px-3 rounded-l-full text-left bg-white"
+        >
+          z
+        </div>
       </div>
 
       {/* Active Tab */}
@@ -240,7 +263,7 @@ const Leaderboard = (props) => {
             ))}
           </div>
           <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
-            <div className="flex border rounded-primary bg-black justify-center w-full">
+            <div className="flex border border-gray-400 rounded-primary bg-black justify-center w-full">
               <div className="flex text-white justify-center items-center w-[20%] h-full">
                 {userData.overallRank}
               </div>

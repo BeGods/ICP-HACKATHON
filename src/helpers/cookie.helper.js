@@ -4,7 +4,7 @@ import { isSafari } from "../utils/device.info";
 export const setAuthCookie = async (tele, token) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.setItem("accessToken", token);
   } else {
     localStorage.setItem("accessToken", token);
@@ -15,7 +15,7 @@ export const setAuthCookie = async (tele, token) => {
 export const setLangCookie = async (tele, langCode) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.setItem("lang", langCode);
   } else {
     localStorage.setItem("lang", langCode);
@@ -26,7 +26,7 @@ export const setLangCookie = async (tele, langCode) => {
 export const setTutKey = async (tele, key, value) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.setItem(key, value);
   } else {
     localStorage.setItem(key, value);
@@ -37,7 +37,7 @@ export const setTutKey = async (tele, key, value) => {
 export const setCountryCookie = async (tele, countryCode) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.setItem("country_code", countryCode);
   } else {
     localStorage.setItem("country_code", countryCode);
@@ -48,7 +48,7 @@ export const setCountryCookie = async (tele, countryCode) => {
 export const setSoundStatus = async (tele, toRemove) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     if (toRemove) {
       tele.CloudStorage.removeItem("sound");
     } else {
@@ -63,7 +63,7 @@ export const setSoundStatus = async (tele, toRemove) => {
 export const validateSoundCookie = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
       tele.CloudStorage.getItem("sound", (err, item) => {
         if (err) {
@@ -92,7 +92,7 @@ export const validateSoundCookie = async (tele) => {
 export const validateCountryCode = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
       tele.CloudStorage.getItem("country_code", (err, item) => {
         if (err) {
@@ -121,7 +121,7 @@ export const validateCountryCode = async (tele) => {
 export const validateLang = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
       tele.CloudStorage.getItem("lang", (err, item) => {
         if (err) {
@@ -146,7 +146,7 @@ export const validateLang = async (tele) => {
 export const validateAuth = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
       tele.CloudStorage.getItem("accessToken", (err, item) => {
         if (err) {
@@ -171,7 +171,7 @@ export const validateAuth = async (tele) => {
 export const validateTutCookie = async (tele, key) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
       tele.CloudStorage.getItem("lang", (err, item) => {
         if (err) {
@@ -197,20 +197,25 @@ export const validateTutCookie = async (tele, key) => {
 // haptic on click
 export const fetchHapticStatus = async (tele) => {
   await tele.ready();
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
       tele.CloudStorage.getItem("disableHaptic", (err, item) => {
         if (err) {
           resolve(true);
         } else {
           if (item) {
-            resolve(true);
-          } else {
             resolve(false);
+          } else {
+            resolve(true);
           }
         }
       });
     });
+  } else {
+    const cookieItem = localStorage.getItem("disableHaptic");
+    if (cookieItem) {
+      return false;
+    }
   }
 
   return true;
@@ -219,7 +224,11 @@ export const fetchHapticStatus = async (tele) => {
 // haptic on click
 export const handleClickHaptic = (tele, isActive) => {
   if (isActive) {
-    tele.HapticFeedback.notificationOccurred("success");
+    if (tele.platform === "ios" || tele.platform === "android") {
+      tele.HapticFeedback.notificationOccurred("success");
+    } else {
+      window.navigator.vibrate(25);
+    }
   }
 };
 
@@ -239,7 +248,7 @@ export const handleTapHaptic = (tele, platform, isActive, value) => {
 export const setHapticCookie = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.setItem("disableHaptic", true);
   } else {
     localStorage.setItem("disableHaptic", true);
@@ -249,7 +258,7 @@ export const setHapticCookie = async (tele) => {
 export const deleteHapticCookie = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.removeItem("disableHaptic");
   } else {
     localStorage.removeItem("disableHaptic");
@@ -259,7 +268,7 @@ export const deleteHapticCookie = async (tele) => {
 export const clearAllGuideCookie = async (tele) => {
   await tele.ready();
 
-  if (tele.platform === "ios" || tele.android === "android") {
+  if (tele.platform === "ios" || tele.platform === "android") {
     tele.CloudStorage.removeItem("tutorial01");
     tele.CloudStorage.removeItem("tutorial02");
     tele.CloudStorage.removeItem("tutorial03");

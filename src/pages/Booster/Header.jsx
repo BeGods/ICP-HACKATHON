@@ -12,7 +12,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
   const { enableHaptic } = useContext(MyContext);
 
   return (
-    <div className="flex absolute justify-center w-full top-0 -mt-1 z-20">
+    <div className="flex absolute justify-center w-full top-0 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -86,7 +86,7 @@ const BoosterHeader = ({ activeMyth, showSymbol, gameData }) => {
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
+        {/* <div
           className={`text-sectionHead ${
             changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
           } -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
@@ -94,7 +94,7 @@ const BoosterHeader = ({ activeMyth, showSymbol, gameData }) => {
           {changeText
             ? t("sections.boosters")
             : t(`mythologies.${mythSections[activeMyth]}`)}
-        </div>
+        </div> */}
         <BottomChild activeMyth={activeMyth} gameData={gameData} />
         <CenterChild activeMyth={activeMyth} showSymbol={showSymbol} />
       </div>

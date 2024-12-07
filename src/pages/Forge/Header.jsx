@@ -20,7 +20,7 @@ const CenterChild = ({
   const { setSection, assets, enableHaptic } = useContext(MyContext);
 
   return (
-    <div className="flex absolute justify-center w-full z-20 top-0 -mt-1">
+    <div className="flex absolute justify-center w-full z-20 top-0">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -174,7 +174,7 @@ const ForgeHeader = ({
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
+        {/* <div
           className={`text-sectionHead ${minimize == 1 && "minimize-head"} ${
             minimize == 2 && "maximize-head"
           } ${
@@ -184,7 +184,7 @@ const ForgeHeader = ({
           {changeText
             ? t("sections.forges")
             : t(`elements.${elements[activeMyth]}`)}
-        </div>
+        </div> */}
         <BottomChild
           shards={shards}
           orbs={orbs}
