@@ -5,7 +5,7 @@ import {
   fetchProfilePhoto,
   fetchRewards,
 } from "./utils/api";
-import i18next, { use } from "i18next";
+import i18next from "i18next";
 import { getRandomColor } from "./helpers/randomColor.helper";
 import { MyContext } from "./context/context";
 import Quests from "./pages/Quest/Page";
@@ -32,6 +32,7 @@ import {
 } from "./helpers/cookie.helper";
 import OnboardPage from "./pages/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "./utils/ga";
+import { enqueueNotification } from "./utils/tauri";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -223,6 +224,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    // enqueueNotification();
     syncAllCookies();
   }, []);
 
