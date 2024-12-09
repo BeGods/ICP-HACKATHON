@@ -87,15 +87,15 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         >
           {userData.avatarUrl ? (
             <div
-              className="flex flex-col items-center cursor-pointer z-50 h-full mb-4 transition-all duration-500"
+              className="flex flex-col items-center cursor-pointer z-50 h-full mb-5 transition-all duration-500"
               style={{ minWidth: "70px" }}
             >
               <img
                 src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
                 alt="profile-image"
-                className={`w-[16.5vw] ${
+                className={`w-[17.5vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
-                  "scale-110 glow-icon-white"
+                  "scale-105 glow-icon-white"
                 } border border-black  rounded-full pointer-events-none`}
               />
             </div>

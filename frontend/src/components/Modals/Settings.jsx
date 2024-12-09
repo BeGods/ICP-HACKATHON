@@ -208,7 +208,7 @@ const SettingModal = ({ close }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
-      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col -mt-[2vh] card-shadow-white p-4">
+      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4">
         <IconBtn align={0} handleClick={handleClose} activeMyth={4} />
         <div className="flex w-full">
           <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">

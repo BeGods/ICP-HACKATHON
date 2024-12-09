@@ -16,6 +16,7 @@ import { ExternalLink } from "lucide-react";
 import confetti from "canvas-confetti";
 import { showToast } from "../../components/Toast/Toast";
 import { trackComponentView } from "../../utils/ga";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -158,6 +159,14 @@ const Redeem = (props) => {
       {/* Header */}
       <RedeemHeader
         currIndex={currIndex}
+        link={() => {
+          window.open(
+            currReward.partnerType == "playsuper"
+              ? `${currReward.metadata.campaignAssets.bannerView}`
+              : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
+            "_blank"
+          );
+        }}
         isCharity={currReward.isCharity}
         pieces={currReward.tokensCollected}
         name={currReward.metadata.brandName}
@@ -254,28 +263,12 @@ const Redeem = (props) => {
           </div>
           <div
             onClick={() => {
-              handleClickHapti(tele);
+              handleClickHaptic(tele);
               setFlipped((prev) => !prev);
             }}
             className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
           >
             <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
-            {showLink && (
-              <div
-                onClick={() => {
-                  window.open(
-                    currReward.partnerType == "playsuper"
-                      ? `${currReward.metadata.campaignAssets.bannerView}`
-                      : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
-                    "_blank"
-                  );
-                }}
-                className="flex z-50 justify-center items-center bottom-0 text-paperSub absolute w-full mb-7 uppercase underline"
-              >
-                <div>Checkout</div>
-                <ExternalLink />
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -304,3 +297,20 @@ const Redeem = (props) => {
 };
 
 export default Redeem;
+
+// {showLink && (
+//   <div
+//     onClick={() => {
+//       window.open(
+//         currReward.partnerType == "playsuper"
+//           ? `${currReward.metadata.campaignAssets.bannerView}`
+//           : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
+//         "_blank"
+//       );
+//     }}
+//     className="flex z-50 justify-center items-center bottom-0 text-paperSub absolute w-full mb-7 uppercase underline"
+//   >
+//     <div>Checkout</div>
+//     <ExternalLink />
+//   </div>
+// )}

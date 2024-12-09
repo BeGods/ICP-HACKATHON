@@ -173,7 +173,7 @@ export const validateTutCookie = async (tele, key) => {
 
   if (tele.platform === "ios" || tele.platform === "android") {
     return new Promise((resolve) => {
-      tele.CloudStorage.getItem("lang", (err, item) => {
+      tele.CloudStorage.getItem(key, (err, item) => {
         if (err) {
           resolve(false);
         } else {

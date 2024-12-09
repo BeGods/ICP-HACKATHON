@@ -37,12 +37,26 @@ const BottomChild = ({ pieces, currIndex }) => {
   );
 };
 
-const CenterChild = ({ name, bubble, action }) => {
+const CenterChild = ({ name, bubble, action, link }) => {
+  const [showEffect, setShowEffect] = useState(true);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
   return (
     <div className="flex absolute justify-center w-full top-0 z-20">
       {/* Orb */}
       <div
-        className={`z-20 bg-white flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
+        onClick={link}
+        className={`z-20 ${
+          showEffect && "pulse-text"
+        } bg-white flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  overflow-hidden relative`}
       >
         <img
           src={bubble}
@@ -61,6 +75,7 @@ const RedeemHeader = ({
   action,
   currIndex,
   isCharity,
+  link,
 }) => {
   const [changeText, setChangeText] = useState(true);
   const { t } = useTranslation();
@@ -81,7 +96,7 @@ const RedeemHeader = ({
           {changeText ? t("sections.gifts") : t("sections.voucher")}
         </div> */}
         <BottomChild pieces={pieces} currIndex={currIndex} />
-        <CenterChild bubble={bubble} name={name} action={action} />
+        <CenterChild link={link} bubble={bubble} name={name} action={action} />
       </div>
     </div>
   );
