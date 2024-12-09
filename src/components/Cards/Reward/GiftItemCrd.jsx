@@ -14,7 +14,7 @@ const GiftItemCrd = ({ item }) => {
       className={`flex gap-1 border
 ${
   isClicked ? `glow-button-white` : ""
-} rounded-primary h-[90px] w-full  bg-glass-black border text-white p-[15px]`}
+} rounded-primary h-[90px] w-full  bg-glass-black border text-white p-[10px]`}
       onClick={(e) => {
         e.preventDefault();
         handleClickHaptic(tele, enableHaptic);
@@ -40,7 +40,7 @@ ${
         setIsClicked(false);
       }}
     >
-      <div className="w-[22%] rounded-full flex justify-start items-center">
+      <div className="w-[27%] rounded-full flex justify-start items-center">
         <img
           src={
             item.partnerType == "playsuper"

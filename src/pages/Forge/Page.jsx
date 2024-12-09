@@ -400,11 +400,11 @@ const Forges = () => {
     let blackOrbPhaseBonus = 1;
 
     if (currPhase === 4) {
-      blackOrbPhaseBonus = 2;
+      blackOrbPhaseBonus += 1;
     }
     setGameData((prev) => ({
       ...prev,
-      blackOrbs: (prev.blackOrbs + 1) * blackOrbPhaseBonus,
+      blackOrbs: prev.blackOrbs + blackOrbPhaseBonus,
     }));
   };
 

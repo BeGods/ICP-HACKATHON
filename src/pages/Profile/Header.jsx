@@ -24,7 +24,7 @@ const BottomChild = ({ userData, showGuide }) => {
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full px-7">
         <div
-          className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="text-primary pl-headSides">
             {/* {formatTwoNums(rewards?.length ?? 0)} */}
@@ -41,7 +41,7 @@ const BottomChild = ({ userData, showGuide }) => {
       <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
         <div
           style={{
-            "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
@@ -55,7 +55,7 @@ const BottomChild = ({ userData, showGuide }) => {
         </div>
         <div
           style={{
-            "box-shadow": "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);

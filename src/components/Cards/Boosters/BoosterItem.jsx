@@ -26,7 +26,7 @@ const BoosterItem = ({
           : `border-${mythSections[activeMyth]}-primary`
       } text-white ${
         isActive && isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-      } rounded-primary h-[90px] w-full bg-glass-black p-[15px]`}
+      } rounded-primary h-[90px] w-full bg-glass-black p-[10px]`}
       onMouseDown={() => {
         setIsClicked(true);
       }}
@@ -62,7 +62,7 @@ const BoosterItem = ({
             booster === 6 &&
             !gameData.mythologies[activeMyth].isEligibleForBurst &&
             `text-gray-400`
-          } text-booster p-0 -mt-2 mr-2`}
+          } text-[55px] p-0 -mt-2 mr-2`}
         >
           {boosterIcon[booster]}
         </div>

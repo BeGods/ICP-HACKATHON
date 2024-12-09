@@ -99,7 +99,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
       className={`flex gap-1 border 
 ${
   isClicked ? `glow-button-white` : ""
-} rounded-primary h-[90px] w-full bg-glass-black p-[15px] `}
+} rounded-primary h-[90px] w-full bg-glass-black p-[10px] `}
       onMouseDown={() => {
         setIsClicked(true);
       }}
@@ -119,7 +119,7 @@ ${
         setIsClicked(false);
       }}
     >
-      <div className="w-[20%] flex justify-start items-center">
+      <div className="w-[22%] flex justify-start items-center">
         <img src={quest.type} alt="task-icon" className="w-fullb grayscale" />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
