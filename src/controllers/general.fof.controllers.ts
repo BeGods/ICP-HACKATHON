@@ -22,6 +22,8 @@ import {
 import milestones from "../models/milestones.models";
 import partners from "../models/partners.models";
 import { validCountries } from "../utils/constants/variables";
+import quest from "../models/quests.models";
+import dailyQuests from "../assets/quests.json";
 
 export const ping = async (req, res) => {
   try {
@@ -385,7 +387,7 @@ export const claimStreakBonus = async (req, res) => {
 export const getRewards = async (req, res) => {
   try {
     const userId = req.user._id;
-    const playusperCred = req.user.playsuper;
+    // const playusperCred = req.user.playsuper;
     const { country, lang } = req.query;
 
     let userMilestones = await milestones.findOne({ userId });
@@ -399,36 +401,36 @@ export const getRewards = async (req, res) => {
       .lean()
       .select("-__v -createdAt -updatedAt");
 
-    let playsuper = [];
+    // let playsuper = [];
     let activeCustomPartners = [];
     let claimedCustomPartners = [];
 
     // playsuper partners
-    if (validCountries.includes(country)) {
-      const playsuperRewards = await fetchPlaySuperRewards(
-        country,
-        lang,
-        playusperCred
-      );
+    // if (validCountries.includes(country)) {
+    //   const playsuperRewards = await fetchPlaySuperRewards(
+    //     country,
+    //     lang,
+    //     playusperCred
+    //   );
 
-      playsuper = playsuperRewards.map((reward) => {
-        const claimedReward = claimedRewards.find(
-          (claimed) => claimed.partnerId === reward.id
-        );
+    //   playsuper = playsuperRewards.map((reward) => {
+    //     const claimedReward = claimedRewards.find(
+    //       (claimed) => claimed.partnerId === reward.id
+    //     );
 
-        const tokensCollected = claimedReward
-          ? claimedReward.tokensCollected
-          : 0;
-        const isClaimed = claimedReward ? claimedReward.isClaimed : false;
+    //     const tokensCollected = claimedReward
+    //       ? claimedReward.tokensCollected
+    //       : 0;
+    //     const isClaimed = claimedReward ? claimedReward.isClaimed : false;
 
-        return {
-          ...reward,
-          partnerType: "playsuper",
-          tokensCollected,
-          isClaimed,
-        };
-      });
-    }
+    //     return {
+    //       ...reward,
+    //       partnerType: "playsuper",
+    //       tokensCollected,
+    //       isClaimed,
+    //     };
+    //   });
+    // }
 
     // inhlouse partners
     const ourPartners = activePartners.map((reward) => {
@@ -459,34 +461,35 @@ export const getRewards = async (req, res) => {
     );
 
     // manage number of parters
-    const playSuperItems = playsuper.slice(0, 9);
-    const remainingSlots = 12 - playSuperItems.length;
-    const partnerItems = activeCustomPartners.slice(0, remainingSlots);
+    // const playSuperItems = playsuper.slice(0, 9);
+    // const remainingSlots = 12 - playSuperItems.length;
+    // const partnerItems = activeCustomPartners.slice(0, remainingSlots);
+    const partnerItems = activeCustomPartners;
 
     // playsuper orders
-    const playsuperOrders = await fetchPlaysuperOrders(lang, playusperCred.key);
+    // const playsuperOrders = await fetchPlaysuperOrders(lang, playusperCred.key);
 
-    const claimedPlaysuperOrders = playsuperOrders
-      .filter((reward) =>
-        claimedRewards.some((claimed) => reward.rewardId === claimed.partnerId)
-      )
-      .map((reward) => {
-        const claimedReward = claimedRewards.find(
-          (claimed) => claimed.partnerId === reward.rewardId
-        );
+    // const claimedPlaysuperOrders = playsuperOrders
+    //   .filter((reward) =>
+    //     claimedRewards.some((claimed) => reward.rewardId === claimed.partnerId)
+    //   )
+    //   .map((reward) => {
+    //     const claimedReward = claimedRewards.find(
+    //       (claimed) => claimed.partnerId === reward.rewardId
+    //     );
 
-        return {
-          ...reward,
-          id: reward.rewardId,
-          partnerType: "playsuper",
-          tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
-          isClaimed: claimedReward ? claimedReward.isClaimed : false,
-        };
-      });
+    //     return {
+    //       ...reward,
+    //       id: reward.rewardId,
+    //       partnerType: "playsuper",
+    //       tokensCollected: claimedReward ? claimedReward.tokensCollected : 0,
+    //       isClaimed: claimedReward ? claimedReward.isClaimed : false,
+    //     };
+    //   });
 
     res.status(200).json({
-      rewards: [...playSuperItems, ...partnerItems],
-      claimedRewards: [...claimedPlaysuperOrders, ...claimedCustomPartners],
+      rewards: [...partnerItems],
+      claimedRewards: [...claimedCustomPartners],
       rewardsClaimedInLastHr: rewardsClaimedInLastHr,
       bubbleLastClaimed: userMilestones.rewards.updatedAt,
     });
@@ -734,6 +737,68 @@ export const getDailyActiveUsers = async (req, res) => {
 
     const count = await User.countDocuments(query);
     res.status(200).json({ totalUsers: count });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const updateDailyQuest = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const previousDate = new Date(currentDate);
+
+    // start and end of date
+    previousDate.setUTCDate(previousDate.getUTCDate() - 1);
+    const previousDayStart = new Date(
+      Date.UTC(
+        previousDate.getUTCFullYear(),
+        previousDate.getUTCMonth(),
+        previousDate.getUTCDate()
+      )
+    );
+    const previousDayEnd = new Date(
+      Date.UTC(
+        previousDate.getUTCFullYear(),
+        previousDate.getUTCMonth(),
+        previousDate.getUTCDate() + 1
+      )
+    );
+
+    // inactive previous quests
+    await quest.updateMany(
+      {
+        createdAt: {
+          $gte: previousDayStart,
+          $lt: previousDayEnd,
+        },
+      },
+      { $set: { status: "Inactive" } }
+    );
+
+    // curr date in given date format
+    const currentDayKey =
+      currentDate.toISOString().slice(8, 10) +
+      "-" +
+      currentDate.toISOString().slice(5, 7) +
+      "-" +
+      currentDate.toISOString().slice(2, 4);
+
+    // update quest
+    if (dailyQuests[currentDayKey]) {
+      const newQuest = {
+        ...dailyQuests[currentDayKey],
+        createdAt: new Date(),
+      };
+      await quest.create(newQuest);
+      console.log("Quests updated");
+    } else {
+      console.log("No quest available for today.");
+    }
   } catch (error) {
     console.log(error);
 

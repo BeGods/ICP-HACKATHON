@@ -31,6 +31,7 @@ router.get(
 
 // avatar
 router.get("/profile/avatar", authMiddleware, storeImage);
+
 // router.get("/test/script", runProfileScript);
 
 // announcements
