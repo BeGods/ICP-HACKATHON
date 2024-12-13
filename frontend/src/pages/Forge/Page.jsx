@@ -1187,7 +1187,8 @@ const Forges = () => {
             shards={shards}
             activeMyth={activeMyth}
             mythStates={mythStates}
-            minimize={minimize}
+            minimize={activeCard === "minion"}
+            maximize={activeCard === "minion-down"}
             glowBooster={glowBooster}
           />
           {/* TapArea */}
@@ -1372,7 +1373,7 @@ const Forges = () => {
                     activeCard={"minion"}
                     activeMyth={activeMyth}
                     mythData={mythStates[activeMyth]}
-                    disableIcon={showBooster}
+                    disableIcon={false}
                     closeCard={() => setShowCard(null)}
                     Button={
                       showBooster ? (

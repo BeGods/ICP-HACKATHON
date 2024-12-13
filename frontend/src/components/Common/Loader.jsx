@@ -26,8 +26,8 @@ const Loader = (props) => {
   return (
     <div
       style={{
-        background: `url(${assets.uxui.fofsplash})`,
-        backgroundPosition: "50% 0%",
+        background: `url(${assets.uxui.intro})`,
+        backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         height: "100vh",

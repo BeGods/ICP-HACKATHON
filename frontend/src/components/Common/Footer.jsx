@@ -4,13 +4,16 @@ import { footerIcons, mythSections } from "../../utils/constants";
 import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { useTranslation } from "react-i18next";
 
 const redirect = [0, 2, 4, 3];
+const sectionTitles = ["forges", "boosters", "tower", "profile"];
 
 const tele = window.Telegram?.WebApp;
 
 const FooterItem = ({ enableSound, icon, avatarColor }) => {
   const howlerRef = useRef(null);
+  const { t } = useTranslation();
   const {
     section,
     setSection,
@@ -63,8 +66,6 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             className={`font-symbols ${
               clickEffect && "click-effect"
             }  text-iconLg  ${
-              section === redirect[icon] && platform !== "ios" && "pb-[3px]"
-            } ${
               section === redirect[icon]
                 ? `${
                     activeMyth < 4 && section !== 4
@@ -76,6 +77,9 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
           >
             {footerIcons[icon]}
           </h1>
+          <h1 className="flex justify-center -mt-3 pb-[6px] uppercase">
+            {t(`sections.${sectionTitles[icon]}`)}
+          </h1>
         </div>
       ) : (
         <div
@@ -84,25 +88,26 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             playAudio();
             handleSectionChange(icon);
           }}
+          className="flex flex-col items-center mb-2"
         >
           {userData.avatarUrl ? (
             <div
-              className="flex flex-col items-center cursor-pointer z-50 h-full mb-5 transition-all duration-500"
-              style={{ minWidth: "70px" }}
+              className="flex flex-col items-center cursor-pointer z-50 h-full transition-all duration-500"
+              style={{ minWidth: "60px" }}
             >
               <img
                 src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
                 alt="profile-image"
-                className={`w-[17.5vw] transition-all duration-500 ${
+                className={`w-[16vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
-                  "scale-105 glow-icon-white"
+                  "glow-icon-white"
                 } border border-black  rounded-full pointer-events-none`}
               />
             </div>
           ) : (
             <>
               <div
-                className={`flex relative text-center mb-3.5 justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
+                className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
               >
                 <img
                   src={assets.uxui.baseorb}
@@ -117,10 +122,13 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
               </div>
             </>
           )}
+          <h1 className="flex justify-center -mb-0.5 uppercase">
+            {t(`sections.profile`)}
+          </h1>
         </div>
       )}
       {icon === 3 && (
-        <div className="absolute gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[7.5vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+        <div className="absolute pulse-text gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[9vh] mr-2 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
           {countOfInCompleteQuests}
         </div>
       )}

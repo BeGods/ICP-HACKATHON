@@ -9,13 +9,21 @@ import { MyContext } from "../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
-const GameHeader = ({ activeMyth, mythStates, glowBooster }) => {
+const GameHeader = ({
+  activeMyth,
+  mythStates,
+  glowBooster,
+  minimize,
+  maximize,
+}) => {
   const { enableHaptic } = useContext(MyContext);
   const [toggleValue, setToggleValue] = useState(true);
 
   return (
     <div
-      className={`flex w-full justify-between absolute bottom-0 -mb-0.5 z-0 transition-all duration-250`}
+      className={`flex ${minimize && "minimize"} ${
+        maximize && "maximize"
+      } w-full justify-between absolute bottom-0 -mb-0.5 z-0 transition-all duration-250`}
     >
       <div>
         {!mythStates[activeMyth].isShardsClaimActive &&

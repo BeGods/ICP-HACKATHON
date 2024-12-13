@@ -106,7 +106,7 @@ export default {
         paperHead: "7.65vw",
         paperSub: "6.5vw",
         icon: "50px",
-        iconLg: "15vw",
+        iconLg: "14vw",
       },
       width: {
         "icon-primary": "55px",
@@ -131,6 +131,7 @@ export default {
       },
       padding: {
         headSides: "5.5vw",
+        headSidesMd: "2vw",
       },
     },
   },
