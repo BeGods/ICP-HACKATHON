@@ -4,12 +4,10 @@ import {
   getTotalUsers,
   migrateDb,
   ping,
+  updateDailyQuest,
   updateRanks,
 } from "../controllers/general.fof.controllers";
-import {
-  createQuest,
-  deactivateQuest,
-} from "../controllers/quests.fof.controllers";
+import { createQuest } from "../controllers/quests.fof.controllers";
 import cron from "node-cron";
 import express from "express";
 import config from "../config/config";
@@ -29,7 +27,7 @@ router.get(`/${config.security.ADMIN_KEY}/migrate`, migrateDb);
 router.get(`/${config.security.ADMIN_KEY}/leaderboard`, updateRanks);
 
 // manually deactive quest
-router.get(`/${config.security.ADMIN_KEY}/update/quest`, deactivateQuest);
+// router.get(`/${config.security.ADMIN_KEY}/update/quest`, updateDailyQuest);
 
 // manually create quest
 router.post(

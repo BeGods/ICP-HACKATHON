@@ -1,4 +1,18 @@
 {
+  "11-12-24": {
+    "questName": "XXZHeptu's escape",
+    "description": "s1",
+    "type": "A01",
+    "link": ["1840768914629800323", "1840768914629800323"],
+    "mythology": "Celtic",
+    "status": "Active",
+    "requiredOrbs": {
+      "Celtic": 3,
+      "Egyptian": 1,
+      "Greek": 1,
+      "Norse": 1
+    }
+  },
   "14-12-24": {
     "questName": "Viriato's Betrayal",
     "description": "s1",
