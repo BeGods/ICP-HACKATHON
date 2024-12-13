@@ -10,14 +10,27 @@ const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ activeMyth, showSymbol }) => {
   const { enableHaptic } = useContext(MyContext);
+  const [showEffect, setShowEffect] = useState(true);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
   return (
-    <div className="flex absolute justify-center w-full top-0 z-20">
+    <div className="flex  absolute justify-center w-full top-0 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
           showSymbol();
         }}
-        className="h-full z-20"
+        className={`h-full z-20 transition-all duration-500 ${
+          showEffect && "pulse-text"
+        }`}
       >
         <Symbol myth={mythSections[activeMyth]} isCard={2} />
       </div>

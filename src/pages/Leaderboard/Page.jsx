@@ -134,15 +134,15 @@ const Leaderboard = (props) => {
         />
       </div>
 
-      <div className="flex mt-[1.5vh] absolute z-50 text-black font-symbols justify-between w-screen">
+      <div className="flex h-button-primary mt-[1.5vh] absolute z-50 text-black font-symbols justify-between w-screen">
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
             setSection(3);
           }}
-          className="flex slide-inside-left p-0.5 justify-end items-center w-1/5 bg-white rounded-r-full"
+          className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
         >
-          <div className="flex justify-center items-center bg-black text-white w-[10vw] h-[10vw]  text-[7vw] rounded-full">
+          <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
             0
           </div>
         </div>
@@ -151,16 +151,16 @@ const Leaderboard = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(0);
           }}
-          className="flex slide-inside-right p-0.5 justify-start items-center w-1/5 bg-white rounded-l-full"
+          className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
         >
-          <div className="flex justify-center items-center bg-black text-white w-[10vw] h-[10vw] text-[7vw] rounded-full">
+          <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
             z
           </div>
         </div>
       </div>
 
       {/* Active Tab */}
-      <div className="flex pt-1 flex-col  absolute top-0 w-full">
+      <div className="flex mt-[1.5vh] flex-col  absolute top-0 w-full">
         <div
           className={`flex z-50 transition-all p-0.5 duration-1000 ${
             activeTab ? "bg-white" : "bg-black"

@@ -9,7 +9,7 @@
         "forgefx": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.forge.fx.png",
         "forgebg": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.forge.png",
         "paper": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1160px-fof.footer.rock-X.png",
-        "intro": "/assets/uxui/intro.jpg",
+        "intro": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/fof.intro.jpg",
         "dial-fire": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.background.fire1.png",
         "dial-earth": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.background.earth1.png",
         "dial-water": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.background.water1.png",
