@@ -808,3 +808,27 @@ export const updateDailyQuest = async (req, res) => {
     });
   }
 };
+
+export const getHourlyUsers = async (req, res) => {
+  try {
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+    const query = {
+      createdAt: {
+        $gte: oneHourAgo,
+        $lte: now,
+      },
+    };
+
+    const count = await User.countDocuments(query);
+    res.status(200).json({ totalUsers: count });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
