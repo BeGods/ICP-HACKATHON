@@ -162,15 +162,28 @@ export const completeQuest = async (questData, accessToken) => {
   }
 };
 
-export const claimShardsBooster = async (mythologyName, accessToken) => {
+export const claimShardsBooster = async (mythologyName, adId, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/booster/claim/minion`;
+  const secretKey = import.meta.env.VITE_HASH_KEY;
+  const gameData = {
+    mythologyName: mythologyName.mythologyName,
+    adId: adId,
+  };
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
 
   try {
-    const response = await axios.post(url, mythologyName, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await axios.post(
+      url,
+      { data: hashedData },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
@@ -194,15 +207,37 @@ export const claimBurstBooster = async (mythologyName, accessToken) => {
   }
 };
 
-export const claimAutomataBooster = async (mythologyName, accessToken) => {
+export const claimAutomataBooster = async (
+  mythologyName,
+  adId,
+  accessToken
+) => {
   let url = `${import.meta.env.VITE_API_URL}/booster/claim/automata`;
+  const secretKey = import.meta.env.VITE_HASH_KEY;
+  const gameData = {
+    mythologyName: mythologyName.mythologyName,
+    adId: adId,
+  };
+
+  console.log(gameData);
+
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
+
+  console.log(hashedData);
 
   try {
-    const response = await axios.post(url, mythologyName, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await axios.post(
+      url,
+      { data: hashedData },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);

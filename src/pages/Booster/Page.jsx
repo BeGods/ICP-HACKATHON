@@ -17,6 +17,7 @@ import { useBoosterGuide } from "../../hooks/Tutorial";
 import BoosterCarousel from "../../components/Carousel/BoosterCarousel";
 import ReactHowler from "react-howler";
 import { trackComponentView, trackEvent } from "../../utils/ga";
+import { BoosterAdsBtn } from "../../components/AdsgramBtn/AdsgramBtn";
 
 const Boosters = () => {
   const { t } = useTranslation();

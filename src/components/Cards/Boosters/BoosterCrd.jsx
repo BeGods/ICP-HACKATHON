@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useCallback, useContext, useRef } from "react";
 import { mythologies, mythSections } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
@@ -14,6 +14,8 @@ import {
 } from "../../../utils/api";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { Clapperboard } from "lucide-react";
+import { useAdsgram } from "../../../hooks/Adsgram";
 
 const tele = window.Telegram?.WebApp;
 
@@ -40,15 +42,22 @@ const BoosterClaim = ({
     enableHaptic,
   } = useContext(MyContext);
   const disableRef = useRef(false);
+  const boostersData = gameData.mythologies[activeMyth].boosters;
 
-  const handleClaimShards = async () => {
+  const handleClaimShards = async (isAdPlayed) => {
     if (disableRef.current === false) {
       disableRef.current === true;
       const mythologyName = {
         mythologyName: mythologies[activeMyth],
       };
+      const adId = isAdPlayed ? process.env.VITE_AD_BOOSTER : null;
+
       try {
-        const response = await claimShardsBooster(mythologyName, authToken);
+        const response = await claimShardsBooster(
+          mythologyName,
+          adId,
+          authToken
+        );
         trackEvent("purchase", "claim_alchemist", "success");
         setGameData((prevData) => {
           const updatedData = {
@@ -124,14 +133,20 @@ const BoosterClaim = ({
     }
   };
 
-  const handleClaimAutomata = async () => {
+  const handleClaimAutomata = async (isAdPlayed) => {
     if (disableRef.current === false) {
       disableRef.current = true;
       const mythologyName = {
         mythologyName: mythologies[activeMyth],
       };
+
+      const adId = isAdPlayed ? process.env.VITE_AD_BOOSTER : null;
       try {
-        const response = await claimAutomataBooster(mythologyName, authToken);
+        const response = await claimAutomataBooster(
+          mythologyName,
+          adId,
+          authToken
+        );
         trackEvent("purchase", "claim_automata", "success");
 
         setGameData((prevData) => {
@@ -225,8 +240,53 @@ const BoosterClaim = ({
     return handleClaim();
   };
 
+  const onReward = useCallback(() => {
+    if (activeCard == "automata" && !isAutoPay) {
+      handleClaimAutomata(true);
+    }
+    if (activeCard == "minion") {
+      handleClaimShards(true);
+    }
+  }, []);
+  const onError = useCallback((result) => {
+    console.log(result);
+
+    showToast("ad_error");
+  }, []);
+
+  const showAd = useAdsgram({
+    blockId: process.env.VITE_AD_BOOSTER,
+    debug: true,
+    onReward,
+    onError,
+  });
+
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
+      {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
+        (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
+        <div
+          onClick={() => {
+            handleClickHaptic(tele);
+            showAd();
+          }}
+          className="absolute flex items-center justify-center top-0 w-screen pt-2"
+        >
+          <div className="flex gap-2 w-fit">
+            <div className="flex items-center justify-center">
+              <Clapperboard color="white" size={"8vw"} />
+            </div>
+            <div className="flex flex-col text-white">
+              <div className="font-semibold text-[4.5vw] text-gold">
+                Click Here to Watch an Ad
+              </div>
+              <div className="text-[4.25vw] -mt-1">
+                Claim your free booster!
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div
         onClick={handleButton}
         className="absolute  w-[72%] h-[50%] mt-10 cursor-pointer z-50 rounded-primary"
