@@ -55,7 +55,7 @@ export const validShardsBoosterReq = async (req, res, next) => {
     }
 
     // validate ad
-    if (adId && adId !== config.adsgram.AD_BOOSTER_ID) {
+    if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
       throw new Error("Invalid ad request.");
     }
 
@@ -82,10 +82,8 @@ export const validAutomataReq = async (req, res, next) => {
     const secretKey = config.security.HASH_KEY;
 
     const hashedData = req.body.data;
-    console.log(req.body);
 
     const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
-    console.log(decryptedData);
 
     const { mythologyName, adId } = JSON.parse(
       decryptedData.toString(CryptoJs.enc.Utf8)
@@ -121,7 +119,7 @@ export const validAutomataReq = async (req, res, next) => {
       }
     }
 
-    if (adId && adId !== config.adsgram.AD_BOOSTER_ID) {
+    if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
       throw new Error("Invalid ad request.");
     }
 
