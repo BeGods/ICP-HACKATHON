@@ -463,6 +463,24 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+    case "ad_error":
+      toast.error(
+        <ToastMesg
+          title={"Something went wrong."}
+          desc={"There was an issue loading the ad. Please try again."}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
       break;
     default:
       toast.info(
