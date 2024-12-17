@@ -455,8 +455,8 @@ export const getGameStats = async (req, res) => {
 export const claimShardsBooster = async (req, res) => {
   try {
     const userId = req.user;
-
     const userMyth = req.userMyth;
+    const deductValue = req.deductValue;
 
     userMyth.boosters.shardslvl += 1;
     userMyth.boosters.isShardsClaimActive = false;
@@ -465,7 +465,10 @@ export const claimShardsBooster = async (req, res) => {
     const updatedMythData = (await userMythologies
       .findOneAndUpdate(
         { userId, "mythologies.name": userMyth.name },
-        { $inc: { multiColorOrbs: -1 }, $set: { "mythologies.$": userMyth } },
+        {
+          $inc: { multiColorOrbs: deductValue },
+          $set: { "mythologies.$": userMyth },
+        },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt")) as Document;
@@ -496,7 +499,7 @@ export const claimShardsBooster = async (req, res) => {
 
 export const claimAutomata = async (req, res) => {
   try {
-    const { user, userMyth, mythData } = req;
+    const { user, userMyth, mythData, deductValue } = req;
     const now = Date.now();
     let enableAutoPay = mythData.autoPay;
 
@@ -522,7 +525,7 @@ export const claimAutomata = async (req, res) => {
       .findOneAndUpdate(
         { userId: user, "mythologies.name": userMyth.name },
         {
-          $inc: { multiColorOrbs: -1 },
+          $inc: { multiColorOrbs: deductValue },
           $set: {
             "mythologies.$": userMyth,
             "autoPay.isAutomataAutoPayEnabled":
