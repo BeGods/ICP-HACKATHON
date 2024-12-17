@@ -43,6 +43,8 @@ const BoosterClaim = ({
   } = useContext(MyContext);
   const disableRef = useRef(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
+  const adsgramId = import.meta.env.VITE_AD_BOOSTER;
+  console.log(adsgramId);
 
   const handleClaimShards = async (isAdPlayed) => {
     if (disableRef.current === false) {
@@ -50,7 +52,7 @@ const BoosterClaim = ({
       const mythologyName = {
         mythologyName: mythologies[activeMyth],
       };
-      const adId = isAdPlayed ? process.env.VITE_AD_BOOSTER : null;
+      const adId = isAdPlayed ? adsgramId : null;
 
       try {
         const response = await claimShardsBooster(
@@ -140,7 +142,7 @@ const BoosterClaim = ({
         mythologyName: mythologies[activeMyth],
       };
 
-      const adId = isAdPlayed ? process.env.VITE_AD_BOOSTER : null;
+      const adId = isAdPlayed ? adsgramId : null;
       try {
         const response = await claimAutomataBooster(
           mythologyName,
@@ -255,7 +257,7 @@ const BoosterClaim = ({
   }, []);
 
   const showAd = useAdsgram({
-    blockId: process.env.VITE_AD_BOOSTER,
+    blockId: adsgramId,
     debug: true,
     onReward,
     onError,
