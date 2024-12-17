@@ -44,7 +44,6 @@ const BoosterClaim = ({
   const disableRef = useRef(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
   const adsgramId = import.meta.env.VITE_AD_BOOSTER;
-  console.log(adsgramId);
 
   const handleClaimShards = async (isAdPlayed) => {
     if (disableRef.current === false) {
@@ -269,7 +268,7 @@ const BoosterClaim = ({
         (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
         <div
           onClick={() => {
-            handleClickHaptic(tele);
+            handleClickHaptic(tele, enableHaptic);
             showAd();
           }}
           className="absolute flex items-center justify-center top-0 w-screen pt-2"
