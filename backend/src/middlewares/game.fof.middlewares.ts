@@ -8,11 +8,18 @@ import userMythologies, {
   IUserMyths,
 } from "../models/mythologies.models";
 import { mythOrder } from "../utils/constants/variables";
+import config from "../config/config";
+import CryptoJs from "crypto-js";
 
 export const validShardsBoosterReq = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName } = req.body;
+    const secretKey = config.security.HASH_KEY;
+    const hashedData = req.body.data;
+    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
+    const { mythologyName, adId } = JSON.parse(
+      decryptedData.toString(CryptoJs.enc.Utf8)
+    );
 
     if (!mythologyName) {
       throw new Error("Mythology name is required.");
@@ -47,11 +54,21 @@ export const validShardsBoosterReq = async (req, res, next) => {
       }
     }
 
+    // validate ad
+    if (adId && adId !== config.adsgram.AD_BOOSTER_ID) {
+      throw new Error("Invalid ad request.");
+    }
+
     // Check sufficient orbs to claim booster
-    if (userMythologiesData.multiColorOrbs < 1) {
+    if (userMythologiesData.multiColorOrbs < 1 && !adId) {
       throw new Error("Insufficient multiColorOrbs to claim this booster.");
     }
 
+    if (adId) {
+      req.deductValue = 0;
+    } else {
+      req.deductValue = -1;
+    }
     req.userMyth = requestedMyth;
     next();
   } catch (error) {
@@ -62,7 +79,17 @@ export const validShardsBoosterReq = async (req, res, next) => {
 export const validAutomataReq = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName } = req.body;
+    const secretKey = config.security.HASH_KEY;
+
+    const hashedData = req.body.data;
+    console.log(req.body);
+
+    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
+    console.log(decryptedData);
+
+    const { mythologyName, adId } = JSON.parse(
+      decryptedData.toString(CryptoJs.enc.Utf8)
+    );
 
     if (!mythologyName) {
       throw new Error("Mythology name is required.");
@@ -94,15 +121,26 @@ export const validAutomataReq = async (req, res, next) => {
       }
     }
 
+    if (adId && adId !== config.adsgram.AD_BOOSTER_ID) {
+      throw new Error("Invalid ad request.");
+    }
+
     // Check sufficient orbs to claim automata
-    if (userMythologiesData.multiColorOrbs < 1) {
+    if (userMythologiesData.multiColorOrbs < 1 && !adId) {
       throw new Error("Insufficient multiColorOrbs to claim this automata.");
     }
 
+    if (adId) {
+      req.deductValue = 0;
+    } else {
+      req.deductValue = -1;
+    }
     req.userMyth = requestedMyth;
     req.mythData = userMythologiesData;
     next();
   } catch (error) {
+    console.log(error);
+
     res.status(400).json({ message: error.message });
   }
 };
