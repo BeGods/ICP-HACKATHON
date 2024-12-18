@@ -15,6 +15,12 @@ export const getLeaderboardSnapshot = async () => {
       {
         $group: {
           _id: "$userId",
+          mythologyOrbsData: {
+            $push: {
+              name: "$mythologies.name",
+              orbs: "$mythologies.orbs",
+            },
+          },
           totalMythologyOrbs: {
             $sum: {
               $ifNull: ["$mythologies.orbs", 0],
@@ -57,8 +63,12 @@ export const getLeaderboardSnapshot = async () => {
         $project: {
           userId: "$_id",
           telegramUsername: "$userDetails.telegramUsername",
-          profileImage: "$userDetails.profile.avatarUrl", // Adjusted this line
+          profileImage: "$userDetails.profile.avatarUrl",
+          country: "$userDetails.country",
+          blackOrbs: 1,
+          multiColorOrbs: 1,
           totalOrbs: 1,
+          mythologyOrbsData: 1,
           squadOwner: "$userDetails.squadOwner",
         },
       },
@@ -380,5 +390,33 @@ export const updatePartnersInLastHr = async (userMilestones) => {
     return userMilestones;
   } catch (error) {
     throw new Error(error.message);
+  }
+};
+
+export const sortRanksByCountry = async (users) => {
+  try {
+    const usersByCountry = {};
+
+    users.forEach((user) => {
+      if (user.country) {
+        const key = user.country;
+        if (!usersByCountry[key]) {
+          usersByCountry[key] = [];
+        }
+        usersByCountry[key].push(user);
+      }
+    });
+
+    Object.keys(usersByCountry).forEach((country) => {
+      const squadUsers = usersByCountry[country];
+      squadUsers.sort((a, b) => b.totalOrbs - a.totalOrbs);
+      squadUsers.forEach((user, index) => {
+        user.countryRank = index + 1;
+      });
+    });
+
+    return usersByCountry;
+  } catch (error) {
+    throw new Error(error);
   }
 };

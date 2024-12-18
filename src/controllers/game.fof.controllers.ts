@@ -369,10 +369,10 @@ export const getGameStats = async (req, res) => {
     const members = await Team.findOne({ owner: squadOwner });
     const memberData = {
       overallRank: userRank?.overallRank ?? 0,
-      squadRank: userRank?.squadRank ?? 0,
+      // squadRank: userRank?.squadRank ?? 0,
       totalOrbs: userRank?.totalOrbs ?? 0,
-      squadCount: members?.members.length ?? 0,
-      squadTotalOrbs: members?.totalOrbs ?? 0,
+      // squadCount: members?.members.length ?? 0,
+      // squadTotalOrbs: members?.totalOrbs ?? 0,
     };
 
     const userData = {

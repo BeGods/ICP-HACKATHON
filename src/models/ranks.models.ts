@@ -30,9 +30,22 @@ const rankSchema = new Schema(
       default: 1,
       required: true,
     },
+    countryRank: {
+      type: Number,
+      default: 1,
+      required: true,
+    },
     telegramUsername: { type: String, unique: true },
     profileImage: {
       type: String,
+    },
+    country: {
+      type: String,
+      default: "NA",
+    },
+    gameData: {
+      type: Object,
+      default: {},
     },
     totalOrbs: Number,
   },
