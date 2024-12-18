@@ -77,7 +77,8 @@
     "follow": "Follow",
     "select": "Select",
     "music": "Music",
-    "wallet": "Wallet"
+    "wallet": "Wallet",
+    "watch": "Watch"
   },
   "misc": {
     "name": "Name",

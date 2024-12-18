@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
-import { useTranslation } from "react-i18next";
 import JigsawButton from "../../components/Buttons/JigsawBtn";
 import JigsawImage from "../../components/Cards/Jigsaw/JigsawCrd";
 import {
@@ -12,7 +11,6 @@ import { claimPlaysuperReward } from "../../utils/api";
 import IconBtn from "../../components/Buttons/IconBtn";
 import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";
-import { ExternalLink } from "lucide-react";
 import confetti from "canvas-confetti";
 import { showToast } from "../../components/Toast/Toast";
 import { trackComponentView } from "../../utils/ga";
@@ -35,7 +33,6 @@ const Redeem = (props) => {
   } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
-  const [showLink, setShowLink] = useState(true);
   const index = rewards.findIndex((item) => item.id === activeReward.id);
   const [currIndex, setCurrIndex] = useState(index);
   const currReward = rewards[currIndex];
@@ -74,9 +71,19 @@ const Redeem = (props) => {
         setSection(11);
       }
     } else {
-      window.open(
-        `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`,
-        "_blank"
+      setShowCard(
+        <div
+          onClick={() => {
+            setShowCard(null);
+          }}
+          className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
+        >
+          <img
+            src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`}
+            alt="campaign"
+            className="w-full h-4/5"
+          />
+        </div>
       );
     }
   };
@@ -117,12 +124,6 @@ const Redeem = (props) => {
       setShowToggles(true);
     }, 300);
   }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setShowLink((prev) => !prev);
-    }, 400);
-  }, [flipped]);
 
   return (
     <div
@@ -272,6 +273,7 @@ const Redeem = (props) => {
           </div>
         </div>
       </div>
+
       {showToggles && (
         <>
           <ToggleLeft

@@ -1,31 +1,27 @@
-import React, { useCallback } from "react";
-import { useAdsgram } from "../../hooks/Adsgram";
+import { useCallback, useEffect, useRef } from "react";
+import { showToast } from "../Toast/Toast";
 
-export const BoosterAdsBtn = (props) => {
-  const onReward = useCallback(() => {
-    alert("Reward");
-  }, []);
-  const onError = useCallback((result) => {
-    alert(JSON.stringify(result, null, 4));
-  }, []);
+export const callAdsgram = ({ blockId, onReward }) => {
+  const AdControllerRef = useRef(null);
 
-  const showAd = useAdsgram({
-    blockId: "int-6256",
-    debug: true,
-    onReward,
-    onError,
-  });
+  // Initialize Adsgram only once
+  useEffect(() => {
+    AdControllerRef.current = window.Adsgram?.init({ blockId });
+  }, [blockId]);
 
-  return (
-    <button
-      className="bg-white text-black w-[8vw] h-[6vw]"
-      onClick={() => {
-        console.log("Hello");
+  const showAd = useCallback(async () => {
+    if (AdControllerRef.current) {
+      try {
+        await AdControllerRef.current.show();
+        onReward();
+      } catch (error) {
+        console.error("Adsgram Error:", error);
+        showToast("ad_error");
+      }
+    } else {
+      console.error("Adsgram is not initialized");
+    }
+  }, [onReward]);
 
-        showAd();
-      }}
-    >
-      Show Ad
-    </button>
-  );
+  return showAd;
 };

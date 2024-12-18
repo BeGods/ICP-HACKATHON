@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { MyContext } from "../../../context/context";
@@ -7,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
 import { validateCountryCode } from "../../../helpers/cookie.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { useAdsgram } from "../../../hooks/Adsgram";
 
 const tele = window.Telegram?.WebApp;
 
@@ -25,6 +32,20 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
   const disableClick = useRef(false);
+  const adsgramId = import.meta.env.VITE_AD_TASK_CLAIM;
+
+  const onReward = useCallback(() => {
+    setClaim(true);
+  }, []);
+  const onError = useCallback((result) => {
+    showToast("ad_error");
+  }, []);
+
+  const showAd = useAdsgram({
+    blockId: adsgramId,
+    onReward,
+    onError,
+  });
 
   const handleCopyLink = async () => {
     handleClickHaptic(tele, enableHaptic);
@@ -87,6 +108,8 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
             } else {
               showWallet();
             }
+          } else if (quest._id == "6762964c296034c3b3342548") {
+            showAd();
           } else {
             setClaim(true);
 

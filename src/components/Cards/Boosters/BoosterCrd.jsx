@@ -257,7 +257,6 @@ const BoosterClaim = ({
 
   const showAd = useAdsgram({
     blockId: adsgramId,
-    debug: true,
     onReward,
     onError,
   });
