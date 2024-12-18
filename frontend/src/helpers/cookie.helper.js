@@ -45,18 +45,62 @@ export const setCountryCookie = async (tele, countryCode) => {
 };
 
 // set sound
-export const setSoundStatus = async (tele, toRemove) => {
+export const setSoundStatus = async (tele, updatedValue) => {
   await tele.ready();
 
   if (tele.platform === "ios" || tele.platform === "android") {
-    if (toRemove) {
-      tele.CloudStorage.removeItem("sound");
+    if (!updatedValue) {
+      tele.CloudStorage.setItem("sound", "off");
     } else {
-      tele.CloudStorage.setItem("sound", false);
+      tele.CloudStorage.removeItem("sound");
     }
   } else {
-    localStorage.setItem("sound", toRemove);
+    if (!updatedValue) {
+      localStorage.setItem("sound", "off");
+    } else {
+      localStorage.removeItem("sound");
+    }
   }
+};
+
+// set gift ad
+export const setGiftAdStatus = async (tele, updatedValue) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    tele.CloudStorage.setItem("giftAd", updatedValue);
+  } else {
+    localStorage.setItem("giftAd", updatedValue);
+  }
+};
+
+// validate gift ad
+export const validateGiftAdStatus = async (tele) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    return new Promise((resolve) => {
+      tele.CloudStorage.getItem("giftAd", (err, item) => {
+        if (err) {
+          console.error(err);
+          resolve(0);
+        } else {
+          if (item) {
+            resolve(Number(item));
+          } else {
+            resolve(0);
+          }
+        }
+      });
+    });
+  } else {
+    const cookieItem = localStorage.getItem("giftAd");
+    if (cookieItem) {
+      return Number(cookieItem);
+    }
+  }
+
+  return 0;
 };
 
 // get auth
@@ -81,7 +125,9 @@ export const validateSoundCookie = async (tele) => {
   } else {
     const cookieItem = localStorage.getItem("sound");
     if (cookieItem) {
-      return cookieItem;
+      console.log(Boolean(item));
+
+      return Boolean(item);
     }
   }
 

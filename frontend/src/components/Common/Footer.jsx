@@ -22,7 +22,6 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     socialQuestData,
     assets,
     userData,
-    platform,
     enableHaptic,
   } = useContext(MyContext);
   const countOfInCompleteQuests = socialQuestData.filter(

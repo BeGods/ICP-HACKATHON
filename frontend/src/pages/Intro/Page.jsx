@@ -97,7 +97,7 @@ const IntroPage = (props) => {
 
   const checkSoundActive = async () => {
     const isSoundActive = await validateSoundCookie(tele);
-    setEnableSound(JSON.parse(isSoundActive));
+    setEnableSound(isSoundActive);
   };
 
   useEffect(() => {

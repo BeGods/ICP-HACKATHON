@@ -10,6 +10,7 @@ import {
 } from "../../helpers/leaderboard.helper";
 import { trackComponentView } from "../../utils/ga";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import UserInfoCard from "../../components/Cards/Info/UserInfoCrd";
 
 const tele = window.Telegram?.WebApp;
 
@@ -64,7 +65,7 @@ const UserAvatar = ({ user, index }) => {
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, assets, userData, enableHaptic } =
+  const { setSection, authToken, assets, userData, enableHaptic, setShowCard } =
     useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -217,6 +218,17 @@ const Leaderboard = (props) => {
 
                   return (
                     <div
+                      onClick={() => {
+                        handleClickHaptic(tele, enableHaptic);
+                        setShowCard(
+                          <UserInfoCard
+                            close={() => {
+                              setShowCard(null);
+                            }}
+                            userData={item}
+                          />
+                        );
+                      }}
                       key={index}
                       style={{
                         boxShadow:
@@ -255,7 +267,21 @@ const Leaderboard = (props) => {
           </div>
           <div className="pb-[9vh] overflow-auto disable-scroll-bar">
             {leaderboard.slice(3).map((item, index) => (
-              <div key={index} className="">
+              <div
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  setShowCard(
+                    <UserInfoCard
+                      close={() => {
+                        setShowCard(null);
+                      }}
+                      userData={item}
+                    />
+                  );
+                }}
+                key={index}
+                className=""
+              >
                 <LeaderboardItem
                   key={index}
                   rank={index + 4}

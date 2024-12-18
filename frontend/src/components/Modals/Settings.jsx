@@ -76,8 +76,12 @@ const SettingModal = ({ close }) => {
     setEnableSound((prev) => {
       const newValue = !prev;
       if (newValue) {
+        console.log("Yes set to true: ON");
+
         setSoundStatus(tele, true);
       } else {
+        console.log("Yes set to false: OFF");
+
         setSoundStatus(tele, false);
       }
       return newValue;
@@ -247,7 +251,7 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
+        {/* <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
           <div className="flex justify-start -ml-3">
             <Wallet />
           </div>
@@ -268,7 +272,7 @@ const SettingModal = ({ close }) => {
               <ChevronRight size={"20px"} />
             </div>
           )}
-        </div>
+        </div> */}
 
         <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
           <div className="flex justify-start -ml-3">

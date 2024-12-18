@@ -1,21 +1,41 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { mythSections } from "../../utils/constants";
 import { CornerUpLeft, CornerUpRight, Download, ThumbsUp } from "lucide-react";
+import { useAdsgram } from "../../hooks/Adsgram";
+import { showToast } from "../Toast/Toast";
 
 const JigsawButton = ({
   activeMyth,
   handleNext,
   handlePrev,
-  t,
   faith,
   disableLeft,
   handleClick,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
+  const adsgramId = import.meta.env.VITE_AD_VOUCHER_CLAIM;
+
+  const onReward = useCallback(() => {
+    handleClick();
+  }, []);
+  const onError = useCallback((result) => {
+    console.log(result);
+    showToast("ad_error");
+  }, []);
+
+  const showAd = useAdsgram({
+    blockId: adsgramId,
+    onReward,
+    onError,
+  });
 
   return (
     <div
-      onClick={handleClick}
+      onClick={() => {
+        if (faith == 12) {
+          showAd();
+        }
+      }}
       onMouseDown={() => {
         setIsClicked(true);
       }}
