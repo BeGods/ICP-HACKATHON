@@ -3,6 +3,7 @@ import {
   getLeaderboard,
   claimJoiningBonus,
   claimStreakBonus,
+  fetchUserData,
 } from "../controllers/general.fof.controllers";
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
@@ -17,6 +18,7 @@ const router = express.Router();
 
 // leaderboard
 router.get("/leaderboard", authMiddleware, getLeaderboard);
+router.get("/user", authMiddleware, fetchUserData);
 
 // bonus
 router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);
