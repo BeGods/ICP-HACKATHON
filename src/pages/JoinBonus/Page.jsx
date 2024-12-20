@@ -85,20 +85,6 @@ const JoinBonus = (props) => {
 
   return (
     <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
-      <div
-        className="absolute animate-spin-slow scale-150 z-0"
-        style={{
-          background: `url(${assets.uxui.startlight})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "contain",
-          backgroundPosition: "center center",
-          height: "100vh",
-          width: "100vw",
-          position: "fixed",
-          top: 0,
-          left: 0,
-        }}
-      ></div>
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
