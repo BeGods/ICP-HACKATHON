@@ -251,8 +251,6 @@ export const updateRanks = async (req, res) => {
     );
 
     console.log("Leaderboard updated successfully.");
-
-    res.status(200).json({ message: "Leaderboard updated successfully." });
   } catch (error) {
     console.error("Error during updateRanks:", error);
     res.status(500).json({
