@@ -219,14 +219,10 @@ export const claimAutomataBooster = async (
     adId: adId,
   };
 
-  console.log(gameData);
-
   const hashedData = CryptoJS.AES.encrypt(
     JSON.stringify(gameData),
     secretKey
   ).toString();
-
-  console.log(hashedData);
 
   try {
     const response = await axios.post(

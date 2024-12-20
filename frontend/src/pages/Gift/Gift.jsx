@@ -7,18 +7,11 @@ import {
 } from "../../components/Common/SectionToggles";
 import GiftCarousel from "../../components/Carousel/GiftCarousel";
 import { trackComponentView } from "../../utils/ga";
-import {
-  setGiftAdStatus,
-  validateGiftAdStatus,
-} from "../../helpers/cookie.helper";
-import { callAdsgram } from "../../components/AdsgramBtn/AdsgramBtn";
-
-const tele = window.Telegram?.WebApp;
 
 const Gift = () => {
   const { rewards, assets, setSection } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
-  const adsgramId = import.meta.env.VITE_AD_GIFT_CLAIM;
+  // const adsgramId = import.meta.env.VITE_AD_GIFT_CLAIM;
 
   useEffect(() => {
     trackComponentView("gifts");
@@ -27,30 +20,30 @@ const Gift = () => {
     }, 300);
   }, []);
 
-  const onReward = async () => {
-    const lastValue = await validateGiftAdStatus(tele);
-    setGiftAdStatus(tele, lastValue + 1);
-  };
+  // const onReward = async () => {
+  //   const lastValue = await validateGiftAdStatus(tele);
+  //   setGiftAdStatus(tele, lastValue + 1);
+  // };
 
-  const showAd = callAdsgram({
-    blockId: adsgramId,
-    onReward,
-  });
+  // const showAd = callAdsgram({
+  //   blockId: adsgramId,
+  //   onReward,
+  // });
 
-  const checkGiftAdCookie = async () => {
-    const lastValue = await validateGiftAdStatus(tele);
+  // const checkGiftAdCookie = async () => {
+  //   const lastValue = await validateGiftAdStatus(tele);
 
-    // not even
-    if (lastValue % 2 !== 0) {
-      showAd();
-    } else {
-      setGiftAdStatus(tele, lastValue + 1);
-    }
-  };
+  //   // not even
+  //   if (lastValue % 2 !== 0) {
+  //     showAd();
+  //   } else {
+  //     setGiftAdStatus(tele, lastValue + 1);
+  //   }
+  // };
 
-  useEffect(() => {
-    checkGiftAdCookie();
-  }, []);
+  // useEffect(() => {
+  //   checkGiftAdCookie();
+  // }, []);
 
   return (
     <div

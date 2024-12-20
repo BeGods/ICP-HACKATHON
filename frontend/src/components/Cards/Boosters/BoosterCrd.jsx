@@ -346,11 +346,15 @@ const BoosterClaim = ({
                   height: "100%",
                   width: "100%",
                 }}
-                className={`rounded-b-primary filter-paper-${mythSections[activeMyth]}`}
+                className={`rounded-b-primary filter-paper-${
+                  !isAutoPay && mythSections[activeMyth]
+                }`}
               />
               <div
                 className={`flex justify-center ${
-                  isAutoPay ? "gradient-multi" : "text-white  glow-text-black"
+                  isAutoPay
+                    ? "gradient-icon-multi"
+                    : "text-white  glow-text-black"
                 } text-[60px] w-full h-full items-center px-3 z-10 font-symbols`}
               >
                 {activeCard === "automata"

@@ -84,6 +84,13 @@
     #ffb800 78%,
     #ff0000 100%
   );
+  --multi-linear-icon-gradient: linear-gradient(
+    90deg,
+    #001aff 0%,
+    #42ff00 25%,
+    #ffb800 50%,
+    #ff0000 75%
+  );
 
   /* Filters for Backgrounds */
   --filter-celtic-background: brightness(100%) invert(5%) sepia(12%)
@@ -189,6 +196,15 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+.gradient-icon-multi {
+  background: var(--multi-linear-icon-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  background-size: 200%;
 }
 
 .border-multiColor {
