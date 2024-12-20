@@ -1,884 +1,904 @@
 {
-  "11-12-24": {
-    "questName": "XXZHeptu's escape",
-    "description": "s1",
-    "type": "A01",
-    "link": ["1840768914629800323", "1840768914629800323"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Egyptian": 1,
-      "Greek": 1,
-      "Norse": 1
-    }
-  },
-  "14-12-24": {
-    "questName": "Viriato's Betrayal",
-    "description": "s1",
-    "type": "A02",
-    "link": ["1841402980395880755", "1841402980395880755"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 1,
-      "MultiOrb": 2,
-      "Egyptian": 1
-    }
-  },
-  "15-12-24": {
-    "questName": "Hathor's Charm",
-    "description": "s1",
-    "type": "A02",
-    "link": ["1841735160514916855", "1841735160514916855"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "16-12-24": {
-    "questName": "WATER NYMPHS",
-    "description": "s1",
-    "type": "A02",
-    "link": ["1842097534379913640", "1842097534379913640"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 2,
-      "MultiOrb": 1,
-      "Egyptian": 2
-    }
-  },
-  "17-12-24": {
-    "questName": "Twilight",
-    "description": "s1",
-    "type": "A02",
-    "link": ["1842459842646012393", "1842459842646012393"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 2,
-      "Greek": 2,
-      "MultiOrb": 2
-    }
-  },
-  "18-12-24": {
-    "questName": "Tristan & Iseult",
-    "description": "s1",
-    "type": "A03",
-    "link": ["1842822352012234804", "1842822352012234804"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 2,
-      "Norse": 3,
-      "Egyptian": 1
-    }
-  },
-  "19-12-24": {
-    "questName": "NILE'S MIRACLE",
-    "description": "s1",
-    "type": "A03",
-    "link": ["1843184548462350745", "1843184548462350745"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 2,
-      "Greek": 2,
-      "Celtic": 2
-    }
-  },
-  "20-12-24": {
-    "questName": "Achilles' Fury",
-    "description": "s1",
-    "type": "A03",
-    "link": ["1843546932624372017", "1843546932624372017"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Norse": 2
-    }
-  },
-  "21-12-24": {
-    "questName": "A Valkyrie Prison",
-    "description": "s1",
-    "type": "A03",
-    "link": ["1843909342828925318", "1843909342828925318"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Egyptian": 1,
-      "Celtic": 1,
-      "Greek": 1
-    }
-  },
-  "22-12-24": {
-    "questName": "The Sad Princess",
-    "description": "s1",
-    "type": "A04",
-    "link": ["1844271750529401244", "1844271750529401244"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Egyptian": 1,
-      "MultiOrb": 1
-    }
-  },
-  "23-12-24": {
-    "questName": "ISIS PROCESSION",
-    "description": "s1",
-    "type": "A04",
-    "link": ["1844634134200656300", "1844634134200656300"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Greek": 1,
-      "MultiOrb": 2
-    }
-  },
-  "24-12-24": {
-    "questName": "Pandora's Box",
-    "description": "s1",
-    "type": "A04",
-    "link": ["1844996516538110192", "1844996516538110192"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Egyptian": 1,
-      "MultiOrb": 1
-    }
-  },
-  "25-12-24": {
-    "questName": "Valkyries' Touch",
-    "description": "s1",
-    "type": "A04",
-    "link": ["1845358998104535394", "1845358998104535394"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Greek": 1,
-      "MultiOrb": 1
-    }
-  },
-  "26-12-24": {
-    "questName": "Brigid's Imbolc",
-    "description": "s1",
-    "type": "A05",
-    "link": ["1845721405335183439", "1845721405335183439"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 2,
-      "Greek": 1,
-      "Norse": 1,
-      "Egyptian": 1
-    }
-  },
-  "27-12-24": {
-    "questName": "Shezmus' Perfume I",
-    "description": "s1",
-    "type": "A05",
-    "link": ["1846083762632753370", "1846083762632753370"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Norse": 1
-    }
-  },
-  "28-12-24": {
-    "questName": "Icarus & Daedalus",
-    "description": "s1",
-    "type": "A05",
-    "link": ["1846083762632753370", "1846083762632753370"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Norse": 2,
-      "Egyptian": 2
-    }
-  },
-  "29-12-24": {
-    "questName": "Vinland (America)",
-    "description": "s1",
-    "type": "A05",
-    "link": ["1846446180617642112", "1846446180617642112"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 2,
-      "Greek": 2,
-      "Egyptian": 2
-    }
-  },
-  "30-12-24": {
-    "questName": "Summer Fantasy",
-    "description": "s1",
-    "type": "A06",
-    "link": ["1846808571532480796", "1846808571532480796"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "31-12-24": {
-    "questName": "Cleopatra's Tomb",
-    "description": "s1",
-    "type": "A06",
-    "link": ["1847170777327480892", "1847170777327480892"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 2,
-      "Celtic": 2,
-      "MultiOrb": 2
-    }
-  },
-  "01-01-25": {
-    "questName": "PROMETHEUS' GIFT",
-    "description": "s1",
-    "type": "A06",
-    "link": ["1847533164551368712", "1847533164551368712"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 2,
-      "MultiOrb": 2,
-      "Celtic": 2
-    }
-  },
-  "02-01-25": {
-    "questName": "Iceland Discovery",
-    "description": "s1",
-    "type": "A06",
-    "link": ["1847895700387807584", "1847895700387807584"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 2,
-      "Egyptian": 2,
-      "MultiOrb": 2
-    }
-  },
-  "03-01-24": {
-    "questName": "Lir Clann",
-    "description": "s1",
-    "type": "B01",
-    "link": ["1848258134717972694", "1848258134717972694"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "04-01-25": {
-    "questName": "Shezmus' Perfume II",
-    "description": "s1",
-    "type": "B01",
-    "link": ["1848620521987920197", "1848620521987920197"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Norse": 2,
-      "Greek": 2,
-      "Celtic": 2
-    }
-  },
-  "05-01-25": {
-    "questName": "Oracle Of Delphia",
-    "description": "s1",
-    "type": "B01",
-    "link": ["1848982843969450084", "1848982843969450084"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Norse": 1,
-      "Celtic": 1,
-      "Egyptian": 1
-    }
-  },
-  "06-01-25": {
-    "questName": "A Vikings Raid",
-    "description": "s1",
-    "type": "B01",
-    "link": ["1849345136074838253", "1849345136074838253"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Egyptian": 2
-    }
-  },
-  "07-01-24": {
-    "questName": "Aengus' Lover",
-    "description": "s1",
-    "type": "B02",
-    "link": ["1849707530554921238", "1849707530554921238"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 2,
-      "MultiOrb": 2,
-      "Norse": 2
-    }
-  },
-  "08-01-25": {
-    "questName": "Bastet's Cult",
-    "description": "s1",
-    "type": "B02",
-    "link": ["1850069979648995447", "1850069979648995447"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Celtic": 2,
-      "MultiOrb": 2
-    }
-  },
-  "09-01-25": {
-    "questName": "Hephaestus' Fate",
-    "description": "s1",
-    "type": "B02",
-    "link": ["1850447427007852814", "1850447427007852814"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Celtic": 1,
-      "MultiOrb": 1
-    }
-  },
-  "10-01-25": {
-    "questName": "Vikings Funeral",
-    "description": "s1",
-    "type": "B02",
-    "link": ["1850809827112464578", "1850809827112464578"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 2,
-      "Greek": 2,
-      "MultiOrb": 2
-    }
-  },
-  "11-01-24": {
-    "questName": "SLEEPING BEAUTY",
-    "description": "s1",
-    "type": "B03",
-    "link": ["1851172210314002583", "1851172210314002583"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Egyptian": 2
-    }
-  },
-  "12-01-25": {
-    "questName": "Pharao's Dream I",
-    "description": "s1",
-    "type": "B03",
-    "link": ["1851534599643451760", "1851534599643451760"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Greek": 2
-    }
-  },
-  "13-01-25": {
-    "questName": "GOLDEN FLEECE",
-    "description": "s1",
-    "type": "B03",
-    "link": ["1851896950322294876", "1851896950322294876"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Egyptian": 2
-    }
-  },
-  "14-01-25": {
-    "questName": "The King's Ding",
-    "description": "s1",
-    "type": "B03",
-    "link": ["1852259520031900157", "1852259520031900157"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Greek": 2
-    }
-  },
-  "15-01-24": {
-    "questName": "Leanan Sidhe",
-    "description": "s1",
-    "type": "B04",
-    "link": ["1852621906991583499", "1852621906991583499"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Greek": 1,
-      "MultiOrb": 1
-    }
-  },
-  "16-01-25": {
-    "questName": "Maahes' Cult",
-    "description": "s1",
-    "type": "B04",
-    "link": ["1852984295456927827", "1852984295456927827"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 1,
-      "Greek": 1,
-      "MultiOrb": 3
-    }
-  },
-  "17-01-25": {
-    "questName": "Odysseus' Sirens",
-    "description": "s1",
-    "type": "B04",
-    "link": ["1853346501419733150", "1853346501419733150"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 1,
-      "MultiOrb": 2,
-      "Egyptian": 1,
-      "Celtic": 1
-    }
-  },
-  "18-01-25": {
-    "questName": "SVOLD'S BATTLE I",
-    "description": "s1",
-    "type": "B04",
-    "link": ["1853708961393893395", "1853708961393893395"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Egyptian": 1,
-      "MultiOrb": 1
-    }
-  },
-  "19-01-24": {
-    "questName": "Sidhe Riders",
-    "description": "s1",
-    "type": "B05",
-    "link": ["1854071352413560874", "1854071352413560874"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Greek": 2
-    }
-  },
-  "20-01-25": {
-    "questName": "Pharao's Dream II",
-    "description": "s1",
-    "type": "B05",
-    "link": ["1854433732234551558", "1854433732234551558"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 3,
-      "Celtic": 2
-    }
-  },
-  "21-01-25": {
-    "questName": "EMPIRE'S RISE",
-    "description": "s1",
-    "type": "B05",
-    "link": ["1854796128035778744", "1854796128035778744"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Celtic": 2
-    }
-  },
-  "22-01-25": {
-    "questName": "Vikings vs Celts",
-    "description": "s1",
-    "type": "B05",
-    "link": ["1855158512789193057", "1855158512789193057"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Celtic": 2
-    }
-  },
-  "23-01-24": {
-    "questName": "Vercingetorix",
-    "description": "s1",
-    "type": "B06",
-    "link": ["1855520903242940586", "1855520903242940586"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 1,
-      "MultiOrb": 2,
-      "Egyptian": 2,
-      "Norse": 2
-    }
-  },
-  "24-01-25": {
-    "questName": "Foreign Threat",
-    "description": "s1",
-    "type": "B06",
-    "link": ["1855883294161657951", "1855883294161657951"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 1,
-      "Greek": 1,
-      "Norse": 1,
-      "MultiOrb": 2
-    }
-  },
-  "25-01-25": {
-    "questName": "EMPIRE'S FALL",
-    "description": "s1",
-    "type": "B06",
-    "link": ["1856245721566945632", "1856245721566945632"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 3,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "26-01-25": {
-    "questName": "SVOLD'S BATTLE II",
-    "description": "s1",
-    "type": "B06",
-    "link": ["1856608027249385565", "1856608027249385565"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Celtic": 1,
-      "MultiOrb": 1
-    }
-  },
-  "27-01-24": {
-    "questName": "Tuath Danann I",
-    "description": "s1",
-    "type": "C01",
-    "link": ["1856970395234029855", "1856970395234029855"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Egyptian": 1
-    }
-  },
-  "28-01-25": {
-    "questName": "Bull Apis Cult I",
-    "description": "s1",
-    "type": "C01",
-    "link": ["1857332931875741841", "1857332931875741841"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 4,
-      "Greek": 1
-    }
-  },
-  "29-01-25": {
-    "questName": "Titanomachia I",
-    "description": "s1",
-    "type": "C01",
-    "link": ["1857695266733723816", "1857695266733723816"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 4,
-      "Norse": 1
-    }
-  },
-  "30-01-25": {
-    "questName": "Idun's Apples I",
-    "description": "s1",
-    "type": "C01",
-    "link": ["1857695265144156359", "1857695265144156359"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 4,
-      "Celtic": 1
-    }
-  },
-  "01-02-25": {
-    "questName": "TIR NA NOG I",
-    "description": "s1",
-    "type": "C02",
-    "link": ["1866438274211831920", "1866438274211831920"],
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 4,
-      "Egyptian": 1,
-      "MultiOrb": 1
-    }
-  },
-  "02-02-25": {
-    "questName": "Sekhmet's Blood I",
-    "description": "s1",
-    "type": "C02",
-    "link": ["1866440152123355527", "1866440152123355527"],
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 4,
-      "Greek": 1,
-      "MultiOrb": 1
-    }
-  },
-  "03-02-25": {
-    "questName": "PHAETON'S FALL I",
-    "description": "s1",
-    "type": "C02",
-    "link": ["1856970395234029855", "1856970395234029855"],
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 4,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "04-02-25": {
-    "questName": "Ragnarok I",
-    "description": "s1",
-    "type": "C02",
-    "link": ["1856970395234029855", "1856970395234029855"],
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Celtic": 1,
-      "MultiOrb": 1
-    }
-  },
-  "05-01-24": {
-    "questName": "Tuath Danann II",
-    "description": "s1",
-    "type": "C03",
-    "link": "",
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Greek": 1
-    }
-  },
-  "06-02-25": {
-    "questName": "Bull Apis Cult II",
-    "description": "s1",
-    "type": "C03",
-    "link": "",
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 4,
-      "Norse": 1
-    }
-  },
-  "07-02-25": {
-    "questName": "Titanomachia II",
-    "description": "s1",
-    "type": "C03",
-    "link": "",
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 4,
-      "Celtic": 1
-    }
-  },
-  "08-02-25": {
-    "questName": "Idun's Apples II",
-    "description": "s1",
-    "type": "C03",
-    "link": "",
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 4,
-      "Egyptian": 1
-    }
-  },
-  "09-02-25": {
-    "questName": "TIR NA NOG II",
-    "description": "s1",
-    "type": "C04",
-    "link": "",
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 4,
-      "Greek": 1,
-      "MultiOrb": 1
-    }
-  },
-  "10-02-25": {
-    "questName": "Sekhmet's Blood II",
-    "description": "s1",
-    "type": "C04",
-    "link": "",
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 4,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "11-02-25": {
-    "questName": "PHAETON'S FALL II",
-    "description": "s1",
-    "type": "C04",
-    "link": "",
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 4,
-      "Celtic": 1,
-      "MultiOrb": 1
-    }
-  },
-  "12-02-25": {
-    "questName": "Ragnarok II",
-    "description": "s1",
-    "type": "C04",
-    "link": "",
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Egyptian": 1,
-      "MultiOrb": 1
-    }
-  },
-  "13-02-24": {
-    "questName": "Tuath Danann III",
-    "description": "s1",
-    "type": "C05",
-    "link": "",
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 3,
-      "Greek": 1
-    }
-  },
-  "14-02-25": {
-    "questName": "Bull Apis Cult III",
-    "description": "s1",
-    "type": "C05",
-    "link": "",
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 4,
-      "Celtic": 1
-    }
-  },
-  "15-02-25": {
-    "questName": "Titanomachia III",
-    "description": "s1",
-    "type": "C05",
-    "link": "",
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 4,
-      "Egyptian": 1
-    }
-  },
-  "16-02-25": {
-    "questName": "Idun's Apples III",
-    "description": "s1",
-    "type": "C05",
-    "link": "",
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 4,
-      "Greek": 1
-    }
-  },
-  "17-02-24": {
-    "questName": "TIR NA NOG III",
-    "description": "s1",
-    "type": "C06",
-    "link": "",
-    "mythology": "Celtic",
-    "status": "Active",
-    "requiredOrbs": {
-      "Celtic": 4,
-      "Norse": 1,
-      "MultiOrb": 1
-    }
-  },
-  "18-02-25": {
-    "questName": "Sekhmet's Blood III",
-    "description": "s1",
-    "type": "C06",
-    "link": "",
-    "mythology": "Egyptian",
-    "status": "Active",
-    "requiredOrbs": {
-      "Egyptian": 4,
-      "Celtic": 1,
-      "MultiOrb": 1
-    }
-  },
-  "19-02-25": {
-    "questName": "PHAETON'S FALL III",
-    "description": "s1",
-    "type": "C06",
-    "link": "",
-    "mythology": "Greek",
-    "status": "Active",
-    "requiredOrbs": {
-      "Greek": 4,
-      "Egyptian": 1,
-      "MultiOrb": 1
-    }
-  },
-  "20-02-25": {
-    "questName": "Ragnarok II",
-    "description": "s1",
-    "type": "C06",
-    "link": "",
-    "mythology": "Norse",
-    "status": "Active",
-    "requiredOrbs": {
-      "Norse": 3,
-      "Greek": 1,
-      "MultiOrb": 1
-    }
-  }
+  "21-12-24": [
+    {
+      "questName": "Viriato's Betrayal",
+      "description": "s1",
+      "type": "A02",
+      "link": ["1841402980395880755", "1841402980395880755"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 1,
+        "MultiOrb": 2,
+        "Egyptian": 1
+      }
+    },
+    {
+      "questName": "Hathor's Charm",
+      "description": "s1",
+      "type": "A02",
+      "link": ["1841735160514916855", "1841735160514916855"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "WATER NYMPHS",
+      "description": "s1",
+      "type": "A02",
+      "link": ["1842097534379913640", "1842097534379913640"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 2,
+        "MultiOrb": 1,
+        "Egyptian": 2
+      }
+    },
+    {
+      "questName": "Twilight",
+      "description": "s1",
+      "type": "A02",
+      "link": ["1842459842646012393", "1842459842646012393"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 2,
+        "Greek": 2,
+        "MultiOrb": 2
+      }
+    }
+  ],
+  "22-12-24": [
+    {
+      "questName": "Tristan & Iseult",
+      "description": "s1",
+      "type": "A03",
+      "link": ["1842822352012234804", "1842822352012234804"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 2,
+        "Norse": 3,
+        "Egyptian": 1
+      }
+    },
+    {
+      "questName": "NILE'S MIRACLE",
+      "description": "s1",
+      "type": "A03",
+      "link": ["1843184548462350745", "1843184548462350745"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 2,
+        "Greek": 2,
+        "Celtic": 2
+      }
+    },
+    {
+      "questName": "Achilles' Fury",
+      "description": "s1",
+      "type": "A03",
+      "link": ["1843546932624372017", "1843546932624372017"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Norse": 2
+      }
+    },
+    {
+      "questName": "A Valkyrie Prison",
+      "description": "s1",
+      "type": "A03",
+      "link": ["1843909342828925318", "1843909342828925318"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Egyptian": 1,
+        "Celtic": 1,
+        "Greek": 1
+      }
+    }
+  ],
+  "23-12-24": [
+    {
+      "questName": "The Sad Princess",
+      "description": "s1",
+      "type": "A04",
+      "link": ["1844271750529401244", "1844271750529401244"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Egyptian": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "ISIS PROCESSION",
+      "description": "s1",
+      "type": "A04",
+      "link": ["1844634134200656300", "1844634134200656300"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Greek": 1,
+        "MultiOrb": 2
+      }
+    },
+    {
+      "questName": "Pandora's Box",
+      "description": "s1",
+      "type": "A04",
+      "link": ["1844996516538110192", "1844996516538110192"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Egyptian": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Valkyries' Touch",
+      "description": "s1",
+      "type": "A04",
+      "link": ["1845358998104535394", "1845358998104535394"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Greek": 1,
+        "MultiOrb": 1
+      }
+    }
+  ],
+  "24-12-24": [
+    {
+      "questName": "Brigid's Imbolc",
+      "description": "s1",
+      "type": "A05",
+      "link": ["1845721405335183439", "1845721405335183439"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 2,
+        "Greek": 1,
+        "Norse": 1,
+        "Egyptian": 1
+      }
+    },
+    {
+      "questName": "Shezmus' Perfume I",
+      "description": "s1",
+      "type": "A05",
+      "link": ["1846083762632753370", "1846083762632753370"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Norse": 1
+      }
+    },
+    {
+      "questName": "Icarus & Daedalus",
+      "description": "s1",
+      "type": "A05",
+      "link": ["1846083762632753370", "1846083762632753370"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Norse": 2,
+        "Egyptian": 2
+      }
+    },
+    {
+      "questName": "Vinland (America)",
+      "description": "s1",
+      "type": "A05",
+      "link": ["1846446180617642112", "1846446180617642112"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 2,
+        "Greek": 2,
+        "Egyptian": 2
+      }
+    }
+  ],
+  "25-12-24": [
+    {
+      "questName": "Summer Fantasy",
+      "description": "s1",
+      "type": "A06",
+      "link": ["1846808571532480796", "1846808571532480796"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Cleopatra's Tomb",
+      "description": "s1",
+      "type": "A06",
+      "link": ["1847170777327480892", "1847170777327480892"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 2,
+        "Celtic": 2,
+        "MultiOrb": 2
+      }
+    },
+    {
+      "questName": "PROMETHEUS' GIFT",
+      "description": "s1",
+      "type": "A06",
+      "link": ["1847533164551368712", "1847533164551368712"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 2,
+        "MultiOrb": 2,
+        "Celtic": 2
+      }
+    },
+    {
+      "questName": "Iceland Discovery",
+      "description": "s1",
+      "type": "A06",
+      "link": ["1847895700387807584", "1847895700387807584"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 2,
+        "Egyptian": 2,
+        "MultiOrb": 2
+      }
+    }
+  ],
+  "26-12-24": [
+    {
+      "questName": "Lir Clann",
+      "description": "s1",
+      "type": "B01",
+      "link": ["1848258134717972694", "1848258134717972694"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Shezmus' Perfume II",
+      "description": "s1",
+      "type": "B01",
+      "link": ["1848620521987920197", "1848620521987920197"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Norse": 2,
+        "Greek": 2,
+        "Celtic": 2
+      }
+    },
+    {
+      "questName": "Oracle Of Delphia",
+      "description": "s1",
+      "type": "B01",
+      "link": ["1848982843969450084", "1848982843969450084"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Norse": 1,
+        "Celtic": 1,
+        "Egyptian": 1
+      }
+    },
+    {
+      "questName": "A Vikings Raid",
+      "description": "s1",
+      "type": "B01",
+      "link": ["1849345136074838253", "1849345136074838253"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Egyptian": 2
+      }
+    }
+  ],
+  "27-12-24": [
+    {
+      "questName": "Aengus' Lover",
+      "description": "s1",
+      "type": "B02",
+      "link": ["1849707530554921238", "1849707530554921238"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 2,
+        "MultiOrb": 2,
+        "Norse": 2
+      }
+    },
+    {
+      "questName": "Bastet's Cult",
+      "description": "s1",
+      "type": "B02",
+      "link": ["1850069979648995447", "1850069979648995447"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Celtic": 2,
+        "MultiOrb": 2
+      }
+    },
+    {
+      "questName": "Hephaestus' Fate",
+      "description": "s1",
+      "type": "B02",
+      "link": ["1850447427007852814", "1850447427007852814"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Celtic": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Vikings Funeral",
+      "description": "s1",
+      "type": "B02",
+      "link": ["1850809827112464578", "1850809827112464578"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 2,
+        "Greek": 2,
+        "MultiOrb": 2
+      }
+    }
+  ],
+  "28-12-24": [
+    {
+      "questName": "SLEEPING BEAUTY",
+      "description": "s1",
+      "type": "B03",
+      "link": ["1851172210314002583", "1851172210314002583"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Egyptian": 2
+      }
+    },
+    {
+      "questName": "Pharao's Dream I",
+      "description": "s1",
+      "type": "B03",
+      "link": ["1851534599643451760", "1851534599643451760"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Greek": 2
+      }
+    },
+    {
+      "questName": "GOLDEN FLEECE",
+      "description": "s1",
+      "type": "B03",
+      "link": ["1851896950322294876", "1851896950322294876"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Egyptian": 2
+      }
+    },
+    {
+      "questName": "The King's Ding",
+      "description": "s1",
+      "type": "B03",
+      "link": ["1852259520031900157", "1852259520031900157"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Greek": 2
+      }
+    }
+  ],
+  "29-12-24": [
+    {
+      "questName": "Leanan Sidhe",
+      "description": "s1",
+      "type": "B04",
+      "link": ["1852621906991583499", "1852621906991583499"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Greek": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Maahes' Cult",
+      "description": "s1",
+      "type": "B04",
+      "link": ["1852984295456927827", "1852984295456927827"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 1,
+        "Greek": 1,
+        "MultiOrb": 3
+      }
+    },
+    {
+      "questName": "Odysseus' Sirens",
+      "description": "s1",
+      "type": "B04",
+      "link": ["1853346501419733150", "1853346501419733150"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 1,
+        "MultiOrb": 2,
+        "Egyptian": 1,
+        "Celtic": 1
+      }
+    },
+    {
+      "questName": "SVOLD'S BATTLE I",
+      "description": "s1",
+      "type": "B04",
+      "link": ["1853708961393893395", "1853708961393893395"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Egyptian": 1,
+        "MultiOrb": 1
+      }
+    }
+  ],
+  "30-12-24": [
+    {
+      "questName": "Sidhe Riders",
+      "description": "s1",
+      "type": "B05",
+      "link": ["1854071352413560874", "1854071352413560874"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Greek": 2
+      }
+    },
+    {
+      "questName": "Pharao's Dream II",
+      "description": "s1",
+      "type": "B05",
+      "link": ["1854433732234551558", "1854433732234551558"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 3,
+        "Celtic": 2
+      }
+    },
+    {
+      "questName": "EMPIRE'S RISE",
+      "description": "s1",
+      "type": "B05",
+      "link": ["1854796128035778744", "1854796128035778744"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Celtic": 2
+      }
+    },
+    {
+      "questName": "Vikings vs Celts",
+      "description": "s1",
+      "type": "B05",
+      "link": ["1855158512789193057", "1855158512789193057"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Celtic": 2
+      }
+    }
+  ],
+  "31-12-24": [
+    {
+      "questName": "Vercingetorix",
+      "description": "s1",
+      "type": "B06",
+      "link": ["1855520903242940586", "1855520903242940586"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 1,
+        "MultiOrb": 2,
+        "Egyptian": 2,
+        "Norse": 2
+      }
+    },
+    {
+      "questName": "Foreign Threat",
+      "description": "s1",
+      "type": "B06",
+      "link": ["1855883294161657951", "1855883294161657951"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 1,
+        "Greek": 1,
+        "Norse": 1,
+        "MultiOrb": 2
+      }
+    },
+    {
+      "questName": "EMPIRE'S FALL",
+      "description": "s1",
+      "type": "B06",
+      "link": ["1856245721566945632", "1856245721566945632"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 3,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "SVOLD'S BATTLE II",
+      "description": "s1",
+      "type": "B06",
+      "link": ["1856608027249385565", "1856608027249385565"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Celtic": 1,
+        "MultiOrb": 1
+      }
+    }
+  ],
+  "01-01-25": [
+    {
+      "questName": "Tuath Danann I",
+      "description": "s1",
+      "type": "C01",
+      "link": ["1856970395234029855", "1856970395234029855"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Egyptian": 1
+      }
+    },
+    {
+      "questName": "Bull Apis Cult I",
+      "description": "s1",
+      "type": "C01",
+      "link": ["1857332931875741841", "1857332931875741841"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 4,
+        "Greek": 1
+      }
+    },
+    {
+      "questName": "Titanomachia I",
+      "description": "s1",
+      "type": "C01",
+      "link": ["1857695266733723816", "1857695266733723816"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 4,
+        "Norse": 1
+      }
+    },
+    {
+      "questName": "Idun's Apples I",
+      "description": "s1",
+      "type": "C01",
+      "link": ["1857695265144156359", "1857695265144156359"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 4,
+        "Celtic": 1
+      }
+    }
+  ],
+  "02-01-25": [
+    {
+      "questName": "TIR NA NOG I",
+      "description": "s1",
+      "type": "C02",
+      "link": ["1866438274211831920", "1866438274211831920"],
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 4,
+        "Egyptian": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Sekhmet's Blood I",
+      "description": "s1",
+      "type": "C02",
+      "link": ["1866440152123355527", "1866440152123355527"],
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 4,
+        "Greek": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "PHAETON'S FALL I",
+      "description": "s1",
+      "type": "C02",
+      "link": ["1856970395234029855", "1856970395234029855"],
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 4,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Ragnarok I",
+      "description": "s1",
+      "type": "C02",
+      "link": ["1856970395234029855", "1856970395234029855"],
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Celtic": 1,
+        "MultiOrb": 1
+      }
+    }
+  ],
+  "03-01-25": [
+    {
+      "questName": "Tuath Danann II",
+      "description": "s1",
+      "type": "C03",
+      "link": "",
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Greek": 1
+      }
+    },
+    {
+      "questName": "Bull Apis Cult II",
+      "description": "s1",
+      "type": "C03",
+      "link": "",
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 4,
+        "Norse": 1
+      }
+    },
+    {
+      "questName": "Titanomachia II",
+      "description": "s1",
+      "type": "C03",
+      "link": "",
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 4,
+        "Celtic": 1
+      }
+    },
+    {
+      "questName": "Idun's Apples II",
+      "description": "s1",
+      "type": "C03",
+      "link": "",
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 4,
+        "Egyptian": 1
+      }
+    }
+  ],
+  "04-01-25": [
+    {
+      "questName": "TIR NA NOG II",
+      "description": "s1",
+      "type": "C04",
+      "link": "",
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 4,
+        "Greek": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Sekhmet's Blood II",
+      "description": "s1",
+      "type": "C04",
+      "link": "",
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 4,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "PHAETON'S FALL II",
+      "description": "s1",
+      "type": "C04",
+      "link": "",
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 4,
+        "Celtic": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Ragnarok II",
+      "description": "s1",
+      "type": "C04",
+      "link": "",
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Egyptian": 1,
+        "MultiOrb": 1
+      }
+    }
+  ],
+  "05-01-25": [
+    {
+      "questName": "Tuath Danann III",
+      "description": "s1",
+      "type": "C05",
+      "link": "",
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 3,
+        "Greek": 1
+      }
+    },
+    {
+      "questName": "Bull Apis Cult III",
+      "description": "s1",
+      "type": "C05",
+      "link": "",
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 4,
+        "Celtic": 1
+      }
+    },
+    {
+      "questName": "Titanomachia III",
+      "description": "s1",
+      "type": "C05",
+      "link": "",
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 4,
+        "Egyptian": 1
+      }
+    },
+    {
+      "questName": "Idun's Apples III",
+      "description": "s1",
+      "type": "C05",
+      "link": "",
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 4,
+        "Greek": 1
+      }
+    }
+  ],
+  "06-01-25": [
+    {
+      "questName": "TIR NA NOG III",
+      "description": "s1",
+      "type": "C06",
+      "link": "",
+      "mythology": "Celtic",
+      "status": "Active",
+      "requiredOrbs": {
+        "Celtic": 4,
+        "Norse": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Sekhmet's Blood III",
+      "description": "s1",
+      "type": "C06",
+      "link": "",
+      "mythology": "Egyptian",
+      "status": "Active",
+      "requiredOrbs": {
+        "Egyptian": 4,
+        "Celtic": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "PHAETON'S FALL III",
+      "description": "s1",
+      "type": "C06",
+      "link": "",
+      "mythology": "Greek",
+      "status": "Active",
+      "requiredOrbs": {
+        "Greek": 4,
+        "Egyptian": 1,
+        "MultiOrb": 1
+      }
+    },
+    {
+      "questName": "Ragnarok II",
+      "description": "s1",
+      "type": "C06",
+      "link": "",
+      "mythology": "Norse",
+      "status": "Active",
+      "requiredOrbs": {
+        "Norse": 3,
+        "Greek": 1,
+        "MultiOrb": 1
+      }
+    }
+  ]
 }
