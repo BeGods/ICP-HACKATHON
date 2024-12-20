@@ -2,7 +2,11 @@ import { Megaphone, ThumbsUp } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../context/context";
 import { claimStreakBonus, fetchProfilePhoto } from "../../utils/api";
-import { setTutKey, validateCountryCode } from "../../helpers/cookie.helper";
+import {
+  handleClickHaptic,
+  setTutKey,
+  validateCountryCode,
+} from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
 import { showToast } from "../../components/Toast/Toast";
 import Confetti from "react-confetti";
@@ -12,8 +16,14 @@ const tele = window.Telegram?.WebApp;
 const Announcement = (props) => {
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { setSection, userData, setUserData, authToken, setActiveReward } =
-    useContext(MyContext);
+  const {
+    setSection,
+    userData,
+    setUserData,
+    authToken,
+    setActiveReward,
+    enableHaptic,
+  } = useContext(MyContext);
 
   const playConfetti = () => {
     setShowConfetti(true);
@@ -87,6 +97,7 @@ const Announcement = (props) => {
         <div className="flex absolute items-start bottom-[75px] justify-center w-full">
           <ThumbsUp
             onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
               setTutKey(tele, "announcement01", 2);
 
               if (!userData.joiningBonus) {
