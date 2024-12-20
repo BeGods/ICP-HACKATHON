@@ -205,8 +205,6 @@ const Home = () => {
     const currLang = await validateLang(tele);
     const isAuth = await validateAuth(tele);
     const isSoundActive = await validateSoundCookie(tele);
-    console.log(isSoundActive);
-
     const isHapticActive = await fetchHapticStatus(tele);
 
     i18next.changeLanguage(currLang);

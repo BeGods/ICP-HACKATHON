@@ -125,9 +125,7 @@ export const validateSoundCookie = async (tele) => {
   } else {
     const cookieItem = localStorage.getItem("sound");
     if (cookieItem) {
-      console.log(Boolean(item));
-
-      return Boolean(item);
+      return Boolean(cookieItem);
     }
   }
 

@@ -152,7 +152,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
         {t("bonus.youwon")
           .split(" ")
           .map((word, index) => (
-            <>
+            <div key={index}>
               {index === 0 ? (
                 <h1
                   className={`scale-[${showYouScale}%] text-[22vw] mt-7 transition-transform duration-500`}
@@ -168,7 +168,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
                   )}
                 </>
               )}
-            </>
+            </div>
           ))}
       </div>
       <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
