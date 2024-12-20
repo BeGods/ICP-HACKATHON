@@ -243,6 +243,13 @@ export const updateRanks = async (req, res) => {
 
     await ranks.bulkWrite(bulkOps);
 
+    const totalUsers = await User.countDocuments({});
+    await Stats.findOneAndUpdate(
+      { statId: "fof" },
+      { $set: { totalUsers: totalUsers } },
+      { upsert: true }
+    );
+
     console.log("Leaderboard updated successfully.");
 
     res.status(200).json({ message: "Leaderboard updated successfully." });
@@ -878,16 +885,22 @@ export const updateDailyQuest = async (req, res) => {
       "-" +
       currentDate.toISOString().slice(2, 4);
 
-    // update quest
-    if (dailyQuests[currentDayKey]) {
-      const newQuest = {
-        ...dailyQuests[currentDayKey],
+    // Check if quests exist for the current day
+    const questsForToday = dailyQuests[currentDayKey];
+    if (questsForToday) {
+      const questsWithCreatedAt = questsForToday.map((quest) => ({
+        ...quest,
         createdAt: new Date(),
-      };
-      await quest.create(newQuest);
-      console.log("Quests updated");
+      }));
+
+      // Insert new quests
+      await quest.insertMany(questsWithCreatedAt);
+
+      console.log("Daily quests updated.");
+      res.status(200).json({ message: "Daily quests updated successfully." });
     } else {
-      console.log("No quest available for today.");
+      console.log("No quests available for today.");
+      res.status(404).json({ message: "No quests available for today." });
     }
   } catch (error) {
     console.log(error);
