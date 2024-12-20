@@ -26,12 +26,14 @@ export const getLeaderboardSnapshot = async () => {
               $ifNull: ["$mythologies.orbs", 0],
             },
           },
-          blackOrbs: {
+          blackOrbs: { $first: { $ifNull: ["$blackOrbs", 0] } },
+          multiColorOrbs: { $first: { $ifNull: ["$multiColorOrbs", 0] } },
+          modifiedBlackOrbs: {
             $first: {
               $multiply: [{ $ifNull: ["$blackOrbs", 0] }, 1000],
             },
           },
-          multiColorOrbs: {
+          modifiedMultiColorOrbs: {
             $first: {
               $multiply: [{ $ifNull: ["$multiColorOrbs", 0] }, 2],
             },
@@ -41,7 +43,11 @@ export const getLeaderboardSnapshot = async () => {
       {
         $addFields: {
           totalOrbs: {
-            $add: ["$totalMythologyOrbs", "$blackOrbs", "$multiColorOrbs"],
+            $add: [
+              "$totalMythologyOrbs",
+              "$modifiedBlackOrbs",
+              "$modifiedMultiColorOrbs",
+            ],
           },
         },
       },
