@@ -365,8 +365,8 @@ export const getGameStats = async (req, res) => {
     }
 
     // get totalMembers
-    const squadOwner = user.squadOwner ? user.squadOwner : userId;
-    const members = await Team.findOne({ owner: squadOwner });
+    // const squadOwner = user.squadOwner ? user.squadOwner : userId;
+    // const members = await Team.findOne({ owner: squadOwner });
     const memberData = {
       overallRank: userRank?.overallRank ?? 0,
       // squadRank: userRank?.squadRank ?? 0,
@@ -507,19 +507,22 @@ export const claimAutomata = async (req, res) => {
     userMyth.boosters.isAutomataActive = true;
     userMyth.boosters.automataLastClaimedAt = now;
     userMyth.boosters.automataStartTime = now;
+    const automataStartTimes = getAutomataStartTimes(mythData.mythologies);
+    automataStartTimes.push(now);
 
+    // activate when claimed in
     if (!mythData.autoPay.isAutomataAutoPayEnabled) {
-      const automataStartTimes = getAutomataStartTimes(mythData.mythologies);
-
-      automataStartTimes.push(now);
       if (isWithinOneMinute(automataStartTimes)) {
         enableAutoPay.isAutomataAutoPayEnabled = true;
       }
     }
 
-    if (enableAutoPay.automataAutoPayExpiration <= now) {
-      enableAutoPay.automataAutoPayExpiration = now;
-    }
+    // if (
+    //   enableAutoPay.automataAutoPayExpiration <= now &&
+    //   automataStartTimes.length === 5
+    // ) {
+    //   enableAutoPay.automataAutoPayExpiration = now;
+    // }
 
     const updatedMythData = await userMythologies
       .findOneAndUpdate(
@@ -530,7 +533,7 @@ export const claimAutomata = async (req, res) => {
             "mythologies.$": userMyth,
             "autoPay.isAutomataAutoPayEnabled":
               enableAutoPay.isAutomataAutoPayEnabled,
-            "autoPay.automataAutoPayExpiration": now,
+            // "autoPay.automataAutoPayExpiration": now,
           },
         },
         { new: true }

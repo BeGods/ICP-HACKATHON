@@ -166,16 +166,16 @@ export const validAutoAutomataReq = async (req, res, next) => {
       throw new Error("Insufficient multiColorOrbs to claim this automata.");
     }
 
-    const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
+    // const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
 
-    if (
-      userMythologiesData.autoPay.automataAutoPayExpiration - Date.now() >
-      millisecondsIn24Hours
-    ) {
-      throw new Error(
-        "Your previous automata has not expired yet. Please try again later."
-      );
-    }
+    // if (
+    //   userMythologiesData.autoPay.automataAutoPayExpiration - Date.now() >
+    //   millisecondsIn24Hours
+    // ) {
+    //   throw new Error(
+    //     "Your previous automata has not expired yet. Please try again later."
+    //   );
+    // }
 
     req.mythData = userMythologiesData;
 
