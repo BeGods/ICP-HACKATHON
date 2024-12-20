@@ -29,10 +29,11 @@ import {
   validateCountryCode,
   validateLang,
   validateSoundCookie,
+  validateTutCookie,
 } from "./helpers/cookie.helper";
 import OnboardPage from "./pages/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "./utils/ga";
-import { enqueueNotification } from "./utils/tauri";
+import Announcement from "./pages/Announcement/Page";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -108,6 +109,7 @@ const Home = () => {
     <JoinBonus />, // 9
     <StreakBonus />, // 10
     <OnboardPage />, // 11
+    <Announcement />, // 12
   ];
 
   const getProfilePhoto = async (token) => {
@@ -161,6 +163,7 @@ const Home = () => {
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
+      const showAnmnt = await validateTutCookie(tele, "announcement01");
 
       setGameData(response?.stats);
       setQuestsData(response?.quests);
@@ -168,7 +171,10 @@ const Home = () => {
       setCountry(response?.user.country);
       setUserData(response?.user);
       setKeysData(response?.towerKeys);
-      if (!response?.user?.joiningBonus) {
+      if (!showAnmnt) {
+        setSection(12);
+        setIsLoading(false);
+      } else if (!response?.user?.joiningBonus) {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
@@ -224,7 +230,6 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // enqueueNotification();
     syncAllCookies();
   }, []);
 
@@ -259,7 +264,7 @@ const Home = () => {
       {!isLoading ? (
         <div className="h-[100svh] w-screen bg-white select-none font-fof">
           <MyContext.Provider value={initalStates}>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
               <div key={item}>
                 <>{section === item && sections[item]}</>
               </div>
@@ -268,6 +273,7 @@ const Home = () => {
               section != 10 &&
               section != 9 &&
               section != 8 &&
+              section != 12 &&
               section != 11 && <Footer minimize={minimize} />}
             {showCard && (
               <div className="absolute z-50 h-screen w-screen">{showCard}</div>
