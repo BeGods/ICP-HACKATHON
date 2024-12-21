@@ -13,7 +13,10 @@ import ReactHowler from "react-howler";
 import MappedOrbs from "../../components/Common/MappedOrbs";
 import Symbol from "../../components/Common/Symbol";
 import assets from "../../assets/assets.json";
-import { handleClickHaptic } from "../../helpers/cookie.helper";
+import {
+  handleClickHaptic,
+  validateTutCookie,
+} from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -63,17 +66,32 @@ const SplashScreen = ({ reward, exploitReward }) => {
     setTimeout(shoot, 300);
   };
 
-  const handleClick = (reward) => {
+  const handleClick = async (reward) => {
     handleClickHaptic(tele, enableHaptic);
-    if (reward.type === "quest") {
-      setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-      setSection(1);
-    } else if (reward.type === "blackOrb") {
-      setActiveMyth(0);
-      setSection(0);
+    const showAnmnt = await validateTutCookie(tele, "announcement02");
+
+    if (!showAnmnt) {
+      if (reward.type === "quest") {
+        setActiveMyth(mythologies.indexOf(reward.quest.mythology));
+        setSection(2);
+      } else if (reward.type === "blackOrb") {
+        setActiveMyth(0);
+        setSection(2);
+      } else {
+        setActiveMyth(mythologies.indexOf(reward.mythology));
+        setSection(2);
+      }
     } else {
-      setActiveMyth(mythologies.indexOf(reward.mythology));
-      setSection(0);
+      if (reward.type === "quest") {
+        setActiveMyth(mythologies.indexOf(reward.quest.mythology));
+        setSection(1);
+      } else if (reward.type === "blackOrb") {
+        setActiveMyth(0);
+        setSection(0);
+      } else {
+        setActiveMyth(mythologies.indexOf(reward.mythology));
+        setSection(0);
+      }
     }
   };
 
@@ -181,7 +199,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
             <div
               onClick={() => {
                 handleClickHaptic(tele, enableHaptic);
-                setSection(0);
+                handleClick();
               }}
               className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[55vw]  mx-auto icon-black-contour`}
             >

@@ -1,7 +1,11 @@
 import { Megaphone, ThumbsUp } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
-import { claimStreakBonus, fetchProfilePhoto } from "../../utils/api";
+import {
+  claimAnmntReward,
+  claimStreakBonus,
+  fetchProfilePhoto,
+} from "../../utils/api";
 import {
   handleClickHaptic,
   setTutKey,
@@ -18,12 +22,13 @@ const Announcement = (props) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const {
     setSection,
-    userData,
-    setUserData,
+
+    setGameData,
     authToken,
     setActiveReward,
     enableHaptic,
   } = useContext(MyContext);
+  let disableRef = useRef(false);
 
   const playConfetti = () => {
     setShowConfetti(true);
@@ -37,40 +42,30 @@ const Announcement = (props) => {
     setTimeout(() => {
       setDisableHand(false);
     }, 2000);
+
+    setTimeout(() => {
+      getAnmntReward();
+    }, 4000);
   }, []);
 
-  const getProfilePhoto = async () => {
-    try {
-      const response = await fetchProfilePhoto(authToken);
-      if (response.avatarUrl) {
-        setUserData((prev) => ({
+  const getAnmntReward = async () => {
+    if (disableRef.current === false) {
+      handleClickHaptic(tele, enableHaptic);
+      disableRef.current = true;
+      try {
+        const response = await claimAnmntReward(authToken);
+        setTutKey(tele, "announcement01", 1);
+        setGameData((prev) => ({
           ...prev,
-          avatarUrl: response.avatarUrl,
+          autopay: {
+            ...prev.autopay,
+            isAutoPayActive: true,
+          },
         }));
+        setSection(2);
+      } catch (error) {
+        showToast("default");
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getStreakBonus = async () => {
-    try {
-      const activeCountry = await validateCountryCode(tele);
-      const rewardsData = await claimStreakBonus(authToken, activeCountry);
-      trackEvent("rewards", "claim_streak_reward", "success");
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-
-      if (rewardsData.reward === "fdg") {
-        setSection(0);
-      } else {
-        setActiveReward(rewardsData.reward);
-        setSection(10);
-      }
-    } catch (error) {
-      console.log(error);
-      showToast("default");
     }
   };
 
@@ -88,7 +83,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_00.jpg"
+              src="/assets/announcements/480px-announcement_01.jpg"
               alt="announcement"
               className="w-full h-auto"
             />
@@ -96,34 +91,7 @@ const Announcement = (props) => {
         </div>
         <div className="flex absolute items-start bottom-[75px] justify-center w-full">
           <ThumbsUp
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              setTutKey(tele, "announcement01", 2);
-
-              if (!userData.joiningBonus) {
-                setSection(9);
-                setTimeout(() => {
-                  setIsLoading(false);
-                }, 3000);
-                (async () => {
-                  await getProfilePhoto(token);
-                })();
-              } else if (userData.joiningBonus && userData.isEligibleToClaim) {
-                setSection(8);
-                setTimeout(() => {
-                  setIsLoading(false);
-                }, 3000);
-              } else if (userData.isStreakActive) {
-                (async () => {
-                  await getStreakBonus(token);
-                })();
-              } else {
-                setSection(0);
-                setTimeout(() => {
-                  setIsLoading(false);
-                }, 4000);
-              }
-            }}
+            onClick={getAnmntReward}
             size={"18vw"}
             color="#FFD660"
             className="mx-auto drop-shadow-xl scale-more"

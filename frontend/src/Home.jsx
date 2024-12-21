@@ -171,10 +171,7 @@ const Home = () => {
       setCountry(response?.user.country);
       setUserData(response?.user);
       setKeysData(response?.towerKeys);
-      if (!showAnmnt) {
-        setSection(12);
-        setIsLoading(false);
-      } else if (!response?.user?.joiningBonus) {
+      if (!response?.user?.joiningBonus) {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
@@ -194,6 +191,9 @@ const Home = () => {
         (async () => {
           await getStreakBonus(token);
         })();
+      } else if (!showAnmnt) {
+        setSection(12);
+        setIsLoading(false);
       } else {
         setSection(0);
         setTimeout(() => {
