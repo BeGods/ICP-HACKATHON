@@ -31,6 +31,8 @@ const Boosters = () => {
     setShowBooster,
     assets,
     enableSound,
+    showAnmt,
+    setShowAnmt,
   } = useContext(MyContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
@@ -88,7 +90,11 @@ const Boosters = () => {
         activeCard={"automata"}
         activeMyth={activeMyth}
         mythData={mythData}
-        closeCard={() => setShowCard(null)}
+        isAutoPay={true}
+        closeCard={() => {
+          setShowCard(null);
+          setShowAnmt(false);
+        }}
         Button={
           <BoosterBtn
             activeCard={"automata"}
@@ -100,6 +106,12 @@ const Boosters = () => {
       />
     );
   };
+
+  useEffect(() => {
+    if (showAnmt && !enableGuide) {
+      handleCardChange();
+    }
+  }, []);
 
   const [enableGuide, setEnableGuide] = useBoosterGuide(
     "tutorial03",

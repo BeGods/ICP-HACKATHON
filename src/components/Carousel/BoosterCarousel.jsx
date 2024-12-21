@@ -15,7 +15,6 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
-  console.log(gameData);
 
   useEffect(() => {
     const newItems = [

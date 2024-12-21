@@ -48,6 +48,7 @@ const Home = () => {
   const [keysData, setKeysData] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
+  const [showAnmt, setShowAnmt] = useState(false);
   const [activeReward, setActiveReward] = useState(null);
   const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
@@ -95,6 +96,8 @@ const Home = () => {
     setTriggerConf,
     enableHaptic,
     setEnableHaptic,
+    setShowAnmt,
+    showAnmt,
   };
   const sections = [
     <Forges />, // 0
