@@ -57,11 +57,9 @@ const Announcement = (props) => {
         setTutKey(tele, "announcement02", 1);
         setGameData((prev) => ({
           ...prev,
-          autopay: {
-            ...prev.autopay,
-            isAutoPayActive: true,
-          },
+          isAutoPayActive: true,
         }));
+
         setSection(2);
       } catch (error) {
         showToast("default");
