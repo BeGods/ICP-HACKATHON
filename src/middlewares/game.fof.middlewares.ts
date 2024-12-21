@@ -328,3 +328,17 @@ export const validateStarClaim = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const validateAnnounceReward = async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    if (user.announcements === 1) {
+      throw new Error("Reward already claimed.");
+    }
+
+    next();
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
