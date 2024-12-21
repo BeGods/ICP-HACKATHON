@@ -54,7 +54,7 @@ const Announcement = (props) => {
       disableRef.current = true;
       try {
         const response = await claimAnmntReward(authToken);
-        setTutKey(tele, "announcement01", 1);
+        setTutKey(tele, "announcement02", 1);
         setGameData((prev) => ({
           ...prev,
           autopay: {
