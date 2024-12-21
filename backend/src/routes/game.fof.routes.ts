@@ -10,11 +10,14 @@ import {
   updateGameData,
   claimBurst,
   claimAutoAutomata,
+  claimAutomataReward,
+  claimBurstReward,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
   validAutomataReq,
   validShardsBoosterReq,
+  validateAnnounceReward,
   validateBurstReq,
   validateOrbsConversion,
   validateStarClaim,
@@ -70,5 +73,6 @@ router.get(
   validateOrbsConversion,
   convertOrbs
 );
+router.get("/reward/claim", authMiddleware, claimAutomataReward);
 
 export default router;

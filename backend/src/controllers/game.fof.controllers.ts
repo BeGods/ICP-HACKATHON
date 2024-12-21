@@ -582,7 +582,7 @@ export const claimAutoAutomata = async (req, res) => {
           $inc: { multiColorOrbs: -3 },
           $set: {
             mythologies: mythData.mythologies,
-            "autoPay.automataAutoPayExpiration": now,
+            // "autoPay.automataAutoPayExpiration": now,
           },
         },
         { new: true }
@@ -817,6 +817,91 @@ export const updateGameData = async (req, res) => {
     );
 
     res.status(200).json({ message: "Mythology Updated Successfully" });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+// announcement rewards
+export const claimAutomataReward = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = req.user;
+
+    await userMythologies
+      .findOneAndUpdate(
+        { userId: userId },
+        {
+          $set: {
+            "autoPay.isAutomataAutoPayEnabled": true,
+          },
+        }
+      )
+      .select("-__v -createdAt -updatedAt -_id");
+
+    await user.updateOne({ announcements: 1 });
+
+    res.status(200).json({ message: "Reward claimed successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimBurstReward = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = req.user;
+
+    const userMyth = await userMythologies.findOne({ userId: userId });
+
+    userMyth.mythologies.forEach((mythology) => {
+      mythology.boosters.burstlvl += 1;
+      mythology.boosters.isBurstActive = true;
+      mythology.boosters.isBurstActiveToClaim = false;
+      mythology.boosters.burstActiveAt = Date.now();
+    });
+
+    await userMythologies
+      .findOneAndUpdate(
+        { userId: userId },
+        {
+          $set: {
+            mythologies: userMyth.mythologies,
+          },
+        },
+        { new: true }
+      )
+      .select("-__v -createdAt -updatedAt -_id");
+
+    await user.updateOne({ announcements: 1 });
+
+    res.status(200).json({
+      message: "Burst claimed successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimGachaReward = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = req.user;
+
+    await user.updateOne({ announcements: 1 });
+
+    res.status(200).json({
+      message: "Gacha claimed successfully.",
+    });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",
