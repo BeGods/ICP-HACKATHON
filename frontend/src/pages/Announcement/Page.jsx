@@ -20,14 +20,8 @@ const tele = window.Telegram?.WebApp;
 const Announcement = (props) => {
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const {
-    setSection,
-
-    setGameData,
-    authToken,
-    setActiveReward,
-    enableHaptic,
-  } = useContext(MyContext);
+  const { setSection, setGameData, authToken, setShowAnmt, enableHaptic } =
+    useContext(MyContext);
   let disableRef = useRef(false);
 
   const playConfetti = () => {
@@ -60,6 +54,7 @@ const Announcement = (props) => {
           isAutoPayActive: true,
         }));
 
+        setShowAnmt(true);
         setSection(2);
       } catch (error) {
         showToast("default");

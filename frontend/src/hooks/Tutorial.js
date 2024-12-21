@@ -59,11 +59,11 @@ export const useBoosterGuide = (
         setEnableGuide(false);
         handleActiveCard();
         setTutKey(tele, key, 3);
-        guideTimeoutId.current = setTimeout(() => {
-          handleClaimAutomata();
-          guideTimeoutId.current = null;
-          clearTimeout(guideTimeoutId);
-        }, 1500);
+        // guideTimeoutId.current = setTimeout(() => {
+        //   handleClaimAutomata();
+        //   guideTimeoutId.current = null;
+        //   clearTimeout(guideTimeoutId);
+        // }, 1500);
       }, 2500);
     }
   };

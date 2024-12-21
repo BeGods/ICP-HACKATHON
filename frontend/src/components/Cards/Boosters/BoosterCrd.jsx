@@ -184,12 +184,14 @@ const BoosterClaim = ({
     }
   };
 
-  const handleClaimAutoAutomata = async () => {
+  const handleClaimAutoAutomata = async (isAdPlayed) => {
     if (disableRef.current === false) {
       disableRef.current = true;
 
+      const adId = isAdPlayed ? adsgramId : null;
+
       try {
-        await claimAutoAutomata(authToken);
+        await claimAutoAutomata(authToken, adId);
         trackEvent("purchase", "claim_auto_automata", "success");
 
         setGameData((prevData) => {
@@ -245,6 +247,9 @@ const BoosterClaim = ({
     if (activeCard == "automata" && !isAutoPay) {
       handleClaimAutomata(true);
     }
+    if (activeCard == "automata" && isAutoPay) {
+      handleClaimAutoAutomata(true);
+    }
     if (activeCard == "minion") {
       handleClaimShards(true);
     }
@@ -264,7 +269,8 @@ const BoosterClaim = ({
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
-        (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
+        (activeCard === "minion" && boostersData?.isShardsClaimActive) ||
+        (activeCard === "automata" && isAutoPay)) && (
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);

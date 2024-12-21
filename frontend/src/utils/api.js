@@ -241,13 +241,21 @@ export const claimAutomataBooster = async (
   }
 };
 
-export const claimAutoAutomata = async (accessToken) => {
+export const claimAutoAutomata = async (accessToken, adId) => {
   let url = `${import.meta.env.VITE_API_URL}/booster/autoClaim/automata`;
+  const gameData = {
+    adId: adId,
+  };
+  const secretKey = import.meta.env.VITE_HASH_KEY;
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
 
   try {
     const response = await axios.post(
       url,
-      {},
+      { data: hashedData },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
