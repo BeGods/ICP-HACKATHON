@@ -633,3 +633,19 @@ export const updateCountry = async (country, accessToken) => {
     throw error;
   }
 };
+
+export const claimAnmntReward = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/reward/claim`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
