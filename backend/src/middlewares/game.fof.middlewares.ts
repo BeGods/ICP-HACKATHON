@@ -146,6 +146,13 @@ export const validAutomataReq = async (req, res, next) => {
 export const validAutoAutomataReq = async (req, res, next) => {
   try {
     const userId = req.user;
+    const secretKey = config.security.HASH_KEY;
+
+    const hashedData = req.body.data;
+
+    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
+
+    const { adId } = JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
 
     const userMythologiesData = (await userMythologies.findOne({
       userId,
@@ -162,8 +169,12 @@ export const validAutoAutomataReq = async (req, res, next) => {
     }
 
     // Check sufficient orbs to claim automata
-    if (userMythologiesData.multiColorOrbs < 3) {
+    if (userMythologiesData.multiColorOrbs < 3 && !adId) {
       throw new Error("Insufficient multiColorOrbs to claim this automata.");
+    }
+
+    if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
+      throw new Error("Invalid ad request.");
     }
 
     // const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
@@ -176,6 +187,12 @@ export const validAutoAutomataReq = async (req, res, next) => {
     //     "Your previous automata has not expired yet. Please try again later."
     //   );
     // }
+
+    if (adId) {
+      req.deductValue = 0;
+    } else {
+      req.deductValue = -3;
+    }
 
     req.mythData = userMythologiesData;
 
