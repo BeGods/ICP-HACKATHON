@@ -565,7 +565,7 @@ export const claimAutomata = async (req, res) => {
 
 export const claimAutoAutomata = async (req, res) => {
   try {
-    const { user, mythData } = req;
+    const { user, mythData, deductValue } = req;
     const now = Date.now();
 
     mythData.mythologies.forEach((mythology) => {
@@ -579,7 +579,7 @@ export const claimAutoAutomata = async (req, res) => {
       .findOneAndUpdate(
         { userId: user._id },
         {
-          $inc: { multiColorOrbs: -3 },
+          $inc: { multiColorOrbs: deductValue },
           $set: {
             mythologies: mythData.mythologies,
             // "autoPay.automataAutoPayExpiration": now,
