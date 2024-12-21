@@ -73,13 +73,13 @@ const SplashScreen = ({ reward, exploitReward }) => {
     if (!showAnmnt) {
       if (reward.type === "quest") {
         setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-        setSection(2);
+        setSection(12);
       } else if (reward.type === "blackOrb") {
         setActiveMyth(0);
-        setSection(2);
+        setSection(12);
       } else {
         setActiveMyth(mythologies.indexOf(reward.mythology));
-        setSection(2);
+        setSection(12);
       }
     } else {
       if (reward.type === "quest") {
