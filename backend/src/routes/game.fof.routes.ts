@@ -11,13 +11,13 @@ import {
   claimBurst,
   claimAutoAutomata,
   claimAutomataReward,
-  claimBurstReward,
+  claimAutoBurst,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
+  validAutoBurstReq,
   validAutomataReq,
   validShardsBoosterReq,
-  validateAnnounceReward,
   validateBurstReq,
   validateOrbsConversion,
   validateStarClaim,
@@ -66,6 +66,12 @@ router.post(
   authMiddleware,
   validAutoAutomataReq,
   claimAutoAutomata
+);
+router.post(
+  "/booster/autoClaim/burst",
+  authMiddleware,
+  validAutoBurstReq,
+  claimAutoBurst
 );
 router.get(
   "/game/convert",
