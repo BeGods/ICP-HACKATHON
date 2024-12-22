@@ -78,16 +78,40 @@ const Quests = () => {
     return 0;
   });
 
-  // completed quests
+  // Filter for different quest categories
   const completedQuests = quests?.filter(
     (item) => item.isQuestClaimed === true
   );
+
   const lostQuests = quests?.filter(
     (item) => item.isQuestClaimed === false && item.status === "Inactive"
   );
-  const todaysQuest = quests.findIndex((item) => item.status === "Active");
-  const [currQuest, setCurrQuest] = useState(todaysQuest);
-  const quest = quests[currQuest];
+
+  const activeQuestIndex = quests?.findIndex(
+    (item) => item.status === "Active"
+  );
+
+  // Determine the fallback quest
+  let initialQuestIndex = activeQuestIndex;
+
+  if (initialQuestIndex === -1) {
+    // No active quest, check for lost quests
+    initialQuestIndex = quests?.findIndex(
+      (item) => item.isQuestClaimed === false && item.status === "Inactive"
+    );
+  }
+
+  if (initialQuestIndex === -1) {
+    // No active or lost quests, check for completed quests
+    initialQuestIndex = quests?.findIndex(
+      (item) => item.isQuestClaimed === true
+    );
+  }
+
+  // Initialize state with the determined quest
+  const [currQuest, setCurrQuest] = useState(initialQuestIndex);
+  const quest = quests?.[currQuest];
+
   // secret quests
   const secretQuests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
@@ -361,7 +385,6 @@ const Quests = () => {
         totalQuests={quests}
         quest={quest}
         activeMyth={activeMyth}
-        todayQuest={todaysQuest}
         currQuest={currQuest}
         completedQuests={completedQuests}
         lostQuests={lostQuests}
