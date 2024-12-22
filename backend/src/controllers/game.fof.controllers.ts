@@ -1,6 +1,7 @@
 import {
   calculateEnergy,
   getAutomataStartTimes,
+  getBurstStartTimes,
   getPhaseByDate,
   isWithinOneMinute,
 } from "../utils/helpers/game.helpers";
@@ -23,7 +24,6 @@ import { checkPlaysuperExpiry } from "../services/playsuper.services";
 import { defaultMythologies } from "../utils/constants/variables";
 import { Document } from "mongodb";
 import ranks from "../models/ranks.models";
-import { Team } from "../models/referral.models";
 import Stats from "../models/Stats.models";
 import { checkBonus } from "../services/general.fof.services";
 import { mythOrder } from "../utils/constants/variables";
@@ -429,9 +429,15 @@ export const getGameStats = async (req, res) => {
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
         blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
         whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
-        isAutoPayActive:
+        isAutomataAutoPayActive:
           userMythologiesData.userMythologies[0].autoPay
             ?.isAutomataAutoPayEnabled ?? false,
+        isBurstAutoPayActive:
+          userMythologiesData.userMythologies[0].autoPay
+            ?.isBurstAutoPayEnabled ?? false,
+        autoPayBurstExpiry:
+          userMythologiesData.userMythologies[0].autoPay
+            ?.burstAutoPayExpiration ?? 0,
         autoPayExpiry:
           userMythologiesData.userMythologies[0].autoPay
             ?.automataAutoPayExpiration ?? 0,
@@ -458,7 +464,7 @@ export const claimShardsBooster = async (req, res) => {
     const userMyth = req.userMyth;
     const deductValue = req.deductValue;
 
-    userMyth.boosters.shardslvl += 1;
+    userMyth.boosters.shardslvl = Math.min(userMyth.boosters.shardslvl + 2, 99);
     userMyth.boosters.isShardsClaimActive = false;
     userMyth.boosters.shardsLastClaimedAt = Date.now();
 
@@ -503,7 +509,10 @@ export const claimAutomata = async (req, res) => {
     const now = Date.now();
     let enableAutoPay = mythData.autoPay;
 
-    userMyth.boosters.automatalvl += 1;
+    userMyth.boosters.automatalvl = Math.min(
+      userMyth.boosters.automatalvl + 2,
+      99
+    );
     userMyth.boosters.isAutomataActive = true;
     userMyth.boosters.automataLastClaimedAt = now;
     userMyth.boosters.automataStartTime = now;
@@ -569,7 +578,10 @@ export const claimAutoAutomata = async (req, res) => {
     const now = Date.now();
 
     mythData.mythologies.forEach((mythology) => {
-      mythology.boosters.automatalvl += 1;
+      mythology.boosters.automatalvl = Math.min(
+        mythology.boosters.automatalvl + 2,
+        99
+      );
       mythology.boosters.isAutomataActive = true;
       mythology.boosters.automataLastClaimedAt = now;
       mythology.boosters.automataStartTime = now;
@@ -612,16 +624,36 @@ export const claimBurst = async (req, res) => {
   try {
     const userId = req.user._id;
     const userMyth = req.userMyth;
+    const mythData = req.mythData;
+    const now = Date.now();
+    let enableAutoPay = mythData.autoPay;
 
-    userMyth.boosters.burstlvl += 1;
+    userMyth.boosters.burstlvl = Math.min(userMyth.boosters.burstlvl + 2, 99);
     userMyth.boosters.isBurstActive = true;
     userMyth.boosters.isBurstActiveToClaim = false;
     userMyth.boosters.burstActiveAt = Date.now();
 
+    const burstStartTimes = getBurstStartTimes(mythData.mythologies);
+    burstStartTimes.push(now);
+
+    // activate when claimed in
+    if (!enableAutoPay.isBurstAutoPayEnabled) {
+      if (isWithinOneMinute(burstStartTimes)) {
+        enableAutoPay.isBurstAutoPayEnabled = true;
+      }
+    }
+
     const updatedMythData = (await userMythologies
       .findOneAndUpdate(
         { userId, "mythologies.name": userMyth.name },
-        { $inc: { multiColorOrbs: -3 }, $set: { "mythologies.$": userMyth } },
+        {
+          $inc: { multiColorOrbs: -3 },
+          $set: {
+            "mythologies.$": userMyth,
+            "autoPay.isBurstAutoPayEnabled":
+              enableAutoPay.isBurstAutoPayEnabled ?? false,
+          },
+        },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt _id")) as Document;
@@ -645,6 +677,53 @@ export const claimBurst = async (req, res) => {
   } catch (error) {
     console.log(error);
 
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimAutoBurst = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { deductValue } = req;
+
+    const userMyth = await userMythologies.findOne({ userId: userId });
+
+    userMyth.mythologies.forEach((mythology) => {
+      // mythology.boosters.burstlvl += 1;
+      mythology.boosters.isBurstActive = true;
+      // mythology.boosters.isBurstActiveToClaim = false;
+      // mythology.boosters.burstActiveAt = Date.now();
+    });
+
+    await userMythologies
+      .findOneAndUpdate(
+        { userId: userId },
+        {
+          $inc: { multiColorOrbs: deductValue },
+          $set: {
+            "autoPay.burstAutoPayExpiration": Date.now(),
+            mythologies: userMyth.mythologies,
+          },
+        },
+        { new: true }
+      )
+      .select("-__v -createdAt -updatedAt -_id");
+
+    // maintain transaction
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "burst",
+      orbs: { multiColorOrb: deductValue == 0 ? 0 : 9 },
+    });
+    await newOrbsTransaction.save();
+
+    res.status(200).json({
+      message: "Burst claimed successfully.",
+    });
+  } catch (error) {
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -845,45 +924,6 @@ export const claimAutomataReward = async (req, res) => {
     await user.updateOne({ announcements: 1 });
 
     res.status(200).json({ message: "Reward claimed successfully." });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-    });
-  }
-};
-
-export const claimBurstReward = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const user = req.user;
-
-    const userMyth = await userMythologies.findOne({ userId: userId });
-
-    userMyth.mythologies.forEach((mythology) => {
-      mythology.boosters.burstlvl += 1;
-      mythology.boosters.isBurstActive = true;
-      mythology.boosters.isBurstActiveToClaim = false;
-      mythology.boosters.burstActiveAt = Date.now();
-    });
-
-    await userMythologies
-      .findOneAndUpdate(
-        { userId: userId },
-        {
-          $set: {
-            mythologies: userMyth.mythologies,
-          },
-        },
-        { new: true }
-      )
-      .select("-__v -createdAt -updatedAt -_id");
-
-    await user.updateOne({ announcements: 1 });
-
-    res.status(200).json({
-      message: "Burst claimed successfully.",
-    });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error.",

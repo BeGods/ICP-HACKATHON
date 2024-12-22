@@ -33,6 +33,8 @@ export interface IUserMyths extends Document {
   multiColorOrbs: number;
   autoPay: {
     isAutomataAutoPayEnabled: boolean;
+    isBurstAutoPayEnabled: boolean;
+    burstAutoPayExpiration: number;
     automataAutoPayExpiration: number;
   };
 }
@@ -85,14 +87,20 @@ const mythologySchema = new Schema({
     automatalvl: {
       type: Number,
       default: 0,
+      min: 0,
+      max: 99,
     },
     shardslvl: {
       type: Number,
       default: 1,
+      min: 0,
+      max: 99,
     },
     burstlvl: {
       type: Number,
       default: 1,
+      min: 0,
+      max: 99,
     },
     shardsLastClaimedAt: {
       type: Number,
@@ -172,7 +180,15 @@ const userMythologySchema = new Schema(
         type: Boolean,
         default: false,
       },
+      isBurstAutoPayEnabled: {
+        type: Boolean,
+        default: false,
+      },
       automataAutoPayExpiration: {
+        type: Number,
+        default: 0,
+      },
+      burstAutoPayExpiration: {
         type: Number,
         default: 0,
       },
@@ -189,6 +205,13 @@ userMythologySchema.index({ userId: 1 }, { unique: true });
 //   }
 //   next();
 // });
+
+mythologySchema.pre("save", function (next) {
+  this.boosters.automatalvl = Math.min(this.boosters.automatalvl, 99);
+  this.boosters.shardslvl = Math.min(this.boosters.shardslvl, 99);
+  this.boosters.burstlvl = Math.min(this.boosters.burstlvl, 99);
+  next();
+});
 
 const userMythologies = model<IUserMyths>(
   "UserMythologies",
