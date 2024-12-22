@@ -51,7 +51,7 @@ const Announcement = (props) => {
         setTutKey(tele, "announcement02", 1);
         setGameData((prev) => ({
           ...prev,
-          isAutoPayActive: true,
+          isAutomataAutoPayActive: true,
         }));
 
         setShowAnmt(true);

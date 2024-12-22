@@ -45,7 +45,8 @@
     {},
     {},
     { "title": "Pagbabalik", "desc": "Puwersa ng Pagsisikip" },
-    { "title": "Pakete ng mga Awtomata", "desc": "4X Awtomata" }
+    { "title": "Pakete ng mga Awtomata", "desc": "4X Awtomata" },
+    { "title": "Pakete ng mga Pagbabalik", "desc": "4X Pagbabalik" }
   ],
   "profile": {
     "premium": "Premium",

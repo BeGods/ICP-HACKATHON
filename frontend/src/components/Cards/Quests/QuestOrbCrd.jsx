@@ -118,7 +118,7 @@ const OrbClaimCard = ({
           handleClaim={handleOrbClaimReward}
           activeMyth={activeMyth}
           t={t}
-          link={quest?.link[0]}
+          link={`https://twitter.com/intent/tweet?text=%F0%9F%8C%9F%20Quest%20Completed!%20%F0%9F%8C%9F%0AJoin%20us%20to%20discover%20the%20world%20of%20BeGods%20Quests%20with%20Forges%20of%20Faith!%F0%9F%9B%A1%EF%B8%8F%F0%9F%94%A5%40BattleofGods_io%0Ahttps%3A%2F%2Fx.com%2FBattleofGods_io%2Fstatus%2F${quest.link[1]}%0A%0A%F0%9F%8E%AE%20Join%20now%3A%20http%3A%2F%2Ft.me%2FBeGods_bot%0A%0A%23FoF%20%23ForgesOfFaith%20%23Play2Learn%20%23BeGodsTMA&via=BattleofGods_io`}
         />
       </div>
 

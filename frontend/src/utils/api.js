@@ -269,6 +269,34 @@ export const claimAutoAutomata = async (accessToken, adId) => {
   }
 };
 
+export const claimAutoBurst = async (accessToken, adId) => {
+  let url = `${import.meta.env.VITE_API_URL}/booster/autoClaim/burst`;
+  const gameData = {
+    adId: adId,
+  };
+  const secretKey = import.meta.env.VITE_HASH_KEY;
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
+
+  try {
+    const response = await axios.post(
+      url,
+      { data: hashedData },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const connectTonWallet = async (tonAddress, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/user/connectTon`;
 

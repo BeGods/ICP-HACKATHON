@@ -55,7 +55,8 @@
     {},
     {},
     { "title": "Burst", "desc": "Power Press" },
-    { "title": "Automata Pack", "desc": "4X Automata" }
+    { "title": "Automata Pack", "desc": "4X Automata" },
+    { "title": "Burst Pack", "desc": "4X Stars" }
   ],
   "profile": {
     "premium": "Premium",

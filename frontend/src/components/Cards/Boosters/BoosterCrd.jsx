@@ -8,6 +8,7 @@ import BoosterBtn from "../../Buttons/BoosterBtn";
 import { showToast } from "../../Toast/Toast";
 import {
   claimAutoAutomata,
+  claimAutoBurst,
   claimAutomataBooster,
   claimBurstBooster,
   claimShardsBooster,
@@ -16,6 +17,7 @@ import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { Clapperboard } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
+import { hasTimeElapsed } from "../../../helpers/booster.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -199,7 +201,7 @@ const BoosterClaim = ({
 
           const updatedData = {
             ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 1,
+            multiColorOrbs: prevData.multiColorOrbs - 3,
             mythologies: prevData.mythologies.map((item) => ({
               ...item,
               boosters: {
@@ -232,12 +234,57 @@ const BoosterClaim = ({
     }
   };
 
+  const handleClaimAutoBurst = async (isAdPlayed) => {
+    if (disableRef.current === false) {
+      disableRef.current = true;
+
+      const adId = isAdPlayed ? adsgramId : null;
+
+      try {
+        await claimAutoBurst(authToken, adId);
+        trackEvent("purchase", "claim_auto_burst", "success");
+        setGameData((prevData) => {
+          const now = Date.now();
+
+          const updatedData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs - 9,
+            autoPayBurstExpiry: now,
+            mythologies: prevData.mythologies.map((item) => ({
+              ...item,
+              boosters: {
+                ...item.boosters,
+                isBurstActive: true,
+              },
+            })),
+          };
+
+          return updatedData;
+        });
+        setShowCard(null);
+        disableRef.current = false;
+        showToast("booster_success");
+        setShowBooster("automata");
+        setSection(0);
+      } catch (error) {
+        disableRef.current = false;
+        setShowCard(null);
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred";
+        console.log(errorMessage);
+        showToast("booster_error");
+      }
+    }
+  };
+
   const handleButton = () => {
     handleClickHaptic(tele, enableHaptic);
     const handleClaim = {
       automata: isAutoPay ? handleClaimAutoAutomata : handleClaimAutomata,
       minion: handleClaimShards,
-      burst: handleClaimBurst,
+      burst: isAutoPay ? handleClaimAutoBurst : handleClaimBurst,
     }[activeCard];
 
     return handleClaim();
@@ -249,6 +296,9 @@ const BoosterClaim = ({
     }
     if (activeCard == "automata" && isAutoPay) {
       handleClaimAutoAutomata(true);
+    }
+    if (activeCard == "burst" && isAutoPay) {
+      handleClaimAutoBurst(true);
     }
     if (activeCard == "minion") {
       handleClaimShards(true);
@@ -270,6 +320,10 @@ const BoosterClaim = ({
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
         (activeCard === "minion" && boostersData?.isShardsClaimActive) ||
+        (activeCard === "burst" &&
+          isAutoPay &&
+          !boostersData.isBurstActive &&
+          hasTimeElapsed(gameData.autoPayBurstExpiry)) ||
         (activeCard === "automata" && isAutoPay)) && (
         <div
           onClick={() => {
