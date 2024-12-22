@@ -31,6 +31,11 @@ export const getAutomataStartTimes = (mythologies) =>
     .flatMap((myth) => myth.boosters.automataStartTime)
     .filter((time) => time !== 0);
 
+export const getBurstStartTimes = (mythologies) =>
+  mythologies
+    .flatMap((myth) => myth.boosters.burstActiveAt)
+    .filter((time) => time !== 0);
+
 export const isWithinOneMinute = (times) => {
   if (times.length !== 5) return false;
   const minTime = Math.min(...times);
