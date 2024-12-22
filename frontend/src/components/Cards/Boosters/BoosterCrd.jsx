@@ -191,6 +191,7 @@ const BoosterClaim = ({
       disableRef.current = true;
 
       const adId = isAdPlayed ? adsgramId : null;
+      const deductValue = isAdPlayed ? 0 : 3;
 
       try {
         await claimAutoAutomata(authToken, adId);
@@ -201,7 +202,7 @@ const BoosterClaim = ({
 
           const updatedData = {
             ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 3,
+            multiColorOrbs: prevData.multiColorOrbs - deductValue,
             mythologies: prevData.mythologies.map((item) => ({
               ...item,
               boosters: {
@@ -239,6 +240,7 @@ const BoosterClaim = ({
       disableRef.current = true;
 
       const adId = isAdPlayed ? adsgramId : null;
+      const deductValue = isAdPlayed ? 0 : 3;
 
       try {
         await claimAutoBurst(authToken, adId);
@@ -248,7 +250,7 @@ const BoosterClaim = ({
 
           const updatedData = {
             ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 9,
+            multiColorOrbs: prevData.multiColorOrbs - deductValue,
             autoPayBurstExpiry: now,
             mythologies: prevData.mythologies.map((item) => ({
               ...item,
