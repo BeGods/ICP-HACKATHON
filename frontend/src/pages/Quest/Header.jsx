@@ -1,6 +1,5 @@
 import { mythSections } from "../../utils/constants";
 import Symbol from "../../components/Common/Symbol";
-import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useState } from "react";
 import { formatTwoNums } from "../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -60,7 +59,7 @@ const BottomChild = ({
         >
           <div className="text-primary pl-headSides">
             {" "}
-            {formatTwoNums(lostQuests.length)}
+            {formatTwoNums(lostQuests)}
           </div>
         </div>
         <div

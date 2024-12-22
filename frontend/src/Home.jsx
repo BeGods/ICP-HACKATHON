@@ -166,7 +166,7 @@ const Home = () => {
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
-      const showAnmnt = await validateTutCookie(tele, "announcement02");
+      const showAnmnt = await validateTutCookie(tele, "announcement03");
 
       setGameData(response?.stats);
       setQuestsData(response?.quests);

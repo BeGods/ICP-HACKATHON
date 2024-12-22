@@ -91,24 +91,31 @@ const Quests = () => {
     (item) => item.status === "Active"
   );
 
-  // Determine the fallback quest
+  // fallback quest
   let initialQuestIndex = activeQuestIndex;
 
   if (initialQuestIndex === -1) {
-    // No active quest, check for lost quests
+    // inactive lost quests
+
     initialQuestIndex = quests?.findIndex(
       (item) => item.isQuestClaimed === false && item.status === "Inactive"
     );
   }
 
+  const numUnclaimedActiveQuests =
+    quests?.filter((item) => item.status === "Active" && !item.isQuestClaimed)
+      ?.length || 0;
+
   if (initialQuestIndex === -1) {
-    // No active or lost quests, check for completed quests
+    // completed quests
     initialQuestIndex = quests?.findIndex(
       (item) => item.isQuestClaimed === true
     );
   }
 
-  // Initialize state with the determined quest
+  const noOfUnclaimedQuests = numUnclaimedActiveQuests + lostQuests.length || 0;
+
+  // curr quest
   const [currQuest, setCurrQuest] = useState(initialQuestIndex);
   const quest = quests?.[currQuest];
 
@@ -387,7 +394,7 @@ const Quests = () => {
         activeMyth={activeMyth}
         currQuest={currQuest}
         completedQuests={completedQuests}
-        lostQuests={lostQuests}
+        lostQuests={noOfUnclaimedQuests}
         mythData={mythData}
         showClaimEffect={showClaimEffect}
         showSymbol={() => {

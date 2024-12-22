@@ -323,8 +323,7 @@ const BoosterClaim = ({
         (activeCard === "burst" &&
           isAutoPay &&
           !boostersData.isBurstActive &&
-          hasTimeElapsed(gameData.autoPayBurstExpiry)) ||
-        (activeCard === "automata" && isAutoPay)) && (
+          hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
