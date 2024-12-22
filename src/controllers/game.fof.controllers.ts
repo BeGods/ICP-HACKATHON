@@ -915,7 +915,7 @@ export const claimAutomataReward = async (req, res) => {
         { userId: userId },
         {
           $set: {
-            "autoPay.isAutomataAutoPayEnabled": true,
+            "autoPay.isBurstAutoPayEnabled": true,
           },
         }
       )
