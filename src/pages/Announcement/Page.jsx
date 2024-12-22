@@ -48,10 +48,10 @@ const Announcement = (props) => {
       disableRef.current = true;
       try {
         const response = await claimAnmntReward(authToken);
-        setTutKey(tele, "announcement02", 1);
+        setTutKey(tele, "announcement03", 1);
         setGameData((prev) => ({
           ...prev,
-          isAutomataAutoPayActive: true,
+          isBurstAutoPayActive: true,
         }));
 
         setShowAnmt(true);
@@ -76,7 +76,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_01.jpg"
+              src="/assets/announcements/480px-announcement_02.jpg"
               alt="announcement"
               className="w-full h-auto"
             />

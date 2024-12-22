@@ -94,16 +94,14 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
               <h1
                 className={`text-xl text-${mythSections[activeMyth]}-text text-button-primary rounded-full  w-full flex justify-center items-center`}
               >
-                Lvl{" "}
-                {activeCard === "automata" && isAutoPay
-                  ? 4
-                  : activeCard === "automata"
-                  ? mythData.automatalvl + 1
-                  : activeCard === "minion"
-                  ? mythData.shardslvl + 1
-                  : activeCard === "burst"
-                  ? mythData.burstlvl + 1
-                  : 1}
+                {!isAutoPay && "Lvl"}
+                {activeCard === "automata" && !isAutoPay
+                  ? mythData.automatalvl + 2
+                  : activeCard === "minion" && !isAutoPay
+                  ? mythData.shardslvl + 2
+                  : activeCard === "burst" && !isAutoPay
+                  ? mythData.burstlvl + 2
+                  : "4x"}
               </h1>
             </div>
             <div
@@ -135,3 +133,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
 };
 
 export default BoosterBtn;
+
+// activeCard === "automata" && isAutoPay
+//                   ? 4
+//                   :
