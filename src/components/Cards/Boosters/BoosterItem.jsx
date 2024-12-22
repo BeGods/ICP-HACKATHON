@@ -21,7 +21,7 @@ const BoosterItem = ({
         booster === 6 &&
         "grayscale"
       } ${booster === 0 && isGuideActive && "z-[60]"} ${
-        booster === 7
+        booster === 7 || booster === 8
           ? "border-multiColor"
           : `border-${mythSections[activeMyth]}-primary`
       } text-white ${
@@ -58,7 +58,7 @@ const BoosterItem = ({
             booster !== 7 &&
             booster !== 6 &&
             `glow-icon-${mythSections[activeMyth]}`
-          } ${booster === 7 && "gradient-multi"}  ${
+          } ${(booster === 7 || booster === 8) && "gradient-multi"}  ${
             booster === 6 &&
             !gameData.mythologies[activeMyth].isEligibleForBurst &&
             `text-gray-400`
@@ -90,7 +90,11 @@ const BoosterItem = ({
             </span>
           )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-            {booster != 6 && booster != 7 && booster != 1 && "Max. 99"}
+            {booster != 6 &&
+              booster != 7 &&
+              booster != 8 &&
+              booster != 1 &&
+              "Max. 99"}
           </span>
         </h2>
       </div>

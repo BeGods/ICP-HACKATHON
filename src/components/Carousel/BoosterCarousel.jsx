@@ -70,7 +70,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       />,
     ];
 
-    if (gameData.isAutoPayActive) {
+    if (gameData.isAutomataAutoPayActive) {
       // if (gameData.mythologies[activeMyth].boosters.isAutomataActive) {
       //   newItems.push(
       //     <BoosterItem
@@ -111,6 +111,22 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           activeMyth={activeMyth}
           t={t}
           booster={7}
+        />
+      );
+    }
+
+    if (gameData.isBurstAutoPayActive) {
+      newItems.unshift(
+        <BoosterItem
+          key="burst"
+          index={0}
+          currentIndex={currentIndex}
+          isGuideActive={enableGuide}
+          isActive={true}
+          handleClick={() => handleBoosterClick("burst", true)}
+          activeMyth={activeMyth}
+          t={t}
+          booster={8}
         />
       );
     }

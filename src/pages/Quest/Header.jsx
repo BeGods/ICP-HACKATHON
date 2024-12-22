@@ -104,7 +104,6 @@ const QuestHeader = ({
   totalQuests,
 }) => {
   const [changeText, setChangeText] = useState(true);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {

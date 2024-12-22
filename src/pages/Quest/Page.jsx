@@ -395,7 +395,7 @@ const Quests = () => {
                 isInfo={true}
                 handleClaim={handleClaimShareReward}
                 activeMyth={activeMyth}
-                link={quest.link[1]}
+                link={`https://twitter.com/intent/tweet?text=Check%20it%20out!%20%F0%9F%92%AF%0A%0ALearn%20about%20world%20mythologies%20and%20Play%20Forges%20of%20Faith%20from%20BeGODS%20Mythoverse!%20%F0%9F%9B%A1%EF%B8%8F%F0%9F%94%A5%40BattleofGods_io%0Ahttps%3A%2F%2Fx.com%2FBattleofGods_io%2Fstatus%2F${quest.link[0]}%0A%0A%F0%9F%8E%AE%20Join%20now%3A%20http%3A%2F%2Ft.me%2FBeGods_bot%0A%0A%23FoF%20%23ForgesOfFaith%20%23Play2Learn%20%23BeGodsTMA&via=BattleofGods_io`}
                 t={t}
               />
             }
@@ -426,7 +426,7 @@ const Quests = () => {
             }
           />
         ) : (
-          <div className="flex flex-col  mt-[12vh] gap-[28px] items-center justify-center w-full h-full">
+          <div className="flex flex-col  mt-[10vh] gap-[28px] items-center justify-center w-full h-full">
             <div
               className={`card ${
                 flipped ? "flipped" : ""

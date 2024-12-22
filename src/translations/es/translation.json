@@ -51,7 +51,8 @@
     {},
     {},
     { "title": "Explosión", "desc": "Presión de Apretar" },
-    { "title": "Paquete de Autómatas", "desc": "Autómatas 4X" }
+    { "title": "Paquete de Autómatas", "desc": "Autómatas 4X" },
+    { "title": "Paquete de Explosión", "desc": "4X Explosión" }
   ],
   "profile": {
     "premium": "Premium",

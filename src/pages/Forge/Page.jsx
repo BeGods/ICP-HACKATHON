@@ -830,7 +830,7 @@ const Forges = () => {
           setShowBlackOrb(0);
           setshowStarBoosters(0);
           isStarHold.current = false;
-          isStarHolding(0);
+          setIsStarHolding(0);
         }, 500);
       }, 9000);
     }
