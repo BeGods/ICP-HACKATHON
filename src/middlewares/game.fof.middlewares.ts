@@ -107,7 +107,7 @@ export const validAutomataReq = async (req, res, next) => {
 
     if (!requestedMyth) {
       return res
-        .status(404)
+        .status(400)
         .json({ message: `Mythology ${mythologyName} not found.` });
     }
 
@@ -204,6 +204,64 @@ export const validAutoAutomataReq = async (req, res, next) => {
   }
 };
 
+export const validAutoBurstReq = async (req, res, next) => {
+  try {
+    const userId = req.user;
+    const secretKey = config.security.HASH_KEY;
+    const hashedData = req.body.data;
+    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
+
+    const { adId } = JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
+
+    const userMythologiesData = (await userMythologies.findOne({
+      userId,
+    })) as IUserMyths;
+
+    if (!userMythologiesData) {
+      throw new Error("Insufficient orbs to claim brust.");
+    }
+
+    if (!userMythologiesData.autoPay.isBurstAutoPayEnabled) {
+      return res
+        .status(400)
+        .json({ message: `You are not eligible for auto pay.` });
+    }
+
+    // Check sufficient orbs to claim automata
+    if (userMythologiesData.multiColorOrbs < 3 && !adId) {
+      throw new Error("Insufficient multiColorOrbs to claim this burst.");
+    }
+
+    if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
+      throw new Error("Invalid ad request.");
+    }
+
+    const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
+
+    if (
+      userMythologiesData.autoPay.burstAutoPayExpiration - Date.now() >
+      millisecondsIn24Hours
+    ) {
+      throw new Error(
+        "Your previous burst has not expired yet. Please try again later."
+      );
+    }
+
+    if (adId) {
+      req.deductValue = 0;
+    } else {
+      req.deductValue = -9;
+    }
+    req.mythData = userMythologiesData;
+
+    next();
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export const validateBurstReq = async (req, res, next) => {
   try {
     const userId = req.user;
@@ -248,6 +306,7 @@ export const validateBurstReq = async (req, res, next) => {
     }
 
     req.userMyth = requestedMyth;
+    req.mythData = userMythologiesData;
 
     next();
   } catch (error) {

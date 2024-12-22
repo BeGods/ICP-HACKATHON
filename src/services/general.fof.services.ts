@@ -179,7 +179,7 @@ export const claimBonusBooster = async (userId) => {
       const result = await userMythologies.findOneAndUpdate(
         { userId, "mythologies.name": randomMyth },
         {
-          $inc: { "mythologies.$.boosters.shardslvl": 1 },
+          $inc: { "mythologies.$.boosters.shardslvl": 2 },
           $set: {
             "mythologies.$.boosters.isShardsClaimActive": false,
             "mythologies.$.boosters.shardsLastClaimedAt": Date.now(),
@@ -194,7 +194,7 @@ export const claimBonusBooster = async (userId) => {
       const result = await userMythologies.findOneAndUpdate(
         { userId, "mythologies.name": randomMyth },
         {
-          $inc: { "mythologies.$.boosters.automatalvl": 1 },
+          $inc: { "mythologies.$.boosters.automatalvl": 2 },
           $set: {
             "mythologies.$.boosters.isAutomataActive": true,
             "mythologies.$.boosters.automataLastClaimedAt": Date.now(),
