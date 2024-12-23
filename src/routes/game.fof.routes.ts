@@ -12,6 +12,7 @@ import {
   claimAutoAutomata,
   claimAutomataReward,
   claimAutoBurst,
+  claimMoonBoost,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
@@ -19,6 +20,7 @@ import {
   validAutomataReq,
   validShardsBoosterReq,
   validateBurstReq,
+  validateClaimMoon,
   validateOrbsConversion,
   validateStarClaim,
 } from "../middlewares/game.fof.middlewares";
@@ -78,6 +80,12 @@ router.get(
   authMiddleware,
   validateOrbsConversion,
   convertOrbs
+);
+router.post(
+  "/booster/claim/moon",
+  authMiddleware,
+  validateClaimMoon,
+  claimMoonBoost
 );
 router.get("/reward/claim", authMiddleware, claimAutomataReward);
 

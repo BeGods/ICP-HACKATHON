@@ -3,6 +3,8 @@ import {
   getAutomataStartTimes,
   getBurstStartTimes,
   getPhaseByDate,
+  hasBeenFourDaysSinceClaimedUTC,
+  isClaimedTodayUTC,
   isWithinOneMinute,
 } from "../utils/helpers/game.helpers";
 import userMythologies, {
@@ -148,7 +150,10 @@ export const claimTapSession = async (req, res) => {
     let blackOrbPhaseBonus = 1;
     const currPhase = getPhaseByDate(new Date());
 
-    if (currPhase === 4) {
+    if (
+      currPhase === 4 &&
+      hasBeenFourDaysSinceClaimedUTC(userMythology.lastMoonClaimAt)
+    ) {
       blackOrbPhaseBonus = 2;
     }
 
@@ -426,6 +431,12 @@ export const getGameStats = async (req, res) => {
     res.status(200).json({
       user: userData,
       stats: {
+        isMoonActive: userMythologiesData.userMythologies[0].lastMoonClaimAt
+          ? hasBeenFourDaysSinceClaimedUTC(
+              userMythologiesData.userMythologies[0].lastMoonClaimAt
+            )
+          : false,
+        moonExpiresAt: userMythologiesData.userMythologies[0].lastMoonClaimAt,
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
         blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
         whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
@@ -487,7 +498,7 @@ export const claimShardsBooster = async (req, res) => {
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
       source: "boosters",
-      orbs: { MultiOrb: 1 },
+      orbs: { MultiOrb: deductValue == 0 ? 0 : 1 },
     });
     await newOrbsTransaction.save();
 
@@ -556,7 +567,7 @@ export const claimAutomata = async (req, res) => {
     await new OrbsTransactions({
       userId: user,
       source: "automata",
-      orbs: { MultiOrb: 1 },
+      orbs: { MultiOrb: deductValue == 0 ? 0 : 1 },
     }).save();
 
     res.status(200).json({
@@ -604,7 +615,7 @@ export const claimAutoAutomata = async (req, res) => {
     await new OrbsTransactions({
       userId: user,
       source: "automata",
-      orbs: { MulitOrb: 3 },
+      orbs: { MulitOrb: deductValue ? 0 : 3 },
     }).save();
 
     res.status(200).json({
@@ -741,10 +752,13 @@ export const convertOrbs = async (req, res) => {
     let blackOrbPhaseBonus = 1;
     let phaseBonus = 1;
 
-    if (mythOrder[currPhase] === mythologyName) {
-      phaseBonus = 2;
+    if (!hasBeenFourDaysSinceClaimedUTC(Date.now())) {
+      blackOrbPhaseBonus = 1;
+      phaseBonus = 1;
+    } else if (mythOrder[currPhase] === mythologyName) {
+      phaseBonus = 4;
     } else if (currPhase === 4) {
-      blackOrbPhaseBonus = 2;
+      blackOrbPhaseBonus = 4;
     }
 
     let updatedMultiOrbs = (convertedOrbs / (isValidKey ? 1 : 2)) * phaseBonus;
@@ -786,6 +800,41 @@ export const convertOrbs = async (req, res) => {
 
     res.status(200).json({ message: "Orbs converted successfully!" });
   } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimMoonBoost = async (req, res) => {
+  try {
+    const { user, deductValue } = req;
+    const now = Date.now();
+
+    await userMythologies
+      .findOneAndUpdate(
+        { userId: user._id },
+        {
+          $set: {
+            lastMoonClaimAt: now,
+          },
+        },
+        { new: true }
+      )
+      .select("-__v -createdAt -updatedAt -_id");
+
+    await new OrbsTransactions({
+      userId: user,
+      source: "moon",
+      orbs: { MultiOrb: deductValue == 0 ? 0 : 3 },
+    }).save();
+
+    res.status(200).json({
+      message: "Moon Boost claimed successfully.",
+    });
+  } catch (error) {
+    console.error("Moon Boost error:", error);
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
