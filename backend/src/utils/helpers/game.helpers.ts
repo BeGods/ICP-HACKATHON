@@ -54,3 +54,31 @@ export const getPhaseByDate = (date = new Date()) => {
 
   return phase + 1;
 };
+
+export const isClaimedTodayUTC = (time) => {
+  if (time === 0) {
+    return false;
+  }
+  const now = new Date();
+  const startOfTodayUTC = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate()
+  );
+  const endOfTodayUTC = startOfTodayUTC + 86400000;
+
+  return time >= startOfTodayUTC && time < endOfTodayUTC;
+};
+
+export const hasBeenFourDaysSinceClaimedUTC = (time) => {
+  if (time === 0) {
+    return false;
+  }
+
+  const now = Date.now();
+
+  const fourDaysAgoUTC = now - 4 * 24 * 60 * 60 * 1000;
+  const fiveDaysAgoUTC = now - 5 * 24 * 60 * 60 * 1000;
+
+  return time >= fiveDaysAgoUTC && time < fourDaysAgoUTC;
+};
