@@ -3,8 +3,8 @@ import {
   getAutomataStartTimes,
   getBurstStartTimes,
   getPhaseByDate,
+  getShortestStartTime,
   hasBeenFourDaysSinceClaimedUTC,
-  isClaimedTodayUTC,
   isWithinOneMinute,
 } from "../utils/helpers/game.helpers";
 import userMythologies, {
@@ -33,6 +33,12 @@ import milestones from "../models/milestones.models";
 import User, { IUser } from "../models/user.models";
 import CryptoJs from "crypto-js";
 import config from "../config/config";
+
+interface OutputJson {
+  message: string;
+  updatedBooster: Object;
+  autoPayLock?: number;
+}
 
 export const startTapSession = async (req, res) => {
   try {
@@ -278,7 +284,7 @@ export const getGameStats = async (req, res) => {
 
     const userMythologiesData = userGameStats[0];
 
-    // Calculate and update energy for each mythology
+    // calculate and update energy for each mythology
     const updatedData = updateMythologies(
       userMythologiesData.userMythologies[0].mythologies
     );
@@ -291,6 +297,9 @@ export const getGameStats = async (req, res) => {
       (defaultMyth) => !existingNames.includes(defaultMyth.name)
     );
     const completeMythologies = [...updatedMythologies, ...missingMythologies];
+
+    const automataStateTimes = getAutomataStartTimes(completeMythologies);
+    const isAutoAutomataActive = getShortestStartTime(automataStateTimes);
 
     // Remove id from each mythology
     completeMythologies.forEach((mythology) => {
@@ -440,18 +449,17 @@ export const getGameStats = async (req, res) => {
         multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
         blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
         whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
-        isAutomataAutoPayActive:
+        isEligibleToAutomataAuto:
           userMythologiesData.userMythologies[0].autoPay
             ?.isAutomataAutoPayEnabled ?? false,
+        isAutomataAutoActive: isAutoAutomataActive,
         isBurstAutoPayActive:
           userMythologiesData.userMythologies[0].autoPay
             ?.isBurstAutoPayEnabled ?? false,
         autoPayBurstExpiry:
           userMythologiesData.userMythologies[0].autoPay
             ?.burstAutoPayExpiration ?? 0,
-        autoPayExpiry:
-          userMythologiesData.userMythologies[0].autoPay
-            ?.automataAutoPayExpiration ?? 0,
+
         mythologies: completeMythologies.sort(
           (a, b) => mythOrder.indexOf(a.name) - mythOrder.indexOf(b.name)
         ),
@@ -519,6 +527,7 @@ export const claimAutomata = async (req, res) => {
     const { user, userMyth, mythData, deductValue } = req;
     const now = Date.now();
     let enableAutoPay = mythData.autoPay;
+    let autoPayLock = -1;
 
     userMyth.boosters.automatalvl = Math.min(
       userMyth.boosters.automatalvl + 2,
@@ -535,6 +544,10 @@ export const claimAutomata = async (req, res) => {
       if (isWithinOneMinute(automataStartTimes)) {
         enableAutoPay.isAutomataAutoPayEnabled = true;
       }
+    }
+
+    if (automataStartTimes.length === 5) {
+      autoPayLock = getShortestStartTime(automataStartTimes);
     }
 
     // if (
@@ -573,6 +586,7 @@ export const claimAutomata = async (req, res) => {
     res.status(200).json({
       message: "Automata claimed successfully.",
       updatedBooster: updatedBoosterData,
+      autoPayLock: autoPayLock,
     });
   } catch (error) {
     console.error("Claim automata error:", error);

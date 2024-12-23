@@ -165,7 +165,7 @@ export const validateBooster = (boosters) => {
     }
     if (boosters.shardslvl === 99) {
       // level 7
-      boosters.shardslvl = 1;
+      boosters.shardslvl = 99;
     }
 
     return boosters;
@@ -187,7 +187,7 @@ export const validateAutomata = (gameData) => {
 
     if (gameData.boosters.automatalvl === 99) {
       // 48 hours or level 7
-      gameData.boosters.automatalvl = 0;
+      gameData.boosters.automatalvl = 99;
     }
 
     if (gameData.boosters.isAutomataActive) {
@@ -218,7 +218,7 @@ export const validateBurst = (gameData) => {
 
     if (gameData.boosters.burstlvl === 99) {
       // 48 hours or level 7
-      gameData.boosters.burstlvl = 1;
+      gameData.boosters.burstlvl = 99;
     }
 
     return gameData;
@@ -265,7 +265,6 @@ export const updateMythologies = (mythologies) => {
 
       // Validate boosters
       mythology.boosters = validateBooster(mythology.boosters);
-
       mythology = validateAutomata(mythology);
 
       if (
