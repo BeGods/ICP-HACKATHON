@@ -10,6 +10,10 @@ import userMythologies, {
 import { mythOrder } from "../utils/constants/variables";
 import config from "../config/config";
 import CryptoJs from "crypto-js";
+import {
+  hasBeenFourDaysSinceClaimedUTC,
+  isClaimedTodayUTC,
+} from "../utils/helpers/game.helpers";
 
 export const validShardsBoosterReq = async (req, res, next) => {
   try {
@@ -218,7 +222,7 @@ export const validAutoBurstReq = async (req, res, next) => {
     })) as IUserMyths;
 
     if (!userMythologiesData) {
-      throw new Error("Insufficient orbs to claim brust.");
+      throw new Error("Game data not found.");
     }
 
     if (!userMythologiesData.autoPay.isBurstAutoPayEnabled) {
@@ -363,6 +367,47 @@ export const validateOrbsConversion = async (req, res, next) => {
     req.convertedOrbs = convertedOrbs;
     req.userMyth = data[0];
 
+    next();
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const validateClaimMoon = async (req, res, next) => {
+  try {
+    const userId = req.user;
+    const secretKey = config.security.HASH_KEY;
+    const hashedData = req.body.data;
+    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
+
+    const { adId } = JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
+
+    const userMythologiesData = (await userMythologies.findOne({
+      userId,
+    })) as IUserMyths;
+
+    if (hasBeenFourDaysSinceClaimedUTC(userMythologiesData.lastMoonClaimAt)) {
+      throw new Error(
+        "Your previous boost has not expired yet. Please try again later."
+      );
+    }
+
+    // Check sufficient orbs to claim automata
+    if (userMythologiesData.multiColorOrbs < 1 && !adId) {
+      throw new Error("Insufficient multiColorOrbs to claim this moon.");
+    }
+
+    if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
+      throw new Error("Invalid ad request.");
+    }
+
+    if (adId) {
+      req.deductValue = 0;
+    } else {
+      req.deductValue = -3;
+    }
     next();
   } catch (error) {
     console.log(error);
