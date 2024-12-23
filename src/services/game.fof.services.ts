@@ -185,9 +185,9 @@ export const validateAutomata = (gameData) => {
       gameData.boosters.automataStartTime = 0;
     }
 
-    if (gameData.boosters.automatalvl === 99) {
+    if (gameData.boosters.automatalvl === 98) {
       // 48 hours or level 7
-      gameData.boosters.automatalvl = 99;
+      gameData.boosters.automatalvl = 98;
     }
 
     if (gameData.boosters.isAutomataActive) {
