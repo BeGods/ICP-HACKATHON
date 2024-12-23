@@ -17,9 +17,22 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
     <div className="relative mt-[10px]">
       <div className="relative z-50">
         {activeCard === "automata" &&
-        mythData?.isAutomataActive &&
-        !hasTimeElapsed(mythData.automataStartTime) &&
-        !isAutoPay ? (
+        gameData?.isAutomataAutoActive !== -1 &&
+        !hasTimeElapsed(gameData.isAutomataAutoActive) &&
+        isAutoPay ? (
+          <div
+            className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}
+          >
+            <div className="flex justify-center items-center w-1/4 h-full"></div>
+            <div className="text-primary uppercase">
+              -{calculateRemainingTime(gameData.isAutomataAutoActive)}
+            </div>
+            <div className="flex justify-center items-center w-1/4  h-full"></div>
+          </div>
+        ) : activeCard === "automata" &&
+          mythData?.isAutomataActive &&
+          !hasTimeElapsed(mythData.automataStartTime) &&
+          !isAutoPay ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}
           >

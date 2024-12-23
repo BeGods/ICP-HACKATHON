@@ -124,8 +124,9 @@ export const validateSoundCookie = async (tele) => {
     });
   } else {
     const cookieItem = localStorage.getItem("sound");
+
     if (cookieItem) {
-      return Boolean(cookieItem);
+      return false;
     }
   }
 
