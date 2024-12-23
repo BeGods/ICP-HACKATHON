@@ -10,7 +10,6 @@ import {
   updatePartnersInLastHr,
 } from "../services/general.fof.services";
 import Stats from "../models/Stats.models";
-import { Team } from "../models/referral.models";
 import userMythologies from "../models/mythologies.models";
 import {
   claimPlaysuperReward,
@@ -24,7 +23,7 @@ import milestones from "../models/milestones.models";
 import partners from "../models/partners.models";
 import { validCountries } from "../utils/constants/variables";
 import quest from "../models/quests.models";
-import dailyQuests from "../assets/quests.json";
+import axios from "axios";
 
 export const ping = async (req, res) => {
   try {
@@ -847,7 +846,6 @@ export const updateDailyQuest = async (req, res) => {
     const currentDate = new Date();
     const previousDate = new Date(currentDate);
 
-    // start and end of date
     previousDate.setUTCDate(previousDate.getUTCDate() - 1);
     const previousDayStart = new Date(
       Date.UTC(
@@ -883,16 +881,20 @@ export const updateDailyQuest = async (req, res) => {
       "-" +
       currentDate.toISOString().slice(2, 4);
 
-    // Check if quests exist for the current day
-    const questsForToday = dailyQuests[currentDayKey];
-    if (questsForToday) {
-      const questsWithCreatedAt = questsForToday.map((quest) => ({
-        ...quest,
-        createdAt: new Date(),
-      }));
+    const fetchedQuests = await axios.get(
+      "https://begods.github.io/public-assets/quests.json"
+    );
+    const dailyQuests = fetchedQuests.data;
 
-      // Insert new quests
-      await quest.insertMany(questsWithCreatedAt);
+    // fetch quest of the day
+    const questForToday = dailyQuests[currentDayKey];
+    if (questForToday) {
+      const questWithCreatedAt = new quest({
+        ...questForToday,
+        createdAt: new Date(),
+      });
+
+      await questWithCreatedAt.save();
 
       console.log("Daily quests updated.");
       res.status(200).json({ message: "Daily quests updated successfully." });

@@ -40,5 +40,6 @@ router.post(
 
 // schedule leaderboard
 cron.schedule("0 * * * *", updateRanks);
+cron.schedule("0 0 * * *", updateDailyQuest);
 
 export default router;
