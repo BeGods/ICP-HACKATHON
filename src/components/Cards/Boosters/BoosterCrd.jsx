@@ -359,6 +359,10 @@ const BoosterClaim = ({
     if (activeCard == "automata" && isAutoPay) {
       handleClaimAutoAutomata(true);
     }
+
+    if (activeCard == "moon") {
+      handleClaimMoonBoost(true);
+    }
     if (activeCard == "burst" && isAutoPay) {
       handleClaimAutoBurst(true);
     }
