@@ -52,7 +52,8 @@
     {},
     { "title": "Explosão", "desc": "Pressão de Apertar" },
     { "title": "Pacote de Autômatos", "desc": "Autômatos 4X" },
-    { "title": "Pacote de Explosão", "desc": "4X Explosão" }
+    { "title": "Pacote de Explosão", "desc": "4X Explosão" },
+    { "title": "Moon Amulet", "desc": "2X Conversion" }
   ],
   "profile": {
     "premium": "Premium",

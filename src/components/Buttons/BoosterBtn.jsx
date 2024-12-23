@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { mythSections } from "../../utils/constants";
 import {
+  calculateMoonRemainingTime,
   calculateRemainingTime,
   hasTimeElapsed,
 } from "../../helpers/booster.helper";
@@ -77,6 +78,16 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
             </div>
             <div className="flex justify-center items-center w-1/4  h-full"></div>
           </div>
+        ) : activeCard === "moon" && gameData.isMoonActive ? (
+          <div
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+          >
+            <div className="flex justify-center items-center w-1/4 h-full"></div>
+            <div className="text-primary uppercase">
+              -{calculateMoonRemainingTime(gameData.moonExpiresAt)}
+            </div>
+            <div className="flex justify-center items-center w-1/4  h-full"></div>
+          </div>
         ) : (
           <div
             onClick={(e) => {
@@ -94,13 +105,15 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
               <h1
                 className={`text-xl text-${mythSections[activeMyth]}-text text-button-primary rounded-full  w-full flex justify-center items-center`}
               >
-                {!isAutoPay && "Lvl"}
+                {!isAutoPay && activeCard !== "moon" && "Lvl"}
                 {activeCard === "automata" && !isAutoPay
                   ? mythData.automatalvl + 2
                   : activeCard === "minion" && !isAutoPay
                   ? mythData.shardslvl + 2
                   : activeCard === "burst" && !isAutoPay
                   ? mythData.burstlvl + 2
+                  : activeCard === "moon" && !isAutoPay
+                  ? "4x"
                   : "4x"}
               </h1>
             </div>
@@ -119,7 +132,9 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
                 <div className="font-medium text-[40px] text-white glow-text-black">
                   {activeCard == "burst" && isAutoPay
                     ? 9
-                    : (activeCard == "burst" && !isAutoPay) || isAutoPay
+                    : (activeCard == "burst" && !isAutoPay) ||
+                      isAutoPay ||
+                      activeCard === "moon"
                     ? 3
                     : 1}
                 </div>
@@ -133,7 +148,3 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
 };
 
 export default BoosterBtn;
-
-// activeCard === "automata" && isAutoPay
-//                   ? 4
-//                   :
