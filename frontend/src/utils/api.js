@@ -98,6 +98,34 @@ export const convertOrbs = async (data, accessToken) => {
   }
 };
 
+export const claimMoonBoost = async (accessToken, adId) => {
+  let url = `${import.meta.env.VITE_API_URL}/booster/claim/moon`;
+  const secretKey = import.meta.env.VITE_HASH_KEY;
+  const gameData = {
+    adId: adId,
+  };
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
+
+  try {
+    const response = await axios.post(
+      url,
+      { data: hashedData },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const claimShareReward = async (questData, accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/quests/share`;
 

@@ -20,8 +20,14 @@ const tele = window.Telegram?.WebApp;
 const Announcement = (props) => {
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { setSection, setGameData, authToken, setShowAnmt, enableHaptic } =
-    useContext(MyContext);
+  const {
+    setSection,
+    setGameData,
+    authToken,
+    setActiveMyth,
+    setShowAnmt,
+    enableHaptic,
+  } = useContext(MyContext);
   let disableRef = useRef(false);
 
   const playConfetti = () => {
@@ -47,14 +53,16 @@ const Announcement = (props) => {
       handleClickHaptic(tele, enableHaptic);
       disableRef.current = true;
       try {
-        const response = await claimAnmntReward(authToken);
-        setTutKey(tele, "announcement03", 1);
-        setGameData((prev) => ({
-          ...prev,
-          isBurstAutoPayActive: true,
-        }));
+        // const response = await claimAnmntReward(authToken);
+        // setTutKey(tele, "announcement03", 1);
+        // setGameData((prev) => ({
+        //   ...prev,
+        //   isBurstAutoPayActive: true,
+        // }));
 
+        // setShowAnmt(true);
         setShowAnmt(true);
+        setTutKey(tele, "announcement04", 1);
         setSection(2);
       } catch (error) {
         showToast("default");
@@ -76,7 +84,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_02.jpg"
+              src="/assets/announcements/480px-announcement_03.jpg"
               alt="announcement"
               className="w-full h-auto"
             />

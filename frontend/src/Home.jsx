@@ -34,6 +34,7 @@ import {
 import OnboardPage from "./pages/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "./utils/ga";
 import Announcement from "./pages/Announcement/Page";
+import { getPhaseByDate } from "./helpers/game.helper";
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -166,8 +167,7 @@ const Home = () => {
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
-      const showAnmnt = await validateTutCookie(tele, "announcement03");
-
+      const showAnmnt = await validateTutCookie(tele, "announcement04");
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setSocialQuestData(response?.extraQuests);

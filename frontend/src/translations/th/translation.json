@@ -56,7 +56,8 @@
     {},
     { "title": "ระเบิด", "desc": "กดค้าง" },
     { "title": "ชุด ออโตมาตา", "desc": "4X ออโตมาตา" },
-    { "title": "ชุด ระเบิด", "desc": "4X ระเบิด" }
+    { "title": "ชุด ระเบิด", "desc": "4X ระเบิด" },
+    { "title": "Moon Amulet", "desc": "4X Orb Conversion" }
   ],
   "profile": {
     "premium": "พรีเมียม",

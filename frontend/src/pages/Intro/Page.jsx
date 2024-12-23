@@ -12,6 +12,7 @@ import { trackComponentView } from "../../utils/ga";
 import { mythologies, mythSymbols } from "../../utils/constants";
 
 const tele = window.Telegram?.WebApp;
+console.log(tele.platform);
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",
@@ -24,7 +25,6 @@ const IntroPage = (props) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
-  const [showCaptcha, setShowCaptcha] = useState(false);
   const [fadeout, setFadeout] = useState(false);
   const [platform, setPlatform] = useState(null);
   const [enableSound, setEnableSound] = useState(true);
@@ -36,10 +36,11 @@ const IntroPage = (props) => {
       try {
         await tele.ready();
 
-        const { user } = tele.initDataUnsafe || {};
+        const { user } = tele.initData || {};
+
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
-        // tele.addToHomeScreen();
+        tele.addToHomeScreen();
         tele.lockOrientation();
         tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();

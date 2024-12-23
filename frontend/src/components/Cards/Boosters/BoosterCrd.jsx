@@ -1,5 +1,15 @@
-import React, { useCallback, useContext, useRef } from "react";
-import { mythologies, mythSections } from "../../../utils/constants";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  mythologies,
+  mythSections,
+  mythSymbols,
+} from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../../context/context";
@@ -11,6 +21,7 @@ import {
   claimAutoBurst,
   claimAutomataBooster,
   claimBurstBooster,
+  claimMoonBoost,
   claimShardsBooster,
 } from "../../../utils/api";
 import { trackEvent } from "../../../utils/ga";
@@ -46,6 +57,16 @@ const BoosterClaim = ({
   const disableRef = useRef(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
   const adsgramId = import.meta.env.VITE_AD_BOOSTER;
+  const myths = ["greek", "celtic", "norse", "egyptian", "other"];
+  const [activeColor, setActiveColor] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveColor((prev) => (prev + 1) % myths.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [myths.length]);
 
   const handleClaimShards = async (isAdPlayed) => {
     if (disableRef.current === false) {
@@ -281,12 +302,51 @@ const BoosterClaim = ({
     }
   };
 
+  const handleClaimMoonBoost = async (isAdPlayed) => {
+    if (disableRef.current === false) {
+      disableRef.current === true;
+      const adId = isAdPlayed ? adsgramId : null;
+      const deductValue = isAdPlayed ? 0 : 3;
+
+      try {
+        await claimMoonBoost(authToken, adId);
+        trackEvent("purchase", "claim_moon", "success");
+        setGameData((prevData) => {
+          const updatedData = {
+            ...prevData,
+            multiColorOrbs: prevData.multiColorOrbs - deductValue,
+            isMoonActive: true,
+            moonExpiresAt: Date.now(),
+          };
+
+          return updatedData;
+        });
+
+        setShowCard(null);
+        showToast("booster_success");
+        setSection(4);
+        disableRef.current === false;
+      } catch (error) {
+        setShowCard(null);
+        disableRef.current === false;
+        const errorMessage =
+          error.response.data.error ||
+          error.response.data.message ||
+          error.message ||
+          "An unexpected error occurred";
+        console.log(errorMessage);
+        showToast("booster_error");
+      }
+    }
+  };
+
   const handleButton = () => {
     handleClickHaptic(tele, enableHaptic);
     const handleClaim = {
       automata: isAutoPay ? handleClaimAutoAutomata : handleClaimAutomata,
       minion: handleClaimShards,
       burst: isAutoPay ? handleClaimAutoBurst : handleClaimBurst,
+      moon: handleClaimMoonBoost,
     }[activeCard];
 
     return handleClaim();
@@ -321,11 +381,8 @@ const BoosterClaim = ({
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
-        (activeCard === "minion" && boostersData?.isShardsClaimActive) ||
-        (activeCard === "burst" &&
-          isAutoPay &&
-          !boostersData.isBurstActive &&
-          hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
+        (activeCard === "moon" && !gameData.isMoonActive) ||
+        (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
@@ -408,22 +465,43 @@ const BoosterClaim = ({
                   width: "100%",
                 }}
                 className={`rounded-b-primary filter-paper-${
-                  !isAutoPay && mythSections[activeMyth]
+                  !isAutoPay &&
+                  activeCard !== "moon" &&
+                  mythSections[activeMyth]
                 }`}
               />
-              <div
-                className={`flex justify-center ${
-                  isAutoPay
-                    ? "gradient-icon-multi"
-                    : "text-white  glow-text-black"
-                } text-[60px] w-full h-full items-center px-3 z-10 font-symbols`}
-              >
-                {activeCard === "automata"
-                  ? "n"
-                  : activeCard === "minion"
-                  ? "9"
-                  : "s"}
-              </div>
+              {activeCard === "moon" ? (
+                <div className="flex justify-center items-center w-full">
+                  <div
+                    className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeColor]} `}
+                  >
+                    <img
+                      src={assets.uxui.baseorb}
+                      alt="orb"
+                      className={`filter-orbs-${mythSections[activeColor]} overflow-hidden max-w-[14vw]`}
+                    />
+                    <span
+                      className={`absolute z-1  text-black-sm-contour transition-all duration-1000 text-white  font-symbols  text-[10vw] mt-1 opacity-50`}
+                    >
+                      {mythSymbols[mythSections[activeColor]]}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`flex justify-center ${
+                    isAutoPay
+                      ? "gradient-icon-multi"
+                      : "text-white  glow-text-black"
+                  } text-[60px] w-full h-full items-center px-3 z-10 font-symbols`}
+                >
+                  {activeCard === "automata"
+                    ? "n"
+                    : activeCard === "minion"
+                    ? "9"
+                    : "s"}
+                </div>
+              )}
             </div>
           </div>
         </div>

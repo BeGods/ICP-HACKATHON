@@ -5,6 +5,8 @@ import BoosterClaim from "../Cards/Boosters/BoosterCrd";
 import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { isClaimedTodayUTC } from "../../helpers/booster.helper";
+import { getPhaseByDate } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -71,7 +73,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     ];
 
     if (gameData.isBurstAutoPayActive) {
-      newItems.unshift(
+      newItems.push(
         <BoosterItem
           key="burst"
           index={0}
@@ -130,6 +132,20 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         />
       );
     }
+
+    newItems.unshift(
+      <BoosterItem
+        key="moon"
+        index={0}
+        currentIndex={currentIndex}
+        isGuideActive={enableGuide}
+        isActive={gameData.isMoonActive}
+        handleClick={() => handleBoosterClick("moon", false)}
+        activeMyth={activeMyth}
+        t={t}
+        booster={9}
+      />
+    );
 
     setItems(newItems);
     setCurrentIndex(0);

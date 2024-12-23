@@ -39,7 +39,8 @@
         "automataPop": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/160px-automata.png",
         "alchemistCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-alchemist.jpg",
         "automataCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-automata.jpg",
-        "burstCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-burst.jpg"
+        "burstCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-burst.jpg",
+        "moonCard": "/assets/320px-moon-amulet.jpg"
     },
     "audio": {
         "towerButton": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.tower.lock.mp3",
