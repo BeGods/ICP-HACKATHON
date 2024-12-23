@@ -88,36 +88,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       );
     }
 
-    if (gameData.isAutomataAutoPayActive) {
-      // if (gameData.mythologies[activeMyth].boosters.isAutomataActive) {
-      //   newItems.push(
-      //     <BoosterItem
-      //       key="automata"
-      //       index={0}
-      //       currentIndex={currentIndex}
-      //       isGuideActive={enableGuide}
-      //       isActive={true}
-      //       handleClick={() => handleBoosterClick("automata", true)}
-      //       activeMyth={activeMyth}
-      //       t={t}
-      //       booster={7}
-      //     />
-      //   );
-      // } else {
-      //   newItems.unshift(
-      //     <BoosterItem
-      //       key="automata"
-      //       index={0}
-      //       currentIndex={currentIndex}
-      //       isGuideActive={enableGuide}
-      //       isActive={true}
-      //       handleClick={() => handleBoosterClick("automata", true)}
-      //       activeMyth={activeMyth}
-      //       t={t}
-      //       booster={7}
-      //     />
-      //   );
-      // }
+    if (gameData.isEligibleToAutomataAuto) {
       newItems.push(
         <BoosterItem
           key="automata"

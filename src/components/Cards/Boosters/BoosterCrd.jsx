@@ -176,6 +176,7 @@ const BoosterClaim = ({
         setGameData((prevData) => {
           const updatedData = {
             ...prevData,
+            isAutomataAutoActive: response.autoPayLock,
             multiColorOrbs: prevData.multiColorOrbs - 1,
             mythologies: prevData.mythologies.map((item) =>
               item.name === mythologies[activeMyth]
@@ -223,6 +224,7 @@ const BoosterClaim = ({
 
           const updatedData = {
             ...prevData,
+            isAutomataAutoActive: Date.now(),
             multiColorOrbs: prevData.multiColorOrbs - deductValue,
             mythologies: prevData.mythologies.map((item) => ({
               ...item,
@@ -492,18 +494,20 @@ const BoosterClaim = ({
                   </div>
                 </div>
               ) : (
-                <div
-                  className={`flex justify-center ${
-                    isAutoPay
-                      ? "gradient-icon-multi"
-                      : "text-white  glow-text-black"
-                  } text-[60px] w-full h-full items-center px-3 z-10 font-symbols`}
-                >
-                  {activeCard === "automata"
-                    ? "n"
-                    : activeCard === "minion"
-                    ? "9"
-                    : "s"}
+                <div className="flex w-full justify-center items-center">
+                  <div
+                    className={`${
+                      isAutoPay
+                        ? "gradient-multi"
+                        : "text-white  glow-text-black"
+                    } text-[60px] font-symbols z-10`}
+                  >
+                    {activeCard === "automata"
+                      ? "n"
+                      : activeCard === "minion"
+                      ? "9"
+                      : "s"}
+                  </div>
                 </div>
               )}
             </div>
