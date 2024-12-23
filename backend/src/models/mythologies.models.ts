@@ -31,6 +31,7 @@ export interface IMyth extends Document {
 export interface IUserMyths extends Document {
   mythologies: IMyth[];
   multiColorOrbs: number;
+  lastMoonClaimAt: number;
   autoPay: {
     isAutomataAutoPayEnabled: boolean;
     isBurstAutoPayEnabled: boolean;
@@ -159,6 +160,10 @@ const userMythologySchema = new Schema(
         },
         message: "Each mythology must be unique.",
       },
+    },
+    lastMoonClaimAt: {
+      type: Number,
+      default: 0,
     },
     multiColorOrbs: {
       type: Number,

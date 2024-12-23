@@ -44,6 +44,7 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
         "automata",
         "bonus",
         "burst",
+        "moon",
       ],
       required: true,
     },
