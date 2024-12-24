@@ -10,9 +10,9 @@ import {
   updateGameData,
   claimBurst,
   claimAutoAutomata,
-  claimAutomataReward,
   claimAutoBurst,
   claimMoonBoost,
+  claimGachaReward,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
@@ -87,6 +87,6 @@ router.post(
   validateClaimMoon,
   claimMoonBoost
 );
-router.get("/reward/claim", authMiddleware, claimAutomataReward);
+router.get("/reward/claim", authMiddleware, claimGachaReward);
 
 export default router;

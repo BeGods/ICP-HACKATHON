@@ -175,11 +175,17 @@ export const claimBonusBooster = async (userId) => {
     const randomBooster = boosters[Math.floor(Math.random() * 2)];
     let boosterUpdatedData;
 
+    const userMyth = await userMythologies.findOne({ userId: userId });
+    const filteredMyth = userMyth.mythologies.find(
+      (mythology) => mythology.name == randomMyth
+    );
+
     if (randomBooster === "minion") {
+      const updateValue = filteredMyth.boosters.shardslvl >= 99 ? 0 : 2;
       const result = await userMythologies.findOneAndUpdate(
         { userId, "mythologies.name": randomMyth },
         {
-          $inc: { "mythologies.$.boosters.shardslvl": 2 },
+          $inc: { "mythologies.$.boosters.shardslvl": updateValue },
           $set: {
             "mythologies.$.boosters.isShardsClaimActive": false,
             "mythologies.$.boosters.shardsLastClaimedAt": Date.now(),
@@ -191,10 +197,11 @@ export const claimBonusBooster = async (userId) => {
         (item) => item.name === randomMyth
       )[0].boosters;
     } else {
+      const updateValue = filteredMyth.boosters.automatalvl >= 99 ? 0 : 2;
       const result = await userMythologies.findOneAndUpdate(
         { userId, "mythologies.name": randomMyth },
         {
-          $inc: { "mythologies.$.boosters.automatalvl": 2 },
+          $inc: { "mythologies.$.boosters.automatalvl": updateValue },
           $set: {
             "mythologies.$.boosters.isAutomataActive": true,
             "mythologies.$.boosters.automataLastClaimedAt": Date.now(),

@@ -997,10 +997,9 @@ export const claimAutomataReward = async (req, res) => {
 
 export const claimGachaReward = async (req, res) => {
   try {
-    const userId = req.user._id;
     const user = req.user;
 
-    await user.updateOne({ announcements: 1 });
+    await user.updateOne({ "bonus.fof.dailyBonusClaimedAt": 0 });
 
     res.status(200).json({
       message: "Gacha claimed successfully.",
