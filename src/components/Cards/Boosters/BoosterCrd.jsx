@@ -387,7 +387,6 @@ const BoosterClaim = ({
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
-        (activeCard === "moon" && !gameData.isMoonActive) ||
         (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
         <div
           onClick={() => {

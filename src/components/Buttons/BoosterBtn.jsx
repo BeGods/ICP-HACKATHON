@@ -120,11 +120,17 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
               >
                 {!isAutoPay && activeCard !== "moon" && "Lvl"}
                 {activeCard === "automata" && !isAutoPay
-                  ? mythData.automatalvl + 2
+                  ? mythData.automatalvl + 2 >= 99
+                    ? 99
+                    : mythData.automatalvl + 2
                   : activeCard === "minion" && !isAutoPay
-                  ? mythData.shardslvl + 2
+                  ? mythData.shardslvl + 2 >= 99
+                    ? 99
+                    : mythData.shardslvl + 2
                   : activeCard === "burst" && !isAutoPay
-                  ? mythData.burstlvl + 2
+                  ? mythData.burstlvl + 2 >= 99
+                    ? 99
+                    : mythData.burstlvl + 2
                   : activeCard === "moon" && !isAutoPay
                   ? "4x"
                   : "4x"}
