@@ -68,7 +68,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
   const handleClick = async (reward) => {
     handleClickHaptic(tele, enableHaptic);
-    const showAnmnt = await validateTutCookie(tele, "announcement04");
+    const showAnmnt = await validateTutCookie(tele, "announcement05");
 
     if (!showAnmnt) {
       if (reward.type === "quest") {

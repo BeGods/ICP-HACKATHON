@@ -23,6 +23,7 @@ const Gacha = (props) => {
     enableSound,
     enableHaptic,
     assets,
+    showAnmt,
   } = useContext(MyContext);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);

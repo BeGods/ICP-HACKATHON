@@ -103,8 +103,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         />
       );
     }
-
-    newItems.unshift(
+    newItems.push(
       <BoosterItem
         key="moon"
         index={0}
