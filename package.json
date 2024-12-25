@@ -30,6 +30,7 @@
     "react-howler": "^5.2.0",
     "react-i18next": "^15.0.1",
     "react-image-mosaic": "^2.3.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-konva": "^18.2.10",
     "react-router-dom": "^6.24.1",
     "react-toastify": "^10.0.5",

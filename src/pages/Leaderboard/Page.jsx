@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { toggleBackButton } from "../../utils/teleBackButton";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard } from "../../utils/api";
@@ -11,6 +11,8 @@ import {
 import { trackComponentView } from "../../utils/ga";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import UserInfoCard from "../../components/Cards/Info/UserInfoCrd";
+import { Crown, Trophy } from "lucide-react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const tele = window.Telegram?.WebApp;
 
@@ -65,13 +67,22 @@ const UserAvatar = ({ user, index }) => {
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, assets, userData, enableHaptic, setShowCard } =
-    useContext(MyContext);
+  const {
+    setSection,
+    authToken,
+    assets,
+    userData,
+    enableHaptic,
+    setShowCard,
+    setLeaderboard,
+  } = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [leaderboardData, setLeaderboardData] = useState([]);
   const avatarColor = localStorage.getItem("avatarColor");
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [squad, setSquad] = useState([]);
   const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
     0: "second",
@@ -79,26 +90,34 @@ const Leaderboard = (props) => {
     2: "third",
   };
 
-  const getLeaderboardData = async () => {
+  const getLeaderboardData = async (pageNum) => {
     try {
-      const response = await fetchLeaderboard(authToken);
-      setLeaderboard(response.leaderboard);
-      setSquad(response.squad);
+      const response = await fetchLeaderboard(authToken, pageNum);
+      setLeaderboard(response);
+      if (response.leaderboard.length > 0) {
+        setLeaderboardData((prevData) => [
+          ...prevData,
+          ...response.leaderboard,
+        ]);
+      } else {
+        setHasMore(false);
+      }
+
       setTimeout(() => {
         setIsLoading(true);
       }, 500);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching leaderboard:", error);
     }
   };
 
   useEffect(() => {
-    trackComponentView("leaderboard");
-    toggleBackButton(tele, () => {
-      setSection(3);
-    });
-    (async () => getLeaderboardData())();
-  }, []);
+    getLeaderboardData(page);
+  }, [page]);
+
+  const loadMoreData = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
 
   return (
     <div
@@ -150,18 +169,18 @@ const Leaderboard = (props) => {
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            setSection(0);
+            setSection(13);
           }}
           className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
-            z
+            <Crown size={"9vw"} />
           </div>
         </div>
       </div>
 
       {/* Active Tab */}
-      <div className="flex mt-[1.5vh] flex-col  absolute top-0 w-full">
+      <div className="flex mt-[1.5vh] z-20 flex-col  absolute top-0 w-full">
         <div
           className={`flex z-50 transition-all p-0.5 duration-1000 ${
             activeTab ? "bg-white" : "bg-black"
@@ -196,7 +215,7 @@ const Leaderboard = (props) => {
         <div className="flex flex-grow justify-center">
           {isLoading && (
             <div className="flex items-end w-[90%] gap-2">
-              {[leaderboard[1], leaderboard[0], leaderboard[2]].map(
+              {[leaderboardData[1], leaderboardData[0], leaderboardData[2]].map(
                 (item, index) => {
                   const positions = [
                     {
@@ -263,34 +282,50 @@ const Leaderboard = (props) => {
               <span className="pr-6">#</span>
               {t(`profile.name`)}
             </h1>
+            <div className="absolute text-gold w-full flex justify-center ">
+              {t(`sections.leaderboard`)}
+            </div>
             <h1>{t(`keywords.orbs`)}</h1>
           </div>
-          <div className="pb-[9vh] overflow-auto disable-scroll-bar">
-            {leaderboard.slice(3).map((item, index) => (
-              <div
-                onClick={() => {
-                  handleClickHaptic(tele, enableHaptic);
-                  setShowCard(
-                    <UserInfoCard
-                      close={() => {
-                        setShowCard(null);
-                      }}
-                      userData={item}
-                    />
-                  );
-                }}
-                key={index}
-                className=""
-              >
-                <LeaderboardItem
+          <div
+            id="scrollableDiv"
+            className="pb-[9vh] overflow-auto disable-scroll-bar"
+          >
+            <InfiniteScroll
+              dataLength={leaderboardData.length}
+              next={() => {
+                page < 4 && loadMoreData();
+              }}
+              hasMore={hasMore}
+              loader={<h4>Loading...</h4>}
+              scrollableTarget="scrollableDiv"
+            >
+              {leaderboardData.slice(3, 333).map((item, index) => (
+                <div
+                  onClick={() => {
+                    handleClickHaptic(tele, enableHaptic);
+                    setShowCard(
+                      <UserInfoCard
+                        close={() => {
+                          setShowCard(null);
+                        }}
+                        userData={item}
+                      />
+                    );
+                  }}
                   key={index}
-                  rank={index + 4}
-                  name={item.telegramUsername}
-                  totalOrbs={item.totalOrbs}
-                  imageUrl={item.profileImage}
-                />
-              </div>
-            ))}
+                  className=""
+                >
+                  <LeaderboardItem
+                    key={index}
+                    rank={index + 4}
+                    name={item.telegramUsername}
+                    totalOrbs={formatRankOrbs(item.totalOrbs)}
+                    imageUrl={item.profileImage}
+                  />
+                </div>
+              ))}
+            </InfiniteScroll>
           </div>
           <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
             <div className="flex border border-gray-400 rounded-primary bg-black justify-center w-full">

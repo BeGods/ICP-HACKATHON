@@ -34,7 +34,8 @@ import {
 import OnboardPage from "./pages/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "./utils/ga";
 import Announcement from "./pages/Announcement/Page";
-import { getPhaseByDate } from "./helpers/game.helper";
+import Winners from "./pages/Leaderboard/Winners";
+
 const tele = window.Telegram?.WebApp;
 
 const Home = () => {
@@ -42,6 +43,7 @@ const Home = () => {
   const [showCard, setShowCard] = useState(null);
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
+  const [leaderboard, setLeaderboard] = useState(null);
   const [socialQuestData, setSocialQuestData] = useState(null);
   const [enableSound, setEnableSound] = useState(true);
   const [enableHaptic, setEnableHaptic] = useState(true);
@@ -99,6 +101,8 @@ const Home = () => {
     setEnableHaptic,
     setShowAnmt,
     showAnmt,
+    leaderboard,
+    setLeaderboard,
   };
   const sections = [
     <Forges />, // 0
@@ -114,6 +118,7 @@ const Home = () => {
     <StreakBonus />, // 10
     <OnboardPage />, // 11
     <Announcement />, // 12
+    <Winners />, // 13
   ];
 
   const getProfilePhoto = async (token) => {
@@ -267,7 +272,7 @@ const Home = () => {
       {!isLoading ? (
         <div className="h-[100svh] w-screen bg-white select-none font-fof">
           <MyContext.Provider value={initalStates}>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((item) => (
               <div key={item}>
                 <>{section === item && sections[item]}</>
               </div>
@@ -277,6 +282,7 @@ const Home = () => {
               section != 9 &&
               section != 8 &&
               section != 12 &&
+              section != 13 &&
               section != 11 && <Footer minimize={minimize} />}
             {showCard && (
               <div className="absolute z-50 h-screen w-screen">{showCard}</div>
