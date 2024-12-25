@@ -3,6 +3,7 @@ import {
   createPartner,
   generateOtp,
   getRewards,
+  redeemCustomReward,
   redeemPlayuperReward,
   resendOtp,
   verifyOtp,
@@ -11,6 +12,7 @@ import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   validMobileNo,
   validOnboardInput,
+  validPartnerReward,
   validPlaysuperRedeem,
 } from "../middlewares/general.fof.middlewares";
 import express from "express";
@@ -31,6 +33,12 @@ router.post(
 // partners
 router.get("/partners", authMiddleware, getRewards);
 router.post("/partners/create", authMiddleware, createPartner);
+router.post(
+  "/custom/redeem",
+  authMiddleware,
+  validPartnerReward,
+  redeemCustomReward
+);
 
 // clear rewards 1hr stats
 router.get(
