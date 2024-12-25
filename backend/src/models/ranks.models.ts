@@ -55,7 +55,7 @@ const rankSchema = new Schema(
 
 const ranks = model("Ranks", rankSchema);
 
-rankSchema.index({ userId: 1 }, { unique: true });
-rankSchema.index({ parentReferrerId: 1 });
+// rankSchema.index({ userId: 1 }, { unique: true });
+// rankSchema.index({ parentReferrerId: 1 });
 
 export default ranks;

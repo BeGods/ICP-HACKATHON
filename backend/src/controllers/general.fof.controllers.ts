@@ -251,8 +251,24 @@ export const updateRanks = async (req, res) => {
         update: {
           $set: {
             fofCompletedAt: user.finishedAt,
+            userId: user.userId,
+            telegramUsername: user.telegramUsername,
+            profileImage: user.profileImage,
+            totalOrbs: user.totalOrbs,
+            squadOwner: user.squadOwner,
             overallRank: 0,
+            country: user.country ?? "NA",
             countryRank: 0,
+            gameData: {
+              ...user.mythologyOrbsData.reduce((acc, obj) => {
+                if (obj.name && obj.orbs !== undefined) {
+                  acc[obj.name.toLowerCase()] = obj.orbs;
+                }
+                return acc;
+              }, {}),
+              blackOrbs: user.blackOrbs,
+              multiColorOrbs: user.multiColorOrbs,
+            },
             squadRank: 0,
           },
         },
@@ -709,6 +725,43 @@ export const redeemPlayuperReward = async (req, res) => {
 
     res.status(200).json({
       couponCode: reward.data.couponCode,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const redeemCustomReward = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const updatedPartner = req.partner;
+    const { partnerId } = req.body;
+
+    updatedPartner.isClaimed = true;
+
+    await milestones.findOneAndUpdate(
+      { userId, "rewards.claimedRewards.partnerId": partnerId },
+      {
+        $set: {
+          "rewards.claimedRewards.$": updatedPartner,
+        },
+      }
+    );
+
+    await userMythologies.findOneAndUpdate(
+      { userId },
+      {
+        $inc: {
+          blackOrbs: 3,
+        },
+      }
+    );
+
+    res.status(200).json({
+      message: "Reward claimed successfully",
     });
   } catch (error) {
     res.status(500).json({
