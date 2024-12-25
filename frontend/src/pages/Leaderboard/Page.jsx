@@ -290,6 +290,10 @@ const Leaderboard = (props) => {
                       hallOfFameData[0],
                       hallOfFameData[2],
                     ].map((item, index) => {
+                      const countryFlag =
+                        countries.find(
+                          (country) => country.code == item.country
+                        ).flag || "🌐";
                       const positions = [
                         {
                           pos: 2,
@@ -333,8 +337,8 @@ const Leaderboard = (props) => {
                           >
                             {positions[index].pos}
                           </div>
-                          <div className="absolute text-white -bottom-1 text-tertiary font-normal">
-                            Hello
+                          <div className="absolute text-white -bottom-1 text-[24px] font-normal">
+                            {countryFlag}
                           </div>
                           <UserAvatar user={item} index={index} />
                         </div>
