@@ -374,10 +374,6 @@ export const getGameStats = async (req, res) => {
       };
     }
 
-    if (Object.keys(updates).length > 0) {
-      await User.findOneAndUpdate({ _id: req.user._id }, { $set: updates });
-    }
-
     // get totalMembers
     // const squadOwner = user.squadOwner ? user.squadOwner : userId;
     // const members = await Team.findOne({ owner: squadOwner });
@@ -388,6 +384,16 @@ export const getGameStats = async (req, res) => {
       // squadCount: members?.members.length ?? 0,
       // squadTotalOrbs: members?.totalOrbs ?? 0,
     };
+
+    if (memberData.totalOrbs >= 999999 && !user?.gameCompletedAt?.fof) {
+      updates.gameCompletedAt = {
+        fof: new Date(),
+      };
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await User.findOneAndUpdate({ _id: req.user._id }, { $set: updates });
+    }
 
     const userData = {
       telegramUsername: user.telegramUsername,
@@ -469,6 +475,8 @@ export const getGameStats = async (req, res) => {
       towerKeys: towerKeys,
     });
   } catch (error) {
+    console.log(error);
+
     console.log(error.message);
     res.status(500).json({
       message: "Internal server error.",

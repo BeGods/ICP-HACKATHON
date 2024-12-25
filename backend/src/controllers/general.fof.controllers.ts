@@ -4,6 +4,7 @@ import {
   claimBonusBooster,
   claimBonusOrb,
   claimBonusQuest,
+  getLeaderboardRanks,
   getLeaderboardSnapshot,
   getRandomValue,
   sortRanksByCountry,
@@ -13,7 +14,6 @@ import Stats from "../models/Stats.models";
 import userMythologies from "../models/mythologies.models";
 import {
   claimPlaysuperReward,
-  fetchPlaysuperOrders,
   fetchPlaySuperRewards,
   getPlaysuperOtp,
   resendPlaysuperOtp,
@@ -37,26 +37,14 @@ export const ping = async (req, res) => {
 };
 
 export const getLeaderboard = async (req, res) => {
-  const user = req.user;
-
+  const { page } = req.query;
+  const requestPage = page || 0;
   try {
-    const overallLeaderboard = await ranks
-      .find()
-      .sort({ totalOrbs: -1 })
-      .limit(100)
-      .select("-__v -createdAt -updatedAt -_id -userId");
-
-    const squadOwner = user?.squadOwner ? user?.squadOwner : user._id;
-
-    const squadLeaderboard = await ranks
-      .find({ squadOwner: squadOwner })
-      .sort({ totalOrbs: -1 })
-      .limit(100)
-      .select("-__v -createdAt -updatedAt");
+    const overallLeaderboard = await getLeaderboardRanks(requestPage, 100);
 
     res.status(200).json({
-      leaderboard: overallLeaderboard,
-      squad: squadLeaderboard.sort((a, b) => a.squadRank - b.squadRank),
+      leaderboard: overallLeaderboard[0].active,
+      hallOfFame: overallLeaderboard[0].finished,
     });
   } catch (error) {
     res.status(500).json({
@@ -65,6 +53,16 @@ export const getLeaderboard = async (req, res) => {
     });
   }
 };
+
+// const squadOwner = user?.squadOwner ? user?.squadOwner : user._id;
+
+// const squadLeaderboard = await ranks
+// .find({ squadOwner: squadOwner })
+// .sort({ totalOrbs: -1 })
+// .limit(100)
+// .select("-__v -createdAt -updatedAt");
+
+// squad: squadLeaderboard.sort((a, b) => a.squadRank - b.squadRank),
 
 // export const updateRanks = async (req, res) => {
 //   try {
@@ -191,14 +189,20 @@ export const updateRanks = async (req, res) => {
   try {
     const leaderboard = await getLeaderboardSnapshot();
 
-    // overall rank based on totalOrbs
-    const sortedUsers = leaderboard
-      .map((user, index) => ({ ...user, overallRank: index + 1 }))
+    const finishedUsers = leaderboard.filter((user) => user.totalOrbs > 999999);
+    const activeUsers = leaderboard.filter((user) => user.totalOrbs <= 999999);
+
+    // overall rank
+    const sortedUsers = activeUsers
+      .map((user, index) => ({
+        ...user,
+        overallRank: index + 1,
+      }))
       .sort((a, b) => b.totalOrbs - a.totalOrbs);
 
     const usersByCountry = await sortRanksByCountry(sortedUsers);
 
-    // update ranks in bulk
+    // Update ranks in bulk for active users
     const bulkOps = sortedUsers.map((user) => {
       let userCountryRank = 0;
       if (user.country && user.country !== "NA") {
@@ -240,7 +244,24 @@ export const updateRanks = async (req, res) => {
       };
     });
 
-    await ranks.bulkWrite(bulkOps);
+    // Mark finished users
+    const finishedOps = finishedUsers.map((user) => ({
+      updateOne: {
+        filter: { userId: user.userId },
+        update: {
+          $set: {
+            fofCompletedAt: user.finishedAt,
+            overallRank: 0,
+            countryRank: 0,
+            squadRank: 0,
+          },
+        },
+        upsert: true,
+      },
+    }));
+
+    // Perform bulkWrite operations
+    await ranks.bulkWrite([...bulkOps, ...finishedOps]);
 
     const totalUsers = await User.countDocuments({});
     await Stats.findOneAndUpdate(
