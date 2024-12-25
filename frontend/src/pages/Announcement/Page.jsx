@@ -48,14 +48,34 @@ const Announcement = (props) => {
     }, 4000);
   }, []);
 
+  // const getAnmntReward = async () => {
+  //   if (disableRef.current === false) {
+  //     handleClickHaptic(tele, enableHaptic);
+  //     disableRef.current = true;
+  //     try {
+  //       const response = await claimAnmntReward(authToken);
+  //       setTutKey(tele, "announcement05", 1);
+  //       setSection(8);
+  //     } catch (error) {
+  //       showToast("default");
+  //     }
+  //   }
+  // };
   const getAnmntReward = async () => {
     if (disableRef.current === false) {
       handleClickHaptic(tele, enableHaptic);
       disableRef.current = true;
       try {
         const response = await claimAnmntReward(authToken);
-        setTutKey(tele, "announcement05", 1);
-        setSection(8);
+        setTutKey(tele, "announcement06", 1);
+        setGameData((prev) => ({
+          ...prev,
+          isBurstAutoPayActive: true,
+          autoPayBurstExpiry: 0,
+        }));
+
+        setShowAnmt(true);
+        setSection(2);
       } catch (error) {
         showToast("default");
       }
@@ -76,7 +96,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_04.jpg"
+              src="/assets/announcements/480px-announcement_05.jpg"
               alt="announcement"
               className="w-full h-auto"
             />
