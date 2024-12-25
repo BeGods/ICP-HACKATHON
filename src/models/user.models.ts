@@ -42,6 +42,9 @@ export interface IUser extends Document {
   country: string;
   lastLoginAt: Date;
   partOfGames: string[];
+  gameCompletedAt: {
+    fof: Date;
+  };
 }
 
 const userSchema = new Schema<IUser>(
@@ -158,6 +161,9 @@ const userSchema = new Schema<IUser>(
     partOfGames: {
       type: [String],
       default: [],
+    },
+    gameCompletedAt: {
+      fof: Date,
     },
   },
 

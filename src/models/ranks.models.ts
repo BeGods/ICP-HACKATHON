@@ -48,13 +48,14 @@ const rankSchema = new Schema(
       default: {},
     },
     totalOrbs: Number,
+    fofCompletedAt: Date,
   },
   { timestamps: true }
 );
 
 const ranks = model("Ranks", rankSchema);
 
-rankSchema.index({ userId: 1 }, { unique: true });
-rankSchema.index({ parentReferrerId: 1 });
+// rankSchema.index({ userId: 1 }, { unique: true });
+// rankSchema.index({ parentReferrerId: 1 });
 
 export default ranks;

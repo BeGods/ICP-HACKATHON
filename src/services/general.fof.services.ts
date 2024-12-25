@@ -1,3 +1,4 @@
+import ranks from "../models/ranks.models";
 import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { OrbsTransactions } from "../models/transactions.models";
@@ -76,6 +77,12 @@ export const getLeaderboardSnapshot = async () => {
           totalOrbs: 1,
           mythologyOrbsData: 1,
           squadOwner: "$userDetails.squadOwner",
+          finishedAt: {
+            $ifNull: [
+              "$userDetails.gameCompletedAt.fof",
+              "$userDetails.createdAt",
+            ],
+          },
         },
       },
     ];
@@ -86,6 +93,53 @@ export const getLeaderboardSnapshot = async () => {
       .exec();
 
     return leaderboard;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getLeaderboardRanks = async (page = 0, limit = 100) => {
+  const skip = page * limit;
+  try {
+    const pipeline = [
+      {
+        $facet: {
+          active: [
+            { $match: { totalOrbs: { $lt: 999999 } } },
+            { $sort: { overallRank: 1 as 1 } },
+            { $skip: skip },
+            { $limit: limit },
+            {
+              $project: {
+                __v: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                _id: 0,
+                userId: 0,
+              },
+            },
+          ],
+
+          finished: [
+            { $match: { totalOrbs: { $gte: 999999 } } },
+            { $sort: { fofCompletedAt: 1 as 1 } },
+            {
+              $project: {
+                __v: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                _id: 0,
+                userId: 0,
+              },
+            },
+          ],
+        },
+      },
+    ];
+
+    const results = await ranks.aggregate(pipeline).allowDiskUse(true).exec();
+
+    return results;
   } catch (error) {
     throw new Error(error);
   }
