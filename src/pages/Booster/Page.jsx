@@ -87,9 +87,10 @@ const Boosters = () => {
   const handleCardChange = () => {
     setShowCard(
       <BoosterClaim
-        activeCard={"moon"}
+        activeCard={"burst"}
         activeMyth={activeMyth}
         mythData={mythData}
+        isAutoPay={true}
         closeCard={() => {
           setShowCard(null);
           setShowAnmt(false);

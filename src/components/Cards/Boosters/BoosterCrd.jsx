@@ -384,32 +384,45 @@ const BoosterClaim = ({
     onError,
   });
 
+  useEffect(() => {
+    console.log(
+      activeCard === "burst" &&
+        isAutoPay &&
+        !boostersData.isBurstActive &&
+        hasTimeElapsed(gameData.autoPayBurstExpiry)
+    );
+  }, []);
+
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
-      {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
-        (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
-        <div
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            showAd();
-          }}
-          className="absolute flex items-center justify-center top-0 w-screen pt-2"
-        >
-          <div className="flex gap-2 w-fit">
-            <div className="flex items-center justify-center">
-              <Clapperboard color="white" size={"8vw"} />
-            </div>
-            <div className="flex flex-col text-white">
-              <div className="font-semibold text-[4.5vw] text-gold">
-                Click Here to Watch an Ad
+      {(activeCard === "automata" && !boostersData?.isAutomataActive) ||
+        (activeCard === "minion" && boostersData?.isShardsClaimActive) ||
+        (activeCard === "burst" &&
+          isAutoPay &&
+          !boostersData.isBurstActive &&
+          hasTimeElapsed(gameData.autoPayBurstExpiry) && (
+            <div
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                showAd();
+              }}
+              className="absolute flex items-center justify-center top-0 w-screen pt-2"
+            >
+              <div className="flex gap-2 w-fit">
+                <div className="flex items-center justify-center">
+                  <Clapperboard color="white" size={"8vw"} />
+                </div>
+                <div className="flex flex-col text-white">
+                  <div className="font-semibold text-[4.5vw] text-gold">
+                    Click Here to Watch an Ad
+                  </div>
+                  <div className="text-[4.25vw] -mt-1">
+                    Claim your free booster!
+                  </div>
+                </div>
               </div>
-              <div className="text-[4.25vw] -mt-1">
-                Claim your free booster!
-              </div>
             </div>
-          </div>
-        </div>
-      )}
+          ))}
       <div
         onClick={handleButton}
         className="absolute  w-[72%] h-[50%] mt-10 cursor-pointer z-50 rounded-primary"
