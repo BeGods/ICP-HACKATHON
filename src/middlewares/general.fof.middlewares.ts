@@ -1,3 +1,4 @@
+import partners from "../models/partners.models";
 import milestones, { IClaimedReward } from "../models/milestones.models";
 
 export const validDailyBonusReq = async (req, res, next) => {
@@ -190,6 +191,38 @@ export const validOnboardInput = async (req, res, next) => {
     }
     next();
   } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const validPartnerReward = async (req, res, next) => {
+  try {
+    const { partnerId } = req.body;
+    const user = req.user;
+
+    const userMilestones = await milestones.findOne({ userId: user._id });
+
+    const fetchedPartner = userMilestones.rewards.claimedRewards.find(
+      (reward) => reward.partnerId === partnerId
+    );
+
+    if (!fetchedPartner) {
+      throw new Error("Invalid partnerId.");
+    }
+
+    if (fetchedPartner.tokensCollected < 12) {
+      throw new Error("Invalid request. Please complete all part to claim.");
+    }
+
+    if (fetchedPartner.isClaimed) {
+      throw new Error("Invalid request. Reward already claimed.");
+    }
+
+    req.partner = fetchedPartner;
+    next();
+  } catch (error) {
+    console.log(error);
+
     res.status(400).json({ error: error.message });
   }
 };
