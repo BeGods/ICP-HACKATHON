@@ -37,7 +37,6 @@ const IntroPage = (props) => {
         await tele.ready();
 
         const { user } = tele.initDataUnsafe || {};
-
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
         tele.addToHomeScreen();
@@ -56,12 +55,12 @@ const IntroPage = (props) => {
         // });
 
         if (user) {
-          const userData = {
+          const userDataObj = {
             initData: tele?.initData,
           };
           const param = tele.initDataUnsafe?.start_param;
 
-          setUserData(userData);
+          setUserData(userDataObj);
 
           if (param.includes("FDG")) {
             setReferralCode(param);
@@ -122,26 +121,30 @@ const IntroPage = (props) => {
   }, []);
 
   useEffect(() => {
-    if (
-      platform === "macos" ||
-      platform === "windows" ||
-      platform === "tdesktop" ||
-      platform === "web" ||
-      platform === "weba" ||
-      platform === "unknown"
-    ) {
-      setDisableDestop(true);
-    } else {
-      setDisableDestop(false);
-      (async () => await auth())();
-    }
-    if (platform === "ios") {
-      document.body.style.position = "fixed";
-      document.body.style.top = 0;
-      document.body.style.bottom = 0;
-      document.body.style.left = 0;
-      document.body.style.right = 0;
-      document.body.style.overflow = "hidden";
+    if (platform) {
+      if (
+        platform === "macos" ||
+        platform === "windows" ||
+        platform === "tdesktop" ||
+        platform === "web" ||
+        platform === "weba" ||
+        platform === "unknown"
+      ) {
+        setDisableDestop(true);
+      } else {
+        setDisableDestop(false);
+        setTimeout(() => {
+          (async () => await auth())();
+        }, 1000);
+      }
+      if (platform === "ios") {
+        document.body.style.position = "fixed";
+        document.body.style.top = 0;
+        document.body.style.bottom = 0;
+        document.body.style.left = 0;
+        document.body.style.right = 0;
+        document.body.style.overflow = "hidden";
+      }
     }
   }, [platform]);
 

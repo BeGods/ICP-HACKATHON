@@ -43,7 +43,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl }) => {
         <h1>{name.length > 20 ? name.slice(0, 20) : name}</h1>
       </div>
       <div className="flex flex-col justify-center items-center text-tertiary w-[25%] h-full">
-        <h1>{formatRankOrbs(totalOrbs)}</h1>
+        <h1>{totalOrbs}</h1>
       </div>
     </div>
   );
