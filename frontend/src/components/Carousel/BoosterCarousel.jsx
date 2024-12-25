@@ -122,16 +122,23 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   }, [activeMyth, enableGuide, mythData, gameData]);
 
   const handleBoosterClick = (activeCard, isAutoPay) => {
-    setShowCard(
-      <BoosterClaim
-        isAutoPay={isAutoPay}
-        activeCard={activeCard}
-        activeMyth={activeMyth}
-        mythData={mythData}
-        closeCard={() => setShowCard(null)}
-        t={t}
-      />
-    );
+    if (
+      activeCard === "burst" &&
+      !isAutoPay &&
+      !gameData.mythologies[activeMyth].isEligibleForBurst
+    ) {
+    } else {
+      setShowCard(
+        <BoosterClaim
+          isAutoPay={isAutoPay}
+          activeCard={activeCard}
+          activeMyth={activeMyth}
+          mythData={mythData}
+          closeCard={() => setShowCard(null)}
+          t={t}
+        />
+      );
+    }
   };
 
   const handleTouchStart = (e) => setStartY(e.touches[0].clientY);

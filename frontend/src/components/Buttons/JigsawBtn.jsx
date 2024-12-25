@@ -33,7 +33,8 @@ const JigsawButton = ({
     <div
       onClick={() => {
         if (faith == 12) {
-          showAd();
+          // showAd();
+          handleClick();
         }
       }}
       onMouseDown={() => {
