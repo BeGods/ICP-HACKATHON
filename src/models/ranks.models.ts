@@ -48,6 +48,7 @@ const rankSchema = new Schema(
       default: {},
     },
     totalOrbs: Number,
+    fofCompletedAt: Date,
   },
   { timestamps: true }
 );
