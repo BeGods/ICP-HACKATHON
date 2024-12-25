@@ -177,7 +177,7 @@ const Leaderboard = (props) => {
               r
             </div>
           </div>
-          <div className="flex font-fof z-20 flex-col top-0 w-full">
+          <div className="flex font-fof z-20 flex-col top-0 w-1/2">
             <div
               className={`flex z-50 transition-all p-0.5 duration-1000 ${
                 activeTab ? "bg-white" : "bg-black"
@@ -233,9 +233,9 @@ const Leaderboard = (props) => {
               0
             </div>
           </div>
-          <div className="flex font-fof z-20 flex-col top-0 w-full">
+          <div className="flex font-fof z-20 flex-col top-0 w-1/2">
             <div
-              className={`flex z-50 transition-all p-0.5 duration-1000 ${
+              className={`flex z-50 transition-all p-0.5  duration-1000 ${
                 activeTab ? "bg-white" : "bg-black"
               } mx-auto border border-black w-[40%] rounded-full h-[30px]`}
             >
