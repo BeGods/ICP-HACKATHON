@@ -7,7 +7,7 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import { handleActiveParts } from "../../helpers/quests.helper";
-import { claimPlaysuperReward } from "../../utils/api";
+import { claimCustomReward, claimPlaysuperReward } from "../../utils/api";
 import IconBtn from "../../components/Buttons/IconBtn";
 import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";
@@ -15,6 +15,7 @@ import confetti from "canvas-confetti";
 import { showToast } from "../../components/Toast/Toast";
 import { trackComponentView } from "../../utils/ga";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import BlackOrbRewardCrd from "../../components/Cards/Reward/BlackOrbCrd";
 
 const tele = window.Telegram?.WebApp;
 
@@ -30,6 +31,7 @@ const Redeem = (props) => {
     setRewards,
     triggerConf,
     setTriggerConf,
+    setGameData,
   } = useContext(MyContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -71,20 +73,24 @@ const Redeem = (props) => {
         setSection(11);
       }
     } else {
-      setShowCard(
-        <div
-          onClick={() => {
-            setShowCard(null);
-          }}
-          className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
-        >
-          <img
-            src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`}
-            alt="campaign"
-            className="w-full h-4/5"
-          />
-        </div>
-      );
+      if (activeReward.isClaimed) {
+        setShowCard(
+          <div
+            onClick={() => {
+              setShowCard(null);
+            }}
+            className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
+          >
+            <img
+              src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.jpg`}
+              alt="campaign"
+              className="w-full h-4/5"
+            />
+          </div>
+        );
+      } else {
+        handleCustomRedeen();
+      }
     }
   };
 
@@ -104,6 +110,36 @@ const Redeem = (props) => {
               : reward
           )
         );
+      }
+    } catch (error) {
+      showToast("voucher_error");
+      console.log(error);
+    }
+  };
+
+  const handleCustomRedeen = async () => {
+    try {
+      if (currReward.partnerType === "custom") {
+        const response = await claimCustomReward(currReward.id, authToken);
+        showToast("voucher_success");
+        setShowCard(<BlackOrbRewardCrd />);
+
+        setRewards((prevRewards) =>
+          prevRewards.map((reward) =>
+            reward.id === currReward.id
+              ? {
+                  ...reward,
+                  isClaimed: true,
+                }
+              : reward
+          )
+        );
+        setGameData((prev) => {
+          return {
+            ...prev,
+            blackOrbs: prev.blackOrbs + 1,
+          };
+        });
       }
     } catch (error) {
       showToast("voucher_error");

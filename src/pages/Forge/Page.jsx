@@ -530,7 +530,8 @@ const Forges = () => {
       } else if (currShards >= 10 && popupTime - Date.now() < 0 && !isActive) {
         const filteredRewards = rewards.filter(
           (reward) =>
-            !rewardsClaimedInLastHr.includes(reward.id) && !reward.isClaimed
+            !rewardsClaimedInLastHr.includes(reward.id) &&
+            reward.tokensCollected < 12
         );
 
         if (canShowBubble && filteredRewards.length > 0 && counter === 1) {

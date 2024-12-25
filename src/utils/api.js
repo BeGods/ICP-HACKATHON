@@ -654,6 +654,28 @@ export const claimPlaysuperReward = async (rewardId, accessToken) => {
   }
 };
 
+export const claimCustomReward = async (rewardId, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/custom/redeem`;
+
+  try {
+    const response = await axios.post(
+      url,
+      {
+        partnerId: rewardId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const claimStreakBonus = async (accessToken, country) => {
   let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
 
