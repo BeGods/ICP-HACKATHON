@@ -24,13 +24,12 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     const boosterStatus = {
       multiAutomata: gameData?.isAutomataAutoActive === -1,
       multiBurst: hasTimeElapsed(gameData.autoPayBurstExpiry),
-      moon: gameData.isMoonActive,
+      moon: !gameData.isMoonActive,
       automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
       burst: gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim,
       minion: gameData.mythologies[activeMyth].boosters.isShardsClaimActive,
     };
 
-    // Define BoosterItems in the same order as `boosterStatus`
     const boosters = [
       {
         key: "automata",
