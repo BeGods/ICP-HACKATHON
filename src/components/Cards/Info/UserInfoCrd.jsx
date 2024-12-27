@@ -31,33 +31,6 @@ const UserInfoCard = ({ close, userData }) => {
           className={`absolute leading-[18px] text-paperSub text-card inset-0 w-[85%] mx-auto flex gap-6 justify-start pt-[32%] font-[550] z-30 `}
         >
           <div className="flex flex-col gap-[6vw] w-full">
-            {Object.entries(userData.gameData)
-              .slice(0, 4)
-              .map(([key, value], index) => (
-                <div key={index} className="flex gap-2 items-center">
-                  <div
-                    className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${key}`}
-                  >
-                    <img
-                      src={assets.uxui.baseorb}
-                      alt="orb"
-                      className={`filter-orbs-${key}`}
-                    />
-                    <span
-                      className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-sm mt-1 transition-all duration-1000`}
-                    >
-                      <>{mythSymbols[key]}</>
-                    </span>
-                  </div>
-                  <div
-                    className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
-                  >
-                    {value}
-                  </div>
-                </div>
-              ))}
-          </div>
-          <div className="flex flex-col gap-[6vw] w-full">
             <div className="flex gap-2 items-center">
               <div
                 className={`flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black`}
@@ -91,6 +64,58 @@ const UserInfoCard = ({ close, userData }) => {
                 {userData.gameData.blackOrbs}
               </div>
             </div>
+            {Object.entries(userData.gameData)
+              .slice(0, 2)
+              .map(([key, value], index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <div
+                    className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${key}`}
+                  >
+                    <img
+                      src={assets.uxui.baseorb}
+                      alt="orb"
+                      className={`filter-orbs-${key}`}
+                    />
+                    <span
+                      className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-sm mt-1 transition-all duration-1000`}
+                    >
+                      <>{mythSymbols[key]}</>
+                    </span>
+                  </div>
+                  <div
+                    className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
+                  >
+                    {value}
+                  </div>
+                </div>
+              ))}
+          </div>
+          <div className="flex flex-col gap-[6vw] w-full">
+            {Object.entries(userData.gameData)
+              .slice(2, 4)
+              .map(([key, value], index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <div
+                    className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${key}`}
+                  >
+                    <img
+                      src={assets.uxui.baseorb}
+                      alt="orb"
+                      className={`filter-orbs-${key}`}
+                    />
+                    <span
+                      className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-sm mt-1 transition-all duration-1000`}
+                    >
+                      <>{mythSymbols[key]}</>
+                    </span>
+                  </div>
+                  <div
+                    className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
+                  >
+                    {value}
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
 

@@ -66,14 +66,14 @@ const Redeem = (props) => {
   };
 
   const handleClick = () => {
-    if (activeReward.partnerType == "playsuper") {
+    if (currReward.partnerType == "playsuper") {
       if (userData.isPlaySuperVerified) {
         handleRedeen();
       } else {
         setSection(11);
       }
     } else {
-      if (activeReward.isClaimed) {
+      if (currReward.isClaimed) {
         setShowCard(
           <div
             onClick={() => {
@@ -122,7 +122,16 @@ const Redeem = (props) => {
       if (currReward.partnerType === "custom") {
         const response = await claimCustomReward(currReward.id, authToken);
         showToast("voucher_success");
-        setShowCard(<BlackOrbRewardCrd />);
+        setShowCard(
+          <BlackOrbRewardCrd
+            reward={
+              currReward.partnerType == "playsuper"
+                ? `${currReward.metadata.campaignCoverImage}`
+                : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
+            }
+          />
+        );
+        ``;
 
         setRewards((prevRewards) =>
           prevRewards.map((reward) =>
@@ -197,11 +206,23 @@ const Redeem = (props) => {
       <RedeemHeader
         currIndex={currIndex}
         link={() => {
-          window.open(
-            currReward.partnerType == "playsuper"
-              ? `${currReward.metadata.campaignAssets.bannerView}`
-              : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
-            "_blank"
+          setShowCard(
+            <div
+              onClick={() => {
+                setShowCard(null);
+              }}
+              className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
+            >
+              <img
+                src={
+                  currReward.partnerType == "playsuper"
+                    ? `${currReward.metadata.campaignAssets.bannerView}`
+                    : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.png`
+                }
+                alt="campaign"
+                className="w-full h-4/5"
+              />
+            </div>
           );
         }}
         isCharity={currReward.isCharity}
@@ -273,7 +294,7 @@ const Redeem = (props) => {
                 />
               </div>
               <div className="card__face card__face--back flex justify-center items-center">
-                <PartnerCard close={() => {}} />
+                <PartnerCard reward={currReward} close={() => {}} />
               </div>
             </div>
 

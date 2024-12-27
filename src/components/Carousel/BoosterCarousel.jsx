@@ -5,7 +5,10 @@ import BoosterClaim from "../Cards/Boosters/BoosterCrd";
 import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import { isClaimedTodayUTC } from "../../helpers/booster.helper";
+import {
+  hasTimeElapsed,
+  isClaimedTodayUTC,
+} from "../../helpers/booster.helper";
 import { getPhaseByDate } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
@@ -17,107 +20,154 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
-
   useEffect(() => {
-    const newItems = [
-      <BoosterItem
-        key="automata"
-        index={0}
-        currentIndex={currentIndex}
-        isGuideActive={enableGuide}
-        isActive={!mythData.isAutomataActive}
-        handleClick={() => handleBoosterClick("automata", false)}
-        activeMyth={activeMyth}
-        t={t}
-        booster={0}
-      />,
-      <BoosterItem
-        key="minion"
-        index={1}
-        currentIndex={currentIndex}
-        isActive={mythData.isShardsClaimActive}
-        handleClick={() => handleBoosterClick("minion", false)}
-        activeMyth={activeMyth}
-        t={t}
-        booster={2}
-      />,
-      <BoosterItem
-        key="guide"
-        index={2}
-        currentIndex={currentIndex}
-        isGuideActive={enableGuide}
-        isActive={true}
-        handleClick={() => {
-          handleClickHaptic(tele, enableHaptic);
-          setSection(1);
-        }}
-        activeMyth={activeMyth}
-        t={t}
-        booster={1}
-      />,
-      <BoosterItem
-        key="burst"
-        index={3}
-        currentIndex={currentIndex}
-        isActive={
-          !gameData.mythologies[activeMyth].boosters.isBurstActive ||
-          gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
-        }
-        handleClick={() => handleBoosterClick("burst", false)}
-        mythData={mythData}
-        isGuideActive={enableGuide}
-        activeMyth={activeMyth}
-        t={t}
-        booster={6}
-      />,
+    const boosterStatus = {
+      multiAutomata: gameData?.isAutomataAutoActive === -1,
+      multiBurst: hasTimeElapsed(gameData.autoPayBurstExpiry),
+      moon: gameData.isMoonActive,
+      automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
+      burst: gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim,
+      minion: gameData.mythologies[activeMyth].boosters.isShardsClaimActive,
+    };
+
+    // Define BoosterItems in the same order as `boosterStatus`
+    const boosters = [
+      {
+        key: "automata",
+        component: (
+          <BoosterItem
+            key="automata"
+            index={0}
+            currentIndex={currentIndex}
+            isGuideActive={enableGuide}
+            isActive={!mythData.isAutomataActive}
+            handleClick={() => handleBoosterClick("automata", false)}
+            activeMyth={activeMyth}
+            t={t}
+            booster={0}
+          />
+        ),
+      },
+      {
+        key: "minion",
+        component: (
+          <BoosterItem
+            key="minion"
+            index={1}
+            currentIndex={currentIndex}
+            isActive={mythData.isShardsClaimActive}
+            handleClick={() => handleBoosterClick("minion", false)}
+            activeMyth={activeMyth}
+            t={t}
+            booster={2}
+          />
+        ),
+      },
+      {
+        key: "guide",
+        component: (
+          <BoosterItem
+            key="guide"
+            index={2}
+            currentIndex={currentIndex}
+            isGuideActive={enableGuide}
+            isActive={true}
+            handleClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setSection(1);
+            }}
+            activeMyth={activeMyth}
+            t={t}
+            booster={1}
+          />
+        ),
+      },
+      {
+        key: "burst",
+        component: (
+          <BoosterItem
+            key="burst"
+            index={3}
+            currentIndex={currentIndex}
+            isActive={
+              !gameData.mythologies[activeMyth].boosters.isBurstActive ||
+              gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
+            }
+            handleClick={() => handleBoosterClick("burst", false)}
+            mythData={mythData}
+            isGuideActive={enableGuide}
+            activeMyth={activeMyth}
+            t={t}
+            booster={6}
+          />
+        ),
+      },
+      {
+        key: "moon",
+        component: (
+          <BoosterItem
+            key="moon"
+            index={0}
+            currentIndex={currentIndex}
+            isGuideActive={enableGuide}
+            isActive={gameData.isMoonActive}
+            handleClick={() => handleBoosterClick("moon", false)}
+            activeMyth={activeMyth}
+            t={t}
+            booster={9}
+          />
+        ),
+      },
     ];
 
+    // Add conditional boosters
     if (gameData.isBurstAutoPayActive) {
-      newItems.push(
-        <BoosterItem
-          key="burst"
-          index={0}
-          currentIndex={currentIndex}
-          isGuideActive={enableGuide}
-          isActive={true}
-          handleClick={() => handleBoosterClick("burst", true)}
-          activeMyth={activeMyth}
-          t={t}
-          booster={8}
-        />
-      );
+      boosters.push({
+        key: "burstAutoPay",
+        component: (
+          <BoosterItem
+            key="burst"
+            index={0}
+            currentIndex={currentIndex}
+            isGuideActive={enableGuide}
+            isActive={true}
+            handleClick={() => handleBoosterClick("burst", true)}
+            activeMyth={activeMyth}
+            t={t}
+            booster={8}
+          />
+        ),
+      });
     }
 
     if (gameData.isEligibleToAutomataAuto) {
-      newItems.push(
-        <BoosterItem
-          key="automata"
-          index={0}
-          currentIndex={currentIndex}
-          isGuideActive={enableGuide}
-          isActive={true}
-          handleClick={() => handleBoosterClick("automata", true)}
-          activeMyth={activeMyth}
-          t={t}
-          booster={7}
-        />
-      );
+      boosters.push({
+        key: "automataAuto",
+        component: (
+          <BoosterItem
+            key="automata"
+            index={0}
+            currentIndex={currentIndex}
+            isGuideActive={enableGuide}
+            isActive={true}
+            handleClick={() => handleBoosterClick("automata", true)}
+            activeMyth={activeMyth}
+            t={t}
+            booster={7}
+          />
+        ),
+      });
     }
-    newItems.push(
-      <BoosterItem
-        key="moon"
-        index={0}
-        currentIndex={currentIndex}
-        isGuideActive={enableGuide}
-        isActive={gameData.isMoonActive}
-        handleClick={() => handleBoosterClick("moon", false)}
-        activeMyth={activeMyth}
-        t={t}
-        booster={9}
-      />
-    );
 
-    setItems(newItems);
+    const sortedItems = boosters
+      .sort((a, b) => {
+        const statusA = boosterStatus[a.key] || false;
+        const statusB = boosterStatus[b.key] || false;
+        return statusB - statusA;
+      })
+      .map((item) => item.component);
+
+    setItems(sortedItems);
     setCurrentIndex(0);
   }, [activeMyth, enableGuide, mythData, gameData]);
 

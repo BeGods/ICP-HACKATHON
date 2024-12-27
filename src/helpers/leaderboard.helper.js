@@ -22,11 +22,11 @@ export const formatTwoNums = (num) => {
 };
 
 export const formatThreeNums = (num) => {
-  if (num > 99) {
+  if (num > 999) {
+    return (Math.floor(num / 100) / 10).toFixed(1) + "K";
+  } else if (num > 99) {
     return num.toString();
-  }
-
-  if (num < 10) {
+  } else if (num < 10) {
     num = "00" + num.toString();
   } else if (num < 99) {
     num = "0" + num.toString();

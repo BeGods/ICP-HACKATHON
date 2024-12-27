@@ -80,7 +80,8 @@
     "select": "Select",
     "music": "Music",
     "wallet": "Wallet",
-    "watch": "Watch"
+    "watch": "Watch",
+    "flag": "Flag"
   },
   "misc": {
     "name": "Name",

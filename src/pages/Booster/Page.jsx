@@ -17,6 +17,8 @@ import { useBoosterGuide } from "../../hooks/Tutorial";
 import BoosterCarousel from "../../components/Carousel/BoosterCarousel";
 import ReactHowler from "react-howler";
 import { trackComponentView, trackEvent } from "../../utils/ga";
+import { showSnow } from "../../helpers/confetti";
+import confetti from "canvas-confetti";
 
 const Boosters = () => {
   const { t } = useTranslation();
@@ -39,6 +41,7 @@ const Boosters = () => {
   const [showToggles, setShowToggles] = useState(false);
   let guideTimeoutId = useRef(null);
   const disableRef = useRef(false);
+  const animationFrameId = useRef(null);
 
   const handleClaimAutomata = async () => {
     if (disableRef.current === false) {
@@ -87,17 +90,17 @@ const Boosters = () => {
   const handleCardChange = () => {
     setShowCard(
       <BoosterClaim
-        activeCard={"burst"}
+        activeCard={"automata"}
         activeMyth={activeMyth}
         mythData={mythData}
-        isAutoPay={true}
+        isAutoPay={false}
         closeCard={() => {
           setShowCard(null);
           setShowAnmt(false);
         }}
         Button={
           <BoosterBtn
-            activeCard={"moon"}
+            activeCard={"automata"}
             mythData={mythData}
             handleClaim={() => {}}
             t={t}
@@ -139,6 +142,51 @@ const Boosters = () => {
     setTimeout(() => {
       setShowToggles(true);
     }, 300);
+  }, []);
+
+  useEffect(() => {
+    const duration = 20 * 1000;
+    const animationEnd = Date.now() + duration;
+    let skew = 1;
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function frame() {
+      const timeLeft = animationEnd - Date.now();
+      const ticks = Math.max(1, 200 * (timeLeft / duration));
+      skew = Math.max(0.8, skew - 0.001);
+
+      confetti({
+        particleCount: 1,
+        startVelocity: 0,
+        ticks: ticks,
+        origin: {
+          x: Math.random(),
+          y: Math.random() * skew - 0.2,
+        },
+        colors: ["#ffffff"],
+        shapes: ["circle"],
+        gravity: randomInRange(0.4, 0.6),
+        scalar: randomInRange(0.4, 1),
+        drift: randomInRange(-0.4, 0.4),
+      });
+
+      if (timeLeft > 0) {
+        animationFrameId.current = requestAnimationFrame(frame);
+      }
+    }
+
+    frame();
+
+    // Cleanup when component is unmounted
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+        animationFrameId.current = null;
+      }
+    };
   }, []);
 
   return (

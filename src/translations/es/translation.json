@@ -99,7 +99,9 @@
     "getOTP": "Obtener OTP",
     "terms": "Aceptar Términos y Condiciones",
     "policy": "Política de Privacidad",
-    "haptic": "Hápticos"
+    "haptic": "Hápticos",
+    "flag": "Flag"
+
   },
   "note": {
     "text": "Actualización de la tabla de clasificación en",

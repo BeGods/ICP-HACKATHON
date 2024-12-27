@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 
 import IconBtn from "../../Buttons/IconBtn";
-import { useTranslation } from "react-i18next";
 import { MyContext } from "../../../context/context";
 
-const PartnerCard = ({ close }) => {
-  const { activeReward, assets, platform } = useContext(MyContext);
+const PartnerCard = ({ close, reward }) => {
+  const { assets, platform } = useContext(MyContext);
 
   return (
     <div
@@ -23,14 +22,14 @@ const PartnerCard = ({ close }) => {
         <div className="w-full h-full absolute flex flex-col leading-tight justify-start items-center flex-grow  text-card pt-[10px]">
           <div className="flex flex-col text-center">
             <h1 className="text-paperHead font-bold uppercase">
-              {activeReward.metadata.brandName}
+              {reward.metadata.brandName}
             </h1>
             <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
-              {activeReward.metadata.brandCategory}
+              {reward.metadata.brandCategory}
             </h2>
           </div>
           <div className="h-full w-full text-center px-3 pt-2">
-            {activeReward.metadata.howToRedeem.replace(/<\/?p>/g, "")}
+            {reward.metadata.howToRedeem.replace(/<\/?p>/g, "")}
           </div>
         </div>
       </div>

@@ -16,6 +16,7 @@ const CenterChild = ({
   orbGlow,
   platform,
   mythData,
+  starIsHeld,
 }) => {
   const { setSection, assets, enableHaptic } = useContext(MyContext);
 
@@ -58,7 +59,9 @@ const CenterChild = ({
               : showBlackOrb === 1
               ? "text-white"
               : "text-white"
-          } text-[22vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+          } text-[22vw] transition-all ${
+            starIsHeld && "z-20"
+          } duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
           <div className={`${platform === "ios" ? "-mt-1" : "mt-4"}`}>
             {mythSymbols[mythSections[activeMyth]]}
@@ -156,6 +159,7 @@ const ForgeHeader = ({
   glowBooster,
   minimize,
   showTut,
+  starIsHeld,
 }) => {
   const height = Math.min(
     100,
@@ -196,6 +200,7 @@ const ForgeHeader = ({
           minimize={minimize}
         />
         <CenterChild
+          starIsHeld={starIsHeld}
           height={height}
           tapGlow={tapGlow}
           glowReward={glowReward}

@@ -302,6 +302,32 @@
   }
 }
 
+@mixin slide-in-out($name, $initial, $final) {
+  @keyframes #{$name} {
+    0% {
+      transform: translateX($initial);
+      opacity: 1;
+    }
+    30% {
+      transform: translateX($final);
+      opacity: 1;
+    }
+    70% {
+      transform: translateX($final);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX($initial);
+      opacity: 0;
+    }
+  }
+
+  & {
+    animation: #{$name} 2s ease-in-out forwards;
+  }
+}
+
+
 @mixin slideY($name, $initial, $final) {
   @keyframes #{$name} {
     0%{
@@ -397,6 +423,16 @@
 .slide-inside-right{
 @include slide(slide-inside-right-animation, 100%, 0%);
 }
+
+.slide-in-out-left{
+  @include slide-in-out(slide-insout-left-animation, 0px, 20px);
+}
+
+.slide-in-out-right{
+  @include slide-in-out(slide-insout-right-animation, 0px, -20px);
+}
+
+
 
 @keyframes slideMinionUp {
   0% {

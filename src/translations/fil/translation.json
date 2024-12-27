@@ -70,7 +70,8 @@
     "select": "Piliin",
     "music": "Musika",
     "wallet": "Pitaka",
-    "watch": "Watch"
+    "watch": "Watch",
+    "flag": "Flag"
   },
   "elements": {
     "earth": "Lupa",

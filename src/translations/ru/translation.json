@@ -76,7 +76,8 @@
     "select": "Выбрать",
     "music": "Музыка",
     "wallet": "Кошелек",
-    "watch": "Watch"
+    "watch": "Watch",
+    "flag": "Flag"
   },
   "elements": {
     "earth": "Земля",
