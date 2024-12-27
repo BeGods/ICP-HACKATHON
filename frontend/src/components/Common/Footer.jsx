@@ -5,6 +5,7 @@ import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useTranslation } from "react-i18next";
+import { hasTimeElapsed } from "../../helpers/booster.helper";
 
 const redirect = [0, 2, 4, 3];
 const sectionTitles = ["forges", "boosters", "tower", "profile"];
@@ -23,11 +24,23 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     assets,
     userData,
     enableHaptic,
+    gameData,
   } = useContext(MyContext);
   const countOfInCompleteQuests = socialQuestData.filter(
     (item) => item.isQuestClaimed === false
   ).length;
   const [clickEffect, setClickEffect] = useState(false);
+
+  const boosterStatus = {
+    automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
+    burst: gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim,
+    minion: gameData.mythologies[activeMyth].boosters.isShardsClaimActive,
+    moon: gameData.isMoonActive,
+    multiAutomata: gameData?.isAutomataAutoActive === -1,
+    multiBurst: hasTimeElapsed(gameData.autoPayBurstExpiry),
+  };
+
+  const boostersActiveCnt = Object.values(boosterStatus).filter(Boolean).length;
 
   const playAudio = () => {
     handleClickHaptic(tele, enableHaptic);
@@ -49,7 +62,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     <>
       {icon < 3 ? (
         <div
-          className={`flex flex-col items-center cursor-pointer z-50`}
+          className={`flex relative flex-col items-center cursor-pointer z-50`}
           onClick={(e) => {
             e.preventDefault();
             playAudio();
@@ -79,6 +92,13 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
           <h1 className="flex justify-center -mt-3 pb-[6px] uppercase">
             {t(`sections.${sectionTitles[icon]}`)}
           </h1>
+          {icon === 1 && (
+            <div
+              className={`absolute pulse-text gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${mythSections[activeMyth]}-text text-white  h-7 w-7 -mr-1 mt-[0.3vh] z-50 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+            >
+              {boostersActiveCnt}
+            </div>
+          )}
         </div>
       ) : (
         <div
@@ -127,7 +147,9 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
       {icon === 3 && (
-        <div className="absolute pulse-text gelatine flex justify-center items-center border-[3px] font-roboto text-[5vw] font-medium bg-[#FF6500] text-white h-8 w-8 mb-[9vh] mr-2 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]">
+        <div
+          className={`absolute pulse-text gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${mythSections[activeMyth]}-text text-white  h-7 w-7 mb-[8vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+        >
           {countOfInCompleteQuests}
         </div>
       )}

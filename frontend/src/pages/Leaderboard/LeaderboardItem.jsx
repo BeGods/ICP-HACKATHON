@@ -21,7 +21,16 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl, isEmpty }) => {
       } font-medium text-tertiary w-[98%] h-fit mx-auto text-white py-2`}
     >
       {isEmpty ? (
-        <div className="h-[35px]"></div>
+        <div className="flex w-full h-fit justify-between">
+          <div className="flex justify-center items-center w-[20%] h-full"></div>
+          <div className="flex gap-3 items-center  w-full">
+            <div className="h-[35px] w-[35px]"></div>
+            <h1></h1>
+          </div>
+          <div className="flex flex-col justify-center items-center text-tertiary w-[25%] h-full">
+            <h1></h1>
+          </div>
+        </div>
       ) : (
         <div className="flex w-full h-fit justify-between">
           <div className="flex justify-center items-center w-[20%] h-full">

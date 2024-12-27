@@ -83,7 +83,17 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full px-7">
         <div
-          className={`flex border  ${
+          className={`flex justify-start ${
+            showGlow && "glow-button-white"
+          } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="text-primary font-medium pl-headSides">
+            {" "}
+            {formatThreeNums(gameData.multiColorOrbs)}
+          </div>
+        </div>
+        <div
+          className={`flex border justify-end ${
             myth === 0 || showGlow
               ? `glow-button-white border-white`
               : `glow-button-${mythSections[myth - 1]} border-${
@@ -91,7 +101,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
                 }-primary`
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className={`text-primary font-medium pl-headSides`}>
+          <div className={`text-primary font-medium pr-headSides`}>
             {" "}
             {myth !== 0 ? (
               <>
@@ -104,18 +114,17 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
             )}
           </div>
         </div>
-        <div
-          className={`flex justify-end ${
-            showGlow && "glow-button-white"
-          } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
-        >
-          <div className="text-primary font-medium pr-headSides">
-            {" "}
-            {formatThreeNums(gameData.multiColorOrbs)}
-          </div>
-        </div>
       </div>
       <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          className={`flex relative text-center justify-center items-center w-[15vw] h-[15vw] mt-[16px]  rounded-full`}
+        >
+          <img
+            src={`${assets.uxui.multiorb}`}
+            alt="multiOrb"
+            className="w-full h-full"
+          />
+        </div>
         {myth !== 0 ? (
           <>
             <div
@@ -134,15 +143,6 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
             </div>
           </>
         )}
-        <div
-          className={`flex relative text-center justify-center items-center w-[15vw] h-[15vw] mt-[16px]  rounded-full`}
-        >
-          <img
-            src={`${assets.uxui.multiorb}`}
-            alt="multiOrb"
-            className="w-full h-full"
-          />
-        </div>
       </div>
     </div>
   );

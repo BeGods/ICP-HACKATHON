@@ -80,7 +80,8 @@
     "select": "เลือก",
     "music": "ดนตรี",
     "wallet": "กระเป๋าสตางค์",
-    "watch": "Watch"
+    "watch": "Watch",
+    "flag": "Flag"
   },
   "elements": {
     "earth": "ดิน",

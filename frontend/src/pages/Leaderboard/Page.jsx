@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard } from "../../utils/api";
 import { MyContext } from "../../context/context";
@@ -12,6 +18,7 @@ import UserInfoCard from "../../components/Cards/Info/UserInfoCrd";
 import { Crown, Trophy } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../utils/country";
+import confetti from "canvas-confetti";
 
 const tele = window.Telegram?.WebApp;
 
@@ -72,6 +79,7 @@ const Leaderboard = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [showHide, setShopHide] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [hallOfFameData, sethallOfFameData] = useState([]);
@@ -82,6 +90,13 @@ const Leaderboard = (props) => {
     1: "first",
     2: "third",
   };
+  const [animationKey, setAnimationKey] = useState(0);
+  const animationFrameId = useRef(null);
+
+  useEffect(() => {
+    // Increment animationKey to force re-trigger of animation classes
+    setAnimationKey((prevKey) => prevKey + 1);
+  }, [isFinished]);
 
   const getLeaderboardData = async (pageNum) => {
     try {
@@ -115,9 +130,9 @@ const Leaderboard = (props) => {
 
   const placeholderItem = {
     telegramUsername: "Anonymous",
-    profileImage: "default-profile.png", // Provide a default profile image URL
+    profileImage: "default-profile.png",
     id: null,
-    country: "NA", // Default or placeholder country code
+    country: "NA",
     isEmpty: true,
   };
 
@@ -128,6 +143,51 @@ const Leaderboard = (props) => {
       () => placeholderItem
     ),
   ];
+
+  useEffect(() => {
+    const duration = 20 * 1000;
+    const animationEnd = Date.now() + duration;
+    let skew = 1;
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function frame() {
+      const timeLeft = animationEnd - Date.now();
+      const ticks = Math.max(1, 200 * (timeLeft / duration));
+      skew = Math.max(0.8, skew - 0.001);
+
+      confetti({
+        particleCount: 1,
+        startVelocity: 0,
+        ticks: ticks,
+        origin: {
+          x: Math.random(),
+          y: Math.random() * skew - 0.2,
+        },
+        colors: ["#ffffff"],
+        shapes: ["circle"],
+        gravity: randomInRange(0.4, 0.6),
+        scalar: randomInRange(0.4, 1),
+        drift: randomInRange(-0.4, 0.4),
+      });
+
+      if (timeLeft > 0) {
+        animationFrameId.current = requestAnimationFrame(frame);
+      }
+    }
+
+    frame();
+
+    // Cleanup when component is unmounted
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+        animationFrameId.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div
@@ -177,9 +237,9 @@ const Leaderboard = (props) => {
               r
             </div>
           </div>
-          <div className="flex font-fof z-20 flex-col top-0 w-1/2">
+          <div className="font-fof z-20 top-0 w-1/2">
             <div
-              className={`flex z-50 transition-all p-0.5 duration-1000 ${
+              className={`flex z-50 w-[75%] transition-all p-0.5  duration-1000 ${
                 activeTab ? "bg-white" : "bg-black"
               } mx-auto border border-black w-[40%] rounded-full h-[30px]`}
             >
@@ -205,7 +265,7 @@ const Leaderboard = (props) => {
               </div>
             </div>
             <div className="z-50 text-white text-black-contour w-full text-secondary text-center">
-              ( Hall Of Fame )
+              Hall Of Fame
             </div>
           </div>
           <div
@@ -217,6 +277,18 @@ const Leaderboard = (props) => {
           >
             <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
               z
+            </div>
+          </div>
+          <div
+            key={animationKey}
+            className="absolute flex text-white text-black-contour px-2 w-full mt-[7vh] font-fof text-[17px] uppercase"
+          >
+            <div className={`mr-auto slide-in-out-left`}>
+              {t("sections.leaderboard")}
+            </div>
+            <div className={`ml-auto slide-in-out-right`}>
+              {" "}
+              {t("sections.forges")}
             </div>
           </div>
         </div>
@@ -233,9 +305,9 @@ const Leaderboard = (props) => {
               0
             </div>
           </div>
-          <div className="flex font-fof z-20 flex-col top-0 w-1/2">
+          <div className="font-fof z-20 top-0 w-1/2">
             <div
-              className={`flex z-50 transition-all p-0.5  duration-1000 ${
+              className={`flex z-50 w-[75%] transition-all p-0.5  duration-1000 ${
                 activeTab ? "bg-white" : "bg-black"
               } mx-auto border border-black w-[40%] rounded-full h-[30px]`}
             >
@@ -274,6 +346,15 @@ const Leaderboard = (props) => {
             <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
               <Crown size={"9vw"} />
             </div>
+          </div>
+          <div
+            key={animationKey}
+            className="absolute flex text-white text-black-contour px-2 w-full mt-[7vh] font-fof text-[17px] uppercase"
+          >
+            <div className={`mr-auto slide-in-out-left`}>
+              {t("profile.task")}
+            </div>
+            <div className={`ml-auto slide-in-out-right`}>Winners</div>
           </div>
         </div>
       )}
@@ -450,7 +531,7 @@ const Leaderboard = (props) => {
                       <div key={id || index} className="leaderboard-item">
                         <LeaderboardItem
                           isEmpty={isEmpty || false}
-                          rank={index + 1}
+                          rank={index}
                           name={telegramUsername}
                           totalOrbs={countryFlag}
                           imageUrl={profileImage}
@@ -583,7 +664,7 @@ const Leaderboard = (props) => {
                           : userData.telegramUsername}
                       </h1>
                     </div>
-                    <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
+                    <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">
                       <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
                     </div>
                   </div>

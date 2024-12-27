@@ -199,9 +199,9 @@ const Home = () => {
         (async () => {
           await getStreakBonus(token);
         })();
-      } else if (!showAnmnt) {
-        setSection(12);
-        setIsLoading(false);
+        // } else if (!showAnmnt) {
+        //   setSection(12);
+        //   setIsLoading(false);
       } else {
         setSection(0);
         setTimeout(() => {

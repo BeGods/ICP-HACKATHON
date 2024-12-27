@@ -1089,6 +1089,7 @@ const Forges = () => {
               showTut={currGuide}
               activeMyth={activeMyth}
               t={t}
+              starIsHeld={isStarHolding === 1}
               minimize={minimize}
               platform={platform}
               orbGlow={orbGlow}
@@ -1167,6 +1168,7 @@ const Forges = () => {
         <ForgeHeader
           activeMyth={activeMyth}
           t={t}
+          starIsHeld={isStarHolding === 1}
           minimize={minimize}
           platform={platform}
           orbGlow={orbGlow}
