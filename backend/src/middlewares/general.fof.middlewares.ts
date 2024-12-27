@@ -203,10 +203,10 @@ export const validPartnerReward = async (req, res, next) => {
     const userMilestones = await milestones.findOne({ userId: user._id });
 
     const fetchedPartner = userMilestones.rewards.claimedRewards.find(
-      (reward) => reward.partnerId === partnerId
+      (reward) => reward.partnerId.toString() === partnerId
     );
 
-    if (!fetchedPartner) {
+    if (!fetchedPartner.partnerId) {
       throw new Error("Invalid partnerId.");
     }
 
