@@ -78,15 +78,25 @@ export const isClaimedTodayUTC = (time) => {
   return time >= startOfTodayUTC && time < endOfTodayUTC;
 };
 
-export const hasBeenFourDaysSinceClaimedUTC = (time) => {
-  if (time === 0) {
-    return false;
+export const hasBeenFourDaysSinceClaimedUTC = (lastClaimedTime) => {
+  if (lastClaimedTime === 0) {
+    return false; // No claim has been made yet
   }
 
-  const now = Date.now();
+  const now = Date.now(); // Current time in milliseconds
+  const fourDaysInMs = 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
 
-  const fourDaysAgoUTC = now - 4 * 24 * 60 * 60 * 1000;
-  const fiveDaysAgoUTC = now - 5 * 24 * 60 * 60 * 1000;
+  // If the time difference is within 4 days, return true; otherwise, return false
+  return now - lastClaimedTime < fourDaysInMs;
+};
 
-  return time >= fiveDaysAgoUTC && time < fourDaysAgoUTC;
+export const checkLastMoonClaim = (lastMoonClaimAt) => {
+  const currentTime = Date.now();
+  const fourDaysInMs = 4 * 24 * 60 * 60 * 1000;
+
+  if (currentTime - lastMoonClaimAt > fourDaysInMs) {
+    return 100;
+  }
+
+  return currentTime - lastMoonClaimAt;
 };
