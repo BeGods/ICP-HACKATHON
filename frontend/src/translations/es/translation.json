@@ -141,43 +141,43 @@
         "QuestName": "Escape de Heptu",
         "desc": "'Heptu despidiéndose de la ciudad de Obb', ca 1909, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en Whitehouse Terrace, Edimburgo - Escocia."
       },
-      "A02": {
+      "B01": {
         "QuestName": "La Traición de Viriato",
         "desc": "'La muerte de Viriato, jefe de los lusitanos', ca 1807, es una pintura de José de Madrazo y Agudo, un pintor neoclásico español. Visita el original en el Museo del Prado, Madrid - España."
       },
-      "A03": {
+      "A02": {
         "QuestName": "Tristán e Isolda",
         "desc": "'Tristán e Isolda', ca 1912, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en Whitehouse Terrace, Edimburgo - Escocia."
       },
-      "A04": {
+      "B02": {
         "QuestName": "La Princesa Triste",
         "desc": "'Isolda: La Princesa Celta', ca 1912, es una pintura de Gaston Bussière, un pintor simbolista francés. Visita el original en el Museo de las Ursulinas, Macon - Francia."
       },
-      "A05": {
+      "A03": {
         "QuestName": "Imbolc de Brigid",
         "desc": "'La Santa Novia', ca 1913, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en la Galería Nacional, Edimburgo - Escocia."
       },
-      "A06": {
+      "B03": {
         "QuestName": "Fantasía de Verano",
         "desc": "'Fantasía en Crepúsculo', ca 1911, es una pintura de Edward Robert Hughes, un pintor simbolista británico. Visita el original en la Galería Artchiv, Praga - República Checa."
       },
-      "B01": {
+      "A04": {
         "QuestName": "Clann de Lir",
         "desc": "'Los Hijos de Lir', ca 1924, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en las Galerías de Arte de Dundee, Edimburgo - Escocia."
       },
-      "B02": {
+      "B04": {
         "QuestName": "El Amante de Aengus",
         "desc": "'El Cisne Amenazado', ca 1650, es una pintura de Jan Asselijn, un pintor del Siglo de Oro holandés. Visita el original en el Rijksmuseum de Ámsterdam, Ámsterdam - Países Bajos."
       },
-      "B03": {
+      "A05": {
         "QuestName": "La Bella Durmiente",
         "desc": "'La Princesa Durmiente', ca 1924, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en la Galería de Arte de Perth, Perth - Escocia."
       },
-      "B04": {
+      "B05": {
         "QuestName": "Leanan Sidhe",
         "desc": "'La Bella Dame sans Merci', ca 1913, es una pintura de Frank Bernard Dicksee, un pintor victoriano británico. Visita el original en el Museo de la Ciudad de Bristol, Bristol - Inglaterra."
       },
-      "B05": {
+      "A06": {
         "QuestName": "Jinetes Sidhe",
         "desc": "'Jinetes de la Sidhe', ca 1911, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en las Galerías de Arte de Dundee, Edimburgo - Escocia."
       },
@@ -185,7 +185,7 @@
         "QuestName": "Vercingetórix",
         "desc": "'Vercingetórix ante César', ca 1899, es una pintura de Lionel Royer, un pintor histórico francés. Visita el original en el Museo Crozatier, Auvernia - Francia."
       },
-      "C07": {
+      "C01": {
         "QuestName": "Tuath Danann",
         "desc": "'La Disputa de Oberón y Titania', ca 1849, es una pintura de Joseph Noel Paton, un pintor histórico escocés. Visita el original en la Galería Nacional, Edimburgo - Escocia."
       },
@@ -199,43 +199,43 @@
         "QuestName": "Susurrador de Aves",
         "desc": "'El Vendedor de Palomas Egipcio', ca 1864, es una pintura de Eugène Pierre François Giraud, un pintor francés. Visita el original en el Museo de Bellas Artes, Valencia - España."
       },
-      "A02": {
+      "B01": {
         "QuestName": "El Encanto de Hathor",
         "desc": "'El Arpista', ca 1890, es una pintura de Arthur Drummond, un pintor británico. Visita el original en Sotheby’s, Londres - Inglaterra."
       },
-      "A03": {
+      "A02": {
         "QuestName": "El Milagro del Nilo",
         "desc": "'El Encuentro de Moisés', ca 1904, es una pintura de Lawrence Alma-Tadema, un pintor victoriano neerlandés. Visita el original en Sotheby’s, Londres - Inglaterra."
       },
-      "A04": {
+      "B02": {
         "QuestName": "Procesión de Isis",
         "desc": "'La Huida a Egipto', ca 1883, es una pintura de Edwin Longsden Long, un pintor bíblico británico. Visita el original en el Museo Russell-Cotes, Bournemouth - Inglaterra."
       },
-      "A05": {
+      "A03": {
         "QuestName": "Perfume de Shezmus",
         "desc": "'Cleopatra probando venenos en prisioneros condenados', ca 1887, es una pintura de Alexandre Cabanel, un pintor clásico francés. Visita el original en el Museo Real, Amberes - Bélgica."
       },
-      "A06": {
+      "B03": {
         "QuestName": "Tumba de Cleopatra",
         "desc": "'La Muerte de Cleopatra', ca 1890, es una pintura de John Collier, un pintor prerrafaelita británico. Visita el original en la Galería de Arte de Oldham - Inglaterra."
       },
-      "B01": {
+      "A04": {
         "QuestName": "Sangre de Sekhmet I",
         "desc": "'Israel en Egipto', ca 1867, es una pintura de Edward Poynter, un pintor histórico británico. Visita el original en la Galería de Arte Guildhall, Londres - Inglaterra."
       },
-      "B02": {
+      "B04": {
         "QuestName": "Culto de Bastet",
         "desc": "'Los Dioses y Sus Creadores', ca 1878, es una pintura del pintor bíblico inglés Edwin Long. Visita el original en la Galería de Arte Towneley Hall, Burnley - Inglaterra."
       },
-      "B03": {
+      "A05": {
         "QuestName": "Sangre de Sekhmet II",
         "desc": "'Israel en Egipto', ca 1867, es una pintura de Edward Poynter, un pintor histórico británico. Visita el original en la Galería de Arte Guildhall, Londres - Inglaterra."
       },
-      "B04": {
+      "B05": {
         "QuestName": "Culto de Maahes",
         "desc": "'La Obsequias de un Gato Egipcio', ca 1886, es una pintura de John Weguelin, un pintor clásico británico. Visita el original en la Galería de Arte de Auckland, Auckland - Nueva Zelanda."
       },
-      "B05": {
+      "A06": {
         "QuestName": "Sueño del Faraón",
         "desc": "'José interpretando el sueño del Faraón', ca 1894, es una pintura de Reginald Arthur, un pintor histórico británico. Visita el original en Sotheby’s, Londres - Inglaterra."
       },
@@ -243,7 +243,7 @@
         "QuestName": "Amenaza Extranjera",
         "desc": "'El Encuentro de Antonio y Cleopatra', ca 1885, es una pintura de Lawrence Alma-Tadema, un pintor victoriano neerlandés. Visita el original en Sotheby’s, Londres - Inglaterra."
       },
-      "C08": {
+      "C01": {
         "QuestName": "Culto al Toro Apis",
         "desc": "'La Procesión del Toro Apis', ca 1879, es una pintura de Frederick Arthur Bridgman, un pintor orientalista americano. Visita el original en una colección privada, EE. UU."
       },
@@ -258,43 +258,43 @@
         "QuestName": "Narcyssus y Eco",
         "desc": "'Eco y Narciso', ca 1903, es una pintura de John William Waterhouse, un pintor clásico británico. Visita el original en la Galería de Arte Walker, Liverpool - Inglaterra."
       },
-      "A02": {
+      "B01": {
         "QuestName": "Ninfas de Agua",
         "desc": "'Hylas y las Ninfas de Agua', ca 1909, es una pintura de Henrietta Rae, una pintora clásica británica. Visita el original en la Galería de Arte Walker, Liverpool - Inglaterra."
       },
-      "A03": {
+      "A02": {
         "QuestName": "La Ira de Aquiles",
         "desc": "'La Ira de Aquiles', ca 1737, es una pintura de Charles-Antoine Coypel, un pintor clásico francés. Visita el original en la Galería de Arte Walker, San Petersburgo - Rusia."
       },
-      "A04": {
+      "B02": {
         "QuestName": "La Caída de Phaeton",
         "desc": "'La Caída de Phaeton', ca 1737, es una pintura de Peter Paul Rubens, un pintor barroco flamenco. Visita el original en la Galería Nacional de Arte, Washington D.C. - Estados Unidos."
       },
-      "A05": {
+      "A03": {
         "QuestName": "Ícaro y Dédalo",
         "desc": "'El Sol o la Caída de Ícaro', ca 1819, es una pintura de Merry Joseph Blondel, un pintor neoclásico francés. Visita el original en el Museo del Louvre, París - Francia."
       },
-      "A06": {
+      "B03": {
         "QuestName": "El Regalo de Prometeo",
         "desc": "'Prometeo', ca 1620, es una pintura de Theodoor Rombouts, un pintor caravaggista flamenco. Visita el original en los Museos Reales de Bellas Artes, Amberes - Bélgica."
       },
-      "B01": {
+      "A04": {
         "QuestName": "Oráculo de Delfos",
         "desc": "'Pitia: Oráculo y Alta Sacerdotisa de Delfos', ca 1880, es una pintura de Camillo Miola, un pintor histórico italiano. Visita el original en el Centro J. Paul Getty, Los Ángeles - EE. UU."
       },
-      "B02": {
+      "B04": {
         "QuestName": "El Destino de Hefesto",
         "desc": "'El Último Día de Pompeya', ca 1833, es una pintura de Karl Pavlovich Bryullov, un pintor neoclásico ruso. Visita el original en el Museo Ruso Estatal, San Petersburgo - Rusia."
       },
-      "B03": {
+      "A05": {
         "QuestName": "Vellocino de Oro",
         "desc": "'El Vellocino de Oro', ca 1904, es una pintura de Herbert James Draper, un pintor neoclásico británico. Visita el original en Cartwright Hall, Bradford - Inglaterra."
       },
-      "B04": {
+      "B05": {
         "QuestName": "Las Sirenas de Odiseo",
         "desc": "'Ulises y las Sirenas', ca 1909, es una pintura de Herbert James Draper, un pintor neoclásico británico. Visita el original en la Galería de Arte Ferens, Hull - Inglaterra."
       },
-      "B05": {
+      "A06": {
         "QuestName": "El Auge del Imperio",
         "desc": "'La Consumación del Curso del Imperio', ca 1836, es una pintura de Cole Thomas, un pintor paisajista americano. Visita el original en la Sociedad Histórica, Nueva York - EE. UU."
       },
@@ -302,7 +302,7 @@
         "QuestName": "La Caída del Imperio",
         "desc": "'La Destrucción del Curso del Imperio', ca 1836, es una pintura de Cole Thomas, un pintor paisajista americano. Visita el original en la Sociedad Histórica, Nueva York - EE. UU."
       },
-      "C06": {
+      "C01": {
         "QuestName": "Titanomaquia",
         "desc": "'Olímpico: La Caída de los Gigantes', ca 1764, es una pintura de Francisco Bayeu y Subías, un pintor neoclásico español. Visita el original en el Museo del Prado, Madrid - España."
       },
@@ -317,43 +317,43 @@
         "QuestName": "Un Nuevo Amanecer",
         "desc": "'Dagr (Día)', ca 1874, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
       },
-      "A02": {
+      "B01": {
         "QuestName": "Crepúsculo",
         "desc": "'Nott (Noche)', ca 1887, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
       },
-      "A03": {
+      "A02": {
         "QuestName": "Una Prisión Valkiria",
         "desc": "'La Vigilancia de la Valkiria', ca 1915, es una pintura de Edward Robert Hughes, un pintor británico de acuarelas. Visita el original en el Museo y Galería de Arte, Birmingham - Inglaterra."
       },
-      "A04": {
+      "B02": {
         "QuestName": "El Toque de las Valkirias",
         "desc": "'La Muerte de Hervor', ca 1892, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
       },
-      "A05": {
+      "A03": {
         "QuestName": "Vinland (América)",
         "desc": "'Leiv Eirikson descubriendo América', ca 1893, es una pintura de Christian Krohg, un pintor naturalista noruego. Visita el original en el Museo Nacional, Oslo - Noruega."
       },
-      "A06": {
+      "B03": {
         "QuestName": "Descubrimiento de Islandia",
         "desc": "'El Noruego desembarca en Islandia', ca 1877, es una pintura de Oscar Arnold Wergeland, un pintor histórico noruego. Visita el original en el Museo Nacional, Oslo - Noruega."
       },
-      "B01": {
+      "A04": {
         "QuestName": "Una Incursión Vikinga",
         "desc": "'Una Incursión Vikinga', ca 1901, es una pintura de Ferdinand Leek, un pintor modernista alemán. Visita el original en la Galería de Arte Schloss, Ahlden - Alemania."
       },
-      "B02": {
+      "B04": {
         "QuestName": "Funeral Vikingo",
         "desc": "'El Funeral de un Vikingo', ca 1893, es una pintura de Frank Bernard Dicksee, un pintor victoriano británico. Visita el original en la Galería de Arte de Manchester - Inglaterra."
       },
-      "B03": {
+      "A05": {
         "QuestName": "La Campanada del Rey",
         "desc": "'Hakon el Bueno', ca 1876, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
       },
-      "B04": {
+      "B05": {
         "QuestName": "Batalla de Svold I",
         "desc": "'Batalla de Svolder', ca 1883, es una pintura de Peter Otto Sinding, un pintor histórico noruego. Visita el original en una colección privada, Estocolmo - Suecia."
       },
-      "B05": {
+      "A06": {
         "QuestName": "Vikingos vs Celtas",
         "desc": "'Batalla de Stamford Bridge', ca 1870, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo de Arte Nordnorsk, Tromsø - Noruega."
       },
@@ -361,7 +361,7 @@
         "QuestName": "Batalla de Svold II",
         "desc": "'Batalla de Svolder', ca 1883, es una pintura del pintor histórico noruego Peter Otto Sinding. Visita el original en una colección privada, Estocolmo - Suecia."
       },
-      "C07": {
+      "C01": {
         "QuestName": "Asgardsreien",
         "desc": "'La Caza Salvaje', ca 1856, es una pintura de Johann Wilhelm Cordes, un pintor paisajista alemán. Visita el original en Behnhaus, Lübeck - Alemania."
       },
