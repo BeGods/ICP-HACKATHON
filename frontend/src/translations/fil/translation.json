@@ -546,5 +546,15 @@
       "title": "Congratulations! Gift Unlocked",
       "desc": "Your voucher is successfully claimed."
     }
-  }
+  },
+  "Stake": {
+    "success": {
+      "title": "Stake Successful",
+      "desc": "You have successfully staked 1 Black Orb. Good luck!"
+    },
+    "error": {
+      "title": "Unable to Stake",
+      "desc": "You need to have at least 1 Black Orb to stake."
+    }
+}
 }

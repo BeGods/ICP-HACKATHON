@@ -463,6 +463,43 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+    case "stake_success":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Stake.success.title")}
+          desc={t("toasts.Stake.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "stake_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Stake.error.title")}
+          desc={t("toasts.Stake.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     case "ad_error":
       toast.error(
         <ToastMesg
