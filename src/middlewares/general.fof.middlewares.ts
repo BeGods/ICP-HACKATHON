@@ -1,5 +1,5 @@
-import partners from "../models/partners.models";
 import milestones, { IClaimedReward } from "../models/milestones.models";
+import userMythologies from "../models/mythologies.models";
 
 export const validDailyBonusReq = async (req, res, next) => {
   try {
@@ -219,6 +219,32 @@ export const validPartnerReward = async (req, res, next) => {
     }
 
     req.partner = fetchedPartner;
+    next();
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const validateUserBet = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (user.userBetAt) {
+      throw new Error("You have already placed your bet.");
+    }
+    if (user.gameCompletedAt.fof) {
+      throw new Error("You are not eligible to bet.");
+    }
+    const userMythData = await userMythologies.findOne({ userId: user._id });
+    if (!userMythData) {
+      throw new Error("There was a problem fetching Mythology data.");
+    }
+
+    if (userMythData.blackOrbs < 1) {
+      throw new Error("Insufficient black orbs to bet.");
+    }
+
     next();
   } catch (error) {
     console.log(error);

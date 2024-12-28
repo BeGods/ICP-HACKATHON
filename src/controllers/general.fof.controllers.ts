@@ -1,6 +1,7 @@
 import User from "../models/user.models";
 import ranks from "../models/ranks.models";
 import {
+  bulkUpdateBetResult,
   claimBonusBooster,
   claimBonusOrb,
   claimBonusQuest,
@@ -38,6 +39,8 @@ export const ping = async (req, res) => {
 
 export const getLeaderboard = async (req, res) => {
   const { page } = req.query;
+  const user = req.user;
+
   const requestPage = page || 0;
   try {
     const overallLeaderboard = await getLeaderboardRanks(requestPage, 100);
@@ -45,8 +48,11 @@ export const getLeaderboard = async (req, res) => {
     res.status(200).json({
       leaderboard: overallLeaderboard[0].active,
       hallOfFame: overallLeaderboard[0].finished,
+      stakeOn: user.userBetAt ? user.userBetAt[0] : null,
     });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -226,6 +232,7 @@ export const updateRanks = async (req, res) => {
               overallRank: user.overallRank,
               country: user.country ?? "NA",
               countryRank: userCountryRank,
+              userBetFor: null,
               gameData: {
                 ...user.mythologyOrbsData.reduce((acc, obj) => {
                   if (obj.name && obj.orbs !== undefined) {
@@ -278,6 +285,12 @@ export const updateRanks = async (req, res) => {
 
     // Perform bulkWrite operations
     await ranks.bulkWrite([...bulkOps, ...finishedOps]);
+
+    const bettedUsers = sortedUsers.filter(
+      (user) => user.totalOrbs <= 999999 && user.userBetAt
+    );
+
+    await bulkUpdateBetResult(bettedUsers);
 
     const totalUsers = await User.countDocuments({});
     await Stats.findOneAndUpdate(
@@ -1004,6 +1017,63 @@ export const getHourlyUsers = async (req, res) => {
     res.status(200).json({ totalUsers: count });
   } catch (error) {
     console.error(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+// bet
+export const addUserBet = async (req, res) => {
+  const user = req.user;
+  const status = req.body.status ? "+" : "-";
+
+  try {
+    const userRank = await ranks.findOneAndUpdate(
+      {
+        userId: user._id,
+      },
+      {
+        $set: {
+          userBetFor: status,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    await user.updateOne({
+      $set: {
+        userBetAt: status + userRank.overallRank,
+      },
+    });
+
+    res.status(200).json({ message: "Your bet has been successfully placed." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const updateReward = async (req, res) => {
+  const user = req.user;
+
+  try {
+    await user.updateOne({
+      $set: {
+        "bonus.fof.extraBlackOrb": null,
+      },
+    });
+
+    res.status(200).json({ message: "Reward updated." });
+  } catch (error) {
+    console.log(error);
 
     res.status(500).json({
       message: "Internal server error.",
