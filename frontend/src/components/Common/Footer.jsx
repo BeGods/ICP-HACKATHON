@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import { footerIcons, mythSections } from "../../utils/constants";
 import ReactHowler from "react-howler";
@@ -30,6 +30,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     (item) => item.isQuestClaimed === false
   ).length;
   const [clickEffect, setClickEffect] = useState(false);
+  const [showEffect, setShowEffect] = useState(true);
 
   const boosterStatus = {
     automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
@@ -57,6 +58,16 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
       setActiveMyth(0);
     }
   };
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <>
@@ -94,7 +105,11 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
           </h1>
           {icon === 1 && (
             <div
-              className={`absolute pulse-text gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${mythSections[activeMyth]}-text text-white  h-7 w-7 -mr-1 mt-[0.3vh] z-50 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+              className={`absolute ${
+                showEffect && "pulse-text"
+              } gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
+                mythSections[activeMyth]
+              }-text text-white  h-7 w-7 -mr-1 mt-[0.3vh] z-50 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
             >
               {boostersActiveCnt}
             </div>
@@ -148,7 +163,11 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
       )}
       {icon === 3 && (
         <div
-          className={`absolute pulse-text gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${mythSections[activeMyth]}-text text-white  h-7 w-7 mb-[8.25vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+          className={`absolute ${
+            showEffect && "pulse-text"
+          } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
+            mythSections[activeMyth]
+          }-text text-white  h-7 w-7 mb-[8.25vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
         >
           {countOfInCompleteQuests}
         </div>

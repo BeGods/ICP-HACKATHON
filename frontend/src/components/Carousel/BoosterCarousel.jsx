@@ -5,11 +5,7 @@ import BoosterClaim from "../Cards/Boosters/BoosterCrd";
 import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import {
-  hasTimeElapsed,
-  isClaimedTodayUTC,
-} from "../../helpers/booster.helper";
-import { getPhaseByDate } from "../../helpers/game.helper";
+import { hasTimeElapsed } from "../../helpers/booster.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,15 +17,6 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
   useEffect(() => {
-    const boosterStatus = {
-      multiAutomata: gameData?.isAutomataAutoActive === -1,
-      multiBurst: hasTimeElapsed(gameData.autoPayBurstExpiry),
-      moon: !gameData.isMoonActive,
-      automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
-      burst: gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim,
-      minion: gameData.mythologies[activeMyth].boosters.isShardsClaimActive,
-    };
-
     const boosters = [
       {
         key: "automata",
@@ -122,10 +109,10 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     // Add conditional boosters
     if (gameData.isBurstAutoPayActive) {
       boosters.push({
-        key: "burstAutoPay",
+        key: "multiBurst",
         component: (
           <BoosterItem
-            key="burst"
+            key="multiBurst"
             index={0}
             currentIndex={currentIndex}
             isGuideActive={enableGuide}
@@ -141,10 +128,10 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
 
     if (gameData.isEligibleToAutomataAuto) {
       boosters.push({
-        key: "automataAuto",
+        key: "multiAutomata",
         component: (
           <BoosterItem
-            key="automata"
+            key="multiAutomata"
             index={0}
             currentIndex={currentIndex}
             isGuideActive={enableGuide}
@@ -158,18 +145,44 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       });
     }
 
+    const boosterStatus = {
+      multiAutomata: gameData?.isAutomataAutoActive === -1,
+      multiBurst: hasTimeElapsed(gameData.autoPayBurstExpiry),
+      moon: !gameData.isMoonActive,
+      automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
+      burst: gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim,
+      minion: gameData.mythologies[activeMyth].boosters.isShardsClaimActive,
+    };
+
+    const predefinedOrder = [
+      "multiAutomata",
+      "multiBurst",
+      "moon",
+      "automata",
+      "burst",
+      "minion",
+    ];
+
     const sortedItems = boosters
+      .filter((item) => predefinedOrder.includes(item.key)) // Ensure only relevant keys
       .sort((a, b) => {
         const statusA = boosterStatus[a.key] || false;
         const statusB = boosterStatus[b.key] || false;
-        return statusB - statusA;
+
+        // If status is true, prioritize it
+        if (statusA && !statusB) return -1;
+        if (!statusA && statusB) return 1;
+
+        // If both statuses are equal, fall back to predefined order
+        const orderA = predefinedOrder.indexOf(a.key);
+        const orderB = predefinedOrder.indexOf(b.key);
+        return orderA - orderB;
       })
       .map((item) => item.component);
 
     setItems(sortedItems);
     setCurrentIndex(0);
   }, [activeMyth, enableGuide, mythData, gameData]);
-
   const handleBoosterClick = (activeCard, isAutoPay) => {
     if (
       activeCard === "burst" &&
