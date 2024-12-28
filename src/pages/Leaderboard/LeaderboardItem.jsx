@@ -2,8 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import Avatar from "../../components/Common/Avatar";
 import { MyContext } from "../../context/context";
 import { formatRankOrbs } from "../../helpers/leaderboard.helper";
+import { MoveDown, MoveUp } from "lucide-react";
 
-const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl, isEmpty }) => {
+const LeaderboardItem = ({
+  rank,
+  name,
+  totalOrbs,
+  imageUrl,
+  isEmpty,
+  stake,
+}) => {
   const { userData } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(null);
 
@@ -22,7 +30,7 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl, isEmpty }) => {
     >
       {isEmpty ? (
         <div className="flex w-full h-fit justify-between">
-          <div className="flex justify-center items-center w-[20%] h-full"></div>
+          <div className="flex justify-center items-center w-[25%] h-full"></div>
           <div className="flex gap-3 items-center  w-full">
             <div className="h-[35px] w-[35px]"></div>
             <h1></h1>
@@ -33,8 +41,21 @@ const LeaderboardItem = ({ rank, name, totalOrbs, imageUrl, isEmpty }) => {
         </div>
       ) : (
         <div className="flex w-full h-fit justify-between">
-          <div className="flex justify-center items-center w-[20%] h-full">
-            {rank}
+          <div className="flex justify-center items-center w-[25%] h-full">
+            <h1>{rank}</h1>
+            <div>
+              {stake == "+" && (
+                <MoveUp
+                  color="green"
+                  strokeWidth={"3px"}
+                  size={"22px"}
+                  className="-mt-1"
+                />
+              )}
+              {stake == "-" && (
+                <MoveDown color="red" strokeWidth={"3px"} size={"22px"} />
+              )}
+            </div>
           </div>
           <div className="flex gap-3 items-center  w-full">
             <div className="h-[35px] w-[35px]">

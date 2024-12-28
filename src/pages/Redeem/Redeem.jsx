@@ -129,6 +129,9 @@ const Redeem = (props) => {
                 ? `${currReward.metadata.campaignCoverImage}`
                 : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
             }
+            blackorbs={3}
+            value={0}
+            handAction={() => {}}
           />
         );
         ``;

@@ -512,6 +512,16 @@
         "title": "အောင်မြင်မှုမရ: အစိတ်အပိုင်းများမပြည့်စုံ",
         "desc": "သင့်၏ဗောက်ချာကိုဖွင့်ရန် ၁၂ ခုလုံးကိုပြီးစီးပါ။"
     }    
-    }
+    },
+    "Stake": {
+      "success": {
+        "title": "Stake Successful",
+        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+      },
+      "error": {
+        "title": "Unable to Stake",
+        "desc": "You need to have at least 1 Black Orb to stake."
+      }
+  }
   }
 }

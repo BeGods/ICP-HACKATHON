@@ -517,6 +517,16 @@
         "title": "Неудачная заявка: Недостающие элементы",
         "desc": "Завершите все 12 элементов, чтобы разблокировать ваш ваучер."
     }    
-    }
+    },
+    "Stake": {
+      "success": {
+        "title": "Stake Successful",
+        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+      },
+      "error": {
+        "title": "Unable to Stake",
+        "desc": "You need to have at least 1 Black Orb to stake."
+      }
+  }
   }
 }

@@ -510,6 +510,16 @@
         "title": "การขอรับสิทธิ์ล้มเหลว: ชิ้นส่วนไม่ครบ",
         "desc": "ทำให้ครบทั้ง 12 ชิ้นเพื่อปลดล็อกคูปองของคุณ"
     }    
-    }
+    },
+    "Stake": {
+      "success": {
+        "title": "Stake Successful",
+        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+      },
+      "error": {
+        "title": "Unable to Stake",
+        "desc": "You need to have at least 1 Black Orb to stake."
+      }
+  }
   }
 }

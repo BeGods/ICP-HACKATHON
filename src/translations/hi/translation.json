@@ -512,6 +512,16 @@
         "title": "दावा विफल: टुकड़े अधूरे",
         "desc": "अपना वाउचर अनलॉक करने के लिए सभी 12 टुकड़े पूरे करें।"
       }
-    }
+    },
+    "Stake": {
+      "success": {
+        "title": "Stake Successful",
+        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+      },
+      "error": {
+        "title": "Unable to Stake",
+        "desc": "You need to have at least 1 Black Orb to stake."
+      }
+  }
   }
 }

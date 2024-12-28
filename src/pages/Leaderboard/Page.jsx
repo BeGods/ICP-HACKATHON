@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import LeaderboardItem from "./LeaderboardItem";
-import { fetchLeaderboard } from "../../utils/api";
+import { fetchLeaderboard, updateRewardStatus } from "../../utils/api";
 import { MyContext } from "../../context/context";
 import { useTranslation } from "react-i18next";
 import {
@@ -15,10 +15,13 @@ import {
 } from "../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import UserInfoCard from "../../components/Cards/Info/UserInfoCrd";
-import { Crown, Trophy } from "lucide-react";
+import { Crown, MoveDown, MoveUp, Trophy } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../utils/country";
 import confetti from "canvas-confetti";
+import StakeCrd from "../../components/Cards/Reward/StakeCrd";
+import { showToast } from "../../components/Toast/Toast";
+import BlackOrbRewardCrd from "../../components/Cards/Reward/BlackOrbCrd";
 
 const tele = window.Telegram?.WebApp;
 
@@ -73,8 +76,16 @@ const UserAvatar = ({ user, index }) => {
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, assets, userData, enableHaptic, setShowCard } =
-    useContext(MyContext);
+  const {
+    setSection,
+    authToken,
+    assets,
+    userData,
+    enableHaptic,
+    gameData,
+    setShowCard,
+    setUserData,
+  } = useContext(MyContext);
   const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -112,6 +123,12 @@ const Leaderboard = (props) => {
         setHasMore(false);
       }
 
+      setUserData((prev) => {
+        return {
+          ...prev,
+          stakeOn: prev.stakeOn,
+        };
+      });
       setTimeout(() => {
         setIsLoading(true);
       }, 500);
@@ -180,13 +197,39 @@ const Leaderboard = (props) => {
 
     frame();
 
-    // Cleanup when component is unmounted
     return () => {
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
         animationFrameId.current = null;
       }
     };
+  }, []);
+
+  const handleClaimReward = async () => {
+    try {
+      const response = await updateRewardStatus(authToken);
+      setUserData((prev) => {
+        return {
+          ...prev,
+          stakeReward: null,
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (userData.stakeReward) {
+      setShowCard(
+        <BlackOrbRewardCrd
+          reward={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+          blackorbs={1}
+          value={userData.stakeReward}
+          handAction={handleClaimReward}
+        />
+      );
+    }
   }, []);
 
   return (
@@ -513,7 +556,7 @@ const Leaderboard = (props) => {
                     <span className="pr-6">#</span>
                     {t(`profile.name`)}
                   </h1>
-                  <h1>{t(`keywords.orbs`)}</h1>
+                  <h1>Flag</h1>
                 </div>
                 <div
                   id="scrollableDiv"
@@ -588,12 +631,12 @@ const Leaderboard = (props) => {
               <div className="flex flex-col w-full text-medium h-[56vh] bg-black text-black rounded-t-primary">
                 <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
                   <h1>
-                    <span className="pr-6">#</span>
+                    <span className="pr-12">#</span>
                     {t(`profile.name`)}
                   </h1>
-                  <div className="absolute text-gold w-full flex justify-center ">
+                  {/* <div className="absolute text-gold w-full flex justify-center ">
                     {t(`sections.leaderboard`)}
-                  </div>
+                  </div> */}
                   <h1>{t(`keywords.orbs`)}</h1>
                 </div>
                 <div
@@ -631,15 +674,50 @@ const Leaderboard = (props) => {
                           name={item.telegramUsername}
                           totalOrbs={formatRankOrbs(item.totalOrbs)}
                           imageUrl={item.profileImage}
+                          stake={item.userBetFor}
                         />
                       </div>
                     ))}
                   </InfiniteScroll>
                 </div>
                 <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
-                  <div className="flex border border-gray-400 rounded-primary bg-black justify-center w-full">
-                    <div className="flex text-white justify-center items-center w-[20%] h-full">
-                      {userData.overallRank}
+                  <div
+                    onClick={() => {
+                      if (gameData.blackOrbs < 1) {
+                        showToast("stake_error");
+                      } else if (
+                        !isFinished &&
+                        userData.overallRank !== 0 &&
+                        !userData.stakeOn
+                      ) {
+                        setShowCard(
+                          <StakeCrd
+                            profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                          />
+                        );
+                      }
+                    }}
+                    className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
+                  >
+                    <div className="flex relative text-white justify-center items-center w-[25%] h-full">
+                      <h1>{userData.overallRank}</h1>
+                      <div>
+                        {userData.stakeOn == "+" && (
+                          <MoveUp
+                            color="green"
+                            strokeWidth={"3px"}
+                            size={"22px"}
+                            className="-mt-1"
+                          />
+                        )}
+                        {userData.stakeOn == "-" && (
+                          <MoveDown
+                            color="red"
+                            strokeWidth={"3px"}
+                            size={"22px"}
+                          />
+                        )}
+                      </div>
                     </div>
                     <div className="flex gap-3 items-center  w-full">
                       <div className="h-[35px] w-[35px]">

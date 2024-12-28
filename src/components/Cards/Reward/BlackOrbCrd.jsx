@@ -4,7 +4,7 @@ import { MyContext } from "../../../context/context";
 
 import ClaimRewardBtn from "../../Buttons/ClaimRewardBtn";
 
-const BlackOrbRewardCrd = ({ reward }) => {
+const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
   const { assets, setShowCard } = useContext(MyContext);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -17,7 +17,9 @@ const BlackOrbRewardCrd = ({ reward }) => {
   };
 
   useEffect(() => {
-    playConfetti();
+    if (value != "-1") {
+      playConfetti();
+    }
     const interval = setInterval(() => {
       setFlipped((prev) => !prev);
     }, 1500);
@@ -57,10 +59,11 @@ const BlackOrbRewardCrd = ({ reward }) => {
               </div>
             </div>
             <div className="text-gold text-[12.2vw] w-full flex justify-center">
-              3 Black ORBS
+              {blackorbs == 1 ? `${value} Black ORB` : "3 Black ORBS"}
             </div>
             <ClaimRewardBtn
               handleClick={() => {
+                handAction();
                 setShowCard(null);
               }}
             />

@@ -148,7 +148,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
       )}
       {icon === 3 && (
         <div
-          className={`absolute pulse-text gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${mythSections[activeMyth]}-text text-white  h-7 w-7 mb-[8vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+          className={`absolute pulse-text gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${mythSections[activeMyth]}-text text-white  h-7 w-7 mb-[8.25vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
         >
           {countOfInCompleteQuests}
         </div>

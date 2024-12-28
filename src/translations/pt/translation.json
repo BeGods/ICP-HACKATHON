@@ -515,6 +515,16 @@
         "title": "Operação Falhada: Peças Incompletas",
         "desc": "Complete as 12 peças para desbloquear seu voucher."
     }    
-    }
+    },
+    "Stake": {
+      "success": {
+        "title": "Stake Successful",
+        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+      },
+      "error": {
+        "title": "Unable to Stake",
+        "desc": "You need to have at least 1 Black Orb to stake."
+      }
+  }
   }
 }

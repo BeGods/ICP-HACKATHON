@@ -739,3 +739,39 @@ export const claimAnmntReward = async (accessToken) => {
     throw error;
   }
 };
+
+export const addLeaderboardBet = async (accessToken, status) => {
+  let url = `${import.meta.env.VITE_API_URL}/leaderboard/bet`;
+
+  try {
+    const response = await axios.post(
+      url,
+      { status: status },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const updateRewardStatus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/update/reward`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
