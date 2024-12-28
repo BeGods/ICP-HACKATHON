@@ -8,6 +8,7 @@ export interface IUser extends Document {
   role: "user" | "admin" | "partner";
   bonus: {
     fof: {
+      extraBlackOrb: string;
       dailyBonusClaimedAt: Date;
       exploitCount: number;
       streakBonus: {
@@ -45,6 +46,7 @@ export interface IUser extends Document {
   gameCompletedAt: {
     fof: Date;
   };
+  userBetAt: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -54,6 +56,9 @@ const userSchema = new Schema<IUser>(
     isPremium: { type: Boolean },
     bonus: {
       fof: {
+        extraBlackOrb: {
+          type: String,
+        },
         exploitCount: {
           type: Number,
           default: 0,
@@ -164,6 +169,9 @@ const userSchema = new Schema<IUser>(
     },
     gameCompletedAt: {
       fof: Date,
+    },
+    userBetAt: {
+      type: String,
     },
   },
 

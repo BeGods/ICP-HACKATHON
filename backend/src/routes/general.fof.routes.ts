@@ -4,10 +4,13 @@ import {
   claimJoiningBonus,
   claimStreakBonus,
   fetchUserData,
+  addUserBet,
+  updateReward,
 } from "../controllers/general.fof.controllers";
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   validateStreakBonus,
+  validateUserBet,
   validDailyBonusReq,
   validDailyHackBonus,
   validJoinBonusReq,
@@ -19,6 +22,8 @@ const router = express.Router();
 // leaderboard
 router.get("/leaderboard", authMiddleware, getLeaderboard);
 router.get("/user", authMiddleware, fetchUserData);
+router.post("/leaderboard/bet", authMiddleware, validateUserBet, addUserBet);
+router.get("/update/reward", authMiddleware, updateReward);
 
 // bonus
 router.get("/bonus/daily", authMiddleware, validDailyBonusReq, claimDailyBonus);

@@ -49,7 +49,9 @@ const rankSchema = new Schema(
     },
     totalOrbs: Number,
     fofCompletedAt: Date,
+    userBetFor: String,
   },
+
   { timestamps: true }
 );
 

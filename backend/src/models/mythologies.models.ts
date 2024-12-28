@@ -31,6 +31,7 @@ export interface IMyth extends Document {
 export interface IUserMyths extends Document {
   mythologies: IMyth[];
   multiColorOrbs: number;
+  blackOrbs: number;
   lastMoonClaimAt: number;
   autoPay: {
     isAutomataAutoPayEnabled: boolean;
