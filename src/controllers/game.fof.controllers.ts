@@ -408,6 +408,8 @@ export const getGameStats = async (req, res) => {
       streakCount: user.bonus.fof.streakBonus.streakCount,
       joiningBonus: user.bonus.fof.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,
+      stakeOn: user.userBetAt ? user.userBetAt[0] : null,
+      stakeReward: user.bonus.fof.extraBlackOrb,
       country: user.country ?? "NA",
       ...memberData,
     };

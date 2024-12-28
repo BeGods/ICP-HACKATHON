@@ -3,6 +3,7 @@ import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { OrbsTransactions } from "../models/transactions.models";
 import mongoose from "mongoose";
+import User from "../models/user.models";
 
 export const getLeaderboardSnapshot = async () => {
   try {
@@ -77,6 +78,9 @@ export const getLeaderboardSnapshot = async () => {
           totalOrbs: 1,
           mythologyOrbsData: 1,
           squadOwner: "$userDetails.squadOwner",
+          userBetAt: {
+            $ifNull: ["$userDetails.userBetAt", null],
+          },
           finishedAt: {
             $ifNull: [
               "$userDetails.gameCompletedAt.fof",
@@ -483,6 +487,67 @@ export const sortRanksByCountry = async (users) => {
     });
 
     return usersByCountry;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const bulkUpdateBetResult = async (users) => {
+  try {
+    // update all user docs and reset bet
+
+    const betResetUsers = users.map((user) => {
+      const prediction = user.userBetAt[0];
+      const previousRank = parseInt(user.userBetAt.slice(1), 10);
+      let updateValue = "-1";
+
+      if (prediction === "-" && user.overallRank > previousRank) {
+        updateValue = "+1";
+      } else if (prediction === "+" && user.overallRank < previousRank) {
+        updateValue = "+1";
+      }
+
+      return {
+        updateOne: {
+          filter: { _id: user.userId },
+          update: {
+            $set: {
+              userBetAt: null,
+              "bonus.fof.extraBlackOrb": updateValue,
+            },
+          },
+          upsert: true,
+        },
+      };
+    });
+
+    await User.bulkWrite([...betResetUsers]);
+
+    const rewardedUsers = users.map((user) => {
+      const prediction = user.userBetAt[0];
+      const previousRank = parseInt(user.userBetAt.slice(1), 10);
+      let updateValue = -1;
+
+      if (prediction === "-" && user.overallRank > previousRank) {
+        updateValue = 1;
+      } else if (prediction === "+" && user.overallRank < previousRank) {
+        updateValue = 1;
+      }
+
+      return {
+        updateOne: {
+          filter: { userId: user.userId },
+          update: {
+            $inc: {
+              blackOrbs: updateValue,
+            },
+          },
+          upsert: true,
+        },
+      };
+    });
+
+    await userMythologies.bulkWrite([...rewardedUsers]);
   } catch (error) {
     throw new Error(error);
   }
