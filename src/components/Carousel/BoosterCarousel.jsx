@@ -50,10 +50,10 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         ),
       },
       {
-        key: "guide",
+        key: "quests",
         component: (
           <BoosterItem
-            key="guide"
+            key="quests"
             index={2}
             currentIndex={currentIndex}
             isGuideActive={enableGuide}
@@ -158,6 +158,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       "multiAutomata",
       "multiBurst",
       "moon",
+      "quests",
       "automata",
       "burst",
       "minion",
