@@ -128,7 +128,7 @@
   "quests": {
     "celtic": {
       "A01": {
-        "QuestName": "Heptu's Escape1",
+        "QuestName": "Heptu's Escape",
         "desc": "'Heptu Bidding Farewell to The City of Obb', ca 1909, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B01": {
@@ -136,7 +136,7 @@
         "desc": "'The Death of Viriatus, Chief of the Lusitanians', ca 1807, is a painting by Jose de Madrazo y Agudo, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
       },
       "A02": {
-        "QuestName": "Tristan & Iseult1",
+        "QuestName": "Tristan & Iseult",
         "desc": "'Tristan and Isolde', ca 1912, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B02": {
@@ -144,7 +144,7 @@
         "desc": "'Isolde: The Celt Princess', ca 1912, is a painting by Gaston Gaston Bussiere, a French symbolist painter. Visit the original in Musee des Ursulines, Macon - France."
       },
       "A03": {
-        "QuestName": "Brigid's Imbolc1",
+        "QuestName": "Brigid's Imbolc",
         "desc": "'The Saint Bride', ca 1913, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "B03": {
@@ -160,7 +160,7 @@
         "desc": "'The Threatened Swan', ca 1650, is a painting by Jan Asselijn, a Dutch golden age painter. Visit the original in Rijksmuseum Amsterdam, Amsterdam - Netherlands."
       },
       "A05": {
-        "QuestName": "SLEEPING BEAUTY1",
+        "QuestName": "SLEEPING BEAUTY",
         "desc": "'The Sleeping Princess', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Perth Art Gallery, Perth - Scotland."
       },
       "B05": {
@@ -176,7 +176,7 @@
         "desc": "'Vercingetorix before Caesar', ca 1899, is a painting by Lionel Royer, a French historical painter. Visit the original in Musee Crozatier, Auvergne - France."
       },
       "C01": {
-        "QuestName": "Tuath Danann1",
+        "QuestName": "Tuath Danann",
         "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "whitelist": {
