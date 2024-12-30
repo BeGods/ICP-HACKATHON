@@ -179,14 +179,6 @@ export const claimTapSession = async (req, res) => {
     mythData.lastTapAcitivityTime = Date.now();
     mythData.energy = updatedEnergy;
 
-    // maintain transaction
-    const newShardTransaction = new ShardsTransactions({
-      userId: userId,
-      source: "game",
-      shards: updatedShards,
-    });
-    await newShardTransaction.save();
-
     // return status and update User
     const updatedUserMythology = await userMythologies.findOneAndUpdate(
       { userId: userId, "mythologies.name": mythologyName },
@@ -254,6 +246,14 @@ export const claimTapSession = async (req, res) => {
         );
       }
     }
+
+    // maintain transaction
+    const newShardTransaction = new ShardsTransactions({
+      userId: userId,
+      source: "game",
+      shards: updatedShards,
+    });
+    await newShardTransaction.save();
 
     if (!updatedUserMythology) {
       return res.status(500).json({ message: "Failed to update mythology." });
@@ -515,7 +515,7 @@ export const claimShardsBooster = async (req, res) => {
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
-      source: "boosters",
+      source: "alchemist",
       orbs: { MultiOrb: deductValue == 0 ? 0 : 1 },
     });
     await newOrbsTransaction.save();
@@ -638,7 +638,7 @@ export const claimAutoAutomata = async (req, res) => {
 
     await new OrbsTransactions({
       userId: user,
-      source: "automata",
+      source: "multiAutomata",
       orbs: { MulitOrb: deductValue ? 0 : 3 },
     }).save();
 
@@ -750,7 +750,7 @@ export const claimAutoBurst = async (req, res) => {
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
-      source: "burst",
+      source: "multiBurst",
       orbs: { multiColorOrb: deductValue == 0 ? 0 : 9 },
     });
     await newOrbsTransaction.save();
@@ -900,6 +900,15 @@ export const claimStarBonus = async (req, res) => {
       );
     }
 
+    const newOrbTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "burst",
+      orbs: {
+        [userMyth.name]: userMyth.orbs,
+      },
+    });
+    await newOrbTransaction.save();
+
     res.status(200).json({ message: "Star bonus claimed" });
   } catch (error) {
     console.log(error);
@@ -1014,6 +1023,36 @@ export const claimGachaReward = async (req, res) => {
 
     res.status(200).json({
       message: "Gacha claimed successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimRatUpdate = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const userMyth = req.userMyth;
+    const { deduct } = req.body;
+
+    userMyth.boosters.rats.count -= 1;
+
+    if (deduct) {
+      userMyth.boosters.automatalvl -= 1;
+    }
+
+    await userMythologies.findOneAndUpdate(
+      { userId: userId, "mythologies.name": userMyth.name },
+      {
+        $set: { "mythologies.$": userMyth },
+      }
+    );
+
+    res.status(200).json({
+      message: "Rat claimed successfully.",
     });
   } catch (error) {
     res.status(500).json({

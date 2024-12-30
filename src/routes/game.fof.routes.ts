@@ -12,8 +12,8 @@ import {
   claimAutoAutomata,
   claimAutoBurst,
   claimMoonBoost,
-  claimGachaReward,
   claimAutomataReward,
+  claimRatUpdate,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
@@ -23,6 +23,7 @@ import {
   validateBurstReq,
   validateClaimMoon,
   validateOrbsConversion,
+  validateRatClaim,
   validateStarClaim,
 } from "../middlewares/game.fof.middlewares";
 import express from "express";
@@ -36,6 +37,7 @@ router.get("/game/stats/update", authMiddleware, updateGameData);
 router.post("/game/startTapSession", authMiddleware, startTapSession);
 router.post("/game/claimTapSession", authMiddleware, claimTapSession);
 router.post("/game/burst", authMiddleware, validateStarClaim, claimStarBonus);
+router.post("/game/rat", authMiddleware, validateRatClaim, claimRatUpdate);
 
 // tower conversion
 router.post(
