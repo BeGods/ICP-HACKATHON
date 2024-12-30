@@ -209,7 +209,7 @@ export const claimBonusOrb = async (reward, userId) => {
       const newOrbsTransaction = new OrbsTransactions({
         userId: userId,
         source: "bonus",
-        orbs: { randomMythOrb: 1 },
+        orbs: { [randomMythOrb]: 1 },
       });
       await newOrbsTransaction.save();
 
@@ -287,6 +287,9 @@ export const claimBonusQuest = async (userId) => {
   try {
     const pipeline = [
       {
+        $match: { userId: new mongoose.Types.ObjectId(userId) }, // Ensure the pipeline is scoped to the user
+      },
+      {
         $lookup: {
           from: "quests",
           let: { userId: "$userId" },
@@ -297,15 +300,32 @@ export const claimBonusQuest = async (userId) => {
                 let: { questId: "$_id", userId: "$$userId" },
                 pipeline: [
                   {
-                    $unwind: "$claimedQuests",
-                  },
-                  {
                     $match: {
                       $expr: {
                         $and: [
                           { $eq: ["$userId", "$$userId"] },
-                          { $eq: ["$$questId", "$claimedQuests.taskId"] },
+                          { $in: ["$$questId", "$claimedQuests.taskId"] },
                         ],
+                      },
+                    },
+                  },
+                  {
+                    $addFields: {
+                      matchedClaimedQuest: {
+                        $filter: {
+                          input: "$claimedQuests",
+                          as: "task",
+                          cond: {
+                            $eq: ["$$task.taskId", "$$questId"],
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    $addFields: {
+                      isClaimed: {
+                        $gt: [{ $size: "$matchedClaimedQuest" }, 0],
                       },
                     },
                   },
@@ -316,11 +336,11 @@ export const claimBonusQuest = async (userId) => {
             {
               $addFields: {
                 isQuestClaimed: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$claimedQuestData" }, 0] },
-                    then: true,
-                    else: false,
-                  },
+                  $cond: [
+                    { $gt: [{ $size: "$claimedQuestData" }, 0] },
+                    { $arrayElemAt: ["$claimedQuestData.isClaimed", 0] },
+                    false,
+                  ],
                 },
               },
             },
@@ -356,11 +376,16 @@ export const claimBonusQuest = async (userId) => {
       { $project: { allQuests: 0 } },
     ];
 
-    const quests = await milestones.aggregate(pipeline).exec();
+    const quests = await milestones
+      .aggregate(pipeline)
+      .allowDiskUse(true)
+      .exec();
 
     const unClaimedActiveQuests = quests[0].quests.filter(
       (item) => item.mythology !== "Other"
     );
+
+    console.log(unClaimedActiveQuests);
 
     const randomQuest =
       unClaimedActiveQuests[

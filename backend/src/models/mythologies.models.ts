@@ -13,6 +13,10 @@ interface IBooster {
   isBurstActiveToClaim: boolean;
   isBurstActive: boolean;
   burstActiveAt: number;
+  rats: {
+    count: number;
+    lastClaimedThreshold: number;
+  };
 }
 export interface IMyth extends Document {
   name: string;
@@ -135,6 +139,13 @@ const mythologySchema = new Schema({
     burstActiveAt: {
       type: Number,
       default: 0,
+    },
+    rats: {
+      type: Object,
+      default: {
+        count: 0,
+        lastClaimedThreshold: 0,
+      },
     },
   },
   // claimedCards: {

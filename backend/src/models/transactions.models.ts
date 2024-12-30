@@ -14,15 +14,24 @@ export interface IShardsTransactions extends Document {
   date: Date;
 }
 
+export interface IShardsTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  shards: number;
+  source: string;
+  date: Date;
+}
+
+export interface IRewardTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  rewardId: string;
+  type: string;
+}
+
 const baseTransactionSchema = {
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
   },
 };
 
@@ -41,10 +50,15 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
         "quests",
         "boosters",
         "share",
+        "alchemist",
         "automata",
         "bonus",
         "burst",
         "moon",
+        "voucher",
+        "multiAutomata",
+        "multiBurst",
+        "join",
       ],
       required: true,
     },
@@ -76,11 +90,7 @@ const rewardsTransactionsSchema = new Schema(
       type: String,
       required: true,
     },
-    source: {
-      type: String,
-      required: true,
-    },
-    region: {
+    type: {
       type: String,
       required: true,
     },
@@ -97,4 +107,9 @@ const ShardsTransactions = model<IShardsTransactions>(
   shardsTransactionsSchema
 );
 
-export { OrbsTransactions, ShardsTransactions };
+const RewardsTransactions = model<IRewardTransactions>(
+  "RewardsTransaction",
+  rewardsTransactionsSchema
+);
+
+export { OrbsTransactions, ShardsTransactions, RewardsTransactions };
