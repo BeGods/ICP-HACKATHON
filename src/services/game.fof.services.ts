@@ -266,6 +266,7 @@ export const updateMythologies = (mythologies) => {
       // Validate boosters
       mythology.boosters = validateBooster(mythology.boosters);
       mythology = validateAutomata(mythology);
+      mythology.boosters = validateRatValues(mythology.boosters);
 
       if (
         !mythology.boosters.isBurstActiveToClaim &&
@@ -465,6 +466,23 @@ export const checkStreakIsActive = async (
     return false;
   } catch (error) {
     console.error("Error checking streak activity:", error.message);
+    throw new Error(error.response ? error.response.data : error.message);
+  }
+};
+
+export const validateRatValues = (boosterData) => {
+  try {
+    const ratCount = boosterData?.rats?.count ?? 0;
+    const ratLastThreshold = boosterData?.rats?.lastClaimedThreshold ?? 0;
+
+    if (boosterData.automatalvl > ratLastThreshold + 10 && ratCount == 0) {
+      boosterData.rats.lastClaimedThreshold += 10;
+      boosterData.rats.count = boosterData.rats.lastClaimedThreshold / 10;
+    }
+
+    return boosterData;
+  } catch (error) {
+    console.error("Error valdiating rat", error.message);
     throw new Error(error.response ? error.response.data : error.message);
   }
 };

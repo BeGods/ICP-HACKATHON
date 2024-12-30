@@ -463,3 +463,37 @@ export const validateAnnounceReward = async (req, res, next) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const validateRatClaim = async (req, res, next) => {
+  try {
+    const userId = req.user;
+    const { mythologyName } = req.body;
+
+    const userMythologiesData = (await userMythologies.findOne({
+      userId,
+    })) as IUserMyths;
+
+    if (!userMythologiesData) {
+      throw new Error("User mythologies not found.");
+    }
+
+    const requestedMyth = userMythologiesData.mythologies.find(
+      (item) => item.name === mythologyName
+    ) as IMyth;
+
+    if (!requestedMyth) {
+      return res
+        .status(404)
+        .json({ message: `Mythology ${mythologyName} not found.` });
+    }
+
+    if (requestedMyth.boosters.rats.count > 0) {
+      req.userMyth = requestedMyth;
+      next();
+    } else {
+      throw new Error("You are not eligible to claim rat.");
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};

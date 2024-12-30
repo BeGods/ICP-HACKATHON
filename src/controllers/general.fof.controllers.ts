@@ -25,6 +25,10 @@ import partners from "../models/partners.models";
 import { validCountries } from "../utils/constants/variables";
 import quest from "../models/quests.models";
 import axios from "axios";
+import {
+  OrbsTransactions,
+  RewardsTransactions,
+} from "../models/transactions.models";
 
 export const ping = async (req, res) => {
   try {
@@ -413,6 +417,13 @@ export const claimJoiningBonus = async (req, res) => {
       { $inc: { multiColorOrbs: 3, "mythologies.$.orbs": 2 } }
     );
 
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "join",
+      orbs: { MultiOrb: 3, Greek: 2 },
+    });
+    await newOrbsTransaction.save();
+
     res.status(200).json({ message: "Joining bonus claimed successfully." });
   } catch (error) {
     console.log(error);
@@ -534,7 +545,7 @@ export const getRewards = async (req, res) => {
   try {
     const userId = req.user._id;
     // const playusperCred = req.user.playsuper;
-    const { country, lang } = req.query;
+    const country = req.user.country ?? null;
 
     let userMilestones = await milestones.findOne({ userId });
     userMilestones = await updatePartnersInLastHr(userMilestones);
@@ -736,6 +747,13 @@ export const redeemPlayuperReward = async (req, res) => {
       );
     }
 
+    const newRewardTransaction = new RewardsTransactions({
+      userId: userId,
+      rewardId: rewardId,
+      type: "playsuper",
+    });
+    await newRewardTransaction.save();
+
     res.status(200).json({
       couponCode: reward.data.couponCode,
     });
@@ -772,6 +790,20 @@ export const redeemCustomReward = async (req, res) => {
         },
       }
     );
+
+    const newRewardTransaction = new RewardsTransactions({
+      userId: userId,
+      rewardId: partnerId,
+      type: "custom",
+    });
+    await newRewardTransaction.save();
+
+    const newOrbTransaction = new OrbsTransactions({
+      userId: userId,
+      source: "voucher",
+      orbs: { BlackOrb: 1 },
+    });
+    await newOrbTransaction.save();
 
     res.status(200).json({
       message: "Reward claimed successfully",
@@ -1065,6 +1097,13 @@ export const updateReward = async (req, res) => {
   const user = req.user;
 
   try {
+    const newOrbsTransaction = new OrbsTransactions({
+      userId: user.userId,
+      source: "stake",
+      orbs: { BlackOrb: user.bonus.fof.extraBlackOrb },
+    });
+    await newOrbsTransaction.save();
+
     await user.updateOne({
       $set: {
         "bonus.fof.extraBlackOrb": null,

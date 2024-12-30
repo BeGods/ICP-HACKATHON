@@ -21,7 +21,7 @@ const router = express.Router();
 
 // leaderboard
 router.get("/leaderboard", authMiddleware, getLeaderboard);
-router.get("/user", authMiddleware, fetchUserData);
+// router.get("/user", authMiddleware, fetchUserData);
 router.post("/leaderboard/bet", authMiddleware, validateUserBet, addUserBet);
 router.get("/update/reward", authMiddleware, updateReward);
 
