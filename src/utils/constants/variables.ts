@@ -20,6 +20,10 @@ export const defaultMythologies = [
       automataLastClaimedAt: 0,
       isAutomataActive: false,
       automataStartTime: 0,
+      rats: {
+        count: 0,
+        lastClaimedThreshold: 0,
+      },
     },
   },
   {
@@ -38,6 +42,10 @@ export const defaultMythologies = [
       automataLastClaimedAt: 0,
       isAutomataActive: false,
       automataStartTime: 0,
+      rats: {
+        count: 0,
+        lastClaimedThreshold: 0,
+      },
     },
   },
   {
@@ -56,6 +64,10 @@ export const defaultMythologies = [
       automataLastClaimedAt: 0,
       isAutomataActive: false,
       automataStartTime: 0,
+      rats: {
+        count: 0,
+        lastClaimedThreshold: 0,
+      },
     },
   },
   {
@@ -74,6 +86,10 @@ export const defaultMythologies = [
       automataLastClaimedAt: 0,
       isAutomataActive: false,
       automataStartTime: 0,
+      rats: {
+        count: 0,
+        lastClaimedThreshold: 0,
+      },
     },
   },
 ];
