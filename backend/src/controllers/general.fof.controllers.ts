@@ -1098,9 +1098,9 @@ export const updateReward = async (req, res) => {
 
   try {
     const newOrbsTransaction = new OrbsTransactions({
-      userId: user.userId,
+      userId: user._id,
       source: "stake",
-      orbs: { BlackOrb: user.bonus.fof.extraBlackOrb },
+      orbs: { BlackOrb: 1 },
     });
     await newOrbsTransaction.save();
 

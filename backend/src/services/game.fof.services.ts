@@ -472,17 +472,23 @@ export const checkStreakIsActive = async (
 
 export const validateRatValues = (boosterData) => {
   try {
-    const ratCount = boosterData?.rats?.count ?? 0;
-    const ratLastThreshold = boosterData?.rats?.lastClaimedThreshold ?? 0;
+    boosterData.rats = boosterData.rats ?? {};
 
-    if (boosterData.automatalvl > ratLastThreshold + 10 && ratCount == 0) {
+    boosterData.rats.lastClaimedThreshold =
+      boosterData.rats.lastClaimedThreshold ?? 0;
+    boosterData.rats.count = boosterData.rats.count ?? 0;
+
+    const ratCount = boosterData.rats.count;
+    const ratLastThreshold = boosterData.rats.lastClaimedThreshold;
+
+    if (boosterData.automatalvl > ratLastThreshold + 10 && ratCount === 0) {
       boosterData.rats.lastClaimedThreshold += 10;
       boosterData.rats.count = boosterData.rats.lastClaimedThreshold / 10;
     }
 
     return boosterData;
   } catch (error) {
-    console.error("Error valdiating rat", error.message);
+    console.error("Error validating rat:", error.message);
     throw new Error(error.response ? error.response.data : error.message);
   }
 };
