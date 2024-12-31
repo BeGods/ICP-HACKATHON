@@ -173,7 +173,7 @@ export const validAutoAutomataReq = async (req, res, next) => {
     }
 
     // Check sufficient orbs to claim automata
-    if (userMythologiesData.multiColorOrbs < 3 && !adId) {
+    if (userMythologiesData.multiColorOrbs < 9 && !adId) {
       throw new Error("Insufficient multiColorOrbs to claim this automata.");
     }
 
