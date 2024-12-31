@@ -23,7 +23,13 @@ const BottomChild = ({ userData, showGuide }) => {
 
   return (
     <div className="flex h-button-primary -mt-3 absolute z-50 text-black font-symbols justify-between w-screen">
-      <div className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full">
+      <div
+        onClick={() => {
+          handleClickHaptic(tele, enableHaptic);
+          setSection(5);
+        }}
+        className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+      >
         <div
           className={`flex ${
             showEffect && "pulse-text"
@@ -32,7 +38,13 @@ const BottomChild = ({ userData, showGuide }) => {
           t
         </div>
       </div>
-      <div className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full">
+      <div
+        onClick={() => {
+          handleClickHaptic(tele, enableHaptic);
+          setSection(7);
+        }}
+        className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+      >
         <div
           className={`flex ${
             showEffect && "pulse-text"
@@ -41,7 +53,7 @@ const BottomChild = ({ userData, showGuide }) => {
           r
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-2 w-full mt-[9vh] font-fof text-[17px] uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
         <div className={`mr-auto slide-in-out-left`}>{t("sections.gifts")}</div>
         <div className={`ml-auto slide-in-out-right`}>
           {t("sections.leaderboard")}
