@@ -269,6 +269,28 @@
   animation: moveAndFade 1s forwards;
 }
 
+@keyframes minusMoveAndFade {
+  0% {
+    opacity: 1;
+    scale: 1;
+    transform: translateY(-200px);
+  }
+  100% {
+    opacity: 0;
+    scale: 0.75;
+    transform: translateY(-800px);
+  }
+}
+
+
+.minus-one {
+  position: absolute;
+  font-size: 65px;
+  margin-top: 50px;
+  color: rgba(255, 247, 220, 1);
+  animation: minusMoveAndFade 2s forwards;
+}
+
 @keyframes slideDown {
   0% {
     transform: translateY(0);
@@ -548,7 +570,7 @@ $third-place-height: 19vh;
   @include rise-up('third', $third-place-height, 0.5s);
 }
 
-@keyframes shake {
+@keyframes shake-lg {
   0% { transform: rotate(0deg) scale(1); }
   25% { transform: rotate(5deg) scale(1.15); }
   50% { transform: rotate(0deg) scale(0.95); }
@@ -556,8 +578,29 @@ $third-place-height: 19vh;
   100% { transform: rotate(0deg) scale(1); }
 }
 
+@keyframes shake-sm {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(2deg) scale(1.05); }
+  50% { transform: rotate(0deg) scale(0.95); }
+  75% { transform: rotate(-2deg) scale(1.05); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+@keyframes scale-sm {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1.15); }
+}
+
 .tut-shake{
-  animation: shake 1s infinite ;
+  animation: shake-lg 1s infinite ;
+}
+
+.pop-shake{
+  animation: shake-sm 0.5s infinite ;
+}
+
+.pop-scale{
+  animation: scale-sm 0.5s infinite ;
 }
 
 @keyframes move-diagonal {

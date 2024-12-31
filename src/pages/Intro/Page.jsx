@@ -237,7 +237,7 @@ const IntroPage = (props) => {
             <div
               className="relative flex justify-center items-center w-full h-full pointer-events-none"
               style={{
-                backgroundImage: `url(${assets.uxui.tower})`,
+                backgroundImage: `url(${assets.uxui.towerOn})`,
                 backgroundSize: "contain",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

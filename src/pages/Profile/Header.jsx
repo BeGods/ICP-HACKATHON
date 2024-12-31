@@ -9,6 +9,7 @@ const tele = window.Telegram?.WebApp;
 const BottomChild = ({ userData, showGuide }) => {
   const { rewards, setSection, enableHaptic } = useContext(MyContext);
   const [showEffect, setShowEffect] = useState(true);
+  const { t } = useTranslation();
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -21,49 +22,29 @@ const BottomChild = ({ userData, showGuide }) => {
   }, []);
 
   return (
-    <div className="flex relative justify-center px-2 -mt-3">
-      <div className="flex w-full px-7">
+    <div className="flex h-button-primary -mt-3 absolute z-50 text-black font-symbols justify-between w-screen">
+      <div className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full">
         <div
-          className={`flex  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex ${
+            showEffect && "pulse-text"
+          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
-          <div className="text-primary pl-headSides">
-            {/* {formatTwoNums(rewards?.length ?? 0)} */}
-          </div>
-        </div>
-        <div
-          className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
-        >
-          <div className="text-primary pr-headSides">
-            {/* {userData?.overallRank === 0 ? 1 : userData?.overallRank} */}
-          </div>
+          t
         </div>
       </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+      <div className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full">
         <div
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-          }}
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            setSection(5);
-          }}
-          className={`font-symbols  ${
-            showGuide === 1 && "tut-shake"
-          } text-iconLg text-black-lg-contour text-white z-50`}
+          className={`flex ${
+            showEffect && "pulse-text"
+          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
-          <span className={`${showEffect && "pulse-text"}`}>t</span>
+          r
         </div>
-        <div
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-          }}
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            setSection(7);
-          }}
-          className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
-        >
-          <span className={`${showEffect && "pulse-text"}`}>r</span>
+      </div>
+      <div className="absolute flex text-white text-black-contour px-2 w-full mt-[9vh] font-fof text-[17px] uppercase">
+        <div className={`mr-auto slide-in-out-left`}>{t("sections.gifts")}</div>
+        <div className={`ml-auto slide-in-out-right`}>
+          {t("sections.leaderboard")}
         </div>
       </div>
     </div>
@@ -159,3 +140,48 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
 };
 
 export default ProfileHeader;
+
+{
+  /* <div className="flex relative justify-center px-2 -mt-3">
+  <div className="flex w-full px-7">
+    <div
+      className={`flex  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+    >
+      <div className="text-primary pl-headSides"></div>
+    </div>
+    <div
+      className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+    >
+      <div className="text-primary pr-headSides"></div>
+    </div>
+  </div>
+  <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+    <div
+      style={{
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+      }}
+      onClick={() => {
+        handleClickHaptic(tele, enableHaptic);
+        setSection(5);
+      }}
+      className={`font-symbols  ${
+        showGuide === 1 && "tut-shake"
+      } text-iconLg text-black-lg-contour text-white z-50`}
+    >
+      <span className={`${showEffect && "pulse-text"}`}>t</span>
+    </div>
+    <div
+      style={{
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+      }}
+      onClick={() => {
+        handleClickHaptic(tele, enableHaptic);
+        setSection(7);
+      }}
+      className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
+    >
+      <span className={`${showEffect && "pulse-text"}`}>r</span>
+    </div>
+  </div>
+</div>; */
+}

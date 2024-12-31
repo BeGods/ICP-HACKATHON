@@ -133,6 +133,11 @@ export default {
         headSides: "5.5vw",
         headSidesMd: "2vw",
       },
+      keyframes: {
+        shimmer: {},
+        shine: {},
+        text: {},
+      },
     },
   },
   plugins: [],

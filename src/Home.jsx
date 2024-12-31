@@ -34,7 +34,6 @@ import {
 import OnboardPage from "./pages/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "./utils/ga";
 import Announcement from "./pages/Announcement/Page";
-import Winners from "./pages/Leaderboard/Winners";
 
 const tele = window.Telegram?.WebApp;
 
@@ -118,7 +117,6 @@ const Home = () => {
     <StreakBonus />, // 10
     <OnboardPage />, // 11
     <Announcement />, // 12
-    <Winners />, // 13
   ];
 
   const getProfilePhoto = async (token) => {
@@ -242,10 +240,10 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (country && lang && authToken) {
+    if (lang && authToken) {
       (async () => await getPartnersData())();
     }
-  }, [country, lang, authToken]);
+  }, [lang, authToken]);
 
   useEffect(() => {
     if (tele) {

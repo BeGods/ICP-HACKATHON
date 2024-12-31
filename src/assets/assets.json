@@ -14,7 +14,9 @@
         "dial-earth": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.pointer.earth1.png",
         "dial-water": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.pointer.water1.png",
         "dial-air": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.pointer.air1.png",
+        "dial-aether": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.pointer.aether1.png",
         "tower": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.tower.off.png",
+        "towerOn": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.tower.on.png",
         "pandora": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/320px-pandora.png",
         "info": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg",
         "infomoon":"https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-moon.jpg",
@@ -40,9 +42,11 @@
         "alchemistCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-alchemist.jpg",
         "automataCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-automata.jpg",
         "burstCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-burst.jpg",
-        "moonCard": "/assets/320px-moon-amulet.jpg"
+        "moonCard": "/assets/320px-moon-amulet.jpg",
+        "ratPop": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/160px-rat.png"
     },
     "audio": {
+        "rat": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.rat.squeak.mp3",
         "towerButton": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.tower.lock.mp3",
         "towerBg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.tower.background01.mp3",
         "forgeBg": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.forges.background01.mp3",

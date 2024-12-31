@@ -158,7 +158,7 @@ ${
           <span className="pl-1 gradient-multi">ORB(S)</span>
         </h2>
       </div>
-      <div className="flex justify-center items-center w-[8%] ">
+      <div className="flex justify-center items-center w-[8%] pr-4">
         {quest.isQuestClaimed ? (
           <div className="flex justify-center items-center h-[30px] w-[30px] p-1 bg-white rounded-full">
             <Check strokeWidth={3} color="black" />

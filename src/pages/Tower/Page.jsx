@@ -7,6 +7,7 @@ import {
   mythologies,
   mythSymbols,
   wheel,
+  wheelMyths,
   wheelNames,
 } from "../../utils/constants";
 import { showToast } from "../../components/Toast/Toast";
@@ -24,6 +25,7 @@ import { handleClickHaptic } from "../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const orbPos = [
+  "mt-[54vw] mr-[0vw]",
   "mt-[45vw] mr-[32vw]",
   "-ml-[52vw] -mt-[17vw]",
   "-mt-[45vw] ml-[32vw]",
@@ -302,7 +304,7 @@ const Tower = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          {mythologies.map((item, index) => (
+          {wheelMyths.map((item, index) => (
             <div
               onTouchStart={() => {
                 setScaleOrb(index);
@@ -312,7 +314,11 @@ const Tower = () => {
               }}
               onClick={() => {
                 handleClickHaptic(tele, enableHaptic);
-                setMyth(index + 1);
+                if (index == 0) {
+                  setMyth(index);
+                } else {
+                  setMyth(index);
+                }
               }}
               key={index}
               className={`absolute transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}

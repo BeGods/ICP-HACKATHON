@@ -6,13 +6,20 @@ import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
+import { mythologies } from "../../utils/constants";
 
 const tele = window.Telegram?.WebApp;
 
 const BoosterCarousel = ({ enableGuide, mythData }) => {
   const { t } = useTranslation();
-  const { setShowCard, activeMyth, gameData, setSection, enableHaptic } =
-    useContext(MyContext);
+  const {
+    setShowCard,
+    activeMyth,
+    gameData,
+    setSection,
+    enableHaptic,
+    questsData,
+  } = useContext(MyContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
@@ -145,7 +152,11 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       });
     }
 
+    const dailyQuest = questsData.find((quest) => quest.status === "Active");
     const boosterStatus = {
+      quests:
+        !dailyQuest.isClaimed &&
+        dailyQuest.mythology === mythologies[activeMyth],
       multiAutomata: gameData?.isAutomataAutoActive === -1,
       multiBurst: hasTimeElapsed(gameData.autoPayBurstExpiry),
       moon: !gameData.isMoonActive,
@@ -155,10 +166,10 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     };
 
     const predefinedOrder = [
+      "quests",
       "multiAutomata",
       "multiBurst",
       "moon",
-      "quests",
       "automata",
       "burst",
       "minion",

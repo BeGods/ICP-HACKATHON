@@ -90,10 +90,10 @@ const Leaderboard = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [showHide, setShopHide] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [hallOfFameData, sethallOfFameData] = useState([]);
+  const [flipped, setFlipped] = useState(false);
   const avatarColor = localStorage.getItem("avatarColor");
   const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
@@ -220,7 +220,7 @@ const Leaderboard = (props) => {
   };
 
   useEffect(() => {
-    if (userData.stakeReward) {
+    if (userData.stakeReward === "+1") {
       setShowCard(
         <BlackOrbRewardCrd
           reward={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
@@ -229,6 +229,19 @@ const Leaderboard = (props) => {
           handAction={handleClaimReward}
         />
       );
+    } else {
+      handleClaimReward();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userData.stakeOn) {
+      const interval = setInterval(() => {
+        setFlipped((prev) => !prev);
+      }, 3000);
+      return () => clearInterval(interval);
+    } else {
+      setFlipped(false);
     }
   }, []);
 
@@ -276,39 +289,8 @@ const Leaderboard = (props) => {
             }}
             className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
           >
-            <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
+            <div className="flex justify-center items-center bg-black text-[#959494] w-[12vw] h-[12vw] text-symbol-sm rounded-full">
               r
-            </div>
-          </div>
-          <div className="font-fof z-20 top-0 w-1/2">
-            <div
-              className={`flex z-50 w-[75%] transition-all p-0.5  duration-1000 ${
-                activeTab ? "bg-white" : "bg-black"
-              } mx-auto border border-black w-[40%] rounded-full h-[30px]`}
-            >
-              <div
-                onClick={() => {
-                  setActiveTab(true);
-                }}
-                className={`flex justify-center items-center ${
-                  activeTab ? "bg-black text-white" : "text-white"
-                } h-full uppercase rounded-full w-1/2 text-[16px] py-1`}
-              >
-                FoF
-              </div>
-              <div
-                onClick={() => {
-                  setActiveTab(false);
-                }}
-                className={`flex justify-center items-center ${
-                  !activeTab ? "bg-white text-black" : "text-black"
-                } h-full uppercase rounded-full w-1/2 text-[16px] py-1`}
-              >
-                RoR
-              </div>
-            </div>
-            <div className="z-50 text-white text-black-contour w-full text-secondary text-center">
-              Hall Of Fame
             </div>
           </div>
           <div
@@ -348,7 +330,35 @@ const Leaderboard = (props) => {
               0
             </div>
           </div>
-          <div className="font-fof z-20 top-0 w-1/2">
+
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setIsFinished(true);
+            }}
+            className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+          >
+            <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
+              <Crown size={"9vw"} color="#ffd660" />
+            </div>
+          </div>
+          <div
+            key={animationKey}
+            className="absolute flex text-white text-black-contour px-2 w-full mt-[9vh] font-fof text-[17px] uppercase"
+          >
+            <div className={`mr-auto slide-in-out-left`}>
+              {t("profile.task")}
+            </div>
+            <div className={`ml-auto slide-in-out-right`}>Winners</div>
+          </div>
+        </div>
+      )}
+
+      <div className="font-fof z-50 top-0 mx-auto mt-[1.5vh] w-1/2">
+        <div className={`w-full button ${flipped ? "flipped" : ""}`}>
+          <div
+            className={`button__face button__face--front flex-col flex justify-center items-center`}
+          >
             <div
               className={`flex z-50 w-[75%] transition-all p-0.5  duration-1000 ${
                 activeTab ? "bg-white" : "bg-black"
@@ -376,31 +386,37 @@ const Leaderboard = (props) => {
               </div>
             </div>
             <div className="z-50 text-white text-black-contour w-full text-secondary text-center">
-              ({t(`note.text`)} {updateTimeLeft.minutes}min)
+              {isFinished
+                ? "Hall Of Fame"
+                : `${t(`note.text`)} ${updateTimeLeft.minutes}min`}
             </div>
           </div>
           <div
             onClick={() => {
               handleClickHaptic(tele, enableHaptic);
-              setIsFinished(true);
+              if (gameData.blackOrbs < 1) {
+                showToast("stake_error");
+              } else if (
+                !isFinished &&
+                userData.overallRank !== 0 &&
+                !userData.stakeOn
+              ) {
+                setShowCard(
+                  <StakeCrd
+                    profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                  />
+                );
+              }
             }}
-            className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+            className="button__face button__face--back z-50 flex justify-center items-center"
           >
-            <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
-              <Crown size={"9vw"} />
-            </div>
-          </div>
-          <div
-            key={animationKey}
-            className="absolute flex text-white text-black-contour px-2 w-full mt-[9vh] font-fof text-[17px] uppercase"
-          >
-            <div className={`mr-auto slide-in-out-left`}>
-              {t("profile.task")}
-            </div>
-            <div className={`ml-auto slide-in-out-right`}>Winners</div>
+            <button className="custom-button bg-black text-white text-[24px] px-6 py-1 rounded-full">
+              <span className="text text-gold">STAKE</span>
+              <span className="shimmer"></span>
+            </button>
           </div>
         </div>
-      )}
+      </div>
 
       <>
         {isFinished ? (
@@ -551,7 +567,7 @@ const Leaderboard = (props) => {
           <>
             {activeTab ? (
               <div className="flex flex-col w-full text-medium h-[56vh] bg-black text-black rounded-t-primary">
-                <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
+                <div className="flex text-gold justify-between text-secondary uppercase items-center w-[90%] mx-auto py-3">
                   <h1>
                     <span className="pr-6">#</span>
                     {t(`profile.name`)}

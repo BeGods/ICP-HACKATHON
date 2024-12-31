@@ -540,9 +540,9 @@ export const fetchRewards = async (
 
   let queryParams = [];
 
-  if (country !== "NA") {
-    queryParams.push(`country=${country}`);
-  }
+  // if (country !== "NA") {
+  //   queryParams.push(`country=${country}`);
+  // }
 
   if (lang) {
     queryParams.push(`lang=${lang}`);
@@ -765,6 +765,22 @@ export const updateRewardStatus = async (accessToken) => {
 
   try {
     const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const claimRatUpdate = async (mythologyName, accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/game/rat`;
+
+  try {
+    const response = await axios.post(url, mythologyName, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

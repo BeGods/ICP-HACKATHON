@@ -6,6 +6,7 @@ import "./styles/animations.scss";
 import "./styles/arrow.scss";
 import "./styles/moon.scss";
 import "./styles/lottie.scss";
+import "./styles/glowButton.scss";
 import "./index.css";
 import "./styles/toast.css";
 import { ToastContainer } from "react-toastify";
