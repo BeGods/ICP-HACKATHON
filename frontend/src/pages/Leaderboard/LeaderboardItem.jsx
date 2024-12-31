@@ -40,8 +40,8 @@ const LeaderboardItem = ({
           </div>
         </div>
       ) : (
-        <div className="flex w-full h-fit justify-between">
-          <div className="flex justify-center items-center w-[25%] h-full">
+        <div className="flex w-full h-[35px] justify-between">
+          <div className="flex justify-start pl-5 items-center w-[25%] h-full">
             <h1>{rank}</h1>
             <div>
               {stake == "+" && (

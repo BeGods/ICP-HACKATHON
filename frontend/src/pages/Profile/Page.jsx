@@ -1,5 +1,5 @@
 import { Settings } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import SettingModal from "../../components/Modals/Settings";
 import { ProfileGuide } from "../../components/Common/Tutorials";
@@ -12,6 +12,7 @@ import {
 } from "../../components/Common/SectionToggles";
 import { hideBackButton } from "../../utils/teleBackButton";
 import { trackComponentView } from "../../utils/ga";
+import confetti from "canvas-confetti";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,6 +22,7 @@ const Profile = (props) => {
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
+  const animationFrameId = useRef(null);
 
   useEffect(() => {
     if (enableGuide) {
@@ -71,6 +73,51 @@ const Profile = (props) => {
     setTimeout(() => {
       setShowToggles(true);
     }, 300);
+  }, []);
+
+  useEffect(() => {
+    const duration = 20 * 1000;
+    const animationEnd = Date.now() + duration;
+    let skew = 1;
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function frame() {
+      const timeLeft = animationEnd - Date.now();
+      const ticks = Math.max(1, 200 * (timeLeft / duration));
+      skew = Math.max(0.8, skew - 0.001);
+
+      confetti({
+        particleCount: 1,
+        startVelocity: 0,
+        ticks: ticks,
+        origin: {
+          x: Math.random(),
+          y: Math.random() * skew - 0.2,
+        },
+        colors: ["#ffffff"],
+        shapes: ["circle"],
+        gravity: randomInRange(0.4, 0.6),
+        scalar: randomInRange(0.4, 1),
+        drift: randomInRange(-0.4, 0.4),
+      });
+
+      if (timeLeft > 0) {
+        animationFrameId.current = requestAnimationFrame(frame);
+      }
+    }
+
+    frame();
+
+    // Cleanup when component is unmounted
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+        animationFrameId.current = null;
+      }
+    };
   }, []);
 
   return (

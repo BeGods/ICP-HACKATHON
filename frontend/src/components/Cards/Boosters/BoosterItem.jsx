@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { boosterIcon, mythSections } from "../../../utils/constants";
 import { MyContext } from "../../../context/context";
 import { MoonStar } from "lucide-react";
@@ -36,6 +36,7 @@ const BoosterItem = ({
 }) => {
   const { gameData } = useContext(MyContext);
   const [isClicked, setIsClicked] = useState(false);
+  const touchTimer = useRef(null);
 
   return (
     <div
@@ -51,23 +52,18 @@ const BoosterItem = ({
       } text-white ${
         isActive && isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       } rounded-primary h-[90px] w-full bg-glass-black p-[10px]`}
-      onMouseDown={() => {
-        setIsClicked(true);
-      }}
-      onMouseUp={() => {
-        setIsClicked(false);
-      }}
-      onMouseLeave={() => {
-        setIsClicked(false);
-      }}
       onTouchStart={() => {
-        setIsClicked(true);
+        touchTimer.current = setTimeout(() => {
+          setIsClicked(true);
+        }, 200);
       }}
       onTouchEnd={() => {
         setIsClicked(false);
+        clearTimeout(touchTimer.current);
       }}
       onTouchCancel={() => {
         setIsClicked(false);
+        clearTimeout(touchTimer.current);
       }}
     >
       <div>

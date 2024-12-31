@@ -327,3 +327,13 @@ export const clearAllGuideCookie = async (tele) => {
     localStorage.removeItem("tutorial05");
   }
 };
+
+export const getBubbleLastClaimedTime = () => {
+  const lastClaimed = localStorage.getItem("bubbleLastClaimed");
+  return lastClaimed ? parseInt(lastClaimed, 10) : null;
+};
+
+export const getRatLastClaimedTime = () => {
+  const lastClaimed = localStorage.getItem("ratLastClaimed");
+  return lastClaimed ? parseInt(lastClaimed, 10) : null;
+};

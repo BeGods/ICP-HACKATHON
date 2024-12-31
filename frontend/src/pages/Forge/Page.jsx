@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { MyContext } from "../../context/context";
 import {
   claimBurst,
+  claimRatUpdate,
   claimShardsBooster,
   startTapSession,
   updateGameData,
@@ -32,6 +33,7 @@ import {
   handleClickHaptic,
   handleTapHaptic,
 } from "../../helpers/cookie.helper";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -74,6 +76,7 @@ const Forges = () => {
       isShardsClaimActive: myth.boosters.isShardsClaimActive,
       automataStartTime: myth.boosters.automataStartTime,
       isAutomataActive: myth.boosters.isAutomataActive,
+      ratCount: myth.boosters.rats.count,
       shardsLastClaimedAt: myth.boosters.shardsLastClaimedAt,
       isBurstActive: myth.boosters.isBurstActive,
       isEligibleForBurst: myth.isEligibleForBurst,
@@ -95,6 +98,9 @@ const Forges = () => {
   const [startOrbGlow, setstartOrbGlow] = useState(false);
   const [orbGlow, setOrbGlow] = useState(false);
   const [tapGlow, setTapGlow] = useState(false);
+  const [showRat, setShowRat] = useState(false);
+  const [showRatEffect, setShowRatEffect] = useState(0);
+  const [ratEffectToggle, setRatEffectToggle] = useState(false);
   const [glowReward, setGlowReward] = useState(false);
   const [glowSymbol, setGlowSymbol] = useState(false);
   const [glowShards, setGlowShards] = useState(false);
@@ -438,6 +444,89 @@ const Forges = () => {
     }, 500);
   };
 
+  const handleClaimRat = async (status) => {
+    try {
+      await claimRatUpdate(
+        {
+          mythologyName: mythologies[activeMyth],
+          deduct: status,
+        },
+        authToken
+      );
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === mythologies[activeMyth]
+              ? {
+                  ...item,
+                  boosters: {
+                    ...item.boosters,
+                    rats: {
+                      ...item.boosters.rats,
+                      count: item.boosters.rats.count - 1,
+                      automatalvl: item.boosters.automatalvl - 1,
+                    },
+                  },
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+      setMythStates((prevData) => {
+        return prevData.map((item, index) => {
+          if (index === activeMyth) {
+            return {
+              ...item,
+              ratCount: item.ratCount - 1,
+              automatalvl: status ? item.automatalvl - 1 : item.automatalvl,
+            };
+          }
+          return item;
+        });
+      });
+
+      if (status) {
+        setShowRatEffect(1);
+        setTimeout(() => {
+          handlePlusAutomata(290, 800);
+        }, 500);
+        setTimeout(() => {
+          setShowRatEffect(2);
+          setTimeout(() => {
+            setShowRatEffect(0);
+          }, 500);
+        }, 4000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const closeRat = (status) => {
+    if (activeCard === "rat") {
+      setActiveCard(`rat-down`);
+    }
+
+    handleClaimRat(status);
+    setIsHolding(false);
+    clearMinionTimeouts();
+    setTimeout(() => {
+      setActiveCard(null);
+      setShowRat(false);
+    }, 500);
+    if (maxHoldTimeoutId.current) {
+      clearTimeout(maxHoldTimeoutId.current);
+      maxHoldTimeoutId.current = null;
+    }
+    if (holdTimeoutId.current) {
+      clearTimeout(holdTimeoutId.current);
+      holdTimeoutId.current = null;
+    }
+  };
+
   const storeBubbleLastClaimedTime = () => {
     const currentTime = Date.now();
 
@@ -460,7 +549,7 @@ const Forges = () => {
       autoCloseTimeoutId.current = null;
     }
 
-    const { energy, shardslvl, currShards } = mythStates[activeMyth];
+    const { energy, shardslvl, currShards, ratCount } = mythStates[activeMyth];
     const { counter, popupTime, isActive } = popupStates;
 
     const lastBubbleClaimedTime = getBubbleLastClaimedTime();
@@ -518,7 +607,12 @@ const Forges = () => {
         updateBlackOrbStatus();
       }
 
-      if (currShards >= 10 && popupTime === 0 && !isActive && energy >= 150) {
+      if (
+        currShards >= 10 &&
+        popupTime === 0 &&
+        (!isActive || !showRat) &&
+        energy >= 150
+      ) {
         setPopupStates((prev) => ({
           ...prev,
           popupTime: handleGeneratePopTime(counter),
@@ -526,8 +620,14 @@ const Forges = () => {
 
         const randomPosArray = [true, false];
         const randomPos = randomPosArray[Math.floor(Math.random() * 2)];
+
         setMinionPosition(randomPos);
-      } else if (currShards >= 10 && popupTime - Date.now() < 0 && !isActive) {
+      } else if (
+        currShards >= 10 &&
+        popupTime - Date.now() < 0 &&
+        !isActive &&
+        !showRat
+      ) {
         const filteredRewards = rewards.filter(
           (reward) =>
             !rewardsClaimedInLastHr.includes(reward.id) &&
@@ -550,6 +650,29 @@ const Forges = () => {
             counter: prev.counter + 1,
             isActive: false,
           }));
+        } else if (
+          ratCount > 0 &&
+          mythStates[activeMyth].isAutomataActive &&
+          counter % 2 !== 0 &&
+          !showRat
+        ) {
+          setShowRat(true);
+          setPopupStates((prev) => ({
+            ...prev,
+            popupTime: 0,
+            counter: prev.counter + 1,
+            isActive: false,
+          }));
+          setActiveCard("rat");
+          if (!holdTimeoutId.current) {
+            // Disappear after 3 seconds if not held
+            holdTimeoutId.current = setTimeout(() => {
+              if (!isHolding) {
+                setActiveCard(`rat-down`);
+                closeRat(true);
+              }
+            }, 3000);
+          }
         } else {
           setPopupStates((prev) => ({
             ...prev,
@@ -564,6 +687,24 @@ const Forges = () => {
                 closeMinion();
               }
             }, 3000);
+          }
+        }
+      } else if (showRat) {
+        if (isHolding) {
+          if (holdTimeoutId.current) {
+            clearTimeout(holdTimeoutId.current);
+            holdTimeoutId.current = null;
+          }
+
+          if (!maxHoldTimeoutId.current) {
+            maxHoldTimeoutId.current = setTimeout(() => {
+              closeRat(false);
+            }, 3000);
+          }
+        } else {
+          if (maxHoldTimeoutId.current) {
+            clearTimeout(maxHoldTimeoutId.current);
+            maxHoldTimeoutId.current = null;
           }
         }
       } else if (isActive) {
@@ -1133,6 +1274,21 @@ const Forges = () => {
     }
   }, [enableGuide, currGuide]);
 
+  useEffect(() => {
+    let intervalId;
+    if (showRatEffect === 0) {
+      intervalId = setInterval(() => {
+        setRatEffectToggle((prev) => !prev);
+      }, 500);
+    } else {
+      clearInterval(intervalId);
+    }
+  }, [showRatEffect]);
+
+  useEffect(() => {
+    handlePlusAutomata(290, 800);
+  }, [activeMyth]);
+
   return (
     <>
       <div
@@ -1366,6 +1522,81 @@ const Forges = () => {
             ))}
           </div>
         )}
+        {/* Rat */}
+        {(activeCard === "rat" || activeCard === "rat-down") && (
+          <div
+            onTouchStart={() => {
+              if (activeCard === "rat") {
+                setIsHolding(true);
+                handleTapHaptic(tele, platform, enableHaptic, 1000);
+              }
+            }}
+            onTouchEnd={() => {
+              if (isHolding) {
+                closeRat(true);
+              }
+            }}
+            className={`absolute  ${activeCard === "rat-down" && "popdown"} ${
+              activeCard === "rat" && "popup"
+            } bottom-0 select-none left-0 -mb-2.5 minion-button`}
+          >
+            <div className={`relative`}>
+              <img
+                src={`${assets.boosters.ratPop}`}
+                alt="rat"
+                className="w-full select-none pointer-events-none z-50"
+              />
+            </div>
+          </div>
+        )}
+        {/* Rat - Deduct */}
+        {showRatEffect !== 0 && (
+          <div
+            className={`flex  ${showRatEffect === 2 && "popdown"} ${
+              showRatEffect === 1 && "popup"
+            }`}
+          >
+            <div
+              className={`absolute bottom-0 select-none left-0 -mb-2.5 minion-button`}
+            >
+              <div className={`relative pop-shake`}>
+                <img
+                  src={`${assets.boosters.ratPop}`}
+                  alt="rat"
+                  className={`w-full select-none pointer-events-none filter-orbs-${mythSections[activeMyth]} z-50`}
+                />
+              </div>
+            </div>
+            <div
+              className={`absolute bottom-0 select-none right-0 -mb-2.5 minion-button`}
+            >
+              <div className="relative pop-scale">
+                <img
+                  src={`${assets.boosters.automataPop}`}
+                  alt="automata"
+                  className={`w-full h-full select-none pointer-events-none ${
+                    ratEffectToggle
+                      ? `filter-orbs-${mythSections[activeMyth]}`
+                      : "grayscale"
+                  } `}
+                />
+              </div>
+            </div>
+            {plusAutomata.map((plusOne) => (
+              <span
+                key={plusOne.id}
+                className={`minus-one glow-text-${mythSections[activeMyth]}`}
+                style={{
+                  bottom: `-12vh`,
+                  right: `8vw`,
+                  zIndex: 99,
+                }}
+              >
+                -x1
+              </span>
+            ))}
+          </div>
+        )}
         {/* Minion */}
         {(activeCard === "minion" || activeCard === "minion-down") && (
           <div
@@ -1454,10 +1685,21 @@ const Forges = () => {
               html5={true}
             />
           )}
-          {isStarHold.current === true && (
+          {(isStarHold.current === true || showRatEffect == 1) && (
             <ReactHowler
               src={`${assets.audio.automataLong}`}
-              playing={enableSound && isStarHold.current === true}
+              playing={
+                enableSound &&
+                (isStarHold.current === true || showRatEffect == 1)
+              }
+              preload={true}
+              html5={true}
+            />
+          )}
+          {(showRat === true || showRatEffect === 1) && (
+            <ReactHowler
+              src={`${assets.audio.rat}`}
+              playing={enableSound && (showRat === true || showRatEffect === 1)}
               preload={true}
               html5={true}
             />
