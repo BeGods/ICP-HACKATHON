@@ -47,9 +47,13 @@ const rankSchema = new Schema(
       type: Object,
       default: {},
     },
+    directReferralCount: {
+      type: Number,
+      default: 0,
+    },
     totalOrbs: Number,
     fofCompletedAt: Date,
-    userBetFor: String,
+    prevRank: Number,
   },
 
   { timestamps: true }
@@ -57,7 +61,7 @@ const rankSchema = new Schema(
 
 const ranks = model("Ranks", rankSchema);
 
-// rankSchema.index({ userId: 1 }, { unique: true });
+rankSchema.index({ userId: 1 }, { unique: true });
 // rankSchema.index({ parentReferrerId: 1 });
 
 export default ranks;

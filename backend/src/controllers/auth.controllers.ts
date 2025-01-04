@@ -1,48 +1,24 @@
-import { validate, parse } from "@tma.js/init-data-node";
-import config from "../config/config";
 import User, { IUser } from "../models/user.models";
 import { ObjectId } from "mongodb";
-import { generateAuthToken } from "../services/auth.services";
+import {
+  decryptTelegramData,
+  generateAuthToken,
+} from "../services/auth.services";
 import {
   addTeamMember,
   createDefaultUserMyth,
   addNewUser,
 } from "../services/user.services";
 
+// login
 export const authenticate = async (req, res) => {
   try {
     const { initData } = req.body;
-
-    if (!initData) {
-      return res.status(400).json({
-        message: "initData is required.",
-      });
-    }
-
     const { referralCode } = req.query as { referralCode?: string | null };
-
-    const parsedInitData = parse(initData);
     let isUpdated = false;
 
-    // validate initData
-    try {
-      validate(initData, config.security.TMA_BOT_TOKEN);
-    } catch (validateError) {
-      return res.status(400).json({
-        message: "initData validation failed",
-        error: validateError.message,
-      });
-    }
-
-    const telegramId = parsedInitData.user.id.toString();
-    const telegramUsername = parsedInitData.user.username;
-    const isPremium = parsedInitData.user.isPremium;
-
-    if (!telegramId) {
-      return res.status(404).json({
-        message: "User not found.",
-      });
-    }
+    const { telegramId, telegramUsername, isPremium } =
+      await decryptTelegramData(initData);
 
     // existing user or not
     let existingUser: IUser | null = await User.findOne({ telegramId });
@@ -64,13 +40,6 @@ export const authenticate = async (req, res) => {
       if (isUpdated) {
         existingUser.save();
       }
-
-      // response token
-      const accessToken = await generateAuthToken(existingUser);
-      res.status(200).json({
-        message: "User authenticated successfully.",
-        data: { token: accessToken },
-      });
     } else {
       let newUser: Partial<IUser> = {
         telegramId,
@@ -95,19 +64,19 @@ export const authenticate = async (req, res) => {
       existingUser = await addNewUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
-      // response token
-      const accessToken = await generateAuthToken(existingUser);
-
-      res.status(201).json({
-        message: "User authenticated successfully.",
-        data: { token: accessToken },
-      });
     }
+
+    // response token
+    const accessToken = await generateAuthToken(existingUser);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: { token: accessToken },
+    });
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "There was a problem authenticating user.",
       error: error.message,
     });
   }
@@ -186,7 +155,7 @@ export const testAuthenticate = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "There was a problem authenticating user.",
       error: error.message,
     });
   }

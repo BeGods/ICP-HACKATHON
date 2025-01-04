@@ -1,8 +1,3 @@
-import {
-  fetchUserData,
-  validateAutomata,
-  validateBooster,
-} from "../services/game.fof.services";
 import userMythologies, {
   IMyth,
   IUserMyths,
@@ -10,48 +5,36 @@ import userMythologies, {
 import { mythOrder } from "../utils/constants/variables";
 import config from "../config/config";
 import CryptoJs from "crypto-js";
+import { hasBeenFourDaysSinceClaimedUTC } from "../helpers/game.helpers";
 import {
-  hasBeenFourDaysSinceClaimedUTC,
-  isClaimedTodayUTC,
-} from "../utils/helpers/game.helpers";
+  checkAutomataStatus,
+  validateBooster,
+} from "../helpers/booster.helpers";
+import {
+  aggregateConvStats,
+  filterDataByMyth,
+} from "../services/game.fof.services";
+import { decryptHash } from "../helpers/security";
 
-export const validShardsBoosterReq = async (req, res, next) => {
+export const validateAlchemist = async (req, res, next) => {
   try {
     const userId = req.user;
-    const secretKey = config.security.HASH_KEY;
-    const hashedData = req.body.data;
-    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
-    const { mythologyName, adId } = JSON.parse(
-      decryptedData.toString(CryptoJs.enc.Utf8)
-    );
+    const { mythologyName, adId } = await decryptHash(req.body.data);
 
     if (!mythologyName) {
       throw new Error("Mythology name is required.");
     }
 
-    const userMythologiesData = (await userMythologies.findOne({
-      userId,
-    })) as IUserMyths;
+    const { mythData, userMythology } = await filterDataByMyth(
+      mythologyName,
+      userId
+    );
 
-    if (!userMythologiesData) {
-      throw new Error("User mythologies not found.");
-    }
+    if (!mythData.boosters.isShardsClaimActive) {
+      mythData.boosters = validateBooster(mythData.boosters);
+      console.log(mythData);
 
-    const requestedMyth = userMythologiesData.mythologies.find(
-      (item) => item.name === mythologyName
-    ) as IMyth;
-
-    if (!requestedMyth) {
-      return res
-        .status(404)
-        .json({ message: `Mythology ${mythologyName} not found.` });
-    }
-
-    if (!requestedMyth.boosters.isShardsClaimActive) {
-      requestedMyth.boosters = validateBooster(requestedMyth.boosters);
-      console.log(requestedMyth);
-
-      if (!requestedMyth.boosters.isShardsClaimActive) {
+      if (!mythData.boosters.isShardsClaimActive) {
         throw new Error(
           "Booster activation failed. Please try to multiply your shards tapping power later."
         );
@@ -64,7 +47,7 @@ export const validShardsBoosterReq = async (req, res, next) => {
     }
 
     // Check sufficient orbs to claim booster
-    if (userMythologiesData.multiColorOrbs < 1 && !adId) {
+    if (userMythology.multiColorOrbs < 1 && !adId) {
       throw new Error("Insufficient multiColorOrbs to claim this booster.");
     }
 
@@ -73,52 +56,27 @@ export const validShardsBoosterReq = async (req, res, next) => {
     } else {
       req.deductValue = -1;
     }
-    req.userMyth = requestedMyth;
+    req.userMyth = mythData;
     next();
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-export const validAutomataReq = async (req, res, next) => {
+export const validateAutomata = async (req, res, next) => {
   try {
     const userId = req.user;
-    const secretKey = config.security.HASH_KEY;
+    const { mythologyName, adId } = await decryptHash(req.body.data);
 
-    const hashedData = req.body.data;
-
-    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
-
-    const { mythologyName, adId } = JSON.parse(
-      decryptedData.toString(CryptoJs.enc.Utf8)
+    const { mythData, userMythology } = await filterDataByMyth(
+      mythologyName,
+      userId
     );
 
-    if (!mythologyName) {
-      throw new Error("Mythology name is required.");
-    }
+    if (mythData.boosters.isAutomataActive) {
+      mythData.boosters = checkAutomataStatus(mythData);
 
-    const userMythologiesData = (await userMythologies.findOne({
-      userId,
-    })) as IUserMyths;
-
-    if (!userMythologiesData) {
-      throw new Error("Insufficient orbs to claim automata.");
-    }
-
-    let requestedMyth = userMythologiesData.mythologies.find(
-      (item) => item.name === mythologyName
-    ) as IMyth;
-
-    if (!requestedMyth) {
-      return res
-        .status(400)
-        .json({ message: `Mythology ${mythologyName} not found.` });
-    }
-
-    if (requestedMyth.boosters.isAutomataActive) {
-      requestedMyth = validateAutomata(requestedMyth);
-
-      if (requestedMyth.boosters.isAutomataActive) {
+      if (mythData.boosters.isAutomataActive) {
         throw new Error("Automata is already active. Try again later.");
       }
     }
@@ -128,7 +86,7 @@ export const validAutomataReq = async (req, res, next) => {
     }
 
     // Check sufficient orbs to claim automata
-    if (userMythologiesData.multiColorOrbs < 1 && !adId) {
+    if (userMythology.multiColorOrbs < 1 && !adId) {
       throw new Error("Insufficient multiColorOrbs to claim this automata.");
     }
 
@@ -137,8 +95,8 @@ export const validAutomataReq = async (req, res, next) => {
     } else {
       req.deductValue = -1;
     }
-    req.userMyth = requestedMyth;
-    req.mythData = userMythologiesData;
+    req.userMyth = mythData;
+    req.mythData = userMythology;
     next();
   } catch (error) {
     console.log(error);
@@ -150,13 +108,7 @@ export const validAutomataReq = async (req, res, next) => {
 export const validAutoAutomataReq = async (req, res, next) => {
   try {
     const userId = req.user;
-    const secretKey = config.security.HASH_KEY;
-
-    const hashedData = req.body.data;
-
-    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
-
-    const { adId } = JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
+    const { mythologyName, adId } = await decryptHash(req.body.data);
 
     const userMythologiesData = (await userMythologies.findOne({
       userId,
@@ -181,17 +133,6 @@ export const validAutoAutomataReq = async (req, res, next) => {
       throw new Error("Invalid ad request.");
     }
 
-    // const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
-
-    // if (
-    //   userMythologiesData.autoPay.automataAutoPayExpiration - Date.now() >
-    //   millisecondsIn24Hours
-    // ) {
-    //   throw new Error(
-    //     "Your previous automata has not expired yet. Please try again later."
-    //   );
-    // }
-
     if (adId) {
       req.deductValue = 0;
     } else {
@@ -199,7 +140,6 @@ export const validAutoAutomataReq = async (req, res, next) => {
     }
 
     req.mythData = userMythologiesData;
-
     next();
   } catch (error) {
     console.log(error);
@@ -208,14 +148,10 @@ export const validAutoAutomataReq = async (req, res, next) => {
   }
 };
 
-export const validAutoBurstReq = async (req, res, next) => {
+export const validateMultiBurst = async (req, res, next) => {
   try {
     const userId = req.user;
-    const secretKey = config.security.HASH_KEY;
-    const hashedData = req.body.data;
-    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
-
-    const { adId } = JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
+    const { mythologyName, adId } = await decryptHash(req.body.data);
 
     const userMythologiesData = (await userMythologies.findOne({
       userId,
@@ -266,7 +202,7 @@ export const validAutoBurstReq = async (req, res, next) => {
   }
 };
 
-export const validateBurstReq = async (req, res, next) => {
+export const validateBurst = async (req, res, next) => {
   try {
     const userId = req.user;
     const { mythologyName } = req.body;
@@ -275,42 +211,29 @@ export const validateBurstReq = async (req, res, next) => {
       throw new Error("Mythology name is required.");
     }
 
-    const userMythologiesData = (await userMythologies.findOne({
-      userId,
-    })) as IUserMyths;
-
-    if (!userMythologiesData) {
-      throw new Error("Insufficient orbs to claim automata.");
-    }
-
-    let requestedMyth = userMythologiesData.mythologies.find(
-      (item) => item.name === mythologyName
-    ) as IMyth;
-
-    if (!requestedMyth) {
-      return res
-        .status(404)
-        .json({ message: `Mythology ${mythologyName} not found.` });
-    }
+    const { mythData, userMythology } = await filterDataByMyth(
+      mythologyName,
+      userId
+    );
 
     if (
-      !requestedMyth.isEligibleForBurst ||
-      !requestedMyth.boosters.isBurstActiveToClaim
+      !mythData.isEligibleForBurst ||
+      !mythData.boosters.isBurstActiveToClaim
     ) {
       throw new Error("You are not eligible to buy burst. Try again later.");
     }
 
-    if (requestedMyth.boosters.isBurstActive) {
+    if (mythData.boosters.isBurstActive) {
       throw new Error("Burst is already active. Try again later.");
     }
 
     // Check sufficient orbs to claim automata
-    if (userMythologiesData.multiColorOrbs < 3) {
+    if (userMythology.multiColorOrbs < 3) {
       throw new Error("Insufficient multiColorOrbs to claim this burst.");
     }
 
-    req.userMyth = requestedMyth;
-    req.mythData = userMythologiesData;
+    req.userMyth = mythData;
+    req.mythData = userMythology;
 
     next();
   } catch (error) {
@@ -323,7 +246,7 @@ export const validateOrbsConversion = async (req, res, next) => {
     const userId = req.user._id;
     const { mythologyName, key, convertedOrbs } = req.body;
 
-    const data = await fetchUserData(userId);
+    const data = await aggregateConvStats(userId);
 
     const quests = data[0].quests.map((quest) => ({
       ...quest,
@@ -378,11 +301,7 @@ export const validateOrbsConversion = async (req, res, next) => {
 export const validateClaimMoon = async (req, res, next) => {
   try {
     const userId = req.user;
-    const secretKey = config.security.HASH_KEY;
-    const hashedData = req.body.data;
-    const decryptedData = CryptoJs.AES.decrypt(hashedData, secretKey);
-
-    const { adId } = JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
+    const { mythologyName, adId } = await decryptHash(req.body.data);
 
     const userMythologiesData = (await userMythologies.findOne({
       userId,
@@ -421,26 +340,19 @@ export const validateStarClaim = async (req, res, next) => {
     const userId = req.user;
     const { mythologyName } = req.body;
 
-    const userMythologiesData = (await userMythologies.findOne({
-      userId,
-    })) as IUserMyths;
+    const { mythData, userMythology } = await filterDataByMyth(
+      mythologyName,
+      userId
+    );
 
-    if (!userMythologiesData) {
-      throw new Error("User mythologies not found.");
-    }
-
-    const requestedMyth = userMythologiesData.mythologies.find(
-      (item) => item.name === mythologyName
-    ) as IMyth;
-
-    if (!requestedMyth) {
+    if (!mythData) {
       return res
         .status(404)
         .json({ message: `Mythology ${mythologyName} not found.` });
     }
 
-    if (requestedMyth.boosters.isBurstActive) {
-      req.userMyth = requestedMyth;
+    if (mythData.boosters.isBurstActive) {
+      req.userMyth = mythData;
       next();
     } else {
       throw new Error("You are not eligible to claim star bonus.");
@@ -469,26 +381,13 @@ export const validateRatClaim = async (req, res, next) => {
     const userId = req.user;
     const { mythologyName } = req.body;
 
-    const userMythologiesData = (await userMythologies.findOne({
-      userId,
-    })) as IUserMyths;
+    const { mythData, userMythology } = await filterDataByMyth(
+      mythologyName,
+      userId
+    );
 
-    if (!userMythologiesData) {
-      throw new Error("User mythologies not found.");
-    }
-
-    const requestedMyth = userMythologiesData.mythologies.find(
-      (item) => item.name === mythologyName
-    ) as IMyth;
-
-    if (!requestedMyth) {
-      return res
-        .status(404)
-        .json({ message: `Mythology ${mythologyName} not found.` });
-    }
-
-    if (requestedMyth.boosters.rats.count > 0) {
-      req.userMyth = requestedMyth;
+    if (mythData.boosters.rats.count > 0) {
+      req.userMyth = mythData;
       next();
     } else {
       throw new Error("You are not eligible to claim rat.");

@@ -1,11 +1,19 @@
-export const calculateAutomataEarnings = (automataLastClaimedAt, shardslvl) => {
-  const automataTimeElapsed = Math.floor(
-    (Date.now() - automataLastClaimedAt) / 1000
-  );
+export const isWithinOneMinute = (times) => {
+  if (times.length !== 5) return false;
+  const minTime = Math.min(...times);
+  const maxTime = Math.max(...times);
+  return maxTime - minTime < 60000;
+};
 
-  const automataEarnings = automataTimeElapsed * shardslvl;
+export const checkLastMoonClaim = (lastMoonClaimAt) => {
+  const currentTime = Date.now();
+  const fourDaysInMs = 4 * 24 * 60 * 60 * 1000;
 
-  return automataEarnings;
+  if (currentTime - lastMoonClaimAt > fourDaysInMs) {
+    return 100;
+  }
+
+  return currentTime - lastMoonClaimAt;
 };
 
 export const calculateEnergy = (
@@ -24,31 +32,6 @@ export const calculateEnergy = (
   );
 
   return restoredEnergy;
-};
-
-export const getAutomataStartTimes = (mythologies) =>
-  mythologies
-    .flatMap((myth) => myth.boosters.automataStartTime)
-    .filter((time) => time !== 0);
-
-export const getShortestStartTime = (arrayOfTimes) => {
-  if (arrayOfTimes.length < 4) {
-    return -1;
-  }
-
-  return Math.min(...arrayOfTimes);
-};
-
-export const getBurstStartTimes = (mythologies) =>
-  mythologies
-    .flatMap((myth) => myth.boosters.burstActiveAt)
-    .filter((time) => time !== 0);
-
-export const isWithinOneMinute = (times) => {
-  if (times.length !== 5) return false;
-  const minTime = Math.min(...times);
-  const maxTime = Math.max(...times);
-  return maxTime - minTime < 60000;
 };
 
 export const getPhaseByDate = (date = new Date()) => {
@@ -86,17 +69,6 @@ export const hasBeenFourDaysSinceClaimedUTC = (lastClaimedTime) => {
   const now = Date.now(); // Current time in milliseconds
   const fourDaysInMs = 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
 
-  // If the time difference is within 4 days, return true; otherwise, return false
+  // if within 4 days then true, else false
   return now - lastClaimedTime < fourDaysInMs;
-};
-
-export const checkLastMoonClaim = (lastMoonClaimAt) => {
-  const currentTime = Date.now();
-  const fourDaysInMs = 4 * 24 * 60 * 60 * 1000;
-
-  if (currentTime - lastMoonClaimAt > fourDaysInMs) {
-    return 100;
-  }
-
-  return currentTime - lastMoonClaimAt;
 };
