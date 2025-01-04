@@ -4,6 +4,7 @@ import userMythologies from "../models/mythologies.models";
 import { OrbsTransactions } from "../models/transactions.models";
 import mongoose from "mongoose";
 import User from "../models/user.models";
+import { countries } from "../utils/constants/countrt";
 
 export const getLeaderboardSnapshot = async () => {
   try {
@@ -68,19 +69,33 @@ export const getLeaderboardSnapshot = async () => {
         $sort: { totalOrbs: -1 as -1 },
       },
       {
+        $lookup: {
+          from: "ranks",
+          localField: "_id",
+          foreignField: "userId",
+          as: "rankDetails",
+        },
+      },
+      {
+        $addFields: {
+          prevRank: {
+            $ifNull: [{ $arrayElemAt: ["$rankDetails.overallRank", 0] }, null],
+          },
+        },
+      },
+      {
         $project: {
           userId: "$_id",
           telegramUsername: "$userDetails.telegramUsername",
           profileImage: "$userDetails.profile.avatarUrl",
+          directReferralCount: "$userDetails.directReferralCount",
           country: "$userDetails.country",
           blackOrbs: 1,
           multiColorOrbs: 1,
           totalOrbs: 1,
           mythologyOrbsData: 1,
           squadOwner: "$userDetails.squadOwner",
-          userBetAt: {
-            $ifNull: ["$userDetails.userBetAt", null],
-          },
+          prevRank: 1,
           finishedAt: {
             $ifNull: [
               "$userDetails.gameCompletedAt.fof",
@@ -102,44 +117,102 @@ export const getLeaderboardSnapshot = async () => {
   }
 };
 
-export const getLeaderboardRanks = async (page = 0, limit = 100) => {
+export const getLeaderboardRanks = async (page = 0, limit = 100, filter) => {
   const skip = page * limit;
   try {
-    const pipeline = [
+    const countryCondn = (countryCode) => [
       {
-        $facet: {
-          active: [
-            { $match: { totalOrbs: { $lt: 999999 } } },
-            { $sort: { overallRank: 1 as 1 } },
-            { $skip: skip },
-            { $limit: limit },
-            {
-              $project: {
-                __v: 0,
-                createdAt: 0,
-                updatedAt: 0,
-                _id: 0,
-                userId: 0,
-              },
-            },
-          ],
-
-          finished: [
-            { $match: { totalOrbs: { $gte: 999999 } } },
-            { $sort: { fofCompletedAt: 1 as 1 } },
-            {
-              $project: {
-                __v: 0,
-                createdAt: 0,
-                updatedAt: 0,
-                _id: 0,
-                userId: 0,
-              },
-            },
-          ],
+        $match: {
+          $and: [{ totalOrbs: { $lt: 999999 } }, { country: countryCode }],
+        },
+      },
+      { $sort: { countryRank: 1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $project: {
+          __v: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          _id: 0,
+          userId: 0,
         },
       },
     ];
+    const defaultCondn = [
+      {
+        $match: {
+          $and: [{ totalOrbs: { $lt: 999999 } }],
+        },
+      },
+      { $sort: { overallRank: 1 as 1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $project: {
+          __v: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          _id: 0,
+          userId: 0,
+        },
+      },
+    ];
+    const referCondn = [
+      {
+        $match: {
+          $and: [{ totalOrbs: { $lt: 999999 } }],
+        },
+      },
+      { $sort: { directReferralCount: -1 as -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $project: {
+          __v: 0,
+          createdAt: 0,
+          updatedAt: 0,
+          _id: 0,
+          userId: 0,
+        },
+      },
+    ];
+
+    const matchedCountry = countries.find((country) => country.code === filter);
+    let currFilter;
+    if (matchedCountry) {
+      currFilter = countryCondn(filter);
+    } else {
+      switch (filter) {
+        case "refer":
+          currFilter = referCondn;
+          break;
+        default:
+          currFilter = defaultCondn;
+          break;
+      }
+    }
+
+    let pipelineObj = {
+      $facet: {
+        active: currFilter,
+
+        finished: [
+          { $match: { totalOrbs: { $gte: 999999 } } },
+          { $sort: { fofCompletedAt: 1 as 1 } },
+          {
+            $project: {
+              __v: 0,
+              createdAt: 0,
+              updatedAt: 0,
+              _id: 0,
+              userId: 0,
+            },
+          },
+        ],
+      },
+    };
+    const pipeline = [pipelineObj];
 
     const results = await ranks.aggregate(pipeline).allowDiskUse(true).exec();
 

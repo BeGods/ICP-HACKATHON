@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import quest from "../models/quests.models";
 
-export const questAggregator = async (userId, questId) => {
+export const aggregateQuests = async (userId, questId) => {
   try {
     const pipeline = [
       {
@@ -74,7 +74,7 @@ export const questAggregator = async (userId, questId) => {
   }
 };
 
-export const unClaimedQuests = async (userId) => {
+export const aggregateUnclaimedQuests = async (userId) => {
   try {
     const pipeline = [
       {

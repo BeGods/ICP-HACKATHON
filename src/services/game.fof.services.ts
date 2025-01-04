@@ -1,12 +1,26 @@
 import mongoose from "mongoose";
 import {
-  calculateAutomataEarnings,
   calculateEnergy,
   getPhaseByDate,
-} from "../utils/helpers/game.helpers";
-import userMythologies from "../models/mythologies.models";
+  hasBeenFourDaysSinceClaimedUTC,
+} from "../helpers/game.helpers";
+import userMythologies, {
+  IMyth,
+  IUserMyths,
+} from "../models/mythologies.models";
+import milestones from "../models/milestones.models";
+import { defaultMythologies } from "../utils/constants/variables";
+import User, { IUser } from "../models/user.models";
+import { checkPlaysuperExpiry } from "./playsuper.services";
+import {
+  getAutomataStartTimes,
+  getShortestStartTime,
+  checkAutomataStatus,
+  validateBooster,
+  validateBurst,
+} from "../helpers/booster.helpers";
 
-export const fetchUserGameStats = async (userId) => {
+export const aggregateGameStats = async (userId) => {
   try {
     // Aggregate pipeline
     const pipeline = [
@@ -146,101 +160,34 @@ export const fetchUserGameStats = async (userId) => {
     ];
 
     // Execute the aggregation pipeline
-    const userGameStats = await userMythologies.aggregate(pipeline);
+    const result = await userMythologies.aggregate(pipeline);
 
-    return userGameStats;
+    return result;
   } catch (error) {
     throw new Error("There was a problem fetching user data.");
   }
 };
 
-export const validateBooster = (boosters) => {
+export const validateRatValues = (boosterData) => {
   try {
-    const timeLapsed = Date.now() - boosters.shardsLastClaimedAt;
+    boosterData.rats = boosterData.rats ?? {};
 
-    if (timeLapsed >= 86400000) {
-      // 24 hours
-      boosters.isShardsClaimActive = true;
-      boosters.shardsLastClaimedAt = 0;
-    }
-    if (boosters.shardslvl === 99) {
-      // level 7
-      boosters.shardslvl = 99;
+    boosterData.rats.lastClaimedThreshold =
+      boosterData.rats.lastClaimedThreshold ?? 0;
+    boosterData.rats.count = boosterData.rats.count ?? 0;
+
+    const ratCount = boosterData.rats.count;
+    const ratLastThreshold = boosterData.rats.lastClaimedThreshold;
+
+    if (boosterData.automatalvl > ratLastThreshold + 10 && ratCount === 0) {
+      boosterData.rats.lastClaimedThreshold += 10;
+      boosterData.rats.count = boosterData.rats.lastClaimedThreshold / 10;
     }
 
-    return boosters;
+    return boosterData;
   } catch (error) {
-    throw new Error("Error in validating booster.");
-  }
-};
-
-export const validateAutomata = (gameData) => {
-  try {
-    const timeLapsed = Date.now() - gameData.boosters.automataStartTime;
-
-    if (timeLapsed >= 86400000) {
-      // 24 hours
-      gameData.boosters.isAutomataActive = false;
-      gameData.boosters.automataLastClaimedAt = 0;
-      gameData.boosters.automataStartTime = 0;
-    }
-
-    if (gameData.boosters.automatalvl === 98) {
-      // 48 hours or level 7
-      gameData.boosters.automatalvl = 98;
-    }
-
-    if (gameData.boosters.isAutomataActive) {
-      gameData.shards += calculateAutomataEarnings(
-        gameData.boosters.automataLastClaimedAt,
-        gameData.boosters.automatalvl
-      );
-
-      gameData.boosters.automataLastClaimedAt = Date.now();
-    }
-
-    return gameData;
-  } catch (error) {
-    throw new Error("Error in validating booster.");
-  }
-};
-
-export const validateBurst = (gameData) => {
-  try {
-    const timeLapsed = Date.now() - gameData.boosters.burstActiveAt;
-
-    if (timeLapsed >= 86400000) {
-      // 24 hours
-      gameData.boosters.isBurstActiveToClaim = true;
-      gameData.boosters.isBurstActive = false;
-      gameData.boosters.burstActiveAt = 0;
-    }
-
-    if (gameData.boosters.burstlvl === 99) {
-      // 48 hours or level 7
-      gameData.boosters.burstlvl = 99;
-    }
-
-    return gameData;
-  } catch (error) {
-    throw new Error("Error in validating booster.");
-  }
-};
-
-export const disableActiveBurst = (mythology) => {
-  try {
-    const timeLapsed = Date.now() - mythology.burstActiveAt;
-
-    const twelveHours = 12 * 60 * 60 * 1000;
-
-    if (timeLapsed > twelveHours) {
-      mythology.isBurstActive = false;
-      mythology.burstActiveAt = false;
-    }
-
-    return mythology;
-  } catch (error) {
-    throw new Error("Error in validating booster.");
+    console.error("Error validating rat:", error.message);
+    throw new Error(error.response ? error.response.data : error.message);
   }
 };
 
@@ -265,7 +212,7 @@ export const updateMythologies = (mythologies) => {
 
       // Validate boosters
       mythology.boosters = validateBooster(mythology.boosters);
-      mythology = validateAutomata(mythology);
+      mythology.boosters = checkAutomataStatus(mythology);
       mythology.boosters = validateRatValues(mythology.boosters);
 
       if (
@@ -275,10 +222,6 @@ export const updateMythologies = (mythologies) => {
         mythology = validateBurst(mythology);
       }
 
-      // validate burst timeout
-      // if (mythology.isBurstActive && mythology.burstActiveAt != 0) {
-      //   mythology = disableActiveBurst(mythology);
-      // }
       mythology.energy = restoredEnergy;
       mythology.lastTapAcitivityTime = Date.now();
 
@@ -307,7 +250,7 @@ export const updateMythologies = (mythologies) => {
   }
 };
 
-export const fetchUserData = async (userId) => {
+export const aggregateConvStats = async (userId) => {
   try {
     const pipeline = [
       { $match: { userId: new mongoose.Types.ObjectId(userId) } },
@@ -470,25 +413,255 @@ export const checkStreakIsActive = async (
   }
 };
 
-export const validateRatValues = (boosterData) => {
+export const filterDataByMyth = async (mythologyName, userId) => {
   try {
-    boosterData.rats = boosterData.rats ?? {};
+    const userMythology = (await userMythologies.findOne({
+      userId: userId,
+    })) as IUserMyths;
 
-    boosterData.rats.lastClaimedThreshold =
-      boosterData.rats.lastClaimedThreshold ?? 0;
-    boosterData.rats.count = boosterData.rats.count ?? 0;
-
-    const ratCount = boosterData.rats.count;
-    const ratLastThreshold = boosterData.rats.lastClaimedThreshold;
-
-    if (boosterData.automatalvl > ratLastThreshold + 10 && ratCount === 0) {
-      boosterData.rats.lastClaimedThreshold += 10;
-      boosterData.rats.count = boosterData.rats.lastClaimedThreshold / 10;
+    if (!userMythology) {
+      throw Error("Invalid game data. Mythologies data not found.");
     }
 
-    return boosterData;
+    const mythData = userMythology.mythologies.find(
+      (item) => item.name === mythologyName
+    ) as IMyth;
+
+    if (!mythData) {
+      throw Error("Invalid game data. Mythology not found.");
+    }
+
+    return { mythData, userMythology };
   } catch (error) {
-    console.error("Error validating rat:", error.message);
-    throw new Error(error.response ? error.response.data : error.message);
+    throw Error(error);
+  }
+};
+
+export const updateSessionData = async (
+  mythData,
+  userMythology,
+  taps,
+  minionTaps
+) => {
+  try {
+    let totalTaps = taps - minionTaps;
+
+    // calculate energy
+    const restoredEnergy = calculateEnergy(
+      mythData.tapSessionStartTime,
+      mythData.lastTapAcitivityTime,
+      mythData.energy,
+      mythData.energyLimit
+    );
+
+    // check if numberOfTaps are valid
+    if (restoredEnergy < totalTaps) {
+      totalTaps = restoredEnergy;
+    }
+
+    // update energy after tapping, shards, lastTapActivityTime
+    const updatedEnergy = restoredEnergy - totalTaps;
+    let updatedShards =
+      taps * mythData.boosters.shardslvl +
+      minionTaps * mythData.boosters.shardslvl * 2;
+
+    // update myth shards
+    mythData.shards += updatedShards;
+
+    // define flags
+    let blackOrbs = 0;
+    let blackOrbPhaseBonus = 1;
+    const currPhase = getPhaseByDate(new Date());
+
+    if (
+      currPhase === 4 &&
+      hasBeenFourDaysSinceClaimedUTC(userMythology.lastMoonClaimAt)
+    ) {
+      blackOrbPhaseBonus = 2;
+    }
+
+    // update shards
+    if (mythData.shards >= 1000) {
+      mythData.orbs += Math.floor(mythData.shards / 1000);
+      mythData.shards = mythData.shards % 1000;
+    }
+
+    // update orbs
+    if (mythData.orbs >= 1000) {
+      mythData.boosters.isBurstActive = true;
+      blackOrbs += Math.floor(mythData.orbs / 1000) * blackOrbPhaseBonus;
+      mythData.orbs = mythData.orbs % 1000;
+    }
+
+    mythData.lastTapAcitivityTime = Date.now();
+    mythData.energy = updatedEnergy;
+    const updatedMythData = mythData;
+
+    return { updatedMythData, blackOrbs, updatedShards };
+  } catch (error) {
+    throw Error("Failed to update session data.");
+  }
+};
+
+export const updateBubbleData = async (userId, bubbleSession) => {
+  try {
+    const userMilestones = await milestones.findOne({ userId });
+
+    // Find the first matching partner
+    const partnerExists = userMilestones.rewards.claimedRewards.find(
+      (item) => item.partnerId === bubbleSession.partnerId
+    );
+
+    const fiveMinutesInMs = 2 * 60 * 1000;
+
+    if (
+      partnerExists &&
+      userMilestones.rewards.updatedAt <= Date.now() - fiveMinutesInMs
+    ) {
+      // if partner exists update tokensCollected
+      if (partnerExists.tokensCollected < 12) {
+        await milestones.findOneAndUpdate(
+          {
+            userId,
+            "rewards.claimedRewards.partnerId": bubbleSession.partnerId,
+          },
+          {
+            $set: { "rewards.updatedAt": bubbleSession.lastClaimedAt },
+            $push: { "rewards.rewardsInLastHr": bubbleSession.partnerId },
+            $inc: { "rewards.claimedRewards.$.tokensCollected": 1 },
+          },
+          {
+            new: true,
+          }
+        );
+      }
+    } else {
+      // add new partner
+      await milestones.findOneAndUpdate(
+        { userId },
+        {
+          $set: {
+            "rewards.updatedAt": Date.now(),
+          },
+          $push: {
+            "rewards.rewardsInLastHr": bubbleSession.partnerId,
+            "rewards.claimedRewards": {
+              partnerId: bubbleSession.partnerId,
+              type: bubbleSession.type,
+              isClaimed: false,
+              tokensCollected: 1,
+            },
+          },
+        },
+        { new: true }
+      );
+    }
+  } catch (error) {
+    throw Error("Failed to update partner data.");
+  }
+};
+
+export const updateMythologyData = async (userMythologiesData, userId) => {
+  try {
+    const updatedData = updateMythologies(
+      userMythologiesData.userMythologies[0].mythologies
+    );
+    const updatedMythologies = updatedData.data;
+    let blackOrbs = updatedData.updatedBlackOrb;
+
+    // Add missing mythologies with default values
+    const existingNames = updatedMythologies.map((myth) => myth.name);
+    const missingMythologies = defaultMythologies.filter(
+      (defaultMyth) => !existingNames.includes(defaultMyth.name)
+    );
+    const completeMythologies = [...updatedMythologies, ...missingMythologies];
+
+    // Remove id from each mythology
+    completeMythologies.forEach((mythology) => {
+      delete mythology._id;
+    });
+
+    const automataStateTimes = getAutomataStartTimes(completeMythologies);
+    const isAutoAutomataActive = getShortestStartTime(automataStateTimes);
+
+    // update latest data
+    await userMythologies.updateOne(
+      { userId },
+      {
+        $inc: { blackOrbs: blackOrbs },
+        $set: { mythologies: completeMythologies },
+      }
+    );
+
+    return { isAutoAutomataActive, completeMythologies };
+  } catch (error) {
+    throw Error("Failed to update mythologies data.");
+  }
+};
+
+export const updateUserData = async (
+  user,
+  memberData,
+  isEligibleToClaim,
+  isStreakActive
+) => {
+  try {
+    const hasPlaysuperExpired = await checkPlaysuperExpiry(user.playsuper);
+
+    const updates: Partial<IUser> = {};
+
+    if (isEligibleToClaim) {
+      updates["bonus.fof.exploitCount"] = 0;
+    }
+
+    if (isStreakActive && !user.bonus.fof.streakBonus.isActive) {
+      updates["bonus.fof.streakBonus.isActive"] = true;
+    }
+
+    if (!user.partOfGames || !Array.isArray(user.partOfGames)) {
+      updates.partOfGames = ["fof"];
+    } else if (!user.partOfGames.includes("fof")) {
+      updates.partOfGames = [...user.partOfGames, "fof"];
+    }
+
+    // track daily login
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const lastLoginDate = new Date(user.lastLoginAt || 0);
+    lastLoginDate.setHours(0, 0, 0, 0);
+
+    // if not consecutive day - reset streak
+    const differenceInDays =
+      (now.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (differenceInDays > 1) {
+      updates["bonus.fof.streakBonus.streakCount"] = 1;
+    }
+
+    if (lastLoginDate.getTime() !== now.getTime()) {
+      updates["lastLoginAt"] = new Date();
+    }
+
+    if (user.playsuper.isVerified && hasPlaysuperExpired) {
+      user.playsuper.isVerified = false;
+      updates.playsuper = {
+        isVerified: false,
+        key: null,
+        createdAt: null,
+      };
+    }
+
+    if (memberData.totalOrbs >= 999999 && !user?.gameCompletedAt?.fof) {
+      updates.gameCompletedAt = {
+        fof: new Date(),
+      };
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await User.findOneAndUpdate({ _id: user._id }, { $set: updates });
+    }
+  } catch (error) {
+    throw Error("Failed to update user data.");
   }
 };
