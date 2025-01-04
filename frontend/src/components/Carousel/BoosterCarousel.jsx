@@ -239,7 +239,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[26%] mr-[2vw] w-full z-50"
+          className="absolute top-[24%] mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
         </div>
@@ -261,7 +261,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[24%] w-full"
+          className="absolute bottom-[22%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

@@ -22,6 +22,7 @@ import confetti from "canvas-confetti";
 import StakeCrd from "../../components/Cards/Reward/StakeCrd";
 import { showToast } from "../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../components/Cards/Reward/BlackOrbCrd";
+import Avatar from "../../components/Common/Avatar";
 
 const tele = window.Telegram?.WebApp;
 
@@ -229,7 +230,7 @@ const Leaderboard = (props) => {
           handAction={handleClaimReward}
         />
       );
-    } else {
+    } else if (userData.stakeReward === "-1") {
       handleClaimReward();
     }
   }, []);
@@ -308,9 +309,7 @@ const Leaderboard = (props) => {
             key={animationKey}
             className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase"
           >
-            <div className={`mr-auto slide-in-out-left`}>
-              {t("sections.leaderboard")}
-            </div>
+            <div className={`mr-auto slide-in-out-left`}>Ranking</div>
             <div className={`ml-auto slide-in-out-right`}>
               {" "}
               {t("sections.forges")}
@@ -690,7 +689,7 @@ const Leaderboard = (props) => {
                           name={item.telegramUsername}
                           totalOrbs={formatRankOrbs(item.totalOrbs)}
                           imageUrl={item.profileImage}
-                          stake={item.userBetFor}
+                          prevRank={item.prevRank}
                         />
                       </div>
                     ))}

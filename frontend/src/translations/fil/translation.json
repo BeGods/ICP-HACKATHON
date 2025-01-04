@@ -16,7 +16,8 @@
     "conversion": "Pagko-convert",
     "discover": "Tuklasin",
     "whitelist": "Whitelist",
-    "load": "Naglo-load..."
+    "load": "Naglo-load",
+    "shards": "Piraso"
   },
   "buttons": {
     "hire": "Kumuhá",
@@ -417,144 +418,150 @@
         "title": "Walang Magagamit na Misyon",
         "desc": "Bumalik Bukas!"
       }
-    }
-  },
-  "Quest_complete": {
-    "success": {
-      "title": "Pagbati! Natapos mo ang Quest!",
-      "desc": "Binabati kita! Natapos mo ang iyong quest."
     },
-    "error": {
-      "title": "Nabigong Matapos ang Quest",
-      "desc": "Nagkaroon ng problema sa pagtatapos ng quest. Siguraduhing kumpleto ang quest at subukang muli mamaya."
-    }
-  },
-  "Booster_Claim": {
-    "success": {
-      "title": "Nakamit ang Power Boost!",
-      "desc": "Naka-setup ka na para sa mga epikong tagumpay! Pumunta at sakupin ito!"
+    "Quest_complete": {
+      "success": {
+        "title": "Pagbati! Natapos mo ang Quest!",
+        "desc": "Binabati kita! Natapos mo ang iyong quest."
+      },
+      "error": {
+        "title": "Nabigong Matapos ang Quest",
+        "desc": "Nagkaroon ng problema sa pagtatapos ng quest. Siguraduhing kumpleto ang quest at subukang muli mamaya."
+      }
     },
-    "error": {
-      "title": "Nabigong Kunin ang Booster!",
-      "desc": "Oops! May nangyaring mali habang kinukuha ang iyong booster. Pakisubukang muli!"
-    }
-  },
-  "Conversion_Multiplier": {
-    "success": {
-      "title": "Tugma ang Himig!",
-      "desc": "Nakuha mo! Tama ang susi, at naipatak ang multiplier!"
+    "Booster_Claim": {
+      "success": {
+        "title": "Nakamit ang Power Boost!",
+        "desc": "Naka-setup ka na para sa mga epikong tagumpay! Pumunta at sakupin ito!"
+      },
+      "error": {
+        "title": "Nabigong Kunin ang Booster!",
+        "desc": "Oops! May nangyaring mali habang kinukuha ang iyong booster. Pakisubukang muli!"
+      }
     },
-    "error": {
-      "title": "Hindi Tugma ang Himig",
-      "desc": "Ang susi na iyong ipinasok ay mali. Sa kasamaang palad, walang naipatang multiplier."
-    }
-  },
-  "Tasks": {
-    "success": {
-      "title": "Matagumpay na Nakumpleto ang Gawain!",
-      "desc": "Magaling! Nakuha mo ang 3 MultiOrbs."
+    "Conversion_Multiplier": {
+      "success": {
+        "title": "Tugma ang Himig!",
+        "desc": "Nakuha mo! Tama ang susi, at naipatak ang multiplier!"
+      },
+      "error": {
+        "title": "Hindi Tugma ang Himig",
+        "desc": "Ang susi na iyong ipinasok ay mali. Sa kasamaang palad, walang naipatang multiplier."
+      }
     },
-    "error": {
-      "title": "Hindi Kumpletong Gawain",
-      "desc": "Hindi natapos ang gawain. Pakisubukang muli upang makuha ang iyong mga gantimpala."
-    }
-  },
-  "Quest_claim": {
-    "success": {
-      "title": "Matagumpay na Nakamit ang Quest!",
-      "desc": "Matagumpay mong nakuha ang misyon. Iagpatuloy mo lamang at upang makamit ang higit pang gantimpala!"
+    "Tasks": {
+      "success": {
+        "title": "Matagumpay na Nakumpleto ang Gawain!",
+        "desc": "Magaling! Nakuha mo ang 3 MultiOrbs."
+      },
+      "error": {
+        "title": "Hindi Kumpletong Gawain",
+        "desc": "Hindi natapos ang gawain. Pakisubukang muli upang makuha ang iyong mga gantimpala."
+      }
     },
-    "error": {
-      "title": "Hindi Sapat ang Bato para sa Pagkuha ng Misyon",
-      "desc": "Wala kang sapat na bato upang makuha ang misyon na ito. Mangyaring mangolekta ng higit pa at subukang muli."
-    }
-  },
-  "Quest_claim_InsufficientOrbs": {
-    "error": {
-      "title": "Hindi Sapat ang Orbs para sa Pagkuha ng Quest",
-      "desc": "Wala kang sapat na Orbs upang makuha ang Quest na ito. Mangyaring mangolekta ng higit pa at subukang muli."
-    }
-  },
-  "Quest_claim_AlreadyClaimed": {
-    "error": {
-      "title": "Nakuha mo na ang Quest na ito",
-      "desc": "Nakuha na ang quest na ito. Tingnan ang iyong mga aktibong quests para sa mga detalye."
-    }
-  },
-  "Quest_orb_claim": {
-    "success": {
-      "title": "Matagumpay na Nakuha ang mga Orbs!",
-      "desc": "Matagumpay mong nakuha ang iyong mga Orbs. I-enjoy mo ang mga pinaghirapang premyo at magpatuloy sa pag-unlad!"
+    "Quest_claim": {
+      "success": {
+        "title": "Matagumpay na Nakamit ang Quest!",
+        "desc": "Matagumpay mong nakuha ang misyon. Iagpatuloy mo lamang at upang makamit ang higit pang gantimpala!"
+      },
+      "error": {
+        "title": "Hindi Sapat ang Bato para sa Pagkuha ng Misyon",
+        "desc": "Wala kang sapat na bato upang makuha ang misyon na ito. Mangyaring mangolekta ng higit pa at subukang muli."
+      }
     },
-    "error": {
-      "title": "Hindi Matagumpay ang Pagkuha ng Orbs",
-      "desc": "Nagkaroon ng problema sa pagkuha ng iyong mga Orbs. Pakisubukang muli mamaya."
-    }
-  },
-  "Quest_share": {
-    "success": {
-      "title": "Matagumpay na Nai-share ang Quest!",
-      "desc": "Binabati kita! Matagumpay mong nai-share ang iyong quest at kumita ng dagdag na orb."
+    "Quest_claim_InsufficientOrbs": {
+      "error": {
+        "title": "Hindi Sapat ang Orbs para sa Pagkuha ng Quest",
+        "desc": "Wala kang sapat na Orbs upang makuha ang Quest na ito. Mangyaring mangolekta ng higit pa at subukang muli."
+      }
     },
-    "error": {
-      "title": "Nabigong I-share ang Misyon",
-      "desc": "Nagkaroon ng problema sa pag-share ng iyong misyon. Pakisubukang muli mamaya."
-    }
-  },
-  "ReferralCopy": {
-    "success": {
-      "title": "Nakopya na ang Referral Link!",
-      "desc": "Ang iyong referral link ay nakopya na sa clipboard. I-share ito sa iyong mga kaibigan!"
-    }
-  },
-  "TonConnect": {
-    "success": {
-      "title": "Matagumpay na Naikonekta ang Wallet!",
-      "desc": "Ang iyong TON wallet ay naikonekta na."
+    "Quest_claim_AlreadyClaimed": {
+      "error": {
+        "title": "Nakuha mo na ang Quest na ito",
+        "desc": "Nakuha na ang quest na ito. Tingnan ang iyong mga aktibong quests para sa mga detalye."
+      }
     },
-    "error": {
-      "title": "Nabigong Kumonekta ang Wallet",
-      "desc": "Nagkaroon ng problema sa pagkonekta sa iyong TON wallet. Pakisubukang muli mamaya."
-    }
-  },
-  "InputValidate": {
-    "success": {
-      "title": "OTP Ipinadala!",
-      "desc": "Matagumpay na naipadala ang OTP."
+    "Quest_orb_claim": {
+      "success": {
+        "title": "Matagumpay na Nakuha ang mga Orbs!",
+        "desc": "Matagumpay mong nakuha ang iyong mga Orbs. I-enjoy mo ang mga pinaghirapang premyo at magpatuloy sa pag-unlad!"
+      },
+      "error": {
+        "title": "Hindi Matagumpay ang Pagkuha ng Orbs",
+        "desc": "Nagkaroon ng problema sa pagkuha ng iyong mga Orbs. Pakisubukang muli mamaya."
+      }
     },
-    "error": {
-      "title": "Maling Input!",
-      "desc": "Mangyaring punan ng tama ang lahat ng kinakailangang mga field."
-    }
-  },
-  "OnboardSuccess": {
-    "success": {
-      "title": "Na-verify ang OTP!",
-      "desc": "Salamat sa pagkonekta sa FrogDog Games!"
+    "Quest_share": {
+      "success": {
+        "title": "Matagumpay na Nai-share ang Quest!",
+        "desc": "Binabati kita! Matagumpay mong nai-share ang iyong quest at kumita ng dagdag na orb."
+      },
+      "error": {
+        "title": "Nabigong I-share ang Misyon",
+        "desc": "Nagkaroon ng problema sa pag-share ng iyong misyon. Pakisubukang muli mamaya."
+      }
     },
-    "error": {
-      "title": "Hindi Tamang OTP!",
-      "desc": "Pakipasok ang tamang OTP."
-    }
-  },
-  "Voucher": {
-    "success": {
-      "title": "Pagbati! Naharap na ang Regalo",
-      "desc": "Matagumpay mong nakuha ang iyong voucher."
-  },
-    "error": {
-      "title": "Congratulations! Gift Unlocked",
-      "desc": "Your voucher is successfully claimed."
-    }
-  },
-  "Stake": {
-    "success": {
-      "title": "Stake Successful",
-      "desc": "You have successfully staked 1 Black Orb. Good luck!"
+    "ReferralCopy": {
+      "success": {
+        "title": "Nakopya na ang Referral Link!",
+        "desc": "Ang iyong referral link ay nakopya na sa clipboard. I-share ito sa iyong mga kaibigan!"
+      }
     },
-    "error": {
-      "title": "Unable to Stake",
-      "desc": "You need to have at least 1 Black Orb to stake."
+    "TonConnect": {
+      "success": {
+        "title": "Matagumpay na Naikonekta ang Wallet!",
+        "desc": "Ang iyong TON wallet ay naikonekta na."
+      },
+      "error": {
+        "title": "Nabigong Kumonekta ang Wallet",
+        "desc": "Nagkaroon ng problema sa pagkonekta sa iyong TON wallet. Pakisubukang muli mamaya."
+      }
+    },
+    "InputValidate": {
+      "success": {
+        "title": "OTP Ipinadala!",
+        "desc": "Matagumpay na naipadala ang OTP."
+      },
+      "error": {
+        "title": "Maling Input!",
+        "desc": "Mangyaring punan ng tama ang lahat ng kinakailangang mga field."
+      }
+    },
+    "OnboardSuccess": {
+      "success": {
+        "title": "Na-verify ang OTP!",
+        "desc": "Salamat sa pagkonekta sa FrogDog Games!"
+      },
+      "error": {
+        "title": "Hindi Tamang OTP!",
+        "desc": "Pakipasok ang tamang OTP."
+      }
+    },
+    "Voucher": {
+      "success": {
+        "title": "Pagbati! Naharap na ang Regalo",
+        "desc": "Matagumpay mong nakuha ang iyong voucher."
+      },
+      "error": {
+        "title": "Congratulations! Gift Unlocked",
+        "desc": "Your voucher is successfully claimed."
+      }
+    },
+    "Stake": {
+      "success": {
+        "title": "Stake Successful",
+        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+      },
+      "error": {
+        "title": "Unable to Stake",
+        "desc": "You need to have at least 1 Black Orb to stake."
+      }
+    },
+    "Profile": {
+      "success": {
+        "title": "Update Initiated",
+        "desc": "Your profile avatar will be updated shortly!"
+      }
     }
-}
+  }
 }

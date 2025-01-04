@@ -21,7 +21,8 @@
     "orbs": "Сферы",
     "conversion": "Преобразование",
     "discover": "Открытие",
-    "whitelist": "Whitelist"
+    "whitelist": "Whitelist",
+    "shards": "Осколки"
   },
   "buttons": {
     "buy": "Купить",
@@ -512,11 +513,11 @@
       "success": {
         "title": "Поздравляем! Подарок разблокирован",
         "desc": "Ваш ваучер успешно получен."
-    },
+      },
       "error": {
         "title": "Неудачная заявка: Недостающие элементы",
         "desc": "Завершите все 12 элементов, чтобы разблокировать ваш ваучер."
-    }    
+      }
     },
     "Stake": {
       "success": {
@@ -527,6 +528,12 @@
         "title": "Unable to Stake",
         "desc": "You need to have at least 1 Black Orb to stake."
       }
-  }
+    },
+    "Profile": {
+      "success": {
+        "title": "Update Initiated",
+        "desc": "Your profile avatar will be updated shortly!"
+      }
+    }
   }
 }

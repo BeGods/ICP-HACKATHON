@@ -66,8 +66,12 @@ export const updateMythology = async (mythology, accessToken) => {
   }
 };
 
-export const fetchLeaderboard = async (accessToken, pageNum) => {
+export const fetchLeaderboard = async (accessToken, pageNum, filter) => {
   let url = `${import.meta.env.VITE_API_URL}/leaderboard`;
+
+  if (filter) {
+    url += `?filter=${filter}`;
+  }
 
   if (pageNum != 0) {
     url += `?page=${pageNum}`;

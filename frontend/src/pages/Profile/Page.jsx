@@ -155,23 +155,8 @@ const Profile = (props) => {
       {/* Header */}
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
 
-      <div className="flex relative flex-grow justify-center items-start top-0">
-        <div className={`flex relative w-full justify-end top-0 `}>
-          <div
-            onClick={() => {
-              setShowCard(
-                <SettingModal
-                  close={() => {
-                    setShowCard(null);
-                  }}
-                />
-              );
-            }}
-            className="flex justify-center items-center bg-black  w-[45px] h-[45px] mr-[35px] z-50 rounded-full mt-[9.5vh]"
-          >
-            <Settings color="white" size={"25px"} />
-          </div>
-        </div>
+      <div className="flex relative text-[6vw] uppercase text-gold text-black-contour h-fit justify-center items-start top-0 mt-[18vh]">
+        {userData.telegramUsername}
       </div>
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">

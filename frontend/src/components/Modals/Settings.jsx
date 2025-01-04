@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Globe,
   Map,
+  UserRoundPen,
   Vibrate,
   VibrateOff,
   Volume2,
@@ -18,6 +19,7 @@ import { countries } from "../../utils/country";
 import {
   connectTonWallet,
   disconnectTonWallet,
+  fetchProfilePhoto,
   fetchRewards,
   updateCountry,
 } from "../../utils/api";
@@ -36,6 +38,7 @@ import {
   setSoundStatus,
 } from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -169,6 +172,22 @@ const SettingModal = ({ close }) => {
     setSection(0);
   };
 
+  const updateProfilePhoto = async () => {
+    showToast("success_avatar");
+    close();
+    try {
+      const response = await fetchProfilePhoto(authToken);
+      if (response.avatarUrl) {
+        setUserData((prev) => ({
+          ...prev,
+          avatarUrl: response.avatarUrl,
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
       if (
@@ -250,29 +269,6 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        {/* <div className="flex text-tertiary text-white text-left justify-between w-full mt-6 pl-4">
-          <div className="flex justify-start -ml-3">
-            <Wallet />
-          </div>
-          {userData.tonAddress ? (
-            <div className="flex items-center w-full justify-end">
-              {userData.tonAddress.length > 10
-                ? `${userData.tonAddress.slice(0, 25)}...`
-                : userData.tonAddress}
-            </div>
-          ) : (
-            <div
-              onClick={() => open()}
-              className="flex items-center w-full justify-between"
-            >
-              <div className="pl-3">
-                {t("profile.connect") + " " + t("profile.wallet")}{" "}
-              </div>
-              <ChevronRight size={"20px"} />
-            </div>
-          )}
-        </div> */}
-
         <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
           <div className="flex justify-start -ml-3">
             {enableSound ? <Volume2 /> : <VolumeX />}
@@ -308,6 +304,19 @@ const SettingModal = ({ close }) => {
           </div>
           <div className="flex justify-between w-full">
             <div className="pl-3">{t("profile.guide")}</div>
+            <ChevronRight />
+          </div>
+        </div>
+
+        <div
+          onClick={updateProfilePhoto}
+          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
+        >
+          <div className="flex justify-start -ml-3">
+            <UserRoundPen />
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="pl-3">Refresh Avatar</div>
             <ChevronRight />
           </div>
         </div>

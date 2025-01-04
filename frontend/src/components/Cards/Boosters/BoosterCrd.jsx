@@ -75,6 +75,7 @@ const BoosterClaim = ({
         mythologyName: mythologies[activeMyth],
       };
       const adId = isAdPlayed ? adsgramId : null;
+      const deductValue = isAdPlayed ? 0 : 1;
 
       try {
         const response = await claimShardsBooster(
@@ -86,7 +87,7 @@ const BoosterClaim = ({
         setGameData((prevData) => {
           const updatedData = {
             ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 1,
+            multiColorOrbs: prevData.multiColorOrbs - deductValue,
             mythologies: prevData.mythologies.map((item) =>
               item.name === mythologies[activeMyth]
                 ? {
@@ -165,6 +166,8 @@ const BoosterClaim = ({
       };
 
       const adId = isAdPlayed ? adsgramId : null;
+      const deductValue = isAdPlayed ? 0 : 1;
+
       try {
         const response = await claimAutomataBooster(
           mythologyName,
@@ -177,7 +180,7 @@ const BoosterClaim = ({
           const updatedData = {
             ...prevData,
             isAutomataAutoActive: response.autoPayLock,
-            multiColorOrbs: prevData.multiColorOrbs - 1,
+            multiColorOrbs: prevData.multiColorOrbs - deductValue,
             mythologies: prevData.mythologies.map((item) =>
               item.name === mythologies[activeMyth]
                 ? {

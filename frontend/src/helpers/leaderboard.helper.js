@@ -36,18 +36,12 @@ export const formatThreeNums = (num) => {
 
 export const formatRankOrbs = (num) => {
   if (num < 1000) {
-    return num;
+    return num.toString();
   }
 
   const numStr = num.toString();
-
   const thousands = numStr.slice(0, -3);
-  let remainder = numStr.slice(-3);
-  remainder = remainder.padStart(3, "0");
+  const remainder = numStr.slice(-3).padStart(3, "0");
 
-  if (remainder === "000") {
-    return `${thousands} 0`;
-  } else {
-    return `${thousands} ${remainder}`;
-  }
+  return `${thousands} ${remainder}`;
 };
