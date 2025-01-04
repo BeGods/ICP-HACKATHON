@@ -1,13 +1,11 @@
 import {
-  clearRewardsInLastHr,
-  createPartner,
   generateOtp,
-  getRewards,
+  getAllPartners,
   redeemCustomReward,
   redeemPlayuperReward,
   resendOtp,
   verifyOtp,
-} from "../controllers/general.fof.controllers";
+} from "../controllers/partners.controllers";
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   validMobileNo,
@@ -31,19 +29,12 @@ router.post(
 );
 
 // partners
-router.get("/partners", authMiddleware, getRewards);
-router.post("/partners/create", authMiddleware, createPartner);
+router.get("/partners", authMiddleware, getAllPartners);
 router.post(
   "/custom/redeem",
   authMiddleware,
   validPartnerReward,
   redeemCustomReward
-);
-
-// clear rewards 1hr stats
-router.get(
-  "/f115d48c-4929-4190-b326-e50f228500c7/update/clearLast1hr",
-  clearRewardsInLastHr
 );
 
 export default router;

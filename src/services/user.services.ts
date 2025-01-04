@@ -33,7 +33,7 @@ export const addNewUser = async (userData) => {
 
     return newUserCreated;
   } catch (error) {
-    throw new Error("Could not create user");
+    throw new Error("Failed to create a new user.");
   }
 };
 
@@ -70,7 +70,7 @@ export const addTeamMember = async (user, existingReferrer, referralCode) => {
       existingReferrer.save();
     }
   } catch (error) {
-    throw new Error("Could not add team member");
+    throw new Error("Failed to add refer for user.");
   }
 };
 
@@ -87,18 +87,6 @@ export const createDefaultUserMyth = async (user) => {
     await newUserMyth.save();
     await newMilestone.save();
   } catch (error) {
-    throw new Error("Could create default myth");
+    throw new Error("Failed to add default usermythology.");
   }
 };
-
-// export const createDefaultMilestones = async (user) => {
-//   try {
-//     const newUserMyth = new userMythologies({
-//       userId: user._id,
-//     });
-
-//     await newUserMyth.save();
-//   } catch (error) {
-//     throw new Error("Could create default myth");
-//   }
-// };

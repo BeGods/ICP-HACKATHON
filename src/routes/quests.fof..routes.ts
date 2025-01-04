@@ -40,13 +40,4 @@ router.post(
   claimQuestShare
 );
 
-// lost quests
-// router.get("/quests/lost", authMiddleware, unClaimedQuests);
-// router.post(
-//   "/quests/claim/lost",
-//   authMiddleware,
-//   verifyValidLostQuest,
-//   claimLostQuest
-// );
-
 export default router;

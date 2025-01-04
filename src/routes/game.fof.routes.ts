@@ -1,43 +1,44 @@
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
-  startTapSession,
-  claimTapSession,
+  startGameSession,
+  claimGameSession,
   getGameStats,
-  claimShardsBooster,
   convertOrbs,
-  claimAutomata,
-  claimStarBonus,
   updateGameData,
-  claimBurst,
-  claimAutoAutomata,
-  claimAutoBurst,
-  claimMoonBoost,
-  claimAutomataReward,
-  claimRatUpdate,
+  updateRatData,
+  claimStarRwrd,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
-  validAutoBurstReq,
-  validAutomataReq,
-  validShardsBoosterReq,
-  validateBurstReq,
+  validateMultiBurst,
+  validateAutomata,
+  validateAlchemist,
+  validateBurst,
   validateClaimMoon,
   validateOrbsConversion,
   validateRatClaim,
   validateStarClaim,
 } from "../middlewares/game.fof.middlewares";
 import express from "express";
+import {
+  claimAlchemist,
+  claimAutomata,
+  claimBurst,
+  claimMoon,
+  claimMultiAutomata,
+  claimMultiBurst,
+} from "../controllers/boosters.fof.controllers";
 const router = express.Router();
 
 // stats
 router.get("/game/stats", authMiddleware, getGameStats);
 router.get("/game/stats/update", authMiddleware, updateGameData);
 
-// tapping session
-router.post("/game/startTapSession", authMiddleware, startTapSession);
-router.post("/game/claimTapSession", authMiddleware, claimTapSession);
-router.post("/game/burst", authMiddleware, validateStarClaim, claimStarBonus);
-router.post("/game/rat", authMiddleware, validateRatClaim, claimRatUpdate);
+// session
+router.post("/game/startTapSession", authMiddleware, startGameSession);
+router.post("/game/claimTapSession", authMiddleware, claimGameSession);
+router.post("/game/burst", authMiddleware, validateStarClaim, claimStarRwrd);
+router.post("/game/rat", authMiddleware, validateRatClaim, updateRatData);
 
 // tower conversion
 router.post(
@@ -51,32 +52,15 @@ router.post(
 router.post(
   "/booster/claim/minion",
   authMiddleware,
-  validShardsBoosterReq,
-  claimShardsBooster
+  validateAlchemist,
+  claimAlchemist
 );
-router.post(
-  "/booster/claim/burst",
-  authMiddleware,
-  validateBurstReq,
-  claimBurst
-);
+router.post("/booster/claim/burst", authMiddleware, validateBurst, claimBurst);
 router.post(
   "/booster/claim/automata",
   authMiddleware,
-  validAutomataReq,
+  validateAutomata,
   claimAutomata
-);
-router.post(
-  "/booster/autoClaim/automata",
-  authMiddleware,
-  validAutoAutomataReq,
-  claimAutoAutomata
-);
-router.post(
-  "/booster/autoClaim/burst",
-  authMiddleware,
-  validAutoBurstReq,
-  claimAutoBurst
 );
 router.get(
   "/game/convert",
@@ -84,12 +68,28 @@ router.get(
   validateOrbsConversion,
   convertOrbs
 );
+
+// special boosters
+router.post(
+  "/booster/autoClaim/automata",
+  authMiddleware,
+  validAutoAutomataReq,
+  claimMultiAutomata
+);
+router.post(
+  "/booster/autoClaim/burst",
+  authMiddleware,
+  validateMultiBurst,
+  claimMultiBurst
+);
 router.post(
   "/booster/claim/moon",
   authMiddleware,
   validateClaimMoon,
-  claimMoonBoost
+  claimMoon
 );
-router.get("/reward/claim", authMiddleware, claimAutomataReward);
+
+// announcement specials
+// router.get("/reward/claim", authMiddleware, claimAutomataReward);
 
 export default router;
