@@ -57,7 +57,7 @@ const BottomChild = ({
               : "text-white"
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary pl-headSides">
+          <div className="text-primary text-black-contour pl-headSides">
             {" "}
             {formatTwoNums(lostQuests)}
           </div>
@@ -71,7 +71,7 @@ const BottomChild = ({
             mythSections[activeMyth]
           }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary pr-headSides">
+          <div className="text-primary text-black-contour pr-headSides">
             {" "}
             {formatTwoNums(completedQuests.length)}
           </div>

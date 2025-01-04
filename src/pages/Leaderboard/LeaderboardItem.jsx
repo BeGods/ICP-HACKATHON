@@ -10,7 +10,7 @@ const LeaderboardItem = ({
   totalOrbs,
   imageUrl,
   isEmpty,
-  stake,
+  prevRank,
 }) => {
   const { userData } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(null);
@@ -44,7 +44,7 @@ const LeaderboardItem = ({
           <div className="flex justify-start pl-5 items-center w-[25%] h-full">
             <h1>{rank}</h1>
             <div>
-              {stake == "+" && (
+              {rank < prevRank && (
                 <MoveUp
                   color="green"
                   strokeWidth={"3px"}
@@ -52,7 +52,7 @@ const LeaderboardItem = ({
                   className="-mt-1"
                 />
               )}
-              {stake == "-" && (
+              {rank > prevRank && (
                 <MoveDown color="red" strokeWidth={"3px"} size={"22px"} />
               )}
             </div>

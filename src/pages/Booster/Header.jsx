@@ -40,6 +40,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
 };
 
 const BottomChild = ({ activeMyth, gameData }) => {
+  const { t } = useTranslation();
   return (
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full px-7">
@@ -50,7 +51,9 @@ const BottomChild = ({ activeMyth, gameData }) => {
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="flex items-center text-primary font-medium pl-headSides">
-            <span className="font-roboto font-normal text-[6vw] pr-1">x</span>
+            <span className="font-roboto text-black-contour font-normal text-[6vw] pr-1">
+              x
+            </span>
 
             {formatTwoNums(gameData.shardslvl)}
           </div>
@@ -63,7 +66,7 @@ const BottomChild = ({ activeMyth, gameData }) => {
             mythSections[activeMyth]
           }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="flex items-center text-primary font-medium pr-headSides">
+          <div className="flex text-black-contour items-center text-primary font-medium pr-headSides">
             {formatTwoNums(gameData.automatalvl + 1)}{" "}
             <span className="font-roboto font-normal text-[6vw] pl-1">x</span>
           </div>
@@ -79,6 +82,14 @@ const BottomChild = ({ activeMyth, gameData }) => {
           className={`font-symbols text-iconLg text-black-contour  text-${mythSections[activeMyth]}-text`}
         >
           n
+        </div>
+      </div>
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
+        <div className={`mr-auto slide-in-out-left`}>
+          {t(`boosters.${2}.title`)}
+        </div>
+        <div className={`ml-auto slide-in-out-right`}>
+          {t(`boosters.${0}.title`)}
         </div>
       </div>
     </div>

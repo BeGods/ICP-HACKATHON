@@ -519,6 +519,25 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "success_avatar":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Profile.success.title")}
+          desc={t("toasts.Profile.success.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     default:
       toast.info(
         <ToastMesg

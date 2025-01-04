@@ -210,28 +210,20 @@ const Tower = () => {
         gameData={gameData}
         mythData={mythData}
         sessionOrbs={sessionOrbs}
+        showInfo={showInfo}
+        handleInfoClk={() => {
+          setShowInfo(true);
+          setShowCard(
+            <ConvertInfo
+              t={t}
+              handleClick={() => {
+                setShowCard(null);
+                setShowInfo(false);
+              }}
+            />
+          );
+        }}
       />
-      <div className="flex relative max-h-[16vw] w-full justify-center items-center z-[99]">
-        {!showInfo && (
-          <IconBtn
-            isInfo={true}
-            handleClick={() => {
-              setShowInfo(true);
-              setShowCard(
-                <ConvertInfo
-                  t={t}
-                  handleClick={() => {
-                    setShowCard(null);
-                    setShowInfo(false);
-                  }}
-                />
-              );
-            }}
-            activeMyth={4}
-            align={2}
-          />
-        )}
-      </div>
 
       {/* Wheel */}
       <div className="flex flex-col items-center justify-center w-full">
@@ -286,7 +278,7 @@ const Tower = () => {
         <div
           className="relative scale-110 flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
-            backgroundImage: `url(${assets.uxui.tower})`,
+            backgroundImage: `url(${assets.uxui.towerOn})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -314,6 +306,7 @@ const Tower = () => {
               }}
               onClick={() => {
                 handleClickHaptic(tele, enableHaptic);
+
                 if (index == 0) {
                   setMyth(index);
                 } else {

@@ -22,7 +22,8 @@
     "conversion": "Conversão",
     "discover": "Descobrir",
     "whitelist": "Whitelist",
-    "load": "Carregando"
+    "load": "Carregando",
+    "shards": "fragmentos"
   },
   "buttons": {
     "buy": "Comprar",
@@ -510,11 +511,11 @@
       "success": {
         "title": "Parabéns! Presente desbloqueado",
         "desc": "Seu voucher foi resgatado com sucesso."
-    },
+      },
       "error": {
         "title": "Operação Falhada: Peças Incompletas",
         "desc": "Complete as 12 peças para desbloquear seu voucher."
-    }    
+      }
     },
     "Stake": {
       "success": {
@@ -525,6 +526,12 @@
         "title": "Unable to Stake",
         "desc": "You need to have at least 1 Black Orb to stake."
       }
-  }
+    },
+    "Profile": {
+      "success": {
+        "title": "Update Initiated",
+        "desc": "Your profile avatar will be updated shortly!"
+      }
+    }
   }
 }

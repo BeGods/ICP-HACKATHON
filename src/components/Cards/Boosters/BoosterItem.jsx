@@ -116,7 +116,7 @@ const BoosterItem = ({
           )}
           {booster === 1 && (
             <span className={`text-${mythSections[activeMyth]}-text pl-1`}>
-              200%
+              +20%
             </span>
           )}
           <span className={`text-${mythSections[activeMyth]}-text pl-1`}>

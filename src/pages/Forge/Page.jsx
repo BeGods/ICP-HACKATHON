@@ -1441,7 +1441,7 @@ const Forges = () => {
                 }}
                 fill={"white"}
                 color={"white"}
-                className={`font-symbols text-[18vw] text-white glow-star-${
+                className={`font-symbols text-[18vw] -mb-4 text-white glow-star-${
                   mythSections[activeMyth]
                 } duration-500 transition-all ${
                   showBlackOrb === 1 && "maximize-star"
@@ -1454,7 +1454,7 @@ const Forges = () => {
               <div
                 className={`z-10 text-center ${
                   isStarHolding === 1 && "mt-4"
-                } mx-auto my-auto text-white text-tertiary text-black-contour`}
+                } mx-auto my-auto text-white text-[24px] text-black-contour`}
               >
                 Lvl {mythStates[activeMyth].burstlvl}
               </div>

@@ -3,6 +3,8 @@ import { MyContext } from "../../context/context";
 import ProfileInfoCard from "../../components/Cards/Info/ProfileInfoCrd";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import SettingModal from "../../components/Modals/Settings";
+import { Settings } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -55,9 +57,7 @@ const BottomChild = ({ userData, showGuide }) => {
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
         <div className={`mr-auto slide-in-out-left`}>{t("sections.gifts")}</div>
-        <div className={`ml-auto slide-in-out-right`}>
-          {t("sections.leaderboard")}
-        </div>
+        <div className={`ml-auto slide-in-out-right`}>Ranking</div>
       </div>
     </div>
   );
@@ -70,7 +70,21 @@ const CenterChild = ({ userData }) => {
   });
 
   return (
-    <div className="flex absolute top-0 justify-center w-full">
+    <div className="flex absolute top-0 justify-center z-50 left-[34vw]">
+      <div
+        onClick={() => {
+          setShowCard(
+            <SettingModal
+              close={() => {
+                setShowCard(null);
+              }}
+            />
+          );
+        }}
+        className="flex justify-center items-center bg-black  w-[45px] h-[45px] z-50 rounded-full absolute top-0 mt-0.5 ml-[33vw]"
+      >
+        <Settings color="white" size={"30px"} />
+      </div>
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -115,7 +129,6 @@ const CenterChild = ({ userData }) => {
 
 const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
   const [changeText, setChangeText] = useState(true);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -152,48 +165,3 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
 };
 
 export default ProfileHeader;
-
-{
-  /* <div className="flex relative justify-center px-2 -mt-3">
-  <div className="flex w-full px-7">
-    <div
-      className={`flex  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
-    >
-      <div className="text-primary pl-headSides"></div>
-    </div>
-    <div
-      className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
-    >
-      <div className="text-primary pr-headSides"></div>
-    </div>
-  </div>
-  <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-    <div
-      style={{
-        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-      }}
-      onClick={() => {
-        handleClickHaptic(tele, enableHaptic);
-        setSection(5);
-      }}
-      className={`font-symbols  ${
-        showGuide === 1 && "tut-shake"
-      } text-iconLg text-black-lg-contour text-white z-50`}
-    >
-      <span className={`${showEffect && "pulse-text"}`}>t</span>
-    </div>
-    <div
-      style={{
-        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-      }}
-      onClick={() => {
-        handleClickHaptic(tele, enableHaptic);
-        setSection(7);
-      }}
-      className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
-    >
-      <span className={`${showEffect && "pulse-text"}`}>r</span>
-    </div>
-  </div>
-</div>; */
-}

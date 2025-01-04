@@ -22,7 +22,8 @@
     "conversion": "Conversión",
     "discover": "Descubrir",
     "whitelist": "Whitelist",
-    "load": "Cargando"
+    "load": "Cargando",
+    "shards": "fragmentos"
   },
   "buttons": {
     "buy": "Comprar",
@@ -101,7 +102,6 @@
     "policy": "Política de Privacidad",
     "haptic": "Hápticos",
     "flag": "Flag"
-
   },
   "note": {
     "text": "Actualización de la tabla de clasificación en",
@@ -516,11 +516,11 @@
       "success": {
         "title": "¡Felicitationes! Regalo desbloqueado",
         "desc": "Tu cupón ha sido reclamado con éxito."
-    },
+      },
       "error": {
         "title": "Reclamación fallida: Piezas incompletas",
         "desc": "Termina las 12 piezas para desbloquear tu cupón."
-    }    
+      }
     },
     "Stake": {
       "success": {
@@ -531,6 +531,12 @@
         "title": "Unable to Stake",
         "desc": "You need to have at least 1 Black Orb to stake."
       }
-  }
+    },
+    "Profile": {
+      "success": {
+        "title": "Update Initiated",
+        "desc": "Your profile avatar will be updated shortly!"
+      }
+    }
   }
 }

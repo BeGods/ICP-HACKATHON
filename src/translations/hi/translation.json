@@ -22,7 +22,8 @@
     "conversion": "रूपांतरण",
     "discover": "खोजें",
     "whitelist": "Whitelist",
-    "load": "लोड हो रहा है"
+    "load": "लोड हो रहा है",
+    "shards": "टुकड़े"
   },
   "buttons": {
     "buy": "खरीदें",
@@ -507,7 +508,7 @@
       "success": {
         "title": "बधाई हो! उपहार अनलॉक हो गया",
         "desc": "आपका वाउचर सफलतापूर्वक प्राप्त हो गया है।"
-        },
+      },
       "error": {
         "title": "दावा विफल: टुकड़े अधूरे",
         "desc": "अपना वाउचर अनलॉक करने के लिए सभी 12 टुकड़े पूरे करें।"
@@ -522,6 +523,12 @@
         "title": "Unable to Stake",
         "desc": "You need to have at least 1 Black Orb to stake."
       }
-  }
+    },
+    "Profile": {
+      "success": {
+        "title": "Update Initiated",
+        "desc": "Your profile avatar will be updated shortly!"
+      }
+    }
   }
 }

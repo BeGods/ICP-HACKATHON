@@ -48,7 +48,7 @@ const TaskCarousel = ({ quests }) => {
 
   return (
     <div
-      className="wrapper h-[60vh]"
+      className="wrapper relative flex flex-col flex-grow"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -57,12 +57,12 @@ const TaskCarousel = ({ quests }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[26%] w-full z-50 mr-[2vw]"
+          className="absolute w-full top-[9%] z-50 mr-[2vw]"
         >
           <div className="arrows-up"></div>
         </div>
       )}
-      <div className="carousel">
+      <div className="carousel flex flex-grow">
         {quests
           .sort((a, b) => {
             if (a._id === "fjkddfakj138338huadla") return -1;
@@ -118,7 +118,7 @@ const TaskCarousel = ({ quests }) => {
       {currentIndex < quests.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[24%] w-full"
+          className="absolute w-full bottom-[5%]"
         >
           <div className="arrows-down"></div>
         </div>

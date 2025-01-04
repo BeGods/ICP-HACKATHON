@@ -8,7 +8,6 @@ import { handleClickHaptic } from "../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({
-  height,
   tapGlow,
   glowReward,
   showBlackOrb,
@@ -16,6 +15,7 @@ const CenterChild = ({
   orbGlow,
   platform,
   mythData,
+  height,
   starIsHeld,
 }) => {
   const { setSection, assets, enableHaptic } = useContext(MyContext);
@@ -82,6 +82,7 @@ const BottomChild = ({
   showTut,
 }) => {
   const [showEffect, setShowEffect] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (glowShards) {
@@ -103,7 +104,7 @@ const BottomChild = ({
             mythSections[activeMyth]
           }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary font-medium pl-headSides">
+          <div className="text-primary text-black-contour font-medium pl-headSides">
             {formatThreeNums(shards)}
           </div>
         </div>
@@ -115,7 +116,7 @@ const BottomChild = ({
             mythSections[activeMyth]
           }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary font-medium pr-headSides">
+          <div className="text-primary text-black-contour font-medium pr-headSides">
             {formatThreeNums(orbs)}
           </div>
         </div>
@@ -140,6 +141,14 @@ const BottomChild = ({
           {mythSymbols[mythSections[activeMyth]]}
         </div>
       </div>
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
+        <div className={`mr-auto slide-in-out-left`}>
+          {t(`keywords.shards`)}
+        </div>
+        <div className={`ml-auto slide-in-out-right`}>
+          {t(`elements.${elements[activeMyth]}`) + " " + t(`keywords.orbs`)}
+        </div>
+      </div>
     </div>
   );
 };
@@ -161,12 +170,11 @@ const ForgeHeader = ({
   showTut,
   starIsHeld,
 }) => {
+  const [changeText, setChangeText] = useState(true);
   const height = Math.min(
     100,
     Math.max(0, (mythData.energy / mythData.energyLimit) * 100)
   );
-  const [changeText, setChangeText] = useState(true);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -178,17 +186,18 @@ const ForgeHeader = ({
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        {/* <div
-          className={`text-sectionHead ${minimize == 1 && "minimize-head"} ${
-            minimize == 2 && "maximize-head"
+        <div
+          className={`text-sectionHead opacity-50 absolute z-10 -mt-1.5 text-white-lg-contour font-semibold ${
+            minimize == 1 && "minimize-head"
           } ${
-            changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
-          } -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+            minimize == 2 && "maximize-head"
+          } text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >
-          {changeText
-            ? t("sections.forges")
-            : t(`elements.${elements[activeMyth]}`)}
-        </div> */}
+          <h1 className="">
+            {Math.floor(mythData.energy / 10)}
+            <span className="text-[22px] font-bold">%</span>
+          </h1>
+        </div>
         <BottomChild
           shards={shards}
           orbs={orbs}
@@ -201,8 +210,8 @@ const ForgeHeader = ({
         />
         <CenterChild
           starIsHeld={starIsHeld}
-          height={height}
           tapGlow={tapGlow}
+          height={height}
           glowReward={glowReward}
           showBlackOrb={showBlackOrb}
           orbGlow={orbGlow}

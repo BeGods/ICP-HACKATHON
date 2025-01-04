@@ -6,14 +6,21 @@ import { getPhaseByDate } from "../../helpers/game.helper";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import IconBtn from "../../components/Buttons/IconBtn";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ platform, myth }) => {
+const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
   const { setShowCard, assets, enableHaptic } = useContext(MyContext);
 
   return (
     <div className="flex absolute justify-center w-full z-[60] top-0">
+      <div className="top-0 absolute h-[20vw] w-[20vw] z-50 mt-0.5 ml-[21vw]">
+        {!showInfo && (
+          <IconBtn handleClick={handleInfoClk} isInfo={true} activeMyth={4} />
+        )}
+      </div>
+
       {myth !== 0 ? (
         <div
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
@@ -87,7 +94,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
             showGlow && "glow-button-white"
           } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className="text-primary font-medium pl-headSides">
+          <div className="text-primary text-black-contour font-medium pl-headSides">
             {" "}
             {formatThreeNums(gameData.multiColorOrbs)}
           </div>
@@ -101,7 +108,9 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
                 }-primary`
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
-          <div className={`text-primary font-medium pr-headSides`}>
+          <div
+            className={`text-primary text-black-contour font-medium pr-headSides`}
+          >
             {" "}
             {myth !== 0 ? (
               <>
@@ -148,10 +157,16 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
   );
 };
 
-const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow }) => {
+const TowerHeader = ({
+  gameData,
+  myth,
+  sessionOrbs,
+  showGlow,
+  showInfo,
+  handleInfoClk,
+}) => {
   const { platform } = useContext(MyContext);
   const [changeText, setChangeText] = useState(true);
-  const { t } = useTranslation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -178,7 +193,12 @@ const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow }) => {
           myth={myth}
           sessionOrbs={sessionOrbs}
         />
-        <CenterChild platform={platform} myth={myth} />
+        <CenterChild
+          platform={platform}
+          myth={myth}
+          showInfo={showInfo}
+          handleInfoClk={handleInfoClk}
+        />
       </div>
     </div>
   );
