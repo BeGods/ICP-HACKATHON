@@ -3,14 +3,18 @@ import { mythSections } from "../../utils/constants";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MyContext } from "../../context/context";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
 
 export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets } = useContext(MyContext);
+  const { enableSound, assets, enableHaptic } = useContext(MyContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const handleButtonClick = () => {
+    handleClickHaptic(tele, enableHaptic);
     setIsButtonClicked(true);
 
     setTimeout(() => {
@@ -61,11 +65,12 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
 
 export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets } = useContext(MyContext);
+  const { enableSound, assets, enableHaptic } = useContext(MyContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const handleButtonClick = () => {
+    handleClickHaptic(tele, enableHaptic);
     setIsButtonClicked(true);
     playAudio();
     setTimeout(() => {

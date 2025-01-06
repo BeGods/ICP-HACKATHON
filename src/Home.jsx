@@ -268,7 +268,9 @@ const Home = () => {
   return (
     <div>
       {!isLoading ? (
-        <div className="h-[100svh] w-screen bg-white select-none font-fof">
+        <div
+          className={`w-screen h-[100svh] bg-white select-none font-fof overflow-hidden`}
+        >
           <MyContext.Provider value={initalStates}>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((item) => (
               <div key={item}>

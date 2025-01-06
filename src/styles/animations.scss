@@ -191,6 +191,10 @@
   @include scale-and-glow(scale-wheel-glow-animation, black, 5px, 50px);
 }
 
+.scale-wheel-gold-glow {
+  @include scale-and-glow(scale-wheel-glow-animation, #ffb800, 5px, 30px);
+}
+
 
 // Scale in and out Animations
 .scale-symbol {
@@ -538,9 +542,9 @@
 }
 
 
-$first-place-height: 26vh;
-$second-place-height: 20vh;
-$third-place-height: 19vh;
+$first-place-height: 25vh;
+$second-place-height: 19vh;
+$third-place-height: 18vh;
 
 @mixin rise-up($name, $height, $delay) {
   @keyframes rise-up-#{$name} {
@@ -553,7 +557,7 @@ $third-place-height: 19vh;
   }
 
   & {
-    animation: rise-up-#{$name} 0.25s ease-out forwards;
+    animation: rise-up-#{$name} 0.5s ease-out forwards;
     animation-delay: $delay;
   }
 }
@@ -770,6 +774,23 @@ $third-place-height: 19vh;
 }
 
 .move-hand {
-
   animation: move-and-scale 1.5s ease-in-out forwards;
+}
+
+
+
+@keyframes disappear-effect {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9); 
+  }
+}
+
+
+.disappear {
+  animation: disappear-effect 3s forwards; 
 }

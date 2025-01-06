@@ -1,5 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import { mythSections, mythSymbols, wheel } from "../../utils/constants";
+import { useContext, useEffect, useRef, useState } from "react";
+import {
+  elements,
+  mythSections,
+  mythSymbols,
+  wheel,
+} from "../../utils/constants";
 import { MyContext } from "../../context/context";
 import MoonInfoCard from "../../components/Cards/Info/MoonInfoCrd";
 import { getPhaseByDate } from "../../helpers/game.helper";
@@ -12,9 +17,22 @@ const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
   const { setShowCard, assets, enableHaptic } = useContext(MyContext);
+  const currPhase = getPhaseByDate(new Date());
+  const moonPhase = useRef(currPhase);
+  const [showEffect, setShowEffect] = useState(true);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
-    <div className="flex absolute justify-center w-full z-[60] top-0">
+    <div className={`flex absolute justify-center w-full z-[60] top-0`}>
       <div className="top-0 absolute h-[20vw] w-[20vw] z-50 mt-0.5 ml-[21vw]">
         {!showInfo && (
           <IconBtn handleClick={handleInfoClk} isInfo={true} activeMyth={4} />
@@ -50,24 +68,22 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
               />
             );
           }}
-          className={`z-20 glow-icon-white`}
+          className={`z-20 glow-icon-white transition-all duration-500`}
         >
-          <div className="moon-phases">
-            <div className="moon">
+          <div className={`moon-phases`}>
+            <div className={`moon`}>
               <div
                 className={`absolute z-10 h-full w-full overflow-hidden rounded-full y`}
               >
                 <div
                   style={{ height: `100%` }}
-                  className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 phase phase-${getPhaseByDate(
-                    new Date()
-                  )} z-10`}
+                  className={`absolute bottom-0 opacity-35 w-full transition-all duration-500 phase phase-${moonPhase.current} z-10`}
                 ></div>
               </div>
               <img
                 src={`${assets.uxui.baseorb}`}
                 alt="moon-phase"
-                className="moon-base"
+                className={`moon-base`}
               />
               <span
                 className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[28vw] ${
@@ -85,7 +101,8 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
 };
 
 const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
-  const { assets } = useContext(MyContext);
+  const { assets, activeMyth } = useContext(MyContext);
+  const { t } = useTranslation();
   return (
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full px-7">
@@ -126,7 +143,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
       </div>
       <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
         <div
-          className={`flex relative text-center justify-center items-center w-[15vw] h-[15vw] mt-[16px]  rounded-full`}
+          className={`flex relative text-center justify-center items-center w-[14vw] h-[14vw] mt-[16px]  rounded-full`}
         >
           <img
             src={`${assets.uxui.multiorb}`}
@@ -152,6 +169,14 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
             </div>
           </>
         )}
+      </div>
+      <div className="absolute flex text-white  px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
+        <div className={`mr-auto slide-in-out-left gradient-multi`}>
+          {t(`keywords.orbs`)}
+        </div>
+        <div className={`ml-auto slide-in-out-right text-black-contour`}>
+          {t(`elements.aether`)}
+        </div>
       </div>
     </div>
   );

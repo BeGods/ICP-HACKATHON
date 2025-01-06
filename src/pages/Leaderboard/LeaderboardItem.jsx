@@ -45,15 +45,10 @@ const LeaderboardItem = ({
             <h1>{rank}</h1>
             <div>
               {rank < prevRank && (
-                <MoveUp
-                  color="green"
-                  strokeWidth={"3px"}
-                  size={"22px"}
-                  className="-mt-1"
-                />
+                <h1 className="text-green-500 text-[18px]">▲</h1>
               )}
               {rank > prevRank && (
-                <MoveDown color="red" strokeWidth={"3px"} size={"22px"} />
+                <h1 className="text-red-500 text-[18px]">▼</h1>
               )}
             </div>
           </div>

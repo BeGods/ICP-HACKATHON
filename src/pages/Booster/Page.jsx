@@ -17,8 +17,6 @@ import { useBoosterGuide } from "../../hooks/Tutorial";
 import BoosterCarousel from "../../components/Carousel/BoosterCarousel";
 import ReactHowler from "react-howler";
 import { trackComponentView, trackEvent } from "../../utils/ga";
-import { showSnow } from "../../helpers/confetti";
-import confetti from "canvas-confetti";
 
 const Boosters = () => {
   const { t } = useTranslation();
@@ -41,7 +39,6 @@ const Boosters = () => {
   const [showToggles, setShowToggles] = useState(false);
   let guideTimeoutId = useRef(null);
   const disableRef = useRef(false);
-  const animationFrameId = useRef(null);
 
   const handleClaimAutomata = async () => {
     if (disableRef.current === false) {
@@ -144,58 +141,13 @@ const Boosters = () => {
     }, 300);
   }, []);
 
-  useEffect(() => {
-    const duration = 20 * 1000;
-    const animationEnd = Date.now() + duration;
-    let skew = 1;
-
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-
-    function frame() {
-      const timeLeft = animationEnd - Date.now();
-      const ticks = Math.max(1, 200 * (timeLeft / duration));
-      skew = Math.max(0.8, skew - 0.001);
-
-      confetti({
-        particleCount: 1,
-        startVelocity: 0,
-        ticks: ticks,
-        origin: {
-          x: Math.random(),
-          y: Math.random() * skew - 0.2,
-        },
-        colors: ["#ffffff"],
-        shapes: ["circle"],
-        gravity: randomInRange(0.4, 0.6),
-        scalar: randomInRange(0.4, 1),
-        drift: randomInRange(-0.4, 0.4),
-      });
-
-      if (timeLeft > 0) {
-        animationFrameId.current = requestAnimationFrame(frame);
-      }
-    }
-
-    frame();
-
-    // Cleanup when component is unmounted
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-        animationFrameId.current = null;
-      }
-    };
-  }, []);
-
   return (
     <div
       style={{
         position: "fixed",
         top: 0,
         left: 0,
-        height: "100vh",
+        height: "100%",
         width: "100vw",
       }}
       className="flex flex-col h-screen overflow-hidden m-0"
@@ -240,19 +192,21 @@ const Boosters = () => {
       />
 
       {/* BOOSTER CARDS */}
-      <div className="flex flex-col items-center justify-center h-screen w-screen absolute mx-auto">
-        <div className="flex flex-col w-[70%] items-center justify-start gap-[15px]">
+      <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
+        <div className="flex w-[75%] min-h-[60vh] flex-col">
           <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
         </div>
       </div>
 
-      <ReactHowler
-        src={assets.audio.forgeBg}
-        playing={enableSound}
-        loop
-        preload={true}
-        html5={true}
-      />
+      <div className="absolute">
+        <ReactHowler
+          src={assets.audio.forgeBg}
+          playing={enableSound}
+          loop
+          preload={true}
+          html5={true}
+        />
+      </div>
 
       {/* Toggles */}
       {showToggles && (

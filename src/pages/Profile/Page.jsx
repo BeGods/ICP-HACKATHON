@@ -75,58 +75,13 @@ const Profile = (props) => {
     }, 300);
   }, []);
 
-  useEffect(() => {
-    const duration = 20 * 1000;
-    const animationEnd = Date.now() + duration;
-    let skew = 1;
-
-    function randomInRange(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-
-    function frame() {
-      const timeLeft = animationEnd - Date.now();
-      const ticks = Math.max(1, 200 * (timeLeft / duration));
-      skew = Math.max(0.8, skew - 0.001);
-
-      confetti({
-        particleCount: 1,
-        startVelocity: 0,
-        ticks: ticks,
-        origin: {
-          x: Math.random(),
-          y: Math.random() * skew - 0.2,
-        },
-        colors: ["#ffffff"],
-        shapes: ["circle"],
-        gravity: randomInRange(0.4, 0.6),
-        scalar: randomInRange(0.4, 1),
-        drift: randomInRange(-0.4, 0.4),
-      });
-
-      if (timeLeft > 0) {
-        animationFrameId.current = requestAnimationFrame(frame);
-      }
-    }
-
-    frame();
-
-    // Cleanup when component is unmounted
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-        animationFrameId.current = null;
-      }
-    };
-  }, []);
-
   return (
     <div
       style={{
         position: "fixed",
         top: 0,
         left: 0,
-        height: "100vh",
+        height: "100%",
         width: "100vw",
       }}
       className="flex flex-col h-screen overflow-hidden m-0"
@@ -154,10 +109,6 @@ const Profile = (props) => {
       </div>
       {/* Header */}
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
-
-      <div className="flex relative text-[6vw] uppercase text-gold text-black-contour h-fit justify-center items-start top-0 mt-[18vh]">
-        {userData.telegramUsername}
-      </div>
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] min-h-[60vh] flex-col">

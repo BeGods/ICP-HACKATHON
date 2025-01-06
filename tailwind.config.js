@@ -116,6 +116,7 @@ export default {
         "symbol-secondary": "45px",
       },
       height: {
+        tgHeight: "90vh",
         "icon-primary": "55px",
         "icon-secondary": "20px",
         "button-primary": "60px",

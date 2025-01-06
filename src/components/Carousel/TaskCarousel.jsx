@@ -8,7 +8,7 @@ import SettingModal from "../Modals/Settings";
 const tele = window.Telegram?.WebApp;
 
 const TaskCarousel = ({ quests }) => {
-  const { setShowCard } = useContext(MyContext);
+  const { setShowCard, userData } = useContext(MyContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
 
@@ -48,21 +48,25 @@ const TaskCarousel = ({ quests }) => {
 
   return (
     <div
-      className="wrapper relative flex flex-col flex-grow"
+      className="wrapper h-[60vh]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {quests.length > 3 && currentIndex >= 1 && (
+      {quests.length > 3 && currentIndex >= 1 ? (
         <div
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute w-full top-[9%] z-50 mr-[2vw]"
+          className="absolute top-[24%] mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
         </div>
+      ) : (
+        <div className="flex absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start -mt-[1.5vh]">
+          {userData.telegramUsername}
+        </div>
       )}
-      <div className="carousel flex flex-grow">
+      <div className="carousel">
         {quests
           .sort((a, b) => {
             if (a._id === "fjkddfakj138338huadla") return -1;
@@ -118,7 +122,7 @@ const TaskCarousel = ({ quests }) => {
       {currentIndex < quests.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute w-full bottom-[5%]"
+          className="absolute bottom-[22%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

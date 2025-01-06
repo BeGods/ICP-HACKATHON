@@ -153,7 +153,7 @@ const KOLboard = (props) => {
         position: "fixed",
         top: 0,
         left: 0,
-        height: "100vh",
+        height: "100%",
         width: "100vw",
       }}
       className="flex flex-col h-screen overflow-hidden m-0"
