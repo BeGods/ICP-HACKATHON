@@ -44,3 +44,21 @@ export const orbSounds = {
   3: "air.yellow",
   4: "multicolor",
 };
+
+export const rankPositions = [
+  {
+    pos: 2,
+    size: "text-[60px]",
+    align: 5,
+  },
+  {
+    pos: 1,
+    size: "text-[100px]",
+    align: 10,
+  },
+  {
+    pos: 3,
+    size: "text-[50px]",
+    align: 5,
+  },
+];

@@ -1298,7 +1298,7 @@ const Forges = () => {
           height: "100svh",
           width: "100vw",
         }}
-        className="flex flex-col h-screen overflow-hidden m-0"
+        className="flex flex-col overflow-hidden m-0"
       >
         <div
           style={{
@@ -1424,24 +1424,26 @@ const Forges = () => {
                 isStarHolding === 1 && "star-beam-active"
               } ${isStarHolding === 2 && "star-beam-inactive"} -mb-8`}
             ></div>
-            <div className="relative">
+            <div
+              onTouchStart={() => {
+                setMinimize(1);
+                setIsStarHolding(1);
+                isStarHold.current = true;
+                setshowStarBoosters(1);
+                setOrbGlow(true);
+                setTapGlow(true);
+              }}
+              onTouchEnd={() => {
+                setIsStarHolding(2);
+                isStarHold.current = false;
+                setshowStarBoosters(2);
+              }}
+              className="flex justify-center items-center relative"
+            >
               <div
-                onTouchStart={() => {
-                  setMinimize(1);
-                  setIsStarHolding(1);
-                  isStarHold.current = true;
-                  setshowStarBoosters(1);
-                  setOrbGlow(true);
-                  setTapGlow(true);
-                }}
-                onTouchEnd={() => {
-                  setIsStarHolding(2);
-                  isStarHold.current = false;
-                  setshowStarBoosters(2);
-                }}
                 fill={"white"}
                 color={"white"}
-                className={`font-symbols text-[18vw] -mb-4 text-white glow-star-${
+                className={`font-symbols text-[18vw] text-white glow-star-${
                   mythSections[activeMyth]
                 } duration-500 transition-all ${
                   showBlackOrb === 1 && "maximize-star"
@@ -1452,11 +1454,13 @@ const Forges = () => {
                 s
               </div>
               <div
-                className={`z-10 text-center ${
-                  isStarHolding === 1 && "mt-4"
-                } mx-auto my-auto text-white text-[24px] text-black-contour`}
+                className={`z-10 absolute text-center mx-auto my-auto mt-3 ml-1 text-white ${
+                  showBlackOrb === 1 && "maximize-star"
+                } ${showBlackOrb === 2 && "minimize-star"} ${
+                  isStarHolding === 1 ? "scale-150" : "scale-100"
+                } text-[7vw] text-black-contour`}
               >
-                Lvl {mythStates[activeMyth].burstlvl}
+                {mythStates[activeMyth].burstlvl}
               </div>
             </div>
           </div>

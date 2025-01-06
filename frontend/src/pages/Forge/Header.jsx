@@ -146,7 +146,8 @@ const BottomChild = ({
           {t(`keywords.shards`)}
         </div>
         <div className={`ml-auto slide-in-out-right`}>
-          {t(`elements.${elements[activeMyth]}`) + " " + t(`keywords.orbs`)}
+          {" "}
+          {t(`elements.${elements[activeMyth]}`)}
         </div>
       </div>
     </div>
@@ -187,7 +188,7 @@ const ForgeHeader = ({
     <div>
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-sectionHead opacity-50 absolute z-10 -mt-1.5 text-white-lg-contour font-semibold ${
+          className={`text-[5vw] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${
             minimize == 1 && "minimize-head"
           } ${
             minimize == 2 && "maximize-head"
@@ -195,7 +196,7 @@ const ForgeHeader = ({
         >
           <h1 className="">
             {Math.floor(mythData.energy / 10)}
-            <span className="text-[22px] font-bold">%</span>
+            <span className="text-[16px] font-bold">%</span>
           </h1>
         </div>
         <BottomChild

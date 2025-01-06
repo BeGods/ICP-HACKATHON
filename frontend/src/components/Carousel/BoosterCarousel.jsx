@@ -6,7 +6,7 @@ import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
-import { mythologies } from "../../utils/constants";
+import { mythologies, mythSections } from "../../utils/constants";
 
 const tele = window.Telegram?.WebApp;
 
@@ -23,6 +23,8 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
+  const [showEffect, setShowEffect] = useState(false);
+
   useEffect(() => {
     const boosters = [
       {
@@ -228,13 +230,22 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     }
   };
 
+  useEffect(() => {
+    setShowEffect(false);
+    const resetTimeout = setTimeout(() => {
+      setShowEffect(true);
+    }, 50);
+
+    return () => clearTimeout(resetTimeout);
+  }, [activeMyth]);
+
   return (
     <div
       className="wrapper h-[60vh]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {items.length > 3 && currentIndex >= 1 && (
+      {items.length > 3 && currentIndex >= 1 ? (
         <div
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
@@ -242,6 +253,16 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           className="absolute top-[24%] mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
+        </div>
+      ) : (
+        <div
+          className={`flex absolute ${
+            showEffect && "disappear"
+          } opacity-100 text-[8vw] uppercase text-white glow-icon-${
+            mythSections[activeMyth]
+          } h-fit justify-center items-start -mt-[1.5vh]`}
+        >
+          {mythologies[activeMyth]}
         </div>
       )}
 

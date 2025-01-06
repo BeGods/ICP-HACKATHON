@@ -11,9 +11,8 @@ import {
   wheelNames,
 } from "../../utils/constants";
 import { showToast } from "../../components/Toast/Toast";
-import IconBtn from "../../components/Buttons/IconBtn";
 import ReactHowler from "react-howler";
-import { Repeat2 } from "lucide-react";
+import { Repeat2, RotateCw } from "lucide-react";
 import ConvertClaimCard from "./ClaimTune";
 import TowerHeader from "./Header";
 import { TowerGuide } from "../../components/Common/Tutorials";
@@ -57,7 +56,18 @@ const Tower = () => {
   )[0];
   const [enableGuide, setEnableGuide] = useTowerGuide("tutorial02");
   const [showHand, setShowHand] = useState(false);
+  const [disappearEffect, setDisappearEffect] = useState(false);
+
   const handTimeoutRef = useRef(false);
+
+  useEffect(() => {
+    setDisappearEffect(false);
+    const resetTimeout = setTimeout(() => {
+      setDisappearEffect(true);
+    }, 50);
+
+    return () => clearTimeout(resetTimeout);
+  }, []);
 
   const handleOrbsConversion = async (key) => {
     if (!keysData.includes(key) && key) {
@@ -179,7 +189,7 @@ const Tower = () => {
         height: "100vh",
         width: "100vw",
       }}
-      className="flex flex-col h-screen overflow-hidden m-0"
+      className="flex flex-col overflow-hidden m-0"
     >
       <div
         style={{
@@ -193,7 +203,7 @@ const Tower = () => {
         className="background-wrapper"
       >
         <div
-          className={`absolute top-0 left-0 h-screen w-screen pointer-events-none`}
+          className={`absolute top-0 left-0 w-full h-full pointer-events-none`}
           style={{
             backgroundImage: `url(${assets.uxui.intro})`,
             backgroundRepeat: "no-repeat",
@@ -224,6 +234,14 @@ const Tower = () => {
           );
         }}
       />
+
+      <div
+        className={`flex w-full ${
+          disappearEffect && "disappear"
+        } absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[18.5vh]`}
+      >
+        DOME
+      </div>
 
       {/* Wheel */}
       <div className="flex flex-col items-center justify-center w-full">
@@ -269,6 +287,17 @@ const Tower = () => {
                   color={`${myth === 0 ? "white" : `white`}`}
                 />
               </div>
+            </div>
+          )}
+          {myth == 0 && (
+            <div
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setMyth(1);
+              }}
+              className="text-button-primary uppercase shadow-2xl z-[99]"
+            >
+              <RotateCw size={"12vw"} strokeWidth={3} color="gold" />
             </div>
           )}
         </div>

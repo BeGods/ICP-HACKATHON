@@ -39,7 +39,8 @@ const IntroPage = (props) => {
         const { user } = tele.initDataUnsafe || {};
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
-        tele.addToHomeScreen();
+
+        // tele.requestFullscreen();
         tele.lockOrientation();
         tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();
@@ -157,7 +158,7 @@ const IntroPage = (props) => {
   setFullHeight();
 
   return (
-    <div className="bg-white text-black flex h-screen w-screen text-wrap">
+    <div className={`bg-white text-black flex h-screen w-screen text-wrap`}>
       {disableDesktop ? (
         // TMA desktop view
         <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
@@ -226,7 +227,7 @@ const IntroPage = (props) => {
             backgroundPosition: "50.5% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            height: "100vh",
+            height: "100svh",
             width: "100vw",
             position: "fixed",
             top: 0,
@@ -270,7 +271,7 @@ const IntroPage = (props) => {
               ⚜️“For I walk by faith, not by sight”⚜️
             </p>
           </div>
-          <div className="flex flex-col h-screen ">
+          <div className="flex flex-col h-screen">
             <div className="flex justify-center items-center w-full leading-tight">
               <div className="relative z-[100]">
                 <img

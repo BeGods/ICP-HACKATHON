@@ -7,6 +7,7 @@ import {
   Check,
   ChevronRight,
   Globe,
+  LayoutGrid,
   Map,
   UserRoundPen,
   Vibrate,
@@ -38,7 +39,6 @@ import {
   setSoundStatus,
 } from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
-import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -317,6 +317,21 @@ const SettingModal = ({ close }) => {
           </div>
           <div className="flex justify-between w-full">
             <div className="pl-3">Refresh Avatar</div>
+            <ChevronRight />
+          </div>
+        </div>
+
+        <div
+          onClick={() => {
+            tele.addToHomeScreen();
+          }}
+          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
+        >
+          <div className="flex justify-start -ml-3">
+            <LayoutGrid />
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="pl-3">Add Shortcut</div>
             <ChevronRight />
           </div>
         </div>

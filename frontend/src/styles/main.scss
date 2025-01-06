@@ -128,8 +128,6 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
 /* Button Black Glass Effect */
 .bg-glass-black {
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .bg-glass-white {
@@ -253,13 +251,13 @@ text-shadow:
 }
 
 .leaderboard-first{
-background-color: gold;
+background-color: #fed700;
 }
 
 .leaderboard-second{
-  background-color: #9a9999;
+  background-color: #808080;
 }
 
 .leaderboard-third{
-  background-color:  #684522;
+  background-color:  #9b5e20;
 }
