@@ -1,16 +1,7 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import { IRank } from "../ts/models.interfaces";
 
-export interface IRank extends Document {
-  telegramUsername: string;
-  totalOrbs: string;
-  rank: number;
-  sqaudRank: number;
-  profile: {
-    avatarUrl: String;
-  };
-}
-
-const rankSchema = new Schema(
+const rankSchema = new Schema<IRank>(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +19,6 @@ const rankSchema = new Schema(
     squadRank: {
       type: Number,
       default: 1,
-      required: true,
     },
     countryRank: {
       type: Number,
@@ -59,9 +49,8 @@ const rankSchema = new Schema(
   { timestamps: true }
 );
 
-const ranks = model("Ranks", rankSchema);
+const ranks = model<IRank>("Ranks", rankSchema);
 
 rankSchema.index({ userId: 1 }, { unique: true });
-// rankSchema.index({ parentReferrerId: 1 });
 
 export default ranks;

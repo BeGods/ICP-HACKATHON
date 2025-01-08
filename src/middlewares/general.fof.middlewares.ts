@@ -1,4 +1,5 @@
-import milestones, { IClaimedReward } from "../models/milestones.models";
+import { IClaimedReward } from "../ts/models.interfaces";
+import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 
 export const validDailyBonusReq = async (req, res, next) => {

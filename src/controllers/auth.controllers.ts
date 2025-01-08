@@ -1,4 +1,4 @@
-import User, { IUser } from "../models/user.models";
+import User from "../models/user.models";
 import { ObjectId } from "mongodb";
 import {
   decryptTelegramData,
@@ -9,9 +9,14 @@ import {
   createDefaultUserMyth,
   addNewUser,
 } from "../services/user.services";
+import { Request, Response } from "express";
+import { IUser } from "../ts/models.interfaces";
 
 // login
-export const authenticate = async (req, res) => {
+export const authenticate = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { initData } = req.body;
     const { referralCode } = req.query as { referralCode?: string | null };
@@ -54,7 +59,7 @@ export const authenticate = async (req, res) => {
         existingReferrer = await User.findOne({ referralCode });
 
         if (!existingReferrer) {
-          return res.status(404).json({ message: "Invalid referral code." });
+          res.status(404).json({ message: "Invalid referral code." });
         }
 
         newUser.parentReferrerId = existingReferrer._id as ObjectId;
@@ -72,7 +77,7 @@ export const authenticate = async (req, res) => {
       message: "User authenticated successfully.",
       data: { token: accessToken },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
 
     res.status(500).json({

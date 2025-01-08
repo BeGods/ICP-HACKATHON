@@ -1,10 +1,6 @@
-import userMythologies, {
-  IMyth,
-  IUserMyths,
-} from "../models/mythologies.models";
+import userMythologies from "../models/mythologies.models";
 import { mythOrder } from "../utils/constants/variables";
 import config from "../config/config";
-import CryptoJs from "crypto-js";
 import { hasBeenFourDaysSinceClaimedUTC } from "../helpers/game.helpers";
 import {
   checkAutomataStatus,
@@ -15,6 +11,7 @@ import {
   filterDataByMyth,
 } from "../services/game.fof.services";
 import { decryptHash } from "../helpers/security";
+import { IMyth, IUserMyths } from "../ts/models.interfaces";
 
 export const validateAlchemist = async (req, res, next) => {
   try {

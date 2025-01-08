@@ -10,7 +10,7 @@ import {
   getRandomValue,
   sortRanksByCountry,
 } from "../services/general.fof.services";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import userMythologies from "../models/mythologies.models";
 import { fetchPlaySuperRewards } from "../services/playsuper.services";
 import milestones from "../models/milestones.models";
