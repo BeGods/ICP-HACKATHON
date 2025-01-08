@@ -4,13 +4,10 @@ import {
   getPhaseByDate,
   hasBeenFourDaysSinceClaimedUTC,
 } from "../helpers/game.helpers";
-import userMythologies, {
-  IMyth,
-  IUserMyths,
-} from "../models/mythologies.models";
+import userMythologies from "../models/mythologies.models";
 import milestones from "../models/milestones.models";
 import { defaultMythologies } from "../utils/constants/variables";
-import User, { IUser } from "../models/user.models";
+import User from "../models/user.models";
 import { checkPlaysuperExpiry } from "./playsuper.services";
 import {
   getAutomataStartTimes,
@@ -19,6 +16,7 @@ import {
   validateBooster,
   validateBurst,
 } from "../helpers/booster.helpers";
+import { IMyth, IUser, IUserMyths } from "../ts/models.interfaces";
 
 export const aggregateGameStats = async (userId) => {
   try {

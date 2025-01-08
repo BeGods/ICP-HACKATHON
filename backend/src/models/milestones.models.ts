@@ -1,36 +1,7 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
+import { IMilestone } from "../ts/models.interfaces";
 
-export interface IClaimedQuest {
-  taskId: mongoose.Types.ObjectId;
-  questClaimed: boolean;
-  isKeyClaimed: boolean;
-  orbClaimed: boolean;
-  completedAt: Date;
-}
-
-export interface IClaimedReward {
-  partnerId: string;
-  type: string;
-  isClaimed: boolean;
-  claimedAt: Date;
-  tokensCollected: number;
-}
-
-export interface IRewards {
-  rewardsInLastHr: string[];
-  updatedAt: number;
-  lastResetAt: number;
-  claimedRewards: IClaimedReward[];
-}
-
-export interface IMilestone extends Document {
-  userId: mongoose.Types.ObjectId;
-  claimedQuests: IClaimedQuest[];
-  sharedQuests: mongoose.Types.ObjectId[];
-  rewards: IRewards;
-}
-
-const milestoneSchema = new Schema({
+const milestoneSchema = new Schema<IMilestone>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -87,10 +58,10 @@ const milestoneSchema = new Schema({
           type: Boolean,
           default: false,
         },
-        couponCode: {
-          type: String,
-          default: "",
-        },
+        // couponCode: {
+        //   type: String,
+        //   default: "",
+        // },
         orderId: {
           type: String,
           default: "",
@@ -113,6 +84,8 @@ const milestoneSchema = new Schema({
     ],
   },
 });
+
+milestoneSchema.index({ userId: 1 }, { unique: true });
 
 const milestones = model<IMilestone>("Milestones", milestoneSchema);
 

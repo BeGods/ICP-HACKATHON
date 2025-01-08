@@ -1,51 +1,7 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
+import { IMyth, IUserMyths } from "../ts/models.interfaces";
 
-//? rethink on active status
-interface IBooster {
-  shardslvl: number;
-  automatalvl: number;
-  burstlvl: number;
-  shardsLastClaimedAt: number;
-  isShardsClaimActive: boolean;
-  isAutomataActive: boolean;
-  automataLastClaimedAt: number;
-  automataStartTime: number;
-  isBurstActiveToClaim: boolean;
-  isBurstActive: boolean;
-  burstActiveAt: number;
-  rats: {
-    count: number;
-    lastClaimedThreshold: number;
-  };
-}
-export interface IMyth extends Document {
-  name: string;
-  orbs: number;
-  shards: number;
-  tapSessionStartTime?: number;
-  lastTapAcitivityTime: number;
-  energy: number;
-  energyLimit: number;
-  faith: number;
-  isEligibleForBurst: boolean;
-  boosters?: IBooster;
-  claimedCards?: [];
-}
-
-export interface IUserMyths extends Document {
-  mythologies: IMyth[];
-  multiColorOrbs: number;
-  blackOrbs: number;
-  lastMoonClaimAt: number;
-  autoPay: {
-    isAutomataAutoPayEnabled: boolean;
-    isBurstAutoPayEnabled: boolean;
-    burstAutoPayExpiration: number;
-    automataAutoPayExpiration: number;
-  };
-}
-
-const mythologySchema = new Schema({
+const mythologySchema = new Schema<IMyth>({
   name: {
     type: String,
     enum: ["Greek", "Celtic", "Norse", "Egyptian"],
@@ -148,18 +104,14 @@ const mythologySchema = new Schema({
       },
     },
   },
-  // claimedCards: {
-  //   type: Array,
-  //   default: [],
-  // },
 });
 
-const userMythologySchema = new Schema(
+const userMythologySchema = new Schema<IUserMyths>(
   {
     userId: {
-      type: mongoose.Types.ObjectId,
-      unique: true,
+      type: Schema.Types.ObjectId,
       required: true,
+      unique: true,
     },
     mythologies: {
       type: [mythologySchema],
@@ -201,10 +153,6 @@ const userMythologySchema = new Schema(
         type: Boolean,
         default: false,
       },
-      automataAutoPayExpiration: {
-        type: Number,
-        default: 0,
-      },
       burstAutoPayExpiration: {
         type: Number,
         default: 0,
@@ -215,13 +163,6 @@ const userMythologySchema = new Schema(
 );
 
 userMythologySchema.index({ userId: 1 }, { unique: true });
-
-// mythologySchema.pre("save", (next) => {
-//   if (this.isNew && this.energy === undefined) {
-//     this.energy = 1000;
-//   }
-//   next();
-// });
 
 mythologySchema.pre("save", function (next) {
   this.boosters.automatalvl = Math.min(this.boosters.automatalvl, 99);

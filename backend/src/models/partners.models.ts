@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
+import { IPartner } from "src/ts/models.interfaces";
 
-const partnerSchema = new Schema(
+export const partnerSchema = new Schema<IPartner>(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
@@ -28,6 +29,6 @@ const partnerSchema = new Schema(
   { timestamps: true }
 );
 
-const partners = model("Partners", partnerSchema);
+const partners = model<IPartner>("Partners", partnerSchema);
 
 export default partners;

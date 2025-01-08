@@ -12,7 +12,6 @@ import {
   getTotalUsers,
   ping,
   updateDailyQuest,
-  updateFileCode,
 } from "../controllers/admin.controllers";
 const router = express.Router();
 
@@ -24,7 +23,6 @@ router.get(`/${config.security.ADMIN_KEY}/totalUsers`, getTotalUsers);
 router.get(`/${config.security.ADMIN_KEY}/dailyUsers`, getDailyUsers);
 router.get(`/${config.security.ADMIN_KEY}/hourlyUsers`, getHourlyUsers);
 router.get(`/${config.security.ADMIN_KEY}/activeUsers`, getDailyActiveUsers);
-router.get(`/${config.security.ADMIN_KEY}/migrate`, updateFileCode);
 
 // manually update leaderboard
 router.get(`/${config.security.ADMIN_KEY}/leaderboard`, updateLeadboardRanks);
@@ -38,6 +36,9 @@ router.post(
 
 // add partner
 router.post("/partners/create", authMiddleware, createPartner);
+
+// migrate db
+// router.get(`/${config.security.ADMIN_KEY}/migrate`, updateFileCode);
 
 // schedule leaderboard
 cron.schedule("0 * * * *", updateLeadboardRanks);

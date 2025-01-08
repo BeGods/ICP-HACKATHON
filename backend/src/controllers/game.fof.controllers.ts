@@ -3,10 +3,7 @@ import {
   getPhaseByDate,
   hasBeenFourDaysSinceClaimedUTC,
 } from "../helpers/game.helpers";
-import userMythologies, {
-  IMyth,
-  IUserMyths,
-} from "../models/mythologies.models";
+import userMythologies from "../models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
@@ -21,7 +18,7 @@ import {
   updateUserData,
 } from "../services/game.fof.services";
 import ranks from "../models/ranks.models";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import { checkBonus } from "../services/general.fof.services";
 import { mythOrder } from "../utils/constants/variables";
 import milestones from "../models/milestones.models";
@@ -31,6 +28,7 @@ import {
   checkAutomataStatus,
   validateBooster,
 } from "../helpers/booster.helpers";
+import { IMyth, IUserMyths } from "../ts/models.interfaces";
 
 export const startGameSession = async (req, res) => {
   try {

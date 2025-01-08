@@ -1,18 +1,7 @@
-import mongoose, { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import { IReferral, ITeam } from "../ts/models.interfaces";
 
-interface IReferral extends Document {
-  userId: mongoose.Types.ObjectId;
-  directInvites: mongoose.Types.ObjectId[];
-}
-interface ITeam extends Document {
-  owner: mongoose.Types.ObjectId;
-  teamName: string;
-  teamCode: string;
-  totalOrbs: number;
-  members: mongoose.Types.ObjectId[];
-}
-
-const referralSchema = new Schema(
+const referralSchema = new Schema<IReferral>(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +16,7 @@ const referralSchema = new Schema(
   { timestamps: true }
 );
 
-const teamSchema = new Schema({
+const teamSchema = new Schema<ITeam>({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -53,11 +42,6 @@ const teamSchema = new Schema({
     default: [],
   },
 });
-
-// teamSchema.pre("save", (next) => {
-//   this.teamName = this.teamCode ?? this.teamName;
-//   next();
-// });
 
 const Referral = model<IReferral>("Referral", referralSchema);
 const Team = model<ITeam>("Team", teamSchema);
