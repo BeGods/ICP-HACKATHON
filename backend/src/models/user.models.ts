@@ -1,53 +1,5 @@
-import mongoose, { Schema, model, Document } from "mongoose";
-
-export interface IUser extends Document {
-  telegramId?: string;
-  telegramUsername?: string;
-  name: string;
-  isPremium?: boolean;
-  role: "user" | "admin" | "partner";
-  bonus: {
-    fof: {
-      extraBlackOrb: string;
-      dailyBonusClaimedAt: Date;
-      exploitCount: number;
-      streakBonus: {
-        isActive: boolean;
-        claimedAt: number;
-        streakCount: number;
-      };
-      joiningBonus: boolean;
-    };
-  };
-  directReferralCount: number;
-  tonAddress: string;
-  premiumReferralCount: number;
-  phoneNumber: string;
-  gameSession: {
-    gameHrStartAt: number;
-    dailyGameQuota: number;
-  };
-  parentReferrerId?: mongoose.Types.ObjectId;
-  squadOwner: mongoose.Types.ObjectId;
-  referralCode: string;
-  profile?: {
-    avatarUrl: string;
-    updateAt: Date;
-  };
-  playsuper?: {
-    isVerified: boolean;
-    key: string;
-    createdAt: Date;
-  };
-  announcements: number;
-  country: string;
-  lastLoginAt: Date;
-  partOfGames: string[];
-  gameCompletedAt: {
-    fof: Date;
-  };
-  userBetAt: string;
-}
+import mongoose, { Schema, model } from "mongoose";
+import { IUser } from "../ts/models.interfaces";
 
 const userSchema = new Schema<IUser>(
   {
@@ -177,13 +129,6 @@ const userSchema = new Schema<IUser>(
 
   { timestamps: true }
 );
-
-// userSchema.pre<IUser>("save", function (next) {
-//   if (!this.squadOwner) {
-//     this.squadOwner = this._id as mongoose.Types.ObjectId;
-//   }
-//   next();
-// });
 
 const User = model<IUser>("User", userSchema);
 

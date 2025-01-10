@@ -1,15 +1,17 @@
 import partners from "../models/partners.models";
 import quest from "../models/quests.models";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import User from "../models/user.models";
-import updates from "../../listOfImages.json";
 import axios from "axios";
+import { Request, Response } from "express";
+import { IQuest, IStats } from "../ts/models.interfaces";
 
-// test
-export const ping = async (req, res) => {
+// get
+// test server
+export const ping = async (req: Request, res: Response): Promise<void> => {
   try {
     res.send("Server is runnnig fine.");
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -17,22 +19,29 @@ export const ping = async (req, res) => {
   }
 };
 
-// stats
-export const getTotalUsers = async (req, res) => {
+// total users
+export const getTotalUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const totalUsers = await Stats.findOne({ statId: "fof" });
+    const totalUsers: IStats | null = await Stats.findOne({ statId: "fof" });
     res.status(200).json({ totalUsers: totalUsers.totalUsers });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch totalUsers.",
       error: error.message,
     });
   }
 };
 
-export const getDailyUsers = async (req, res) => {
+// daily new users
+export const getDailyUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -46,19 +55,23 @@ export const getDailyUsers = async (req, res) => {
       },
     };
 
-    const count = await User.countDocuments(query);
+    const count: number | 0 = await User.countDocuments(query);
     res.status(200).json({ totalUsers: count });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch daily new users.",
       error: error.message,
     });
   }
 };
 
-export const getDailyActiveUsers = async (req, res) => {
+// daily active users
+export const getDailyActiveUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -72,19 +85,22 @@ export const getDailyActiveUsers = async (req, res) => {
       },
     };
 
-    const count = await User.countDocuments(query);
+    const count: number | 0 = await User.countDocuments(query);
     res.status(200).json({ totalUsers: count });
   } catch (error) {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch active users.",
       error: error.message,
     });
   }
 };
 
-export const getHourlyUsers = async (req, res) => {
+export const getHourlyUsers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const now = new Date();
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
@@ -96,20 +112,23 @@ export const getHourlyUsers = async (req, res) => {
       },
     };
 
-    const count = await User.countDocuments(query);
+    const count: number | 0 = await User.countDocuments(query);
     res.status(200).json({ totalUsers: count });
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch hourly users.",
       error: error.message,
     });
   }
 };
 
-// actions
-export const updateDailyQuest = async (req, res) => {
+// update
+export const updateDailyQuest = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const currentDate = new Date();
     const previousDate = new Date(currentDate);
@@ -165,7 +184,6 @@ export const updateDailyQuest = async (req, res) => {
       await questWithCreatedAt.save();
 
       console.log("Daily quests updated.");
-      res.status(200).json({ message: "Daily quests updated successfully." });
     } else {
       console.log("No quests available for today.");
       res.status(404).json({ message: "No quests available for today." });
@@ -174,53 +192,17 @@ export const updateDailyQuest = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update daily quest.",
       error: error.message,
     });
   }
 };
 
-export const migrateDb = async (req, res) => {
-  try {
-    await User.updateMany({}, [
-      {
-        $set: {
-          bonus: {
-            fof: {
-              exploitCount: "$exploitCount",
-              joiningBonus: "$joiningBonus",
-              streakBonus: {
-                isActive: false,
-                claimedAt: 0,
-                streakCount: 0,
-              },
-              dailyBonusClaimedAt: "$dailyBonusClaimedAt",
-            },
-          },
-        },
-      },
-      {
-        $unset: [
-          "exploitCount",
-          "joiningBonus",
-          "streakBonus",
-          "dailyBonusClaimedAt",
-        ],
-      },
-    ]);
-
-    res.status(200).json({ data: "done" });
-  } catch (error) {
-    console.log(error);
-
-    res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-    });
-  }
-};
-
-export const createPartner = async (req, res) => {
+// create
+export const createPartner = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { data } = req.body;
 
@@ -232,15 +214,22 @@ export const createPartner = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to create partner.",
       error: error.message,
     });
   }
 };
 
-export const createQuest = async (req, res) => {
+export const createQuest = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const { questData } = req.body;
+    const { questData }: { questData: Partial<IQuest> } = req.body;
+
+    if (!questData) {
+      throw new Error("Invalid quest data.");
+    }
 
     const newQuest = new quest(questData);
     const newQuestCreated = await newQuest.save();
@@ -248,27 +237,68 @@ export const createQuest = async (req, res) => {
     res.status(200).json({ data: newQuestCreated });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to create quest.",
       error: error.message,
     });
   }
 };
 
-export const updateFileCode = async () => {
-  try {
-    const bulkOperations = updates.map(({ _id, fileId }) => {
-      return {
-        updateOne: {
-          filter: { _id },
-          update: { "profile.avatarUrl": fileId },
-        },
-      };
-    });
+// db migrations
+// export const migrateDb = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     await User.updateMany({}, [
+//       {
+//         $set: {
+//           bonus: {
+//             fof: {
+//               exploitCount: "$exploitCount",
+//               joiningBonus: "$joiningBonus",
+//               streakBonus: {
+//                 isActive: false,
+//                 claimedAt: 0,
+//                 streakCount: 0,
+//               },
+//               dailyBonusClaimedAt: "$dailyBonusClaimedAt",
+//             },
+//           },
+//         },
+//       },
+//       {
+//         $unset: [
+//           "exploitCount",
+//           "joiningBonus",
+//           "streakBonus",
+//           "dailyBonusClaimedAt",
+//         ],
+//       },
+//     ]);
 
-    const result = await User.bulkWrite(bulkOperations);
+//     res.status(200).json({ data: "done" });
+//   } catch (error) {
+//     console.log(error);
 
-    console.log("Bulk update result:", result);
-  } catch (error) {
-    console.log();
-  }
-};
+//     res.status(500).json({
+//       message: "Internal server error.",
+//       error: error.message,
+//     });
+//   }
+// };
+
+// export const updateFileCode = async () => {
+//   try {
+//     const bulkOperations = updates.map(({ _id, fileId }) => {
+//       return {
+//         updateOne: {
+//           filter: { _id },
+//           update: { "profile.avatarUrl": fileId },
+//         },
+//       };
+//     });
+
+//     const result = await User.bulkWrite(bulkOperations);
+
+//     console.log("Bulk update result:", result);
+//   } catch (error) {
+//     console.log();
+//   }
+// };

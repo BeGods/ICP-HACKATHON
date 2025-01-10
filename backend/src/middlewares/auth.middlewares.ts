@@ -31,7 +31,7 @@ export const authMiddleware = async (req, res, next) => {
         .json({ error: "Not authorized to access this resource" });
     } else {
       res.status(500).json({
-        message: "Internal server error.",
+        message: "Failed to validate user.",
         error: error.message,
       });
     }

@@ -3,10 +3,7 @@ import {
   getPhaseByDate,
   hasBeenFourDaysSinceClaimedUTC,
 } from "../helpers/game.helpers";
-import userMythologies, {
-  IMyth,
-  IUserMyths,
-} from "../models/mythologies.models";
+import userMythologies from "../models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
@@ -21,7 +18,7 @@ import {
   updateUserData,
 } from "../services/game.fof.services";
 import ranks from "../models/ranks.models";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import { checkBonus } from "../services/general.fof.services";
 import { mythOrder } from "../utils/constants/variables";
 import milestones from "../models/milestones.models";
@@ -31,6 +28,7 @@ import {
   checkAutomataStatus,
   validateBooster,
 } from "../helpers/booster.helpers";
+import { IMyth, IUserMyths } from "../ts/models.interfaces";
 
 export const startGameSession = async (req, res) => {
   try {
@@ -87,7 +85,7 @@ export const startGameSession = async (req, res) => {
   }
 };
 
-export const claimGameSession = async (req, res) => {
+export const updateGameSession = async (req, res) => {
   try {
     const userId = req.user;
     let { taps, minionTaps, mythologyName, bubbleSession } = await decryptHash(
@@ -145,7 +143,7 @@ export const claimGameSession = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update game session.",
       error: error.message,
     });
   }
@@ -380,7 +378,7 @@ export const updateGameData = async (req, res) => {
     res.status(200).json({ message: "Mythology Updated Successfully" });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update game data.",
       error: error.message,
     });
   }
@@ -410,13 +408,13 @@ export const updateRatData = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update rat data.",
       error: error.message,
     });
   }
 };
 
-export const claimStarRwrd = async (req, res) => {
+export const updateStarStatus = async (req, res) => {
   try {
     const userId = req.user._id;
     const userMyth = req.userMyth;
@@ -464,7 +462,7 @@ export const claimStarRwrd = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update star status.",
       error: error.message,
     });
   }

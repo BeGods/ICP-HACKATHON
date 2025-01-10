@@ -78,13 +78,13 @@ export const claimQuest = async (req, res) => {
     res.status(200).json({ message: "Quest claimed successfully." });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim quest.",
       error: error.message,
     });
   }
 };
 
-export const claimSocialQuest = async (req, res) => {
+export const claimTask = async (req, res) => {
   try {
     const userId = req.user._id;
     const quest = req.quest;
@@ -119,107 +119,13 @@ export const claimSocialQuest = async (req, res) => {
     res.status(200).json({ message: "Quest claimed successfully." });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim task.",
       error: error.message,
     });
   }
 };
 
-export const completeQuest = async (req, res) => {
-  try {
-    const userId = req.user;
-    const quest = req.quest;
-
-    // Add to claimed quests
-    await milestones.findOneAndUpdate(
-      { userId: userId },
-      {
-        $push: {
-          claimedQuests: { taskId: new mongoose.Types.ObjectId(quest.taskId) },
-        },
-      },
-      { upsert: true }
-    );
-
-    res.status(200).json({ message: "Quest Completed" });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-    });
-  }
-};
-
-export const claimLostQuest = async (req, res) => {
-  try {
-    const userId = req.user;
-    const quest = req.quest;
-    const requiredOrbs = quest.requiredOrbs;
-
-    // Add to claimed quests
-    await milestones.findOneAndUpdate(
-      { userId: userId },
-      {
-        $push: {
-          claimedQuests: {
-            taskId: quest.taskId,
-            questClaimed: true,
-          },
-        },
-      },
-      { upsert: true }
-    );
-
-    // deduct required orbs
-    const updateOperations = Object.entries(requiredOrbs).map(
-      ([mythologyName, orbsToDeduct]) => ({
-        updateOne: {
-          filter: { userId: userId, "mythologies.name": mythologyName },
-          update: {
-            $inc: {
-              "mythologies.$.orbs": -orbsToDeduct,
-            } as any,
-          },
-        },
-      })
-    );
-
-    // update rewards
-    updateOperations.push({
-      updateOne: {
-        filter: { userId: userId, "mythologies.name": quest.mythology },
-        update: {
-          $inc: {
-            multiColorOrbs: -1,
-            "mythologies.$.faith": 1,
-            "mythologies.$.energyLimit": 1000,
-          } as any,
-        },
-      },
-    });
-
-    // Execute all updates in bulk
-    if (updateOperations.length > 0) {
-      await userMythologies.bulkWrite(updateOperations);
-    }
-
-    const newOrbTransaction = new OrbsTransactions({
-      userId: userId,
-      source: "quests",
-      orbs: quest.requiredOrbs,
-    });
-    await newOrbTransaction.save();
-
-    res.status(200).json({ message: "Quest claimed successfully." });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error.",
-      error: error.message,
-    });
-  }
-};
-
-export const claimOrbOnShare = async (req, res) => {
+export const claimQuestRwrd = async (req, res) => {
   try {
     const userId = req.user;
     const { questId } = req.body;
@@ -259,13 +165,13 @@ export const claimOrbOnShare = async (req, res) => {
     res.status(200).json({ message: "Orb claimed successfully!" });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim quest complete reward.",
       error: error.message,
     });
   }
 };
 
-export const claimQuestShare = async (req, res) => {
+export const claimQuestInfoRwrd = async (req, res) => {
   try {
     const userId = req.user;
     const { questId } = req.body;
@@ -300,7 +206,7 @@ export const claimQuestShare = async (req, res) => {
     res.status(200).json({ message: "Orb claimed successfully!" });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim quest info reward.",
       error: error.message,
     });
   }

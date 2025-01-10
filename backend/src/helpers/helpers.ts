@@ -9,3 +9,8 @@ export const areObjectsEqual = (obj1, obj2) => {
 
   return true;
 };
+
+export const fourDigitCode = () => {
+  const result = Math.floor(1000 + Math.random() * 9000);
+  return result.toString();
+};

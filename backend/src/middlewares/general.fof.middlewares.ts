@@ -1,4 +1,5 @@
-import milestones, { IClaimedReward } from "../models/milestones.models";
+import { IClaimedReward } from "../ts/models.interfaces";
+import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 
 export const validDailyBonusReq = async (req, res, next) => {
@@ -195,7 +196,7 @@ export const validOnboardInput = async (req, res, next) => {
   }
 };
 
-export const validPartnerReward = async (req, res, next) => {
+export const validPartnerRwrd = async (req, res, next) => {
   try {
     const { partnerId } = req.body;
     const user = req.user;

@@ -4,7 +4,7 @@ import userMythologies from "../models/mythologies.models";
 import { OrbsTransactions } from "../models/transactions.models";
 import mongoose from "mongoose";
 import User from "../models/user.models";
-import { countries } from "../utils/constants/countrt";
+import { countries } from "../utils/constants/country";
 
 export const getLeaderboardSnapshot = async () => {
   try {
