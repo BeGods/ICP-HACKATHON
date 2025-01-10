@@ -16,7 +16,7 @@ import { fetchPlaySuperRewards } from "../../common/services/playsuper.services"
 import milestones from "../../common/models/milestones.models";
 import partners from "../../common/models/partners.models";
 import { validCountries } from "../../utils/constants/variables";
-import { OrbsTransactions } from "../models/transactions.models";
+import { OrbsTransactions } from "../../common/models/transactions.models";
 
 // leaderboard
 export const getLeaderboard = async (req, res) => {

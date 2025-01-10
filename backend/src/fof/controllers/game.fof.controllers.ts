@@ -7,7 +7,7 @@ import userMythologies from "../../common/models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
-} from "../models/transactions.models";
+} from "../../common/models/transactions.models";
 import {
   aggregateGameStats,
   checkStreakIsActive,

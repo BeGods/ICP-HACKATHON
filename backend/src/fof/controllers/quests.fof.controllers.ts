@@ -1,7 +1,7 @@
 import quest from "../../common/models/quests.models";
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
-import { OrbsTransactions } from "../models/transactions.models";
+import { OrbsTransactions } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
 
 export const claimQuest = async (req, res) => {

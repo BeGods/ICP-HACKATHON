@@ -1,5 +1,5 @@
 import userMythologies from "../../common/models/mythologies.models";
-import { OrbsTransactions } from "../models/transactions.models";
+import { OrbsTransactions } from "../../common/models/transactions.models";
 import { isWithinOneMinute } from "../../helpers/game.helpers";
 import { Document } from "mongodb";
 import {
