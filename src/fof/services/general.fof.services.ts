@@ -1,7 +1,7 @@
 import ranks from "../../common/models/ranks.models";
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
-import { OrbsTransactions } from "../models/transactions.models";
+import { OrbsTransactions } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
 import User from "../../common/models/user.models";
 import { countries } from "../../utils/constants/country";

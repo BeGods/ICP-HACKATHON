@@ -4,7 +4,7 @@ import partners from "../../common/models/partners.models";
 import {
   OrbsTransactions,
   RewardsTransactions,
-} from "../models/transactions.models";
+} from "../../common/models/transactions.models";
 import User from "../../common/models/user.models";
 import { updatePartnersInLastHr } from "../services/general.fof.services";
 import {
