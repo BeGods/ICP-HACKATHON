@@ -28,7 +28,7 @@
         "./src/models/*"
       ],
       "@routes/*": [
-        "./src/routes/*"
+        "src/fof/routes/*"
       ],
       "@config/*": [
         "./src/config/*"

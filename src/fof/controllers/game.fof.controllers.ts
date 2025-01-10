@@ -2,8 +2,8 @@ import {
   calculateEnergy,
   getPhaseByDate,
   hasBeenFourDaysSinceClaimedUTC,
-} from "../helpers/game.helpers";
-import userMythologies from "../models/mythologies.models";
+} from "../../helpers/game.helpers";
+import userMythologies from "../../common/models/mythologies.models";
 import {
   OrbsTransactions,
   ShardsTransactions,
@@ -17,19 +17,20 @@ import {
   updateMythologyData,
   updateUserData,
 } from "../services/game.fof.services";
-import ranks from "../models/ranks.models";
-import Stats from "../models/stats.models";
+import ranks from "../../common/models/ranks.models";
+import Stats from "../../common/models/Stats.models";
 import { checkBonus } from "../services/general.fof.services";
-import { mythOrder } from "../utils/constants/variables";
-import milestones from "../models/milestones.models";
-import { decryptHash } from "../helpers/crypt.helpers";
-import { filterAllQuests } from "../helpers/quests.helpers";
+import { mythOrder } from "../../utils/constants/variables";
+import milestones from "../../common/models/milestones.models";
+import { decryptHash } from "../../helpers/crypt.helpers";
+import { filterAllQuests } from "../../helpers/quests.helpers";
 import {
   checkAutomataStatus,
   validateBooster,
-} from "../helpers/booster.helpers";
-import { IMyth, IUserMyths } from "../ts/models.interfaces";
+} from "../../helpers/booster.helpers";
+import { IMyth, IUserMyths } from "../../ts/models.interfaces";
 
+// start tap session
 export const startGameSession = async (req, res) => {
   try {
     const userId = req.user;
@@ -85,6 +86,7 @@ export const startGameSession = async (req, res) => {
   }
 };
 
+// claim tap session
 export const updateGameSession = async (req, res) => {
   try {
     const userId = req.user;
@@ -149,6 +151,7 @@ export const updateGameSession = async (req, res) => {
   }
 };
 
+// stats
 export const getGameStats = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -253,6 +256,7 @@ export const getGameStats = async (req, res) => {
   }
 };
 
+// orb conversion
 export const convertOrbs = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -318,6 +322,7 @@ export const convertOrbs = async (req, res) => {
   }
 };
 
+// refresh stats
 export const updateGameData = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -384,6 +389,7 @@ export const updateGameData = async (req, res) => {
   }
 };
 
+// update rat
 export const updateRatData = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -414,6 +420,7 @@ export const updateRatData = async (req, res) => {
   }
 };
 
+// update star status
 export const updateStarStatus = async (req, res) => {
   try {
     const userId = req.user._id;
