@@ -30,6 +30,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@alicloud/pop-core": "^1.8.0",
     "@tma.js/init-data-node": "^1.4.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
@@ -46,6 +47,7 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "publitio_js_sdk": "^1.1.5",
+    "redis": "^4.7.0",
     "xss-clean": "^0.1.4"
   }
 }

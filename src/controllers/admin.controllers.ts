@@ -31,7 +31,7 @@ export const getTotalUsers = async (
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch totalUsers.",
       error: error.message,
     });
   }
@@ -61,7 +61,7 @@ export const getDailyUsers = async (
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch daily new users.",
       error: error.message,
     });
   }
@@ -91,7 +91,7 @@ export const getDailyActiveUsers = async (
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch active users.",
       error: error.message,
     });
   }
@@ -118,7 +118,7 @@ export const getHourlyUsers = async (
     console.error(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch hourly users.",
       error: error.message,
     });
   }
@@ -192,7 +192,7 @@ export const updateDailyQuest = async (
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update daily quest.",
       error: error.message,
     });
   }
@@ -214,7 +214,7 @@ export const createPartner = async (
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to create partner.",
       error: error.message,
     });
   }
@@ -237,7 +237,7 @@ export const createQuest = async (
     res.status(200).json({ data: newQuestCreated });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to create quest.",
       error: error.message,
     });
   }

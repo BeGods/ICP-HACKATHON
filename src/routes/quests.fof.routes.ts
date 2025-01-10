@@ -1,10 +1,10 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
-  claimOrbOnShare,
+  claimQuestRwrd,
   claimQuest,
-  claimQuestShare,
-  claimSocialQuest,
+  claimQuestInfoRwrd,
+  claimTask,
 } from "../controllers/quests.fof.controllers";
 import {
   verifyCompletedQuest,
@@ -17,19 +17,14 @@ const router = express.Router();
 router.post("/quests/claim", authMiddleware, verifyValidQuest, claimQuest);
 
 // other social quests
-router.post(
-  "/quests/social",
-  authMiddleware,
-  verifyValidQuest,
-  claimSocialQuest
-);
+router.post("/quests/social", authMiddleware, verifyValidQuest, claimTask);
 
 // extra orb reward
 router.post(
   "/quests/claim/share",
   authMiddleware,
   verifyCompletedQuest,
-  claimOrbOnShare
+  claimQuestRwrd
 );
 
 // share quest
@@ -37,7 +32,7 @@ router.post(
   "/quests/share",
   authMiddleware,
   verifyValidShareClaim,
-  claimQuestShare
+  claimQuestInfoRwrd
 );
 
 export default router;
