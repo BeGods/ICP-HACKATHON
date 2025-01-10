@@ -1,12 +1,12 @@
 import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   startGameSession,
-  claimGameSession,
+  updateGameSession,
   getGameStats,
   convertOrbs,
   updateGameData,
   updateRatData,
-  claimStarRwrd,
+  updateStarStatus,
 } from "../controllers/game.fof.controllers";
 import {
   validAutoAutomataReq,
@@ -36,8 +36,8 @@ router.get("/game/stats/update", authMiddleware, updateGameData);
 
 // session
 router.post("/game/startTapSession", authMiddleware, startGameSession);
-router.post("/game/claimTapSession", authMiddleware, claimGameSession);
-router.post("/game/burst", authMiddleware, validateStarClaim, claimStarRwrd);
+router.post("/game/claimTapSession", authMiddleware, updateGameSession);
+router.post("/game/burst", authMiddleware, validateStarClaim, updateStarStatus);
 router.post("/game/rat", authMiddleware, validateRatClaim, updateRatData);
 
 // tower conversion

@@ -2,10 +2,10 @@ import config from "./config/config";
 import app from "./app";
 import connectMongo from "./config/database/mongo";
 
-const PORT = 3000;
+const PORT = config.server.PORT;
 
 connectMongo();
 
-app.listen(PORT, () => {
+app.listen(PORT, (): void => {
   console.log(`Server running on port ${PORT}`);
 });
