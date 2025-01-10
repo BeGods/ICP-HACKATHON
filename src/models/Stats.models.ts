@@ -1,10 +1,5 @@
-import { Document } from "mongodb";
 import { Schema, model } from "mongoose";
-
-export interface IStats extends Document {
-  statId: string;
-  totalUsers?: number;
-}
+import { IStats } from "../ts/models.interfaces";
 
 const StatsSchema: Schema<IStats> = new Schema<IStats>(
   {

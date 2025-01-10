@@ -10,7 +10,7 @@ import {
   getRandomValue,
   sortRanksByCountry,
 } from "../services/general.fof.services";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import userMythologies from "../models/mythologies.models";
 import { fetchPlaySuperRewards } from "../services/playsuper.services";
 import milestones from "../models/milestones.models";
@@ -188,7 +188,7 @@ export const addUserBet = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update stake.",
       error: error.message,
     });
   }
@@ -216,7 +216,7 @@ export const updateBetRwrdStatus = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update stake reward status.",
       error: error.message,
     });
   }
@@ -269,7 +269,7 @@ export const claimDailyBonus = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update daily bonus.",
       error: error.message,
     });
   }
@@ -301,7 +301,7 @@ export const claimJoinBonus = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update join bonus.",
       error: error.message,
     });
   }
@@ -408,7 +408,7 @@ export const claimStreakBonus = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update streak bonus.",
       error: error.message,
     });
   }

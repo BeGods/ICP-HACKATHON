@@ -128,13 +128,13 @@ export const getAllPartners = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to fetch partners.",
       error: error.message,
     });
   }
 };
 
-export const redeemPlayuperReward = async (req, res) => {
+export const redeemPlayuperRwrd = async (req, res) => {
   try {
     const user = req.user;
     const userId = req.user._id;
@@ -170,13 +170,13 @@ export const redeemPlayuperReward = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update partner reward.",
       error: error.message,
     });
   }
 };
 
-export const redeemCustomReward = async (req, res) => {
+export const redeemCustomRwrd = async (req, res) => {
   try {
     const userId = req.user._id;
     const updatedPartner = req.partner;
@@ -221,7 +221,7 @@ export const redeemCustomReward = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to update partner reward.",
       error: error.message,
     });
   }
@@ -236,7 +236,7 @@ export const generateOtp = async (req, res) => {
     res.status(200).json({ message: "OTP has been sent successfully!" });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to generate otp.",
       error: error.message,
     });
   }
@@ -250,7 +250,7 @@ export const resendOtp = async (req, res) => {
     res.status(200).json({ otp: response });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to generate otp.",
       error: error.message,
     });
   }
@@ -284,7 +284,7 @@ export const verifyOtp = async (req, res) => {
     res.status(200).json({ message: "Authenticated successfully!" });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to verify otp.",
       error: error.message,
     });
   }

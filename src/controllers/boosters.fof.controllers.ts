@@ -33,7 +33,7 @@ export const claimAlchemist = async (req, res) => {
       (item) => item.name === userMyth.name
     )[0].boosters;
 
-    // maintain transaction
+    // orb transaction
     const newOrbsTransaction = new OrbsTransactions({
       userId: userId,
       source: "alchemist",
@@ -47,7 +47,7 @@ export const claimAlchemist = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim alchemist.",
       error: error.message,
     });
   }
@@ -114,7 +114,7 @@ export const claimAutomata = async (req, res) => {
   } catch (error) {
     console.error("Claim automata error:", error);
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim automata.",
       error: error.message,
     });
   }
@@ -178,7 +178,7 @@ export const claimBurst = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim burst.",
       error: error.message,
     });
   }
@@ -222,7 +222,7 @@ export const claimMultiBurst = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim multi burst.",
       error: error.message,
     });
   }
@@ -269,7 +269,7 @@ export const claimMultiAutomata = async (req, res) => {
     console.log(error);
 
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to claim multi automata.",
       error: error.message,
     });
   }
@@ -304,7 +304,7 @@ export const claimMoon = async (req, res) => {
   } catch (error) {
     console.error("Moon Boost error:", error);
     res.status(500).json({
-      message: "Internal server error.",
+      message: "Failed to enable moon booster.",
       error: error.message,
     });
   }

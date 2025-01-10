@@ -12,7 +12,7 @@ export const generateAuthToken = async (user: any) => {
 
     return token;
   } catch (error) {
-    throw Error(error);
+    throw new Error(error);
   }
 };
 
@@ -28,7 +28,7 @@ export const decryptTelegramData = async (initData) => {
     try {
       validate(initData, config.security.TMA_BOT_TOKEN);
     } catch (validateError) {
-      throw Error("InitData validation failed.");
+      throw new Error("InitData validation failed.");
     }
 
     const telegramId = parsedInitData.user.id.toString();
@@ -36,11 +36,11 @@ export const decryptTelegramData = async (initData) => {
     const isPremium = parsedInitData.user.isPremium;
 
     if (!telegramId) {
-      throw Error("Invalid telegramId. User not found.");
+      throw new Error("Invalid telegramId. User not found.");
     }
 
     return { telegramId, telegramUsername, isPremium };
   } catch (error) {
-    throw Error(error);
+    throw new Error(error);
   }
 };

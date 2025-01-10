@@ -1,31 +1,9 @@
-import mongoose, { Schema, model, Document } from "mongoose";
-
-export interface IOrbsTransactions extends Document {
-  userId: mongoose.Types.ObjectId;
-  orbs: Object;
-  source: string;
-  date: Date;
-}
-
-export interface IShardsTransactions extends Document {
-  userId: mongoose.Types.ObjectId;
-  shards: number;
-  source: string;
-  date: Date;
-}
-
-export interface IShardsTransactions extends Document {
-  userId: mongoose.Types.ObjectId;
-  shards: number;
-  source: string;
-  date: Date;
-}
-
-export interface IRewardTransactions extends Document {
-  userId: mongoose.Types.ObjectId;
-  rewardId: string;
-  type: string;
-}
+import { Schema, model } from "mongoose";
+import {
+  IOrbsTransactions,
+  IRewardTransactions,
+  IShardsTransactions,
+} from "src/ts/models.interfaces";
 
 const baseTransactionSchema = {
   userId: {

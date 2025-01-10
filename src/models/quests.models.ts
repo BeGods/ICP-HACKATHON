@@ -1,16 +1,7 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model } from "mongoose";
+import { IQuest } from "../ts/models.interfaces";
 
-export interface IQuest extends Document {
-  questName: string;
-  description: string;
-  type: string;
-  link: string;
-  mythology: string;
-  status: string;
-  requiredOrbs: Map<string, number>;
-}
-
-const questSchema = new Schema(
+const questSchema = new Schema<IQuest>(
   {
     questName: {
       type: String,
@@ -33,9 +24,6 @@ const questSchema = new Schema(
       enum: ["Celtic", "Egyptian", "Greek", "Norse", "Other"],
       required: true,
     },
-    secret: {
-      type: Boolean,
-    },
     status: {
       type: String,
       enum: ["Active", "Inactive"],
@@ -49,6 +37,6 @@ const questSchema = new Schema(
   { timestamps: true }
 );
 
-const quest = model("Quests", questSchema);
+const quest = model<IQuest>("Quests", questSchema);
 
 export default quest;
