@@ -23,10 +23,24 @@ export interface IRewards {
   claimedRewards: IClaimedReward[];
 }
 
+export interface IInventory {
+  _id: mongoose.Types.ObjectId;
+  itemId: string;
+  isComplete: boolean;
+  fragmentId: number;
+  updatedAt: Date;
+}
+
 export interface IMilestone extends Document {
   userId: mongoose.Types.ObjectId;
   claimedQuests: IClaimedQuest[];
   sharedQuests: mongoose.Types.ObjectId[];
+  // bag: IInventory[];
+  // bank: {
+  //   lastVaultInstallmentAt: number;
+  //   vault: IInventory[];
+  // };
+  // claimedRoRItems: string[];
   rewards: IRewards;
 }
 
