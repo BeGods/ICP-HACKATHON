@@ -1,6 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { mythSections } from "../../utils/constants";
-import { CornerUpLeft, CornerUpRight, Download, ThumbsUp } from "lucide-react";
+import {
+  CornerUpLeft,
+  CornerUpRight,
+  Download,
+  Share2,
+  ThumbsUp,
+} from "lucide-react";
 import { useAdsgram } from "../../hooks/Adsgram";
 import { showToast } from "../Toast/Toast";
 
@@ -11,6 +17,7 @@ const JigsawButton = ({
   faith,
   disableLeft,
   handleClick,
+  isPartner,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const adsgramId = import.meta.env.VITE_AD_VOUCHER_CLAIM;
@@ -34,6 +41,8 @@ const JigsawButton = ({
       onClick={() => {
         if (faith == 12) {
           showAd();
+        } else if (faith < 12 && isPartner) {
+          handleClick();
         }
       }}
       onMouseDown={() => {
@@ -70,15 +79,24 @@ const JigsawButton = ({
           onClick={handlePrev}
         />
       </div>
-      <div
-        className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black ${
-          faith < 12
-            ? "text-textGray border-borderDark"
-            : "text-white border-white"
-        }  w-[18vw] h-[18vw] border-[3px] rounded-full`}
-      >
-        <ThumbsUp size={"7.5vw"} />
-      </div>
+      {faith < 12 && isPartner ? (
+        <div
+          className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black text-white border-white w-[18vw] h-[18vw] border-[3px] rounded-full`}
+        >
+          <Share2 size={"7.5vw"} />
+        </div>
+      ) : (
+        <div
+          className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black ${
+            faith < 12
+              ? "text-textGray border-borderDark"
+              : "text-white border-white"
+          }  w-[18vw] h-[18vw] border-[3px] rounded-full`}
+        >
+          <ThumbsUp size={"7.5vw"} />
+        </div>
+      )}
+
       <div className="flex justify-center items-center w-1/4 border-l-secondary border-borderGray h-full">
         <CornerUpRight
           color="#707579"

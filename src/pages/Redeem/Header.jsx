@@ -68,15 +68,7 @@ const CenterChild = ({ name, bubble, action, link }) => {
   );
 };
 
-const RedeemHeader = ({
-  pieces,
-  name,
-  bubble,
-  action,
-  currIndex,
-  isCharity,
-  link,
-}) => {
+const RedeemHeader = ({ pieces, name, bubble, action, currIndex, link }) => {
   const [changeText, setChangeText] = useState(true);
   const { t } = useTranslation();
 

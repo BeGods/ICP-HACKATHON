@@ -188,17 +188,17 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (
-        state.closeReason === "wallet-selected" &&
-        state.status === "closed" &&
-        (userData.tonAddress === null || !userData.tonAddress)
-      ) {
-        handleConnectTon();
-      }
-    });
-  }, [state]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (
+  //       state.closeReason === "wallet-selected" &&
+  //       state.status === "closed" &&
+  //       (userData.tonAddress === null || !userData.tonAddress)
+  //     ) {
+  //       handleConnectTon();
+  //     }
+  //   });
+  // }, [state]);
 
   const handleDisconnectTon = async () => {
     try {
