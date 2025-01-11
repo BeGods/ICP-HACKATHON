@@ -32,8 +32,11 @@ const PartnerCard = ({ close, reward }) => {
             {/* {reward.metadata.howToRedeem.replace(/<\/?p>/g, "")} */}
             <h1>{reward.description}</h1>
             <h1>{reward.metadata.campaignDetails}</h1>
-            <div className="w-full text-center">
-              <h1 className="mt-3 font-semibold">
+            <div className="w-full text-center text-wrap">
+              <h1
+                className="mt-3 font-semibold break-words overflow-wrap-normal"
+                style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
+              >
                 {reward.metadata.brandRedirectionLink}
               </h1>
             </div>
