@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-
 import IconBtn from "../../Buttons/IconBtn";
 import { MyContext } from "../../../context/context";
+import { formatDate } from "../../../helpers/game.helper";
 
 const PartnerCard = ({ close, reward }) => {
   const { assets, platform } = useContext(MyContext);
@@ -25,11 +25,23 @@ const PartnerCard = ({ close, reward }) => {
               {reward.metadata.brandName}
             </h1>
             <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
-              {reward.metadata.brandCategory}
+              GAME
             </h2>
           </div>
-          <div className="h-full w-full text-center px-3 pt-2">
-            {reward.metadata.howToRedeem.replace(/<\/?p>/g, "")}
+          <div className="flex flex-col gap-3 h-full w-full text-center px-3 pt-2">
+            {/* {reward.metadata.howToRedeem.replace(/<\/?p>/g, "")} */}
+            <h1>{reward.description}</h1>
+            <h1>{reward.metadata.campaignDetails}</h1>
+            <div className="w-full text-center">
+              <h1 className="mt-3 font-semibold">
+                {reward.metadata.brandRedirectionLink}
+              </h1>
+            </div>
+            {/* <h1
+              dangerouslySetInnerHTML={{
+                __html: reward.metadata.brandRedirectionLink,
+              }}
+            ></h1> */}
           </div>
         </div>
       </div>
@@ -38,6 +50,9 @@ const PartnerCard = ({ close, reward }) => {
       ) : (
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={0} />
       )}
+      <div className="absolute font-semibold italic bottom-0 text-para text-card mx-auto px-2 py-1">
+        {formatDate(reward.endDate)}
+      </div>
     </div>
   );
 };

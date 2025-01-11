@@ -35,3 +35,11 @@ export const getPhaseByDate = (date = new Date()) => {
 
   return phase + 1;
 };
+
+export const formatDate = (givenDate) => {
+  const date = new Date(givenDate);
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  const formattedDate = date.toLocaleDateString("en-GB", options);
+
+  return formattedDate;
+};

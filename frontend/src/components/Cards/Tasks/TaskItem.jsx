@@ -151,6 +151,8 @@ ${
           country &&
           country !== "NA"
             ? countries.find((item) => item.code === country).name
+            : quest.description === "game"
+            ? quest.questName
             : t(`profile.${quest.questName.toLowerCase()}`)}
         </h1>
         <h2 className="text-tertiary">
