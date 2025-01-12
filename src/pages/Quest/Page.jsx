@@ -530,7 +530,7 @@ const Quests = () => {
               t={t}
             />
           </div>
-        )}{" "}
+        )}
         {/* Flp trigger for Jigsaw */}
         {currQuest === quests.length && (
           <div

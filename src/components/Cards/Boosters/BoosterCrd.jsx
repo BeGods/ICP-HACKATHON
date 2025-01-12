@@ -404,7 +404,7 @@ const BoosterClaim = ({
             </div>
             <div className="flex flex-col text-white">
               <div className="text-[6vw] -mt-2">
-                <span className="text-gold">Watch</span> to get free booster!
+                <span className="text-gold">Watch</span> {t("note.ad")}
               </div>
             </div>
           </div>

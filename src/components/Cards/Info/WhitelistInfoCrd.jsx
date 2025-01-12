@@ -37,7 +37,7 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
         </div>
       </div>
       <div className="leading-[18px] text-[16px] text-left mx-auto w-[85%] text-card font-[550]">
-        {t(`quests.${mythSections[activeMyth]}.whitelist.desc`)}
+        {t(`note.whitelist.desc`)}
       </div>
     </div>
   );

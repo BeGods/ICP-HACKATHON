@@ -316,7 +316,7 @@ const SettingModal = ({ close }) => {
             <UserRoundPen />
           </div>
           <div className="flex justify-between w-full">
-            <div className="pl-3">Refresh Avatar</div>
+            <div className="pl-3">{t("profile.updatePhoto")}</div>
             <ChevronRight />
           </div>
         </div>
@@ -331,7 +331,7 @@ const SettingModal = ({ close }) => {
             <LayoutGrid />
           </div>
           <div className="flex justify-between w-full">
-            <div className="pl-3">Add Shortcut</div>
+            <div className="pl-3">{t("profile.addToHome")}</div>
             <ChevronRight />
           </div>
         </div>

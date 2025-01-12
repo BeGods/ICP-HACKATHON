@@ -54,7 +54,7 @@
     { "title": "Explosão", "desc": "Pressão de Apertar" },
     { "title": "Pacote de Autômatos", "desc": "Autômatos 4X" },
     { "title": "Pacote de Explosão", "desc": "4X Explosão" },
-    { "title": "Moon Amulet", "desc": "2X Conversion" }
+    { "título": "Amuleto da Lua", "desc": "Conversão 2X" }
   ],
   "profile": {
     "premium": "Premium",
@@ -78,7 +78,9 @@
     "music": "Música",
     "wallet": "Carteira",
     "watch": "Watch",
-    "flag": "Flag"
+    "country": "País",
+    "updatePhoto": "Atualizar foto",
+    "addToHome": "Adicionar atalho"
   },
   "elements": {
     "earth": "Terra",
@@ -102,7 +104,12 @@
   "note": {
     "text": "Atualização da classificação em",
     "tower": "Toque nas ORBS para converter",
-    "bonus": "Para ver promoções ativas"
+    "bonus": "Para ver promoções ativas",
+    "ad": "Para obter um potenciador grátis!",
+    "whitelist": {
+      "QuestName": "Whitelist",
+      "desc": "Uma NFT Whitelist é uma coleção selecionada de endereços de carteiras criptográficas com acesso antecipado ao ecossistema BeGODS. Esse NFT permite ao proprietário comprar 30 USD de nosso Token BGODS, após ele ser listado."
+    }
   },
   "tower": {
     "tune": "Você conhece a ♪ melodia ♪?",
@@ -138,237 +145,370 @@
   "quests": {
     "celtic": {
       "A01": {
+        "artist": "John Duncan, 1909",
         "QuestName": "Fuga de Heptu",
         "desc": "'Heptu se Despedindo da Cidade de Obb', ca 1909, é uma pintura de John Duncan, um pintor simbolista escocês. Visite o original em Whitehouse Terrace, Edimburgo - Escócia."
       },
       "B01": {
+        "artist": "Jose de Madrazo y Agudo, 1807",
         "QuestName": "Traição de Viriato",
         "desc": "'A Morte de Viriato, Chefe dos Lusitanos', ca 1807, é uma pintura de José de Madrazo y Agudo, um pintor neoclássico espanhol. Visite o original no Museo del Prado, Madrid - Espanha."
       },
       "A02": {
+        "artist": "John Duncan, 1912",
         "QuestName": "Tristão e Isolda",
         "desc": "'Tristão e Isolda', ca 1912, é uma pintura de John Duncan, um pintor simbolista escocês. Visite o original em Whitehouse Terrace, Edimburgo - Escócia."
       },
       "B02": {
+        "artist": "Gaston Bussiere, 1912",
         "QuestName": "A Triste Princesa",
         "desc": "'Isolda: A Princesa Celta', ca 1912, é uma pintura de Gaston Gaston Bussiere, um pintor simbolista francês. Visite o original no Musée des Ursulines, Mâcon - França."
       },
       "A03": {
+        "artist": "John Duncan, 1913",
         "QuestName": "Imbolc de Brigid",
         "desc": "'A Santa Noiva', ca 1913, é uma pintura de John Duncan, um pintor simbolista escocês. Visite o original na National Gallery, Edimburgo - Escócia."
       },
       "B03": {
+        "artist": "Edward Robert Hughes, 1911",
         "QuestName": "Fantasia de Verão",
         "desc": "'Fantasia ao Crepúsculo', ca 1911, é uma pintura de Edward Robert Hughes, um pintor simbolista britânico. Visite o original na Artchiv Gallery, Praga - República Tcheca."
       },
       "A04": {
+        "artist": "John Duncan, 1924",
         "QuestName": "Clã Lir",
         "desc": "'Filhos de Lir', ca 1924, é uma pintura de John Duncan, um pintor simbolista escocês. Visite o original nas Dundee Art Galleries, Edimburgo - Escócia."
       },
       "B04": {
+        "artist": "Jan Asselijn, 1650",
         "QuestName": "Amante de Aengus",
         "desc": "'O Cisne Ameaçado', ca 1650, é uma pintura de Jan Asselijn, um pintor da Idade de Ouro holandesa. Visite o original no Rijksmuseum Amsterdam, Amsterdã - Países Baixos."
       },
       "A05": {
+        "artist": "John Duncan, 1924",
         "QuestName": "A Bela Adormecida",
         "desc": "'A Princesa Adormecida', ca 1924, é uma pintura de John Duncan, um pintor simbolista escocês. Visite o original na Perth Art Gallery, Perth - Escócia."
       },
       "B05": {
+        "artist": "Frank Bernard Dicksee, 1913",
         "QuestName": "Leanan Sidhe",
         "desc": "'La Belle Dame sans Merci', ca 1913, é uma pintura de Frank Bernard Dicksee, um pintor vitoriano britânico. Visite o original no Bristol City Museum, Bristol - Inglaterra."
       },
       "A06": {
+        "artist": "John Duncan, 1911",
         "QuestName": "Cavaleiros Sidhe",
         "desc": "'Cavaleiros do Sidhe', ca 1911, é uma pintura de John Duncan, um pintor simbolista escocês. Visite o original nas Dundee Art Galleries, Edimburgo - Escócia."
       },
       "B06": {
+        "artist": "Lionel Royer, 1899",
         "QuestName": "Vercingetórix",
         "desc": "'Vercingetórix diante de César', ca 1899, é uma pintura de Lionel Royer, um pintor histórico francês. Visite o original no Musée Crozatier, Auvergne - França."
       },
       "C01": {
-        "QuestName": "Tuatha Dé Danann",
-        "desc": "'A Disputa de Oberon e Titania', ca 1849, é uma pintura de Joseph Noel Paton, um pintor histórico escocês. Visite o original na National Gallery, Edimburgo - Escócia."
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann I",
+        "desc": "`A Disputa de Oberon e Titânia,` ca. 1849, é uma pintura de Joseph Noel Paton, um pintor histórico escocês. Visite o original na Galeria Nacional, Edimburgo - Escócia."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG I",
+        "desc": "`Crepúsculo,` ca. 1890, é uma pintura de Ulpiano Checa, um pintor histórico espanhol. Visite o original no Museu Ulpiano Checa, Madri - Espanha."
+      },
+      "C03": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann II",
+        "desc": "`A Disputa de Oberon e Titânia,` ca. 1849, é uma pintura de Joseph Noel Paton, um pintor histórico escocês. Visite o original na Galeria Nacional, Edimburgo - Escócia."
+      },
+      "C04": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG II",
+        "desc": "`Crepúsculo,` ca. 1890, é uma pintura de Ulpiano Checa, um pintor histórico espanhol. Visite o original no Museu Ulpiano Checa, Madri - Espanha."
+      },
+      "C05": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann III",
+        "desc": "`A Disputa de Oberon e Titânia,` ca. 1849, é uma pintura de Joseph Noel Paton, um pintor histórico escocês. Visite o original na Galeria Nacional, Edimburgo - Escócia."
+      },
+      "C06": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG III",
+        "desc": "`Crepúsculo,` ca. 1890, é uma pintura de Ulpiano Checa, um pintor histórico espanhol. Visite o original no Museu Ulpiano Checa, Madri - Espanha."
       }
     },
-
     "egyptian": {
       "A01": {
+        "artist": "Eugene Pierre Francois Giraud, 1864",
         "QuestName": "Sussurrador de Pássaros",
         "desc": "'O Vendedor de Pombas Egípcias', ca 1864, é uma pintura de Eugène Pierre François Giraud, um pintor francês. Visite o original no Museo de Bellas Artes, Valência - Espanha."
       },
       "B01": {
+        "artist": "Arthur Drummond, 1890",
         "QuestName": "Encanto de Hator",
         "desc": "'O Harpista', ca 1890, é uma pintura de Arthur Drummond, um pintor britânico. Visite o original na Sotheby's, Londres - Inglaterra."
       },
       "A02": {
+        "artist": "Lawrence Alma-Tadema, 1904",
         "QuestName": "Milagre do Nilo",
         "desc": "'A Descoberta de Moisés', ca 1904, é uma pintura de Lawrence Alma-Tadema, um pintor vitoriano holandês. Visite o original na Sotheby's, Londres - Inglaterra."
       },
       "B02": {
+        "artist": "Edwin Longsden Long, 1883",
         "QuestName": "Procissão de Ísis",
         "desc": "'A Fuga para o Egito', ca 1883, é uma pintura de Edwin Longsden Long, um pintor bíblico britânico. Visite o original no Russell-Cotes Museum, Bournemouth - Inglaterra."
       },
       "A03": {
-        "QuestName": "Perfume de Shezmus",
+        "artist": "Alexandre Cabanel, 1887",
+        "QuestName": "Perfume de Shezmus I",
         "desc": "'Cleópatra testando venenos em prisioneiros condenados', ca 1887, é uma pintura de Alexandre Cabanel, um pintor clássico francês. Visite o original no Royal Museum, Antuérpia - Bélgica."
       },
       "B03": {
+        "artist": "John Collier, 1890",
         "QuestName": "Tumba de Cleópatra",
         "desc": "'A Morte de Cleópatra', ca 1890, é uma pintura de John Collier, um pintor pré-rafaelita britânico. Visite o original na Art Gallery, Oldham - Inglaterra."
       },
       "A04": {
-        "QuestName": "Sangue de Sekhmet I",
-        "desc": "'Israel no Egito', ca 1867, é uma pintura de Edward Poynter, um pintor histórico britânico. Visite o original na Guildhall Art Gallery, Londres - Inglaterra."
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Perfume de Shezmus II",
+        "desc": "'Cleópatra testando venenos em prisioneiros condenados', ca 1887, é uma pintura de Alexandre Cabanel, um pintor clássico francês. Visite o original no Royal Museum, Antuérpia - Bélgica."
       },
       "B04": {
+        "artist": "Edwin Long, 1878",
         "QuestName": "Culto de Bastet",
         "desc": "'Os Deuses e Seus Criadores', ca 1878, é uma pintura do pintor bíblico inglês Edwin Long. Visite o original na Towneley Hall Art Gallery, Burnley - Inglaterra."
       },
       "A05": {
-        "QuestName": "Sangue de Sekhmet II",
-        "desc": "'Israel no Egito', ca 1867, é uma pintura de Edward Poynter, um pintor histórico britânico. Visite o original na Guildhall Art Gallery, Londres - Inglaterra."
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sonho do Faraó I",
+        "desc": "'José Interpretando o Sonho do Faraó', ca 1894, é uma pintura de Reginald Arthur, um pintor histórico britânico. Visite o original na Sotheby's, Londres - Inglaterra."
       },
       "B05": {
+        "artist": "John Weguelin, 1886",
         "QuestName": "Culto de Maahes",
         "desc": "'Os Obsequiosos de um Gato Egípcio', ca 1886, é uma pintura de John Weguelin, um pintor clássico britânico. Visite o original na Auckland Art Gallery, Auckland - Nova Zelândia."
       },
       "A06": {
-        "QuestName": "Sonho do Faraó",
+        "artist": "Reginald Arthur, 1894",
+        "QuestName": "Sonho do Faraó II",
         "desc": "'José Interpretando o Sonho do Faraó', ca 1894, é uma pintura de Reginald Arthur, um pintor histórico britânico. Visite o original na Sotheby's, Londres - Inglaterra."
       },
       "B06": {
+        "artist": "Lawrence Alma-Tadema, 1855",
         "QuestName": "Ameaça Estrangeira",
         "desc": "'O Encontro de Antônio e Cleópatra', ca 1885, é uma pintura de Lawrence Alma-Tadema, um pintor vitoriano holandês. Visite o original na Sotheby's, Londres - Inglaterra."
       },
       "C01": {
-        "QuestName": "Culto do Touro Apis",
-        "desc": "'A Procissão do Touro Apis', ca 1879, é uma pintura de Frederick Arthur Bridgman, um pintor orientalista americano. Visite o original em uma Coleção Privada, EUA."
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Culto do Touro Ápis I",
+        "desc": "`A Procissão do Touro Ápis,` ca. 1879, é uma pintura de Frederick Arthur Bridgman, um pintor orientalista americano. Visite o original em uma Coleção Privada, EUA."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sangue de Sekhmet I",
+        "desc": "'Israel no Egito', ca 1867, é uma pintura de Edward Poynter, um pintor histórico britânico. Visite o original na Guildhall Art Gallery, Londres - Inglaterra."
+      },
+      "C03": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Culto do Touro Ápis II",
+        "desc": "`A Procissão do Touro Ápis,` ca. 1879, é uma pintura de Frederick Arthur Bridgman, um pintor orientalista americano. Visite o original em uma Coleção Privada, EUA."
+      },
+      "C04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sangue de Sekhmet II",
+        "desc": "'Israel no Egito', ca 1867, é uma pintura de Edward Poynter, um pintor histórico britânico. Visite o original na Guildhall Art Gallery, Londres - Inglaterra."
+      },
+      "C05": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Culto do Touro Ápis III",
+        "desc": "`A Procissão do Touro Ápis,` ca. 1879, é uma pintura de Frederick Arthur Bridgman, um pintor orientalista americano. Visite o original em uma Coleção Privada, EUA."
+      },
+      "C06": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sangue de Sekhmet III",
+        "desc": "'Israel no Egito', ca 1867, é uma pintura de Edward Poynter, um pintor histórico britânico. Visite o original na Guildhall Art Gallery, Londres - Inglaterra."
       }
     },
-
     "greek": {
       "A01": {
+        "artist": "Frederick Arthur Bridgman, 1903",
         "QuestName": "Narciso e Eco",
         "desc": "'Eco e Narciso', ca 1903, é uma pintura de John William Waterhouse, um pintor clássico britânico. Visite o original na Walker Art Gallery, Liverpool - Inglaterra."
       },
       "B01": {
+        "artist": "Henrietta Rae, 1909",
         "QuestName": "Ninfas da Água",
         "desc": "'Hylas e as Ninfas da Água', ca 1909, é uma pintura de Henrietta Rae, uma pintora clássica britânica. Visite o original na Walker Art Gallery, Liverpool - Inglaterra."
       },
       "A02": {
+        "artist": "Charles-Antoine Coypel, 1737",
         "QuestName": "Fúria de Aquiles",
         "desc": "'Fúria de Aquiles', ca 1737, é uma pintura de Charles-Antoine Coypel, um pintor clássico francês. Visite o original na Walker Art Gallery, São Petersburgo - Rússia."
       },
       "B02": {
-        "QuestName": "Queda de Fáeton",
-        "desc": "'A Queda de Fáeton', ca 1737, é uma pintura de Peter Paul Rubens, um pintor barroco flamengo. Visite o original na National Gallery of Art, Washington D.C. - Estados Unidos."
+        "artist": "Carlo Perugini, 1893",
+        "QuestName": "A Caixa de Pandora",
+        "desc": "`A Caixa de Pandora`, por volta de 1893, é uma pintura de Carlo Perugini, um pintor neoclássico vitoriano italiano. Coleção privada, Londres - Inglaterra."
       },
       "A03": {
+        "artist": "Merry Joseph Blondel, 1819",
         "QuestName": "Ícaro e Dédalo",
         "desc": "'O Sol ou a Queda de Ícaro', ca 1819, é uma pintura de Merry Joseph Blondel, um pintor neoclássico francês. Visite o original no Museu do Louvre, Paris - França."
       },
       "B03": {
+        "artist": "Theodoor Rombouts, 1620",
         "QuestName": "Presente de Prometeu",
         "desc": "'Prometeu', ca 1620, é uma pintura de Theodoor Rombouts, um pintor caravaggesco flamengo. Visite o original nos Museus Reais de Belas Artes, Antuérpia - Bélgica."
       },
       "A04": {
+        "artist": "Camillo Miola, 1880",
         "QuestName": "Oráculo de Delfos",
         "desc": "'Pítia: Oráculo e Alta Sacerdotisa de Delfos', ca 1880, é uma pintura de Camillo Miola, um pintor histórico italiano. Visite o original no J. Paul Getty Center, Los Angeles - EUA."
       },
       "B04": {
+        "artist": "Karl Pavlovich Bryullov, 1833",
         "QuestName": "Destino de Hefesto",
         "desc": "'O Último Dia de Pompéia', ca 1833, é uma pintura de Karl Pavlovich Bryullov, um pintor neoclássico russo. Visite o original no Museu Russo do Estado, São Petersburgo - Rússia."
       },
       "A05": {
+        "artist": "Herbert James Draper, 1904",
         "QuestName": "Velo de Ouro",
         "desc": "'O Velo de Ouro', ca 1904, é uma pintura de Herbert James Draper, um pintor neoclássico britânico. Visite o original no Cartwright Hall, Bradford - Inglaterra."
       },
       "B05": {
+        "artist": "Herbert James Draper, 1909",
         "QuestName": "Sereias de Odisseu",
         "desc": "'Ulisses e as Sereias', ca 1909, é uma pintura de Herbert James Draper, um pintor neoclássico britânico. Visite o original na Ferens Art Gallery, Hull - Inglaterra."
       },
       "A06": {
+        "artist": "Cole Thomas, 1836",
         "QuestName": "Ascensão do Império",
         "desc": "'A Consumação do Curso do Império', ca 1836, é uma pintura de Cole Thomas, um pintor paisagista americano. Visite o original na Historical Society, Nova York - EUA."
       },
       "B06": {
+        "artist": "Cole Thomas, 1836",
         "QuestName": "Queda do Império",
         "desc": "'A Destruição do Curso do Império', ca 1836, é uma pintura de Cole Thomas, um pintor paisagista americano. Visite o original na Historical Society, Nova York - EUA."
       },
       "C01": {
-        "QuestName": "Titanomaquia",
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia I",
         "desc": "'Órion: A Queda dos Gigantes', ca 1764, é uma pintura de Francisco Bayeu y Subías, um pintor neoclássico espanhol. Visite o original no Museo del Prado, Madrid - Espanha."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "Queda de Fáeton I",
+        "desc": "'A Queda de Fáeton', ca 1604, é uma pintura de Peter Paul Rubens, um pintor barroco flamengo. Visite o original na National Gallery of Art, Washington D.C. - Estados Unidos."
+      },
+      "C03": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia II",
+        "desc": "'Órion: A Queda dos Gigantes', ca 1764, é uma pintura de Francisco Bayeu y Subías, um pintor neoclássico espanhol. Visite o original no Museo del Prado, Madrid - Espanha."
+      },
+      "C04": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "Queda de Fáeton II",
+        "desc": "'A Queda de Fáeton', ca 1604, é uma pintura de Peter Paul Rubens, um pintor barroco flamengo. Visite o original na National Gallery of Art, Washington D.C. - Estados Unidos."
+      },
+      "C05": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia III",
+        "desc": "'Órion: A Queda dos Gigantes', ca 1764, é uma pintura de Francisco Bayeu y Subías, um pintor neoclássico espanhol. Visite o original no Museo del Prado, Madrid - Espanha."
+      },
+      "C06": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "Queda de Fáeton III",
+        "desc": "'A Queda de Fáeton', ca 1604, é uma pintura de Peter Paul Rubens, um pintor barroco flamengo. Visite o original na National Gallery of Art, Washington D.C. - Estados Unidos."
       }
     },
-
     "norse": {
       "A01": {
+        "artist": "Peter Nicolai Arbo, 1874",
         "QuestName": "Um Novo Amanhecer",
         "desc": "'Dagr (Dia)', ca 1874, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original no National Museum, Estocolmo - Suécia."
       },
       "B01": {
+        "artist": "Peter Nicolai Arbo, 1887",
         "QuestName": "Crepúsculo",
         "desc": "'Nott (Noite)', ca 1887, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original no National Museum, Estocolmo - Suécia."
       },
       "A02": {
+        "artist": "Edward Robert Hughes, 1915",
         "QuestName": "Uma Prisão de Valquírias",
         "desc": "'A Vigília da Valquíria', ca 1915, é uma pintura de Edward Robert Hughes, um pintor britânico de aquarelas. Visite o original no Museum and Art Gallery, Birmingham - Inglaterra."
       },
       "B02": {
+        "artist": "Peter Nicolai Arbo, 1892",
         "QuestName": "Toque das Valquírias",
         "desc": "'A Morte de Hervor', ca 1892, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original no National Museum, Estocolmo - Suécia."
       },
       "A03": {
+        "artist": "Christian Krohg, 1893",
         "QuestName": "Vinland (América)",
         "desc": "'Leif Erikson Descobrindo a América', ca 1893, é uma pintura de Christian Krohg, um pintor naturalista norueguês. Visite o original no National Museum, Oslo - Noruega."
       },
       "B03": {
+        "artist": "Oscar Arnold Wergeland, 1877",
         "QuestName": "Descoberta da Islândia",
         "desc": "'O Homem Nórdico Aterrissa na Islândia', ca 1877, é uma pintura de Oscar Arnold Wergeland, um pintor histórico norueguês. Visite o original no National Museum, Oslo - Noruega."
       },
       "A04": {
+        "artist": "Ferdinand Leek, 1901",
         "QuestName": "Um Saque de Vikings",
         "desc": "'Um Saque Viking', ca 1901, é uma pintura de Ferdinand Leek, um pintor modernista alemão. Visite o original na Schloss Art Gallery, Ahlden - Alemanha."
       },
       "B04": {
+        "artist": "Frank Bernard Dicksee, 1893",
         "QuestName": "Funeral Viking",
         "desc": "'O Funeral de um Viking', ca 1893, é uma pintura de Frank Bernard Dicksee, um pintor vitoriano britânico. Visite o original na Art Gallery, Manchester - Inglaterra."
       },
       "A05": {
+        "artist": "Peter Nicolai Arbo, 1876",
         "QuestName": "O Sinal do Rei",
         "desc": "'Hákon o Bom', ca 1876, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original no National Museum, Estocolmo - Suécia."
       },
       "B05": {
+        "artist": "Peter Otto Sinding, 1870",
         "QuestName": "Batalha de Svold I",
         "desc": "'Batalha de Svolder', ca 1883, é uma pintura de Peter Otto Sinding, um pintor histórico norueguês. Visite o original em uma Coleção Privada, Estocolmo - Suécia."
       },
       "A06": {
+        "artist": "Peter Nicolai Arbo, 1883",
         "QuestName": "Vikings vs Celtas",
         "desc": "'Batalha da Ponte de Stamford', ca 1870, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original no Nordnorsk Kunstmuseum, Tromsø - Noruega."
       },
       "B06": {
+        "artist": "Peter Otto Sinding, 1870",
         "QuestName": "Batalha de Svold II",
         "desc": "'Batalha de Svolder', ca 1883, é uma pintura do pintor histórico norueguês Peter Otto Sinding. Visite o original em uma Coleção Privada, Estocolmo - Suécia."
       },
       "C01": {
-        "QuestName": "Asgardsreien",
-        "desc": "'A Caça Selvagem', ca 1856, é uma pintura de Johann Wilhelm Cordes, um pintor paisagista alemão. Visite o original na Behnhaus, Lübeck - Alemanha."
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "A Maçã da Vida de Idun I",
+        "desc": "`Idun e as Maçãs,` ca. 1890, é uma pintura de James Doyle Penrose, um pintor histórico norueguês. Coleção Privada, Londres - Inglaterra."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok I",
+        "desc": "`Asgardsreien,` ca. 1872, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original na Galeria Nacional, Oslo - Noruega."
+      },
+      "C03": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "A Maçã da Vida de Idun II",
+        "desc": "`Idun e as Maçãs,` ca. 1890, é uma pintura de James Doyle Penrose, um pintor histórico norueguês. Coleção Privada, Londres - Inglaterra."
+      },
+      "C04": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok II",
+        "desc": "`Asgardsreien,` ca. 1872, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original na Galeria Nacional, Oslo - Noruega."
+      },
+      "C05": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "A Maçã da Vida de Idun III",
+        "desc": "`Idun e as Maçãs,` ca. 1890, é uma pintura de James Doyle Penrose, um pintor histórico norueguês. Coleção Privada, Londres - Inglaterra."
+      },
+      "C06": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok III",
+        "desc": "`Asgardsreien,` ca. 1872, é uma pintura de Peter Nicolai Arbo, um pintor histórico norueguês. Visite o original na Galeria Nacional, Oslo - Noruega."
       }
     }
   },
@@ -519,18 +659,18 @@
     },
     "Stake": {
       "success": {
-        "title": "Stake Successful",
-        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+        "title": "Aposta Bem-Sucedida",
+        "desc": "Você apostou com sucesso 1 Black Orb. Boa sorte!"
       },
       "error": {
-        "title": "Unable to Stake",
-        "desc": "You need to have at least 1 Black Orb to stake."
+        "title": "Impossível Apostar",
+        "desc": "Você precisa ter pelo menos 1 Black Orb para apostar."
       }
     },
     "Profile": {
       "success": {
-        "title": "Update Initiated",
-        "desc": "Your profile avatar will be updated shortly!"
+        "title": "Atualização Iniciada",
+        "desc": "Seu avatar de perfil será atualizado em breve!"
       }
     }
   }
