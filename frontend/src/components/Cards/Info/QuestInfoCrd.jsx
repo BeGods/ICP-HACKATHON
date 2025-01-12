@@ -77,7 +77,9 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
       >
         {t(`quests.${mythSections[activeMyth]}.${quest.type}.desc`)}
       </div>
-      {/* <div className="absolute bottom-0 text-para left-0 px-2 py-1">Daniel</div> */}
+      <div className="absolute bottom-0 text-para mx-auto px-2 py-1 text-card">
+        {t(`quests.${mythSections[activeMyth]}.${quest.type}.artist`)}
+      </div>
     </div>
   );
 };

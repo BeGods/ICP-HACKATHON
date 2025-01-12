@@ -48,7 +48,7 @@
     { "title": "Pagbabalik", "desc": "Puwersa ng Pagsisikip" },
     { "title": "Pakete ng mga Awtomata", "desc": "4X Awtomata" },
     { "title": "Pakete ng mga Pagbabalik", "desc": "4X Pagbabalik" },
-    { "title": "Moon Amulet", "desc": "4X Orb Conversion" }
+    { "title": "Amuleto ng Buwan", "desc": "2X Pag-convert" }
   ],
   "profile": {
     "premium": "Premium",
@@ -72,7 +72,9 @@
     "music": "Musika",
     "wallet": "Pitaka",
     "watch": "Watch",
-    "flag": "Flag"
+    "country": "Bansa",
+    "updatePhoto": "I-update ang larawan",
+    "addToHome": "Magdagdag ng shortcut"
   },
   "elements": {
     "earth": "Lupa",
@@ -96,7 +98,12 @@
   "note": {
     "text": "Pag-update ng leaderboard sa",
     "tower": "Tap ang ORBS para i-convert",
-    "bonus": "Upang makita ang mga aktibong promosyon"
+    "bonus": "Upang makita ang mga aktibong promosyon",
+    "ad": "Para makakuha ng libreng booster!",
+    "whitelist": {
+      "QuestName": "Whitelist",
+      "desc": "Ang NFT whitelist ay isang napiling koleksyon ng mga address ng crypto wallet na may maagang access sa BeGODS ecosystem. Ang NFT na ito ay nagpapahintulot sa may-ari na bumili ng 30 USD ng aming BGODS Token, pagkatapos itong ilista."
+    }
   },
   "tower": {
     "tune": "Alam mo ba ang ♪ himig ♪?",
@@ -135,234 +142,370 @@
   "quests": {
     "celtic": {
       "A01": {
+        "artist": "John Duncan, 1909",
         "QuestName": "Paglikas ni Heptu",
         "desc": "'Paghahatid Pamamaalam ni Heptu sa Lungsod ng Obb', ca 1909, ay isang pinta ni John Duncan, isang Scottish symbolist na pintor. Bisitahin ang orihinal sa Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B01": {
+        "artist": "Jose de Madrazo y Agudo, 1807",
         "QuestName": "Pagkakanulo ni Viriato",
         "desc": "'Ang Kamatayan ni Viriatus, Punong-lungsod ng Lusitanians', ca 1807, ay isang pinta ni Jose de Madrazo y Agudo, isang Spanish neoclassical na pintor. Bisitahin ang orihinal sa Museo del Prado, Madrid - Spain."
       },
       "A02": {
+        "artist": "John Duncan, 1912",
         "QuestName": "Tristan at Iseult",
         "desc": "'Tristan at Isolde', ca 1912, ay isang pinta ni John Duncan, isang Scottish symbolist na pintor. Bisitahin ang orihinal sa Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B02": {
+        "artist": "Gaston Bussiere, 1912",
         "QuestName": "Ang Malungkot na Prinsesa",
         "desc": "'Isolde: Ang Prinsesa ng Celt', ca 1912, ay isang pinta ni Gaston Gaston Bussiere, isang French symbolist na pintor. Bisitahin ang orihinal sa Musee des Ursulines, Macon - France."
       },
       "A03": {
+        "artist": "John Duncan, 1913",
         "QuestName": "Imbolc ni Brigid",
         "desc": "'Ang Santa Bride', ca 1913, ay isang pinta ni John Duncan, isang Scottish symbolist na pintor. Bisitahin ang orihinal sa National Gallery, Edinburgh - Scotland."
       },
       "B03": {
+        "artist": "Edward Robert Hughes, 1911",
         "QuestName": "Pantasyang Tag-init",
         "desc": "'Pantasiya sa Twilight', ca 1911, ay isang pinta ni Edward Robert Hughes, isang British symbolist na pintor. Bisitahin ang orihinal sa Artchiv Gallery, Prague - Czech Republic."
       },
       "A04": {
+        "artist": "John Duncan, 1924",
         "QuestName": "Clann ni Lir",
         "desc": "'Mga Anak ni Lir', ca 1924, ay isang pinta ni John Duncan, isang Scottish symbolist na pintor. Bisitahin ang orihinal sa Dundee Art Galleries, Edinburgh - Scotland."
       },
       "B04": {
+        "artist": "Jan Asselijn, 1650",
         "QuestName": "Kasintahan ni Aengus",
         "desc": "'Ang Banta ng Swan', ca 1650, ay isang pinta ni Jan Asselijn, isang Dutch golden age na pintor. Bisitahin ang orihinal sa Rijksmuseum Amsterdam, Amsterdam - Netherlands."
       },
       "A05": {
+        "artist": "John Duncan, 1924",
         "QuestName": "Natutulog na Kagandahan",
         "desc": "'Ang Natutulog na Prinsesa', ca 1924, ay isang pinta ni John Duncan, isang Scottish symbolist na pintor. Bisitahin ang orihinal sa Perth Art Gallery, Perth - Scotland."
       },
       "B05": {
+        "artist": "Frank Bernard Dicksee, 1913",
         "QuestName": "Leanan Sidhe",
         "desc": "'La Belle Dame sans Merci', ca 1913, ay isang pinta ni Frank Bernard Dicksee, isang British Victorian na pintor. Bisitahin ang orihinal sa Bristol City Museum, Bristol - England."
       },
       "A06": {
+        "artist": "John Duncan, 1911",
         "QuestName": "Mga Rider ng Sidhe",
         "desc": "'Mga Rider ng Sidhe', ca 1911, ay isang pinta ni John Duncan, isang Scottish symbolist na pintor. Bisitahin ang orihinal sa Dundee Art Galleries, Edinburgh - Scotland."
       },
       "B06": {
+        "artist": "Lionel Royer, 1899",
         "QuestName": "Vercingetorix",
         "desc": "'Vercingetorix sa Harap ni Caesar', ca 1899, ay isang pinta ni Lionel Royer, isang French historical na pintor. Bisitahin ang orihinal sa Musee Crozatier, Auvergne - France."
       },
       "C01": {
-        "QuestName": "Tuath Danann",
-        "desc": "'Ang Alitan nina Oberon at Titania', ca 1849, ay isang pinta ni Joseph Noel Paton, isang Scottish historical na pintor. Bisitahin ang orihinal sa National Gallery, Edinburgh - Scotland."
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann I",
+        "desc": "`Ang Alitan nina Oberon at Titania,` ca. 1849, ay isang pintura ni Joseph Noel Paton, isang Scottish na makasaysayang pintor. Bisitahin ang orihinal sa National Gallery, Edinburgh - Scotland."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG I",
+        "desc": "`Takipsilim,` ca. 1890, ay isang pintura ni Ulpiano Checa, isang Espanyol na makasaysayang pintor. Bisitahin ang orihinal sa Ulpiano Checa Museum, Madrid - Spain."
+      },
+      "C03": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann II",
+        "desc": "`Ang Alitan nina Oberon at Titania,` ca. 1849, ay isang pintura ni Joseph Noel Paton, isang Scottish na makasaysayang pintor. Bisitahin ang orihinal sa National Gallery, Edinburgh - Scotland."
+      },
+      "C04": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG II",
+        "desc": "`Takipsilim,` ca. 1890, ay isang pintura ni Ulpiano Checa, isang Espanyol na makasaysayang pintor. Bisitahin ang orihinal sa Ulpiano Checa Museum, Madrid - Spain."
+      },
+      "C05": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann III",
+        "desc": "`Ang Alitan nina Oberon at Titania,` ca. 1849, ay isang pintura ni Joseph Noel Paton, isang Scottish na makasaysayang pintor. Bisitahin ang orihinal sa National Gallery, Edinburgh - Scotland."
+      },
+      "C06": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG III",
+        "desc": "`Takipsilim,` ca. 1890, ay isang pintura ni Ulpiano Checa, isang Espanyol na makasaysayang pintor. Bisitahin ang orihinal sa Ulpiano Checa Museum, Madrid - Spain."
       }
     },
     "egyptian": {
       "A01": {
-        "QuestName": "Tagapagsalita ng mga Ibon",
+        "artist": "Eugene Pierre Francois Giraud, 1864",
+        "QuestName": "Tagapagsalita ng mga Ibong",
         "desc": "'Ang Nagbebenta ng Kalapati ng Ehipto', ca 1864, ay isang pinta ni Eugene Pierre Francois Giraud, isang French na pintor. Bisitahin ang orihinal sa Museo de Bellas Artes, Valencia - Spain."
       },
       "B01": {
+        "artist": "Arthur Drummond, 1890",
         "QuestName": "Alindog ni Hathor",
         "desc": "'Ang Harpist', ca 1890, ay isang pinta ni Arthur Drummond, isang British na pintor. Bisitahin ang orihinal sa Sotheby’s, London - England."
       },
       "A02": {
+        "artist": "Lawrence Alma-Tadema, 1904",
         "QuestName": "Himala ng Nile",
-        "desc": "'Ang Pagkakatagpo ng Moises', ca 1904, ay isang pinta ni Lawrence Alma-Tadema, isang Dutch Victorian na pintor. Bisitahin ang orihinal sa Sotheby’s, London - England."
+        "desc": "'Ang Pagkakatagpo ng Moises', ca 1904, ay isang pinta ni Lawrence Alma-Tadema, isang Dutch Victorian na pintor. Bisitahin ang orihinal sa Sotheby’s, London - England.."
       },
       "B02": {
+        "artist": "Edwin Longsden Long, 1883",
         "QuestName": "Prosisyon ni Isis",
         "desc": "'Ang Paglipad patungo sa Ehipto', ca 1883, ay isang pinta ni Edwin Longsden Long, isang British biblical na pintor. Bisitahin ang orihinal sa Russell-Cotes Museum, Bournemouth - England."
       },
       "A03": {
-        "QuestName": "Pabango ni Shezmus",
+        "artist": "Alexandre Cabanel, 1887",
+        "QuestName": "Pabango ni Shezmus I",
         "desc": "'Si Cleopatra na Tinutest ang mga Lason sa mga Nahatulang Bilanggo', ca 1887, ay isang pinta ni Alexandre Cabanel, isang French classical na pintor. Bisitahin ang orihinal sa Royal Museum, Antwerp - Belgium."
       },
       "B03": {
+        "artist": "John Collier, 1890",
         "QuestName": "Libingan ni Cleopatra",
         "desc": "'Ang Kamatayan ni Cleopatra', ca 1890, ay isang pinta ni John Collier, isang British Pre-Raphaelite na pintor. Bisitahin ang orihinal sa Art Gallery, Oldham - England."
       },
       "A04": {
-        "QuestName": "Dugo ni Sekhmet I",
-        "desc": "'Israel sa Ehipto', ca 1867, ay isang pinta ni Edward Poynter, isang British historical na pintor. Bisitahin ang orihinal sa Guildhall Art Gallery, London - England."
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Pabango ni Shezmus II",
+        "desc": "'Si Cleopatra na Tinutest ang mga Lason sa mga Nahatulang Bilanggo', ca 1887, ay isang pinta ni Alexandre Cabanel, isang French classical na pintor. Bisitahin ang orihinal sa Royal Museum, Antwerp - Belgium."
       },
       "B04": {
+        "artist": "Edwin Long, 1878",
         "QuestName": "Kulto ni Bastet",
-        "desc": "'Ang mga Diyos at Kanilang Mga Gumagawa', ca 1878, ay isang pinta ni Edwin Long, isang English biblical na pintor. Bisitahin ang orihinal sa Towneley Hall Art Gallery, Burnley - England."
+        "desc": "'Ang mga Diyos at Kanilang Mga Gumagawa', ca 1878, ay isang pinta ni Edwin Long, isang British biblical na pintor. Bisitahin ang orihinal sa Towneley Hall Art Gallery, Burnley - England."
       },
       "A05": {
-        "QuestName": "Dugo ni Sekhmet II",
-        "desc": "'Israel sa Ehipto', ca 1867, ay isang pinta ni Edward Poynter, isang British historical na pintor. Bisitahin ang orihinal sa Guildhall Art Gallery, London - England."
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Panaginip ng Paraon I",
+        "desc": "'Si Joseph na Nagsasalin ng Panaginip ng Paraon', ca 1894, ay isang pinta ni Reginald Arthur, isang British historical na pintor. Bisitahin ang orihinal sa Sotheby’s, London - England."
       },
       "B05": {
+        "artist": "John Weguelin, 1886",
         "QuestName": "Kulto ni Maahes",
         "desc": "'Ang Paglilibing ng isang Egyptian Cat', ca 1886, ay isang pinta ni John Weguelin, isang British classical na pintor. Bisitahin ang orihinal sa Auckland Art Gallery, Auckland - New Zealand."
       },
       "A06": {
-        "QuestName": "Panaginip ng Paraon",
+        "artist": "Reginald Arthur, 1894",
+        "QuestName": "Panaginip ng Paraon II",
         "desc": "'Si Joseph na Nagsasalin ng Panaginip ng Paraon', ca 1894, ay isang pinta ni Reginald Arthur, isang British historical na pintor. Bisitahin ang orihinal sa Sotheby’s, London - England."
       },
       "B06": {
+        "artist": "Lawrence Alma-Tadema, 1855",
         "QuestName": "Banta ng Dayuhan",
         "desc": "'Ang Pagkakatagpo nina Antony at Cleopatra', ca 1885, ay isang pinta ni Lawrence Alma-Tadema, isang Dutch Victorian na pintor. Bisitahin ang orihinal sa Sotheby’s, London - England."
       },
       "C01": {
-        "QuestName": "Kulto ng Bull Apis",
-        "desc": "'Ang Prosisyon ng Bull Apis', ca 1879, ay isang pinta ni Frederick Arthur Bridgman, isang American orientalist na pintor. Bisitahin ang orihinal sa Private Collection, USA."
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Kulto ng Toro Apis I",
+        "desc": "`Ang Prusisyon ng Toro Apis,` ca. 1879, ay isang pintura ni Frederick Arthur Bridgman, isang Amerikanong orientalistang pintor. Bisitahin ang orihinal sa isang Pribadong Koleksyon, USA."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Dugo ni Sekhmet I",
+        "desc": "'Israel sa Ehipto', ca 1867, ay isang pinta ni Edward Poynter, isang British historical na pintor. Bisitahin ang orihinal sa Guildhall Art Gallery, London - England."
+      },
+      "C03": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Kulto ng Toro Apis II",
+        "desc": "`Ang Prusisyon ng Toro Apis,` ca. 1879, ay isang pintura ni Frederick Arthur Bridgman, isang Amerikanong orientalistang pintor. Bisitahin ang orihinal sa isang Pribadong Koleksyon, USA."
+      },
+      "C04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Dugo ni Sekhmet II",
+        "desc": "'Israel sa Ehipto', ca 1867, ay isang pinta ni Edward Poynter, isang British historical na pintor. Bisitahin ang orihinal sa Guildhall Art Gallery, London - England."
+      },
+      "C05": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Kulto ng Toro Apis III",
+        "desc": "`Ang Prusisyon ng Toro Apis,` ca. 1879, ay isang pintura ni Frederick Arthur Bridgman, isang Amerikanong orientalistang pintor. Bisitahin ang orihinal sa isang Pribadong Koleksyon, USA."
+      },
+      "C06": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Dugo ni Sekhmet III",
+        "desc": "'Israel sa Ehipto', ca 1867, ay isang pinta ni Edward Poynter, isang British historical na pintor. Bisitahin ang orihinal sa Guildhall Art Gallery, London - England."
       }
     },
     "greek": {
       "A01": {
+        "artist": "Frederick Arthur Bridgman, 1903",
         "QuestName": "Narcyssus at Echo",
         "desc": "'Echo at Narcissus', ca 1903, ay isang pinta ni John William Waterhouse, isang British classical na pintor. Bisitahin ang orihinal sa Walker Art Gallery, Liverpool - England."
       },
       "B01": {
+        "artist": "Henrietta Rae, 1909",
         "QuestName": "Mga Nimpa ng Tubig",
         "desc": "'Hylas at ang mga Nimpa ng Tubig', ca 1909, ay isang pinta ni Henrietta Rae, isang British classical na pintor. Bisitahin ang orihinal sa Walker Art Gallery, Liverpool - England."
       },
       "A02": {
+        "artist": "Charles-Antoine Coypel, 1737",
         "QuestName": "Galit ni Achilles",
         "desc": "'Galit ni Achilles', ca 1737, ay isang pinta ni Charles-Antoine Coypel, isang French classical na pintor. Bisitahin ang orihinal sa Walker Art Gallery, Saint Petersburg - Russia."
       },
       "B02": {
-        "QuestName": "Pagbagsak ni Phaeton",
-        "desc": "'Ang Pagbagsak ni Phaeton', ca 1737, ay isang pinta ni Peter Paul Rubens, isang Flemish baroque na pintor. Bisitahin ang orihinal sa National Gallery of Art, Washington D.C. - United States."
+        "artist": "Carlo Perugini, 1893",
+        "QuestName": "Ang Kahon ni Pandora",
+        "desc": "`Ang Kahon ni Pandora,` bandang 1893, ay isang painting ni Carlo Perugini, isang Italyanong pintor na Neoclassical mula sa panahon ng Victorian. Pribadong Koleksyon, London - Inglatera."
       },
       "A03": {
+        "artist": "Merry Joseph Blondel, 1819",
         "QuestName": "Icarus at Daedalus",
         "desc": "'Ang Araw o ang Pagbagsak ni Icarus', ca 1819, ay isang pinta ni Merry Joseph Blondel, isang French neoclassical na pintor. Bisitahin ang orihinal sa Louvre Museum, Paris - France."
       },
       "B03": {
+        "artist": "Theodoor Rombouts, 1620",
         "QuestName": "Regalo ni Prometheus",
         "desc": "'Prometheus', ca 1620, ay isang pinta ni Theodoor Rombouts, isang Flemish caravaggesque na pintor. Bisitahin ang orihinal sa Royal Museums of Fine Arts, Antwerp - Belgium."
       },
       "A04": {
+        "artist": "Camillo Miola, 1880",
         "QuestName": "Oracle ng Delphi",
         "desc": "'Pythia: Oracle at Mataas na Pari ng Delphi', ca 1880, ay isang pinta ni Camillo Miola, isang Italian historical na pintor. Bisitahin ang orihinal sa J. Paul Getty Center, Los Angeles - USA."
       },
       "B04": {
+        "artist": "Karl Pavlovich Bryullov, 1833",
         "QuestName": "Kapalaran ni Hephaestus",
         "desc": "'Ang Huling Araw ng Pompeii', ca 1833, ay isang pinta ni Karl Pavlovich Bryullov, isang Russian neoclassical na pintor. Bisitahin ang orihinal sa State Russian Museum, Saint Petersburg - Russia."
       },
       "A05": {
+        "artist": "Herbert James Draper, 1904",
         "QuestName": "Gintong Balahibo",
         "desc": "'Ang Gintong Balahibo', ca 1904, ay isang pinta ni Herbert James Draper, isang British neoclassical na pintor. Bisitahin ang orihinal sa Cartwright Hall, Bradford - England."
       },
       "B05": {
+        "artist": "Herbert James Draper, 1909",
         "QuestName": "Sirena ni Odysseus",
         "desc": "'Ulysses at ang mga Sirena', ca 1909, ay isang pinta ni Herbert James Draper, isang British neoclassical na pintor. Bisitahin ang orihinal sa Ferens Art Gallery, Hull - England."
       },
       "A06": {
+        "artist": "Cole Thomas, 1836",
         "QuestName": "Pag-akyat ng Imperyo",
         "desc": "'Ang Pagkakumpleto ng Kurso ng Imperyo', ca 1836, ay isang pinta ni Cole Thomas, isang American landscape na pintor. Bisitahin ang orihinal sa Historical Society, New York - USA."
       },
       "B06": {
+        "artist": "Cole Thomas, 1836",
         "QuestName": "Pagbagsak ng Imperyo",
         "desc": "'Ang Kurso ng Imperyo: Pagkawasak', ca 1836, ay isang pinta ni Cole Thomas, isang American landscape na pintor. Bisitahin ang orihinal sa Historical Society, New York - USA."
       },
       "C01": {
-        "QuestName": "Titanomachia",
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia I",
         "desc": "'Olympus: Ang Pagbagsak ng mga Higante', ca 1764, ay isang pinta ni Francisco Bayeu y Subías, isang Spanish neoclassical na pintor. Bisitahin ang orihinal sa Museo del Prado, Madrid - Spain."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "Pagbagsak ni Phaeton I",
+        "desc": "'Ang Pagbagsak ni Phaeton', ca 1604, ay isang pinta ni Peter Paul Rubens, isang Flemish baroque na pintor. Bisitahin ang orihinal sa National Gallery of Art, Washington D.C. - United States."
+      },
+      "C03": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia II",
+        "desc": "'Olympus: Ang Pagbagsak ng mga Higante', ca 1764, ay isang pinta ni Francisco Bayeu y Subías, isang Spanish neoclassical na pintor. Bisitahin ang orihinal sa Museo del Prado, Madrid - Spain."
+      },
+      "C04": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "Pagbagsak ni Phaeton II",
+        "desc": "'Ang Pagbagsak ni Phaeton', ca 1604, ay isang pinta ni Peter Paul Rubens, isang Flemish baroque na pintor. Bisitahin ang orihinal sa National Gallery of Art, Washington D.C. - United States."
+      },
+      "C05": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia III",
+        "desc": "'Olympus: Ang Pagbagsak ng mga Higante', ca 1764, ay isang pinta ni Francisco Bayeu y Subías, isang Spanish neoclassical na pintor. Bisitahin ang orihinal sa Museo del Prado, Madrid - Spain."
+      },
+      "C06": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "Pagbagsak ni Phaeton III",
+        "desc": "'Ang Pagbagsak ni Phaeton', ca 1604, ay isang pinta ni Peter Paul Rubens, isang Flemish baroque na pintor. Bisitahin ang orihinal sa National Gallery of Art, Washington D.C. - United States."
       }
     },
     "norse": {
       "A01": {
+        "artist": "Peter Nicolai Arbo, 1874",
         "QuestName": "Isang Bagong Bukang Liwayway",
         "desc": "'Dagr (Araw)', ca 1874, ay isang pinta ni Peter Nicolai Arbo, isang Norwegian historical na pintor. Bisitahin ang orihinal sa National Museum, Stockholm - Sweden."
       },
       "B01": {
+        "artist": "Peter Nicolai Arbo, 1887",
         "QuestName": "Takip-Silim",
         "desc": "'Nott (Gabi)', ca 1887, ay isang pinta ni Peter Nicolai Arbo, isang Norwegian historical na pintor. Bisitahin ang orihinal sa National Museum, Stockholm - Sweden."
       },
       "A02": {
+        "artist": "Edward Robert Hughes, 1915",
         "QuestName": "Kulungan ng Valkyrie",
         "desc": "'Ang Vigil ng Valkyrie', ca 1915, ay isang pinta ni Edward Robert Hughes, isang British watercolor na pintor. Bisitahin ang orihinal sa Museum and Art Gallery, Birmingham - England."
       },
       "B02": {
+        "artist": "Peter Nicolai Arbo, 1892",
         "QuestName": "Hipo ng Valkyries",
         "desc": "'Kamatayan ni Hervor', ca 1892, ay isang pinta ni Peter Nicolai Arbo, isang Norwegian historical na pintor. Bisitahin ang orihinal sa National Museum, Stockholm - Sweden."
       },
       "A03": {
+        "artist": "Christian Krohg, 1893",
         "QuestName": "Vinland (America)",
         "desc": "'Leiv Eirikson Natutuklas ang America', ca 1893, ay isang pinta ni Christian Krohg, isang Norwegian naturalist na pintor. Bisitahin ang orihinal sa National Museum, Oslo - Norway."
       },
       "B03": {
+        "artist": "Oscar Arnold Wergeland, 1877",
         "QuestName": "Pagkatuklas ng Iceland",
         "desc": "'Ang Norseman na Lumapag sa Iceland', ca 1877, ay isang pinta ni Oscar Arnold Wergeland, isang Norwegian historical na pintor. Bisitahin ang orihinal sa National Museum, Oslo - Norway."
       },
       "A04": {
+        "artist": "Ferdinand Leek, 1901",
         "QuestName": "Pagsalakay ng Vikings",
         "desc": "'Isang Pagsalakay ng Viking', ca 1901, ay isang pinta ni Ferdinand Leek, isang German modernist na pintor. Bisitahin ang orihinal sa Schloss Art Gallery, Ahlden - Germany."
       },
       "B04": {
+        "artist": "Frank Bernard Dicksee, 1893",
         "QuestName": "Libing ng Vikings",
         "desc": "'Ang Libing ng isang Viking', ca 1893, ay isang pinta ni Frank Bernard Dicksee, isang British Victorian na pintor. Bisitahin ang orihinal sa Art Gallery, Manchester - England."
       },
       "A05": {
+        "artist": "Peter Nicolai Arbo, 1876",
         "QuestName": "Ang Hudyat ng Hari",
         "desc": "'Hakon ang Mabuti', ca 1876, ay isang pinta ni Peter Nicolai Arbo, isang Norwegian historical na pintor. Bisitahin ang orihinal sa National Museum, Stockholm - Sweden."
       },
       "B05": {
+        "artist": "Peter Otto Sinding, 1870",
         "QuestName": "Labanan ng Svold I",
         "desc": "'Labanan ng Svolder', ca 1883, ay isang pinta ni Peter Otto Sinding, isang Norwegian historical na pintor. Bisitahin ang orihinal sa Private Collection, Stockholm - Sweden."
       },
       "A06": {
+        "artist": "Peter Nicolai Arbo, 1883",
         "QuestName": "Vikings laban sa Celts",
         "desc": "'Labanan ng Stamford Bridge', ca 1870, ay isang pinta ni Peter Nicolai Arbo, isang Norwegian historical na pintor. Bisitahin ang orihinal sa Nordnorsk Kunstmuseum, Tromso - Norway."
       },
       "B06": {
+        "artist": "Peter Otto Sinding, 1870",
         "QuestName": "Labanan ng Svold II",
         "desc": "'Labanan ng Svolder', ca 1883, ay isang pinta ng Norwegian historical na pintor na si Peter Otto Sinding. Bisitahin ang orihinal sa Private Collection, Stockholm - Sweden."
       },
       "C01": {
-        "QuestName": "Asgardsreien",
-        "desc": "'Ang Wild Hunt', ca 1856, ay isang pinta ni Johann Wilhelm Cordes, isang German landscape na pintor. Bisitahin ang orihinal sa Behnhaus, Lübeck - Germany."
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "Ang Mansanas ng Buhay ni Idun I",
+        "desc": "`Idun at ang mga Mansanas,` ca. 1890, ay isang pintura ni James Doyle Penrose, isang Norwegian na makasaysayang pintor. Pribadong Koleksyon, London - England."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok I",
+        "desc": "`Asgardsreien,` ca. 1872, ay isang pintura ni Peter Nicolai Arbo, isang Norwegian na makasaysayang pintor. Bisitahin ang orihinal sa National Gallery, Oslo - Norway."
+      },
+      "C03": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "Ang Mansanas ng Buhay ni Idun II",
+        "desc": "`Idun at ang mga Mansanas,` ca. 1890, ay isang pintura ni James Doyle Penrose, isang Norwegian na makasaysayang pintor. Pribadong Koleksyon, London - England."
+      },
+      "C04": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok II",
+        "desc": "`Asgardsreien,` ca. 1872, ay isang pintura ni Peter Nicolai Arbo, isang Norwegian na makasaysayang pintor. Bisitahin ang orihinal sa National Gallery, Oslo - Norway."
+      },
+      "C05": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "Ang Mansanas ng Buhay ni Idun III",
+        "desc": "`Idun at ang mga Mansanas,` ca. 1890, ay isang pintura ni James Doyle Penrose, isang Norwegian na makasaysayang pintor. Pribadong Koleksyon, London - England."
+      },
+      "C06": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok III",
+        "desc": "`Asgardsreien,` ca. 1872, ay isang pintura ni Peter Nicolai Arbo, isang Norwegian na makasaysayang pintor. Bisitahin ang orihinal sa National Gallery, Oslo - Norway."
       }
     }
   },
@@ -432,7 +575,7 @@
     "Booster_Claim": {
       "success": {
         "title": "Nakamit ang Power Boost!",
-        "desc": "Naka-setup ka na para sa mga epikong tagumpay! Pumunta at sakupin ito!"
+        "desc": "For I walk by faith, not by sight!"
       },
       "error": {
         "title": "Nabigong Kunin ang Booster!",
@@ -549,18 +692,18 @@
     },
     "Stake": {
       "success": {
-        "title": "Stake Successful",
-        "desc": "You have successfully staked 1 Black Orb. Good luck!"
+        "title": "Matagumpay na Pagtaya",
+        "desc": "Matagumpay mong naipusta ang 1 Black Orb. Good luck!"
       },
       "error": {
-        "title": "Unable to Stake",
-        "desc": "You need to have at least 1 Black Orb to stake."
+        "title": "Hindi Makataya",
+        "desc": "Kailangan mong magkaroon ng hindi bababa sa 1 Black Orb para makapag-taya."
       }
     },
     "Profile": {
       "success": {
-        "title": "Update Initiated",
-        "desc": "Your profile avatar will be updated shortly!"
+        "title": "Pagsisimula ng Pag-update",
+        "desc": "Ang iyong profile avatar ay maa-update sa lalong madaling panahon!"
       }
     }
   }

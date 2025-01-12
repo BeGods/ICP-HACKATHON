@@ -82,7 +82,9 @@
     "music": "Music",
     "wallet": "Wallet",
     "watch": "Watch",
-    "flag": "Flag"
+    "country": "Country",
+    "updatePhoto": "Update Photo",
+    "addToHome": "Add Shortcut"
   },
   "misc": {
     "name": "Name",
@@ -99,7 +101,12 @@
   "note": {
     "text": "Update in",
     "tower": "Tap ORBS to convert",
-    "bonus": "To see active promotion"
+    "bonus": "To see active promotion",
+    "ad": "To get free booster!",
+    "whitelist": {
+      "QuestName": "Whitelist",
+      "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+    }
   },
   "bonus": {
     "join": "WELCOME BONUS",
@@ -140,56 +147,47 @@
       },
       "A02": {
         "artist": "John Duncan, 1912",
-
         "QuestName": "Tristan & Iseult",
         "desc": "'Tristan and Isolde', ca 1912, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B02": {
         "artist": "Gaston Bussiere, 1912",
-
         "QuestName": "The Sad Princess",
         "desc": "'Isolde: The Celt Princess', ca 1912, is a painting by Gaston Gaston Bussiere, a French symbolist painter. Visit the original in Musee des Ursulines, Macon - France."
       },
       "A03": {
         "artist": "John Duncan, 1913",
-
         "QuestName": "Brigid's Imbolc",
         "desc": "'The Saint Bride', ca 1913, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "B03": {
         "artist": "Edward Robert Hughes, 1911",
-
         "QuestName": "Summer Fantasy",
         "desc": "'Fantasy in Twilight', ca 1911, is a painting by Edward Robert Hughes, a British symbolist painter. Visit the original in Artchiv Gallery, Prague - Czech Republic."
       },
       "A04": {
         "artist": "John Duncan, 1924",
-
         "QuestName": "Lir Clann1",
         "desc": "'Children of Lir', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
       },
       "B04": {
         "artist": "Jan Asselijn, 1650",
-
         "QuestName": "Aengus' Lover",
         "desc": "'The Threatened Swan', ca 1650, is a painting by Jan Asselijn, a Dutch golden age painter. Visit the original in Rijksmuseum Amsterdam, Amsterdam - Netherlands."
       },
       "A05": {
         "artist": "John Duncan, 1924",
-
         "QuestName": "SLEEPING BEAUTY",
         "desc": "'The Sleeping Princess', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Perth Art Gallery, Perth - Scotland."
       },
       "B05": {
         "artist": "Frank Bernard Dicksee, 1913",
-
         "QuestName": "Leanan Sidhe",
         "desc": "'La Belle Dame sans Merci', ca 1913, is a painting by Frank Bernard Dicksee, a British victorian Painter. Visit the original in Bristol City Museum, Bristol - England."
       },
       "A06": {
         "artist": "John Duncan, 1911",
-
-        "QuestName": "Sidhe Riders1",
+        "QuestName": "Sidhe Riders",
         "desc": "'Riders of the Sidhe', ca 1911, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
       },
       "B06": {
@@ -205,7 +203,7 @@
       "C02": {
         "artist": "Ulpiano Checa,1890",
         "QuestName": "TIR NA NOG I",
-        "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
+        "desc": "'Twilight', ca 1890, is a painting by Ulpiano Checa, a Spanish  historical painter. Visit the original in Ulpiano Checa Museum, Madrid - Spain."
       },
       "C03": {
         "artist": "Joseph Noel Pato, 1849",
@@ -215,7 +213,7 @@
       "C04": {
         "artist": "Ulpiano Checa,1890",
         "QuestName": "TIR NA NOG II",
-        "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
+        "desc": "'Twilight', ca 1890, is a painting by Ulpiano Checa, a Spanish  historical painter. Visit the original in Ulpiano Checa Museum, Madrid - Spain."
       },
       "C05": {
         "artist": "Joseph Noel Pato, 1849",
@@ -225,11 +223,7 @@
       "C06": {
         "artist": "Ulpiano Checa,1890",
         "QuestName": "TIR NA NOG III",
-        "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
-      },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+        "desc": "'Twilight', ca 1890, is a painting by Ulpiano Checa, a Spanish  historical painter. Visit the original in Ulpiano Checa Museum, Madrid - Spain."
       }
     },
     "egyptian": {
@@ -265,8 +259,8 @@
       },
       "A04": {
         "artist": "Edward Poynter, 1867",
-        "QuestName": "Sekhmet's Blood I",
-        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
+        "QuestName": "Shezmus' Perfume II",
+        "desc": "'Cleopatra testing poisons on condemned prisoners', ca 1887, is a painting by Alexandre Cabanel, a French classical painter. Visit the original in Royal Museum, Antwerp - Belgium."
       },
       "B04": {
         "artist": "Edwin Long, 1878",
@@ -274,103 +268,146 @@
         "desc": "'The Gods and Their Makers', ca 1878, is a painting by the English biblical painter Edwin Long. Visit the original in Towneley Hall Art Gallery, Burnley - England."
       },
       "A05": {
-        "artist": "John Duncan, 1909",
-        "QuestName": "Sekhmet's Blood II",
-        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Pharao's Dream I",
+        "desc": "'Joseph Interpreting Pharaoh's Dream', ca 1894, is a painting by Reginald Arthur, a British historical painter. Visit the original in Sotheby's, London - England."
       },
       "B05": {
-        "artist": "John Duncan, 1909",
+        "artist": "John Weguelin, 1886",
         "QuestName": "Maahes' Cult",
         "desc": "'The Obsequies of an Egyptian Cat', ca 1886, is a painting by John Weguelin, a British classical painter. Visit the original in Auckland Art Gallery, Auckland - New Zealand."
       },
       "A06": {
-        "artist": "John Duncan, 1909",
-        "QuestName": "Pharao's Dream",
+        "artist": "Reginald Arthur, 1894",
+        "QuestName": "Pharao's Dream II",
         "desc": "'Joseph Interpreting Pharaoh's Dream', ca 1894, is a painting by Reginald Arthur, a British historical painter. Visit the original in Sotheby's, London - England."
       },
       "B06": {
-        "artist": "John Duncan, 1909",
+        "artist": "Lawrence Alma-Tadema, 1855",
         "QuestName": "Foreign Threat",
         "desc": "'The Meeting of Antony and Cleopatra', ca 1885, is a painting Lawrence Alma-Tadema, a Dutch victorian painter. Visit the original in Sotheby's, London - England."
       },
       "C01": {
-        "artist": "John Duncan, 1909",
-        "QuestName": "Bull Apis Cult",
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Bull Apis Cult I",
         "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sekhmet's Blood I",
+        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
+      },
+      "C03": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Bull Apis Cult II",
+        "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
+      },
+      "C04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sekhmet's Blood II",
+        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
+      },
+      "C05": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Bull Apis Cult III",
+        "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
+      },
+      "C06": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sekhmet's Blood III",
+        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
       }
     },
     "greek": {
       "A01": {
-        "artist": "John Duncan, 1909",
+        "artist": "Frederick Arthur Bridgman, 1903",
         "QuestName": "Narcyssus & Echo",
         "desc": "'Echo and Narcissus', ca 1903, is a painting by John William Waterhouse, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England."
       },
       "B01": {
-        "artist": "John Duncan, 1909",
+        "artist": "Henrietta Rae, 1909",
         "QuestName": "WATER NYMPHS",
         "desc": "'Hylas and the Water Nymphs', ca 1909, is a painting by Henrietta Rae, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England."
       },
       "A02": {
-        "artist": "John Duncan, 1909",
+        "artist": "Charles-Antoine Coypel, 1737",
         "QuestName": "Achilles' Fury",
         "desc": "'Fury of Achilles', ca 1737, is a painting by Charles-Antoine Coypel, a French classical painter. Visit the original in Walker Art Gallery, Saint Petersburg - Russia."
       },
       "B02": {
-        "artist": "John Duncan, 1909",
-        "QuestName": "PHAETON'S FALL",
-        "desc": "'The Fall of Phaeton', ca 1737, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
+        "artist": "Carlo Perugini, 1893",
+        "QuestName": "Pandora's Box",
+        "desc": "''Pandora's Box', ca 1893, is a painting by Carlo Perugini, an Italian Victorian Neoclassical painter. Private Collection,  London - England."
       },
       "A03": {
-        "artist": "John Duncan, 1909",
+        "artist": "Merry Joseph Blondel, 1819",
         "QuestName": "Icarus & Daedalus",
         "desc": "'The Sun or the Fall of Icarus', ca 1819, is a painting by Merry Joseph Blondel, a French neoclassical painter. Visit the original in Louvre Museum, Paris - France."
       },
       "B03": {
-        "artist": "John Duncan, 1909",
+        "artist": "Theodoor Rombouts, 1620",
         "QuestName": "PROMETHEUS' GIFT",
         "desc": "'Prometheus', ca 1620, is a painting by Theodoor Rombouts, a Flemish caravaggesque painter. Visit the original in Royal Museums of Fine Arts, Antwerp - Belgium."
       },
       "A04": {
-        "artist": "John Duncan, 1909",
+        "artist": "Camillo Miola, 1880",
         "QuestName": "Oracle Of Delphi",
         "desc": "'Pythia: Oracle and High Priestess of Delphi', ca 1880, is a painting by Camillo Miola, an Italian historical painter. Visit the original in J. Paul Getty Center, Los Angeles - USA."
       },
       "B04": {
-        "artist": "John Duncan, 1909",
+        "artist": "Karl Pavlovich Bryullov, 1833",
         "QuestName": "Hephaestus' Fate",
         "desc": "'The Last Day of Pompeii', ca 1833, is a painting by Karl Pavlovich Bryullov, a Russian neoclassical painter. Visit the original in State Russian Museum, Saint Petersburg - Russia."
       },
       "A05": {
-        "artist": "John Duncan, 1909",
+        "artist": "Herbert James Draper, 1904",
         "QuestName": "GOLDEN FLEECE",
         "desc": "'The Golden Fleece', ca 1904, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Cartwright Hall, Bradford - England."
       },
       "B05": {
-        "artist": "John Duncan, 1909",
+        "artist": "Herbert James Draper, 1909",
         "QuestName": "Odysseus' Sirens",
         "desc": "'Ulysses and the Sirens', ca 1909, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Ferens Art Gallery, Hull - England."
       },
       "A06": {
-        "artist": "John Duncan, 1909",
+        "artist": "Cole Thomas, 1836",
         "QuestName": "EMPIRE'S RISE",
         "desc": "'The Consummation The Course of the Empire', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
       },
       "B06": {
-        "artist": "John Duncan, 1909",
+        "artist": "Cole Thomas, 1836",
         "QuestName": "EMPIRE'S FALL",
         "desc": "'The Course of Empire Destruction', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
       },
       "C01": {
-        "QuestName": "Titanomachia",
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia I",
         "desc": "'Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
       },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "C02": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "PHAETON'S FALL I",
+        "desc": "'The Fall of Phaeton', ca 1604, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
+      },
+      "C03": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia II",
+        "desc": "''Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
+      },
+      "C04": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "PHAETON'S FALL II",
+        "desc": "'The Fall of Phaeton', ca 1604, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
+      },
+      "C05": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia III",
+        "desc": "''Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
+      },
+      "C06": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "PHAETON'S FALL III",
+        "desc": "'The Fall of Phaeton', ca 1604, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
       }
     },
     "norse": {
@@ -437,36 +474,32 @@
       "C01": {
         "artist": "Peter Otto Sinding, 1870",
         "QuestName": "Idun's Life Apple I",
-        "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
+        "desc": "'Idun and the Apples', ca 1890, is a painting by James Doyle Penrose, a Norwegian historical painter. Private Collection, London - England."
       },
       "C02": {
-        "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "Asgardsreien I",
-        "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok I",
+        "desc": "'Asgardsreien', ca 1872, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in the National Gallery, Oslo - Norway."
       },
       "C03": {
-        "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "Asgardsreien I",
-        "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "Idun's Life Apple II",
+        "desc": "'Idun and the Apples', ca 1890, is a painting by James Doyle Penrose, a Norwegian historical painter. Private Collection, London - England."
       },
       "C04": {
-        "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "Asgardsreien I",
-        "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok II",
+        "desc": "'Asgardsreien', ca 1872, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in the National Gallery, Oslo - Norway."
       },
       "C05": {
-        "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "Asgardsreien I",
-        "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "Idun's Life Apple III",
+        "desc": "'Idun and the Apples', ca 1890, is a painting by James Doyle Penrose, a Norwegian historical painter. Private Collection, London - England."
       },
       "C06": {
-        "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "Asgardsreien I",
-        "desc": "'The Wild Hunt', ca 1856, is a painting by Johann Wilhelm Cordes, a German landscape painter. Visit the original in Behnhaus, Lübeck - Germany."
-      },
-      "whitelist": {
-        "QuestName": "Whitelist",
-        "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok III",
+        "desc": "'Asgardsreien', ca 1872, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in the National Gallery, Oslo - Norway."
       }
     }
   },
@@ -490,7 +523,7 @@
     "Booster_Claim": {
       "success": {
         "title": "Power Boost Achieved!",
-        "desc": "You're now equipped for epic wins! Go conquer it!"
+        "desc": "For I walk by faith, not by sight!"
       },
       "error": {
         "title": "Booster Claim Failed!",
