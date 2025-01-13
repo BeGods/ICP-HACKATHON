@@ -321,7 +321,7 @@ const Leaderboard = (props) => {
             }}
             className="button__face button__face--back z-50 flex justify-center items-center"
           >
-            <div className="custom-button bg-black text-white w-[60%] text-[24px] px-6 py-1 rounded-full">
+            <div className="custom-button bg-black text-white text-center w-[60%] text-[24px] px-6 py-1 rounded-full">
               <span className="text text-gold">STAKE</span>
               <span className="shimmer"></span>
             </div>

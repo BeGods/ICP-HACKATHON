@@ -63,7 +63,7 @@ const CenterChild = ({
             starIsHeld && "z-20"
           } duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
-          <div className={`${platform === "ios" ? "-mt-1" : "mt-4"}`}>
+          <div className={`${platform === "ios" ? "mt-3" : "mt-4"}`}>
             {mythSymbols[mythSections[activeMyth]]}
           </div>
         </div>

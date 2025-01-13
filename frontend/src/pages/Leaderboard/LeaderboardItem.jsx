@@ -11,6 +11,7 @@ const LeaderboardItem = ({
   imageUrl,
   isEmpty,
   prevRank,
+  isKOL,
 }) => {
   const { userData } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(null);
@@ -25,8 +26,10 @@ const LeaderboardItem = ({
     <div
       key={rank}
       className={`flex items-center ${
-        rank % 2 === 0 ? "bg-borderGray" : ""
-      } font-medium text-tertiary w-[98%] h-fit mx-auto text-white py-2`}
+        rank % 2 === 0 && !isKOL ? "bg-borderGray" : ""
+      } ${rank % 2 === 0 && isKOL ? "bg-white" : ""} ${
+        isKOL ? "text-black" : "text-white"
+      } font-medium text-tertiary w-[98%] h-fit mx-auto py-2`}
     >
       {isEmpty ? (
         <div className="flex w-full h-fit justify-between">

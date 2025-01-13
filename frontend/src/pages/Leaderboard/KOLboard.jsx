@@ -283,8 +283,8 @@ const KOLboard = (props) => {
         )}
       </div>
 
-      <div className="flex flex-col w-full text-medium h-[56vh] bg-black text-black rounded-t-primary">
-        <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
+      <div className="flex flex-col w-full text-medium h-[56vh] bg-gray-100 text-black rounded-t-primary">
+        <div className="flex justify-between text-secondary uppercase text-black font-semibold items-center w-[90%] mx-auto py-3">
           <h1>
             <span className="pr-12">#</span>
             {t(`profile.name`)}
@@ -318,9 +318,10 @@ const KOLboard = (props) => {
                   );
                 }}
                 key={index}
-                className=""
+                className="border-t"
               >
                 <LeaderboardItem
+                  isKOL={true}
                   key={index}
                   rank={index + 4}
                   name={item.telegramUsername}

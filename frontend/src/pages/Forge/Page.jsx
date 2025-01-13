@@ -1487,7 +1487,7 @@ const Forges = () => {
                 className={`plus-one glow-text-${mythSections[activeMyth]}`}
                 style={{
                   bottom: `-12vh`,
-                  left: `8vw`,
+                  left: `7.5vw`,
                   zIndex: 99,
                 }}
               >
