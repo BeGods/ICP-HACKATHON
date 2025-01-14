@@ -17,10 +17,9 @@ export const getGameStats = async (req, res) => {
       .slice(0, 12);
 
     // add battle stats
-    userGameData.userMythologies[0].competelvl =
-      user.relicGameSession.competelvl;
+    userGameData.userMythologies[0].competelvl = user.gameSession.competelvl;
     userGameData.userMythologies[0].dailyQuota =
-      user.relicGameSession.dailyGameQuota;
+      user.gameSession.dailyGameQuota;
 
     // add default mythologies
     const isMythAbsent =
@@ -63,7 +62,7 @@ export const startSession = async (req, res) => {
 
   try {
     await user.updateOne({
-      $set: { "relicGameSession.lastSessionStartTime": Date.now() },
+      $set: { "gameSession.lastSessionStartTime": Date.now() },
     });
 
     res.status(200).json({ message: "Session started successfully" });
@@ -185,11 +184,11 @@ export const generateSessionReward = async (req, res) => {
 
     await user.updateOne({
       $set: {
-        "relicGameSession.lastSessionStartTime": 0,
-        "relicGameSession.competelvl": competelvl,
+        "gameSession.lastSessionStartTime": 0,
+        "gameSession.competelvl": competelvl,
       },
       $inc: {
-        "relicGameSession.dailyGameQuota": -1,
+        "gameSession.dailyGameQuota": -1,
       },
     });
 

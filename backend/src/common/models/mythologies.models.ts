@@ -144,6 +144,21 @@ const userMythologySchema = new Schema<IUserMyths>(
       default: 0,
       required: true,
     },
+    blackShards: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    whiteShards: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    gobcoin: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     autoPay: {
       isAutomataAutoPayEnabled: {
         type: Boolean,

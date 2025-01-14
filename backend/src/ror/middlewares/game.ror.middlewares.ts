@@ -8,7 +8,7 @@ export const validateSessionsStart = async (req, res, next) => {
 
   try {
     //! check daily quota
-    if (user.relicGameSession.dailyGameQuota <= 0) {
+    if (user.gameSession.dailyGameQuota <= 0) {
       throw new Error("Invalid Session. Daily quota is exausted");
     }
 
@@ -33,14 +33,14 @@ export const validateSessionReward = async (req, res, next) => {
 
     if (
       Date.now() >
-      user.relicGameSession.lastSessionStartTime + oneMinuteFromTime
+      user.gameSession.lastSessionStartTime + oneMinuteFromTime
     ) {
       // validate session
       throw new Error("Session expired. Please try again.");
     }
 
     // validate battle
-    let competelvl = user.relicGameSession.competelvl;
+    let competelvl = user.gameSession.competelvl;
     battleData.forEach((round, index) => {
       const isWin = round.swipes >= competelvl && round.status === 1;
       const isLoss = round.swipes < competelvl && round.status === 0;

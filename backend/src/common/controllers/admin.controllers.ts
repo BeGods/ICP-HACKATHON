@@ -227,6 +227,8 @@ export const createQuest = async (
   try {
     const { questData }: { questData: Partial<IQuest> } = req.body;
 
+    console.log(questData);
+
     if (!questData) {
       throw new Error("Invalid quest data.");
     }

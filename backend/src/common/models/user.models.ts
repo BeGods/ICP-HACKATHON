@@ -43,7 +43,15 @@ const userSchema = new Schema<IUser>(
       },
       dailyGameQuota: {
         type: Number,
+        default: 12,
+      },
+      lastSessionStartTime: {
+        type: Number,
         default: 0,
+      },
+      competelvl: {
+        type: Number,
+        default: 15,
       },
     },
     phoneNumber: {

@@ -1,4 +1,4 @@
-import { authMiddleware } from "../../middlewares/auth.middlewares";
+import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
   activateVault,
   generateSessionReward,
@@ -8,7 +8,7 @@ import {
   tradeFragments,
   transferToBag,
   transferToVault,
-} from "../../controllers/ror/game.controllers";
+} from "../controllers/game.ror.controllers";
 import express from "express";
 import {
   isValidVaultReq,
@@ -18,7 +18,7 @@ import {
   validateTradeFragment,
   validTransferToBag,
   validTransferToVault,
-} from "../../middlewares/ror/game.middlewares";
+} from "../middlewares/game.ror.middlewares";
 const router = express.Router();
 
 router.get("/game/stats", authMiddleware, getGameStats);
