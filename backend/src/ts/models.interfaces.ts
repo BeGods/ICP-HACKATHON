@@ -35,12 +35,12 @@ export interface IMilestone extends Document {
   userId: mongoose.Types.ObjectId;
   claimedQuests: IClaimedQuest[];
   sharedQuests: mongoose.Types.ObjectId[];
-  // bag: IInventory[];
-  // bank: {
-  //   lastVaultInstallmentAt: number;
-  //   vault: IInventory[];
-  // };
-  // claimedRoRItems: string[];
+  bag?: IInventory[];
+  bank?: {
+    lastVaultInstallmentAt: number;
+    vault: IInventory[];
+  };
+  claimedRoRItems?: string[];
   rewards: IRewards;
 }
 
@@ -94,6 +94,9 @@ export interface IUserMyths extends Document {
   multiColorOrbs: number;
   blackOrbs: number;
   whiteOrbs: number;
+  blackShards: number;
+  whiteShards: number;
+  gobcoin: number;
   lastMoonClaimAt: number;
   autoPay: {
     isAutomataAutoPayEnabled: boolean;
@@ -179,6 +182,8 @@ export interface IUser extends Document {
   gameSession: {
     gameHrStartAt: number;
     dailyGameQuota: number;
+    lastSessionStartTime: number;
+    competelvl: number;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
