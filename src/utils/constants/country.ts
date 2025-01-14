@@ -85,6 +85,7 @@ export const countries = [
   { name: "United Kingdom", code: "GBR", flag: "🇬🇧", dialCode: "+44" },
   { name: "United States", code: "USA", flag: "🇺🇸", dialCode: "+1" },
   { name: "Uzbekistan", code: "UZB", flag: "🇺🇿", dialCode: "+998" },
+  { name: "Venezuela", code: "VEN", flag: "🇻🇪", dialCode: "+58" },
   { name: "Vietnam", code: "VNM", flag: "🇻🇳", dialCode: "+84" },
   { name: "Zambia", code: "ZMB", flag: "🇿🇲", dialCode: "+260" },
   { name: "Zimbabwe", code: "ZWE", flag: "🇿🇼", dialCode: "+263" },
