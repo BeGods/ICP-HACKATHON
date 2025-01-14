@@ -33,6 +33,7 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
         "bonus",
         "burst",
         "moon",
+        "star",
         "voucher",
         "multiAutomata",
         "multiBurst",
