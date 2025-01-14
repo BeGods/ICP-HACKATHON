@@ -457,9 +457,9 @@ export const updateStarStatus = async (req, res) => {
 
     const newOrbTransaction = new OrbsTransactions({
       userId: userId,
-      source: "burst",
+      source: "star",
       orbs: {
-        [userMyth.name]: userMyth.orbs,
+        [userMyth.name]: updatedOrbs,
       },
     });
     await newOrbTransaction.save();
