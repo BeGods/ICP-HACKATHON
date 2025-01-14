@@ -321,8 +321,8 @@ const Leaderboard = (props) => {
             }}
             className="button__face button__face--back z-50 flex justify-center items-center"
           >
-            <div className="custom-button bg-black text-white text-center w-[60%] text-[24px] px-6 py-1 rounded-full">
-              <span className="text text-gold">STAKE</span>
+            <div className="custom-button bg-black text-white text-center text-[24px] rounded-full">
+              <span className="text w-full text-gold px-6 py-1">STAKE</span>
               <span className="shimmer"></span>
             </div>
           </div>
@@ -427,13 +427,13 @@ const Leaderboard = (props) => {
       {isFinished ? (
         <>
           {activeTab ? (
-            <div className="flex flex-col w-full text-medium h-[48vh] bg-black text-black rounded-t-primary">
+            <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
               <div className="flex text-gold justify-between text-secondary uppercase items-center w-[90%] mx-auto py-3">
                 <h1>
                   <span className="pr-6">#</span>
                   {t(`profile.name`)}
                 </h1>
-                <h1>Flag</h1>
+                <h1>{t(`profile.country`)}</h1>
               </div>
               <div
                 id="scrollableDiv"
@@ -500,7 +500,7 @@ const Leaderboard = (props) => {
           )}
         </>
       ) : (
-        <div className="flex flex-col w-full text-medium h-[48vh] bg-black text-black rounded-t-primary">
+        <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
