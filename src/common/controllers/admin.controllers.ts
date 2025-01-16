@@ -68,28 +68,44 @@ export const getDailyUsers = async (
 };
 
 // daily active users
-export const getDailyActiveUsers = async (
+export const getActiveUsers = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const startOfDay = new Date();
+    const now = new Date();
+
+    // Daily Range (00:00 to 23:59 of the current day)
+    const startOfDay = new Date(now);
     startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
+    const endOfDay = new Date(now);
     endOfDay.setHours(23, 59, 59, 999);
 
-    const query = {
-      lastLoginAt: {
-        $gte: startOfDay,
-        $lte: endOfDay,
-      },
-    };
+    // Weekly Range (Start of current week to now)
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
 
-    const count: number | 0 = await User.countDocuments(query);
-    res.status(200).json({ totalUsers: count });
+    // Monthly Range (Start of current month to now)
+    const startOfMonth = new Date(now);
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const [dailyActive, weeklyActive, monthlyActive] = await Promise.all([
+      User.countDocuments({
+        lastLoginAt: { $gte: startOfDay, $lte: endOfDay },
+      }),
+      User.countDocuments({ lastLoginAt: { $gte: startOfWeek, $lte: now } }),
+      User.countDocuments({ lastLoginAt: { $gte: startOfMonth, $lte: now } }),
+    ]);
+
+    res.status(200).json({
+      dailyActive,
+      weeklyActive,
+      monthlyActive,
+    });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     res.status(500).json({
       message: "Failed to fetch active users.",
       error: error.message,
