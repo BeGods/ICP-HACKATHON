@@ -6,7 +6,7 @@ import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   createPartner,
   createQuest,
-  getDailyActiveUsers,
+  getActiveUsers,
   getDailyUsers,
   getHourlyUsers,
   getTotalUsers,
@@ -22,7 +22,7 @@ router.get("/ping", ping);
 router.get(`/${config.security.ADMIN_KEY}/totalUsers`, getTotalUsers);
 router.get(`/${config.security.ADMIN_KEY}/dailyUsers`, getDailyUsers);
 router.get(`/${config.security.ADMIN_KEY}/hourlyUsers`, getHourlyUsers);
-router.get(`/${config.security.ADMIN_KEY}/activeUsers`, getDailyActiveUsers);
+router.get(`/${config.security.ADMIN_KEY}/activeUsers`, getActiveUsers);
 
 // manually update leaderboard
 router.get(`/${config.security.ADMIN_KEY}/leaderboard`, updateLeadboardRanks);
