@@ -54,7 +54,7 @@ export const validateSessionReward = async (req, res, next) => {
       }
     });
 
-    if (userClaimedRewards.bag.length >= 12) {
+    if ((userClaimedRewards?.bag?.length ?? 0) >= 12) {
       // check if bag is full
       throw new Error("Bag is full. Please create some space.");
     }

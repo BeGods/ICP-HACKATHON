@@ -12,9 +12,10 @@ export const getGameStats = async (req, res) => {
     const userGameData = await fetchGameData(userId);
 
     // bag data
-    const bagData = userGameData.userMilestones[0].bag
-      .map(({ updatedAt, ...itemWithoutUpdatedAt }) => itemWithoutUpdatedAt)
-      .slice(0, 12);
+    const bagData =
+      userGameData.userMilestones[0].bag
+        ?.map(({ updatedAt, ...itemWithoutUpdatedAt }) => itemWithoutUpdatedAt)
+        ?.slice(0, 12) ?? [];
 
     // add battle stats
     userGameData.userMythologies[0].competelvl = user.gameSession.competelvl;
@@ -45,7 +46,11 @@ export const getGameStats = async (req, res) => {
     res.status(200).json({
       user: userData,
       stats: userGameData.userMythologies[0],
-      bank: userGameData.userMilestones[0].bank,
+      bank: {
+        lastVaultInstallmentAt:
+          userGameData.userMilestones[0].bank.lastVaultInstallmentAt ?? 0,
+        vault: userGameData.userMilestones[0].bank.vault ?? [],
+      },
       bag: bagData,
     });
   } catch (error) {
@@ -62,7 +67,12 @@ export const startSession = async (req, res) => {
 
   try {
     await user.updateOne({
-      $set: { "gameSession.lastSessionStartTime": Date.now() },
+      $set: {
+        "gameSession.lastSessionStartTime": Date.now(),
+      },
+      $inc: {
+        "gameSession.dailyGameQuota": -1,
+      },
     });
 
     res.status(200).json({ message: "Session started successfully" });
@@ -93,12 +103,12 @@ export const generateSessionReward = async (req, res) => {
 
     // combine bag and vault items
     const claimedItems = [
-      ...(userClaimedRewards.bank.vault ?? []),
-      ...(userClaimedRewards.bag ?? []),
+      ...(userClaimedRewards?.bank?.vault ?? []),
+      ...(userClaimedRewards?.bag ?? []),
     ].reduce((acc, item) => {
-      const existingItem = acc.find((obj) => obj.itemId === item.itemId);
+      const existingItem = acc.find((obj) => obj?.itemId === item?.itemId);
       if (existingItem) {
-        existingItem.fragments.push(item.fragmentId);
+        existingItem?.fragments.push(item.fragmentId);
       } else {
         acc.push({
           itemId: item.itemId,
@@ -111,27 +121,29 @@ export const generateSessionReward = async (req, res) => {
     }, []);
 
     // remove completed items &&  items whose all pieces are collected &&  filter based on mythology
-    const completedItemIds = claimedItems
-      .filter(
-        (item) =>
-          (item.isComplete === true ||
-            item.fragments.length ===
-              gameItems.find((gameItem) => gameItem.id === item.itemId)
-                ?.fragments.length) &&
-          item.itemId.includes(mythology.toLowerCase())
-      )
-      .map((item) => {
-        return item.itemId;
-      });
+    const completedItemIds =
+      claimedItems
+        ?.filter(
+          (item) =>
+            (item.isComplete === true ||
+              item.fragments.length ===
+                gameItems?.find((gameItem) => gameItem.id === item.itemId)
+                  ?.fragments.length) &&
+            item.itemId.includes(mythology.toLowerCase())
+        )
+        .map((item) => {
+          return item.itemId;
+        }) ?? [];
 
     // filters and gives items which are not claimed yet & L1,L2,L3
-    const filteredClaimedItems = gameItems.filter(
-      (item) =>
-        !userClaimedRewards.claimedRoRItems.includes(item.id) &&
-        !completedItemIds.includes(item.id) &&
-        item.id.includes(mythology.toLowerCase()) &&
-        item.fragments.length === noOfWinsFromBattle
-    );
+    const filteredClaimedItems =
+      gameItems?.filter(
+        (item) =>
+          !userClaimedRewards?.claimedRoRItems?.includes(item.id) &&
+          !completedItemIds?.includes(item.id) &&
+          item.id?.includes(mythology.toLowerCase()) &&
+          item.fragments.length === noOfWinsFromBattle
+      ) ?? [];
 
     // gives randomItem
     const randomGenItem =
@@ -157,8 +169,10 @@ export const generateSessionReward = async (req, res) => {
         );
 
         randomGenFragntIdx =
-          randomGenItem.fragments[
-            Math.floor(Math.random() * missingFragments.length)
+          missingFragments[
+            randomGenItem.fragments[
+              Math.floor(Math.random() * missingFragments.length)
+            ]
           ];
       } else {
         randomGenFragntIdx = Math.floor(
@@ -178,18 +192,16 @@ export const generateSessionReward = async (req, res) => {
     }
 
     // fallback shards
-    console.log(noOfWinsFromBattle);
-
-    const updatedShards = (!genRewardObj ? 3 : 3 - noOfWinsFromBattle) * 100;
+    const updatedShards = (3 - noOfWinsFromBattle) * 100;
 
     await user.updateOne({
       $set: {
         "gameSession.lastSessionStartTime": 0,
         "gameSession.competelvl": competelvl,
       },
-      $inc: {
-        "gameSession.dailyGameQuota": -1,
-      },
+      // $inc: {
+      //   "gameSession.dailyGameQuota": -1,
+      // },
     });
 
     await userMythologies.findOneAndUpdate(
@@ -201,7 +213,7 @@ export const generateSessionReward = async (req, res) => {
     );
 
     res.status(200).json({
-      reward: [genRewardObj ?? {}, { shards: updatedShards }],
+      reward: [{ fragment: genRewardObj ?? null }, { shards: updatedShards }],
     });
   } catch (error) {
     console.log(error);
