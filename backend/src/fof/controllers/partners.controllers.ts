@@ -96,7 +96,7 @@ export const getAllPartners = async (req, res) => {
     // const remainingSlots = 12 - playSuperItems.length;
     // const partnerItems = activeCustomPartners.slice(0, remainingSlots);
     const partnerItems = activeCustomPartners.sort(
-      (a, b) => b.createdAt - a.createdAt
+      (a, b) => b.startDate - a.startDate
     );
 
     // playsuper orders
