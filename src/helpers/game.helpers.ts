@@ -72,3 +72,13 @@ export const hasBeenFourDaysSinceClaimedUTC = (lastClaimedTime) => {
   // if within 4 days then true, else false
   return now - lastClaimedTime < fourDaysInMs;
 };
+
+export const hasTwelveHoursElapsed = (date) => {
+  const twelveHoursInMs = 12 * 60 * 60 * 1000;
+
+  if (!date || date === 0) {
+    return true;
+  }
+
+  return Date.now() > date + twelveHoursInMs;
+};

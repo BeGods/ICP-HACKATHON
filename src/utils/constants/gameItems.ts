@@ -87,25 +87,25 @@ export const gameItems = [
   {
     id: "celtic.relic15",
     name: "fuip",
-    fragments: [0, 1, 2],
+    fragments: [0],
     orbs: "Celtic",
   },
   {
     id: "celtic.relic16",
     name: "samhain",
-    fragments: [0, 1, 2],
+    fragments: [0, 1, 2, 3],
     orbs: "Norse",
   },
   {
     id: "celtic.relic17",
     name: "uaithne",
-    fragments: [0, 1, 2],
+    fragments: [0, 1, 2, 3],
     orbs: "Egyptian",
   },
   {
     id: "celtic.relic18",
     name: "clairseach",
-    fragments: [0, 1, 2],
+    fragments: [0, 1],
     orbs: "Egyptian",
   },
   // egyptian
