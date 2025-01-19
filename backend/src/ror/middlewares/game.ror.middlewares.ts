@@ -23,7 +23,6 @@ export const validateSessionReward = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { battleData } = req.body;
-  const oneMinuteFromTime = 60 * 1000;
 
   // 1 - win
   // 0 - loss
@@ -31,12 +30,11 @@ export const validateSessionReward = async (req, res, next) => {
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
 
-    if (
-      Date.now() >
-      user.gameSession.lastSessionStartTime + oneMinuteFromTime
-    ) {
-      // validate session
-      throw new Error("Session expired. Please try again.");
+    const sessionDuration = Date.now() - user.gameSession.lastSessionStartTime;
+
+    // validate session duration
+    if (sessionDuration > 60000 || sessionDuration < 25000) {
+      throw new Error("Invalid session. Please try again.");
     }
 
     // validate battle
@@ -174,6 +172,43 @@ export const isValidVaultReq = async (req, res, next) => {
 
     req.userMilestones = userClaimedRewards;
     req.userMythologies = userMythologyData;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const isValidInsideReq = async (req, res, next) => {
+  const user = req.user;
+
+  try {
+    if (user.gameSession.underWorldActiveAt !== 0) {
+      throw new Error("Underworld is already active. Try again later.");
+    } else if (user.gameSession.dailyGameQuota < 1) {
+      throw new Error("You don't have sufficient quota to activate.");
+    } else if (user.gameSession.dailyGameQuota >= 5) {
+      throw new Error(
+        "You need more rounds to unlock the Underworld. Try again later."
+      );
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const isValidOutsideReq = async (req, res, next) => {
+  const user = req.user;
+
+  try {
+    if (user.gameSession.dailyGameQuota < 1) {
+      throw new Error("You don't have sufficient quota to deactivate.");
+    } else if (user.gameSession.underWorldActiveAt == 0) {
+      throw new Error("Underworld is inactive.");
+    }
+
     next();
   } catch (error) {
     console.log(error);

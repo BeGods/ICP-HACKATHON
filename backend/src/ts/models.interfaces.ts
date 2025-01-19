@@ -184,6 +184,7 @@ export interface IUser extends Document {
     dailyGameQuota: number;
     lastSessionStartTime: number;
     competelvl: number;
+    underWorldActiveAt: number;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
@@ -246,6 +247,15 @@ export interface IRewardTransactions extends Document {
   userId: mongoose.Types.ObjectId;
   rewardId: string;
   type: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IItemTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  underworld: boolean;
+  shards: number;
+  item: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

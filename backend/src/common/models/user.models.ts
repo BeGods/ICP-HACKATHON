@@ -53,6 +53,7 @@ const userSchema = new Schema<IUser>(
         type: Number,
         default: 15,
       },
+      underWorldActiveAt: Number,
     },
     phoneNumber: {
       type: String,

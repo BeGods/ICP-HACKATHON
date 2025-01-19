@@ -1,6 +1,8 @@
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
+  activateInside,
   activateVault,
+  deActivateInside,
   generateSessionReward,
   getGameStats,
   joinFragments,
@@ -11,6 +13,8 @@ import {
 } from "../controllers/game.ror.controllers";
 import express from "express";
 import {
+  isValidInsideReq,
+  isValidOutsideReq,
   isValidVaultReq,
   validateJoinFrgmnt,
   validateSessionReward,
@@ -47,6 +51,20 @@ router.post(
   authMiddleware,
   validateTradeFragment,
   tradeFragments
+);
+
+// underworld
+router.get(
+  "/inside/activate",
+  authMiddleware,
+  isValidInsideReq,
+  activateInside
+);
+router.get(
+  "/inside/deactivate",
+  authMiddleware,
+  isValidOutsideReq,
+  deActivateInside
 );
 
 // vault
