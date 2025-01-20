@@ -5,10 +5,10 @@ import {
   useLocation,
 } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import Home from "./Home";
-import IntroPage from "./pages/Intro/Page";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
+import IntroPage from "./app/common/Intro/Page";
+import FoFLayout from "./app/main/FoF";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -28,7 +28,7 @@ function App() {
     <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
       <Routes>
         <Route path="/" element={<IntroPage />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<FoFLayout />} />
       </Routes>
     </TonConnectUIProvider>
   );

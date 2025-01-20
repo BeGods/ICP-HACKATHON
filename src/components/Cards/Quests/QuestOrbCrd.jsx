@@ -4,7 +4,7 @@ import { mythSections } from "../../../utils/constants";
 import ShareButton from "../../Buttons/ShareBtn";
 import IconBtn from "../../Buttons/IconBtn";
 import MappedOrbs from "../../Common/MappedOrbs";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import Confetti from "react-confetti";
 
 const OrbCard = ({ activeMyth }) => {
@@ -27,7 +27,7 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { enableSound, assets } = useContext(MyContext);
+  const { enableSound, assets } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 

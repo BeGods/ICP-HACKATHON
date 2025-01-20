@@ -1,12 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const GiftItemCrd = ({ item }) => {
-  const { setActiveReward, setSection, enableHaptic } = useContext(MyContext);
+  const { setActiveReward, setSection, enableHaptic } = useContext(FofContext);
   const [isClicked, setIsClicked] = useState(false);
 
   return (
