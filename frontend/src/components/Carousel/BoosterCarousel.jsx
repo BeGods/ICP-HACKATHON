@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 import BoosterClaim from "../Cards/Boosters/BoosterCrd";
 import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     setSection,
     enableHaptic,
     questsData,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);

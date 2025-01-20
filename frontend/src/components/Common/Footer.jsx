@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 import { footerIcons, mythSections } from "../../utils/constants";
 import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
@@ -25,7 +25,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     userData,
     enableHaptic,
     gameData,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const countOfInCompleteQuests = socialQuestData.filter(
     (item) => item.isQuestClaimed === false
   ).length;
@@ -191,7 +191,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
 };
 const Footer = ({}) => {
   const { section, activeMyth, enableSound, minimize, assets, platform } =
-    useContext(MyContext);
+    useContext(FofContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });

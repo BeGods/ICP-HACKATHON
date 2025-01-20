@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { mythSymbols } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 
 const ConvertCard = ({ t, assets, myths, activeColor }) => {
   return (
@@ -102,7 +102,7 @@ const ConvertCard = ({ t, assets, myths, activeColor }) => {
 };
 
 const ConvertInfo = ({ t, handleClick }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   const [activeColor, setActiveColor] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const myths = ["greek", "celtic", "norse", "egyptian"];

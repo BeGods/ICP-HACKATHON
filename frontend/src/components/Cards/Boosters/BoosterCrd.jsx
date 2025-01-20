@@ -12,7 +12,7 @@ import {
 } from "../../../utils/constants";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
 import BoosterBtn from "../../Buttons/BoosterBtn";
 import { showToast } from "../../Toast/Toast";
@@ -53,7 +53,7 @@ const BoosterClaim = ({
     authToken,
     setShowCard,
     enableHaptic,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const disableRef = useRef(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
   const adsgramId = import.meta.env.VITE_AD_BOOSTER;

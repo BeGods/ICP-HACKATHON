@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 
 const ProfileInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { assets, userData } = useContext(MyContext);
+  const { assets, userData } = useContext(FofContext);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">

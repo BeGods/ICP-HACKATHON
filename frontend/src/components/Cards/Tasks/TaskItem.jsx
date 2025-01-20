@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
@@ -28,7 +28,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
     userData,
     country,
     enableHaptic,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
   const disableClick = useRef(false);

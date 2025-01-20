@@ -5,12 +5,12 @@ import {
   calculateRemainingTime,
   hasTimeElapsed,
 } from "../../helpers/booster.helper";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 import { Lock } from "lucide-react";
 
 const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
   let disableClick = useRef(false);
-  const { assets, activeMyth, gameData } = useContext(MyContext);
+  const { assets, activeMyth, gameData } = useContext(FofContext);
   const mythData = gameData.mythologies[activeMyth].boosters;
 
   return (
