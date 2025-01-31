@@ -170,7 +170,7 @@ const Home = () => {
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
-      const showAnmnt = await validateTutCookie(tele, "announcement06");
+      const showAnmnt = await validateTutCookie(tele, "announcement08");
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setSocialQuestData(response?.extraQuests);
@@ -197,9 +197,9 @@ const Home = () => {
         (async () => {
           await getStreakBonus(token);
         })();
-        // } else if (!showAnmnt) {
-        //   setSection(12);
-        //   setIsLoading(false);
+      } else if (!showAnmnt) {
+        setSection(12);
+        setIsLoading(false);
       } else {
         setSection(0);
         setTimeout(() => {
