@@ -66,16 +66,10 @@ const Announcement = (props) => {
       handleClickHaptic(tele, enableHaptic);
       disableRef.current = true;
       try {
-        const response = await claimAnmntReward(authToken);
-        setTutKey(tele, "announcement06", 1);
-        setGameData((prev) => ({
-          ...prev,
-          isBurstAutoPayActive: true,
-          autoPayBurstExpiry: 0,
-        }));
-
+        // const response = await claimAnmntReward(authToken);
+        setTutKey(tele, "announcement08", 1);
         setShowAnmt(true);
-        setSection(2);
+        setSection(3);
       } catch (error) {
         showToast("default");
       }
@@ -96,7 +90,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_05.jpg"
+              src="/assets/announcements/480px-announcement_07.jpg"
               alt="announcement"
               className="w-full h-auto"
             />
