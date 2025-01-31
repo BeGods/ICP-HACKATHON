@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { mythSymbols } from "../../../utils/constants";
+import { mythSymbols } from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import { FofContext } from "../../../context/context";
 

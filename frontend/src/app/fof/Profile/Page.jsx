@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FofContext } from "../../../context/context";
 import { ProfileGuide } from "../../../components/Common/Tutorials";
 import { useProfileGuide } from "../../../hooks/Tutorial";
@@ -19,7 +19,6 @@ const Profile = (props) => {
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
-  const animationFrameId = useRef(null);
 
   useEffect(() => {
     if (enableGuide) {
@@ -109,7 +108,7 @@ const Profile = (props) => {
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] min-h-[60vh] flex-col">
-          <TaskCarousel quests={socialQuestData} />
+          <TaskCarousel quests={socialQuestData} userData={userData} />
         </div>
       </div>
     </div>

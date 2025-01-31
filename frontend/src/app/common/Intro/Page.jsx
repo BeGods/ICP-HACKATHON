@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { authenticate } from "../../../utils/api";
+import { authenticate } from "../../../utils/api.fof";
 import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
 import ReactHowler from "react-howler";
@@ -9,7 +9,8 @@ import {
   validateSoundCookie,
 } from "../../../helpers/cookie.helper";
 import { trackComponentView } from "../../../utils/ga";
-import { mythologies, mythSymbols } from "../../../utils/constants";
+import { mythologies, mythSymbols } from "../../../utils/constants.fof";
+import Launcher from "./Launcher";
 
 const tele = window.Telegram?.WebApp;
 
@@ -21,9 +22,8 @@ const orbPos = [
 ];
 
 const IntroPage = (props) => {
-  const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [showLauncher, setShowLauncher] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
   const [fadeout, setFadeout] = useState(false);
   const [platform, setPlatform] = useState(null);
@@ -88,7 +88,7 @@ const IntroPage = (props) => {
       setTimeout(() => {
         setFadeout(true);
         setTimeout(() => {
-          navigate("/home");
+          setShowLauncher(true);
         }, 2000);
       }, 3000);
     } catch (error) {
@@ -158,155 +158,164 @@ const IntroPage = (props) => {
   setFullHeight();
 
   return (
-    <div className={`bg-white text-black flex h-screen w-screen text-wrap`}>
-      {disableDesktop ? (
-        // TMA desktop view
-        <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
-          <img
-            src={assets.logos.fofQr}
-            alt="qr"
-            className="rounded-3xl h-1/2 fof-text-shadow"
-          />
-          <h1 className="text-white text-secondary w-2/3 font-medium mt-4 text-center">
-            We designed the BeGods app to be fully optimized for mobile use.
-            Simply scan the QR code or use Telegram to start playing!
-          </h1>
-          {/* //TODO: this can be improved */}
-          <div className="mx-auto flex w-[80%] justify-between mt-8">
-            <div
-              onClick={() => {
-                window.open("www.battleofgods.io", "_blank");
-              }}
-            >
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Globe_icon-white.svg"
-                alt="web"
-                className="h-[14vw] w-[14vw]"
-              />
-            </div>
-            <div
-              onClick={() => {
-                window.open("https://t.me/begods_games", "_blank");
-              }}
-            >
-              <img
-                src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/telegram-white-icon.png"
-                alt="telegram"
-                className="h-[14w] w-[14vw]"
-              />
-            </div>
-            <div
-              onClick={() => {
-                window.open("https://x.com/BattleofGods_io", "_blank");
-              }}
-            >
-              <img
-                src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png"
-                alt="x"
-                className="h-[13vw] w-[13vw]"
-              />
-            </div>
-            <div
-              onClick={() => {
-                window.open("https://discord.com/invite/Ac7h7huthN", "_blank");
-              }}
-            >
-              <img
-                src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
-                alt="discord"
-                className="h-[14vw] w-[14vw]"
-              />
-            </div>
-          </div>
-        </div>
+    <>
+      {showLauncher ? (
+        <Launcher />
       ) : (
-        // TMA mobile view
-        <div
-          style={{
-            background: `url(${assets.uxui.intro})`,
-            backgroundPosition: "50.5% 0%",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            height: "100svh",
-            width: "100vw",
-            position: "fixed",
-            top: 0,
-            left: 0,
-          }}
-        >
-          <div className="absolute  fade-in-intro scale-110 flex justify-center items-center h-full w-full">
-            <div
-              className="relative flex justify-center items-center w-full h-full pointer-events-none"
-              style={{
-                backgroundImage: `url(${assets.uxui.towerOn})`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            ></div>
-            {mythologies.map((item, index) => (
-              <div
-                key={index}
-                className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
-              >
+        <div className={`bg-white text-black flex h-screen w-screen text-wrap`}>
+          {disableDesktop ? (
+            // TMA desktop view
+            <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
+              <img
+                src={assets.logos.fofQr}
+                alt="qr"
+                className="rounded-3xl h-1/2 fof-text-shadow"
+              />
+              <h1 className="text-white text-secondary w-2/3 font-medium mt-4 text-center">
+                We designed the BeGods app to be fully optimized for mobile use.
+                Simply scan the QR code or use Telegram to start playing!
+              </h1>
+              {/* //TODO: this can be improved */}
+              <div className="mx-auto flex w-[80%] justify-between mt-8">
                 <div
-                  className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}
+                  onClick={() => {
+                    window.open("www.battleofgods.io", "_blank");
+                  }}
                 >
                   <img
-                    src={`${assets.uxui.baseorb}`}
-                    alt="orb"
-                    className={`filter-orbs-${item.toLowerCase()}`}
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Globe_icon-white.svg"
+                    alt="web"
+                    className="h-[14vw] w-[14vw]"
                   />
-                  <span
-                    className={`absolute text-symbol-sm z-1 font-symbols text-white opacity-50 mt-1 text-black-sm-contour`}
-                  >
-                    <>{mythSymbols[item.toLowerCase()]}</>{" "}
-                  </span>
+                </div>
+                <div
+                  onClick={() => {
+                    window.open("https://t.me/begods_games", "_blank");
+                  }}
+                >
+                  <img
+                    src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/telegram-white-icon.png"
+                    alt="telegram"
+                    className="h-[14w] w-[14vw]"
+                  />
+                </div>
+                <div
+                  onClick={() => {
+                    window.open("https://x.com/BattleofGods_io", "_blank");
+                  }}
+                >
+                  <img
+                    src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png"
+                    alt="x"
+                    className="h-[13vw] w-[13vw]"
+                  />
+                </div>
+                <div
+                  onClick={() => {
+                    window.open(
+                      "https://discord.com/invite/Ac7h7huthN",
+                      "_blank"
+                    );
+                  }}
+                >
+                  <img
+                    src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg"
+                    alt="discord"
+                    className="h-[14vw] w-[14vw]"
+                  />
                 </div>
               </div>
-            ))}
-            <p
-              className={`font-fof text-black-contour fade-in-intro text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+            </div>
+          ) : (
+            // TMA mobile view
+            <div
+              style={{
+                background: `url(${assets.uxui.intro})`,
+                backgroundPosition: "50.5% 0%",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                height: "100svh",
+                width: "100vw",
+                position: "fixed",
+                top: 0,
+                left: 0,
+              }}
             >
-              ⚜️“For I walk by faith, not by sight”⚜️
-            </p>
-          </div>
-          <div className="flex flex-col h-screen">
-            <div className="flex justify-center items-center w-full leading-tight">
-              <div className="relative z-[100]">
-                <img
-                  src={assets.logos.fof}
-                  alt="fof"
-                  className="w-[200px] mt-6 fof-text-shadow pointer-events-none"
-                />
+              <div className="absolute  fade-in-intro scale-110 flex justify-center items-center h-full w-full">
+                <div
+                  className="relative flex justify-center items-center w-full h-full pointer-events-none"
+                  style={{
+                    backgroundImage: `url(${assets.uxui.towerOn})`,
+                    backgroundSize: "contain",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                ></div>
+                {mythologies.map((item, index) => (
+                  <div
+                    key={index}
+                    className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
+                  >
+                    <div
+                      className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}
+                    >
+                      <img
+                        src={`${assets.uxui.baseorb}`}
+                        alt="orb"
+                        className={`filter-orbs-${item.toLowerCase()}`}
+                      />
+                      <span
+                        className={`absolute text-symbol-sm z-1 font-symbols text-white opacity-50 mt-1 text-black-sm-contour`}
+                      >
+                        <>{mythSymbols[item.toLowerCase()]}</>{" "}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                <p
+                  className={`font-fof text-black-contour fade-in-intro text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+                >
+                  ⚜️“For I walk by faith, not by sight”⚜️
+                </p>
+              </div>
+              <div className="flex flex-col h-screen">
+                <div className="flex justify-center items-center w-full leading-tight">
+                  <div className="relative z-[100]">
+                    <img
+                      src={assets.logos.fof}
+                      alt="fof"
+                      className="w-[200px] mt-6 fof-text-shadow pointer-events-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-grow"></div>
+                <div
+                  className={`flex ${
+                    fadeout && "fade-out"
+                  } justify-center items-center z-[100]`}
+                >
+                  <img
+                    src={assets.logos.begodsBlack}
+                    alt="logo"
+                    className="w-[65px] h-[75px] mb-6 begod-text-shadow pointer-events-none"
+                  />
+                </div>
               </div>
             </div>
+          )}
 
-            <div className="flex flex-grow"></div>
-            <div
-              className={`flex ${
-                fadeout && "fade-out"
-              } justify-center items-center z-[100]`}
-            >
-              <img
-                src={assets.logos.begodsBlack}
-                alt="logo"
-                className="w-[65px] h-[75px] mb-6 begod-text-shadow pointer-events-none"
-              />
-            </div>
+          <div className="absolute">
+            <ReactHowler
+              src={assets.audio.fofIntro}
+              playing={!disableDesktop && enableSound}
+              preload={true}
+              loop
+            />
           </div>
         </div>
       )}
-
-      <div className="absolute">
-        <ReactHowler
-          src={assets.audio.fofIntro}
-          playing={!disableDesktop && enableSound}
-          preload={true}
-          loop
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

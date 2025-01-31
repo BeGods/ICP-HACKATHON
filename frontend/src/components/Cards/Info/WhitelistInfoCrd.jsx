@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import ShareButton from "../../Buttons/ShareBtn";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 
 const SecretCard = ({ t, handleShowInfo, activeMyth }) => {

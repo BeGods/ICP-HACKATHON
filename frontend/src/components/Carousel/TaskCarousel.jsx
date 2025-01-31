@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
 import { FofContext } from "../../context/context";
-import { useTranslation } from "react-i18next";
 import TaskItem from "../Cards/Tasks/TaskItem";
 import SettingModal from "../Modals/Settings";
 
 const tele = window.Telegram?.WebApp;
 
-const TaskCarousel = ({ quests }) => {
-  const { setShowCard, userData } = useContext(FofContext);
+const TaskCarousel = ({ quests, userData }) => {
+  const { setShowCard } = useContext(FofContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
 

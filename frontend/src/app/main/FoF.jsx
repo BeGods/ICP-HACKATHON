@@ -4,7 +4,7 @@ import {
   fetchGameStats,
   fetchProfilePhoto,
   fetchRewards,
-} from "../../utils/api";
+} from "../../utils/api.fof";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import { FofContext } from "../../context/context";
@@ -17,7 +17,7 @@ import Gacha from "../fof/Gacha/Page";
 import Tower from "../fof/Tower/Page";
 import JoinBonus from "../fof/JoinBonus/Page";
 import Redeem from "../fof/Redeem/Redeem";
-import Footer from "../../components/Common/Footer";
+import Footer from "../../components/Common/FoFFooter";
 import Gift from "../fof/Gift/Gift";
 import assets from "../../assets/assets.json";
 import { showToast } from "../../components/Toast/Toast";
@@ -37,7 +37,7 @@ import FoFLoader from "../../components/Loaders/FoFLoader";
 
 const tele = window.Telegram?.WebApp;
 
-const FoFLayout = () => {
+const FoFMain = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
   const [gameData, setGameData] = useState(null);
@@ -296,4 +296,4 @@ const FoFLayout = () => {
   );
 };
 
-export default FoFLayout;
+export default FoFMain;

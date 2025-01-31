@@ -23,7 +23,7 @@ import {
   fetchProfilePhoto,
   fetchRewards,
   updateCountry,
-} from "../../utils/api";
+} from "../../utils/api.fof";
 import {
   useTonAddress,
   useTonConnectModal,

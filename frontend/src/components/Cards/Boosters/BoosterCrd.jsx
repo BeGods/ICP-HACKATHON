@@ -9,7 +9,7 @@ import {
   mythologies,
   mythSections,
   mythSymbols,
-} from "../../../utils/constants";
+} from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
 import { FofContext } from "../../../context/context";
@@ -23,7 +23,7 @@ import {
   claimBurstBooster,
   claimMoonBoost,
   claimShardsBooster,
-} from "../../../utils/api";
+} from "../../../utils/api.fof";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { Clapperboard } from "lucide-react";

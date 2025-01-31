@@ -1,5 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { elements, mythSections, mythSymbols } from "../../../utils/constants";
+import {
+  elements,
+  mythSections,
+  mythSymbols,
+} from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../../helpers/leaderboard.helper";

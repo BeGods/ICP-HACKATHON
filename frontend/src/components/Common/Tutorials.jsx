@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FofContext } from "../../context/context";
-import { mythSections, mythSymbols } from "../../utils/constants";
+import { mythSections, mythSymbols } from "../../utils/constants.fof";
 
 export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
   const { activeMyth, assets } = useContext(FofContext);

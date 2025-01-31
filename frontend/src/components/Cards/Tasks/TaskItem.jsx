@@ -8,7 +8,7 @@ import React, {
 import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { FofContext } from "../../../context/context";
-import { claimSocialTask } from "../../../utils/api";
+import { claimSocialTask } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
 import { validateCountryCode } from "../../../helpers/cookie.helper";

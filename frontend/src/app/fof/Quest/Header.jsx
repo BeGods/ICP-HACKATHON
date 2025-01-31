@@ -1,4 +1,4 @@
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 import Symbol from "../../../components/Common/Symbol";
 import { useContext, useEffect, useState } from "react";
 import { formatTwoNums } from "../../../helpers/leaderboard.helper";

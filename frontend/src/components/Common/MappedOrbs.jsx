@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { mythSymbols } from "../../utils/constants";
+import { mythSymbols } from "../../utils/constants.fof";
 import { FofContext } from "../../context/context";
 
 const MappedOrbs = ({ quest, showNum }) => {

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FofContext } from "../../../context/context";
-import { claimAutomataBooster } from "../../../utils/api";
+import { claimAutomataBooster } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
-import { mythologies, mythSections } from "../../../utils/constants";
+import { mythologies, mythSections } from "../../../utils/constants.fof";
 import BoosterBtn from "../../../components/Buttons/BoosterBtn";
 import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 import { showToast } from "../../../components/Toast/Toast";

@@ -3,7 +3,7 @@ import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { ThumbsUp } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
-import { addLeaderboardBet } from "../../../utils/api";
+import { addLeaderboardBet } from "../../../utils/api.fof";
 
 const StakeCrd = ({ profileImg }) => {
   const { setShowCard, authToken, setUserData } = useContext(FofContext);

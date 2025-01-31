@@ -5,7 +5,7 @@ import {
   fetchResendOTP,
   fetchRewards,
   verifyOtp,
-} from "../../../utils/api";
+} from "../../../utils/api.fof";
 import { FofContext } from "../../../context/context";
 import { showToast } from "../../../components/Toast/Toast";
 import { useTranslation } from "react-i18next";

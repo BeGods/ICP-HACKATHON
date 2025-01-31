@@ -2,14 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
-import { mythologies, mythSymbols } from "../../utils/constants";
-
-const orbPos = [
-  "mt-[45vw] mr-[32vw]",
-  "-ml-[52vw] -mt-[17vw]",
-  "-mt-[45vw] ml-[32vw]",
-  "mt-[18vw] ml-[52vw]",
-];
 
 const RoRLoader = (props) => {
   const { t } = useTranslation();
