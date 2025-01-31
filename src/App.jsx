@@ -6,11 +6,20 @@ import {
 } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import ReactGA from "react-ga4";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import IntroPage from "./app/common/Intro/Page";
-import FoFLayout from "./app/main/FoF";
+import FoFMain from "./app/main/FoF";
+import RoRMain from "./app/main/RoR";
+import { MainContext } from "./context/context";
+import assets from "./assets/assets.json";
+import {
+  fetchHapticStatus,
+  validateSoundCookie,
+} from "./helpers/cookie.helper";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
+
+const tele = window.Telegram?.WebApp;
 
 function usePageTracking() {
   const location = useLocation();
@@ -22,15 +31,38 @@ function usePageTracking() {
 }
 
 function App() {
+  const [enableHaptic, setEnableHaptic] = useState(true);
+  const [enableSound, setEnableSound] = useState(true);
   usePageTracking();
 
+  const initalStates = {
+    assets,
+    enableHaptic,
+    enableSound,
+  };
+
+  const syncAllCookies = async () => {
+    const isSoundActive = await validateSoundCookie(tele);
+    const isHapticActive = await fetchHapticStatus(tele);
+
+    setEnableHaptic(isHapticActive);
+    setEnableSound(JSON.parse(isSoundActive));
+  };
+
+  useEffect(() => {
+    syncAllCookies();
+  }, []);
+
   return (
-    <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
-      <Routes>
-        <Route path="/" element={<IntroPage />} />
-        <Route path="/home" element={<FoFLayout />} />
-      </Routes>
-    </TonConnectUIProvider>
+    <MainContext.Provider value={initalStates}>
+      <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
+        <Routes>
+          <Route path="/" element={<IntroPage />} />
+          <Route path="/fof" element={<FoFMain />} />
+          <Route path="/ror" element={<RoRMain />} />
+        </Routes>
+      </TonConnectUIProvider>
+    </MainContext.Provider>
   );
 }
 

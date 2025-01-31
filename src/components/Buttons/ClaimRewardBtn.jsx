@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 import { ThumbsUp } from "lucide-react";
 import { FofContext } from "../../context/context";
 

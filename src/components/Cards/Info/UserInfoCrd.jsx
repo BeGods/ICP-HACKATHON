@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSymbols } from "../../../utils/constants";
+import { mythSymbols } from "../../../utils/constants.fof";
 import { countries } from "../../../utils/country";
 
 const UserInfoCard = ({ close, userData }) => {

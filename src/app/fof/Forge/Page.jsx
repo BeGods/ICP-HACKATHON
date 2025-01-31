@@ -7,9 +7,9 @@ import {
   startTapSession,
   updateGameData,
   updateMythology,
-} from "../../../utils/api";
+} from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
-import { mythologies, mythSections } from "../../../utils/constants";
+import { mythologies, mythSections } from "../../../utils/constants.fof";
 import {
   ToggleLeft,
   ToggleRight,

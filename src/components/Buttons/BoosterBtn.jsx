@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 import {
   calculateMoonRemainingTime,
   calculateRemainingTime,

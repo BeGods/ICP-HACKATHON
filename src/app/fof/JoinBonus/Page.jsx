@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { fetchJoiningBonus } from "../../../utils/api";
+import { fetchJoiningBonus } from "../../../utils/api.fof";
 import { FofContext } from "../../../context/context";
 import Confetti from "react-confetti";
 import { ThumbsUp } from "lucide-react";

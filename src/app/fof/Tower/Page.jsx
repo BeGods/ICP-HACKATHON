@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { convertOrbs } from "../../../utils/api";
+import { convertOrbs } from "../../../utils/api.fof";
 import { FofContext } from "../../../context/context";
 import ConvertInfo from "../../../components/Cards/Info/ConvertInfoCrd";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ import {
   wheel,
   wheelMyths,
   wheelNames,
-} from "../../../utils/constants";
+} from "../../../utils/constants.fof";
 import { showToast } from "../../../components/Toast/Toast";
 import ReactHowler from "react-howler";
 import { Repeat2, RotateCw } from "lucide-react";

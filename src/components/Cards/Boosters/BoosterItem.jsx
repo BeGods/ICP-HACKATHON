@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { boosterIcon, mythSections } from "../../../utils/constants";
+import { boosterIcon, mythSections } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 import { MoonStar } from "lucide-react";
 

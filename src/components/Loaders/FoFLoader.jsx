@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
-import { mythologies, mythSymbols } from "../../utils/constants";
+import { mythologies, mythSymbols } from "../../utils/constants.fof";
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { mythSections, mythSymbols, wheel } from "../../../utils/constants";
+import { mythSections, mythSymbols, wheel } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 import MoonInfoCard from "../../../components/Cards/Info/MoonInfoCrd";
 import { getPhaseByDate } from "../../../helpers/game.helper";

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 import ShareButton from "../../Buttons/ShareBtn";
 import IconBtn from "../../Buttons/IconBtn";
 import MappedOrbs from "../../Common/MappedOrbs";

@@ -8,13 +8,13 @@ import {
   claimQuest,
   claimQuestOrbsReward,
   claimShareReward,
-} from "../../../utils/api";
+} from "../../../utils/api.fof";
 import JigsawImage from "../../../components/Cards/Jigsaw/JigsawCrd";
 import InfoCard from "../../../components/Cards/Info/QuestInfoCrd";
 import PayCard from "../../../components/Cards/Quests/QuestPayCrd";
 import OrbClaimCard from "../../../components/Cards/Quests/QuestOrbCrd";
 import { useTranslation } from "react-i18next";
-import { mythologies, mythSections } from "../../../utils/constants";
+import { mythologies, mythSections } from "../../../utils/constants.fof";
 import {
   ToggleLeft,
   ToggleRight,

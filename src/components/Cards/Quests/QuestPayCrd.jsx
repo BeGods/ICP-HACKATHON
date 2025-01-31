@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
 import MappedOrbs from "../../Common/MappedOrbs";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSections, mythSymbols } from "../../../utils/constants";
+import { mythSections, mythSymbols } from "../../../utils/constants.fof";
 import Button from "../../Buttons/DefaultBtn";
 import { FofContext } from "../../../context/context";
 

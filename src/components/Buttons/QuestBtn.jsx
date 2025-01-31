@@ -1,6 +1,6 @@
 import { Check, CircleCheck, CornerUpLeft, CornerUpRight } from "lucide-react";
 import React, { useState } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 
 const QuestButton = ({
   handlePrev,

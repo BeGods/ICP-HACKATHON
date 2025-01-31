@@ -4,7 +4,7 @@ import {
   mythSections,
   mythSymbols,
   mythologies,
-} from "../../../utils/constants";
+} from "../../../utils/constants.fof";
 import { CircleCheck, CircleX } from "lucide-react";
 import ReactHowler from "react-howler";
 import { FofContext } from "../../../context/context";

@@ -5,7 +5,7 @@ import {
   claimAnmntReward,
   claimStreakBonus,
   fetchProfilePhoto,
-} from "../../../utils/api";
+} from "../../../utils/api.fof";
 import {
   handleClickHaptic,
   setTutKey,

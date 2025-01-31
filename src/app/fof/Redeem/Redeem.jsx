@@ -7,7 +7,10 @@ import {
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
 import { handleActiveParts } from "../../../helpers/quests.helper";
-import { claimCustomReward, claimPlaysuperReward } from "../../../utils/api";
+import {
+  claimCustomReward,
+  claimPlaysuperReward,
+} from "../../../utils/api.fof";
 import IconBtn from "../../../components/Buttons/IconBtn";
 import PartnerCard from "../../../components/Cards/Info/PartnerInfoCrd";
 import RedeemHeader from "./Header";

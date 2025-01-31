@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
-import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api";
+import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api.fof";
 import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import {
@@ -16,7 +16,7 @@ import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
 import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
-import { rankPositions } from "../../../utils/constants";
+import { rankPositions } from "../../../utils/constants.fof";
 
 const tele = window.Telegram?.WebApp;
 

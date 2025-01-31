@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { fetchDailyBonus, fetchExploitDailyBonus } from "../../../utils/api";
+import {
+  fetchDailyBonus,
+  fetchExploitDailyBonus,
+} from "../../../utils/api.fof";
 import { Crown, LoaderPinwheel } from "lucide-react";
 import { FofContext } from "../../../context/context";
 import ReactHowler from "react-howler";

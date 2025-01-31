@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 
 export const authenticate = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_URL}/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth`;
   if (referralCode) {
     url += `?referralCode=${referralCode}`;
   }
@@ -17,7 +17,7 @@ export const authenticate = async (userData, referralCode) => {
 };
 
 export const fetchGameStats = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/stats`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/game/stats`;
 
   try {
     const response = await axios.get(url, {
@@ -33,7 +33,7 @@ export const fetchGameStats = async (accessToken) => {
 };
 
 export const fetchProfilePhoto = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/profile/avatar`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/profile/avatar`;
 
   try {
     const response = await axios.get(url, {
@@ -50,7 +50,7 @@ export const fetchProfilePhoto = async (accessToken) => {
 
 export const updateMythology = async (mythology, accessToken) => {
   let url = `${
-    import.meta.env.VITE_API_URL
+    import.meta.env.VITE_API_FOF_URL
   }/game/stats/update?mythologyName=${mythology}`;
 
   try {
@@ -67,7 +67,7 @@ export const updateMythology = async (mythology, accessToken) => {
 };
 
 export const fetchLeaderboard = async (accessToken, pageNum, filter) => {
-  let url = `${import.meta.env.VITE_API_URL}/leaderboard`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/leaderboard`;
 
   if (filter) {
     url += `?filter=${filter}`;
@@ -91,7 +91,7 @@ export const fetchLeaderboard = async (accessToken, pageNum, filter) => {
 };
 
 export const convertOrbs = async (data, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/convert`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/game/convert`;
 
   try {
     const response = await axios.post(url, data, {
@@ -107,7 +107,7 @@ export const convertOrbs = async (data, accessToken) => {
 };
 
 export const claimMoonBoost = async (accessToken, adId) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claim/moon`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/booster/claim/moon`;
   const secretKey = import.meta.env.VITE_HASH_KEY;
   const gameData = {
     adId: adId,
@@ -135,7 +135,7 @@ export const claimMoonBoost = async (accessToken, adId) => {
 };
 
 export const claimShareReward = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/share`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/quests/share`;
 
   try {
     const response = await axios.post(url, questData, {
@@ -151,7 +151,7 @@ export const claimShareReward = async (questData, accessToken) => {
 };
 
 export const claimQuestOrbsReward = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/claim/share`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/quests/claim/share`;
 
   try {
     const response = await axios.post(url, questData, {
@@ -167,7 +167,7 @@ export const claimQuestOrbsReward = async (questData, accessToken) => {
 };
 
 export const claimQuest = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/claim`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/quests/claim`;
 
   try {
     const response = await axios.post(url, questData, {
@@ -183,7 +183,7 @@ export const claimQuest = async (questData, accessToken) => {
 };
 
 export const completeQuest = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/complete`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/quests/complete`;
 
   try {
     const response = await axios.post(url, questData, {
@@ -199,7 +199,7 @@ export const completeQuest = async (questData, accessToken) => {
 };
 
 export const claimShardsBooster = async (mythologyName, adId, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claim/minion`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/booster/claim/minion`;
   const secretKey = import.meta.env.VITE_HASH_KEY;
   const gameData = {
     mythologyName: mythologyName.mythologyName,
@@ -228,7 +228,7 @@ export const claimShardsBooster = async (mythologyName, adId, accessToken) => {
 };
 
 export const claimBurstBooster = async (mythologyName, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claim/burst`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/booster/claim/burst`;
 
   try {
     const response = await axios.post(url, mythologyName, {
@@ -248,7 +248,7 @@ export const claimAutomataBooster = async (
   adId,
   accessToken
 ) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/claim/automata`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/booster/claim/automata`;
   const secretKey = import.meta.env.VITE_HASH_KEY;
   const gameData = {
     mythologyName: mythologyName.mythologyName,
@@ -278,7 +278,7 @@ export const claimAutomataBooster = async (
 };
 
 export const claimAutoAutomata = async (accessToken, adId) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/autoClaim/automata`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/booster/autoClaim/automata`;
   const gameData = {
     adId: adId,
   };
@@ -306,7 +306,7 @@ export const claimAutoAutomata = async (accessToken, adId) => {
 };
 
 export const claimAutoBurst = async (accessToken, adId) => {
-  let url = `${import.meta.env.VITE_API_URL}/booster/autoClaim/burst`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/booster/autoClaim/burst`;
   const gameData = {
     adId: adId,
   };
@@ -334,7 +334,7 @@ export const claimAutoBurst = async (accessToken, adId) => {
 };
 
 export const connectTonWallet = async (tonAddress, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/user/connectTon`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/user/connectTon`;
 
   try {
     const response = await axios.post(url, tonAddress, {
@@ -350,7 +350,7 @@ export const connectTonWallet = async (tonAddress, accessToken) => {
 };
 
 export const disconnectTonWallet = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/user/disconnectTon`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/user/disconnectTon`;
 
   try {
     const response = await axios.get(url, {
@@ -366,7 +366,7 @@ export const disconnectTonWallet = async (accessToken) => {
 };
 
 export const startTapSession = async (mythologyName, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/startTapSession`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/game/startTapSession`;
 
   try {
     const response = await axios.post(url, mythologyName, {
@@ -382,7 +382,7 @@ export const startTapSession = async (mythologyName, accessToken) => {
 };
 
 export const claimBurst = async (result, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/burst`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/game/burst`;
 
   try {
     const response = await axios.post(url, result, {
@@ -398,7 +398,7 @@ export const claimBurst = async (result, accessToken) => {
 };
 
 export const updateGameData = async (gameData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/claimTapSession`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/game/claimTapSession`;
   const secretKey = import.meta.env.VITE_HASH_KEY;
   const hashedData = CryptoJS.AES.encrypt(
     JSON.stringify(gameData),
@@ -423,7 +423,7 @@ export const updateGameData = async (gameData, accessToken) => {
 
 export const fetchLostQuests = async (mythologyName, accessToken) => {
   let url = `${
-    import.meta.env.VITE_API_URL
+    import.meta.env.VITE_API_FOF_URL
   }/quests/lost?mythologyName=${mythologyName}`;
 
   try {
@@ -440,7 +440,7 @@ export const fetchLostQuests = async (mythologyName, accessToken) => {
 };
 
 export const claimLostQuest = async (questData, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/claim/lost`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/quests/claim/lost`;
 
   try {
     const response = await axios.post(url, questData, {
@@ -456,7 +456,7 @@ export const claimLostQuest = async (questData, accessToken) => {
 };
 
 export const fetchBonusStatus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/status`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/status`;
 
   try {
     const response = await axios.get(url, {
@@ -472,7 +472,7 @@ export const fetchBonusStatus = async (accessToken) => {
 };
 
 export const fetchDailyBonus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/daily`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/daily`;
 
   try {
     const response = await axios.get(url, {
@@ -488,7 +488,7 @@ export const fetchDailyBonus = async (accessToken) => {
 };
 
 export const fetchExploitDailyBonus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/dail`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/dail`;
 
   try {
     const response = await axios.get(url, {
@@ -504,7 +504,7 @@ export const fetchExploitDailyBonus = async (accessToken) => {
 };
 
 export const fetchJoiningBonus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/join`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/join`;
 
   try {
     const response = await axios.get(url, {
@@ -520,7 +520,7 @@ export const fetchJoiningBonus = async (accessToken) => {
 };
 
 export const claimSocialTask = async (data, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/quests/social`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/quests/social`;
 
   try {
     const response = await axios.post(url, data, {
@@ -540,7 +540,7 @@ export const fetchRewards = async (
   country = "NA",
   accessToken
 ) => {
-  let url = `${import.meta.env.VITE_API_URL}/partners`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/partners`;
 
   let queryParams = [];
 
@@ -570,7 +570,7 @@ export const fetchRewards = async (
 };
 
 export const fetchOTP = async (mobileNumber, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/playsuper/otp`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/otp`;
 
   try {
     const response = await axios.post(
@@ -590,7 +590,7 @@ export const fetchOTP = async (mobileNumber, accessToken) => {
 };
 
 export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/playsuper/verify`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/verify`;
 
   try {
     const response = await axios.post(
@@ -614,7 +614,7 @@ export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
 };
 
 export const fetchResendOTP = async (mobileNumber, otp, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/playsuper/resendOtp`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/resendOtp`;
 
   try {
     const response = await axios.get(
@@ -637,7 +637,7 @@ export const fetchResendOTP = async (mobileNumber, otp, accessToken) => {
 };
 
 export const claimPlaysuperReward = async (rewardId, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/playsuper/redeem`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/redeem`;
 
   try {
     const response = await axios.post(
@@ -659,7 +659,7 @@ export const claimPlaysuperReward = async (rewardId, accessToken) => {
 };
 
 export const claimCustomReward = async (rewardId, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/custom/redeem`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/custom/redeem`;
 
   try {
     const response = await axios.post(
@@ -681,7 +681,7 @@ export const claimCustomReward = async (rewardId, accessToken) => {
 };
 
 export const claimStreakBonus = async (accessToken, country) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/streak`;
 
   let queryParams = [];
 
@@ -707,7 +707,7 @@ export const claimStreakBonus = async (accessToken, country) => {
 };
 
 export const updateCountry = async (country, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/user/country`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/user/country`;
 
   try {
     const response = await axios.post(
@@ -729,7 +729,7 @@ export const updateCountry = async (country, accessToken) => {
 };
 
 export const claimAnmntReward = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/reward/claim`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/reward/claim`;
 
   try {
     const response = await axios.get(url, {
@@ -745,7 +745,7 @@ export const claimAnmntReward = async (accessToken) => {
 };
 
 export const addLeaderboardBet = async (accessToken, status) => {
-  let url = `${import.meta.env.VITE_API_URL}/leaderboard/bet`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/leaderboard/bet`;
 
   try {
     const response = await axios.post(
@@ -765,7 +765,7 @@ export const addLeaderboardBet = async (accessToken, status) => {
 };
 
 export const updateRewardStatus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/update/reward`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/update/reward`;
 
   try {
     const response = await axios.get(url, {
@@ -781,7 +781,7 @@ export const updateRewardStatus = async (accessToken) => {
 };
 
 export const claimRatUpdate = async (mythologyName, accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/game/rat`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/game/rat`;
 
   try {
     const response = await axios.post(url, mythologyName, {

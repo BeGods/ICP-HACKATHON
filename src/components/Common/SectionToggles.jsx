@@ -1,15 +1,15 @@
 import React, { useContext, useRef, useState } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import ReactHowler from "react-howler";
-import { FofContext } from "../../context/context";
+import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets, enableHaptic } = useContext(FofContext);
+  const { enableSound, assets, enableHaptic } = useContext(MainContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -65,7 +65,7 @@ export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
 
 export const ToggleRight = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets, enableHaptic } = useContext(FofContext);
+  const { enableSound, assets, enableHaptic } = useContext(MainContext);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 

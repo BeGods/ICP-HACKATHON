@@ -3,7 +3,7 @@ import {
   mythElementNames,
   mythologies,
   wheelNames,
-} from "../../../utils/constants";
+} from "../../../utils/constants.fof";
 import confetti from "canvas-confetti";
 import { ThumbsUp } from "lucide-react";
 import { useTranslation } from "react-i18next";

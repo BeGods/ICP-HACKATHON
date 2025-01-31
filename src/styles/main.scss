@@ -1,6 +1,6 @@
 @import "./animations.scss";
 
-$myths: "greek", "celtic", "norse", "egyptian", "other", "white", "black";
+$myths: "greek", "celtic", "norse", "egyptian", "other", "white";
 
 @each $myth in $myths {
   // Filters

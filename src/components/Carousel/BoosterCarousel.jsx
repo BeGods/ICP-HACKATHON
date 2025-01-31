@@ -6,7 +6,7 @@ import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
-import { mythologies, mythSections } from "../../utils/constants";
+import { mythologies, mythSections } from "../../utils/constants.fof";
 
 const tele = window.Telegram?.WebApp;
 

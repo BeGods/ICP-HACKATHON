@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { FofContext } from "../../context/context";
-import { footerIcons, mythSections } from "../../utils/constants";
+import { footerIcons, mythSections } from "../../utils/constants.fof";
 import ReactHowler from "react-howler";
 import "../../styles/flip.scss";
 import { handleClickHaptic } from "../../helpers/cookie.helper";

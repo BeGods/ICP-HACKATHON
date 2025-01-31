@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 import { useTranslation } from "react-i18next";
 import { FofContext } from "../../../context/context";
 
