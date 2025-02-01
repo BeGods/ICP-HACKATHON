@@ -15,8 +15,9 @@ const handleGenerateCoolDown = (counter) => {
 };
 
 export const extractBotName = (url) => {
+  const cleanUrl = url.split("?")[0];
   const regex = /t\.me\/([^/]+)/;
-  const match = url.match(regex);
+  const match = cleanUrl.match(regex);
   return match ? `@${match[1]}` : url;
 };
 
