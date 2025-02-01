@@ -513,8 +513,9 @@ const Quests = () => {
               </div>
             </div>
             <JigsawButton
+              limit={18}
               handleClick={() => {
-                if (gameData.mythologies[activeMyth].faith >= 12) {
+                if (gameData.mythologies[activeMyth].faith >= 18) {
                   setShowCard(
                     <GameEndCrd
                       handleClick={() => {

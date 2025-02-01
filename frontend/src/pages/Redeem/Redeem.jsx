@@ -320,6 +320,7 @@ const Redeem = (props) => {
               </div>
             ) : (
               <JigsawButton
+                limit={12}
                 handleClick={handleClick}
                 activeMyth={4}
                 handleNext={() => {}}
