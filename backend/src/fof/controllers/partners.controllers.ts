@@ -28,7 +28,7 @@ export const getAllPartners = async (req, res) => {
     const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
 
     const activePartners = await partners
-      .find()
+      .find({ status: true })
       .lean()
       .select("-__v -createdAt -updatedAt");
 

@@ -112,6 +112,7 @@ export interface IPartner extends Document {
   category: string;
   startDate: Date;
   endDate: Date;
+  status: boolean;
   brandName: string;
   isCharity?: boolean;
   metadata: {
