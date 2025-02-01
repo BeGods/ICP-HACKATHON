@@ -169,7 +169,7 @@ export const createNewUserIfNoExists = async (req, res) => {
     let existingUser = await User.findOne({ telegramId: telegramId });
 
     if (existingUser) {
-      return res.json({ newUser: false });
+      return res.json({ refers: existingUser.directReferralCount });
     }
 
     let newUser: Partial<IUser> = {
@@ -181,7 +181,7 @@ export const createNewUserIfNoExists = async (req, res) => {
     const createdUser = await addNewUser(newUser);
     await createDefaultUserMyth(createdUser);
 
-    return res.json({ newUser: true });
+    return res.json({ refers: 0 });
   } catch (error: any) {
     console.error(error);
     return res.status(500).json({
