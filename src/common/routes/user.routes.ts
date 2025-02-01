@@ -1,4 +1,7 @@
-import { authMiddleware } from "../middlewares/auth.middlewares";
+import {
+  authMiddleware,
+  validateBotNewUser,
+} from "../middlewares/auth.middlewares";
 import {
   connectTonWallet,
   disconnectTonWallet,
@@ -8,6 +11,7 @@ import {
   verifyOtp,
 } from "../controllers/user.controllers";
 import express from "express";
+import { createNewUserIfNoExists } from "../controllers/auth.controllers";
 
 const router = express.Router();
 
@@ -17,5 +21,8 @@ router.get("/user/disconnectTon", authMiddleware, disconnectTonWallet);
 router.post("/auth/otp", authMiddleware, generateOtp);
 router.post("/auth/verify", authMiddleware, verifyOtp);
 router.get("/profile/avatar", authMiddleware, updateAvatar);
+
+// new user
+router.post("/user/refer", validateBotNewUser, createNewUserIfNoExists);
 
 export default router;
