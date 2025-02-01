@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { MyContext } from "../../../context/context";
-import { formatDate } from "../../../helpers/game.helper";
+import { extractBotName, formatDate } from "../../../helpers/game.helper";
 
 const PartnerCard = ({ close, reward }) => {
   const { assets, platform } = useContext(MyContext);
@@ -37,7 +37,7 @@ const PartnerCard = ({ close, reward }) => {
                 className="mt-3 font-semibold break-words overflow-wrap-normal"
                 style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
               >
-                {reward.metadata.brandRedirectionLink}
+                {extractBotName(reward.metadata.brandRedirectionLink)}
               </h1>
             </div>
             {/* <h1

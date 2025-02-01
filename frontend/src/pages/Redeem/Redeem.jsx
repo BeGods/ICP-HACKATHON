@@ -278,6 +278,7 @@ const Redeem = (props) => {
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
+                  grid={[3, 6]}
                   imageUrl={
                     currReward.partnerType == "playsuper"
                       ? `${currReward.metadata.campaignAssets.bannerView}`
