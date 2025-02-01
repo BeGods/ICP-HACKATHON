@@ -181,7 +181,7 @@ const Home = () => {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
-        }, 3000);
+        }, 2000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -192,7 +192,7 @@ const Home = () => {
         setSection(8);
         setTimeout(() => {
           setIsLoading(false);
-        }, 3000);
+        }, 2000);
       } else if (response?.user?.isStreakActive) {
         (async () => {
           await getStreakBonus(token);
@@ -204,7 +204,7 @@ const Home = () => {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 4000);
+        }, 2000);
       }
     } catch (error) {
       console.log(error);
