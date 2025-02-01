@@ -6,6 +6,15 @@ import { defaultMythologies } from "../../utils/constants/variables";
 import { threeDaysHaveElapsed } from "../../helpers/general.helpers";
 import { hasTwelveHoursElapsed } from "../../helpers/game.helpers";
 import { ItemsTransactions } from "../../common/models/transactions.models";
+import mongoose from "mongoose";
+
+interface itemInterface {
+  itemId?: string;
+  isComplete?: boolean;
+  fragmentId?: number;
+  _id?: mongoose.Types.ObjectId;
+  updatedAt?: Date;
+}
 
 export const getGameStats = async (req, res) => {
   let user = req.user;
@@ -24,6 +33,8 @@ export const getGameStats = async (req, res) => {
     userGameData.userMythologies[0].competelvl = user.gameSession.competelvl;
     userGameData.userMythologies[0].dailyQuota =
       user.gameSession.dailyGameQuota;
+    userGameData.userMythologies[0].gobcoin =
+      userGameData.userMythologies[0].gobcoin ?? 0;
 
     // add default mythologies
     const isMythAbsent =
@@ -37,7 +48,6 @@ export const getGameStats = async (req, res) => {
     }
 
     if (hasTwelveHoursElapsed(user.gameSession.gameHrStartAt)) {
-      // handle loose reward because u were stuck in underworld
       user = await user.updateOne(
         {
           $set: {
@@ -51,28 +61,34 @@ export const getGameStats = async (req, res) => {
     }
 
     userGameData.userMythologies[0].isUnderWorldActive =
-      user.gameSession.underWorldActiveAt != 0 ? true : false;
+      user.gameSession?.underWorldActiveAt != 0 ? true : false;
 
     const userData = {
       telegramUsername: user.telegramUsername,
       tonAddress: user.tonAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile.avatarUrl,
+      avatarUrl: user.profile?.avatarUrl ?? null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
     };
+
+    const tasks = userGameData.quests.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
 
     res.status(200).json({
       user: userData,
       stats: userGameData.userMythologies[0],
       bank: {
         isVaultActive: threeDaysHaveElapsed(
-          userGameData.userMilestones[0].bank.lastVaultInstallmentAt ?? 0
+          userGameData.userMilestones[0]?.bank?.lastVaultInstallmentAt ?? 0
         ),
-        vault: userGameData.userMilestones[0].bank.vault ?? [],
+        vault: userGameData.userMilestones[0].bank?.vault ?? [],
       },
       bag: bagData,
+      quests: tasks,
     });
   } catch (error) {
     console.log(error);
@@ -173,6 +189,7 @@ export const generateSessionReward = async (req, res) => {
       ];
 
     let genRewardObj = null;
+    let itemAddedToBag: itemInterface = {};
 
     // if random item exists
     if (randomGenItem) {
@@ -202,9 +219,18 @@ export const generateSessionReward = async (req, res) => {
         isComplete: randomGenItem.fragments.length === 1,
       };
 
-      await userClaimedRewards.updateOne(
-        { userId },
-        { $push: { bag: genRewardObj } }
+      let updatedBag = await milestones.findOneAndUpdate(
+        { userId: userId },
+        {
+          $push: { bag: genRewardObj },
+        },
+        { new: true }
+      );
+
+      itemAddedToBag = updatedBag.bag.find(
+        (item) =>
+          item.itemId === genRewardObj.itemId &&
+          item.fragmentId === genRewardObj.fragmentId
       );
     }
 
@@ -259,17 +285,19 @@ export const generateSessionReward = async (req, res) => {
       );
     }
 
-    // new item transaction
-    const newItemTransaction = new ItemsTransactions({
-      userId: userId,
-      underworld: isUnderworld,
-      shards: updatedShards,
-      item: randomGenItem.id,
-    });
-    await newItemTransaction.save();
+    if (randomGenItem) {
+      // new item transaction
+      const newItemTransaction = new ItemsTransactions({
+        userId: userId,
+        underworld: isUnderworld,
+        shards: updatedShards,
+        item: randomGenItem.id,
+      });
+      await newItemTransaction.save();
+    }
 
     res.status(200).json({
-      reward: [{ fragment: genRewardObj }, { shards: updatedShards }],
+      reward: [{ fragment: itemAddedToBag }, { shards: updatedShards }],
     });
   } catch (error) {
     console.error(error);
@@ -487,6 +515,25 @@ export const tradeFragments = async (req, res) => {
     });
 
     res.status(200).json({ message: "Item traded successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const giveCoins = async (req, res) => {
+  const user = req.user;
+
+  try {
+    await userMythologies.findOneAndUpdate(
+      { userId: user._id },
+      { $inc: { gobcoin: 10 } }
+    );
+
+    res.status(200).json({ message: "Coins added successfully." });
   } catch (error) {
     console.log(error);
     res.status(500).json({

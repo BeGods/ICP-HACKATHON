@@ -31,6 +31,7 @@ export const getLeaderboardSnapshot = async () => {
           },
           blackOrbs: { $first: { $ifNull: ["$blackOrbs", 0] } },
           multiColorOrbs: { $first: { $ifNull: ["$multiColorOrbs", 0] } },
+          gobcoin: { $first: { $ifNull: ["$gobcoin", 0] } },
           modifiedBlackOrbs: {
             $first: {
               $multiply: [{ $ifNull: ["$blackOrbs", 0] }, 1000],
@@ -92,6 +93,7 @@ export const getLeaderboardSnapshot = async () => {
           country: "$userDetails.country",
           blackOrbs: 1,
           multiColorOrbs: 1,
+          gobcoin: 1,
           totalOrbs: 1,
           mythologyOrbsData: 1,
           squadOwner: "$userDetails.squadOwner",
@@ -585,6 +587,50 @@ export const sortRanksByCountry = async (users) => {
     });
 
     return usersByCountry;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const sortRanksByGobcoin = async (users) => {
+  try {
+    const usersByCoin = {};
+
+    users
+      .map((user, index) => ({
+        ...user,
+        coinRank: index + 1,
+      }))
+      .sort((a, b) => b.gobcoin - a.gobcoin);
+    return usersByCoin;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const sortRanksByCoin = async (users) => {
+  try {
+    const usersByCoin = {};
+
+    users.forEach((user) => {
+      if (user.country) {
+        const key = user.country;
+        if (!usersByCoin[key]) {
+          usersByCoin[key] = [];
+        }
+        usersByCoin[key].push(user);
+      }
+    });
+
+    Object.keys(usersByCoin).forEach((country) => {
+      const squadUsers = usersByCoin[country];
+      squadUsers.sort((a, b) => b.totalOrbs - a.totalOrbs);
+      squadUsers.forEach((user, index) => {
+        user.countryRank = index + 1;
+      });
+    });
+
+    return usersByCoin;
   } catch (error) {
     throw new Error(error);
   }

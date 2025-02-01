@@ -138,15 +138,18 @@ export interface IRank extends Document {
   userId: mongoose.Types.ObjectId;
   telegramUsername: string;
   profileImage: string;
-  overallRank: number;
-  prevRank: number;
+  orbRank: number;
+  coinRank: number;
+  prevOrbRank: number;
+  prevCoinRank: number;
   countryRank: number;
   country: string;
   gameData: Object;
   directReferralCount: number;
   fofCompletedAt: Date;
   squadOwner?: mongoose.Types.ObjectId;
-  totalOrbs: string;
+  totalOrbs: number;
+  totalGobcoin: number;
   squadRank?: number;
   profile: {
     avatarUrl: String;
@@ -167,6 +170,15 @@ export interface IUser extends Document {
       extraBlackOrb: string;
       dailyBonusClaimedAt: Date;
       exploitCount: number;
+      streakBonus: {
+        isActive: boolean;
+        claimedAt: number;
+        streakCount: number;
+      };
+      joiningBonus: boolean;
+    };
+    ror: {
+      dailyBonusClaimedAt: Date;
       streakBonus: {
         isActive: boolean;
         claimedAt: number;

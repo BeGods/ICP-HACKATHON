@@ -35,6 +35,27 @@ const userSchema = new Schema<IUser>(
           default: 0,
         },
       },
+      ror: {
+        joiningBonus: { type: Boolean, default: false },
+        streakBonus: {
+          isActive: {
+            type: Boolean,
+            default: false,
+          },
+          claimedAt: {
+            type: Number,
+            default: 0,
+          },
+          streakCount: {
+            type: Number,
+            default: 0,
+          },
+        },
+        dailyBonusClaimedAt: {
+          type: Date,
+          default: 0,
+        },
+      },
     },
     gameSession: {
       gameHrStartAt: {

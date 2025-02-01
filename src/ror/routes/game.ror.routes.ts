@@ -5,6 +5,7 @@ import {
   deActivateInside,
   generateSessionReward,
   getGameStats,
+  giveCoins,
   joinFragments,
   startSession,
   tradeFragments,
@@ -38,6 +39,8 @@ router.post(
   validateSessionReward,
   generateSessionReward
 );
+
+router.get("/game/xxx/givecoins", authMiddleware, giveCoins);
 
 // transactions
 router.post(

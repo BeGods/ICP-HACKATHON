@@ -106,9 +106,9 @@ const milestoneSchema = new Schema<IMilestone>({
     ],
     validate: {
       validator: function (array) {
-        return array.length <= 12;
+        return array.length <= 9;
       },
-      message: "The bag cannot contain more than 12 items.",
+      message: "The bag cannot contain more than 9 items.",
     },
   },
   bank: {
@@ -139,9 +139,9 @@ const milestoneSchema = new Schema<IMilestone>({
       ],
       validate: {
         validator: function (array) {
-          return array.length <= 24;
+          return array.length <= 36;
         },
-        message: "The vault cannot contain more than 24 items.",
+        message: "The vault cannot contain more than 36 items.",
       },
     },
   },

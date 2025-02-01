@@ -7,6 +7,7 @@ import {
 } from "../services/redis.services";
 import { deleteImage, storeImage } from "../services/storage.services";
 import { fourDigitCode } from "../../helpers/general.helpers";
+import { callAlibabaSendMsg } from "../services/alibaba.services";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -89,10 +90,10 @@ export const generateOtp = async (req, res) => {
       RegionId: "ap-southeast-1",
       To: mobileNumber.replace(/\s/g, ""),
       Message: message,
-      From: "iATSMS",
+      From: "FROGDOGIND",
     };
 
-    // await callAlibabaSendMsg(params);
+    await callAlibabaSendMsg(params);
     await setOTP(mobileNumber.toString(), otp.toString(), 300);
 
     res.status(200).json({ message: "OTP has been sent successfully!" });
