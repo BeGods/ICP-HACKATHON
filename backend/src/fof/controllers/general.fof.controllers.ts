@@ -51,22 +51,38 @@ export const updateLeadboardRanks = async (req, res) => {
   try {
     const leaderboard = await getLeaderboardSnapshot();
 
-    const finishedUsers = leaderboard.filter((user) => user.totalOrbs > 999999);
-    const activeUsers = leaderboard.filter((user) => user.totalOrbs <= 999999);
+    const fofFinishedUsers = leaderboard.filter(
+      (user) => user.totalOrbs > 999999
+    );
+    const fofActiveUsers = leaderboard.filter(
+      (user) => user.totalOrbs <= 999999
+    );
+    const rorFinishedUsers = leaderboard.filter(
+      (user) => user.gobcoin > 999999
+    );
+    const rorActiveUsers = leaderboard.filter((user) => user.gobcoin <= 999999);
 
     // overall rank
-    const sortedUsers = activeUsers
+    const fofSortedUsers = fofActiveUsers
       .map((user, index) => ({
         ...user,
-        overallRank: index + 1,
+        orbRank: index + 1,
       }))
       .sort((a, b) => b.totalOrbs - a.totalOrbs);
 
-    const usersByCountry = await sortRanksByCountry(sortedUsers);
+    const rorSortedUsers = rorActiveUsers
+      .map((user, index) => ({
+        ...user,
+        coinRank: index + 1,
+      }))
+      .sort((a, b) => b.gobcoin - a.gobcoin);
+
+    const usersByCountry = await sortRanksByCountry(fofSortedUsers);
 
     // update ranks for active users
-    const bulkOps = sortedUsers.map((user) => {
+    const bulkOps = fofSortedUsers.map((user) => {
       let userCountryRank = 0;
+      let userCoinRank = 0;
       if (user.country && user.country !== "NA") {
         const key = user.country;
         userCountryRank = usersByCountry[key]
@@ -75,6 +91,10 @@ export const updateLeadboardRanks = async (req, res) => {
             ).countryRank
           : 1;
       }
+
+      userCoinRank = rorSortedUsers.find(
+        (u) => u.userId.toString() === user.userId.toString()
+      ).coinRank;
 
       return {
         updateOne: {
@@ -86,7 +106,8 @@ export const updateLeadboardRanks = async (req, res) => {
               profileImage: user.profileImage,
               totalOrbs: user.totalOrbs,
               squadOwner: user.squadOwner,
-              overallRank: user.overallRank,
+              orbRank: user.orbRank,
+              coinRank: userCoinRank,
               directReferralCount: user.directReferralCount,
               country: user.country ?? "NA",
               countryRank: userCountryRank,
@@ -110,7 +131,7 @@ export const updateLeadboardRanks = async (req, res) => {
     });
 
     // update ranks for finished users
-    const finishedOps = finishedUsers.map((user) => ({
+    const fofFinishedOps = fofFinishedUsers.map((user) => ({
       updateOne: {
         filter: { userId: user.userId },
         update: {
@@ -122,7 +143,8 @@ export const updateLeadboardRanks = async (req, res) => {
             directReferralCount: user.directReferralCount,
             totalOrbs: user.totalOrbs,
             squadOwner: user.squadOwner,
-            overallRank: 0,
+            orbRank: 0,
+            coinRank: user.coinRank,
             country: user.country ?? "NA",
             countryRank: 0,
             gameData: {
@@ -142,10 +164,43 @@ export const updateLeadboardRanks = async (req, res) => {
       },
     }));
 
-    // Perform bulkWrite operations
-    await ranks.bulkWrite([...bulkOps, ...finishedOps]);
+    const rorFinishedOps = fofFinishedUsers.map((user) => ({
+      updateOne: {
+        filter: { userId: user.userId },
+        update: {
+          $set: {
+            fofCompletedAt: user.finishedAt,
+            userId: user.userId,
+            telegramUsername: user.telegramUsername,
+            profileImage: user.profileImage,
+            directReferralCount: user.directReferralCount,
+            totalOrbs: user.totalOrbs,
+            squadOwner: user.squadOwner,
+            orbRank: user.orbRank,
+            coinRank: 0,
+            country: user.country ?? "NA",
+            countryRank: 0,
+            gameData: {
+              ...user.mythologyOrbsData.reduce((acc, obj) => {
+                if (obj.name && obj.orbs !== undefined) {
+                  acc[obj.name.toLowerCase()] = obj.orbs;
+                }
+                return acc;
+              }, {}),
+              blackOrbs: user.blackOrbs,
+              multiColorOrbs: user.multiColorOrbs,
+            },
+            squadRank: 0,
+          },
+        },
+        upsert: true,
+      },
+    }));
 
-    const bettedUsers = sortedUsers.filter(
+    // bulk operations
+    await ranks.bulkWrite([...bulkOps, ...fofFinishedOps, ...rorFinishedOps]);
+
+    const bettedUsers = fofSortedUsers.filter(
       (user) => user.totalOrbs <= 999999 && user.userBetAt
     );
 
@@ -179,7 +234,7 @@ export const addUserBet = async (req, res) => {
     });
     await user.updateOne({
       $set: {
-        userBetAt: status + userRank.overallRank,
+        userBetAt: status + userRank.orbRank,
       },
     });
 

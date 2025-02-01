@@ -32,8 +32,8 @@ export const validateSessionReward = async (req, res, next) => {
 
     const sessionDuration = Date.now() - user.gameSession.lastSessionStartTime;
 
-    // validate session duration
-    if (sessionDuration > 60000 || sessionDuration < 25000) {
+    // validate session duration|| sessionDuration < 25000
+    if (sessionDuration > 60000) {
       throw new Error("Invalid session. Please try again.");
     }
 
@@ -52,7 +52,7 @@ export const validateSessionReward = async (req, res, next) => {
       }
     });
 
-    if ((userClaimedRewards?.bag?.length ?? 0) >= 12) {
+    if ((userClaimedRewards?.bag?.length ?? 0) >= 9) {
       // check if bag is full
       throw new Error("Bag is full. Please create some space.");
     }
@@ -84,7 +84,7 @@ export const validTransferToVault = async (req, res, next) => {
     }
 
     // check if there is enough space in vault
-    if (userClaimedRewards.bank.vault.length >= 24) {
+    if (userClaimedRewards.bank.vault.length >= 36) {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
@@ -128,7 +128,7 @@ export const validTransferToBag = async (req, res, next) => {
     }
 
     // check if there is enough space in bag
-    if (userClaimedRewards.bag.length >= 12) {
+    if (userClaimedRewards.bag.length >= 9) {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
@@ -292,6 +292,8 @@ export const validateTradeFragment = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { itemId } = req.body;
+
+  console.log(itemId);
 
   try {
     const userClaimedRewards = await milestones.findOne({ userId });

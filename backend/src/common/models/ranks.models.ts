@@ -8,7 +8,12 @@ const rankSchema = new Schema<IRank>(
       required: true,
       ref: "User",
     },
-    overallRank: {
+    orbRank: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    coinRank: {
       type: Number,
       required: true,
       default: 1,
@@ -41,9 +46,14 @@ const rankSchema = new Schema<IRank>(
       type: Number,
       default: 0,
     },
-    totalOrbs: Number,
+    totalOrbs: {
+      type: Number,
+      default: 0,
+    },
     fofCompletedAt: Date,
-    prevRank: Number,
+    prevOrbRank: Number,
+    prevCoinRank: Number,
+    totalGobcoin: Number,
   },
 
   { timestamps: true }
