@@ -468,6 +468,7 @@ const Quests = () => {
                 }  relative flex justify-center items-center`}
               >
                 <JigsawImage
+                  grid={[3, 6]}
                   handleClick={() => {}}
                   imageUrl={assets.whitelist[mythSections[activeMyth]]}
                   activeParts={handleActiveParts(

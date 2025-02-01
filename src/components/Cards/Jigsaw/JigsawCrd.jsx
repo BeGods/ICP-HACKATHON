@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image as KonvaImage, Rect } from "react-konva";
 import useImage from "use-image";
 
-const JigsawImage = ({ imageUrl, activeParts, handleClick }) => {
+const JigsawImage = ({ imageUrl, activeParts, handleClick, grid }) => {
   const [image] = useImage(imageUrl);
   const divRef = useRef(null);
   const [dimensions, setDimensions] = useState({
@@ -20,8 +20,8 @@ const JigsawImage = ({ imageUrl, activeParts, handleClick }) => {
     }
   }, []);
 
-  const numCols = 3;
-  const numRows = 4;
+  const numCols = grid[0];
+  const numRows = grid[1];
   const cellWidth = (dimensions.width - (numCols - 1) * gap) / numCols;
   const cellHeight = (dimensions.height - (numRows - 1) * gap) / numRows;
 

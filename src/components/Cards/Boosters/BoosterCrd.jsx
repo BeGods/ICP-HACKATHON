@@ -29,12 +29,12 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { Clapperboard } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
+import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
 const BoosterClaim = ({
   activeCard,
-  t,
   mythData,
   closeCard,
   disableIcon,
@@ -54,6 +54,7 @@ const BoosterClaim = ({
     setShowCard,
     enableHaptic,
   } = useContext(MyContext);
+  const { t } = useTranslation();
   const disableRef = useRef(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
   const adsgramId = import.meta.env.VITE_AD_BOOSTER;
