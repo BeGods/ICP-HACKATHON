@@ -28,7 +28,7 @@ export const getAllPartners = async (req, res) => {
     const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
 
     const activePartners = await partners
-      .find()
+      .find({ status: true })
       .lean()
       .select("-__v -createdAt -updatedAt");
 
@@ -95,7 +95,9 @@ export const getAllPartners = async (req, res) => {
     // const playSuperItems = playsuper.slice(0, 9);
     // const remainingSlots = 12 - playSuperItems.length;
     // const partnerItems = activeCustomPartners.slice(0, remainingSlots);
-    const partnerItems = activeCustomPartners;
+    const partnerItems = activeCustomPartners.sort(
+      (a, b) => b.startDate - a.startDate
+    );
 
     // playsuper orders
     // const playsuperOrders = await fetchPlaysuperOrders(lang, playusperCred.key);

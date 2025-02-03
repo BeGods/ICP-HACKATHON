@@ -9,6 +9,7 @@ export const partnerSchema = new Schema<IPartner>(
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     brandName: { type: String, required: true },
+    status: { type: Boolean, default: true },
     isCharity: { type: Boolean },
     metadata: {
       brandName: { type: String, required: true },

@@ -37,3 +37,20 @@ export const authMiddleware = async (req, res, next) => {
     }
   }
 };
+
+export const validateBotNewUser = async (req, res, next) => {
+  const { telegramId } = req.body;
+
+  try {
+    if (!telegramId && telegramId.length < 8) {
+      throw new Error("Invalid telegram user details.");
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to validate user.",
+      error: error.message,
+    });
+  }
+};

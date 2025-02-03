@@ -161,3 +161,33 @@ export const testAuthenticate = async (
     });
   }
 };
+
+export const createNewUserIfNoExists = async (req, res) => {
+  const { telegramId, telegramUsername, isPremium } = req.body;
+
+  try {
+    let existingUser = await User.findOne({ telegramId: telegramId });
+
+    if (existingUser) {
+      return res.json({ refers: existingUser.directReferralCount });
+    }
+
+    let newUser: Partial<IUser> = {
+      telegramId,
+      telegramUsername,
+      isPremium,
+    };
+
+    const createdUser = await addNewUser(newUser);
+    await createDefaultUserMyth(createdUser);
+
+    return res.json({ refers: 0 });
+  } catch (error: any) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create user.",
+      error: error.message,
+    });
+  }
+};
