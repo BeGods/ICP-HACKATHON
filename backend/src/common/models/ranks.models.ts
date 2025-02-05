@@ -55,7 +55,6 @@ const rankSchema = new Schema<IRank>(
     prevCoinRank: Number,
     totalGobcoin: Number,
   },
-
   { timestamps: true }
 );
 

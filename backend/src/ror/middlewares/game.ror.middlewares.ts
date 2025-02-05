@@ -293,8 +293,6 @@ export const validateTradeFragment = async (req, res, next) => {
   const userId = user._id;
   const { itemId } = req.body;
 
-  console.log(itemId);
-
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
     const userMythologyData = await userMythologies.findOne({ userId });
