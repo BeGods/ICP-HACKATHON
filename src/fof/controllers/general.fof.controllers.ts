@@ -46,142 +46,86 @@ export const getLeaderboard = async (req, res) => {
   }
 };
 
-// update leaderboard
 export const updateLeadboardRanks = async (req, res) => {
   try {
     const leaderboard = await getLeaderboardSnapshot();
 
+    // Segregate Users
     const fofFinishedUsers = leaderboard.filter(
       (user) => user.totalOrbs > 999999
     );
+    const fofFinishedUserIds = fofFinishedUsers.map((user) =>
+      user.userId.toString()
+    );
+
+    const rorFinishedUsers = leaderboard.filter((user) => user.gobcoin > 999);
+    const rorFinishedUserIds = rorFinishedUsers.map((user) =>
+      user.userId.toString()
+    );
+
     const fofActiveUsers = leaderboard.filter(
       (user) => user.totalOrbs <= 999999
     );
-    const rorFinishedUsers = leaderboard.filter(
-      (user) => user.gobcoin > 999999
-    );
-    const rorActiveUsers = leaderboard.filter((user) => user.gobcoin <= 999999);
+    const rorActiveUsers = leaderboard.filter((user) => user.gobcoin <= 999);
 
-    // overall rank
-    const fofSortedUsers = fofActiveUsers
+    // calculate orbRank
+    const sortedFofUsers = [...fofActiveUsers, ...rorFinishedUsers]
+      .sort((a, b) => b.totalOrbs - a.totalOrbs)
       .map((user, index) => ({
         ...user,
-        orbRank: index + 1,
-      }))
-      .sort((a, b) => b.totalOrbs - a.totalOrbs);
+        orbRank: fofFinishedUserIds.includes(user.userId.toString())
+          ? 0
+          : index + 1,
+      }));
 
-    const rorSortedUsers = rorActiveUsers
+    // calculate coinRank
+    const sortedRorUsers = [...rorActiveUsers, ...fofFinishedUsers]
+      .sort((a, b) => b.gobcoin - a.gobcoin)
       .map((user, index) => ({
         ...user,
-        coinRank: index + 1,
-      }))
-      .sort((a, b) => b.gobcoin - a.gobcoin);
+        coinRank: rorFinishedUserIds.includes(user.userId.toString())
+          ? 0
+          : index + 1,
+      }));
 
-    const usersByCountry = await sortRanksByCountry(fofSortedUsers);
-
-    // update ranks for active users
-    const bulkOps = fofSortedUsers.map((user) => {
-      let userCountryRank = 0;
-      let userCoinRank = 0;
-      if (user.country && user.country !== "NA") {
-        const key = user.country;
-        userCountryRank = usersByCountry[key]
-          ? usersByCountry[key].find(
-              (u) => u.userId.toString() === user.userId.toString()
-            ).countryRank
-          : 1;
-      }
-
-      userCoinRank = rorSortedUsers.find(
-        (u) => u.userId.toString() === user.userId.toString()
-      ).coinRank;
-
+    const allUsers = leaderboard.map((user) => {
       return {
-        updateOne: {
-          filter: { userId: user.userId },
-          update: {
-            $set: {
-              userId: user.userId,
-              telegramUsername: user.telegramUsername,
-              profileImage: user.profileImage,
-              totalOrbs: user.totalOrbs,
-              squadOwner: user.squadOwner,
-              orbRank: user.orbRank,
-              coinRank: userCoinRank,
-              directReferralCount: user.directReferralCount,
-              country: user.country ?? "NA",
-              countryRank: userCountryRank,
-              prevRank: user.prevRank,
-              gameData: {
-                ...user.mythologyOrbsData.reduce((acc, obj) => {
-                  if (obj.name && obj.orbs !== undefined) {
-                    acc[obj.name.toLowerCase()] = obj.orbs;
-                  }
-                  return acc;
-                }, {}),
-                blackOrbs: user.blackOrbs,
-                multiColorOrbs: user.multiColorOrbs,
-              },
-              squadRank: 0,
-            },
-          },
-          upsert: true,
-        },
+        ...user,
+        orbRank:
+          sortedFofUsers.find(
+            (u) => u.userId.toString() === user.userId.toString()
+          )?.orbRank || 0,
+        coinRank:
+          sortedRorUsers.find(
+            (u) => u.userId.toString() === user.userId.toString()
+          )?.coinRank || 0,
       };
     });
 
-    // update ranks for finished users
-    const fofFinishedOps = fofFinishedUsers.map((user) => ({
+    const bulkOps = allUsers.map((user) => ({
       updateOne: {
         filter: { userId: user.userId },
         update: {
           $set: {
-            fofCompletedAt: user.finishedAt,
             userId: user.userId,
             telegramUsername: user.telegramUsername,
             profileImage: user.profileImage,
-            directReferralCount: user.directReferralCount,
             totalOrbs: user.totalOrbs,
-            squadOwner: user.squadOwner,
-            orbRank: 0,
-            coinRank: user.coinRank,
-            country: user.country ?? "NA",
-            countryRank: 0,
-            gameData: {
-              ...user.mythologyOrbsData.reduce((acc, obj) => {
-                if (obj.name && obj.orbs !== undefined) {
-                  acc[obj.name.toLowerCase()] = obj.orbs;
-                }
-                return acc;
-              }, {}),
-              blackOrbs: user.blackOrbs,
-              multiColorOrbs: user.multiColorOrbs,
-            },
-            squadRank: 0,
-          },
-        },
-        upsert: true,
-      },
-    }));
-
-    const rorFinishedOps = fofFinishedUsers.map((user) => ({
-      updateOne: {
-        filter: { userId: user.userId },
-        update: {
-          $set: {
-            fofCompletedAt: user.finishedAt,
-            userId: user.userId,
-            telegramUsername: user.telegramUsername,
-            profileImage: user.profileImage,
-            directReferralCount: user.directReferralCount,
-            totalOrbs: user.totalOrbs,
+            totalGobcoin: user.gobcoin,
             squadOwner: user.squadOwner,
             orbRank: user.orbRank,
-            coinRank: 0,
+            coinRank: user.coinRank,
             country: user.country ?? "NA",
-            countryRank: 0,
+            prevRank: user.prevRank,
+            fofCompletedAt: fofFinishedUserIds.includes(user.userId.toString())
+              ? user.finishedAt
+              : null,
+            rorCompletedAt: rorFinishedUserIds.includes(user.userId.toString())
+              ? user.finishedAt
+              : null,
+            directReferralCount: user.directReferralCount,
             gameData: {
-              ...user.mythologyOrbsData.reduce((acc, obj) => {
+              ...user.mythologyOrbsData?.reduce((acc, obj) => {
                 if (obj.name && obj.orbs !== undefined) {
                   acc[obj.name.toLowerCase()] = obj.orbs;
                 }
@@ -197,10 +141,10 @@ export const updateLeadboardRanks = async (req, res) => {
       },
     }));
 
-    // bulk operations
-    await ranks.bulkWrite([...bulkOps, ...fofFinishedOps, ...rorFinishedOps]);
+    // bulk update
+    await ranks.bulkWrite(bulkOps);
 
-    const bettedUsers = fofSortedUsers.filter(
+    const bettedUsers = sortedFofUsers.filter(
       (user) => user.totalOrbs <= 999999 && user.userBetAt
     );
 
@@ -222,7 +166,6 @@ export const updateLeadboardRanks = async (req, res) => {
     });
   }
 };
-
 // bet
 export const addUserBet = async (req, res) => {
   const user = req.user;

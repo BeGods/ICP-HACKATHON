@@ -1,21 +1,27 @@
+import userMythologies from "../../common/models/mythologies.models";
 import User from "../../common/models/user.models";
+import { generateDailyRwrd } from "../services/general.ror.services";
 
 export const claimDailyBonus = async (req, res) => {
+  const userId = req.user._id;
+  const user = req.user;
   try {
-    const user = req.user;
-    const isNotClaimedToday = req.isNotClaimedToday;
-
     const currTimeInUTC = new Date();
-    let bonusReward;
 
-    if (isNotClaimedToday) {
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          $set: {
-            "bonus.ror.dailyBonusClaimedAt": currTimeInUTC,
-          },
-        }
+    await user.updateOne({
+      $set: {
+        "bonus.ror.dailyBonusClaimedAt": currTimeInUTC,
+      },
+    });
+
+    let bonusReward: {} = await generateDailyRwrd(userId);
+
+    if (!bonusReward) {
+      bonusReward = "shards";
+
+      await userMythologies.findOneAndUpdate(
+        { userId: userId },
+        { $inc: { blackShards: 10 } }
       );
     }
 

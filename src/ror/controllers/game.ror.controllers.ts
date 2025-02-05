@@ -178,6 +178,7 @@ export const generateSessionReward = async (req, res) => {
         (item) =>
           !userClaimedRewards?.claimedRoRItems?.includes(item.id) &&
           !completedItemIds?.includes(item.id) &&
+          completedItemIds?.includes("relic") &&
           item.id?.includes(mythology.toLowerCase()) &&
           item.fragments.length === rewardlvl
       ) ?? [];

@@ -145,7 +145,6 @@ const milestoneSchema = new Schema<IMilestone>({
       },
     },
   },
-  // the relics that your completed and sold
   claimedRoRItems: {
     type: [String],
     default: [],
