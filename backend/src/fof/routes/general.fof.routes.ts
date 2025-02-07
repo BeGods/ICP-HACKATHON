@@ -34,7 +34,7 @@ router.get(
   claimStreakBonus
 );
 
-router.get("/validate/user", authMiddleware, validateUserPlayed);
+router.get("/validate/user", validateUserPlayed);
 
 // router.get("/test/script", runProfileScript);
 

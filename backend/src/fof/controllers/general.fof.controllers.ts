@@ -20,7 +20,7 @@ import { OrbsTransactions } from "../../common/models/transactions.models";
 
 export const validateUserPlayed = async (req, res) => {
   try {
-    const { telegramId } = req.body;
+    const { telegramId } = req.query;
     const userPlayed = await User.findOne({ telegramId: telegramId });
 
     if (!telegramId) {
