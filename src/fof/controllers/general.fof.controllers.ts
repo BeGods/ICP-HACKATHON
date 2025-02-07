@@ -18,6 +18,25 @@ import partners from "../../common/models/partners.models";
 import { validCountries } from "../../utils/constants/variables";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 
+export const validateUserPlayed = async (req, res) => {
+  try {
+    const { telegramId } = req.body;
+    const userPlayed = await User.findOne({ telegramId: telegramId });
+
+    if (!telegramId) {
+      res.status(200).json({ hasPlayed: false });
+    }
+
+    if (userPlayed) {
+      res.status(200).json({ hasPlayed: true });
+    } else {
+      res.status(200).json({ hasPlayed: false });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // leaderboard
 export const getLeaderboard = async (req, res) => {
   const { page, filter } = req.query;
