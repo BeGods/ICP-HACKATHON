@@ -51,6 +51,8 @@ const languages = [
   { name: "Español", code: "es" },
   { name: "Filipino", code: "fil" },
   { name: "မြန်မာ", code: "my" },
+  { name: "Indonasia", code: "id" },
+  { name: "Hausa", code: "ha" },
 ];
 
 const SettingModal = ({ close }) => {
