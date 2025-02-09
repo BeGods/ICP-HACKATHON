@@ -231,6 +231,15 @@ export interface IOrbsTransactions extends Document {
   createdAt?: Date;
   updatedAt?: Date;
 }
+// stars transaction
+export interface IStarTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  paymentId: string;
+  transcationId: string;
+  status: "pending" | "success" | "failed" | "rewarded";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 // shard transaction
 export interface IShardsTransactions extends Document {
