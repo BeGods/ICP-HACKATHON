@@ -3,6 +3,7 @@ import {
   IOrbsTransactions,
   IRewardTransactions,
   IShardsTransactions,
+  IStarTransactions,
 } from "src/ts/models.interfaces";
 
 const baseTransactionSchema = {
@@ -78,6 +79,16 @@ const rewardsTransactionsSchema = new Schema(
   { timestamps: true }
 );
 
+const starsTransactionsSchema = new Schema<IStarTransactions>(
+  {
+    ...baseTransactionSchema,
+    paymentId: String,
+    transcationId: String,
+    status: ["pending", "failed", "success", "rewarded"],
+  },
+  { timestamps: true }
+);
+
 const OrbsTransactions = model<IOrbsTransactions>(
   "OrbsTransaction",
   orbsTransactionsSchema
@@ -87,9 +98,19 @@ const ShardsTransactions = model<IShardsTransactions>(
   shardsTransactionsSchema
 );
 
+const StarsTransactions = model<IStarTransactions>(
+  "StarsTransaction",
+  starsTransactionsSchema
+);
+
 const RewardsTransactions = model<IRewardTransactions>(
   "RewardsTransaction",
   rewardsTransactionsSchema
 );
 
-export { OrbsTransactions, ShardsTransactions, RewardsTransactions };
+export {
+  OrbsTransactions,
+  ShardsTransactions,
+  RewardsTransactions,
+  StarsTransactions,
+};
