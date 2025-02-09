@@ -49,9 +49,8 @@ export const fetchProfilePhoto = async (accessToken) => {
 };
 
 export const updateMythology = async (mythology, accessToken) => {
-  let url = `${
-    import.meta.env.VITE_API_URL
-  }/game/stats/update?mythologyName=${mythology}`;
+  let url = `${import.meta.env.VITE_API_URL
+    }/game/stats/update?mythologyName=${mythology}`;
 
   try {
     const response = await axios.get(url, {
@@ -422,9 +421,8 @@ export const updateGameData = async (gameData, accessToken) => {
 };
 
 export const fetchLostQuests = async (mythologyName, accessToken) => {
-  let url = `${
-    import.meta.env.VITE_API_URL
-  }/quests/lost?mythologyName=${mythologyName}`;
+  let url = `${import.meta.env.VITE_API_URL
+    }/quests/lost?mythologyName=${mythologyName}`;
 
   try {
     const response = await axios.get(url, {
@@ -785,6 +783,25 @@ export const claimRatUpdate = async (mythologyName, accessToken) => {
 
   try {
     const response = await axios.post(url, mythologyName, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const generateStarInvoice = async (accessToken, type) => {
+  let url = `${import.meta.env.VITE_API_URL}/stars/invoice`;
+  if (type) {
+    url += `?type=${type}`;
+  }
+
+  try {
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
