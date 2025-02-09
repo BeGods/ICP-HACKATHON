@@ -23,10 +23,11 @@ import {
   claimBurstBooster,
   claimMoonBoost,
   claimShardsBooster,
+  generateStarInvoice,
 } from "../../../utils/api";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { Clapperboard } from "lucide-react";
+import { Clapperboard, Star } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
@@ -56,10 +57,20 @@ const BoosterClaim = ({
   } = useContext(MyContext);
   const { t } = useTranslation();
   const disableRef = useRef(false);
+  const [payIsActive, setPayIsActive] = useState(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
   const adsgramId = import.meta.env.VITE_AD_BOOSTER;
   const myths = ["greek", "celtic", "norse", "egyptian", "other"];
   const [activeColor, setActiveColor] = useState(0);
+  const [dots, setDots] = useState(1);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev === 3 ? 1 : prev + 1));
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -376,11 +387,87 @@ const BoosterClaim = ({
       handleClaimShards(true);
     }
   }, []);
-  const onError = useCallback((result) => {
-    console.log(result);
 
+  const onError = useCallback((result) => {
     showToast("ad_error");
   }, []);
+
+  const handleGenerateInvoice = async () => {
+    setPayIsActive(true);
+    try {
+      const response = await generateStarInvoice(authToken, activeCard);
+      const invoice = `https://t.me/invoice/${response.invoice
+        ?.split("/")
+        .pop()
+        .replace(/^\$/, "")}`;
+      await tele.openInvoice(`${invoice}`, (status) => {
+        if (status == "paid") {
+          if (activeCard === "automata" && isAutoPay) {
+            trackEvent("purchase", "claim_automata", "success");
+            setGameData((prevData) => {
+              const now = Date.now();
+              const updatedData = {
+                ...prevData,
+                isAutomataAutoActive: true,
+                multiColorOrbs: prevData.multiColorOrbs - 0,
+                mythologies: prevData.mythologies.map((item) =>
+                  item.name === mythologies[activeMyth]
+                    ? {
+                        ...item,
+                        boosters: {
+                          ...item.boosters,
+                          automatalvl: Math.min(
+                            item.boosters.automatalvl + 2,
+                            99
+                          ),
+                          isAutomataActive: true,
+                          automataLastClaimedAt: now,
+                          automataStartTime: now,
+                        },
+                      }
+                    : item
+                ),
+              };
+              return updatedData;
+            });
+            setShowCard(null);
+            showToast("booster_success");
+            setShowBooster("automata");
+            setSection(0);
+            setPayIsActive(false);
+          } else if (activeCard === "burst" && isAutoPay) {
+            trackEvent("purchase", "claim_auto_burst", "success");
+            setGameData((prevData) => {
+              const now = Date.now();
+              const updatedData = {
+                ...prevData,
+                autoPayBurstExpiry: now,
+                mythologies: prevData.mythologies.map((item) => ({
+                  ...item,
+                  boosters: {
+                    ...item.boosters,
+                    isBurstActive: true,
+                  },
+                })),
+              };
+              return updatedData;
+            });
+            setShowCard(null);
+            showToast("booster_success");
+            setShowBooster("automata");
+            setSection(0);
+            setPayIsActive(false);
+          }
+        } else if (status == "cancelled" || status == "failed") {
+          showToast("error_payment");
+          setPayIsActive(false);
+          setShowCard(null);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const showAd = useAdsgram({
     blockId: adsgramId,
@@ -390,8 +477,12 @@ const BoosterClaim = ({
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
-      {((activeCard === "automata" && !boostersData?.isAutomataActive) ||
-        (activeCard === "minion" && boostersData?.isShardsClaimActive)) && (
+      {((activeCard === "automata" &&
+        !boostersData?.isAutomataActive &&
+        !isAutoPay) ||
+        (activeCard === "minion" &&
+          boostersData?.isShardsClaimActive &&
+          !isAutoPay)) && (
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
@@ -411,6 +502,58 @@ const BoosterClaim = ({
           </div>
         </div>
       )}
+
+      {((activeCard === "automata" &&
+        !boostersData?.isAutomataActive &&
+        isAutoPay) ||
+        (activeCard === "burst" &&
+          boostersData?.isShardsClaimActive &&
+          isAutoPay)) &&
+        !payIsActive && (
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              handleGenerateInvoice();
+            }}
+            className="absolute flex items-center justify-center top-0 w-screen pt-2"
+          >
+            <div className="flex uppercase flex-col items-center gap-2 w-fit">
+              <div className="flex relative items-center justify-center">
+                <div className="text-white text-black-contour mt-1 absolute text-[8vw]">
+                  {activeCard === "automata" ? 1 : 3}
+                </div>{" "}
+                <Star color="#ffd660" fill="#ffd660" size={"16vw"} />
+              </div>
+              <div className="flex flex-col text-white">
+                <div className="text-[6vw] -mt-2">
+                  <span className="text-gold">{t("buttons.pay")}</span>{" "}
+                  {t("note.ad")}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+      {((activeCard === "automata" &&
+        !boostersData?.isAutomataActive &&
+        isAutoPay) ||
+        (activeCard === "burst" &&
+          boostersData?.isShardsClaimActive &&
+          isAutoPay)) &&
+        payIsActive && (
+          <div className="absolute flex items-center justify-center top-0 w-screen pt-2">
+            <div className="flex uppercase flex-col items-center gap-2 w-fit">
+              <div className="flex pt-8 relative items-center justify-center">
+                <div className="text-white text-black-contour  text-[8vw]">
+                  <div className="w-full relative font-medium text-secondary">
+                    {t("keywords.load")}
+                    <span className="absolute">{`${".".repeat(dots)}`}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       <div
         onClick={() => {
           const conditions = {

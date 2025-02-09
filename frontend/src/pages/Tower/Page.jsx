@@ -104,9 +104,9 @@ const Tower = () => {
           blackOrbPhaseBonus = 1;
           phaseBonus = 1;
         } else if (mythologies[currPhase] === mythData.name) {
-          phaseBonus = 4;
+          phaseBonus = 2;
         } else if (currPhase === 4) {
-          blackOrbPhaseBonus = 4;
+          blackOrbPhaseBonus = 2;
         }
 
         let blackOrb = 0;

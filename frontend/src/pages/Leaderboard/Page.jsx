@@ -425,80 +425,74 @@ const Leaderboard = (props) => {
 
       {/* Leaderboard list */}
       {isFinished ? (
-        <>
-          {activeTab ? (
-            <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
-              <div className="flex text-gold justify-between text-secondary uppercase items-center w-[90%] mx-auto py-3">
-                <h1>
-                  <span className="pr-6">#</span>
-                  {t(`profile.name`)}
-                </h1>
-                <h1>{t(`profile.country`)}</h1>
-              </div>
-              <div
-                id="scrollableDiv"
-                className="pb-[9vh] overflow-auto disable-scroll-bar"
-              >
-                {paddedHallOfFameData.slice(3).map((item, index) => {
-                  const { telegramUsername, profileImage, id, isEmpty } = item;
+        <div className="flex flex-col w-full text-medium h-[52vh] bg-white text-black rounded-t-primary">
+          <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
+            <h1>
+              <span className="pr-12">#</span>
+              {t(`profile.name`)}
+            </h1>
 
-                  const countryFlag =
-                    countries.find((country) => country.code == item.country)
-                      .flag || "🌐";
+            <h1>{t(`profile.country`)}</h1>
+          </div>
+          <div
+            id="scrollableDiv"
+            className="pb-[9vh] overflow-auto disable-scroll-bar"
+          >
+            {paddedHallOfFameData.slice(3).map((item, index) => {
+              const { telegramUsername, profileImage, id, isEmpty } = item;
 
-                  return (
-                    <div key={id || index} className="leaderboard-item">
-                      <LeaderboardItem
-                        isEmpty={isEmpty || false}
-                        rank={index}
-                        name={telegramUsername}
-                        totalOrbs={countryFlag}
-                        imageUrl={profileImage}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
-                <div className="flex border border-gray-400 rounded-primary bg-black justify-center w-full">
-                  <div className="flex text-white justify-center items-center w-[20%] h-full">
-                    {userData.overallRank}
-                  </div>
-                  <div className="flex gap-3 items-center  w-full">
-                    <div className="h-[35px] w-[35px]">
-                      {userData.avatarUrl ? (
-                        <img
-                          src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
-                          alt="profile-image"
-                          className="rounded-full"
-                        />
-                      ) : (
-                        <Avatar
-                          name={userData.telegramUsername}
-                          className="h-full w-full"
-                          profile={0}
-                          color={avatarColor}
-                        />
-                      )}
-                    </div>
-                    <h1 className="text-white">
-                      {userData.telegramUsername.length > 20
-                        ? userData.telegramUsername.slice(0, 20)
-                        : userData.telegramUsername}
-                    </h1>
-                  </div>
-                  <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
-                    <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
-                  </div>
+              const countryFlag =
+                countries.find((country) => country.code == item.country)
+                  .flag || "🌐";
+
+              return (
+                <div key={id || index} className="leaderboard-item">
+                  <LeaderboardItem
+                    isKOL={true}
+                    isEmpty={isEmpty || false}
+                    rank={index}
+                    name={telegramUsername}
+                    totalOrbs={countryFlag}
+                    imageUrl={profileImage}
+                  />
                 </div>
+              );
+            })}
+          </div>
+          <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
+            <div className="flex border border-gray-400 rounded-primary bg-white justify-center w-full">
+              <div className="flex text-black justify-center items-center w-[20%] h-full">
+                {userData.overallRank}
+              </div>
+              <div className="flex gap-3 items-center  w-full">
+                <div className="h-[35px] w-[35px]">
+                  {userData.avatarUrl ? (
+                    <img
+                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      alt="profile-image"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <Avatar
+                      name={userData.telegramUsername}
+                      className="h-full w-full"
+                      profile={0}
+                      color={avatarColor}
+                    />
+                  )}
+                </div>
+                <h1 className="text-black">
+                  {userData.telegramUsername.length > 20
+                    ? userData.telegramUsername.slice(0, 20)
+                    : userData.telegramUsername}
+                </h1>
+              </div>
+              <div className="flex flex-col text-black justify-center items-end text-tertiary w-[30%] mr-4 h-full">
+                <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
               </div>
             </div>
-          ) : (
-            <div className="flex items-end w-full text-medium h-[60vh] bottom-0 text-black rounded-t-primary">
-              <div className="w-full text-center text-[11vw] ">COMING SOON</div>
-            </div>
-          )}
-        </>
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
