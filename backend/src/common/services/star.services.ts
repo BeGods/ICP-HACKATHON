@@ -7,12 +7,14 @@ const invoiceDetails = {
     description: "Claim Automata pack all at once for all mythologies.",
     currency: "XTR",
     amount: 1,
+    photo_url: "https://i.postimg.cc/2yztL9mh/tg-star.png",
   },
   burst: {
     title: "Burst Pack",
     description: "Claim Burst pack all at once for all mythologies.",
     currency: "XTR",
     amount: 3,
+    photo_url: "https://i.postimg.cc/2yztL9mh/tg-star.png",
   },
 };
 

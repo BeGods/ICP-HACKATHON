@@ -7,6 +7,7 @@ import {
 } from "../services/redis.services";
 import { deleteImage, storeImage } from "../services/storage.services";
 import { fourDigitCode } from "../../helpers/general.helpers";
+import { callAlibabaSendMsg } from "../services/alibaba.services";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -77,11 +78,11 @@ export const generateOtp = async (req, res) => {
 
     const requestCount = await setRequestCnt(mobileNumber);
 
-    if (requestCount && requestCount > 3) {
-      return res.status(429).json({
-        message: "You have exceeded the OTP request limit. Try after 1hr.",
-      });
-    }
+    // if (requestCount && requestCount > 3) {
+    //   return res.status(429).json({
+    //     message: "You have exceeded the OTP request limit. Try after 1hr.",
+    //   });
+    // }
 
     const otp = fourDigitCode();
     const message = `${otp} is your OTP / verification code for BeGods and is valid for 5 minutes. Do not share this with anyone. -FrogDog Games`;
@@ -89,10 +90,10 @@ export const generateOtp = async (req, res) => {
       RegionId: "ap-southeast-1",
       To: mobileNumber.replace(/\s/g, ""),
       Message: message,
-      From: "iATSMS",
+      From: "FROGDOGIND",
     };
 
-    // await callAlibabaSendMsg(params);
+    await callAlibabaSendMsg(params);
     await setOTP(mobileNumber.toString(), otp.toString(), 300);
 
     res.status(200).json({ message: "OTP has been sent successfully!" });
