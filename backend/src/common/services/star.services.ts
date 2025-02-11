@@ -19,7 +19,7 @@ const invoiceDetails = {
 };
 
 export const createInvoice = async (rewardType, uuid) => {
-  const { title, description, currency, amount, payload } =
+  const { title, description, currency, amount, payload, photo_url } =
     invoiceDetails[rewardType];
   const totalAmount = amount;
 
@@ -28,6 +28,7 @@ export const createInvoice = async (rewardType, uuid) => {
     description,
     payload,
     provider_token: "",
+    photo_url,
     currency,
     prices: [{ label: title, amount: totalAmount }],
   };
