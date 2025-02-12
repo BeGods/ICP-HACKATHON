@@ -24,7 +24,10 @@ services:
   api:
     container_name: api
     restart: unless-stopped
-    build: .
+    build:
+      context: .
+      args:
+        - BRANCH=main
     ports:
       - 4000:3000
     env_file: .env.docker
@@ -37,6 +40,8 @@ services:
     restart: unless-stopped
     build:
       context: ../forges-of-faith-frontend
+      args:
+        - BRANCH=main
       dockerfile: Dockerfile
     ports:
       - 4001:8083
