@@ -159,6 +159,8 @@ export interface IRank extends Document {
 // user
 export interface IUser extends Document {
   telegramId?: string;
+  lineId?: string;
+  lineName?: string;
   telegramUsername?: string;
   name: string;
   isPremium?: boolean;
