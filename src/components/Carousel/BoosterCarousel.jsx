@@ -261,7 +261,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
             showEffect && "disappear"
           } opacity-100 text-[8vw] uppercase text-white glow-icon-${
             mythSections[activeMyth]
-          } h-fit justify-center items-start -mt-[1.5vh]`}
+          } h-fit justify-center items-start mt-[2vh]`}
         >
           {mythologies[activeMyth]}
         </div>
