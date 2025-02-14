@@ -14,8 +14,6 @@
   "dependencies": {
     "@tauri-apps/plugin-haptics": "^2.0.0",
     "@tauri-apps/plugin-notification": "^2.0.0",
-    "@telegram-apps/sdk": "^3.4.0",
-    "@telegram-apps/sdk-react": "^3.0.10",
     "@tonconnect/ui-react": "^2.0.6",
     "@vitejs/plugin-legacy": "^5.4.1",
     "add": "^2.0.6",
