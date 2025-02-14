@@ -22,7 +22,7 @@ const QuestCard = ({
   const [buttonFlip, setButtonFlip] = useState(false);
 
   return (
-    <div className="w-[70%] mt-[5vh] relative flex flex-col gap-2 justify-center items-center mx-auto">
+    <div className="w-[70%] mt-[4.5vh] relative flex flex-col gap-3 justify-center items-center mx-auto">
       <div className={`card ${flipped ? "flipped" : ""}`}>
         <div
           onClick={(e) => {
@@ -114,7 +114,7 @@ const QuestCard = ({
         >
           {Button}
         </div>
-        <div className="button__face button__face--back z-50 flex justify-center items-center">
+        <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center">
           {ShareButton}
         </div>
       </div>

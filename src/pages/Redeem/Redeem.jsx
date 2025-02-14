@@ -268,9 +268,14 @@ const Redeem = (props) => {
         }}
       />
       {/* Content */}
-      <div className="flex mt-7 justify-center items-center h-screen w-screen absolute mx-auto">
+      <div
+        className="flex mt-7 justify-center items-center w-screen absolute mx-auto"
+        style={{
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+        }}
+      >
         <div className={`flex items-center justify-center w-full h-full`}>
-          <div className="flex flex-col mt-[35px] gap-[28px] items-center justify-center w-full h-full">
+          <div className="flex flex-col mt-[35px] gap-[15px] items-center justify-center w-full h-full">
             <div
               className={`card ${
                 flipped ? "flipped" : ""
@@ -300,7 +305,7 @@ const Redeem = (props) => {
                   handleClick={() => {
                     setShowCard(null);
                   }}
-                  align={0}
+                  align={7}
                 />
               </div>
               <div className="card__face card__face--back flex justify-center items-center">
