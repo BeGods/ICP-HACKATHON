@@ -10,6 +10,7 @@ import {
 } from "../../helpers/cookie.helper";
 import { trackComponentView } from "../../utils/ga";
 import { mythologies, mythSymbols } from "../../utils/constants";
+import { telegramGetSafeAreaInsets } from "../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
@@ -23,7 +24,6 @@ const orbPos = [
 const IntroPage = (props) => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const [showCaptcha, setShowCaptcha] = useState(false);
   const [referralCode, setReferralCode] = useState(null);
   const [fadeout, setFadeout] = useState(false);
   const [platform, setPlatform] = useState(null);
@@ -40,20 +40,13 @@ const IntroPage = (props) => {
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
 
-        // tele.requestFullscreen();
+        tele.requestFullscreen();
         tele.lockOrientation();
         tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();
         tele.setHeaderColor("#000000");
         tele.setBackgroundColor("#000000");
         tele.setBottomBarColor("#000000");
-        // tele.LocationManager.init(function () {
-        //   window.Telegram.WebApp.LocationManager.getLocation(function (
-        //     locationData
-        //   ) {
-        //     toast.success(locationData);
-        //   });
-        // });
 
         if (user) {
           const userDataObj = {
@@ -158,10 +151,18 @@ const IntroPage = (props) => {
   setFullHeight();
 
   return (
-    <div className={`bg-white text-black flex h-screen w-screen text-wrap`}>
+    <div
+      className={`bg-white text-black flex w-screen text-wrap`}
+      style={{ height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)` }}
+    >
       {disableDesktop ? (
         // TMA desktop view
-        <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
+        <div
+          className="flex flex-col justify-center items-center w-screen bg-black"
+          style={{
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
+        >
           <img
             src={assets.logos.fofQr}
             alt="qr"
@@ -227,7 +228,7 @@ const IntroPage = (props) => {
             backgroundPosition: "50.5% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            height: "100svh",
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
             width: "100vw",
             position: "fixed",
             top: 0,
@@ -271,7 +272,7 @@ const IntroPage = (props) => {
               ⚜️“For I walk by faith, not by sight”⚜️
             </p>
           </div>
-          <div className="flex flex-col h-screen">
+          <div className="flex flex-col h-full">
             <div className="flex justify-center items-center w-full leading-tight">
               <div className="relative z-[100]">
                 <img

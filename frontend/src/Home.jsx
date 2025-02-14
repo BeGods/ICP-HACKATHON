@@ -269,7 +269,10 @@ const Home = () => {
     <div>
       {!isLoading ? (
         <div
-          className={`w-screen h-[100svh] bg-white select-none font-fof overflow-hidden`}
+          className="w-screen bg-white select-none font-fof overflow-hidden"
+          style={{
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
         >
           <MyContext.Provider value={initalStates}>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((item) => (
