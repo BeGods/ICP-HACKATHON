@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* Root Variables */
 :root {
   /* Basic */
@@ -172,7 +173,6 @@ body {
   bottom: 0;
   background-color: black;
 }
-
 
 .jigsaw::before {
   content: "";
