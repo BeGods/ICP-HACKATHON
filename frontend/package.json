@@ -36,7 +36,7 @@
     "react-toastify": "^10.0.5",
     "sass": "^1.77.8",
     "styled-components": "^6.1.12",
-    "use-image": "^1.1.1"
+    "use-image": "^1.1.1",
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.1.0",

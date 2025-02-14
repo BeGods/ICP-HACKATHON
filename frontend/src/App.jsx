@@ -9,6 +9,7 @@ import Home from "./Home";
 import IntroPage from "./pages/Intro/Page";
 import ReactGA from "react-ga4";
 import { useEffect } from "react";
+import Test from "./pages/Test";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 

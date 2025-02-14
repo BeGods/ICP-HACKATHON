@@ -1,22 +1,15 @@
-import React from "react";
-import { generateStarInvoice } from "../utils/api";
-const tele = window.Telegram?.WebApp;
+import React, { useState } from "react";
+import { telegramGetSafeAreaInsets } from "../utils/device.info";
 
-const Test = (props) => {
-  const handleGenerateInvoice = async () => {
-    try {
-      const response = await generateStarInvoice();
-
-      await tele.openInvoice(response.invoice, (status) => {
-        console.log(status);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+const Test = () => {
   return (
-    <div className="h-screen w-screen bg-black flex justify-center items-center">
-      <div className="bg-white text-back text-[2vw] p-3">Pay</div>
+    <div
+      className="w-screen bg-white flex justify-center items-center"
+      style={{ height: `calc(100vh - ${safeArea.top}px)` }}
+    >
+      <div className="bg-white text-black text-[2vw] p-3">
+        <p>Safe Area Insets: {JSON.stringify(safeArea)}</p>
+      </div>
     </div>
   );
 };
