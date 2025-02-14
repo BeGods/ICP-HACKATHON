@@ -425,7 +425,7 @@ const Leaderboard = (props) => {
 
       {/* Leaderboard list */}
       {isFinished ? (
-        <div className="flex flex-col w-full text-medium h-[52vh] bg-white text-black rounded-t-primary">
+        <div className="flex flex-col w-full text-medium h-[49vh] bg-white text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
@@ -494,7 +494,7 @@ const Leaderboard = (props) => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
+        <div className="flex flex-col w-full text-medium h-[49vh] bg-black text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
