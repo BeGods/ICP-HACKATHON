@@ -19,7 +19,7 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
         top: 0,
         left: 0,
       }}
-      className="flex h-[91%] flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black"
+      className="flex h-[90%] flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black"
     >
       <IconBtn
         isInfo={false}
