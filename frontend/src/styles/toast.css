@@ -5,6 +5,7 @@
   color: black !important;
   width: 95%;
   margin: 20px auto;
+  margin-top: calc(var(--tg-safe-area-inset-top) + 64px) !important; /* Increased by 20px */
 }
 
 .ToastContainer--top-center {

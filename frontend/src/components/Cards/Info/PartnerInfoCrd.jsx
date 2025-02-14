@@ -16,7 +16,7 @@ const PartnerCard = ({ close, reward }) => {
         top: 0,
         left: 0,
       }}
-      className="flex flex-col rounded-[15px] w-full h-full items-center gap-4 card-shadow-black"
+      className="flex flex-col rounded-[15px] w-full h-[90%] items-center gap-4 card-shadow-black"
     >
       <div className="flex w-full relative">
         <div className="w-full h-full absolute flex flex-col leading-tight justify-start items-center flex-grow  text-card pt-[10px]">

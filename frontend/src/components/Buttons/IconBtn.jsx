@@ -18,6 +18,7 @@ const alignBasedOnCard = [
   "mr-[60px] -mt-8",
   "mt-[18vh] -ml-[12vw]",
   "-mt-[4vh] ml-[14vw]",
+  "-mt-[0.5vh] ml-[10vw]",
 ];
 const IconBtn = ({ isInfo, handleClick, align }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
