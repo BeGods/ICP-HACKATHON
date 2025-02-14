@@ -275,7 +275,7 @@ const Redeem = (props) => {
         }}
       >
         <div className={`flex items-center justify-center w-full h-full`}>
-          <div className="flex flex-col mt-[35px] gap-[15px] items-center justify-center w-full h-full">
+          <div className="flex flex-col mt-[35px] gap-[3vw] items-center justify-center w-full h-full">
             <div
               className={`card ${
                 flipped ? "flipped" : ""

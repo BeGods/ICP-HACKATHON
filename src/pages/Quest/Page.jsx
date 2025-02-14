@@ -462,7 +462,7 @@ const Quests = () => {
           />
         ) : (
           <div
-            className="flex flex-col mt-[7vh] gap-[15px] items-center justify-center w-full"
+            className="flex flex-col mt-[7vh] gap-[3vw] items-center justify-center w-full"
             style={{
               height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
             }}

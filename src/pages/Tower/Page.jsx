@@ -238,7 +238,7 @@ const Tower = () => {
       <div
         className={`flex w-full ${
           disappearEffect && "disappear"
-        } absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[18.5vh]`}
+        } absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[17.5vh]`}
       >
         DOME
       </div>
