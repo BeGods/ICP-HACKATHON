@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import { validate, parse } from "@tma.js/init-data-node";
+import axios from "axios";
 
 export const generateAuthToken = async (user: any) => {
   const userObj = { _id: user._id, role: "user" };
@@ -40,6 +41,40 @@ export const decryptTelegramData = async (initData) => {
     }
 
     return { telegramId, telegramUsername, isPremium };
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const decryptLineData = async (token) => {
+  try {
+    if (!token) {
+      throw Error("Invalid input. Line initData is required.");
+    }
+    let parsedData;
+
+    // validate initData
+    try {
+      const response = await axios.get(`https://api.line.me/v2/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      parsedData = response.data;
+    } catch (validateError) {
+      throw new Error("InitData validation failed.");
+    }
+
+    const lineId = parsedData.userId;
+    const lineName = parsedData.displayName;
+    const photoUrl = parsedData.pictureUrl;
+
+    if (!lineId) {
+      throw new Error("Invalid userId. User not found.");
+    }
+
+    return { lineId, lineName, photoUrl };
   } catch (error) {
     throw new Error(error);
   }

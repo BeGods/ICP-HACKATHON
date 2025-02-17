@@ -1,13 +1,15 @@
 import User from "../models/user.models";
 import { ObjectId } from "mongodb";
 import {
+  decryptLineData,
   decryptTelegramData,
   generateAuthToken,
 } from "../services/auth.services";
 import {
   addTeamMember,
   createDefaultUserMyth,
-  addNewUser,
+  addNewTelegramUser,
+  addNewLineUser,
 } from "../services/user.services";
 import { Request, Response } from "express";
 import { IUser } from "../../ts/models.interfaces";
@@ -66,7 +68,7 @@ export const authenticate = async (
       }
 
       // create new  user
-      existingUser = await addNewUser(newUser);
+      existingUser = await addNewTelegramUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -143,7 +145,7 @@ export const testAuthenticate = async (
       }
 
       // create new  user
-      existingUser = await addNewUser(newUser);
+      existingUser = await addNewTelegramUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -178,7 +180,7 @@ export const createNewUserIfNoExists = async (req, res) => {
       isPremium,
     };
 
-    const createdUser = await addNewUser(newUser);
+    const createdUser = await addNewTelegramUser(newUser);
     await createDefaultUserMyth(createdUser);
 
     return res.json({ refers: 0 });
@@ -187,6 +189,62 @@ export const createNewUserIfNoExists = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to create user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateLine = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { token } = req.body;
+    let isUpdated = false;
+
+    const { lineId, lineName, photoUrl } = await decryptLineData(token);
+
+    // existing user or not
+    let existingUser: IUser | null = await User.findOne({ lineId: lineId });
+
+    if (existingUser) {
+      // check if user details have updated
+      if (lineName !== existingUser.lineName) {
+        existingUser.lineName = lineName;
+        isUpdated = true;
+      }
+
+      if (isUpdated) {
+        existingUser.save();
+      }
+    } else {
+      let newUser: Partial<IUser> = {
+        lineId,
+        lineName,
+        ...(photoUrl && {
+          profile: {
+            avatarUrl: photoUrl,
+            updateAt: new Date(),
+          },
+        }),
+      };
+
+      // create new  user
+      existingUser = await addNewLineUser(newUser);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const accessToken: string | null = await generateAuthToken(existingUser);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: { token: accessToken },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
       error: error.message,
     });
   }

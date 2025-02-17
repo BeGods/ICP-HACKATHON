@@ -4,7 +4,9 @@ import { IUser } from "../../ts/models.interfaces";
 const userSchema = new Schema<IUser>(
   {
     telegramId: { type: String, unique: true, sparse: true },
-    telegramUsername: { type: String, unique: true, sparse: true },
+    lineId: { type: String, unique: true, sparse: true },
+    lineName: { type: String, sparse: true },
+    telegramUsername: { type: String, sparse: true },
     isPremium: { type: Boolean },
     bonus: {
       fof: {
