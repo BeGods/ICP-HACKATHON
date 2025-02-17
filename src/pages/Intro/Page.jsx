@@ -10,7 +10,6 @@ import {
 } from "../../helpers/cookie.helper";
 import { trackComponentView } from "../../utils/ga";
 import { mythologies, mythSymbols } from "../../utils/constants";
-import { telegramGetSafeAreaInsets } from "../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
