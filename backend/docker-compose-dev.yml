@@ -1,0 +1,48 @@
+# run with
+# cd ~/Development/forges-of-faith-backend
+# docker-compose -f docker-compose-production.yml up -d
+# or
+# npm run docker:stack:up
+
+version: "3.3"
+
+services:
+  # MongoDB service
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      # using file system
+      # - ./volumes/mongo/db:/data/db
+      # using volumes
+      - mongo_data:/data/db
+
+  # Node API service
+  api:
+    container_name: api
+    restart: unless-stopped
+    build: .
+    ports:
+      - 4000:3001
+    env_file: .env.docker
+    depends_on:
+      - mongo
+
+  # Web service
+  web:
+    container_name: web
+    restart: unless-stopped
+    build:
+      context: ../begods-dev
+      dockerfile: Dockerfile
+    ports:
+      - 4001:8084
+    env_file: .env.docker
+    volumes:
+      - .:/src
+
+volumes:
+  mongo_data:

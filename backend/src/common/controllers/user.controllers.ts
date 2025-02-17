@@ -78,11 +78,11 @@ export const generateOtp = async (req, res) => {
 
     const requestCount = await setRequestCnt(mobileNumber);
 
-    if (requestCount && requestCount > 3) {
-      return res.status(429).json({
-        message: "You have exceeded the OTP request limit. Try after 1hr.",
-      });
-    }
+    // if (requestCount && requestCount > 3) {
+    //   return res.status(429).json({
+    //     message: "You have exceeded the OTP request limit. Try after 1hr.",
+    //   });
+    // }
 
     const otp = fourDigitCode();
     const message = `${otp} is your OTP / verification code for BeGods and is valid for 5 minutes. Do not share this with anyone. -FrogDog Games`;
