@@ -27,7 +27,7 @@ services:
     build: .
     ports:
       - 4000:3000
-    env_file: .env.docker
+    env_file: .env.prod
     depends_on:
       - mongo
 
@@ -40,7 +40,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 4001:8083
-    env_file: .env.docker
+    env_file: .env.prod
     volumes:
       - .:/src
 
