@@ -1,4 +1,5 @@
 import AuthRoutes from "./common/routes/auth.routes";
+import TeleRoutes from "./common/routes/tele.routes";
 import GeneralRoutes from "./fof/routes/general.fof.routes";
 import GeneralRoRRoutes from "./ror/routes/general.ror.routes";
 import AdminRoutes from "./common/routes/admin.routes";
@@ -16,6 +17,7 @@ export const fofRoutes = [
   PartnerRoutes,
   QuestsRoutes,
   UserRoutes,
+  TeleRoutes,
 ];
 
 export const rorRoutes = [GameRORRoutes, AuthRoutes, GeneralRoRRoutes];

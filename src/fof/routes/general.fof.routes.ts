@@ -5,6 +5,7 @@ import {
   claimStreakBonus,
   addUserBet,
   updateBetRwrdStatus,
+  validateUserPlayed,
 } from "../controllers/general.fof.controllers";
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
@@ -32,6 +33,8 @@ router.get(
   validateStreakBonus,
   claimStreakBonus
 );
+
+router.get("/validate/user", validateUserPlayed);
 
 // router.get("/test/script", runProfileScript);
 

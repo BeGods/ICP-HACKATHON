@@ -112,7 +112,7 @@ export const validAutoAutomataReq = async (req, res, next) => {
     })) as IUserMyths;
 
     if (!userMythologiesData) {
-      throw new Error("Insufficient orbs to claim automata.");
+      throw new Error("Mythology data not found");
     }
 
     if (!userMythologiesData.autoPay.isAutomataAutoPayEnabled) {
