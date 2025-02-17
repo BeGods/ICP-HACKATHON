@@ -446,7 +446,7 @@ const Leaderboard = (props) => {
                   <LeaderboardItem
                     isKOL={true}
                     isEmpty={isEmpty || false}
-                    rank={index}
+                    rank={index + 4}
                     name={telegramUsername}
                     totalOrbs={countryFlag}
                     imageUrl={profileImage}
