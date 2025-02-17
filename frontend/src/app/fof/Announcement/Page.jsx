@@ -77,7 +77,12 @@ const Announcement = (props) => {
   };
 
   return (
-    <div className="flex relative flex-col h-screen w-screen justify-center font-fof items-center bg-black">
+    <div
+      className="flex relative flex-col w-screen justify-center font-fof items-center bg-black"
+      style={{
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+      }}
+    >
       <div className="flex flex-col w-full h-full items-center">
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
           <div className="text-gold font-symbols">
