@@ -183,11 +183,7 @@ const Tower = () => {
   return (
     <div
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
         height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-        width: "100vw",
       }}
       className="flex flex-col overflow-hidden m-0"
     >
