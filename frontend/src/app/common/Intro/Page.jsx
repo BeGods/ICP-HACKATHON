@@ -22,8 +22,9 @@ const orbPos = [
 ];
 
 const IntroPage = (props) => {
-  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
   const [showLauncher, setShowLauncher] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [fadeout, setFadeout] = useState(false);
   const [platform, setPlatform] = useState(null);
@@ -40,20 +41,13 @@ const IntroPage = (props) => {
         if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
 
-        // tele.requestFullscreen();
+        tele.requestFullscreen();
         tele.lockOrientation();
         tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();
         tele.setHeaderColor("#000000");
         tele.setBackgroundColor("#000000");
         tele.setBottomBarColor("#000000");
-        // tele.LocationManager.init(function () {
-        //   window.Telegram.WebApp.LocationManager.getLocation(function (
-        //     locationData
-        //   ) {
-        //     toast.success(locationData);
-        //   });
-        // });
 
         if (user) {
           const userDataObj = {
@@ -140,10 +134,10 @@ const IntroPage = (props) => {
       }
       if (platform === "ios") {
         document.body.style.position = "fixed";
-        document.body.style.top = 0;
-        document.body.style.bottom = 0;
-        document.body.style.left = 0;
-        document.body.style.right = 0;
+        document.body.style.top = `calc(var(--tg-safe-area-inset-top) + 45px)`;
+        document.body.style.bottom = "0";
+        document.body.style.left = "0";
+        document.body.style.right = "0";
         document.body.style.overflow = "hidden";
       }
     }
@@ -162,10 +156,20 @@ const IntroPage = (props) => {
       {showLauncher ? (
         <Launcher />
       ) : (
-        <div className={`bg-white text-black flex h-screen w-screen text-wrap`}>
+        <div
+          className={`bg-white text-black flex w-screen text-wrap`}
+          style={{
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
+        >
           {disableDesktop ? (
             // TMA desktop view
-            <div className="flex flex-col justify-center items-center h-screen w-screen bg-black">
+            <div
+              className="flex flex-col justify-center items-center w-screen bg-black"
+              style={{
+                height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+              }}
+            >
               <img
                 src={assets.logos.fofQr}
                 alt="qr"
@@ -234,7 +238,7 @@ const IntroPage = (props) => {
                 backgroundPosition: "50.5% 0%",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
-                height: "100svh",
+                height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
                 width: "100vw",
                 position: "fixed",
                 top: 0,
@@ -278,7 +282,7 @@ const IntroPage = (props) => {
                   ⚜️“For I walk by faith, not by sight”⚜️
                 </p>
               </div>
-              <div className="flex flex-col h-screen">
+              <div className="flex flex-col h-full">
                 <div className="flex justify-center items-center w-full leading-tight">
                   <div className="relative z-[100]">
                     <img

@@ -14,6 +14,13 @@ const handleGenerateCoolDown = (counter) => {
   }
 };
 
+export const extractBotName = (url) => {
+  const cleanUrl = url.split("?")[0];
+  const regex = /t\.me\/([^/]+)/;
+  const match = cleanUrl.match(regex);
+  return match ? `@${match[1]}` : url;
+};
+
 export const handleGeneratePopTime = (counter) => {
   const currTime = Date.now();
   const downTime = currTime + handleGenerateCoolDown(counter);

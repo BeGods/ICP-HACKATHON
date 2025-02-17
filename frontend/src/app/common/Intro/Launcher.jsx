@@ -5,7 +5,12 @@ const Launcher = (props) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col text-white font-fof items-center text-center h-screen w-screen">
+    <div
+      className="flex flex-col text-white font-fof items-center text-center w-screen"
+      style={{
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+      }}
+    >
       <h1 className="uppercase text-[12vw] mt-4">Play</h1>
       <div className="flex flex-col gap-8 justify-center items-center flex-grow w-full">
         <div

@@ -68,31 +68,31 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
   const handleClick = async (reward) => {
     handleClickHaptic(tele, enableHaptic);
-    // const showAnmnt = await validateTutCookie(tele, "announcement06");
+    const showAnmnt = await validateTutCookie(tele, "announcement08");
 
-    // if (!showAnmnt) {
-    //   if (reward.type === "quest") {
-    //     setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-    //     setSection(12);
-    //   } else if (reward.type === "blackOrb") {
-    //     setActiveMyth(0);
-    //     setSection(12);
-    //   } else {
-    //     setActiveMyth(mythologies.indexOf(reward.mythology));
-    //     setSection(12);
-    //   }
-    // } else {
-    if (reward.type === "quest") {
-      setActiveMyth(mythologies.indexOf(reward.quest.mythology));
-      setSection(1);
-    } else if (reward.type === "blackOrb") {
-      setActiveMyth(0);
-      setSection(0);
+    if (!showAnmnt) {
+      if (reward.type === "quest") {
+        setActiveMyth(mythologies.indexOf(reward.quest.mythology));
+        setSection(12);
+      } else if (reward.type === "blackOrb") {
+        setActiveMyth(0);
+        setSection(12);
+      } else {
+        setActiveMyth(mythologies.indexOf(reward.mythology));
+        setSection(12);
+      }
     } else {
-      setActiveMyth(mythologies.indexOf(reward.mythology));
-      setSection(0);
+      if (reward.type === "quest") {
+        setActiveMyth(mythologies.indexOf(reward.quest.mythology));
+        setSection(1);
+      } else if (reward.type === "blackOrb") {
+        setActiveMyth(0);
+        setSection(0);
+      } else {
+        setActiveMyth(mythologies.indexOf(reward.mythology));
+        setSection(0);
+      }
     }
-    // }
   };
 
   useEffect(() => {

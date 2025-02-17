@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { FofContext } from "../../../context/context";
-import { formatDate } from "../../../helpers/game.helper";
+import { extractBotName, formatDate } from "../../../helpers/game.helper";
 
 const PartnerCard = ({ close, reward }) => {
   const { assets, platform } = useContext(FofContext);
@@ -16,7 +16,7 @@ const PartnerCard = ({ close, reward }) => {
         top: 0,
         left: 0,
       }}
-      className="flex flex-col rounded-[15px] w-full h-full items-center gap-4 card-shadow-black"
+      className="flex flex-col rounded-[15px] w-full h-[90%] items-center gap-4 card-shadow-black"
     >
       <div className="flex w-full relative">
         <div className="w-full h-full absolute flex flex-col leading-tight justify-start items-center flex-grow  text-card pt-[10px]">
@@ -37,7 +37,7 @@ const PartnerCard = ({ close, reward }) => {
                 className="mt-3 font-semibold break-words overflow-wrap-normal"
                 style={{ wordBreak: "break-word", overflowWrap: "break-word" }}
               >
-                {reward.metadata.brandRedirectionLink}
+                {extractBotName(reward.metadata.brandRedirectionLink)}
               </h1>
             </div>
             {/* <h1

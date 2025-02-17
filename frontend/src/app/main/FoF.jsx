@@ -170,7 +170,7 @@ const FoFMain = () => {
   const getGameData = async (token) => {
     try {
       const response = await fetchGameStats(token);
-      const showAnmnt = await validateTutCookie(tele, "announcement06");
+      const showAnmnt = await validateTutCookie(tele, "announcement08");
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setSocialQuestData(response?.extraQuests);
@@ -181,7 +181,7 @@ const FoFMain = () => {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
-        }, 3000);
+        }, 2000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -192,19 +192,19 @@ const FoFMain = () => {
         setSection(8);
         setTimeout(() => {
           setIsLoading(false);
-        }, 3000);
+        }, 2000);
       } else if (response?.user?.isStreakActive) {
         (async () => {
           await getStreakBonus(token);
         })();
-        // } else if (!showAnmnt) {
-        //   setSection(12);
-        //   setIsLoading(false);
+      } else if (!showAnmnt) {
+        setSection(12);
+        setIsLoading(false);
       } else {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 4000);
+        }, 2000);
       }
     } catch (error) {
       console.log(error);
@@ -269,7 +269,10 @@ const FoFMain = () => {
     <div>
       {!isLoading ? (
         <div
-          className={`w-screen h-[100svh] bg-white select-none font-fof overflow-hidden`}
+          className="w-screen bg-white select-none font-fof overflow-hidden"
+          style={{
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
         >
           <FofContext.Provider value={initalStates}>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((item) => (

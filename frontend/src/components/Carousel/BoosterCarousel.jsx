@@ -157,6 +157,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     const dailyQuest = questsData.find((quest) => quest.status === "Active");
     const boosterStatus = {
       quests:
+        dailyQuest &&
         !dailyQuest.isClaimed &&
         dailyQuest.mythology === mythologies[activeMyth],
       multiAutomata: gameData?.isAutomataAutoActive === -1,
@@ -260,7 +261,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
             showEffect && "disappear"
           } opacity-100 text-[8vw] uppercase text-white glow-icon-${
             mythSections[activeMyth]
-          } h-fit justify-center items-start -mt-[1.5vh]`}
+          } h-fit justify-center items-start mt-[2vh]`}
         >
           {mythologies[activeMyth]}
         </div>

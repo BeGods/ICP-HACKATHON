@@ -25,7 +25,7 @@ const LeaderboardItem = ({
       key={rank}
       className={`flex items-center ${
         rank % 2 === 0 && !isKOL ? "bg-borderGray" : ""
-      } ${rank % 2 === 0 && isKOL ? "bg-white" : ""} ${
+      } ${rank % 2 === 0 && isKOL ? "bg-black/10" : ""} ${
         isKOL ? "text-black" : "text-white"
       } font-medium text-tertiary w-[98%] h-fit mx-auto py-2`}
     >

@@ -61,7 +61,7 @@ const TaskCarousel = ({ quests, userData }) => {
           <div className="arrows-up"></div>
         </div>
       ) : (
-        <div className="flex absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start -mt-[1.5vh]">
+        <div className="flex absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[2vh]">
           {userData.telegramUsername}
         </div>
       )}
