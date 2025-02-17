@@ -1,9 +1,10 @@
+import { generateCode } from "../../helpers/general.helpers";
 import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
 import User from "../models/user.models";
 
-export const addNewUser = async (userData) => {
+export const addNewTelegramUser = async (userData) => {
   try {
     userData.referralCode = `FDG${userData.telegramId}`;
     userData.squadOwner = userData.parentReferrerId;
@@ -26,6 +27,37 @@ export const addNewUser = async (userData) => {
       }
 
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
+    }
+
+    const newUser = new User(userData);
+    const newUserCreated = await newUser.save();
+
+    return newUserCreated;
+  } catch (error) {
+    throw new Error("Failed to create a new user.");
+  }
+};
+
+export const addNewLineUser = async (userData) => {
+  try {
+    const genRandomCode = generateCode();
+    userData.referralCode = `FDG${genRandomCode}`;
+
+    if (!userData.lineName) {
+      const lastUser = await User.findOne({
+        lineName: { $regex: /^AVATAR\d{4}$/ },
+      })
+        .sort({ lineName: -1 })
+        .exec();
+
+      let newEndingNumber = "0001";
+
+      if (lastUser) {
+        const lastEndingNumber = parseInt(lastUser.lineName.slice(-4), 10);
+        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
+      }
+
+      userData.lineName = `AVATAR${newEndingNumber}`;
     }
 
     const newUser = new User(userData);
