@@ -257,10 +257,10 @@ const FoFMain = () => {
   useEffect(() => {
     if (platform === "ios") {
       document.body.style.position = "fixed";
-      document.body.style.top = 0;
-      document.body.style.bottom = 0;
-      document.body.style.left = 0;
-      document.body.style.right = 0;
+      document.body.style.top = `calc(var(--tg-safe-area-inset-top) + 45px)`;
+      document.body.style.bottom = "0";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
     }
   }, [platform]);
