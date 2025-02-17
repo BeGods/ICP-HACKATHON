@@ -22,13 +22,18 @@ const RoRLoader = (props) => {
         backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        height: "100vh",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         width: "100vw",
         top: 0,
         left: 0,
       }}
     >
-      <div className="flex flex-col h-screen">
+      <div
+        className="flex flex-col"
+        style={{
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+        }}
+      >
         <div className="flex justify-center items-center w-full leading-tight">
           <div className="relative z-[100]">
             <img

@@ -162,39 +162,38 @@ const RoRMain = () => {
   useEffect(() => {
     if (platform === "ios") {
       document.body.style.position = "fixed";
-      document.body.style.top = 0;
-      document.body.style.bottom = 0;
-      document.body.style.left = 0;
-      document.body.style.right = 0;
+      document.body.style.top = `calc(var(--tg-safe-area-inset-top) + 45px)`;
+      document.body.style.bottom = "0";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
       document.body.style.overflow = "hidden";
     }
   }, [platform]);
 
   return (
     <RorContext.Provider value={contextValues}>
-      <div>
-        {!isLoading ? (
-          <div
-            style={{
-              backgroundImage: `url(${assets.uxui.basebg})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-            }}
-            className="h-screen w-screen flex flex-col bg-white select-none font-fof"
-          >
-            {section !== 6 && section !== 7 && <RoRHeader />}
-            <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
-            {section !== 7 && <Footer />}
+      {!isLoading ? (
+        <div
+          style={{
+            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
+          className="w-screen flex flex-col bg-white select-none font-fof"
+        >
+          {section !== 6 && section !== 7 && <RoRHeader />}
+          <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
+          {section !== 7 && <Footer />}
 
-            {showCard && (
-              <div className="absolute z-50 h-screen w-screen">{showCard}</div>
-            )}
-          </div>
-        ) : (
-          <RoRLoader />
-        )}
-      </div>
+          {showCard && (
+            <div className="absolute z-50 h-screen w-screen">{showCard}</div>
+          )}
+        </div>
+      ) : (
+        <RoRLoader />
+      )}
     </RorContext.Provider>
   );
 };
