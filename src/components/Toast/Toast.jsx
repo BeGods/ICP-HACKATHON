@@ -538,6 +538,25 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "error_payment":
+      toast.error(
+        <ToastMesg
+          title={t("Payment Unsuccessful")}
+          desc={t("The payment was canceled or failed. Please try again.")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     default:
       toast.info(
         <ToastMesg

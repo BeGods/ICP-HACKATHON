@@ -30,7 +30,7 @@ const FoFLoader = (props) => {
         backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        height: "100vh",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         width: "100vw",
         top: 0,
         left: 0,

@@ -410,7 +410,12 @@ const Quests = () => {
       />
 
       {/* Content */}
-      <div className="flex justify-center items-center h-screen w-screen absolute mx-auto">
+      <div
+        className="flex justify-center items-center w-screen absolute mx-auto"
+        style={{
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+        }}
+      >
         {currQuest < quests.length ? (
           <QuestCard
             quest={quest}
@@ -456,7 +461,12 @@ const Quests = () => {
             }
           />
         ) : (
-          <div className="flex flex-col  mt-[10vh] gap-[28px] items-center justify-center w-full h-full">
+          <div
+            className="flex flex-col mt-[7vh] gap-[3vw] items-center justify-center w-full"
+            style={{
+              height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+            }}
+          >
             <div
               className={`card ${
                 flipped ? "flipped" : ""
@@ -468,6 +478,7 @@ const Quests = () => {
                 }  relative flex justify-center items-center`}
               >
                 <JigsawImage
+                  grid={[3, 6]}
                   handleClick={() => {}}
                   imageUrl={assets.whitelist[mythSections[activeMyth]]}
                   activeParts={handleActiveParts(
@@ -493,7 +504,7 @@ const Quests = () => {
                       />
                     );
                   }}
-                  align={0}
+                  align={7}
                 />
               </div>
               <div className="card__face card__face--back flex justify-center items-center">
@@ -512,8 +523,9 @@ const Quests = () => {
               </div>
             </div>
             <JigsawButton
+              limit={18}
               handleClick={() => {
-                if (gameData.mythologies[activeMyth].faith >= 12) {
+                if (gameData.mythologies[activeMyth].faith >= 18) {
                   setShowCard(
                     <GameEndCrd
                       handleClick={() => {
@@ -538,7 +550,7 @@ const Quests = () => {
               handleClickHaptic(tele, enableHaptic);
               setFlipped((prev) => !prev);
             }}
-            className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
+            className="absolute  flex justify-end w-[70%] h-[50%] z-[99]"
           >
             <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
           </div>

@@ -18,6 +18,7 @@ const JigsawButton = ({
   disableLeft,
   handleClick,
   isPartner,
+  limit,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const adsgramId = import.meta.env.VITE_AD_VOUCHER_CLAIM;
@@ -39,9 +40,9 @@ const JigsawButton = ({
   return (
     <div
       onClick={() => {
-        if (faith == 12) {
+        if (faith == limit) {
           showAd();
-        } else if (faith < 12 && isPartner) {
+        } else if (faith < limit && isPartner) {
           handleClick();
         }
       }}
@@ -79,7 +80,7 @@ const JigsawButton = ({
           onClick={handlePrev}
         />
       </div>
-      {faith < 12 && isPartner ? (
+      {faith < limit && isPartner ? (
         <div
           className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black text-white border-white w-[18vw] h-[18vw] border-[3px] rounded-full`}
         >
@@ -88,7 +89,7 @@ const JigsawButton = ({
       ) : (
         <div
           className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black ${
-            faith < 12
+            faith < limit
               ? "text-textGray border-borderDark"
               : "text-white border-white"
           }  w-[18vw] h-[18vw] border-[3px] rounded-full`}

@@ -104,9 +104,9 @@ const Tower = () => {
           blackOrbPhaseBonus = 1;
           phaseBonus = 1;
         } else if (mythologies[currPhase] === mythData.name) {
-          phaseBonus = 4;
+          phaseBonus = 2;
         } else if (currPhase === 4) {
-          blackOrbPhaseBonus = 4;
+          blackOrbPhaseBonus = 2;
         }
 
         let blackOrb = 0;
@@ -186,7 +186,7 @@ const Tower = () => {
         position: "fixed",
         top: 0,
         left: 0,
-        height: "100vh",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         width: "100vw",
       }}
       className="flex flex-col overflow-hidden m-0"
@@ -238,7 +238,7 @@ const Tower = () => {
       <div
         className={`flex w-full ${
           disappearEffect && "disappear"
-        } absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[18.5vh]`}
+        } absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[17.5vh]`}
       >
         DOME
       </div>

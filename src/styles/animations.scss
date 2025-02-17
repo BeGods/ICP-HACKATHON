@@ -409,13 +409,13 @@
     height: 0;
   }
   100% {
-    height: 120vw;
+    height: 140vw;
   }
 }
 
 @keyframes starInactiveBeam {
   0% {
-    height: 120vw;;
+    height: 140vw;;
   }
   100% {
     height: 0;
@@ -542,9 +542,9 @@
 }
 
 
-$first-place-height: 27vh;
-$second-place-height: 21vh;
-$third-place-height: 19.5vh;
+$first-place-height: 22vh;
+$second-place-height: 19.25vh;
+$third-place-height: 17vh;
 
 @mixin rise-up($name, $height, $delay) {
   @keyframes rise-up-#{$name} {

@@ -1,0 +1,618 @@
+{
+  "main": {
+    "fdg": "FrogdogGames",
+    "fof": "Forges of faith"
+  },
+  "descriptions": {
+    "celtic": "Celtic mythology unfolds a fantastical tapestry of magic and mystery, where shimmering Otherworlds exist alongside our own. Enchanted forests teem with mystical creatures, and heroes embark on epic quests filled with battles, prophecies, and transformation. Nature breathes life into every tale, as rivers flow with ancient wisdom and mountains guard timeless secrets. Rich symbolism weaves through enchanting narratives, celebrating the profound connection between humanity and the ethereal realm.",
+    "egyptian": "Egyptian mythology is a mesmerizing realm where gods and goddesses weave the fabric of existence, each embodying powerful forces of nature and cosmic balance. Epic tales of creation, divine battles, and the afterlife unfold in vivid landscapes, from the sun's radiant journey across the sky to the enchanting depths of the underworld. Mystical rituals and grand temples serve as gateways to the divine, guiding souls through the celestial realms in a quest for immortality and enlightenment.",
+    "greek": "Greek mythology is a thrilling saga of epic quests and heart-wrenching struggles, where heroes rise and fall against overwhelming odds. It brims with dramatic confrontations, treacherous betrayals, and passionate romances, each tale echoing the tumult of human emotion. Mortal souls clash with fate, battling monstrous foes and navigating labyrinthine challenges, as the fabric of destiny intertwines with the divine. This grand narrative captures the essence of triumph, loss, and the relentless pursuit of glory.",
+    "norse": "Norse mythology unveils a fantastical realm of swirling realms and legendary beasts, where valiant heroes embark on daring quests against looming shadows. Epic sagas brim with magical artifacts and cosmic trees that bridge worlds, while fierce battles echo through the ages. Enigmatic creatures roam the landscapes, and the air crackles with ancient magic. Themes of bravery, sacrifice, and the inexorable dance of fate intertwine, creating a vivid tapestry of wonder and peril that captivates the imagination."
+  },
+  "mythologies": {
+    "celtic": "Celtic",
+    "egyptian": "Masari",
+    "greek": "Girkanci",
+    "norse": "Norse",
+    "dark": "Dark"
+  },
+  "keywords": {
+    "orb": "Orb",
+    "orbs": "ORB(S)",
+    "conversion": "Juyawa",
+    "discover": "Gano",
+    "whitelist": "Whitelist",
+    "load": "lodi",
+    "shards": "gutsuttsura"
+  },
+  "buttons": {
+    "buy": "Saya",
+    "hire": "haya",
+    "redeem": "fanshi",
+    "pay": "biya",
+    "share": "raba",
+    "shared": "raba"
+  },
+  "tower": {
+    "tune": "ka san wakar ♪?",
+    "play": "Kunna shi daidai tsari!"
+  },
+  "sections": {
+    "forges": "Menempa",
+    "boosters": "Penguat",
+    "quests": "Pencarian",
+    "leaderboard": "Papan Peringkat",
+    "tower": "hasumiya",
+    "brand": "iri",
+    "profile": "bayanin martaba",
+    "gifts": "kyautai",
+    "voucher": "bauchi"
+  },
+  "boosters": [
+    { "title": "Ta atomatik", "desc": "Taɓa ta atomatik" },
+    {"title": "Abubuwan da aka rasa ", "desc": "Makamashi 200%"}, 
+    { "title": "Likitan asali", "desc": "Taɓa sau biyu" },
+    {},
+    {},
+    {},
+    { "title": "Fashewa", "desc": "Latsa Wutar Lantarki" },
+    { "title": "Kunshin atomatik", "desc": "4X Ta atomatik" },
+    { "title": "fashe shakatawa", "desc": "4X tauraro" },
+    { "title": "wata m fara'a", "desc": "2X tuba" }
+  ],
+  "profile": {
+    "premium": "inganci",
+    "invite": "Gayyata",
+    "squad": "Tawagar",
+    "player": "dan wasa",
+    "name": "Suna",
+    "apply": "Aiwatar",
+    "referrals": "masu magana",
+    "team": "tawagar",
+    "guide": "jagora",
+    "causes": "haddasawa",
+    "partners": "abokan tarayya",
+    "partner": "abokan tarayya",
+    "charity": "Sadaka",
+    "rewards": "lada",
+    "task": "aiki",
+    "connect": "haɗi",
+    "follow": "bi",
+    "select": "zaɓi",
+    "music": "kiɗa",
+    "wallet": "walat",
+    "watch": "kallo",
+    "country": "kasa",
+    "updatePhoto": "hoto da aka sabunta",
+    "addToHome": "ƙara gajeriyar hanya"
+  },
+  "misc": {
+    "name": "Suna",
+    "enterOTP": "shiga otp",
+    "phone": "lambar tarho",
+    "day": "rana",
+    "verify": "tabbatar",
+    "resendOTP": "tura otp",
+    "getOTP": "samu OTP",
+    "terms": "yarda da sharuɗɗa ",
+    "policy": "takardar kebantawa ",
+    "haptic": "Haptics"
+  },
+  "note": {
+    "text": "Sabuwar kwamitin jagora a cikin",
+    "tower": "Matsa don samun yanki ",
+    "bonus": "don ganin gabatarwa mai aiki",
+    "ad": "don samun ƙarfafawa kyauta",
+    "whitelist": {
+      "QuestName": "Whitelist",
+      "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+    }
+  },
+  "bonus": {
+    "join": "barka da kari",
+    "box": "Akwatin",
+    "youwon": "ka yi nasara",
+    "win": "nasara"
+  },
+  "elements": {
+    "earth": "Duniya",
+    "air": "iska",
+    "fire": "wuta",
+    "water": "ruwa",
+    "aether": "Aether"
+  },
+  "tutorial": {
+    "forgeShard": { "title": "Matsa don samun yanki", "desc": "" },
+    "forgeOrbs": { "title": "1 Orb = 1,000 guda", "desc": "" },
+    "forgeBubble": { "title": "pop kumfa don samun kyaututtuka", "desc": "" },
+    "forgeMinion": { "title": "Catch & hold 2x shards", "desc": "" },
+    "forgeExplore": { "title": "bincika + ƙari", "desc": "" },
+    "quests": { "title": "cika tambayoyin ", "desc": "sami $faith"  },
+    "boosters": { "title": "Nemi Masu haɓakawa", "desc": "Domin ladan wasa" },
+    "profileTask": { "title": "cika tambayoyin ", "desc": "sami $faith"  },
+    "gift": { "title": "Checkout Abokan hulɗa", "desc": "" },
+    "tower": { "title": "maida orbs", "desc": "" }
+  },
+  "quests": {
+    "celtic": {
+      "A01": {
+        "artist": "John Duncan, 1909",
+        "QuestName": "Gudun Hijira",
+        "desc": "Heptu na bankwana da Birnin Obb', ca 1909, zane ne na John Duncan, mai zanen alamar Scotland. Ziyarci asali a filin Whitehouse, Edinburgh - Scotland."
+      },
+      "B01": {
+        "artist": "Jose de Madrazo y Agudo, 1807",
+        "QuestName": "Cin amanar Viriato",
+        "desc": "Mutuwar Viriatus, Shugaban Lusitanians', ca 1807, zane ne na Jose de Madrazo y Agudo, mai zanen neoclassical na Spain. Ziyarci asali a Museo del Prado, Madrid - Spain."
+      },
+      "A02": {
+        "artist": "John Duncan, 1912",
+        "QuestName": "Tristan & Iseult",
+        "desc": "Tristan and Isolde', ca 1912, zane ne na John Duncan, mai zanen alamar Scotland. Ziyarci ainihin a Whitehouse Terrace, Edinburgh - Scotland."
+      },
+      "B02": {
+        "artist": "Gaston Bussiere, 1912",
+        "QuestName": "Gimbiya Bakin ciki",
+        "desc": "Isolde: The Celt Princess', ca 1912, zane ne na Gaston Bussiere, mai zanen alamar Faransa. Ziyarci asali a cikin Musee des Ursulines, Macon - Faransa."
+      },
+      "A03": {
+        "artist": "John Duncan, 1913",
+        "QuestName": "Brigid's Imbolc",
+        "desc": "Amarya saint', ca 1913, zane ne na John Duncan, mai zanen alamar Scotland. Ziyarci ainihin a cikin National Gallery, Edinburgh - Scotland."
+      },
+      "B03": {
+        "artist": "Edward Robert Hughes, 1911",
+        "QuestName": "Fantasy na bazara",
+        "desc": "Fantasy in Twilight', ca 1911, wani zane ne na Edward Robert Hughes, mai zanen alamar Burtaniya. Ziyarci asali a cikin Artchiv gallery, Prague - Jamhuriyar Czech."
+      },
+      "A04": {
+        "artist": "John Duncan, 1924",
+        "QuestName": "Lir Clan",
+        "desc": "Yaran Lir', ca 1924, zane ne na John Duncan, mai zanen alamar Scotland. Ziyarci ainihin a Dundee Art Galleries, Edinburgh - Scotland."
+      },
+      "B04": {
+        "artist": "Jan Asselijn, 1650",
+        "QuestName": "Masoyan Aengus",
+        "desc": "Swan mai barazanar', ca 1650, zane ne na Jan Asselijn, mai zanen zamanin zinare na Holland. Ziyarci asali a Rijksmuseum Amsterdam, Amsterdam - Netherlands."
+      },
+      "A05": {
+        "artist": "John Duncan, 1924",
+        "QuestName": "KYAU BARCI",
+        "desc": "Gimbiya mai barci', ca 1924, zane ne na John Duncan, mai zanen alamar Scotland. Ziyarci ainihin a cikin Perth Art Gallery, Perth - Scotland."
+      },
+      "B05": {
+        "artist": "Frank Bernard Dicksee, 1913",
+        "QuestName": "Leanan Sidhe",
+        "desc": "\"\"\"La Belle Dame sans Merci\", ca 1913, wani zane ne na Frank Bernard Dicksee, dan Birtaniya mai cin nasara Painter. Ziyarci asali a Bristol City Museum, Bristol - Ingila.\""
+      },
+      "A06": {
+        "artist": "John Duncan, 1911",
+        "QuestName": "Sidhe Riders",
+        "desc": "mahaya sidhe', ca 1911, zane ne na John Duncan, mai zanen alamar Scotland. Ziyarci ainihin a Dundee Art Galleries, Edinburgh - Scotland."
+      },
+      "B06": {
+        "artist": "Lionel Royer, 1899",
+        "QuestName": "Vercingetorix",
+        "desc": "Vercingetorix gabanin Kaisar', ca 1899, zane ne na Lionel Royer, mai zanen tarihi na Faransa. Ziyarci asali a cikin Musee Crozatier, Auvergne - Faransa."
+      },
+      "C01": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann I",
+        "desc": "Rigimar oberon da Titania', ca 1849, zane ne na Joseph Noel Pato, mai zanen tarihi na Scotland. Ziyarci ainihin a cikin National Gallery, Edinburgh - Scotland."
+      },
+      "C02": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG I",
+        "desc": "Twilight', ca 1890, zane ne na Ulpiano Checa, mai zanen tarihi na Spain. Ziyarci asali a Ulpiano Checa Museum, Madrid - Spain."
+      },
+      "C03": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann II",
+        "desc": "the rigimar oberon da Titania', ca 1849, zane ne na Joseph Noel Pato, ɗan ƙasar Scotland mai zanen tarihi. Ziyarci ainihin a cikin National Gallery, Edinburgh - Scotland."
+      },
+      "C04": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG II",
+        "desc": "Twilight', ca 1890, zane ne na Ulpiano Checa, mai zanen tarihi na Sipaniya. Ziyarci asali a Ulpiano Checa Museum, Madrid - Spain."
+      },
+      "C05": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann III",
+        "desc": "Quarrel of Oberon and Titania', ca 1849, wani zane ne na Joseph Noel Pato, mai zanen tarihi na Scotland. Ziyarci ainihin a cikin National Gallery, Edinburgh - Scotland."
+      },
+      "C06": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG III",
+        "desc": "Twilight', ca 1890, zane ne na Ulpiano Checa, mai zanen tarihi na Sipaniya. Ziyarci asali a Ulpiano Checa Museum, Madrid - Spain."
+      }
+    },
+    "egyptian": {
+      "A01": {
+        "artist": "Eugene Pierre Francois Giraud, 1864",
+        "QuestName": "Tsuntsaye na Tsuntsaye",
+        "desc": "Mai Siyar Kurciya ta Masar', ca 1864, zane ne na Eugene Pierre Francois Giraud, mai zanen Faransa. Ziyarci asali a Museo de Bellas Artes, Valencia - Spain."
+      },
+      "B01": {
+        "artist": "Arthur Drummond, 1890",
+        "QuestName": "Ma'anar sunan farko Hathor",
+        "desc": "Mai Harpist', ca 1890, zane ne na Arthur Drummond, mai zanen Burtaniya. Ziyarci asali a Sothebys, London - Ingila."
+      },
+      "A02": {
+        "artist": "Lawrence Alma-Tadema, 1904",
+        "QuestName": "MU'UJIZAR NILE",
+        "desc": "Gano Musa', ca 1904, zane ne na Lawrence Alma-Tadema, ɗan wasan nasara na Holland. Ziyarci asali a Sothebys, London - Ingila."
+      },
+      "B02": {
+        "artist": "Edwin Longsden Long, 1883",
+        "QuestName": "HANYAR ISIS",
+        "desc": "Tsarin zuwa Masar', ca 1883, zane ne na Edwin Longsden Long, wani mai zanen Littafi Mai Tsarki na Burtaniya. Ziyarci ainihin a cikin Gidan kayan tarihi na Russell-Cotes, Bournemouth - Ingila."
+      },
+      "A03": {
+        "artist": "Alexandre Cabanel, 1887",
+        "QuestName": "Turaren Shezmus I",
+        "desc": "Cleopatra gwajin guba a kan fursunonin da aka yanke wa hukunci', ca 1887, zane ne na Alexandre Cabanel, wani mai zanen gargajiya na Faransa. Ziyarci asali a Gidan Tarihi na Royal, Antwerp - Belgium."
+      },
+      "B03": {
+        "artist": "John Collier, 1890",
+        "QuestName": "Kabarin Cleopatra",
+        "desc": "Mutuwar Cleopatra', ca 1890, zane ne na John Collier, mai zanen Pre-Raphaelite na Burtaniya. Ziyarci asali a cikin Art Gallery, Oldham - Ingila."
+      },
+      "A04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Turaren Shezmus II",
+        "desc": "Cleopatra gwajin guba a kan fursunonin da aka yanke wa hukunci', ca 1887, zane ne na Alexandre Cabanel, wani mai zanen gargajiya na Faransa. Ziyarci asali a Gidan Tarihi na Royal, Antwerp - Belgium."
+      },
+      "B04": {
+        "artist": "Edwin Long, 1878",
+        "QuestName": "Bastet's Cult",
+        "desc": "the gods and their makers', ca 1878, zane ne na mai zanen Littafi Mai Tsarki na Ingilishi Edwin Long. Ziyarci ainihin a Towneley Hall Art Gallery, Burnley - Ingila."
+      },
+      "A05": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Mafarkin Fir'auna I",
+        "desc": "Joseph Fassara Mafarkin Fir'auna', ca 1894, wani zane ne na Reginald Arthur, wani mai zanen tarihi na Biritaniya. Ziyarci ainihin a Sotheby's, London - Ingila."
+      },
+      "B05": {
+        "artist": "John Weguelin, 1886",
+        "QuestName": "Maah's Cult",
+        "desc": "The obsequies of a Misira cat', ca 1886, wani zane ne da John Weguelin, wani mai zanen gargajiya na Burtaniya ya yi. Ziyarci ainihin a Auckland Art Gallery, Auckland - New Zealand."
+      },
+      "A06": {
+        "artist": "Reginald Arthur, 1894",
+        "QuestName": "Mafarkin Fir'auna II",
+        "desc": "Joseph Fassara Mafarkin Fir'auna', ca 1894, wani zane ne na Reginald Arthur, wani mai zanen tarihi na Biritaniya. Ziyarci ainihin a Sotheby's, London - Ingila."
+      },
+      "B06": {
+        "artist": "Lawrence Alma-Tadema, 1855",
+        "QuestName": "Barazanar Kasashen Waje",
+        "desc": "Taron Antony da Cleopatra', ca 1885, zane ne Lawrence Alma-Tadema, ɗan wasan nasara na Holland. Ziyarci ainihin a Sotheby's, London - Ingila."
+      },
+      "C01": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Bull Apis Cult I",
+        "desc": "Tsarin bijimin Apis', ca 1879, wani zane ne na Frederick Arthur Bridgman, wani ɗan asalin ƙasar Amurka. Ziyarci ainihin a cikin Tarin Mai zaman kansa, Amurka."
+      },
+      "C02": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Jinin Sekhmet I",
+        "desc": "Isra'ila a Masar', ca 1867, zane ne na Edward Poynter, wani mai zanen tarihi na Biritaniya. Ziyarci ainihin a Guildhall Art Gallery, London - Ingila."
+      },
+      "C03": {
+        "artist": "Frederick Arthur Bridgman",
+        "QuestName": "Bull Apis Cult II",
+        "desc": "Tsarin bijimin Apis', ca 1879, wani zane ne na Frederick Arthur Bridgman, wani ɗan asalin ƙasar Amurka. Ziyarci ainihin a cikin Tarin Mai zaman kansa, Amurka."
+      },
+      "C04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Jinin Sekhmet II",
+        "desc": "Isra'ila a Masar', ca 1867, zane ne na Edward Poynter, wani mai zanen tarihi na Biritaniya. Ziyarci ainihin a Guildhall Art Gallery, London - Ingila."
+      },
+      "C05": {
+        "artist": "Frederick Arthur Bridgman",
+        "QuestName": "Bull Apis Cult III",
+        "desc": "Tsarin bijimin Apis', ca 1879, wani zane ne na Frederick Arthur Bridgman, wani ɗan asalin ƙasar Amurka. Ziyarci ainihin a cikin Tarin Mai zaman kansa, Amurka."
+      },
+      "C06": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Jinin Sekhmet III",
+        "desc": "Isra'ila a Masar', ca 1867, zane ne na Edward Poynter, wani mai zanen tarihi na Biritaniya. Ziyarci ainihin a Guildhall Art Gallery, London - Ingila."
+      }
+    },
+    "greek": {
+      "A01": {
+        "artist": "Frederick Arthur Bridgman, 1903",
+        "QuestName": "Narcyssus & Echo",
+        "desc": "Echo and Narcissus', ca 1903, wani zane ne na John William Waterhouse, mai zanen gargajiya na Biritaniya. Ziyarci asali a cikin gidan wasan kwaikwayo na Walker, Liverpool - Ingila."
+      },
+      "B01": {
+        "artist": "Henrietta Rae, 1909",
+        "QuestName": "RUWA NYMPHS",
+        "desc": "hylas and the water nymphs', ca 1909, zane ne na Henrietta Rae, mai zanen gargajiya na Burtaniya. Ziyarci asali a cikin gidan wasan kwaikwayo na Walker, Liverpool - Ingila."
+      },
+      "A02": {
+        "artist": "Charles-Antoine Coypel, 1737",
+        "QuestName": "Fury na Achilles",
+        "desc": "Fury of Achilles', ca 1737, zane ne na Charles-Antoine Coypel, mai zanen gargajiya na Faransa. Ziyarci asali a cikin gidan wasan kwaikwayo na Walker, Saint Petersburg - Rasha."
+      },
+      "B02": {
+        "artist": "Carlo Perugini, 1893",
+        "QuestName": "Akwatin Pandora",
+        "desc": "Akwatin Pandora', ca 1893, zanen Carlo Perugini, ɗan Italiyanci neoclassical fenti. Tarin Masu zaman kansu, London - Ingila."
+      },
+      "A03": {
+        "artist": "Merry Joseph Blondel, 1819",
+        "QuestName": "Icarus & Daedalus",
+        "desc": "Rana ko Faɗuwar Icarus', ca 1819, zane ne na Merry Joseph Blondel, wani ɗan wasan Faransa neoclassical. Ziyarci asali a Louvre Museum, Paris - Faransa. "
+      },
+      "B03": {
+        "artist": "Theodoor Rombouts, 1620",
+        "QuestName": "KYAUTA PROETHEUS",
+        "desc": "Prometheus', ca 1620, zane ne na Theodoor Rombouts, mai zanen caravaggesque na Flemish. Ziyarci ainihin a cikin Gidan Tarihi na Sarauta na Fine Arts, Antwerp - Belgium."
+      },
+      "A04": {
+        "artist": "Camillo Miola, 1880",
+        "QuestName": "Oracle na Delphi",
+        "desc": "Pythia: Oracle da Babban Firist na Delphi', ca 1880, wani zane ne na Camillo Miola, wani mai zanen tarihi na Italiya. Ziyarci ainihin a J. Paul Getty Center, Los Angeles - Amurka."
+      },
+      "B04": {
+        "artist": "Karl Pavlovich Bryullov, 1833",
+        "QuestName": "Fate na Hephaestus",
+        "desc": "Ranar Ƙarshe na Pompeii', ca 1833, wani zane ne na Karl Pavlovich Bryullov, mai zane-zane na Rasha. Ziyarci asali a cikin Gidan kayan tarihi na Rasha, Saint Petersburg - Rasha."
+      },
+      "A05": {
+        "artist": "Herbert James Draper, 1904",
+        "QuestName": "GYARAN GOLDEN",
+        "desc": "The Golden Fluce', ca 1904, wani zane ne na Herbert James Draper, mai zanen zamani na Biritaniya. Ziyarci ainihin a cikin zauren Cartwright, Bradford - Ingila."
+      },
+      "B05": {
+        "artist": "Herbert James Draper, 1909",
+        "QuestName": "Odysseus Sirens",
+        "desc": "ulysses and the sirens', ca 1909, wani zane ne na Herbert James Draper, mai zanen zamani na Biritaniya. Ziyarci ainihin a cikin gidan kayan fasaha na Ferens, Hull - Ingila."
+      },
+      "A06": {
+        "artist": "Cole Thomas, 1836",
+        "QuestName": "TASHIN SARAUTA",
+        "desc": "cikar tsarin daular', ca 1836, zane ne na Cole Thomas, wani mai zanen fili na Amurka. Ziyarci asali a cikin Tarihi Society, New-York - Amurka."
+      },
+      "B06": {
+        "artist": "Cole Thomas, 1836",
+        "QuestName": "FADUWA DA MULKI",
+        "desc": "Tabbas na lalata daular', ca 1836, zane ne na Cole Thomas, mai zanen fili na Amurka. Ziyarci asali a cikin Tarihi Society, New-York - Amurka."
+      },
+      "C01": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia I",
+        "desc": "Olympus: Fall of the Giants', ca 1764, wani zane ne na Francisco Bayeu y Subías, mai zanen neoclassical na Spain. Ziyarci asali a Museo del Prado, Madrid - Spain."
+      },
+      "C02": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "PHAETON'S FALL I",
+        "desc": "Fall of Phaeton', ca 1604, zane ne na Peter Paul Rubens, mai zanen baroque Flemish. Ziyarci asali a cikin gidan kayan gargajiya na ƙasa, Washington D.C. - Amurka."
+      },
+      "C03": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia II",
+        "desc": "Olympus: Fall of the Giants', ca 1764, wani zane ne na Francisco Bayeu y Subías, mai zanen neoclassical na Spain. Ziyarci asali a Museo del Prado, Madrid - Spain."
+      },
+      "C04": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "PHAETON'S FALL II",
+        "desc": "Fall of Phaeton', ca 1604, zane ne na Peter Paul Rubens, mai zanen baroque Flemish. Ziyarci asali a cikin gidan kayan gargajiya na ƙasa, Washington D.C. - Amurka."
+      },
+      "C05": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomachia III",
+        "desc": "Olympus: Fall of the Giants', ca 1764, wani zane ne na Francisco Bayeu y Subías, mai zanen neoclassical na Spain. Ziyarci asali a Museo del Prado, Madrid - Spain."
+      },
+      "C06": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "PHAETON'S FALL III",
+        "desc": "Faɗuwar Phaeton', ca 1604, zane ne na Peter Paul Rubens, mai zanen baroque Flemish. Ziyarci asali a cikin Taswirar fasaha ta ƙasa, Washington D.C. - Amurka."
+      }
+    },
+    "norse": {
+      "A01": {
+        "artist": "Peter Nicolai Arbo, 1874",
+        "QuestName": "Sabon Alfijir",
+        "desc": "Dagr (Ranar)', ca 1874, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a cikin National Museum, Stockholm - Sweden."
+      },
+      "B01": {
+        "artist": "Peter Nicolai Arbo, 1887",
+        "QuestName": "Magariba",
+        "desc": "Nott (Dare)', ca 1887, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a cikin National Museum, Stockholm - Sweden."
+      },
+      "A02": {
+        "artist": "Edward Robert Hughes, 1915",
+        "QuestName": "Gidan kurkukun Valkyrie",
+        "desc": "The Valkyrie's Vigil', ca 1915, zane ne na Edward Robert Hughes, mai zanen ruwa na Burtaniya. Ziyarci asali a Gidan Tarihi da Gidan Tarihi, Birmingham - Ingila."
+      },
+      "B02": {
+        "artist": "Peter Nicolai Arbo, 1892",
+        "QuestName": "Abubuwan da aka bayar na Valkyries",
+        "desc": "Mutuwar Hervor', ca 1892, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a cikin National Museum, Stockholm - Sweden."
+      },
+      "A03": {
+        "artist": "Christian Krohg, 1893",
+        "QuestName": "Vinland (Amurka)",
+        "desc": "Leiv Eirikson gano Amurka', ca 1893, zane ne na Christian Krohg, mai zanen halitta na Norwegian. Ziyarci asali a National Museum, Oslo - Norway."
+      },
+      "B03": {
+        "artist": "Oscar Arnold Wergeland, 1877",
+        "QuestName": "Gano Iceland",
+        "desc": "Ƙasar Norseman a Iceland', ca 1877, zane ne na Oscar Arnold Wergeland, mai zanen tarihi na Norwegian. Ziyarci asali a National Museum, Oslo - Norway."
+      },
+      "A04": {
+        "artist": "Ferdinand Leek, 1901",
+        "QuestName": "Viking Raid",
+        "desc": "A Viking Raid', ca 1901, wani zane ne na Ferdinand Leek, mai zanen zamani na Jamus. Ziyarci asali a cikin gidan wasan kwaikwayo na Schloss, Ahlden - Jamus."
+      },
+      "B04": {
+        "artist": "Frank Bernard Dicksee, 1893",
+        "QuestName": "Jana'izar Vikings",
+        "desc": "Jana'izar Viking', ca 1893, zane ne na Frank Bernard Dicksee, ɗan wasan cin nasara na Biritaniya. Ziyarci asali a cikin zane-zane, Manchester - Ingila."
+      },
+      "A05": {
+        "artist": "Peter Nicolai Arbo, 1876",
+        "QuestName": "Sarki Ding",
+        "desc": "Hakon the good', ca 1876, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norway. Ziyarci asali a gidan kayan gargajiya na kasa, Stockholm - Sweden."
+      },
+      "B05": {
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "YAKIN SVOLD I",
+        "desc": "Yaƙin svolder', ca 1883, zane ne na Peter Otto Sinding, mai zanen tarihi na Norwegian. Ziyarci asali a cikin Tarin Masu zaman kansu, Stockholm - Sweden."
+      },
+      "A06": {
+        "artist": "Peter Nicolai Arbo, 1883",
+        "QuestName": "Vikings vs Celts",
+        "desc": "Yaƙin Stamford Bridge', ca 1870, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a Nordnorsk Kunstmuseum, Tromso - Norway."
+      },
+      "B06": {
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "YAKIN SVOLD II",
+        "desc": "Yaƙin svolder', ca 1883, zane ne na mai zanen tarihi na Norwegian Peter Otto Sinding. Ziyarci asali a cikin Tarin Masu zaman kansu, Stockholm - Sweden."
+      },
+      "C01": {
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "Rayuwar Idun Apple I",
+        "desc": "Idun and the apples', ca 1890, zane ne na James Doyle Penrose, mai zanen tarihi na Norwegian. Tarin Masu zaman kansu, London - Ingila."
+      },
+      "C02": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok I",
+        "desc": "Asgardsreien', ca 1872, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a cikin gidan wasan kwaikwayo na kasa, Oslo - Norway."
+      },
+      "C03": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "Idun's Life Apple II",
+        "desc": "Idun and the Apples', ca 1890, zane ne na James Doyle Penrose, mai zanen tarihi na Norwegian. Tarin Masu zaman kansu, London - Ingila."
+      },
+      "C04": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok II",
+        "desc": "Asgardsreien', ca 1872, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a cikin gidan wasan kwaikwayo na kasa, Oslo - Norway."
+      },
+      "C05": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "Idun's Life Apple III",
+        "desc": "Idun and the Apples', ca 1890, zane ne na James Doyle Penrose, mai zanen tarihi na Norwegian. Tarin Masu zaman kansu, London - Ingila."
+      },
+      "C06": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok III",
+        "desc": "Asgardsreien', ca 1872, zane ne na Peter Nicolai Arbo, mai zanen tarihi na Norwegian. Ziyarci asali a cikin gidan wasan kwaikwayo na kasa, Oslo - Norway."
+      }
+    }
+  },
+  "toasts": {
+    "default": {
+      "error": { "title": "An kasa haɗawa zuwa uwar garken", "desc": "Wani abu ya faru. Da fatan za a sake sabuntawa ko sake gwadawa nan da wasu lokuta." }
+    },
+    "Convert": {
+      "success": { "title": "Orbs samu nasarar tuba ", "desc": "Sannu da aikatawa! Ci gaba da ci gaba!" },
+      "error": { "title": "rashin isa Orbs", "desc": "Kuna buƙatar ƙarin orbs don kammala wannan ma'amala." }
+    },
+    "Booster_Claim": {
+      "success":{ "title": "ƙarfin ƙarfin da aka samu !", "desc": "Domin ina tafiya bisa ga bangaskiya, ba da gani ba!" },
+      "error": { "title": "iƙirarin ƙarfafawa ya gaza!", "desc": "Kash! Wani abu yayi kuskure yayin da'awar mai ƙarfafa ku. Da fatan za a sake gwadawa!" }
+    },
+    "Conversion_Multiplier": {
+      "success": {
+        "title": "Tune yayi daidai !",
+"desc": "Kun samu! Makullin daidai ne, kuma an yi amfani da mai ninka!"
+      },
+      "error": {
+        "title": "Tune rashin daidaituwa",
+"desc": "Maɓallin da kuka shigar ba daidai ba ne. Abin takaici, ba a yi amfani da mai yawa ba."
+      }
+    },
+    "Tasks": {
+      "success": {
+        "title":"Aiki gaba daya cikin nasara!",
+"desc":"Sannu da aikatawa! Kun sami MultiOrbs 3."
+      },
+      "error":{
+        "title": "Aiki bai cika ba",
+"desc": "An kasa kammala aikin. Da fatan za a sake gwadawa don samun ladan ku."
+      }
+    },
+    "Booster_Lost_Not_Available": {
+      "error": { "title": "nema babu ", "desc": "dawowa gobe !" }
+    },
+    "Quest_complete": {
+      "success": { "title": "taya murna! nema ya kammala!", "desc": "taya murna! kun gama nema." },
+      "error": { "title": "An gaza kammala nema ", "desc": "Akwai matsala wajen kammala nema. Da fatan za a tabbatar da an kammala nema kuma a sake gwadawa daga baya." }
+    },
+    "Quest_claim": {
+      "success": { "title": "nema yayi nasarar yin iƙirari!", "desc": "Kun yi nasarar yin iƙirarin neman.  Ci gaba da buɗe ƙarin lada!" },
+      "error": { "title": "rashin isassun Orbs don neman nema", "desc": "Ba ku da isassun kogi don neman wannan nema. Da fatan za a tattara ƙarin kuma a sake gwadawa." }
+    },
+    "Quest_claim_InsufficientOrbs": {
+      "error": { "title": "rashin isassun Orbs don neman nema", "desc": "Ba ku da isassun kogi don neman wannan nema. Da fatan za a tattara ƙarin kuma a sake gwadawa." }
+
+    },
+    "Quest_claim_AlreadyClaimed": {
+      "error": { "title": "nema riga da'awar", "desc": "Kun riga kun yi iƙirarin wannan nema. Bincika tambayoyinku masu aiki don cikakkun bayanai." }
+    },
+    "Quest_orb_claim": {
+      "success": { "title": "Orbs da'awar nasara!", "desc": "Kun yi nasarar yin iƙirarin ƙazamin ku. Ji daɗin lada kuma ku ci gaba da ci gaba!" },
+      "error": { "title": "Orbs Da'awar ta kasa", "desc": "An sami wata matsala da ke da'awar orbs ɗin ku. Da fatan za a sake gwadawa daga baya." }
+    },
+    "Quest_share": {
+      "success": { "title": "Quest Successfully Shared!", "desc": "Taya murna! Kun yi nasarar raba bincikenku kuma kun sami ƙarin orb." },
+      "error": { "title": "Rabon nema ya kasa", "desc": "Anan akwai matsala raba tambayar ku. Da fatan za a sake gwadawa daga baya." }
+    },
+    "ReferralCopy": {
+      "success": { "title": "An kwafi hanyar haɗin kai !", "desc": "Raba shi tare da abokanka don da'awar launuka masu yawa 3 ORBs!" }
+    },
+    "TonConnect": {
+      "success": { "title": "walat an haɗa cikin nasara !", "desc": "An haɗa walat ɗin ku na TON." },
+      "error": { "title": "Haɗin walat ya gaza", "desc": "An sami matsala haɗawa da walat ɗin ku na TON. Da fatan za a sake gwadawa daga baya." }
+    },
+    "InputValidate": {
+      "success": {
+        "title": "OTP aika!",
+        "desc": "OTP aika cikin nasara."
+},
+      "error": {
+        "title": "shigar da ba daidai ba!",
+        "desc":  "Da fatan za a cika duk filayen da ake buƙata daidai."
+}
+    },
+    "OnboardSuccess": {
+      "success": {
+        "title": "OTP Tabbatarwa!",
+        "desc": "Na gode don haɗawa da Wasannin FrogDog!"
+ },
+      "error": {
+        "title": "mara inganci OTP!",
+        "desc":  "Da fatan za a shigar da daidai OTP."
+}
+    },
+    "Voucher": {
+      "success": {
+        "title": "Taya murna! An Buɗe Kyauta",
+        "desc": "An yi nasarar da'awar baucan ku."
+},
+      "error": {
+        "title": "Ba a yi nasarar da'awar ba: Abubuwan da ba su cika ba",
+        "desc": "Kammala duk guda 12 don buɗe baucan ku."
+}
+    },
+    "Stake": {
+      "success": {
+        "title": "Rikicin ya yi Nasara",
+        "desc": "Kun yi nasarar sanya baƙar fata Orb 1. Sa'a!"
+      },
+      "error": {
+        "title": "Ba za a iya yin Rigima ba",
+        "desc": "Kuna buƙatar samun aƙalla baƙar fata 1 don gungumen azaba."
+      } 
+    },
+    "Profile": {
+      "success": {
+        "title": "An ƙaddamar da sabuntawa",
+        "desc": "Za a sabunta avatar bayanin ku nan ba da jimawa ba!"
+      }
+    }
+  }
+}
