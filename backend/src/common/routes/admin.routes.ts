@@ -42,6 +42,6 @@ router.post("/partners/create", authMiddleware, createPartner);
 
 // schedule leaderboard
 cron.schedule("0 * * * *", updateLeadboardRanks);
-cron.schedule("0 0 * * *", updateDailyQuest);
+// cron.schedule("0 0 * * *", updateDailyQuest);
 
 export default router;
