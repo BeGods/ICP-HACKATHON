@@ -340,20 +340,20 @@ export const claimStreakBonus = async (req, res) => {
 
     let playsuper = [];
 
-    if (validCountries.includes(country)) {
-      const playsuperRewards = await fetchPlaySuperRewards(
-        country,
-        "en",
-        playusperCred
-      );
+    // if (validCountries.includes(country)) {
+    //   const playsuperRewards = await fetchPlaySuperRewards(
+    //     country,
+    //     "en",
+    //     playusperCred
+    //   );
 
-      playsuper = playsuperRewards.map((reward) => {
-        return {
-          ...reward,
-          partnerType: "playsuper",
-        };
-      });
-    }
+    //   playsuper = playsuperRewards.map((reward) => {
+    //     return {
+    //       ...reward,
+    //       partnerType: "playsuper",
+    //     };
+    //   });
+    // }
 
     const claimedRewards = userRewards
       .filter((item) => item.tokensCollected == 12)
@@ -369,62 +369,78 @@ export const claimStreakBonus = async (req, res) => {
         id: item._id,
       }));
 
-    const availablePartners = [...filteredCustomRewards, ...playsuper];
+    const availablePartners = [...filteredCustomRewards];
 
-    // if (availablePartners.length === 0) {
-    user.save();
-    res.status(200).json({ reward: "fdg" });
-    return;
-    // }
+    if (availablePartners.length === 0) {
+      user.save();
+      res.status(200).json({ reward: "fdg" });
+      return;
+    }
 
     // playsuper
-    // const randomPartner = Math.floor(Math.random() * availablePartners.length);
-    // const partnerExists = userRewards.find(
-    //   (item) => item.partnerId == availablePartners[randomPartner].id.toString()
-    // );
+    const randomPartner = Math.floor(Math.random() * availablePartners.length);
+    const partnerExists = userRewards.find(
+      (item) => item.partnerId == availablePartners[randomPartner].id.toString()
+    );
 
-    // if (partnerExists) {
-    //   await milestones.findOneAndUpdate(
-    //     {
-    //       userId,
-    //       "rewards.claimedRewards.partnerId":
-    //         availablePartners[randomPartner].id.toString(),
-    //     },
-    //     {
-    //       $set: { "rewards.updatedAt": Date.now() },
-    //       $inc: { "rewards.claimedRewards.$.tokensCollected": 1 },
-    //     },
-    //     {
-    //       new: true,
-    //     }
-    //   );
-    // } else {
-    //   await userMilestones.updateOne(
-    //     {
-    //       $set: {
-    //         "rewards.updatedAt": Date.now(),
-    //       },
-    //       $push: {
-    //         "rewards.claimedRewards": {
-    //           partnerId: availablePartners[randomPartner].id.toString(),
-    //           type:
-    //             availablePartners[randomPartner].partnerType == "playsuper"
-    //               ? "playsuper"
-    //               : "custom",
-    //           isClaimed: false,
-    //           tokensCollected: 1,
-    //         },
-    //       },
-    //     },
-    //     { new: true }
-    //   );
-    // }
+    if (partnerExists) {
+      await milestones.findOneAndUpdate(
+        {
+          userId,
+          "rewards.claimedRewards.partnerId":
+            availablePartners[randomPartner].id.toString(),
+        },
+        {
+          $set: { "rewards.updatedAt": Date.now() },
+          $inc: { "rewards.claimedRewards.$.tokensCollected": 1 },
+        },
+        {
+          new: true,
+        }
+      );
+    } else {
+      // await userMilestones.updateOne(
+      //   {
+      //     $set: {
+      //       "rewards.updatedAt": Date.now(),
+      //     },
+      //     $push: {
+      //       "rewards.claimedRewards": {
+      //         partnerId: availablePartners[randomPartner].id.toString(),
+      //         type:
+      //           availablePartners[randomPartner]?.partnerType == "playsuper"
+      //             ? "playsuper"
+      //             : "custom",
+      //         isClaimed: false,
+      //         tokensCollected: 1,
+      //       },
+      //     },
+      //   },
+      //   { new: true }
+      // );
+      await userMilestones.updateOne(
+        {
+          $set: {
+            "rewards.updatedAt": Date.now(),
+          },
+          $push: {
+            "rewards.claimedRewards": {
+              partnerId: availablePartners[randomPartner].id.toString(),
+              type: "custom",
+              isClaimed: false,
+              tokensCollected: 1,
+            },
+          },
+        },
+        { new: true }
+      );
+    }
 
-    // res.status(200).json({
-    //   reward: availablePartners[randomPartner],
-    // });
+    res.status(200).json({
+      reward: availablePartners[randomPartner],
+    });
 
-    // user.save();
+    user.save();
   } catch (error) {
     console.log(error);
     res.status(500).json({
