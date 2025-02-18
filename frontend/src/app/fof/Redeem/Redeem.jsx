@@ -182,13 +182,9 @@ const Redeem = (props) => {
   return (
     <div
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        height: "100%",
-        width: "100vw",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
-      className="flex flex-col h-screen overflow-hidden m-0"
+      className="flex flex-col overflow-hidden m-0"
     >
       <div
         style={{
@@ -316,7 +312,6 @@ const Redeem = (props) => {
               </div>
             </div>
 
-            {/* Jigsaw Button */}
             {currReward.isClaimed &&
             userData.isPlaySuperVerified &&
             currReward.partnerType === "playsuper" ? (
