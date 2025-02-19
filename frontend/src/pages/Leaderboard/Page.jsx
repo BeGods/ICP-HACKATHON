@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard, updateRewardStatus } from "../../utils/api";
 import { MyContext } from "../../context/context";
@@ -15,15 +9,14 @@ import {
 } from "../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import UserInfoCard from "../../components/Cards/Info/UserInfoCrd";
-import { Crown, MoveDown, MoveUp, Trophy } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../utils/country";
-import confetti from "canvas-confetti";
 import StakeCrd from "../../components/Cards/Reward/StakeCrd";
 import { showToast } from "../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../components/Common/Avatar";
 import { rankPositions } from "../../utils/constants";
+import WoodSVG from "../../components/Wood";
 
 const tele = window.Telegram?.WebApp;
 
@@ -88,7 +81,7 @@ const Leaderboard = (props) => {
     setShowCard,
     setUserData,
   } = useContext(MyContext);
-  const [activeTab, setActiveTab] = useState(true);
+
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -104,11 +97,60 @@ const Leaderboard = (props) => {
     2: "third",
   };
   const [animationKey, setAnimationKey] = useState(0);
-  const animationFrameId = useRef(null);
+
+  const currGroup = {
+    diamond: (
+      <img src="/assets/diamond.blue.png" alt="trophy" className="h-8 w-8" />
+    ),
+    gold: (
+      <img src="/assets/trophy.gold.png" alt="trophy" className="h-8 w-8" />
+    ),
+    silver: (
+      <img src="/assets/trophy.silver.png" alt="trophy" className="h-8 w-8" />
+    ),
+    bronze: (
+      <img src="/assets/trophy.bronze.png" alt="trophy" className="h-8 w-8" />
+    ),
+    wood: <WoodSVG />,
+  };
+
+  const determineLevel = () => {
+    switch (true) {
+      case userData.overallRank <= 12:
+        return "diamond";
+      case userData.overallRank <= 99:
+        return "gold";
+      case userData.overallRank <= 333:
+        return "silver";
+      case userData.overallRank <= 666:
+        return "bronze";
+      default:
+        return "wood";
+    }
+  };
+
+  const determineFinalLevel = () => {
+    switch (true) {
+      case userData.overallRank <= 12:
+        return "blue";
+      case userData.overallRank <= 99:
+        return "red";
+      case userData.overallRank <= 333:
+        return "green";
+      case userData.overallRank <= 666:
+        return "white";
+      default:
+        return "white";
+    }
+  };
 
   const getLeaderboardData = async (pageNum) => {
     try {
-      const response = await fetchLeaderboard(authToken, pageNum);
+      const response = await fetchLeaderboard(
+        authToken,
+        userData.overallRank,
+        pageNum
+      );
 
       if (response.leaderboard.length > 0) {
         sethallOfFameData(response.hallOfFame);
@@ -135,7 +177,15 @@ const Leaderboard = (props) => {
   };
 
   const loadMoreData = () => {
-    setPage((prevPage) => prevPage + 1);
+    if (
+      (userData.overallRank <= 12 && page > 0) || // Diamond (max 0 pages)
+      (userData.overallRank <= 99 && page > 0) || // Gold (max 0 pages)
+      (userData.overallRank <= 333 && page <= 2) || // Silver (max 2 pages)
+      (userData.overallRank <= 666 && page <= 3) || // Bronze (max 3 pages)
+      (userData.overallRank > 666 && page <= 3) // Wood (max 4 pages)
+    ) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   const handleClaimReward = async () => {
@@ -169,7 +219,6 @@ const Leaderboard = (props) => {
   ];
 
   useEffect(() => {
-    // Increment animationKey to force re-trigger of animation classes
     setAnimationKey((prevKey) => prevKey + 1);
   }, [isFinished]);
 
@@ -287,14 +336,22 @@ const Leaderboard = (props) => {
                   !isFinished ? "bg-black text-white" : "text-black"
                 } h-full font-symbols rounded-full w-1/2 text-[24px]`}
               >
-                r
+                <img
+                  src={`/assets/trophy.${isFinished ? "black" : "white"}.png`}
+                  alt="trophy"
+                  className="h-8 w-8"
+                />
               </div>
               <div
                 className={`flex justify-center items-center ${
                   isFinished ? "bg-black text-white" : "text-black"
                 } h-full uppercase rounded-full w-1/2 py-1`}
               >
-                <Crown size={"28px"} strokeWidth={"3px"} />
+                <img
+                  src={`/assets/diamond.${isFinished ? "white" : "black"}.png`}
+                  alt="diamond"
+                  className="h-8 w-8"
+                />
               </div>
             </div>
           </div>
@@ -323,7 +380,7 @@ const Leaderboard = (props) => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center text-white text-black-contour mt-2">
+        <div className="w-full flex justify-center text-center text-white text-black-contour mt-2">
           ({t(`note.text`)} {updateTimeLeft.minutes}min)
         </div>
       </div>
@@ -359,6 +416,17 @@ const Leaderboard = (props) => {
                       }}
                       className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
+                      <div
+                        className={`absolute z-[99] w-[40%] ${rankPositions[index].alignIcon}`}
+                      >
+                        <img
+                          src={`/assets/diamond.${determineFinalLevel(
+                            item.overallRank
+                          )}.png`}
+                          alt="trophy"
+                          className="h-8 w-8"
+                        />
+                      </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
@@ -402,9 +470,14 @@ const Leaderboard = (props) => {
                       className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
                     >
                       <div
+                        className={`absolute z-[99] w-[40%] ${rankPositions[index].alignIcon}`}
+                      >
+                        {currGroup[determineLevel(userData.overallRank)]}
+                      </div>
+                      <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
-                        {rankPositions[index].pos}
+                        {item.overallRank}
                       </div>
                       <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                         {formatRankOrbs(item.totalOrbs)}
@@ -444,6 +517,7 @@ const Leaderboard = (props) => {
               return (
                 <div key={id || index} className="leaderboard-item">
                   <LeaderboardItem
+                    imageType={determineFinalLevel(item.overallRank)}
                     isKOL={true}
                     isEmpty={isEmpty || false}
                     rank={index + 4}
@@ -530,7 +604,7 @@ const Leaderboard = (props) => {
                 >
                   <LeaderboardItem
                     key={index}
-                    rank={index + 4}
+                    rank={item.overallRank}
                     name={item.telegramUsername}
                     totalOrbs={formatRankOrbs(item.totalOrbs)}
                     imageUrl={item.profileImage}

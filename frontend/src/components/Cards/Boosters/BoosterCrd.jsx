@@ -519,10 +519,14 @@ const BoosterClaim = ({
           >
             <div className="flex uppercase flex-col items-center gap-2 w-fit">
               <div className="flex relative items-center justify-center">
-                <div className="text-white text-black-contour mt-1 absolute text-[8vw]">
+                <div className="text-white text-black-contour mt-1 z-10 absolute text-[8vw]">
                   {activeCard === "automata" ? 1 : 3}
                 </div>{" "}
-                <Star color="#ffd660" fill="#ffd660" size={"16vw"} />
+                <img
+                  src="https://i.postimg.cc/2yztL9mh/tg-star.png"
+                  alt="star"
+                  className="w-[18vw] h-[18vw]"
+                />
               </div>
               <div className="flex flex-col text-white">
                 <div className="text-[6vw] -mt-2">
