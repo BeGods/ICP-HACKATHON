@@ -1,53 +1,14 @@
-import React, { useContext, useState } from "react";
-import { RorContext } from "../../context/context";
-import { activateVault } from "../../utils/api.ror";
-import MiscCard from "./MiscCard";
-import RoRBtn from "./RoRBtn";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
 
-const CitadelItem = ({ data, index }) => {
-  const { setSection, gameData, setGameData, setShowCard, authToken } =
-    useContext(RorContext);
+const CitadelItem = ({ itemKey, handleClick, isMulti }) => {
   const [isClicked, setIsClicked] = useState(false);
-
-  const handleActivateBank = async () => {
-    try {
-      const response = await activateVault(authToken);
-      setShowCard(null);
-      setGameData((prev) => {
-        return {
-          ...prev,
-          bank: {
-            ...prev.bank,
-            isVaultActive: true,
-          },
-        };
-      });
-      setSection(1);
-      console.log(response);
-      toast.success("vault activated");
-    } catch (error) {
-      console.log(error);
-      setShowCard(null);
-      toast.error("insufficient gobcoins");
-    }
-  };
 
   return (
     <div
-      onClick={() => {
-        if (index === 2 && !gameData.bank.isVaultActive) {
-          setShowCard(
-            <MiscCard
-              handleClick={handleActivateBank}
-              Button={<RoRBtn handleClick={handleActivateBank} />}
-            />
-          );
-        } else {
-          setSection(data.redirect);
-        }
-      }}
-      className={`flex gap-1 border text-white ${
+      onClick={handleClick}
+      className={`flex gap-1 border  text-white ${
+        isMulti ? "border-multiColor" : "border-white"
+      } ${
         isClicked ? `glow-button-white` : ""
       } rounded-primary h-[90px] w-full bg-glass-black p-[15px]`}
       onMouseDown={() => {
@@ -70,11 +31,17 @@ const CitadelItem = ({ data, index }) => {
       }}
     >
       <div>
-        <div className={`font-symbols  text-booster p-0 -mt-2 mr-2`}>2</div>
+        <div
+          className={`font-symbols ${
+            isMulti && "gradient-multi"
+          } text-booster p-0 -mt-2 mr-2`}
+        >
+          2
+        </div>
       </div>
       <div className={`flex flex-col flex-grow justify-center -ml-1`}>
-        <h1 className="text-tertiary uppercase">{data.title}</h1>
-        <h2 className="text-tertiary">{data.description}</h2>
+        <h1 className="text-tertiary uppercase">{itemKey}</h1>
+        <h2 className="text-tertiary">{itemKey}</h2>
       </div>
     </div>
   );

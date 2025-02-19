@@ -1,10 +1,15 @@
 import { RorContext } from "../../context/context";
-import { claimSessionReward, startSession } from "../../utils/api.ror";
+import {
+  activateInside,
+  claimSessionReward,
+  deactivateInside,
+  startSession,
+} from "../../utils/api.ror";
 import SwipeArena from "../../components/ror/SwipeArena";
 
 import React, { useContext, useEffect, useState } from "react";
 
-const Explore = (props) => {
+const Explore = () => {
   const {
     battleData,
     setBattleData,
@@ -15,16 +20,26 @@ const Explore = (props) => {
     setMinimize,
     authToken,
   } = useContext(RorContext);
-
   const [currStage, setCurrStage] = useState(0);
   const [countDown, setCountDown] = useState(3);
+  const [startPlay, setStartPlay] = useState(false);
   const [roundTimeElapsed, setRoundTimeElapsed] = useState(10);
   const [reward, setReward] = useState(null);
 
   const stages = [
-    currStage === 0 &&
-    gameData.bag.length < 12 &&
-    gameData.stats.dailyQuota > 0 ? (
+    !startPlay ? (
+      <div
+        onClick={() => {
+          setStartPlay(true);
+        }}
+        className="bg-white text-black text-[6vw] p-3"
+      >
+        Play
+      </div>
+    ) : startPlay &&
+      currStage === 0 &&
+      gameData.bag.length < 12 &&
+      gameData.stats.dailyQuota > 0 ? (
       <div className="text-[12vw]">{countDown}</div>
     ) : (
       <div className="text-[6vw]">
@@ -98,7 +113,6 @@ const Explore = (props) => {
       );
 
       setReward(parsedReward);
-      console.log(parsedReward);
 
       setGameData((prevItems) => {
         const updatedBagItems = [
@@ -169,8 +183,45 @@ const Explore = (props) => {
     }
   };
 
+  const activateUnderworld = async () => {
+    try {
+      await activateInside(authToken);
+      setGameData((prev) => {
+        return {
+          ...prev,
+          stats: {
+            ...prev.stats,
+            isUnderWorldActive: true,
+            dailyQuota: prev.stats.dailyQuota - 1,
+          },
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deactivateUnderworld = async () => {
+    try {
+      await deactivateInside(authToken);
+      setGameData((prev) => {
+        return {
+          ...prev,
+          stats: {
+            ...prev.stats,
+            isUnderWorldActive: false,
+            dailyQuota: prev.stats.dailyQuota - 1,
+          },
+        };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (
+      startPlay &&
       countDown > 0 &&
       gameData.stats.dailyQuota > 0 &&
       gameData.bag.length < 12 &&
@@ -185,7 +236,7 @@ const Explore = (props) => {
     if (countDown === 0) {
       handleStateSession();
     }
-  }, [countDown]);
+  }, [countDown, startPlay]);
 
   useEffect(() => {
     if (currStage === 1 && roundTimeElapsed > 0) {
@@ -201,8 +252,9 @@ const Explore = (props) => {
   return (
     <div className="h-full w-full">
       <div className="flex relative text-white justify-center items-center h-full w-full">
-        {currStage === 0 && (
+        {currStage === 0 && !gameData.stats.isUnderWorldActive && (
           <div
+            onClick={activateUnderworld}
             className={`font-symbols absolute text-[50px] left-5 top-0 text-black-contour ${
               gameData.stats.dailyQuota < 5
                 ? "scale-point text-white"
@@ -212,10 +264,23 @@ const Explore = (props) => {
             a
           </div>
         )}
+        {currStage === 0 && gameData.stats.isUnderWorldActive && (
+          <div
+            onClick={deactivateUnderworld}
+            className={`absolute text-[50px] left-5 top-0 text-black-contour ${
+              gameData.stats.dailyQuota > 1 ? " text-white" : "text-gray-400"
+            } `}
+          >
+            X
+          </div>
+        )}
         {stages[currStage]}
       </div>
       <div className="flex justify-center items-center absolute h-[36vw] w-[36vw] text-[20vw] text-white text-black-md-contour rounded-full top-0 z-20 left-1/2 -translate-x-1/2">
-        <span className="pt-4">{roundTimeElapsed}</span>
+        <span className="pt-4">
+          {roundTimeElapsed}
+          {gameData.stats.isUnderWorldActive && "*"}
+        </span>
       </div>
     </div>
   );
