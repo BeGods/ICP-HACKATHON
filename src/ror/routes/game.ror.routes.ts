@@ -1,6 +1,7 @@
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
   activateInside,
+  activateRest,
   activateVault,
   deActivateInside,
   generateSessionReward,
@@ -16,6 +17,7 @@ import express from "express";
 import {
   isValidInsideReq,
   isValidOutsideReq,
+  isValidRestReq,
   isValidVaultReq,
   validateJoinFrgmnt,
   validateSessionReward,
@@ -72,6 +74,7 @@ router.get(
 
 // vault
 router.get("/vault/activate", authMiddleware, isValidVaultReq, activateVault);
+router.get("/rest/activate", authMiddleware, isValidRestReq, activateRest);
 
 // transfers
 router.post(

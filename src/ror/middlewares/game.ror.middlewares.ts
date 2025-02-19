@@ -32,8 +32,8 @@ export const validateSessionReward = async (req, res, next) => {
 
     const sessionDuration = Date.now() - user.gameSession.lastSessionStartTime;
 
-    // validate session duration|| sessionDuration < 25000
-    if (sessionDuration > 60000) {
+    // validate session duration
+    if (sessionDuration > 60000 || sessionDuration < 25000) {
       throw new Error("Invalid session. Please try again.");
     }
 
@@ -75,10 +75,9 @@ export const validTransferToVault = async (req, res, next) => {
     const userClaimedRewards = await milestones.findOne({ userId });
 
     if (
-      !userClaimedRewards.bank.lastVaultInstallmentAt ||
-      userClaimedRewards.bank.lastVaultInstallmentAt <= 0 ||
-      Date.now() >=
-        userClaimedRewards.bank?.lastVaultInstallmentAt + thereDaysFromDate
+      !userClaimedRewards.bank.vaultExpiryAt ||
+      userClaimedRewards.bank.vaultExpiryAt <= 0 ||
+      Date.now() >= userClaimedRewards.bank?.vaultExpiryAt + thereDaysFromDate
     ) {
       throw Error("Transfer failed. Please activate the vault.");
     }
@@ -119,10 +118,9 @@ export const validTransferToBag = async (req, res, next) => {
     const itemIdsObject = itemIds.map((id) => new mongoose.Types.ObjectId(id));
 
     if (
-      !userClaimedRewards.bank.lastVaultInstallmentAt ||
-      userClaimedRewards.bank.lastVaultInstallmentAt <= 0 ||
-      Date.now() >=
-        userClaimedRewards.bank?.lastVaultInstallmentAt + thereDaysFromDate
+      !userClaimedRewards.bank.vaultExpiryAt ||
+      userClaimedRewards.bank.vaultExpiryAt <= 0 ||
+      Date.now() >= userClaimedRewards.bank?.vaultExpiryAt + thereDaysFromDate
     ) {
       throw Error("Transfer failed. Please activate the vault.");
     }
@@ -153,24 +151,52 @@ export const validTransferToBag = async (req, res, next) => {
 export const isValidVaultReq = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
-  const thereDaysFromDate = 3 * 24 * 60 * 60 * 1000;
+  const { isMulti } = req.query;
+  const expiryDays = Boolean(isMulti) ? 7 : 1;
+  const deductValue = Boolean(isMulti) ? 9 : 3;
 
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
     const userMythologyData = await userMythologies.findOne({ userId });
 
-    if (
-      Date.now() <
-      userClaimedRewards.bank?.lastVaultInstallmentAt + thereDaysFromDate
-    ) {
+    if (Date.now() < userClaimedRewards.bank?.vaultExpiryAt) {
       throw new Error("Vault is already active. Please try again later.");
     }
 
-    if (userMythologyData?.gobcoin < 3) {
+    if (userMythologyData?.gobcoin < deductValue) {
       throw new Error("Insufficient gobcoins to complete this transaction.");
     }
 
+    req.deductValue = deductValue;
+    req.expiryDays = expiryDays * 24 * 60 * 60 * 1000;
     req.userMilestones = userClaimedRewards;
+    req.userMythologies = userMythologyData;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const isValidRestReq = async (req, res, next) => {
+  const user = req.user;
+  const userId = user._id;
+  const { isMulti } = req.query;
+  const expiryDays = Boolean(isMulti) ? 7 : 1;
+  const deductValue = Boolean(isMulti) ? 9 : 3;
+
+  try {
+    const userMythologyData = await userMythologies.findOne({ userId });
+    if (Date.now() < user.gameSession?.restExpiresAt) {
+      throw new Error("Rest is already active. Please try again later.");
+    }
+
+    if (userMythologyData?.gobcoin < deductValue) {
+      throw new Error("Insufficient gobcoins to complete this transaction.");
+    }
+
+    req.deductValue = deductValue;
+    req.expiryDays = expiryDays * 24 * 60 * 60 * 1000;
     req.userMythologies = userMythologyData;
     next();
   } catch (error) {
@@ -203,10 +229,10 @@ export const isValidOutsideReq = async (req, res, next) => {
   const user = req.user;
 
   try {
-    if (user.gameSession.dailyGameQuota < 1) {
-      throw new Error("You don't have sufficient quota to deactivate.");
-    } else if (user.gameSession.underWorldActiveAt == 0) {
+    if (user.gameSession.underWorldActiveAt == 0) {
       throw new Error("Underworld is inactive.");
+    } else if (user.gameSession.dailyGameQuota < 1) {
+      throw new Error("You don't have sufficient quota to deactivate.");
     }
 
     next();

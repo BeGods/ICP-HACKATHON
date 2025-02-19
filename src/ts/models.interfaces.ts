@@ -37,7 +37,7 @@ export interface IMilestone extends Document {
   sharedQuests: mongoose.Types.ObjectId[];
   bag?: IInventory[];
   bank?: {
-    lastVaultInstallmentAt: number;
+    vaultExpiryAt: number;
     vault: IInventory[];
   };
   claimedRoRItems?: string[];
@@ -200,6 +200,7 @@ export interface IUser extends Document {
     lastSessionStartTime: number;
     competelvl: number;
     underWorldActiveAt: number;
+    restExpiresAt: number;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;

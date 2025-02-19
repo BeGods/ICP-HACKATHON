@@ -24,10 +24,8 @@ export const generateCode = () => {
   return code;
 };
 
-export const threeDaysHaveElapsed = (date) => {
-  const thereDaysFromDate = 3 * 24 * 60 * 60 * 1000;
-
-  if (Date.now() < date + thereDaysFromDate) {
+export const isVaultActive = (date) => {
+  if (Date.now() < date) {
     return true;
   }
 
