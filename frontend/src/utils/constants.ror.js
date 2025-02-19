@@ -9,6 +9,7 @@ export const boosters = [
   { title: "Blacksmith", description: "XXX", redirect: 3, category: "" },
   { title: "Merchant", description: "XXX", redirect: 4, category: "" },
   { title: "Banker", description: "XXX", redirect: 5, category: "" },
+  { title: "Multi Banker", description: "XXX", redirect: 5, category: "" },
 ];
 
 export const footerIcons = [5, 6, 7, "t"];

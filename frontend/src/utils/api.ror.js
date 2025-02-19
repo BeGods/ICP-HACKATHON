@@ -106,6 +106,22 @@ export const activateVault = async (accessToken) => {
   }
 };
 
+export const activateRest = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/rest/activate`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const completeItem = async (accessToken, arrayOfIds, payMethod) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/blacksmith/join`;
 
@@ -139,6 +155,39 @@ export const tradeItem = async (accessToken, itemId) => {
         },
       }
     );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+
+export const activateInside = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/inside/activate`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const deactivateInside = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/inside/deactivate`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);

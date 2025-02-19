@@ -1,15 +1,195 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
 import { RorContext } from "../../context/context";
-import { boosters } from "../../utils/constants.ror";
 import CitadelItem from "./CitadelItem";
+import MiscCard from "./MiscCard";
+import RoRBtn from "./RoRBtn";
+import { toast } from "react-toastify";
+import { activateRest, activateVault } from "../../utils/api.ror";
 
-const tele = window.Telegram?.WebApp;
-
-const CitadelCarousel = () => {
-  const { setShowCard, userData } = useContext(RorContext);
+const CitadelCarousel = ({ enableGuide, mythData }) => {
+  const { setShowCard, activeMyth, gameData, setSection, setGameData } =
+    useContext(RorContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
+  const [items, setItems] = useState([]);
+  const [showEffect, setShowEffect] = useState(false);
+
+  const handleActivateBank = async () => {
+    if (gameData.bank.isVaultActive) {
+      setSection(2);
+    } else {
+      try {
+        const response = await activateVault(authToken);
+        setShowCard(null);
+        setGameData((prev) => {
+          return {
+            ...prev,
+            bank: {
+              ...prev.bank,
+              isVaultActive: true,
+            },
+          };
+        });
+        setSection(1);
+        console.log(response);
+        toast.success("vault activated");
+      } catch (error) {
+        console.log(error);
+        setShowCard(null);
+        toast.error("insufficient gobcoins");
+      }
+    }
+  };
+
+  const handleActivateRest = async () => {
+    if (gameData.stats.isRestActive) {
+      setSection(2);
+    } else {
+      try {
+        const response = await activateRest(authToken);
+        setShowCard(null);
+        setGameData((prev) => {
+          return {
+            ...prev,
+            stats: {
+              ...prev.stats,
+              isRestActive: true,
+            },
+          };
+        });
+        setSection(1);
+        console.log(response);
+        toast.success("vault activated");
+      } catch (error) {
+        console.log(error);
+        setShowCard(null);
+        toast.error("insufficient gobcoins");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const boosters = [
+      {
+        key: "blacksmith",
+        component: (
+          <CitadelItem
+            isMulti={false}
+            itemKey="blacksmith"
+            handleClick={() => {
+              setSection(2);
+            }}
+          />
+        ),
+      },
+      {
+        key: "merchant",
+        component: (
+          <CitadelItem
+            isMulti={false}
+            itemKey="merchant"
+            handleClick={() => {
+              setSection(2);
+            }}
+          />
+        ),
+      },
+      {
+        key: "vault",
+        component: (
+          <CitadelItem
+            itemKey="vault"
+            handleClick={() => {
+              setShowCard(
+                <MiscCard
+                  isMulti={false}
+                  handleClick={handleActivateBank}
+                  Button={<RoRBtn handleClick={handleActivateBank} />}
+                />
+              );
+            }}
+          />
+        ),
+      },
+      {
+        key: "multiVault",
+        component: (
+          <CitadelItem
+            isMulti={true}
+            itemKey="multiVault"
+            handleClick={() => {
+              setShowCard(
+                <MiscCard
+                  isMulti={true}
+                  handleClick={handleActivateBank}
+                  Button={
+                    <RoRBtn isMulti={true} handleClick={handleActivateBank} />
+                  }
+                />
+              );
+            }}
+          />
+        ),
+      },
+      {
+        key: "rest",
+        component: (
+          <CitadelItem
+            isMulti={false}
+            itemKey="rest"
+            handleClick={() => {
+              setShowCard(
+                <MiscCard
+                  isMulti={false}
+                  handleClick={handleActivateRest}
+                  Button={
+                    <RoRBtn isMulti={false} handleClick={handleActivateRest} />
+                  }
+                />
+              );
+            }}
+          />
+        ),
+      },
+    ];
+
+    const boosterStatus = {
+      multiVault: !gameData.bank.isVaultActive,
+      vault: !gameData.bank.isVaultActive,
+      blacksmith: false,
+      merchant: false,
+    };
+
+    const predefinedOrder = [
+      "blacksmith",
+      "merchant",
+      "rest",
+      "multiVault",
+      "vault",
+      "rest",
+    ];
+
+    const sortedItems = boosters
+      .filter((item) => predefinedOrder.includes(item.key))
+      .sort((a, b) => {
+        const statusA = boosterStatus[a.key] || false;
+        const statusB = boosterStatus[b.key] || false;
+
+        // If status is true, prioritize it
+        if (statusA && !statusB) return -1;
+        if (!statusA && statusB) return 1;
+
+        // If both statuses are equal, fall back to predefined order
+        const orderA = predefinedOrder.indexOf(a.key);
+        const orderB = predefinedOrder.indexOf(b.key);
+        return orderA - orderB;
+      })
+      .map((item) => item.component);
+
+    setItems(sortedItems);
+    setCurrentIndex(0);
+  }, [activeMyth, enableGuide, mythData, gameData]);
 
   const handleTouchStart = (e) => setStartY(e.touches[0].clientY);
 
@@ -19,10 +199,19 @@ const CitadelCarousel = () => {
 
     if (deltaY > 50 && currentIndex > 0) {
       setCurrentIndex((prevIndex) => prevIndex - 1);
-    } else if (deltaY < -50 && currentIndex < quests.length - 3) {
+    } else if (deltaY < -50 && currentIndex < items.length - 3) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
+
+  useEffect(() => {
+    setShowEffect(false);
+    const resetTimeout = setTimeout(() => {
+      setShowEffect(true);
+    }, 50);
+
+    return () => clearTimeout(resetTimeout);
+  }, [activeMyth]);
 
   return (
     <div
@@ -30,7 +219,7 @@ const CitadelCarousel = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {boosters.length > 3 && currentIndex >= 1 && (
+      {items.length > 3 && currentIndex >= 1 && (
         <div
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
@@ -41,19 +230,19 @@ const CitadelCarousel = () => {
         </div>
       )}
       <div className="carousel">
-        {boosters.slice(currentIndex, currentIndex + 3).map((item, index) => {
+        {items.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
           className +=
             index === 1 ? " active" : index === 0 ? " previous" : " next";
 
           return (
             <div className={className} key={currentIndex + index}>
-              <CitadelItem data={item} index={currentIndex + index} />
+              {item}
             </div>
           );
         })}
       </div>
-      {boosters < boosters.length - 3 && (
+      {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
           className="absolute bottom-[22%] w-full"
