@@ -12,10 +12,8 @@ import {
 } from "../services/general.fof.services";
 import Stats from "../../common/models/Stats.models";
 import userMythologies from "../../common/models/mythologies.models";
-import { fetchPlaySuperRewards } from "../../common/services/playsuper.services";
 import milestones from "../../common/models/milestones.models";
 import partners from "../../common/models/partners.models";
-import { validCountries } from "../../utils/constants/variables";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 
 export const validateUserPlayed = async (req, res) => {
@@ -39,24 +37,24 @@ export const validateUserPlayed = async (req, res) => {
 
 // leaderboard
 export const getLeaderboard = async (req, res) => {
-  const { page, filter } = req.query;
+  const { page, userRank } = req.query;
   const user = req.user;
+  const requestPage = parseInt(page, 10) || 0;
 
-  const requestPage = page || 0;
   try {
     const overallLeaderboard = await getLeaderboardRanks(
+      userRank,
       requestPage,
-      100,
-      filter
+      100
     );
 
     res.status(200).json({
-      leaderboard: overallLeaderboard[0].active,
-      hallOfFame: overallLeaderboard[0].finished,
+      leaderboard: overallLeaderboard[0]?.active || [],
+      hallOfFame: overallLeaderboard[0]?.finished || [],
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching leaderboard:", error);
 
     res.status(500).json({
       message: "Failed to fetch leaderboard",

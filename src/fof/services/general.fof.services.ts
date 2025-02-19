@@ -117,34 +117,34 @@ export const getLeaderboardSnapshot = async () => {
   }
 };
 
-export const getLeaderboardRanks = async (page = 0, limit = 100, filter) => {
-  const skip = page * limit;
+export const getLeaderboardRanks = async (
+  userRank = 1000,
+  page = 0,
+  limit = 100
+) => {
+  let skip = page * limit;
+  let matchStage: Record<string, any> = { totalOrbs: { $lt: 999999 } };
+  let fetchAll = false;
+
+  if (userRank <= 12) {
+    matchStage = { ...matchStage, overallRank: { $lte: 12 } }; // Diamond
+    fetchAll = true;
+  } else if (userRank <= 99) {
+    matchStage = { ...matchStage, overallRank: { $gte: 13, $lte: 99 } }; // Gold
+    fetchAll = true;
+  } else if (userRank <= 333) {
+    matchStage = { ...matchStage, overallRank: { $gte: 100, $lte: 333 } }; // Silver
+  } else if (userRank <= 666) {
+    matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 666 } }; // Bronze
+  } else {
+    matchStage = { ...matchStage, overallRank: { $gte: 667, $lte: 999 } }; // Wood
+  }
+
+  if (fetchAll) skip = 0;
+
   try {
-    const countryCondn = (countryCode) => [
-      {
-        $match: {
-          $and: [{ totalOrbs: { $lt: 999999 } }, { country: countryCode }],
-        },
-      },
-      { $sort: { countryRank: 1 } },
-      { $skip: skip },
-      { $limit: limit },
-      {
-        $project: {
-          __v: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          _id: 0,
-          userId: 0,
-        },
-      },
-    ];
-    const defaultCondn = [
-      {
-        $match: {
-          $and: [{ totalOrbs: { $lt: 999999 } }],
-        },
-      },
+    let ranksFilter = [
+      { $match: matchStage },
       { $sort: { overallRank: 1 as 1 } },
       { $skip: skip },
       { $limit: limit },
@@ -158,45 +158,10 @@ export const getLeaderboardRanks = async (page = 0, limit = 100, filter) => {
         },
       },
     ];
-    const referCondn = [
-      {
-        $match: {
-          $and: [{ totalOrbs: { $lt: 999999 } }],
-        },
-      },
-      { $sort: { directReferralCount: -1 as -1 } },
-      { $skip: skip },
-      { $limit: limit },
-      {
-        $project: {
-          __v: 0,
-          createdAt: 0,
-          updatedAt: 0,
-          _id: 0,
-          userId: 0,
-        },
-      },
-    ];
-
-    const matchedCountry = countries.find((country) => country.code === filter);
-    let currFilter;
-    if (matchedCountry) {
-      currFilter = countryCondn(filter);
-    } else {
-      switch (filter) {
-        case "refer":
-          currFilter = referCondn;
-          break;
-        default:
-          currFilter = defaultCondn;
-          break;
-      }
-    }
 
     let pipelineObj = {
       $facet: {
-        active: currFilter,
-
+        active: ranksFilter,
         finished: [
           { $match: { totalOrbs: { $gte: 999999 } } },
           { $sort: { fofCompletedAt: 1 as 1 } },
@@ -221,7 +186,6 @@ export const getLeaderboardRanks = async (page = 0, limit = 100, filter) => {
     throw new Error(error);
   }
 };
-
 export const getRandomValue = () => {
   const valuesWithProbabilities = [
     { value: "blackOrb", probability: 0.125 },
