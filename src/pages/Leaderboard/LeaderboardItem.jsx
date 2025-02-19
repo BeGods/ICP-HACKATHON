@@ -12,6 +12,7 @@ const LeaderboardItem = ({
   isEmpty,
   prevRank,
   isKOL,
+  imageType,
 }) => {
   const { userData } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(null);
@@ -46,6 +47,14 @@ const LeaderboardItem = ({
         <div className="flex w-full h-[35px] justify-between">
           <div className="flex justify-start pl-5 items-center w-[25%] h-full">
             <h1>{rank}</h1>
+            {isKOL && (
+              <img
+                src={`/assets/diamond.${imageType}.png`}
+                alt="trophy"
+                className="h-6 w-6 ml-1"
+              />
+            )}
+
             <div>
               {rank < prevRank && (
                 <h1 className="text-green-500 text-[18px]">▲</h1>

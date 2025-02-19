@@ -171,21 +171,21 @@ const SplashScreen = ({ reward, exploitReward }) => {
       }}
     >
       {/* You Won Text */}
-      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-black-contour  uppercase z-20">
+      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-center text-black-contour  uppercase z-20">
         {t("bonus.youwon")
           .split(" ")
           .map((word, index) => (
             <div key={index}>
               {index === 0 ? (
                 <h1
-                  className={`scale-[${showYouScale}%] text-[22vw] mt-7 transition-transform duration-500`}
+                  className={`scale-[${showYouScale}%] text-[22vw] mt-7 text-center transition-transform duration-500`}
                 >
                   {word}
                 </h1>
               ) : (
                 <>
                   {showWon && (
-                    <h1 className="text-[14.2vw] transition-opacity duration-250">
+                    <h1 className="text-[14.2vw] text-center transition-opacity duration-250">
                       {word}
                     </h1>
                   )}
