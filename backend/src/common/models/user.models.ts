@@ -76,6 +76,7 @@ const userSchema = new Schema<IUser>(
         type: Number,
         default: 15,
       },
+      restExpiresAt: Number,
       underWorldActiveAt: Number,
     },
     phoneNumber: {

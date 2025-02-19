@@ -3,7 +3,7 @@ import milestones from "../../common/models/milestones.models";
 import { fetchGameData } from "../services/game.ror.services";
 import userMythologies from "../../common/models/mythologies.models";
 import { defaultMythologies } from "../../utils/constants/variables";
-import { threeDaysHaveElapsed } from "../../helpers/general.helpers";
+import { isVaultActive } from "../../helpers/general.helpers";
 import { hasTwelveHoursElapsed } from "../../helpers/game.helpers";
 import { ItemsTransactions } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
@@ -62,6 +62,9 @@ export const getGameStats = async (req, res) => {
 
     userGameData.userMythologies[0].isUnderWorldActive =
       user.gameSession?.underWorldActiveAt != 0 ? true : false;
+    userGameData.userMythologies[0].isRestActive = isVaultActive(
+      user.gameSession?.restExpiresAt
+    );
 
     const userData = {
       telegramUsername: user.telegramUsername,
@@ -82,8 +85,8 @@ export const getGameStats = async (req, res) => {
       user: userData,
       stats: userGameData.userMythologies[0],
       bank: {
-        isVaultActive: threeDaysHaveElapsed(
-          userGameData.userMilestones[0]?.bank?.lastVaultInstallmentAt ?? 0
+        isVaultActive: isVaultActive(
+          userGameData.userMilestones[0]?.bank?.vaultExpiryAt ?? 0
         ),
         vault: userGameData.userMilestones[0].bank?.vault ?? [],
       },
@@ -178,7 +181,7 @@ export const generateSessionReward = async (req, res) => {
         (item) =>
           !userClaimedRewards?.claimedRoRItems?.includes(item.id) &&
           !completedItemIds?.includes(item.id) &&
-          completedItemIds?.includes("relic") &&
+          item.id?.includes("relic") &&
           item.id?.includes(mythology.toLowerCase()) &&
           item.fragments.length === rewardlvl
       ) ?? [];
@@ -416,15 +419,40 @@ export const deActivateInside = async (req, res) => {
 export const activateVault = async (req, res) => {
   const userMythologies = req.userMythologies;
   const userMilestones = req.userMilestones;
+  const deductValue = req.deductValue;
+  const expiryDays = req.expiryDays;
 
   try {
     await userMilestones.updateOne({
-      $set: { "bank.lastVaultInstallmentAt": Date.now() },
+      $set: { "bank.vaultExpiryAt": Date.now() + expiryDays },
     });
     await userMythologies.updateOne({
-      $inc: { gobcoin: -3 },
+      $inc: { gobcoin: -deductValue },
     });
     res.status(200).json({ message: "Vault activated successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const activateRest = async (req, res) => {
+  const userMythologies = req.userMythologies;
+  const user = req.user;
+  const deductValue = req.deductValue;
+  const expiryDays = req.expiryDays;
+
+  try {
+    await user.updateOne({
+      $set: { "gameSession.restExpiresAt": Date.now() + expiryDays },
+    });
+    await userMythologies.updateOne({
+      $inc: { gobcoin: -deductValue },
+    });
+    res.status(200).json({ message: "Rest activated successfully." });
   } catch (error) {
     console.log(error);
     res.status(500).json({

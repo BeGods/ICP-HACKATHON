@@ -112,7 +112,7 @@ const milestoneSchema = new Schema<IMilestone>({
     },
   },
   bank: {
-    lastVaultInstallmentAt: {
+    vaultExpiryAt: {
       type: Number,
       default: 0,
     },
