@@ -809,3 +809,19 @@ export const generateStarInvoice = async (accessToken, type) => {
     throw error;
   }
 };
+
+export const updateFinishStatus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/user/finish`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
