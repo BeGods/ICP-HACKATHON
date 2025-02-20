@@ -117,30 +117,30 @@ const Leaderboard = (props) => {
   const determineLevel = () => {
     switch (true) {
       case userData.overallRank <= 12:
-        return "diamond";
-      case userData.overallRank <= 99:
         return "gold";
-      case userData.overallRank <= 333:
+      case userData.overallRank <= 99:
         return "silver";
-      case userData.overallRank <= 666:
+      case userData.overallRank <= 333:
         return "bronze";
+      case userData.overallRank <= 666:
+        return "wood";
       default:
         return "wood";
     }
   };
 
-  const determineFinalLevel = () => {
+  const determineFinalLevel = (rank) => {
     switch (true) {
-      case userData.overallRank <= 12:
-        return "blue";
-      case userData.overallRank <= 99:
-        return "red";
-      case userData.overallRank <= 333:
-        return "green";
-      case userData.overallRank <= 666:
-        return "white";
+      case rank <= 12:
+        return "diamond";
+      case rank <= 99:
+        return "ruby";
+      case rank <= 333:
+        return "emberald";
+      case rank <= 666:
+        return "topaz";
       default:
-        return "white";
+        return "topaz";
     }
   };
 
@@ -178,11 +178,10 @@ const Leaderboard = (props) => {
 
   const loadMoreData = () => {
     if (
-      (userData.overallRank <= 12 && page > 0) || // Diamond (max 0 pages)
-      (userData.overallRank <= 99 && page > 0) || // Gold (max 0 pages)
-      (userData.overallRank <= 333 && page <= 2) || // Silver (max 2 pages)
-      (userData.overallRank <= 666 && page <= 3) || // Bronze (max 3 pages)
-      (userData.overallRank > 666 && page <= 3) // Wood (max 4 pages)
+      (userData.overallRank <= 12 && page > 0) || // Gold (max 0 pages)
+      (userData.overallRank <= 99 && page > 0) || // Silver (max 0 pages)
+      (userData.overallRank <= 333 && page <= 2) || // Bronze (max 2 pages)
+      (userData.overallRank <= 666 && page <= 6) // Wood (max 6 pages)
     ) {
       setPage((prevPage) => prevPage + 1);
     }
@@ -336,22 +335,14 @@ const Leaderboard = (props) => {
                   !isFinished ? "bg-black text-white" : "text-black"
                 } h-full font-symbols rounded-full w-1/2 text-[24px]`}
               >
-                <img
-                  src={`/assets/trophy.${isFinished ? "black" : "white"}.png`}
-                  alt="trophy"
-                  className="h-8 w-8"
-                />
+                $
               </div>
               <div
-                className={`flex justify-center items-center ${
+                className={`flex font-symbols justify-center items-center ${
                   isFinished ? "bg-black text-white" : "text-black"
-                } h-full uppercase rounded-full w-1/2 py-1`}
+                } h-full uppercase rounded-full w-1/2 py-1 text-[24px]`}
               >
-                <img
-                  src={`/assets/diamond.${isFinished ? "white" : "black"}.png`}
-                  alt="diamond"
-                  className="h-8 w-8"
-                />
+                %
               </div>
             </div>
           </div>
@@ -417,15 +408,13 @@ const Leaderboard = (props) => {
                       className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
                       <div
-                        className={`absolute z-[99] w-[40%] ${rankPositions[index].alignIcon}`}
+                        className={`absolute text-black-contour font-symbols text-${determineFinalLevel(
+                          index + 1
+                        )} text-[24px] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
                       >
-                        <img
-                          src={`/assets/diamond.${determineFinalLevel(
-                            item.overallRank
-                          )}.png`}
-                          alt="trophy"
-                          className="h-8 w-8"
-                        />
+                        %
                       </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
@@ -470,9 +459,13 @@ const Leaderboard = (props) => {
                       className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
                     >
                       <div
-                        className={`absolute z-[99] w-[40%] ${rankPositions[index].alignIcon}`}
+                        className={`absolute text-black-contour font-symbols text-${determineLevel(
+                          item.overallRank
+                        )} text-[24px] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
                       >
-                        {currGroup[determineLevel(userData.overallRank)]}
+                        {userData.overallRank > 333 ? "&" : "$"}
                       </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
@@ -517,7 +510,7 @@ const Leaderboard = (props) => {
               return (
                 <div key={id || index} className="leaderboard-item">
                   <LeaderboardItem
-                    imageType={determineFinalLevel(item.overallRank)}
+                    colorType={determineFinalLevel(index + 1)}
                     isKOL={true}
                     isEmpty={isEmpty || false}
                     rank={index + 4}

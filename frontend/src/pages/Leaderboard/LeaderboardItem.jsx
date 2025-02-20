@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Avatar from "../../components/Common/Avatar";
 import { MyContext } from "../../context/context";
-import { formatRankOrbs } from "../../helpers/leaderboard.helper";
-import { MoveDown, MoveUp } from "lucide-react";
 
 const LeaderboardItem = ({
   rank,
@@ -12,7 +10,7 @@ const LeaderboardItem = ({
   isEmpty,
   prevRank,
   isKOL,
-  imageType,
+  colorType,
 }) => {
   const { userData } = useContext(MyContext);
   const [avatarColor, setAvatarColor] = useState(null);
@@ -48,11 +46,11 @@ const LeaderboardItem = ({
           <div className="flex justify-start pl-5 items-center w-[25%] h-full">
             <h1>{rank}</h1>
             {isKOL && (
-              <img
-                src={`/assets/diamond.${imageType}.png`}
-                alt="trophy"
-                className="h-6 w-6 ml-1"
-              />
+              <h1
+                className={`font-symbols text-black-sm-contour text-[18px] text-${colorType} ml-1.5 -mt-0.5`}
+              >
+                %
+              </h1>
             )}
 
             <div>

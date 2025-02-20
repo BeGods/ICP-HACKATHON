@@ -44,6 +44,14 @@ export default {
     "scale-125",
     "left-0",
     "right-0",
+
+    "text-silver",
+    "text-bronze",
+    "text-diamond",
+    "text-ruby",
+    "text-emberald",
+    "text-wood",
+    "text-gold",
   ],
   theme: {
     extend: {
@@ -84,6 +92,13 @@ export default {
           primary: "var(--norse-color)",
           text: "var(--norse-text)",
         },
+        diamond: "#b9f2ff",
+        ruby: "#E0115F",
+        emberald: "#50C878",
+        topaz: "#FFC067",
+        silver: "#808080",
+        bronze: "#9b5e20",
+        wood: "#A1662F"
       },
       borderRadius: {
         primary: "20px",

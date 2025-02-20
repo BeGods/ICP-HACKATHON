@@ -48,15 +48,11 @@ const BottomChild = ({ userData, showGuide }) => {
         className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
       >
         <div
-          className={`flex ${
+          className={`flex font-symbols ${
             showEffect && "pulse-text"
           } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
-          <img
-            src={`/assets/trophy.white.png`}
-            alt="trophy"
-            className="h-8 w-8"
-          />
+          $
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
