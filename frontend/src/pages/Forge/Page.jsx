@@ -5,6 +5,7 @@ import {
   claimRatUpdate,
   claimShardsBooster,
   startTapSession,
+  updateFinishStatus,
   updateGameData,
   updateMythology,
 } from "../../utils/api";
@@ -34,6 +35,7 @@ import {
   handleTapHaptic,
 } from "../../helpers/cookie.helper";
 import { toast } from "react-toastify";
+import confetti from "canvas-confetti";
 
 const tele = window.Telegram?.WebApp;
 
@@ -61,6 +63,8 @@ const Forges = () => {
     assets,
     setTriggerConf,
     enableHaptic,
+    userData,
+    setUserData,
   } = useContext(MyContext);
   const initialState = gameData.mythologies.map((myth) => {
     return {
@@ -880,12 +884,57 @@ const Forges = () => {
     };
   }, [gameData.mythologies]);
 
+  const triggerConfetti = () => {
+    var duration = 10 * 1000;
+    var animationEnd = Date.now() + duration;
+    var defaults = { startVelocity: 20, spread: 180, ticks: 60, zIndex: 0 };
+    const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+    const interval = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        return;
+      }
+
+      const particleCount = 120 * (timeLeft / duration);
+
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 500);
+  };
+
+  const handleUpdateFinishedGame = async () => {
+    try {
+      triggerConfetti();
+      await updateFinishStatus(authToken);
+      setUserData((prev) => ({
+        ...prev,
+        showFinishRwrd: false,
+      }));
+    } catch (error) {
+      showToast("default");
+    }
+  };
+
   // persist states for diff myths
   useEffect(() => {
     mythStatesRef.current = mythStates;
   }, [mythStates]);
 
   useEffect(() => {
+    if (userData.showFinishRwrd) {
+      handleUpdateFinishedGame();
+    }
     // ga
     trackComponentView("forge");
     // triggerToggles
