@@ -123,18 +123,20 @@ export const getLeaderboardRanks = async (
   let fetchAll = false;
 
   if (userRank <= 12) {
-    matchStage = { ...matchStage, overallRank: { $lte: 12 } }; // Diamond
+    matchStage = { ...matchStage, overallRank: { $lte: 12 } }; // Gold
     fetchAll = true;
   } else if (userRank <= 99) {
-    matchStage = { ...matchStage, overallRank: { $gte: 13, $lte: 99 } }; // Gold
+    matchStage = { ...matchStage, overallRank: { $gte: 13, $lte: 99 } }; // Silver
     fetchAll = true;
   } else if (userRank <= 333) {
-    matchStage = { ...matchStage, overallRank: { $gte: 100, $lte: 333 } }; // Silver
-  } else if (userRank <= 666) {
-    matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 666 } }; // Bronze
+    matchStage = { ...matchStage, overallRank: { $gte: 100, $lte: 333 } }; // Bronze
   } else {
-    matchStage = { ...matchStage, overallRank: { $gte: 667, $lte: 999 } }; // Wood
+    matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 999 } }; // Wood
   }
+
+  // else if (userRank <= 666) {
+  //   matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 666 } }; // Bronze
+  // }
 
   if (fetchAll) skip = 0;
 
