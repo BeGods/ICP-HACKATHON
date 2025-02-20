@@ -204,6 +204,7 @@ export interface IUser extends Document {
   partOfGames: string[];
   gameCompletedAt: {
     fof: Date;
+    hasClaimedFoFRwrd: boolean;
   };
   userBetAt: string;
 }

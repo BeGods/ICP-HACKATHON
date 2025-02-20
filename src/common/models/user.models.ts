@@ -129,6 +129,10 @@ const userSchema = new Schema<IUser>(
     },
     gameCompletedAt: {
       fof: Date,
+      hasClaimedFoFRwrd: {
+        type: Boolean,
+        default: false,
+      },
     },
     userBetAt: {
       type: String,

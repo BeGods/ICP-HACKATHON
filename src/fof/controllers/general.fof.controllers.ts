@@ -2,6 +2,7 @@ import User from "../../common/models/user.models";
 import ranks from "../../common/models/ranks.models";
 import {
   bulkUpdateBetResult,
+  bulkUpdateFoFComplete,
   claimBonusBooster,
   claimBonusOrb,
   claimBonusQuest,
@@ -132,7 +133,7 @@ export const updateLeadboardRanks = async (req, res) => {
         filter: { userId: user.userId },
         update: {
           $set: {
-            fofCompletedAt: user.finishedAt,
+            fofCompletedAt: user.finishedAt ?? new Date(),
             userId: user.userId,
             telegramUsername: user.telegramUsername,
             profileImage: user.profileImage,
@@ -165,7 +166,9 @@ export const updateLeadboardRanks = async (req, res) => {
     const bettedUsers = sortedUsers.filter(
       (user) => user.totalOrbs <= 999999 && user.userBetAt
     );
+    const fofUnmarkedUsers = finishedUsers.filter((user) => !user.finishedAt);
 
+    await bulkUpdateFoFComplete(fofUnmarkedUsers);
     await bulkUpdateBetResult(bettedUsers);
 
     const totalUsers = await User.countDocuments({});
