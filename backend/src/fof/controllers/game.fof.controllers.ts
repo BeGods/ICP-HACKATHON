@@ -198,6 +198,11 @@ export const getGameStats = async (req, res) => {
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
+      showFinishRwrd:
+        user.gameCompletedAt.hasClaimedFoFRwrd === false &&
+        user.gameCompletedAt.fof
+          ? true
+          : false,
       isEligibleToClaim: isEligibleToClaim,
       isStreakActive: isStreakActive,
       streakCount: user.bonus.fof.streakBonus.streakCount,

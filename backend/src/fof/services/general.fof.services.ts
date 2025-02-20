@@ -4,7 +4,6 @@ import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
 import User from "../../common/models/user.models";
-import { countries } from "../../utils/constants/country";
 
 export const getLeaderboardSnapshot = async () => {
   try {
@@ -97,10 +96,7 @@ export const getLeaderboardSnapshot = async () => {
           squadOwner: "$userDetails.squadOwner",
           prevRank: 1,
           finishedAt: {
-            $ifNull: [
-              "$userDetails.gameCompletedAt.fof",
-              "$userDetails.createdAt",
-            ],
+            $ifNull: ["$userDetails.gameCompletedAt.fof", null],
           },
         },
       },
@@ -177,6 +173,7 @@ export const getLeaderboardRanks = async (
         ],
       },
     };
+
     const pipeline = [pipelineObj];
 
     const results = await ranks.aggregate(pipeline).allowDiskUse(true).exec();
@@ -610,6 +607,32 @@ export const bulkUpdateBetResult = async (users) => {
     });
 
     await userMythologies.bulkWrite([...rewardedUsers]);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const bulkUpdateFoFComplete = async (users) => {
+  try {
+    // update all user docs and reset bet
+    const fofUnmarkedUsers = users.map((user) => {
+      return {
+        updateOne: {
+          filter: { _id: user.userId },
+          update: {
+            $set: {
+              gameCompletedAt: {
+                fof: new Date(),
+                hasClaimedFoFRwrd: false,
+              },
+            },
+          },
+          upsert: true,
+        },
+      };
+    });
+
+    await User.bulkWrite([...fofUnmarkedUsers]);
   } catch (error) {
     throw new Error(error);
   }

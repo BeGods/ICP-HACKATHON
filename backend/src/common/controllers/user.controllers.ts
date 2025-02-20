@@ -164,3 +164,21 @@ export const updateAvatar = async (req, res) => {
     });
   }
 };
+
+export const claimFinishRwrd = async (req, res) => {
+  try {
+    const user = req.user;
+
+    await user.updateOne({
+      $set: {
+        "gameCompletedAt.hasClaimedFoFRwrd": true,
+      },
+    });
+    res.status(200).json({ message: "Reward Claimed Successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
