@@ -2,6 +2,7 @@ import User from "../../common/models/user.models";
 import ranks from "../../common/models/ranks.models";
 import {
   bulkUpdateBetResult,
+  bulkUpdateFoFComplete,
   claimBonusBooster,
   claimBonusOrb,
   claimBonusQuest,
@@ -12,10 +13,8 @@ import {
 } from "../services/general.fof.services";
 import Stats from "../../common/models/Stats.models";
 import userMythologies from "../../common/models/mythologies.models";
-import { fetchPlaySuperRewards } from "../../common/services/playsuper.services";
 import milestones from "../../common/models/milestones.models";
 import partners from "../../common/models/partners.models";
-import { validCountries } from "../../utils/constants/variables";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 
 export const validateUserPlayed = async (req, res) => {
@@ -39,24 +38,24 @@ export const validateUserPlayed = async (req, res) => {
 
 // leaderboard
 export const getLeaderboard = async (req, res) => {
-  const { page, filter } = req.query;
+  const { page, userRank } = req.query;
   const user = req.user;
+  const requestPage = parseInt(page, 10) || 0;
 
-  const requestPage = page || 0;
   try {
     const overallLeaderboard = await getLeaderboardRanks(
+      userRank,
       requestPage,
-      100,
-      filter
+      100
     );
 
     res.status(200).json({
-      leaderboard: overallLeaderboard[0].active,
-      hallOfFame: overallLeaderboard[0].finished,
+      leaderboard: overallLeaderboard[0]?.active || [],
+      hallOfFame: overallLeaderboard[0]?.finished || [],
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching leaderboard:", error);
 
     res.status(500).json({
       message: "Failed to fetch leaderboard",
@@ -126,6 +125,7 @@ export const updateLeadboardRanks = async (req, res) => {
         filter: { userId: user.userId },
         update: {
           $set: {
+            fofCompletedAt: user.finishedAt ?? new Date(),
             userId: user.userId,
             telegramUsername: user.telegramUsername,
             profileImage: user.profileImage,
@@ -136,12 +136,7 @@ export const updateLeadboardRanks = async (req, res) => {
             coinRank: user.coinRank,
             country: user.country ?? "NA",
             prevRank: user.prevRank,
-            fofCompletedAt: fofFinishedUserIds.includes(user.userId.toString())
-              ? user.finishedAt
-              : null,
-            rorCompletedAt: rorFinishedUserIds.includes(user.userId.toString())
-              ? user.finishedAt
-              : null,
+            rorCompletedAt: user.finishedAt ?? new Date(),
             directReferralCount: user.directReferralCount,
             gameData: {
               ...user.mythologyOrbsData?.reduce((acc, obj) => {
@@ -166,7 +161,11 @@ export const updateLeadboardRanks = async (req, res) => {
     const bettedUsers = sortedFofUsers.filter(
       (user) => user.totalOrbs <= 999999 && user.userBetAt
     );
+    const fofUnmarkedUsers = fofFinishedUsers.filter(
+      (user) => !user.finishedAt
+    );
 
+    await bulkUpdateFoFComplete(fofUnmarkedUsers);
     await bulkUpdateBetResult(bettedUsers);
 
     const totalUsers = await User.countDocuments({});
