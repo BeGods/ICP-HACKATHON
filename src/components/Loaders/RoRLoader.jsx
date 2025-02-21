@@ -39,7 +39,7 @@ const RoRLoader = (props) => {
             <img
               src={assets.logos.ror}
               alt="fof"
-              className="w-[300px] mt-2 fof-text-shadow pointer-events-none"
+              className="w-[200px] mt-2 fof-text-shadow pointer-events-none"
             />
           </div>
         </div>

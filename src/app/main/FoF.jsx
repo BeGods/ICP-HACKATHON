@@ -35,7 +35,7 @@ import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import Announcement from "../fof/Announcement/Page";
 import FoFLoader from "../../components/Loaders/FoFLoader";
 import { Settings } from "lucide-react";
-import SettingModal from "./components/Modals/Settings";
+import SettingModal from "../../components/Modals/Settings";
 
 const tele = window.Telegram?.WebApp;
 
