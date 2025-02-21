@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api.fof";
 import { FofContext } from "../../../context/context";
@@ -9,7 +9,6 @@ import {
 } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import UserInfoCard from "../../../components/Cards/Info/UserInfoCrd";
-import { Crown } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../../utils/country";
 import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
@@ -97,11 +96,60 @@ const Leaderboard = (props) => {
     2: "third",
   };
   const [animationKey, setAnimationKey] = useState(0);
-  const animationFrameId = useRef(null);
+
+  const currGroup = {
+    diamond: (
+      <img src="/assets/diamond.blue.png" alt="trophy" className="h-8 w-8" />
+    ),
+    gold: (
+      <img src="/assets/trophy.gold.png" alt="trophy" className="h-8 w-8" />
+    ),
+    silver: (
+      <img src="/assets/trophy.silver.png" alt="trophy" className="h-8 w-8" />
+    ),
+    bronze: (
+      <img src="/assets/trophy.bronze.png" alt="trophy" className="h-8 w-8" />
+    ),
+    wood: <WoodSVG />,
+  };
+
+  const determineLevel = () => {
+    switch (true) {
+      case userData.overallRank <= 12:
+        return "gold";
+      case userData.overallRank <= 99:
+        return "silver";
+      case userData.overallRank <= 333:
+        return "bronze";
+      case userData.overallRank <= 666:
+        return "wood";
+      default:
+        return "wood";
+    }
+  };
+
+  const determineFinalLevel = (rank) => {
+    switch (true) {
+      case rank <= 12:
+        return "diamond";
+      case rank <= 99:
+        return "ruby";
+      case rank <= 333:
+        return "emberald";
+      case rank <= 666:
+        return "topaz";
+      default:
+        return "topaz";
+    }
+  };
 
   const getLeaderboardData = async (pageNum) => {
     try {
-      const response = await fetchLeaderboard(authToken, pageNum);
+      const response = await fetchLeaderboard(
+        authToken,
+        userData.overallRank,
+        pageNum
+      );
 
       if (response.leaderboard.length > 0) {
         sethallOfFameData(response.hallOfFame);
@@ -128,7 +176,14 @@ const Leaderboard = (props) => {
   };
 
   const loadMoreData = () => {
-    setPage((prevPage) => prevPage + 1);
+    if (
+      (userData.overallRank <= 12 && page > 0) || // Gold (max 0 pages)
+      (userData.overallRank <= 99 && page > 0) || // Silver (max 0 pages)
+      (userData.overallRank <= 333 && page <= 2) || // Bronze (max 2 pages)
+      (userData.overallRank <= 666 && page <= 6) // Wood (max 6 pages)
+    ) {
+      setPage((prevPage) => prevPage + 1);
+    }
   };
 
   const handleClaimReward = async () => {
@@ -162,7 +217,6 @@ const Leaderboard = (props) => {
   ];
 
   useEffect(() => {
-    // Increment animationKey to force re-trigger of animation classes
     setAnimationKey((prevKey) => prevKey + 1);
   }, [isFinished]);
 
@@ -280,14 +334,14 @@ const Leaderboard = (props) => {
                   !isFinished ? "bg-black text-white" : "text-black"
                 } h-full font-symbols rounded-full w-1/2 text-[24px]`}
               >
-                r
+                $
               </div>
               <div
-                className={`flex justify-center items-center ${
+                className={`flex font-symbols justify-center items-center ${
                   isFinished ? "bg-black text-white" : "text-black"
-                } h-full uppercase rounded-full w-1/2 py-1`}
+                } h-full uppercase rounded-full w-1/2 py-1 text-[24px]`}
               >
-                <Crown size={"28px"} strokeWidth={"3px"} />
+                %
               </div>
             </div>
           </div>
@@ -316,7 +370,7 @@ const Leaderboard = (props) => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center text-white text-black-contour mt-2">
+        <div className="w-full flex justify-center text-center text-white text-black-contour mt-2">
           ({t(`note.text`)} {updateTimeLeft.minutes}min)
         </div>
       </div>
@@ -352,6 +406,15 @@ const Leaderboard = (props) => {
                       }}
                       className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
+                      <div
+                        className={`absolute text-black-contour font-symbols text-${determineFinalLevel(
+                          index + 1
+                        )} text-[24px] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
+                      >
+                        %
+                      </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
@@ -395,9 +458,18 @@ const Leaderboard = (props) => {
                       className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
                     >
                       <div
+                        className={`absolute text-black-contour font-symbols text-${determineLevel(
+                          item.overallRank
+                        )} text-[24px] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
+                      >
+                        {userData.overallRank > 333 ? "&" : "$"}
+                      </div>
+                      <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
-                        {rankPositions[index].pos}
+                        {item.overallRank}
                       </div>
                       <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                         {formatRankOrbs(item.totalOrbs)}
@@ -437,6 +509,7 @@ const Leaderboard = (props) => {
               return (
                 <div key={id || index} className="leaderboard-item">
                   <LeaderboardItem
+                    colorType={determineFinalLevel(index + 1)}
                     isKOL={true}
                     isEmpty={isEmpty || false}
                     rank={index + 4}
@@ -523,7 +596,7 @@ const Leaderboard = (props) => {
                 >
                   <LeaderboardItem
                     key={index}
-                    rank={index + 4}
+                    rank={item.overallRank}
                     name={item.telegramUsername}
                     totalOrbs={formatRankOrbs(item.totalOrbs)}
                     imageUrl={item.profileImage}

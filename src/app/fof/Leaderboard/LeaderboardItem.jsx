@@ -10,6 +10,7 @@ const LeaderboardItem = ({
   isEmpty,
   prevRank,
   isKOL,
+  colorType,
 }) => {
   const { userData } = useContext(FofContext);
   const [avatarColor, setAvatarColor] = useState(null);
@@ -44,6 +45,14 @@ const LeaderboardItem = ({
         <div className="flex w-full h-[35px] justify-between">
           <div className="flex justify-start pl-5 items-center w-[25%] h-full">
             <h1>{rank}</h1>
+            {isKOL && (
+              <h1
+                className={`font-symbols text-black-sm-contour text-[18px] text-${colorType} ml-1.5 -mt-0.5`}
+              >
+                %
+              </h1>
+            )}
+
             <div>
               {rank < prevRank && (
                 <h1 className="text-green-500 text-[18px]">▲</h1>

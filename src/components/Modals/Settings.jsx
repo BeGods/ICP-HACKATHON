@@ -64,7 +64,6 @@ const SettingModal = ({ close }) => {
     enableSound,
     setEnableSound,
     setUserData,
-    userData,
     country,
     setCountry,
     enableHaptic,

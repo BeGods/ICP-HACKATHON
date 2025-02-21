@@ -34,6 +34,8 @@ import OnboardPage from "../fof/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import Announcement from "../fof/Announcement/Page";
 import FoFLoader from "../../components/Loaders/FoFLoader";
+import { Settings } from "lucide-react";
+import SettingModal from "./components/Modals/Settings";
 
 const tele = window.Telegram?.WebApp;
 
@@ -267,6 +269,21 @@ const FoFMain = () => {
 
   return (
     <div>
+      <div
+        onClick={() => {
+          setShowCard(
+            <SettingModal
+              close={() => {
+                setShowCard(null);
+              }}
+            />
+          );
+        }}
+        className="absolute -top-[35px] right-[94px] text-white z-5s0"
+      >
+        <Settings size={"6vw"} />
+      </div>
+
       {!isLoading ? (
         <div
           className="w-screen bg-white select-none font-fof overflow-hidden"

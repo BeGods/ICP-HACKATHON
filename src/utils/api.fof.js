@@ -65,15 +65,12 @@ export const updateMythology = async (mythology, accessToken) => {
   }
 };
 
-export const fetchLeaderboard = async (accessToken, pageNum, filter) => {
+export const fetchLeaderboard = async (accessToken, userRank, pageNum) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/leaderboard`;
 
-  if (filter) {
-    url += `?filter=${filter}`;
-  }
-
+  url += `?userRank=${userRank}`;
   if (pageNum != 0) {
-    url += `?page=${pageNum}`;
+    url += `&page=${pageNum}`;
   }
 
   try {
@@ -799,6 +796,22 @@ export const generateStarInvoice = async (accessToken, type) => {
   if (type) {
     url += `?type=${type}`;
   }
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const updateFinishStatus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/user/finish`;
 
   try {
     const response = await axios.get(url, {
