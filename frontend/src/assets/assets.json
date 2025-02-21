@@ -29,7 +29,8 @@
         "begodsBlack": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.black.svg",
         "fofQr": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-begods.telegram.qrcode.png",
         "fof": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/forgesoffaith-w.svg",
-        "ror": "/assets/requiemofrelics.png"
+        "ror": "/assets/requiemofrelics.png",
+        "dod": "/assets/dod.png"
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.greek.base.svg",
