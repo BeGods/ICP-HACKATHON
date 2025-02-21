@@ -650,11 +650,11 @@ export const updateUserData = async (
       };
     }
 
-    if (memberData.totalOrbs >= 999999 && !user?.gameCompletedAt?.fof) {
-      updates.gameCompletedAt = {
-        fof: new Date(),
-      };
-    }
+    // if (memberData.totalOrbs >= 999999 && !user?.gameCompletedAt?.fof) {
+    //   updates.gameCompletedAt = {
+    //     fof: new Date(),
+    //   };
+    // }
 
     if (Object.keys(updates).length > 0) {
       await User.findOneAndUpdate({ _id: user._id }, { $set: updates });
