@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./styles/main.scss";
 import "./styles/animations.scss";
 import "./styles/arrow.scss";
+import "./styles/credits.scss";
 import "./styles/moon.scss";
 import "./styles/lottie.scss";
 import "./styles/glowButton.scss";

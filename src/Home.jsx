@@ -154,7 +154,7 @@ const Home = () => {
       trackEvent("rewards", "claim_streak_reward", "success");
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 1000);
 
       if (rewardsData.reward === "fdg") {
         setSection(0);
@@ -183,7 +183,7 @@ const Home = () => {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -194,7 +194,7 @@ const Home = () => {
         setSection(8);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
       } else if (response?.user?.isStreakActive) {
         (async () => {
           await getStreakBonus(token);
@@ -206,7 +206,7 @@ const Home = () => {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       console.log(error);
@@ -305,7 +305,7 @@ const Home = () => {
               section != 13 &&
               section != 11 && <Footer minimize={minimize} />}
             {showCard && (
-              <div className="absolute z-50 h-screen w-screen">{showCard}</div>
+              <div className="absolute z-[99] w-screen">{showCard}</div>
             )}
           </MyContext.Provider>
         </div>

@@ -10,6 +10,7 @@ import {
 } from "../../helpers/cookie.helper";
 import { trackComponentView } from "../../utils/ga";
 import { mythologies, mythSymbols } from "../../utils/constants";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
@@ -82,9 +83,10 @@ const IntroPage = (props) => {
         setTimeout(() => {
           navigate("/home");
         }, 2000);
-      }, 3000);
+      }, 1000);
     } catch (error) {
       console.error("Authentication Error: ", error);
+      showToast("default");
     }
   };
 
