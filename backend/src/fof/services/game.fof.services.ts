@@ -17,6 +17,10 @@ import {
   validateBurst,
 } from "../../helpers/booster.helpers";
 import { IMyth, IUser, IUserMyths } from "../../ts/models.interfaces";
+import {
+  determineStreak,
+  validStreakReward,
+} from "../../helpers/streak.helpers";
 
 export const aggregateGameStats = async (userId) => {
   try {
@@ -189,7 +193,7 @@ export const validateRatValues = (boosterData) => {
   }
 };
 
-export const updateMythologies = (mythologies) => {
+export const updateMythologies = (mythologies, user) => {
   try {
     let updatedBlackOrb = 0;
 
@@ -210,7 +214,7 @@ export const updateMythologies = (mythologies) => {
 
       // Validate boosters
       mythology.boosters = validateBooster(mythology.boosters);
-      mythology.boosters = checkAutomataStatus(mythology);
+      mythology.boosters = checkAutomataStatus(mythology, user);
       mythology.boosters = validateRatValues(mythology.boosters);
 
       if (
@@ -375,36 +379,33 @@ export const aggregateConvStats = async (userId) => {
 };
 
 export const checkStreakIsActive = async (
-  lastLoginAt: number,
-  streakLastClaimedAt: number
+  lastLoginAt: Date,
+  streakLastClaimedAt: Date,
+  streakCount: number
 ) => {
   try {
-    if (!lastLoginAt || lastLoginAt === 0) {
+    if (!lastLoginAt) {
       return false;
     }
 
     const now = new Date();
-    const lastLoginDate = new Date(lastLoginAt);
-    const lastClaimedDate = new Date(streakLastClaimedAt);
+    const lastLoginDate = new Date(lastLoginAt ?? new Date(0));
+    const lastClaimedDate = new Date(streakLastClaimedAt ?? new Date(0));
 
-    now.setHours(0, 0, 0, 0);
-    lastLoginDate.setHours(0, 0, 0, 0);
-    lastClaimedDate.setHours(0, 0, 0, 0);
+    now.setUTCHours(0, 0, 0, 0);
+    lastLoginDate.setUTCHours(0, 0, 0, 0);
+    lastClaimedDate.setUTCHours(0, 0, 0, 0);
 
-    // already claimed
-    if (lastClaimedDate.getTime() === now.getTime()) {
-      return false;
-    }
+    const isConsecutiveDay = streakCount > 1;
 
-    const differenceInDays =
-      (now.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
+    // is not claimed today
+    const isNotClaimedToday = lastClaimedDate.getTime() !== now.getTime();
 
-    if (differenceInDays === 1) {
-      return true;
-    }
-
-    // Not a consecutive day
-    return false;
+    return (
+      isConsecutiveDay &&
+      isNotClaimedToday &&
+      determineStreak(streakCount) !== null
+    );
   } catch (error) {
     console.error("Error checking streak activity:", error.message);
     throw new Error(error.response ? error.response.data : error.message);
@@ -439,7 +440,8 @@ export const updateSessionData = async (
   mythData,
   userMythology,
   taps,
-  minionTaps
+  minionTaps,
+  streakMultipier
 ) => {
   try {
     let totalTaps = taps - minionTaps;
@@ -459,9 +461,8 @@ export const updateSessionData = async (
 
     // update energy after tapping, shards, lastTapActivityTime
     const updatedEnergy = restoredEnergy - totalTaps;
-    let updatedShards =
-      taps * mythData.boosters.shardslvl +
-      minionTaps * mythData.boosters.shardslvl * 2;
+    const shardslvl = mythData.boosters.shardslvl * streakMultipier;
+    let updatedShards = taps * shardslvl + minionTaps * shardslvl * 2;
 
     // update myth shards
     mythData.shards += updatedShards;
@@ -559,22 +560,27 @@ export const updateBubbleData = async (userId, bubbleSession) => {
   }
 };
 
-export const updateMythologyData = async (userMythologiesData, userId) => {
+export const updateMythologyData = async (
+  userMythologiesData,
+  userId,
+  user
+) => {
   try {
     const updatedData = updateMythologies(
-      userMythologiesData.userMythologies[0].mythologies
+      userMythologiesData.userMythologies[0].mythologies,
+      user
     );
     const updatedMythologies = updatedData.data;
     let blackOrbs = updatedData.updatedBlackOrb;
 
-    // Add missing mythologies with default values
+    // add default myth is missing
     const existingNames = updatedMythologies.map((myth) => myth.name);
     const missingMythologies = defaultMythologies.filter(
       (defaultMyth) => !existingNames.includes(defaultMyth.name)
     );
     const completeMythologies = [...updatedMythologies, ...missingMythologies];
 
-    // Remove id from each mythology
+    // remove id
     completeMythologies.forEach((mythology) => {
       delete mythology._id;
     });
@@ -597,69 +603,73 @@ export const updateMythologyData = async (userMythologiesData, userId) => {
   }
 };
 
-export const updateUserData = async (
-  user,
-  memberData,
-  isEligibleToClaim,
-  isStreakActive
-) => {
+export const updateUserData = async (user, isEligibleToClaim) => {
   try {
     const hasPlaysuperExpired = await checkPlaysuperExpiry(user.playsuper);
 
-    const updates: Partial<IUser> = {};
+    const updates: any = {};
 
     if (isEligibleToClaim) {
       updates["bonus.fof.exploitCount"] = 0;
     }
 
-    if (isStreakActive && !user.bonus.fof.streakBonus.isActive) {
-      updates["bonus.fof.streakBonus.isActive"] = true;
-    }
-
     if (!user.partOfGames || !Array.isArray(user.partOfGames)) {
-      updates.partOfGames = ["fof"];
+      updates["partOfGames"] = ["fof"];
     } else if (!user.partOfGames.includes("fof")) {
-      updates.partOfGames = [...user.partOfGames, "fof"];
+      updates["partOfGames"] = [...user.partOfGames, "fof"];
     }
 
-    // track daily login
     const now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    const lastLoginDate = new Date(user.lastLoginAt || 0);
+    const lastLoginDate = user.lastLoginAt
+      ? new Date(user.lastLoginAt)
+      : new Date(0);
     lastLoginDate.setHours(0, 0, 0, 0);
 
-    // if not consecutive day - reset streak
-    const differenceInDays =
-      (now.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
-
-    if (differenceInDays > 1) {
-      updates["bonus.fof.streakBonus.streakCount"] = 1;
-    }
-
     if (lastLoginDate.getTime() !== now.getTime()) {
+      // check is a consecutive day
+      const differenceInDays =
+        (now.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24);
+      const isConsecutiveDay = differenceInDays === 1;
+
+      // update streak count
+      if (isConsecutiveDay) {
+        updates["bonus.fof.streak.count"] =
+          (user.bonus?.fof?.streak?.count ?? 0) + 1;
+      } else {
+        updates["bonus.fof.streak.count"] = 1;
+      }
+
       updates["lastLoginAt"] = new Date();
     }
 
-    if (user.playsuper.isVerified && hasPlaysuperExpired) {
-      user.playsuper.isVerified = false;
-      updates.playsuper = {
-        isVerified: false,
-        key: null,
-        createdAt: null,
-      };
+    if (user.playsuper?.isVerified && hasPlaysuperExpired) {
+      updates["playsuper.isVerified"] = false;
+      updates["playsuper.key"] = null;
+      updates["playsuper.createdAt"] = null;
     }
 
-    // if (memberData.totalOrbs >= 999999 && !user?.gameCompletedAt?.fof) {
-    //   updates.gameCompletedAt = {
-    //     fof: new Date(),
-    //   };
-    // }
+    console.log(updates);
 
+    let updatedUser;
     if (Object.keys(updates).length > 0) {
-      await User.findOneAndUpdate({ _id: user._id }, { $set: updates });
+      updatedUser = await User.findOneAndUpdate(
+        { _id: user._id },
+        { $set: updates },
+        { new: true }
+      );
     }
+
+    return updatedUser ?? user;
   } catch (error) {
-    throw Error("Failed to update user data.");
+    console.error(error);
+    throw new Error("Failed to update user data.");
   }
 };
+
+// if (memberData.totalOrbs >= 999999 && !user?.gameCompletedAt?.fof) {
+//   updates.gameCompletedAt = {
+//     fof: new Date(),
+//   };
+// }

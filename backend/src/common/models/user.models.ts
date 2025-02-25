@@ -16,18 +16,17 @@ const userSchema = new Schema<IUser>(
           default: 0,
         },
         joiningBonus: { type: Boolean, default: false },
-        streakBonus: {
-          isActive: {
-            type: Boolean,
-            default: false,
-          },
+        streak: {
           claimedAt: {
+            type: Date,
+          },
+          count: {
             type: Number,
             default: 0,
           },
-          streakCount: {
-            type: Number,
-            default: 0,
+          lastMythClaimed: {
+            type: String,
+            enum: ["Greek", "Celtic", "Norse", "Egyptian"],
           },
         },
         dailyBonusClaimedAt: {

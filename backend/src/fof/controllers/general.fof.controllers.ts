@@ -13,9 +13,8 @@ import {
 } from "../services/general.fof.services";
 import Stats from "../../common/models/Stats.models";
 import userMythologies from "../../common/models/mythologies.models";
-import milestones from "../../common/models/milestones.models";
-import partners from "../../common/models/partners.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
+import { determineStreak } from "../../helpers/streak.helpers";
 
 export const validateUserPlayed = async (req, res) => {
   try {
@@ -334,116 +333,65 @@ export const claimStreakBonus = async (req, res) => {
   try {
     const userId = req.user._id;
     const user = req.user;
-    const playusperCred = req.user.playsuper;
-    const { country } = req.query;
 
-    const userMilestones = await milestones.findOne({ userId: userId });
-    const activePartners = await partners.find().lean();
-    const userRewards = userMilestones.rewards.claimedRewards;
+    // randomize myth
+    const mythologies = ["Greek", "Celtic", "Norse", "Egyptian"];
+    const randomMyth = mythologies[Math.floor(Math.random() * 4)];
+    const streakReward = determineStreak(user.bonus.fof.streak.count);
+    let boosterUpdatedData;
 
-    let playsuper = [];
-
-    // if (validCountries.includes(country)) {
-    //   const playsuperRewards = await fetchPlaySuperRewards(
-    //     country,
-    //     "en",
-    //     playusperCred
-    //   );
-
-    //   playsuper = playsuperRewards.map((reward) => {
-    //     return {
-    //       ...reward,
-    //       partnerType: "playsuper",
-    //     };
-    //   });
-    // }
-
-    const claimedRewards = userRewards
-      .filter((item) => item.tokensCollected == 12)
-      .map((item) => item.partnerId.toString());
-
-    const filteredCustomRewards = activePartners
-      .filter(
-        (item) =>
-          !claimedRewards.includes(item._id.toString()) && !item.isCharity
-      )
-      .map((item) => ({
-        ...item,
-        id: item._id,
-      }));
-
-    const availablePartners = [...filteredCustomRewards];
-
-    if (availablePartners.length === 0) {
-      user.save();
-      res.status(200).json({ reward: "fdg" });
-      return;
-    }
-
-    // playsuper
-    const randomPartner = Math.floor(Math.random() * availablePartners.length);
-    const partnerExists = userRewards.find(
-      (item) => item.partnerId == availablePartners[randomPartner].id.toString()
-    );
-
-    if (partnerExists) {
-      await milestones.findOneAndUpdate(
-        {
-          userId,
-          "rewards.claimedRewards.partnerId":
-            availablePartners[randomPartner].id.toString(),
-        },
-        {
-          $set: { "rewards.updatedAt": Date.now() },
-          $inc: { "rewards.claimedRewards.$.tokensCollected": 1 },
-        },
-        {
-          new: true,
-        }
-      );
-    } else {
-      // await userMilestones.updateOne(
-      //   {
-      //     $set: {
-      //       "rewards.updatedAt": Date.now(),
-      //     },
-      //     $push: {
-      //       "rewards.claimedRewards": {
-      //         partnerId: availablePartners[randomPartner].id.toString(),
-      //         type:
-      //           availablePartners[randomPartner]?.partnerType == "playsuper"
-      //             ? "playsuper"
-      //             : "custom",
-      //         isClaimed: false,
-      //         tokensCollected: 1,
-      //       },
-      //     },
-      //   },
-      //   { new: true }
-      // );
-      await userMilestones.updateOne(
+    if (streakReward && streakReward.reward === "alchemist") {
+      const result = await userMythologies.findOneAndUpdate(
+        { userId, "mythologies.name": randomMyth },
         {
           $set: {
-            "rewards.updatedAt": Date.now(),
-          },
-          $push: {
-            "rewards.claimedRewards": {
-              partnerId: availablePartners[randomPartner].id.toString(),
-              type: "custom",
-              isClaimed: false,
-              tokensCollected: 1,
-            },
+            "mythologies.$.boosters.isShardsClaimActive": false,
+            "mythologies.$.boosters.shardsLastClaimedAt": Date.now(),
           },
         },
         { new: true }
       );
+      boosterUpdatedData = result.mythologies.filter(
+        (item) => item.name === randomMyth
+      )[0].boosters;
+    } else if (streakReward && streakReward.reward === "automata") {
+      const result = await userMythologies.findOneAndUpdate(
+        { userId, "mythologies.name": randomMyth },
+        {
+          $set: {
+            "mythologies.$.boosters.isAutomataActive": true,
+            "mythologies.$.boosters.automataLastClaimedAt": Date.now(),
+            "mythologies.$.boosters.automataStartTime": Date.now(),
+          },
+        },
+        { new: true }
+      );
+
+      boosterUpdatedData = result.mythologies.filter(
+        (item) => item.name === randomMyth
+      )[0].boosters;
+    } else if (streakReward && streakReward.reward === "burst") {
+      const result = await userMythologies.findOneAndUpdate(
+        { userId, "mythologies.name": randomMyth },
+        {
+          $set: {
+            "mythologies.$.boosters.isBurstActive": true,
+            "mythologies.$.boosters.burstActiveAt": Date.now(),
+          },
+        },
+        { new: true }
+      );
+
+      boosterUpdatedData = result.mythologies.filter(
+        (item) => item.name === randomMyth
+      )[0].boosters;
     }
 
-    res.status(200).json({
-      reward: availablePartners[randomPartner],
-    });
-
-    user.save();
+    user.bonus.fof.streak.lastMythClaimed = randomMyth;
+    await user.save();
+    await res
+      .status(200)
+      .json({ boosterUpdatedData: boosterUpdatedData, mythology: randomMyth });
   } catch (error) {
     console.log(error);
     res.status(500).json({

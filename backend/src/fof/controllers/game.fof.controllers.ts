@@ -29,6 +29,7 @@ import {
   validateBooster,
 } from "../../helpers/booster.helpers";
 import { IMyth, IUserMyths } from "../../ts/models.interfaces";
+import { validStreakReward } from "../../helpers/streak.helpers";
 
 // start tap session
 export const startGameSession = async (req, res) => {
@@ -89,9 +90,16 @@ export const startGameSession = async (req, res) => {
 // claim tap session
 export const updateGameSession = async (req, res) => {
   try {
-    const userId = req.user;
+    const userId = req.user._id;
+    const user = req.user;
     let { taps, minionTaps, mythologyName, bubbleSession } = await decryptHash(
       req.body.data
+    );
+    const streakMultipier = validStreakReward(
+      "alchemist",
+      user.bonus.fof.streak.count,
+      user.bonus.fof.streak.claimedAt,
+      user.bonus.fof.streak.lastMythClaimed == mythologyName
     );
 
     // get mythDta
@@ -108,7 +116,13 @@ export const updateGameSession = async (req, res) => {
     }
 
     const { updatedMythData, blackOrbs, updatedShards } =
-      await updateSessionData(mythData, userMythology, taps, minionTaps);
+      await updateSessionData(
+        mythData,
+        userMythology,
+        taps,
+        minionTaps,
+        streakMultipier
+      );
 
     // return status and update User
     const updatedUserMythology = await userMythologies.findOneAndUpdate(
@@ -155,7 +169,7 @@ export const updateGameSession = async (req, res) => {
 export const getGameStats = async (req, res) => {
   try {
     const userId = req.user._id;
-    const user = req.user;
+    let user = req.user;
 
     // Execute the aggregation pipeline
     const userGameStats = await aggregateGameStats(userId);
@@ -167,7 +181,7 @@ export const getGameStats = async (req, res) => {
     // update mythologies data
     const userMythologiesData = userGameStats[0];
     const { completeMythologies, isAutoAutomataActive } =
-      await updateMythologyData(userMythologiesData, userId);
+      await updateMythologyData(userMythologiesData, userId, user);
 
     // get ranks
     let userRank = await ranks.findOne({ userId: req.user._id });
@@ -176,10 +190,6 @@ export const getGameStats = async (req, res) => {
       userRank = { overallRank: totalUsers[0]?.totalUsers && 0 } as any;
     }
 
-    const isStreakActive = await checkStreakIsActive(
-      user.lastLoginAt || 0,
-      user.bonus.fof.streakBonus.claimedAt
-    );
     // is sligible for gacha
     const isEligibleToClaim = await checkBonus(user);
     const memberData = {
@@ -188,7 +198,14 @@ export const getGameStats = async (req, res) => {
     };
 
     // update userdata
-    await updateUserData(user, memberData, isEligibleToClaim, isStreakActive);
+    user = await updateUserData(user, isEligibleToClaim);
+
+    // flag only to show the claim screen
+    const isStreakActive = await checkStreakIsActive(
+      user.lastLoginAt,
+      user.bonus.fof.streak.claimedAt,
+      user.bonus.fof.streak.count
+    );
 
     const userData = {
       telegramUsername: user.telegramUsername,
@@ -204,8 +221,11 @@ export const getGameStats = async (req, res) => {
           ? true
           : false,
       isEligibleToClaim: isEligibleToClaim,
-      isStreakActive: isStreakActive,
-      streakCount: user.bonus.fof.streakBonus.streakCount,
+      streak: {
+        isStreakActive: isStreakActive,
+        streakCount: user.bonus.fof.streak.count,
+        lastMythClaimed: user.bonus.fof.streak.lastMythClaimed,
+      },
       joiningBonus: user.bonus.fof.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
@@ -239,7 +259,7 @@ export const getGameStats = async (req, res) => {
       ),
     };
 
-    const { otherQuests, mythologyQuests, towerKeys } = await filterAllQuests(
+    const { otherQuests, mythologyQuests, towerKeys } = filterAllQuests(
       userMythologiesData.quests
     );
 
@@ -331,6 +351,7 @@ export const convertOrbs = async (req, res) => {
 export const updateGameData = async (req, res) => {
   try {
     const userId = req.user._id;
+    const user = req.user;
     const { mythologyName } = req.query;
 
     const userMythologiesData = (await userMythologies.findOne({
@@ -351,7 +372,7 @@ export const updateGameData = async (req, res) => {
           // Validate boosters
           mythology.boosters = validateBooster(mythology.boosters);
           if (mythology.boosters.isAutomataActive) {
-            mythology = checkAutomataStatus(mythology);
+            mythology = checkAutomataStatus(mythology, user);
           }
           mythology.energy = restoredEnergy;
           mythology.lastTapAcitivityTime = Date.now();
@@ -429,13 +450,21 @@ export const updateRatData = async (req, res) => {
 export const updateStarStatus = async (req, res) => {
   try {
     const userId = req.user._id;
+    const user = req.user;
     const userMyth = req.userMyth;
     const { session } = req.body;
+    const streakMultipier = validStreakReward(
+      "burst",
+      user.bonus.fof.streak.count,
+      user.bonus.fof.streak.claimedAt,
+      user.bonus.fof.streak.lastMythClaimed == userMyth.name
+    );
 
     const holdTimeInSession =
       Math.round(session / 10) > 9 ? 9 : Math.round(session / 10);
 
-    const updatedOrbs = holdTimeInSession * userMyth.boosters.burstlvl;
+    const burstlvl = userMyth.boosters.burstlvl * streakMultipier;
+    const updatedOrbs = holdTimeInSession * burstlvl;
 
     userMyth.boosters.isBurstActive = false;
     userMyth.orbs += updatedOrbs;
