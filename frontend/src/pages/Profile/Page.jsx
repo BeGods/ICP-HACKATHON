@@ -12,7 +12,6 @@ import {
 } from "../../components/Common/SectionToggles";
 import { hideBackButton } from "../../utils/teleBackButton";
 import { trackComponentView } from "../../utils/ga";
-import confetti from "canvas-confetti";
 
 const tele = window.Telegram?.WebApp;
 

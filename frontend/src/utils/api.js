@@ -675,18 +675,8 @@ export const claimCustomReward = async (rewardId, accessToken) => {
   }
 };
 
-export const claimStreakBonus = async (accessToken, country) => {
+export const claimStreakBonus = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
-
-  let queryParams = [];
-
-  if (country !== "NA" || country !== "NA") {
-    queryParams.push(`country=${country}`);
-  }
-
-  if (queryParams.length > 0) {
-    url += `?${queryParams.join("&")}`;
-  }
 
   try {
     const response = await axios.get(url, {

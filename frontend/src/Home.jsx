@@ -149,19 +149,35 @@ const Home = () => {
 
   const getStreakBonus = async (token) => {
     try {
-      const activeCountry = await validateCountryCode(tele);
-      const rewardsData = await claimStreakBonus(token, activeCountry);
+      const response = await claimStreakBonus(token);
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === response.mythology
+              ? {
+                  ...item,
+                  boosters: response.boosterUpdatedData,
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+      setUserData((prev) => ({
+        ...prev,
+        streak: {
+          ...prev.streak,
+          lastMythClaimed: response.mythology,
+        },
+      }));
       trackEvent("rewards", "claim_streak_reward", "success");
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
 
-      if (rewardsData.reward === "fdg") {
-        setSection(0);
-      } else {
-        setActiveReward(rewardsData.reward);
-        setSection(10);
-      }
+      setSection(10);
     } catch (error) {
       console.log(error);
       showToast("default");
@@ -195,7 +211,7 @@ const Home = () => {
         setTimeout(() => {
           setIsLoading(false);
         }, 1000);
-      } else if (response?.user?.isStreakActive) {
+      } else if (response?.user?.streak?.isStreakActive) {
         (async () => {
           await getStreakBonus(token);
         })();
