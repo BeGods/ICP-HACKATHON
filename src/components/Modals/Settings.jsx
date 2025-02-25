@@ -52,7 +52,10 @@ const languages = [
   { name: "Filipino", code: "fil" },
   { name: "မြန်မာ", code: "my" },
   { name: "Indonasia", code: "id" },
-  { name: "Hausa", code: "ha" },
+  { name: "বাংলা", code: "bn" },
+  { name: "中文", code: "zh" },
+  { name: "日本語", code: "ja" },
+  { name: "Yorùbá", code: "yo" },
 ];
 
 const SettingModal = ({ close }) => {

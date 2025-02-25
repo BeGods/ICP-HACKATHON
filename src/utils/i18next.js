@@ -9,6 +9,7 @@ import Russian from "../translations/ru/translation.json";
 import Fillipino from "../translations/fil/translation.json";
 import Myanmar from "../translations/my/translation.json";
 import Indonesian from "../translations/id/translation.json";
+import Bengalli from "../translations/bn/translation.json";
 import Hausa from "../translations/ha/translation.json";
 
 i18next.use(initReactI18next).init({
@@ -47,6 +48,18 @@ i18next.use(initReactI18next).init({
     },
     ha: {
       translation: Hausa,
+    },
+    bn: {
+      translation: Bengalli,
+    },
+    zh: {
+      translation: English,
+    },
+    ja: {
+      translation: English,
+    },
+    yo: {
+      translation: English,
     },
   },
 });
