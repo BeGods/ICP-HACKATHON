@@ -1,9 +1,14 @@
-export const calculateAutomataEarnings = (automataLastClaimedAt, shardslvl) => {
+import { validStreakReward } from "./streak.helpers";
+
+export const calculateAutomataEarnings = (
+  automataLastClaimedAt,
+  automatalvl
+) => {
   const automataTimeElapsed = Math.floor(
     (Date.now() - automataLastClaimedAt) / 1000
   );
 
-  const automataEarnings = automataTimeElapsed * shardslvl;
+  const automataEarnings = automataTimeElapsed * automatalvl;
 
   return automataEarnings;
 };
@@ -46,8 +51,15 @@ export const validateBooster = (boosters) => {
   }
 };
 
-export const checkAutomataStatus = (gameData) => {
+export const checkAutomataStatus = (gameData, user) => {
   try {
+    const streakMultipier = validStreakReward(
+      "automata",
+      user.bonus.fof.streak.count,
+      user.bonus.fof.streak.claimedAt,
+      user.bonus.fof.streak.lastMythClaimed === gameData.name
+    );
+
     const timeLapsed = Date.now() - gameData.boosters.automataStartTime;
 
     if (timeLapsed >= 86400000) {
@@ -65,7 +77,7 @@ export const checkAutomataStatus = (gameData) => {
     if (gameData.boosters.isAutomataActive) {
       gameData.shards += calculateAutomataEarnings(
         gameData.boosters.automataLastClaimedAt,
-        gameData.boosters.automatalvl
+        gameData.boosters.automatalvl * streakMultipier
       );
 
       gameData.boosters.automataLastClaimedAt = Date.now();
