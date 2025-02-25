@@ -108,9 +108,11 @@ const CenterChild = ({ userData }) => {
             </div>
           </div>
         )}
-        <div className="mx-auto absolute bottom-0">
-          <img src={`/assets/badges/${streakBadge}.svg`} alt="badge" />
-        </div>
+        {streakBadge && (
+          <div className="mx-auto absolute bottom-0">
+            <img src={`/assets/badges/${streakBadge}.svg`} alt="badge" />
+          </div>
+        )}
       </div>
     </div>
   );
