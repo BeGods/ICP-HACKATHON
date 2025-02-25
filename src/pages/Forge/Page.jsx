@@ -34,8 +34,8 @@ import {
   handleClickHaptic,
   handleTapHaptic,
 } from "../../helpers/cookie.helper";
-import { toast } from "react-toastify";
 import confetti from "canvas-confetti";
+import { getStreakMultipier } from "../../helpers/streak.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -66,6 +66,16 @@ const Forges = () => {
     userData,
     setUserData,
   } = useContext(MyContext);
+  const streakMultpier = (boosterName) => {
+    const multiplier = getStreakMultipier(
+      boosterName,
+      userData.streak.streakCount,
+      userData.streak.lastMythClaimed === mythologies[activeMyth]
+    );
+
+    return multiplier;
+  };
+
   const initialState = gameData.mythologies.map((myth) => {
     return {
       orbs: myth.orbs,
@@ -87,9 +97,10 @@ const Forges = () => {
       disabled: false,
     };
   });
+  const [mythStates, setMythStates] = useState(initialState);
+
   const [showBlackOrb, setShowBlackOrb] = useState(0);
   const [activeCard, setActiveCard] = useState(null);
-  const [mythStates, setMythStates] = useState(initialState);
   const [popupStates, setPopupStates] = useState({
     isActive: false,
     counter: 0,
@@ -139,6 +150,8 @@ const Forges = () => {
     holdStartTime: 0,
     holdEndTime: 0,
   });
+
+  console.log(mythStates[activeMyth].shardslvl);
 
   const orbChangeEffect = () => {
     const timeoutIds = [];
@@ -554,6 +567,7 @@ const Forges = () => {
     }
 
     const { energy, shardslvl, currShards, ratCount } = mythStates[activeMyth];
+
     const { counter, popupTime, isActive } = popupStates;
 
     const lastBubbleClaimedTime = getBubbleLastClaimedTime();
@@ -912,6 +926,19 @@ const Forges = () => {
       });
     }, 500);
   };
+
+  useEffect(() => {
+    if (!userData) return;
+
+    setMythStates((prevState) =>
+      prevState.map((myth, index) => ({
+        ...myth,
+        burstlvl: myth.burstlvl * streakMultpier("burst"),
+        shardslvl: myth.shardslvl * streakMultpier("alchemist"),
+        automatalvl: myth.automatalvl * streakMultpier("automata"),
+      }))
+    );
+  }, [userData, activeMyth]);
 
   const handleUpdateFinishedGame = async () => {
     try {
@@ -1419,9 +1446,9 @@ const Forges = () => {
                   zIndex: 99,
                 }}
               >
-                +
-                {mythStates[activeMyth].shardslvl *
-                  (isHolding && activeCard === "minion" ? 2 : 1)}
+                +{mythStates[activeMyth].shardslvl}
+                {/* {mythStates[activeMyth].shardslvl *
+                  (isHolding && activeCard === "minion" ? 2 : 1)} */}
               </span>
             ))}
             <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
