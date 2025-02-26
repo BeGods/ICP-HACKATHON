@@ -187,11 +187,17 @@ export const getLeaderboardRanks = async (
 };
 export const getRandomValue = () => {
   const valuesWithProbabilities = [
-    { value: "blackOrb", probability: 0.125 },
-    { value: "quest", probability: 0.125 },
-    { value: "booster", probability: 0.25 },
-    { value: "mythOrb", probability: 0.5 },
+    { value: "blackOrb", probability: 1 / 3 },
+    { value: "booster", probability: 1 / 3 },
+    { value: "mythOrb", probability: 1 / 3 },
   ];
+
+  // const valuesWithProbabilities = [
+  //   { value: "blackOrb", probability: 0.125 },
+  //   { value: "quest", probability: 0.125 },
+  //   { value: "booster", probability: 0.25 },
+  //   { value: "mythOrb", probability: 0.5 },
+  // ];
   const random = Math.random();
   let cumulativeProbability = 0;
 
