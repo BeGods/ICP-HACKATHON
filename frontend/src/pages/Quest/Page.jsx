@@ -405,7 +405,6 @@ const Quests = () => {
         t={t}
       />
 
-      {/* Content */}
       <div
         className="flex justify-center items-center w-screen absolute mx-auto"
         style={{
@@ -524,6 +523,7 @@ const Quests = () => {
                 if (gameData.mythologies[activeMyth].faith >= 18) {
                   setShowCard(
                     <GameEndCrd
+                      activeMyth={activeMyth}
                       handleClick={() => {
                         setShowCard(null);
                       }}
@@ -539,7 +539,6 @@ const Quests = () => {
             />
           </div>
         )}
-        {/* Flp trigger for Jigsaw */}
         {currQuest === quests.length && (
           <div
             onClick={() => {

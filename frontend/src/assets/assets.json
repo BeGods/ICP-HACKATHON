@@ -185,10 +185,10 @@
         }
     },
     "whitelist": {
-        "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-greek.whitelist.wood.jpg",
-        "celtic": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-celtic.whitelist.wood.jpg",
-        "norse": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-norse.whitelist.wood.jpg",
-        "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-egyptian.whitelist.wood.jpg"
+        "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.greek.png",
+        "celtic": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.celtic.png",
+        "norse": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.norse.png",
+        "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.egyptian.png"
     },
     "translations" :{
         "en" : "https://raw.githubusercontent.com/BeGods/public-assets/19c623b9849f42fa1ae01f7c08bafecce15a28bb/translations/en/translation.json",

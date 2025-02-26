@@ -28,6 +28,7 @@ i18next.use(initReactI18next).init({
     es: {
       translation: Spanish,
     },
+
     pt: {
       translation: Portugese,
     },
@@ -37,6 +38,7 @@ i18next.use(initReactI18next).init({
     th: {
       translation: Thai,
     },
+
     fil: {
       translation: Fillipino,
     },
@@ -46,6 +48,7 @@ i18next.use(initReactI18next).init({
     id: {
       translation: Indonesian,
     },
+
     ha: {
       translation: Hausa,
     },
@@ -55,10 +58,14 @@ i18next.use(initReactI18next).init({
     zh: {
       translation: English,
     },
+
     ja: {
       translation: English,
     },
     yo: {
+      translation: English,
+    },
+    ko: {
       translation: English,
     },
   },
