@@ -26,67 +26,42 @@ const FoFLoader = (props) => {
   return (
     <div
       style={{
-        background: `url(${assets.uxui.intro})`,
-        backgroundPosition: "50.5% 0%",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-        width: "100vw",
-        top: 0,
-        left: 0,
+        background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+        backgroundPosition: "50% 10%",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        marginTopTop: "45px",
+        marginBottom: "10px",
       }}
+      className="flex  flex-col items-center justify-center"
     >
-      <div className="absolute scale-110 flex justify-center items-center h-full w-full">
-        <div
-          className="relative  flex justify-center items-center w-full h-full pointer-events-none"
-          style={{
-            backgroundImage: `url(${assets.uxui.towerOn})`,
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        ></div>
-        {mythologies.map((item, index) => (
-          <div
-            key={index}
-            className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
-          >
-            <div
-              className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}
-            >
-              <img
-                src={`${assets.uxui.baseorb}`}
-                alt="orb"
-                className={`filter-orbs-${item.toLowerCase()}`}
-              />
-              <span
-                className={`absolute text-symbol-sm z-1 font-symbols text-white opacity-50 mt-1 text-black-sm-contour`}
-              >
-                <>{mythSymbols[item.toLowerCase()]}</>{" "}
-              </span>
-            </div>
-          </div>
-        ))}
-        <p
-          className={`font-fof text-black-contour text-white text-center w-full top-[75%] absolute text-lg font-medium`}
-        >
-          ⚜️“For I walk by faith, not by sight”⚜️
-        </p>
+      <div
+        className="absolute w-[110vw]"
+        style={{
+          height: `100svh`,
+        }}
+      >
+        <img
+          src={assets.uxui.towerOn}
+          alt="tower"
+          className="w-[110vw] mx-auto"
+        />
       </div>
-      <div className="flex flex-col h-screen">
+      <p
+        className={`font-fof text-black-contour fade-in text-white text-center w-full top-[73%] absolute text-[5.4vw] font-medium`}
+      >
+        ⚜️“For I walk by faith, not by sight”⚜️
+      </p>
+      <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
         <div className="flex justify-center items-center w-full leading-tight">
-          <div className="relative z-[100]">
-            <img
-              src={assets.logos.fof}
-              alt="fof"
-              className="w-[200px] mt-6 fof-text-shadow pointer-events-none"
-            />
-          </div>
+          <img
+            src="/assets/logos/forges.of.faith.vertical.svg"
+            alt="dod"
+            className="fof-text-shadow w-[180px]"
+          />
         </div>
-
         <div className="flex flex-grow"></div>
-        <div className="absolute fade-in w-screen bottom-0">
-          <div className="flex justify-center w-full">
+        <div className="w-screen fade-in">
+          <div className="flex justify-center items-center w-full">
             <LoadRoll />
           </div>
           <div className="w-full relative font-medium text-center font-fof text-secondary uppercase text-white">
@@ -100,3 +75,26 @@ const FoFLoader = (props) => {
 };
 
 export default FoFLoader;
+// {
+//   mythologies.map((item, index) => (
+//     <div
+//       key={index}
+//       className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
+//     >
+//       <div
+//         className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}
+//       >
+//         <img
+//           src={`${assets.uxui.baseorb}`}
+//           alt="orb"
+//           className={`filter-orbs-${item.toLowerCase()}`}
+//         />
+//         <span
+//           className={`absolute text-symbol-sm z-1 font-symbols text-white opacity-50 mt-1 text-black-sm-contour`}
+//         >
+//           <>{mythSymbols[item.toLowerCase()]}</>{" "}
+//         </span>
+//       </div>
+//     </div>
+//   ));
+// }

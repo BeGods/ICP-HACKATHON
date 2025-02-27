@@ -127,13 +127,20 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
 
 /* Button Black Glass Effect */
 .bg-glass-black {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8); /* 50% transparency */
 }
 
+.bg-glass-black-lg {
+  background: rgba(0, 0, 0, 0.8); /* 50% transparency */
+}
+
+
 .bg-glass-white {
-  background: rgba(255, 255, 255, 0.5); /* White with 50% transparency */
-  backdrop-filter: blur(10px);         /* Apply blur effect */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  background: rgba(255, 255, 255, 0.8); /* 50% transparency */
+}
+
+.bg-glass-gold {
+  background: rgba(228, 92, 29, 0.7); /* 50% transparency */
 }
 
 
@@ -232,13 +239,34 @@ text-shadow:
 }
 
 .fof-text-shadow{
-  filter: drop-shadow(0 0 2px #FFD660)
+  filter: drop-shadow(0 0 2px #EB5B00)
           drop-shadow(0 0 2px #FFD660);
 }
+
+.ror-text-shadow{
+  filter: drop-shadow(0 0 2px #3ABEF9)
+          drop-shadow(0 0 2px #A7E6FF);
+}
+
+.dod-text-shadow{
+  filter: drop-shadow(0 0 2px #0000007e)
+          drop-shadow(0 0 2px #3d3a3a7e)
+}
+
 
 .begod-text-shadow{
   filter: drop-shadow(0 0 2px #FFD660)
           drop-shadow(0 0 2px #FFD660);
+}
+
+.begod-blue-shadow{
+  filter: drop-shadow(0 0 4px #3ABEF9)
+          drop-shadow(0 0 3px #A7E6FF);
+}
+
+.begod-orange-shadow{
+  filter: drop-shadow(0 0 4px #EB5B00)
+          drop-shadow(0 0 3px #FFD660);
 }
 
 .hexagon{
