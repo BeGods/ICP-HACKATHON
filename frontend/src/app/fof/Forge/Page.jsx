@@ -1344,7 +1344,7 @@ const Forges = () => {
         style={{
           top: 0,
           left: 0,
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
           width: "100vw",
         }}
         className="flex flex-col overflow-hidden m-0"

@@ -10,6 +10,8 @@ import { trackComponentView } from "../../../utils/ga";
 import Launcher from "./Launcher";
 import FoFIntro from "./FoFIntro";
 import RoRIntro from "./RoRIntro";
+import SettingModal from "../../../components/Modals/Settings";
+import { LogOut, Settings } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -86,7 +88,7 @@ const IntroPage = (props) => {
     checkSoundActive();
 
     const handleUserInteraction = () => {
-      playAudio();
+      // playAudio();
       document.removeEventListener("click", handleUserInteraction);
       document.removeEventListener("touchstart", handleUserInteraction);
     };
@@ -110,12 +112,12 @@ const IntroPage = (props) => {
         platform === "weba" ||
         platform === "unknown"
       ) {
-        setDisableDestop(true);
+        // setDisableDestop(true);
       } else {
-        setDisableDestop(false);
-        setTimeout(() => {
-          (async () => await auth())();
-        }, 1000);
+        // setDisableDestop(false);
+        // setTimeout(() => {
+        //   (async () => await auth())();
+        // }, 1000);
       }
       if (platform === "ios") {
         document.body.style.position = "fixed";
@@ -209,11 +211,14 @@ const IntroPage = (props) => {
         </div>
       ) : (
         <div
-          className={`bg-white text-black flex w-screen text-wrap`}
+          className={`text-black flex w-screen text-wrap`}
           style={{
             height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
           }}
         >
+          <div className="absolute flex gap-5 -top-[35px] right-[94px] text-white z-50">
+            <Settings size={"6vw"} />
+          </div>
           {!showLauncher ? (
             <Launcher handleClick={handleSelectGame} />
           ) : (
@@ -229,14 +234,3 @@ const IntroPage = (props) => {
 };
 
 export default IntroPage;
-
-{
-  /* <div className="absolute">
-<ReactHowler
-  src={assets.audio.fofIntro}
-  playing={!disableDesktop && enableSound}
-  preload={true}
-  loop
-/>
-</div> */
-}

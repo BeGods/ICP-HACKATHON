@@ -288,7 +288,9 @@ const FoFMain = () => {
         <div
           className="w-screen bg-white select-none font-fof overflow-hidden"
           style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+            marginTopTop: "45px",
+            marginBottom: "10px",
           }}
         >
           <FofContext.Provider value={initalStates}>

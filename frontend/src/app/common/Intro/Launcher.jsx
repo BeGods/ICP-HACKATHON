@@ -2,163 +2,216 @@ import { useState } from "react";
 import assets from "../../../assets/assets.json";
 import "../../../styles/load.carousel.scss";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+import { mythologies, mythSymbols } from "../../../utils/constants.fof";
 import { useNavigate } from "react-router-dom";
 
-export default function Launcher({ handleClick }) {
-  const [activeIndex, setActiveIndex] = useState(7);
-  const navigate = useNavigate();
-
-  const sections = [
-    {
-      code: "fof",
-      image: assets.uxui.intro,
-      position: "50.5% 0%",
-    },
-    {
-      code: "dod",
-      image: "/assets/1280px-dod.loading.png",
-      position: "45.75% 0%",
-    },
-    {
-      code: "ror",
-      image: assets.uxui.rorspash,
-      position: "50.25% 0%",
-    },
-    {
-      code: "fof",
-      image: assets.uxui.intro,
-      position: "50.5% 0%",
-    },
-    {
-      code: "dod",
-      image: "/assets/1280px-dod.loading.png",
-      position: "45.75% 0%",
-    },
-    {
-      code: "ror",
-      image: assets.uxui.rorspash,
-      position: "50.25% 0%",
-    },
-    {
-      code: "fof",
-      image: assets.uxui.intro,
-      position: "50.5% 0%",
-    },
-    {
-      code: "dod",
-      image: "/assets/1280px-dod.loading.png",
-      position: "45.75% 0%",
-    },
-    {
-      code: "ror",
-      image: assets.uxui.rorspash,
-      position: "50.25% 0%",
-    },
-    {
-      code: "fof",
-      image: assets.uxui.intro,
-      position: "50.5% 0%",
-    },
-    {
-      code: "dod",
-      image: "/assets/1280px-dod.loading.png",
-      position: "45.75% 0%",
-    },
-    {
-      code: "ror",
-      image: assets.uxui.rorspash,
-      position: "50.25% 0%",
-    },
-    {
-      code: "fof",
-      image: assets.uxui.intro,
-      position: "50.5% 0%",
-    },
-    {
-      code: "dod",
-      image: "/assets/1280px-dod.loading.png",
-      position: "45.75% 0%",
-    },
-    {
-      code: "ror",
-      image: assets.uxui.rorspash,
-      position: "50.25% 0%",
-    },
-  ];
+export default function Launcher() {
+  const [activeIndex, setActiveIndex] = useState(1);
+  const [fadeout, setFadeout] = useState(false);
+  const pos = ["-50vw", "-150vw", "-250vw"];
 
   const nextSlide = () => {
-    setActiveIndex((prev) => (prev + 1) % sections.length);
+    if (activeIndex < pos.length - 1) {
+      setActiveIndex((prev) => prev + 1);
+    }
   };
 
   const prevSlide = () => {
-    setActiveIndex((prev) => (prev - 1 + sections.length) % sections.length);
+    if (activeIndex > 0) {
+      setActiveIndex((prev) => prev - 1);
+    }
+  };
+
+  const handleFadeout = () => {
+    setFadeout(true);
   };
 
   return (
     <div
-      className="carousel-container bg-black"
-      style={{ height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)` }}
+      className="transition-all duration-500 overflow-hidden relative"
+      style={{
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+      }}
     >
       <div
-        className="carousel-track"
-        style={{ transform: `translate3d(-${activeIndex * 100}%, 0, 0)` }}
+        className=" slider-container flex transition-transform duration-500"
+        style={{
+          width: "400vw",
+          transform: `translateX(${pos[activeIndex]})`,
+        }}
       >
-        {sections.map((background, index) => (
-          <div
-            key={index}
-            className="carousel-slide"
-            style={{
-              backgroundImage: `url(${background.image})`,
-              backgroundPosition: background.position,
-            }}
-          >
-            <div className="absolute  fade-in-intro flex justify-center items-center w-full">
-              <div
-                className="flex flex-col"
-                style={{
-                  height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-                }}
-              >
-                <div className="flex justify-center items-center w-full leading-tight">
-                  <div className="relative z-[100]">
-                    <img
-                      src={assets.logos[background.code]}
-                      alt="fof"
-                      className="w-[200px] mt-6 fof-text-shadow pointer-events-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-grow justify-center items-center">
-                  {background.code !== "dod" && (
-                    <div
-                      onClick={() => {
-                        navigate(`/${background.code}`);
-                      }}
-                      className="p-6 bg-white rounded-full shadow-2xl"
-                    >
-                      <Play size={"10vw"} fill="black" />
-                    </div>
-                  )}
-                </div>
-                <div className={`flex justify-center items-center z-[100]`}>
-                  <img
-                    src={assets.logos.begodsBlack}
-                    alt="logo"
-                    className="w-[65px] h-[75px] mb-6 begod-text-shadow pointer-events-none"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        <div
+          className="w-[200vw]"
+          style={{
+            background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
+        >
+          <FOFLaunch handleFadeout={handleFadeout} fadeout={fadeout} />
+        </div>
+        <div
+          className="w-[200vw]"
+          style={{
+            background: `url(${assets.uxui.rorspash}) no-repeat center / cover`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          }}
+        >
+          <RORLaunch />
+        </div>
+        <div
+          className="absolute ml-[150vw] top-0 bottom-0 left-0 w-screen h-full z-10"
+          style={{
+            background: `url(/assets/1280px-dod.loading.png) no-repeat center / cover`,
+            backgroundPosition: "45.75% 0%",
+          }}
+        >
+          <DODLaunch />
+        </div>
       </div>
-      <button className="prev" onClick={prevSlide}>
-        <ChevronLeft strokeWidth={"2px"} size={30} color="white" />
-      </button>
-      <button className="next" onClick={nextSlide}>
-        <ChevronRight strokeWidth={"2px"} size={30} color="white" />
-      </button>
+
+      <div className={`${fadeout && "fade-out"} `}>
+        {activeIndex > 0 && (
+          <button
+            className={`absolute z-50 top-[77%] opacity-80`}
+            onClick={prevSlide}
+          >
+            <ChevronLeft strokeWidth="3px" size={40} color="white" />
+          </button>
+        )}
+        {activeIndex < pos.length - 1 && (
+          <button
+            className={`absolute  right-0 top-[77%] z-50 opacity-80`}
+            onClick={nextSlide}
+          >
+            <ChevronRight strokeWidth="3px" size={40} color="white" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }
+
+export const FOFLaunch = ({ handleFadeout, fadeout }) => {
+  const navigate = useNavigate();
+  return (
+    <div
+      className={`flex  flex-col h-full items-center justify-center z-[100]`}
+    >
+      <div
+        className="absolute w-[110vw]"
+        style={{
+          height: `100svh`,
+        }}
+      >
+        <img
+          src={assets.uxui.towerOn}
+          alt="tower"
+          className="w-[110vw] mx-auto "
+        />
+      </div>
+
+      <div
+        onClick={() => {
+          navigate("/fof");
+        }}
+        className="font-fof z-[100] absolute top-[72%] rounded-primary flex justify-between items-center  opacity-80 text-orange-400 text-black-contour h-button-primary w-button-primary bg-glass-black border-[2px] border-orange-400"
+      >
+        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
+          ⚔️
+        </div>
+        <div className="flex justify-center  items-center w-1/4 h-full text-[6vw]">
+          PLAY
+        </div>
+        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
+          ⚔️
+        </div>
+      </div>
+      <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
+        <img
+          src="/assets/logos/forges.of.faith.vertical.svg"
+          alt="dod"
+          className="fof-text-shadow w-[180px]"
+        />
+        <div
+          className={`flex ${
+            fadeout && "fade-out"
+          } justify-center items-center z-[100]`}
+        >
+          <img
+            src={assets.logos.begodsBlack}
+            alt="logo"
+            className="w-[65px] begod-orange-shadow pointer-events-none"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const RORLaunch = () => {
+  return (
+    <div
+      className={`flex  flex-col h-full items-center justify-center z-[100]`}
+    >
+      <div className="font-fof z-[100] absolute top-[72%] rounded-primary flex justify-between items-center  opacity-90 text-[#3ABEF9] text-black-contour h-button-primary w-button-primary bg-glass-white border-[2px] border-[#3ABEF9]">
+        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
+          ⚔️
+        </div>
+        <div className="flex justify-center  items-center w-1/4 h-full text-[6vw]">
+          PLAY
+        </div>
+        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
+          ⚔️
+        </div>
+      </div>
+      <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
+        <img
+          src="/assets/logos/requiem.of.relics.vertical.svg"
+          alt="dod"
+          className="ror-text-shadow w-[180px]"
+        />
+        <div className={`flex justify-center items-center z-[100]`}>
+          <img
+            src={assets.logos.begodsBlack}
+            alt="logo"
+            className="w-[65px] begod-blue-shadow pointer-events-none"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const DODLaunch = () => {
+  return (
+    <div
+      className={`flex  flex-col h-full items-center justify-center z-[100]`}
+    >
+      <div className="font-fof z-[100] absolute top-[72%] rounded-primary flex justify-between items-center  opacity-80 text-gold text-black-contour h-button-primary w-button-primary bg-glass-black-lg border-[2px] border-gold">
+        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
+          ⚔️
+        </div>
+        <div className="flex justify-center font-semibold  items-center w-1/4 h-full text-[6vw]">
+          PLAY
+        </div>
+        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
+          ⚔️
+        </div>
+      </div>
+      <div className="absolute flex flex-col justify-between items-center h-full pt-[1vh] pb-[3vh]">
+        <img
+          src="/assets/logos/dawn.of.duels.vertical.gold.png"
+          alt="dod"
+          className="w-[180px] dod-text-shadow"
+        />
+        <div className={`flex justify-center items-center z-[100]`}>
+          <img
+            src={assets.logos.begodsBlack}
+            alt="logo"
+            className="w-[65px] begod-text-shadow pointer-events-none"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
