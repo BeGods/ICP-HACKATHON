@@ -195,7 +195,11 @@ const Home = () => {
       setCountry(response?.user.country);
       setUserData(response?.user);
       setKeysData(response?.towerKeys);
-      if (!response?.user?.joiningBonus) {
+      if (response?.user?.streak?.isStreakActive) {
+        (async () => {
+          await getStreakBonus(token);
+        })();
+      } else if (!response?.user?.joiningBonus) {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
@@ -211,10 +215,6 @@ const Home = () => {
         setTimeout(() => {
           setIsLoading(false);
         }, 1000);
-      } else if (response?.user?.streak?.isStreakActive) {
-        (async () => {
-          await getStreakBonus(token);
-        })();
       } else if (!showAnmnt) {
         setSection(12);
         setIsLoading(false);
