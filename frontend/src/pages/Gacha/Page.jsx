@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import GachaRoll from "../../components/Fx/GachaRoll";
 import { trackEvent } from "../../utils/ga";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import assets from "../../assets/assets.json";
 
 const tele = window.Telegram?.WebApp;
 
@@ -22,7 +23,6 @@ const Gacha = (props) => {
     authToken,
     enableSound,
     enableHaptic,
-    assets,
   } = useContext(MyContext);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
@@ -208,11 +208,9 @@ const Gacha = (props) => {
         }
       }, 1500);
 
-      // Clean up the second timeout
       return () => clearTimeout(secondTimeout);
     }, 2000);
 
-    // Clean up the first timeout
     return () => clearTimeout(firstTimeout);
   }, [showScale, isClaimed]);
 
@@ -237,25 +235,30 @@ const Gacha = (props) => {
         </div>
         {/* Main */}
         <div
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            if (showScale) {
-              exploitDailyBonus();
-            }
+          className="absolute"
+          style={{
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
           }}
-          className="flex flex-grow justify-center items-center relative w-full h-full"
         >
-          <img
-            src={`${assets.uxui.pandora}`}
-            alt="pandora"
-            className={`w-fit h-fit transition-transform duration-1000 ${
-              showScale
-                ? "scale-golden-glow glow-box"
-                : "glow-box scale-box -mt-10"
-            }`}
-          />
-          <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
-            <GachaRoll showSpin={spinSound} />
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              if (showScale) {
+                exploitDailyBonus();
+              }
+            }}
+            className="flex flex-grow justify-center items-center relative w-full h-full"
+          >
+            <img
+              src={`${assets.uxui.pandora}`}
+              alt="pandora"
+              className={`w-fit h-fit transition-transform duration-1000  ${
+                !showScale ? "scale-golden-glow glow-box" : "glow-box scale-box"
+              }`}
+            />
+            <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
+              <GachaRoll showSpin={spinSound} />
+            </div>
           </div>
         </div>
         {/* Bottom */}
