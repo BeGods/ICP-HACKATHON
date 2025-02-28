@@ -68,7 +68,6 @@ export default function Launcher() {
           <DODLaunch />
         </div>
       </div>
-
       <div className={`${fadeout && "fade-out"} `}>
         {activeIndex > 0 && (
           <button
@@ -80,7 +79,7 @@ export default function Launcher() {
         )}
         {activeIndex < pos.length - 1 && (
           <button
-            className={`absolute  right-0 top-[77%] z-50 opacity-80`}
+            className={`absolute right-0 top-[80%] z-50 opacity-80`}
             onClick={nextSlide}
           >
             <ChevronRight strokeWidth="3px" size={40} color="white" />
@@ -91,7 +90,7 @@ export default function Launcher() {
   );
 }
 
-export const FOFLaunch = ({ handleFadeout, fadeout }) => {
+export const FOFLaunch = ({ fadeout }) => {
   const navigate = useNavigate();
   return (
     <div
@@ -110,38 +109,49 @@ export const FOFLaunch = ({ handleFadeout, fadeout }) => {
         />
       </div>
 
-      <div
+      {/* <div
         onClick={() => {
           navigate("/fof");
         }}
-        className="font-fof z-[100] absolute top-[72%] rounded-primary flex justify-between items-center  opacity-80 text-orange-400 text-black-contour h-button-primary w-button-primary bg-glass-black border-[2px] border-orange-400"
+        className="absolute z-20 top-[75%]"
       >
-        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
-          ⚔️
-        </div>
-        <div className="flex justify-center  items-center w-1/4 h-full text-[6vw]">
-          PLAY
-        </div>
-        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
-          ⚔️
-        </div>
-      </div>
+        <img
+          src="/assets/240px-button.orange.on--position.png"
+          alt="Button"
+          className="h-auto"
+        />
+      </div> */}
+
       <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
         <img
           src="/assets/logos/forges.of.faith.vertical.svg"
           alt="dod"
           className="fof-text-shadow w-[180px]"
         />
-        <div
-          className={`flex ${
-            fadeout && "fade-out"
-          } justify-center items-center z-[100]`}
-        >
-          <img
-            src={assets.logos.begodsBlack}
-            alt="logo"
-            className="w-[65px] begod-orange-shadow pointer-events-none"
-          />
+        <div className="flex flex-col gap-[2vh]">
+          <div
+            className={`flex ${
+              fadeout && "fade-out"
+            } justify-center items-center z-[100]`}
+          >
+            <img
+              src={assets.logos.begodsBlack}
+              alt="logo"
+              className="w-[65px] begod-orange-shadow pointer-events-none"
+            />
+          </div>
+          <div
+            onClick={() => {
+              navigate("/fof");
+            }}
+            className=""
+          >
+            <img
+              src="/assets/240px-button.orange.off-----position.png"
+              alt="Button"
+              className="h-auto"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -153,29 +163,27 @@ export const RORLaunch = () => {
     <div
       className={`flex  flex-col h-full items-center justify-center z-[100]`}
     >
-      <div className="font-fof z-[100] absolute top-[72%] rounded-primary flex justify-between items-center  opacity-90 text-[#3ABEF9] text-black-contour h-button-primary w-button-primary bg-glass-white border-[2px] border-[#3ABEF9]">
-        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
-          ⚔️
-        </div>
-        <div className="flex justify-center  items-center w-1/4 h-full text-[6vw]">
-          PLAY
-        </div>
-        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
-          ⚔️
-        </div>
-      </div>
       <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
         <img
           src="/assets/logos/requiem.of.relics.vertical.svg"
           alt="dod"
           className="ror-text-shadow w-[180px]"
         />
-        <div className={`flex justify-center items-center z-[100]`}>
-          <img
-            src={assets.logos.begodsBlack}
-            alt="logo"
-            className="w-[65px] begod-blue-shadow pointer-events-none"
-          />
+        <div className="flex flex-col gap-[2vh]">
+          <div className={`flex justify-center items-center z-[100]`}>
+            <img
+              src={assets.logos.begodsBlack}
+              alt="logo"
+              className="w-[65px] begod-blue-shadow pointer-events-none"
+            />
+          </div>
+          <div className="">
+            <img
+              src="/assets/240px-button.orange.off-----position.png"
+              alt="Button"
+              className="h-auto"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -187,29 +195,27 @@ export const DODLaunch = () => {
     <div
       className={`flex  flex-col h-full items-center justify-center z-[100]`}
     >
-      <div className="font-fof z-[100] absolute top-[72%] rounded-primary flex justify-between items-center  opacity-80 text-gold text-black-contour h-button-primary w-button-primary bg-glass-black-lg border-[2px] border-gold">
-        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
-          ⚔️
-        </div>
-        <div className="flex justify-center font-semibold  items-center w-1/4 h-full text-[6vw]">
-          PLAY
-        </div>
-        <div className="flex font-symbols justify-center items-center w-1/4 -mt-2 text-[6vw] h-full">
-          ⚔️
-        </div>
-      </div>
       <div className="absolute flex flex-col justify-between items-center h-full pt-[1vh] pb-[3vh]">
         <img
           src="/assets/logos/dawn.of.duels.vertical.gold.png"
           alt="dod"
           className="w-[180px] dod-text-shadow"
         />
-        <div className={`flex justify-center items-center z-[100]`}>
-          <img
-            src={assets.logos.begodsBlack}
-            alt="logo"
-            className="w-[65px] begod-text-shadow pointer-events-none"
-          />
+        <div className="flex flex-col gap-[2vh]">
+          <div className={`flex justify-center items-center z-[100]`}>
+            <img
+              src={assets.logos.begodsBlack}
+              alt="logo"
+              className="w-[65px] begod-text-shadow pointer-events-none"
+            />
+          </div>
+          <div className="">
+            <img
+              src="/assets/240px-button.orange.off-----position.png"
+              alt="Button"
+              className="h-auto"
+            />
+          </div>
         </div>
       </div>
     </div>
