@@ -48,7 +48,7 @@ const Gift = () => {
   return (
     <div
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
       }}
       className="flex flex-col overflow-hidden m-0"
     >

@@ -295,7 +295,7 @@ const Home = () => {
             />
           );
         }}
-        className="absolute -top-[35px] right-[94px] text-white z-5s0"
+        className="absolute top-[10px] right-[94px] text-white z-5s0"
       >
         <Settings size={"6vw"} />
       </div>
@@ -304,7 +304,9 @@ const Home = () => {
         <div
           className="w-screen bg-white select-none font-fof overflow-hidden"
           style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+            marginTop: "45px",
+            marginBottom: "10px",
           }}
         >
           <MyContext.Provider value={initalStates}>

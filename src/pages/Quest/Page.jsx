@@ -358,7 +358,7 @@ const Quests = () => {
   return (
     <div
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
       }}
       className="flex flex-col overflow-hidden m-0"
     >
@@ -408,7 +408,7 @@ const Quests = () => {
       <div
         className="flex justify-center items-center w-screen absolute mx-auto"
         style={{
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
         }}
       >
         {currQuest < quests.length ? (
@@ -459,7 +459,7 @@ const Quests = () => {
           <div
             className="flex flex-col mt-[7vh] gap-[3vw] items-center justify-center w-full"
             style={{
-              height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+              height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
             }}
           >
             <div
