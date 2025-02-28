@@ -218,7 +218,7 @@ const Gacha = (props) => {
     <div
       className="flex flex-col w-screen justify-center font-fof items-center bg-black"
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
       }}
     >
       <div className="flex flex-col w-full h-full items-center pt-4">
@@ -237,7 +237,7 @@ const Gacha = (props) => {
         <div
           className="absolute"
           style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
           }}
         >
           <div

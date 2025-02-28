@@ -29,14 +29,21 @@ const Loader = (props) => {
         background: `url(${assets.uxui.intro})`,
         backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        marginTop: "45px",
+        marginBottom: "10px",
         backgroundSize: "cover",
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         width: "100vw",
         top: 0,
         left: 0,
       }}
     >
-      <div className="absolute scale-110 flex justify-center items-center h-full w-full">
+      <div
+        className="absolute scale-110 flex justify-center items-center w-full"
+        style={{
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        }}
+      >
         <div
           className="relative  flex justify-center items-center w-full h-full pointer-events-none"
           style={{
