@@ -19,7 +19,7 @@ const StreakBonus = (props) => {
       setDisableHand(false);
     }, 2000);
     const closeTimeout = setTimeout(() => {
-      setSection(5);
+      setSection(8);
     }, 4000);
 
     const interval = setInterval(() => {

@@ -11,6 +11,7 @@ import {
 import { trackComponentView } from "../../utils/ga";
 import { mythologies, mythSymbols } from "../../utils/constants";
 import { showToast } from "../../components/Toast/Toast";
+import { initalizeTgAnalytics } from "../../utils/tg.analytics";
 
 const tele = window.Telegram?.WebApp;
 
@@ -47,6 +48,7 @@ const IntroPage = (props) => {
         tele.setHeaderColor("#000000");
         tele.setBackgroundColor("#000000");
         tele.setBottomBarColor("#000000");
+        await initalizeTgAnalytics();
 
         if (user) {
           const userDataObj = {

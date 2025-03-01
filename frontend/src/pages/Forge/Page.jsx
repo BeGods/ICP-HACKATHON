@@ -151,8 +151,6 @@ const Forges = () => {
     holdEndTime: 0,
   });
 
-  console.log(mythStates[activeMyth].shardslvl);
-
   const orbChangeEffect = () => {
     const timeoutIds = [];
 
