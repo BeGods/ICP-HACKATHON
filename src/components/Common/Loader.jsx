@@ -80,7 +80,7 @@ const Loader = (props) => {
           ⚜️“For I walk by faith, not by sight”⚜️
         </p>
       </div>
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col">
         <div className="flex justify-center items-center w-full leading-tight">
           <div className="relative z-[100]">
             <img
@@ -92,8 +92,8 @@ const Loader = (props) => {
         </div>
 
         <div className="flex flex-grow"></div>
-        <div className="absolute fade-in w-screen bottom-0">
-          <div className="flex justify-center w-full">
+        <div className="absolute fade-in w-screen bottom-2">
+          <div className="flex justify-center w-full -mb-[1.5vh]">
             <LoadRoll />
           </div>
           <div className="w-full relative font-medium text-center font-fof text-secondary uppercase text-white">
