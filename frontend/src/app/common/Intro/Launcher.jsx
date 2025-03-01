@@ -6,7 +6,7 @@ import { mythologies, mythSymbols } from "../../../utils/constants.fof";
 import { useNavigate } from "react-router-dom";
 
 export default function Launcher() {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(2);
   const [fadeout, setFadeout] = useState(false);
   const pos = ["-50vw", "-150vw", "-250vw"];
 
@@ -68,7 +68,7 @@ export default function Launcher() {
           <DODLaunch />
         </div>
       </div>
-      <div className={`${fadeout && "fade-out"} `}>
+      {/* <div className={`${fadeout && "fade-out"} `}>
         {activeIndex > 0 && (
           <button
             className={`absolute z-50 top-[77%] opacity-80`}
@@ -85,55 +85,24 @@ export default function Launcher() {
             <ChevronRight strokeWidth="3px" size={40} color="white" />
           </button>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
 
-export const FOFLaunch = ({ fadeout }) => {
+export const FOFLaunch = ({ handleFadeout, fadeout }) => {
   const navigate = useNavigate();
+
   return (
-    <div
-      className={`flex  flex-col h-full items-center justify-center z-[100]`}
-    >
-      <div
-        className="absolute w-[110vw]"
-        style={{
-          height: `100svh`,
-        }}
-      >
-        <img
-          src={assets.uxui.towerOn}
-          alt="tower"
-          className="w-[110vw] mx-auto "
-        />
-      </div>
-
-      {/* <div
-        onClick={() => {
-          navigate("/fof");
-        }}
-        className="absolute z-20 top-[75%]"
-      >
-        <img
-          src="/assets/240px-button.orange.on--position.png"
-          alt="Button"
-          className="h-auto"
-        />
-      </div> */}
-
+    <div className={`flex flex-col h-full items-center justify-center z-[100]`}>
       <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
         <img
-          src="/assets/logos/forges.of.faith.vertical.svg"
+          src="/assets/logos/forges.of.faith.vertical.copper.svg"
           alt="dod"
           className="fof-text-shadow w-[180px]"
         />
-        <div className="flex flex-col gap-[2vh]">
-          <div
-            className={`flex ${
-              fadeout && "fade-out"
-            } justify-center items-center z-[100]`}
-          >
+        <div className={`flex  ${fadeout && "fade-out"}  flex-col gap-[2vh]`}>
+          <div className={`flex justify-center items-center z-[100]`}>
             <img
               src={assets.logos.begodsBlack}
               alt="logo"
@@ -142,15 +111,21 @@ export const FOFLaunch = ({ fadeout }) => {
           </div>
           <div
             onClick={() => {
-              navigate("/fof");
+              handleFadeout();
+              setTimeout(() => {
+                navigate("/fof");
+              }, 2000);
             }}
-            className=""
+            className="relative inline-block"
           >
             <img
-              src="/assets/240px-button.orange.off-----position.png"
+              src="/assets/buttons/button.orange.off.png"
               alt="Button"
               className="h-auto"
             />
+            <span className="absolute inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[6vw]">
+              PLAY
+            </span>
           </div>
         </div>
       </div>
@@ -165,24 +140,27 @@ export const RORLaunch = () => {
     >
       <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
         <img
-          src="/assets/logos/requiem.of.relics.vertical.svg"
+          src="/assets/ror.logo.silver1.svg"
           alt="dod"
-          className="ror-text-shadow w-[180px]"
+          className="purple-text-shadow w-[180px]"
         />
         <div className="flex flex-col gap-[2vh]">
           <div className={`flex justify-center items-center z-[100]`}>
             <img
-              src={assets.logos.begodsBlack}
+              src={assets.logos.begodsWhite}
               alt="logo"
               className="w-[65px] begod-blue-shadow pointer-events-none"
             />
           </div>
-          <div className="">
+          <div className="relative inline-block">
             <img
-              src="/assets/240px-button.orange.off-----position.png"
+              src="/assets/buttons/button.blue.on.png"
               alt="Button"
               className="h-auto"
             />
+            <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
+              PLAY
+            </span>
           </div>
         </div>
       </div>
@@ -209,12 +187,15 @@ export const DODLaunch = () => {
               className="w-[65px] begod-text-shadow pointer-events-none"
             />
           </div>
-          <div className="">
+          <div className="relative inline-block">
             <img
-              src="/assets/240px-button.orange.off-----position.png"
+              src="/assets/buttons/button.black.off.png"
               alt="Button"
               className="h-auto"
             />
+            <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
+              PLAY
+            </span>
           </div>
         </div>
       </div>

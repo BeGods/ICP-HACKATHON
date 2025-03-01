@@ -143,7 +143,7 @@ const IntroPage = (props) => {
   };
 
   return (
-    <>
+    <div className="bg-white">
       {disableDesktop ? (
         // TMA desktop view
         <div
@@ -211,7 +211,7 @@ const IntroPage = (props) => {
         </div>
       ) : (
         <div
-          className={`text-black flex w-screen text-wrap`}
+          className={`flex w-screen text-wrap`}
           style={{
             height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
           }}
@@ -229,7 +229,7 @@ const IntroPage = (props) => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
