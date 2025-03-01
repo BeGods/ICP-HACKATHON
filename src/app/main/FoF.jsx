@@ -205,7 +205,7 @@ const FoFMain = () => {
       } else {
         setSection(0);
         setTimeout(() => {
-          setIsLoading(false);
+          // setIsLoading(false);
         }, 2000);
       }
     } catch (error) {
@@ -279,7 +279,7 @@ const FoFMain = () => {
             />
           );
         }}
-        className="absolute -top-[35px] right-[94px] text-white z-5s0"
+        className="absolute top-[10px] right-[94px] text-white z-5s0"
       >
         <Settings size={"6vw"} />
       </div>

@@ -239,6 +239,11 @@ text-shadow:
 }
 
 .fof-text-shadow{
+  filter: drop-shadow(0 0 2px #FFD660)
+          drop-shadow(0 0 2px #FFD660);
+}
+
+.fof-text-shadow-after{
   filter: drop-shadow(0 0 2px #EB5B00)
           drop-shadow(0 0 2px #FFD660);
 }
@@ -246,6 +251,11 @@ text-shadow:
 .ror-text-shadow{
   filter: drop-shadow(0 0 2px #3ABEF9)
           drop-shadow(0 0 2px #A7E6FF);
+}
+
+.purple-text-shadow{
+  filter: drop-shadow(0 0 2px #210A79)
+          drop-shadow(0 0 3px #210A79)
 }
 
 .dod-text-shadow{
