@@ -10,7 +10,7 @@ const CreditsScroll = () => {
   return (
     <div
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
       className="relative w-full bg-black overflow-hidden flex items-center justify-center"
     >

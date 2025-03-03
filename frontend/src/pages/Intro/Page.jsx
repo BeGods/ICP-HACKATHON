@@ -157,9 +157,7 @@ const IntroPage = (props) => {
     <div
       className={`bg-white text-black flex w-screen text-wrap`}
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
-        marginTop: "45px",
-        marginBottom: "10px",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
     >
       {disableDesktop ? (
@@ -167,7 +165,7 @@ const IntroPage = (props) => {
         <div
           className="flex flex-col justify-center items-center w-screen bg-black"
           style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
           }}
         >
           <img
@@ -235,7 +233,7 @@ const IntroPage = (props) => {
             backgroundPosition: "50.5% 0%",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
             width: "100vw",
             position: "fixed",
             top: 0,
