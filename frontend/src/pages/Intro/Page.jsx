@@ -47,20 +47,21 @@ const IntroPage = (props) => {
         tele.setHeaderColor("#000000");
         tele.setBackgroundColor("#000000");
         tele.setBottomBarColor("#000000");
-        await initalizeTgAnalytics();
 
         if (user) {
           const userDataObj = {
             initData: tele?.initData,
           };
-          const param = tele.initDataUnsafe?.start_param;
+          const param = tele.initDataUnsafe?.start_param ?? null;
 
           setUserData(userDataObj);
 
-          if (param.includes("FDG")) {
-            setReferralCode(param);
-          } else {
-            setLangCookie(tele, param);
+          if (param) {
+            if (param?.includes("FDG")) {
+              setReferralCode(param);
+            } else {
+              setLangCookie(tele, param);
+            }
           }
         } else {
           console.log("No user found in Telegram data");
@@ -79,6 +80,7 @@ const IntroPage = (props) => {
       const response = await authenticate(userData, referralCode);
       localStorage.setItem("accessToken", response.data.token);
       await setAuthCookie(tele, response.data.token);
+      await initalizeTgAnalytics();
       setTimeout(() => {
         setFadeout(true);
         setTimeout(() => {
