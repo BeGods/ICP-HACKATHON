@@ -97,11 +97,11 @@ export const DODLaunch = () => {
       <div
         className={`flex  flex-col h-full items-center justify-center z-[100]`}
       >
-        <div className="absolute flex flex-col justify-between items-center h-full pt-[1vh] pb-[3vh]">
+        <div className="absolute flex flex-col justify-between items-center h-full pb-[3vh]">
           <img
-            src="/assets/logos/dawn.of.duels.vertical.gold.png"
+            src="/assets/new/dod2-.png"
             alt="dod"
-            className="w-[180px] dod-text-shadow"
+            className="dod-text-shadow"
           />
           <div className="flex flex-col gap-[2vh]">
             <div className={`flex justify-center items-center z-[100]`}>
