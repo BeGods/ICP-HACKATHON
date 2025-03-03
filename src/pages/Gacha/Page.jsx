@@ -37,102 +37,105 @@ const Gacha = (props) => {
   const exploitClaimRef = useRef(false);
 
   const handleUpdateData = (rewardType, rewardValue, data) => {
-    if (rewardType === "blackOrb") {
-      setShowBooster("blackOrb");
+    try {
+      if (rewardType === "blackOrb") {
+        setShowBooster("blackOrb");
 
-      setGameData((prev) => ({
-        ...prev,
-        blackOrbs: prev.blackOrbs + 1,
-      }));
-    } else if (rewardType === "mythOrb") {
-      setShowBooster("mythOrb");
-      const updatedGameData = {
-        ...gameData,
-        mythologies: gameData.mythologies.map((myth) =>
-          myth.name === rewardValue
-            ? {
+        setGameData((prev) => ({
+          ...prev,
+          blackOrbs: prev.blackOrbs + 1,
+        }));
+      } else if (rewardType === "mythOrb") {
+        setShowBooster("mythOrb");
+        const updatedGameData = {
+          ...gameData,
+          mythologies: gameData.mythologies.map((myth) =>
+            myth.name === rewardValue
+              ? {
+                  ...myth,
+                  orbs: myth.orbs + 1,
+                }
+              : myth
+          ),
+        };
+        setGameData(updatedGameData);
+      } else if (rewardType === "minion") {
+        setShowBooster("minion");
+        setGameData((prevData) => {
+          const updatedData = {
+            ...prevData,
+            mythologies: prevData.mythologies.map((item) =>
+              item.name === rewardValue
+                ? {
+                    ...item,
+                    boosters: data,
+                  }
+                : item
+            ),
+          };
+
+          return updatedData;
+        });
+      } else if (rewardType === "automata") {
+        setShowBooster("automata");
+        setGameData((prevData) => {
+          const updatedData = {
+            ...prevData,
+            mythologies: prevData.mythologies.map((item) =>
+              item.name === rewardValue
+                ? {
+                    ...item,
+                    boosters: data,
+                  }
+                : item
+            ),
+          };
+
+          return updatedData;
+        });
+      } else if (rewardType === "quest") {
+        setShowBooster("quest");
+        const updatedQuestData = questsData.map((item) =>
+          item._id === data._id
+            ? { ...item, isQuestClaimed: true, isCompleted: true }
+            : item
+        );
+        const updatedGameData = {
+          ...gameData,
+          mythologies: gameData.mythologies.map((myth) => {
+            if (myth.name === data.mythology) {
+              return {
                 ...myth,
-                orbs: myth.orbs + 1,
-              }
-            : myth
-        ),
-      };
-      setGameData(updatedGameData);
-    } else if (rewardType === "minion") {
-      setShowBooster("minion");
-      setGameData((prevData) => {
-        const updatedData = {
-          ...prevData,
-          mythologies: prevData.mythologies.map((item) =>
-            item.name === rewardValue
-              ? {
-                  ...item,
-                  boosters: data,
-                }
-              : item
-          ),
-        };
+                faith: myth.faith + 1,
+                energyLimit: myth.energyLimit + 1000,
+              };
+            }
 
-        return updatedData;
-      });
-    } else if (rewardType === "automata") {
-      setShowBooster("automata");
-      setGameData((prevData) => {
-        const updatedData = {
-          ...prevData,
-          mythologies: prevData.mythologies.map((item) =>
-            item.name === rewardValue
-              ? {
-                  ...item,
-                  boosters: data,
-                }
-              : item
-          ),
-        };
-
-        return updatedData;
-      });
-    } else if (rewardType === "quest") {
-      setShowBooster("quest");
-      const updatedQuestData = questsData.map((item) =>
-        item._id === data._id
-          ? { ...item, isQuestClaimed: true, isCompleted: true }
-          : item
-      );
-      const updatedGameData = {
-        ...gameData,
-        mythologies: gameData.mythologies.map((myth) => {
-          if (myth.name === data.mythology) {
             return {
               ...myth,
-              faith: myth.faith + 1,
-              energyLimit: myth.energyLimit + 1000,
             };
-          }
-
-          return {
-            ...myth,
-          };
-        }),
-      };
-      setGameData(updatedGameData);
-      setQuestsData(updatedQuestData);
+          }),
+        };
+        setGameData(updatedGameData);
+        setQuestsData(updatedQuestData);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const claimDailyBonus = async () => {
-    handleClickHaptic(tele, enableHaptic);
-
-    if (claimRef.current === true) {
-      return;
-    }
-    claimRef.current = true;
-
-    setShowScale(true);
-    setIsClaimed(true);
-    handlePlay();
-
     try {
+      handleClickHaptic(tele, enableHaptic);
+
+      if (claimRef.current === true) {
+        return;
+      }
+      claimRef.current = true;
+
+      setShowScale(true);
+      setIsClaimed(true);
+      handlePlay();
       const response = await fetchDailyBonus(authToken);
       if (response && response.reward) {
         handleUpdateData(
@@ -157,11 +160,11 @@ const Gacha = (props) => {
   };
 
   const exploitDailyBonus = async () => {
-    if (exploitClaimRef.current === true) {
-      return;
-    }
-    exploitClaimRef.current = true;
     try {
+      if (exploitClaimRef.current === true) {
+        return;
+      }
+      exploitClaimRef.current = true;
       const response = await fetchExploitDailyBonus(authToken);
       if (response && response.reward) {
         handleUpdateData(
