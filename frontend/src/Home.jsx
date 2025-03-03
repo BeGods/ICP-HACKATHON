@@ -295,7 +295,7 @@ const Home = () => {
             />
           );
         }}
-        className="absolute top-[10px] right-[94px] text-white z-5s0"
+        className="absolute top-[-35px] right-[94px] text-white z-5s0"
       >
         <Settings size={"6vw"} />
       </div>
