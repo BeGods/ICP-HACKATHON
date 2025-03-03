@@ -22,8 +22,12 @@ const FoFIntro = ({ handleFadeout, fadeout }) => {
             alt="dod"
             className="fof-text-shadow w-[180px]"
           />
-          <div className={`flex  ${fadeout && "fade-out"}  flex-col gap-[2vh]`}>
-            <div className={`flex justify-center items-center z-[100]`}>
+          <div className={`flex flex-col gap-[2vh]`}>
+            <div
+              className={`flex ${
+                fadeout && "fade-out"
+              }   justify-center items-center z-[100]`}
+            >
               <img
                 src={assets.logos.begodsBlack}
                 alt="logo"
