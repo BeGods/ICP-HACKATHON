@@ -205,7 +205,7 @@ const FoFMain = () => {
       } else {
         setSection(0);
         setTimeout(() => {
-          // setIsLoading(false);
+          setIsLoading(false);
         }, 2000);
       }
     } catch (error) {
