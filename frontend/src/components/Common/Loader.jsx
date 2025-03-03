@@ -37,7 +37,7 @@ const Loader = (props) => {
       }}
     >
       <div
-        className="absolute scale-110 flex justify-center items-center w-full"
+        className="absolute flex justify-center items-center w-full"
         style={{
           height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         }}
@@ -51,7 +51,7 @@ const Loader = (props) => {
             backgroundRepeat: "no-repeat",
           }}
         ></div>
-        {mythologies.map((item, index) => (
+        {/* {mythologies.map((item, index) => (
           <div
             key={index}
             className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
@@ -71,9 +71,9 @@ const Loader = (props) => {
               </span>
             </div>
           </div>
-        ))}
+        ))} */}
         <p
-          className={`font-fof text-black-contour text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+          className={`font-fof text-black-contour text-white text-center w-full top-[80%] absolute text-lg font-medium`}
         >
           ⚜️“For I walk by faith, not by sight”⚜️
         </p>

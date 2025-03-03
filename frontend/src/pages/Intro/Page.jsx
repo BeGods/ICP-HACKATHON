@@ -42,7 +42,6 @@ const IntroPage = (props) => {
         setPlatform(tele.platform);
 
         tele.requestFullscreen();
-        tele.lockOrientation();
         tele.enableClosingConfirmation();
         tele.disableVerticalSwipes();
         tele.setHeaderColor("#000000");
@@ -240,7 +239,7 @@ const IntroPage = (props) => {
             left: 0,
           }}
         >
-          <div className="absolute  fade-in-intro scale-110 flex justify-center items-center h-full w-full">
+          <div className="absolute  fade-in-intro flex justify-center items-center h-full w-full">
             <div
               className="relative flex justify-center items-center w-full h-full pointer-events-none"
               style={{
@@ -250,7 +249,7 @@ const IntroPage = (props) => {
                 backgroundRepeat: "no-repeat",
               }}
             ></div>
-            {mythologies.map((item, index) => (
+            {/* {mythologies.map((item, index) => (
               <div
                 key={index}
                 className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
@@ -270,9 +269,9 @@ const IntroPage = (props) => {
                   </span>
                 </div>
               </div>
-            ))}
+            ))} */}
             <p
-              className={`font-fof text-black-contour fade-in-intro text-white text-center w-full top-[75%] absolute text-lg font-medium`}
+              className={`font-fof text-black-contour fade-in-intro text-white text-center w-full top-[80%] absolute text-lg font-medium`}
             >
               ⚜️“For I walk by faith, not by sight”⚜️
             </p>
