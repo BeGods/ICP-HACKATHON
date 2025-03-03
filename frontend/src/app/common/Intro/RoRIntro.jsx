@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
-const RoRIntro = () => {
+const tele = window.Telegram?.WebApp;
+
+const RoRIntro = ({ handleFadeout, fadeout }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
 
@@ -21,21 +24,25 @@ const RoRIntro = () => {
         <div
           className="absolute inset-0 w-full h-full z-10"
           style={{
-            background: `url(/assets/1280px-ror.on.png) no-repeat center / cover`,
+            background: `url(${assets.uxui.rorspashOn}) no-repeat center / cover`,
           }}
         ></div>
       )}
 
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
+        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <img
-            src="/assets/ror.logo.silver1.svg"
+            src="/assets/new/requiem.of.relics_off----.png"
             alt="dod"
-            className="purple-text-shadow w-[180px]"
+            className="purple-text-shadow"
           />
           <div className="flex flex-col gap-[2vh]">
-            <div className="flex justify-center items-center">
+            <div
+              className={`flex ${
+                fadeout && "fade-out"
+              }   justify-center items-center z-[100]`}
+            >
               <img
                 src={assets.logos.begodsWhite}
                 alt="logo"
@@ -44,7 +51,12 @@ const RoRIntro = () => {
             </div>
             <div
               onClick={() => {
+                handleClickHaptic(tele, true);
                 setShowGlow(true);
+                handleFadeout();
+                setTimeout(() => {
+                  navigate("/ror");
+                }, 2000);
               }}
               className="relative inline-block"
             >

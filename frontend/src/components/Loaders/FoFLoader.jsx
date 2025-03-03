@@ -1,34 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
 import ReactHowler from "react-howler";
 
 const FoFLoader = (props) => {
   return (
-    <div
-      className="w-[100vw] relative flex justify-center items-center"
-      style={{
-        background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
-      <div className="absolute inset-0 flex -mt-[8vh] fade-in justify-center items-center">
+    <div className="w-[100vw] relative h-[calc(100svh-var(--tg-safe-area-inset-top)-45px)]">
+      {/* img 1 */}
+      <div
+        className="absolute inset-0 w-full h-full z-0"
+        style={{
+          background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+        }}
+      ></div>
+      {/* img 2 */}
+      <div
+        className="absolute inset-0 w-full h-full z-10"
+        style={{
+          background: `url(${assets.uxui.fofsplashOn}) no-repeat center / cover`,
+        }}
+      ></div>
+      <div className="absolute inset-0 flex z-[20] -mt-[8vh] fade-in justify-center items-center">
         <img
           src={assets.uxui.towerOn}
           alt="tower"
           className="max-w-full h-auto"
         />
       </div>
-      <div className="flex flex-col h-full items-center justify-center">
-        <div className="absolute flex flex-col justify-between items-center w-full h-full py-[3vh]">
+      {/* content */}
+      <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
+        <div className="flex flex-col justify-between items-center h-full w-full pt-[3vh] pb-[3vh]">
           <img
-            src="/assets/logos/forges.of.faith.vertical.copper.svg"
+            src="/assets/new/forges.of.faith_off-- (1).png"
             alt="dod"
-            className="fof-text-shadow w-[180px]"
+            className="fof-text-shadow"
           />
           <div className="flex flex-col w-full">
-            <div className="flex justify-center fade-in items-center w-full -mb-[1.85vh]">
+            <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />
             </div>
             <div className="relative inline-block mx-auto">

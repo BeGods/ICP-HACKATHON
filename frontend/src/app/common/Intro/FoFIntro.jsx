@@ -1,33 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import assets from "../../../assets/assets.json";
 import { useNavigate } from "react-router-dom";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
 
 const FoFIntro = ({ handleFadeout, fadeout }) => {
   const navigate = useNavigate();
+  const [showGlow, setShowGlow] = useState(false);
 
   return (
-    <div
-      className="w-[200vw]"
-      style={{
-        background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
+    <div className="w-[200vw] relative h-[calc(100svh-var(--tg-safe-area-inset-top)-45px)]">
+      {/* img 1 */}
       <div
-        className={`flex flex-col h-full items-center justify-center z-[100]`}
-      >
-        <div className="absolute flex flex-col justify-between items-center h-full py-[3vh]">
+        className="absolute inset-0 w-full h-full z-0"
+        style={{
+          background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+        }}
+      ></div>
+      {/* img 2 */}
+      {showGlow && (
+        <div
+          className="absolute inset-0 w-full h-full z-10"
+          style={{
+            background: `url(${assets.uxui.fofsplashOn}) no-repeat center / cover`,
+          }}
+        ></div>
+      )}
+      {/* content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <img
-            src="/assets/logos/forges.of.faith.vertical.copper.svg"
-            alt="dod"
-            className="fof-text-shadow w-[180px]"
+            src="/assets/new/forges.of.faith_off-- (1).png"
+            alt="fof"
+            className="fof-text-shadow"
           />
-          <div className={`flex flex-col gap-[2vh]`}>
-            <div
-              className={`flex ${
-                fadeout && "fade-out"
-              }   justify-center items-center z-[100]`}
-            >
+          <div className={`flex flex-col ${fadeout && "fade-out"} gap-[2vh]`}>
+            <div className={`flex  justify-center items-center z-[100]`}>
               <img
                 src={assets.logos.begodsBlack}
                 alt="logo"
@@ -36,15 +45,17 @@ const FoFIntro = ({ handleFadeout, fadeout }) => {
             </div>
             <div
               onClick={() => {
+                handleClickHaptic(tele, true);
+                setShowGlow(true);
                 handleFadeout();
                 setTimeout(() => {
                   navigate("/fof");
-                }, 2000);
+                }, 1000);
               }}
               className="relative inline-block"
             >
               <img
-                src="/assets/buttons/button.orange.off.png"
+                src="/assets/buttons/button.orange.on.png"
                 alt="Button"
                 className="h-auto"
               />

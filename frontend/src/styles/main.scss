@@ -260,7 +260,9 @@ text-shadow:
 
 .dod-text-shadow{
   filter: drop-shadow(0 0 2px #0000007e)
-          drop-shadow(0 0 2px #3d3a3a7e)
+          drop-shadow(0 0 1px #0000007e)
+          drop-shadow(0 0 30deg #0000007e)
+          drop-shadow(0 0 3px #0000007e);
 }
 
 
