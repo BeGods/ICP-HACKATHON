@@ -1,56 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
 
 const RoRIntro = () => {
   const navigate = useNavigate();
-  const [fadeout, setFadeout] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setFadeout(true);
-      setTimeout(() => {
-        navigate("/ror");
-      }, 200);
-    }, 2000);
-  }, []);
 
   return (
     <div
+      className="w-[200vw]"
       style={{
-        background: `url(${assets.uxui.intro})`,
-        backgroundPosition: "50.5% 0%",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        height: "100svh",
-        width: "100vw",
-        position: "fixed",
-        top: 0,
-        left: 0,
+        background: `url(${assets.uxui.rorspash}) no-repeat center / cover`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
     >
-      <div className="flex flex-col h-screen">
-        <div className="flex justify-center items-center w-full leading-tight">
-          <div className="relative z-[100]">
-            <img
-              src={assets.logos.fof}
-              alt="ror"
-              className="w-[200px] mt-6 fof-text-shadow pointer-events-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-grow"></div>
-        <div
-          className={`flex ${
-            fadeout && "fade-out"
-          } justify-center items-center z-[100]`}
-        >
+      <div
+        className={`flex  flex-col h-full items-center justify-center z-[100]`}
+      >
+        <div className="absolute flex flex-col justify-between items-center h-full pt-[3vh] pb-[3vh]">
           <img
-            src={assets.logos.begodsBlack}
-            alt="logo"
-            className="w-[65px] h-[75px] mb-6 begod-text-shadow pointer-events-none"
+            src="/assets/ror.logo.silver1.svg"
+            alt="dod"
+            className="purple-text-shadow w-[180px]"
           />
+          <div className="flex flex-col gap-[2vh]">
+            <div className={`flex justify-center items-center z-[100]`}>
+              <img
+                src={assets.logos.begodsWhite}
+                alt="logo"
+                className="w-[65px] begod-blue-shadow pointer-events-none"
+              />
+            </div>
+            <div
+              onClick={() => {
+                handleFadeout();
+                setTimeout(() => {
+                  navigate("/ror");
+                }, 2000);
+              }}
+              className="relative inline-block"
+            >
+              <img
+                src="/assets/buttons/button.blue.on.png"
+                alt="Button"
+                className="h-auto"
+              />
+              <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
+                PLAY
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
