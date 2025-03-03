@@ -167,7 +167,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
     <div
       className="w-screen relative bg-black"
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
     >
       {/* You Won Text */}

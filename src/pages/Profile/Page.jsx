@@ -76,7 +76,7 @@ const Profile = (props) => {
   return (
     <div
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
       className="flex flex-col overflow-hidden m-0"
     >

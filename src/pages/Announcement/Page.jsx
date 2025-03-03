@@ -80,7 +80,7 @@ const Announcement = (props) => {
     <div
       className="flex relative flex-col w-screen justify-center font-fof items-center bg-black"
       style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
       }}
     >
       <div className="flex flex-col w-full h-full items-center">

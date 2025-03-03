@@ -304,9 +304,7 @@ const Home = () => {
         <div
           className="w-screen bg-white select-none font-fof overflow-hidden"
           style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
-            marginTop: "45px",
-            marginBottom: "10px",
+            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
           }}
         >
           <MyContext.Provider value={initalStates}>

@@ -29,9 +29,7 @@ const Loader = (props) => {
         background: `url(${assets.uxui.intro})`,
         backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
-        marginTop: "45px",
-        marginBottom: "10px",
+        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         backgroundSize: "cover",
         width: "100vw",
         top: 0,
@@ -41,7 +39,7 @@ const Loader = (props) => {
       <div
         className="absolute scale-110 flex justify-center items-center w-full"
         style={{
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
+          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         }}
       >
         <div
