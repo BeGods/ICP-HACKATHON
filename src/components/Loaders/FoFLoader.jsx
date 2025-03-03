@@ -27,8 +27,8 @@ const FoFLoader = (props) => {
             alt="dod"
             className="fof-text-shadow w-[180px]"
           />
-          <div className="flex flex-col fade-in w-full">
-            <div className="flex justify-center items-center w-full -mb-[1.85vh]">
+          <div className="flex flex-col w-full">
+            <div className="flex justify-center fade-in items-center w-full -mb-[1.85vh]">
               <LoadRoll />
             </div>
             <div className="relative inline-block mx-auto">
