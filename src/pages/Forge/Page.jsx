@@ -1391,7 +1391,7 @@ const Forges = () => {
               backgroundImage: `url(${assets.uxui.forgebg})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
-              backgroundPosition: "center center",
+              backgroundPosition: "44% 0%",
             }}
           />
         </div>
