@@ -69,6 +69,40 @@ export const addNewLineUser = async (userData) => {
   }
 };
 
+export const addNewOneWaveUser = async (userData) => {
+  try {
+    const genRandomCode = generateCode();
+    userData.referralCode = `FDG${genRandomCode}`;
+
+    if (!userData.oneWaveUsername) {
+      const lastUser = await User.findOne({
+        oneWaveUsername: { $regex: /^AVATAR\d{4}$/ },
+      })
+        .sort({ oneWaveUsername: -1 })
+        .exec();
+
+      let newEndingNumber = "0001";
+
+      if (lastUser) {
+        const lastEndingNumber = parseInt(
+          lastUser.oneWaveUsername.slice(-4),
+          10
+        );
+        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
+      }
+
+      userData.oneWaveUsername = `AVATAR${newEndingNumber}`;
+    }
+
+    const newUser = new User(userData);
+    const newUserCreated = await newUser.save();
+
+    return newUserCreated;
+  } catch (error) {
+    throw new Error("Failed to create a new user.");
+  }
+};
+
 export const addTeamMember = async (user, existingReferrer, referralCode) => {
   try {
     if (user.parentReferrerId) {

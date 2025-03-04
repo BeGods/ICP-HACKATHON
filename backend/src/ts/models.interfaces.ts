@@ -164,6 +164,8 @@ export interface IUser extends Document {
   telegramId?: string;
   lineId?: string;
   lineName?: string;
+  oneWaveId?: string;
+  oneWaveUsername?: string;
   telegramUsername?: string;
   name: string;
   isPremium?: boolean;
