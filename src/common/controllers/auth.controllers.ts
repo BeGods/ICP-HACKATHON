@@ -10,6 +10,7 @@ import {
   createDefaultUserMyth,
   addNewTelegramUser,
   addNewLineUser,
+  addNewOneWaveUser,
 } from "../services/user.services";
 import { Request, Response } from "express";
 import { IUser } from "../../ts/models.interfaces";
@@ -231,6 +232,64 @@ export const authenticateLine = async (
 
       // create new  user
       existingUser = await addNewLineUser(newUser);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const accessToken: string | null = await generateAuthToken(existingUser);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: { token: accessToken },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateOneWave = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { puid, username } = req.body;
+    let isUpdated = false;
+    const oneWaveId = puid;
+    const oneWaveUsername = username;
+
+    if (!oneWaveId || !oneWaveUsername) {
+      res.status(400).json({
+        message: "Invalid input. Please provide a valid PUID and username.",
+      });
+    }
+
+    // existing user or not
+    let existingUser: IUser | null = await User.findOne({
+      oneWaveId: oneWaveId,
+    });
+
+    if (existingUser) {
+      // check if user details have updated
+      if (oneWaveUsername !== existingUser.oneWaveUsername) {
+        existingUser.oneWaveUsername = oneWaveUsername;
+        isUpdated = true;
+      }
+
+      if (isUpdated) {
+        existingUser.save();
+      }
+    } else {
+      let newUser: Partial<IUser> = {
+        oneWaveId,
+        oneWaveUsername,
+      };
+
+      // create new  user
+      existingUser = await addNewOneWaveUser(newUser);
       await createDefaultUserMyth(existingUser);
     }
 
