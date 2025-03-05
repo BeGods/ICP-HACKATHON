@@ -5,8 +5,8 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const BottomChild = ({ partners }) => {
   return (
-    <div className="flex relative justify-center px-2 -mt-3">
-      <div className="flex w-full px-7">
+    <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
+      <div className="flex relative w-full px-7">
         <div
           className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >

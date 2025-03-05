@@ -46,13 +46,22 @@ const languages = [
   { name: "English", code: "en" },
   { name: "हिन्दी", code: "hi" },
   { name: "Русский", code: "ru" },
+
   { name: "ภาษาไทย", code: "th" },
   { name: "Português", code: "pt" },
   { name: "Español", code: "es" },
+
   { name: "Filipino", code: "fil" },
-  { name: "မြန်မာ", code: "my" },
-  { name: "Indonasia", code: "id" },
   { name: "Hausa", code: "ha" },
+  { name: "မြန်မာ", code: "my" },
+
+  { name: "Indonasia", code: "id" },
+  { name: "বাংলা", code: "bn" },
+  { name: "Yorùbá", code: "yo" },
+
+  { name: "中文", code: "zh" },
+  { name: "日本語", code: "ja" },
+  { name: "한국어", code: "ko" },
 ];
 
 const SettingModal = ({ close }) => {

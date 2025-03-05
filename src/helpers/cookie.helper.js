@@ -272,7 +272,9 @@ export const handleClickHaptic = (tele, isActive) => {
     if (tele.platform === "ios" || tele.platform === "android") {
       tele.HapticFeedback.notificationOccurred("success");
     } else {
-      window.navigator.vibrate(25);
+      if (!isSafari()) {
+        window.navigator.vibrate(25);
+      }
     }
   }
 };

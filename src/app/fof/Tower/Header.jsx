@@ -99,8 +99,8 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
   const { assets, activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
   return (
-    <div className="flex relative justify-center px-2 -mt-3">
-      <div className="flex w-full px-7">
+    <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
+      <div className="flex relative w-full px-7">
         <div
           className={`flex justify-start ${
             showGlow && "glow-button-white"
