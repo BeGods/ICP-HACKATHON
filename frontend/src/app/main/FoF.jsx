@@ -149,19 +149,35 @@ const FoFMain = () => {
 
   const getStreakBonus = async (token) => {
     try {
-      const activeCountry = await validateCountryCode(tele);
-      const rewardsData = await claimStreakBonus(token, activeCountry);
+      const response = await claimStreakBonus(token);
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === response.mythology
+              ? {
+                  ...item,
+                  boosters: response.boosterUpdatedData,
+                }
+              : item
+          ),
+        };
+
+        return updatedData;
+      });
+      setUserData((prev) => ({
+        ...prev,
+        streak: {
+          ...prev.streak,
+          lastMythClaimed: response.mythology,
+        },
+      }));
       trackEvent("rewards", "claim_streak_reward", "success");
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 1000);
 
-      if (rewardsData.reward === "fdg") {
-        setSection(0);
-      } else {
-        setActiveReward(rewardsData.reward);
-        setSection(10);
-      }
+      setSection(10);
     } catch (error) {
       console.log(error);
       showToast("default");
@@ -179,11 +195,15 @@ const FoFMain = () => {
       setCountry(response?.user.country);
       setUserData(response?.user);
       setKeysData(response?.towerKeys);
-      if (!response?.user?.joiningBonus) {
+      if (response?.user?.streak?.isStreakActive) {
+        (async () => {
+          await getStreakBonus(token);
+        })();
+      } else if (!response?.user?.joiningBonus) {
         setSection(9);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
         (async () => {
           await getProfilePhoto(token);
         })();
@@ -194,11 +214,7 @@ const FoFMain = () => {
         setSection(8);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
-      } else if (response?.user?.isStreakActive) {
-        (async () => {
-          await getStreakBonus(token);
-        })();
+        }, 1000);
       } else if (!showAnmnt) {
         setSection(12);
         setIsLoading(false);
@@ -206,7 +222,7 @@ const FoFMain = () => {
         setSection(0);
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       console.log(error);
@@ -279,7 +295,7 @@ const FoFMain = () => {
             />
           );
         }}
-        className="absolute top-[10px] right-[94px] text-white z-5s0"
+        className="absolute top-[-35px] right-[94px] text-white z-5s0"
       >
         <Settings size={"6vw"} />
       </div>
@@ -307,7 +323,7 @@ const FoFMain = () => {
               section != 13 &&
               section != 11 && <Footer minimize={minimize} />}
             {showCard && (
-              <div className="absolute z-50 h-screen w-screen">{showCard}</div>
+              <div className="absolute z-[99] w-screen">{showCard}</div>
             )}
           </FofContext.Provider>
         </div>

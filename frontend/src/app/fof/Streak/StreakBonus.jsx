@@ -3,51 +3,25 @@ import { FofContext } from "../../../context/context";
 import { ThumbsUp } from "lucide-react";
 import { t } from "i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { determineStreak } from "../../../helpers/streak.helper";
+import { mythSections } from "../../../utils/constants";
 
 const tele = window.Telegram?.WebApp;
 
 const StreakBonus = (props) => {
-  const {
-    assets,
-    setSection,
-    userData,
-    activeReward,
-    setActiveReward,
-    setRewards,
-    setTriggerConf,
-    enableHaptic,
-  } = useContext(FofContext);
+  const { assets, setSection, userData, enableHaptic } = useContext(FofContext);
   const [changeText, setChangeText] = useState(true);
-  const [flipped, setFlipped] = useState(false);
   const [disableHand, setDisableHand] = useState(true);
-
-  const updateRewards = () => {
-    setRewards((prev) => {
-      const updatedRewards = [...prev];
-      const reward = updatedRewards.find((item) => item.id === activeReward.id);
-      if (reward) {
-        reward.tokensCollected += 1;
-      }
-      if (reward.tokensCollected === 12) {
-        setTriggerConf(true);
-      }
-
-      setActiveReward(
-        updatedRewards.find((item) => item.id === activeReward.id)
-      );
-
-      return updatedRewards;
-    });
-  };
+  const reward = determineStreak(userData.streak.streakCount);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setDisableHand(false);
     }, 2000);
     const closeTimeout = setTimeout(() => {
-      updateRewards();
-      setSection(6);
+      setSection(8);
     }, 4000);
+
     const interval = setInterval(() => {
       setChangeText((prevText) => !prevText);
     }, 1500);
@@ -71,47 +45,54 @@ const StreakBonus = (props) => {
           <div className="text-gold text-[60px] font-symbols">t</div>
           <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
             {changeText
-              ? `${userData.streakCount + " " + t("misc.day")}`
-              : t("bonus.join").split(" ")[1]}
+              ? `${userData.streak.streakCount + " " + t("misc.day")}`
+              : "Streak"}
           </h1>
         </div>
         {/* Main */}
         <div className="flex justify-center items-center w-full absolute  h-full">
-          <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
-            <div className={``}>
-              <div className={`orb ${flipped ? "flipped" : ""}`}>
-                <div className="orb__face orb__face--front  flex justify-center items-center">
-                  <div className="flex justify-center items-center w-full absolute  h-full">
-                    <img
-                      src={
-                        activeReward.partnerType == "playsuper"
-                          ? `${activeReward.metadata.campaignCoverImage}`
-                          : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${activeReward.metadata.campaignCoverImage}.bubble.png`
-                      }
-                      alt="multicolor"
-                      className="glow-box rounded-full h-[55vw] w-[55vw]"
-                    />
-                  </div>
-                </div>
-                <div className="orb__face orb__face--back flex justify-center items-center">
-                  <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
-                    <img
-                      src={`${assets.uxui.baseorb}`}
-                      alt="orb"
-                      className="filter-orbs-greek rounded-full"
-                    />
-                    <span
-                      className={`absolute inset-0 flex justify-center items-center text-[180px] mt-4 text-white font-symbols opacity-50 orb-symbol-shadow`}
-                    >
-                      d
-                    </span>
-                  </div>
-                </div>
+          <div className="relative h-[55%] w-[72%] flex items-center justify-center rounded-primary card-shadow-white">
+            <div
+              className={`absolute inset-0 rounded-[15px]`}
+              style={{
+                backgroundImage: `url(${
+                  assets.boosters[`${reward.reward}Card`]
+                })`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center center ",
+              }}
+            />
+            <div className="text-primary rotate-6 text-black-contour text-white font-fof w-7 h-7 absolute top-0 right-7">
+              {reward.multiplier}X
+            </div>
+            <div
+              className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
+            >
+              <div
+                style={{
+                  backgroundImage: `url(${assets.uxui.paper})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center center",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  height: "100%",
+                  width: "100%",
+                }}
+                className={`rounded-b-primary filter-paper-${userData.streak.lastMythClaimed?.toLowerCase()}`}
+              />
+              <div className="flex w-full z-50 justify-center items-center font-symbols text-white text-[60px] text-black-contour">
+                {reward.reward === "automata"
+                  ? "n"
+                  : reward.reward === "alchemist"
+                  ? "9"
+                  : "s"}
               </div>
             </div>
           </div>
         </div>
-        {/* Bottom */}
         <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
         <div
           onClick={() => {
@@ -121,19 +102,17 @@ const StreakBonus = (props) => {
           }}
           className="flex absolute items-start bottom-[92px] justify-center w-full"
         >
-          <ThumbsUp
-            size={"18vw"}
-            color="#FFD660"
-            className="mx-auto drop-shadow-xl scale-more"
+          <img
+            src="/assets/badges/superstar.svg"
+            alt="badge"
+            className="w-[16vw] h-[16vw]"
           />
+
           {disableHand && (
             <div className="font-symbols scale-point z-10 mx-auto my-auto absolute ml-4 mt-6 text-white text-[60px] text-black-contour">
               b
             </div>
           )}
-        </div>
-        <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
-          VOUCHER
         </div>
       </div>
     </div>

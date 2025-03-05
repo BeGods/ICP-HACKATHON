@@ -177,13 +177,15 @@ const Leaderboard = (props) => {
 
   const loadMoreData = () => {
     if (
-      (userData.overallRank <= 12 && page > 0) || // Gold (max 0 pages)
-      (userData.overallRank <= 99 && page > 0) || // Silver (max 0 pages)
-      (userData.overallRank <= 333 && page <= 2) || // Bronze (max 2 pages)
-      (userData.overallRank <= 666 && page <= 6) // Wood (max 6 pages)
+      userData.overallRank <= 12 || // Gold (no increment)
+      userData.overallRank <= 99 || // Silver (no increment)
+      (userData.overallRank <= 333 && page >= 2) || // Bronze (max 2 pages)
+      (userData.overallRank <= 666 && page >= 6) // Wood (max 6 pages)
     ) {
-      setPage((prevPage) => prevPage + 1);
+      return;
     }
+
+    setPage((prevPage) => prevPage + 1);
   };
 
   const handleClaimReward = async () => {

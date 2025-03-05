@@ -3,8 +3,7 @@ import { FofContext } from "../../../context/context";
 import ProfileInfoCard from "../../../components/Cards/Info/ProfileInfoCrd";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import SettingModal from "../../../components/Modals/Settings";
-import { Settings } from "lucide-react";
+import { determineStreakBadge } from "../../../helpers/streak.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -69,6 +68,7 @@ const CenterChild = ({ userData }) => {
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
+  const streakBadge = determineStreakBadge(userData.streak.streakCount);
 
   return (
     <div className="flex absolute top-0 justify-center z-50 left-[34vw]">
@@ -107,6 +107,11 @@ const CenterChild = ({ userData }) => {
             >
               {userData.telegramUsername[0]}
             </div>
+          </div>
+        )}
+        {streakBadge && (
+          <div className="mx-auto absolute bottom-0">
+            <img src={`/assets/badges/${streakBadge}.svg`} alt="badge" />
           </div>
         )}
       </div>

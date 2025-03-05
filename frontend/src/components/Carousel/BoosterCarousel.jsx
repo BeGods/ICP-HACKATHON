@@ -97,22 +97,22 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           />
         ),
       },
-      {
-        key: "moon",
-        component: (
-          <BoosterItem
-            key="moon"
-            index={0}
-            currentIndex={currentIndex}
-            isGuideActive={enableGuide}
-            isActive={gameData.isMoonActive}
-            handleClick={() => handleBoosterClick("moon", false)}
-            activeMyth={activeMyth}
-            t={t}
-            booster={9}
-          />
-        ),
-      },
+      // {
+      //   key: "moon",
+      //   component: (
+      //     <BoosterItem
+      //       key="moon"
+      //       index={0}
+      //       currentIndex={currentIndex}
+      //       isGuideActive={enableGuide}
+      //       isActive={gameData.isMoonActive}
+      //       handleClick={() => handleBoosterClick("moon", false)}
+      //       activeMyth={activeMyth}
+      //       t={t}
+      //       booster={9}
+      //     />
+      //   ),
+      // },
     ];
 
     // Add conditional boosters

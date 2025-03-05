@@ -675,18 +675,13 @@ export const claimCustomReward = async (rewardId, accessToken) => {
   }
 };
 
+<<<<<<< HEAD:src/utils/api.fof.js
 export const claimStreakBonus = async (accessToken, country) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/streak`;
-
-  let queryParams = [];
-
-  if (country !== "NA" || country !== "NA") {
-    queryParams.push(`country=${country}`);
-  }
-
-  if (queryParams.length > 0) {
-    url += `?${queryParams.join("&")}`;
-  }
+=======
+export const claimStreakBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
+>>>>>>> main:src/utils/api.js
 
   try {
     const response = await axios.get(url, {
@@ -819,6 +814,30 @@ export const updateFinishStatus = async (accessToken) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const sendTestTGA = async () => {
+  let url = `https://tganalytics.xyz/events`;
+
+  try {
+    const response = await axios.post(url, {
+      "app_name": "TanmTest_2020",
+      "user_id": 1126065333,
+      "event_name": "hello",
+      "session_id": "d0f6880a-66cd-452f-befc-03e73e7cbd8e"
+    }, {
+      headers: {
+        "TGA-Auth-Token": `eyJhcHBfbmFtZSI6IlRhbm1UZXN0XzIwMjAiLCJhcHBfdXJsIjoiaHR0cHM6Ly90Lm1lL2JlR29kc190ZXN0X2JvdCIsImFwcF9kb21haW4iOiJodHRwczovL3QubWUvYmVHb2RzX3Rlc3RfYm90L3Rlc3QifQ==!fzR/j2CnLMkPM3JvKcDlcqIDwf+DE+u2fCdo2MUdcWI=`,
+        "Content-Type": "application/json"
+      },
+    });
+
+
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);

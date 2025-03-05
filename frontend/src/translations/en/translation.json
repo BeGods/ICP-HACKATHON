@@ -58,7 +58,7 @@
     { "title": "Burst", "desc": "Power Press" },
     { "title": "Automata Pack", "desc": "4X Automata" },
     { "title": "Burst Pack", "desc": "4X Stars" },
-    { "title": "Moon Amulet", "desc": "4X Orb Conversion" }
+    { "title": "Moon Amulet", "desc": "2X Orb Conversion" }
   ],
   "profile": {
     "premium": "Premium",
@@ -102,7 +102,7 @@
     "text": "Update in",
     "tower": "Tap ORBS to convert",
     "bonus": "To see active promotion",
-    "ad": "To get free booster!",
+    "ad": "To get booster!",
     "whitelist": {
       "QuestName": "Whitelist",
       "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
