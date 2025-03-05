@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 import ToastMesg from "./ToastMesg";
-
 import { t } from "i18next";
 
 export const showToast = (type) => {

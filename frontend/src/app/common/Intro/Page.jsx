@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { authenticate } from "../../../utils/api.fof";
-import assets from "../../../assets/assets.json";
 import {
   setAuthCookie,
   setLangCookie,
@@ -8,10 +7,6 @@ import {
 } from "../../../helpers/cookie.helper";
 import { trackComponentView } from "../../../utils/ga";
 import Launcher from "./Launcher";
-import FoFIntro from "./FoFIntro";
-import RoRIntro from "./RoRIntro";
-import SettingModal from "../../../components/Modals/Settings";
-import { LogOut, Settings } from "lucide-react";
 import DesktopScreen from "./Desktop";
 
 const tele = window.Telegram?.WebApp;
@@ -145,21 +140,11 @@ const IntroPage = (props) => {
       {disableDesktop ? (
         <DesktopScreen />
       ) : (
-        <div
-          className={`flex w-screen text-wrap`}
-          style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-          }}
-        >
-          <div className="absolute flex gap-5 -top-[35px] right-[94px] text-white z-50">
-            <Settings size={"6vw"} />
-          </div>
-          <Launcher
-            handleClick={handleSelectGame}
-            handleUpdateIdx={handleUpdateIdx}
-            activeIndex={activeIndex}
-          />
-        </div>
+        <Launcher
+          handleClick={handleSelectGame}
+          handleUpdateIdx={handleUpdateIdx}
+          activeIndex={activeIndex}
+        />
       )}
     </div>
   );

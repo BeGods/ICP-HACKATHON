@@ -63,6 +63,7 @@
         "bubble": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.bubble.mp3",
         "alchemistShort": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.alchemist.grunt.short.mp3",
         "fofIntro": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.music.intro.mp3",
+        "rorIntro": "/assets/audio/ror.music.intro.wav",
         "alchemistLong": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.alchemist.grunt.long.mp3",
         "automataShort": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.automata.pulse.long.mp3",
         "automataLong": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.automata.pulse.long.mp3",
