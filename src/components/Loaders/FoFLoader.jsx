@@ -29,9 +29,9 @@ const FoFLoader = (props) => {
       </div>
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full w-full pt-[3vh] pb-[3vh]">
+        <div className="flex flex-col justify-between items-center h-full w-full pt-[3vh] pb-[2vh]">
           <img
-            src="/assets/new/forges.of.faith_off-- (1).png"
+            src="/assets/logos/forges.of.faith.png"
             alt="dod"
             className="fof-text-shadow"
           />
@@ -45,8 +45,8 @@ const FoFLoader = (props) => {
                 alt="Button"
                 className="h-auto"
               />
-              <span className="absolute inset-0 mt-[2px] flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold text-[6vw]">
-                <div>LOADING</div>
+              <span className="absolute inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[6vw]">
+                LOADING
               </span>
             </div>
           </div>

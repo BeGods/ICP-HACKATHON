@@ -20,18 +20,11 @@ const RoRLoader = (props) => {
           background: `url(${assets.uxui.rorspashOn}) no-repeat center / cover`,
         }}
       ></div>
-      {/* <div className="absolute inset-0 flex z-[20] -mt-[8vh] fade-in justify-center items-center">
-        <img
-          src={assets.uxui.towerOn}
-          alt="tower"
-          className="max-w-full h-auto"
-        />
-      </div> */}
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
-        <div className="flex flex-col justify-between items-center w-full h-full pt-[3vh] pb-[3vh]">
+        <div className="flex flex-col justify-between items-center w-full h-full pt-[3vh] pb-[2vh]">
           <img
-            src="/assets/new/requiem.of.relics_off----.png"
+            src="/assets/logos/requiem.of.relics.png"
             alt="ror"
             className="purple-text-shadow"
           />
@@ -54,7 +47,7 @@ const RoRLoader = (props) => {
       </div>
       <div className="absolute">
         <ReactHowler
-          src={`${assets.audio.fofIntro}`}
+          src={`${assets.audio.rorIntro}`}
           playing={true}
           preload={true}
           html5={true}

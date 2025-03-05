@@ -33,7 +33,7 @@ const RoRIntro = ({ handleFadeout, fadeout }) => {
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <img
-            src="/assets/new/requiem.of.relics_off----.png"
+            src="/assets/logos/requiem.of.relics.png"
             alt="dod"
             className="purple-text-shadow"
           />
@@ -56,12 +56,16 @@ const RoRIntro = ({ handleFadeout, fadeout }) => {
                 handleFadeout();
                 setTimeout(() => {
                   navigate("/ror");
-                }, 2000);
+                }, 1000);
               }}
               className="relative inline-block"
             >
               <img
-                src="/assets/buttons/button.blue.on.png"
+                src={
+                  showGlow
+                    ? `/assets/buttons/button.blue.off.png`
+                    : `/assets/buttons/button.blue.on.png`
+                }
                 alt="Button"
                 className="h-auto"
               />

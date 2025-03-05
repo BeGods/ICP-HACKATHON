@@ -6,18 +6,18 @@ const DoDIntro = (props) => {
     <div
       className="absolute ml-[150vw] top-0 bottom-0 left-0 w-screen h-full z-10"
       style={{
-        background: `url(${assets.uxui.dodsplash}) no-repeat center / cover`,
+        background: `url(/assets/1280px-dod.loading.png) no-repeat center / cover`,
         backgroundPosition: "45.75% 0%",
       }}
     >
       <div
         className={`flex  flex-col h-full items-center justify-center z-[100]`}
       >
-        <div className="absolute flex flex-col justify-between items-center h-full pb-[2vh]">
+        <div className="absolute flex flex-col justify-between items-center h-full pt-[0.5vh] pb-[3vh]">
           <img
-            src="/assets/logos/dawn.of.duels.vertical.gold.png"
+            src="/assets/logos/dawn.of.duels.png"
             alt="dod"
-            className="dod-text-shadow bg-red-400"
+            className="dod-text-shadow"
           />
           <div className="flex flex-col gap-[2vh]">
             <div className={`flex justify-center items-center z-[100]`}>
