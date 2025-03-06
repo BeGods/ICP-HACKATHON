@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import assets from "../../../assets/assets.json";
-import "../../../styles/load.carousel.scss";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import FoFIntro from "./FoFIntro";
 import RoRIntro from "./RoRIntro";
