@@ -64,14 +64,16 @@ const IntroPage = (props) => {
           const userDataObj = {
             initData: tele?.initData,
           };
-          const param = tele.initDataUnsafe?.start_param;
+          const param = tele.initDataUnsafe?.start_param ?? null;
 
           setTgUserData(userDataObj);
 
-          if (param.includes("FDG")) {
-            setReferralCode(param);
-          } else {
-            setLangCookie(tele, param);
+          if (param) {
+            if (param?.includes("FDG")) {
+              setReferralCode(param);
+            } else {
+              setLangCookie(tele, param);
+            }
           }
         } else {
           console.log("No user found in Telegram data");
