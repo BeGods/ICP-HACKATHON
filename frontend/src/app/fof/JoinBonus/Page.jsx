@@ -84,12 +84,7 @@ const JoinBonus = (props) => {
   }, []);
 
   return (
-    <div
-      className="flex relative flex-col w-screen justify-center font-fof items-center bg-black"
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
+    <div className="flex relative flex-col tg-container-height w-screen justify-center font-fof items-center bg-black">
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">

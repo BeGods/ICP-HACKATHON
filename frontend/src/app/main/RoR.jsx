@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { RorContext } from "../../context/context";
+import React, { useContext, useEffect, useState } from "react";
+import { MainContext, RorContext } from "../../context/context";
 import { fetchGameStats } from "../../utils/api.ror";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import {
   fetchHapticStatus,
   validateAuth,
+  validateCountryCode,
   validateLang,
   validateSoundCookie,
 } from "../../helpers/cookie.helper";
@@ -12,33 +13,45 @@ import i18next from "i18next";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import RoRLoader from "../../components/Loaders/RoRLoader";
 import Footer from "../../components/Common/RoRFooter";
-import assets from "../../assets/assets.json";
 import Citadel from "../ror/Citadel";
-import RoRHeader from "../../components/ror/RoRHeader";
 import Explore from "../ror/Explore";
 import Leaderboard from "../ror/Leaderboard/Page";
 import Bag from "../ror/Bag";
 import Vault from "../ror/Vault";
 import Blacksmith from "../ror/Blacksmith";
 import Merchant from "../ror/Merchant";
-import Profile from "../ror/Profile/Page";
+import SettingModal from "../../components/Modals/Settings";
+import TgHeader from "../../components/Common/TgHeader";
+import { fetchRewards } from "../../utils/api.fof";
+import Profile from "../fof/Profile/Page";
 
 const tele = window.Telegram?.WebApp;
 
 const RoRMain = () => {
+  const {
+    assets,
+    enableHaptic,
+    setEnableHaptic,
+    enableSound,
+    setEnableSound,
+    userData,
+    setUserData,
+    platform,
+    setPlatform,
+    authToken,
+    setAuthToken,
+    country,
+    setCountry,
+    lang,
+    tasks,
+    setTasks,
+  } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
-  const [enableSound, setEnableSound] = useState(true);
-  const [enableHaptic, setEnableHaptic] = useState(true);
-  const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
-  const [platform, setPlatform] = useState(null);
-  const [authToken, setAuthToken] = useState(0);
   const [section, setSection] = useState(7);
   const [minimize, setMinimize] = useState(0);
-  const [country, setCountry] = useState(null);
-  const [socialQuestData, setSocialQuestData] = useState([]);
-  const [lang, setLang] = useState(null);
+  const [rewards, setRewards] = useState([]);
   const [swipes, setSwipes] = useState(0);
   const [battleData, setBattleData] = useState({
     currentRound: 1,
@@ -70,9 +83,11 @@ const RoRMain = () => {
     battleData,
     setBattleData,
     swipes,
+    rewards,
+    setRewards,
     setSwipes,
-    socialQuestData,
-    setSocialQuestData,
+    tasks,
+    setTasks,
   };
 
   const sections = [
@@ -84,15 +99,17 @@ const RoRMain = () => {
     <Vault />, // 5
     <Profile />, // 6
     <Leaderboard />, // 7
-    // <Citadel />, // 0
-    // <Explore />, // 1
-    // <Bag />, // 2
-    // <Profile />, //3
-    // <Vault />, // 4
-    // <Blacksmith />, // 5
-    // <Merchant />, // 6
-    // <Gacha />, // 7
   ];
+
+  const getPartnersData = async (token) => {
+    try {
+      const rewardsData = await fetchRewards(lang, country, token);
+      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+    } catch (error) {
+      console.log(error);
+      showToast("default");
+    }
+  };
 
   // fetch all game data
   const getGameData = async (token) => {
@@ -106,49 +123,55 @@ const RoRMain = () => {
           bank: response.bank,
         };
       });
-      setSocialQuestData(response.quests);
+      setTasks(response.quests);
       setSection(0);
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.log(error);
+      showToast("default");
     }
   };
 
-  // set initial cookies
   const syncAllCookies = async () => {
-    localStorage.setItem("avatarColor", getRandomColor());
-    const currLang = await validateLang(tele);
-    const isAuth = await validateAuth(tele);
-    const isSoundActive = await validateSoundCookie(tele);
-    const isHapticActive = await fetchHapticStatus(tele);
+    try {
+      const activeCountry = await validateCountryCode(tele);
+      localStorage.setItem("avatarColor", getRandomColor());
+      const currLang = await validateLang(tele);
+      const isSoundActive = await validateSoundCookie(tele);
+      const isHapticActive = await fetchHapticStatus(tele);
 
-    i18next.changeLanguage(currLang);
-    setEnableHaptic(isHapticActive);
-    setLang(currLang);
-    setEnableSound(JSON.parse(isSoundActive));
-    setAuthToken(isAuth);
+      i18next.changeLanguage(currLang);
+      setEnableHaptic(isHapticActive);
+      setEnableSound(JSON.parse(isSoundActive));
+      setCountry(activeCountry);
 
-    const device = getDeviceAndOS(tele.platform);
-    trackEvent("device", device, "success");
+      const device = getDeviceAndOS(tele.platform);
+      trackEvent("device", device, "success");
+    } catch (error) {
+      showToast("default");
+    }
+  };
 
-    if (isAuth) {
-      (async () => await getGameData(isAuth))();
-    } else {
+  const initializeGame = async () => {
+    try {
+      const token = await validateAuth(tele);
+      if (token) {
+        setAuthToken(token);
+        (async () => await getGameData(token))();
+        (async () => await getPartnersData(token))();
+      }
+    } catch (error) {
+      console.log(error);
       showToast("default");
     }
   };
 
   useEffect(() => {
     syncAllCookies();
+    initializeGame();
   }, []);
-
-  // useEffect(() => {
-  //   if (lang && authToken) {
-  //     (async () => await getPartnersData())();
-  //   }
-  // }, [lang, authToken]);
 
   useEffect(() => {
     if (tele) {
@@ -171,7 +194,19 @@ const RoRMain = () => {
   }, [platform]);
 
   return (
-    <RorContext.Provider value={contextValues}>
+    <div>
+      <TgHeader
+        openSettings={() => {
+          setShowCard(
+            <SettingModal
+              close={() => {
+                setShowCard(null);
+              }}
+            />
+          );
+        }}
+      />
+
       {!isLoading ? (
         <div
           style={{
@@ -179,22 +214,22 @@ const RoRMain = () => {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
           }}
-          className="w-screen flex flex-col bg-white select-none font-fof"
+          className="w-screen tg-container-height bg-white select-none font-fof overflow-hidden"
         >
-          {section !== 6 && section !== 7 && <RoRHeader />}
-          <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
-          {section !== 7 && <Footer />}
+          <RorContext.Provider value={contextValues}>
+            <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
+            {section !== 7 && <Footer />}
 
-          {showCard && (
-            <div className="absolute z-50 h-screen w-screen">{showCard}</div>
-          )}
+            {showCard && (
+              <div className="absolute z-[99] w-screen">{showCard}</div>
+            )}
+          </RorContext.Provider>
         </div>
       ) : (
         <RoRLoader />
       )}
-    </RorContext.Provider>
+    </div>
   );
 };
 

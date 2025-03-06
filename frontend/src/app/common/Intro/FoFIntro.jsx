@@ -10,7 +10,7 @@ const FoFIntro = ({ handleFadeout, fadeout }) => {
   const [showGlow, setShowGlow] = useState(false);
 
   return (
-    <div className="w-[200vw] relative h-[calc(100svh-var(--tg-safe-area-inset-top)-45px)]">
+    <div className="w-[200vw] tg-container-height relative">
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"

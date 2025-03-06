@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import GachaRoll from "../../../components/Fx/GachaRoll";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import assets from "../../assets/assets.json";
+import assets from "../../../assets/assets.json";
 
 const tele = window.Telegram?.WebApp;
 
@@ -28,7 +28,7 @@ const Gacha = (props) => {
     enableHaptic,
     assets,
     showAnmt,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
   const [showSpin, setShowSpin] = useState(false);
@@ -223,12 +223,7 @@ const Gacha = (props) => {
   }, [showScale, isClaimed]);
 
   return (
-    <div
-      className="flex flex-col w-screen justify-center font-fof items-center bg-black"
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
+    <div className="flex flex-col tg-container-height w-screen justify-center font-fof items-center bg-black">
       <div className="flex flex-col w-full h-full items-center pt-4">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
@@ -242,12 +237,7 @@ const Gacha = (props) => {
           )}
         </div>
         {/* Main */}
-        <div
-          className="absolute"
-          style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-          }}
-        >
+        <div className="absolute tg-container-height">
           <div
             onClick={() => {
               handleClickHaptic(tele, enableHaptic);

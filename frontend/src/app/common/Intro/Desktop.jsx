@@ -2,12 +2,7 @@ import React from "react";
 
 const DesktopScreen = ({ assets }) => {
   return (
-    <div
-      className="flex flex-col justify-center items-center w-screen bg-black"
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
+    <div className="flex flex-col tg-container-height justify-center items-center w-screen bg-black">
       <img
         src={assets.logos.fofQr}
         alt="qr"

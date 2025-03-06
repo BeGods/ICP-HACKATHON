@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { MainContext } from "../../../context/context";
 import { ProfileGuide } from "../../../components/Common/Tutorials";
 import { useProfileGuide } from "../../../hooks/Tutorial";
 import ProfileHeader from "./Header";
@@ -14,8 +14,8 @@ import { trackComponentView } from "../../../utils/ga";
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
-  const { userData, socialQuestData, setShowCard, assets, setSection } =
-    useContext(FofContext);
+  const { userData, tasks, setShowCard, assets, setSection } =
+    useContext(MainContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
@@ -72,12 +72,7 @@ const Profile = (props) => {
   }, []);
 
   return (
-    <div
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-      className="flex flex-col overflow-hidden m-0"
-    >
+    <div className="flex flex-col overflow-hidden m-0">
       <div
         style={{
           position: "absolute",
@@ -104,7 +99,7 @@ const Profile = (props) => {
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] min-h-[60vh] flex-col">
-          <TaskCarousel quests={socialQuestData} userData={userData} />
+          <TaskCarousel quests={tasks} userData={userData} />
         </div>
       </div>
     </div>

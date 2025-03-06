@@ -180,12 +180,7 @@ const Redeem = (props) => {
   }, []);
 
   return (
-    <div
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-      className="flex flex-col overflow-hidden m-0"
-    >
+    <div className="flex flex-col tg-container-height overflow-hidden m-0">
       <div
         style={{
           position: "absolute",
@@ -267,12 +262,7 @@ const Redeem = (props) => {
         }}
       />
       {/* Content */}
-      <div
-        className="flex mt-7 justify-center items-center w-screen absolute mx-auto"
-        style={{
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-        }}
-      >
+      <div className="flex mt-7 tg-container-height justify-center items-center w-screen absolute mx-auto">
         <div className={`flex items-center justify-center w-full h-full`}>
           <div className="flex flex-col mt-[35px] gap-[3vw] items-center justify-center w-full h-full">
             <div

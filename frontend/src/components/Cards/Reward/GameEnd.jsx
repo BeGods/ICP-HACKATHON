@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { FofContext } from "../../../context/context";
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 
 const GameEndCrd = ({ handleClick, activeMyth }) => {
   const { assets } = useContext(FofContext);

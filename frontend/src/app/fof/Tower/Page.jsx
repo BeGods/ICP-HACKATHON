@@ -181,12 +181,7 @@ const Tower = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-      className="flex flex-col overflow-hidden m-0"
-    >
+    <div className="flex flex-col tg-container-height overflow-hidden m-0">
       <div
         style={{
           position: "absolute",

@@ -20,13 +20,13 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     setSection,
     activeMyth,
     setActiveMyth,
-    socialQuestData,
+    tasks,
     assets,
     userData,
     enableHaptic,
     gameData,
   } = useContext(FofContext);
-  const countOfInCompleteQuests = socialQuestData.filter(
+  const countOfInCompleteQuests = tasks.filter(
     (item) => item.isQuestClaimed === false
   ).length;
   const [clickEffect, setClickEffect] = useState(false);
