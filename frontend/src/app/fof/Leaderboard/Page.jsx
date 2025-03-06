@@ -97,22 +97,6 @@ const Leaderboard = (props) => {
   };
   const [animationKey, setAnimationKey] = useState(0);
 
-  const currGroup = {
-    diamond: (
-      <img src="/assets/diamond.blue.png" alt="trophy" className="h-8 w-8" />
-    ),
-    gold: (
-      <img src="/assets/trophy.gold.png" alt="trophy" className="h-8 w-8" />
-    ),
-    silver: (
-      <img src="/assets/trophy.silver.png" alt="trophy" className="h-8 w-8" />
-    ),
-    bronze: (
-      <img src="/assets/trophy.bronze.png" alt="trophy" className="h-8 w-8" />
-    ),
-    wood: <WoodSVG />,
-  };
-
   const determineLevel = () => {
     switch (true) {
       case userData.overallRank <= 12:
@@ -483,7 +467,7 @@ const Leaderboard = (props) => {
 
       {/* Leaderboard list */}
       {isFinished ? (
-        <div className="flex flex-col w-full text-medium h-[49vh] bg-white text-black rounded-t-primary">
+        <div className="flex z-50 flex-col w-full text-medium h-[49vh] bg-white text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
@@ -553,7 +537,7 @@ const Leaderboard = (props) => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col w-full text-medium h-[49vh] bg-black text-black rounded-t-primary">
+        <div className="flex z-50 flex-col w-full text-medium h-[49vh] bg-black text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
