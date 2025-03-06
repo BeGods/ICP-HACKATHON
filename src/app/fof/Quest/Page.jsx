@@ -356,12 +356,7 @@ const Quests = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-      className="flex flex-col overflow-hidden m-0"
-    >
+    <div className="flex flex-col tg-container-height overflow-hidden m-0">
       <div
         style={{
           position: "absolute",
@@ -405,12 +400,7 @@ const Quests = () => {
         t={t}
       />
 
-      <div
-        className="flex justify-center items-center w-screen absolute mx-auto"
-        style={{
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-        }}
-      >
+      <div className="flex tg-container-height justify-center items-center w-screen absolute mx-auto">
         {currQuest < quests.length ? (
           <QuestCard
             quest={quest}
@@ -456,12 +446,7 @@ const Quests = () => {
             }
           />
         ) : (
-          <div
-            className="flex flex-col mt-[7vh] gap-[3vw] items-center justify-center w-full"
-            style={{
-              height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-            }}
-          >
+          <div className="flex tg-container-height flex-col mt-[7vh] gap-[3vw] items-center justify-center w-full">
             <div
               className={`card ${
                 flipped ? "flipped" : ""

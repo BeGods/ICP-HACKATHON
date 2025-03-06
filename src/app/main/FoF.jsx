@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   claimStreakBonus,
   fetchGameStats,
   fetchProfilePhoto,
   fetchRewards,
 } from "../../utils/api.fof";
-import i18next from "i18next";
-import { getRandomColor } from "../../helpers/randomColor.helper";
-import { FofContext } from "../../context/context";
+import { FofContext, MainContext } from "../../context/context";
 import Quests from "../fof/Quest/Page";
 import Profile from "../fof/Profile/Page";
 import Boosters from "../fof/Booster/Page";
@@ -34,35 +32,47 @@ import OnboardPage from "../fof/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import Announcement from "../fof/Announcement/Page";
 import FoFLoader from "../../components/Loaders/FoFLoader";
-import { Settings } from "lucide-react";
 import SettingModal from "../../components/Modals/Settings";
+import TgHeader from "../../components/Common/TgHeader";
+import i18next from "i18next";
+import { getRandomColor } from "../../helpers/randomColor.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const FoFMain = () => {
+  const {
+    assets,
+    enableHaptic,
+    setEnableHaptic,
+    enableSound,
+    setEnableSound,
+    userData,
+    setUserData,
+    platform,
+    setPlatform,
+    authToken,
+    setAuthToken,
+    country,
+    setCountry,
+    lang,
+    tasks,
+    setTasks,
+  } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
   const [leaderboard, setLeaderboard] = useState(null);
-  const [socialQuestData, setSocialQuestData] = useState(null);
-  const [enableSound, setEnableSound] = useState(true);
-  const [enableHaptic, setEnableHaptic] = useState(true);
   const [triggerConf, setTriggerConf] = useState(false);
   const [keysData, setKeysData] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [showAnmt, setShowAnmt] = useState(false);
   const [activeReward, setActiveReward] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
-  const [platform, setPlatform] = useState(null);
-  const [authToken, setAuthToken] = useState(null);
   const [section, setSection] = useState(1);
   const [minimize, setMinimize] = useState(0);
-  const [country, setCountry] = useState("NA");
-  const [lang, setLang] = useState(null);
   const initalStates = {
     gameData,
     setGameData,
@@ -80,8 +90,8 @@ const FoFMain = () => {
     authToken,
     keysData,
     setKeysData,
-    socialQuestData,
-    setSocialQuestData,
+    tasks,
+    setTasks,
     rewards,
     setRewards,
     activeReward,
@@ -93,7 +103,7 @@ const FoFMain = () => {
     minimize,
     setMinimize,
     setShowCard,
-    assets,
+    assets, // .
     country,
     setCountry,
     triggerConf,
@@ -135,9 +145,9 @@ const FoFMain = () => {
     }
   };
 
-  const getPartnersData = async () => {
+  const getPartnersData = async (token) => {
     try {
-      const rewardsData = await fetchRewards(lang, country, authToken);
+      const rewardsData = await fetchRewards(lang, country, token);
       setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
@@ -191,7 +201,7 @@ const FoFMain = () => {
       const showAnmnt = await validateTutCookie(tele, "announcement08");
       setGameData(response?.stats);
       setQuestsData(response?.quests);
-      setSocialQuestData(response?.extraQuests);
+      setTasks(response?.extraQuests);
       setCountry(response?.user.country);
       setUserData(response?.user);
       setKeysData(response?.towerKeys);
@@ -231,37 +241,43 @@ const FoFMain = () => {
   };
 
   const syncAllCookies = async () => {
-    localStorage.setItem("avatarColor", getRandomColor());
-    const currLang = await validateLang(tele);
-    const isAuth = await validateAuth(tele);
-    const isSoundActive = await validateSoundCookie(tele);
-    const isHapticActive = await fetchHapticStatus(tele);
+    try {
+      const activeCountry = await validateCountryCode(tele);
+      localStorage.setItem("avatarColor", getRandomColor());
+      const currLang = await validateLang(tele);
+      const isSoundActive = await validateSoundCookie(tele);
+      const isHapticActive = await fetchHapticStatus(tele);
 
-    i18next.changeLanguage(currLang);
-    setEnableHaptic(isHapticActive);
-    setLang(currLang);
-    setEnableSound(JSON.parse(isSoundActive));
-    setAuthToken(isAuth);
+      i18next.changeLanguage(currLang);
+      setEnableHaptic(isHapticActive);
+      setEnableSound(JSON.parse(isSoundActive));
+      setCountry(activeCountry);
 
-    const device = getDeviceAndOS(tele.platform);
-    trackEvent("device", device, "success");
+      const device = getDeviceAndOS(tele.platform);
+      trackEvent("device", device, "success");
+    } catch (error) {
+      showToast("default");
+    }
+  };
 
-    if (isAuth) {
-      (async () => await getGameData(isAuth))();
-    } else {
+  const initializeGame = async () => {
+    try {
+      const token = await validateAuth(tele);
+      if (token) {
+        setAuthToken(token);
+        (async () => await getGameData(token))();
+        (async () => await getPartnersData(token))();
+      }
+    } catch (error) {
+      console.log(error);
       showToast("default");
     }
   };
 
   useEffect(() => {
     syncAllCookies();
+    initializeGame();
   }, []);
-
-  useEffect(() => {
-    if (lang && authToken) {
-      (async () => await getPartnersData())();
-    }
-  }, [lang, authToken]);
 
   useEffect(() => {
     if (tele) {
@@ -285,8 +301,8 @@ const FoFMain = () => {
 
   return (
     <div>
-      <div
-        onClick={() => {
+      <TgHeader
+        openSettings={() => {
           setShowCard(
             <SettingModal
               close={() => {
@@ -295,26 +311,12 @@ const FoFMain = () => {
             />
           );
         }}
-        className="absolute top-[-35px] right-[94px] text-white z-5s0"
-      >
-        <Settings size={"6vw"} />
-      </div>
+      />
 
       {!isLoading ? (
-        <div
-          className="w-screen bg-white select-none font-fof overflow-hidden"
-          style={{
-            height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
-            marginTopTop: "45px",
-            marginBottom: "10px",
-          }}
-        >
+        <div className="w-screen tg-container-height bg-white select-none font-fof overflow-hidden">
           <FofContext.Provider value={initalStates}>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((item) => (
-              <div key={item}>
-                <>{section === item && sections[item]}</>
-              </div>
-            ))}
+            <div>{sections[section]}</div>
             {section != 7 &&
               section != 10 &&
               section != 9 &&

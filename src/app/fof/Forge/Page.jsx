@@ -35,7 +35,7 @@ import {
   handleTapHaptic,
 } from "../../../helpers/cookie.helper";
 import confetti from "canvas-confetti";
-import { getStreakMultipier } from "../../helpers/streak.helper";
+import { getStreakMultipier } from "../../../helpers/streak.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -65,15 +65,18 @@ const Forges = () => {
     enableHaptic,
     userData,
     setUserData,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const streakMultpier = (boosterName) => {
-    const multiplier = getStreakMultipier(
-      boosterName,
-      userData.streak.streakCount,
-      userData.streak.lastMythClaimed === mythologies[activeMyth]
-    );
+    if (userData.streak?.streakCount && userData.streak?.lastMythClaimed) {
+      const multiplier = getStreakMultipier(
+        boosterName,
+        userData.streak.streakCount,
+        userData.streak.lastMythClaimed === mythologies[activeMyth]
+      );
+      return multiplier;
+    }
 
-    return multiplier;
+    return 1;
   };
 
   const initialState = gameData.mythologies.map((myth) => {
@@ -1369,10 +1372,9 @@ const Forges = () => {
         style={{
           top: 0,
           left: 0,
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 55px)`,
           width: "100vw",
         }}
-        className="flex flex-col overflow-hidden m-0"
+        className="flex tg-container-height flex-col overflow-hidden m-0"
       >
         <div
           style={{

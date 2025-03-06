@@ -675,13 +675,8 @@ export const claimCustomReward = async (rewardId, accessToken) => {
   }
 };
 
-<<<<<<< HEAD:src/utils/api.fof.js
 export const claimStreakBonus = async (accessToken, country) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/bonus/streak`;
-=======
-export const claimStreakBonus = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_URL}/bonus/streak`;
->>>>>>> main:src/utils/api.js
 
   try {
     const response = await axios.get(url, {

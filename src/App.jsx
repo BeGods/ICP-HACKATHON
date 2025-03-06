@@ -33,12 +33,32 @@ function usePageTracking() {
 function App() {
   const [enableHaptic, setEnableHaptic] = useState(true);
   const [enableSound, setEnableSound] = useState(true);
+  const [userData, setUserData] = useState(null);
+  const [platform, setPlatform] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
+  const [country, setCountry] = useState("NA");
+  const [lang, setLang] = useState(null);
+  const [tasks, setTasks] = useState([]);
   usePageTracking();
 
   const initalStates = {
     assets,
-    enableHaptic,
-    enableSound,
+    enableHaptic, //.
+    setEnableHaptic,
+    enableSound, //.
+    setEnableSound,
+    userData,
+    setUserData,
+    platform, //.
+    setPlatform,
+    authToken, //.
+    setAuthToken,
+    country, //.
+    setCountry,
+    lang, //.
+    setLang,
+    tasks,
+    setTasks,
   };
 
   const syncAllCookies = async () => {

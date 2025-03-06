@@ -156,12 +156,7 @@ const OnboardPage = (props) => {
   }, []);
 
   return (
-    <div
-      className="relative w-screen font-roboto bg-black"
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
+    <div className="relative tg-container-height w-screen font-roboto bg-black">
       <img
         src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/frogdog.games.black.svg"
         alt="fof"

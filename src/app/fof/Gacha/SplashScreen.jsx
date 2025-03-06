@@ -164,12 +164,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
   }, [playFlip]);
 
   return (
-    <div
-      className="w-screen relative bg-black"
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
+    <div className="w-screen tg-container-height relative bg-black">
       {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-center text-black-contour  uppercase z-20">
         {t("bonus.youwon")

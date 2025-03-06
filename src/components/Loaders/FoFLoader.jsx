@@ -5,7 +5,7 @@ import ReactHowler from "react-howler";
 
 const FoFLoader = (props) => {
   return (
-    <div className="w-[100vw] relative h-[calc(100svh-var(--tg-safe-area-inset-top)-45px)]">
+    <div className="w-[100vw] relative tg-container-height">
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"

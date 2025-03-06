@@ -51,10 +51,7 @@ export default function LoadCarousel() {
   };
 
   return (
-    <div
-      className="carousel-container"
-      style={{ height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)` }}
-    >
+    <div className="carousel-container tg-container-height">
       <div
         className="carousel-track"
         style={{ transform: `translate3d(-${activeIndex * 100}%, 0, 0)` }}
@@ -69,12 +66,7 @@ export default function LoadCarousel() {
             }}
           >
             <div className="absolute  fade-in-intro flex justify-center items-center w-full">
-              <div
-                className="flex flex-col"
-                style={{
-                  height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-                }}
-              >
+              <div className="flex flex-col tg-container-height">
                 <div className="flex justify-center items-center w-full leading-tight">
                   <div className="relative z-[100]">
                     <img

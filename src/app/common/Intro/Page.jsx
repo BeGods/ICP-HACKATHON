@@ -1,23 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { authenticate } from "../../../utils/api.fof";
 import {
+  fetchHapticStatus,
   setAuthCookie,
   setLangCookie,
+  validateAuth,
+  validateCountryCode,
+  validateLang,
   validateSoundCookie,
 } from "../../../helpers/cookie.helper";
-import { trackComponentView } from "../../../utils/ga";
+import {
+  getDeviceAndOS,
+  trackComponentView,
+  trackEvent,
+} from "../../../utils/ga";
 import Launcher from "./Launcher";
 import DesktopScreen from "./Desktop";
+import { MainContext } from "../../../context/context";
+import i18next from "i18next";
+import { getRandomColor } from "../../../helpers/randomColor.helper";
+import { showToast } from "../../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
 const IntroPage = (props) => {
-  const [showLauncher, setShowLauncher] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const {
+    assets,
+    enableHaptic,
+    setEnableHaptic,
+    enableSound,
+    setEnableSound,
+    platform,
+    setPlatform,
+    setAuthToken,
+    setCountry,
+    setLang,
+  } = useContext(MainContext);
+
+  const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
-  const [fadeout, setFadeout] = useState(false);
-  const [platform, setPlatform] = useState(null);
-  const [enableSound, setEnableSound] = useState(true);
   const [disableDesktop, setDisableDestop] = useState(false);
   const [activeIndex, setActiveIndex] = useState(1);
 
@@ -45,7 +66,7 @@ const IntroPage = (props) => {
           };
           const param = tele.initDataUnsafe?.start_param;
 
-          setUserData(userDataObj);
+          setTgUserData(userDataObj);
 
           if (param.includes("FDG")) {
             setReferralCode(param);
@@ -66,23 +87,38 @@ const IntroPage = (props) => {
   // authenticate
   const auth = async () => {
     try {
-      const response = await authenticate(userData, referralCode);
-      localStorage.setItem("accessToken", response.data.token);
+      const response = await authenticate(tgUserData, referralCode);
+      setAuthToken(response.data.token);
       await setAuthCookie(tele, response.data.token);
     } catch (error) {
       console.error("Authentication Error: ", error);
     }
   };
 
-  const checkSoundActive = async () => {
-    const isSoundActive = await validateSoundCookie(tele);
-    setEnableSound(isSoundActive);
+  const syncAllCookies = async () => {
+    try {
+      const activeCountry = await validateCountryCode(tele);
+      localStorage.setItem("avatarColor", getRandomColor());
+      const currLang = await validateLang(tele);
+      const isSoundActive = await validateSoundCookie(tele);
+      const isHapticActive = await fetchHapticStatus(tele);
+
+      i18next.changeLanguage(currLang);
+      setEnableHaptic(isHapticActive);
+      setEnableSound(JSON.parse(isSoundActive));
+      setCountry(activeCountry);
+
+      const device = getDeviceAndOS(tele.platform);
+      trackEvent("device", device, "success");
+      trackComponentView("landing_page");
+    } catch (error) {
+      showToast("default");
+    }
   };
 
   useEffect(() => {
-    trackComponentView("landing_page");
+    syncAllCookies();
     getUserData();
-    checkSoundActive();
 
     const handleUserInteraction = () => {
       // playAudio();
@@ -109,12 +145,12 @@ const IntroPage = (props) => {
         platform === "weba" ||
         platform === "unknown"
       ) {
-        // setDisableDestop(true);
+        setDisableDestop(true);
       } else {
-        // setDisableDestop(false);
-        // setTimeout(() => {
-        //   (async () => await auth())();
-        // }, 1000);
+        setDisableDestop(false);
+        setTimeout(() => {
+          (async () => await auth())();
+        }, 1000);
       }
       if (platform === "ios") {
         document.body.style.position = "fixed";
@@ -127,10 +163,6 @@ const IntroPage = (props) => {
     }
   }, [platform]);
 
-  const handleSelectGame = (screen) => {
-    setShowLauncher(screen);
-  };
-
   const handleUpdateIdx = (num) => {
     setActiveIndex(num);
   };
@@ -140,11 +172,7 @@ const IntroPage = (props) => {
       {disableDesktop ? (
         <DesktopScreen />
       ) : (
-        <Launcher
-          handleClick={handleSelectGame}
-          handleUpdateIdx={handleUpdateIdx}
-          activeIndex={activeIndex}
-        />
+        <Launcher handleUpdateIdx={handleUpdateIdx} activeIndex={activeIndex} />
       )}
     </div>
   );

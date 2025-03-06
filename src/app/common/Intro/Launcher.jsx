@@ -1,15 +1,24 @@
 import { useRef, useState } from "react";
 import assets from "../../../assets/assets.json";
 import "../../../styles/load.carousel.scss";
-import { ChevronLeft, ChevronRight, Play, Settings } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  Play,
+  Settings,
+} from "lucide-react";
 import FoFIntro from "./FoFIntro";
 import RoRIntro from "./RoRIntro";
 import ReactHowler from "react-howler";
 import DoDIntro from "./DoDIntro";
+import TgHeader from "../../../components/Common/TgHeader";
+import SettingModal from "../../../components/Modals/Settings";
 
 export default function Launcher({ handleUpdateIdx, activeIndex }) {
   const howlerRef = useRef(null);
   const [fadeout, setFadeout] = useState(false);
+  const [showCard, setShowCard] = useState(false);
   const pos = ["-50vw", "-150vw", "-250vw"];
   const bgAudios = ["fofIntro", "", "rorIntro"];
   const currAudio = bgAudios[activeIndex];
@@ -40,21 +49,14 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
   };
 
   return (
-    <div
-      className={`flex w-screen text-wrap`}
-      style={{
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-      }}
-    >
-      <div className="absolute flex gap-5 -top-[35px] right-[94px] text-white z-50">
-        <Settings size={"6vw"} />
-      </div>
-      <div
-        className="transition-all duration-500 overflow-hidden relative"
-        style={{
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
+    <div className={`flex w-screen text-wrap`}>
+      <TgHeader
+        hideExit={true}
+        openSettings={() => {
+          setShowCard(true);
         }}
-      >
+      />
+      <div className="transition-all tg-container-height duration-500 overflow-hidden relative">
         <div
           className="slider-container flex transition-transform duration-500"
           style={{
@@ -84,6 +86,16 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
             </button>
           )}
         </div>
+
+        {showCard && (
+          <div className="absolute z-[99] w-screen">
+            <SettingModal
+              close={() => {
+                setShowCard(false);
+              }}
+            />
+          </div>
+        )}
         <div className="absolute">
           <ReactHowler
             src={assets.audio.menu}
