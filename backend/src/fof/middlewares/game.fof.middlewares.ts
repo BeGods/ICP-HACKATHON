@@ -62,7 +62,8 @@ export const validateAlchemist = async (req, res, next) => {
 
 export const validateAutomata = async (req, res, next) => {
   try {
-    const userId = req.user;
+    const userId = req.user._id;
+    const user = req.user;
     const { mythologyName, adId } = await decryptHash(req.body.data);
 
     const { mythData, userMythology } = await filterDataByMyth(
@@ -71,7 +72,7 @@ export const validateAutomata = async (req, res, next) => {
     );
 
     if (mythData.boosters.isAutomataActive) {
-      mythData.boosters = checkAutomataStatus(mythData);
+      mythData.boosters = checkAutomataStatus(mythData, user);
 
       if (mythData.boosters.isAutomataActive) {
         throw new Error("Automata is already active. Try again later.");

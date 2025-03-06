@@ -175,10 +175,10 @@ export interface IUser extends Document {
       extraBlackOrb: string;
       dailyBonusClaimedAt: Date;
       exploitCount: number;
-      streakBonus: {
-        isActive: boolean;
-        claimedAt: number;
-        streakCount: number;
+      streak: {
+        claimedAt: Date;
+        count: number;
+        lastMythClaimed: "Celtic" | "Egyptian" | "Greek" | "Norse";
       };
       joiningBonus: boolean;
     };
