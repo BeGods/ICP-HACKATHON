@@ -40,7 +40,7 @@ const IntroPage = (props) => {
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [disableDesktop, setDisableDestop] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // configure tma.auth
   const getUserData = async () => {

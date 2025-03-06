@@ -1,7 +1,6 @@
 import React from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
-import ReactHowler from "react-howler";
 
 const FoFLoader = (props) => {
   return (
@@ -52,14 +51,14 @@ const FoFLoader = (props) => {
           </div>
         </div>
       </div>
-      <div className="absolute">
+      {/* <div className="absolute">
         <ReactHowler
           src={`${assets.audio.fofIntro}`}
           playing={true}
           preload={true}
           html5={true}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
