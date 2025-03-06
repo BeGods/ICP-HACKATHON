@@ -54,6 +54,7 @@ const BoosterClaim = ({
     setShowCard,
     enableHaptic,
   } = useContext(FofContext);
+  const { t } = useTranslation();
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
