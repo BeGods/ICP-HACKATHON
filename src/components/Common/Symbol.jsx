@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 
 const Symbol = ({ myth, isCard, showClaimEffect }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   return (
     <div
       className={`relative  select-none pointer-events-none  flex justify-center items-center ${

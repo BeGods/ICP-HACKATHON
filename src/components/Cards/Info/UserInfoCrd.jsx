@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSymbols } from "../../../utils/constants";
+import { mythSymbols } from "../../../utils/constants.fof";
 import { countries } from "../../../utils/country";
 
 const UserInfoCard = ({ close, userData }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   const countryFlag = countries.find((item) => item.code == userData.country);
 
   return (

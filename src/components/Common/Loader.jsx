@@ -25,23 +25,18 @@ const Loader = (props) => {
 
   return (
     <div
+      className="tg-container-height"
       style={{
         background: `url(${assets.uxui.intro})`,
         backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
-        height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
         backgroundSize: "cover",
         width: "100vw",
         top: 0,
         left: 0,
       }}
     >
-      <div
-        className="absolute flex justify-center items-center w-full"
-        style={{
-          height: `calc(100svh - var(--tg-safe-area-inset-top) - 45px)`,
-        }}
-      >
+      <div className="absolute flex justify-center items-center w-full tg-container-height">
         <div
           className="relative  flex justify-center items-center w-full h-full pointer-events-none"
           style={{

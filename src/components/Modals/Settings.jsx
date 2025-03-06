@@ -15,7 +15,7 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 import { countries } from "../../utils/country";
 import {
   connectTonWallet,
@@ -23,7 +23,7 @@ import {
   fetchProfilePhoto,
   fetchRewards,
   updateCountry,
-} from "../../utils/api";
+} from "../../utils/api.fof";
 import {
   useTonAddress,
   useTonConnectModal,
@@ -78,7 +78,7 @@ const SettingModal = ({ close }) => {
     enableHaptic,
     setEnableHaptic,
     setSection,
-  } = useContext(MyContext);
+  } = useContext(FofContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const { state, open } = useTonConnectModal();

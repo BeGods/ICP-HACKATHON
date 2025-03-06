@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 import { ThumbsUp } from "lucide-react";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 
 const ClaimRewardBtn = ({ handleClick }) => {
   let disableClick = useRef(false);

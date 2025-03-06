@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 import {
   CornerUpLeft,
   CornerUpRight,

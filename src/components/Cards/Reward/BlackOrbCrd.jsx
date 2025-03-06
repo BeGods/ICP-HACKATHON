@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 
 import ClaimRewardBtn from "../../Buttons/ClaimRewardBtn";
 
 const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
-  const { assets, setShowCard } = useContext(MyContext);
+  const { assets, setShowCard } = useContext(FofContext);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
 

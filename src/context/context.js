@@ -1,3 +1,5 @@
 import { createContext } from "react";
 
-export const MyContext = createContext("");
+export const FofContext = createContext("");
+export const RorContext = createContext("");
+export const MainContext = createContext("");

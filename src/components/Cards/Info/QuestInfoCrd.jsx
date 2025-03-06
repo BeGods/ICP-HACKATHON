@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 import { useTranslation } from "react-i18next";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   const { i18n } = useTranslation();
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   const [platform, setPlatform] = useState(null);
 
   useEffect(() => {
