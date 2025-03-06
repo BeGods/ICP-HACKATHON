@@ -25,15 +25,14 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
   };
 
   useEffect(() => {
-    const playAudioWithDelay = () => {
-      setTimeout(() => {
-        if (bgRef.current && activeIndex !== 1) {
+    const handleAudioLoad = () => {
+      if (bgRef.current && activeIndex !== 1) {
+        setTimeout(() => {
           bgRef.current.play();
-        }
-      }, 1000);
+        }, 2000);
+      }
     };
-
-    playAudioWithDelay();
+    handleAudioLoad();
   }, [activeIndex]);
 
   const nextSlide = () => {
@@ -103,9 +102,14 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
               playing={false}
               ref={bgRef}
               loop
-              preload
+              onLoad={() => {
+                console.log("ye loaded");
+              }}
               onLoadError={(err) => {
-                console.log(err);
+                console.log("Error", err);
+              }}
+              onPlayError={(err) => {
+                console.log("Error", err);
               }}
             />
           )}
