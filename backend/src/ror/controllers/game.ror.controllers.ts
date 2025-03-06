@@ -66,14 +66,36 @@ export const getGameStats = async (req, res) => {
       user.gameSession?.restExpiresAt
     );
 
+    const memberData = {
+      overallRank: 0,
+      totalOrbs: 0,
+    };
+
+    // is eligible to claim, streak, joining bonus
     const userData = {
       telegramUsername: user.telegramUsername,
+      lineName: user.lineName,
       tonAddress: user.tonAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile?.avatarUrl ?? null,
+      avatarUrl: user.profile.avatarUrl ?? null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
+      country: user.country ?? "NA",
+      showFinishRwrd:
+        user.gameCompletedAt.hasClaimedFoFRwrd === false &&
+        user.gameCompletedAt.fof
+          ? true
+          : false,
+      streak: {
+        isStreakActive: false,
+        streakCount: 0,
+        lastMythClaimed: "Celtic",
+      },
+      joiningBonus: true,
+      isPlaySuperVerified: user.playsuper.isVerified,
+      stakeOn: user.userBetAt ? user.userBetAt[0] : null,
+      ...memberData,
     };
 
     const tasks = userGameData.quests.sort(

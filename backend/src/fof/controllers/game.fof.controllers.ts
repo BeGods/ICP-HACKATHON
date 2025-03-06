@@ -212,7 +212,7 @@ export const getGameStats = async (req, res) => {
       lineName: user.lineName,
       tonAddress: user.tonAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile.avatarUrl,
+      avatarUrl: user.profile.avatarUrl ?? null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
