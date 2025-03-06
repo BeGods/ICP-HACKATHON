@@ -109,22 +109,18 @@ export const validateStreakBonus = async (req, res, next) => {
     const user = req.user;
     const { bonus } = user;
     const now = new Date();
-    const lastClaimedDate = new Date(bonus.fof.streakBonus.claimedAt);
-    lastClaimedDate.setHours(0, 0, 0, 0);
+    now.setUTCHours(0, 0, 0, 0);
 
-    // already claimed
+    const lastClaimedDate = new Date(bonus.fof.streak.claimedAt ?? new Date(0));
+    lastClaimedDate.setUTCHours(0, 0, 0, 0);
+
+    // already claimed today
     if (lastClaimedDate.getTime() === now.getTime()) {
-      throw Error("You are not eligible to claim bonus.");
+      throw new Error("You are not eligible to claim the bonus today.");
     }
 
-    // not active
-    if (!bonus.fof.streakBonus.isActive) {
-      throw Error("Invalid request. Bonus already claimed");
-    }
-
-    bonus.fof.streakBonus.isActive = false;
-    bonus.fof.streakBonus.streakCount += 1;
-    bonus.fof.streakBonus.claimedAt = Date.now();
+    // if not
+    bonus.fof.streak.claimedAt = new Date().toISOString();
     next();
   } catch (error) {
     console.error("Error in validateStreakBonus:", error.message);
