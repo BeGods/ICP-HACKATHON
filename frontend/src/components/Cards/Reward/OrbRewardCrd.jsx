@@ -8,7 +8,7 @@ import {
 } from "../../../utils/constants";
 import ReactHowler from "react-howler";
 import { Download } from "lucide-react";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 
 const MilestoneCard = ({
   activeMyth,
@@ -22,7 +22,7 @@ const MilestoneCard = ({
   t,
 }) => {
   const [disableSound, setDisableSound] = useState(true);
-  const { enableSound, assets } = useContext(MyContext);
+  const { enableSound, assets } = useContext(FofContext);
 
   useEffect(() => {
     setTimeout(() => {

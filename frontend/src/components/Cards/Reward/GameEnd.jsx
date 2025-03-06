@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { MyContext } from "../../../context/context";
-import { mythSections } from "../../../utils/constants";
+import { FofContext } from "../../../context/context";
+import { mythSections } from "../../../utils/constants.fof";
 
 const GameEndCrd = ({ handleClick, activeMyth }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">

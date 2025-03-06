@@ -1,4 +1,4 @@
-import { mythologies } from "../utils/constants";
+import { mythologies } from "../utils/constants.fof";
 
 export const categorizeQuestsByMythology = (quests) => {
   const categorizedQuests = mythologies.reduce((acc, mythology) => {

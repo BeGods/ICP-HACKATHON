@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { mythSymbols } from "../../utils/constants";
-import { MyContext } from "../../context/context";
+import { mythSymbols } from "../../utils/constants.fof";
+import { FofContext } from "../../context/context";
 
 const MappedOrbs = ({ quest, showNum }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   return (
     <div className="flex w-full gap-[3px]">
       {Object.entries(quest.requiredOrbs).map(([key, value], index) => (

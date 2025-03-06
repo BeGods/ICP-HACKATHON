@@ -9,10 +9,10 @@ import {
   mythologies,
   mythSections,
   mythSymbols,
-} from "../../../utils/constants";
+} from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
 import BoosterBtn from "../../Buttons/BoosterBtn";
 import { showToast } from "../../Toast/Toast";
@@ -23,8 +23,7 @@ import {
   claimBurstBooster,
   claimMoonBoost,
   claimShardsBooster,
-  generateStarInvoice,
-} from "../../../utils/api";
+} from "../../../utils/api.fof";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { Clapperboard, Star } from "lucide-react";
@@ -54,8 +53,7 @@ const BoosterClaim = ({
     authToken,
     setShowCard,
     enableHaptic,
-  } = useContext(MyContext);
-  const { t } = useTranslation();
+  } = useContext(FofContext);
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;

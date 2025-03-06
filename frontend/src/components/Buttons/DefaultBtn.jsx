@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
-import { mythSections } from "../../utils/constants";
+import { mythSections } from "../../utils/constants.fof";
 import { Handshake } from "lucide-react";
-import { MyContext } from "../../context/context";
+import { FofContext } from "../../context/context";
 
 const DefaultBtn = ({
   message,
@@ -10,7 +10,7 @@ const DefaultBtn = ({
   isGold,
   isBooster,
 }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   const [isClicked, setIsClicked] = useState(false);
   let disableClick = useRef(false);
 

@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-import { mythSections } from "../../../utils/constants";
+import { mythSections } from "../../../utils/constants.fof";
 import MappedOrbs from "../../Common/MappedOrbs";
 import Symbol from "../../Common/Symbol";
 import IconBtn from "../../Buttons/IconBtn";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
@@ -17,7 +17,7 @@ const QuestCard = ({
   InfoCard,
   isGuideActive,
 }) => {
-  const { assets, enableHaptic } = useContext(MyContext);
+  const { assets, enableHaptic } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [buttonFlip, setButtonFlip] = useState(false);
 

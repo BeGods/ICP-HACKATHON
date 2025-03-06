@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { MyContext } from "../../context/context";
-import { mythSections, mythSymbols } from "../../utils/constants";
+import { FofContext } from "../../context/context";
+import { mythSections, mythSymbols } from "../../utils/constants.fof";
 
 export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
-  const { activeMyth, assets } = useContext(MyContext);
+  const { activeMyth, assets } = useContext(FofContext);
   const { t, i18n } = useTranslation();
 
   return (
@@ -170,7 +170,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
 };
 
 export const QuestGuide = ({ handleClick }) => {
-  const { activeMyth } = useContext(MyContext);
+  const { activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
 
   return (
@@ -231,7 +231,7 @@ export const QuestGuide = ({ handleClick }) => {
 };
 
 export const BoosterGuide = ({ handleClick }) => {
-  const { activeMyth } = useContext(MyContext);
+  const { activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
 
   return (
@@ -290,7 +290,7 @@ export const BoosterGuide = ({ handleClick }) => {
 };
 
 export const TowerGuide = ({ handleClick }) => {
-  const { assets, activeMyth } = useContext(MyContext);
+  const { assets, activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
   const [activeColor, setActiveColor] = useState(0);
   const myths = ["greek", "celtic", "norse", "egyptian"];

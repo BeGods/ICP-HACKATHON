@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
 import MappedOrbs from "../../Common/MappedOrbs";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSections, mythSymbols } from "../../../utils/constants";
+import { mythSections, mythSymbols } from "../../../utils/constants.fof";
 import Button from "../../Buttons/DefaultBtn";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 
 function PayCard({
   quest,
@@ -14,7 +14,7 @@ function PayCard({
   handleClaimEffect,
   isBooster,
 }) {
-  const { gameData, assets } = useContext(MyContext);
+  const { gameData, assets } = useContext(FofContext);
   const [deduct, setDeduct] = useState(false);
   const [scale, setScale] = useState(false);
   const [showNum, setShowNum] = useState(false);

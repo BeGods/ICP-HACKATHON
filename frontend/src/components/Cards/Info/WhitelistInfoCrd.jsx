@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { MyContext } from "../../../context/context";
+import { mythSections } from "../../../utils/constants.fof";
+import { FofContext } from "../../../context/context";
 
 const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
-  const { assets } = useContext(MyContext);
+  const { assets } = useContext(FofContext);
   return (
     <div
       onClick={() => {

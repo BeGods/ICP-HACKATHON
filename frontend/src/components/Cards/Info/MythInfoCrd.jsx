@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { mythSections } from "../../../utils/constants";
-import { MyContext } from "../../../context/context";
+import { mythSections } from "../../../utils/constants.fof";
+import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 
 const MythInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { activeMyth, assets } = useContext(MyContext);
+  const { activeMyth, assets } = useContext(FofContext);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">

@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
-import { MyContext } from "../../../context/context";
+import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { ThumbsUp } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
-import { addLeaderboardBet } from "../../../utils/api";
+import { addLeaderboardBet } from "../../../utils/api.fof";
 
 const StakeCrd = ({ profileImg }) => {
-  const { setShowCard, authToken, setUserData } = useContext(MyContext);
+  const { setShowCard, authToken, setUserData } = useContext(FofContext);
   const [status, setStatus] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const handleAddStake = async () => {
