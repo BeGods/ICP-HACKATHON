@@ -17,7 +17,6 @@ import JoinBonus from "../fof/JoinBonus/Page";
 import Redeem from "../fof/Redeem/Redeem";
 import Footer from "../../components/Common/FoFFooter";
 import Gift from "../fof/Gift/Gift";
-import assets from "../../assets/assets.json";
 import { showToast } from "../../components/Toast/Toast";
 import StreakBonus from "../fof/Streak/StreakBonus";
 import {

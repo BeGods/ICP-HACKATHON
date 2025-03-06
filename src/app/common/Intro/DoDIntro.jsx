@@ -13,7 +13,7 @@ const DoDIntro = (props) => {
       <div
         className={`flex  flex-col h-full items-center justify-center z-[100]`}
       >
-        <div className="absolute flex flex-col justify-between items-center h-full pt-[0.5vh] pb-[3vh]">
+        <div className="absolute flex flex-col justify-between items-center h-full pt-[0.5vh] pb-[3.5vh]">
           <img
             src="/assets/logos/dawn.of.duels.png"
             alt="dod"
@@ -28,14 +28,17 @@ const DoDIntro = (props) => {
               />
             </div>
             <div className="relative inline-block">
-              <img
+              <h1 className="text-gold font-fof text-[9vw] text-black-contour">
+                COMING SOON
+              </h1>
+              {/* <img
                 src="/assets/buttons/button.black.off.png"
                 alt="Button"
                 className="h-auto"
               />
               <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
                 PLAY
-              </span>
+              </span> */}
             </div>
           </div>
         </div>
