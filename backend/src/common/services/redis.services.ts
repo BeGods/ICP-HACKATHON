@@ -49,3 +49,13 @@ export const deleteRedisKey = async (key) => {
     console.log(error);
   }
 };
+
+export const setOneWaveSession = async (key, value, expiry) => {
+  try {
+    const redisClient = await connectRedis();
+
+    await redisClient.set(key, value, { EX: expiry });
+  } catch (error) {
+    console.log(error);
+  }
+};

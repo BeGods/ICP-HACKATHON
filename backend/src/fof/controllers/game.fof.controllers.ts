@@ -210,6 +210,7 @@ export const getGameStats = async (req, res) => {
     const userData = {
       telegramUsername: user.telegramUsername,
       lineName: user.lineName,
+      oneWaveUsername: user.oneWaveUsername,
       tonAddress: user.tonAddress,
       isPremium: user.isPremium,
       avatarUrl: user.profile.avatarUrl ?? null,

@@ -19,6 +19,8 @@ import {
   decryptOneWaveHash,
 } from "../../helpers/crypt.helpers";
 import config from "../../config/config";
+import { getOTP, setOneWaveSession } from "../services/redis.services";
+import { v4 as uuidv4 } from "uuid";
 
 // login
 export const authenticate = async (
@@ -275,11 +277,13 @@ export const createOneWaveSession = async (
       expiresAt: Math.floor(Date.now() / 1000) + 300,
     };
 
+    const sessionId = uuidv4();
     const oneWaveHash = await encryptOneWaveHash(oneWaveCredentials);
+    await setOneWaveSession(sessionId, oneWaveHash, 300);
 
     res
       .status(200)
-      .json({ url: `${config.source.client}?onewave=${oneWaveHash}` });
+      .json({ url: `${config.source.client}?onewave=${sessionId}` });
   } catch (error: any) {
     console.log(error);
     res.status(500).json({
@@ -294,7 +298,16 @@ export const authenticateOneWave = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { sessionHash } = req.body;
+    const { sessionId } = req.body;
+    const sessionHash = await getOTP(sessionId);
+
+    if (!sessionHash) {
+      res.status(400).json({
+        message: "Invalid sessionId.",
+      });
+      return;
+    }
+
     const { oneWaveId, oneWaveUsername } = await decryptOneWaveHash(
       sessionHash
     );
