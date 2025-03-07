@@ -78,6 +78,7 @@ const SettingModal = ({ close }) => {
     enableHaptic,
     setEnableHaptic,
     setSection,
+    isTelegram,
   } = useContext(FofContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
@@ -320,7 +321,9 @@ const SettingModal = ({ close }) => {
 
         <div
           onClick={updateProfilePhoto}
-          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
+          className={`${
+            !isTelegram ? "hidden" : "flex"
+          } text-tertiary text-white text-left w-full mt-6 pl-4`}
         >
           <div className="flex justify-start -ml-3">
             <UserRoundPen />
@@ -335,7 +338,9 @@ const SettingModal = ({ close }) => {
           onClick={() => {
             tele.addToHomeScreen();
           }}
-          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
+          className={`${
+            !isTelegram ? "hidden" : "flex"
+          } text-tertiary text-white text-left w-full mt-6 pl-4`}
         >
           <div className="flex justify-start -ml-3">
             <LayoutGrid />

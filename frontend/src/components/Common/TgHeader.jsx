@@ -20,7 +20,7 @@ const TgHeader = ({ openSettings, hideExit }) => {
         <LogOut
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            navigate("/");
+            navigate(-1);
           }}
         />
       )}

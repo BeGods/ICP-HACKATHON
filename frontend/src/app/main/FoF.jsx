@@ -215,9 +215,11 @@ const FoFMain = () => {
         setTimeout(() => {
           setIsLoading(false);
         }, 1000);
-        (async () => {
-          await getProfilePhoto(token);
-        })();
+        if (isTelegram) {
+          (async () => {
+            await getProfilePhoto(token);
+          })();
+        }
       } else if (
         response?.user?.joiningBonus &&
         response?.user.isEligibleToClaim

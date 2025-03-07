@@ -111,7 +111,7 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
             html5={true}
             volume={0.2}
           />
-          {/* {activeIndex !== 1 && (
+          {activeIndex !== 1 && (
             <ReactHowler
               src={assets.audio[bgAudios[activeIndex]]}
               playing={false}
@@ -127,7 +127,7 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
                 console.log("Error", err);
               }}
             />
-          )} */}
+          )}
         </div>
       </div>
     </div>

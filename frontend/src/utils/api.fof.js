@@ -1,7 +1,7 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
-export const authenticate = async (userData, referralCode) => {
+export const authenticateTg = async (userData, referralCode) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/auth`;
   if (referralCode) {
     url += `?referralCode=${referralCode}`;
@@ -15,6 +15,20 @@ export const authenticate = async (userData, referralCode) => {
     throw error;
   }
 };
+
+export const authenticateOneWave = async (param) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/onewave/auth`;
+
+
+  try {
+    const response = await axios.post(url, { sessionId: param });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 
 export const fetchGameStats = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/game/stats`;

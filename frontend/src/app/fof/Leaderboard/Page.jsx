@@ -522,7 +522,11 @@ const Leaderboard = (props) => {
                     />
                   ) : (
                     <Avatar
-                      name={userData.telegramUsername}
+                      name={
+                        isTelegram
+                          ? userData.telegramUsername.charAt(0).toUpperCase()
+                          : userData.oneWaveUsername.charAt(0).toUpperCase()
+                      }
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -530,9 +534,13 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-black">
-                  {userData.telegramUsername.length > 20
-                    ? userData.telegramUsername.slice(0, 20)
-                    : userData.telegramUsername}
+                  {isTelegram
+                    ? userData.telegramUsername.length > 20
+                      ? userData.telegramUsername.slice(0, 20)
+                      : userData.telegramUsername
+                    : userData.oneWaveUsername.length > 20
+                    ? userData.oneWaveUsername.slice(0, 20)
+                    : userData.oneWaveUsername}
                 </h1>
               </div>
               <div className="flex flex-col text-black justify-center items-end text-tertiary w-[30%] mr-4 h-full">
@@ -632,7 +640,11 @@ const Leaderboard = (props) => {
                     />
                   ) : (
                     <Avatar
-                      name={userData.telegramUsername}
+                      name={
+                        isTelegram
+                          ? userData.telegramUsername.charAt(0).toUpperCase()
+                          : userData.oneWaveUsername.charAt(0).toUpperCase()
+                      }
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -640,9 +652,13 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-white text-tertiary">
-                  {userData.telegramUsername.length > 20
-                    ? userData.telegramUsername.slice(0, 20)
-                    : userData.telegramUsername}
+                  {isTelegram
+                    ? userData.telegramUsername.length > 20
+                      ? userData.telegramUsername.slice(0, 20)
+                      : userData.telegramUsername
+                    : userData.oneWaveUsername.length > 20
+                    ? userData.oneWaveUsername.slice(0, 20)
+                    : userData.oneWaveUsername}
                 </h1>
               </div>
               <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">
