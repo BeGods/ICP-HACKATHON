@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import { validate, parse } from "@tma.js/init-data-node";
 import axios from "axios";
+import crypto from "crypto";
 
 export const generateAuthToken = async (user: any) => {
   const userObj = { _id: user._id, role: "user" };
