@@ -483,26 +483,27 @@ const BoosterClaim = ({
         !isAutoPay) ||
         (activeCard === "minion" &&
           boostersData?.isShardsClaimActive &&
-          !isAutoPay)) && (
-        <div
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            showAd();
-          }}
-          className="absolute flex items-center justify-center top-0 w-screen pt-2"
-        >
-          <div className="flex uppercase flex-col items-center gap-2 w-fit">
-            <div className="flex relative items-center justify-center">
-              <Clapperboard color="#ffd660" size={"16vw"} />
-            </div>
-            <div className="flex flex-col text-white">
-              <div className="text-[6vw] -mt-2">
-                <span className="text-gold">Watch</span> {t("note.ad")}
+          !isAutoPay)) &&
+        isTelegram && (
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              showAd();
+            }}
+            className="absolute flex items-center justify-center top-0 w-screen pt-2"
+          >
+            <div className="flex uppercase flex-col items-center gap-2 w-fit">
+              <div className="flex relative items-center justify-center">
+                <Clapperboard color="#ffd660" size={"16vw"} />
+              </div>
+              <div className="flex flex-col text-white">
+                <div className="text-[6vw] -mt-2">
+                  <span className="text-gold">Watch</span> {t("note.ad")}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {((activeCard === "automata" &&
         !boostersData?.isAutomataActive &&

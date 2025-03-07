@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { authenticate } from "../../../utils/api.fof";
+import { authenticateOneWave } from "../../../utils/api.fof";
 import {
   fetchHapticStatus,
   setAuthCookie,
@@ -20,6 +20,7 @@ import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
 import { determineIsTelegram } from "../../../utils/device.info";
+import { useLocation } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
@@ -38,6 +39,10 @@ const IntroPage = (props) => {
     isTelegram,
     setIsTelegram,
   } = useContext(MainContext);
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const oneWaveParam = queryParams.get("onewave");
+  console.log(oneWaveParam);
 
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
@@ -89,9 +94,19 @@ const IntroPage = (props) => {
   };
 
   // authenticate
-  const auth = async () => {
+  const telegramAuth = async () => {
     try {
-      const response = await authenticate(tgUserData, referralCode);
+      const response = await authenticateTg(tgUserData, referralCode);
+      setAuthToken(response.data.token);
+      await setAuthCookie(tele, response.data.token);
+    } catch (error) {
+      console.error("Authentication Error: ", error);
+    }
+  };
+
+  const onewaveAuth = async () => {
+    try {
+      const response = await authenticateOneWave(oneWaveParam);
       setAuthToken(response.data.token);
       await setAuthCookie(tele, response.data.token);
     } catch (error) {
@@ -141,20 +156,26 @@ const IntroPage = (props) => {
 
   useEffect(() => {
     if (platform) {
-      setIsTelegram(determineIsTelegram(platform));
+      const isTg = determineIsTelegram(platform);
+      setIsTelegram(isTg);
       if (
         platform === "macos" ||
         platform === "windows" ||
         platform === "tdesktop" ||
         platform === "web" ||
-        platform === "weba"
+        platform === "weba" ||
+        (platform === "unknown" && !oneWaveParam)
       ) {
         setDisableDestop(true);
       } else {
         setDisableDestop(false);
-        setTimeout(() => {
-          (async () => await auth())();
-        }, 1000);
+        if (isTg) {
+          setTimeout(() => {
+            (async () => await telegramAuth())();
+          }, 1000);
+        } else if (oneWaveParam) {
+          (async () => await onewaveAuth())();
+        }
       }
       if (platform === "ios") {
         document.body.style.position = "fixed";

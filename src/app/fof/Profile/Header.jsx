@@ -8,7 +8,8 @@ import { determineStreakBadge } from "../../../helpers/streak.helper";
 const tele = window.Telegram?.WebApp;
 
 const BottomChild = ({ userData, showGuide }) => {
-  const { rewards, setSection, enableHaptic } = useContext(FofContext);
+  const { rewards, setSection, enableHaptic, isTelegram } =
+    useContext(FofContext);
   const [showEffect, setShowEffect] = useState(true);
   const { t } = useTranslation();
 
@@ -63,7 +64,7 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard, enableHaptic } =
+  const { assets, platform, setShowCard, enableHaptic, isTelegram } =
     useContext(FofContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
@@ -105,7 +106,9 @@ const CenterChild = ({ userData }) => {
                 platform === "ios" ? "mt-2" : "mt-4"
               } text-white opacity-70`}
             >
-              {userData.telegramUsername[0]}
+              {isTelegram
+                ? userData.telegramUsername.charAt(0).toUpperCase()
+                : userData.oneWaveUsername.charAt(0).toUpperCase()[0]}
             </div>
           </div>
         )}

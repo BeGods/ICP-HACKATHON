@@ -25,6 +25,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     userData,
     enableHaptic,
     gameData,
+    isTelegram,
   } = useContext(FofContext);
   const countOfInCompleteQuests = tasks.filter(
     (item) => item.isQuestClaimed === false
@@ -157,7 +158,9 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 <span
                   className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}
                 >
-                  {userData.telegramUsername.charAt(0).toUpperCase()}
+                  {isTelegram
+                    ? userData.telegramUsername.charAt(0).toUpperCase()
+                    : userData.oneWaveUsername.charAt(0).toUpperCase()}
                 </span>
               </div>
             </>

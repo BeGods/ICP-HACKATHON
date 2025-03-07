@@ -63,7 +63,7 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard, enableHaptic } =
+  const { assets, platform, setShowCard, enableHaptic, isTelegram } =
     useContext(RorContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
