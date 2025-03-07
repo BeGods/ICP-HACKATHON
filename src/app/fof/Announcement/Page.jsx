@@ -27,6 +27,7 @@ const Announcement = (props) => {
     setActiveMyth,
     setShowAnmt,
     enableHaptic,
+    isTelegram,
   } = useContext(FofContext);
   let disableRef = useRef(false);
 
@@ -77,7 +78,11 @@ const Announcement = (props) => {
   };
 
   return (
-    <div className="flex tg-container-height relative flex-col w-screen justify-center font-fof items-center bg-black">
+    <div
+      className={`flex ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative flex-col w-screen justify-center font-fof items-center bg-black`}
+    >
       <div className="flex flex-col w-full h-full items-center">
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
           <div className="text-gold font-symbols">

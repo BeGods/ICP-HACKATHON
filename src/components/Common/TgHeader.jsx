@@ -7,11 +7,15 @@ import { handleClickHaptic } from "../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const TgHeader = ({ openSettings, hideExit }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const { enableHaptic, isTelegram } = useContext(MainContext);
   const navigate = useNavigate();
 
   return (
-    <div className="absolute flex gap-x-5 top-[-35px] right-[94px] text-white z-50">
+    <div
+      className={`absolute flex gap-x-5 ${
+        isTelegram ? "right-[94px] top-[-35px]" : "right-[20px] top-[-32px]"
+      } text-white z-50`}
+    >
       {!hideExit && (
         <LogOut
           onClick={() => {

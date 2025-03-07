@@ -8,7 +8,8 @@ import { mythSections } from "../../../utils/constants.fof";
 const tele = window.Telegram?.WebApp;
 
 const StreakBonus = (props) => {
-  const { assets, setSection, userData, enableHaptic } = useContext(FofContext);
+  const { assets, setSection, userData, enableHaptic, isTelegram } =
+    useContext(FofContext);
   const [changeText, setChangeText] = useState(true);
   const [disableHand, setDisableHand] = useState(true);
   const reward = determineStreak(userData.streak.streakCount);
@@ -32,7 +33,11 @@ const StreakBonus = (props) => {
   }, []);
 
   return (
-    <div className="flex tg-container-height relative flex-col w-screen justify-center font-fof items-center bg-black">
+    <div
+      className={`flex ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative flex-col w-screen justify-center font-fof items-center bg-black`}
+    >
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">

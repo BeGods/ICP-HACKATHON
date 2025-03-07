@@ -22,7 +22,7 @@ const tele = window.Telegram?.WebApp;
 
 const SplashScreen = ({ reward, exploitReward }) => {
   const { t } = useTranslation();
-  const { setSection, setActiveMyth, enableSound, enableHaptic } =
+  const { setSection, setActiveMyth, enableSound, enableHaptic, isTelegram } =
     useContext(FofContext);
   const [currReward, setCurrReward] = useState(reward);
   const [showScale, setShowScale] = useState(0);
@@ -164,7 +164,11 @@ const SplashScreen = ({ reward, exploitReward }) => {
   }, [playFlip]);
 
   return (
-    <div className="w-screen tg-container-height relative bg-black">
+    <div
+      className={`w-screen ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative bg-black`}
+    >
       {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-center text-black-contour  uppercase z-20">
         {t("bonus.youwon")

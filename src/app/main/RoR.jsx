@@ -45,6 +45,7 @@ const RoRMain = () => {
     lang,
     tasks,
     setTasks,
+    isTelegram,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -88,6 +89,7 @@ const RoRMain = () => {
     setSwipes,
     tasks,
     setTasks,
+    isTelegram,
   };
 
   const sections = [
@@ -215,7 +217,9 @@ const RoRMain = () => {
             backgroundSize: "cover",
             backgroundPosition: "center center",
           }}
-          className="w-screen tg-container-height bg-white select-none font-fof overflow-hidden"
+          className={`w-screen ${
+            isTelegram ? "tg-container-height" : "browser-container-height"
+          } bg-white select-none font-fof overflow-hidden`}
         >
           <RorContext.Provider value={contextValues}>
             <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>

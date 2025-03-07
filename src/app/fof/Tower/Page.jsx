@@ -46,6 +46,7 @@ const Tower = () => {
     setShowCard,
     assets,
     enableHaptic,
+    isTelegram,
   } = useContext(FofContext);
   const [myth, setMyth] = useState(0);
   const [showClaim, setShowClaim] = useState(false);
@@ -181,7 +182,11 @@ const Tower = () => {
   }, []);
 
   return (
-    <div className="flex flex-col tg-container-height overflow-hidden m-0">
+    <div
+      className={`flex flex-col ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } overflow-hidden m-0`}
+    >
       <div
         style={{
           position: "absolute",

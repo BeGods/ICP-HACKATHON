@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
 import ReactHowler from "react-howler";
+import { MainContext } from "../../context/context";
 
 const RoRLoader = (props) => {
+  const { isTelegram } = useContext(MainContext);
+
   return (
-    <div className="w-[100vw] relative tg-container-height">
+    <div
+      className={`w-[100vw] relative ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      }`}
+    >
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"

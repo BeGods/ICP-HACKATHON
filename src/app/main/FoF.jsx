@@ -56,6 +56,7 @@ const FoFMain = () => {
     lang,
     tasks,
     setTasks,
+    isTelegram,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -113,6 +114,7 @@ const FoFMain = () => {
     showAnmt,
     leaderboard,
     setLeaderboard,
+    isTelegram,
   };
   const sections = [
     <Forges />, // 0
@@ -313,7 +315,11 @@ const FoFMain = () => {
       />
 
       {!isLoading ? (
-        <div className="w-screen tg-container-height bg-white select-none font-fof overflow-hidden">
+        <div
+          className={`w-screen ${
+            isTelegram ? "tg-container-height" : "browser-container-height"
+          } bg-white select-none font-fof overflow-hidden`}
+        >
           <FofContext.Provider value={initalStates}>
             <div>{sections[section]}</div>
             {section != 7 &&

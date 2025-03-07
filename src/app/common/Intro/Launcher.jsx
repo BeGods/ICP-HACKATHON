@@ -8,7 +8,7 @@ import DoDIntro from "./DoDIntro";
 import TgHeader from "../../../components/Common/TgHeader";
 import SettingModal from "../../../components/Modals/Settings";
 
-export default function Launcher({ handleUpdateIdx, activeIndex }) {
+export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   const menuRef = useRef(null);
   const bgRef = useRef(null);
   const [fadeout, setFadeout] = useState(false);
@@ -51,7 +51,11 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
   return (
     <div className="flex w-screen text-wrap">
       <TgHeader hideExit={true} openSettings={() => setShowCard(true)} />
-      <div className="transition-all tg-container-height duration-500 overflow-hidden relative">
+      <div
+        className={`transition-all ${
+          isTelegram ? "tg-container-height" : "browser-container-height"
+        } duration-500 overflow-hidden relative`}
+      >
         <div
           className="slider-container flex transition-transform duration-500"
           style={{
@@ -59,9 +63,21 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
             transform: `translateX(${pos[activeIndex]})`,
           }}
         >
-          <FoFIntro handleFadeout={() => setFadeout(true)} fadeout={fadeout} />
-          <RoRIntro handleFadeout={() => setFadeout(true)} fadeout={fadeout} />
-          <DoDIntro handleFadeout={() => setFadeout(true)} fadeout={fadeout} />
+          <FoFIntro
+            isTelegram={isTelegram}
+            handleFadeout={() => setFadeout(true)}
+            fadeout={fadeout}
+          />
+          <RoRIntro
+            isTelegram={isTelegram}
+            handleFadeout={() => setFadeout(true)}
+            fadeout={fadeout}
+          />
+          <DoDIntro
+            isTelegram={isTelegram}
+            handleFadeout={() => setFadeout(true)}
+            fadeout={fadeout}
+          />
         </div>
         <div className={`${fadeout && "fade-out"}`}>
           {activeIndex > 0 && (
@@ -95,7 +111,7 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
             html5={true}
             volume={0.2}
           />
-          {activeIndex !== 1 && (
+          {/* {activeIndex !== 1 && (
             <ReactHowler
               src={assets.audio[bgAudios[activeIndex]]}
               playing={false}
@@ -111,7 +127,7 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
                 console.log("Error", err);
               }}
             />
-          )}
+          )} */}
         </div>
       </div>
     </div>

@@ -5,6 +5,13 @@ export const isSafari = () => {
 };
 
 
+export const determineIsTelegram = (platform) => {
+  if (platform === "ios" || platform === "android") {
+    return true
+  }
+  return false;
+}
+
 export const telegramGetSafeAreaInsets = () => {
   const rootStyle = getComputedStyle(document.documentElement);
   return {
