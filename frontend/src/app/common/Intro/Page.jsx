@@ -4,7 +4,6 @@ import {
   fetchHapticStatus,
   setAuthCookie,
   setLangCookie,
-  validateAuth,
   validateCountryCode,
   validateLang,
   validateSoundCookie,
@@ -20,6 +19,7 @@ import { MainContext } from "../../../context/context";
 import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
+import { determineIsTelegram } from "../../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
@@ -35,6 +35,8 @@ const IntroPage = (props) => {
     setAuthToken,
     setCountry,
     setLang,
+    isTelegram,
+    setIsTelegram,
   } = useContext(MainContext);
 
   const [tgUserData, setTgUserData] = useState(null);
@@ -139,13 +141,13 @@ const IntroPage = (props) => {
 
   useEffect(() => {
     if (platform) {
+      setIsTelegram(determineIsTelegram(platform));
       if (
         platform === "macos" ||
         platform === "windows" ||
         platform === "tdesktop" ||
         platform === "web" ||
-        platform === "weba" ||
-        platform === "unknown"
+        platform === "weba"
       ) {
         setDisableDestop(true);
       } else {
@@ -172,9 +174,13 @@ const IntroPage = (props) => {
   return (
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
       {disableDesktop ? (
-        <DesktopScreen />
+        <DesktopScreen assets={assets} />
       ) : (
-        <Launcher handleUpdateIdx={handleUpdateIdx} activeIndex={activeIndex} />
+        <Launcher
+          isTelegram={isTelegram}
+          handleUpdateIdx={handleUpdateIdx}
+          activeIndex={activeIndex}
+        />
       )}
     </div>
   );

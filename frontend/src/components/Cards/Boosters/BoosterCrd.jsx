@@ -54,6 +54,7 @@ const BoosterClaim = ({
     authToken,
     setShowCard,
     enableHaptic,
+    isTelegram,
   } = useContext(FofContext);
   const { t } = useTranslation();
   const disableRef = useRef(false);
@@ -509,7 +510,8 @@ const BoosterClaim = ({
         (activeCard === "burst" &&
           boostersData?.isShardsClaimActive &&
           isAutoPay)) &&
-        !payIsActive && (
+        !payIsActive &&
+        isTelegram && (
           <div
             onClick={() => {
               handleClickHaptic(tele, enableHaptic);
@@ -523,7 +525,7 @@ const BoosterClaim = ({
                   {activeCard === "automata" ? 1 : 3}
                 </div>{" "}
                 <img
-                  src="https://i.postimg.cc/2yztL9mh/tg-star.png"
+                  src={assets.uxui.tgStar}
                   alt="star"
                   className="w-[18vw] h-[18vw]"
                 />

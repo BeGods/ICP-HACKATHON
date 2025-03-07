@@ -5,12 +5,16 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const FoFIntro = ({ handleFadeout, fadeout }) => {
+const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
 
   return (
-    <div className="w-[200vw] tg-container-height relative">
+    <div
+      className={`w-[200vw] ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative`}
+    >
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"

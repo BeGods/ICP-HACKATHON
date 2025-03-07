@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
-import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const RoRIntro = ({ handleFadeout, fadeout }) => {
-  const navigate = useNavigate();
+const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   const [showGlow, setShowGlow] = useState(false);
 
   return (
-    <div className="w-[200vw] tg-container-height relative">
+    <div
+      className={`w-[200vw] ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative`}
+    >
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"

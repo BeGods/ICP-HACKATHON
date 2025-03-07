@@ -2,7 +2,7 @@ import React from "react";
 
 const DesktopScreen = ({ assets }) => {
   return (
-    <div className="flex flex-col tg-container-height justify-center items-center w-screen bg-black">
+    <div className="flex flex-col h-screen justify-center items-center w-screen bg-black">
       <img
         src={assets.logos.fofQr}
         alt="qr"

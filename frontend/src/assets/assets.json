@@ -1,5 +1,6 @@
 {
     "uxui": {
+        "tgStar": "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/tg-star.png",
         "multiorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.multicolor.png",
         "baseorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png",
         "basebg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.base.background.jpg",

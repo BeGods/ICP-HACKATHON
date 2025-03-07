@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
 import { mythologies, mythSymbols } from "../../utils/constants";
+import { MainContext } from "../../context/context";
 
 const orbPos = [
   "mt-[45vw] mr-[32vw]",
@@ -14,6 +15,7 @@ const orbPos = [
 const Loader = (props) => {
   const { t } = useTranslation();
   const [dots, setDots] = useState(1);
+  const { isTelegram } = useContext(MainContext);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,7 +27,9 @@ const Loader = (props) => {
 
   return (
     <div
-      className="tg-container-height"
+      className={`${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      }`}
       style={{
         background: `url(${assets.uxui.intro})`,
         backgroundPosition: "50.5% 0%",
@@ -36,7 +40,11 @@ const Loader = (props) => {
         left: 0,
       }}
     >
-      <div className="absolute flex justify-center items-center w-full tg-container-height">
+      <div
+        className={`absolute flex justify-center items-center w-full ${
+          isTelegram ? "tg-container-height" : "browser-container-height"
+        }`}
+      >
         <div
           className="relative  flex justify-center items-center w-full h-full pointer-events-none"
           style={{

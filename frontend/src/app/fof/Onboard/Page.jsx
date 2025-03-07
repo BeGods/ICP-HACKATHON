@@ -30,6 +30,7 @@ const OnboardPage = (props) => {
     setSection,
     setRewards,
     setRewardsClaimedInLastHr,
+    isTelegram,
   } = useContext(FofContext);
   const [otp, setOTP] = useState(new Array(6).fill(""));
   const dropdownRef = useRef(null);
@@ -156,7 +157,11 @@ const OnboardPage = (props) => {
   }, []);
 
   return (
-    <div className="relative tg-container-height w-screen font-roboto bg-black">
+    <div
+      className={`relative ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } w-screen font-roboto bg-black`}
+    >
       <img
         src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/frogdog.games.black.svg"
         alt="fof"
