@@ -14,6 +14,11 @@ import {
 } from "../services/user.services";
 import { Request, Response } from "express";
 import { IUser } from "../../ts/models.interfaces";
+import {
+  encryptOneWaveHash,
+  decryptOneWaveHash,
+} from "../../helpers/crypt.helpers";
+import config from "../../config/config";
 
 // login
 export const authenticate = async (
@@ -205,11 +210,9 @@ export const authenticateLine = async (
 
     const { lineId, lineName, photoUrl } = await decryptLineData(token);
 
-    // existing user or not
     let existingUser: IUser | null = await User.findOne({ lineId: lineId });
 
     if (existingUser) {
-      // check if user details have updated
       if (lineName !== existingUser.lineName) {
         existingUser.lineName = lineName;
         isUpdated = true;
@@ -251,15 +254,51 @@ export const authenticateLine = async (
   }
 };
 
-export const authenticateOneWave = async (
+export const createOneWaveSession = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
     const { puid, username } = req.body;
+
+    if (!puid || !username) {
+      res.status(400).json({
+        message: "Invalid input. Please provide a valid PUID and username.",
+      });
+      return;
+    }
+
+    const oneWaveCredentials = {
+      platform: "onewave",
+      oneWaveId: puid,
+      oneWaveUsername: username,
+      expiresAt: Math.floor(Date.now() / 1000) + 300,
+    };
+
+    const oneWaveHash = await encryptOneWaveHash(oneWaveCredentials);
+
+    res
+      .status(200)
+      .json({ url: `${config.source.client}?onewave=${oneWaveHash}` });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateOneWave = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { sessionHash } = req.body;
+    const { oneWaveId, oneWaveUsername } = await decryptOneWaveHash(
+      sessionHash
+    );
     let isUpdated = false;
-    const oneWaveId = puid;
-    const oneWaveUsername = username;
 
     if (!oneWaveId || !oneWaveUsername) {
       res.status(400).json({
