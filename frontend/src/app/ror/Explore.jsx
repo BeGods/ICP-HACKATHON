@@ -8,6 +8,18 @@ import {
 import SwipeArena from "../../components/ror/SwipeArena";
 
 import React, { useContext, useEffect, useState } from "react";
+import RoRHeader from "../../components/layouts/Header";
+
+const CenterChild = ({ content }) => {
+  return (
+    <div
+      className={`
+            flex justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary text-[20vw] rounded-full bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
+    >
+      {content}
+    </div>
+  );
+};
 
 const Explore = () => {
   const {
@@ -251,7 +263,19 @@ const Explore = () => {
 
   return (
     <div className="h-full w-full">
-      <div className="flex relative text-white justify-center items-center h-full w-full">
+      <RoRHeader
+        CenterChild={
+          <CenterChild
+            content={
+              <span className="pt-4">
+                {roundTimeElapsed}
+                {gameData.stats.isUnderWorldActive && "*"}
+              </span>
+            }
+          />
+        }
+      />
+      <div className="flex relative bg-red-400 text-white justify-center items-center mt-[9vh] h-[65vh] w-full">
         {currStage === 0 && !gameData.stats.isUnderWorldActive && (
           <div
             onClick={activateUnderworld}
@@ -275,12 +299,6 @@ const Explore = () => {
           </div>
         )}
         {stages[currStage]}
-      </div>
-      <div className="flex justify-center items-center absolute h-[36vw] w-[36vw] text-[20vw] text-white text-black-md-contour rounded-full top-0 z-20 left-1/2 -translate-x-1/2">
-        <span className="pt-4">
-          {roundTimeElapsed}
-          {gameData.stats.isUnderWorldActive && "*"}
-        </span>
       </div>
     </div>
   );

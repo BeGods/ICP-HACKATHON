@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import GachaRoll from "../../../components/Fx/GachaRoll";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import assets from "../../../assets/assets.json";
 
 const tele = window.Telegram?.WebApp;
 

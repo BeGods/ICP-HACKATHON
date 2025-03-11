@@ -1,0 +1,61 @@
+import React from "react";
+
+const BottomChild = () => {
+  return (
+    <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
+      <div className="flex relative w-full px-7">
+        <div
+          className={`flex border-white  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="flex items-center text-primary font-medium pl-headSides">
+            12
+          </div>
+        </div>
+        <div
+          className={`flex justify-end border-white gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+        >
+          <div className="flex text-black-contour items-center text-primary font-medium pr-headSides">
+            12
+          </div>
+        </div>
+      </div>
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
+        <div
+          className={`font-symbols text-iconLg text-black-lg-contour text-white`}
+        >
+          9
+        </div>
+        <div
+          className={`font-symbols text-iconLg text-black-contour text-white`}
+        >
+          n
+        </div>
+      </div>
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
+        <div className={`mr-auto slide-in-out-left`}>Hello</div>
+        <div className={`ml-auto slide-in-out-right`}>Hello</div>
+      </div>
+    </div>
+  );
+};
+
+// const CenterChild = () => {
+//   return (
+//     <div className="flex absolute justify-center w-full top-0 z-20">
+//       <div
+//         className={`h-symbol-primary w-symbol-primary rounded-full bg-black border border-white z-20 transition-all duration-500`}
+//       ></div>
+//     </div>
+//   );
+// };
+
+const RoRHeader = ({ CenterChild }) => {
+  return (
+    <div>
+      {CenterChild}
+      <BottomChild />
+    </div>
+  );
+};
+
+export default RoRHeader;
