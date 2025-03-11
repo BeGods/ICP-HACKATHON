@@ -7,6 +7,20 @@ import {
 } from "../../components/Common/SectionToggles";
 import { RorContext } from "../../context/context";
 import { updateBagData } from "../../utils/api.ror";
+import RoRHeader from "../../components/layouts/Header";
+
+const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
+  return (
+    <div
+      ref={dropZoneRef}
+      onClick={handleClick}
+      className={`
+            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+    >
+      {isDropActive ? "drop here" : "locked"}
+    </div>
+  );
+};
 
 const Vault = (props) => {
   const { gameData, setGameData, authToken } = useContext(RorContext);
@@ -116,6 +130,19 @@ const Vault = (props) => {
 
   return (
     <div className="w-full h-full">
+      <RoRHeader
+        CenterChild={
+          <CenterChild
+            dropZoneRef={dropZoneRef}
+            handleClick={() => {
+              if (itemToTransfer.length > 0 && !dragging) {
+                (async () => handleAddToBag())();
+              }
+            }}
+            isDropActive={gameData.bag.length < 12}
+          />
+        }
+      />
       <div className="h-full w-[80%] mx-auto grid grid-cols-3">
         {gameData.bank.vault.map((item) => (
           <div
@@ -181,7 +208,7 @@ const Vault = (props) => {
           </div>
         )}
 
-        <div
+        {/* <div
           onClick={() => {
             if (itemToTransfer.length > 0 && !dragging) {
               (async () => handleAddToBag())();
@@ -198,7 +225,7 @@ const Vault = (props) => {
           ) : (
             "locked"
           )}
-        </div>
+        </div> */}
       </div>
       <ToggleLeft activeMyth={4} handleClick={() => {}} />
       <ToggleRight activeMyth={4} handleClick={() => {}} />

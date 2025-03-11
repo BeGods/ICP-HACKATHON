@@ -24,6 +24,7 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
 import { fetchRewards } from "../../utils/api.fof";
 import Profile from "../fof/Profile/Page";
+import RoRHeader from "../../components/layouts/Header";
 
 const tele = window.Telegram?.WebApp;
 
@@ -224,7 +225,6 @@ const RoRMain = () => {
           <RorContext.Provider value={contextValues}>
             <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
             {section !== 7 && <Footer />}
-
             {showCard && (
               <div className="absolute z-[99] w-screen">{showCard}</div>
             )}

@@ -7,6 +7,19 @@ import {
 } from "../../components/Common/SectionToggles";
 import { RorContext } from "../../context/context";
 import { updateVaultData } from "../../utils/api.ror";
+import RoRHeader from "../../components/layouts/Header";
+
+const CenterChild = ({ dropZoneRef, isDropActive }) => {
+  return (
+    <div
+      ref={dropZoneRef}
+      className={`
+            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+    >
+      {isDropActive ? "drop here" : "locked"}
+    </div>
+  );
+};
 
 const Bag = (props) => {
   const { gameData, setGameData, authToken } = useContext(RorContext);
@@ -123,6 +136,16 @@ const Bag = (props) => {
 
   return (
     <div className="w-full h-full">
+      <RoRHeader
+        CenterChild={
+          <CenterChild
+            dropZoneRef={dropZoneRef}
+            isDropActive={
+              gameData.bank.isVaultActive && gameData.bank.vault.length < 24
+            }
+          />
+        }
+      />
       <div className="h-full w-[80%] mx-auto grid grid-cols-3">
         {gameData.bag.map((item) => (
           <div
@@ -185,20 +208,6 @@ const Bag = (props) => {
             </div>
           </div>
         )}
-
-        <div
-          ref={dropZoneRef}
-          className={`
-            ${
-              gameData.bank.isVaultActive && gameData.bank.vault.length < 24
-                ? "bg-green-400"
-                : "bg-red-400"
-            } flex justify-center items-center absolute h-[36vw] w-[36vw] rounded-full top-0 z-20 left-1/2 -translate-x-1/2`}
-        >
-          {gameData.bank.isVaultActive && gameData.bank.vault.length < 24
-            ? "drop here"
-            : "locked"}
-        </div>
       </div>
       <ToggleLeft activeMyth={4} handleClick={() => {}} />
       <ToggleRight activeMyth={4} handleClick={() => {}} />

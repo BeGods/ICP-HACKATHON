@@ -55,7 +55,7 @@ const SwipeArena = (props) => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-9/12 h-5/6 bg-yellow-400"
+        className="w-9/12  h-full bg-yellow-400"
       >
         <div>
           <p>Left swipes: {swipeCount.left}</p>
