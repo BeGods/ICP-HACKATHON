@@ -10,6 +10,20 @@ import { completeItem } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
 import MiscCard from "../../components/ror/MiscCard";
 import JoinButton from "../../components/ror/JoinButton";
+import RoRHeader from "../../components/layouts/Header";
+
+const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
+  return (
+    <div
+      ref={dropZoneRef}
+      onClick={handleClick}
+      className={`
+           flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+    >
+      {isDropActive ? "drop here" : "locked"}
+    </div>
+  );
+};
 
 const Blacksmith = () => {
   const { gameData, setGameData, authToken, setShowOverlayItem, setSection } =
@@ -41,8 +55,6 @@ const Blacksmith = () => {
       }
       return acc;
     }, []);
-
-    console.log(combinedFragItms);
 
     const itemsWithAllFrags = combinedFragItms
       .filter(
@@ -170,6 +182,28 @@ const Blacksmith = () => {
 
   return (
     <div className="w-full h-fit">
+      <RoRHeader
+        CenterChild={
+          <CenterChild
+            dropZoneRef={dropZoneRef}
+            onClick={() => {
+              if (itemToTransfer.length > 0 && !dragging) {
+                setShowOverlayItem(
+                  <MiscCard
+                    Button={
+                      <JoinButton
+                        payWithOrb={() => handleCompleteItem(1)}
+                        payWithCoin={() => handleCompleteItem(0)}
+                      />
+                    }
+                  />
+                );
+              }
+            }}
+            isDropActive={itemToTransfer.length === 0 || dragging}
+          />
+        }
+      />
       <div className="h-full w-[80%] mx-auto grid grid-cols-3 gap-[5px]">
         {arbitaryBag.map((item) => (
           <div
@@ -232,27 +266,6 @@ const Blacksmith = () => {
             </div>
           </div>
         )}
-
-        <div
-          onClick={() => {
-            if (itemToTransfer.length > 0 && !dragging) {
-              setShowOverlayItem(
-                <MiscCard
-                  Button={
-                    <JoinButton
-                      payWithOrb={() => handleCompleteItem(1)}
-                      payWithCoin={() => handleCompleteItem(0)}
-                    />
-                  }
-                />
-              );
-            }
-          }}
-          ref={dropZoneRef}
-          className="bg-yellow-400 flex justify-center items-center absolute h-[36vw] w-[36vw] rounded-full top-0 z-20 left-1/2 -translate-x-1/2"
-        >
-          {itemToTransfer.length === 0 || dragging ? <>drop here</> : <>done</>}
-        </div>
       </div>
 
       <ToggleLeft activeMyth={4} handleClick={() => {}} />
