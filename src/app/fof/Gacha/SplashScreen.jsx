@@ -164,7 +164,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
   }, [playFlip]);
 
   return (
-    <div className="w-screen tg-container-height relative bg-black">
+    <div className="w-screen tg-container-height relative">
       {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-center text-black-contour  uppercase z-20">
         {t("bonus.youwon")
@@ -295,7 +295,7 @@ const OrbCard = ({ reward }) => {
 
 const BoosterCard = ({ reward }) => {
   return (
-    <div className="relative h-full -mt-8 w-[72%] flex items-center justify-center rounded-primary card-shadow-white">
+    <div className="relative h-full -mt-8 w-[72%] flex items-center justify-center rounded-primary crd-shadow-black">
       <div
         className={`absolute inset-0 rounded-[15px]`}
         style={{
@@ -316,7 +316,7 @@ const BoosterCard = ({ reward }) => {
 const QuestCard = ({ reward }) => {
   return (
     <div className="relative w-[72%] rounded-lg shadow-lg -mt-8 flex flex-col z-50">
-      <div className="relative card-shadow-white">
+      <div className="relative crd-shadow-black">
         {/* Card Image */}
         <img
           src={
@@ -335,7 +335,7 @@ const QuestCard = ({ reward }) => {
             </div>
           </div>
           <div
-            className={`flex relative items-center h-[19%] uppercase card-shadow-white-${reward.quest} text-white`}
+            className={`flex relative items-center h-[19%] uppercase crd-shadow-black text-white`}
           >
             <div
               style={{

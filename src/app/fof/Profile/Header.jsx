@@ -29,7 +29,7 @@ const BottomChild = ({ userData, showGuide }) => {
           handleClickHaptic(tele, enableHaptic);
           setSection(5);
         }}
-        className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+        className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
       >
         <div
           className={`flex ${
@@ -44,7 +44,7 @@ const BottomChild = ({ userData, showGuide }) => {
           handleClickHaptic(tele, enableHaptic);
           setSection(7);
         }}
-        className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+        className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
       >
         <div
           className={`flex font-symbols ${
