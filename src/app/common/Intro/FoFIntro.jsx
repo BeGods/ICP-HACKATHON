@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import assets from "../../../assets/assets.json";
 import { useNavigate } from "react-router-dom";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
+  const { setGame } = useContext(MainContext);
 
   return (
     <div
@@ -55,6 +57,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
               onClick={() => {
                 handleClickHaptic(tele, true);
                 setShowGlow(true);
+                setGame("fof");
                 handleFadeout();
                 setTimeout(() => {
                   navigate("/fof");

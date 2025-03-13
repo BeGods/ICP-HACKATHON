@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { authenticateOneWave } from "../../../utils/api.fof";
+import { authenticateOneWave, authenticateTg } from "../../../utils/api.fof";
 import {
   fetchHapticStatus,
   setAuthCookie,
@@ -136,11 +136,11 @@ const IntroPage = (props) => {
   };
 
   useEffect(() => {
-    syncAllCookies();
     getUserData();
+    syncAllCookies();
 
     const handleUserInteraction = () => {
-      // playAudio();
+      // playAudio();z
       document.removeEventListener("click", handleUserInteraction);
       document.removeEventListener("touchstart", handleUserInteraction);
     };

@@ -72,7 +72,7 @@ const Profile = (props) => {
   }, []);
 
   return (
-    <div className="flex flex-col overflow-hidden m-0">
+    <div className={`flex flex-col h-full overflow-hidden`}>
       <div
         style={{
           position: "absolute",
