@@ -24,7 +24,7 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
 import { fetchRewards } from "../../utils/api.fof";
 import Profile from "../fof/Profile/Page";
-import RoRHeader from "../../components/layouts/Header";
+import Gift from "../fof/Gift/Gift";
 
 const tele = window.Telegram?.WebApp;
 
@@ -102,6 +102,7 @@ const RoRMain = () => {
     <Vault />, // 5
     <Profile />, // 6
     <Leaderboard />, // 7
+    <Gift />, // 8
   ];
 
   const getPartnersData = async (token) => {
@@ -223,7 +224,7 @@ const RoRMain = () => {
           } bg-white select-none font-fof overflow-hidden`}
         >
           <RorContext.Provider value={contextValues}>
-            <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
+            <div className={`flex-grow flex`}>{sections[section]}</div>
             {section !== 7 && <Footer />}
             {showCard && (
               <div className="absolute z-[99] w-screen">{showCard}</div>

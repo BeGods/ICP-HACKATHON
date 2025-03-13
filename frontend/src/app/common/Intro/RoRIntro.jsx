@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
+  const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
+  const { setGame } = useContext(MainContext);
 
   return (
     <div
@@ -54,6 +58,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
             <div
               onClick={() => {
                 handleClickHaptic(tele, true);
+                setGame("ror");
                 setShowGlow(true);
                 handleFadeout();
                 setTimeout(() => {
