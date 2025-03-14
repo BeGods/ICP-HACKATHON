@@ -272,7 +272,7 @@ const Leaderboard = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(3);
           }}
-          className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+          className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
             0
@@ -284,7 +284,7 @@ const Leaderboard = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(0);
           }}
-          className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+          className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
             z

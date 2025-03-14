@@ -267,9 +267,10 @@ export const fetchHapticStatus = async (tele) => {
 };
 
 // haptic on click
-export const handleClickHaptic = (tele, isActive) => {
+export const handleClickHaptic = async (tele, isActive, platform) => {
+  await tele.ready();
   if (isActive) {
-    if (tele.platform === "ios" || tele.platform === "android") {
+    if (platform === "ios" || platform === "android") {
       tele.HapticFeedback.notificationOccurred("success");
     } else {
       if (!isSafari()) {

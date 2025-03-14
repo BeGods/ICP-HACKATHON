@@ -23,7 +23,7 @@ const GameHeader = ({
     <div
       className={`flex ${minimize && "minimize"} ${
         maximize && "maximize"
-      } w-full justify-between absolute bottom-0 -mb-0.5 z-0 transition-all duration-250`}
+      } w-full justify-between absolute bottom-0 mb-3 z-0 transition-all duration-250`}
     >
       <div>
         {!mythStates[activeMyth].isShardsClaimActive &&
