@@ -1399,6 +1399,15 @@ const Forges = () => {
               backgroundPosition: "44% 0%",
             }}
           />
+          {/* <div
+            className={`absolute top-0 left-0 h-full w-full filter-orbs-${mythSections[activeMyth]}`}
+            style={{
+              backgroundImage: `url(${assets.uxui.forgefx})`,
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          /> */}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
@@ -1449,9 +1458,9 @@ const Forges = () => {
                   zIndex: 99,
                 }}
               >
-                +{mythStates[activeMyth].shardslvl}
-                {/* {mythStates[activeMyth].shardslvl *
-                  (isHolding && activeCard === "minion" ? 2 : 1)} */}
+                +
+                {mythStates[activeMyth].shardslvl *
+                  (isHolding && activeCard === "minion" ? 2 : 1)}
               </span>
             ))}
             <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>

@@ -26,6 +26,7 @@ const Gacha = (props) => {
     enableSound,
     enableHaptic,
     assets,
+    platform,
     showAnmt,
     isTelegram,
   } = useContext(FofContext);
@@ -131,7 +132,7 @@ const Gacha = (props) => {
 
   const claimDailyBonus = async () => {
     try {
-      handleClickHaptic(tele, enableHaptic);
+      handleClickHaptic(tele, enableHaptic, platform);
 
       if (claimRef.current === true) {
         return;
@@ -228,85 +229,95 @@ const Gacha = (props) => {
         isTelegram ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
-      <div className="flex flex-col w-full h-full items-center pt-4">
-        {/* Heading */}
-        <div className="flex flex-col items-center justify-center w-full h-1/5">
-          {!showScale && (
-            <>
-              <Crown color="#FFD660" size={"20vw"} />
-              <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero text-black-contour">
-                {changeText}
-              </h1>
-            </>
-          )}
-        </div>
-        {/* Main */}
+      <div
+        className="absolute inset-0 w-full h-full opacity-80 z-0"
+        style={{
+          background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+        }}
+      ></div>
+
+      {showFlash ? (
         <div
-          className={`absolute ${
-            isTelegram ? "tg-container-height" : "browser-container-height"
+          className={`fixed flex flex-col items-center h-screen w-screen flash-overlay ${
+            showFlash ? "show" : ""
           }`}
         >
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              if (showScale) {
-                exploitDailyBonus();
-              }
-            }}
-            className="flex flex-grow justify-center items-center relative w-full h-full"
-          >
-            <img
-              src={`${assets.uxui.pandora}`}
-              alt="pandora"
-              className={`w-fit h-fit transition-transform duration-1000  ${
-                !showScale ? "scale-golden-glow glow-box" : "glow-box scale-box"
-              }`}
-            />
-            <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
-              <GachaRoll showSpin={spinSound} />
-            </div>
+          <SplashScreen
+            showFlash={showFlash}
+            reward={reward}
+            exploitReward={exploitReward}
+          />{" "}
+        </div>
+      ) : (
+        <div className="flex flex-col w-full h-full items-center pt-4">
+          {/* Heading */}
+          <div className="flex flex-col z-50 items-center justify-center w-full h-1/5">
+            {!showScale && (
+              <>
+                <Crown color="#FFD660" size={"20vw"} />
+                <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero text-black-contour">
+                  {changeText}
+                </h1>
+              </>
+            )}
           </div>
-        </div>
-        {/* Bottom */}
-        <div className="flex items-start justify-center w-full h-1/5"></div>
-        <div className="flex absolute items-start bottom-[92px] justify-center w-full">
-          {!showScale && (
-            <div className="relative">
-              {!disableHand && (
-                <div className="font-symbols scale-point z-10 mx-auto my-auto absolute -mt-3 text-white text-[100px] text-black-contour">
-                  b
-                </div>
-              )}
-              <LoaderPinwheel
-                color="#FFD660"
-                size={"18vw"}
-                className={`${disableHand && "animate-spin-slow"}`}
-              />
-            </div>
-          )}
-        </div>
-        {showFlash && (
+          {/* Main */}
           <div
-            className={`fixed flex flex-col items-center h-screen w-screen flash-overlay ${
-              showFlash ? "show" : ""
+            className={`absolute ${
+              isTelegram ? "tg-container-height" : "browser-container-height"
             }`}
           >
-            <SplashScreen
-              showFlash={showFlash}
-              reward={reward}
-              exploitReward={exploitReward}
-            />{" "}
+            <div
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic, platform);
+                if (showScale) {
+                  exploitDailyBonus();
+                }
+              }}
+              className="flex flex-grow justify-center items-center relative w-full h-full"
+            >
+              <img
+                src={`${assets.uxui.pandora}`}
+                alt="pandora"
+                className={`w-fit h-fit transition-transform duration-1000  ${
+                  !showScale
+                    ? "scale-golden-glow glow-box"
+                    : "glow-box scale-box"
+                }`}
+              />
+              <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
+                <GachaRoll showSpin={spinSound} />
+              </div>
+            </div>
           </div>
-        )}
-        {spinSound && (
-          <ReactHowler
-            src={`${assets.audio.gachaSpin}`}
-            playing={enableSound}
-            preload={true}
-            loop
-          />
-        )}
-      </div>
+          {/* Bottom */}
+          <div className="flex items-start justify-center w-full h-1/5"></div>
+          <div className="flex absolute items-start bottom-[92px] justify-center w-full">
+            {!showScale && (
+              <div className="relative">
+                {!disableHand && (
+                  <div className="font-symbols scale-point z-10 mx-auto my-auto absolute -mt-3 text-white text-[100px] text-black-contour">
+                    b
+                  </div>
+                )}
+                <LoaderPinwheel
+                  color="#FFD660"
+                  size={"18vw"}
+                  className={`${disableHand && "animate-spin-slow"}`}
+                />
+              </div>
+            )}
+          </div>
+          {spinSound && (
+            <ReactHowler
+              src={`${assets.audio.gachaSpin}`}
+              playing={enableSound}
+              preload={true}
+              loop
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };
