@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext, RorContext } from "../../../context/context";
 import ProfileInfoCard from "../../../components/Cards/Info/ProfileInfoCrd";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
@@ -7,11 +7,15 @@ import { determineStreakBadge } from "../../../helpers/streak.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const BottomChild = ({ userData, showGuide }) => {
-  const { rewards, setSection, enableHaptic, isTelegram } =
-    useContext(FofContext);
+const BottomChild = () => {
+  const { enableHaptic, game } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
   const [showEffect, setShowEffect] = useState(true);
   const { t } = useTranslation();
+  const setSection =
+    game === "fof" ? fofContext.setSection : rorContext.setSection;
+  const giftIdx = game === "fof" ? 5 : 8;
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -28,7 +32,7 @@ const BottomChild = ({ userData, showGuide }) => {
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
-          setSection(5);
+          setSection(giftIdx);
         }}
         className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
       >
@@ -64,8 +68,7 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard, enableHaptic, isTelegram } =
-    useContext(FofContext);
+  const { assets, platform, isTelegram } = useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
@@ -74,16 +77,6 @@ const CenterChild = ({ userData }) => {
   return (
     <div className="flex absolute top-0 justify-center z-50 left-[34vw]">
       <div
-        onClick={() => {
-          handleClickHaptic(tele, enableHaptic);
-          setShowCard(
-            <ProfileInfoCard
-              close={() => {
-                setShowCard(null);
-              }}
-            />
-          );
-        }}
         className={`z-20 flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
