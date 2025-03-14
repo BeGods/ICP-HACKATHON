@@ -156,8 +156,8 @@ const Footer = ({}) => {
       />
 
       <div
-        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
-          platform === "ios" ? "-mt-3" : "-mt-0.5"
+        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 ml-2 w-full px-2 flex justify-between text-white ${
+          platform === "ios" ? "-mt-5.5" : "-mt-3"
         }`}
       >
         {footerIcons.map((item, index) => (

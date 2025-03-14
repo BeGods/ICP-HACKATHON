@@ -47,6 +47,7 @@ const RoRMain = () => {
     tasks,
     setTasks,
     isTelegram,
+    game,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -91,6 +92,7 @@ const RoRMain = () => {
     tasks,
     setTasks,
     isTelegram,
+    game,
   };
 
   const sections = [

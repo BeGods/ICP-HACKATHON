@@ -7,6 +7,7 @@ import ReactHowler from "react-howler";
 import DoDIntro from "./DoDIntro";
 import TgHeader from "../../../components/Common/TgHeader";
 import SettingModal from "../../../components/Modals/Settings";
+import { validateSoundCookie } from "../../../helpers/cookie.helper";
 
 export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   const menuRef = useRef(null);
@@ -15,9 +16,10 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   const [showCard, setShowCard] = useState(false);
   const pos = ["-50vw", "-150vw", "-250vw"];
   const bgAudios = ["fofIntro", "", "rorIntro"];
+  const [enableSound, setEnableSound] = useState(false);
 
   const playMenuAudio = () => {
-    if (menuRef.current) {
+    if (menuRef.current && enableSound) {
       menuRef.current.stop();
       menuRef.current.play();
     }
@@ -25,7 +27,7 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
 
   useEffect(() => {
     const handleAudioLoad = () => {
-      if (bgRef.current && activeIndex !== 1) {
+      if (bgRef.current && enableSound && activeIndex !== 1) {
         setTimeout(() => {
           bgRef.current.play();
         }, 2000);
@@ -47,6 +49,14 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
       handleUpdateIdx(activeIndex - 1);
     }
   };
+
+  useEffect(() => {
+    const initalizeSound = async () => {
+      const isSoundActive = await validateSoundCookie(tele);
+      setEnableSound(isSoundActive);
+    };
+    initalizeSound();
+  }, []);
 
   return (
     <div className="flex w-screen text-wrap">

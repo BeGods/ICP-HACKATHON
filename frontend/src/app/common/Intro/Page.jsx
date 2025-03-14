@@ -21,6 +21,7 @@ import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
 import { determineIsTelegram } from "../../../utils/device.info";
 import { useLocation } from "react-router-dom";
+import liff from "@line/liff";
 
 const tele = window.Telegram?.WebApp;
 
@@ -42,8 +43,6 @@ const IntroPage = (props) => {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const oneWaveParam = queryParams.get("onewave");
-  console.log(oneWaveParam);
-
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [disableDesktop, setDisableDestop] = useState(false);
@@ -135,8 +134,20 @@ const IntroPage = (props) => {
     }
   };
 
+  const initalizeLine = async () => {
+    liff
+      .init({
+        liffId: "2006673823-lPjdDe6b",
+      })
+      .then(() => {
+        const idToken = liff.getIDToken();
+        console.log(idToken);
+      });
+  };
+
   useEffect(() => {
-    getUserData();
+    // getUserData();
+    initalizeLine();
     syncAllCookies();
 
     const handleUserInteraction = () => {
@@ -198,6 +209,7 @@ const IntroPage = (props) => {
         <DesktopScreen assets={assets} />
       ) : (
         <Launcher
+          enableSound={enableSound}
           isTelegram={isTelegram}
           handleUpdateIdx={handleUpdateIdx}
           activeIndex={activeIndex}

@@ -46,7 +46,7 @@ const Explore = () => {
         }}
         className="bg-white text-black text-[6vw] p-3"
       >
-        Play
+        PLAY
       </div>
     ) : startPlay &&
       currStage === 0 &&
@@ -275,7 +275,7 @@ const Explore = () => {
           />
         }
       />
-      <div className="flex relative bg-red-400 text-white justify-center items-center mt-[9vh] h-[65vh] w-full">
+      <div className="flex relative text-white justify-center items-center mt-[14vh] h-[65vh] w-full">
         {currStage === 0 && !gameData.stats.isUnderWorldActive && (
           <div
             onClick={activateUnderworld}
