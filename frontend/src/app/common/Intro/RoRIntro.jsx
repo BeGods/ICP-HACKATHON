@@ -60,7 +60,7 @@ const RoRIntro = ({ handleFadeout, fadeout }) => {
               }}
               className="relative inline-block"
             >
-              <img
+              {/* <img
                 src={
                   showGlow
                     ? `/assets/buttons/button.blue.off.png`
@@ -71,10 +71,10 @@ const RoRIntro = ({ handleFadeout, fadeout }) => {
               />
               <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
                 PLAY
-              </span>
-              {/* <h1 className="text-white font-fof text-[9vw] text-black-contour">
+              </span> */}
+              <h1 className="text-white font-fof text-[9vw] text-black-contour">
                 COMING SOON
-              </h1> */}
+              </h1>
             </div>
           </div>
         </div>
