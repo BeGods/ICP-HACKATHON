@@ -14,6 +14,7 @@ import {
   VibrateOff,
   Volume2,
   VolumeX,
+  Wallet,
 } from "lucide-react";
 import { FofContext } from "../../context/context";
 import { countries } from "../../utils/country";
@@ -24,11 +25,7 @@ import {
   fetchRewards,
   updateCountry,
 } from "../../utils/api.fof";
-import {
-  useTonAddress,
-  useTonConnectModal,
-  useTonConnectUI,
-} from "@tonconnect/ui-react";
+import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
 import {
   clearAllGuideCookie,
@@ -39,6 +36,7 @@ import {
   setSoundStatus,
 } from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
+import { initializeWalletSDK } from "../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -79,10 +77,10 @@ const SettingModal = ({ close }) => {
     setEnableHaptic,
     setSection,
     isTelegram,
+    platform,
   } = useContext(FofContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
-  const { state, open } = useTonConnectModal();
   const [isChanged, setIsChanged] = useState(false);
 
   const handleSoundToggle = () => {
@@ -177,6 +175,27 @@ const SettingModal = ({ close }) => {
     }
   };
 
+  const handleDisconnectTon = async () => {
+    try {
+      await disconnectTonWallet(authToken);
+      tonConnectUI.disconnect();
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: null,
+      }));
+      showToast("ton_connect_success");
+    } catch (error) {
+      console.log(error);
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("ton_connect_error");
+    }
+  };
+
   const handleEnableGuide = () => {
     clearAllGuideCookie(tele);
     close();
@@ -210,27 +229,6 @@ const SettingModal = ({ close }) => {
   //     }
   //   });
   // }, [state]);
-
-  const handleDisconnectTon = async () => {
-    try {
-      await disconnectTonWallet(authToken);
-      tonConnectUI.disconnect();
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: null,
-      }));
-      showToast("ton_connect_success");
-    } catch (error) {
-      console.log(error);
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-      console.log(errorMessage);
-      showToast("ton_connect_error");
-    }
-  };
 
   const handleClose = () => {
     close();
@@ -347,6 +345,19 @@ const SettingModal = ({ close }) => {
           </div>
           <div className="flex justify-between w-full">
             <div className="pl-3">{t("profile.addToHome")}</div>
+            <ChevronRight />
+          </div>
+        </div>
+
+        <div
+          onClick={initializeWalletSDK}
+          className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
+        >
+          <div className="flex justify-start -ml-3">
+            <Wallet />
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="pl-3">{t("profile.wallet")}</div>
             <ChevronRight />
           </div>
         </div>

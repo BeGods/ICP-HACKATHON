@@ -32,6 +32,7 @@ const tele = window.Telegram?.WebApp;
 const IntroPage = (props) => {
   const {
     assets,
+    enableHaptic,
     setEnableHaptic,
     enableSound,
     setEnableSound,
@@ -39,6 +40,7 @@ const IntroPage = (props) => {
     setPlatform,
     setAuthToken,
     setCountry,
+    setLang,
     isTelegram,
     setIsTelegram,
   } = useContext(MainContext);
@@ -151,15 +153,14 @@ const IntroPage = (props) => {
       .init({
         liffId: import.meta.env.VITE_LINE_ID,
       })
-      .then(() => {
+      .then(async () => {
         const idToken = liff.getIDToken();
-        lineAuth(idToken);
+        await lineAuth(idToken);
       });
   };
 
   useEffect(() => {
     getUserData();
-    initalizeLine();
     syncAllCookies();
 
     const handleUserInteraction = () => {
@@ -197,7 +198,7 @@ const IntroPage = (props) => {
           }, 1000);
         } else if (liff.isInClient()) {
           setPlatform("line");
-          (async () => await lineAuth())();
+          (async () => await initalizeLine())();
         } else if (oneWaveParam) {
           setPlatform("onewave");
           (async () => await onewaveAuth())();
