@@ -48,7 +48,6 @@ const FoFMain = () => {
     userData,
     setUserData,
     platform,
-    setPlatform,
     authToken,
     setAuthToken,
     country,
@@ -287,7 +286,6 @@ const FoFMain = () => {
       tele.setHeaderColor("#000000");
       tele.setBackgroundColor("#000000");
       tele.setBottomBarColor("#000000");
-      setPlatform(tele.platform);
     }
   }, []);
 

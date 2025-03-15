@@ -16,6 +16,7 @@ import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { rankPositions } from "../../../utils/constants.fof";
+import { getImage } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 
@@ -80,8 +81,8 @@ const Leaderboard = (props) => {
     setShowCard,
     setUserData,
     isTelegram,
+    platform,
   } = useContext(FofContext);
-  const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -343,7 +344,7 @@ const Leaderboard = (props) => {
               ) {
                 setShowCard(
                   <StakeCrd
-                    profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                    profileImg={getImage(platform, userData.avatarUrl)}
                   />
                 );
               }
@@ -516,7 +517,7 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      src={getImage(platform, userData.avatarUrl)}
                       alt="profile-image"
                       className="rounded-full"
                     />
@@ -612,7 +613,7 @@ const Leaderboard = (props) => {
                 ) {
                   setShowCard(
                     <StakeCrd
-                      profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      profileImg={getImage(platform, userData.avatarUrl)}
                     />
                   );
                 }
@@ -634,7 +635,7 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      src={getImage(platform, userData.avatarUrl)}
                       alt="profile-image"
                       className="rounded-full"
                     />

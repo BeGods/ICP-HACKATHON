@@ -6,6 +6,7 @@ import "../../styles/flip.scss";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useTranslation } from "react-i18next";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
+import { getImage } from "../../utils/line";
 
 const redirect = [0, 2, 4, 3];
 const sectionTitles = ["forges", "boosters", "tower", "profile"];
@@ -26,6 +27,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     enableHaptic,
     gameData,
     isTelegram,
+    platform,
   } = useContext(FofContext);
   const countOfInCompleteQuests = tasks.filter(
     (item) => item.isQuestClaimed === false
@@ -137,7 +139,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
               style={{ minWidth: "60px" }}
             >
               <img
-                src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                src={getImage(platform, userData.avatarUrl)}
                 alt="profile-image"
                 className={`w-[16vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
@@ -176,12 +178,11 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             showEffect && "pulse-text"
           } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
             mythSections[activeMyth]
-          }-text text-white text-black-sm-contour h-7 w-7 mb-[8vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+          }-text text-white text-black-sm-contour mb-[7.9vh] h-7 w-7 mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
         >
           {countOfInCompleteQuests}
         </div>
       )}
-
       <ReactHowler
         src={assets.audio.menu}
         playing={false}
