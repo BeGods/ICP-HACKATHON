@@ -29,6 +29,19 @@ export const authenticateOneWave = async (param) => {
   }
 };
 
+export const authenticateLine = async (param) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
+
+
+  try {
+    const response = await axios.post(url, { token: param });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 
 export const fetchGameStats = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/game/stats`;

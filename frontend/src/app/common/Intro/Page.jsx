@@ -1,5 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { authenticateOneWave, authenticateTg } from "../../../utils/api.fof";
+import {
+  authenticateLine,
+  authenticateOneWave,
+  authenticateTg,
+} from "../../../utils/api.fof";
 import {
   fetchHapticStatus,
   setAuthCookie,
@@ -28,7 +32,6 @@ const tele = window.Telegram?.WebApp;
 const IntroPage = (props) => {
   const {
     assets,
-    enableHaptic,
     setEnableHaptic,
     enableSound,
     setEnableSound,
@@ -36,7 +39,6 @@ const IntroPage = (props) => {
     setPlatform,
     setAuthToken,
     setCountry,
-    setLang,
     isTelegram,
     setIsTelegram,
   } = useContext(MainContext);
@@ -113,6 +115,16 @@ const IntroPage = (props) => {
     }
   };
 
+  const lineAuth = async (idToken) => {
+    try {
+      const response = await authenticateLine(idToken);
+      setAuthToken(response.data.token);
+      await setAuthCookie(tele, response.data.token);
+    } catch (error) {
+      console.error("Authentication Error: ", error);
+    }
+  };
+
   const syncAllCookies = async () => {
     try {
       const activeCountry = await validateCountryCode(tele);
@@ -137,21 +149,20 @@ const IntroPage = (props) => {
   const initalizeLine = async () => {
     liff
       .init({
-        liffId: "2006673823-lPjdDe6b",
+        liffId: import.meta.env.VITE_LINE_ID,
       })
       .then(() => {
         const idToken = liff.getIDToken();
-        console.log(idToken);
+        lineAuth(idToken);
       });
   };
 
   useEffect(() => {
-    // getUserData();
+    getUserData();
     initalizeLine();
     syncAllCookies();
 
     const handleUserInteraction = () => {
-      // playAudio();z
       document.removeEventListener("click", handleUserInteraction);
       document.removeEventListener("touchstart", handleUserInteraction);
     };
@@ -175,7 +186,7 @@ const IntroPage = (props) => {
         platform === "tdesktop" ||
         platform === "web" ||
         platform === "weba" ||
-        (platform === "unknown" && !oneWaveParam)
+        (platform === "unknown" && !oneWaveParam && !liff.isInClient())
       ) {
         setDisableDestop(true);
       } else {
@@ -184,7 +195,11 @@ const IntroPage = (props) => {
           setTimeout(() => {
             (async () => await telegramAuth())();
           }, 1000);
+        } else if (liff.isInClient()) {
+          setPlatform("line");
+          (async () => await lineAuth())();
         } else if (oneWaveParam) {
+          setPlatform("onewave");
           (async () => await onewaveAuth())();
         }
       }
