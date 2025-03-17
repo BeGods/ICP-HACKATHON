@@ -19,14 +19,7 @@ const UserInfoCard = ({ close, userData }) => {
           />
         </div>
         <div className="absolute top-0 w-full text-center text-card text-paperHead font-bold mt-2 uppercase z-30">
-          <h1>
-            {isTelegram
-              ? userData.telegramUsername.charAt(0).toUpperCase()
-              : userData.oneWaveUsername
-                  .charAt(0)
-                  .toUpperCase()[0]
-                  .slice(0, 11)}
-          </h1>
+          <h1>{userData.username.charAt(0).toUpperCase()[0].slice(0, 11)}</h1>
           <h2 className={`-mt-[2vh] text-paperSub font-medium uppercase`}>
             #{userData.overallRank}{" "}
             {userData.country != "NA" &&

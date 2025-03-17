@@ -26,8 +26,6 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     userData,
     enableHaptic,
     gameData,
-    isTelegram,
-    platform,
   } = useContext(FofContext);
   const countOfInCompleteQuests = tasks.filter(
     (item) => item.isQuestClaimed === false
@@ -129,17 +127,28 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             }, 500);
             handleSectionChange(icon);
           }}
-          className={`flex ${
+          className={`flex relative ${
             clickEffect && "click-effect"
           } flex-col items-center mb-2`}
         >
+          {icon === 3 && (
+            <div
+              className={`absolute ${
+                showEffect && "pulse-text"
+              } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
+                mythSections[activeMyth]
+              }-text text-white text-black-sm-contour h-7 w-7 -mr-4 -mt-1 z-[60] right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+            >
+              {countOfInCompleteQuests}
+            </div>
+          )}
           {userData.avatarUrl ? (
             <div
               className="flex flex-col items-center cursor-pointer z-50 h-full transition-all duration-500"
               style={{ minWidth: "60px" }}
             >
               <img
-                src={getImage(platform, userData.avatarUrl)}
+                src={userData.avatarUrl}
                 alt="profile-image"
                 className={`w-[16vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
@@ -160,9 +169,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 <span
                   className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}
                 >
-                  {isTelegram
-                    ? userData.telegramUsername.charAt(0).toUpperCase()
-                    : userData.oneWaveUsername.charAt(0).toUpperCase()}
+                  {userData.username.charAt(0).toUpperCase()}
                 </span>
               </div>
             </>
@@ -172,17 +179,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
           </h1>
         </div>
       )}
-      {icon === 3 && (
-        <div
-          className={`absolute ${
-            showEffect && "pulse-text"
-          } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
-            mythSections[activeMyth]
-          }-text text-white text-black-sm-contour mb-[7.9vh] h-7 w-7 mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
-        >
-          {countOfInCompleteQuests}
-        </div>
-      )}
+
       <ReactHowler
         src={assets.audio.menu}
         playing={false}

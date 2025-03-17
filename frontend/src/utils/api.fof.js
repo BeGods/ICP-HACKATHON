@@ -388,6 +388,38 @@ export const disconnectTonWallet = async (accessToken) => {
   }
 };
 
+export const connectLineWallet = async (kaiaAddress, accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/connect/line`;
+
+  try {
+    const response = await axios.post(url, { kaiaAddress: kaiaAddress }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const disconnectLineWallet = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/disconnect/line`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const startTapSession = async (mythologyName, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/game/startTapSession`;
 

@@ -342,11 +342,7 @@ const Leaderboard = (props) => {
                 userData.overallRank !== 0 &&
                 !userData.stakeOn
               ) {
-                setShowCard(
-                  <StakeCrd
-                    profileImg={getImage(platform, userData.avatarUrl)}
-                  />
-                );
+                setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
               }
             }}
             className="button__face button__face--back z-50 flex justify-center items-center"
@@ -517,17 +513,13 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={getImage(platform, userData.avatarUrl)}
+                      src={userData.avatarUrl}
                       alt="profile-image"
                       className="rounded-full"
                     />
                   ) : (
                     <Avatar
-                      name={
-                        isTelegram
-                          ? userData.telegramUsername.charAt(0).toUpperCase()
-                          : userData.oneWaveUsername.charAt(0).toUpperCase()
-                      }
+                      name={userData.username.charAt(0).toUpperCase()}
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -535,13 +527,9 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-black">
-                  {isTelegram
-                    ? userData.telegramUsername.length > 20
-                      ? userData.telegramUsername.slice(0, 20)
-                      : userData.telegramUsername
-                    : userData.oneWaveUsername.length > 20
-                    ? userData.oneWaveUsername.slice(0, 20)
-                    : userData.oneWaveUsername}
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
                 </h1>
               </div>
               <div className="flex flex-col text-black justify-center items-end text-tertiary w-[30%] mr-4 h-full">
@@ -611,11 +599,7 @@ const Leaderboard = (props) => {
                   userData.overallRank !== 0 &&
                   !userData.stakeOn
                 ) {
-                  setShowCard(
-                    <StakeCrd
-                      profileImg={getImage(platform, userData.avatarUrl)}
-                    />
-                  );
+                  setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
                 }
               }}
               className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
@@ -635,17 +619,13 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={getImage(platform, userData.avatarUrl)}
+                      src={userData.avatarUrl}
                       alt="profile-image"
                       className="rounded-full"
                     />
                   ) : (
                     <Avatar
-                      name={
-                        isTelegram
-                          ? userData.telegramUsername.charAt(0).toUpperCase()
-                          : userData.oneWaveUsername.charAt(0).toUpperCase()
-                      }
+                      name={userData.username.charAt(0).toUpperCase()}
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -653,13 +633,9 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-white text-tertiary">
-                  {isTelegram
-                    ? userData.telegramUsername.length > 20
-                      ? userData.telegramUsername.slice(0, 20)
-                      : userData.telegramUsername
-                    : userData.oneWaveUsername.length > 20
-                    ? userData.oneWaveUsername.slice(0, 20)
-                    : userData.oneWaveUsername}
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
                 </h1>
               </div>
               <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">

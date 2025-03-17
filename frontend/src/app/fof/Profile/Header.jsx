@@ -81,9 +81,7 @@ const CenterChild = ({ userData }) => {
       >
         <img
           src={
-            userData.avatarUrl
-              ? getImage(platform, userData.avatarUrl)
-              : `${assets.uxui.baseorb}`
+            userData.avatarUrl ? userData.avatarUrl : `${assets.uxui.baseorb}`
           }
           alt="base-orb"
           className={`${
@@ -99,9 +97,7 @@ const CenterChild = ({ userData }) => {
                 platform === "ios" ? "mt-2" : "mt-4"
               } text-white opacity-70`}
             >
-              {isTelegram
-                ? userData.telegramUsername.charAt(0).toUpperCase()
-                : userData.oneWaveUsername.charAt(0).toUpperCase()[0]}
+              {userData.username.charAt(0).toUpperCase()}
             </div>
           </div>
         )}

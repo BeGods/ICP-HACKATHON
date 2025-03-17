@@ -20,15 +20,8 @@ const tele = window.Telegram?.WebApp;
 const Announcement = (props) => {
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const {
-    setSection,
-    setGameData,
-    authToken,
-    setActiveMyth,
-    setShowAnmt,
-    enableHaptic,
-    isTelegram,
-  } = useContext(FofContext);
+  const { setSection, setShowAnmt, enableHaptic, isTelegram } =
+    useContext(FofContext);
   let disableRef = useRef(false);
 
   const playConfetti = () => {
