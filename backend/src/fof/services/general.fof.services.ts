@@ -125,15 +125,15 @@ export const getLeaderboardRanks = async (
   let fetchAll = false;
 
   if (userRank <= 12) {
-    matchStage = { ...matchStage, overallRank: { $lte: 12 } }; // Gold
+    matchStage = { ...matchStage, orbRank: { $lte: 12 } }; // Gold
     fetchAll = true;
   } else if (userRank <= 99) {
-    matchStage = { ...matchStage, overallRank: { $gte: 13, $lte: 99 } }; // Silver
+    matchStage = { ...matchStage, orbRank: { $gte: 13, $lte: 99 } }; // Silver
     fetchAll = true;
   } else if (userRank <= 333) {
-    matchStage = { ...matchStage, overallRank: { $gte: 100, $lte: 333 } }; // Bronze
+    matchStage = { ...matchStage, orbRank: { $gte: 100, $lte: 333 } }; // Bronze
   } else {
-    matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 999 } }; // Wood
+    matchStage = { ...matchStage, orbRank: { $gte: 334, $lte: 999 } }; // Wood
   }
 
   // else if (userRank <= 666) {
@@ -145,7 +145,7 @@ export const getLeaderboardRanks = async (
   try {
     let ranksFilter = [
       { $match: matchStage },
-      { $sort: { overallRank: 1 as 1 } },
+      { $sort: { orbRank: 1 as 1 } },
       { $skip: skip },
       { $limit: limit },
       {

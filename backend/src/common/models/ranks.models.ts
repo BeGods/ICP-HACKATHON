@@ -51,9 +51,13 @@ const rankSchema = new Schema<IRank>(
       default: 0,
     },
     fofCompletedAt: Date,
+    rorCompletedAt: Date,
     prevOrbRank: Number,
     prevCoinRank: Number,
-    totalGobcoin: Number,
+    totalGobcoin: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

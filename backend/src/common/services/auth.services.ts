@@ -54,22 +54,24 @@ export const decryptLineData = async (token) => {
     }
     let parsedData;
 
+    const clientID = config.security.LINE_CHANNEL_ID;
+
     // validate initData
     try {
-      const response = await axios.get(`https://api.line.me/v2/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `https://api.line.me/oauth2/v2.1/verify?id_token=${token}&client_id=${clientID}`,
+        {}
+      );
 
       parsedData = response.data;
     } catch (validateError) {
-      throw new Error("InitData validation failed.");
+      console.log(validateError);
+      throw new Error(validateError);
     }
 
-    const lineId = parsedData.userId;
-    const lineName = parsedData.displayName;
-    const photoUrl = parsedData.pictureUrl;
+    const lineId = parsedData.sub;
+    const lineName = parsedData.name;
+    const photoUrl = parsedData.picture;
 
     if (!lineId) {
       throw new Error("Invalid userId. User not found.");
