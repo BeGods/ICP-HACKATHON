@@ -167,7 +167,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
     <div
       className={`w-screen ${
         isTelegram ? "tg-container-height" : "browser-container-height"
-      } relative bg-black`}
+      } relative`}
     >
       {/* You Won Text */}
       <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-center text-black-contour  uppercase z-20">

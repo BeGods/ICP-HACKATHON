@@ -118,7 +118,7 @@ const CenterChild = ({ userData }) => {
                 platform === "ios" ? "mt-2" : "mt-4"
               } text-white opacity-70`}
             >
-              {userData.telegramUsername[0]}
+              {userData.username[0]}
             </div>
           </div>
         )}

@@ -40,7 +40,6 @@ const IntroPage = (props) => {
     setPlatform,
     setAuthToken,
     setCountry,
-    setLang,
     isTelegram,
     setIsTelegram,
   } = useContext(MainContext);

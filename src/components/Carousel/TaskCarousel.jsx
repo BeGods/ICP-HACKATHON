@@ -62,9 +62,7 @@ const TaskCarousel = ({ quests, userData }) => {
         </div>
       ) : (
         <div className="flex absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[2vh]">
-          {isTelegram
-            ? userData.telegramUsername.toUpperCase()
-            : userData?.oneWaveUsername?.toUpperCase()[0]}
+          {userData.username.toUpperCase()}
         </div>
       )}
       <div className="carousel">

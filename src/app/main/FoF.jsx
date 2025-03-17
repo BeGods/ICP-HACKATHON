@@ -35,6 +35,7 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
+import { determineIsTelegram } from "../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
@@ -56,6 +57,9 @@ const FoFMain = () => {
     tasks,
     setTasks,
     isTelegram,
+    setLineWallet,
+    setPlatform,
+    setIsTelegram,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -114,6 +118,7 @@ const FoFMain = () => {
     leaderboard,
     setLeaderboard,
     isTelegram,
+    setLineWallet,
   };
   const sections = [
     <Forges />, // 0
@@ -199,6 +204,7 @@ const FoFMain = () => {
     try {
       const response = await fetchGameStats(token);
       const showAnmnt = await validateTutCookie(tele, "announcement08");
+      setLineWallet(response?.user?.kaiaAddress);
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setTasks(response?.extraQuests);
@@ -286,6 +292,9 @@ const FoFMain = () => {
       tele.setHeaderColor("#000000");
       tele.setBackgroundColor("#000000");
       tele.setBottomBarColor("#000000");
+      setPlatform(tele.platform);
+      const isTg = determineIsTelegram(tele.platform);
+      setIsTelegram(isTg);
     }
   }, []);
 
@@ -303,6 +312,7 @@ const FoFMain = () => {
   return (
     <div>
       <TgHeader
+        isLoaded={!isLoading}
         openSettings={() => {
           setShowCard(
             <SettingModal

@@ -301,7 +301,7 @@ const Tower = () => {
 
       <div className="absolute flex justify-center items-center h-full w-full">
         <div
-          className="relative flex justify-center items-center h-full w-full pointer-events-none scale-wheel-glow"
+          className="relative flex justify-center items-center h-[100%] w-[100%] pointer-events-none scale-wheel-glow"
           style={{
             backgroundImage: `url(${assets.uxui.towerOn})`,
             backgroundSize: "contain",

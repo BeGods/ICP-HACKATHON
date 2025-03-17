@@ -36,7 +36,6 @@ import {
   setSoundStatus,
 } from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
-import { initializeWalletSDK } from "../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -349,8 +348,8 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        <div
-          onClick={initializeWalletSDK}
+        {/* <div
+          onClick={() => {}}
           className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
         >
           <div className="flex justify-start -ml-3">
@@ -360,7 +359,7 @@ const SettingModal = ({ close }) => {
             <div className="pl-3">{t("profile.wallet")}</div>
             <ChevronRight />
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={handleClose}
