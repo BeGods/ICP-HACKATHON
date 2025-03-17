@@ -9,7 +9,6 @@ import {
   getLeaderboardRanks,
   getLeaderboardSnapshot,
   getRandomValue,
-  sortRanksByCountry,
 } from "../services/general.fof.services";
 import Stats from "../../common/models/Stats.models";
 import userMythologies from "../../common/models/mythologies.models";

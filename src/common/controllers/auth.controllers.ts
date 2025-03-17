@@ -208,6 +208,7 @@ export const authenticateLine = async (
 ): Promise<void> => {
   try {
     const { token } = req.body;
+
     let isUpdated = false;
 
     const { lineId, lineName, photoUrl } = await decryptLineData(token);

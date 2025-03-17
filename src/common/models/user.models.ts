@@ -96,6 +96,10 @@ const userSchema = new Schema<IUser>(
       unique: true,
       sparse: true,
     },
+    kaiaAddress: {
+      type: String,
+      unique: true,
+    },
     directReferralCount: {
       type: Number,
       default: 0,

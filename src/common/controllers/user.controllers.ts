@@ -48,6 +48,45 @@ export const disconnectTonWallet = async (req, res) => {
   }
 };
 
+export const connectLineWallet = async (req, res) => {
+  try {
+    const user = req.user;
+    const { kaiaAddress } = req.body;
+
+    if (kaiaAddress) {
+      user.kaiaAddress = kaiaAddress;
+      await user.save();
+    }
+
+    res.status(200).json({ message: "Line wallet connected successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update ton wallet.",
+      error: error.message,
+    });
+  }
+};
+
+export const disconnectLineWallet = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user.kaiaAddress) {
+      return res.status(400).json({ message: "Please connect your wallet." });
+    }
+
+    user.kaiaAddress = null;
+    user.save();
+
+    res.status(200).json({ message: "Line wallet disconnected successfully." });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete ton wallet.",
+      error: error.message,
+    });
+  }
+};
+
 export const updateCountry = async (req, res) => {
   try {
     const user = req.user;

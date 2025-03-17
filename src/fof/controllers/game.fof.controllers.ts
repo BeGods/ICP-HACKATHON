@@ -207,13 +207,19 @@ export const getGameStats = async (req, res) => {
       user.bonus.fof.streak.count
     );
 
+    // telegramUsername: user.telegramUsername,
+    // lineName: user.lineName,
+    // oneWaveUsername: user.oneWaveUsername,
     const userData = {
-      telegramUsername: user.telegramUsername,
-      lineName: user.lineName,
-      oneWaveUsername: user.oneWaveUsername,
+      username: user.oneWaveUsername || user.telegramUsername || user.lineName,
       tonAddress: user.tonAddress,
+      kaiaAddress: user.kaiaAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile.avatarUrl ?? null,
+      avatarUrl: user.profile.avatarUrl
+        ? user.telegramUsername
+          ? `https://media.publit.io/file/UserAvatars/${user.profile.avatarUrl}.jpg`
+          : user.profile.avatarUrl
+        : null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,

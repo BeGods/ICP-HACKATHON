@@ -148,6 +148,7 @@ export interface IRank extends Document {
   gameData: Object;
   directReferralCount: number;
   fofCompletedAt: Date;
+  rorCompletedAt: Date;
   squadOwner?: mongoose.Types.ObjectId;
   totalOrbs: number;
   totalGobcoin: number;
@@ -194,6 +195,7 @@ export interface IUser extends Document {
   };
   directReferralCount: number;
   tonAddress: string;
+  kaiaAddress: string;
   premiumReferralCount: number;
   phoneNumber: string;
   gameSession: {
