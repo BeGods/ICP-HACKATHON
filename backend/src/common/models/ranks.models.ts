@@ -30,7 +30,7 @@ const rankSchema = new Schema<IRank>(
       default: 1,
       required: true,
     },
-    telegramUsername: { type: String, unique: true },
+    username: { type: String, unique: true },
     profileImage: {
       type: String,
     },

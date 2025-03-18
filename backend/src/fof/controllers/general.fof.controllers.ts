@@ -125,8 +125,13 @@ export const updateLeadboardRanks = async (req, res) => {
           $set: {
             fofCompletedAt: user.finishedAt ?? new Date(),
             userId: user.userId,
-            telegramUsername: user.telegramUsername,
-            profileImage: user.profileImage,
+            username:
+              user.oneWaveUsername || user.telegramUsername || user.lineName,
+            profileImage: user.profileImage
+              ? user.telegramUsername
+                ? `https://media.publit.io/file/UserAvatars/${user.profileImage}.jpg`
+                : user.profileImage
+              : null,
             totalOrbs: user.totalOrbs,
             totalGobcoin: user.gobcoin,
             squadOwner: user.squadOwner,

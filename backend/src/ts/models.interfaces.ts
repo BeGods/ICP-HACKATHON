@@ -137,7 +137,7 @@ export interface IPartner extends Document {
 // rank
 export interface IRank extends Document {
   userId: mongoose.Types.ObjectId;
-  telegramUsername: string;
+  username: string;
   profileImage: string;
   orbRank: number;
   coinRank: number;
