@@ -191,7 +191,7 @@ const ForgeHeader = ({
 
   return (
     <div>
-      <img
+      {/* <img
         src={assets.uxui.paper}
         alt="paper"
         className={`w-full absolute rotate-180 h-auto filter-paper-${
@@ -203,7 +203,7 @@ const ForgeHeader = ({
             ? mythSections[8]
             : mythSections[activeMyth]
         }`}
-      />
+      /> */}
 
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
