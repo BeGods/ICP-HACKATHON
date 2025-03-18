@@ -60,7 +60,7 @@ const UserAvatar = ({ user, index }) => {
                 platform === "ios" ? "" : "mt-1"
               } text-white`}
             >
-              {user.telegramUsername[0]}
+              {user.username[0]}
             </div>
           </div>
         )}
@@ -145,7 +145,7 @@ const Leaderboard = (props) => {
   };
 
   const placeholderItem = {
-    telegramUsername: "Anonymous",
+    username: "Anonymous",
     profileImage: "default-profile.png",
     id: null,
     country: "NA",
@@ -431,7 +431,7 @@ const Leaderboard = (props) => {
                 className="pb-[9vh] overflow-auto disable-scroll-bar"
               >
                 {paddedHallOfFameData.slice(3).map((item, index) => {
-                  const { telegramUsername, profileImage, id, isEmpty } = item;
+                  const { username, profileImage, id, isEmpty } = item;
 
                   const countryFlag =
                     countries.find((country) => country.code == item.country)
@@ -442,7 +442,7 @@ const Leaderboard = (props) => {
                       <LeaderboardItem
                         isEmpty={isEmpty || false}
                         rank={index}
-                        name={telegramUsername}
+                        name={username}
                         totalOrbs={countryFlag}
                         imageUrl={profileImage}
                       />
@@ -459,13 +459,13 @@ const Leaderboard = (props) => {
                     <div className="h-[35px] w-[35px]">
                       {userData.avatarUrl ? (
                         <img
-                          src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                          src={userData.avatarUrl}
                           alt="profile-image"
                           className="rounded-full"
                         />
                       ) : (
                         <Avatar
-                          name={userData.telegramUsername}
+                          name={userData.username}
                           className="h-full w-full"
                           profile={0}
                           color={avatarColor}
@@ -473,9 +473,9 @@ const Leaderboard = (props) => {
                       )}
                     </div>
                     <h1 className="text-white">
-                      {userData.telegramUsername.length > 20
-                        ? userData.telegramUsername.slice(0, 20)
-                        : userData.telegramUsername}
+                      {userData.username.length > 20
+                        ? userData.username.slice(0, 20)
+                        : userData.username}
                     </h1>
                   </div>
                   <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
@@ -532,7 +532,7 @@ const Leaderboard = (props) => {
                   <LeaderboardItem
                     key={index}
                     rank={index + 4}
-                    name={item.telegramUsername}
+                    name={item.username}
                     totalOrbs={formatRankOrbs(item.totalOrbs)}
                     imageUrl={item.profileImage}
                     prevRank={item.prevRank}
@@ -575,13 +575,13 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      src={userData.avatarUrl}
                       alt="profile-image"
                       className="rounded-full"
                     />
                   ) : (
                     <Avatar
-                      name={userData.telegramUsername}
+                      name={userData.username}
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -589,9 +589,9 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-white text-tertiary">
-                  {userData.telegramUsername.length > 20
-                    ? userData.telegramUsername.slice(0, 20)
-                    : userData.telegramUsername}
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
                 </h1>
               </div>
               <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">

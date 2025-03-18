@@ -147,8 +147,8 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
           ) : (
             <div className="text-gold">
               {(
-                userData.telegramUsername.charAt(0).toUpperCase() +
-                userData.telegramUsername.slice(1).toLowerCase()
+                userData.username.charAt(0).toUpperCase() +
+                userData.username.slice(1).toLowerCase()
               ).slice(0, 12)}
             </div>
           )}
