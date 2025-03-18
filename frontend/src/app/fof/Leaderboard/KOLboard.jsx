@@ -65,7 +65,7 @@ const UserAvatar = ({ user, index }) => {
                 platform === "ios" ? "" : "mt-1"
               } text-white`}
             >
-              {user.telegramUsername[0]}
+              {user.username[0]}
             </div>
           </div>
         )}
@@ -140,7 +140,7 @@ const KOLboard = (props) => {
   };
 
   const placeholderItem = {
-    telegramUsername: "Anonymous",
+    username: "Anonymous",
     profileImage: "default-profile.png",
     id: null,
     country: "NA",
@@ -324,7 +324,7 @@ const KOLboard = (props) => {
                   isKOL={true}
                   key={index}
                   rank={index + 4}
-                  name={item.telegramUsername}
+                  name={item.username}
                   totalOrbs={item.directReferralCount}
                   imageUrl={item.profileImage}
                   stake={item.userBetFor}

@@ -43,7 +43,7 @@ const UserAvatar = ({ user, index }) => {
         <img
           src={
             user?.profileImage
-              ? `https://media.publit.io/file/UserAvatars/${user?.profileImage}.jpg`
+              ? `${user?.profileImage}`
               : `${assets.uxui.baseorb}`
           }
           alt="base-orb"
@@ -60,7 +60,7 @@ const UserAvatar = ({ user, index }) => {
                 platform === "ios" ? "" : "mt-1"
               } text-white`}
             >
-              {user.telegramUsername[0]}
+              {user.username[0]}
             </div>
           </div>
         )}
@@ -189,7 +189,7 @@ const Leaderboard = (props) => {
   };
 
   const placeholderItem = {
-    telegramUsername: "Anonymous",
+    username: "Anonymous",
     profileImage: "default-profile.png",
     id: null,
     country: "NA",
@@ -483,7 +483,7 @@ const Leaderboard = (props) => {
             className="pb-[9vh] overflow-auto disable-scroll-bar"
           >
             {paddedHallOfFameData.slice(3).map((item, index) => {
-              const { telegramUsername, profileImage, id, isEmpty } = item;
+              const { username, profileImage, id, isEmpty } = item;
 
               const countryFlag =
                 countries.find((country) => country.code == item.country)
@@ -496,7 +496,7 @@ const Leaderboard = (props) => {
                     isKOL={true}
                     isEmpty={isEmpty || false}
                     rank={index + 4}
-                    name={telegramUsername}
+                    name={username}
                     totalOrbs={countryFlag}
                     imageUrl={profileImage}
                   />
@@ -580,7 +580,7 @@ const Leaderboard = (props) => {
                   <LeaderboardItem
                     key={index}
                     rank={item.overallRank}
-                    name={item.telegramUsername}
+                    name={item.username}
                     totalOrbs={formatRankOrbs(item.totalOrbs)}
                     imageUrl={item.profileImage}
                     prevRank={item.prevRank}
