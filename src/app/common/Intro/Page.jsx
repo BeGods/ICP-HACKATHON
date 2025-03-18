@@ -191,7 +191,7 @@ const IntroPage = (props) => {
         platform === "weba" ||
         (platform === "unknown" && !oneWaveParam && !liff.isInClient())
       ) {
-        setDisableDestop(true);
+        // setDisableDestop(true);
       } else {
         setDisableDestop(false);
         if (isTg) {

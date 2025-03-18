@@ -88,7 +88,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_07.jpg"
+              src="https://media.publit.io/file/BattleofGods/FoF/Assets/announcements/480px-airdrop.jpg"
               alt="announcement"
               className="w-full h-auto"
             />
