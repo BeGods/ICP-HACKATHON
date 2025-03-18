@@ -32,7 +32,6 @@ const tele = window.Telegram?.WebApp;
 const IntroPage = (props) => {
   const {
     assets,
-    enableHaptic,
     setEnableHaptic,
     enableSound,
     setEnableSound,
@@ -49,6 +48,7 @@ const IntroPage = (props) => {
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [disableDesktop, setDisableDestop] = useState(false);
+  const [lineCalled, setLineCalled] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   // configure tma.auth
@@ -148,14 +148,17 @@ const IntroPage = (props) => {
   };
 
   const initalizeLine = async () => {
-    liff
-      .init({
-        liffId: import.meta.env.VITE_LINE_ID,
-      })
-      .then(async () => {
-        const idToken = liff.getIDToken();
-        await lineAuth(idToken);
-      });
+    if (!lineCalled) {
+      setLineCalled(true);
+      liff
+        .init({
+          liffId: import.meta.env.VITE_LINE_ID,
+        })
+        .then(async () => {
+          const idToken = liff.getIDToken();
+          await lineAuth(idToken);
+        });
+    }
   };
 
   useEffect(() => {
