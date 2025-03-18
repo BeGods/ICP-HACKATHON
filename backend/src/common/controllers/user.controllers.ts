@@ -8,6 +8,7 @@ import {
 import { deleteImage, storeImage } from "../services/storage.services";
 import { fourDigitCode } from "../../helpers/general.helpers";
 import { callAlibabaSendMsg } from "../services/alibaba.services";
+import config from "../../config/config";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -124,12 +125,13 @@ export const generateOtp = async (req, res) => {
     // }
 
     const otp = fourDigitCode();
-    const message = `${otp} is your OTP / verification code for BeGods and is valid for 5 minutes. Do not share this with anyone. -FrogDog Games`;
+    const message = `${otp} is your OTP / verification code for ${"FrogDog Games"} and is valid for 5 minutes. Do not share this with anyone.  - Regards, Playsuper`;
     const params = {
       RegionId: "ap-southeast-1",
       To: mobileNumber.replace(/\s/g, ""),
       Message: message,
-      From: "FROGDOGIND",
+      From: config.alibaba.senderId,
+      channel: config.alibaba.channel,
     };
 
     await callAlibabaSendMsg(params);
