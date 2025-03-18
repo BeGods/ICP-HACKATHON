@@ -36,11 +36,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
-          <img
-            src="/assets/logos/forges.of.faith.png"
-            alt="fof"
-            className="fof-text-shadow"
-          />
+          <img src={assets.logos.fof} alt="fof" className="fof-text-shadow" />
           <div className={`flex flex-col gap-[2vh]`}>
             <div
               className={`flex ${
@@ -68,8 +64,8 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
               <img
                 src={
                   showGlow
-                    ? `/assets/buttons/button.orange.off.png`
-                    : `/assets/buttons/button.orange.on.png`
+                    ? `${assets.buttons.orange.off}`
+                    : `${assets.buttons.orange.on}`
                 }
                 alt="Button"
                 className="h-auto"

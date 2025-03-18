@@ -9,6 +9,8 @@ import TgHeader from "../../../components/Common/TgHeader";
 import SettingModal from "../../../components/Modals/Settings";
 import { validateSoundCookie } from "../../../helpers/cookie.helper";
 
+const tele = window.Telegram?.WebApp;
+
 export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   const menuRef = useRef(null);
   const bgRef = useRef(null);
@@ -16,18 +18,19 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   const [showCard, setShowCard] = useState(false);
   const pos = ["-50vw", "-150vw", "-250vw"];
   const bgAudios = ["fofIntro", "", "rorIntro"];
-  const [enableSound, setEnableSound] = useState(false);
 
-  const playMenuAudio = () => {
-    if (menuRef.current && enableSound) {
+  const playMenuAudio = async () => {
+    const isSoundActive = await validateSoundCookie(tele);
+    if (menuRef.current && isSoundActive) {
       menuRef.current.stop();
       menuRef.current.play();
     }
   };
 
   useEffect(() => {
-    const handleAudioLoad = () => {
-      if (bgRef.current && enableSound && activeIndex !== 1) {
+    const handleAudioLoad = async () => {
+      const isSoundActive = await validateSoundCookie(tele);
+      if (bgRef.current && isSoundActive && activeIndex !== 1) {
         setTimeout(() => {
           bgRef.current.play();
         }, 2000);
@@ -49,14 +52,6 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
       handleUpdateIdx(activeIndex - 1);
     }
   };
-
-  useEffect(() => {
-    const initalizeSound = async () => {
-      const isSoundActive = await validateSoundCookie(tele);
-      setEnableSound(isSoundActive);
-    };
-    initalizeSound();
-  }, []);
 
   return (
     <div className="flex w-screen text-wrap">

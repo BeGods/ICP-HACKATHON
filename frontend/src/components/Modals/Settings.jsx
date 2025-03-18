@@ -16,7 +16,7 @@ import {
   VolumeX,
   Wallet,
 } from "lucide-react";
-import { FofContext } from "../../context/context";
+import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
 import {
   connectTonWallet,
@@ -64,20 +64,17 @@ const languages = [
 const SettingModal = ({ close }) => {
   const { i18n, t } = useTranslation();
   const {
-    setRewards,
-    setRewardsClaimedInLastHr,
     authToken,
     enableSound,
     setEnableSound,
-    setUserData,
     country,
     setCountry,
     enableHaptic,
     setEnableHaptic,
-    setSection,
     isTelegram,
-    platform,
-  } = useContext(FofContext);
+  } = useContext(MainContext);
+  const { setRewards, setRewardsClaimedInLastHr, setUserData, setSection } =
+    useContext(FofContext);
   const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const [isChanged, setIsChanged] = useState(false);
