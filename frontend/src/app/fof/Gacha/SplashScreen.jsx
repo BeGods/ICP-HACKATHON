@@ -256,8 +256,11 @@ const SplashScreen = ({ reward, exploitReward }) => {
             ? `${t("sections.quests")}`
             : `1 ${
                 wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
-                " " +
-                currReward.type.toUpperCase()
+                  " " +
+                  currReward.type ==
+                "minion"
+                  ? "ALCHEMIST"
+                  : currReward.type.toUpperCase()
               }`}
         </h1>
       </div>
