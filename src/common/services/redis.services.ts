@@ -2,7 +2,7 @@ import { connectRedis } from "../../config/database/redis";
 
 export const setOTP = async (key, value, expiry) => {
   try {
-    const redisClient = await connectRedis();
+    const redisClient = await connectRedis(0);
 
     await redisClient.set(key, value, { EX: expiry });
   } catch (error) {
@@ -12,7 +12,7 @@ export const setOTP = async (key, value, expiry) => {
 
 export const setRequestCnt = async (key) => {
   try {
-    const redisClient = await connectRedis();
+    const redisClient = await connectRedis(0);
 
     const requestCount = await redisClient.incr(`count_${key}`);
 
@@ -28,7 +28,7 @@ export const setRequestCnt = async (key) => {
 
 export const getOTP = async (key) => {
   try {
-    const redisClient = await connectRedis();
+    const redisClient = await connectRedis(0);
 
     const result = await redisClient.get(key);
 
@@ -40,7 +40,7 @@ export const getOTP = async (key) => {
 
 export const deleteRedisKey = async (key) => {
   try {
-    const redisClient = await connectRedis();
+    const redisClient = await connectRedis(0);
 
     const result = await redisClient.del(key);
 
@@ -52,7 +52,7 @@ export const deleteRedisKey = async (key) => {
 
 export const setOneWaveSession = async (key, value, expiry) => {
   try {
-    const redisClient = await connectRedis();
+    const redisClient = await connectRedis(1);
 
     await redisClient.set(key, value, { EX: expiry });
   } catch (error) {
