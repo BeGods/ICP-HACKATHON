@@ -1,8 +1,12 @@
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
+  activateInside,
+  activateRest,
   activateVault,
+  deActivateInside,
   generateSessionReward,
   getGameStats,
+  giveCoins,
   joinFragments,
   startSession,
   tradeFragments,
@@ -11,6 +15,9 @@ import {
 } from "../controllers/game.ror.controllers";
 import express from "express";
 import {
+  isValidInsideReq,
+  isValidOutsideReq,
+  isValidRestReq,
   isValidVaultReq,
   validateJoinFrgmnt,
   validateSessionReward,
@@ -35,6 +42,8 @@ router.post(
   generateSessionReward
 );
 
+router.get("/game/xxx/givecoins", authMiddleware, giveCoins);
+
 // transactions
 router.post(
   "/blacksmith/join",
@@ -49,8 +58,23 @@ router.post(
   tradeFragments
 );
 
+// underworld
+router.get(
+  "/inside/activate",
+  authMiddleware,
+  isValidInsideReq,
+  activateInside
+);
+router.get(
+  "/inside/deactivate",
+  authMiddleware,
+  isValidOutsideReq,
+  deActivateInside
+);
+
 // vault
 router.get("/vault/activate", authMiddleware, isValidVaultReq, activateVault);
+router.get("/rest/activate", authMiddleware, isValidRestReq, activateRest);
 
 // transfers
 router.post(

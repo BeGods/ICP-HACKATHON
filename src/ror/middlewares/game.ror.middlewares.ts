@@ -23,7 +23,6 @@ export const validateSessionReward = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { battleData } = req.body;
-  const oneMinuteFromTime = 60 * 1000;
 
   // 1 - win
   // 0 - loss
@@ -31,12 +30,11 @@ export const validateSessionReward = async (req, res, next) => {
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
 
-    if (
-      Date.now() >
-      user.gameSession.lastSessionStartTime + oneMinuteFromTime
-    ) {
-      // validate session
-      throw new Error("Session expired. Please try again.");
+    const sessionDuration = Date.now() - user.gameSession.lastSessionStartTime;
+
+    // validate session duration
+    if (sessionDuration > 60000 || sessionDuration < 25000) {
+      throw new Error("Invalid session. Please try again.");
     }
 
     // validate battle
@@ -54,7 +52,7 @@ export const validateSessionReward = async (req, res, next) => {
       }
     });
 
-    if (userClaimedRewards.bag.length >= 12) {
+    if ((userClaimedRewards?.bag?.length ?? 0) >= 9) {
       // check if bag is full
       throw new Error("Bag is full. Please create some space.");
     }
@@ -77,16 +75,15 @@ export const validTransferToVault = async (req, res, next) => {
     const userClaimedRewards = await milestones.findOne({ userId });
 
     if (
-      !userClaimedRewards.bank.lastVaultInstallmentAt ||
-      userClaimedRewards.bank.lastVaultInstallmentAt <= 0 ||
-      Date.now() >=
-        userClaimedRewards.bank?.lastVaultInstallmentAt + thereDaysFromDate
+      !userClaimedRewards.bank.vaultExpiryAt ||
+      userClaimedRewards.bank.vaultExpiryAt <= 0 ||
+      Date.now() >= userClaimedRewards.bank?.vaultExpiryAt + thereDaysFromDate
     ) {
       throw Error("Transfer failed. Please activate the vault.");
     }
 
     // check if there is enough space in vault
-    if (userClaimedRewards.bank.vault.length >= 24) {
+    if (userClaimedRewards.bank.vault.length >= 36) {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
@@ -121,16 +118,15 @@ export const validTransferToBag = async (req, res, next) => {
     const itemIdsObject = itemIds.map((id) => new mongoose.Types.ObjectId(id));
 
     if (
-      !userClaimedRewards.bank.lastVaultInstallmentAt ||
-      userClaimedRewards.bank.lastVaultInstallmentAt <= 0 ||
-      Date.now() >=
-        userClaimedRewards.bank?.lastVaultInstallmentAt + thereDaysFromDate
+      !userClaimedRewards.bank.vaultExpiryAt ||
+      userClaimedRewards.bank.vaultExpiryAt <= 0 ||
+      Date.now() >= userClaimedRewards.bank?.vaultExpiryAt + thereDaysFromDate
     ) {
       throw Error("Transfer failed. Please activate the vault.");
     }
 
     // check if there is enough space in bag
-    if (userClaimedRewards.bag.length >= 12) {
+    if (userClaimedRewards.bag.length >= 9) {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
@@ -155,25 +151,90 @@ export const validTransferToBag = async (req, res, next) => {
 export const isValidVaultReq = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
-  const thereDaysFromDate = 3 * 24 * 60 * 60 * 1000;
+  const { isMulti } = req.query;
+  const expiryDays = Boolean(isMulti) ? 7 : 1;
+  const deductValue = Boolean(isMulti) ? 9 : 3;
 
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
     const userMythologyData = await userMythologies.findOne({ userId });
 
-    if (
-      Date.now() <
-      userClaimedRewards.bank?.lastVaultInstallmentAt + thereDaysFromDate
-    ) {
+    if (Date.now() < userClaimedRewards.bank?.vaultExpiryAt) {
       throw new Error("Vault is already active. Please try again later.");
     }
 
-    if (userMythologyData?.gobcoin < 3) {
+    if (userMythologyData?.gobcoin < deductValue) {
       throw new Error("Insufficient gobcoins to complete this transaction.");
     }
 
+    req.deductValue = deductValue;
+    req.expiryDays = expiryDays * 24 * 60 * 60 * 1000;
     req.userMilestones = userClaimedRewards;
     req.userMythologies = userMythologyData;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const isValidRestReq = async (req, res, next) => {
+  const user = req.user;
+  const userId = user._id;
+  const { isMulti } = req.query;
+  const expiryDays = Boolean(isMulti) ? 7 : 1;
+  const deductValue = Boolean(isMulti) ? 9 : 3;
+
+  try {
+    const userMythologyData = await userMythologies.findOne({ userId });
+    if (Date.now() < user.gameSession?.restExpiresAt) {
+      throw new Error("Rest is already active. Please try again later.");
+    }
+
+    if (userMythologyData?.gobcoin < deductValue) {
+      throw new Error("Insufficient gobcoins to complete this transaction.");
+    }
+
+    req.deductValue = deductValue;
+    req.expiryDays = expiryDays * 24 * 60 * 60 * 1000;
+    req.userMythologies = userMythologyData;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const isValidInsideReq = async (req, res, next) => {
+  const user = req.user;
+
+  try {
+    if (user.gameSession.underWorldActiveAt !== 0) {
+      throw new Error("Underworld is already active. Try again later.");
+    } else if (user.gameSession.dailyGameQuota < 1) {
+      throw new Error("You don't have sufficient quota to activate.");
+    } else if (user.gameSession.dailyGameQuota >= 5) {
+      throw new Error(
+        "You need more rounds to unlock the Underworld. Try again later."
+      );
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const isValidOutsideReq = async (req, res, next) => {
+  const user = req.user;
+
+  try {
+    if (user.gameSession.underWorldActiveAt == 0) {
+      throw new Error("Underworld is inactive.");
+    } else if (user.gameSession.dailyGameQuota < 1) {
+      throw new Error("You don't have sufficient quota to deactivate.");
+    }
+
     next();
   } catch (error) {
     console.log(error);

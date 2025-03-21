@@ -37,7 +37,7 @@ export interface IMilestone extends Document {
   sharedQuests: mongoose.Types.ObjectId[];
   bag?: IInventory[];
   bank?: {
-    lastVaultInstallmentAt: number;
+    vaultExpiryAt: number;
     vault: IInventory[];
   };
   claimedRoRItems?: string[];
@@ -137,17 +137,21 @@ export interface IPartner extends Document {
 // rank
 export interface IRank extends Document {
   userId: mongoose.Types.ObjectId;
-  telegramUsername: string;
+  username: string;
   profileImage: string;
-  overallRank: number;
-  prevRank: number;
+  orbRank: number;
+  coinRank: number;
+  prevOrbRank: number;
+  prevCoinRank: number;
   countryRank: number;
   country: string;
   gameData: Object;
   directReferralCount: number;
   fofCompletedAt: Date;
+  rorCompletedAt: Date;
   squadOwner?: mongoose.Types.ObjectId;
-  totalOrbs: string;
+  totalOrbs: number;
+  totalGobcoin: number;
   squadRank?: number;
   profile: {
     avatarUrl: String;
@@ -159,6 +163,9 @@ export interface IRank extends Document {
 // user
 export interface IUser extends Document {
   telegramId?: string;
+  stanId?: string;
+  lineId?: string;
+  oneWaveId?: string;
   telegramUsername?: string;
   name: string;
   isPremium?: boolean;
@@ -175,16 +182,28 @@ export interface IUser extends Document {
       };
       joiningBonus: boolean;
     };
+    ror: {
+      dailyBonusClaimedAt: Date;
+      streakBonus: {
+        isActive: boolean;
+        claimedAt: number;
+        streakCount: number;
+      };
+      joiningBonus: boolean;
+    };
   };
   directReferralCount: number;
   tonAddress: string;
+  kaiaAddress: string;
   premiumReferralCount: number;
-  phoneNumber: string;
+  mobileNumber: string;
   gameSession: {
     gameHrStartAt: number;
     dailyGameQuota: number;
     lastSessionStartTime: number;
     competelvl: number;
+    underWorldActiveAt: number;
+    restExpiresAt: number;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
@@ -257,6 +276,15 @@ export interface IRewardTransactions extends Document {
   userId: mongoose.Types.ObjectId;
   rewardId: string;
   type: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IItemTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  underworld: boolean;
+  shards: number;
+  item: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

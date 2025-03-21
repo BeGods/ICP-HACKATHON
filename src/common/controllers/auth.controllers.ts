@@ -1,19 +1,35 @@
 import User from "../models/user.models";
 import { ObjectId } from "mongodb";
 import {
+  decryptLineData,
   decryptTelegramData,
   generateAuthToken,
 } from "../services/auth.services";
 import {
   addTeamMember,
   createDefaultUserMyth,
-  addNewUser,
+  addNewTelegramUser,
+  addNewLineUser,
+  addNewOneWaveUser,
+  addNewOTPUser,
+  validateUsername,
 } from "../services/user.services";
 import { Request, Response } from "express";
 import { IUser } from "../../ts/models.interfaces";
+import {
+  encryptOneWaveHash,
+  decryptOneWaveHash,
+} from "../../helpers/crypt.helpers";
+import config from "../../config/config";
+import {
+  getOneWaveSession,
+  setOneWaveSession,
+} from "../services/redis.services";
+import { v4 as uuidv4 } from "uuid";
+import { generateAliOTP, verifyOtp } from "../services/otp.services";
 
 // login
-export const authenticate = async (
+export const authenticateTg = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -66,7 +82,7 @@ export const authenticate = async (
       }
 
       // create new  user
-      existingUser = await addNewUser(newUser);
+      existingUser = await addNewTelegramUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -143,7 +159,7 @@ export const testAuthenticate = async (
       }
 
       // create new  user
-      existingUser = await addNewUser(newUser);
+      existingUser = await addNewTelegramUser(newUser);
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -178,7 +194,7 @@ export const createNewUserIfNoExists = async (req, res) => {
       isPremium,
     };
 
-    const createdUser = await addNewUser(newUser);
+    const createdUser = await addNewTelegramUser(newUser);
     await createDefaultUserMyth(createdUser);
 
     return res.json({ refers: 0 });
@@ -187,6 +203,281 @@ export const createNewUserIfNoExists = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to create user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateLine = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { token } = req.body;
+
+    let isUpdated = false;
+
+    const { lineId, lineName, photoUrl } = await decryptLineData(token);
+
+    let existingUser: IUser | null = await User.findOne({ lineId: lineId });
+
+    if (existingUser) {
+      if (lineName !== existingUser.telegramUsername) {
+        existingUser.telegramUsername = lineName;
+        isUpdated = true;
+      }
+
+      if (isUpdated) {
+        existingUser.save();
+      }
+    } else {
+      // handle this
+      let usernameToAdd = lineName;
+      const usernameExists = await validateUsername(usernameToAdd);
+      if (usernameExists) {
+        const randomSuffix = Math.random().toString(36).substring(2, 5); // random 3-letter string
+        usernameToAdd = `${usernameToAdd}_${randomSuffix}`;
+      }
+      let newUser: Partial<IUser> = {
+        lineId: lineId,
+        telegramUsername: usernameToAdd,
+        ...(photoUrl && {
+          profile: {
+            avatarUrl: photoUrl,
+            updateAt: new Date(),
+          },
+        }),
+      };
+
+      // create new  user
+      existingUser = await addNewLineUser(newUser);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const accessToken: string | null = await generateAuthToken(existingUser);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: { token: accessToken },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const createOneWaveSession = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { puid, username } = req.body;
+
+    if (!puid || !username) {
+      res.status(400).json({
+        message: "Invalid input. Please provide a valid PUID and username.",
+      });
+      return;
+    }
+
+    const oneWaveCredentials = {
+      platform: "onewave",
+      oneWaveId: puid,
+      oneWaveUsername: username,
+      expiresAt: Math.floor(Date.now() / 1000) + 300,
+    };
+
+    const sessionId = uuidv4();
+    const oneWaveHash = await encryptOneWaveHash(oneWaveCredentials);
+    await setOneWaveSession(sessionId, oneWaveHash, 300);
+
+    res
+      .status(200)
+      .json({ url: `${config.source.client}?onewave=${sessionId}` });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateOneWave = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { sessionId } = req.body;
+    const sessionHash = await getOneWaveSession(sessionId);
+
+    if (!sessionHash) {
+      console.log(sessionHash);
+      res.status(400).json({
+        message: "Invalid sessionId.",
+      });
+      return;
+    }
+
+    const { oneWaveId, oneWaveUsername } = await decryptOneWaveHash(
+      sessionHash
+    );
+    let isUpdated = false;
+
+    if (!oneWaveId || !oneWaveUsername) {
+      console.log(oneWaveId, oneWaveUsername);
+
+      res.status(400).json({
+        message: "Invalid input. Please provide a valid PUID and username.",
+      });
+    }
+
+    // existing user or not
+    let existingUser: IUser | null = await User.findOne({
+      oneWaveId: oneWaveId,
+    });
+
+    if (existingUser) {
+      // check if user details have updated
+      if (oneWaveUsername !== existingUser.telegramUsername) {
+        existingUser.telegramUsername = oneWaveUsername;
+        isUpdated = true;
+      }
+
+      if (isUpdated) {
+        existingUser.save();
+      }
+    } else {
+      // handle this
+      let usernameToAdd = oneWaveUsername;
+      const usernameExists = await validateUsername(usernameToAdd);
+      if (usernameExists) {
+        const randomSuffix = Math.random().toString(36).substring(2, 5); // random 3-letter string
+        usernameToAdd = `${usernameToAdd}_${randomSuffix}`;
+      }
+      let newUser: Partial<IUser> = {
+        oneWaveId,
+        telegramUsername: usernameToAdd,
+      };
+
+      // create new  user
+      existingUser = await addNewOneWaveUser(newUser);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const accessToken: string | null = await generateAuthToken(existingUser);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: { token: accessToken },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const generateOtp = async (req, res) => {
+  try {
+    const { mobileNumber } = req.body;
+    const sanitizedNumber = mobileNumber.replace(/[^0-9]/g, "");
+
+    const mobileRegex = /^\+\d{1,3}-\d{5,15}$/;
+
+    if (!mobileNumber || !mobileRegex.test(mobileNumber)) {
+      res.status(400).json({
+        message: "Invalid input. Please provide a valid mobileNumber.",
+      });
+      return;
+    }
+
+    const result = await generateAliOTP(sanitizedNumber);
+
+    return res.status(result.status).json({ message: result.message });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Failed to generate OTP.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateOTP = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { mobileNumber, username, otp, referPartner, stanId } = req.body;
+    const sanitizedNumber = mobileNumber?.replace(/[^0-9]/g, "");
+    const sanitizedUsername = username?.replace(/[^a-zA-Z0-9]/g, "");
+    const mobileRegex = /^\+\d{1,3}-\d{5,15}$/;
+    await verifyOtp(sanitizedNumber, otp);
+
+    if (!mobileNumber || !mobileRegex.test(mobileNumber)) {
+      res.status(400).json({
+        message: "Invalid input. Please provide a valid mobileNumber.",
+      });
+      return;
+    }
+
+    // existing user or not
+    let existingUser: IUser | null = await User.findOne({
+      mobileNumber: mobileNumber,
+    });
+
+    if (existingUser) {
+      // check if user details have updated
+      // if (sanitizedUsername !== existingUser.telegramUsername) {
+      //   existingUser.telegramUsername = sanitizedUsername;
+      //   isUpdated = true;
+      // }
+      // if (isUpdated) {
+      //   existingUser.save();
+      // }
+    } else {
+      if (!sanitizedUsername) {
+        res.status(400).json({
+          message: "Invalid input. Please provide a valid username.",
+        });
+      }
+      let usernameToAdd = sanitizedUsername;
+      const usernameExists = await validateUsername(usernameToAdd);
+      if (usernameExists) {
+        const randomSuffix = Math.random().toString(36).substring(2, 5); // random 3-letter string
+        usernameToAdd = `${usernameToAdd}_${randomSuffix}`;
+      }
+      let newUser: Partial<IUser> = {
+        mobileNumber,
+        telegramUsername: usernameToAdd,
+        ...(stanId && { stanId }),
+      };
+
+      // create new  user
+      const refPartner = referPartner ? referPartner : "";
+      existingUser = await addNewOTPUser(newUser, refPartner);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const accessToken: string | null = await generateAuthToken(existingUser);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: { token: accessToken },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
       error: error.message,
     });
   }

@@ -83,73 +83,72 @@ const milestoneSchema = new Schema<IMilestone>({
       },
     ],
   },
-  // bag: {
-  //   type: [
-  //     {
-  //       itemId: {
-  //         type: String,
-  //         required: true,
-  //       },
-  //       fragmentId: {
-  //         type: Number,
-  //         default: 0,
-  //       },
-  //       isComplete: {
-  //         type: Boolean,
-  //         default: false,
-  //       },
-  //       updatedAt: {
-  //         type: Date,
-  //         default: Date.now(),
-  //       },
-  //     },
-  //   ],
-  //   validate: {
-  //     validator: function (array) {
-  //       return array.length <= 12;
-  //     },
-  //     message: "The bag cannot contain more than 12 items.",
-  //   },
-  // },
-  // bank: {
-  //   lastVaultInstallmentAt: {
-  //     type: Number,
-  //     default: 0,
-  //   },
-  //   vault: {
-  //     type: [
-  //       {
-  //         itemId: {
-  //           type: String,
-  //           required: true,
-  //         },
-  //         fragmentId: {
-  //           type: Number,
-  //           default: 0,
-  //         },
-  //         isComplete: {
-  //           type: Boolean,
-  //           default: false,
-  //         },
-  //         updatedAt: {
-  //           type: Date,
-  //           default: Date.now(),
-  //         },
-  //       },
-  //     ],
-  //     validate: {
-  //       validator: function (array) {
-  //         return array.length <= 24;
-  //       },
-  //       message: "The vault cannot contain more than 24 items.",
-  //     },
-  //   },
-  // },
-  // // the relics that your completed and sold
-  // claimedRoRItems: {
-  //   type: [String],
-  //   default: [],
-  // },
+  bag: {
+    type: [
+      {
+        itemId: {
+          type: String,
+          required: true,
+        },
+        fragmentId: {
+          type: Number,
+          default: 0,
+        },
+        isComplete: {
+          type: Boolean,
+          default: false,
+        },
+        updatedAt: {
+          type: Date,
+          default: Date.now(),
+        },
+      },
+    ],
+    validate: {
+      validator: function (array) {
+        return array.length <= 9;
+      },
+      message: "The bag cannot contain more than 9 items.",
+    },
+  },
+  bank: {
+    vaultExpiryAt: {
+      type: Number,
+      default: 0,
+    },
+    vault: {
+      type: [
+        {
+          itemId: {
+            type: String,
+            required: true,
+          },
+          fragmentId: {
+            type: Number,
+            default: 0,
+          },
+          isComplete: {
+            type: Boolean,
+            default: false,
+          },
+          updatedAt: {
+            type: Date,
+            default: Date.now(),
+          },
+        },
+      ],
+      validate: {
+        validator: function (array) {
+          return array.length <= 36;
+        },
+        message: "The vault cannot contain more than 36 items.",
+      },
+    },
+  },
+  claimedRoRItems: {
+    type: [String],
+    default: [],
+  },
 });
 
 milestoneSchema.index({ userId: 1 }, { unique: true });

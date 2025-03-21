@@ -48,10 +48,71 @@ export const fetchGameData = async (userId) => {
         },
       },
       {
+        $lookup: {
+          from: "quests",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $lookup: {
+                from: "milestones",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: "milestones",
+              },
+            },
+            {
+              $addFields: {
+                isQuestClaimed: {
+                  $cond: {
+                    if: { $gt: [{ $size: "$milestones" }, 0] },
+                    then: true,
+                    else: false,
+                  },
+                },
+              },
+            },
+            { $sort: { createdAt: -1 as -1 } },
+            {
+              $project: {
+                milestones: 0,
+                claimedQuestData: 0,
+                updatedAt: 0,
+                __v: 0,
+              },
+            },
+          ],
+          as: "allQuests",
+        },
+      },
+      {
+        $addFields: {
+          quests: {
+            $filter: {
+              input: "$allQuests",
+              as: "quest",
+              cond: {
+                $and: [{ $eq: ["$$quest.mythology", "Other"] }],
+              },
+            },
+          },
+        },
+      },
+      {
         $project: {
           userMythologies: 1,
           userMilestones: 1,
-          _id: 0,
+          quests: 1,
         },
       },
     ];
