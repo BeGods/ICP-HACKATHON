@@ -37,18 +37,14 @@ const FoFLoader = (props) => {
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full w-full pt-[3vh] pb-[2vh]">
-          <img
-            src="/assets/logos/forges.of.faith.png"
-            alt="dod"
-            className="fof-text-shadow"
-          />
+          <img src={assets.logos.fof} alt="fof" className="fof-text-shadow" />
           <div className="flex flex-col w-full">
             <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />
             </div>
             <div className="relative inline-block mx-auto">
               <img
-                src="/assets/buttons/button.orange.off.png"
+                src={`${assets.buttons.orange.off}`}
                 alt="Button"
                 className="h-auto"
               />

@@ -93,7 +93,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
               style={{ minWidth: "60px" }}
             >
               <img
-                src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                src={userData.avatarUrl}
                 alt="profile-image"
                 className={`w-[16vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
