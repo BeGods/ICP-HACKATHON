@@ -4,7 +4,10 @@ import { IUser } from "../../ts/models.interfaces";
 const userSchema = new Schema<IUser>(
   {
     telegramId: { type: String, unique: true, sparse: true },
-    telegramUsername: { type: String, unique: true, sparse: true },
+    lineId: { type: String, unique: true, sparse: true },
+    oneWaveId: { type: String, unique: true, sparse: true },
+    stanId: { type: String, unique: true, sparse: true },
+    telegramUsername: { type: String, sparse: true },
     isPremium: { type: Boolean },
     bonus: {
       fof: {
@@ -34,6 +37,27 @@ const userSchema = new Schema<IUser>(
           default: 0,
         },
       },
+      ror: {
+        joiningBonus: { type: Boolean, default: false },
+        streakBonus: {
+          isActive: {
+            type: Boolean,
+            default: false,
+          },
+          claimedAt: {
+            type: Number,
+            default: 0,
+          },
+          streakCount: {
+            type: Number,
+            default: 0,
+          },
+        },
+        dailyBonusClaimedAt: {
+          type: Date,
+          default: 0,
+        },
+      },
     },
     gameSession: {
       gameHrStartAt: {
@@ -52,8 +76,10 @@ const userSchema = new Schema<IUser>(
         type: Number,
         default: 15,
       },
+      restExpiresAt: Number,
+      underWorldActiveAt: Number,
     },
-    phoneNumber: {
+    mobileNumber: {
       type: String,
     },
     name: {
@@ -68,6 +94,10 @@ const userSchema = new Schema<IUser>(
       type: String,
       unique: true,
       sparse: true,
+    },
+    kaiaAddress: {
+      type: String,
+      unique: true,
     },
     directReferralCount: {
       type: Number,

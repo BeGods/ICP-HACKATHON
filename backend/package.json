@@ -11,27 +11,27 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
   },
-"scripts": {
-  "start": "node dist/server.js",
-  "dev": "nodemon --watch src src/server.ts",
-  "build": "tsc",
-  "prestart": "npm run build",
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "lint": "eslint . --ext .ts",
-  "format": "prettier --write .",
-  "docker:build:prod": "docker-compose -f docker-compose-production.yml build",
-  "docker:stack:up:prod": "docker-compose -f docker-compose-production.yml up -d",
-  "docker:stack:build:up:prod": "docker-compose -f docker-compose-production.yml up -d --build",
-  "docker:stack:down:prod": "docker-compose -f docker-compose-production.yml down",
-  "docker:stack:down:volumes:prod": "docker-compose -f docker-compose-production.yml down --volumes",
-  "docker:stack:logs:prod": "docker-compose -f docker-compose-production.yml logs -f --tail 100",
-  "docker:build:dev": "docker-compose -f docker-compose-dev.yml build",
-  "docker:stack:up:dev": "docker-compose -f docker-compose-dev.yml up -d",
-  "docker:stack:build:up:dev": "docker-compose -f docker-compose-dev.yml up -d --build",
-  "docker:stack:down:dev": "docker-compose -f docker-compose-dev.yml down",
-  "docker:stack:down:volumes:dev": "docker-compose -f docker-compose-dev.yml down --volumes",
-  "docker:stack:logs:dev": "docker-compose -f docker-compose-dev.yml logs -f --tail 100"
-},
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch src src/server.ts",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "docker:build:prod": "docker-compose -f docker-compose-production.yml build",
+    "docker:stack:up:prod": "docker-compose -f docker-compose-production.yml up -d",
+    "docker:stack:build:up:prod": "docker-compose -f docker-compose-production.yml up -d --build",
+    "docker:stack:down:prod": "docker-compose -f docker-compose-production.yml down",
+    "docker:stack:down:volumes:prod": "docker-compose -f docker-compose-production.yml down --volumes",
+    "docker:stack:logs:prod": "docker-compose -f docker-compose-production.yml logs -f --tail 100",
+    "docker:build:dev": "docker-compose -f docker-compose-dev.yml build",
+    "docker:stack:up:dev": "docker-compose -f docker-compose-dev.yml up -d",
+    "docker:stack:build:up:dev": "docker-compose -f docker-compose-dev.yml up -d --build",
+    "docker:stack:down:dev": "docker-compose -f docker-compose-dev.yml down",
+    "docker:stack:down:volumes:dev": "docker-compose -f docker-compose-dev.yml down --volumes",
+    "docker:stack:logs:dev": "docker-compose -f docker-compose-dev.yml logs -f --tail 100"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -53,6 +53,7 @@
     "node-cron": "^3.0.3",
     "publitio_js_sdk": "^1.1.5",
     "redis": "^4.7.0",
+    "uuid": "^11.1.0",
     "xss-clean": "^0.1.4"
   }
 }

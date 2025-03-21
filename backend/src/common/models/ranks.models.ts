@@ -8,7 +8,12 @@ const rankSchema = new Schema<IRank>(
       required: true,
       ref: "User",
     },
-    overallRank: {
+    orbRank: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    coinRank: {
       type: Number,
       required: true,
       default: 1,
@@ -25,7 +30,7 @@ const rankSchema = new Schema<IRank>(
       default: 1,
       required: true,
     },
-    telegramUsername: { type: String, unique: true },
+    username: { type: String, unique: true },
     profileImage: {
       type: String,
     },
@@ -41,11 +46,19 @@ const rankSchema = new Schema<IRank>(
       type: Number,
       default: 0,
     },
-    totalOrbs: Number,
+    totalOrbs: {
+      type: Number,
+      default: 0,
+    },
     fofCompletedAt: Date,
-    prevRank: Number,
+    rorCompletedAt: Date,
+    prevOrbRank: Number,
+    prevCoinRank: Number,
+    totalGobcoin: {
+      type: Number,
+      default: 0,
+    },
   },
-
   { timestamps: true }
 );
 

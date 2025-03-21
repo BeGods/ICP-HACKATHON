@@ -3,23 +3,38 @@ import milestones from "../../common/models/milestones.models";
 import { fetchGameData } from "../services/game.ror.services";
 import userMythologies from "../../common/models/mythologies.models";
 import { defaultMythologies } from "../../utils/constants/variables";
+import { isVaultActive } from "../../helpers/general.helpers";
+import { hasTwelveHoursElapsed } from "../../helpers/game.helpers";
+import { ItemsTransactions } from "../../common/models/transactions.models";
+import mongoose from "mongoose";
+
+interface itemInterface {
+  itemId?: string;
+  isComplete?: boolean;
+  fragmentId?: number;
+  _id?: mongoose.Types.ObjectId;
+  updatedAt?: Date;
+}
 
 export const getGameStats = async (req, res) => {
-  const user = req.user;
+  let user = req.user;
   const userId = user._id;
 
   try {
     const userGameData = await fetchGameData(userId);
 
     // bag data
-    const bagData = userGameData.userMilestones[0].bag
-      .map(({ updatedAt, ...itemWithoutUpdatedAt }) => itemWithoutUpdatedAt)
-      .slice(0, 12);
+    const bagData =
+      userGameData.userMilestones[0].bag
+        ?.map(({ updatedAt, ...itemWithoutUpdatedAt }) => itemWithoutUpdatedAt)
+        ?.slice(0, 12) ?? [];
 
     // add battle stats
     userGameData.userMythologies[0].competelvl = user.gameSession.competelvl;
     userGameData.userMythologies[0].dailyQuota =
       user.gameSession.dailyGameQuota;
+    userGameData.userMythologies[0].gobcoin =
+      userGameData.userMythologies[0].gobcoin ?? 0;
 
     // add default mythologies
     const isMythAbsent =
@@ -32,21 +47,77 @@ export const getGameStats = async (req, res) => {
       );
     }
 
+    if (hasTwelveHoursElapsed(user.gameSession.gameHrStartAt)) {
+      user = await user.updateOne(
+        {
+          $set: {
+            "gameSession.dailyGameQuota": 12,
+            "gameSession.gameHrStartAt": Date.now(),
+            "gameSession.underWorldActiveAt": 0,
+          },
+        },
+        { new: true }
+      );
+    }
+
+    userGameData.userMythologies[0].isUnderWorldActive =
+      user.gameSession?.underWorldActiveAt != 0 ? true : false;
+    userGameData.userMythologies[0].isRestActive = isVaultActive(
+      user.gameSession?.restExpiresAt
+    );
+
+    const memberData = {
+      overallRank: 0,
+      totalOrbs: 0,
+    };
+
+    // is eligible to claim, streak, joining bonus
     const userData = {
-      telegramUsername: user.telegramUsername,
+      username: user.telegramUsername,
       tonAddress: user.tonAddress,
+      kaiaAddress: user.kaiaAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile.avatarUrl,
+      avatarUrl: user.profile.avatarUrl
+        ? user.telegramId
+          ? `https://media.publit.io/file/UserAvatars/${user.profile.avatarUrl}.jpg`
+          : user.profile.avatarUrl
+        : null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
+      country: user.country ?? "NA",
+      showFinishRwrd:
+        user.gameCompletedAt.hasClaimedFoFRwrd === false &&
+        user.gameCompletedAt.fof
+          ? true
+          : false,
+      streak: {
+        isStreakActive: false,
+        streakCount: 0,
+        lastMythClaimed: "Celtic",
+      },
+      joiningBonus: true,
+      isPlaySuperVerified: user.playsuper.isVerified,
+      stakeOn: user.userBetAt ? user.userBetAt[0] : null,
+      ...memberData,
     };
+
+    const tasks = userGameData.quests.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
 
     res.status(200).json({
       user: userData,
       stats: userGameData.userMythologies[0],
-      bank: userGameData.userMilestones[0].bank,
+      bank: {
+        isVaultActive: isVaultActive(
+          userGameData.userMilestones[0]?.bank?.vaultExpiryAt ?? 0
+        ),
+        vault: userGameData.userMilestones[0].bank?.vault ?? [],
+      },
       bag: bagData,
+      quests: tasks,
     });
   } catch (error) {
     console.log(error);
@@ -62,7 +133,12 @@ export const startSession = async (req, res) => {
 
   try {
     await user.updateOne({
-      $set: { "gameSession.lastSessionStartTime": Date.now() },
+      $set: {
+        "gameSession.lastSessionStartTime": Date.now(),
+      },
+      $inc: {
+        "gameSession.dailyGameQuota": -1,
+      },
     });
 
     res.status(200).json({ message: "Session started successfully" });
@@ -78,27 +154,29 @@ export const startSession = async (req, res) => {
 export const generateSessionReward = async (req, res) => {
   const user = req.user;
   const userId = user._id;
+  const isUnderworld = user.gameSession.underWorldActiveAt !== 0;
   const competelvl = req.competelvl;
   const { battleData, mythology } = req.body;
 
-  //! add validation where if all rewards for  a mythology are exhaused give shards
-  //! fix missing fragments no working correctly
-
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
-
+    const userMythlogyData = await userMythologies.findOne({ userId });
     const noOfWinsFromBattle = battleData.filter(
       (item) => item.status === 1
     ).length;
 
+    const rewardlvl = isUnderworld
+      ? noOfWinsFromBattle + 1
+      : noOfWinsFromBattle;
+
     // combine bag and vault items
     const claimedItems = [
-      ...(userClaimedRewards.bank.vault ?? []),
-      ...(userClaimedRewards.bag ?? []),
+      ...(userClaimedRewards?.bank?.vault ?? []),
+      ...(userClaimedRewards?.bag ?? []),
     ].reduce((acc, item) => {
-      const existingItem = acc.find((obj) => obj.itemId === item.itemId);
+      const existingItem = acc.find((obj) => obj?.itemId === item?.itemId);
       if (existingItem) {
-        existingItem.fragments.push(item.fragmentId);
+        existingItem?.fragments.push(item.fragmentId);
       } else {
         acc.push({
           itemId: item.itemId,
@@ -110,40 +188,41 @@ export const generateSessionReward = async (req, res) => {
       return acc;
     }, []);
 
-    // remove completed items &&  items whose all pieces are collected &&  filter based on mythology
-    const completedItemIds = claimedItems
-      .filter(
+    // Remove completed items && filter based on mythology
+    const completedItemIds =
+      claimedItems
+        ?.filter(
+          (item) =>
+            (item.isComplete === true ||
+              item.fragments.length ===
+                gameItems?.find((gameItem) => gameItem.id === item.itemId)
+                  ?.fragments.length) &&
+            item.itemId.includes(mythology.toLowerCase())
+        )
+        .map((item) => item.itemId) ?? [];
+
+    // filter items not claimed yet & L1, L2, L3
+    const filteredClaimedItems =
+      gameItems?.filter(
         (item) =>
-          (item.isComplete === true ||
-            item.fragments.length ===
-              gameItems.find((gameItem) => gameItem.id === item.itemId)
-                ?.fragments.length) &&
-          item.itemId.includes(mythology.toLowerCase())
-      )
-      .map((item) => {
-        return item.itemId;
-      });
+          !userClaimedRewards?.claimedRoRItems?.includes(item.id) &&
+          !completedItemIds?.includes(item.id) &&
+          item.id?.includes("relic") &&
+          item.id?.includes(mythology.toLowerCase()) &&
+          item.fragments.length === rewardlvl
+      ) ?? [];
 
-    // filters and gives items which are not claimed yet & L1,L2,L3
-    const filteredClaimedItems = gameItems.filter(
-      (item) =>
-        !userClaimedRewards.claimedRoRItems.includes(item.id) &&
-        !completedItemIds.includes(item.id) &&
-        item.id.includes(mythology.toLowerCase()) &&
-        item.fragments.length === noOfWinsFromBattle
-    );
-
-    // gives randomItem
+    // rnadom item
     const randomGenItem =
       filteredClaimedItems[
         Math.floor(Math.random() * filteredClaimedItems.length)
       ];
 
-    let genRewardObj;
+    let genRewardObj = null;
+    let itemAddedToBag: itemInterface = {};
 
-    // check if randomItem exists
+    // if random item exists
     if (randomGenItem) {
-      // check already exists
       const alreadyClaimedItem = claimedItems.find(
         (item) => item.itemId === randomGenItem.id
       );
@@ -151,15 +230,13 @@ export const generateSessionReward = async (req, res) => {
       let randomGenFragntIdx;
 
       if (alreadyClaimedItem) {
-        // missing fragments
+        // missing frags
         const missingFragments = randomGenItem.fragments.filter(
           (item) => !alreadyClaimedItem.fragments.includes(item)
         );
 
         randomGenFragntIdx =
-          randomGenItem.fragments[
-            Math.floor(Math.random() * missingFragments.length)
-          ];
+          missingFragments[Math.floor(Math.random() * missingFragments.length)];
       } else {
         randomGenFragntIdx = Math.floor(
           Math.random() * randomGenItem.fragments.length
@@ -169,42 +246,91 @@ export const generateSessionReward = async (req, res) => {
       genRewardObj = {
         itemId: randomGenItem.id,
         fragmentId: randomGenFragntIdx,
-        isComplete: randomGenItem.fragments.length === 1 ? true : false,
+        isComplete: randomGenItem.fragments.length === 1,
       };
 
-      await userClaimedRewards.updateOne({
-        $push: { bag: genRewardObj },
-      });
+      let updatedBag = await milestones.findOneAndUpdate(
+        { userId: userId },
+        {
+          $push: { bag: genRewardObj },
+        },
+        { new: true }
+      );
+
+      itemAddedToBag = updatedBag.bag.find(
+        (item) =>
+          item.itemId === genRewardObj.itemId &&
+          item.fragmentId === genRewardObj.fragmentId
+      );
     }
 
-    // fallback shards
-    console.log(noOfWinsFromBattle);
+    let updatedShards = (3 - noOfWinsFromBattle) * 100;
 
-    const updatedShards = (!genRewardObj ? 3 : 3 - noOfWinsFromBattle) * 100;
+    if (!randomGenItem) {
+      updatedShards += noOfWinsFromBattle * 100;
+    }
 
     await user.updateOne({
       $set: {
         "gameSession.lastSessionStartTime": 0,
         "gameSession.competelvl": competelvl,
       },
-      $inc: {
-        "gameSession.dailyGameQuota": -1,
-      },
     });
 
-    await userMythologies.findOneAndUpdate(
-      {
-        userId,
-        "mythologies.name": mythology,
-      },
-      { $inc: { "mythologies.$.shards": updatedShards } }
-    );
+    // shards/orb update
+    if (isUnderworld) {
+      // underworld
+      userMythlogyData.blackOrbs += Math.floor(
+        (userMythlogyData.blackShards + updatedShards) / 1000
+      );
+      userMythlogyData.blackShards =
+        (userMythlogyData.blackShards + updatedShards) % 1000;
+
+      await userMythologies.updateOne(
+        { userId },
+        {
+          $set: {
+            blackShards: userMythlogyData.blackShards,
+            blackOrbs: userMythlogyData.blackOrbs,
+          },
+        }
+      );
+    } else {
+      // mythology
+      let mythData = userMythlogyData.mythologies.find(
+        (myth) => myth.name == mythology
+      );
+
+      mythData.orbs += Math.floor((mythData.shards + updatedShards) / 1000);
+      mythData.shards = (mythData.shards + updatedShards) % 1000;
+
+      await userMythologies.updateOne(
+        { userId, "mythologies.name": mythology },
+        {
+          $set: {
+            "mythologies.$.shards": mythData.shards,
+            "mythologies.$.orbs": mythData.orbs,
+          },
+        }
+      );
+    }
+
+    if (randomGenItem) {
+      // new item transaction
+      const newItemTransaction = new ItemsTransactions({
+        userId: userId,
+        underworld: isUnderworld,
+        shards: updatedShards,
+        item: randomGenItem.id,
+      });
+      await newItemTransaction.save();
+    }
 
     res.status(200).json({
-      reward: [genRewardObj ?? {}, { shards: updatedShards }],
+      reward: [{ fragment: itemAddedToBag }, { shards: updatedShards }],
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       message: "Internal server error.",
       error: error.message,
@@ -272,18 +398,87 @@ export const transferToBag = async (req, res) => {
   }
 };
 
+export const activateInside = async (req, res) => {
+  const user = req.user;
+
+  try {
+    await user.updateOne({
+      $set: {
+        "gameSession.underWorldActiveAt": Date.now(),
+      },
+      $inc: {
+        "gameSession.dailyGameQuota": -1,
+      },
+    });
+    res.status(200).json({ message: "Underworld activated successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const deActivateInside = async (req, res) => {
+  const user = req.user;
+
+  try {
+    await user.updateOne({
+      $set: {
+        "gameSession.underWorldActiveAt": 0,
+      },
+      $inc: {
+        "gameSession.dailyGameQuota": -1,
+      },
+    });
+    res.status(200).json({ message: "Underworld deActivated successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
 export const activateVault = async (req, res) => {
   const userMythologies = req.userMythologies;
   const userMilestones = req.userMilestones;
+  const deductValue = req.deductValue;
+  const expiryDays = req.expiryDays;
 
   try {
     await userMilestones.updateOne({
-      $set: { "bank.lastVaultInstallmentAt": Date.now() },
+      $set: { "bank.vaultExpiryAt": Date.now() + expiryDays },
     });
     await userMythologies.updateOne({
-      $inc: { gobcoin: -3 },
+      $inc: { gobcoin: -deductValue },
     });
     res.status(200).json({ message: "Vault activated successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const activateRest = async (req, res) => {
+  const userMythologies = req.userMythologies;
+  const user = req.user;
+  const deductValue = req.deductValue;
+  const expiryDays = req.expiryDays;
+
+  try {
+    await user.updateOne({
+      $set: { "gameSession.restExpiresAt": Date.now() + expiryDays },
+    });
+    await userMythologies.updateOne({
+      $inc: { gobcoin: -deductValue },
+    });
+    res.status(200).json({ message: "Rest activated successfully." });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -375,6 +570,25 @@ export const tradeFragments = async (req, res) => {
     });
 
     res.status(200).json({ message: "Item traded successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const giveCoins = async (req, res) => {
+  const user = req.user;
+
+  try {
+    await userMythologies.findOneAndUpdate(
+      { userId: user._id },
+      { $inc: { gobcoin: 10 } }
+    );
+
+    res.status(200).json({ message: "Coins added successfully." });
   } catch (error) {
     console.log(error);
     res.status(500).json({

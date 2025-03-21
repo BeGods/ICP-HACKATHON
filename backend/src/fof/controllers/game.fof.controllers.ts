@@ -193,7 +193,7 @@ export const getGameStats = async (req, res) => {
     // is sligible for gacha
     const isEligibleToClaim = await checkBonus(user);
     const memberData = {
-      overallRank: userRank?.overallRank ?? 0,
+      overallRank: userRank?.orbRank ?? 0,
       totalOrbs: userRank?.totalOrbs ?? 0,
     };
 
@@ -207,11 +207,19 @@ export const getGameStats = async (req, res) => {
       user.bonus.fof.streak.count
     );
 
+    // telegramUsername: user.telegramUsername,
+    // lineName: user.lineName,
+    // oneWaveUsername: user.oneWaveUsername,
     const userData = {
-      telegramUsername: user.telegramUsername,
+      username: user.telegramUsername,
       tonAddress: user.tonAddress,
+      kaiaAddress: user.kaiaAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile.avatarUrl,
+      avatarUrl: user.profile.avatarUrl
+        ? user.telegramId
+          ? `https://media.publit.io/file/UserAvatars/${user.profile.avatarUrl}.jpg`
+          : user.profile.avatarUrl
+        : null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,
