@@ -16,6 +16,7 @@ import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { rankPositions } from "../../../utils/constants.fof";
+import { getImage } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 
@@ -42,7 +43,7 @@ const UserAvatar = ({ user, index }) => {
         <img
           src={
             user?.profileImage
-              ? `https://media.publit.io/file/UserAvatars/${user?.profileImage}.jpg`
+              ? `${user?.profileImage}`
               : `${assets.uxui.baseorb}`
           }
           alt="base-orb"
@@ -59,7 +60,7 @@ const UserAvatar = ({ user, index }) => {
                 platform === "ios" ? "" : "mt-1"
               } text-white`}
             >
-              {user.telegramUsername[0]}
+              {user.username[0]}
             </div>
           </div>
         )}
@@ -79,8 +80,9 @@ const Leaderboard = (props) => {
     gameData,
     setShowCard,
     setUserData,
+    isTelegram,
+    platform,
   } = useContext(FofContext);
-  const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -187,7 +189,7 @@ const Leaderboard = (props) => {
   };
 
   const placeholderItem = {
-    telegramUsername: "Anonymous",
+    username: "Anonymous",
     profileImage: "default-profile.png",
     id: null,
     country: "NA",
@@ -237,7 +239,11 @@ const Leaderboard = (props) => {
   }, []);
 
   return (
-    <div className="flex tg-container-height flex-col overflow-hidden m-0">
+    <div
+      className={`flex ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } flex-col overflow-hidden m-0`}
+    >
       <div
         style={{
           position: "absolute",
@@ -336,11 +342,7 @@ const Leaderboard = (props) => {
                 userData.overallRank !== 0 &&
                 !userData.stakeOn
               ) {
-                setShowCard(
-                  <StakeCrd
-                    profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
-                  />
-                );
+                setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
               }
             }}
             className="button__face button__face--back z-50 flex justify-center items-center"
@@ -481,7 +483,7 @@ const Leaderboard = (props) => {
             className="pb-[9vh] overflow-auto disable-scroll-bar"
           >
             {paddedHallOfFameData.slice(3).map((item, index) => {
-              const { telegramUsername, profileImage, id, isEmpty } = item;
+              const { username, profileImage, id, isEmpty } = item;
 
               const countryFlag =
                 countries.find((country) => country.code == item.country)
@@ -494,7 +496,7 @@ const Leaderboard = (props) => {
                     isKOL={true}
                     isEmpty={isEmpty || false}
                     rank={index + 4}
-                    name={telegramUsername}
+                    name={username}
                     totalOrbs={countryFlag}
                     imageUrl={profileImage}
                   />
@@ -511,13 +513,13 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      src={userData.avatarUrl}
                       alt="profile-image"
                       className="rounded-full"
                     />
                   ) : (
                     <Avatar
-                      name={userData.telegramUsername}
+                      name={userData.username.charAt(0).toUpperCase()}
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -525,9 +527,9 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-black">
-                  {userData.telegramUsername.length > 20
-                    ? userData.telegramUsername.slice(0, 20)
-                    : userData.telegramUsername}
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
                 </h1>
               </div>
               <div className="flex flex-col text-black justify-center items-end text-tertiary w-[30%] mr-4 h-full">
@@ -578,7 +580,7 @@ const Leaderboard = (props) => {
                   <LeaderboardItem
                     key={index}
                     rank={item.overallRank}
-                    name={item.telegramUsername}
+                    name={item.username}
                     totalOrbs={formatRankOrbs(item.totalOrbs)}
                     imageUrl={item.profileImage}
                     prevRank={item.prevRank}
@@ -597,11 +599,7 @@ const Leaderboard = (props) => {
                   userData.overallRank !== 0 &&
                   !userData.stakeOn
                 ) {
-                  setShowCard(
-                    <StakeCrd
-                      profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
-                    />
-                  );
+                  setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
                 }
               }}
               className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
@@ -621,13 +619,13 @@ const Leaderboard = (props) => {
                 <div className="h-[35px] w-[35px]">
                   {userData.avatarUrl ? (
                     <img
-                      src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                      src={userData.avatarUrl}
                       alt="profile-image"
                       className="rounded-full"
                     />
                   ) : (
                     <Avatar
-                      name={userData.telegramUsername}
+                      name={userData.username.charAt(0).toUpperCase()}
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -635,9 +633,9 @@ const Leaderboard = (props) => {
                   )}
                 </div>
                 <h1 className="text-white text-tertiary">
-                  {userData.telegramUsername.length > 20
-                    ? userData.telegramUsername.slice(0, 20)
-                    : userData.telegramUsername}
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
                 </h1>
               </div>
               <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">

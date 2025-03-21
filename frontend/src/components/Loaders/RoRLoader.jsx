@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
 import ReactHowler from "react-howler";
+import { MainContext } from "../../context/context";
 
 const RoRLoader = (props) => {
+  const { isTelegram } = useContext(MainContext);
+
   return (
-    <div className="w-[100vw] relative tg-container-height">
+    <div
+      className={`w-[100vw] relative ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      }`}
+    >
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"
@@ -24,7 +31,7 @@ const RoRLoader = (props) => {
       <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
         <div className="flex flex-col justify-between items-center w-full h-full pt-[3vh] pb-[2vh]">
           <img
-            src="/assets/logos/requiem.of.relics.png"
+            src={assets.logos.ror}
             alt="ror"
             className="purple-text-shadow"
           />
@@ -34,7 +41,7 @@ const RoRLoader = (props) => {
             </div>
             <div className="relative inline-block mx-auto">
               <img
-                src="/assets/buttons/button.blue.off.png"
+                src={`${assets.buttons.blue.off}`}
                 alt="Button"
                 className="h-auto"
               />

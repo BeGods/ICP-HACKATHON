@@ -31,7 +31,10 @@ function usePageTracking() {
 }
 
 function App() {
+  const [game, setGame] = useState("fof");
+  const [lineWallet, setLineWallet] = useState(null);
   const [enableHaptic, setEnableHaptic] = useState(true);
+  const [isTelegram, setIsTelegram] = useState(false);
   const [enableSound, setEnableSound] = useState(true);
   const [userData, setUserData] = useState(null);
   const [platform, setPlatform] = useState(null);
@@ -59,6 +62,12 @@ function App() {
     setLang,
     tasks,
     setTasks,
+    isTelegram,
+    setIsTelegram,
+    game,
+    setGame,
+    setLineWallet,
+    lineWallet,
   };
 
   const syncAllCookies = async () => {

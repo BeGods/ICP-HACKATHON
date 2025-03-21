@@ -175,6 +175,7 @@ const ForgeHeader = ({
   showTut,
   starIsHeld,
 }) => {
+  const { assets, section } = useContext(FofContext);
   const [changeText, setChangeText] = useState(true);
   const height = Math.min(
     100,
@@ -190,6 +191,20 @@ const ForgeHeader = ({
 
   return (
     <div>
+      {/* <img
+        src={assets.uxui.paper}
+        alt="paper"
+        className={`w-full absolute rotate-180 h-auto filter-paper-${
+          section === 3 ||
+          section === 4 ||
+          section === 5 ||
+          section === 6 ||
+          section === 11
+            ? mythSections[8]
+            : mythSections[activeMyth]
+        }`}
+      /> */}
+
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
           className={`text-[5vw] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${

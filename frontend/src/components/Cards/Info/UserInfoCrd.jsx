@@ -5,7 +5,7 @@ import { mythSymbols } from "../../../utils/constants.fof";
 import { countries } from "../../../utils/country";
 
 const UserInfoCard = ({ close, userData }) => {
-  const { assets } = useContext(FofContext);
+  const { assets, isTelegram } = useContext(FofContext);
   const countryFlag = countries.find((item) => item.code == userData.country);
 
   return (
@@ -19,7 +19,7 @@ const UserInfoCard = ({ close, userData }) => {
           />
         </div>
         <div className="absolute top-0 w-full text-center text-card text-paperHead font-bold mt-2 uppercase z-30">
-          <h1>{userData.telegramUsername.slice(0, 11)}</h1>
+          <h1>{userData.username.charAt(0).toUpperCase()[0].slice(0, 11)}</h1>
           <h2 className={`-mt-[2vh] text-paperSub font-medium uppercase`}>
             #{userData.overallRank}{" "}
             {userData.country != "NA" &&

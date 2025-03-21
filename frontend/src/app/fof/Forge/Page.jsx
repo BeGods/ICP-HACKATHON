@@ -65,6 +65,7 @@ const Forges = () => {
     enableHaptic,
     userData,
     setUserData,
+    isTelegram,
   } = useContext(FofContext);
   const streakMultpier = (boosterName) => {
     if (userData.streak?.streakCount && userData.streak?.lastMythClaimed) {
@@ -1374,7 +1375,9 @@ const Forges = () => {
           left: 0,
           width: "100vw",
         }}
-        className="flex tg-container-height flex-col overflow-hidden m-0"
+        className={`flex ${
+          isTelegram ? "tg-container-height" : "browser-container-height"
+        } flex-col overflow-hidden m-0`}
       >
         <div
           style={{

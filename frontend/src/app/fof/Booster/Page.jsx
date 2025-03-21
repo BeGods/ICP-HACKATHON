@@ -33,6 +33,7 @@ const Boosters = () => {
     enableSound,
     showAnmt,
     setShowAnmt,
+    isTelegram,
   } = useContext(FofContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
@@ -142,7 +143,11 @@ const Boosters = () => {
   }, []);
 
   return (
-    <div className="flex flex-col tg-container-height overflow-hidden m-0">
+    <div
+      className={`flex flex-col ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } overflow-hidden m-0`}
+    >
       <div
         style={{
           position: "absolute",

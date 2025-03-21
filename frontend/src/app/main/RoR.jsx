@@ -24,7 +24,7 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
 import { fetchRewards } from "../../utils/api.fof";
 import Profile from "../fof/Profile/Page";
-import RoRHeader from "../../components/layouts/Header";
+import Gift from "../fof/Gift/Gift";
 
 const tele = window.Telegram?.WebApp;
 
@@ -38,7 +38,6 @@ const RoRMain = () => {
     userData,
     setUserData,
     platform,
-    setPlatform,
     authToken,
     setAuthToken,
     country,
@@ -46,6 +45,8 @@ const RoRMain = () => {
     lang,
     tasks,
     setTasks,
+    isTelegram,
+    game,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -89,6 +90,8 @@ const RoRMain = () => {
     setSwipes,
     tasks,
     setTasks,
+    isTelegram,
+    game,
   };
 
   const sections = [
@@ -100,6 +103,7 @@ const RoRMain = () => {
     <Vault />, // 5
     <Profile />, // 6
     <Leaderboard />, // 7
+    <Gift />, // 8
   ];
 
   const getPartnersData = async (token) => {
@@ -179,7 +183,6 @@ const RoRMain = () => {
       tele.setHeaderColor("#000000");
       tele.setBackgroundColor("#000000");
       tele.setBottomBarColor("#000000");
-      setPlatform(tele.platform);
     }
   }, []);
 
@@ -216,10 +219,12 @@ const RoRMain = () => {
             backgroundSize: "cover",
             backgroundPosition: "center center",
           }}
-          className="w-screen tg-container-height bg-white select-none font-fof overflow-hidden"
+          className={`w-screen ${
+            isTelegram ? "tg-container-height" : "browser-container-height"
+          } bg-white select-none font-fof overflow-hidden`}
         >
           <RorContext.Provider value={contextValues}>
-            <div className={`flex-grow flex pt-[7vh]`}>{sections[section]}</div>
+            <div className={`flex-grow flex`}>{sections[section]}</div>
             {section !== 7 && <Footer />}
             {showCard && (
               <div className="absolute z-[99] w-screen">{showCard}</div>

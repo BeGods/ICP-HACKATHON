@@ -6,7 +6,7 @@ const DoDIntro = (props) => {
     <div
       className="absolute ml-[150vw] top-0 bottom-0 left-0 w-screen h-full z-10"
       style={{
-        background: `url(/assets/1280px-dod.loading.png) no-repeat center / cover`,
+        background: `url(${assets.uxui.dodsplash}) no-repeat center / cover`,
         backgroundPosition: "45.75% 0%",
       }}
     >
@@ -14,11 +14,7 @@ const DoDIntro = (props) => {
         className={`flex  flex-col h-full items-center justify-center z-[100]`}
       >
         <div className="absolute flex flex-col justify-between items-center h-full pt-[0.5vh] pb-[3.5vh]">
-          <img
-            src="/assets/logos/dawn.of.duels.png"
-            alt="dod"
-            className="dod-text-shadow"
-          />
+          <img src={assets.logos.dod} alt="dod" className="dod-text-shadow" />
           <div className="flex flex-col gap-[2vh]">
             <div className={`flex justify-center items-center z-[100]`}>
               <img
@@ -32,7 +28,11 @@ const DoDIntro = (props) => {
                 COMING SOON
               </h1>
               {/* <img
-                src="/assets/buttons/button.black.off.png"
+                src={
+                  showGlow
+                    ? `${assets.buttons.black.off}`
+                    : `${assets.buttons.black.on}`
+                }
                 alt="Button"
                 className="h-auto"
               />

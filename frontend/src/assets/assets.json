@@ -4,23 +4,23 @@
         "multiorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.multicolor.png",
         "baseorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png",
         "basebg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.base.background.jpg",
-        "rorspash" : "/assets/uxui/1280px-ror.off.jpg",
-        "fofsplash" : "/assets/uxui/1280px-fof.off.jpg",
-        "rorspashOn" : "/assets/uxui/1280px-ror.on.png",
-        "fofsplashOn" : "/assets/uxui/1280px-fof.on.png",
-        "dodsplash" : "/assets/logos/dawn.of.duels.vertical.gold.png",
+        "rorspash" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-ror.off.jpg",
+        "fofsplash" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.off.jpg",
+        "rorspashOn" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-ror.on.png",
+        "fofsplashOn" : "/https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.on.png",
+        "dodsplash" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-dod.loading.png",
         "fofbg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.base.background.jpg",
-        "forgefx": "/assets/uxui/1280px-fof.forge.off.png",
-        "forgebg": "/assets/uxui/1280px-fof.forge.jpg",
-        "paper": "/assets/uxui/1280px-fof.footer.png",
+        "forgefx": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.forge.off.png",
+        "forgebg": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.forge.jpg",
+        "paper": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.footer.png",
         "intro": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.loading.background.jpg",
-        "dial-fire": "/assets/480px-fof.pointer.fire1-.png",
-        "dial-earth": "/assets/480px-fof.pointer.earth1-.png",
-        "dial-water": "/assets/480px-fof.pointer.water1-.png",
-        "dial-air": "/assets/480px-fof.pointer.air1-.png",
-        "dial-aether": "/assets/480px-fof.pointer.aether1-.png",
-        "tower": "/assets/480px-fof.tower.off-.png",
-        "towerOn": "/assets/480px-fof.tower.on-.png",
+        "dial-fire": "https://media.publit.io/file/BattleofGods/FoF/Assets/pointers/480px-fof.pointer.fire1.png",
+        "dial-earth": "https://media.publit.io/file/BattleofGods/FoF/Assets/pointers/480px-fof.pointer.earth1.png",
+        "dial-water": "https://media.publit.io/file/BattleofGods/FoF/Assets/pointers/480px-fof.pointer.water1.png",
+        "dial-air": "https://media.publit.io/file/BattleofGods/FoF/Assets/pointers/480px-fof.pointer.air1.png",
+        "dial-aether": "https://media.publit.io/file/BattleofGods/FoF/Assets/pointers/480px-fof.pointer.aether1.png",
+        "tower": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.tower.off-z.png",
+        "towerOn": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/480px-fof.tower.on-B.png",
         "pandora": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/320px-pandora.png",
         "info": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg",
         "infomoon":"https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-moon.jpg",
@@ -33,9 +33,39 @@
         "begodsBlack": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.black.svg",
         "begodsWhite": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.white.svg",
         "fofQr": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-begods.telegram.qrcode.png",
-        "fof": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/forgesoffaith-w.svg",
-        "ror": "/assets/requiemofrelics.png",
-        "dod": "/assets/dod.png"
+        "fof": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/forges.of.faith.png",
+        "ror": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/requiem.of.relics.png",
+        "dod": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/dawn.of.duels.png"
+    },
+    "buttons": {
+        "orange": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.orange.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.orange.off.png"
+        },
+        "black": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.black.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.black.off.png"
+        },
+        "blue": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.blue.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.blue.off.png"
+        },
+        "green": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.green.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.green.off.png"
+        },
+        "pink": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.pink.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.pink.off.png"
+        },
+        "red": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.red.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.red.off.png"
+        },
+        "violet": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.violet.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.violet.off.png"
+        }
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.greek.base.svg",
@@ -63,8 +93,8 @@
         "menu": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.menu01.mp3",
         "bubble": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.bubble.mp3",
         "alchemistShort": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.alchemist.grunt.short.mp3",
-        "fofIntro": "/assets/audio/fof.music.intro.wav",
-        "rorIntro": "/assets/audio/ror.music.intro.wav",
+        "fofIntro": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.music.intro-d.mp3",
+        "rorIntro": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/ror.music.intro-Z.mp3",
         "alchemistLong": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.alchemist.grunt.long.mp3",
         "automataShort": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.automata.pulse.long.mp3",
         "automataLong": "https://media.publit.io/file/BattleofGods/FoF/Assets/AUDIO/fof.automata.pulse.long.mp3",

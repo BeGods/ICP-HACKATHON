@@ -91,4 +91,4 @@ export const countries = [
   { name: "Zimbabwe", code: "ZWE", flag: "🇿🇼", dialCode: "+263" },
 ];
 
-export const validCountry = ["IND"];
+export const validCountry = ["IND", "THA"];

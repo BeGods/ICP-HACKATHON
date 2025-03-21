@@ -1,16 +1,21 @@
 import { useContext, useEffect, useState } from "react";
-import { FofContext } from "../../../context/context";
-import ProfileInfoCard from "../../../components/Cards/Info/ProfileInfoCrd";
+import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { determineStreakBadge } from "../../../helpers/streak.helper";
+import { getImage } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 
-const BottomChild = ({ userData, showGuide }) => {
-  const { rewards, setSection, enableHaptic } = useContext(FofContext);
+const BottomChild = () => {
+  const { enableHaptic, game } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
   const [showEffect, setShowEffect] = useState(true);
   const { t } = useTranslation();
+  const setSection =
+    game === "fof" ? fofContext.setSection : rorContext.setSection;
+  const giftIdx = game === "fof" ? 5 : 8;
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -27,7 +32,7 @@ const BottomChild = ({ userData, showGuide }) => {
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
-          setSection(5);
+          setSection(giftIdx);
         }}
         className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
       >
@@ -63,8 +68,7 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard, enableHaptic } =
-    useContext(FofContext);
+  const { assets, platform, isTelegram } = useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
@@ -73,23 +77,11 @@ const CenterChild = ({ userData }) => {
   return (
     <div className="flex absolute top-0 justify-center z-50 left-[34vw]">
       <div
-        onClick={() => {
-          handleClickHaptic(tele, enableHaptic);
-          setShowCard(
-            <ProfileInfoCard
-              close={() => {
-                setShowCard(null);
-              }}
-            />
-          );
-        }}
         className={`z-20 flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
           src={
-            userData.avatarUrl
-              ? `https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`
-              : `${assets.uxui.baseorb}`
+            userData.avatarUrl ? userData.avatarUrl : `${assets.uxui.baseorb}`
           }
           alt="base-orb"
           className={`${
@@ -105,7 +97,7 @@ const CenterChild = ({ userData }) => {
                 platform === "ios" ? "mt-2" : "mt-4"
               } text-white opacity-70`}
             >
-              {userData.telegramUsername[0]}
+              {userData.username.charAt(0).toUpperCase()}
             </div>
           </div>
         )}
@@ -139,8 +131,8 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
           ) : (
             <div className="text-gold">
               {(
-                userData.telegramUsername.charAt(0).toUpperCase() +
-                userData.telegramUsername.slice(1).toLowerCase()
+                userData.username.charAt(0).toUpperCase() +
+                userData.username.slice(1).toLowerCase()
               ).slice(0, 12)}
             </div>
           )}

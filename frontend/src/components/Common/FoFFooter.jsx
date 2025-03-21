@@ -6,6 +6,7 @@ import "../../styles/flip.scss";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useTranslation } from "react-i18next";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
+import { getImage } from "../../utils/line";
 
 const redirect = [0, 2, 4, 3];
 const sectionTitles = ["forges", "boosters", "tower", "profile"];
@@ -126,17 +127,28 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             }, 500);
             handleSectionChange(icon);
           }}
-          className={`flex ${
+          className={`flex relative ${
             clickEffect && "click-effect"
           } flex-col items-center mb-2`}
         >
+          {icon === 3 && (
+            <div
+              className={`absolute ${
+                showEffect && "pulse-text"
+              } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
+                mythSections[activeMyth]
+              }-text text-white text-black-sm-contour h-7 w-7 -mr-4 -mt-1 z-[60] right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+            >
+              {countOfInCompleteQuests}
+            </div>
+          )}
           {userData.avatarUrl ? (
             <div
               className="flex flex-col items-center cursor-pointer z-50 h-full transition-all duration-500"
               style={{ minWidth: "60px" }}
             >
               <img
-                src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                src={userData.avatarUrl}
                 alt="profile-image"
                 className={`w-[16vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
@@ -157,7 +169,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 <span
                   className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}
                 >
-                  {userData.telegramUsername.charAt(0).toUpperCase()}
+                  {userData.username.charAt(0).toUpperCase()}
                 </span>
               </div>
             </>
@@ -165,17 +177,6 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
           <h1 className="flex justify-center -mb-0.5 uppercase">
             {t(`sections.profile`)}
           </h1>
-        </div>
-      )}
-      {icon === 3 && (
-        <div
-          className={`absolute ${
-            showEffect && "pulse-text"
-          } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
-            mythSections[activeMyth]
-          }-text text-white text-black-sm-contour h-7 w-7 mb-[8vh] mr-3 z-50 right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
-        >
-          {countOfInCompleteQuests}
         </div>
       )}
 

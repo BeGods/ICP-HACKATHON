@@ -35,6 +35,7 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
+import { determineIsTelegram } from "../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
@@ -48,7 +49,6 @@ const FoFMain = () => {
     userData,
     setUserData,
     platform,
-    setPlatform,
     authToken,
     setAuthToken,
     country,
@@ -56,6 +56,10 @@ const FoFMain = () => {
     lang,
     tasks,
     setTasks,
+    isTelegram,
+    setLineWallet,
+    setPlatform,
+    setIsTelegram,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -113,6 +117,8 @@ const FoFMain = () => {
     showAnmt,
     leaderboard,
     setLeaderboard,
+    isTelegram,
+    setLineWallet,
   };
   const sections = [
     <Forges />, // 0
@@ -198,6 +204,7 @@ const FoFMain = () => {
     try {
       const response = await fetchGameStats(token);
       const showAnmnt = await validateTutCookie(tele, "announcement08");
+      setLineWallet(response?.user?.kaiaAddress);
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setTasks(response?.extraQuests);
@@ -213,9 +220,11 @@ const FoFMain = () => {
         setTimeout(() => {
           setIsLoading(false);
         }, 1000);
-        (async () => {
-          await getProfilePhoto(token);
-        })();
+        if (isTelegram) {
+          (async () => {
+            await getProfilePhoto(token);
+          })();
+        }
       } else if (
         response?.user?.joiningBonus &&
         response?.user.isEligibleToClaim
@@ -284,6 +293,8 @@ const FoFMain = () => {
       tele.setBackgroundColor("#000000");
       tele.setBottomBarColor("#000000");
       setPlatform(tele.platform);
+      const isTg = determineIsTelegram(tele.platform);
+      setIsTelegram(isTg);
     }
   }, []);
 
@@ -301,6 +312,7 @@ const FoFMain = () => {
   return (
     <div>
       <TgHeader
+        isLoaded={!isLoading}
         openSettings={() => {
           setShowCard(
             <SettingModal
@@ -313,7 +325,11 @@ const FoFMain = () => {
       />
 
       {!isLoading ? (
-        <div className="w-screen tg-container-height bg-white select-none font-fof overflow-hidden">
+        <div
+          className={`w-screen ${
+            isTelegram ? "tg-container-height" : "browser-container-height"
+          } bg-white select-none font-fof overflow-hidden`}
+        >
           <FofContext.Provider value={initalStates}>
             <div>{sections[section]}</div>
             {section != 7 &&

@@ -93,7 +93,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
               style={{ minWidth: "60px" }}
             >
               <img
-                src={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
+                src={userData.avatarUrl}
                 alt="profile-image"
                 className={`w-[16vw] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
@@ -114,8 +114,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 <span
                   className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}
                 >
-                  {userData?.telegramUsername?.charAt(0).toUpperCase() ??
-                    "name"}
+                  {userData?.username?.charAt(0).toUpperCase() ?? "name"}
                 </span>
               </div>
             </>
@@ -156,8 +155,8 @@ const Footer = ({}) => {
       />
 
       <div
-        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
-          platform === "ios" ? "-mt-3" : "-mt-0.5"
+        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 ml-2 w-full px-2 flex justify-between text-white ${
+          platform === "ios" ? "-mt-5.5" : "-mt-3"
         }`}
       >
         {footerIcons.map((item, index) => (

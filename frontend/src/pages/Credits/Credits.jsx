@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { MainContext } from "../../context/context";
 
 const CreditsScroll = () => {
+  const { isTelegram } = useContext(MainContext);
   const [animation, setAnimation] = useState(false);
 
   useEffect(() => {
@@ -8,7 +10,11 @@ const CreditsScroll = () => {
   }, []);
 
   return (
-    <div className="relative tg-container-height w-full bg-black overflow-hidden flex items-center justify-center">
+    <div
+      className={`relative ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } w-full bg-black overflow-hidden flex items-center justify-center`}
+    >
       <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-black to-transparent"></div>
       <div className="perspective-[450px] pt-20 w-full mx-auto">
         <div
