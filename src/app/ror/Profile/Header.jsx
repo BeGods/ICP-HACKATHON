@@ -63,7 +63,7 @@ const BottomChild = ({ userData, showGuide }) => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, setShowCard, enableHaptic } =
+  const { assets, platform, setShowCard, enableHaptic, isTelegram } =
     useContext(RorContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
@@ -118,7 +118,7 @@ const CenterChild = ({ userData }) => {
                 platform === "ios" ? "mt-2" : "mt-4"
               } text-white opacity-70`}
             >
-              {userData.telegramUsername[0]}
+              {userData.username[0]}
             </div>
           </div>
         )}
@@ -147,8 +147,8 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
           ) : (
             <div className="text-gold">
               {(
-                userData.telegramUsername.charAt(0).toUpperCase() +
-                userData.telegramUsername.slice(1).toLowerCase()
+                userData.username.charAt(0).toUpperCase() +
+                userData.username.slice(1).toLowerCase()
               ).slice(0, 12)}
             </div>
           )}

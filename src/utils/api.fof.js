@@ -1,8 +1,8 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
-export const authenticate = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/auth`;
+export const authenticateTg = async (userData, referralCode) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/tele/auth`;
   if (referralCode) {
     url += `?referralCode=${referralCode}`;
   }
@@ -15,6 +15,33 @@ export const authenticate = async (userData, referralCode) => {
     throw error;
   }
 };
+
+export const authenticateOneWave = async (param) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/onewave/auth`;
+
+
+  try {
+    const response = await axios.post(url, { sessionId: param });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const authenticateLine = async (param) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
+
+
+  try {
+    const response = await axios.post(url, { token: param });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 
 export const fetchGameStats = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/game/stats`;
@@ -361,6 +388,38 @@ export const disconnectTonWallet = async (accessToken) => {
   }
 };
 
+export const connectLineWallet = async (kaiaAddress, accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/connect/line`;
+
+  try {
+    const response = await axios.post(url, { kaiaAddress: kaiaAddress }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const disconnectLineWallet = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/disconnect/line`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const startTapSession = async (mythologyName, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/game/startTapSession`;
 
@@ -565,7 +624,7 @@ export const fetchRewards = async (
 };
 
 export const fetchOTP = async (mobileNumber, accessToken) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/otp`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/otp`;
 
   try {
     const response = await axios.post(
@@ -585,14 +644,14 @@ export const fetchOTP = async (mobileNumber, accessToken) => {
 };
 
 export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/verify`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/verify`;
 
   try {
     const response = await axios.post(
       url,
       {
         mobileNumber: mobileNumber,
-        name: name,
+        username: name,
         otp: otp,
       },
       {

@@ -16,7 +16,7 @@ const LeaderboardItem = ({
   const [avatarColor, setAvatarColor] = useState(null);
 
   useEffect(() => {
-    if (name === userData.telegramUsername) {
+    if (name === userData.username) {
       setAvatarColor(localStorage.getItem("avatarColor"));
     }
   }, []);
@@ -66,7 +66,7 @@ const LeaderboardItem = ({
             <div className="h-[35px] w-[35px]">
               {imageUrl ? (
                 <img
-                  src={`https://media.publit.io/file/UserAvatars/${imageUrl}.jpg`}
+                  src={imageUrl}
                   alt="profile-image"
                   className="rounded-full"
                 />

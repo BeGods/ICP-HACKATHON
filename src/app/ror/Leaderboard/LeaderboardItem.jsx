@@ -15,7 +15,7 @@ const LeaderboardItem = ({
   const [avatarColor, setAvatarColor] = useState(null);
 
   useEffect(() => {
-    if (name === userData.telegramUsername) {
+    if (name === userData.username) {
       setAvatarColor(localStorage.getItem("avatarColor"));
     }
   }, []);

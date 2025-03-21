@@ -7,7 +7,7 @@ import SettingModal from "../Modals/Settings";
 const tele = window.Telegram?.WebApp;
 
 const TaskCarousel = ({ quests, userData }) => {
-  const { setShowCard } = useContext(FofContext);
+  const { setShowCard, isTelegram } = useContext(FofContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
 
@@ -62,7 +62,7 @@ const TaskCarousel = ({ quests, userData }) => {
         </div>
       ) : (
         <div className="flex absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[2vh]">
-          {userData.telegramUsername}
+          {userData.username.toUpperCase()}
         </div>
       )}
       <div className="carousel">

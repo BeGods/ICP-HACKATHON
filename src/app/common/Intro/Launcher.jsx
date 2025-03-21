@@ -7,8 +7,11 @@ import ReactHowler from "react-howler";
 import DoDIntro from "./DoDIntro";
 import TgHeader from "../../../components/Common/TgHeader";
 import SettingModal from "../../../components/Modals/Settings";
+import { validateSoundCookie } from "../../../helpers/cookie.helper";
 
-export default function Launcher({ handleUpdateIdx, activeIndex }) {
+const tele = window.Telegram?.WebApp;
+
+export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   const menuRef = useRef(null);
   const bgRef = useRef(null);
   const [fadeout, setFadeout] = useState(false);
@@ -16,16 +19,18 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
   const pos = ["-50vw", "-150vw", "-250vw"];
   const bgAudios = ["fofIntro", "", "rorIntro"];
 
-  const playMenuAudio = () => {
-    if (menuRef.current) {
+  const playMenuAudio = async () => {
+    const isSoundActive = await validateSoundCookie(tele);
+    if (menuRef.current && isSoundActive) {
       menuRef.current.stop();
       menuRef.current.play();
     }
   };
 
   useEffect(() => {
-    const handleAudioLoad = () => {
-      if (bgRef.current && activeIndex !== 1) {
+    const handleAudioLoad = async () => {
+      const isSoundActive = await validateSoundCookie(tele);
+      if (bgRef.current && isSoundActive && activeIndex !== 1) {
         setTimeout(() => {
           bgRef.current.play();
         }, 2000);
@@ -51,7 +56,11 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
   return (
     <div className="flex w-screen text-wrap">
       <TgHeader hideExit={true} openSettings={() => setShowCard(true)} />
-      <div className="transition-all tg-container-height duration-500 overflow-hidden relative">
+      <div
+        className={`transition-all ${
+          isTelegram ? "tg-container-height" : "browser-container-height"
+        } duration-500 overflow-hidden relative`}
+      >
         <div
           className="slider-container flex transition-transform duration-500"
           style={{
@@ -59,9 +68,21 @@ export default function Launcher({ handleUpdateIdx, activeIndex }) {
             transform: `translateX(${pos[activeIndex]})`,
           }}
         >
-          <FoFIntro handleFadeout={() => setFadeout(true)} fadeout={fadeout} />
-          <RoRIntro handleFadeout={() => setFadeout(true)} fadeout={fadeout} />
-          <DoDIntro handleFadeout={() => setFadeout(true)} fadeout={fadeout} />
+          <FoFIntro
+            isTelegram={isTelegram}
+            handleFadeout={() => setFadeout(true)}
+            fadeout={fadeout}
+          />
+          <RoRIntro
+            isTelegram={isTelegram}
+            handleFadeout={() => setFadeout(true)}
+            fadeout={fadeout}
+          />
+          <DoDIntro
+            isTelegram={isTelegram}
+            handleFadeout={() => setFadeout(true)}
+            fadeout={fadeout}
+          />
         </div>
         <div className={`${fadeout && "fade-out"}`}>
           {activeIndex > 0 && (

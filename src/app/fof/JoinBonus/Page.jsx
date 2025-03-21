@@ -11,8 +11,14 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setGameData, setSection, authToken, assets, enableHaptic } =
-    useContext(FofContext);
+  const {
+    setGameData,
+    setSection,
+    authToken,
+    assets,
+    enableHaptic,
+    isTelegram,
+  } = useContext(FofContext);
   const [changeText, setChangeText] = useState(true);
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -84,7 +90,11 @@ const JoinBonus = (props) => {
   }, []);
 
   return (
-    <div className="flex relative flex-col tg-container-height w-screen justify-center font-fof items-center bg-black">
+    <div
+      className={`flex relative flex-col ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } w-screen justify-center font-fof items-center bg-black`}
+    >
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">

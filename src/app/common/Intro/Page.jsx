@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { authenticate } from "../../../utils/api.fof";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  authenticateLine,
+  authenticateOneWave,
+  authenticateTg,
+} from "../../../utils/api.fof";
 import {
   fetchHapticStatus,
   setAuthCookie,
   setLangCookie,
-  validateAuth,
   validateCountryCode,
   validateLang,
   validateSoundCookie,
@@ -20,13 +23,16 @@ import { MainContext } from "../../../context/context";
 import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
+import { determineIsTelegram } from "../../../utils/device.info";
+import { useLocation } from "react-router-dom";
+import liff from "@line/liff";
+import OnboardPage from "../../fof/Onboard/Page";
 
 const tele = window.Telegram?.WebApp;
 
 const IntroPage = (props) => {
   const {
     assets,
-    enableHaptic,
     setEnableHaptic,
     enableSound,
     setEnableSound,
@@ -34,13 +40,19 @@ const IntroPage = (props) => {
     setPlatform,
     setAuthToken,
     setCountry,
-    setLang,
+    isTelegram,
+    setIsTelegram,
   } = useContext(MainContext);
-
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const oneWaveParam = queryParams.get("onewave");
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [disableDesktop, setDisableDestop] = useState(false);
+  const [lineCalled, setLineCalled] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const lineCalledRef = useRef(false);
+  const onewaveCalledRef = useRef(false);
 
   // configure tma.auth
   const getUserData = async () => {
@@ -87,13 +99,26 @@ const IntroPage = (props) => {
   };
 
   // authenticate
-  const auth = async () => {
+  const telegramAuth = async () => {
     try {
-      const response = await authenticate(tgUserData, referralCode);
+      const response = await authenticateTg(tgUserData, referralCode);
       setAuthToken(response.data.token);
       await setAuthCookie(tele, response.data.token);
     } catch (error) {
       console.error("Authentication Error: ", error);
+    }
+  };
+
+  const lineAuth = async (idToken) => {
+    if (!lineCalledRef.current) {
+      lineCalledRef.current = true;
+      try {
+        const response = await authenticateLine(idToken);
+        setAuthToken(response.data.token);
+        await setAuthCookie(tele, response.data.token);
+      } catch (error) {
+        console.error("Authentication Error: ", error);
+      }
     }
   };
 
@@ -118,12 +143,35 @@ const IntroPage = (props) => {
     }
   };
 
+  const initalizeLine = async () => {
+    liff
+      .init({
+        liffId: import.meta.env.VITE_LINE_ID,
+      })
+      .then(async () => {
+        const idToken = liff.getIDToken();
+        await lineAuth(idToken);
+      });
+  };
+
+  const onewaveAuth = async () => {
+    if (!onewaveCalledRef.current) {
+      onewaveCalledRef.current = true;
+      try {
+        const response = await authenticateOneWave(oneWaveParam);
+        setAuthToken(response.data.token);
+        await setAuthCookie(tele, response.data.token);
+      } catch (error) {
+        console.error("Authentication Error: ", error);
+      }
+    }
+  };
+
   useEffect(() => {
-    syncAllCookies();
     getUserData();
+    syncAllCookies();
 
     const handleUserInteraction = () => {
-      // playAudio();
       document.removeEventListener("click", handleUserInteraction);
       document.removeEventListener("touchstart", handleUserInteraction);
     };
@@ -139,20 +187,34 @@ const IntroPage = (props) => {
 
   useEffect(() => {
     if (platform) {
+      const isTg = determineIsTelegram(platform);
+      setIsTelegram(isTg);
       if (
         platform === "macos" ||
         platform === "windows" ||
         platform === "tdesktop" ||
         platform === "web" ||
         platform === "weba" ||
-        platform === "unknown"
+        (platform === "unknown" && !oneWaveParam && !liff.isInClient())
       ) {
         setDisableDestop(true);
       } else {
         setDisableDestop(false);
-        setTimeout(() => {
-          (async () => await auth())();
-        }, 1000);
+        if (isTg) {
+          setTimeout(() => {
+            (async () => await telegramAuth())();
+          }, 1000);
+        } else if (liff.isInClient()) {
+          setPlatform("line");
+          setTimeout(() => {
+            (async () => await initalizeLine())();
+          }, 1000);
+        } else if (oneWaveParam) {
+          setPlatform("onewave");
+          setTimeout(() => {
+            (async () => await onewaveAuth())();
+          }, 1000);
+        }
       }
       if (platform === "ios") {
         document.body.style.position = "fixed";
@@ -172,9 +234,14 @@ const IntroPage = (props) => {
   return (
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
       {disableDesktop ? (
-        <DesktopScreen />
+        <DesktopScreen assets={assets} />
       ) : (
-        <Launcher handleUpdateIdx={handleUpdateIdx} activeIndex={activeIndex} />
+        <Launcher
+          enableSound={enableSound}
+          isTelegram={isTelegram}
+          handleUpdateIdx={handleUpdateIdx}
+          activeIndex={activeIndex}
+        />
       )}
     </div>
   );

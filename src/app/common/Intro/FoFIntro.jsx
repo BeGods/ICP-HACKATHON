@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import assets from "../../../assets/assets.json";
 import { useNavigate } from "react-router-dom";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
-const FoFIntro = ({ handleFadeout, fadeout }) => {
+const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
+  const { setGame } = useContext(MainContext);
 
   return (
-    <div className="w-[200vw] tg-container-height relative">
+    <div
+      className={`w-[200vw] ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative`}
+    >
       {/* img 1 */}
       <div
         className="absolute inset-0 w-full h-full z-0"
@@ -30,11 +36,7 @@ const FoFIntro = ({ handleFadeout, fadeout }) => {
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
-          <img
-            src="/assets/logos/forges.of.faith.png"
-            alt="fof"
-            className="fof-text-shadow"
-          />
+          <img src={assets.logos.fof} alt="fof" className="fof-text-shadow" />
           <div className={`flex flex-col gap-[2vh]`}>
             <div
               className={`flex ${
@@ -51,6 +53,7 @@ const FoFIntro = ({ handleFadeout, fadeout }) => {
               onClick={() => {
                 handleClickHaptic(tele, true);
                 setShowGlow(true);
+                setGame("fof");
                 handleFadeout();
                 setTimeout(() => {
                   navigate("/fof");
@@ -61,8 +64,8 @@ const FoFIntro = ({ handleFadeout, fadeout }) => {
               <img
                 src={
                   showGlow
-                    ? `/assets/buttons/button.orange.off.png`
-                    : `/assets/buttons/button.orange.on.png`
+                    ? `${assets.buttons.orange.off}`
+                    : `${assets.buttons.orange.on}`
                 }
                 alt="Button"
                 className="h-auto"

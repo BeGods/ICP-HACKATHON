@@ -28,6 +28,7 @@ const Gacha = (props) => {
     assets,
     platform,
     showAnmt,
+    isTelegram,
   } = useContext(FofContext);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
@@ -223,7 +224,11 @@ const Gacha = (props) => {
   }, [showScale, isClaimed]);
 
   return (
-    <div className="flex flex-col tg-container-height w-screen justify-center font-fof items-center bg-black">
+    <div
+      className={`flex flex-col ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } w-screen justify-center font-fof items-center bg-black`}
+    >
       <div
         className="absolute inset-0 w-full h-full opacity-80 z-0"
         style={{
@@ -257,7 +262,11 @@ const Gacha = (props) => {
             )}
           </div>
           {/* Main */}
-          <div className="absolute tg-container-height">
+          <div
+            className={`absolute ${
+              isTelegram ? "tg-container-height" : "browser-container-height"
+            }`}
+          >
             <div
               onClick={() => {
                 handleClickHaptic(tele, enableHaptic, platform);

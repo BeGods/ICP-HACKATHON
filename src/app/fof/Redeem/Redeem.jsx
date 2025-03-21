@@ -35,6 +35,7 @@ const Redeem = (props) => {
     triggerConf,
     setTriggerConf,
     setGameData,
+    isTelegram,
   } = useContext(FofContext);
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
@@ -180,7 +181,11 @@ const Redeem = (props) => {
   }, []);
 
   return (
-    <div className="flex flex-col tg-container-height overflow-hidden m-0">
+    <div
+      className={`flex flex-col ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } overflow-hidden m-0`}
+    >
       <div
         style={{
           position: "absolute",
@@ -262,7 +267,11 @@ const Redeem = (props) => {
         }}
       />
       {/* Content */}
-      <div className="flex mt-7 tg-container-height justify-center items-center w-screen absolute mx-auto">
+      <div
+        className={`flex mt-7 ${
+          isTelegram ? "tg-container-height" : "browser-container-height"
+        } justify-center items-center w-screen absolute mx-auto`}
+      >
         <div className={`flex items-center justify-center w-full h-full`}>
           <div className="flex flex-col mt-[35px] gap-[3vw] items-center justify-center w-full h-full">
             <div

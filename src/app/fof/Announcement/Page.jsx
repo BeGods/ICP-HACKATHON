@@ -20,14 +20,8 @@ const tele = window.Telegram?.WebApp;
 const Announcement = (props) => {
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const {
-    setSection,
-    setGameData,
-    authToken,
-    setActiveMyth,
-    setShowAnmt,
-    enableHaptic,
-  } = useContext(FofContext);
+  const { setSection, setShowAnmt, enableHaptic, isTelegram } =
+    useContext(FofContext);
   let disableRef = useRef(false);
 
   const playConfetti = () => {
@@ -77,7 +71,11 @@ const Announcement = (props) => {
   };
 
   return (
-    <div className="flex tg-container-height relative flex-col w-screen justify-center font-fof items-center bg-black">
+    <div
+      className={`flex ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } relative flex-col w-screen justify-center font-fof items-center bg-black`}
+    >
       <div className="flex flex-col w-full h-full items-center">
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
           <div className="text-gold font-symbols">
@@ -90,7 +88,7 @@ const Announcement = (props) => {
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5">
             <img
-              src="/assets/announcements/480px-announcement_07.jpg"
+              src="https://media.publit.io/file/BattleofGods/FoF/Assets/announcements/480px-airdrop.jpg"
               alt="announcement"
               className="w-full h-auto"
             />

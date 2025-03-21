@@ -8,18 +8,7 @@ const tele = window.Telegram?.WebApp;
 
 const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   const { i18n } = useTranslation();
-  const { assets } = useContext(FofContext);
-  const [platform, setPlatform] = useState(null);
-
-  useEffect(() => {
-    const teleConfi = async () => {
-      if (tele) {
-        await tele.ready();
-        setPlatform(tele.platform);
-      }
-    };
-    teleConfi();
-  }, []);
+  const { assets, platform } = useContext(FofContext);
 
   return (
     <div
