@@ -73,11 +73,15 @@ export const getGameStats = async (req, res) => {
 
     // is eligible to claim, streak, joining bonus
     const userData = {
-      telegramUsername: user.telegramUsername,
-      lineName: user.lineName,
+      username: user.telegramUsername,
       tonAddress: user.tonAddress,
+      kaiaAddress: user.kaiaAddress,
       isPremium: user.isPremium,
-      avatarUrl: user.profile.avatarUrl ?? null,
+      avatarUrl: user.profile.avatarUrl
+        ? user.telegramId
+          ? `https://media.publit.io/file/UserAvatars/${user.profile.avatarUrl}.jpg`
+          : user.profile.avatarUrl
+        : null,
       directReferralCount: user.directReferralCount,
       premiumReferralCount: user.premiumReferralCount,
       referralCode: user.referralCode,

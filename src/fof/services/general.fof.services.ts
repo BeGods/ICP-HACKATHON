@@ -86,9 +86,8 @@ export const getLeaderboardSnapshot = async () => {
       {
         $project: {
           userId: "$_id",
+          telegramId: "$userDetails.telegramId",
           telegramUsername: "$userDetails.telegramUsername",
-          oneWaveUsername: "$userDetails.oneWaveUsername",
-          lineUsername: "$userDetails.lineUsername",
           profileImage: "$userDetails.profile.avatarUrl",
           directReferralCount: "$userDetails.directReferralCount",
           country: "$userDetails.country",

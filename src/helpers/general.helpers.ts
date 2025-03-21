@@ -15,10 +15,10 @@ export const fourDigitCode = () => {
   return result.toString();
 };
 
-export const generateCode = () => {
+export const generateCode = (num) => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let code = "";
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < num; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return code;

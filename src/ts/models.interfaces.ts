@@ -163,10 +163,9 @@ export interface IRank extends Document {
 // user
 export interface IUser extends Document {
   telegramId?: string;
+  stanId?: string;
   lineId?: string;
-  lineName?: string;
   oneWaveId?: string;
-  oneWaveUsername?: string;
   telegramUsername?: string;
   name: string;
   isPremium?: boolean;
@@ -197,7 +196,7 @@ export interface IUser extends Document {
   tonAddress: string;
   kaiaAddress: string;
   premiumReferralCount: number;
-  phoneNumber: string;
+  mobileNumber: string;
   gameSession: {
     gameHrStartAt: number;
     dailyGameQuota: number;

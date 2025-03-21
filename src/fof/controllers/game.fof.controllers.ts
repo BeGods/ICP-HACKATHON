@@ -211,12 +211,12 @@ export const getGameStats = async (req, res) => {
     // lineName: user.lineName,
     // oneWaveUsername: user.oneWaveUsername,
     const userData = {
-      username: user.oneWaveUsername || user.telegramUsername || user.lineName,
+      username: user.telegramUsername,
       tonAddress: user.tonAddress,
       kaiaAddress: user.kaiaAddress,
       isPremium: user.isPremium,
       avatarUrl: user.profile.avatarUrl
-        ? user.telegramUsername
+        ? user.telegramId
           ? `https://media.publit.io/file/UserAvatars/${user.profile.avatarUrl}.jpg`
           : user.profile.avatarUrl
         : null,
