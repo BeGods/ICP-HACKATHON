@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   authenticateLine,
   authenticateOneWave,
@@ -26,6 +26,7 @@ import { showToast } from "../../../components/Toast/Toast";
 import { determineIsTelegram } from "../../../utils/device.info";
 import { useLocation } from "react-router-dom";
 import liff from "@line/liff";
+import OnboardPage from "../../fof/Onboard/Page";
 
 const tele = window.Telegram?.WebApp;
 
@@ -50,6 +51,8 @@ const IntroPage = (props) => {
   const [disableDesktop, setDisableDestop] = useState(false);
   const [lineCalled, setLineCalled] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const lineCalledRef = useRef(false);
+  const onewaveCalledRef = useRef(false);
 
   // configure tma.auth
   const getUserData = async () => {
@@ -106,23 +109,16 @@ const IntroPage = (props) => {
     }
   };
 
-  const onewaveAuth = async () => {
-    try {
-      const response = await authenticateOneWave(oneWaveParam);
-      setAuthToken(response.data.token);
-      await setAuthCookie(tele, response.data.token);
-    } catch (error) {
-      console.error("Authentication Error: ", error);
-    }
-  };
-
   const lineAuth = async (idToken) => {
-    try {
-      const response = await authenticateLine(idToken);
-      setAuthToken(response.data.token);
-      await setAuthCookie(tele, response.data.token);
-    } catch (error) {
-      console.error("Authentication Error: ", error);
+    if (!lineCalledRef.current) {
+      lineCalledRef.current = true;
+      try {
+        const response = await authenticateLine(idToken);
+        setAuthToken(response.data.token);
+        await setAuthCookie(tele, response.data.token);
+      } catch (error) {
+        console.error("Authentication Error: ", error);
+      }
     }
   };
 
@@ -148,16 +144,26 @@ const IntroPage = (props) => {
   };
 
   const initalizeLine = async () => {
-    if (!lineCalled) {
-      setLineCalled(true);
-      liff
-        .init({
-          liffId: import.meta.env.VITE_LINE_ID,
-        })
-        .then(async () => {
-          const idToken = liff.getIDToken();
-          await lineAuth(idToken);
-        });
+    liff
+      .init({
+        liffId: import.meta.env.VITE_LINE_ID,
+      })
+      .then(async () => {
+        const idToken = liff.getIDToken();
+        await lineAuth(idToken);
+      });
+  };
+
+  const onewaveAuth = async () => {
+    if (!onewaveCalledRef.current) {
+      onewaveCalledRef.current = true;
+      try {
+        const response = await authenticateOneWave(oneWaveParam);
+        setAuthToken(response.data.token);
+        await setAuthCookie(tele, response.data.token);
+      } catch (error) {
+        console.error("Authentication Error: ", error);
+      }
     }
   };
 
@@ -191,7 +197,7 @@ const IntroPage = (props) => {
         platform === "weba" ||
         (platform === "unknown" && !oneWaveParam && !liff.isInClient())
       ) {
-        // setDisableDestop(true);
+        setDisableDestop(true);
       } else {
         setDisableDestop(false);
         if (isTg) {
@@ -200,10 +206,14 @@ const IntroPage = (props) => {
           }, 1000);
         } else if (liff.isInClient()) {
           setPlatform("line");
-          (async () => await initalizeLine())();
+          setTimeout(() => {
+            (async () => await initalizeLine())();
+          }, 1000);
         } else if (oneWaveParam) {
           setPlatform("onewave");
-          (async () => await onewaveAuth())();
+          setTimeout(() => {
+            (async () => await onewaveAuth())();
+          }, 1000);
         }
       }
       if (platform === "ios") {

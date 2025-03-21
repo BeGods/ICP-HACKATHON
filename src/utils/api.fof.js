@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 
 export const authenticateTg = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/tele/auth`;
   if (referralCode) {
     url += `?referralCode=${referralCode}`;
   }
@@ -624,7 +624,7 @@ export const fetchRewards = async (
 };
 
 export const fetchOTP = async (mobileNumber, accessToken) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/otp`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/otp`;
 
   try {
     const response = await axios.post(
@@ -644,14 +644,14 @@ export const fetchOTP = async (mobileNumber, accessToken) => {
 };
 
 export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/playsuper/verify`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/verify`;
 
   try {
     const response = await axios.post(
       url,
       {
         mobileNumber: mobileNumber,
-        name: name,
+        username: name,
         otp: otp,
       },
       {
