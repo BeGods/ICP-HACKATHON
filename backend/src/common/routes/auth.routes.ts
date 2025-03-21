@@ -1,15 +1,19 @@
 import express from "express";
 import {
-  authenticate,
   authenticateLine,
   authenticateOneWave,
+  authenticateOTP,
+  authenticateTg,
   createOneWaveSession,
+  generateOtp,
   testAuthenticate,
 } from "../../common/controllers/auth.controllers";
 const authRouter = express.Router();
 
 // login
-authRouter.post("/auth", authenticate);
+authRouter.post("/auth/otp", generateOtp);
+authRouter.post("/auth/verify", authenticateOTP);
+authRouter.post("/tele/auth", authenticateTg);
 authRouter.post("/line/auth", authenticateLine);
 authRouter.post("/onewave/session", createOneWaveSession);
 authRouter.post("/onewave/auth", authenticateOneWave);

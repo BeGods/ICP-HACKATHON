@@ -8,10 +8,8 @@ import {
   connectTonWallet,
   disconnectLineWallet,
   disconnectTonWallet,
-  generateOtp,
   updateAvatar,
   updateCountry,
-  verifyOtp,
 } from "../controllers/user.controllers";
 import express from "express";
 import { createNewUserIfNoExists } from "../controllers/auth.controllers";
@@ -24,8 +22,6 @@ router.post("/connect/ton", authMiddleware, connectTonWallet);
 router.get("/disconnect/ton", authMiddleware, disconnectTonWallet);
 router.post("/connect/line", authMiddleware, connectLineWallet);
 router.get("/disconnect/line", authMiddleware, disconnectLineWallet);
-router.post("/auth/otp", authMiddleware, generateOtp);
-router.post("/auth/verify", authMiddleware, verifyOtp);
 router.get("/profile/avatar", authMiddleware, updateAvatar);
 router.get(
   "/user/finish",

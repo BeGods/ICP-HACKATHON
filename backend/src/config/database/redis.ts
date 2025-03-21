@@ -1,11 +1,12 @@
+import config from "../../config/config";
+
 const { createClient } = require("redis");
 
 export const connectRedis = async (index) => {
   try {
     const client = createClient({
-      url: "redis://localhost:6379",
+      url: config.database.redis,
     });
-
     client.on("error", (err) => console.log("Redis Client Error", err));
 
     await client.connect();
