@@ -12,7 +12,10 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid token." });
     }
 
-    const decodedUserData = await jwt.verify(token, config.security.JWT_SECRET);
+    const decodedUserData = await jwt.verify(
+      token,
+      config.security.ACCESS_TOKEN_SECRET
+    );
     const user = await User.findOne({ _id: decodedUserData._id });
 
     if (!user) {

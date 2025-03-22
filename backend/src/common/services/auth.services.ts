@@ -2,19 +2,55 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import { validate, parse } from "@tma.js/init-data-node";
 import axios from "axios";
-import crypto from "crypto";
 
-export const generateAuthToken = async (user: any) => {
+const getTokenExpiryMs = (expiry: string): number => {
+  const timeUnit = expiry.slice(-1);
+  const timeValue = parseInt(expiry.slice(0, -1));
+
+  switch (timeUnit) {
+    case "s":
+      return timeValue * 1000;
+    case "m":
+      return timeValue * 60 * 1000;
+    case "h":
+      return timeValue * 60 * 60 * 1000;
+    case "d":
+      return timeValue * 24 * 60 * 60 * 1000;
+    default:
+      throw new Error("Invalid token expiry format");
+  }
+};
+
+export const generateAuthToken = async (user: any, res) => {
   const userObj = { _id: user._id, role: "user" };
 
   try {
-    const token = jwt.sign(userObj, config.security.JWT_SECRET, {
-      expiresIn: config.security.TOKEN_EXPIRE,
+    const accessToken = jwt.sign(userObj, config.security.ACCESS_TOKEN_SECRET, {
+      expiresIn: config.security.ACCESS_TOKEN_EXPIRE,
     });
 
-    return token;
+    const refreshToken = jwt.sign(
+      userObj,
+      config.security.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: config.security.REFRESH_TOKEN_EXPIRE,
+      }
+    );
+
+    const refreshTokenExpiryMs = getTokenExpiryMs(
+      config.security.REFRESH_TOKEN_EXPIRE
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      path: "/",
+      maxAge: refreshTokenExpiryMs, // 90 days
+    });
+
+    return { accessToken, refreshToken };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message || "Failed to generate tokens");
   }
 };
 

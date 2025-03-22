@@ -88,10 +88,13 @@ export const authenticateTg = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -165,10 +168,13 @@ export const testAuthenticate = async (
     }
 
     // response token
-    const accessToken = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        token: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     res.status(500).json({
@@ -255,10 +261,13 @@ export const authenticateLine = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -370,10 +379,13 @@ export const authenticateOneWave = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -468,10 +480,13 @@ export const authenticateOTP = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -480,5 +495,12 @@ export const authenticateOTP = async (
       message: "Failed to authenticate user.",
       error: error.message,
     });
+  }
+};
+
+export const generateRefreshToken = async () => {
+  try {
+  } catch (error) {
+    console.log(error.message || "Failed to generate refresh token.");
   }
 };
