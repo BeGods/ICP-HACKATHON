@@ -571,8 +571,12 @@ const BoosterClaim = ({
             minion: [mythData?.isShardsClaimActive],
             burst: [
               !mythData.isBurstActive,
-              mythData?.isBurstActiveToClaim && !isAutoPay,
-              hasTimeElapsed(gameData.autoPayBurstExpiry) && isAutoPay,
+              !mythData.isBurstActive &&
+                mythData?.isBurstActiveToClaim &&
+                !isAutoPay,
+              !mythData.isBurstActive &&
+                hasTimeElapsed(gameData.autoPayBurstExpiry) &&
+                isAutoPay,
             ],
             moon: [!gameData.isMoonActive],
           };
