@@ -4,6 +4,7 @@ import {
   decryptLineData,
   decryptTelegramData,
   generateAuthToken,
+  validateRefreshToken,
 } from "../services/auth.services";
 import {
   addTeamMember,
@@ -498,8 +499,43 @@ export const authenticateOTP = async (
   }
 };
 
-export const generateRefreshToken = async () => {
+export const generateRefreshToken = async (req, res) => {
   try {
+    const refreshToken = req.cookies.refreshToken || req.cookies.refreshToken;
+
+    if (!refreshToken)
+      return res
+        .status(401)
+        .json({ message: "Unauthorized:  Invalid refresh token" });
+
+    const { accessToken, newRefreshToken } = await validateRefreshToken(
+      refreshToken,
+      res
+    );
+
+    res.status(200).json({
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
+    });
+  } catch (error) {
+    console.log(error.message || "Failed to generate refresh token.");
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
+
+    res.status(200).json({
+      message: "User logout successful!",
+    });
   } catch (error) {
     console.log(error.message || "Failed to generate refresh token.");
   }
