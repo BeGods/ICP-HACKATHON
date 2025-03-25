@@ -1,13 +1,44 @@
 import { isSafari } from "../utils/device.info";
 
+
+export const getExpCookie = async (tele) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    return new Promise((resolve) => {
+      tele.CloudStorage.getItem("token_exp", (err, item) => {
+        if (err) {
+          console.error(err);
+          resolve(undefined);
+        } else {
+          resolve(item);
+        }
+      });
+    });
+  } else {
+    const cookieItem = localStorage.getItem("token_exp");
+    if (cookieItem) {
+      return cookieItem;
+    }
+  }
+
+  return undefined;
+};
+
+
+
 // set auth
 export const setAuthCookie = async (tele, token) => {
   await tele.ready();
 
   if (tele.platform === "ios" || tele.platform === "android") {
-    tele.CloudStorage.setItem("accessToken", token);
+    await tele.CloudStorage.setItem("accessToken", token);
+    await tele.CloudStorage.setItem("token_exp", Date.now() + (1 * 60 + 45) * 60 * 1000);
+    // await tele.CloudStorage.setItem("token_exp", Date.now() + 30000);
   } else {
     localStorage.setItem("accessToken", token);
+    localStorage.setItem("token_exp", Date.now() + (1 * 60 + 45) * 60 * 1000);
+    // localStorage.setItem("token_exp", Date.now() + 30000);
   }
 };
 
