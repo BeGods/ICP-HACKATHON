@@ -3,6 +3,7 @@ import config from "../../config/config";
 import { validate, parse } from "@tma.js/init-data-node";
 import axios from "axios";
 import crypto from "crypto";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 export const generateAuthToken = async (user: any) => {
   const userObj = { _id: user._id, role: "user" };
@@ -56,11 +57,16 @@ export const decryptLineData = async (token) => {
 
     const clientID = config.security.LINE_CHANNEL_ID;
 
+    const agent = new HttpsProxyAgent(config.source.PROXY_SERVER_JP);
+
     // validate initData
     try {
       const response = await axios.post(
         `https://api.line.me/oauth2/v2.1/verify?id_token=${token}&client_id=${clientID}`,
-        {}
+        {},
+        {
+          httpsAgent: agent,
+        }
       );
 
       parsedData = response.data;
