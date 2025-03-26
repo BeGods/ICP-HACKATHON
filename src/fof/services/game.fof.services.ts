@@ -461,7 +461,7 @@ export const updateSessionData = async (
 
     // update energy after tapping, shards, lastTapActivityTime
     const updatedEnergy = restoredEnergy - totalTaps;
-    const shardslvl = mythData.boosters.shardslvl * streakMultipier;
+    const shardslvl = Math.round(mythData.boosters.shardslvl * streakMultipier);
     let updatedShards = taps * shardslvl + minionTaps * shardslvl * 2;
 
     // update myth shards
@@ -649,8 +649,6 @@ export const updateUserData = async (user, isEligibleToClaim) => {
       updates["playsuper.key"] = null;
       updates["playsuper.createdAt"] = null;
     }
-
-    console.log(updates);
 
     let updatedUser;
     if (Object.keys(updates).length > 0) {

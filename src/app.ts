@@ -4,6 +4,7 @@ import helmet from "helmet";
 import xss from "xss-clean";
 import hpp from "hpp";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -17,16 +18,20 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(limiter);
 
 app.set("trust proxy", 1);
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "https://2r2cf484-5173.inc1.devtunnels.ms",
+      "http://localhost:5173",
+    ],
+    credentials: true,
     // origin: "https://fof.battleofgods.io",
-    methods:
-      "GET,HEAD,PUT,PATCH,POST,DELETE                                                                                                                                  ",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 app.use(helmet());

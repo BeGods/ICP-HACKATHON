@@ -77,7 +77,7 @@ export const checkAutomataStatus = (gameData, user) => {
     if (gameData.boosters.isAutomataActive) {
       gameData.shards += calculateAutomataEarnings(
         gameData.boosters.automataLastClaimedAt,
-        gameData.boosters.automatalvl * streakMultipier
+        Math.round(gameData.boosters.automatalvl * streakMultipier)
       );
 
       gameData.boosters.automataLastClaimedAt = Date.now();

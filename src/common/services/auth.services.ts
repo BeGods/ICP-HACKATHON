@@ -2,20 +2,138 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import { validate, parse } from "@tma.js/init-data-node";
 import axios from "axios";
-import crypto from "crypto";
 import { HttpsProxyAgent } from "https-proxy-agent";
+import User from "../models/user.models";
 
-export const generateAuthToken = async (user: any) => {
+const getTokenExpiryMs = (expiry: string): number => {
+  const timeUnit = expiry.slice(-1);
+  const timeValue = parseInt(expiry.slice(0, -1));
+
+  switch (timeUnit) {
+    case "s":
+      return timeValue * 1000;
+    case "m":
+      return timeValue * 60 * 1000;
+    case "h":
+      return timeValue * 60 * 60 * 1000;
+    case "d":
+      return timeValue * 24 * 60 * 60 * 1000;
+    default:
+      throw new Error("Invalid token expiry format");
+  }
+};
+
+const parseTimeToMs = (timeString: string) => {
+  const match = timeString.match(/^(\d+)([smhd])$/);
+  if (!match) {
+    throw new Error(`Invalid time format: ${timeString}`);
+  }
+
+  const timeValue = parseInt(match[1]);
+  const timeUnit = match[2];
+
+  switch (timeUnit) {
+    case "s":
+      return timeValue * 1000; // Convert seconds to ms
+    case "m":
+      return timeValue * 60 * 1000; // Convert minutes to ms
+    case "h":
+      return timeValue * 60 * 60 * 1000; // Convert hours to ms
+    case "d":
+      return timeValue * 24 * 60 * 60 * 1000; // Convert days to ms
+    default:
+      throw new Error(`Unsupported time unit: ${timeUnit}`);
+  }
+};
+
+export const generateAuthToken = async (user: any, res) => {
+  const now = Date.now();
+  const refreshTokenExpiryMs = getTokenExpiryMs(
+    config.security.REFRESH_TOKEN_EXPIRE
+  );
+
   const userObj = { _id: user._id, role: "user" };
 
   try {
-    const token = jwt.sign(userObj, config.security.JWT_SECRET, {
-      expiresIn: config.security.TOKEN_EXPIRE,
+    const accessToken = jwt.sign(userObj, config.security.ACCESS_TOKEN_SECRET, {
+      expiresIn: config.security.ACCESS_TOKEN_EXPIRE,
     });
 
-    return token;
+    const refreshToken = jwt.sign(
+      userObj,
+      config.security.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: config.security.REFRESH_TOKEN_EXPIRE,
+      }
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true, // https
+      sameSite: "none", // cross-origin
+      maxAge: refreshTokenExpiryMs,
+    });
+
+    return { accessToken, refreshToken };
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message || "Failed to generate tokens");
+  }
+};
+
+export const validateRefreshToken = async (refreshToken, res) => {
+  try {
+    const decodedUserData = jwt.verify(
+      refreshToken,
+      config.security.REFRESH_TOKEN_SECRET
+    );
+
+    const user = await User.findOne({ _id: decodedUserData._id });
+
+    if (!user) {
+      throw new Error("Not authorized to access this resource");
+    }
+
+    const userObj = { _id: user._id, role: "user" };
+    const accessToken = jwt.sign(userObj, config.security.ACCESS_TOKEN_SECRET, {
+      expiresIn: config.security.ACCESS_TOKEN_EXPIRE,
+    });
+
+    let newRefreshToken = null;
+    const now = Date.now();
+    const refreshTokenLifespan = parseTimeToMs(
+      config.security.REFRESH_TOKEN_EXPIRE
+    );
+    const issuedAtMs = decodedUserData.iat * 1000;
+    const refreshTokenAge = now - issuedAtMs;
+
+    // if token in older than 80% of expiry then new
+    if (refreshTokenAge > refreshTokenLifespan * 0.8) {
+      console.log("new refresh token");
+
+      const refreshUserObj = {
+        _id: user._id,
+        role: "user",
+      };
+
+      newRefreshToken = jwt.sign(
+        refreshUserObj,
+        config.security.REFRESH_TOKEN_SECRET,
+        {
+          expiresIn: config.security.REFRESH_TOKEN_EXPIRE,
+        }
+      );
+      res.cookie("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: refreshTokenLifespan,
+      });
+    }
+
+    return { accessToken, newRefreshToken };
+  } catch (error) {
+    throw new Error(error || "Failed to validate refresh token");
   }
 };
 

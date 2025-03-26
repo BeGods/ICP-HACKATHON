@@ -42,8 +42,6 @@ export const claimAlchemist = async (req, res) => {
     });
     await newOrbsTransaction.save();
 
-    console.log(updatedBoosterData);
-
     res.status(200).json({
       message: "Booster claimed successfully.",
       updatedBooster: updatedBoosterData,
