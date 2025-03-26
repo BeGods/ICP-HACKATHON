@@ -301,7 +301,9 @@ const Tower = () => {
 
       <div className="absolute flex justify-center items-center h-full w-full">
         <div
-          className="relative flex justify-center items-center h-[100%] w-[100%] pointer-events-none scale-wheel-glow"
+          className={`relative flex justify-center items-center ${
+            isTelegram ? "h-[100%] w-[100%]" : "h-[85%] w-[85%] mt-3.5"
+          } pointer-events-none scale-wheel-glow`}
           style={{
             backgroundImage: `url(${assets.uxui.towerOn})`,
             backgroundSize: "contain",
@@ -313,7 +315,9 @@ const Tower = () => {
 
       <div className="absolute flex justify-center items-center h-full w-full z-50">
         <div
-          className="relative scale-[120%] flex justify-center items-center w-full h-full pointer-events-none"
+          className={`relative ${
+            isTelegram ? "scale-[120%]" : "scale-[100%] mt-3.5"
+          } flex justify-center items-center w-full h-full pointer-events-none`}
           style={{
             backgroundImage: `url(${assets.uxui[`dial-${wheelNames[myth]}`]})`,
             backgroundSize: "contain",

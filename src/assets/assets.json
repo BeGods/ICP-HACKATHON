@@ -1,6 +1,7 @@
 {
     "uxui": {
         "tgStar": "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/tg-star.png",
+        "kaia": "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/kaia.png",
         "multiorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.multicolor.png",
         "baseorb" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/240px-orb.base.png",
         "basebg" : "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/1280px-fof.base.background.jpg",
@@ -223,6 +224,12 @@
         }
     },
     "whitelist": {
+        "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-greek.whitelist.wood.jpg",
+        "celtic": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-celtic.whitelist.wood.jpg",
+        "norse": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-norse.whitelist.wood.jpg",
+        "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-egyptian.whitelist.wood.jpg"
+    },
+    "win": {
         "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.greek.png",
         "celtic": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.celtic.png",
         "norse": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/360px.fof.packet.norse.png",

@@ -299,6 +299,13 @@ const FoFMain = () => {
   }, []);
 
   useEffect(() => {
+    document.documentElement.style.setProperty(
+      "card.height",
+      isTelegram ? "45.35vh" : "48vh"
+    );
+  }, [isTelegram]);
+
+  useEffect(() => {
     if (platform === "ios") {
       document.body.style.position = "fixed";
       document.body.style.top = `calc(var(--tg-safe-area-inset-top) + 45px)`;

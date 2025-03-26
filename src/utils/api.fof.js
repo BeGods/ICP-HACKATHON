@@ -898,3 +898,19 @@ export const sendTestTGA = async () => {
     throw error;
   }
 };
+
+export const getPaymentId = async (accessToken, booster) => {
+  let url = `${import.meta.env.VITE_API_URL}/line/createPayment?booster=${booster}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data.payment_id;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};

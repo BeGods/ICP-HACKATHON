@@ -2,7 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { Stage, Layer, Image as KonvaImage, Rect } from "react-konva";
 import useImage from "use-image";
 
-const JigsawImage = ({ imageUrl, activeParts, handleClick, grid }) => {
+const JigsawImage = ({
+  imageUrl,
+  activeParts,
+  handleClick,
+  grid,
+  isTelegram,
+}) => {
   const [image] = useImage(imageUrl);
   const divRef = useRef(null);
   const [dimensions, setDimensions] = useState({
@@ -48,7 +54,7 @@ const JigsawImage = ({ imageUrl, activeParts, handleClick, grid }) => {
       style={{
         position: "relative",
         width: "71vw",
-        height: "45.25vh",
+        height: `${isTelegram ? "45.25vh" : "50.5svh"}`,
         overflow: "hidden",
         borderRadius: "16px",
         backgroundSize: "cover",

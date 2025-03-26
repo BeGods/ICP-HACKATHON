@@ -31,6 +31,10 @@ import { Clapperboard, Star } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
+import {
+  createLinePayment,
+  initializePaymentSDK,
+} from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -370,6 +374,62 @@ const BoosterClaim = ({
     return handleClaim();
   };
 
+  const handleUpdatePayReward = () => {
+    if (activeCard === "automata" && isAutoPay) {
+      trackEvent("purchase", "claim_automata", "success");
+      setGameData((prevData) => {
+        const now = Date.now();
+        const updatedData = {
+          ...prevData,
+          isAutomataAutoActive: true,
+          multiColorOrbs: prevData.multiColorOrbs - 0,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === mythologies[activeMyth]
+              ? {
+                  ...item,
+                  boosters: {
+                    ...item.boosters,
+                    automatalvl: Math.min(item.boosters.automatalvl + 2, 99),
+                    isAutomataActive: true,
+                    automataLastClaimedAt: now,
+                    automataStartTime: now,
+                  },
+                }
+              : item
+          ),
+        };
+        return updatedData;
+      });
+      setShowCard(null);
+      showToast("booster_success");
+      setShowBooster("automata");
+      setSection(0);
+      setPayIsActive(false);
+    } else if (activeCard === "burst" && isAutoPay) {
+      trackEvent("purchase", "claim_auto_burst", "success");
+      setGameData((prevData) => {
+        const now = Date.now();
+        const updatedData = {
+          ...prevData,
+          autoPayBurstExpiry: now,
+          mythologies: prevData.mythologies.map((item) => ({
+            ...item,
+            boosters: {
+              ...item.boosters,
+              isBurstActive: true,
+            },
+          })),
+        };
+        return updatedData;
+      });
+      setShowCard(null);
+      showToast("booster_success");
+      setShowBooster("automata");
+      setSection(0);
+      setPayIsActive(false);
+    }
+  };
+
   const onReward = useCallback(() => {
     if (activeCard == "automata" && !isAutoPay) {
       handleClaimAutomata(true);
@@ -403,62 +463,7 @@ const BoosterClaim = ({
         .replace(/^\$/, "")}`;
       await tele.openInvoice(`${invoice}`, (status) => {
         if (status == "paid") {
-          if (activeCard === "automata" && isAutoPay) {
-            trackEvent("purchase", "claim_automata", "success");
-            setGameData((prevData) => {
-              const now = Date.now();
-              const updatedData = {
-                ...prevData,
-                isAutomataAutoActive: true,
-                multiColorOrbs: prevData.multiColorOrbs - 0,
-                mythologies: prevData.mythologies.map((item) =>
-                  item.name === mythologies[activeMyth]
-                    ? {
-                        ...item,
-                        boosters: {
-                          ...item.boosters,
-                          automatalvl: Math.min(
-                            item.boosters.automatalvl + 2,
-                            99
-                          ),
-                          isAutomataActive: true,
-                          automataLastClaimedAt: now,
-                          automataStartTime: now,
-                        },
-                      }
-                    : item
-                ),
-              };
-              return updatedData;
-            });
-            setShowCard(null);
-            showToast("booster_success");
-            setShowBooster("automata");
-            setSection(0);
-            setPayIsActive(false);
-          } else if (activeCard === "burst" && isAutoPay) {
-            trackEvent("purchase", "claim_auto_burst", "success");
-            setGameData((prevData) => {
-              const now = Date.now();
-              const updatedData = {
-                ...prevData,
-                autoPayBurstExpiry: now,
-                mythologies: prevData.mythologies.map((item) => ({
-                  ...item,
-                  boosters: {
-                    ...item.boosters,
-                    isBurstActive: true,
-                  },
-                })),
-              };
-              return updatedData;
-            });
-            setShowCard(null);
-            showToast("booster_success");
-            setShowBooster("automata");
-            setSection(0);
-            setPayIsActive(false);
-          }
+          handleUpdatePayReward();
         } else if (status == "cancelled" || status == "failed") {
           showToast("error_payment");
           setPayIsActive(false);
@@ -467,6 +472,26 @@ const BoosterClaim = ({
       });
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleLinePayment = async () => {
+    setPayIsActive(true);
+
+    const { paymentProvider, lineProvider } = await initializePaymentSDK();
+    const paymentStatus = await createLinePayment(
+      paymentProvider,
+      lineProvider,
+      authToken,
+      activeCard
+    );
+
+    if (paymentStatus === true) {
+      handleUpdatePayReward();
+    } else {
+      showToast("error_payment");
+      setShowCard(null);
+      setPayIsActive(false);
     }
   };
 
@@ -533,6 +558,38 @@ const BoosterClaim = ({
               </div>
               <div className="flex flex-col text-white">
                 <div className="text-[6vw] -mt-2">
+                  <span className="text-gold">{t("buttons.pay")}</span>{" "}
+                  {t("note.ad")}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+      {((activeCard === "automata" &&
+        !boostersData?.isAutomataActive &&
+        isAutoPay) ||
+        (activeCard === "burst" &&
+          boostersData?.isShardsClaimActive &&
+          isAutoPay)) &&
+        !payIsActive &&
+        !isTelegram && (
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              handleLinePayment();
+            }}
+            className="absolute flex items-center justify-center top-0 w-screen pt-2"
+          >
+            <div className="flex uppercase flex-col items-center gap-2 w-fit">
+              <div className="flex gap-x-2 relative items-center justify-center">
+                <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
+                  {activeCard === "automata" ? 0.01 : 0.03}
+                </div>{" "}
+                <img src={assets.uxui.kaia} alt="star" className="h-[6vw]" />
+              </div>
+              <div className="flex flex-col text-white">
+                <div className="text-[6vw] -mt-3">
                   <span className="text-gold">{t("buttons.pay")}</span>{" "}
                   {t("note.ad")}
                 </div>

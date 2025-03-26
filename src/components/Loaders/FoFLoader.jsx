@@ -31,7 +31,7 @@ const FoFLoader = (props) => {
         <img
           src={assets.uxui.towerOn}
           alt="tower"
-          className="max-w-full h-auto"
+          className={`${isTelegram ? "max-w-full h-auto" : "w-[85%] h-auto"}`}
         />
       </div>
       {/* content */}

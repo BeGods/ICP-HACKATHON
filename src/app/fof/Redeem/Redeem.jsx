@@ -273,14 +273,15 @@ const Redeem = (props) => {
         } justify-center items-center w-screen absolute mx-auto`}
       >
         <div className={`flex items-center justify-center w-full h-full`}>
-          <div className="flex flex-col mt-[35px] gap-[3vw] items-center justify-center w-full h-full">
+          <div className="flex flex-col gap-[3vw] items-center justify-center w-full h-full">
             <div
-              className={`card ${
+              className={`card ${isTelegram ? "h-[55%]" : "h-[59%] -mt-6"} ${
                 flipped ? "flipped" : ""
-              } w-[70%] h-[55%] z-[99]`}
+              } w-[70%] z-[99]`}
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
+                  isTelegram={isTelegram}
                   grid={[3, 6]}
                   imageUrl={
                     currReward.partnerType == "playsuper"

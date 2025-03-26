@@ -102,7 +102,7 @@ const ConvertCard = ({ t, assets, myths, activeColor }) => {
 };
 
 const ConvertInfo = ({ t, handleClick }) => {
-  const { assets } = useContext(FofContext);
+  const { assets, isTelegram } = useContext(FofContext);
   const [activeColor, setActiveColor] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const myths = ["greek", "celtic", "norse", "egyptian"];
@@ -128,7 +128,11 @@ const ConvertInfo = ({ t, handleClick }) => {
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div className="relative w-[72%] rounded-lg shadow-lg -mt-[30px] flex flex-col z-50">
-        <div className={`card ${flipped ? "flipped" : ""}`}>
+        <div
+          className={`card ${
+            isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50svh] mt-[2vh]"
+          } ${flipped ? "flipped" : ""}`}
+        >
           <div
             onClick={(e) => {
               setFlipped((prev) => !prev);
@@ -162,7 +166,7 @@ const ConvertInfo = ({ t, handleClick }) => {
           isInfo={false}
           activeMyth={4}
           handleClick={handleClick}
-          align={1}
+          align={8}
         />
       </div>
     </div>

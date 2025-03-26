@@ -457,13 +457,15 @@ const Quests = () => {
         ) : (
           <div
             className={`flex ${
-              isTelegram ? "tg-container-height" : "browser-container-height"
-            } flex-col mt-[7vh] gap-[3vw] items-center justify-center w-full`}
+              isTelegram
+                ? "tg-container-height mt-[7vh]"
+                : "browser-container-height mt-[4vh]"
+            } flex-col  gap-[3vw] items-center justify-center w-full`}
           >
             <div
-              className={`card ${
+              className={`card ${isTelegram ? "h-[55%]" : "h-[60%]"} ${
                 flipped ? "flipped" : ""
-              } w-[70%] h-[55%] z-[99]`}
+              } w-[70%] z-[99]`}
             >
               <div
                 className={`card__face card__face--front ${
@@ -497,7 +499,7 @@ const Quests = () => {
                       />
                     );
                   }}
-                  align={7}
+                  align={isTelegram ? 7 : 9}
                 />
               </div>
               <div className="card__face card__face--back flex justify-center items-center">
@@ -543,9 +545,13 @@ const Quests = () => {
               handleClickHaptic(tele, enableHaptic);
               setFlipped((prev) => !prev);
             }}
-            className="absolute  flex justify-end w-[70%] h-[50%] z-[99]"
+            className={`absolute  flex justify-end  w-[70%] ${
+              isTelegram ? "h-[50%]" : "h-[55%] -mt-10"
+            }  z-[99]`}
           >
-            <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
+            <div
+              className={`h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]`}
+            ></div>
           </div>
         )}
       </div>

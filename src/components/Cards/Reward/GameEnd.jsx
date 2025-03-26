@@ -10,7 +10,7 @@ const GameEndCrd = ({ handleClick, activeMyth }) => {
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
-            src={assets.whitelist[mythSections[activeMyth]]}
+            src={assets.win[mythSections[activeMyth]]}
             alt="info card background"
             className="w-full h-full object-cover rounded-primary z-10"
           />
