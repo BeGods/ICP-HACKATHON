@@ -162,7 +162,7 @@ const userMythologySchema = new Schema<IUserMyths>(
     autoPay: {
       isAutomataAutoPayEnabled: {
         type: Boolean,
-        default: false,
+        default: true,
       },
       isBurstAutoPayEnabled: {
         type: Boolean,

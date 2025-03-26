@@ -51,10 +51,10 @@ export const authenticateTg = async (
         isUpdated = true;
       }
 
-      if (
-        telegramUsername &&
-        telegramUsername !== existingUser.telegramUsername
-      ) {
+      const match = existingUser.telegramUsername.match(/^(.*)_\w{3}$/);
+      const baseUsername = match ? match[1] : existingUser.telegramUsername;
+
+      if (telegramUsername && telegramUsername !== baseUsername) {
         existingUser.telegramUsername = telegramUsername;
         isUpdated = true;
       }
@@ -222,7 +222,9 @@ export const authenticateLine = async (
     let existingUser: IUser | null = await User.findOne({ lineId: lineId });
 
     if (existingUser) {
-      if (lineName !== existingUser.telegramUsername) {
+      const match = existingUser.telegramUsername.match(/^(.*)_\w{3}$/);
+      const baseUsername = match ? match[1] : existingUser.telegramUsername;
+      if (lineName !== baseUsername) {
         existingUser.telegramUsername = lineName;
         isUpdated = true;
       }
@@ -316,7 +318,6 @@ export const authenticateOneWave = async (
     const sessionHash = await getOneWaveSession(sessionId);
 
     if (!sessionHash) {
-      console.log(sessionHash);
       res.status(400).json({
         message: "Invalid sessionId.",
       });
@@ -329,8 +330,6 @@ export const authenticateOneWave = async (
     let isUpdated = false;
 
     if (!oneWaveId || !oneWaveUsername) {
-      console.log(oneWaveId, oneWaveUsername);
-
       res.status(400).json({
         message: "Invalid input. Please provide a valid PUID and username.",
       });
@@ -342,8 +341,10 @@ export const authenticateOneWave = async (
     });
 
     if (existingUser) {
+      const match = existingUser.telegramUsername.match(/^(.*)_\w{3}$/);
+      const baseUsername = match ? match[1] : existingUser.telegramUsername;
       // check if user details have updated
-      if (oneWaveUsername !== existingUser.telegramUsername) {
+      if (oneWaveUsername !== baseUsername) {
         existingUser.telegramUsername = oneWaveUsername;
         isUpdated = true;
       }

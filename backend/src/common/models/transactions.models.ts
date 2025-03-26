@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import {
   IItemTransactions,
+  IKaiaTransactions,
   IOrbsTransactions,
   IRewardTransactions,
   IShardsTransactions,
@@ -90,6 +91,16 @@ const starsTransactionsSchema = new Schema<IStarTransactions>(
   { timestamps: true }
 );
 
+const kaiaTransactionsSchema = new Schema<IKaiaTransactions>(
+  {
+    ...baseTransactionSchema,
+    paymentId: String,
+    reward: String,
+    status: String,
+  },
+  { timestamps: true }
+);
+
 const itemsTransactionsSchema = new Schema(
   {
     ...baseTransactionSchema,
@@ -106,10 +117,16 @@ const itemsTransactionsSchema = new Schema(
   { timestamps: true }
 );
 
+const KaiaTransactions = model<IKaiaTransactions>(
+  "KaiaTransaction",
+  kaiaTransactionsSchema
+);
+
 const OrbsTransactions = model<IOrbsTransactions>(
   "OrbsTransaction",
   orbsTransactionsSchema
 );
+
 const ShardsTransactions = model<IShardsTransactions>(
   "ShardsTransaction",
   shardsTransactionsSchema
@@ -136,4 +153,5 @@ export {
   RewardsTransactions,
   StarsTransactions,
   ItemsTransactions,
+  KaiaTransactions,
 };

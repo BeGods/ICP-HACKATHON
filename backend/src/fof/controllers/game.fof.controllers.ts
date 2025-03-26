@@ -190,10 +190,12 @@ export const getGameStats = async (req, res) => {
       userRank = { overallRank: totalUsers[0]?.totalUsers && 0 } as any;
     }
 
+    const totalUsers = await Stats.findOne({ statId: "fof" });
+
     // is sligible for gacha
     const isEligibleToClaim = await checkBonus(user);
     const memberData = {
-      overallRank: userRank?.orbRank ?? 0,
+      overallRank: userRank?.orbRank ?? totalUsers.totalUsers,
       totalOrbs: userRank?.totalOrbs ?? 0,
     };
 
@@ -207,9 +209,6 @@ export const getGameStats = async (req, res) => {
       user.bonus.fof.streak.count
     );
 
-    // telegramUsername: user.telegramUsername,
-    // lineName: user.lineName,
-    // oneWaveUsername: user.oneWaveUsername,
     const userData = {
       username: user.telegramUsername,
       tonAddress: user.tonAddress,
