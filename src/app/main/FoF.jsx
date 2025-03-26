@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   claimStreakBonus,
   fetchGameStats,
   fetchProfilePhoto,
   fetchRewards,
+  refreshAuthToken,
 } from "../../utils/api.fof";
 import { FofContext, MainContext } from "../../context/context";
 import Quests from "../fof/Quest/Page";
@@ -21,6 +22,8 @@ import { showToast } from "../../components/Toast/Toast";
 import StreakBonus from "../fof/Streak/StreakBonus";
 import {
   fetchHapticStatus,
+  getExpCookie,
+  setAuthCookie,
   validateAuth,
   validateCountryCode,
   validateLang,
@@ -36,6 +39,7 @@ import TgHeader from "../../components/Common/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import { determineIsTelegram } from "../../utils/device.info";
+import { useTokenCountdown } from "../../hooks/RefreshToken";
 
 const tele = window.Telegram?.WebApp;
 
@@ -76,6 +80,8 @@ const FoFMain = () => {
   const [showBooster, setShowBooster] = useState(null);
   const [section, setSection] = useState(1);
   const [minimize, setMinimize] = useState(0);
+  const refreshTimeoutRef = useRef();
+
   const initalStates = {
     gameData,
     setGameData,
@@ -248,6 +254,48 @@ const FoFMain = () => {
     }
   };
 
+  const initializeGame = async () => {
+    try {
+      const tokenExp = await getExpCookie(tele);
+      const now = Date.now();
+      let timeLeft = tokenExp - now;
+
+      let token;
+      if (timeLeft <= 0) {
+        token = await handleRefreshToken();
+        timeLeft = (await getExpCookie(tele)) - Date.now();
+      } else {
+        token = await validateAuth(tele);
+      }
+
+      if (token) {
+        setAuthToken(token);
+        await getGameData(token);
+        await getPartnersData(token);
+      }
+
+      refreshTimeoutRef.current = setTimeout(async () => {
+        await handleRefreshToken();
+      }, timeLeft - 10000);
+    } catch (error) {
+      console.log(error);
+      showToast("default");
+    }
+  };
+
+  const handleRefreshToken = async () => {
+    try {
+      const response = await refreshAuthToken();
+      const newToken = response.data.accessToken;
+      clearTimeout(refreshTimeoutRef.current);
+      refreshTimeoutRef.current = null;
+      setAuthToken(newToken);
+      await setAuthCookie(tele, newToken);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const syncAllCookies = async () => {
     try {
       const activeCountry = await validateCountryCode(tele);
@@ -264,20 +312,6 @@ const FoFMain = () => {
       const device = getDeviceAndOS(tele.platform);
       trackEvent("device", device, "success");
     } catch (error) {
-      showToast("default");
-    }
-  };
-
-  const initializeGame = async () => {
-    try {
-      const token = await validateAuth(tele);
-      if (token) {
-        setAuthToken(token);
-        (async () => await getGameData(token))();
-        (async () => await getPartnersData(token))();
-      }
-    } catch (error) {
-      console.log(error);
       showToast("default");
     }
   };
