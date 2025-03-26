@@ -6,10 +6,12 @@ import {
   claimFinishRwrd,
   connectLineWallet,
   connectTonWallet,
+  createLinePayment,
   disconnectLineWallet,
   disconnectTonWallet,
   updateAvatar,
   updateCountry,
+  updateLinePaymentStatus,
 } from "../controllers/user.controllers";
 import express from "express";
 import { createNewUserIfNoExists } from "../controllers/auth.controllers";
@@ -32,5 +34,8 @@ router.get(
 
 // new user
 router.post("/user/refer", validateBotNewUser, createNewUserIfNoExists);
+router.get("/line/createPayment", authMiddleware, createLinePayment);
+router.post("/line/paymentStatus", updateLinePaymentStatus);
+router.get("/line/paymentStatus", updateLinePaymentStatus);
 
 export default router;

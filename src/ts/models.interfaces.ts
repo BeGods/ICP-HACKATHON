@@ -261,6 +261,15 @@ export interface IStarTransactions extends Document {
   updatedAt?: Date;
 }
 
+export interface IKaiaTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  paymentId: string;
+  reward: "automata-pack" | "burst-pack";
+  status: "pending" | "success" | "failed" | "rewarded";
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 // shard transaction
 export interface IShardsTransactions extends Document {
   userId: mongoose.Types.ObjectId;

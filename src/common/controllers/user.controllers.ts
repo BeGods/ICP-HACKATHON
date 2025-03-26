@@ -1,6 +1,13 @@
 import { countries } from "../../utils/constants/country";
 import { deleteImage, storeImage } from "../services/storage.services";
-import { generateAliOTP } from "../services/otp.services";
+import axios from "axios";
+import config from "../../config/config";
+import { KaiaTransactions } from "../models/transactions.models";
+import userMythologies from "../models/mythologies.models";
+import {
+  updateMultiAutomata,
+  updateMultiBurst,
+} from "../../fof/services/boosters.fof.services";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -147,5 +154,196 @@ export const claimFinishRwrd = async (req, res) => {
       message: "Failed to authenticate user.",
       error: error.message,
     });
+  }
+};
+
+export const createLinePayment = async (req, res) => {
+  const { booster } = req.query;
+  const userWalletAddr = req.user.kaiaAddress;
+  const clientId = config.line.LINE_WALLET_CLIENT;
+  const clientSecret = config.line.LINE_WALLET_SECRET;
+  const boosters = {
+    automata: {
+      itemIdentifier: "automata-pack",
+      name: "Automata Pack",
+      price: "0.01",
+    },
+    burst: {
+      itemIdentifier: "burst-pack",
+      name: "Burst Pack",
+      price: "0.03",
+    },
+  };
+
+  try {
+    const url = "https://payment.dappportal.io/api/payment-v1/payment/create";
+
+    const headers = {
+      "X-Client-Id": clientId,
+      "X-Client-Secret": clientSecret,
+      "Content-Type": "application/json",
+    };
+
+    const data = {
+      buyerDappPortalAddress: userWalletAddr,
+      pgType: "CRYPTO",
+      currencyCode: "KAIA",
+      price: boosters[booster].price,
+      confirmCallbackUrl:
+        "https://2r2cf484-3001.inc1.devtunnels.ms/api/v1/line/paymentStatus",
+      items: [
+        {
+          itemIdentifier: boosters[booster].itemIdentifier,
+          name: boosters[booster].name,
+          imageUrl:
+            "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/fof.bot.thumbnail.jpg",
+          price: boosters[booster].price,
+          currencyCode: "KAIA",
+        },
+      ],
+      testMode: true,
+    };
+
+    const response = await axios.post(url, data, { headers });
+
+    const newTransaction = new KaiaTransactions({
+      userId: req.user._id,
+      paymentId: response.data.id,
+      reward: boosters[booster].itemIdentifier,
+      status: "pending",
+    });
+
+    newTransaction.save();
+
+    res.status(200).json({ payment_id: response.data.id });
+  } catch (error) {
+    console.error(
+      "Error Creating Payment:",
+      error.response?.data || error.message
+    );
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const updateLinePaymentStatus = async (req, res) => {
+  try {
+    const { paymentId, status } = req.body;
+
+    if (status !== "CONFIRMED") {
+      await KaiaTransactions.findOneAndUpdate(
+        { paymentId: paymentId },
+        { $set: { status: "failed" } }
+      );
+      console.error(`Payment failed with status ${status}`);
+      return res.status(400).json({ message: "Payment not confirmed" });
+    }
+
+    const transaction = await KaiaTransactions.findOne({
+      paymentId,
+      status: "pending",
+    });
+
+    if (!transaction) {
+      console.error(`Transaction not found or already processed.`);
+      return res.status(400).json({ message: "Transaction not found" });
+    }
+
+    const reward = transaction.reward;
+    const userId = transaction.userId;
+
+    const userMythologiesData = await userMythologies.findOne({ userId });
+    if (!userMythologiesData) {
+      console.error(`Game data not found.`);
+      return res.status(400).json({ message: "Game data not found" });
+    }
+
+    let updateSuccess = false;
+
+    if (reward === "automata-pack") {
+      if (!userMythologiesData.autoPay.isAutomataAutoPayEnabled) {
+        console.error(`Not eligible for automata auto-pay.`);
+        return res
+          .status(400)
+          .json({ message: "Not eligible for automata auto-pay" });
+      }
+
+      updateSuccess = await updateMultiAutomata(
+        userMythologiesData,
+        Date.now(),
+        0,
+        userId
+      );
+    } else if (reward === "burst-pack") {
+      if (!userMythologiesData.autoPay.isBurstAutoPayEnabled) {
+        console.error(`Not eligible for burst auto-pay.`);
+        return res
+          .status(400)
+          .json({ message: "Not eligible for burst auto-pay" });
+      }
+
+      const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
+      if (
+        userMythologiesData.autoPay.burstAutoPayExpiration - Date.now() >
+        millisecondsIn24Hours
+      ) {
+        console.error(`Previous burst has not expired yet.`);
+        return res
+          .status(400)
+          .json({ message: "Previous burst not expired yet" });
+      }
+
+      updateSuccess = await updateMultiBurst(userMythologiesData, 0, userId);
+    } else {
+      console.error(`Invalid reward type.`);
+      return res.status(400).json({ message: "Invalid reward type" });
+    }
+
+    if (!updateSuccess) {
+      console.error(`Failed to update ${reward} auto-pay.`);
+      return res.status(500).json({ message: `Failed to update ${reward}` });
+    }
+
+    const updateResult = await transaction.updateOne({
+      paymentId: paymentId,
+      status: "rewarded",
+    });
+
+    if (updateResult.modifiedCount === 0) {
+      console.error(`Failed to finalize transaction.`);
+      return res
+        .status(500)
+        .json({ message: "Failed to finalize transaction" });
+    }
+
+    console.log(`${reward} claimed successfully.`);
+    return res.status(200).send("OK");
+  } catch (error) {
+    console.error("Error in payment confirmation:", error);
+    res.status(500).json({ message: "Error processing payment" });
+  }
+};
+
+export const getLinePaymentStatus = async (req, res) => {
+  try {
+    const { paymentId } = req.query;
+    const clientId = config.line.LINE_WALLET_CLIENT;
+    const clientSecret = config.line.LINE_WALLET_SECRET;
+
+    const url = `https://payment.dappportal.io/api/payment-v1/payment/info?id=${paymentId}`;
+
+    const headers = {
+      "X-Client-Id": clientId,
+      "X-Client-Secret": clientSecret,
+    };
+
+    const response = await axios.get(url, { headers });
+
+    res.status(200).json({ data: response.data });
+  } catch (error) {
+    console.error("Error in payment confirmation:", error);
+    res.status(500).json({ message: "Error processing payment" });
   }
 };
