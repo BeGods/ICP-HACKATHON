@@ -17,13 +17,19 @@ const QuestCard = ({
   InfoCard,
   isGuideActive,
 }) => {
-  const { assets, enableHaptic } = useContext(FofContext);
+  const { assets, enableHaptic, isTelegram } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [buttonFlip, setButtonFlip] = useState(false);
 
   return (
-    <div className="w-[70%] mt-[4.5vh] relative flex flex-col gap-3 justify-center items-center mx-auto">
-      <div className={`card ${flipped ? "flipped" : ""}`}>
+    <div
+      className={`w-[70%] relative flex flex-col gap-3 justify-center items-center mx-auto`}
+    >
+      <div
+        className={`card ${
+          isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50svh] mt-[2vh]"
+        } ${flipped ? "flipped" : ""}`}
+      >
         <div
           onClick={(e) => {
             handleClickHaptic(tele, enableHaptic);

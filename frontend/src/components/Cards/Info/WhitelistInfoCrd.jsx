@@ -4,7 +4,7 @@ import { mythSections } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 
 const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
-  const { assets } = useContext(FofContext);
+  const { assets, isTelegram } = useContext(FofContext);
   return (
     <div
       onClick={() => {
@@ -18,13 +18,15 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
         top: 0,
         left: 0,
       }}
-      className="flex h-[90%] flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black"
+      className={`flex ${
+        isTelegram ? "h-[90%]" : "h-[88%] mt-1"
+      } flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black`}
     >
       <IconBtn
         isInfo={false}
         activeMyth={activeMyth}
         handleClick={handleShowInfo}
-        align={0}
+        align={isTelegram ? 0 : 7}
       />
       <div className="flex w-full">
         <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">

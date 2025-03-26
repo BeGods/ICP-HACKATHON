@@ -34,7 +34,7 @@ const BoosterItem = ({
   booster,
   isGuideActive,
 }) => {
-  const { gameData } = useContext(FofContext);
+  const { gameData, isTelegram } = useContext(FofContext);
   const [isClicked, setIsClicked] = useState(false);
   const touchTimer = useRef(null);
 
@@ -66,37 +66,74 @@ const BoosterItem = ({
         clearTimeout(touchTimer.current);
       }}
     >
-      <div>
-        {booster == 9 ? (
-          <div
-            className={`${
-              isActive && `glow-icon-${mythSections[activeMyth]}`
-            } mt-1 mr-2`}
-          >
-            <MoonStar fill="white" size={"14vw"} />
-          </div>
-        ) : (
-          <div
-            className={`font-symbols ${
-              gameData.mythologies[activeMyth].isEligibleForBurst &&
-              booster === 6 &&
-              !isActive &&
-              `glow-icon-${mythSections[activeMyth]}`
-            } ${
-              (!isActive || booster === 1) &&
-              booster !== 7 &&
-              booster !== 6 &&
-              `glow-icon-${mythSections[activeMyth]}`
-            } ${(booster === 7 || booster === 8) && "gradient-multi"}  ${
-              booster === 6 &&
-              !gameData.mythologies[activeMyth].isEligibleForBurst &&
-              `text-gray-400`
-            } text-[55px] p-0 -mt-2 mr-2`}
-          >
-            {boosterIcon[booster]}
-          </div>
-        )}
-      </div>
+      {isTelegram ? (
+        <div>
+          {booster == 9 ? (
+            <div
+              className={`${
+                isActive && `glow-icon-${mythSections[activeMyth]}`
+              } mt-1 mr-2`}
+            >
+              <MoonStar fill="white" size={"14vw"} />
+            </div>
+          ) : (
+            <div
+              className={`font-symbols ${
+                gameData.mythologies[activeMyth].isEligibleForBurst &&
+                booster === 6 &&
+                !isActive &&
+                `glow-icon-${mythSections[activeMyth]}`
+              } ${
+                (!isActive || booster === 1) &&
+                booster !== 7 &&
+                booster !== 6 &&
+                `glow-icon-${mythSections[activeMyth]}`
+              } ${(booster === 7 || booster === 8) && "gradient-multi"}  ${
+                booster === 6 &&
+                !gameData.mythologies[activeMyth].isEligibleForBurst &&
+                `text-gray-400`
+              } text-[55px] p-0  -mt-2 mr-2`}
+            >
+              {boosterIcon[booster]}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>
+          {booster == 9 ? (
+            <div
+              className={`${
+                isActive && `glow-icon-${mythSections[activeMyth]}`
+              } mt-1 mr-2`}
+            >
+              <MoonStar fill="white" size={"14vw"} />
+            </div>
+          ) : (
+            <div
+              className={`font-symbols ${
+                gameData.mythologies[activeMyth].isEligibleForBurst &&
+                booster === 6 &&
+                !isActive &&
+                `glow-icon-${mythSections[activeMyth]}  -mt-2 mr-2`
+              } ${
+                (!isActive || booster === 1) &&
+                booster !== 7 &&
+                booster !== 6 &&
+                `glow-icon-${mythSections[activeMyth]}  -mt-2 mr-2`
+              } ${
+                (booster === 7 || booster === 8) &&
+                "gradient-multi  -mt-3.5 -ml-2 mr-2"
+              }  ${
+                booster === 6 &&
+                !gameData.mythologies[activeMyth].isEligibleForBurst &&
+                `text-gray-400  -mt-2 mr-2`
+              } text-[55px] p-0 -mt-2 mr-2`}
+            >
+              {boosterIcon[booster]}
+            </div>
+          )}
+        </div>
+      )}
       <div
         className={`flex flex-col ${
           !gameData.mythologies[activeMyth].isEligibleForBurst &&

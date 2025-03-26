@@ -14,15 +14,16 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const orbPos = [
-  "mt-[45vw] mr-[32vw]",
-  "-ml-[55vw] -mt-[18vw]",
-  "-mt-[45vw] ml-[32vw]",
-  "mt-[18vw] ml-[52vw]",
+  "mt-[55vw] mr-[38vw]",
+  "-ml-[62vw] -mt-[19vw]",
+  "-mt-[52vw] ml-[40vw]",
+  "mt-[21vw] ml-[65vw]",
 ];
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { t } = useTranslation();
-  const { enableSound, assets, enableHaptic } = useContext(FofContext);
+  const { enableSound, assets, enableHaptic, isTelegram } =
+    useContext(FofContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
   const [showEffect, setShowEffect] = useState(null);
@@ -79,7 +80,9 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             className={`relative flex justify-center
               ${showEffect === -1 && "glow-tap-white"} ${
               showEffect && `glow-tap-${mythSections[showEffect - 1]}`
-            } scale-110 items-center w-full h-full pointer-events-none`}
+            } ${
+              isTelegram ? "scale-[95%]" : "scale-[80%] mt-4 mr-1"
+            }  items-center w-full h-full pointer-events-none`}
             style={{
               backgroundImage: `url(${assets.uxui.tower})`,
               backgroundSize: "contain",
@@ -105,7 +108,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   }
                 }}
                 key={index}
-                className={`absolute ${orbPos[index]} pointer-events-auto z-50`}
+                className={`absolute ${orbPos[index]}  pointer-events-auto z-50`}
               >
                 <div
                   className={`flex relative transition-all duration-1000 glow-icon-${item.toLowerCase()} text-center justify-center ${
@@ -161,7 +164,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               size={"18vw"}
               color="white"
               onClick={handleKeys}
-              className="scale-icon mb-[26vw]"
+              className={`scale-icon mb-[12vh]`}
             />
           </div>
           <div className="absolute bottom-0 text-[14.2vw] text-white text-black-contour font-roboto flex gap-2">

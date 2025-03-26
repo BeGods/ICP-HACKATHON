@@ -195,9 +195,9 @@ const SplashScreen = ({ reward, exploitReward }) => {
       </div>
       <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
         <div
-          className={`flex relative flex-col items-center cursor-pointer mt-5 z-50 card ${
-            flipped ? "flipped" : ""
-          }`}
+          className={`flex relative flex-col items-center cursor-pointer z-50 card ${
+            isTelegram ? "h-[45.35vh] mt-5" : "h-[50svh]"
+          }${flipped ? "flipped" : ""}`}
         >
           <div className="card__face card__face--front flex justify-center items-center">
             <div

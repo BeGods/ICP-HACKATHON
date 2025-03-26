@@ -4,7 +4,7 @@ import { FofContext } from "../../../context/context";
 import { extractBotName, formatDate } from "../../../helpers/game.helper";
 
 const PartnerCard = ({ close, reward }) => {
-  const { assets, platform } = useContext(FofContext);
+  const { assets, platform, isTelegram } = useContext(FofContext);
 
   return (
     <div
@@ -48,12 +48,18 @@ const PartnerCard = ({ close, reward }) => {
           </div>
         </div>
       </div>
-      {platform === "ios" ? (
+      {!isTelegram ? (
+        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={7} />
+      ) : platform === "ios" ? (
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={6} />
       ) : (
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={0} />
       )}
-      <div className="absolute font-semibold italic bottom-0 text-para text-card mx-auto px-2 py-1">
+      <div
+        className={`absolute font-semibold italic ${
+          isTelegram ? "bottom-0" : "bottom-6"
+        } text-para text-card mx-auto px-2 py-1`}
+      >
         {formatDate(reward.endDate)}
       </div>
     </div>

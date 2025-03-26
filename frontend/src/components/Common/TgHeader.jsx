@@ -87,11 +87,11 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
         }}
       />
       {showModal && (
-        <div
-          onClick={handleDisconnectLineWallet}
-          className="bg-black p-3 rounded-md absolute mt-9"
-        >
-          <div className="bg-white px-2 py-1 rounded-md text-black">
+        <div className="bg-black p-3 flex-col gap-y-2 rounded-md absolute mt-9">
+          <div
+            onClick={handleDisconnectLineWallet}
+            className="bg-white px-2 py-1 rounded-md text-black text-md"
+          >
             Disconnect
           </div>
         </div>
