@@ -279,8 +279,6 @@ export const getGameStats = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-
-    console.log(error.message);
     res.status(500).json({
       message: "Failed to fetch game data.",
       error: error.message,
@@ -470,7 +468,8 @@ export const updateStarStatus = async (req, res) => {
     const holdTimeInSession =
       Math.round(session / 10) > 9 ? 9 : Math.round(session / 10);
 
-    const burstlvl = userMyth.boosters.burstlvl * streakMultipier;
+    const burstlvl = Math.round(userMyth.boosters.burstlvl * streakMultipier);
+
     const updatedOrbs = holdTimeInSession * burstlvl;
 
     userMyth.boosters.isBurstActive = false;

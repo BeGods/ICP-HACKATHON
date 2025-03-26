@@ -4,6 +4,7 @@ import {
   decryptLineData,
   decryptTelegramData,
   generateAuthToken,
+  validateRefreshToken,
 } from "../services/auth.services";
 import {
   addTeamMember,
@@ -88,10 +89,13 @@ export const authenticateTg = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -165,10 +169,13 @@ export const testAuthenticate = async (
     }
 
     // response token
-    const accessToken = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        token: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     res.status(500).json({
@@ -257,10 +264,13 @@ export const authenticateLine = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -371,10 +381,13 @@ export const authenticateOneWave = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -469,10 +482,13 @@ export const authenticateOTP = async (
     }
 
     // response token
-    const accessToken: string | null = await generateAuthToken(existingUser);
+    const { accessToken } = await generateAuthToken(existingUser, res);
     res.status(200).json({
       message: "User authenticated successfully.",
-      data: { token: accessToken },
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
     });
   } catch (error: any) {
     console.log(error);
@@ -481,5 +497,47 @@ export const authenticateOTP = async (
       message: "Failed to authenticate user.",
       error: error.message,
     });
+  }
+};
+
+export const generateRefreshToken = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken || req.cookies.refreshToken;
+
+    if (!refreshToken)
+      return res
+        .status(401)
+        .json({ message: "Unauthorized:  Invalid refresh token" });
+
+    const { accessToken, newRefreshToken } = await validateRefreshToken(
+      refreshToken,
+      res
+    );
+
+    res.status(200).json({
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
+    });
+  } catch (error) {
+    console.log(error.message || "Failed to generate refresh token.");
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
+
+    res.status(200).json({
+      message: "User logout successful!",
+    });
+  } catch (error) {
+    console.log(error.message || "Failed to generate refresh token.");
   }
 };
