@@ -1,6 +1,7 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
+
 export const authenticateTg = async (userData, referralCode) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/tele/auth`;
   if (referralCode) {
@@ -8,7 +9,7 @@ export const authenticateTg = async (userData, referralCode) => {
   }
 
   try {
-    const response = await axios.post(url, userData);
+    const response = await axios.post(url, userData, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
@@ -21,7 +22,7 @@ export const authenticateOneWave = async (param) => {
 
 
   try {
-    const response = await axios.post(url, { sessionId: param });
+    const response = await axios.post(url, { sessionId: param }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
@@ -34,13 +35,27 @@ export const authenticateLine = async (param) => {
 
 
   try {
-    const response = await axios.post(url, { token: param });
+    const response = await axios.post(url, { token: param }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
     throw error;
   }
 };
+
+export const refreshAuthToken = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_FOF_URL}/auth/refresh`, {
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Token refresh failed:", error);
+    throw error;
+  }
+};
+
 
 
 export const fetchGameStats = async (accessToken) => {
