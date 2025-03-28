@@ -17,7 +17,7 @@ export const setRequestCnt = async (key) => {
     const requestCount = await redisClient.incr(`count_${key}`);
 
     if (requestCount === 1) {
-      await redisClient.expire(key, 3600); // 1hr
+      await redisClient.expire(`count_${key}`, 3600); // 1hr
     }
 
     return requestCount;

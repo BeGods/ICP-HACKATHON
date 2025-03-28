@@ -87,9 +87,25 @@ export const validateRefreshToken = async (refreshToken, res) => {
       config.security.REFRESH_TOKEN_SECRET
     );
 
+    if (!decodedUserData) {
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
+      throw new Error("Invalid Token");
+    }
+
     const user = await User.findOne({ _id: decodedUserData._id });
 
     if (!user) {
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
       throw new Error("Not authorized to access this resource");
     }
 
@@ -108,8 +124,6 @@ export const validateRefreshToken = async (refreshToken, res) => {
 
     // if token in older than 80% of expiry then new
     if (refreshTokenAge > refreshTokenLifespan * 0.8) {
-      console.log("new refresh token");
-
       const refreshUserObj = {
         _id: user._id,
         role: "user",
