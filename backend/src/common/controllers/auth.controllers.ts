@@ -309,7 +309,7 @@ export const createOneWaveSession = async (
 
     res
       .status(200)
-      .json({ url: `${config.source.client}?onewave=${sessionId}` });
+      .json({ url: `${config.source.client}?onewave=${sessionId}&refer=ONW` });
   } catch (error: any) {
     console.log(error);
     res.status(500).json({
@@ -324,7 +324,7 @@ export const authenticateOneWave = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { sessionId } = req.body;
+    const { sessionId, refer } = req.body;
     const sessionHash = await getOneWaveSession(sessionId);
 
     if (!sessionHash) {
@@ -375,8 +375,10 @@ export const authenticateOneWave = async (
         telegramUsername: usernameToAdd,
       };
 
+      const refPartner = refer === "ONW" ? refer : "";
+
       // create new  user
-      existingUser = await addNewOneWaveUser(newUser);
+      existingUser = await addNewOneWaveUser(newUser, refPartner);
       await createDefaultUserMyth(existingUser);
     }
 
@@ -401,8 +403,20 @@ export const authenticateOneWave = async (
 
 export const generateOtp = async (req, res) => {
   try {
-    const { mobileNumber } = req.body;
+    const { mobileNumber, username } = req.body;
     const sanitizedNumber = mobileNumber.replace(/[^0-9]/g, "");
+    let usernameExists;
+
+    if (username) {
+      usernameExists = await validateUsername(username);
+    }
+
+    if (usernameExists) {
+      res.status(400).json({
+        message: "Username already exists.",
+      });
+      return;
+    }
 
     const mobileRegex = /^\+\d{1,3}-\d{5,15}$/;
 
@@ -430,7 +444,7 @@ export const authenticateOTP = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { mobileNumber, username, otp, referPartner, stanId } = req.body;
+    const { mobileNumber, username, otp, refer, stanId } = req.body;
     const sanitizedNumber = mobileNumber?.replace(/[^0-9]/g, "");
     const sanitizedUsername = username?.replace(/[^a-zA-Z0-9]/g, "");
     const mobileRegex = /^\+\d{1,3}-\d{5,15}$/;
@@ -476,7 +490,7 @@ export const authenticateOTP = async (
       };
 
       // create new  user
-      const refPartner = referPartner ? referPartner : "";
+      const refPartner = refer === "STAN" ? refer : "";
       existingUser = await addNewOTPUser(newUser, refPartner);
       await createDefaultUserMyth(existingUser);
     }
@@ -522,6 +536,11 @@ export const generateRefreshToken = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message || "Failed to generate refresh token.");
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
   }
 };
 
@@ -539,5 +558,10 @@ export const logoutUser = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message || "Failed to generate refresh token.");
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
   }
 };

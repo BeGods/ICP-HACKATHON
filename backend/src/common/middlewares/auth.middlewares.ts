@@ -5,35 +5,35 @@ import User from "../models/user.models";
 export const authMiddleware = async (req, res, next) => {
   try {
     const tokenString = req.headers?.authorization;
-
     const token = tokenString?.split(" ")[1];
 
     if (!token || !tokenString) {
-      return res.status(400).json({ message: "Invalid token." });
+      return res.status(401).json({ message: "Invalid token." });
     }
 
-    const decodedUserData = await jwt.verify(
+    const decodedUserData = jwt.verify(
       token,
       config.security.ACCESS_TOKEN_SECRET
     );
     const user = await User.findOne({ _id: decodedUserData._id });
 
     if (!user) {
-      throw new Error("Not authorized to access this resource");
+      return res
+        .status(401)
+        .json({ error: "Not authorized to access this resource" });
     }
 
     req.user = user;
     next();
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({ error: "Token expired" });
     } else if (error.name === "JsonWebTokenError") {
-      return res
-        .status(401)
-        .json({ error: "Not authorized to access this resource" });
+      return res.status(401).json({ error: "Invalid token" });
     } else {
-      res.status(500).json({
+      return res.status(500).json({
         message: "Failed to validate user.",
         error: error.message,
       });

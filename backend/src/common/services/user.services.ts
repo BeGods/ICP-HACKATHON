@@ -2,6 +2,7 @@ import { generateCode } from "../../helpers/general.helpers";
 import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
+import Stats from "../models/Stats.models";
 import User from "../models/user.models";
 
 export const addNewTelegramUser = async (userData) => {
@@ -31,6 +32,12 @@ export const addNewTelegramUser = async (userData) => {
 
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
+
+    await Stats.findOneAndUpdate(
+      { statId: "telegram" },
+      { $inc: { totalUsers: 1 } },
+      { upsert: true, new: true }
+    );
 
     return newUserCreated;
   } catch (error) {
@@ -66,8 +73,16 @@ export const addNewLineUser = async (userData) => {
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
 
+    await Stats.findOneAndUpdate(
+      { statId: "line" },
+      { $inc: { totalUsers: 1 } },
+      { upsert: true, new: true }
+    );
+
     return newUserCreated;
   } catch (error) {
+    console.log(error);
+
     throw new Error("Failed to create a new user.");
   }
 };
@@ -101,16 +116,25 @@ export const addNewOTPUser = async (userData, referPartner) => {
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
 
+    if (referPartner !== "") {
+      await Stats.findOneAndUpdate(
+        { statId: referPartner },
+        { $inc: { totalUsers: 1 } },
+        { upsert: true, new: true }
+      );
+    }
+
     return newUserCreated;
   } catch (error) {
     throw new Error("Failed to create a new user.");
   }
 };
 
-export const addNewOneWaveUser = async (userData) => {
+export const addNewOneWaveUser = async (userData, referPartner) => {
   try {
-    const genRandomCode = generateCode(6);
-    userData.referralCode = `FDGOW${genRandomCode}`;
+    const genRandomCode =
+      referPartner == "" ? generateCode(8) : generateCode(6);
+    userData.referralCode = `FDG${referPartner + genRandomCode}`;
 
     if (!userData.telegramUsername) {
       const lastUser = await User.findOne({
@@ -131,6 +155,12 @@ export const addNewOneWaveUser = async (userData) => {
 
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
+
+    await Stats.findOneAndUpdate(
+      { statId: "onewave" },
+      { $inc: { totalUsers: 1 } },
+      { upsert: true, new: true }
+    );
 
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();

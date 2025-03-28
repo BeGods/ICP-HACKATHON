@@ -81,6 +81,9 @@ const userSchema = new Schema<IUser>(
     },
     mobileNumber: {
       type: String,
+      unique: true,
+      sparse: true,
+      default: undefined,
     },
     name: {
       type: String,
@@ -98,6 +101,7 @@ const userSchema = new Schema<IUser>(
     kaiaAddress: {
       type: String,
       unique: true,
+      sparse: true,
     },
     directReferralCount: {
       type: Number,

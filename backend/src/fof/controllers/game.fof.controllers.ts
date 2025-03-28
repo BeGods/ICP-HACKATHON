@@ -186,16 +186,14 @@ export const getGameStats = async (req, res) => {
     // get ranks
     let userRank = await ranks.findOne({ userId: req.user._id });
     if (!userRank) {
-      const totalUsers = (await Stats.find()) as any;
-      userRank = { overallRank: totalUsers[0]?.totalUsers && 0 } as any;
+      const totalUsers = await Stats.findOne({ statId: "fof" });
+      userRank = { orbRank: totalUsers?.totalUsers && 0 } as any;
     }
-
-    const totalUsers = await Stats.findOne({ statId: "fof" });
 
     // is sligible for gacha
     const isEligibleToClaim = await checkBonus(user);
     const memberData = {
-      overallRank: userRank?.orbRank ?? totalUsers.totalUsers,
+      orbRank: userRank?.orbRank,
       totalOrbs: userRank?.totalOrbs ?? 0,
     };
 

@@ -30,10 +30,13 @@ export const generateAliOTP = async (mobileNumber) => {
       channel: config.alibaba.channel,
     };
 
+    await setOTP(mobileNumber.toString(), otp.toString(), 300);
+
     try {
       const result = await client.request("SendMessageToGlobe", params, {
         method: "POST",
       });
+
       console.log("SMS sent successfully:", result);
     } catch (error) {
       console.error("Error sending SMS:", error);
@@ -43,7 +46,6 @@ export const generateAliOTP = async (mobileNumber) => {
       };
     }
 
-    await setOTP(mobileNumber.toString(), otp.toString(), 300);
     return { status: 200, message: "OTP has been sent successfully!" };
   } catch (error) {
     console.error("Unexpected error:", error);

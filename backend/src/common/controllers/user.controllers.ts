@@ -201,7 +201,7 @@ export const createLinePayment = async (req, res) => {
           currencyCode: "KAIA",
         },
       ],
-      testMode: true,
+      testMode: config.server.ENVIRONMENT === "dev" ? true : false,
     };
 
     const response = await axios.post(url, data, { headers });
