@@ -67,7 +67,9 @@ const BottomChild = ({ activeMyth, gameData }) => {
           }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="flex text-black-contour items-center text-primary font-medium pr-headSides">
-            {formatTwoNums(gameData.automatalvl + 1)}{" "}
+            {gameData?.automatalvl
+              ? formatTwoNums(gameData.automatalvl + 1)
+              : 1}
             <span className="font-roboto font-normal text-[6vw] pl-1">x</span>
           </div>
         </div>

@@ -21,6 +21,7 @@ import Gift from "../fof/Gift/Gift";
 import { showToast } from "../../components/Toast/Toast";
 import StreakBonus from "../fof/Streak/StreakBonus";
 import {
+  deleteAuthCookie,
   fetchHapticStatus,
   getExpCookie,
   setAuthCookie,
@@ -39,7 +40,6 @@ import TgHeader from "../../components/Common/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import { determineIsTelegram } from "../../utils/device.info";
-import { useTokenCountdown } from "../../hooks/RefreshToken";
 
 const tele = window.Telegram?.WebApp;
 
@@ -249,6 +249,7 @@ const FoFMain = () => {
         }, 1000);
       }
     } catch (error) {
+      await deleteAuthCookie(tele);
       console.log(error);
       showToast("default");
     }
@@ -279,6 +280,7 @@ const FoFMain = () => {
       }, timeLeft - 10000);
     } catch (error) {
       console.log(error);
+      alert(error);
       showToast("default");
     }
   };
@@ -331,13 +333,6 @@ const FoFMain = () => {
       setIsTelegram(isTg);
     }
   }, []);
-
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      "card.height",
-      isTelegram ? "45.35vh" : "48vh"
-    );
-  }, [isTelegram]);
 
   useEffect(() => {
     if (platform === "ios") {

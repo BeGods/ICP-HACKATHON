@@ -16,7 +16,6 @@ import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { rankPositions } from "../../../utils/constants.fof";
-import { getImage } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 
@@ -101,13 +100,13 @@ const Leaderboard = (props) => {
 
   const determineLevel = () => {
     switch (true) {
-      case userData.overallRank <= 12:
+      case userData.orbRank <= 12:
         return "gold";
-      case userData.overallRank <= 99:
+      case userData.orbRank <= 99:
         return "silver";
-      case userData.overallRank <= 333:
+      case userData.orbRank <= 333:
         return "bronze";
-      case userData.overallRank <= 666:
+      case userData.orbRank <= 666:
         return "wood";
       default:
         return "wood";
@@ -133,7 +132,7 @@ const Leaderboard = (props) => {
     try {
       const response = await fetchLeaderboard(
         authToken,
-        userData.overallRank,
+        userData.orbRank,
         pageNum
       );
 
@@ -163,10 +162,10 @@ const Leaderboard = (props) => {
 
   const loadMoreData = () => {
     if (
-      userData.overallRank <= 12 || // Gold (no increment)
-      userData.overallRank <= 99 || // Silver (no increment)
-      (userData.overallRank <= 333 && page >= 2) || // Bronze (max 2 pages)
-      (userData.overallRank <= 666 && page >= 6) // Wood (max 6 pages)
+      userData.orbRank <= 12 || // Gold (no increment)
+      userData.orbRank <= 99 || // Silver (no increment)
+      (userData.orbRank <= 333 && page >= 2) || // Bronze (max 2 pages)
+      (userData.orbRank <= 666 && page >= 6) // Wood (max 6 pages)
     ) {
       return;
     }
@@ -339,7 +338,7 @@ const Leaderboard = (props) => {
                 showToast("stake_error");
               } else if (
                 !isFinished &&
-                userData.overallRank !== 0 &&
+                userData.orbRank !== 0 &&
                 !userData.stakeOn
               ) {
                 setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
@@ -442,17 +441,17 @@ const Leaderboard = (props) => {
                     >
                       <div
                         className={`absolute text-black-contour font-symbols text-${determineLevel(
-                          item.overallRank
+                          item.orbRank
                         )} text-[24px] z-[50] w-[40%] ${
                           rankPositions[index].alignIcon
                         }`}
                       >
-                        {userData.overallRank > 333 ? "&" : "$"}
+                        {userData.orbRank > 333 ? "&" : "$"}
                       </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
-                        {item.overallRank}
+                        {item.orbRank}
                       </div>
                       <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                         {formatRankOrbs(item.totalOrbs)}
@@ -507,7 +506,7 @@ const Leaderboard = (props) => {
           <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
             <div className="flex border border-gray-400 rounded-primary bg-white justify-center w-full">
               <div className="flex text-black justify-center items-center w-[20%] h-full">
-                {userData.overallRank}
+                {userData.orbRank}
               </div>
               <div className="flex gap-3 items-center  w-full">
                 <div className="h-[35px] w-[35px]">
@@ -579,7 +578,7 @@ const Leaderboard = (props) => {
                 >
                   <LeaderboardItem
                     key={index}
-                    rank={item.overallRank}
+                    rank={item.orbRank}
                     name={item.username}
                     totalOrbs={formatRankOrbs(item.totalOrbs)}
                     imageUrl={item.profileImage}
@@ -596,7 +595,7 @@ const Leaderboard = (props) => {
                   showToast("stake_error");
                 } else if (
                   !isFinished &&
-                  userData.overallRank !== 0 &&
+                  userData.orbRank !== 0 &&
                   !userData.stakeOn
                 ) {
                   setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
@@ -605,7 +604,7 @@ const Leaderboard = (props) => {
               className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
             >
               <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
-                <h1>{userData.overallRank}</h1>
+                <h1>{userData.orbRank}</h1>
                 <div>
                   {userData.stakeOn == "+" && (
                     <h1 className="text-green-500 text-[18px]">▲</h1>

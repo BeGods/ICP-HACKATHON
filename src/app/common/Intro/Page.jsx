@@ -6,6 +6,7 @@ import {
   refreshAuthToken,
 } from "../../../utils/api.fof";
 import {
+  deleteAuthCookie,
   fetchHapticStatus,
   getExpCookie,
   setAuthCookie,
@@ -21,7 +22,6 @@ import {
   trackEvent,
 } from "../../../utils/ga";
 import Launcher from "./Launcher";
-import DesktopScreen from "./Desktop";
 import { MainContext } from "../../../context/context";
 import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
@@ -29,8 +29,9 @@ import { showToast } from "../../../components/Toast/Toast";
 import { determineIsTelegram } from "../../../utils/device.info";
 import { useLocation } from "react-router-dom";
 import liff from "@line/liff";
-import { v4 as uuidv4 } from "uuid";
+import { validate as isValidUUID } from "uuid";
 import OnboardPage from "../../fof/Onboard/Page";
+import DesktopScreen from "./Desktop";
 
 const tele = window.Telegram?.WebApp;
 
@@ -49,12 +50,15 @@ const IntroPage = (props) => {
   } = useContext(MainContext);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
-  const oneWaveParam = queryParams.get("onewave");
+  const oneWaveParam =
+    isValidUUID(queryParams.get("onewave")) && queryParams.get("onewave");
   const refer = queryParams.get("refer");
+  const [tokenExpired, setTokenExpired] = useState(false);
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
-  const [disableDesktop, setDisableDestop] = useState(false);
+  const [isBrowser, setIsBrowser] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isTgDesktop, setIsTgDesktop] = useState(false);
   const lineCalledRef = useRef(false);
   const onewaveCalledRef = useRef(false);
 
@@ -65,7 +69,6 @@ const IntroPage = (props) => {
         await tele.ready();
 
         const { user } = tele.initDataUnsafe || {};
-        if (!tele.isExpanded) tele.expand();
         setPlatform(tele.platform);
 
         tele.requestFullscreen();
@@ -133,7 +136,8 @@ const IntroPage = (props) => {
       setAuthToken(newToken);
       await setAuthCookie(tele, newToken);
     } catch (error) {
-      console.log(error);
+      await deleteAuthCookie();
+      handleAuth(isTelegram);
     }
   };
 
@@ -182,15 +186,22 @@ const IntroPage = (props) => {
     }
   };
 
+  const checkTokenExpiry = async () => {
+    const tokenExpiry = await getExpCookie(tele);
+    if (!tokenExpiry || tokenExpiry <= Date.now()) {
+      setTokenExpired(true);
+      return true;
+    }
+    return false;
+  };
+
   const isExistingTknValid = async (tokenExp) => {
     try {
-      console.log("Validating existing token...");
       const now = Date.now();
       let timeLeft = tokenExp - now;
 
       let token;
       if (timeLeft <= 0) {
-        console.log("Token expired, attempting refresh...");
         token = await handleRefreshToken();
 
         if (!token) {
@@ -199,7 +210,6 @@ const IntroPage = (props) => {
 
         timeLeft = (await getExpCookie(tele)) - Date.now();
       } else {
-        console.log("Token still valid, verifying auth...");
         token = await validateAuth(tele);
 
         if (!token) {
@@ -210,14 +220,13 @@ const IntroPage = (props) => {
       }
     } catch (error) {
       console.error("Error inside isExistingTknValid:", error);
-
-      // Explicitly rethrow the error
       throw error;
     }
   };
 
   useEffect(() => {
     getUserData();
+    checkTokenExpiry();
     syncAllCookies();
 
     const handleUserInteraction = () => {
@@ -235,8 +244,6 @@ const IntroPage = (props) => {
   }, []);
 
   const handleAuth = async (isTg) => {
-    console.log("Yes handleAuth was called", isTg);
-
     if (isTg) {
       setTimeout(() => telegramAuth(), 1000);
     } else if (liff.isInClient()) {
@@ -253,7 +260,6 @@ const IntroPage = (props) => {
       const isTg = determineIsTelegram(platform);
 
       (async () => {
-        const tokenExpiry = await getExpCookie(tele);
         setIsTelegram(isTg);
 
         if (
@@ -261,35 +267,39 @@ const IntroPage = (props) => {
           platform === "windows" ||
           platform === "tdesktop" ||
           platform === "web" ||
-          platform === "weba" ||
-          (platform === "unknown" && !oneWaveParam && !liff.isInClient())
+          platform === "weba"
         ) {
-          setDisableDestop(true);
+          setIsTgDesktop(true);
+          setIsBrowser(false);
+        } else if (
+          platform === "unknown" &&
+          !oneWaveParam &&
+          !liff.isInClient()
+        ) {
+          setIsBrowser(true);
         } else {
-          setDisableDestop(false);
-          if (tokenExpiry) {
-            try {
-              console.log("Checking token validity...");
-              await isExistingTknValid(tokenExpiry);
-              console.log("Token is valid");
-            } catch (error) {
-              console.log("Yes error occurred bro", error); // This should now always log errors
+          setIsBrowser(false);
 
-              // Debugging: Check the error structure
-              console.log("Error details:", JSON.stringify(error, null, 2));
-
-              if (error?.status === 401 || error?.response?.status === 401) {
-                console.warn("Refresh token expired, proceeding with login");
-                await handleAuth(isTg);
-              } else {
-                console.warn(
-                  "Unexpected error occurred, proceeding with login anyway"
-                );
+          if (liff.isInClient()) {
+            await handleAuth(isTg);
+          } else {
+            const tokenExpiry = await getExpCookie(tele);
+            if (tokenExpiry) {
+              try {
+                await isExistingTknValid(tokenExpiry);
+              } catch (error) {
+                if (error?.status === 401 || error?.response?.status === 401) {
+                  console.warn("Refresh token expired, proceeding with login");
+                } else {
+                  console.warn(
+                    "Unexpected error occurred, proceeding with login anyway"
+                  );
+                }
                 await handleAuth(isTg);
               }
+            } else {
+              await handleAuth(isTg);
             }
-          } else {
-            await handleAuth();
           }
         }
       })();
@@ -311,10 +321,15 @@ const IntroPage = (props) => {
 
   return (
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
-      {disableDesktop && refer == "STAN" ? (
-        <OnboardPage />
-      ) : disableDesktop && refer !== "STAN" ? (
+      {isTgDesktop && !isBrowser ? (
         <DesktopScreen assets={assets} />
+      ) : isBrowser && tokenExpired ? (
+        <OnboardPage
+          handleTokenUpdated={() => {
+            setTokenExpired(false);
+          }}
+          refer={refer || null}
+        />
       ) : (
         <Launcher
           enableSound={enableSound}

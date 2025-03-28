@@ -26,6 +26,20 @@ export const getExpCookie = async (tele) => {
 };
 
 
+// delete auth cookie
+export const deleteAuthCookie = async (tele) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    await tele.CloudStorage.removeItem("accessToken");
+    await tele.CloudStorage.removeItem("token_exp");
+  } else {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("token_exp");
+  }
+};
+
+
 
 // set auth
 export const setAuthCookie = async (tele, token) => {
