@@ -229,7 +229,7 @@ export const authenticateLine = async (
     let existingUser: IUser | null = await User.findOne({ lineId: lineId });
 
     if (existingUser) {
-      const match = existingUser.telegramUsername.match(/^(.*)_\w{3}$/);
+      const match = lineName.match(/^(.*)_\w{3}$/);
       const baseUsername = match ? match[1] : existingUser.telegramUsername;
       if (lineName !== baseUsername) {
         existingUser.telegramUsername = lineName;
