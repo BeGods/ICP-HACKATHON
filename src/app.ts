@@ -8,8 +8,9 @@ import cookieParser from "cookie-parser";
 import config from "./config/config";
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const mongoSanitize = require("express-mongo-sanitize");
+
+const app = express();
 
 const limiter = rateLimit({
   windowMs: 60 * 1000,
@@ -22,9 +23,9 @@ const limiter = rateLimit({
 app.use(cookieParser());
 app.use(express.json());
 app.use(limiter);
-
 app.set("trust proxy", 1);
 
+// Enhanced CORS handling with logging
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -36,14 +37,24 @@ app.use(
     },
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
   })
 );
+
 app.use(helmet());
 app.use(mongoSanitize());
-app.use(morgan("tiny"));
 app.use(xss());
 app.use(hpp());
 
+morgan.token("body", (req) => JSON.stringify(req.body));
+morgan.token("origin", (req) => req.headers.origin || "No-Origin");
+
+const loggerFormat =
+  ":remote-addr - :method :url :status - :response-time ms - Origin: :origin - Body: :body";
+
+app.use(morgan(loggerFormat));
+
+// API Routes
 app.use("/api/v1", fofRoutes);
 app.use("/api/v2", rorRoutes);
 
