@@ -9,6 +9,7 @@ import {
   Globe,
   LayoutGrid,
   Map,
+  SquareArrowOutUpRight,
   UserRoundPen,
   Vibrate,
   VibrateOff,
@@ -29,6 +30,7 @@ import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
 import {
   clearAllGuideCookie,
+  deleteAuthCookie,
   deleteHapticCookie,
   setCountryCookie,
   setHapticCookie,
@@ -36,6 +38,8 @@ import {
   setSoundStatus,
 } from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
+import liff from "@line/liff";
+import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
@@ -63,6 +67,7 @@ const languages = [
 
 const SettingModal = ({ close }) => {
   const { i18n, t } = useTranslation();
+  const navigate = useNavigate();
   const {
     authToken,
     enableSound,
@@ -345,18 +350,23 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        {/* <div
-          onClick={() => {}}
-          className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
-        >
-          <div className="flex justify-start -ml-3">
-            <Wallet />
+        {!liff.isInClient() && !isTelegram && (
+          <div
+            onClick={async () => {
+              await deleteAuthCookie(tele);
+              navigate("/");
+            }}
+            className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
+          >
+            <div className="flex justify-start -ml-3">
+              <SquareArrowOutUpRight />
+            </div>
+            <div className="flex justify-between w-full">
+              <div className="pl-3">Logout</div>
+              <ChevronRight />
+            </div>
           </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{t("profile.wallet")}</div>
-            <ChevronRight />
-          </div>
-        </div> */}
+        )}
 
         <div
           onClick={handleClose}

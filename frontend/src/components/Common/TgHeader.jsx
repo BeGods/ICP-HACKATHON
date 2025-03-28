@@ -15,7 +15,6 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
   const navigate = useNavigate();
 
   const handleConnectLineWallet = async () => {
-    handleClickHaptic(tele, enableHaptic);
     try {
       const { kaiaProvider } = await initializeWalletSDK();
       const account = await connectWallet(kaiaProvider);
@@ -32,11 +31,12 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
   const handleDisconnectLineWallet = async () => {
     handleClickHaptic(tele, enableHaptic);
     try {
-      setShowModal(false);
-      const { lineProvider } = await initializeWalletSDK();
-      await lineProvider.disconnectWallet();
-      setLineWallet(null);
       await disconnectLineWallet(authToken);
+      const { lineProvider } = await initializeWalletSDK();
+      lineProvider.disconnectWallet();
+      lineProvider.disconnect();
+      setLineWallet(null);
+      setShowModal(false);
     } catch (error) {
       console.log(error);
       alert(error);

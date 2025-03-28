@@ -50,19 +50,19 @@ export const rankPositions = [
     pos: 2,
     size: "text-[50px]",
     align: 5,
-    alignIcon: "-mt-[80px] ml-7"
+    alignIcon: "-mt-[8.5svh] ml-7"
   },
   {
     pos: 1,
     size: "text-[60px]",
     align: 10,
-    alignIcon: "-mt-[105px] ml-7"
+    alignIcon: "-mt-[10.5svh] ml-7"
   },
   {
     pos: 3,
     size: "text-[40px]",
     align: 5,
-    alignIcon: "-mt-[60px] ml-7"
+    alignIcon: "-mt-[6.5svh] ml-7"
 
   },
 ];

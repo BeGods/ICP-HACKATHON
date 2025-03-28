@@ -638,18 +638,13 @@ export const fetchRewards = async (
   }
 };
 
-export const fetchOTP = async (mobileNumber, accessToken) => {
+export const fetchOTP = async (mobileNumber, name) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/auth/otp`;
 
   try {
     const response = await axios.post(
       url,
-      { mobileNumber: mobileNumber },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+      { mobileNumber: mobileNumber, username: name }
     );
     return response.data;
   } catch (error) {
@@ -658,8 +653,10 @@ export const fetchOTP = async (mobileNumber, accessToken) => {
   }
 };
 
-export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
+export const verifyOtp = async (mobileNumber, name, otp, refer) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/auth/verify`;
+
+  console.log(refer);
 
   try {
     const response = await axios.post(
@@ -668,11 +665,7 @@ export const verifyOtp = async (mobileNumber, name, otp, accessToken) => {
         mobileNumber: mobileNumber,
         username: name,
         otp: otp,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        refer: refer
       }
     );
     return response.data;

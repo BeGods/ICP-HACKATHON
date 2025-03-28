@@ -9,12 +9,18 @@ import {
 import { MainContext } from "../../../context/context";
 import { showToast } from "../../../components/Toast/Toast";
 import { useTranslation } from "react-i18next";
-import { trackComponentView } from "../../../utils/ga";
-import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { trackComponentView, trackEvent } from "../../../utils/ga";
+import {
+  handleClickHaptic,
+  setAuthCookie,
+} from "../../../helpers/cookie.helper";
+import { ArrowLeft } from "lucide-react";
+import ToastMesg from "../../../components/Toast/ToastMesg";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
-const OnboardPage = (props) => {
+const OnboardPage = ({ handleTokenUpdated, refer }) => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const { t } = useTranslation();
@@ -27,14 +33,14 @@ const OnboardPage = (props) => {
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showCount, setShowCount] = useState(false);
-  const [countDown, setCountDown] = useState(15);
-  const { authToken, isTelegram } = useContext(MainContext);
+  const [countDown, setCountDown] = useState(0);
+  const [createAcnt, setCreateAcnt] = useState(false);
+  const { authToken, isTelegram, setAuthToken } = useContext(MainContext);
   const [otp, setOTP] = useState(new Array(4).fill(""));
   const dropdownRef = useRef(null);
   const firstInputRef = useRef(null);
   const availableCountries = countries.filter(
     (country) => country.code == "IND" || country.code == "THA"
-    // (country) => country.code !== "NA"
   );
 
   useEffect(() => {
@@ -70,28 +76,27 @@ const OnboardPage = (props) => {
     }
   };
 
-  // const getPartnersData = async (lang, country) => {
-  //   try {
-  //     const rewardsData = await fetchRewards(lang, country, authToken);
-  //     setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
-  //     setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
-  //     localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const handleGenerateOtp = async () => {
-    handleClickHaptic(tele, true);
-    if (phone.length !== 10 || name.length === 0 || name === "" || !name) {
-      showToast("form_error");
-      return;
-    }
-
     try {
-      await fetchOTP(selectedCountry.dialCode + "-" + phone, authToken);
+      handleClickHaptic(tele, true);
+
+      if (createAcnt) {
+        if (phone.length !== 10 || !name.trim()) {
+          showToast("form_error");
+          return;
+        }
+      } else {
+        if (phone.length !== 10) {
+          showToast("form_error");
+          return;
+        }
+      }
+
+      await fetchOTP(selectedCountry.dialCode + "-" + phone, name);
       showToast("form_success");
       setShowVerify(true);
+
+      setCountDown(15); // Start countdown from 15
       let interval = setInterval(() => {
         setCountDown((prev) => {
           if (prev <= 1) {
@@ -102,46 +107,113 @@ const OnboardPage = (props) => {
         });
       }, 1000);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? error.response.data.message || "Invalid request. Please try again."
+          : "Failed to generate OTP. Please check your network and try again.";
+
+      toast.error(
+        <ToastMesg
+          title={t("toasts.InputValidate.error.title")}
+          desc={errorMessage}
+          status="fail"
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     }
   };
 
   const handleResendOtp = async () => {
-    if (phone.length !== 10) {
-      showToast("form_error");
-      return;
+    if (createAcnt) {
+      if (phone.length !== 10 || !name.trim()) {
+        showToast("form_error");
+        return;
+      }
+    } else {
+      if (phone.length !== 10) {
+        showToast("form_error");
+        return;
+      }
     }
 
     try {
       await fetchResendOTP(selectedCountry.dialCode + "-" + phone, authToken);
       showToast("form_success");
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      const errorMessage =
+        error.response && error.response.status === 400
+          ? error.response.data.message || "Invalid request. Please try again."
+          : "Failed to generate OTP. Please check your network and try again.";
+
+      toast.error(
+        <ToastMesg
+          title={t("toasts.InputValidate.error.title")}
+          desc={errorMessage}
+          status="fail"
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     }
   };
 
   const handleVerifyOtp = async () => {
-    if (phone.length != 10 || name.length == 0 || name === "" || !name) {
-      showToast("phone_valid_error");
-      return;
+    if (createAcnt) {
+      if (phone.length !== 10 || !name.trim()) {
+        showToast("form_error");
+        return;
+      }
+    } else {
+      if (phone.length !== 10) {
+        showToast("form_error");
+        return;
+      }
     }
 
     try {
-      await verifyOtp(
-        selectedCountry.dialCode + phone,
+      const response = await verifyOtp(
+        selectedCountry.dialCode + "-" + phone,
         name,
         otp.join(""),
-        authToken
+        refer
       );
-      setShowCount(true);
+
       trackEvent("misc", "mobile_verified", "success");
-      setSection(0);
       showToast("onboard_success");
-      // setUserData((prevState) => ({
-      //   ...prevState,
-      //   isPlaySuperVerified: true,
-      // }));
-      // (async () => await getPartnersData())();
+      setAuthToken(response.data.accessToken);
+      await setAuthCookie(tele, response.data.accessToken);
+      setCountDown(15);
+      setShowCount(true);
+      handleTokenUpdated();
+      let interval = setInterval(() => {
+        setCountDown((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setShowCount(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     } catch (error) {
       console.log(error);
       showToast("onboard_error");
@@ -156,24 +228,48 @@ const OnboardPage = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (countDown > 0) {
+      setShowCount(true);
+    }
+  }, [countDown]);
+
+  useEffect(() => {
+    setName("");
+    setPhone("");
+  }, [createAcnt]);
+
   return (
     <div
-      className={`relative ${
+      className={`relative flex flex-col justify-center ${
         isTelegram ? "tg-container-height" : "browser-container-height"
       } w-screen font-roboto bg-black`}
     >
-      <img
-        src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/frogdog.games.black.svg"
-        alt="fof"
-        className="w-full opacity-55 pt-4"
-      />
-      {/* Form */}
-      <div className="flex flex-col h-full w-full">
-        <div className="flex flex-grow h-full">
-          {showVerify ? (
-            <div className="flex flex-col mx-auto w-[85%] text-white mt-8 gap-y-4">
-              <div className="flex justify-between w-full">
-                <div className="text-lg w-full">{t("misc.enterOTP")}</div>
+      {showVerify && (
+        <div
+          onClick={() => {
+            setShowVerify(false);
+          }}
+          className="absolute p-1 top-0 ml-3"
+        >
+          <ArrowLeft color="white" size={"7vw"} />
+        </div>
+      )}
+
+      <div className="w-full h-fit -mt-[18vh]">
+        <img
+          src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.white.svg"
+          alt="fof"
+          className="w-1/4 opacity-95 mx-auto scale-loader-glow"
+        />
+
+        {showVerify ? (
+          <div className="flex flex-col items-center mx-auto w-[85%] text-white mt-14 gap-y-4">
+            <div className="flex justify-between w-full">
+              <div className="text-lg font-medium w-full">
+                {t("misc.enterOTP")}
+              </div>
+              <div className="w-full">
                 {showCount && (
                   <div
                     onClick={() => {
@@ -181,42 +277,47 @@ const OnboardPage = (props) => {
                         handleResendOtp();
                       }
                     }}
-                    className="flex cursor-pointer justify-end w-full font-medium text-secondary"
+                    className="flex text-md cursor-pointer justify-end w-full font-medium"
                   >
-                    {countDown != 0 ? (
+                    {countDown > 0 ? (
                       <div className="pl-2">{countDown}s</div>
-                    ) : countDown < 0 ? (
-                      <div></div>
                     ) : (
-                      <div>{t("misc.resendOTP")}</div>
+                      <div
+                        onClick={handleResendOtp}
+                        className="cursor-pointer underline"
+                      >
+                        {t("misc.resendOTP")}
+                      </div>
                     )}
                   </div>
                 )}
               </div>
-              <div className="flex justify-start -mt-1">
-                {otp.map((digit, index) => (
-                  <input
-                    ref={index === 0 ? firstInputRef : null}
-                    key={index}
-                    id={`otp-input-${index}`}
-                    type="text"
-                    maxLength={1}
-                    className="w-12 bg-gray-800 outline-white/20 h-12 text-4xl border border-gray-600 rounded mx-1 text-center"
-                    value={digit}
-                    onChange={(event) => handleChange(index, event)}
-                    onKeyDown={(event) => handleKeyDown(index, event)}
-                  />
-                ))}
-              </div>
-              <div
-                onClick={handleVerifyOtp}
-                className="bg-white flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-md"
-              >
-                {t("misc.verify")}
-              </div>
             </div>
-          ) : (
-            <div className="flex flex-col mx-auto w-[85%] text-white gap-y-3 mt-8">
+            <div className="flex justify-start -mt-1">
+              {otp.map((digit, index) => (
+                <input
+                  ref={index === 0 ? firstInputRef : null}
+                  key={index}
+                  id={`otp-input-${index}`}
+                  type="text"
+                  maxLength={1}
+                  className="w-12 bg-gray-800 outline-white/20 h-12 text-4xl border border-gray-600 rounded mx-1 text-center"
+                  value={digit}
+                  onChange={(event) => handleChange(index, event)}
+                  onKeyDown={(event) => handleKeyDown(index, event)}
+                />
+              ))}
+            </div>
+            <div
+              onClick={handleVerifyOtp}
+              className="bg-white w-full flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-md"
+            >
+              {t("misc.verify")}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col mx-auto w-[85%] text-white gap-y-3 mt-14">
+            {createAcnt && (
               <div className="w-full h-[6.5vh] border-gray-400 border-2 rounded-lg">
                 <input
                   type="text"
@@ -229,66 +330,92 @@ const OnboardPage = (props) => {
                   }}
                 />
               </div>
-              <div className="flex border-gray-400 border-2 rounded-lg h-[6.5vh] gap-2 text-[4vw]">
-                <div
-                  className="flex justify-center items-center gap-1 w-[25%] cursor-pointer relative"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClickHaptic(tele, true);
-                    setIsDropdownOpen((prev) => !prev);
-                  }}
-                >
-                  <h1>{selectedCountry.dialCode}</h1>
-                  <h1 className="text-[3vw]">▼</h1>
-                </div>
-                <div className="w-full">
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
-                    placeholder={t("misc.phone")}
-                    value={phone}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
-                      if (value.length <= 10) setPhone(value);
-                    }}
-                  />
-                </div>
-              </div>
-              {isDropdownOpen && (
-                <div
-                  className="absolute mt-[15vh] max-h-[20vh] w-fit overflow-auto bg-white text-black rounded-md shadow-2xl z-10"
-                  ref={dropdownRef}
-                >
-                  {availableCountries.map((country) => (
-                    <div
-                      key={country.code}
-                      className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleCountrySelect(country)}
-                    >
-                      <span>{country.flag}</span>
-                      <span className="font-medium">{country.dialCode}</span>
+            )}
 
-                      <span>
-                        {country.name.length > 20
-                          ? `${country.name.slice(0, 20)}...`
-                          : country.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="flex border-gray-400 border-2 rounded-lg h-[6.5vh] gap-2 text-[4vw]">
               <div
-                onClick={handleGenerateOtp}
-                className="bg-white active:bg-gray-200 flex justify-center items-center text-black text-[4vw] font-medium py-3 mt-2 rounded-md"
+                className="flex justify-center items-center gap-1 w-[25%] cursor-pointer relative"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickHaptic(tele, true);
+                  setIsDropdownOpen((prev) => !prev);
+                }}
               >
-                {t("misc.getOTP")}
+                <h1>{selectedCountry.dialCode}</h1>
+                <h1 className="text-[3vw]">▼</h1>
+              </div>
+              <div className="w-full">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
+                  placeholder={t("misc.phone")}
+                  value={phone}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "");
+                    if (value.length <= 10) setPhone(value);
+                  }}
+                />
               </div>
             </div>
-          )}
-        </div>
-        <div className="w-full h-full flex justify-center text-[3vw] pb-[2vh] text-gray-600">
+            {isDropdownOpen && (
+              <div
+                className="absolute mt-[15vh] max-h-[20vh] w-fit overflow-auto bg-white text-black rounded-md shadow-2xl z-10"
+                ref={dropdownRef}
+              >
+                {availableCountries.map((country) => (
+                  <div
+                    key={country.code}
+                    className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
+                    onClick={() => handleCountrySelect(country)}
+                  >
+                    <span>{country.flag}</span>
+                    <span className="font-medium">{country.dialCode}</span>
+
+                    <span>
+                      {country.name.length > 20
+                        ? `${country.name.slice(0, 20)}...`
+                        : country.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div
+              onClick={handleGenerateOtp}
+              className="bg-white active:bg-gray-200 flex justify-center items-center text-black text-[4vw] font-medium py-3 mt-2 rounded-md"
+            >
+              {t("misc.getOTP")}
+            </div>
+            {!createAcnt ? (
+              <div className="mx-auto text-[3.5vw] text-gray-500 mt-3">
+                Don't have an account?{" "}
+                <span
+                  onClick={() => {
+                    setCreateAcnt(true);
+                  }}
+                  className="font-medium text-white ml-1"
+                >
+                  Create
+                </span>
+              </div>
+            ) : (
+              <div className="mx-auto text-[3.5vw] text-gray-500 mt-3">
+                Already have an account?{" "}
+                <span
+                  onClick={() => {
+                    setCreateAcnt(false);
+                  }}
+                  className="font-medium text-white ml-1"
+                >
+                  Login
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="w-full flex justify-center text-[3vw] absolute bottom-[2vh] text-gray-600">
           <span className="pr-1 underline cursor-pointer">
             {t("misc.policy")}
           </span>{" "}
@@ -300,15 +427,3 @@ const OnboardPage = (props) => {
 };
 
 export default OnboardPage;
-
-{
-  /* <div className="flex py-1 gap-2 w-full justify-center items-center text-gray-200">
-                <input
-                  type="checkbox"
-                  name="terms"
-                  id="terms"
-                  className="-mt-1"
-                />
-                <div className="text-[3.5vw]">{t("misc.terms")}</div>
-              </div> */
-}
