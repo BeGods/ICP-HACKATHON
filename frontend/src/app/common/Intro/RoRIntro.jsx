@@ -79,7 +79,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
               <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
                 PLAY
               </span> */}
-              <h1 className="text-white font-fof text-[9vw] text-black-contour">
+              <h1 className="text-white font-fof text-[1.75rem] text-black-contour">
                 COMING SOON
               </h1>
             </div>

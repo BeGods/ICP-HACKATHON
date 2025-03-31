@@ -48,7 +48,7 @@ const FoFLoader = (props) => {
                 alt="Button"
                 className="h-auto"
               />
-              <span className="absolute inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[6vw]">
+              <span className="absolute inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
                 LOADING
               </span>
             </div>

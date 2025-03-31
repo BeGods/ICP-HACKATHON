@@ -56,11 +56,7 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
   return (
     <div className="flex w-screen text-wrap">
       <TgHeader hideExit={true} openSettings={() => setShowCard(true)} />
-      <div
-        className={`transition-all ${
-          isTelegram ? "tg-container-height" : "browser-container-height"
-        } duration-500 overflow-hidden relative`}
-      >
+      <div className={`transition-all duration-500 overflow-hidden relative`}>
         <div
           className="slider-container flex transition-transform duration-500"
           style={{

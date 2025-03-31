@@ -24,7 +24,7 @@ const DoDIntro = (props) => {
               />
             </div>
             <div className="relative inline-block">
-              <h1 className="text-gold font-fof text-[9vw] text-black-contour">
+              <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
                 COMING SOON
               </h1>
               {/* <img

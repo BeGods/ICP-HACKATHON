@@ -2,7 +2,10 @@ import React, { useContext, useState } from "react";
 import { ChevronDown, ChevronUp, LogOut, Settings, Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MainContext } from "../../context/context";
-import { handleClickHaptic } from "../../helpers/cookie.helper";
+import {
+  deleteExpCookie,
+  handleClickHaptic,
+} from "../../helpers/cookie.helper";
 import { connectLineWallet, disconnectLineWallet } from "../../utils/api.fof";
 import { connectWallet, initializeWalletSDK } from "../../hooks/LineWallet";
 
@@ -16,11 +19,13 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
 
   const handleConnectLineWallet = async () => {
     try {
-      const { kaiaProvider } = await initializeWalletSDK();
-      const account = await connectWallet(kaiaProvider);
-      if (account) {
-        setLineWallet(account);
-        await connectLineWallet(account, authToken);
+      const { lineProvider } = await initializeWalletSDK();
+      const { accountAddress, signature, message } = await connectWallet(
+        lineProvider
+      );
+      if (accountAddress) {
+        setLineWallet(accountAddress);
+        await connectLineWallet(message, signature, authToken);
       }
     } catch (error) {
       console.log(error);
@@ -45,7 +50,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
 
   return (
     <div
-      className={`absolute flex gap-x-5 ${
+      className={`absolute flex gap-x-5 min-h-[5.5dvh] ${
         isTelegram ? "right-[94px] top-[-35px]" : "right-[20px] top-[-32px]"
       } text-white z-50`}
     >
@@ -67,20 +72,22 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
               )}
             </div>
           ) : (
-            <Wallet onClick={handleConnectLineWallet} />
+            <Wallet size={"1.5rem"} onClick={handleConnectLineWallet} />
           )}
         </>
       )}
       {!hideExit && (
         <LogOut
-          onClick={() => {
+          onClick={async () => {
             handleClickHaptic(tele, enableHaptic);
+            await deleteExpCookie(tele);
             navigate(-1);
           }}
+          size={"1.5rem"}
         />
       )}
       <Settings
-        size={"6vw"}
+        size={"1.5rem"}
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
           openSettings();

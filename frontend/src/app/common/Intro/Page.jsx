@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   authenticateLine,
+  authenticateLineWallet,
   authenticateOneWave,
   authenticateTg,
+  connectLineWallet,
   refreshAuthToken,
 } from "../../../utils/api.fof";
 import {
@@ -23,7 +25,7 @@ import {
 } from "../../../utils/ga";
 import Launcher from "./Launcher";
 import { MainContext } from "../../../context/context";
-import i18next from "i18next";
+import i18next, { changeLanguage } from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
 import { determineIsTelegram } from "../../../utils/device.info";
@@ -32,12 +34,12 @@ import liff from "@line/liff";
 import { validate as isValidUUID } from "uuid";
 import OnboardPage from "../../fof/Onboard/Page";
 import DesktopScreen from "./Desktop";
+import { connectWallet, initializeWalletSDK } from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
 const IntroPage = (props) => {
   const {
-    assets,
     setEnableHaptic,
     enableSound,
     setEnableSound,
@@ -47,13 +49,14 @@ const IntroPage = (props) => {
     setCountry,
     isTelegram,
     setIsTelegram,
+    setLineWallet,
   } = useContext(MainContext);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const oneWaveParam =
     isValidUUID(queryParams.get("onewave")) && queryParams.get("onewave");
   const refer = queryParams.get("refer");
-  const [tokenExpired, setTokenExpired] = useState(false);
+  // const [tokenExpired, setTokenExpired] = useState(false);
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [isBrowser, setIsBrowser] = useState(false);
@@ -169,6 +172,10 @@ const IntroPage = (props) => {
       })
       .then(async () => {
         const idToken = liff.getIDToken();
+        const lang = liff.getAppLanguage();
+        const shortLang = lang.split("-")[0];
+        i18next.changeLanguage(shortLang);
+        setLangCookie(tele, shortLang);
         await lineAuth(idToken);
       });
   };
@@ -189,7 +196,6 @@ const IntroPage = (props) => {
   const checkTokenExpiry = async () => {
     const tokenExpiry = await getExpCookie(tele);
     if (!tokenExpiry || tokenExpiry <= Date.now()) {
-      setTokenExpired(true);
       return true;
     }
     return false;
@@ -224,6 +230,24 @@ const IntroPage = (props) => {
     }
   };
 
+  const handleConnectLineWallet = async () => {
+    try {
+      const { lineProvider } = await initializeWalletSDK();
+      const { accountAddress, signature, message } = await connectWallet(
+        lineProvider
+      );
+      if (accountAddress) {
+        setLineWallet(accountAddress);
+        const response = await authenticateLineWallet(message, signature);
+        setAuthToken(response.data.accessToken);
+        await setAuthCookie(tele, response.data.accessToken);
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
   useEffect(() => {
     getUserData();
     checkTokenExpiry();
@@ -243,21 +267,28 @@ const IntroPage = (props) => {
     };
   }, []);
 
-  const handleAuth = async (isTg) => {
+  const handleAuth = async (isTg, isIsBrowser) => {
     if (isTg) {
-      setTimeout(() => telegramAuth(), 1000);
+      await telegramAuth();
     } else if (liff.isInClient()) {
       setPlatform("line");
-      setTimeout(() => initalizeLine(), 1000);
+      await initalizeLine();
     } else if (oneWaveParam) {
       setPlatform("onewave");
-      setTimeout(() => onewaveAuth(), 1000);
+      await onewaveAuth();
+    } else if (isIsBrowser) {
+      await handleConnectLineWallet();
     }
   };
 
   useEffect(() => {
     if (platform) {
       const isTg = determineIsTelegram(platform);
+      let itIsBrowser = false;
+
+      if (platform === "unknown" && !oneWaveParam && !liff.isInClient()) {
+        itIsBrowser = true;
+      }
 
       (async () => {
         setIsTelegram(isTg);
@@ -271,19 +302,15 @@ const IntroPage = (props) => {
         ) {
           setIsTgDesktop(true);
           setIsBrowser(false);
-        } else if (
-          platform === "unknown" &&
-          !oneWaveParam &&
-          !liff.isInClient()
-        ) {
-          setIsBrowser(true);
         } else {
           setIsBrowser(false);
 
           if (liff.isInClient()) {
-            await handleAuth(isTg);
+            await handleAuth(isTg, itIsBrowser);
           } else {
             const tokenExpiry = await getExpCookie(tele);
+            console.log(tokenExpiry);
+
             if (tokenExpiry) {
               try {
                 await isExistingTknValid(tokenExpiry);
@@ -295,10 +322,10 @@ const IntroPage = (props) => {
                     "Unexpected error occurred, proceeding with login anyway"
                   );
                 }
-                await handleAuth(isTg);
+                await handleAuth(isTg, itIsBrowser);
               }
             } else {
-              await handleAuth(isTg);
+              await handleAuth(isTg, itIsBrowser);
             }
           }
         }
@@ -323,13 +350,6 @@ const IntroPage = (props) => {
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
       {isTgDesktop && !isBrowser ? (
         <DesktopScreen assets={assets} />
-      ) : isBrowser && tokenExpired ? (
-        <OnboardPage
-          handleTokenUpdated={() => {
-            setTokenExpired(false);
-          }}
-          refer={refer || null}
-        />
       ) : (
         <Launcher
           enableSound={enableSound}
@@ -343,3 +363,12 @@ const IntroPage = (props) => {
 };
 
 export default IntroPage;
+
+// : isBrowser && tokenExpired ? (
+//   <OnboardPage
+//     handleTokenUpdated={() => {
+//       setTokenExpired(false);
+//     }}
+//     refer={refer || null}
+//   />
+// )

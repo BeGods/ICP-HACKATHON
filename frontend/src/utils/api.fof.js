@@ -30,6 +30,19 @@ export const authenticateOneWave = async (param) => {
   }
 };
 
+export const authenticateLineWallet = async (message, signature) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/wallet/auth`;
+
+  try {
+    const response = await axios.post(url, { message: message, signature: signature }, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+
 export const authenticateLine = async (param) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
 
@@ -403,11 +416,11 @@ export const disconnectTonWallet = async (accessToken) => {
   }
 };
 
-export const connectLineWallet = async (kaiaAddress, accessToken) => {
+export const connectLineWallet = async (kaiaAddress, signature, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/connect/line`;
 
   try {
-    const response = await axios.post(url, { kaiaAddress: kaiaAddress }, {
+    const response = await axios.post(url, { message: kaiaAddress, signature: signature }, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
