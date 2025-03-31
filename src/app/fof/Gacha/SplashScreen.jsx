@@ -196,7 +196,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
       <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
         <div
           className={`flex relative flex-col items-center cursor-pointer z-50 card ${
-            isTelegram ? "h-[45.35vh] mt-5" : "h-[50svh]"
+            isTelegram ? "h-[45.35vh] mt-5" : "h-[50dvh]"
           }${flipped ? "flipped" : ""}`}
         >
           <div className="card__face card__face--front flex justify-center items-center">
@@ -240,7 +240,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
         <h1
           className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} transition-all duration-1000`}
         >
-          {currReward.type === "mythOrb"
+          {currReward?.type === "mythOrb"
             ? `${
                 t(
                   `elements.${mythElementNames[
@@ -250,17 +250,19 @@ const SplashScreen = ({ reward, exploitReward }) => {
                 " " +
                 t("keywords.orb")
               }`
-            : currReward.type === "blackOrb"
+            : currReward?.type === "blackOrb"
             ? `${t("elements.aether") + " " + t("keywords.orb")}`
-            : currReward.type === "quest"
+            : currReward?.type === "quest"
             ? `${t("sections.quests")}`
+            : currReward?.type === "minion"
+            ? `1 ${
+                wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
+                " ALCHEMIST"
+              }`
             : `1 ${
                 wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
-                  " " +
-                  currReward.type ==
-                "minion"
-                  ? "ALCHEMIST"
-                  : currReward.type.toUpperCase()
+                " " +
+                currReward?.type?.toUpperCase()
               }`}
         </h1>
       </div>

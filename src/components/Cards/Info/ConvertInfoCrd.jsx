@@ -130,7 +130,7 @@ const ConvertInfo = ({ t, handleClick }) => {
       <div className="relative w-[72%] rounded-lg shadow-lg -mt-[30px] flex flex-col z-50">
         <div
           className={`card ${
-            isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50svh] mt-[2vh]"
+            isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
           } ${flipped ? "flipped" : ""}`}
         >
           <div

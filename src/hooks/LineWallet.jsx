@@ -2,6 +2,7 @@ import liff from "@line/liff";
 import DappPortalSDK, { WalletType } from "@linenext/dapp-portal-sdk";
 import { Web3Provider as w3 } from "@kaiachain/ethers-ext/v6";
 import { getPaymentId } from "../utils/api.fof";
+import { v4 as uuidv4 } from "uuid";
 
 export const initializeWalletSDK = async () => {
   return liff
@@ -35,13 +36,21 @@ export const connectWallet = async (provider) => {
       return;
     }
 
-    const accounts = await provider.send("kaia_requestAccounts", []);
+    const accounts = await provider.request({ method: "kaia_requestAccounts" });
+
     if (!accounts || accounts.length === 0) {
       alert("No wallet connected. Please try again.");
       return;
     }
+
     const accountAddress = accounts[0];
-    return accountAddress;
+    const message = uuidv4();
+    const signature = await provider.request({
+      method: "personal_sign",
+      params: [message, accountAddress],
+    });
+
+    return { signature, accountAddress, message };
   } catch (error) {
     console.error("Wallet Connection Error:", error);
     if (error?.data?.message) {

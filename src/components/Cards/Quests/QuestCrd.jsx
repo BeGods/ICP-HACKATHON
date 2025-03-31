@@ -27,7 +27,7 @@ const QuestCard = ({
     >
       <div
         className={`card ${
-          isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50svh] mt-[2vh]"
+          isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
         } ${flipped ? "flipped" : ""}`}
       >
         <div

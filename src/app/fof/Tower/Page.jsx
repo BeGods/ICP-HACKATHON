@@ -157,6 +157,7 @@ const Tower = () => {
     if (enableGuide) {
       setShowCard(
         <TowerGuide
+          isTelegram={isTelegram}
           currGuide={0}
           Header={
             <TowerHeader
@@ -273,7 +274,7 @@ const Tower = () => {
               className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
             >
               <div
-                className={`p-[5.5vw] border flex justify-center items-center rounded-full ${
+                className={`p-[3.5vw] -mt-[9.5dvh] border flex justify-center items-center rounded-full ${
                   myth === 0 ? "bg-black" : `bg-${wheel[myth]}-text`
                 }`}
               >
