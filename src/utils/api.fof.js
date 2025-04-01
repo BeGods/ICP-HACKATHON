@@ -43,12 +43,12 @@ export const authenticateLineWallet = async (message, signature) => {
 };
 
 
-export const authenticateLine = async (param) => {
+export const authenticateLine = async (token, code) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
 
 
   try {
-    const response = await axios.post(url, { token: param }, { withCredentials: true });
+    const response = await axios.post(url, { token: token, code: code }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);

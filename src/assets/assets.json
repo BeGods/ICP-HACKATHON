@@ -66,7 +66,10 @@
         "violet": {
             "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.violet.on.png",
             "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.violet.off.png"
-        }
+        },
+        "line" : "/assets/line.png",
+        "otp" : "/assets/mobile.png",
+        "dapp" : "/assets/dapp.png"
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.greek.base.svg",
