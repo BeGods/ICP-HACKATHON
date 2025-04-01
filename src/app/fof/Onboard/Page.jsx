@@ -408,7 +408,9 @@ const AuthMenu = () => {
 
   const handleLineLogin = async () => {
     try {
-      const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006673823&redirect_uri=${encodeURIComponent(
+      const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
+        import.meta.env.VITE_LINE_CHANNEL
+      }&redirect_uri=${encodeURIComponent(
         `${import.meta.env.VITE_CLIENT}/auth/line/callback`
       )}&state=xyz123abc&scope=profile%20openid%20email&nonce=secureRandomNonce`;
 
