@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { countries } from "../../../utils/country";
 import {
+  authenticateLineWallet,
   fetchOTP,
   fetchResendOTP,
   fetchRewards,
@@ -14,13 +15,18 @@ import {
   handleClickHaptic,
   setAuthCookie,
 } from "../../../helpers/cookie.helper";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import ToastMesg from "../../../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
+import TgHeader from "../../../components/Common/TgHeader";
+import FoFIntro from "../../common/Intro/FoFIntro";
+import RoRIntro from "../../common/Intro/RoRIntro";
+import assets from "../../../assets/assets.json";
+import { connectWallet, initializeWalletSDK } from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
-const OnboardPage = ({ handleTokenUpdated, refer }) => {
+const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const { t } = useTranslation();
@@ -240,190 +246,254 @@ const OnboardPage = ({ handleTokenUpdated, refer }) => {
   }, [createAcnt]);
 
   return (
-    <div
-      className={`relative flex flex-col justify-center ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
-      } w-screen font-roboto bg-black`}
-    >
-      {showVerify && (
-        <div
-          onClick={() => {
-            setShowVerify(false);
-          }}
-          className="absolute p-1 top-0 ml-3"
-        >
-          <ArrowLeft color="white" size={"7vw"} />
+    <div className="absolute z-50 flex flex-col w-[85%] max-w-md p-6 bg-gray-950 text-white rounded-2xl shadow-2xl">
+      {showVerify ? (
+        <div className="flex flex-col items-center gap-5">
+          <div className="w-full flex justify-between items-center">
+            <h2 className="text-lg font-semibold">{t("misc.enterOTP")}</h2>
+            {showCount && (
+              <div
+                className="text-sm cursor-pointer text-gray-400 hover:text-gray-200 transition"
+                onClick={countDown === 0 ? handleResendOtp : null}
+              >
+                {countDown > 0 ? `${countDown}s` : t("misc.resendOTP")}
+              </div>
+            )}
+          </div>
+
+          <div className="flex space-x-3">
+            {otp.map((digit, index) => (
+              <input
+                ref={index === 0 ? firstInputRef : null}
+                key={index}
+                type="text"
+                maxLength={1}
+                className="w-12 h-12 text-2xl text-center bg-gray-800 border border-gray-600 rounded-lg outline-none focus:border-white transition"
+                value={digit}
+                onChange={(event) => handleChange(index, event)}
+                onKeyDown={(event) => handleKeyDown(index, event)}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={handleVerifyOtp}
+            className="w-full py-3 text-black font-semibold bg-white rounded-lg hover:bg-gray-300 transition"
+          >
+            {t("misc.verify")}
+          </button>
+          <p
+            onClick={() => {
+              setShowVerify(false);
+            }}
+            className="text-center text-sm text-gray-400 underline"
+          >
+            Go back
+          </p>
         </div>
-      )}
-
-      <div className="w-full h-fit -mt-[18vh]">
-        <img
-          src="https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.white.svg"
-          alt="fof"
-          className="w-1/4 opacity-95 mx-auto scale-loader-glow"
-        />
-
-        {showVerify ? (
-          <div className="flex flex-col items-center mx-auto w-[85%] text-white mt-14 gap-y-4">
-            <div className="flex justify-between w-full">
-              <div className="text-lg font-medium w-full">
-                {t("misc.enterOTP")}
-              </div>
-              <div className="w-full">
-                {showCount && (
-                  <div
-                    onClick={() => {
-                      if (countDown === 0) {
-                        handleResendOtp();
-                      }
-                    }}
-                    className="flex text-md cursor-pointer justify-end w-full font-medium"
-                  >
-                    {countDown > 0 ? (
-                      <div className="pl-2">{countDown}s</div>
-                    ) : (
-                      <div
-                        onClick={handleResendOtp}
-                        className="cursor-pointer underline"
-                      >
-                        {t("misc.resendOTP")}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {createAcnt && (
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full px-4 py-3 text-lg bg-gray-800 border border-gray-600 rounded-lg outline-none focus:border-white transition"
+                placeholder="Username"
+                value={name}
+                onChange={(e) =>
+                  setName(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))
+                }
+              />
             </div>
-            <div className="flex justify-start -mt-1">
-              {otp.map((digit, index) => (
-                <input
-                  ref={index === 0 ? firstInputRef : null}
-                  key={index}
-                  id={`otp-input-${index}`}
-                  type="text"
-                  maxLength={1}
-                  className="w-12 bg-gray-800 outline-white/20 h-12 text-4xl border border-gray-600 rounded mx-1 text-center"
-                  value={digit}
-                  onChange={(event) => handleChange(index, event)}
-                  onKeyDown={(event) => handleKeyDown(index, event)}
-                />
+          )}
+
+          <div className="flex border border-gray-600 rounded-lg bg-gray-800 overflow-hidden">
+            <button
+              className="flex items-center justify-center w-[30%] px-3 bg-gray-700 hover:bg-gray-600 transition"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDropdownOpen((prev) => !prev);
+              }}
+            >
+              {selectedCountry.dialCode} ▼
+            </button>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              className="w-full px-4 py-3 text-lg bg-gray-800 outline-none"
+              placeholder={t("misc.phone")}
+              value={phone}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                if (value.length <= 10) setPhone(value);
+              }}
+            />
+          </div>
+
+          {isDropdownOpen && (
+            <div
+              className="absolute mt-2 max-h-60 w-full bg-white text-black rounded-lg shadow-lg overflow-auto"
+              ref={dropdownRef}
+            >
+              {availableCountries.map((country) => (
+                <div
+                  key={country.code}
+                  className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-200 transition"
+                  onClick={() => handleCountrySelect(country)}
+                >
+                  <span>{country.flag}</span>
+                  <span className="font-medium">{country.dialCode}</span>
+                  <span>
+                    {country.name.length > 20
+                      ? `${country.name.slice(0, 20)}...`
+                      : country.name}
+                  </span>
+                </div>
               ))}
             </div>
-            <div
-              onClick={handleVerifyOtp}
-              className="bg-white w-full flex justify-center items-center text-black text-[4vw] font-medium py-3 rounded-md"
-            >
-              {t("misc.verify")}
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col mx-auto w-[85%] text-white gap-y-3 mt-14">
-            {createAcnt && (
-              <div className="w-full h-[6.5vh] border-gray-400 border-2 rounded-lg">
-                <input
-                  type="text"
-                  className="w-full text-[4vw] px-4 h-full bg-inherit outline-none"
-                  placeholder={`Username`}
-                  value={name}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
-                    setName(value);
-                  }}
-                />
-              </div>
-            )}
+          )}
 
-            <div className="flex border-gray-400 border-2 rounded-lg h-[6.5vh] gap-2 text-[4vw]">
-              <div
-                className="flex justify-center items-center gap-1 w-[25%] cursor-pointer relative"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClickHaptic(tele, true);
-                  setIsDropdownOpen((prev) => !prev);
-                }}
-              >
-                <h1>{selectedCountry.dialCode}</h1>
-                <h1 className="text-[3vw]">▼</h1>
-              </div>
-              <div className="w-full">
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  className="w-full text-[4vw] px-2 h-full bg-inherit outline-none"
-                  placeholder={t("misc.phone")}
-                  value={phone}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "");
-                    if (value.length <= 10) setPhone(value);
-                  }}
-                />
-              </div>
-            </div>
-            {isDropdownOpen && (
-              <div
-                className="absolute mt-[15vh] max-h-[20vh] w-fit overflow-auto bg-white text-black rounded-md shadow-2xl z-10"
-                ref={dropdownRef}
-              >
-                {availableCountries.map((country) => (
-                  <div
-                    key={country.code}
-                    className="flex items-center gap-2 px-3 py-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => handleCountrySelect(country)}
-                  >
-                    <span>{country.flag}</span>
-                    <span className="font-medium">{country.dialCode}</span>
+          <button
+            onClick={handleGenerateOtp}
+            className="w-full py-3 text-lg font-semibold text-black bg-white rounded-lg hover:bg-gray-300 transition"
+          >
+            {t("misc.getOTP")}
+          </button>
 
-                    <span>
-                      {country.name.length > 20
-                        ? `${country.name.slice(0, 20)}...`
-                        : country.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div
-              onClick={handleGenerateOtp}
-              className="bg-white active:bg-gray-200 flex justify-center items-center text-black text-[4vw] font-medium py-3 mt-2 rounded-md"
+          <p className="text-center text-sm text-gray-400">
+            {createAcnt ? "Already have an account?" : "Don't have an account?"}
+            <span
+              onClick={() => setCreateAcnt(!createAcnt)}
+              className="ml-1 font-medium text-white cursor-pointer hover:underline"
             >
-              {t("misc.getOTP")}
-            </div>
-            {!createAcnt ? (
-              <div className="mx-auto text-[3.5vw] text-gray-500 mt-3">
-                Don't have an account?{" "}
-                <span
-                  onClick={() => {
-                    setCreateAcnt(true);
-                  }}
-                  className="font-medium text-white ml-1"
-                >
-                  Create
-                </span>
-              </div>
-            ) : (
-              <div className="mx-auto text-[3.5vw] text-gray-500 mt-3">
-                Already have an account?{" "}
-                <span
-                  onClick={() => {
-                    setCreateAcnt(false);
-                  }}
-                  className="font-medium text-white ml-1"
-                >
-                  Login
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-        <div className="w-full flex justify-center text-[3vw] absolute bottom-[2vh] text-gray-600">
-          <span className="pr-1 underline cursor-pointer">
-            {t("misc.policy")}
-          </span>{" "}
-          | @Frogdog Games 2025
+              {createAcnt ? "Login" : "Create"}
+            </span>
+          </p>
         </div>
+      )}
+      <div
+        onClick={closeModal}
+        className="absolute top-0 right-0 -mt-4 -mr-4 bg-black p-1 rounded-full"
+      >
+        <X size={"1.75rem"} />
       </div>
     </div>
   );
 };
 
+const AuthMenu = () => {
+  const [showMobileAuth, setShowMobileAuth] = useState(false);
+  const { setLineWallet, setAuthToken } = useContext(MainContext);
+  const { t } = useTranslation();
+
+  const handleConnectLineWallet = async () => {
+    try {
+      const { lineProvider } = await initializeWalletSDK();
+      const { accountAddress, signature, message } = await connectWallet(
+        lineProvider
+      );
+      if (accountAddress) {
+        setLineWallet(accountAddress);
+        const response = await authenticateLineWallet(message, signature);
+        setAuthToken(response.data.accessToken);
+        await setAuthCookie(tele, response.data.accessToken);
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Failed");
+    }
+  };
+
+  const handleLineLogin = async () => {
+    try {
+      const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2006673823&redirect_uri=${encodeURIComponent(
+        `${import.meta.env.VITE_CLIENT}/auth/line/callback`
+      )}&state=xyz123abc&scope=profile%20openid%20email&nonce=secureRandomNonce`;
+
+      window.location.href = lineAuthUrl;
+    } catch (error) {
+      console.log("LINE login error:", error);
+    }
+  };
+
+  return (
+    <div
+      className="absolute ml-[150vw] top-0 bottom-0 left-0 w-screen h-full z-[99]"
+      style={{
+        background: `url(${assets.uxui.dodsplash}) no-repeat center / cover`,
+        backgroundPosition: "45.75% 0%",
+      }}
+    >
+      <div className={`flex  flex-col h-full items-center justify-center`}>
+        {showMobileAuth && (
+          <OnboardOTP closeModal={() => setShowMobileAuth(false)} />
+        )}
+
+        <div className="absolute flex flex-col justify-between items-center h-full py-[3.5dvh]">
+          <img
+            src={assets.logos.begodsBlack}
+            alt="logo"
+            className="w-[85px] begod-text-shadow pointer-events-none"
+          />
+          {!showMobileAuth && (
+            <div className="flex flex-col z-[99] gap-[1.5dvh] mb-[8dvh]">
+              <div>
+                <img
+                  src={assets.buttons.otp}
+                  alt="otp-button"
+                  className="begod-text-shadow w-[215px]"
+                  onClick={() => {
+                    setShowMobileAuth(true);
+                  }}
+                />
+              </div>
+              <img
+                src={assets.buttons.line}
+                alt="line-button"
+                className="begod-text-shadow w-[215px]"
+                onClick={handleLineLogin}
+              />
+              <img
+                src={assets.buttons.dapp}
+                alt="dapp-button"
+                className="begod-text-shadow w-[215px]"
+                onClick={handleConnectLineWallet}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="w-full flex justify-center text-[0.75rem] absolute bottom-[1.5dvh] mx-auto text-gray-600">
+        <span className="pr-1 underline cursor-pointer">
+          {t("misc.policy")}
+        </span>{" "}
+        | © 2025 Frogdog Games
+      </div>
+    </div>
+  );
+};
+
+const OnboardPage = () => {
+  return (
+    <div className="flex w-screen text-wrap">
+      <TgHeader hideExit={true} openSettings={() => {}} />
+      <div className={`transition-all duration-500 overflow-hidden relative`}>
+        <div
+          className="slider-container flex transition-transform duration-500"
+          style={{
+            width: "400vw",
+            transform: `translateX(-150vw)`,
+          }}
+        >
+          <FoFIntro />
+          <RoRIntro />
+          <AuthMenu />
+        </div>
+      </div>
+    </div>
+  );
+};
 export default OnboardPage;

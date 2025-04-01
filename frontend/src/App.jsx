@@ -16,6 +16,7 @@ import {
   fetchHapticStatus,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
+import LineCallback from "./app/common/LineCallback";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -87,6 +88,7 @@ function App() {
       <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
         <Routes>
           <Route path="/" element={<IntroPage />} />
+          <Route path="/auth/line/callback" element={<LineCallback />} />
           <Route path="/fof" element={<FoFMain />} />
           <Route path="/ror" element={<RoRMain />} />
         </Routes>

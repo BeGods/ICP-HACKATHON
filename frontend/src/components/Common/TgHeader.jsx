@@ -1,5 +1,12 @@
 import React, { useContext, useState } from "react";
-import { ChevronDown, ChevronUp, LogOut, Settings, Wallet } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronUp,
+  LogOut,
+  Settings,
+  Wallet,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MainContext } from "../../context/context";
 import {
@@ -11,7 +18,7 @@ import { connectWallet, initializeWalletSDK } from "../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
-const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
+const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
   const { enableHaptic, isTelegram, authToken, setLineWallet, lineWallet } =
     useContext(MainContext);
   const [showModal, setShowModal] = useState(false);
@@ -50,7 +57,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
 
   return (
     <div
-      className={`absolute flex gap-x-5 min-h-[5.5dvh] ${
+      className={`absolute flex gap-x-5 ${
         isTelegram ? "right-[94px] top-[-35px]" : "right-[20px] top-[-32px]"
       } text-white z-50`}
     >

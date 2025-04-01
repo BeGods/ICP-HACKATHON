@@ -56,7 +56,7 @@ const IntroPage = (props) => {
   const oneWaveParam =
     isValidUUID(queryParams.get("onewave")) && queryParams.get("onewave");
   const refer = queryParams.get("refer");
-  // const [tokenExpired, setTokenExpired] = useState(false);
+  const [tokenExpired, setTokenExpired] = useState(false);
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [isBrowser, setIsBrowser] = useState(false);
@@ -123,7 +123,7 @@ const IntroPage = (props) => {
     if (!lineCalledRef.current) {
       lineCalledRef.current = true;
       try {
-        const response = await authenticateLine(idToken);
+        const response = await authenticateLine(idToken, null);
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
       } catch (error) {
@@ -196,6 +196,7 @@ const IntroPage = (props) => {
   const checkTokenExpiry = async () => {
     const tokenExpiry = await getExpCookie(tele);
     if (!tokenExpiry || tokenExpiry <= Date.now()) {
+      setTokenExpired(true);
       return true;
     }
     return false;
@@ -230,24 +231,6 @@ const IntroPage = (props) => {
     }
   };
 
-  const handleConnectLineWallet = async () => {
-    try {
-      const { lineProvider } = await initializeWalletSDK();
-      const { accountAddress, signature, message } = await connectWallet(
-        lineProvider
-      );
-      if (accountAddress) {
-        setLineWallet(accountAddress);
-        const response = await authenticateLineWallet(message, signature);
-        setAuthToken(response.data.accessToken);
-        await setAuthCookie(tele, response.data.accessToken);
-      }
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    }
-  };
-
   useEffect(() => {
     getUserData();
     checkTokenExpiry();
@@ -267,7 +250,7 @@ const IntroPage = (props) => {
     };
   }, []);
 
-  const handleAuth = async (isTg, isIsBrowser) => {
+  const handleAuth = async (isTg) => {
     if (isTg) {
       await telegramAuth();
     } else if (liff.isInClient()) {
@@ -276,19 +259,12 @@ const IntroPage = (props) => {
     } else if (oneWaveParam) {
       setPlatform("onewave");
       await onewaveAuth();
-    } else if (isIsBrowser) {
-      await handleConnectLineWallet();
     }
   };
 
   useEffect(() => {
     if (platform) {
       const isTg = determineIsTelegram(platform);
-      let itIsBrowser = false;
-
-      if (platform === "unknown" && !oneWaveParam && !liff.isInClient()) {
-        itIsBrowser = true;
-      }
 
       (async () => {
         setIsTelegram(isTg);
@@ -302,14 +278,19 @@ const IntroPage = (props) => {
         ) {
           setIsTgDesktop(true);
           setIsBrowser(false);
+        } else if (
+          platform === "unknown" &&
+          !oneWaveParam &&
+          !liff.isInClient()
+        ) {
+          setIsBrowser(true);
         } else {
           setIsBrowser(false);
 
           if (liff.isInClient()) {
-            await handleAuth(isTg, itIsBrowser);
+            await handleAuth(isTg);
           } else {
             const tokenExpiry = await getExpCookie(tele);
-            console.log(tokenExpiry);
 
             if (tokenExpiry) {
               try {
@@ -322,10 +303,10 @@ const IntroPage = (props) => {
                     "Unexpected error occurred, proceeding with login anyway"
                   );
                 }
-                await handleAuth(isTg, itIsBrowser);
+                await handleAuth(isTg);
               }
             } else {
-              await handleAuth(isTg, itIsBrowser);
+              await handleAuth(isTg);
             }
           }
         }
@@ -350,6 +331,13 @@ const IntroPage = (props) => {
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
       {isTgDesktop && !isBrowser ? (
         <DesktopScreen assets={assets} />
+      ) : isBrowser && tokenExpired ? (
+        <OnboardPage
+          handleTokenUpdated={() => {
+            setTokenExpired(false);
+          }}
+          refer={refer || null}
+        />
       ) : (
         <Launcher
           enableSound={enableSound}
@@ -372,3 +360,7 @@ export default IntroPage;
 //     refer={refer || null}
 //   />
 // )
+
+// else if (isBrowser) {
+//   await handleConnectLineWallet();
+// }
