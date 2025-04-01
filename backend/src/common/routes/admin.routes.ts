@@ -2,7 +2,10 @@ import { updateLeadboardRanks } from "../../fof/controllers/general.fof.controll
 import cron from "node-cron";
 import express from "express";
 import config from "../../config/config";
-import { authMiddleware } from "../middlewares/auth.middlewares";
+import {
+  adminMiddleware,
+  authMiddleware,
+} from "../middlewares/auth.middlewares";
 import {
   createPartner,
   createQuest,
@@ -11,7 +14,6 @@ import {
   getHourlyUsers,
   getTotalUsers,
   ping,
-  updateDailyQuest,
 } from "../controllers/admin.controllers";
 const router = express.Router();
 
@@ -24,18 +26,22 @@ router.get(`/${config.security.ADMIN_KEY}/dailyUsers`, getDailyUsers);
 router.get(`/${config.security.ADMIN_KEY}/hourlyUsers`, getHourlyUsers);
 router.get(`/${config.security.ADMIN_KEY}/activeUsers`, getActiveUsers);
 
-// manually update leaderboard
-router.get(`/${config.security.ADMIN_KEY}/leaderboard`, updateLeadboardRanks);
+// admin: update leaderboard
+router.get(
+  `/${config.security.ADMIN_KEY}/leaderboard`,
+  adminMiddleware,
+  updateLeadboardRanks
+);
 
-// manually create quest
+// admin: create quest
 router.post(
   `/${config.security.ADMIN_KEY}/quests/create`,
-  authMiddleware,
+  adminMiddleware,
   createQuest
 );
 
-// add partner
-router.post("/partners/create", authMiddleware, createPartner);
+// admin: create partner
+router.post("/partners/create", adminMiddleware, createPartner);
 
 // migrate db
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, updateFileCode);

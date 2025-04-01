@@ -8,6 +8,7 @@ import {
   updateMultiAutomata,
   updateMultiBurst,
 } from "../../fof/services/boosters.fof.services";
+import { verifyMessage } from "ethers";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -51,10 +52,12 @@ export const disconnectTonWallet = async (req, res) => {
 export const connectLineWallet = async (req, res) => {
   try {
     const user = req.user;
-    const { kaiaAddress } = req.body;
+    const { signature, message } = req.body;
 
-    if (kaiaAddress) {
-      user.kaiaAddress = kaiaAddress;
+    const recoveredAddress = verifyMessage(message, signature);
+
+    if (recoveredAddress) {
+      user.kaiaAddress = recoveredAddress;
       await user.save();
     }
 
@@ -189,8 +192,7 @@ export const createLinePayment = async (req, res) => {
       pgType: "CRYPTO",
       currencyCode: "KAIA",
       price: boosters[booster].price,
-      confirmCallbackUrl:
-        "https://2r2cf484-3001.inc1.devtunnels.ms/api/v1/line/paymentStatus",
+      confirmCallbackUrl: `${config.source.server}/api/v1/line/paymentStatus`,
       items: [
         {
           itemIdentifier: boosters[booster].itemIdentifier,

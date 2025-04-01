@@ -4,6 +4,7 @@ import {
   decryptLineData,
   decryptTelegramData,
   generateAuthToken,
+  getLineIdToken,
   validateRefreshToken,
 } from "../services/auth.services";
 import {
@@ -28,6 +29,7 @@ import {
 } from "../services/redis.services";
 import { v4 as uuidv4 } from "uuid";
 import { generateAliOTP, verifyOtp } from "../services/otp.services";
+import { verifyMessage } from "ethers";
 
 // login
 export const authenticateTg = async (
@@ -220,11 +222,16 @@ export const authenticateLine = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { token } = req.body;
+    const { token, code } = req.body;
 
+    let idToken = token;
     let isUpdated = false;
 
-    const { lineId, lineName, photoUrl } = await decryptLineData(token);
+    if (code && !idToken) {
+      idToken = await getLineIdToken(code);
+    }
+
+    const { lineId, lineName, photoUrl } = await decryptLineData(idToken);
 
     let existingUser: IUser | null = await User.findOne({ lineId: lineId });
 
@@ -258,6 +265,55 @@ export const authenticateLine = async (
         }),
       };
 
+      // create new  user
+      existingUser = await addNewLineUser(newUser);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const { accessToken } = await generateAuthToken(existingUser, res);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateKaiaAddr = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { signature, message } = req.body;
+
+    const recoveredAddress = verifyMessage(message, signature);
+
+    if (!recoveredAddress) {
+      res.status(400).json({
+        message: "Invalid address.",
+      });
+      return;
+    }
+
+    let existingUser: IUser | null = await User.findOne({
+      kaiaAddress: recoveredAddress,
+    });
+
+    if (existingUser) {
+    } else {
+      let newUser: Partial<IUser> = {
+        kaiaAddress: recoveredAddress,
+      };
       // create new  user
       existingUser = await addNewLineUser(newUser);
       await createDefaultUserMyth(existingUser);
