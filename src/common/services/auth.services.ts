@@ -4,6 +4,7 @@ import { validate, parse } from "@tma.js/init-data-node";
 import axios from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import User from "../models/user.models";
+import qs from "qs";
 
 const getTokenExpiryMs = (expiry: string): number => {
   const timeUnit = expiry.slice(-1);
@@ -218,5 +219,46 @@ export const decryptLineData = async (token) => {
     return { lineId, lineName, photoUrl };
   } catch (error) {
     throw new Error(error);
+  }
+};
+
+export const getLineIdToken = async (code) => {
+  try {
+    if (!code) {
+      throw new Error("Invalid input. Line code is required.");
+    }
+
+    const agent = new HttpsProxyAgent(config.source.PROXY_SERVER_JP);
+
+    const data = qs.stringify({
+      grant_type: "authorization_code",
+      code: code,
+      redirect_uri: config.source.client + "/auth/line/callback",
+      client_id: config.security.LINE_CHANNEL_ID,
+      client_secret: config.security.LINE_CHANNEL_SECRET,
+    });
+
+    const response = await axios.post(
+      "https://api.line.me/oauth2/v2.1/token",
+      data,
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        httpsAgent: agent,
+      }
+    );
+
+    if (!response.data) {
+      throw new Error("Invalid response from LINE API.");
+    }
+
+    return response.data.id_token;
+  } catch (error) {
+    console.error(
+      "Error fetching LINE ID token:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.error_description || "Failed to retrieve token."
+    );
   }
 };

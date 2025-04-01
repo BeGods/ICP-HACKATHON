@@ -25,7 +25,6 @@ app.use(express.json());
 app.use(limiter);
 app.set("trust proxy", 1);
 
-// Enhanced CORS handling with logging
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -37,7 +36,7 @@ app.use(
     },
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -50,7 +49,7 @@ morgan.token("body", (req) => JSON.stringify(req.body));
 morgan.token("origin", (req) => req.headers.origin || "No-Origin");
 
 const loggerFormat =
-  ":remote-addr - :method :url :status - :response-time ms - Origin: :origin - Body: :body";
+  ":remote-addr - :method :url :status - :response-time ms - Origin: :origin";
 
 app.use(morgan(loggerFormat));
 
