@@ -27,7 +27,7 @@ import {
 } from "../../../utils/api.fof";
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { Clapperboard, Star } from "lucide-react";
+import { Clapperboard, Star, X } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
@@ -37,6 +37,101 @@ import {
 } from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
+
+const PayModal = ({
+  t,
+  activeMyth,
+  assets,
+  activeCard,
+  closeModal,
+  handlePayment,
+  isLoading,
+}) => {
+  const [dots, setDots] = useState(1);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev === 3 ? 1 : prev + 1));
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative w-[72%] h-[55%] flex items-center justify-center rounded-primary card-shadow-white">
+      {!isLoading && (
+        <div className="absolute text-card z-50 top-0 w-full text-center text-paperHead font-bold mt-2 uppercase">
+          <div>{t(`buttons.pay`)}</div>
+        </div>
+      )}
+
+      <div
+        className={`absolute inset-0 rounded-primary`}
+        style={{
+          backgroundImage: `${`url(${assets.uxui.info})`}`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center center ",
+        }}
+      />
+      {!isLoading ? (
+        <div className="relative h-full w-full flex flex-col justify-center items-center">
+          <div className="flex flex-col gap-y-4 mt-6">
+            <div
+              onClick={() => handlePayment("kaia")}
+              className="flex z-50 relative flex-col justify-center items-center w-full"
+            >
+              <div
+                className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
+              >
+                <img src={assets.uxui.kaia} alt="kaia" className="w-[9vw]" />
+                <div className="font-medium text-[40px] text-white glow-text-black">
+                  {activeCard === "automata" ? 0.01 : 0.03}
+                </div>
+              </div>
+            </div>
+            <div className="flex z-50 relative flex-col justify-center items-center w-full">
+              <div
+                onClick={() => handlePayment("stripe")}
+                className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
+              >
+                <div className="font-medium text-[40px] text-white glow-text-black">
+                  $
+                </div>
+                <div className="font-medium text-[40px] text-white glow-text-black">
+                  {activeCard === "automata" ? 1 : 3}
+                </div>
+              </div>
+            </div>
+            <div className="leading-[18px] text-para mt-1 text-left mx-auto w-[85%] text-card font-[550]">
+              <h2 className={`font-medium uppercase mb-1`}>Note: </h2>
+              <p>1. You agree that the product(s) is/are non-refundable.</p>
+              <p>
+                2. If paid via LINE IAP, you agree to providing encrypted ID
+                info to LY Corporation.
+              </p>
+            </div>
+          </div>
+          <IconBtn
+            isInfo={false}
+            activeMyth={activeMyth}
+            handleClick={closeModal}
+            align={0}
+          />
+        </div>
+      ) : (
+        <div className="relative h-full w-full flex flex-col justify-center items-center">
+          <div className="text-card  font-fof">
+            <div className="w-full relative font-medium text-[1.5rem]">
+              {t("keywords.load")}
+              <span className="absolute">{`${".".repeat(dots)}`}</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const BoosterClaim = ({
   activeCard,
@@ -67,6 +162,7 @@ const BoosterClaim = ({
   const adsgramId = import.meta.env.VITE_AD_BOOSTER;
   const myths = ["greek", "celtic", "norse", "egyptian", "other"];
   const [activeColor, setActiveColor] = useState(0);
+  const [showPayModal, setShowPayModal] = useState(false);
   const [dots, setDots] = useState(1);
 
   useEffect(() => {
@@ -475,19 +571,29 @@ const BoosterClaim = ({
     }
   };
 
-  const handleLinePayment = async () => {
+  const handleLinePayment = async (paymentMethod) => {
     setPayIsActive(true);
 
     const { paymentProvider, lineProvider } = await initializePaymentSDK();
-    const paymentStatus = await createLinePayment(
+
+    const paymentPromise = createLinePayment(
+      paymentMethod,
       paymentProvider,
       lineProvider,
       authToken,
       activeCard
     );
 
+    const timeoutPromise = new Promise((resolve) =>
+      setTimeout(() => resolve(false), 180000)
+    );
+
+    const paymentStatus = await Promise.race([paymentPromise, timeoutPromise]);
+
     if (paymentStatus === true) {
       handleUpdatePayReward();
+      setShowCard(null);
+      setPayIsActive(false);
     } else {
       showToast("error_payment");
       setShowCard(null);
@@ -503,256 +609,287 @@ const BoosterClaim = ({
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
-      {((activeCard === "automata" &&
-        !boostersData?.isAutomataActive &&
-        !isAutoPay) ||
-        (activeCard === "minion" &&
-          boostersData?.isShardsClaimActive &&
-          !isAutoPay)) &&
-        isTelegram && (
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              showAd();
-            }}
-            className="absolute flex items-center justify-center top-0 w-screen pt-2"
-          >
-            <div className="flex uppercase flex-col items-center gap-2 w-fit">
-              <div className="flex relative items-center justify-center">
-                <Clapperboard color="#ffd660" size={"16vw"} />
-              </div>
-              <div className="flex flex-col text-white">
-                <div className="text-[6vw] -mt-2">
-                  <span className="text-gold">Watch</span> {t("note.ad")}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-      {((activeCard === "automata" &&
-        !boostersData?.isAutomataActive &&
-        isAutoPay) ||
-        (activeCard === "burst" &&
-          boostersData?.isShardsClaimActive &&
-          isAutoPay)) &&
-        !payIsActive &&
-        isTelegram && (
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              handleGenerateInvoice();
-            }}
-            className="absolute flex items-center justify-center top-0 w-screen pt-2"
-          >
-            <div className="flex uppercase flex-col items-center gap-2 w-fit">
-              <div className="flex relative items-center justify-center">
-                <div className="text-white text-black-contour mt-1 z-10 absolute text-[8vw]">
-                  {activeCard === "automata" ? 1 : 3}
-                </div>{" "}
-                <img
-                  src={assets.uxui.tgStar}
-                  alt="star"
-                  className="w-[18vw] h-[18vw]"
-                />
-              </div>
-              <div className="flex flex-col text-white">
-                <div className="text-[6vw] -mt-2">
-                  <span className="text-gold">{t("buttons.pay")}</span>{" "}
-                  {t("note.ad")}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-      {((activeCard === "automata" &&
-        !boostersData?.isAutomataActive &&
-        isAutoPay) ||
-        (activeCard === "burst" &&
-          boostersData?.isShardsClaimActive &&
-          isAutoPay)) &&
-        !payIsActive &&
-        !isTelegram && (
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              handleLinePayment();
-            }}
-            className="absolute flex items-center justify-center top-0 w-screen pt-2"
-          >
-            <div className="flex uppercase flex-col items-center gap-2 w-fit">
-              <div className="flex gap-x-2 relative items-center justify-center">
-                <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
-                  {activeCard === "automata" ? 0.01 : 0.03}
-                </div>{" "}
-                <img src={assets.uxui.kaia} alt="star" className="h-[6vw]" />
-              </div>
-              <div className="flex flex-col text-white">
-                <div className="text-[6vw] -mt-3">
-                  <span className="text-gold">{t("buttons.pay")}</span>{" "}
-                  {t("note.ad")}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-      {((activeCard === "automata" &&
-        !boostersData?.isAutomataActive &&
-        isAutoPay) ||
-        (activeCard === "burst" &&
-          boostersData?.isShardsClaimActive &&
-          isAutoPay)) &&
-        payIsActive && (
-          <div className="absolute flex items-center justify-center top-0 w-screen pt-2">
-            <div className="flex uppercase flex-col items-center gap-2 w-fit">
-              <div className="flex pt-8 relative items-center justify-center">
-                <div className="text-white text-black-contour  text-[8vw]">
-                  <div className="w-full relative font-medium text-secondary">
-                    {t("keywords.load")}
-                    <span className="absolute">{`${".".repeat(dots)}`}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      <div
-        onClick={() => {
-          const conditions = {
-            automata: [
-              gameData?.isAutomataAutoActive === -1 && isAutoPay,
-              !mythData?.isAutomataActive && !isAutoPay,
-            ],
-            minion: [mythData?.isShardsClaimActive],
-            burst: [
-              !mythData.isBurstActive,
-              !mythData.isBurstActive &&
-                mythData?.isBurstActiveToClaim &&
-                !isAutoPay,
-              !mythData.isBurstActive &&
-                hasTimeElapsed(gameData.autoPayBurstExpiry) &&
-                isAutoPay,
-            ],
-            moon: [!gameData.isMoonActive],
-          };
-
-          const shouldHandleButton = conditions[activeCard]?.some(Boolean);
-
-          if (shouldHandleButton) {
-            handleButton();
-          }
-        }}
-        className="absolute  w-[72%] h-[50%] mt-10 cursor-pointer z-50 rounded-primary"
-      ></div>
-      {section === 2 && (
-        <div className="flex gap-3 absolute bottom-5">
-          <div className="flex gap-1 items-center">
-            <div
-              className={`flex relative text-center justify-center max-w-orb p-0.5 items-center rounded-full glow-icon-white`}
-            >
-              <img src={assets.uxui.multiorb} alt="orb" />
-            </div>
-            <div
-              className={`font-fof text-[28px] font-normal text-white text-black-sm-contour transition-all duration-1000`}
-            >
-              {gameData.multiColorOrbs}
-            </div>
-          </div>
-        </div>
-      )}
-      <div className="relative w-[72%] h-[55%] mt-[70px] flex items-center justify-center rounded-primary card-shadow-white">
-        <div
-          className={`absolute inset-0 rounded-primary`}
-          style={{
-            backgroundImage: `${`url(${
-              assets.boosters[
-                `${activeCard === "minion" ? "alchemist" : activeCard}Card`
-              ]
-            })`}`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center ",
-          }}
-        />
-        <div className="relative h-full w-full flex flex-col items-center">
-          <div className="flex z-50 relative flex-col justify-center items-center h-full w-full">
-            {!disableIcon && (
-              <IconBtn
-                isInfo={false}
-                activeMyth={activeMyth}
-                handleClick={closeCard}
-                align={0}
-              />
-            )}
-            <div
-              className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
-            >
+      {!showPayModal ? (
+        <>
+          {((activeCard === "automata" &&
+            !boostersData?.isAutomataActive &&
+            !isAutoPay) ||
+            (activeCard === "minion" &&
+              boostersData?.isShardsClaimActive &&
+              !isAutoPay)) &&
+            isTelegram && (
               <div
-                style={{
-                  backgroundImage: `url(${assets.uxui.paper})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  height: "100%",
-                  width: "100%",
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  showAd();
                 }}
-                className={`rounded-b-primary filter-paper-${
-                  !isAutoPay &&
-                  activeCard !== "moon" &&
-                  mythSections[activeMyth]
-                }`}
-              />
-              {activeCard === "moon" ? (
-                <div className="flex justify-center items-center w-full">
-                  <div
-                    className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeColor]} `}
-                  >
+                className="absolute flex items-center justify-center top-0 w-screen pt-2"
+              >
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex relative items-center justify-center">
+                    <Clapperboard color="#ffd660" size={"16vw"} />
+                  </div>
+                  <div className="flex flex-col text-white">
+                    <div className="text-[6vw] -mt-2">
+                      <span className="text-gold">Watch</span> {t("note.ad")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {((activeCard === "automata" &&
+            !boostersData?.isAutomataActive &&
+            isAutoPay) ||
+            (activeCard === "burst" &&
+              boostersData?.isShardsClaimActive &&
+              isAutoPay)) &&
+            !payIsActive &&
+            isTelegram && (
+              <div
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  handleGenerateInvoice();
+                }}
+                className="absolute flex items-center justify-center top-0 w-screen pt-2"
+              >
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex relative items-center justify-center">
+                    <div className="text-white text-black-contour mt-1 z-10 absolute text-[8vw]">
+                      {activeCard === "automata" ? 1 : 3}
+                    </div>{" "}
                     <img
-                      src={assets.uxui.baseorb}
-                      alt="orb"
-                      className={`filter-orbs-${mythSections[activeColor]} overflow-hidden max-w-[14vw]`}
+                      src={assets.uxui.tgStar}
+                      alt="star"
+                      className="w-[18vw] h-[18vw]"
                     />
-                    <span
-                      className={`absolute z-1  text-black-sm-contour transition-all duration-1000 text-white  font-symbols  text-[10vw] mt-1 opacity-50`}
-                    >
-                      {mythSymbols[mythSections[activeColor]]}
-                    </span>
+                  </div>
+                  <div className="flex flex-col text-white">
+                    <div className="text-[6vw] -mt-2">
+                      <span className="text-gold">{t("buttons.pay")}</span>{" "}
+                      {t("note.ad")}
+                    </div>
                   </div>
                 </div>
-              ) : (
-                <div className="flex w-full justify-center items-center">
+              </div>
+            )}
+
+          {((activeCard === "automata" &&
+            !boostersData?.isAutomataActive &&
+            isAutoPay) ||
+            (activeCard === "burst" &&
+              boostersData?.isShardsClaimActive &&
+              isAutoPay)) &&
+            !payIsActive &&
+            !isTelegram && (
+              <div
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  // handleLinePayment();
+                  setShowPayModal(true);
+                }}
+                className="absolute flex items-center justify-center top-0 w-screen pt-2"
+              >
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex gap-x-1 relative items-center justify-center">
+                    <img
+                      src={assets.uxui.kaia}
+                      alt="star"
+                      className="h-[8vw]"
+                    />
+                    <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
+                      {activeCard === "automata" ? 0.01 : 0.03}
+                    </div>{" "}
+                    <div className="text-white text-black-contour mt-1 z-10 text-[8vw] px-1">
+                      |
+                    </div>
+                    <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
+                      ${activeCard === "automata" ? 1 : 3}
+                    </div>
+                  </div>
+                  <div className="flex flex-col text-white">
+                    <div className="text-[6vw] -mt-3">
+                      <span className="text-gold">{t("buttons.pay")}</span>{" "}
+                      {t("note.ad")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {((activeCard === "automata" &&
+            !boostersData?.isAutomataActive &&
+            isAutoPay) ||
+            (activeCard === "burst" &&
+              boostersData?.isShardsClaimActive &&
+              isAutoPay)) &&
+            payIsActive && (
+              <div className="absolute flex items-center justify-center top-0 w-screen pt-2">
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex pt-8 relative items-center justify-center">
+                    <div className="text-white text-black-contour  text-[8vw]">
+                      <div className="w-full relative font-medium text-secondary">
+                        {t("keywords.load")}
+                        <span className="absolute">{`${".".repeat(
+                          dots
+                        )}`}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          <div
+            onClick={() => {
+              const conditions = {
+                automata: [
+                  gameData?.isAutomataAutoActive === -1 && isAutoPay,
+                  !mythData?.isAutomataActive && !isAutoPay,
+                ],
+                minion: [mythData?.isShardsClaimActive],
+                burst: [
+                  !mythData.isBurstActive,
+                  !mythData.isBurstActive &&
+                    mythData?.isBurstActiveToClaim &&
+                    !isAutoPay,
+                  !mythData.isBurstActive &&
+                    hasTimeElapsed(gameData.autoPayBurstExpiry) &&
+                    isAutoPay,
+                ],
+                moon: [!gameData.isMoonActive],
+              };
+
+              const shouldHandleButton = conditions[activeCard]?.some(Boolean);
+
+              if (shouldHandleButton) {
+                handleButton();
+              }
+            }}
+            className="absolute  w-[72%] h-[50%] mt-10 cursor-pointer z-50 rounded-primary"
+          ></div>
+          {section === 2 && (
+            <div className="flex gap-3 absolute bottom-5">
+              <div className="flex gap-1 items-center">
+                <div
+                  className={`flex relative text-center justify-center max-w-orb p-0.5 items-center rounded-full glow-icon-white`}
+                >
+                  <img src={assets.uxui.multiorb} alt="orb" />
+                </div>
+                <div
+                  className={`font-fof text-[28px] font-normal text-white text-black-sm-contour transition-all duration-1000`}
+                >
+                  {gameData.multiColorOrbs}
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="relative w-[72%] h-[55%] mt-[70px] flex items-center justify-center rounded-primary card-shadow-white">
+            <div
+              className={`absolute inset-0 rounded-primary`}
+              style={{
+                backgroundImage: `${`url(${
+                  assets.boosters[
+                    `${activeCard === "minion" ? "alchemist" : activeCard}Card`
+                  ]
+                })`}`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center center ",
+              }}
+            />
+            <div className="relative h-full w-full flex flex-col items-center">
+              <div className="flex z-50 relative flex-col justify-center items-center h-full w-full">
+                {!disableIcon && (
+                  <IconBtn
+                    isInfo={false}
+                    activeMyth={activeMyth}
+                    handleClick={closeCard}
+                    align={0}
+                  />
+                )}
+                <div
+                  className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
+                >
                   <div
-                    className={`${
-                      isAutoPay
-                        ? "gradient-multi"
-                        : "text-white  glow-text-black"
-                    } text-[60px] font-symbols z-10`}
-                  >
-                    {activeCard === "automata"
-                      ? "n"
-                      : activeCard === "minion"
-                      ? "9"
-                      : "s"}
-                  </div>
+                    style={{
+                      backgroundImage: `url(${assets.uxui.paper})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center center",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      height: "100%",
+                      width: "100%",
+                    }}
+                    className={`rounded-b-primary filter-paper-${
+                      !isAutoPay &&
+                      activeCard !== "moon" &&
+                      mythSections[activeMyth]
+                    }`}
+                  />
+                  {activeCard === "moon" ? (
+                    <div className="flex justify-center items-center w-full">
+                      <div
+                        className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeColor]} `}
+                      >
+                        <img
+                          src={assets.uxui.baseorb}
+                          alt="orb"
+                          className={`filter-orbs-${mythSections[activeColor]} overflow-hidden max-w-[14vw]`}
+                        />
+                        <span
+                          className={`absolute z-1  text-black-sm-contour transition-all duration-1000 text-white  font-symbols  text-[10vw] mt-1 opacity-50`}
+                        >
+                          {mythSymbols[mythSections[activeColor]]}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex w-full justify-center items-center">
+                      <div
+                        className={`${
+                          isAutoPay
+                            ? "gradient-multi"
+                            : "text-white  glow-text-black"
+                        } text-[60px] font-symbols z-10`}
+                      >
+                        {activeCard === "automata"
+                          ? "n"
+                          : activeCard === "minion"
+                          ? "9"
+                          : "s"}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <BoosterBtn
-        isAutoPay={isAutoPay}
-        activeCard={activeCard}
-        mythData={mythData}
-        handleClaim={handleButton}
-        activeMyth={activeMyth}
-        t={t}
-      />
+          <BoosterBtn
+            isAutoPay={isAutoPay}
+            activeCard={activeCard}
+            mythData={mythData}
+            handleClaim={handleButton}
+            activeMyth={activeMyth}
+            t={t}
+          />
+        </>
+      ) : (
+        <PayModal
+          isLoading={payIsActive}
+          enableHaptic={enableHaptic}
+          t={t}
+          activeMyth={activeMyth}
+          assets={assets}
+          activeCard={activeCard}
+          closeModal={() => {
+            setShowPayModal(false);
+          }}
+          handlePayment={(method) => handleLinePayment(method)}
+        />
+      )}
+
       {assets.audio &&
         (activeCard === "automata" || activeCard === "minion") && (
           <ReactHowler

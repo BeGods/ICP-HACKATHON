@@ -26,7 +26,7 @@ import { MainContext } from "../../../context/context";
 import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
-import { determineIsTelegram } from "../../../utils/device.info";
+import { determineIsTelegram, isDesktop } from "../../../utils/device.info";
 import { useLocation } from "react-router-dom";
 import liff from "@line/liff";
 import { validate as isValidUUID } from "uuid";
@@ -46,7 +46,7 @@ const IntroPage = (props) => {
     setCountry,
     isTelegram,
     setIsTelegram,
-    setLineWallet,
+    assets,
   } = useContext(MainContext);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -267,6 +267,10 @@ const IntroPage = (props) => {
   useEffect(() => {
     if (platform) {
       const isTg = determineIsTelegram(platform);
+      const isBrowserDesktop = isDesktop();
+      if (isBrowserDesktop) {
+        setIsTgDesktop(true);
+      }
 
       (async () => {
         setIsTelegram(isTg);
@@ -332,7 +336,7 @@ const IntroPage = (props) => {
 
   return (
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
-      {isTgDesktop && !isBrowser ? (
+      {isTgDesktop ? (
         <DesktopScreen assets={assets} />
       ) : isBrowser && tokenExpired ? (
         <OnboardPage

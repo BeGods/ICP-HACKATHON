@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ArrowLeft,
   ChevronDown,
@@ -14,15 +14,32 @@ import {
   handleClickHaptic,
 } from "../../helpers/cookie.helper";
 import { connectLineWallet, disconnectLineWallet } from "../../utils/api.fof";
-import { connectWallet, initializeWalletSDK } from "../../hooks/LineWallet";
+import {
+  connectWallet,
+  fetchLinePayHistory,
+  initializePaymentSDK,
+  initializeWalletSDK,
+} from "../../hooks/LineWallet";
+import { useTranslation } from "react-i18next";
 
 const tele = window.Telegram?.WebApp;
 
 const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
   const { enableHaptic, isTelegram, authToken, setLineWallet, lineWallet } =
     useContext(MainContext);
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+  const [dots, setDots] = useState(1);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => (prev === 3 ? 1 : prev + 1));
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleConnectLineWallet = async () => {
     try {
@@ -48,6 +65,20 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
       lineProvider.disconnectWallet();
       lineProvider.disconnect();
       setLineWallet(null);
+      setShowModal(false);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
+  const handleFetchtLineHistory = async () => {
+    handleClickHaptic(tele, enableHaptic);
+    setShowLoading(true);
+    try {
+      const { paymentProvider } = await initializePaymentSDK();
+      await fetchLinePayHistory(paymentProvider);
+      setShowLoading(false);
       setShowModal(false);
     } catch (error) {
       console.log(error);
@@ -101,12 +132,28 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
         }}
       />
       {showModal && (
-        <div className="bg-black p-3 flex-col gap-y-2 rounded-md absolute mt-9">
+        <div className="bg-black p-3 flex flex-col gap-y-4 rounded-md absolute mt-9">
           <div
             onClick={handleDisconnectLineWallet}
             className="bg-white px-2 py-1 rounded-md text-black text-md"
           >
             Disconnect
+          </div>
+          <div
+            onClick={handleFetchtLineHistory}
+            className="bg-white px-2 py-1 rounded-md text-black text-md"
+          >
+            Payment History
+          </div>
+        </div>
+      )}
+      {showLoading && (
+        <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
+          <div className="text-white  font-fof text-black-contour  ">
+            <div className="w-full relative font-medium text-[1.5rem]">
+              {t("keywords.load")}
+              <span className="absolute">{`${".".repeat(dots)}`}</span>
+            </div>
           </div>
         </div>
       )}

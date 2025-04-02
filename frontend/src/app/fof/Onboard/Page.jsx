@@ -457,23 +457,21 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
           />
           {!showMobileAuth && (
             <div className="flex flex-col z-[99] gap-[1.5dvh] mb-[8dvh]">
-              <div>
-                <img
-                  src={assets.buttons.otp}
-                  alt="otp-button"
-                  className="begod-text-shadow w-[215px]"
-                  onClick={() => {
-                    handleClickHaptic(tele, true);
-                    openModal();
-                  }}
-                />
-              </div>
+              {/* <img
+                src={assets.buttons.otp}
+                alt="otp-button"
+                className="begod-text-shadow w-[215px]"
+                onClick={() => {
+                  handleClickHaptic(tele, true);
+                  openModal();
+                }}
+              />
               <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              />
+              /> */}
               <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"

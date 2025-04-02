@@ -4,6 +4,19 @@ export const isSafari = () => {
   return /Safari/.test(ua) && !/Chrome/.test(ua);
 };
 
+export const isDesktop = () => {
+  let userAgent = navigator.userAgent.toLowerCase();
+  let isDesktop = true;
+
+
+  if (userAgent.match(/android|iphone|ipad|ipod|blackberry|windows phone/i)) {
+    isDesktop = false;;
+  }
+
+  return isDesktop;
+};
+
+
 
 export const determineIsTelegram = (platform) => {
   if (platform === "ios" || platform === "android") {

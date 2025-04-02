@@ -920,8 +920,8 @@ export const sendTestTGA = async () => {
   }
 };
 
-export const getPaymentId = async (accessToken, booster) => {
-  let url = `${import.meta.env.VITE_API_URL}/line/createPayment?booster=${booster}`;
+export const getPaymentId = async (accessToken, booster, paymentMethod) => {
+  let url = `${import.meta.env.VITE_API_URL}/line/createPayment?booster=${booster}&paymentMethod=${paymentMethod}`;
 
   try {
     const response = await axios.get(url, {
