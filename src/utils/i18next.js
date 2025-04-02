@@ -11,6 +11,9 @@ import Myanmar from "../translations/my/translation.json";
 import Indonesian from "../translations/id/translation.json";
 import Bengalli from "../translations/bn/translation.json";
 import Hausa from "../translations/ha/translation.json";
+import Japanese from "../translations/ja/translation.json";
+import Korean from "../translations/ko/translation.json";
+
 
 i18next.use(initReactI18next).init({
   lng: "en",
@@ -60,13 +63,13 @@ i18next.use(initReactI18next).init({
     },
 
     ja: {
-      translation: English,
+      translation: Japanese,
     },
     yo: {
       translation: English,
     },
     ko: {
-      translation: English,
+      translation: Korean,
     },
   },
 });

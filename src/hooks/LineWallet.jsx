@@ -84,6 +84,7 @@ export const initializePaymentSDK = async () => {
 };
 
 export const createLinePayment = async (
+  paymentMethod,
   paymentProvider,
   lineProvider,
   authToken,
@@ -95,10 +96,23 @@ export const createLinePayment = async (
 
   try {
     await lineProvider.request({ method: "kaia_requestAccounts" });
-    const paymentId = await getPaymentId(authToken, booster);
+    const paymentId = await getPaymentId(authToken, booster, paymentMethod);
     await paymentProvider.startPayment(paymentId);
 
     return true;
+  } catch (error) {
+    console.error("Wallet Connection Error:", error);
+    return false;
+  }
+};
+
+export const fetchLinePayHistory = async (paymentProvider) => {
+  if (!paymentProvider) {
+    return false;
+  }
+
+  try {
+    await paymentProvider.openPaymentHistory();
   } catch (error) {
     console.error("Wallet Connection Error:", error);
     return false;
