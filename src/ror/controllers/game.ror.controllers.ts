@@ -67,7 +67,7 @@ export const getGameStats = async (req, res) => {
     );
 
     const memberData = {
-      overallRank: 0,
+      orbRank: 0,
       totalOrbs: 0,
     };
 

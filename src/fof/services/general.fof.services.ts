@@ -79,7 +79,7 @@ export const getLeaderboardSnapshot = async () => {
       {
         $addFields: {
           prevRank: {
-            $ifNull: [{ $arrayElemAt: ["$rankDetails.overallRank", 0] }, null],
+            $ifNull: [{ $arrayElemAt: ["$rankDetails.orbRank", 0] }, null],
           },
         },
       },
@@ -138,7 +138,7 @@ export const getLeaderboardRanks = async (
   }
 
   // else if (userRank <= 666) {
-  //   matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 666 } }; // Bronze
+  //   matchStage = { ...matchStage, orbRank: { $gte: 334, $lte: 666 } }; // Bronze
   // }
 
   if (fetchAll) skip = 0;
@@ -615,9 +615,9 @@ export const bulkUpdateBetResult = async (users) => {
       const previousRank = parseInt(user.userBetAt.slice(1), 10);
       let updateValue = "-1";
 
-      if (prediction === "-" && user.overallRank > previousRank) {
+      if (prediction === "-" && user.orbRank > previousRank) {
         updateValue = "+1";
-      } else if (prediction === "+" && user.overallRank < previousRank) {
+      } else if (prediction === "+" && user.orbRank < previousRank) {
         updateValue = "+1";
       }
 
@@ -642,9 +642,9 @@ export const bulkUpdateBetResult = async (users) => {
       const previousRank = parseInt(user.userBetAt.slice(1), 10);
       let updateValue = -1;
 
-      if (prediction === "-" && user.overallRank > previousRank) {
+      if (prediction === "-" && user.orbRank > previousRank) {
         updateValue = 1;
-      } else if (prediction === "+" && user.overallRank < previousRank) {
+      } else if (prediction === "+" && user.orbRank < previousRank) {
         updateValue = 1;
       }
 
