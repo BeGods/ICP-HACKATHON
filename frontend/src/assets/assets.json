@@ -69,7 +69,8 @@
         },
         "line" : "/assets/line.png",
         "otp" : "/assets/mobile.png",
-        "dapp" : "/assets/dapp.png"
+        "dapp" : "/assets/dapp.png",
+        "telegram" : "/assets/telegram.png"
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.greek.base.svg",

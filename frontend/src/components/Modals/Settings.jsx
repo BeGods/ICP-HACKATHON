@@ -39,7 +39,7 @@ import {
 } from "../../helpers/cookie.helper";
 import { trackEvent } from "../../utils/ga";
 import liff from "@line/liff";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
@@ -68,6 +68,7 @@ const languages = [
 const SettingModal = ({ close }) => {
   const { i18n, t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     authToken,
     enableSound,
@@ -354,7 +355,11 @@ const SettingModal = ({ close }) => {
           <div
             onClick={async () => {
               await deleteAuthCookie(tele);
-              navigate("/");
+              if (location.pathname === "/") {
+                window.location.reload();
+              } else {
+                navigate("/");
+              }
             }}
             className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
           >
