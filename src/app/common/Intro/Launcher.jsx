@@ -11,7 +11,12 @@ import { validateSoundCookie } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
-export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
+export default function Launcher({
+  handleUpdateIdx,
+  activeIndex,
+  isTelegram,
+  isLoading,
+}) {
   const menuRef = useRef(null);
   const bgRef = useRef(null);
   const [fadeout, setFadeout] = useState(false);
@@ -65,16 +70,19 @@ export default function Launcher({ handleUpdateIdx, activeIndex, isTelegram }) {
           }}
         >
           <FoFIntro
+            isLoading={isLoading}
             isTelegram={isTelegram}
             handleFadeout={() => setFadeout(true)}
             fadeout={fadeout}
           />
           <RoRIntro
+            isLoading={isLoading}
             isTelegram={isTelegram}
             handleFadeout={() => setFadeout(true)}
             fadeout={fadeout}
           />
           <DoDIntro
+            isLoading={isLoading}
             isTelegram={isTelegram}
             handleFadeout={() => setFadeout(true)}
             fadeout={fadeout}

@@ -15,7 +15,7 @@ import {
   handleClickHaptic,
   setAuthCookie,
 } from "../../../helpers/cookie.helper";
-import { ArrowLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import ToastMesg from "../../../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
 import TgHeader from "../../../components/Common/TgHeader";
@@ -23,6 +23,8 @@ import FoFIntro from "../../common/Intro/FoFIntro";
 import RoRIntro from "../../common/Intro/RoRIntro";
 import assets from "../../../assets/assets.json";
 import { connectWallet, initializeWalletSDK } from "../../../hooks/LineWallet";
+import { useLocation } from "react-router-dom";
+import SettingModal from "../../../components/Modals/Settings";
 
 const tele = window.Telegram?.WebApp;
 
@@ -41,13 +43,14 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
   const [showCount, setShowCount] = useState(false);
   const [countDown, setCountDown] = useState(0);
   const [createAcnt, setCreateAcnt] = useState(false);
-  const { authToken, isTelegram, setAuthToken } = useContext(MainContext);
+  const { authToken, setAuthToken } = useContext(MainContext);
   const [otp, setOTP] = useState(new Array(4).fill(""));
   const dropdownRef = useRef(null);
   const firstInputRef = useRef(null);
   const availableCountries = countries.filter(
     (country) => country.code == "IND" || country.code == "THA"
   );
+  const otpRefs = useRef([]);
 
   useEffect(() => {
     if (showVerify) firstInputRef.current.focus();
@@ -59,15 +62,16 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
       const newOTP = [...otp];
       newOTP[index] = value;
       setOTP(newOTP);
+
       if (value && index < otp.length - 1) {
-        document.getElementById(`otp-input-${index + 1}`).focus();
+        otpRefs.current[index + 1]?.focus();
       }
     }
   };
 
   const handleKeyDown = (index, event) => {
     if (event.key === "Backspace" && otp[index] === "" && index > 0) {
-      document.getElementById(`otp-input-${index - 1}`).focus();
+      otpRefs.current[index - 1]?.focus();
     }
   };
 
@@ -140,6 +144,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
   };
 
   const handleResendOtp = async () => {
+    handleClickHaptic(tele, true);
     if (createAcnt) {
       if (phone.length !== 10 || !name.trim()) {
         showToast("form_error");
@@ -183,6 +188,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
   };
 
   const handleVerifyOtp = async () => {
+    handleClickHaptic(tele, true);
     if (createAcnt) {
       if (phone.length !== 10 || !name.trim()) {
         showToast("form_error");
@@ -207,6 +213,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
       showToast("onboard_success");
       setAuthToken(response.data.accessToken);
       await setAuthCookie(tele, response.data.accessToken);
+      window.location.reload();
       setCountDown(15);
       setShowCount(true);
       handleTokenUpdated();
@@ -264,9 +271,9 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
           <div className="flex space-x-3">
             {otp.map((digit, index) => (
               <input
-                ref={index === 0 ? firstInputRef : null}
+                ref={(el) => (otpRefs.current[index] = el)}
                 key={index}
-                type="text"
+                type="number"
                 maxLength={1}
                 className="w-12 h-12 text-2xl text-center bg-gray-800 border border-gray-600 rounded-lg outline-none focus:border-white transition"
                 value={digit}
@@ -285,6 +292,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
           <p
             onClick={() => {
               setShowVerify(false);
+              handleClickHaptic(tele, true);
             }}
             className="text-center text-sm text-gray-400 underline"
           >
@@ -365,7 +373,10 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
           <p className="text-center text-sm text-gray-400">
             {createAcnt ? "Already have an account?" : "Don't have an account?"}
             <span
-              onClick={() => setCreateAcnt(!createAcnt)}
+              onClick={() => {
+                handleClickHaptic(tele, true);
+                setCreateAcnt(!createAcnt);
+              }}
               className="ml-1 font-medium text-white cursor-pointer hover:underline"
             >
               {createAcnt ? "Login" : "Create"}
@@ -374,7 +385,10 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
         </div>
       )}
       <div
-        onClick={closeModal}
+        onClick={() => {
+          handleClickHaptic(tele, true);
+          closeModal();
+        }}
         className="absolute top-0 right-0 -mt-4 -mr-4 bg-black p-1 rounded-full"
       >
         <X size={"1.75rem"} />
@@ -383,12 +397,14 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
   );
 };
 
-const AuthMenu = () => {
-  const [showMobileAuth, setShowMobileAuth] = useState(false);
+const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const { setLineWallet, setAuthToken } = useContext(MainContext);
-  const { t } = useTranslation();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const refer = queryParams.get("refer");
 
   const handleConnectLineWallet = async () => {
+    handleClickHaptic(tele, true);
     try {
       const { lineProvider } = await initializeWalletSDK();
       const { accountAddress, signature, message } = await connectWallet(
@@ -399,6 +415,7 @@ const AuthMenu = () => {
         const response = await authenticateLineWallet(message, signature);
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -407,6 +424,7 @@ const AuthMenu = () => {
   };
 
   const handleLineLogin = async () => {
+    handleClickHaptic(tele, true);
     try {
       const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${
         import.meta.env.VITE_LINE_CHANNEL
@@ -429,9 +447,7 @@ const AuthMenu = () => {
       }}
     >
       <div className={`flex  flex-col h-full items-center justify-center`}>
-        {showMobileAuth && (
-          <OnboardOTP closeModal={() => setShowMobileAuth(false)} />
-        )}
+        {showMobileAuth && <OnboardOTP closeModal={() => closeModal()} />}
 
         <div className="absolute flex flex-col justify-between items-center h-full py-[3.5dvh]">
           <img
@@ -447,7 +463,8 @@ const AuthMenu = () => {
                   alt="otp-button"
                   className="begod-text-shadow w-[215px]"
                   onClick={() => {
-                    setShowMobileAuth(true);
+                    handleClickHaptic(tele, true);
+                    openModal();
                   }}
                 />
               </div>
@@ -463,25 +480,51 @@ const AuthMenu = () => {
                 className="begod-text-shadow w-[215px]"
                 onClick={handleConnectLineWallet}
               />
+              {/* {refer == "dapp" ? (
+                <img
+                  src={assets.buttons.dapp}
+                  alt="dapp-button"
+                  className="begod-text-shadow w-[215px]"
+                  onClick={handleConnectLineWallet}
+                />
+              ) : (
+                <img
+                  src={assets.buttons.telegram}
+                  alt="dapp-button"
+                  className="begod-text-shadow w-[215px]"
+                  onClick={() => {
+                    alert("Coming Soon");
+                  }}
+                />
+              )} */}
             </div>
           )}
         </div>
       </div>
 
       <div className="w-full flex justify-center text-[0.75rem] absolute bottom-[1.5dvh] mx-auto text-gray-600">
-        <span className="pr-1 underline cursor-pointer">
-          {t("misc.policy")}
-        </span>{" "}
-        | © 2025 Frogdog Games
+        {/* <span className="pr-1 underline cursor-pointer">
+          {t("misc.policy")} |
+        </span>{" "} */}
+        © 2025 Frogdog Games
       </div>
     </div>
   );
 };
 
 const OnboardPage = () => {
+  const [showMobileAuth, setShowMobileAuth] = useState(false);
+  const [showSetting, setShowSetting] = useState(false);
+
   return (
     <div className="flex w-screen text-wrap">
-      <TgHeader hideExit={true} openSettings={() => {}} />
+      <TgHeader
+        hideExit={true}
+        openSettings={() => {
+          setShowMobileAuth(false);
+          setShowSetting(true);
+        }}
+      />
       <div className={`transition-all duration-500 overflow-hidden relative`}>
         <div
           className="slider-container flex transition-transform duration-500"
@@ -492,9 +535,19 @@ const OnboardPage = () => {
         >
           <FoFIntro />
           <RoRIntro />
-          <AuthMenu />
+          <AuthMenu
+            showMobileAuth={showMobileAuth}
+            closeModal={() => setShowMobileAuth(false)}
+            openModal={() => setShowMobileAuth(true)}
+          />
         </div>
       </div>
+
+      {showSetting && (
+        <div className="absolute z-[99] w-screen">
+          <SettingModal close={() => setShowSetting(false)} />
+        </div>
+      )}
     </div>
   );
 };

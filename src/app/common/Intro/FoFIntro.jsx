@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import assets from "../../../assets/assets.json";
 import { useNavigate } from "react-router-dom";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
@@ -6,7 +6,7 @@ import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
-const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
+const FoFIntro = ({ handleFadeout, fadeout, isTelegram, isLoading }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
   const { setGame } = useContext(MainContext);
@@ -59,7 +59,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
                   navigate("/fof");
                 }, 1000);
               }}
-              className="relative inline-block transition-all duration-500"
+              className={`relative fade-in inline-block transition-all duration-500`}
             >
               <img
                 src={

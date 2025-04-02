@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   authenticateLine,
-  authenticateLineWallet,
   authenticateOneWave,
   authenticateTg,
-  connectLineWallet,
   refreshAuthToken,
 } from "../../../utils/api.fof";
 import {
@@ -25,7 +23,7 @@ import {
 } from "../../../utils/ga";
 import Launcher from "./Launcher";
 import { MainContext } from "../../../context/context";
-import i18next, { changeLanguage } from "i18next";
+import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
 import { determineIsTelegram } from "../../../utils/device.info";
@@ -34,7 +32,6 @@ import liff from "@line/liff";
 import { validate as isValidUUID } from "uuid";
 import OnboardPage from "../../fof/Onboard/Page";
 import DesktopScreen from "./Desktop";
-import { connectWallet, initializeWalletSDK } from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -62,6 +59,7 @@ const IntroPage = (props) => {
   const [isBrowser, setIsBrowser] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTgDesktop, setIsTgDesktop] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const lineCalledRef = useRef(false);
   const onewaveCalledRef = useRef(false);
 
@@ -123,11 +121,15 @@ const IntroPage = (props) => {
     if (!lineCalledRef.current) {
       lineCalledRef.current = true;
       try {
+        console.log("Authenticating with LINE...");
         const response = await authenticateLine(idToken, null);
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
+        console.log("LINE Authentication successful!");
       } catch (error) {
         console.error("Authentication Error: ", error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -288,6 +290,7 @@ const IntroPage = (props) => {
           setIsBrowser(false);
 
           if (liff.isInClient()) {
+            setIsLoading(true);
             await handleAuth(isTg);
           } else {
             const tokenExpiry = await getExpCookie(tele);
@@ -340,6 +343,7 @@ const IntroPage = (props) => {
         />
       ) : (
         <Launcher
+          isLoading={isLoading}
           enableSound={enableSound}
           isTelegram={isTelegram}
           handleUpdateIdx={handleUpdateIdx}
@@ -351,16 +355,3 @@ const IntroPage = (props) => {
 };
 
 export default IntroPage;
-
-// : isBrowser && tokenExpired ? (
-//   <OnboardPage
-//     handleTokenUpdated={() => {
-//       setTokenExpired(false);
-//     }}
-//     refer={refer || null}
-//   />
-// )
-
-// else if (isBrowser) {
-//   await handleConnectLineWallet();
-// }
