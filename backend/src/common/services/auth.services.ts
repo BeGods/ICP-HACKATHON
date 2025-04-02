@@ -48,14 +48,12 @@ const parseTimeToMs = (timeString: string) => {
 };
 
 export const generateAuthToken = async (user: any, res) => {
-  const now = Date.now();
-  const refreshTokenExpiryMs = getTokenExpiryMs(
-    config.security.REFRESH_TOKEN_EXPIRE
-  );
-
-  const userObj = { _id: user._id, role: "user" };
-
   try {
+    const refreshTokenExpiryMs = getTokenExpiryMs(
+      config.security.REFRESH_TOKEN_EXPIRE
+    );
+    const userObj = { _id: user._id, role: "user" };
+
     const accessToken = jwt.sign(userObj, config.security.ACCESS_TOKEN_SECRET, {
       expiresIn: config.security.ACCESS_TOKEN_EXPIRE,
     });
@@ -68,15 +66,19 @@ export const generateAuthToken = async (user: any, res) => {
       }
     );
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: true, // https
-      sameSite: "none", // cross-origin
-      maxAge: refreshTokenExpiryMs,
-    });
+    // Only set cookies if response hasn't been sent
+    if (!res.headersSent) {
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true, // https
+        sameSite: "none", // cross-origin
+        maxAge: refreshTokenExpiryMs,
+      });
+    }
 
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error("Token generation failed:", error);
     throw new Error(error.message || "Failed to generate tokens");
   }
 };

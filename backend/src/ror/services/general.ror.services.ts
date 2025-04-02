@@ -135,7 +135,7 @@ export const getLeaderboardRanks = async (
   }
 
   // else if (userRank <= 666) {
-  //   matchStage = { ...matchStage, overallRank: { $gte: 334, $lte: 666 } }; // Bronze
+  //   matchStage = { ...matchStage, orbRank: { $gte: 334, $lte: 666 } }; // Bronze
   // }
 
   if (fetchAll) skip = 0;
