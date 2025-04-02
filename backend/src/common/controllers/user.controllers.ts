@@ -161,22 +161,58 @@ export const claimFinishRwrd = async (req, res) => {
 };
 
 export const createLinePayment = async (req, res) => {
-  const { booster } = req.query;
+  const { booster, paymentMethod } = req.query;
   const userWalletAddr = req.user.kaiaAddress;
   const clientId = config.line.LINE_WALLET_CLIENT;
   const clientSecret = config.line.LINE_WALLET_SECRET;
-  const boosters = {
+
+  if (!userWalletAddr) {
+    return res.status(400).json({ message: "Wallet not connected." });
+  }
+
+  if (paymentMethod !== "kaia" && paymentMethod !== "stripe") {
+    return res.status(400).json({ message: "Invalid payment method." });
+  }
+
+  const kaiaPayment = {
     automata: {
       itemIdentifier: "automata-pack",
       name: "Automata Pack",
       price: "0.01",
+      pgType: "CRYPTO",
+      currencyCode: "KAIA",
     },
     burst: {
       itemIdentifier: "burst-pack",
       name: "Burst Pack",
       price: "0.03",
+      pgType: "CRYPTO",
+      currencyCode: "KAIA",
     },
   };
+  const stripePayment = {
+    automata: {
+      itemIdentifier: "automata-pack",
+      name: "Automata Pack",
+      price: "100",
+      pgType: "STRIPE",
+      currencyCode: "USD",
+    },
+    burst: {
+      itemIdentifier: "burst-pack",
+      name: "Burst Pack",
+      price: "300",
+      pgType: "STRIPE",
+      currencyCode: "USD",
+    },
+  };
+
+  const boosters =
+    paymentMethod === "kaia"
+      ? kaiaPayment
+      : paymentMethod === "stripe"
+      ? stripePayment
+      : {};
 
   try {
     const url = "https://payment.dappportal.io/api/payment-v1/payment/create";
@@ -189,8 +225,8 @@ export const createLinePayment = async (req, res) => {
 
     const data = {
       buyerDappPortalAddress: userWalletAddr,
-      pgType: "CRYPTO",
-      currencyCode: "KAIA",
+      pgType: boosters[booster].pgType,
+      currencyCode: boosters[booster].currencyCode,
       price: boosters[booster].price,
       confirmCallbackUrl: `${config.source.server}/api/v1/line/paymentStatus`,
       items: [
@@ -200,7 +236,7 @@ export const createLinePayment = async (req, res) => {
           imageUrl:
             "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/fof.bot.thumbnail.jpg",
           price: boosters[booster].price,
-          currencyCode: "KAIA",
+          currencyCode: boosters[booster].currencyCode,
         },
       ],
       testMode: config.server.ENVIRONMENT === "dev" ? true : false,
