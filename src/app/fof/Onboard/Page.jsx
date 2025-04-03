@@ -22,9 +22,9 @@ import TgHeader from "../../../components/Common/TgHeader";
 import FoFIntro from "../../common/Intro/FoFIntro";
 import RoRIntro from "../../common/Intro/RoRIntro";
 import assets from "../../../assets/assets.json";
-import { connectWallet, initializeWalletSDK } from "../../../hooks/LineWallet";
 import { useLocation } from "react-router-dom";
 import SettingModal from "../../../components/Modals/Settings";
+import useWalletPayment from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -39,6 +39,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
     flag: "🇮🇳",
     dialCode: "+91",
   });
+  const { connectWallet } = useWalletPayment();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showCount, setShowCount] = useState(false);
   const [countDown, setCountDown] = useState(0);
@@ -406,10 +407,7 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const handleConnectLineWallet = async () => {
     handleClickHaptic(tele, true);
     try {
-      const { lineProvider } = await initializeWalletSDK();
-      const { accountAddress, signature, message } = await connectWallet(
-        lineProvider
-      );
+      const accountAddress = await connectWallet();
       if (accountAddress) {
         setLineWallet(accountAddress);
         const response = await authenticateLineWallet(message, signature);
@@ -466,12 +464,13 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   openModal();
                 }}
               />
+            */}
               <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              /> */}
+              />
               <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
