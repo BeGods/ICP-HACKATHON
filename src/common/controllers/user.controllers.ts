@@ -52,14 +52,18 @@ export const disconnectTonWallet = async (req, res) => {
 export const connectLineWallet = async (req, res) => {
   try {
     const user = req.user;
-    const { accountAddr, message } = req.body;
+    const { signature, message } = req.body;
 
-    console.log(accountAddr);
+    if (!signature || !message) {
+      return res
+        .status(400)
+        .json({ message: "Please provide signed wallet details." });
+    }
 
-    // const recoveredAddress = verifyMessage(message, signature);
+    const recoveredAddress = verifyMessage(message, signature);
 
-    if (accountAddr) {
-      user.kaiaAddress = accountAddr;
+    if (recoveredAddress) {
+      user.kaiaAddress = recoveredAddress;
       await user.save();
     }
 
