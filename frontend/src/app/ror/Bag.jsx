@@ -146,7 +146,7 @@ const Bag = (props) => {
           />
         }
       />
-      <div className="h-full w-[80%] mx-auto grid grid-cols-3">
+      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {gameData.bag.map((item) => (
           <div
             key={item._id}
@@ -185,7 +185,7 @@ const Bag = (props) => {
               <div
                 className="glow-icon-white h-full w-full"
                 style={{
-                  backgroundImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-celtic.relic.B08_off.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "100% 20%",
                   backgroundRepeat: "no-repeat",
@@ -195,8 +195,8 @@ const Bag = (props) => {
               <div
                 className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
                 style={{
-                  maskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
-                  WebkitMaskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-celtic.relic.B08_off.png)`,
+                  WebkitMaskImage: `url(/assets/ror-cards/240px-celtic.relic.B08_off.png)`,
                   maskSize: "cover",
                   WebkitMaskSize: "cover",
                   maskPosition: "100% 20%",

@@ -12,25 +12,25 @@ const GridItem = ({ itemObj, itemsWithAllFrags }) => {
           !itemsWithAllFrags.includes(itemDetails.id) && "opacity-50"
         }`}
         style={{
-          backgroundImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
+          backgroundImage: `url(/assets/ror-cards/240px-${itemObj.itemId}_off.png)`,
           backgroundSize: "cover",
-          backgroundPosition: "100% 20%",
+          backgroundPosition: "10% 20%",
           backgroundRepeat: "no-repeat",
         }}
       >
-        {itemDetails.name}
+        <div className="glow-icon-white ">{itemDetails.name}</div>
       </div>
       <div className={`${itemObj.isComplete && "hidden"}`}>
         {itemDetails.fragments.length === 3 && itemObj.fragmentId === 1 ? (
           <>
-            <div className="absolute top-0 left-0 h-full w-[32.5%] bg-gray-700 mix-blend-hue opacity-100"></div>
-            <div className="absolute top-0 right-0 h-full w-[32.5%] bg-gray-700 mix-blend-hue opacity-100"></div>
+            <div className="absolute top-0 left-0 h-full w-[32.5%] bg-gray-900 mix-blend-hue opacity-100"></div>
+            <div className="absolute top-0 right-0 h-full w-[32.5%] bg-gray-900 mix-blend-hue opacity-100"></div>
           </>
         ) : (
           <div
             className={`absolute ${
               overlayStyle[itemDetails.fragments.length][itemObj.fragmentId]
-            } bg-gray-700 mix-blend-hue opacity-100`}
+            } bg-gray-900  grayscale mix-blend-hue opacity-100`}
           ></div>
         )}
       </div>
