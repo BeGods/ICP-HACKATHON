@@ -13,18 +13,15 @@ import {
   deleteExpCookie,
   handleClickHaptic,
 } from "../../helpers/cookie.helper";
-import { connectLineWallet, disconnectLineWallet } from "../../utils/api.fof";
-import {
-  connectWallet,
-  fetchLinePayHistory,
-  initializePaymentSDK,
-  initializeWalletSDK,
-} from "../../hooks/LineWallet";
+import { connectLineWallet } from "../../utils/api.fof";
 import { useTranslation } from "react-i18next";
+import useWalletPayment from "../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
 const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
+  const { connectWallet, fetchLinePayHistory, disonnectWallet } =
+    useWalletPayment();
   const { enableHaptic, isTelegram, authToken, setLineWallet, lineWallet } =
     useContext(MainContext);
   const { t } = useTranslation();
@@ -37,22 +34,18 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
     const interval = setInterval(() => {
       setDots((prev) => (prev === 3 ? 1 : prev + 1));
     }, 500);
-
     return () => clearInterval(interval);
   }, []);
 
   const handleConnectLineWallet = async () => {
     try {
-      const { lineProvider } = await initializeWalletSDK();
-      const { accountAddress, signature, message } = await connectWallet(
-        lineProvider
-      );
+      const { accountAddress } = await connectWallet();
       if (accountAddress) {
         setLineWallet(accountAddress);
-        await connectLineWallet(message, signature, authToken);
+        await connectLineWallet(accountAddress, authToken);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert(error);
     }
   };
@@ -60,29 +53,25 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
   const handleDisconnectLineWallet = async () => {
     handleClickHaptic(tele, enableHaptic);
     try {
-      await disconnectLineWallet(authToken);
-      const { lineProvider } = await initializeWalletSDK();
-      lineProvider.disconnectWallet();
-      lineProvider.disconnect();
-      setLineWallet(null);
+      await disonnectWallet();
       setShowModal(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert(error);
     }
   };
 
-  const handleFetchtLineHistory = async () => {
+  const handleFetchLineHistory = async () => {
     handleClickHaptic(tele, enableHaptic);
     setShowLoading(true);
     try {
-      const { paymentProvider } = await initializePaymentSDK();
-      await fetchLinePayHistory(paymentProvider);
+      await fetchLinePayHistory();
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    } finally {
       setShowLoading(false);
       setShowModal(false);
-    } catch (error) {
-      console.log(error);
-      alert(error);
     }
   };
 
@@ -96,7 +85,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
         <>
           {lineWallet && isLoaded ? (
             <div
-              className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full"
+              className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full cursor-pointer"
               onClick={() => {
                 handleClickHaptic(tele, enableHaptic);
                 setShowModal((prev) => !prev);
@@ -104,13 +93,17 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
             >
               <h1 className="text-gray-300">{lineWallet?.slice(0, 5)}</h1>
               {showModal ? (
-                <ChevronUp size={"20px"} strokeWidth={2} />
+                <ChevronUp size={20} strokeWidth={2} />
               ) : (
-                <ChevronDown size={"20px"} strokeWidth={2} />
+                <ChevronDown size={20} strokeWidth={2} />
               )}
             </div>
           ) : (
-            <Wallet size={"1.5rem"} onClick={handleConnectLineWallet} />
+            <Wallet
+              size={24}
+              onClick={handleConnectLineWallet}
+              className="cursor-pointer"
+            />
           )}
         </>
       )}
@@ -121,39 +114,39 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
             await deleteExpCookie(tele);
             navigate(-1);
           }}
-          size={"1.5rem"}
+          size={24}
+          className="cursor-pointer"
         />
       )}
       <Settings
-        size={"1.5rem"}
+        size={24}
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
           openSettings();
         }}
+        className="cursor-pointer"
       />
       {showModal && (
         <div className="bg-black p-3 flex flex-col gap-y-4 rounded-md absolute mt-9">
-          <div
+          <button
             onClick={handleDisconnectLineWallet}
             className="bg-white px-2 py-1 rounded-md text-black text-md"
           >
             Disconnect
-          </div>
-          <div
-            onClick={handleFetchtLineHistory}
+          </button>
+          <button
+            onClick={handleFetchLineHistory}
             className="bg-white px-2 py-1 rounded-md text-black text-md"
           >
             Payment History
-          </div>
+          </button>
         </div>
       )}
       {showLoading && (
-        <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
-          <div className="text-white  font-fof text-black-contour  ">
-            <div className="w-full relative font-medium text-[1.5rem]">
-              {t("keywords.load")}
-              <span className="absolute">{`${".".repeat(dots)}`}</span>
-            </div>
+        <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
+          <div className="text-white font-fof text-black-contour text-[1.5rem] relative font-medium">
+            {t("keywords.load")}
+            <span className="absolute">{".".repeat(dots)}</span>
           </div>
         </div>
       )}

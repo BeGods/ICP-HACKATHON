@@ -31,10 +31,7 @@ import { Clapperboard, Star, X } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
-import {
-  createLinePayment,
-  initializePaymentSDK,
-} from "../../../hooks/LineWallet";
+import useWalletPayment from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -127,6 +124,12 @@ const PayModal = ({
               <span className="absolute">{`${".".repeat(dots)}`}</span>
             </div>
           </div>
+          <IconBtn
+            isInfo={false}
+            activeMyth={activeMyth}
+            handleClick={closeModal}
+            align={0}
+          />
         </div>
       )}
     </div>
@@ -155,6 +158,7 @@ const BoosterClaim = ({
     enableHaptic,
     isTelegram,
   } = useContext(FofContext);
+  const { createLinePayment } = useWalletPayment();
   const { t } = useTranslation();
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);
@@ -574,28 +578,31 @@ const BoosterClaim = ({
   const handleLinePayment = async (paymentMethod) => {
     setPayIsActive(true);
 
-    const { paymentProvider, lineProvider } = await initializePaymentSDK();
+    try {
+      const paymentPromise = createLinePayment(
+        paymentMethod,
+        authToken,
+        activeCard
+      );
 
-    const paymentPromise = createLinePayment(
-      paymentMethod,
-      paymentProvider,
-      lineProvider,
-      authToken,
-      activeCard
-    );
+      const timeoutPromise = new Promise((resolve) =>
+        setTimeout(() => resolve(false), 180000)
+      );
 
-    const timeoutPromise = new Promise((resolve) =>
-      setTimeout(() => resolve(false), 180000)
-    );
+      const paymentStatus = await Promise.race([
+        paymentPromise,
+        timeoutPromise,
+      ]);
 
-    const paymentStatus = await Promise.race([paymentPromise, timeoutPromise]);
-
-    if (paymentStatus === true) {
-      handleUpdatePayReward();
-      setShowCard(null);
-      setPayIsActive(false);
-    } else {
+      if (paymentStatus) {
+        handleUpdatePayReward();
+      } else {
+        showToast("error_payment");
+      }
+    } catch (error) {
+      console.error("Payment Error:", error);
       showToast("error_payment");
+    } finally {
       setShowCard(null);
       setPayIsActive(false);
     }
