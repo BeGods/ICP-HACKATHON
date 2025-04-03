@@ -466,12 +466,13 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   openModal();
                 }}
               />
+*/}
               <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              /> */}
+              />
               <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
