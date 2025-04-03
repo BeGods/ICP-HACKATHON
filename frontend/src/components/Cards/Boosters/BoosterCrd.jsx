@@ -579,11 +579,7 @@ const BoosterClaim = ({
     setPayIsActive(true);
 
     try {
-      const paymentPromise = createLinePayment(
-        paymentMethod,
-        authToken,
-        activeCard
-      );
+      const paymentPromise = createLinePayment(paymentMethod, activeCard);
 
       const timeoutPromise = new Promise((resolve) =>
         setTimeout(() => resolve(false), 180000)

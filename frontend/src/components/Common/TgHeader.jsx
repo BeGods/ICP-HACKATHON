@@ -20,9 +20,9 @@ import useWalletPayment from "../../hooks/LineWallet";
 const tele = window.Telegram?.WebApp;
 
 const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
-  const { connectWallet, fetchLinePayHistory, disonnectWallet } =
+  const { connectWallet, fetchLinePayHistory, disconnectLineWallet } =
     useWalletPayment();
-  const { enableHaptic, isTelegram, authToken, setLineWallet, lineWallet } =
+  const { enableHaptic, isTelegram, authToken, lineWallet } =
     useContext(MainContext);
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -39,10 +39,9 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
 
   const handleConnectLineWallet = async () => {
     try {
-      const { accountAddress } = await connectWallet();
+      const { accountAddress, signature, message } = await connectWallet();
       if (accountAddress) {
-        setLineWallet(accountAddress);
-        await connectLineWallet(accountAddress, authToken);
+        await connectLineWallet(signature, message, authToken);
       }
     } catch (error) {
       console.error(error);
@@ -53,7 +52,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
   const handleDisconnectLineWallet = async () => {
     handleClickHaptic(tele, enableHaptic);
     try {
-      await disonnectWallet();
+      await disconnectLineWallet();
       setShowModal(false);
     } catch (error) {
       console.error(error);

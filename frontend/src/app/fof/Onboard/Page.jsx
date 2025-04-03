@@ -39,7 +39,6 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
     flag: "🇮🇳",
     dialCode: "+91",
   });
-  const { connectWallet } = useWalletPayment();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showCount, setShowCount] = useState(false);
   const [countDown, setCountDown] = useState(0);
@@ -400,6 +399,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
 
 const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const { setLineWallet, setAuthToken } = useContext(MainContext);
+  const { connectWallet } = useWalletPayment();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const refer = queryParams.get("refer");
@@ -407,9 +407,8 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const handleConnectLineWallet = async () => {
     handleClickHaptic(tele, true);
     try {
-      const accountAddress = await connectWallet();
+      const { accountAddress, signature, message } = await connectWallet();
       if (accountAddress) {
-        setLineWallet(accountAddress);
         const response = await authenticateLineWallet(message, signature);
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
@@ -465,12 +464,12 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                 }}
               />
             */}
-              <img
+              {/* <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              />
+              /> */}
               <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
