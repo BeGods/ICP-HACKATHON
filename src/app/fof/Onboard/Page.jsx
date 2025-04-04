@@ -464,15 +464,15 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                 }}
               />
             */}
-              {/* <img
+              <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              /> */}
+              />
               <div
                 onClick={handleConnectLineWallet}
-                className="flex justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]"
+                className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]"
               >
                 <img
                   src="/assets/dapp.logo.png"
