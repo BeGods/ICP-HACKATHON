@@ -47,3 +47,12 @@ export const decryptOneWaveHash = (hashedInput) => {
     throw new Error(error);
   }
 };
+
+export const getKaiaValue = (usdAmount) => {
+  try {
+    const kaiaExchangeRate = 0.107903;
+    return (usdAmount / kaiaExchangeRate).toFixed(4);
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -9,6 +9,7 @@ import {
   updateMultiBurst,
 } from "../../fof/services/boosters.fof.services";
 import { verifyMessage } from "ethers";
+import { getKaiaValue } from "../../helpers/crypt.helpers";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -184,14 +185,14 @@ export const createLinePayment = async (req, res) => {
     automata: {
       itemIdentifier: "automata-pack",
       name: "Automata Pack",
-      price: "0.01",
+      price: JSON.stringify(getKaiaValue(1)),
       pgType: "CRYPTO",
       currencyCode: "KAIA",
     },
     burst: {
       itemIdentifier: "burst-pack",
       name: "Burst Pack",
-      price: "0.03",
+      price: JSON.stringify(getKaiaValue(3)),
       pgType: "CRYPTO",
       currencyCode: "KAIA",
     },
