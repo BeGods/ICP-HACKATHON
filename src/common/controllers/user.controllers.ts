@@ -185,18 +185,19 @@ export const createLinePayment = async (req, res) => {
     automata: {
       itemIdentifier: "automata-pack",
       name: "Automata Pack",
-      price: JSON.stringify(getKaiaValue(1)),
+      price: String(getKaiaValue(1)),
       pgType: "CRYPTO",
       currencyCode: "KAIA",
     },
     burst: {
       itemIdentifier: "burst-pack",
       name: "Burst Pack",
-      price: JSON.stringify(getKaiaValue(3)),
+      price: String(getKaiaValue(3)),
       pgType: "CRYPTO",
       currencyCode: "KAIA",
     },
   };
+
   const stripePayment = {
     automata: {
       itemIdentifier: "automata-pack",
