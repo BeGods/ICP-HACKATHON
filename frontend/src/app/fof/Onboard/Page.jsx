@@ -470,12 +470,26 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
               /> */}
-              <img
+              <div
+                onClick={handleConnectLineWallet}
+                className="flex justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]"
+              >
+                <img
+                  src="/assets/dapp.logo.png"
+                  alt="dapp"
+                  className="w-[28px] min-w-[26px] max-w-[34px]"
+                />
+                <h1 className="text-[18px] min-text-[18px] max-text-[24px] font-medium font-[SF Pro Display, SF Pro Text, Apple SD Gothic Neo]">
+                  Connect
+                </h1>
+              </div>
+
+              {/* <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleConnectLineWallet}
-              />
+              /> */}
               {/* {refer == "dapp" ? (
                 <img
                   src={assets.buttons.dapp}

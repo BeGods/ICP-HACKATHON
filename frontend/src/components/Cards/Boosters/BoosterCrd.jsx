@@ -32,6 +32,7 @@ import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
 import useWalletPayment from "../../../hooks/LineWallet";
+import { getKaiaValue } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 
@@ -81,9 +82,11 @@ const PayModal = ({
               <div
                 className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
               >
-                <img src={assets.uxui.kaia} alt="kaia" className="w-[9vw]" />
+                <img src={assets.uxui.kaia} alt="kaia" className="w-[2.5rem]" />
                 <div className="font-medium text-[40px] text-white glow-text-black">
-                  {activeCard === "automata" ? 0.01 : 0.03}
+                  {activeCard === "automata"
+                    ? getKaiaValue(1)
+                    : getKaiaValue(3)}
                 </div>
               </div>
             </div>
@@ -701,7 +704,9 @@ const BoosterClaim = ({
                       className="h-[8vw]"
                     />
                     <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
-                      {activeCard === "automata" ? 0.01 : 0.03}
+                      {activeCard === "automata"
+                        ? getKaiaValue(1)
+                        : getKaiaValue(3)}
                     </div>{" "}
                     <div className="text-white text-black-contour mt-1 z-10 text-[8vw] px-1">
                       |
