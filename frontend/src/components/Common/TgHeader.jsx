@@ -44,7 +44,6 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
     try {
       const walletData = await connectWallet();
       if (!walletData) {
-        alert("Wallet connection was canceled or failed. Please try again.");
         return;
       }
       const { signature, message } = walletData;
