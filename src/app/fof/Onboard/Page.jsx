@@ -464,16 +464,13 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                 }}
               />
             */}
-              <img
+              {/* <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              />
-              <div
-                onClick={handleConnectLineWallet}
-                className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]"
-              >
+              /> */}
+              {/* <div className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]">
                 <img
                   src="/assets/dapp.logo.png"
                   alt="dapp"
@@ -482,7 +479,13 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                 <h1 className="text-[18px] min-text-[18px] max-text-[24px] font-medium font-[SF Pro Display, SF Pro Text, Apple SD Gothic Neo]">
                   Connect
                 </h1>
-              </div>
+              </div> */}
+              <img
+                src={assets.buttons.dapp}
+                alt="dapp-button"
+                className="cursor-pointer w-full"
+                onClick={handleConnectLineWallet}
+              />
 
               {/* <img
                 src={assets.buttons.dapp}
