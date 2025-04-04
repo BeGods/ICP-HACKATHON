@@ -13,13 +13,13 @@ import {
   deleteExpCookie,
   handleClickHaptic,
 } from "../../helpers/cookie.helper";
-import { connectLineWallet } from "../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import useWalletPayment from "../../hooks/LineWallet";
+import { connectLineWallet } from "../../utils/api.fof";
 
 const tele = window.Telegram?.WebApp;
 
-const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
+const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
   const { connectWallet, fetchLinePayHistory, disconnectLineWallet } =
     useWalletPayment();
   const { enableHaptic, isTelegram, authToken, lineWallet } =
@@ -28,6 +28,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [dots, setDots] = useState(1);
+  const [isConnecting, setIsConnecting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,14 +39,21 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
   }, []);
 
   const handleConnectLineWallet = async () => {
+    if (isConnecting) return;
+    setIsConnecting(true);
     try {
-      const { accountAddress, signature, message } = await connectWallet();
-      if (accountAddress) {
-        await connectLineWallet(signature, message, authToken);
+      const walletData = await connectWallet();
+      if (!walletData) {
+        alert("Wallet connection was canceled or failed. Please try again.");
+        return;
       }
+      const { signature, message } = walletData;
+      await connectLineWallet(signature, message, authToken);
     } catch (error) {
-      console.error(error);
-      alert(error);
+      console.error("Wallet Connection Error:", error);
+      alert("An error occurred while connecting the wallet.");
+    } finally {
+      setIsConnecting(false);
     }
   };
 
@@ -55,8 +63,8 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
       await disconnectLineWallet();
       setShowModal(false);
     } catch (error) {
-      console.error(error);
-      alert(error);
+      console.error("Error disconnecting wallet:", error);
+      alert("Failed to disconnect the wallet. Please try again.");
     }
   };
 
@@ -66,8 +74,8 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
     try {
       await fetchLinePayHistory();
     } catch (error) {
-      console.error(error);
-      alert(error);
+      console.error("Payment History Error:", error);
+      alert("Failed to fetch payment history.");
     } finally {
       setShowLoading(false);
       setShowModal(false);
@@ -101,7 +109,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded, showMobileAuth }) => {
             <Wallet
               size={24}
               onClick={handleConnectLineWallet}
-              className="cursor-pointer"
+              className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
             />
           )}
         </>
