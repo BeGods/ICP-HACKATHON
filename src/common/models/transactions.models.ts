@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import {
+  ICoinTransactions,
   IItemTransactions,
   IKaiaTransactions,
   IOrbsTransactions,
@@ -42,6 +43,30 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
         "multiBurst",
         "join",
         "stake",
+      ],
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const coinTransactionsSchema = new Schema<ICoinTransactions>(
+  {
+    ...baseTransactionSchema,
+    coins: {
+      type: Number,
+      required: true,
+    },
+    source: {
+      type: String,
+      enum: [
+        "blacksmith",
+        "join",
+        "stake",
+        "voucher",
+        "moon",
+        "share",
+        "bonus",
       ],
       required: true,
     },
@@ -137,6 +162,11 @@ const ItemsTransactions = model<IItemTransactions>(
   itemsTransactionsSchema
 );
 
+const CoinsTransactions = model<ICoinTransactions>(
+  "CoinsTransaction",
+  itemsTransactionsSchema
+);
+
 const StarsTransactions = model<IStarTransactions>(
   "StarsTransaction",
   starsTransactionsSchema
@@ -151,6 +181,7 @@ export {
   OrbsTransactions,
   ShardsTransactions,
   RewardsTransactions,
+  CoinsTransactions,
   StarsTransactions,
   ItemsTransactions,
   KaiaTransactions,

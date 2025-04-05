@@ -7,6 +7,9 @@ import { isVaultActive } from "../../helpers/general.helpers";
 import { hasTwelveHoursElapsed } from "../../helpers/game.helpers";
 import { ItemsTransactions } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
+import ranks from "../../common/models/ranks.models";
+import Stats from "../../common/models/Stats.models";
+import { checkBonus } from "../services/general.ror.services";
 
 interface itemInterface {
   itemId?: string;
@@ -17,10 +20,9 @@ interface itemInterface {
 }
 
 export const getGameStats = async (req, res) => {
-  let user = req.user;
-  const userId = user._id;
-
   try {
+    let user = req.user;
+    const userId = user._id;
     const userGameData = await fetchGameData(userId);
 
     // bag data
@@ -40,6 +42,7 @@ export const getGameStats = async (req, res) => {
     const isMythAbsent =
       userGameData.userMythologies[0].mythologies.length === 0;
 
+    // new user
     if (isMythAbsent) {
       await userMythologies.findOneAndUpdate(
         { userId: userId },
@@ -47,6 +50,7 @@ export const getGameStats = async (req, res) => {
       );
     }
 
+    // reset game session
     if (hasTwelveHoursElapsed(user.gameSession.gameHrStartAt)) {
       user = await user.updateOne(
         {
@@ -66,10 +70,18 @@ export const getGameStats = async (req, res) => {
       user.gameSession?.restExpiresAt
     );
 
+    let userRank = await ranks.findOne({ userId: req.user._id });
+    if (!userRank) {
+      const totalUsers = await Stats.findOne({ statId: "fof" });
+      userRank = { coinRank: totalUsers?.totalUsers && 0 } as any;
+    }
+
     const memberData = {
-      orbRank: 0,
-      totalOrbs: 0,
+      coinRank: userRank?.coinRank,
+      gobcoin: userRank?.totalGobcoin,
     };
+
+    const isEligibleToClaim = await checkBonus(user);
 
     // is eligible to claim, streak, joining bonus
     const userData = {
@@ -96,7 +108,7 @@ export const getGameStats = async (req, res) => {
         streakCount: 0,
         lastMythClaimed: "Celtic",
       },
-      joiningBonus: true,
+      joiningBonus: user.bonus.ror.joiningBonus,
       isPlaySuperVerified: user.playsuper.isVerified,
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
       ...memberData,

@@ -171,7 +171,7 @@ export const getGameStats = async (req, res) => {
     const userId = req.user._id;
     let user = req.user;
 
-    // Execute the aggregation pipeline
+    // fetch quests, game data
     const userGameStats = await aggregateGameStats(userId);
 
     if (!userGameStats || userGameStats.length === 0) {
