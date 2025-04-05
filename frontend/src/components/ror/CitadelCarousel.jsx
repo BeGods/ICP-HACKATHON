@@ -8,8 +8,14 @@ import { toast } from "react-toastify";
 import { activateRest, activateVault } from "../../utils/api.ror";
 
 const CitadelCarousel = ({ enableGuide, mythData }) => {
-  const { setShowCard, activeMyth, gameData, setSection, setGameData } =
-    useContext(RorContext);
+  const {
+    setShowCard,
+    activeMyth,
+    authToken,
+    gameData,
+    setSection,
+    setGameData,
+  } = useContext(RorContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
@@ -31,7 +37,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             },
           };
         });
-        setSection(1);
+        setSection(0);
         console.log(response);
         toast.success("vault activated");
       } catch (error) {
@@ -60,7 +66,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         });
         setSection(1);
         console.log(response);
-        toast.success("vault activated");
+        toast.success("rest activated");
       } catch (error) {
         console.log(error);
         setShowCard(null);
@@ -78,7 +84,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             isMulti={false}
             itemKey="blacksmith"
             handleClick={() => {
-              setSection(2);
+              setSection(3);
             }}
           />
         ),
@@ -90,7 +96,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             isMulti={false}
             itemKey="merchant"
             handleClick={() => {
-              setSection(2);
+              setSection(4);
             }}
           />
         ),
@@ -101,38 +107,52 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
           <CitadelItem
             itemKey="vault"
             handleClick={() => {
-              setShowCard(
-                <MiscCard
-                  isMulti={false}
-                  handleClick={handleActivateBank}
-                  Button={<RoRBtn handleClick={handleActivateBank} />}
-                />
-              );
+              if (gameData.bank.isVaultActive) {
+                setSection(5);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    isMulti={false}
+                    handleClick={handleActivateBank}
+                    Button={<RoRBtn handleClick={handleActivateBank} />}
+                  />
+                );
+              }
             }}
           />
         ),
       },
-      {
+    ];
+
+    if (!gameData.bank.isVaultActive) {
+      boosters.push({
         key: "multiVault",
         component: (
           <CitadelItem
             isMulti={true}
             itemKey="multiVault"
             handleClick={() => {
-              setShowCard(
-                <MiscCard
-                  isMulti={true}
-                  handleClick={handleActivateBank}
-                  Button={
-                    <RoRBtn isMulti={true} handleClick={handleActivateBank} />
-                  }
-                />
-              );
+              if (gameData.bank.isVaultActive) {
+                setSection(5);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    isMulti={true}
+                    handleClick={handleActivateBank}
+                    Button={
+                      <RoRBtn isMulti={true} handleClick={handleActivateBank} />
+                    }
+                  />
+                );
+              }
             }}
           />
         ),
-      },
-      {
+      });
+    }
+
+    if (!gameData.stats.isRestActive) {
+      boosters.push({
         key: "rest",
         component: (
           <CitadelItem
@@ -151,20 +171,20 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             }}
           />
         ),
-      },
-    ];
+      });
+    }
 
     const boosterStatus = {
       multiVault: !gameData.bank.isVaultActive,
       vault: !gameData.bank.isVaultActive,
-      blacksmith: false,
+      blacksmith: true,
       merchant: false,
+      rest: false,
     };
 
     const predefinedOrder = [
       "blacksmith",
       "merchant",
-      "rest",
       "multiVault",
       "vault",
       "rest",

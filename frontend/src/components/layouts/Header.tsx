@@ -1,6 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
+import { RorContext } from "../../context/context";
 
 const BottomChild = () => {
+  const { gameData, section } = useContext(RorContext);
+
+  const sections = [
+    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 0
+    { left: gameData.stats.dailyQuota, right: gameData.stats.competelvl }, // 1
+    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 2
+    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 3
+    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 4
+    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 5
+  ];
+
   return (
     <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
       <div className="flex relative w-full px-7">
@@ -8,14 +20,14 @@ const BottomChild = () => {
           className={`flex border-white  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="flex items-center text-primary font-medium pl-headSides">
-            12
+            {sections[section].left}
           </div>
         </div>
         <div
           className={`flex justify-end border-white gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div className="flex text-black-contour items-center text-primary font-medium pr-headSides">
-            12
+            {sections[section].right}
           </div>
         </div>
       </div>
@@ -38,16 +50,6 @@ const BottomChild = () => {
     </div>
   );
 };
-
-// const CenterChild = () => {
-//   return (
-//     <div className="flex absolute justify-center w-full top-0 z-20">
-//       <div
-//         className={`h-symbol-primary w-symbol-primary rounded-full bg-black border border-white z-20 transition-all duration-500`}
-//       ></div>
-//     </div>
-//   );
-// };
 
 const RoRHeader = ({ CenterChild }) => {
   return (

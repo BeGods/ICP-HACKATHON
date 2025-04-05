@@ -13,6 +13,7 @@ const BottomChild = () => {
   const rorContext = useContext(RorContext);
   const [showEffect, setShowEffect] = useState(true);
   const { t } = useTranslation();
+
   const setSection =
     game === "fof" ? fofContext.setSection : rorContext.setSection;
   const giftIdx = game === "fof" ? 5 : 8;

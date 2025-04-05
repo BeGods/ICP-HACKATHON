@@ -1,24 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { FofContext } from "../../../context/context";
+import React, { useContext } from "react";
+import { MainContext } from "../../../context/context";
 import GiftHeader from "./Header";
-import {
-  ToggleLeft,
-  ToggleRight,
-} from "../../../components/Common/SectionToggles";
 import GiftCarousel from "../../../components/Carousel/GiftCarousel";
-import { trackComponentView } from "../../../utils/ga";
 
 const Gift = () => {
-  const { rewards, assets, setSection, isTelegram } = useContext(FofContext);
-  const [showToggles, setShowToggles] = useState(false);
+  const { globalRewards, assets, isTelegram } = useContext(MainContext);
+  // const [showToggles, setShowToggles] = useState(false);
   // const adsgramId = import.meta.env.VITE_AD_GIFT_CLAIM;
 
-  useEffect(() => {
-    trackComponentView("gifts");
-    setTimeout(() => {
-      setShowToggles(true);
-    }, 300);
-  }, []);
+  // useEffect(() => {
+  //   trackComponentView("gifts");
+  //   setTimeout(() => {
+  //     setShowToggles(true);
+  //   }, 300);
+  // }, []);
 
   // const onReward = async () => {
   //   const lastValue = await validateGiftAdStatus(tele);
@@ -73,15 +68,15 @@ const Gift = () => {
         />
       </div>
       {/* Header */}
-      <GiftHeader partners={rewards.length} />
+      <GiftHeader partners={globalRewards.length} />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] flex-col gap-y-[15px]">
-          <GiftCarousel rewards={rewards} />
+          <GiftCarousel rewards={globalRewards} />
         </div>
       </div>
 
       {/* Toggles */}
-      {showToggles && (
+      {/* {showToggles && (
         <>
           <ToggleLeft
             minimize={2}
@@ -98,7 +93,7 @@ const Gift = () => {
             activeMyth={4}
           />
         </>
-      )}
+      )} */}
     </div>
   );
 };

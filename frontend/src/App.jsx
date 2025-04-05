@@ -14,6 +14,7 @@ import { MainContext } from "./context/context";
 import assets from "./assets/assets.json";
 import {
   fetchHapticStatus,
+  getStorage,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
 import LineCallback from "./app/common/LineCallback";
@@ -35,6 +36,7 @@ function usePageTracking() {
 function App() {
   const [game, setGame] = useState("fof");
   const [lineWallet, setLineWallet] = useState(null);
+  const [globalRewards, setGlobalRewards] = useState([]);
   const [enableHaptic, setEnableHaptic] = useState(true);
   const [isTelegram, setIsTelegram] = useState(false);
   const [enableSound, setEnableSound] = useState(true);
@@ -70,12 +72,16 @@ function App() {
     setGame,
     setLineWallet,
     lineWallet,
+    globalRewards,
+    setGlobalRewards,
   };
 
   const syncAllCookies = async () => {
     const isSoundActive = await validateSoundCookie(tele);
     const isHapticActive = await fetchHapticStatus(tele);
+    const fetcedGame = await getStorage(tele, "game");
 
+    setGame(fetcedGame);
     setEnableHaptic(isHapticActive);
     setEnableSound(JSON.parse(isSoundActive));
   };

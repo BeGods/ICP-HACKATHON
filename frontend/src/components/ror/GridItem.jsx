@@ -8,11 +8,11 @@ const GridItem = ({ itemObj, itemsWithAllFrags }) => {
   return (
     <div className={`relative h-[120px] w-[120px] overflow-hidden`}>
       <div
-        className={`glow-icon-white h-full w-full ${
+        className={` h-full w-full ${
           !itemsWithAllFrags.includes(itemDetails.id) && "opacity-50"
         }`}
         style={{
-          backgroundImage: `url(/assets/ror-cards/240px-${itemObj.itemId}_off.png)`,
+          backgroundImage: `url(/assets/ror-cards/240px-${itemObj.itemId}_on.png)`,
           backgroundSize: "cover",
           backgroundPosition: "10% 20%",
           backgroundRepeat: "no-repeat",

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import assets from "../../../assets/assets.json";
 import { useNavigate } from "react-router-dom";
-import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { handleClickHaptic, setStorage } from "../../../helpers/cookie.helper";
 import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
@@ -50,11 +50,12 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram, isLoading }) => {
               />
             </div>
             <div
-              onClick={() => {
+              onClick={async () => {
                 handleClickHaptic(tele, true);
                 setShowGlow(true);
                 setGame("fof");
                 handleFadeout();
+                await setStorage(tele, "game", "fof");
                 setTimeout(() => {
                   navigate("/fof");
                 }, 1000);

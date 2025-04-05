@@ -19,10 +19,14 @@ const CenterChild = () => {
 };
 
 const Citadel = (props) => {
-  const { minimize } = useContext(RorContext);
+  const { minimize, isTelegram } = useContext(RorContext);
 
   return (
-    <div className="w-full h-full">
+    <div
+      className={`flex flex-col ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } overflow-hidden m-0`}
+    >
       <RoRHeader CenterChild={<CenterChild />} />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] min-h-[60vh] flex-col">

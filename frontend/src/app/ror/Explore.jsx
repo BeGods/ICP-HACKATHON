@@ -9,6 +9,7 @@ import SwipeArena from "../../components/ror/SwipeArena";
 
 import React, { useContext, useEffect, useState } from "react";
 import RoRHeader from "../../components/layouts/Header";
+import { gameItems } from "../../utils/gameItems";
 
 const CenterChild = ({ content }) => {
   return (
@@ -68,10 +69,29 @@ const Explore = () => {
     <div className="text-[6vw]">
       {reward ? (
         <>
-          {reward.shards > 0 && <div>Shards: {reward.shards}</div>}
+          {reward.shards > 0 && (
+            <div className="flex flex-col justify-center items-center text-white">
+              <img
+                src={`/assets/ror-cards/240px-shard.green.png`}
+                alt="reward"
+              />
+              <h1 className="text-primary glow-myth-celtic uppercase mt-4">
+                {reward.shards}
+              </h1>
+            </div>
+          )}
           {reward.fragment && (
-            <div className="text-white">
-              Relic: {JSON.stringify(reward.fragment.itemId)}
+            <div className="flex flex-col justify-center items-center text-white">
+              <img
+                src={`/assets/ror-cards/240px-${reward.fragment.itemId}_on.png`}
+                alt="reward"
+              />
+              <h1 className="text-primary glow-myth-celtic uppercase mt-4">
+                {
+                  gameItems.find((item) => item.id === reward.fragment.itemId)
+                    .name
+                }
+              </h1>
             </div>
           )}
         </>
@@ -153,6 +173,10 @@ const Explore = () => {
           },
         };
       });
+
+      setTimeout(() => {
+        setStartPlay(false);
+      }, 6000);
     } catch (error) {
       console.log(error);
     }

@@ -65,7 +65,6 @@ const Vault = (props) => {
     setIsTouched(false);
     setScaleIcon(false);
 
-    // Check if the item was dropped inside the drop zone
     const dropZone = dropZoneRef.current;
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
@@ -84,20 +83,35 @@ const Vault = (props) => {
         bottom: copyPosition.y + 100,
       };
 
-      // Check drop range
-      if (
-        copyRect.left >= adjustedDropZoneRect.left &&
-        copyRect.right <= adjustedDropZoneRect.right &&
-        copyRect.top >= adjustedDropZoneRect.top &&
-        copyRect.bottom <= adjustedDropZoneRect.bottom
-      ) {
+      // Calculate overlap area
+      const overlapWidth = Math.max(
+        0,
+        Math.min(copyRect.right, adjustedDropZoneRect.right) -
+          Math.max(copyRect.left, adjustedDropZoneRect.left)
+      );
+      const overlapHeight = Math.max(
+        0,
+        Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
+          Math.max(copyRect.top, adjustedDropZoneRect.top)
+      );
+      const overlapArea = overlapWidth * overlapHeight;
+      const itemArea =
+        (copyRect.right - copyRect.left) * (copyRect.bottom - copyRect.top);
+      const overlapPercentage = (overlapArea / itemArea) * 100;
+
+      console.log(`📌 Overlap Area: ${overlapArea}px²`);
+      console.log(`📌 Item Area: ${itemArea}px²`);
+      console.log(`📌 Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
+
+      if (overlapPercentage >= 10) {
+        console.log("✅ Item successfully dropped inside!");
         // Remove the dragged item
         setGameData((prevItems) => {
           let updatedVaultItems = prevItems.bank.vault.filter(
             (i) => i._id !== draggedItem._id
           );
 
-          // check bag space
+          // Check bag space
           if (prevItems.bag.length < 12) {
             let updatedBagItems = [...prevItems.bag, draggedItem];
             itemToTransfer.push(draggedItem._id);
@@ -110,10 +124,12 @@ const Vault = (props) => {
               },
             };
           } else {
-            console.log("Error, insufficient space in bank");
+            console.log("❌ Error: Insufficient space in the bag");
             return prevItems;
           }
         });
+      } else {
+        console.log("❌ Drop invalid: Not enough overlap.");
       }
     }
 
@@ -143,7 +159,7 @@ const Vault = (props) => {
           />
         }
       />
-      <div className="h-full w-[80%] mx-auto grid grid-cols-3">
+      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {gameData.bank.vault.map((item) => (
           <div
             key={item._id}
@@ -184,14 +200,14 @@ const Vault = (props) => {
               <div
                 className="glow-icon-white h-full w-full"
                 style={{
-                  backgroundImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "100% 20%",
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
 
-              <div
+              {/* <div
                 className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
                 style={{
                   maskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
@@ -203,7 +219,7 @@ const Vault = (props) => {
                   maskRepeat: "no-repeat",
                   WebkitMaskRepeat: "no-repeat",
                 }}
-              ></div>
+              ></div> */}
             </div>
           </div>
         )}
@@ -227,8 +243,8 @@ const Vault = (props) => {
           )}
         </div> */}
       </div>
-      <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} />
+      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
+      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
     </div>
   );
 };

@@ -35,7 +35,6 @@ export const startSession = async (accessToken) => {
 export const claimSessionReward = async (accessToken, battleData) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/game/claimSession`;
 
-  console.log(battleData);
 
   try {
     const response = await axios.post(url, battleData, {
@@ -83,6 +82,22 @@ export const updateBagData = async (accessToken, arrayOfIds) => {
         },
       }
     );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchJoiningBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/bonus/join`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
