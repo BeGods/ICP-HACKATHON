@@ -22,8 +22,10 @@ const useWalletPayment = () => {
     }
 
     try {
-      const provider = new w3(lineProvider);
-      const accounts = await provider.send("kaia_requestAccounts", []);
+      // const provider = new w3(lineProvider);
+      const accounts = await lineProvider.request({
+        method: "kaia_requestAccounts",
+      });
 
       if (!accounts || accounts.length === 0) {
         alert("No wallet connected. Please check your wallet and try again.");
