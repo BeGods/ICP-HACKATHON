@@ -185,3 +185,44 @@ export const getLeaderboardRanks = async (
     throw new Error(error);
   }
 };
+
+export const checkBonus = async (user) => {
+  try {
+    const dailyBonusClaimed = user.bonus?.ror.dailyBonusClaimedAt;
+    const nowUtc = new Date();
+
+    const startOfTodayUtc = new Date(
+      Date.UTC(
+        nowUtc.getUTCFullYear(),
+        nowUtc.getUTCMonth(),
+        nowUtc.getUTCDate(),
+        0,
+        0,
+        0
+      )
+    );
+
+    const endOfTodayUtc = new Date(
+      Date.UTC(
+        nowUtc.getUTCFullYear(),
+        nowUtc.getUTCMonth(),
+        nowUtc.getUTCDate(),
+        23,
+        59,
+        59
+      )
+    );
+    const validClaim =
+      dailyBonusClaimed >= startOfTodayUtc &&
+      dailyBonusClaimed <= endOfTodayUtc;
+
+    if (validClaim) {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
+};

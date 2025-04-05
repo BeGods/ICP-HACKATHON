@@ -1,6 +1,8 @@
 import { getLeaderboardRanks } from "../../ror/services/general.ror.services";
 import userMythologies from "../../common/models/mythologies.models";
 import { generateDailyRwrd } from "../services/general.ror.services";
+import User from "../../common/models/user.models";
+import { CoinsTransactions } from "../../common/models/transactions.models";
 
 export const claimDailyBonus = async (req, res) => {
   const userId = req.user._id;
@@ -58,6 +60,38 @@ export const getLeaderboard = async (req, res) => {
 
     res.status(500).json({
       message: "Failed to fetch leaderboard",
+      error: error.message,
+    });
+  }
+};
+
+export const claimJoinBonus = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { "bonus.ror.joiningBonus": true }
+    );
+
+    await userMythologies.findOneAndUpdate(
+      { userId: userId },
+      { $inc: { gobcoin: 3 } }
+    );
+
+    const newCoinsTransaction = new CoinsTransactions({
+      userId: userId,
+      source: "join",
+      coins: 3,
+    });
+    await newCoinsTransaction.save();
+
+    res.status(200).json({ message: "Joining bonus claimed successfully." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to update join bonus.",
       error: error.message,
     });
   }

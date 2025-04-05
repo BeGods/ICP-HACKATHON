@@ -251,6 +251,22 @@ export interface IOrbsTransactions extends Document {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface ICoinTransactions extends Document {
+  userId: mongoose.Types.ObjectId;
+  coins: number;
+  source:
+    | "blacksmith"
+    | "join"
+    | "stake"
+    | "voucher"
+    | "moon"
+    | "share"
+    | "bonus";
+  date?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 // stars transaction
 export interface IStarTransactions extends Document {
   userId: mongoose.Types.ObjectId;
