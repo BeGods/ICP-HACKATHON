@@ -69,7 +69,7 @@
         },
         "line" : "/assets/line.png",
         "otp" : "/assets/mobile.png",
-        "dapp" : "/assets/dapp.png",
+        "dapp" : "/assets/dapp.connect.svg",
         "telegram" : "/assets/telegram.png"
     },
     "symbols": {

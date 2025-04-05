@@ -22,9 +22,9 @@ import TgHeader from "../../../components/Common/TgHeader";
 import FoFIntro from "../../common/Intro/FoFIntro";
 import RoRIntro from "../../common/Intro/RoRIntro";
 import assets from "../../../assets/assets.json";
-import { connectWallet, initializeWalletSDK } from "../../../hooks/LineWallet";
 import { useLocation } from "react-router-dom";
 import SettingModal from "../../../components/Modals/Settings";
+import useWalletPayment from "../../../hooks/LineWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -399,6 +399,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
 
 const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const { setLineWallet, setAuthToken } = useContext(MainContext);
+  const { connectWallet } = useWalletPayment();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const refer = queryParams.get("refer");
@@ -406,12 +407,8 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const handleConnectLineWallet = async () => {
     handleClickHaptic(tele, true);
     try {
-      const { lineProvider } = await initializeWalletSDK();
-      const { accountAddress, signature, message } = await connectWallet(
-        lineProvider
-      );
+      const { accountAddress, signature, message } = await connectWallet();
       if (accountAddress) {
-        setLineWallet(accountAddress);
         const response = await authenticateLineWallet(message, signature);
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
@@ -466,19 +463,36 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   openModal();
                 }}
               />
-*/}
-              <img
+            */}
+              {/* <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              />
+              /> */}
+              {/* <div className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]">
+                <img
+                  src="/assets/dapp.logo.png"
+                  alt="dapp"
+                  className="w-[28px] min-w-[26px] max-w-[34px]"
+                />
+                <h1 className="text-[18px] min-text-[18px] max-text-[24px] font-medium font-[SF Pro Display, SF Pro Text, Apple SD Gothic Neo]">
+                  Connect
+                </h1>
+              </div> */}
               <img
+                src={assets.buttons.dapp}
+                alt="dapp-button"
+                className="cursor-pointer w-full"
+                onClick={handleConnectLineWallet}
+              />
+
+              {/* <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleConnectLineWallet}
-              />
+              /> */}
               {/* {refer == "dapp" ? (
                 <img
                   src={assets.buttons.dapp}

@@ -31,10 +31,8 @@ import { Clapperboard, Star, X } from "lucide-react";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
-import {
-  createLinePayment,
-  initializePaymentSDK,
-} from "../../../hooks/LineWallet";
+import useWalletPayment from "../../../hooks/LineWallet";
+import { getKaiaValue } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 
@@ -84,9 +82,11 @@ const PayModal = ({
               <div
                 className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
               >
-                <img src={assets.uxui.kaia} alt="kaia" className="w-[9vw]" />
+                <img src={assets.uxui.kaia} alt="kaia" className="w-[2.5rem]" />
                 <div className="font-medium text-[40px] text-white glow-text-black">
-                  {activeCard === "automata" ? 0.01 : 0.03}
+                  {activeCard === "automata"
+                    ? getKaiaValue(1)
+                    : getKaiaValue(3)}
                 </div>
               </div>
             </div>
@@ -127,6 +127,12 @@ const PayModal = ({
               <span className="absolute">{`${".".repeat(dots)}`}</span>
             </div>
           </div>
+          <IconBtn
+            isInfo={false}
+            activeMyth={activeMyth}
+            handleClick={closeModal}
+            align={0}
+          />
         </div>
       )}
     </div>
@@ -155,6 +161,7 @@ const BoosterClaim = ({
     enableHaptic,
     isTelegram,
   } = useContext(FofContext);
+  const { createLinePayment } = useWalletPayment();
   const { t } = useTranslation();
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);
@@ -574,28 +581,27 @@ const BoosterClaim = ({
   const handleLinePayment = async (paymentMethod) => {
     setPayIsActive(true);
 
-    const { paymentProvider, lineProvider } = await initializePaymentSDK();
+    try {
+      const paymentPromise = createLinePayment(paymentMethod, activeCard);
 
-    const paymentPromise = createLinePayment(
-      paymentMethod,
-      paymentProvider,
-      lineProvider,
-      authToken,
-      activeCard
-    );
+      const timeoutPromise = new Promise((resolve) =>
+        setTimeout(() => resolve(false), 180000)
+      );
 
-    const timeoutPromise = new Promise((resolve) =>
-      setTimeout(() => resolve(false), 180000)
-    );
+      const paymentStatus = await Promise.race([
+        paymentPromise,
+        timeoutPromise,
+      ]);
 
-    const paymentStatus = await Promise.race([paymentPromise, timeoutPromise]);
-
-    if (paymentStatus === true) {
-      handleUpdatePayReward();
-      setShowCard(null);
-      setPayIsActive(false);
-    } else {
+      if (paymentStatus) {
+        handleUpdatePayReward();
+      } else {
+        showToast("error_payment");
+      }
+    } catch (error) {
+      console.error("Payment Error:", error);
       showToast("error_payment");
+    } finally {
       setShowCard(null);
       setPayIsActive(false);
     }
@@ -698,7 +704,9 @@ const BoosterClaim = ({
                       className="h-[8vw]"
                     />
                     <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
-                      {activeCard === "automata" ? 0.01 : 0.03}
+                      {activeCard === "automata"
+                        ? getKaiaValue(1)
+                        : getKaiaValue(3)}
                     </div>{" "}
                     <div className="text-white text-black-contour mt-1 z-10 text-[8vw] px-1">
                       |
