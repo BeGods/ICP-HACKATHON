@@ -28,3 +28,15 @@ services:
     env_file: .env.docker
     volumes:
       - .:/src
+
+  ror-dev:
+    container_name: ror-dev
+    restart: unless-stopped
+    build:
+      context: ../ror-frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - 5002:8085
+    env_file: .env.docker
+    volumes:
+      - .:/src
