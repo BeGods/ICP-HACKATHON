@@ -19,54 +19,35 @@ export const gameItems = [
   { id: "celtic.relic.B07", name: "samhain", fragments: [0, 1], orbs: "Norse" },
   { id: "celtic.relic.B08", name: "uaithne", fragments: [0, 1], orbs: "Egyptian" },
   { id: "celtic.relic.B09", name: "clairseach", fragments: [0, 1], orbs: "Egyptian" },
-  {
-    id: "celtic.artifact01",
-    name: "lamhainn",
-    fragments: [0, 1, 2, 3],
-    orbs: "Celtic",
-  },
-  {
-    id: "celtic.artifact02",
-    name: "slabhra",
-    fragments: [0, 1, 2],
-    orbs: "Celtic",
-  },
-  {
-    id: "celtic.artifact03",
-    name: "safach",
-    fragments: [0, 1],
-    orbs: "Norse",
-  },
-  {
-    id: "celtic.artifact04",
-    name: "coire ansic",
-    fragments: [0, 1, 2],
-    orbs: "Aether",
-  },
-  {
-    id: "celtic.artifact05",
-    name: "coil",
-    fragments: [0, 1],
-    orbs: "Norse",
-  },
-  {
-    id: "celtic.artifact06",
-    name: "fealdog",
-    fragments: [0],
-    orbs: "Celtic",
-  },
-  {
-    id: "celtic.artifact07",
-    name: "adharc",
-    fragments: [0],
-    orbs: "Celtic",
-  },
-  {
-    id: "celtic.artifact08",
-    name: "cogar",
-    fragments: [0],
-    orbs: "Egyptian",
-  },
+
+  { id: "celtic.relic.C01", name: "lamhainn", fragments: [0, 1, 2, 3], orbs: "Celtic" },
+  { id: "celtic.relic.C02", name: "slabhra", fragments: [0, 1, 2], orbs: "Celtic" },
+  { id: "celtic.relic.C03", name: "safach", fragments: [0, 1], orbs: "Norse" },
+  { id: "celtic.relic.C04", name: "coire ansic", fragments: [0, 1, 2], orbs: "Aether" },
+  { id: "celtic.relic.C05", name: "coil", fragments: [0, 1], orbs: "Norse" },
+  { id: "celtic.relic.C06", name: "fealdog", fragments: [0], orbs: "Celtic" },
+  { id: "celtic.relic.C07", name: "adharc", fragments: [0], orbs: "Celtic" },
+  { id: "celtic.relic.C08", name: "cogar", fragments: [0], orbs: "Egyptian" },
+
+  { id: "celtic.artifact.common01", name: "gold coin 1", fragments: [0] },
+  { id: "celtic.artifact.common02_on", name: "key", fragments: [0] },
+  { id: "celtic.artifact.common03", name: "map", fragments: [0] },
+  { id: "celtic.artifact.common04_on", name: "potion 1", fragments: [0] },
+  { id: "celtic.artifact.common05_on", name: "potion 2", fragments: [0] },
+  { id: "celtic.artifact.common06_on", name: "potion 3", fragments: [0] },
+  { id: "celtic.artifact.starter01", name: "statue", fragments: [0] },
+  { id: "celtic.artifact.starter02", name: "boots", fragments: [0] },
+  { id: "celtic.artifact.starter03", name: "gold coin 2", fragments: [0] },
+  { id: "celtic.artifact.starter04", name: "gold coin 3", fragments: [0] },
+  { id: "celtic.artifact.starter05", name: "silver coin 1", fragments: [0] },
+  { id: "celtic.artifact.starter06", name: "silver coin 2", fragments: [0] },
+  { id: "celtic.artifact.starter07", name: "silver coin 3", fragments: [0] },
+  { id: "celtic.artifact.starter08", name: "silver coin 4", fragments: [0] },
+  { id: "celtic.artifact.starter09", name: "silver coin 5", fragments: [0] },
+  { id: "celtic.artifact.starter10", name: "book", fragments: [0] },
+
+
+
   // egyptian
   {
     id: "egyptian.relic01",

@@ -130,7 +130,6 @@ const Blacksmith = () => {
     setIsTouched(false);
     setScaleIcon(false);
 
-    // Check if the item was dropped inside the drop zone
     const dropZone = dropZoneRef.current;
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
@@ -149,27 +148,36 @@ const Blacksmith = () => {
         bottom: copyPosition.y + 100,
       };
 
-      // Check drop range
-      if (
-        copyRect.left >= adjustedDropZoneRect.left &&
-        copyRect.right <= adjustedDropZoneRect.right &&
-        copyRect.top >= adjustedDropZoneRect.top &&
-        copyRect.bottom <= adjustedDropZoneRect.bottom
-      ) {
-        setArbitaryBag((prevItems) => {
-          let updatedBagItems = prevItems.filter(
-            (i) => i._id !== draggedItem._id
-          );
+      // Calculate overlap area
+      const overlapWidth = Math.max(
+        0,
+        Math.min(copyRect.right, adjustedDropZoneRect.right) -
+          Math.max(copyRect.left, adjustedDropZoneRect.left)
+      );
+      const overlapHeight = Math.max(
+        0,
+        Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
+          Math.max(copyRect.top, adjustedDropZoneRect.top)
+      );
+      const overlapArea = overlapWidth * overlapHeight;
+      const itemArea =
+        (copyRect.right - copyRect.left) * (copyRect.bottom - copyRect.top);
+      const overlapPercentage = (overlapArea / itemArea) * 100;
 
-          return updatedBagItems;
-        });
+      console.log(`📌 Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
 
-        setItemsToTransfer((prev) => {
-          if (!prev.includes(draggedItem._id)) {
-            return [...prev, draggedItem._id];
-          }
-          return prev;
-        });
+      if (overlapPercentage >= 10) {
+        console.log("✅ Valid drop: Removing item from bag");
+
+        setArbitaryBag((prevItems) =>
+          prevItems.filter((i) => i._id !== draggedItem._id)
+        );
+
+        setItemsToTransfer((prev) =>
+          prev.includes(draggedItem._id) ? prev : [...prev, draggedItem._id]
+        );
+      } else {
+        console.log("❌ Drop rejected: Not enough overlap.");
       }
     }
 
@@ -204,7 +212,7 @@ const Blacksmith = () => {
           />
         }
       />
-      <div className="h-full w-[80%] mx-auto grid grid-cols-3 gap-[5px]">
+      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {arbitaryBag.map((item) => (
           <div
             key={item._id}
@@ -243,14 +251,14 @@ const Blacksmith = () => {
               <div
                 className="glow-icon-white h-full w-full"
                 style={{
-                  backgroundImage: `url(/320px-celtic-item-example-transparent.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "100% 20%",
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
 
-              <div
+              {/* <div
                 className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
                 style={{
                   maskImage: `url(/320px-celtic-item-example-transparent.png)`,
@@ -262,30 +270,16 @@ const Blacksmith = () => {
                   maskRepeat: "no-repeat",
                   WebkitMaskRepeat: "no-repeat",
                 }}
-              ></div>
+              ></div> */}
             </div>
           </div>
         )}
       </div>
 
-      <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} />
+      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
+      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
     </div>
   );
 };
 
 export default Blacksmith;
-
-//   const filteredItems = gameData.bag.filter((itemId) =>
-//     itemsWithAllFrags.some((item) => item.itemId === itemId.itemId)
-//   );
-
-//   console.log(itemsWithAllFrags);
-
-// useEffect(() => {
-//   if (itemToTransfer.length == 1) {
-//     console.log("dfkja");
-
-//     setMinimize(1);
-//   }
-// }, [itemToTransfer]);

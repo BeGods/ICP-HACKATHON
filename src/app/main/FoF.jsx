@@ -24,6 +24,7 @@ import {
   deleteAuthCookie,
   fetchHapticStatus,
   getExpCookie,
+  getStorage,
   setAuthCookie,
   validateAuth,
   validateCountryCode,
@@ -64,6 +65,7 @@ const FoFMain = () => {
     setLineWallet,
     setPlatform,
     setIsTelegram,
+    setGlobalRewards,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -160,6 +162,10 @@ const FoFMain = () => {
     try {
       const rewardsData = await fetchRewards(lang, country, token);
       setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+      setGlobalRewards([
+        ...rewardsData?.rewards,
+        ...rewardsData?.claimedRewards,
+      ]);
       setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
       localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
     } catch (error) {
@@ -336,6 +342,13 @@ const FoFMain = () => {
       setIsTelegram(isTg);
     }
   }, []);
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--card-height",
+      isTelegram ? "45.35vh" : "90vh"
+    );
+  }, [isTelegram]);
 
   useEffect(() => {
     if (platform === "ios") {

@@ -8,6 +8,19 @@ import {
 import { RorContext } from "../../context/context";
 import { tradeItem } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
+import RoRHeader from "../../components/layouts/Header";
+
+const CenterChild = ({ dropZoneRef }) => {
+  return (
+    <div
+      ref={dropZoneRef}
+      className={`
+            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+    >
+      drop here
+    </div>
+  );
+};
 
 const Merchant = (props) => {
   const { gameData, setGameData, authToken } = useContext(RorContext);
@@ -22,8 +35,6 @@ const Merchant = (props) => {
   const handleItemToTrade = async (item) => {
     setIsLoading(true);
     try {
-      console.log(item);
-
       const response = await tradeItem(authToken, item);
 
       // remove draggedItem
@@ -84,6 +95,8 @@ const Merchant = (props) => {
     const dropZone = dropZoneRef.current;
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
+
+      // Increase tolerance (10% overlap required)
       const tolerance = 10;
       const adjustedDropZoneRect = {
         left: dropZoneRect.left - tolerance,
@@ -99,14 +112,32 @@ const Merchant = (props) => {
         bottom: copyPosition.y + 100,
       };
 
-      // Check drop range
-      if (
-        copyRect.left >= adjustedDropZoneRect.left &&
-        copyRect.right <= adjustedDropZoneRect.right &&
-        copyRect.top >= adjustedDropZoneRect.top &&
-        copyRect.bottom <= adjustedDropZoneRect.bottom
-      ) {
+      // Calculate overlap area
+      const overlapWidth = Math.max(
+        0,
+        Math.min(copyRect.right, adjustedDropZoneRect.right) -
+          Math.max(copyRect.left, adjustedDropZoneRect.left)
+      );
+      const overlapHeight = Math.max(
+        0,
+        Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
+          Math.max(copyRect.top, adjustedDropZoneRect.top)
+      );
+      const overlapArea = overlapWidth * overlapHeight;
+
+      const itemArea =
+        (copyRect.right - copyRect.left) * (copyRect.bottom - copyRect.top);
+      const overlapPercentage = (overlapArea / itemArea) * 100;
+
+      console.log(`Overlap Area: ${overlapArea}px²`);
+      console.log(`Item Area: ${itemArea}px²`);
+      console.log(`Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
+
+      if (overlapPercentage >= 10) {
+        console.log("✅ Yes, drop it!");
         handleItemToTrade(draggedItem._id);
+      } else {
+        console.log("❌ Not enough overlap to drop.");
       }
     }
 
@@ -115,7 +146,8 @@ const Merchant = (props) => {
 
   return (
     <div className="w-full h-full">
-      <div className="h-full w-[80%] mx-auto grid grid-cols-3">
+      <RoRHeader CenterChild={<CenterChild dropZoneRef={dropZoneRef} />} />
+      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {gameData.bag.map((item) => (
           <div
             key={item._id}
@@ -156,14 +188,14 @@ const Merchant = (props) => {
               <div
                 className="glow-icon-white h-full w-full"
                 style={{
-                  backgroundImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "100% 20%",
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
 
-              <div
+              {/* <div
                 className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
                 style={{
                   maskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
@@ -175,20 +207,13 @@ const Merchant = (props) => {
                   maskRepeat: "no-repeat",
                   WebkitMaskRepeat: "no-repeat",
                 }}
-              ></div>
+              ></div> */}
             </div>
           </div>
         )}
-
-        <div
-          ref={dropZoneRef}
-          className="bg-red-400 flex justify-center items-center absolute h-[36vw] w-[36vw] rounded-full top-0 z-20 left-1/2 -translate-x-1/2"
-        >
-          drop here
-        </div>
       </div>
-      <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} />
+      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
+      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
     </div>
   );
 };

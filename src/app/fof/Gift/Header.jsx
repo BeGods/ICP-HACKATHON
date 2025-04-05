@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
@@ -35,7 +35,7 @@ const BottomChild = ({ partners }) => {
 };
 
 const CenterChild = (props) => {
-  const { platform, assets, enableHaptic } = useContext(FofContext);
+  const { platform, assets, enableHaptic } = useContext(MainContext);
 
   return (
     <div className="flex absolute justify-center w-full z-20 top-0 ">

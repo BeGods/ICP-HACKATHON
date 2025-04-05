@@ -22,9 +22,12 @@ import Blacksmith from "../ror/Blacksmith";
 import Merchant from "../ror/Merchant";
 import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
-import { fetchRewards } from "../../utils/api.fof";
+import { fetchProfilePhoto, fetchRewards } from "../../utils/api.fof";
 import Profile from "../fof/Profile/Page";
 import Gift from "../fof/Gift/Gift";
+import Gacha from "../ror/Gacha";
+import { determineIsTelegram } from "../../utils/device.info";
+import JoinBonus from "../ror/JoinBonus";
 
 const tele = window.Telegram?.WebApp;
 
@@ -47,6 +50,10 @@ const RoRMain = () => {
     setTasks,
     isTelegram,
     game,
+    globalRewards,
+    setGlobalRewards,
+    setIsTelegram,
+    setPlatform,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -92,6 +99,8 @@ const RoRMain = () => {
     setTasks,
     isTelegram,
     game,
+    globalRewards,
+    setGlobalRewards,
   };
 
   const sections = [
@@ -104,15 +113,35 @@ const RoRMain = () => {
     <Profile />, // 6
     <Leaderboard />, // 7
     <Gift />, // 8
+    <Gacha />, // 9
+    <JoinBonus />, // 10
   ];
 
   const getPartnersData = async (token) => {
     try {
       const rewardsData = await fetchRewards(lang, country, token);
       setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+      setGlobalRewards([
+        ...rewardsData?.rewards,
+        ...rewardsData?.claimedRewards,
+      ]);
     } catch (error) {
       console.log(error);
       showToast("default");
+    }
+  };
+
+  const getProfilePhoto = async (token) => {
+    try {
+      const response = await fetchProfilePhoto(token);
+      if (response.avatarUrl) {
+        setUserData((prev) => ({
+          ...prev,
+          avatarUrl: response.avatarUrl,
+        }));
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -129,10 +158,33 @@ const RoRMain = () => {
         };
       });
       setTasks(response.quests);
-      setSection(0);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+
+      if (!response.user?.joiningBonus) {
+        setSection(10);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+        if (isTelegram) {
+          (async () => {
+            await getProfilePhoto(token);
+          })();
+        }
+      } else {
+        setTimeout(() => {
+          setSection(9);
+          setIsLoading(false);
+        }, 1000);
+      }
+
+      // else if (
+      //   response?.user?.joiningBonus &&
+      //   response?.user.isEligibleToClaim
+      // ) {
+      //   setSection(9);
+      //   setTimeout(() => {
+      //     setIsLoading(false);
+      //   }, 1000);
+      // }
     } catch (error) {
       console.log(error);
       showToast("default");
@@ -183,6 +235,9 @@ const RoRMain = () => {
       tele.setHeaderColor("#000000");
       tele.setBackgroundColor("#000000");
       tele.setBottomBarColor("#000000");
+      setPlatform(tele.platform);
+      const isTg = determineIsTelegram(tele.platform);
+      setIsTelegram(isTg);
     }
   }, []);
 
@@ -232,7 +287,7 @@ const RoRMain = () => {
         >
           <RorContext.Provider value={contextValues}>
             <div className={`flex-grow flex`}>{sections[section]}</div>
-            {section !== 7 && <Footer />}
+            {section !== 7 && section !== 9 && section !== 10 && <Footer />}
             {showCard && (
               <div className="absolute z-[99] w-screen">{showCard}</div>
             )}

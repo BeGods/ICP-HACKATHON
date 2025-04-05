@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
-import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { handleClickHaptic, setStorage } from "../../../helpers/cookie.helper";
 import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
@@ -56,11 +56,12 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
               />
             </div>
             <div
-              onClick={() => {
+              onClick={async () => {
                 handleClickHaptic(tele, true);
                 setGame("ror");
                 setShowGlow(true);
                 handleFadeout();
+                await setStorage(tele, "game", "ror");
                 setTimeout(() => {
                   navigate("/ror");
                 }, 1000);
@@ -77,7 +78,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
                 className="h-auto"
               />
               <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
-                PLAY
+                {showGlow ? "LOADING" : "PLAY"}
               </span>
               {/* <h1 className="text-white font-fof text-[1.75rem] text-black-contour">
                 COMING SOON

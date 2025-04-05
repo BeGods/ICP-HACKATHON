@@ -66,35 +66,49 @@ const Bag = (props) => {
     setIsTouched(false);
     setScaleIcon(false);
 
-    // check if the item was dropped inside the drop zone
     const dropZone = dropZoneRef.current;
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
 
-      // add a tolerance margin
-      const tolerance = 10;
+      // Increase tolerance margin (10% of drop zone size)
+      const toleranceX = dropZoneRect.width * 0.1;
+      const toleranceY = dropZoneRect.height * 0.1;
+
       const adjustedDropZoneRect = {
-        left: dropZoneRect.left - tolerance,
-        right: dropZoneRect.right + tolerance,
-        top: dropZoneRect.top - tolerance,
-        bottom: dropZoneRect.bottom + tolerance,
+        left: dropZoneRect.left - toleranceX,
+        right: dropZoneRect.right + toleranceX,
+        top: dropZoneRect.top - toleranceY,
+        bottom: dropZoneRect.bottom + toleranceY,
       };
 
       const copyRect = {
         left: copyPosition.x,
         top: copyPosition.y,
-        right: copyPosition.x + 100,
-        bottom: copyPosition.y + 100,
+        right: copyPosition.x + 100, // Assuming dragged item is 100px wide
+        bottom: copyPosition.y + 100, // Assuming dragged item is 100px tall
       };
 
-      // Check drop range
-      if (
-        copyRect.left >= adjustedDropZoneRect.left &&
-        copyRect.right <= adjustedDropZoneRect.right &&
-        copyRect.top >= adjustedDropZoneRect.top &&
-        copyRect.bottom <= adjustedDropZoneRect.bottom
-      ) {
-        // Item dropped successfully
+      // Calculate intersection percentage
+      const overlapX = Math.max(
+        0,
+        Math.min(copyRect.right, adjustedDropZoneRect.right) -
+          Math.max(copyRect.left, adjustedDropZoneRect.left)
+      );
+      const overlapY = Math.max(
+        0,
+        Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
+          Math.max(copyRect.top, adjustedDropZoneRect.top)
+      );
+
+      const overlapArea = overlapX * overlapY;
+      const draggedItemArea = 100 * 100; // Item is 100x100 px
+      const overlapPercentage = (overlapArea / draggedItemArea) * 100;
+
+      console.log(`Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
+
+      // Allow drop if at least 10% of the item is inside the drop zone
+      if (overlapPercentage >= 10) {
+        console.log("✅ YES, Drop it!");
         setGameData((prevItems) => {
           let updatedBagItems = prevItems.bag.filter(
             (i) => i._id !== draggedItem._id
@@ -114,12 +128,12 @@ const Bag = (props) => {
               },
             };
           } else {
-            console.log("Error, insufficient space in vault");
+            console.log("❌ Error: Insufficient space in vault");
             return prevItems;
           }
         });
       } else {
-        console.log("Dropped outside of drop zone.");
+        console.log("❌ Dropped outside of drop zone.");
       }
     }
 
@@ -185,18 +199,18 @@ const Bag = (props) => {
               <div
                 className="glow-icon-white h-full w-full"
                 style={{
-                  backgroundImage: `url(/assets/ror-cards/240px-celtic.relic.B08_off.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "100% 20%",
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
 
-              <div
-                className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
+              {/* <div
+                className={`absolute ${overlayStyle[2][1]}  opacity-50`}
                 style={{
-                  backgroundImage: `url(/assets/ror-cards/240px-celtic.relic.B08_off.png)`,
-                  WebkitMaskImage: `url(/assets/ror-cards/240px-celtic.relic.B08_off.png)`,
+                  backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
+                  WebkitMaskImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
                   maskSize: "cover",
                   WebkitMaskSize: "cover",
                   maskPosition: "100% 20%",
@@ -204,13 +218,13 @@ const Bag = (props) => {
                   maskRepeat: "no-repeat",
                   WebkitMaskRepeat: "no-repeat",
                 }}
-              ></div>
+              ></div> */}
             </div>
           </div>
         )}
       </div>
-      <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} />
+      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
+      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
     </div>
   );
 };

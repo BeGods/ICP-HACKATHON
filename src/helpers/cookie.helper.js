@@ -1,6 +1,42 @@
 import { isSafari } from "../utils/device.info";
 
 
+export const setStorage = async (tele, key, value) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    tele.CloudStorage.setItem(key, value);
+  } else {
+    localStorage.setItem(key, value);
+  }
+};
+
+export const getStorage = async (tele, key) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    return new Promise((resolve) => {
+      tele.CloudStorage.getItem(key, (err, item) => {
+        if (err) {
+          console.error(err);
+          resolve("fof");
+        } else {
+          resolve(item);
+        }
+      });
+    });
+  } else {
+    const cookieItem = localStorage.getItem(key);
+    if (cookieItem) {
+      return cookieItem;
+    }
+  }
+
+  return "fof";
+};
+
+
+
 export const getExpCookie = async (tele) => {
   await tele.ready();
 
