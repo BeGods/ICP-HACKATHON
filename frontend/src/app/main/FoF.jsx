@@ -210,7 +210,6 @@ const FoFMain = () => {
     try {
       const response = await fetchGameStats(token);
       const showAnmnt = await validateTutCookie(tele, "announcement08");
-      setLineWallet(response?.user?.kaiaAddress);
       setGameData(response?.stats);
       setQuestsData(response?.quests);
       setTasks(response?.extraQuests);
@@ -313,6 +312,10 @@ const FoFMain = () => {
 
       const device = getDeviceAndOS(tele.platform);
       trackEvent("device", device, "success");
+      const existingAddr = sessionStorage.getItem("accountAddress");
+      if (existingAddr) {
+        setLineWallet(existingAddr);
+      }
     } catch (error) {
       showToast("default");
     }

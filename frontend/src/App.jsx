@@ -17,6 +17,7 @@ import {
   validateSoundCookie,
 } from "./helpers/cookie.helper";
 import LineCallback from "./app/common/LineCallback";
+import { WalletProvider } from "./context/wallet";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -85,14 +86,16 @@ function App() {
 
   return (
     <MainContext.Provider value={initalStates}>
-      <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
-        <Routes>
-          <Route path="/" element={<IntroPage />} />
-          <Route path="/auth/line/callback" element={<LineCallback />} />
-          <Route path="/fof" element={<FoFMain />} />
-          <Route path="/ror" element={<RoRMain />} />
-        </Routes>
-      </TonConnectUIProvider>
+      <WalletProvider>
+        <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
+          <Routes>
+            <Route path="/" element={<IntroPage />} />
+            <Route path="/auth/line/callback" element={<LineCallback />} />
+            <Route path="/fof" element={<FoFMain />} />
+            <Route path="/ror" element={<RoRMain />} />
+          </Routes>
+        </TonConnectUIProvider>
+      </WalletProvider>
     </MainContext.Provider>
   );
 }

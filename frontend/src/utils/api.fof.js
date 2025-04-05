@@ -416,11 +416,11 @@ export const disconnectTonWallet = async (accessToken) => {
   }
 };
 
-export const connectLineWallet = async (kaiaAddress, signature, accessToken) => {
+export const connectLineWallet = async (signature, message, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/connect/line`;
 
   try {
-    const response = await axios.post(url, { message: kaiaAddress, signature: signature }, {
+    const response = await axios.post(url, { signature: signature, message: message }, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
