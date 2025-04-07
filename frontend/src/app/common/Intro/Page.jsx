@@ -337,12 +337,7 @@ const IntroPage = (props) => {
   return (
     <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
       {isTgDesktop ? (
-        <OnboardPage
-          handleTokenUpdated={() => {
-            setTokenExpired(false);
-          }}
-          refer={refer || null}
-        />
+        <DesktopScreen assets={assets} />
       ) : isBrowser && tokenExpired ? (
         <OnboardPage
           handleTokenUpdated={() => {
