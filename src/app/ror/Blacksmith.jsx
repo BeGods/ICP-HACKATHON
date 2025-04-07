@@ -1,10 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import GridItem from "../../components/ror/GridItem";
-import { overlayStyle } from "../../utils/constants.ror";
-import {
-  ToggleLeft,
-  ToggleRight,
-} from "../../components/Common/SectionToggles";
 import { RorContext } from "../../context/context";
 import { completeItem } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
@@ -26,7 +21,7 @@ const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
 };
 
 const Blacksmith = () => {
-  const { gameData, setGameData, authToken, setShowOverlayItem, setSection } =
+  const { gameData, setGameData, authToken, setShowCard, setSection } =
     useContext(RorContext);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
@@ -37,8 +32,12 @@ const Blacksmith = () => {
   const [scaleIcon, setScaleIcon] = useState(false);
   const [activeItems, setActiveItems] = useState([]);
   const [arbitaryBag, setArbitaryBag] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const dropZoneRef = useRef(null);
   const disableClick = useRef(null);
+
+  const getGameItemFragmentLength = (itemId) =>
+    gameItems.find((gameItem) => gameItem.id === itemId)?.fragments.length ?? 0;
 
   const initializeActiveItems = () => {
     const combinedFragItms = gameData.bag.reduce((acc, item) => {
@@ -56,13 +55,15 @@ const Blacksmith = () => {
       return acc;
     }, []);
 
-    const itemsWithAllFrags = combinedFragItms
-      .filter(
-        (item) =>
-          item.fragments.length ===
-            gameItems.find((gameItem) => gameItem.id === item.itemId).fragments
-              .length && item.isComplete === false
-      )
+    let itemsWithAllFrags;
+
+    itemsWithAllFrags = combinedFragItms
+      .filter((item) => {
+        const hasAllFrags =
+          item.fragments.length === getGameItemFragmentLength(item.itemId);
+        const matchesSelected = !selectedItem || item.itemId === selectedItem;
+        return hasAllFrags && !item.isComplete && matchesSelected;
+      })
       .map((item) => item.itemId);
 
     setActiveItems(itemsWithAllFrags);
@@ -78,7 +79,7 @@ const Blacksmith = () => {
           itemToTransfer,
           payMethod
         );
-        setShowOverlayItem(null);
+        setShowCard(null);
         setGameData((prevItems) => {
           let updatedBagItems = prevItems.bag.filter(
             (item) => !itemToTransfer.includes(item._id)
@@ -91,7 +92,6 @@ const Blacksmith = () => {
             bag: updatedBagItems,
           };
         });
-        console.log(response);
         setItemsToTransfer([]);
         setSection(2);
         disableClick.current = false;
@@ -105,12 +105,12 @@ const Blacksmith = () => {
   };
 
   const handleTouchStart = (e, item) => {
-    if (activeItems.includes(item.itemId)) {
-      setDraggedItem(item);
-      setLastDraggedItem(item);
-      setDragging(true);
-      setScaleIcon(true);
-    }
+    if (!activeItems.includes(item.itemId)) return;
+
+    setDraggedItem(item);
+    setLastDraggedItem(item);
+    setDragging(true);
+    setScaleIcon(true);
   };
 
   const handleTouchMove = (e) => {
@@ -126,19 +126,28 @@ const Blacksmith = () => {
   };
 
   const handleTouchEnd = () => {
+    if (!draggedItem) return;
+
     setDragging(false);
     setIsTouched(false);
     setScaleIcon(false);
 
+    if (draggedItem?.itemId && !activeItems.includes(draggedItem.itemId))
+      return;
+
     const dropZone = dropZoneRef.current;
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
-      const tolerance = 10;
+
+      // Increase tolerance margin (10% of drop zone size)
+      const toleranceX = dropZoneRect.width * 0.1;
+      const toleranceY = dropZoneRect.height * 0.1;
+
       const adjustedDropZoneRect = {
-        left: dropZoneRect.left - tolerance,
-        right: dropZoneRect.right + tolerance,
-        top: dropZoneRect.top - tolerance,
-        bottom: dropZoneRect.bottom + tolerance,
+        left: dropZoneRect.left - toleranceX,
+        right: dropZoneRect.right + toleranceX,
+        top: dropZoneRect.top - toleranceY,
+        bottom: dropZoneRect.bottom + toleranceY,
       };
 
       const copyRect = {
@@ -148,21 +157,20 @@ const Blacksmith = () => {
         bottom: copyPosition.y + 100,
       };
 
-      // Calculate overlap area
-      const overlapWidth = Math.max(
+      // overalp area
+      const overlapX = Math.max(
         0,
         Math.min(copyRect.right, adjustedDropZoneRect.right) -
           Math.max(copyRect.left, adjustedDropZoneRect.left)
       );
-      const overlapHeight = Math.max(
+      const overlapY = Math.max(
         0,
         Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
           Math.max(copyRect.top, adjustedDropZoneRect.top)
       );
-      const overlapArea = overlapWidth * overlapHeight;
-      const itemArea =
-        (copyRect.right - copyRect.left) * (copyRect.bottom - copyRect.top);
-      const overlapPercentage = (overlapArea / itemArea) * 100;
+      const overlapArea = overlapX * overlapY;
+      const draggedItemArea = 100 * 100; // Item is 100x100 px
+      const overlapPercentage = (overlapArea / draggedItemArea) * 100;
 
       console.log(`📌 Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
 
@@ -172,6 +180,10 @@ const Blacksmith = () => {
         setArbitaryBag((prevItems) =>
           prevItems.filter((i) => i._id !== draggedItem._id)
         );
+
+        if (itemToTransfer == 0) {
+          setSelectedItem(draggedItem.itemId);
+        }
 
         setItemsToTransfer((prev) =>
           prev.includes(draggedItem._id) ? prev : [...prev, draggedItem._id]
@@ -186,7 +198,27 @@ const Blacksmith = () => {
 
   useEffect(() => {
     initializeActiveItems();
-  }, []);
+  }, [selectedItem]);
+
+  useEffect(() => {
+    if (selectedItem && !dragging) {
+      const allItemsTransfered =
+        gameItems.find((item) => item.id === selectedItem).fragments.length ===
+        itemToTransfer.length;
+      if (allItemsTransfered) {
+        setShowCard(
+          <MiscCard
+            Button={
+              <JoinButton
+                payWithOrb={() => handleCompleteItem(1)}
+                payWithCoin={() => handleCompleteItem(0)}
+              />
+            }
+          />
+        );
+      }
+    }
+  }, [itemToTransfer]);
 
   return (
     <div className="w-full h-fit">
@@ -194,25 +226,11 @@ const Blacksmith = () => {
         CenterChild={
           <CenterChild
             dropZoneRef={dropZoneRef}
-            onClick={() => {
-              if (itemToTransfer.length > 0 && !dragging) {
-                setShowOverlayItem(
-                  <MiscCard
-                    Button={
-                      <JoinButton
-                        payWithOrb={() => handleCompleteItem(1)}
-                        payWithCoin={() => handleCompleteItem(0)}
-                      />
-                    }
-                  />
-                );
-              }
-            }}
             isDropActive={itemToTransfer.length === 0 || dragging}
           />
         }
       />
-      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
+      <div className="w-[80%] mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {arbitaryBag.map((item) => (
           <div
             key={item._id}
@@ -228,7 +246,7 @@ const Blacksmith = () => {
             />
           </div>
         ))}
-        {/* Invisble remaining  */}
+        {/* remaining places */}
         {Array.from({ length: 12 - arbitaryBag.length }).map((_, index) => (
           <div
             key={`placeholder-${index}`}
@@ -236,7 +254,7 @@ const Blacksmith = () => {
           ></div>
         ))}
 
-        {/* Copy */}
+        {/* dragged copy of item */}
         {isTouched && draggedItem && (
           <div
             style={{

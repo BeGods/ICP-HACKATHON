@@ -5,7 +5,7 @@ import { RorContext } from "../../context/context";
 import { gameItems } from "../../utils/gameItems";
 
 const Gacha = () => {
-  const { setSection, isTelegram } = useContext(RorContext);
+  const { setSection, isTelegram, assets } = useContext(RorContext);
   const [changeText, setChangeText] = useState("SCRATCH");
   const [item, setItem] = useState(null);
 
@@ -32,7 +32,13 @@ const Gacha = () => {
         isTelegram ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
-      <div className="flex flex-col w-full h-full items-center pt-4">
+      <div
+        className="absolute inset-0 w-full h-full opacity-80 z-0"
+        style={{
+          background: `url(${assets.uxui.rorspash}) no-repeat center / cover`,
+        }}
+      ></div>
+      <div className="flex flex-col w-full h-full z-50 items-center pt-4">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
           <Crown color="#FFD660" size={"20vw"} />

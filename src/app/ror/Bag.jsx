@@ -62,6 +62,8 @@ const Bag = (props) => {
   };
 
   const handleTouchEnd = () => {
+    if (!draggedItem) return;
+
     setDragging(false);
     setIsTouched(false);
     setScaleIcon(false);
@@ -84,8 +86,8 @@ const Bag = (props) => {
       const copyRect = {
         left: copyPosition.x,
         top: copyPosition.y,
-        right: copyPosition.x + 100, // Assuming dragged item is 100px wide
-        bottom: copyPosition.y + 100, // Assuming dragged item is 100px tall
+        right: copyPosition.x + 100,
+        bottom: copyPosition.y + 100,
       };
 
       // Calculate intersection percentage
