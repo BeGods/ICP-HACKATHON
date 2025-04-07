@@ -52,7 +52,7 @@ export const getGameStats = async (req, res) => {
 
     // reset game session
     if (hasTwelveHoursElapsed(user.gameSession.gameHrStartAt)) {
-      user = await user.updateOne(
+      await user.updateOne(
         {
           $set: {
             "gameSession.dailyGameQuota": 12,
@@ -62,6 +62,9 @@ export const getGameStats = async (req, res) => {
         },
         { new: true }
       );
+      user.gameSession.dailyGameQuota = 12;
+      user.gameSession.gameHrStartAt = Date.now();
+      user.gameSession.underWorldActiveAt = 0;
     }
 
     userGameData.userMythologies[0].isUnderWorldActive =
@@ -365,6 +368,7 @@ export const transferToVault = async (req, res) => {
             _id: item._id,
             itemId: item.itemId,
             fragmentId: item.fragmentId,
+            isComplete: item.isComplete,
           })),
         },
       },
@@ -532,6 +536,7 @@ export const joinFragments = async (req, res) => {
     );
 
     updatedBag.push(itemObj);
+    console.log(itemObj);
 
     await userMilestones.updateOne({
       $set: { bag: updatedBag },
