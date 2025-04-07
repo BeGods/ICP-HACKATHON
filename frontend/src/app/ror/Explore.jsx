@@ -69,27 +69,27 @@ const Explore = () => {
     <div className="text-[6vw]">
       {reward ? (
         <>
-          {reward.shards > 0 && (
+          {reward?.shards > 0 && (
             <div className="flex flex-col justify-center items-center text-white">
               <img
                 src={`/assets/ror-cards/240px-shard.green.png`}
                 alt="reward"
               />
               <h1 className="text-primary glow-myth-celtic uppercase mt-4">
-                {reward.shards}
+                {reward?.shards}
               </h1>
             </div>
           )}
-          {reward.fragment && (
+          {reward?.fragment?.length > 0 && (
             <div className="flex flex-col justify-center items-center text-white">
               <img
-                src={`/assets/ror-cards/240px-${reward.fragment.itemId}_on.png`}
+                src={`/assets/ror-cards/240px-${reward?.fragment.itemId}_on.png`}
                 alt="reward"
               />
               <h1 className="text-primary glow-myth-celtic uppercase mt-4">
                 {
-                  gameItems.find((item) => item.id === reward.fragment.itemId)
-                    .name
+                  gameItems?.find((item) => item.id === reward.fragment.itemId)
+                    ?.name
                 }
               </h1>
             </div>
@@ -175,8 +175,17 @@ const Explore = () => {
       });
 
       setTimeout(() => {
+        setCurrStage(0);
         setStartPlay(false);
-      }, 6000);
+        setCountDown(3);
+        setRoundTimeElapsed(10);
+        setBattleData({
+          currentRound: 1,
+          roundData: [],
+        });
+        setSwipes(0);
+        setMinimize(0);
+      }, 4000);
     } catch (error) {
       console.log(error);
     }
@@ -193,7 +202,7 @@ const Explore = () => {
       };
     });
 
-    if (battleData.currentRound < 3) {
+    if (battleData.currentRound < 3 && startPlay) {
       setCurrStage(2);
       setTimeout(() => {
         setSwipes(0);

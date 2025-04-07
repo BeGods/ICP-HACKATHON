@@ -5,12 +5,42 @@ const BottomChild = () => {
   const { gameData, section } = useContext(RorContext);
 
   const sections = [
-    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 0
-    { left: gameData.stats.dailyQuota, right: gameData.stats.competelvl }, // 1
-    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 2
-    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 3
-    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 4
-    { left: gameData.stats.dailyQuota, right: gameData.stats.gobcoin }, // 5
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+    }, // 0
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.competelvl,
+      hLeft: "Sessions",
+      hRight: "Competelvl",
+    }, // 1
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+    }, // 2
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+    }, // 3
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+    }, // 4
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+    }, // 5
   ];
 
   return (
@@ -44,8 +74,12 @@ const BottomChild = () => {
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
-        <div className={`mr-auto slide-in-out-left`}>Hello</div>
-        <div className={`ml-auto slide-in-out-right`}>Hello</div>
+        <div className={`mr-auto slide-in-out-left`}>
+          {sections[section].hLeft}
+        </div>
+        <div className={`ml-auto slide-in-out-right`}>
+          {sections[section].hRight}
+        </div>
       </div>
     </div>
   );

@@ -17,9 +17,9 @@ const JoinButton = ({ payWithOrb, payWithCoin }) => {
       >
         <div className="flex justify-center items-center  h-full">
           <div className={`relative flex justify-center items-center`}>
-            <img src={`${assets.uxui.multiorb}`} alt="orb" className="p-5" />
+            <img src={`/assets/240px-gobcoin.png`} alt="orb" className="p-5" />
             <div className="absolute z-10">
-              <div className="text-[10px] text-white glow-text-black">3</div>
+              <div className="text-num text-white glow-text-black">3</div>
             </div>
           </div>
         </div>
@@ -40,7 +40,7 @@ const JoinButton = ({ payWithOrb, payWithCoin }) => {
               className="p-5 filter-orbs-celtic"
             />
             <div className="absolute z-10">
-              <div className="text-[10px] text-white glow-text-black">3</div>
+              <div className="text-num text-white glow-text-black">3</div>
             </div>
           </div>
         </div>

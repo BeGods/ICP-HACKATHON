@@ -96,13 +96,15 @@ const Merchant = (props) => {
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
 
-      // Increase tolerance (10% overlap required)
-      const tolerance = 10;
+      // Increase tolerance margin (10% of drop zone size)
+      const toleranceX = dropZoneRect.width * 0.1;
+      const toleranceY = dropZoneRect.height * 0.1;
+
       const adjustedDropZoneRect = {
-        left: dropZoneRect.left - tolerance,
-        right: dropZoneRect.right + tolerance,
-        top: dropZoneRect.top - tolerance,
-        bottom: dropZoneRect.bottom + tolerance,
+        left: dropZoneRect.left - toleranceX,
+        right: dropZoneRect.right + toleranceX,
+        top: dropZoneRect.top - toleranceY,
+        bottom: dropZoneRect.bottom + toleranceY,
       };
 
       const copyRect = {
@@ -112,22 +114,20 @@ const Merchant = (props) => {
         bottom: copyPosition.y + 100,
       };
 
-      // Calculate overlap area
-      const overlapWidth = Math.max(
+      // Calculate intersection percentage
+      const overlapX = Math.max(
         0,
         Math.min(copyRect.right, adjustedDropZoneRect.right) -
           Math.max(copyRect.left, adjustedDropZoneRect.left)
       );
-      const overlapHeight = Math.max(
+      const overlapY = Math.max(
         0,
         Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
           Math.max(copyRect.top, adjustedDropZoneRect.top)
       );
-      const overlapArea = overlapWidth * overlapHeight;
-
-      const itemArea =
-        (copyRect.right - copyRect.left) * (copyRect.bottom - copyRect.top);
-      const overlapPercentage = (overlapArea / itemArea) * 100;
+      const overlapArea = overlapX * overlapY;
+      const draggedItemArea = 100 * 100; // Item is 100x100 px
+      const overlapPercentage = (overlapArea / draggedItemArea) * 100;
 
       console.log(`Overlap Area: ${overlapArea}px²`);
       console.log(`Item Area: ${itemArea}px²`);
