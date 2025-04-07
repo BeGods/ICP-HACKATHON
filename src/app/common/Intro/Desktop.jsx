@@ -33,7 +33,7 @@ const DesktopScreen = ({ assets }) => {
           }}
         >
           <img
-            src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/telegram-white-icon.png"
+            src="https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/telegram.white.png"
             alt="telegram"
             className="w-[3rem] cursor-pointer"
           />
@@ -44,7 +44,7 @@ const DesktopScreen = ({ assets }) => {
           }}
         >
           <img
-            src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png"
+            src="https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/x.white.png"
             alt="x"
             className="w-[3rem] cursor-pointer"
           />
