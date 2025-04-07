@@ -1,6 +1,5 @@
 import { useWallet } from "../context/wallet";
 import { getPaymentId } from "../utils/api.fof";
-import { Web3Provider as w3 } from "@kaiachain/ethers-ext/v6";
 import { v4 as uuidv4 } from "uuid";
 
 const useWalletPayment = () => {
