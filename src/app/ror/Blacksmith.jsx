@@ -7,16 +7,22 @@ import MiscCard from "../../components/ror/MiscCard";
 import JoinButton from "../../components/ror/JoinButton";
 import RoRHeader from "../../components/layouts/Header";
 
+// {isDropActive ? "drop here" : "locked"}
+
 const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
   return (
     <div
       ref={dropZoneRef}
       onClick={handleClick}
+      style={{
+        backgroundImage: `url('/assets/240px-blacksmith_head.jpg')`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
       className={`
            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
-    >
-      {isDropActive ? "drop here" : "locked"}
-    </div>
+    ></div>
   );
 };
 
@@ -230,7 +236,7 @@ const Blacksmith = () => {
           />
         }
       />
-      <div className="w-[80%] mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
+      <div className="w-[80%] mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {arbitaryBag.map((item) => (
           <div
             key={item._id}
@@ -240,6 +246,7 @@ const Blacksmith = () => {
             className={`${scaleIcon && draggedItem === item && "scale-110"}`}
           >
             <GridItem
+              handleClick={() => {}}
               itemObj={item}
               scaleIcon={scaleIcon}
               itemsWithAllFrags={activeItems}
@@ -247,7 +254,7 @@ const Blacksmith = () => {
           </div>
         ))}
         {/* remaining places */}
-        {Array.from({ length: 12 - arbitaryBag.length }).map((_, index) => (
+        {Array.from({ length: 9 - arbitaryBag.length }).map((_, index) => (
           <div
             key={`placeholder-${index}`}
             className="relative h-[120px] w-[120px] overflow-hidden"

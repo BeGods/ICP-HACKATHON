@@ -335,7 +335,11 @@ const IntroPage = (props) => {
   };
 
   return (
-    <div className={`${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
+    <div
+      className={` ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } ${activeIndex == 2 ? "bg-white" : "bg-black"}`}
+    >
       {isTgDesktop ? (
         <DesktopScreen assets={assets} />
       ) : isBrowser && tokenExpired ? (

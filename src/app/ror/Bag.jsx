@@ -42,7 +42,7 @@ const Bag = (props) => {
   };
 
   const handleTouchStart = (e, item) => {
-    if (gameData.bank.isVaultActive && gameData.bank.vault.length < 24) {
+    if (gameData.bank.isVaultActive && gameData.bank.vault.length < 27) {
       setDraggedItem(item);
       setDragging(true);
       setScaleIcon(true);
@@ -117,7 +117,7 @@ const Bag = (props) => {
           );
 
           // Check vault space
-          if (prevItems.bank.vault.length < 24) {
+          if (prevItems.bank.vault.length < 27) {
             let updatedVaultItems = [...prevItems.bank.vault, draggedItem];
             itemToTransfer.push(draggedItem._id);
 
@@ -157,12 +157,12 @@ const Bag = (props) => {
           <CenterChild
             dropZoneRef={dropZoneRef}
             isDropActive={
-              gameData.bank.isVaultActive && gameData.bank.vault.length < 24
+              gameData.bank.isVaultActive && gameData.bank.vault.length < 27
             }
           />
         }
       />
-      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
+      <div className="w-[80%]  mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {gameData.bag.map((item) => (
           <div
             key={item._id}
@@ -172,6 +172,7 @@ const Bag = (props) => {
             className={`${scaleIcon && draggedItem === item && "scale-110"}`}
           >
             <GridItem
+              handleClick={() => {}}
               itemObj={item}
               scaleIcon={scaleIcon}
               itemsWithAllFrags={gameData.bag.map((item) => item.itemId)}
@@ -179,7 +180,7 @@ const Bag = (props) => {
           </div>
         ))}
         {/* Invisble remaining  */}
-        {Array.from({ length: 12 - gameData.bag.length }).map((_, index) => (
+        {Array.from({ length: 9 - gameData.bag.length }).map((_, index) => (
           <div
             key={`placeholder-${index}`}
             className="relative h-[120px] w-[120px] overflow-hidden"

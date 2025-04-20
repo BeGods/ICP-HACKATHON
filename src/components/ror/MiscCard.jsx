@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { RorContext } from "../../context/context";
 import IconBtn from "../Buttons/IconBtn";
 
-const MiscCard = ({ Button }) => {
+const MiscCard = ({ Button, img, icon }) => {
   const { assets, setShowCard, section } = useContext(RorContext);
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
@@ -10,7 +10,7 @@ const MiscCard = ({ Button }) => {
         <div
           className={`absolute inset-0 rounded-[15px]`}
           style={{
-            backgroundImage: `${`url(${assets.boosters.burstCard})`}`,
+            backgroundImage: `${`url(${img ?? assets.boosters.burstCard})`}`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center ",
@@ -47,7 +47,7 @@ const MiscCard = ({ Button }) => {
               <div
                 className={`flex justify-center text-[60px] text-white text-black-contour w-full h-full items-center px-3 z-10 font-symbols`}
               >
-                a
+                {icon ?? "a"}
               </div>
             </div>
           </div>

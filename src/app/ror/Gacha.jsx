@@ -2,12 +2,64 @@ import { Crown } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Scratch from "../../components/Common/ScratchCrd";
 import { RorContext } from "../../context/context";
-import { gameItems } from "../../utils/gameItems";
+import { fetchDailyBonus } from "../../utils/api.ror";
 
 const Gacha = () => {
-  const { setSection, isTelegram, assets } = useContext(RorContext);
+  const { setSection, setGameData, isTelegram, assets, authToken } =
+    useContext(RorContext);
   const [changeText, setChangeText] = useState("SCRATCH");
   const [item, setItem] = useState(null);
+
+  const claimDailyBonus = async () => {
+    try {
+      const response = await fetchDailyBonus(authToken);
+
+      setItem(response.reward);
+
+      if (response && response.reward) {
+        const itemId = response.reward;
+        let coins = 0;
+        let updateField = null;
+
+        if (/common0[1-4]/.test(itemId)) {
+          // gold coin
+          coins = 2;
+          updateField = "claimedItems";
+        } else if (/common0[5-9]/.test(itemId)) {
+          // silver coin
+          coins = 1;
+          updateField = "claimedItems";
+        } else {
+          // other
+          updateField = "pouch";
+        }
+
+        setGameData((prev) => {
+          const newStats = { ...prev.stats };
+          let updatedPouch = [...prev.pouch];
+          let updatedClaimedItems = [...prev.claimedItems];
+
+          if (updateField == "pouch") {
+            updatedPouch.push(itemId);
+          } else {
+            updatedClaimedItems.push(itemId);
+          }
+
+          newStats.gobcoins = (prev.stats.gobcoin || 0) + coins;
+          return {
+            ...prev,
+            pouch: updatedPouch,
+            claimedItems: updatedClaimedItems,
+            stats: newStats,
+          };
+        });
+      } else {
+        console.error("No reward in response:", response);
+      }
+    } catch (error) {
+      console.error("Failed to claim daily bonus:", error);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -16,16 +68,11 @@ const Gacha = () => {
       );
     }, 1500);
 
-    const artifacts = gameItems.filter((item) =>
-      item.id.includes("celtic.artifact")
-    );
-    const randomItem = artifacts[Math.floor(Math.random() * artifacts.length)];
-    console.log(randomItem.id);
-
-    setItem(randomItem.id);
+    (async () => await claimDailyBonus())();
 
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div
       className={`flex flex-col ${

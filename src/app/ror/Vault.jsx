@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import GridItem from "../../components/ror/GridItem";
-import { overlayStyle } from "../../utils/constants.ror";
 import {
   ToggleLeft,
   ToggleRight,
@@ -14,11 +13,15 @@ const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
     <div
       ref={dropZoneRef}
       onClick={handleClick}
+      style={{
+        backgroundImage: `url('/assets/240px-banker_head.jpg')`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
       className={`
             flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
-    >
-      {isDropActive ? "drop here" : "locked"}
-    </div>
+    ></div>
   );
 };
 
@@ -31,6 +34,23 @@ const Vault = (props) => {
   const [isTouched, setIsTouched] = useState(false);
   const [scaleIcon, setScaleIcon] = useState(false);
   const dropZoneRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const itemsPerPage = 9;
+  const totalPages = Math.ceil(gameData.bank.vault.length / itemsPerPage);
+
+  const paginatedVaultItems = gameData.bank.vault.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
+  const handlePageLeft = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const handlePageRight = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
 
   const handleAddToBag = async () => {
     try {
@@ -112,7 +132,7 @@ const Vault = (props) => {
           );
 
           // Check bag space
-          if (prevItems.bag.length < 12) {
+          if (prevItems.bag.length < 9) {
             let updatedBagItems = [...prevItems.bag, draggedItem];
             itemToTransfer.push(draggedItem._id);
             return {
@@ -155,12 +175,12 @@ const Vault = (props) => {
                 (async () => handleAddToBag())();
               }
             }}
-            isDropActive={gameData.bag.length < 12}
+            isDropActive={gameData.bag.length < 9}
           />
         }
       />
-      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
-        {gameData.bank.vault.map((item) => (
+      <div className="w-[80%]  mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
+        {paginatedVaultItems.map((item) => (
           <div
             key={item._id}
             onTouchStart={(e) => handleTouchStart(e, item)}
@@ -169,6 +189,7 @@ const Vault = (props) => {
             className={`${scaleIcon && draggedItem === item && "scale-110"}`}
           >
             <GridItem
+              handleClick={() => {}}
               itemObj={item}
               scaleIcon={scaleIcon}
               itemsWithAllFrags={gameData.bank.vault.map((item) => item.itemId)}
@@ -176,7 +197,7 @@ const Vault = (props) => {
           </div>
         ))}
         {/* Invisble remaining  */}
-        {Array.from({ length: 12 - gameData.bank.vault.length }).map(
+        {Array.from({ length: 9 - paginatedVaultItems.length }).map(
           (_, index) => (
             <div
               key={`placeholder-${index}`}
@@ -206,45 +227,16 @@ const Vault = (props) => {
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
-
-              {/* <div
-                className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
-                style={{
-                  maskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
-                  WebkitMaskImage: `url(/320px-celtic-item-example-transparent.png)`,
-                  maskSize: "cover",
-                  WebkitMaskSize: "cover",
-                  maskPosition: "100% 20%",
-                  WebkitMaskPosition: "100% 20%",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskRepeat: "no-repeat",
-                }}
-              ></div> */}
             </div>
           </div>
         )}
-
-        {/* <div
-          onClick={() => {
-            if (itemToTransfer.length > 0 && !dragging) {
-              (async () => handleAddToBag())();
-            }
-          }}
-          ref={dropZoneRef}
-          className={`
-            ${
-              gameData.bag.length < 12 ? "bg-green-400" : "bg-red-400"
-            } flex justify-center items-center absolute h-[36vw] w-[36vw] rounded-full top-0 z-20 left-1/2 -translate-x-1/2`}
-        >
-          {gameData.bank.isVaultActive || gameData.bank.vault.length < 24 ? (
-            <>drop here</>
-          ) : (
-            "locked"
-          )}
-        </div> */}
       </div>
-      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
+      {gameData.bank.vault.length > 9 && (
+        <>
+          <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
+          <ToggleRight activeMyth={4} handleClick={handlePageRight} />
+        </>
+      )}
     </div>
   );
 };

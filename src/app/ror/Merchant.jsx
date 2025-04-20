@@ -114,7 +114,6 @@ const Merchant = (props) => {
         bottom: copyPosition.y + 100,
       };
 
-      // Calculate intersection percentage
       const overlapX = Math.max(
         0,
         Math.min(copyRect.right, adjustedDropZoneRect.right) -
@@ -128,10 +127,6 @@ const Merchant = (props) => {
       const overlapArea = overlapX * overlapY;
       const draggedItemArea = 100 * 100; // Item is 100x100 px
       const overlapPercentage = (overlapArea / draggedItemArea) * 100;
-
-      console.log(`Overlap Area: ${overlapArea}px²`);
-      console.log(`Item Area: ${itemArea}px²`);
-      console.log(`Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
 
       if (overlapPercentage >= 10) {
         console.log("✅ Yes, drop it!");
@@ -147,7 +142,7 @@ const Merchant = (props) => {
   return (
     <div className="w-full h-full">
       <RoRHeader CenterChild={<CenterChild dropZoneRef={dropZoneRef} />} />
-      <div className="w-[80%]  mt-[17dvh] h-[65dvh] mx-auto grid grid-cols-3">
+      <div className="w-[80%]  mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
         {gameData.bag.map((item) => (
           <div
             key={item._id}
@@ -157,6 +152,7 @@ const Merchant = (props) => {
             className={`${scaleIcon && draggedItem === item && "scale-110"}`}
           >
             <GridItem
+              handleClick={() => {}}
               itemObj={item}
               scaleIcon={scaleIcon}
               itemsWithAllFrags={
@@ -166,7 +162,7 @@ const Merchant = (props) => {
           </div>
         ))}
         {/* Invisble remaining  */}
-        {Array.from({ length: 12 - gameData.bag.length }).map((_, index) => (
+        {Array.from({ length: 9 - gameData.bag.length }).map((_, index) => (
           <div
             key={`placeholder-${index}`}
             className="relative h-[120px] w-[120px] overflow-hidden"
