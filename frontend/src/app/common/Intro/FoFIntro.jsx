@@ -6,7 +6,7 @@ import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
-const FoFIntro = ({ handleFadeout, fadeout, isTelegram, isLoading }) => {
+const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
   const { setGame } = useContext(MainContext);
@@ -24,7 +24,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram, isLoading }) => {
           background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
         }}
       ></div>
-      {/* img 2 */}
+      {/* img 2  */}
       {showGlow && (
         <div
           className="absolute inset-0 w-full h-full z-10"
@@ -36,7 +36,13 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram, isLoading }) => {
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
-          <img src={assets.logos.fof} alt="fof" className="fof-text-shadow" />
+          <img
+            src={assets.logos.fof}
+            alt="fof"
+            className={`${
+              showGlow && "fof-text-shadow"
+            } transition-all duration-300`}
+          />
           <div className={`flex flex-col gap-[2vh]`}>
             <div
               className={`flex ${

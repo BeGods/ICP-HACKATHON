@@ -34,8 +34,8 @@
         "begodsBlack": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.black.svg",
         "begodsWhite": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/battle.gods.white.svg",
         "fofQr": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-begods.telegram.qrcode.png",
-        "fof": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/forges.of.faith.png",
-        "ror": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/requiem.of.relics.png",
+        "fof": "/assets/forges.of.faith_on.png",
+        "ror": "/assets/requiem.of.relics_.png",
         "dod": "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/dawn.of.duels.png"
     },
     "buttons": {
@@ -69,7 +69,7 @@
         },
         "line" : "/assets/line.png",
         "otp" : "/assets/mobile.png",
-        "dapp" : "/assets/dapp.connect.svg",
+        "dapp" : "/assets/button.dapp.white.svg",
         "telegram" : "/assets/telegram.png"
     },
     "symbols": {
@@ -79,6 +79,12 @@
         "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.egyptian.base.svg"
     },
     "boosters": {
+        "bankerHead": "/assets/240px-banker_head.jpg",
+        "bankerCard": "/assets/320px-banker.jpg",
+        "gemologistCard": "/assets/320px-gemologist.jpeg",
+        "minionHead": "/assets/240px-blacksmith_head.jpg",
+        "thiefCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-thief.jpg",
+        "minionCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-minion.jpg",
         "alchemistPop": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/160px-alchemist.png",
         "automataPop": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/160px-automata.png",
         "alchemistCard": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-alchemist.jpg",

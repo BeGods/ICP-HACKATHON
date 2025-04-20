@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CitadelItem = ({ itemKey, handleClick, isMulti }) => {
+const CitadelItem = ({ icon, itemKey, handleClick, isMulti }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -36,7 +36,7 @@ const CitadelItem = ({ itemKey, handleClick, isMulti }) => {
             isMulti && "gradient-multi"
           } text-booster p-0 -mt-2 mr-2`}
         >
-          2
+          {icon}
         </div>
       </div>
       <div className={`flex flex-col flex-grow justify-center -ml-1`}>

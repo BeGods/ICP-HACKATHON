@@ -12,9 +12,7 @@ const CenterChild = () => {
     <div
       className={`
             flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
-    >
-      hi
-    </div>
+    ></div>
   );
 };
 

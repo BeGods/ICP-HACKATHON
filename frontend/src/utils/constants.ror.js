@@ -12,7 +12,7 @@ export const boosters = [
   { title: "Multi Banker", description: "XXX", redirect: 5, category: "" },
 ];
 
-export const footerIcons = [5, 6, 7, "t"];
+export const footerIcons = [5, `"`, 8, "t"];
 
 export const mythSymbols = {
   greek: "d",
@@ -28,6 +28,16 @@ export const mythElementNames = {
   Egyptian: "Air",
   Other: "Aether",
 };
+
+export const elementMythNames = {
+  fire: "Greek",
+  earth: "Celtic",
+  water: "Norse",
+  air: "Egyptian",
+  aether: "Aether"
+};
+
+
 export const defaultIcons = {
   quest: "j",
   automata: "o",

@@ -41,7 +41,9 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
           <img
             src={assets.logos.ror}
             alt="dod"
-            className="purple-text-shadow"
+            className={`${
+              showGlow && "ror-text-shadow"
+            } transition-all duration-300`}
           />
           <div className="flex flex-col gap-[2vh]">
             <div

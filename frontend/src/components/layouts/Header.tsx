@@ -10,37 +10,70 @@ const BottomChild = () => {
       right: gameData.stats.gobcoin,
       hLeft: "Sessions",
       hRight: "Coins",
+      lIcon: "9",
+      rIcon: "A",
     }, // 0
     {
       left: gameData.stats.dailyQuota,
       right: gameData.stats.competelvl,
       hLeft: "Sessions",
       hRight: "Competelvl",
+      lIcon: "9",
+      rIcon: "n",
     }, // 1
     {
       left: gameData.stats.dailyQuota,
       right: gameData.stats.gobcoin,
       hLeft: "Sessions",
       hRight: "Coins",
+      lIcon: "9",
+      rIcon: "A",
     }, // 2
     {
       left: gameData.stats.dailyQuota,
       right: gameData.stats.gobcoin,
       hLeft: "Sessions",
       hRight: "Coins",
+      lIcon: "9",
+      rIcon: "A",
     }, // 3
     {
       left: gameData.stats.dailyQuota,
       right: gameData.stats.gobcoin,
       hLeft: "Sessions",
       hRight: "Coins",
+      lIcon: "9",
+      rIcon: "A",
     }, // 4
     {
       left: gameData.stats.dailyQuota,
       right: gameData.stats.gobcoin,
       hLeft: "Sessions",
       hRight: "Coins",
-    }, // 5
+      lIcon: "9",
+      rIcon: "A",
+    }, // 5,
+    {}, // 6,
+    {}, // 7,
+    {}, // 8,
+    {}, // 9,
+    {}, // 10,
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+      lIcon: "9",
+      rIcon: "A",
+    }, // 11
+    {
+      left: gameData.stats.dailyQuota,
+      right: gameData.stats.gobcoin,
+      hLeft: "Sessions",
+      hRight: "Coins",
+      lIcon: "9",
+      rIcon: "A",
+    }, // 12
   ];
 
   return (
@@ -65,12 +98,12 @@ const BottomChild = () => {
         <div
           className={`font-symbols text-iconLg text-black-lg-contour text-white`}
         >
-          9
+          {sections[section].lIcon}
         </div>
         <div
           className={`font-symbols text-iconLg text-black-contour text-white`}
         >
-          n
+          {sections[section].rIcon}
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">

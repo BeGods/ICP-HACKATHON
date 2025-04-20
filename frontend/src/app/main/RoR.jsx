@@ -3,6 +3,7 @@ import { MainContext, RorContext } from "../../context/context";
 import { fetchGameStats } from "../../utils/api.ror";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import {
+  deleteAuthCookie,
   fetchHapticStatus,
   validateAuth,
   validateCountryCode,
@@ -28,6 +29,8 @@ import Gift from "../fof/Gift/Gift";
 import Gacha from "../ror/Gacha";
 import { determineIsTelegram } from "../../utils/device.info";
 import JoinBonus from "../ror/JoinBonus";
+import Potions from "../ror/Potions";
+import Book from "../ror/Book";
 
 const tele = window.Telegram?.WebApp;
 
@@ -70,6 +73,8 @@ const RoRMain = () => {
     stats: null,
     bag: null,
     bank: null,
+    pouch: null,
+    claimedItems: null,
   });
   const contextValues = {
     enableHaptic,
@@ -115,6 +120,8 @@ const RoRMain = () => {
     <Gift />, // 8
     <Gacha />, // 9
     <JoinBonus />, // 10
+    <Potions />, // 11
+    <Book />, // 12
   ];
 
   const getPartnersData = async (token) => {
@@ -126,6 +133,8 @@ const RoRMain = () => {
         ...rewardsData?.claimedRewards,
       ]);
     } catch (error) {
+      await deleteAuthCookie(tele);
+
       console.log(error);
       showToast("default");
     }
@@ -155,6 +164,8 @@ const RoRMain = () => {
           stats: response.stats,
           bag: response.bag,
           bank: response.bank,
+          pouch: response.pouch,
+          claimedItems: response.claimedItems,
         };
       });
       setTasks(response.quests);
@@ -169,9 +180,14 @@ const RoRMain = () => {
             await getProfilePhoto(token);
           })();
         }
-      } else {
+      } else if (response.user.isEligibleToClaim) {
         setTimeout(() => {
           setSection(9);
+          setIsLoading(false);
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          setSection(0);
           setIsLoading(false);
         }, 1000);
       }
@@ -186,6 +202,7 @@ const RoRMain = () => {
       //   }, 1000);
       // }
     } catch (error) {
+      await deleteAuthCookie(tele);
       console.log(error);
       showToast("default");
     }
