@@ -43,7 +43,7 @@ const JoinBonus = (props) => {
           newStats.gobcoins = prevItems.stats.gobcoin + 3;
 
           return {
-            ...prev,
+            ...prevItems,
             stats: newStats,
           };
         });
@@ -104,7 +104,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--back flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute h-full glow-tap-white">
                     <img
-                      src={`/assets/ror-cards/240px-celtic.artifact.starter00.png`}
+                      src={`/assets/ror-cards/240px-celtic.artifact.starter00_on.png`}
                       alt="bag"
                     />
                   </div>
