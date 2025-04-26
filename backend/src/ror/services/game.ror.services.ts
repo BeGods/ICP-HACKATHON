@@ -455,8 +455,6 @@ export const filterFetchedItem = (
       "artifact.treasure03",
     ];
 
-    console.log(rewardlvl, isUnderworld);
-
     const filteredNotClaimedItems =
       gameItems?.filter((item) => {
         const id = item.id || "";
@@ -470,8 +468,8 @@ export const filterFetchedItem = (
 
         const rewardCondn =
           isUnderworld && rewardlvl === 4
-            ? [1, 4].includes(item.fragments.length)
-            : item.fragments.length === rewardlvl;
+            ? [1, 4].includes(item.coins)
+            : item.coins === rewardlvl;
 
         return (
           !userClaimedRewards?.claimedRoRItems?.includes(id) &&
@@ -521,8 +519,6 @@ export const updateDigSessionData = async (
       // underworld
 
       if (randomShard == 0) {
-        console.log("white shard");
-
         // white
         userMythlogyData.whiteOrbs += Math.floor(
           (userMythlogyData.whiteShards + updatedShards) / 1000
@@ -540,7 +536,6 @@ export const updateDigSessionData = async (
           }
         );
       } else {
-        console.log("black shard");
         // black
         userMythlogyData.blackOrbs += Math.floor(
           (userMythlogyData.blackShards + updatedShards) / 1000

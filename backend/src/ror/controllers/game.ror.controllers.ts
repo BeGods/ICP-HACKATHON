@@ -232,8 +232,6 @@ export const generateSessionReward = async (req, res) => {
     const totalUNWLoss =
       user.gameSession.undeworldLostCount + (3 - noOfWinsFromBattle);
 
-    console.log(isUnderworld, totalUNWLoss);
-
     // call dragon
     if (isUnderworld && totalUNWLoss > 5) {
       await claimDragon(user, competelvl, userClaimedRewards.bag);
@@ -300,7 +298,6 @@ export const generateSessionReward = async (req, res) => {
     const undeworldShards = ["whiteShards", "blackShards"];
     const randomUnderworldShard = undeworldShards[randomShard];
     const updatedShardType = isUnderworld ? randomUnderworldShard : mythology;
-    console.log(updatedShardType);
 
     res.status(200).json({
       reward: {
