@@ -128,7 +128,7 @@ const BottomChild = () => {
 
 const RoRHeader = ({ CenterChild }) => {
   return (
-    <div>
+    <div className="z-50">
       {CenterChild}
       <BottomChild />
     </div>

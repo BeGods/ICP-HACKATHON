@@ -45,7 +45,7 @@ const RelicRwrdCrd = ({
         </div>
       )}
 
-      {/* {hasShards && (
+      {hasShards && (
         <div className="flex flex-col justify-center items-center reward-pop-in">
           <div className="flex relative justify-center items-center  rounded-full p-2.5 w-[60vw]">
             <img src={`/assets/ror-cards/240px-shard.fire.png`} alt="item" />
@@ -54,7 +54,7 @@ const RelicRwrdCrd = ({
             +300
           </div>
         </div>
-      )} */}
+      )}
 
       {isChar ? (
         <CharCrd

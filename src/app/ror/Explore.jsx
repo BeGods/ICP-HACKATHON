@@ -17,6 +17,7 @@ import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import DefaultBtn from "../../components/Buttons/DefaultBtn";
 import { mythSections } from "../../utils/constants.ror";
+import { toast } from "react-toastify";
 
 const tele = window.Telegram?.WebApp;
 
@@ -302,45 +303,54 @@ const Explore = () => {
         parsedReward.fragment.isChar = true;
       }
 
-      setShowCard(
-        <RelicRwrdCrd
-          claimBoots={async () => {
-            await handleClaimItem(
-              `${digMyth?.toLowerCase()}.artifact.starter02`
-            );
-            setShowCard(null);
-          }}
-          showBoots={
-            isInside &&
-            hasItemInBag(`${digMyth?.toLowerCase()}.artifact.starter02`)
-          }
-          itemId={id}
-          isChar={parsedReward?.fragment?.isChar}
-          fragmentId={parsedReward?.fragment?.fragmentId}
-          isComplete={parsedReward?.fragment?.isComplete}
-          hasShards={parsedReward?.shards ?? 0}
-          mythology={parsedReward?.shardType ?? digMyth}
-          ButtonBack={
-            <ShareButton
-              isShared={false}
-              isInfo={false}
-              handleClaim={() => {}}
-              activeMyth={1}
-              isCoin={true}
-              link={"sdjkfds"}
-            />
-          }
-          ButtonFront={
-            <DefaultBtn
-              message={2}
-              activeMyth={1}
-              handleClick={() => {
-                setShowCard(null);
-              }}
-            />
-          }
-        />
-      );
+      if (
+        parsedReward?.fragment &&
+        Object.keys(parsedReward.fragment).length > 0
+      ) {
+        setShowCard(
+          <RelicRwrdCrd
+            claimBoots={async () => {
+              await handleClaimItem(
+                `${digMyth?.toLowerCase()}.artifact.starter02`
+              );
+              setShowCard(null);
+            }}
+            showBoots={
+              isInside &&
+              hasItemInBag(`${digMyth?.toLowerCase()}.artifact.starter02`)
+            }
+            itemId={id}
+            isChar={parsedReward?.fragment?.isChar}
+            fragmentId={parsedReward?.fragment?.fragmentId}
+            isComplete={parsedReward?.fragment?.isComplete}
+            hasShards={parsedReward?.shards ?? 0}
+            mythology={parsedReward?.shardType ?? digMyth}
+            ButtonBack={
+              <ShareButton
+                isShared={false}
+                isInfo={false}
+                handleClaim={() => {}}
+                activeMyth={1}
+                isCoin={true}
+                link={"sdjkfds"}
+              />
+            }
+            ButtonFront={
+              <DefaultBtn
+                message={2}
+                activeMyth={1}
+                handleClick={() => {
+                  setShowCard(null);
+                }}
+              />
+            }
+          />
+        );
+      } else {
+        if (parsedReward?.shards > 0) {
+          toast.success(`You earned ${parsedReward?.shards} shards`);
+        }
+      }
 
       setGameData((prevItems) => {
         const shouldAddFragment =
@@ -563,19 +573,6 @@ const Explore = () => {
         }}
         className="background-wrapper transition-all duration-100"
       >
-        <RoRHeader
-          CenterChild={
-            <CenterChild
-              mythology={digMyth?.toLowerCase()}
-              content={
-                <span className="pt-4">
-                  {roundTimeElapsed}
-                  {isInside && "*"}
-                </span>
-              }
-            />
-          }
-        />
         {!mythBg ? (
           <div className="background-container transition-all duration-300 blur-[2px]">
             <img
@@ -601,6 +598,19 @@ const Explore = () => {
           </div>
         )}
       </div>
+      <RoRHeader
+        CenterChild={
+          <CenterChild
+            mythology={digMyth?.toLowerCase()}
+            content={
+              <span className="pt-4">
+                {roundTimeElapsed}
+                {isInside && "*"}
+              </span>
+            }
+          />
+        }
+      />
 
       <div className="flex relative text-white justify-center items-center mt-[14vh] h-[65vh] w-full z-50">
         <div className="absolute flex top-0 px-5 justify-between w-full">
