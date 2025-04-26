@@ -63,10 +63,10 @@ export const isClaimedTodayUTC = (time) => {
 
 export const hasBeenFourDaysSinceClaimedUTC = (lastClaimedTime) => {
   if (lastClaimedTime === 0) {
-    return false; // No claim has been made yet
+    return false;
   }
 
-  const now = Date.now(); // Current time in milliseconds
+  const now = Date.now();
   const fourDaysInMs = 4 * 24 * 60 * 60 * 1000; // 4 days in milliseconds
 
   // if within 4 days then true, else false
@@ -81,4 +81,28 @@ export const hasTwelveHoursElapsed = (date) => {
   }
 
   return Date.now() > date + twelveHoursInMs;
+};
+
+export const checkIsUnderworldActive = (
+  isUW,
+  gameSession,
+  mythology,
+  pouch
+) => {
+  const turns = gameSession.dailyGameQuota >= 2;
+
+  const treasureKey = `${mythology.toLowerCase()}.artifact.treasure01`;
+  const commonKey = `${mythology.toLowerCase()}.artifact.common02`;
+
+  const hasDemonCoin = pouch?.includes(treasureKey);
+  const hasKey = pouch?.includes(commonKey);
+
+  const itemExists = hasDemonCoin || hasKey;
+
+  if (isUW && itemExists) {
+    if (hasDemonCoin) return true;
+    if (hasKey && turns) return true;
+  }
+
+  return false;
 };

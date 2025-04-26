@@ -523,9 +523,12 @@ export const updatePartnersInLastHr = async (userMilestones) => {
     const timeElapsed = now - userMilestones.rewards.lastResetAt;
 
     if (userMilestones.rewards.lastResetAt === 0 || timeElapsed > oneHour) {
-      userMilestones.rewards.rewardsInLastHr = [];
-      userMilestones.rewards.lastResetAt = now;
-      await userMilestones.save();
+      userMilestones.updateOne({
+        $set: {
+          "rewards.rewardsInLastHr": [],
+          "rewards.lastResetAt": now,
+        },
+      });
     }
 
     return userMilestones;

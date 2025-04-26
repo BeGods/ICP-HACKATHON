@@ -2,12 +2,17 @@ import mongoose from "mongoose";
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
 import { gameItems } from "../../utils/constants/gameItems";
+import { IUserMyths } from "../../ts/models.interfaces";
+import {
+  parsePotionType,
+  validatePotionType,
+} from "../services/game.ror.services";
 
 export const validateSessionsStart = async (req, res, next) => {
   const user = req.user;
 
   try {
-    //! check daily quota
+    // check daily quota
     if (user.gameSession.dailyGameQuota <= 0) {
       throw new Error("Invalid Session. Daily quota is exausted");
     }
@@ -32,10 +37,15 @@ export const validateSessionReward = async (req, res, next) => {
 
     const sessionDuration = Date.now() - user.gameSession.lastSessionStartTime;
 
-    // validate session duration
-    if (sessionDuration > 60000 || sessionDuration < 25000) {
+    // validate daily quota
+    if (user.gameSession.dailyQuota === 0) {
       throw new Error("Invalid session. Please try again.");
     }
+
+    // validate session duration
+    // if (sessionDuration > 60000 || sessionDuration < 25000) {
+    //   throw new Error("Invalid session. Please try again.");
+    // }
 
     // validate battle
     let competelvl = user.gameSession.competelvl;
@@ -83,13 +93,13 @@ export const validTransferToVault = async (req, res, next) => {
     }
 
     // check if there is enough space in vault
-    if (userClaimedRewards.bank.vault.length >= 36) {
+    if (userClaimedRewards.bank.vault.length >= 27) {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
     const itemIdsObject = itemIds.map((id) => new mongoose.Types.ObjectId(id));
 
-    const existingItemsInBag = userClaimedRewards.bag.filter((itemId) =>
+    const existingItemsInBag = userClaimedRewards.bag?.filter((itemId) =>
       itemIdsObject.some((item) => item.equals(itemId._id))
     );
 
@@ -126,7 +136,7 @@ export const validTransferToBag = async (req, res, next) => {
     }
 
     // check if there is enough space in bag
-    if (userClaimedRewards.bag.length >= 9) {
+    if (userClaimedRewards.bag?.length >= 9) {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
@@ -153,7 +163,7 @@ export const isValidVaultReq = async (req, res, next) => {
   const userId = user._id;
   const { isMulti } = req.query;
   const expiryDays = Boolean(isMulti) ? 7 : 1;
-  const deductValue = Boolean(isMulti) ? 9 : 3;
+  const deductValue = Boolean(isMulti) ? 5 : 1;
 
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
@@ -183,7 +193,7 @@ export const isValidRestReq = async (req, res, next) => {
   const userId = user._id;
   const { isMulti } = req.query;
   const expiryDays = Boolean(isMulti) ? 7 : 1;
-  const deductValue = Boolean(isMulti) ? 9 : 3;
+  const deductValue = Boolean(isMulti) ? 5 : 1;
 
   try {
     const userMythologyData = await userMythologies.findOne({ userId });
@@ -205,43 +215,6 @@ export const isValidRestReq = async (req, res, next) => {
   }
 };
 
-export const isValidInsideReq = async (req, res, next) => {
-  const user = req.user;
-
-  try {
-    if (user.gameSession.underWorldActiveAt !== 0) {
-      throw new Error("Underworld is already active. Try again later.");
-    } else if (user.gameSession.dailyGameQuota < 1) {
-      throw new Error("You don't have sufficient quota to activate.");
-    } else if (user.gameSession.dailyGameQuota >= 5) {
-      throw new Error(
-        "You need more rounds to unlock the Underworld. Try again later."
-      );
-    }
-    next();
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: error.message });
-  }
-};
-
-export const isValidOutsideReq = async (req, res, next) => {
-  const user = req.user;
-
-  try {
-    if (user.gameSession.underWorldActiveAt == 0) {
-      throw new Error("Underworld is inactive.");
-    } else if (user.gameSession.dailyGameQuota < 1) {
-      throw new Error("You don't have sufficient quota to deactivate.");
-    }
-
-    next();
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: error.message });
-  }
-};
-
 export const validateJoinFrgmnt = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
@@ -255,13 +228,23 @@ export const validateJoinFrgmnt = async (req, res, next) => {
     const userMythologyData = await userMythologies.findOne({ userId });
 
     const itemIdsObject = itemIds.map((id) => new mongoose.Types.ObjectId(id));
-    const existingItemsInBag = userClaimedRewards.bag.filter((obj) =>
+    const existingItemsInBag = userClaimedRewards.bag?.filter((obj) =>
       itemIdsObject.some((id) => obj._id.equals(id))
     );
 
-    const itemsWithSameId = existingItemsInBag.filter(
+    const itemsWithSameId = existingItemsInBag?.filter(
       (item) => item.itemId === existingItemsInBag[0].itemId
     );
+
+    // if activate
+    if (!user.gameSession.isBlackSmithActive) {
+      throw new Error("Blacksmith is inactive. Please activate.");
+    }
+
+    // space in builder
+    if (userClaimedRewards?.buildStage?.length >= 3) {
+      throw new Error("Builder is occupied. Free up space.");
+    }
 
     // check if bag is empty
     if (itemsWithSameId.length === 0) {
@@ -314,6 +297,44 @@ export const validateJoinFrgmnt = async (req, res, next) => {
   }
 };
 
+export const validateCompleteItem = async (req, res, next) => {
+  const user = req.user;
+  const userId = user._id;
+  const { itemId } = req.body;
+
+  try {
+    const userClaimedRewards = await milestones.findOne({ userId });
+
+    const existingItemInBuild = userClaimedRewards.buildStage?.find(
+      (obj) => obj.itemId == itemId
+    );
+
+    // check if item exists in build
+    if (!existingItemInBuild) {
+      throw new Error("Inavlid Item. Please provide correct item.");
+    }
+
+    // check if item already completed
+    if (userClaimedRewards.claimedRoRItems.includes(itemId)) {
+      throw new Error("Item has been already traded.");
+    }
+
+    // validate expiry
+    const hasBuildCompleted = Date.now() >= existingItemInBuild.exp;
+
+    if (!hasBuildCompleted) {
+      throw new Error("Item is still building.");
+    }
+
+    req.userMilestones = userClaimedRewards;
+    req.itemObj = existingItemInBuild;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export const validateTradeFragment = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
@@ -323,7 +344,7 @@ export const validateTradeFragment = async (req, res, next) => {
     const userClaimedRewards = await milestones.findOne({ userId });
     const userMythologyData = await userMythologies.findOne({ userId });
 
-    const existingItemInBag = userClaimedRewards.bag.find((obj) =>
+    const existingItemInBag = userClaimedRewards.bag?.find((obj) =>
       obj._id.equals(new mongoose.Types.ObjectId(itemId))
     );
 
@@ -351,5 +372,186 @@ export const validateTradeFragment = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const validateTradePotion = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const { type } = req.body;
+    const { element, mythology, typeCode } = parsePotionType(type);
+    // 240px-potion.earth.A01
+
+    // user bag data
+    const userClaimedRewards = await milestones.findOne({ userId });
+
+    // check if there is space in bag
+    if (userClaimedRewards.bag.length >= 9) {
+      throw Error("Insufficient space inside vault. Try again later");
+    }
+
+    // user myth data
+    const userMythology = (await userMythologies.findOne({
+      userId: userId,
+    })) as IUserMyths;
+
+    if (userMythology?.gobcoin < 1) {
+      throw new Error("Insufficient gobcoins to complete this transaction.");
+    }
+
+    if (!userMythology) {
+      throw Error("Invalid game data. Mythologies data not found.");
+    }
+
+    // validate shards bal.
+    await validatePotionType(element, mythology, typeCode, userMythology);
+
+    req.potionType = { element, mythology, typeCode };
+    req.userMythology = userMythology;
+    req.milestones = userClaimedRewards;
+    next();
+  } catch (error) {
+    console.log(error);
+
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const validItemAbility = async (req, res, next) => {
+  const { itemId } = req.body;
+  const { user } = req;
+
+  const ITEM_TYPE_MAP = {
+    "artifact.starter01": "statue",
+    "artifact.starter02": "boots",
+    "artifact.common03": "map",
+    "artifact.treasure02": "sun.amulet",
+    "artifact.treasure03": "moon.amulet",
+  };
+
+  try {
+    const matchedType = Object.entries(ITEM_TYPE_MAP).find(([key]) =>
+      itemId.includes(key)
+    );
+
+    if (!matchedType) {
+      return res.status(400).json({ message: "Invalid itemId." });
+    }
+
+    const [_, type] = matchedType;
+
+    const userMilestones = await milestones.findOne({ userId: user._id });
+
+    if (!userMilestones) {
+      return res
+        .status(404)
+        .json({ message: "Milestones not found for user." });
+    }
+
+    const itemInBag = userMilestones?.pouch?.includes(itemId);
+
+    if (!itemInBag) {
+      return res.status(404).json({ message: "Item not found in pouch." });
+    }
+
+    req.userMilestones = userMilestones;
+    req.type = type;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+};
+
+export const validBlksmthReq = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const userId = user._id;
+
+    const userMythData = await userMythologies.findOne({ userId });
+
+    // validate coins
+    if (userMythData?.gobcoin < 1) {
+      throw new Error("Insufficient gobcoins to complete this transaction.");
+    }
+
+    // validate blacksmith
+    if (user?.isBlackSmithActive === true) {
+      throw new Error("Invalid request. Blacksmith is already active.");
+    }
+
+    req.userMythData = userMythData;
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const validLibrnReq = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const userId = user._id;
+
+    const userMythData = await userMythologies.findOne({ userId });
+
+    // validate coins
+    if (userMythData?.gobcoin < 1) {
+      throw new Error("Insufficient gobcoins to complete this transaction.");
+    }
+
+    // validate blacksmith
+    if (user?.isLibrnActive === true) {
+      throw new Error("Invalid request. Blacksmith is already active.");
+    }
+
+    req.userMythData = userMythData;
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const validArtifactClaim = async (req, res, next) => {
+  const { itemId } = req.body;
+  const { user } = req;
+
+  const artifactType = [
+    "artifact.starter01",
+    "artifact.starter02",
+    "artifact.common03",
+    "artifact.starter10",
+  ];
+
+  try {
+    const matchedType = artifactType.some((itm) => itemId.includes(itm));
+
+    if (!matchedType) {
+      return res.status(400).json({ message: "Invalid itemId." });
+    }
+
+    const userMilestones = await milestones.findOne({ userId: user._id });
+    const userMythData = await userMythologies.findOne({ userId: user._id });
+
+    if (!userMilestones) {
+      return res
+        .status(404)
+        .json({ message: "Milestones not found for user." });
+    }
+
+    const itemInBag = userMilestones?.pouch?.includes(itemId);
+
+    if (itemInBag) {
+      return res.status(404).json({ message: "Artifact is already claimed." });
+    }
+
+    if (userMythData.gobcoin < 1) {
+      return res.status(400).json({ message: "Insufficient gobcoins." });
+    }
+
+    req.userMilestones = userMilestones;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error. Please try again later." });
   }
 };

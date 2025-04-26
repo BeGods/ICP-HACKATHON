@@ -60,6 +60,10 @@ const userSchema = new Schema<IUser>(
       },
     },
     gameSession: {
+      isThiefActive: {
+        type: Boolean,
+        default: false,
+      },
       gameHrStartAt: {
         type: Number,
         default: () => new Date().setHours(9, 0, 0, 0),
@@ -77,7 +81,22 @@ const userSchema = new Schema<IUser>(
         default: 15,
       },
       restExpiresAt: Number,
-      underWorldActiveAt: Number,
+      isUnderworldActive: {
+        type: Number,
+        default: 0,
+      },
+      undeworldLostCount: {
+        type: Number,
+        default: 0,
+      },
+      isBlackSmithActive: {
+        type: Boolean,
+        default: false,
+      },
+      isLibrnActive: {
+        type: Boolean,
+        default: false,
+      },
     },
     mobileNumber: {
       type: String,

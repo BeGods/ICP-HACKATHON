@@ -7,6 +7,25 @@ const milestoneSchema = new Schema<IMilestone>({
     required: true,
     unique: true,
   },
+  appearedUnderworldChars: {
+    type: [String],
+    default: [],
+  },
+  pouch: {
+    type: [String],
+    default: [],
+  },
+  buildStage: {
+    type: [
+      {
+        itemId: {
+          type: String,
+          required: true,
+        },
+        exp: Number,
+      },
+    ],
+  },
   claimedQuests: [
     {
       taskId: {
@@ -139,9 +158,9 @@ const milestoneSchema = new Schema<IMilestone>({
       ],
       validate: {
         validator: function (array) {
-          return array.length <= 36;
+          return array.length <= 27;
         },
-        message: "The vault cannot contain more than 36 items.",
+        message: "The vault cannot contain more than 27 items.",
       },
     },
   },
