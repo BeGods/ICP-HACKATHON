@@ -59,7 +59,11 @@ export default function Launcher({
   };
 
   return (
-    <div className="flex w-screen text-wrap">
+    <div
+      className={`flex ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } w-screen text-wrap`}
+    >
       <TgHeader hideExit={true} openSettings={() => setShowCard(true)} />
       <div className={`transition-all duration-500 overflow-hidden relative`}>
         <div

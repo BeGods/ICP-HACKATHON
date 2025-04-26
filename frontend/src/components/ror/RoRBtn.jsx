@@ -1,7 +1,8 @@
 import React, { useContext, useRef, useState } from "react";
 import { RorContext } from "../../context/context";
+import { Lock, ThumbsUp } from "lucide-react";
 
-const RoRBtn = ({ handleClick, isMulti }) => {
+const RoRBtn = ({ handleClick, left, right, disable, isNotPay }) => {
   const { assets } = useContext(RorContext);
   const [isClicked, setIsClicked] = useState(false);
   let disableClick = useRef(false);
@@ -36,28 +37,55 @@ const RoRBtn = ({ handleClick, isMulti }) => {
         setIsClicked(false);
       }}
       className={`flex items-center border text-white ${
-        isClicked && `glow-button-white`
-      } justify-between h-button-primary w-button-primary mt-[4px] mx-auto  bg-glass-black z-50 rounded-primary`}
+        isClicked && !disable && `glow-button-white`
+      } justify-between h-button-primary mt-[4px] w-button-primary  mx-auto  bg-glass-black z-50 rounded-primary`}
     >
-      <div className="flex text-primary justify-center items-center w-1/4 h-full">
-        {isMulti ? 7 : 1}
-      </div>
-      <div
-        className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px] rounded-full`}
-      >
-        V
-      </div>
-
-      <div className="flex justify-center items-center w-1/4  h-full">
-        <div className="relative flex justify-center items-center">
-          <img src={`${assets.uxui.multiorb}`} alt="orb" className="p-1" />
-          <div className="absolute z-10">
-            <div className="text-primary text-white glow-text-black">
-              {isMulti ? 9 : 3}
+      {isNotPay ? (
+        <>
+          <div></div>
+          <div
+            className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px] border-gray rounded-full`}
+          >
+            <ThumbsUp size={30} />
+          </div>
+          <div></div>
+        </>
+      ) : disable ? (
+        <>
+          <div></div>
+          <div
+            className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px] border-gray rounded-full`}
+          >
+            <Lock size={30} />
+          </div>
+          <div></div>
+        </>
+      ) : (
+        <>
+          <div className="flex text-primary justify-center items-center w-1/4 h-full">
+            {left}
+          </div>
+          <div
+            className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px] rounded-full`}
+          >
+            V
+          </div>
+          <div className="flex justify-center items-center w-1/4  h-full">
+            <div className="relative flex justify-center items-center">
+              <img
+                src={`/assets/240px-gobcoin.png`}
+                alt="orb"
+                className="p-1"
+              />
+              <div className="absolute z-10">
+                <div className="text-primary text-white glow-text-black">
+                  {right}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

@@ -11,7 +11,7 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, assets, enableHaptic, isTelegram } =
+  const { setSection, authToken, setGameData, enableHaptic, isTelegram } =
     useContext(RorContext);
   const [changeText, setChangeText] = useState(true);
   const [disableHand, setDisableHand] = useState(true);
@@ -39,14 +39,12 @@ const JoinBonus = (props) => {
           setSection(0);
         }, 1000);
         setGameData((prevItems) => {
-          const updatedCoins = prevItems.stats.gobcoin + 1;
+          const newStats = { ...prevItems.stats };
+          newStats.gobcoins = prevItems.stats.gobcoin + 3;
 
           return {
-            ...prevItems,
-            stats: {
-              ...prevItems.stats,
-              gobcoin: updatedCoins,
-            },
+            ...prev,
+            stats: newStats,
           };
         });
       } catch (error) {

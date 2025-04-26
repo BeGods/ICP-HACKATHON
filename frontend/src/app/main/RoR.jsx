@@ -3,6 +3,7 @@ import { MainContext, RorContext } from "../../context/context";
 import { fetchGameStats } from "../../utils/api.ror";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import {
+  deleteAuthCookie,
   fetchHapticStatus,
   validateAuth,
   validateCountryCode,
@@ -28,6 +29,9 @@ import Gift from "../fof/Gift/Gift";
 import Gacha from "../ror/Gacha";
 import { determineIsTelegram } from "../../utils/device.info";
 import JoinBonus from "../ror/JoinBonus";
+import Potions from "../ror/Potions";
+import Book from "../ror/Book";
+import Tavern from "../ror/Tavern";
 
 const tele = window.Telegram?.WebApp;
 
@@ -62,6 +66,7 @@ const RoRMain = () => {
   const [minimize, setMinimize] = useState(0);
   const [rewards, setRewards] = useState([]);
   const [swipes, setSwipes] = useState(0);
+  const [shiftBg, setShiftBg] = useState(50);
   const [battleData, setBattleData] = useState({
     currentRound: 1,
     roundData: [],
@@ -70,6 +75,9 @@ const RoRMain = () => {
     stats: null,
     bag: null,
     bank: null,
+    pouch: null,
+    claimedItems: null,
+    builder: null,
   });
   const contextValues = {
     enableHaptic,
@@ -101,21 +109,8 @@ const RoRMain = () => {
     game,
     globalRewards,
     setGlobalRewards,
+    setShiftBg,
   };
-
-  const sections = [
-    <Citadel />, // 0
-    <Explore />, // 1
-    <Bag />, // 2
-    <Blacksmith />, //  3
-    <Merchant />, // 4
-    <Vault />, // 5
-    <Profile />, // 6
-    <Leaderboard />, // 7
-    <Gift />, // 8
-    <Gacha />, // 9
-    <JoinBonus />, // 10
-  ];
 
   const getPartnersData = async (token) => {
     try {
@@ -126,6 +121,8 @@ const RoRMain = () => {
         ...rewardsData?.claimedRewards,
       ]);
     } catch (error) {
+      await deleteAuthCookie(tele);
+
       console.log(error);
       showToast("default");
     }
@@ -155,10 +152,12 @@ const RoRMain = () => {
           stats: response.stats,
           bag: response.bag,
           bank: response.bank,
+          pouch: response.pouch,
+          claimedItems: response.claimedItems,
+          builder: response.builder,
         };
       });
       setTasks(response.quests);
-
       if (!response.user?.joiningBonus) {
         setSection(10);
         setTimeout(() => {
@@ -169,9 +168,14 @@ const RoRMain = () => {
             await getProfilePhoto(token);
           })();
         }
-      } else {
+      } else if (response.user.isEligibleToClaim) {
         setTimeout(() => {
           setSection(9);
+          setIsLoading(false);
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          setSection(0);
           setIsLoading(false);
         }, 1000);
       }
@@ -186,6 +190,7 @@ const RoRMain = () => {
       //   }, 1000);
       // }
     } catch (error) {
+      await deleteAuthCookie(tele);
       console.log(error);
       showToast("default");
     }
@@ -259,6 +264,45 @@ const RoRMain = () => {
     }
   }, [platform]);
 
+  const sections = [
+    <Citadel />, // 0
+    <Explore />, // 1
+    <Bag />, // 2
+    <Blacksmith />, //  3
+    <Merchant />, // 4
+    <Vault />, // 5
+    <Profile />, // 6
+    <Leaderboard />, // 7
+    <Gift />, // 8
+    <Gacha />, // 9
+    <JoinBonus />, // 10
+    <Potions />, // 11
+    <Book />, // 12,
+    <Tavern />, // 13
+  ];
+
+  const bgs = {
+    0: "/assets/bg/1280px-ror.citadel_wide.jpeg",
+    1: assets.uxui.basebg,
+    2: assets.uxui.basebg,
+    3: "/assets/bg/1280px-ror.citadel.foundry_wide.jpeg",
+    4: "/assets/bg/1280px-ror.citadel.bank_wide.jpeg",
+    5: "/assets/bg/1280px-ror.citadel.bank_wide.jpeg",
+    6: assets.uxui.basebg,
+    7: assets.uxui.basebg,
+    8: assets.uxui.basebg,
+    9: assets.uxui.basebg,
+    10: assets.uxui.basebg,
+    10: assets.uxui.basebg,
+    11: "/assets/bg/1280px-ror.citadel.apothecary_wide.jpeg",
+    12: "/assets/bg/1280px-ror.citadel.library_wide.jpeg",
+    13: "/assets/bg/1280px-ror.citadel.tavern_wide.jpeg",
+  };
+
+  useEffect(() => {
+    setShiftBg(50);
+  }, [section]);
+
   return (
     <div>
       <TgHeader
@@ -276,12 +320,12 @@ const RoRMain = () => {
       {!isLoading ? (
         <div
           style={{
-            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundImage: `url(${bgs[section]})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            backgroundPosition: "center center",
+            backgroundPosition: `${shiftBg}%`,
           }}
-          className={`w-screen ${
+          className={`w-screen transition-all duration-500 ${
             isTelegram ? "tg-container-height" : "browser-container-height"
           } bg-white select-none font-fof overflow-hidden`}
         >

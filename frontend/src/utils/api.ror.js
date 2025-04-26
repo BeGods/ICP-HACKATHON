@@ -16,8 +16,12 @@ export const fetchGameStats = async (accessToken) => {
   }
 };
 
-export const startSession = async (accessToken) => {
+export const startSession = async (accessToken, isInside) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/game/startSession`;
+
+  if (isInside) {
+    url += `?isInside=true`
+  }
 
   try {
     const response = await axios.get(url, {
@@ -105,8 +109,61 @@ export const fetchJoiningBonus = async (accessToken) => {
   }
 };
 
-export const activateVault = async (accessToken) => {
+export const fetchDailyBonus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/bonus/daily`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const activateBlacksmith = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/blacksmith/activate`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const activateLibrarian = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/librarian/activate`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+
+export const activateVault = async (accessToken, isMulti) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/vault/activate`;
+
+  if (isMulti) {
+    url += `?isMulti=${isMulti}`
+  }
 
   try {
     const response = await axios.get(url, {
@@ -137,7 +194,27 @@ export const activateRest = async (accessToken) => {
   }
 };
 
-export const completeItem = async (accessToken, arrayOfIds, payMethod) => {
+export const completeItem = async (accessToken, itemId) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/blacksmith/claim`;
+
+  try {
+    const response = await axios.post(
+      url,
+      { itemId: itemId },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const joinItem = async (accessToken, arrayOfIds, payMethod) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/blacksmith/join`;
 
   try {
@@ -178,11 +255,11 @@ export const tradeItem = async (accessToken, itemId) => {
 };
 
 
-export const activateInside = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_ROR_URL}/inside/activate`;
+export const claimItemAbility = async (accessToken, itemId) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/game/claim`;
 
   try {
-    const response = await axios.get(url, {
+    const response = await axios.post(url, { itemId: itemId }, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -194,11 +271,11 @@ export const activateInside = async (accessToken) => {
   }
 };
 
-export const deactivateInside = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_ROR_URL}/inside/deactivate`;
+export const claimArtifact = async (accessToken, itemId) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/artifact/claim`;
 
   try {
-    const response = await axios.get(url, {
+    const response = await axios.post(url, { itemId: itemId }, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -209,3 +286,24 @@ export const deactivateInside = async (accessToken) => {
     throw error;
   }
 };
+
+
+export const claimPotion = async (accessToken, type) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/trade/potion`;
+
+  try {
+    const response = await axios.post(
+      url,
+      { type: type },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+}

@@ -1,6 +1,5 @@
 import { useWallet } from "../context/wallet";
 import { getPaymentId } from "../utils/api.fof";
-import { Web3Provider as w3 } from "@kaiachain/ethers-ext/v6";
 import { v4 as uuidv4 } from "uuid";
 
 const useWalletPayment = () => {
@@ -22,26 +21,19 @@ const useWalletPayment = () => {
     }
 
     try {
-      // const provider = new w3(lineProvider);
-      const accounts = await lineProvider.request({
-        method: "kaia_requestAccounts",
+      const message = uuidv4();
+      const [accountAddress, signature] = await lineProvider.request({
+        method: "kaia_connectAndSign",
+        params: [message],
       });
 
-      if (!accounts || accounts.length === 0) {
+      if (!accountAddress || accountAddress.length === 0) {
         alert("No wallet connected. Please check your wallet and try again.");
         return null;
       }
 
-      const accountAddress = accounts[0];
-
       setLineWallet(accountAddress);
       sessionStorage.setItem("accountAddress", accountAddress);
-
-      const message = uuidv4();
-      const signature = await lineProvider.request({
-        method: "personal_sign",
-        params: [message, accountAddress],
-      });
 
       if (dappSdk) {
         console.log("Setting payment provider...");
