@@ -27,6 +27,7 @@
         "infomoon":"https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-moon.jpg",
         "starlight": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/star.light.jpg",
         "gameEnd": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px.fof.whitelist.jpg",
+        "libbg": "/assets/1280px-ror.library_wide.jpg",
         "shadow": "/assets/uxui/1280px-fof.base.shadow.png"
     },
     "logos": {
@@ -79,6 +80,7 @@
         "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.egyptian.base.svg"
     },
     "boosters": {
+        "libCard": "/assets/320px-librarian.jpg",
         "bankerHead": "/assets/240px-banker_head.jpg",
         "bankerCard": "/assets/320px-banker.jpg",
         "gemologistCard": "/assets/320px-gemologist.jpeg",

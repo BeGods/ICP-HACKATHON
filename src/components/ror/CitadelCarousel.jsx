@@ -7,9 +7,17 @@ import RoRBtn from "./RoRBtn";
 import { toast } from "react-toastify";
 import {
   activateBlacksmith,
+  activateLibrarian,
   activateRest,
   activateVault,
 } from "../../utils/api.ror";
+import {
+  getActiveFeature,
+  getStorage,
+  setStorage,
+} from "../../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
 
 const CitadelCarousel = ({ enableGuide, mythData }) => {
   const {
@@ -28,7 +36,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
 
   const handleActivateBank = async (isMulti) => {
     if (gameData.bank.isVaultActive) {
-      setSection(2);
+      setSection(4);
     } else {
       try {
         const response = await activateVault(authToken, isMulti);
@@ -36,7 +44,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         setGameData((prev) => {
           const newStats = { ...prev.stats };
 
-          newStats.gobcoin = prev.stats.gobcoin - (isMulti ? 9 : 3);
+          newStats.gobcoin = prev.stats.gobcoin - (isMulti ? 5 : 1);
 
           return {
             ...prev,
@@ -60,7 +68,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
 
   const handleActivateRest = async () => {
     if (gameData.stats.isRestActive) {
-      setSection(2);
+      setSection(13);
     } else {
       try {
         const response = await activateRest(authToken);
@@ -86,60 +94,10 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
     }
   };
 
-  const handleActivateBlacksmith = async () => {
-    if (gameData.stats.isBlackSmithActive) {
-      setSection(3);
-    } else {
-      try {
-        const response = await activateBlacksmith(authToken);
-        setShowCard(null);
-        setGameData((prev) => {
-          const newStats = { ...prev.stats };
-
-          newStats.gobcoins = (prev.stats.gobcoin || 0) - 1;
-          newStats.isBlacksmithActive = true;
-          return {
-            ...prev,
-            stats: newStats,
-          };
-        });
-        setSection(3);
-        console.log(response);
-        toast.success("blacksmith activated");
-      } catch (error) {
-        console.log(error);
-        setShowCard(null);
-        toast.error("insufficient gobcoins");
-      }
-    }
-  };
-
-  const handleActivateLibrarian = async () => {
-    if (gameData.stats.isLibrnActive) {
-      setSection(3);
-    } else {
-      try {
-        const response = await activateBlacksmith(authToken);
-        setShowCard(null);
-        setGameData((prev) => {
-          const newStats = { ...prev.stats };
-
-          newStats.gobcoins = (prev.stats.gobcoin || 0) - 1;
-          newStats.isLibrnActive = true;
-          return {
-            ...prev,
-            stats: newStats,
-          };
-        });
-        setSection(3);
-        console.log(response);
-        toast.success("blacksmith activated");
-      } catch (error) {
-        console.log(error);
-        setShowCard(null);
-        toast.error("insufficient gobcoins");
-      }
-    }
+  const handleActivate = async (key, value, navigateTo) => {
+    setSection(navigateTo);
+    setShowCard(null);
+    await setStorage(tele, key, value);
   };
 
   useEffect(() => {
@@ -150,9 +108,10 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
           <CitadelItem
             icon="h"
             isMulti={false}
-            itemKey="blacksmith"
-            handleClick={() => {
-              if (gameData.stats.isBlackSmithActive) {
+            itemKey="furnace"
+            handleClick={async () => {
+              const isActive = await getActiveFeature(tele, "blacksmith");
+              if (isActive) {
                 setSection(3);
               } else {
                 setShowCard(
@@ -160,12 +119,15 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
                     img={assets.boosters.minionCard}
                     icon="w"
                     isMulti={false}
-                    handleClick={handleActivateBlacksmith}
+                    handleClick={() => handleActivate("blacksmith", "true", 3)}
                     Button={
                       <RoRBtn
+                        isNotPay={true}
                         left={1}
                         right={1}
-                        handleClick={handleActivateBlacksmith}
+                        handleClick={() =>
+                          handleActivate("blacksmith", "true", 3)
+                        }
                       />
                     }
                   />
@@ -176,27 +138,14 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         ),
       },
       {
-        key: "merchant",
-        component: (
-          <CitadelItem
-            icon="A"
-            isMulti={false}
-            itemKey="merchant"
-            handleClick={() => {
-              setSection(4);
-            }}
-          />
-        ),
-      },
-      {
         key: "vault",
         component: (
           <CitadelItem
-            icon="6"
-            itemKey="vault"
+            icon="A"
+            itemKey="bank"
             handleClick={() => {
               if (gameData.bank.isVaultActive) {
-                setSection(5);
+                setSection(4);
               } else {
                 setShowCard(
                   <MiscCard
@@ -207,7 +156,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
                     Button={
                       <RoRBtn
                         left={1}
-                        right={3}
+                        right={1}
                         handleClick={handleActivateBank}
                       />
                     }
@@ -224,110 +173,98 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
           <CitadelItem
             icon="v"
             isMulti={false}
-            itemKey="gemologist"
+            itemKey="apothecary"
+            handleClick={async () => {
+              const isActive = await getActiveFeature(tele, "gemologist");
+              if (isActive) {
+                setSection(11);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    img={assets.boosters.gemologistCard}
+                    icon="A"
+                    isMulti={false}
+                    handleClick={() => handleActivate("gemologist", "true", 11)}
+                    Button={
+                      <RoRBtn
+                        isNotPay={true}
+                        left={1}
+                        right={1}
+                        handleClick={() =>
+                          handleActivate("gemologist", "true", 11)
+                        }
+                      />
+                    }
+                  />
+                );
+              }
+            }}
+          />
+        ),
+      },
+      {
+        key: "library",
+        component: (
+          <CitadelItem
+            icon="+"
+            isMulti={false}
+            itemKey="library"
             handleClick={() => {
-              setSection(11);
-              // if (gameData.stats.isLibrnActive) {
-              //   setSection(11);
-              // } else {
-              //   setShowCard(
-              //     <MiscCard
-              //       img={assets.boosters.gemologistCard}
-              //       icon="v"
-              //       isMulti={false}
-              //       handleClick={handleActivateLibrarian}
-              //       Button={
-              //         <RoRBtn
-              //           left={1}
-              //           right={1}
-              //           handleClick={handleActivateLibrarian}
-              //         />
-              //       }
-              //     />
-              //   );
-              // }
+              if (gameData.stats.isLibrnActive) {
+                setSection(12);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    img={assets.boosters.libCard}
+                    icon="Y"
+                    isMulti={false}
+                    handleClick={() => handleActivate("library", "true", 12)}
+                    Button={
+                      <RoRBtn
+                        isNotPay={true}
+                        left={1}
+                        right={1}
+                        handleClick={() =>
+                          handleActivate("library", "true", 12)
+                        }
+                      />
+                    }
+                  />
+                );
+              }
             }}
           />
         ),
       },
     ];
 
-    // if (!gameData.bank.isVaultActive) {
-    //   boosters.push({
-    //     key: "multiVault",
-    //     component: (
-    //       <CitadelItem
-    //         icon="6"
-    //         isMulti={true}
-    //         itemKey="multiVault"
-    //         handleClick={() => {
-    //           if (gameData.bank.isVaultActive) {
-    //             setSection(5);
-    //           } else {
-    //             setShowCard(
-    //               <MiscCard
-    //                 isMulti={true}
-    //                 handleClick={() => handleActivateBank(true)}
-    //                 Button={
-    //                   <RoRBtn
-    //                     isMulti={true}
-    //                     left={7}
-    //                     right={9}
-    //                     handleClick={() => handleActivateBank(true)}
-    //                   />
-    //                 }
-    //               />
-    //             );
-    //           }
-    //         }}
-    //       />
-    //     ),
-    //   });
-    // }
-
-    if (!gameData.stats.isRestActive && gameData.stats.isThiefActive) {
+    if (gameData.stats.isThiefActive) {
       boosters.push({
         key: "rest",
         component: (
           <CitadelItem
             icon="7"
             isMulti={false}
-            itemKey="rest"
+            itemKey="tavern"
             handleClick={() => {
-              setShowCard(
-                <MiscCard
-                  isMulti={false}
-                  handleClick={handleActivateRest}
-                  Button={
-                    <RoRBtn
-                      left={1}
-                      right={3}
-                      isMulti={false}
-                      handleClick={handleActivateRest}
-                    />
-                  }
-                />
-              );
-            }}
-          />
-        ),
-      });
-    }
-
-    if (
-      !gameData?.bag?.find((item) =>
-        item?.itemId?.includes("celtic.artifact.starter10")
-      )
-    ) {
-      boosters.push({
-        key: "book",
-        component: (
-          <CitadelItem
-            icon="j"
-            isMulti={false}
-            itemKey="book"
-            handleClick={() => {
-              setSection(12);
+              if (gameData.stats.isRestActive) {
+                setSection(13);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    isMulti={false}
+                    handleClick={handleActivateRest}
+                    Button={
+                      <RoRBtn
+                        left={1}
+                        right={1}
+                        isMulti={false}
+                        handleClick={handleActivateRest}
+                      />
+                    }
+                  />
+                );
+              }
             }}
           />
         ),
@@ -348,8 +285,8 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       "multiVault",
       "vault",
       "gemologist",
+      "library",
       "rest",
-      "book",
     ];
 
     const sortedItems = boosters

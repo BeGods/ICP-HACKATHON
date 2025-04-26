@@ -1,18 +1,18 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import GridItem from "../../components/ror/GridItem";
+import { RorContext } from "../../context/context";
+import { updateBagData } from "../../utils/api.ror";
+import RoRHeader from "../../components/layouts/Header";
+import { ArrowLeft } from "lucide-react";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
-import { RorContext } from "../../context/context";
-import { updateBagData } from "../../utils/api.ror";
-import RoRHeader from "../../components/layouts/Header";
+import { toggleBackButton } from "../../utils/teleBackButton";
 
-const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
+const CenterChild = ({}) => {
   return (
     <div
-      ref={dropZoneRef}
-      onClick={handleClick}
       style={{
         backgroundImage: `url('/assets/240px-banker_head.jpg')`,
         backgroundPosition: "center",
@@ -26,7 +26,8 @@ const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
 };
 
 const Vault = (props) => {
-  const { gameData, setGameData, authToken } = useContext(RorContext);
+  const { gameData, setGameData, authToken, setSection } =
+    useContext(RorContext);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
   const [copyPosition, setCopyPosition] = useState({ x: 0, y: 0 });
@@ -36,7 +37,7 @@ const Vault = (props) => {
   const dropZoneRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const itemsPerPage = 9;
+  const itemsPerPage = 6;
   const totalPages = Math.ceil(gameData.bank.vault.length / itemsPerPage);
 
   const paginatedVaultItems = gameData.bank.vault.slice(
@@ -88,12 +89,15 @@ const Vault = (props) => {
     const dropZone = dropZoneRef.current;
     if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
-      const tolerance = 15;
+
+      const toleranceX = dropZoneRect.width * 0.05;
+      const toleranceY = dropZoneRect.height * 0.05;
+
       const adjustedDropZoneRect = {
-        left: dropZoneRect.left - tolerance,
-        right: dropZoneRect.right + tolerance,
-        top: dropZoneRect.top - tolerance,
-        bottom: dropZoneRect.bottom + tolerance,
+        left: dropZoneRect.left - toleranceX,
+        right: dropZoneRect.right + toleranceX,
+        top: dropZoneRect.top - toleranceY,
+        bottom: dropZoneRect.bottom + toleranceY,
       };
 
       const copyRect = {
@@ -103,28 +107,22 @@ const Vault = (props) => {
         bottom: copyPosition.y + 100,
       };
 
-      // Calculate overlap area
-      const overlapWidth = Math.max(
+      const overlapX = Math.max(
         0,
         Math.min(copyRect.right, adjustedDropZoneRect.right) -
           Math.max(copyRect.left, adjustedDropZoneRect.left)
       );
-      const overlapHeight = Math.max(
+      const overlapY = Math.max(
         0,
         Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
           Math.max(copyRect.top, adjustedDropZoneRect.top)
       );
-      const overlapArea = overlapWidth * overlapHeight;
-      const itemArea =
-        (copyRect.right - copyRect.left) * (copyRect.bottom - copyRect.top);
-      const overlapPercentage = (overlapArea / itemArea) * 100;
 
-      console.log(`📌 Overlap Area: ${overlapArea}px²`);
-      console.log(`📌 Item Area: ${itemArea}px²`);
-      console.log(`📌 Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
+      const overlapArea = overlapX * overlapY;
+      const draggedItemArea = 100 * 100; // Item is 100x100 px
+      const overlapPercentage = (overlapArea / draggedItemArea) * 100;
 
-      if (overlapPercentage >= 10) {
-        console.log("✅ Item successfully dropped inside!");
+      if (overlapPercentage >= 20) {
         // Remove the dragged item
         setGameData((prevItems) => {
           let updatedVaultItems = prevItems.bank.vault.filter(
@@ -164,22 +162,39 @@ const Vault = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    (async () =>
+      await toggleBackButton(tele, () => {
+        setSection(4);
+      }))();
+  }, []);
+
   return (
     <div className="w-full h-full">
       <RoRHeader
         CenterChild={
           <CenterChild
             dropZoneRef={dropZoneRef}
-            handleClick={() => {
-              if (itemToTransfer.length > 0 && !dragging) {
-                (async () => handleAddToBag())();
-              }
-            }}
             isDropActive={gameData.bag.length < 9}
           />
         }
       />
-      <div className="w-[80%]  mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
+      <div className="w-[80%] mt-[20dvh] h-[60dvh] mx-auto grid grid-cols-3 gap-x-1">
+        {["#", "8", "6"].map((itm, index) => (
+          <div
+            ref={index === 1 ? dropZoneRef : undefined}
+            key={`box-${index}`}
+            className="w-[100%] relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/10 border border-white/10 shadow-2xl rounded-md overflow-auto"
+          >
+            <div
+              className={`text-booster font-symbols ${
+                index !== 1 ? "text-white/20" : "text-white"
+              }`}
+            >
+              {itm}
+            </div>
+          </div>
+        ))}
         {paginatedVaultItems.map((item) => (
           <div
             key={item._id}
@@ -197,7 +212,7 @@ const Vault = (props) => {
           </div>
         ))}
         {/* Invisble remaining  */}
-        {Array.from({ length: 9 - paginatedVaultItems.length }).map(
+        {Array.from({ length: 6 - paginatedVaultItems.length }).map(
           (_, index) => (
             <div
               key={`placeholder-${index}`}
@@ -231,7 +246,7 @@ const Vault = (props) => {
           </div>
         )}
       </div>
-      {gameData.bank.vault.length > 9 && (
+      {gameData.bank.vault.length > 6 && (
         <>
           <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
           <ToggleRight activeMyth={4} handleClick={handlePageRight} />

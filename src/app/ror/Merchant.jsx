@@ -1,41 +1,73 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import GridItem from "../../components/ror/GridItem";
-import { overlayStyle } from "../../utils/constants.ror";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import { RorContext } from "../../context/context";
-import { tradeItem } from "../../utils/api.ror";
+import { tradeItem, updateVaultData } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
 import RoRHeader from "../../components/layouts/Header";
 
-const CenterChild = ({ dropZoneRef }) => {
+const tele = window.Telegram?.WebApp;
+
+const CenterChild = ({}) => {
   return (
     <div
-      ref={dropZoneRef}
+      style={{
+        backgroundImage: `url('/assets/240px-banker_head.jpg')`,
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
       className={`
             flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
-    >
-      drop here
-    </div>
+    ></div>
   );
 };
 
 const Merchant = (props) => {
-  const { gameData, setGameData, authToken } = useContext(RorContext);
+  const { gameData, setGameData, authToken, setSection } =
+    useContext(RorContext);
   const [isLoading, setIsLoading] = useState(false);
   const [draggedItem, setDraggedItem] = useState(null);
+  const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [copyPosition, setCopyPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
   const [scaleIcon, setScaleIcon] = useState(false);
-  const dropZoneRef = useRef(null);
+  const boxRefs = [useRef(null), useRef(null), useRef(null)];
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(gameData.bag.length / itemsPerPage);
+
+  const paginatedVaultItems = gameData.bag.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
+  const handlePageLeft = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const handlePageRight = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
+
+  const handleAddToVault = async () => {
+    try {
+      const response = await updateVaultData(authToken, itemToTransfer);
+      setItemsToTransfer([]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleItemToTrade = async (item) => {
     setIsLoading(true);
     try {
-      const response = await tradeItem(authToken, item);
+      await tradeItem(authToken, item);
 
       // remove draggedItem
       setGameData((prevItems) => {
@@ -47,7 +79,7 @@ const Merchant = (props) => {
         );
         const updatedCoins =
           prevItems.stats.gobcoin +
-          (draggedItem.isComplete ? itemData.fragments.length + 1 : 1);
+          (draggedItem.isComplete ? itemData.coins : 1);
 
         return {
           ...prevItems,
@@ -58,7 +90,6 @@ const Merchant = (props) => {
           },
         };
       });
-      console.log(response);
     } catch (error) {
       console.log(error);
     } finally {
@@ -87,18 +118,19 @@ const Merchant = (props) => {
   };
 
   const handleTouchEnd = () => {
+    if (!draggedItem) return;
+
     setDragging(false);
     setIsTouched(false);
     setScaleIcon(false);
 
-    // Check if the item was dropped inside the drop zone
-    const dropZone = dropZoneRef.current;
-    if (dropZone) {
-      const dropZoneRect = dropZone.getBoundingClientRect();
+    const itemBoxIndex = boxRefs.findIndex((ref) => {
+      const dropZone = ref.current;
+      if (!dropZone) return false;
 
-      // Increase tolerance margin (10% of drop zone size)
-      const toleranceX = dropZoneRect.width * 0.1;
-      const toleranceY = dropZoneRect.height * 0.1;
+      const dropZoneRect = dropZone.getBoundingClientRect();
+      const toleranceX = dropZoneRect.width * 0.05;
+      const toleranceY = dropZoneRect.height * 0.05;
 
       const adjustedDropZoneRect = {
         left: dropZoneRect.left - toleranceX,
@@ -124,26 +156,79 @@ const Merchant = (props) => {
         Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
           Math.max(copyRect.top, adjustedDropZoneRect.top)
       );
-      const overlapArea = overlapX * overlapY;
-      const draggedItemArea = 100 * 100; // Item is 100x100 px
-      const overlapPercentage = (overlapArea / draggedItemArea) * 100;
 
-      if (overlapPercentage >= 10) {
-        console.log("✅ Yes, drop it!");
+      const overlapArea = overlapX * overlapY;
+      const overlapPercentage = (overlapArea / (100 * 100)) * 100;
+
+      return overlapPercentage >= 20;
+    });
+
+    if (itemBoxIndex !== -1) {
+      if (itemBoxIndex == 0) {
         handleItemToTrade(draggedItem._id);
-      } else {
-        console.log("❌ Not enough overlap to drop.");
+      } else if (itemBoxIndex == 2) {
+        setGameData((prevItems) => {
+          let updatedBagItems = prevItems.bag.filter(
+            (i) => i._id !== draggedItem._id
+          );
+
+          // Check vault space
+          if (prevItems.bank.vault.length < 27) {
+            let updatedVaultItems = [...prevItems.bank.vault, draggedItem];
+            itemToTransfer.push(draggedItem._id);
+
+            return {
+              ...prevItems,
+              bag: updatedBagItems,
+              bank: {
+                ...prevItems.bank,
+                vault: updatedVaultItems,
+              },
+            };
+          } else {
+            console.log("Error: Insufficient space in vault");
+            return prevItems;
+          }
+        });
       }
     }
-
     setDraggedItem(null);
   };
 
+  useEffect(() => {
+    return () => {
+      if (itemToTransfer.length != 0) {
+        (async () => handleAddToVault())();
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild dropZoneRef={dropZoneRef} />} />
-      <div className="w-[80%]  mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
-        {gameData.bag.map((item) => (
+      <RoRHeader CenterChild={<CenterChild />} />
+      <div className="w-[80%] mt-[20dvh] h-[60dvh] mx-auto grid grid-cols-3 gap-x-1">
+        {["#", "8", "6"].map((itm, index) => (
+          <div
+            ref={boxRefs[index]}
+            key={`box-${index}`}
+            onClick={() => {
+              if (index === 2) {
+                setSection(5);
+              }
+            }}
+            className="w-[100%] relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/10 border border-white/10 shadow-2xl rounded-md overflow-auto"
+          >
+            <div
+              className={`text-booster font-symbols ${
+                index == 1 ? "text-white/20" : "text-white"
+              }`}
+            >
+              {itm}
+            </div>
+          </div>
+        ))}
+
+        {paginatedVaultItems.map((item) => (
           <div
             key={item._id}
             onTouchStart={(e) => handleTouchStart(e, item)}
@@ -161,15 +246,16 @@ const Merchant = (props) => {
             />
           </div>
         ))}
-        {/* Invisble remaining  */}
-        {Array.from({ length: 9 - gameData.bag.length }).map((_, index) => (
-          <div
-            key={`placeholder-${index}`}
-            className="relative h-[120px] w-[120px] overflow-hidden"
-          ></div>
-        ))}
 
-        {/* Copy */}
+        {Array.from({ length: 6 - paginatedVaultItems.length }).map(
+          (_, index) => (
+            <div
+              key={`placeholder-${index}`}
+              className="relative w-[100%] aspect-square max-w-[120px] overflow-hidden"
+            ></div>
+          )
+        )}
+
         {isTouched && draggedItem && (
           <div
             style={{
@@ -190,26 +276,16 @@ const Merchant = (props) => {
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
-
-              {/* <div
-                className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
-                style={{
-                  maskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
-                  WebkitMaskImage: `url(/assets/320px-celtic-item-example-transparent.png)`,
-                  maskSize: "cover",
-                  WebkitMaskSize: "cover",
-                  maskPosition: "100% 20%",
-                  WebkitMaskPosition: "100% 20%",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskRepeat: "no-repeat",
-                }}
-              ></div> */}
             </div>
           </div>
         )}
       </div>
-      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
+      {gameData.bag.length > 6 && (
+        <>
+          <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
+          <ToggleRight activeMyth={4} handleClick={handlePageRight} />
+        </>
+      )}
     </div>
   );
 };

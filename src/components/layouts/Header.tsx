@@ -6,74 +6,82 @@ const BottomChild = () => {
 
   const sections = [
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
+      lIcon: "A",
+      rIcon: "9",
     }, // 0
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.competelvl,
-      hLeft: "Sessions",
-      hRight: "Competelvl",
-      lIcon: "9",
-      rIcon: "n",
-    }, // 1
-    {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
-    }, // 2
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
-    }, // 3
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
-    }, // 4
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
-    }, // 5,
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
+    {
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
+      hLeft: "Sessions",
+      hRight: "Coins",
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
     {}, // 6,
     {}, // 7,
     {}, // 8,
     {}, // 9,
     {}, // 10,
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
-    }, // 11
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
     {
-      left: gameData.stats.dailyQuota,
-      right: gameData.stats.gobcoin,
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
       hLeft: "Sessions",
       hRight: "Coins",
-      lIcon: "9",
-      rIcon: "A",
-    }, // 12
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
+    {
+      left: gameData.stats.gobcoin,
+      right: gameData.stats.dailyQuota,
+      hLeft: "Sessions",
+      hRight: "Coins",
+      lIcon: "A",
+      rIcon: "9",
+    }, // 0
   ];
 
   return (

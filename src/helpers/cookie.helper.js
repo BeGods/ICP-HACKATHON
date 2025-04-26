@@ -1,5 +1,33 @@
 import { isSafari } from "../utils/device.info";
 
+export const getActiveFeature = async (tele, key) => {
+  await tele.ready();
+
+  if (tele.platform === "ios" || tele.platform === "android") {
+    return new Promise((resolve) => {
+      tele.CloudStorage.getItem(key, (err, item) => {
+        if (err) {
+          console.error(err);
+          resolve(false);
+        } else {
+          if (item) {
+            resolve(true);
+          } else {
+            resolve(false);
+
+          }
+        }
+      });
+    });
+  } else {
+    const cookieItem = localStorage.getItem(key);
+    if (cookieItem) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 export const setStorage = async (tele, key, value) => {
   await tele.ready();

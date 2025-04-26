@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { Handshake } from "lucide-react";
+import { BookOpenText, Handshake } from "lucide-react";
 import { FofContext } from "../../context/context";
 
 const DefaultBtn = ({
@@ -59,6 +59,10 @@ const DefaultBtn = ({
           "V"
         ) : message === 1 ? (
           <Handshake size={"7.5vw"} />
+        ) : message === 2 ? (
+          "8"
+        ) : message === 3 ? (
+          <BookOpenText size={"7.5vw"} />
         ) : (
           ""
         )}
