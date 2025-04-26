@@ -1,41 +1,61 @@
-import React from "react";
-import { overlayStyle } from "../../utils/constants.ror";
+import React, { useContext } from "react";
 import { gameItems } from "../../utils/gameItems";
+import { useMaskStyle } from "../../hooks/MaskStyle";
+import { RorContext } from "../../context/context";
 
-const GridItem = ({ itemObj, itemsWithAllFrags, handleClick }) => {
-  const itemDetails = gameItems.find((item) => item.id === itemObj.itemId);
+const GridItem = ({
+  itemObj,
+  itemsWithAllFrags,
+  handleClick,
+  isInfo,
+  isStage,
+}) => {
+  const { assets } = useContext(RorContext);
+  let itemDetails = gameItems.find((item) => item?.id === itemObj?.itemId);
+  const mask = useMaskStyle(
+    itemDetails?.id,
+    itemDetails?.fragments.length,
+    Array.isArray(itemObj?.fragmentId)
+      ? itemObj?.fragmentId
+      : [itemObj?.fragmentId]
+  );
 
   return (
     <div
       onClick={handleClick}
-      className={`relative w-[100%] aspect-square max-w-[120px] overflow-hidden`}
+      className={`relative w-[100%] ${
+        !isStage && !itemsWithAllFrags.includes(itemDetails?.id) && "grayscale"
+      } ${
+        isStage &&
+        !itemObj.isComplete &&
+        !itemsWithAllFrags.includes(itemDetails?.id) &&
+        "grayscale"
+      } aspect-square max-w-[120px] border border-white/10 shadow-2xl rounded-md overflow-auto`}
     >
       <div
-        className={`flex justify-center items-end h-full w-full ${
-          !itemsWithAllFrags.includes(itemDetails.id) && "opacity-50"
+        className={`absolute inset-0 z-0 filter-${
+          !isInfo && itemObj?.itemId?.split(".")[0]
         }`}
         style={{
-          backgroundImage: `url(/assets/ror-cards/240px-${itemObj.itemId}_on.png)`,
+          backgroundImage: `url(${
+            isInfo ? assets.uxui.info : assets.uxui.basebg
+          })`,
           backgroundSize: "cover",
-          backgroundPosition: "10% 20%",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
-      >
-        <div className="glow-icon-white">{itemDetails.name}</div>
-      </div>
-      <div className={`${itemObj.isComplete && "hidden"}`}>
-        {itemDetails.fragments.length === 3 && itemObj.fragmentId === 1 ? (
-          <>
-            <div className="absolute grayscale top-0 left-0 h-full w-[32.5%] bg-gray-900 mix-blend-hue opacity-100"></div>
-            <div className="absolute grayscale top-0 right-0 h-full w-[32.5%] bg-gray-900 mix-blend-hue opacity-100"></div>
-          </>
-        ) : (
-          <div
-            className={`absolute ${
-              overlayStyle[itemDetails.fragments.length][itemObj.fragmentId]
-            } bg-gray-900  grayscale mix-blend-hue opacity-100`}
-          ></div>
-        )}
+      />
+      <div className="absolute inset-0 z-50 p-1.5">
+        <div
+          className={`w-full h-full flex justify-center items-end rounded-md `}
+          style={{
+            backgroundImage: `url(/assets/ror-cards/240px-${itemObj?.itemId}_on.png)`,
+            backgroundSize: "cover",
+            backgroundPosition: "10% 20%",
+            backgroundRepeat: "no-repeat",
+          }}
+        ></div>
+        <div className={`${itemObj?.isComplete && "hidden"}`}>{mask}</div>
       </div>
     </div>
   );

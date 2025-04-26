@@ -1,18 +1,22 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useContext, useEffect, useMemo } from "react";
 import GridItem from "../../components/ror/GridItem";
 import { RorContext } from "../../context/context";
-import { completeItem } from "../../utils/api.ror";
+import { completeItem, joinItem } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
-import MiscCard from "../../components/ror/MiscCard";
-import JoinButton from "../../components/ror/JoinButton";
 import RoRHeader from "../../components/layouts/Header";
+import {
+  ToggleLeft,
+  ToggleRight,
+} from "../../components/Common/SectionToggles";
+import MiscCard from "../../components/ror/MiscCard";
+import RoRBtn from "../../components/ror/RoRBtn";
+import { calculateRemainingTime } from "../../helpers/ror.timers.helper";
 
 // {isDropActive ? "drop here" : "locked"}
 
-const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
+const CenterChild = ({ handleClick }) => {
   return (
     <div
-      ref={dropZoneRef}
       onClick={handleClick}
       style={{
         backgroundImage: `url('/assets/240px-blacksmith_head.jpg')`,
@@ -27,20 +31,70 @@ const CenterChild = ({ dropZoneRef, isDropActive, handleClick }) => {
 };
 
 const Blacksmith = () => {
-  const { gameData, setGameData, authToken, setShowCard, setSection } =
+  const { gameData, setGameData, authToken, setShowCard, assets } =
     useContext(RorContext);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
-  const [lastDraggedItem, setLastDraggedItem] = useState(null);
   const [copyPosition, setCopyPosition] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
   const [scaleIcon, setScaleIcon] = useState(false);
   const [activeItems, setActiveItems] = useState([]);
-  const [arbitaryBag, setArbitaryBag] = useState([]);
+  const [arbitaryBag, setArbitaryBag] = useState(gameData.bag);
   const [selectedItem, setSelectedItem] = useState(null);
-  const dropZoneRef = useRef(null);
   const disableClick = useRef(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [boxFlags, setBoxFlags] = useState([false, false, false]);
+  const boxRefs = [useRef(null), useRef(null), useRef(null)];
+  const [boxItems, setBoxItems] = useState([{}, {}, {}]);
+
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(
+    arbitaryBag.sort((a, b) => {
+      const aActive = activeItems.includes(a.itemId);
+      const bActive = activeItems.includes(b.itemId);
+      return aActive === bActive ? 0 : aActive ? -1 : 1;
+    }).length / itemsPerPage
+  );
+
+  const sortedBag = useMemo(() => {
+    return (
+      arbitaryBag.sort((a, b) => {
+        const aActive = activeItems.includes(a.itemId);
+        const bActive = activeItems.includes(b.itemId);
+        return aActive === bActive ? 0 : aActive ? -1 : 1;
+      }) ?? []
+    );
+  }, [arbitaryBag, activeItems]);
+
+  const paginatedVaultItems = useMemo(() => {
+    return (
+      sortedBag.slice(
+        currentPage * itemsPerPage,
+        (currentPage + 1) * itemsPerPage
+      ) ?? []
+    );
+  }, [sortedBag, currentPage]);
+
+  useEffect(() => {
+    if (gameData?.bag) {
+      const sorted =
+        [...gameData.bag].sort((a, b) => {
+          const aActive = activeItems.includes(a.itemId);
+          const bActive = activeItems.includes(b.itemId);
+          return aActive === bActive ? 0 : aActive ? -1 : 1;
+        }) ?? [];
+      setArbitaryBag(sorted);
+    }
+  }, []);
+
+  const handlePageLeft = () => {
+    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
+  };
+
+  const handlePageRight = () => {
+    setCurrentPage((prev) => (prev + 1) % totalPages);
+  };
 
   const getGameItemFragmentLength = (itemId) =>
     gameItems.find((gameItem) => gameItem.id === itemId)?.fragments.length ?? 0;
@@ -68,42 +122,106 @@ const Blacksmith = () => {
         const hasAllFrags =
           item.fragments.length === getGameItemFragmentLength(item.itemId);
         const matchesSelected = !selectedItem || item.itemId === selectedItem;
-        return hasAllFrags && !item.isComplete && matchesSelected;
+        return (
+          item.fragments.length !== 1 &&
+          hasAllFrags &&
+          !item.isComplete &&
+          matchesSelected
+        );
       })
       .map((item) => item.itemId);
 
     setActiveItems(itemsWithAllFrags);
-    setArbitaryBag(gameData.bag);
   };
 
-  const handleCompleteItem = async (payMethod) => {
+  const handleJoinItem = async (itemIdx, payMethod = 0) => {
     if (!disableClick.current) {
       disableClick.current = true;
       try {
-        const response = await completeItem(
-          authToken,
-          itemToTransfer,
-          payMethod
-        );
-        setShowCard(null);
+        const box = boxItems[itemIdx];
+        const [key] = Object.keys(box);
+        const value = box[key];
+        const itemToTransfer = value.map((obj) => obj._id);
+
+        await joinItem(authToken, itemToTransfer, payMethod);
+        setBoxItems((prevItems) => {
+          const updatedItems = [...prevItems];
+          updatedItems[itemIdx] = {};
+          return updatedItems;
+        });
+
+        setBoxFlags((prevFlags) => {
+          const updatedFlags = [...prevFlags];
+          updatedFlags[itemIdx] = false;
+          return updatedFlags;
+        });
+
         setGameData((prevItems) => {
+          let updatedStats = { ...prevItems.stats };
           let updatedBagItems = prevItems.bag.filter(
             (item) => !itemToTransfer.includes(item._id)
           );
-          lastDraggedItem.isComplete = true;
-          lastDraggedItem.fragmentId = 0;
-          updatedBagItems.push(lastDraggedItem);
+
+          const exp = Date.now() + (value.length - 1) * 60 * 60 * 1000;
+          const combinedItem = {
+            itemId: key,
+            exp: exp,
+            _id: "sdfsdkjfj",
+          };
+
+          updatedStats.gobcoins -= value.length - 1;
+          const updatedBuilder = [...prevItems.builder, combinedItem];
+
+          setArbitaryBag(updatedBagItems);
+
           return {
             ...prevItems,
+            builder: updatedBuilder,
             bag: updatedBagItems,
+            stats: updatedStats,
           };
         });
+
         setItemsToTransfer([]);
-        setSection(2);
+        setShowCard(null);
         disableClick.current = false;
       } catch (error) {
         setItemsToTransfer([]);
-        setShowOverlayItem(null);
+        console.error("Error completing item:", error);
+        disableClick.current = false;
+      }
+    }
+  };
+
+  const handleCompleteItem = async (itemId) => {
+    if (!disableClick.current) {
+      disableClick.current = true;
+      try {
+        await completeItem(authToken, itemId);
+        setGameData((prevItems) => {
+          const combinedItem = {
+            itemId: itemId,
+            fragmentId: 0,
+            isComplete: true,
+            _id: "sdfsdkjfj",
+          };
+
+          const updatedBagItems = [...prevItems.bag, combinedItem];
+          const updatedBuilder = prevItems?.builder?.filter(
+            (itm) => itm.itemId !== itemId
+          );
+          setArbitaryBag(updatedBagItems);
+
+          return {
+            ...prevItems,
+            bag: updatedBagItems,
+            builder: updatedBuilder,
+          };
+        });
+
+        setShowCard(null);
+        disableClick.current = false;
+      } catch (error) {
         console.error("Error completing item:", error);
         disableClick.current = false;
       }
@@ -114,7 +232,6 @@ const Blacksmith = () => {
     if (!activeItems.includes(item.itemId)) return;
 
     setDraggedItem(item);
-    setLastDraggedItem(item);
     setDragging(true);
     setScaleIcon(true);
   };
@@ -138,16 +255,13 @@ const Blacksmith = () => {
     setIsTouched(false);
     setScaleIcon(false);
 
-    if (draggedItem?.itemId && !activeItems.includes(draggedItem.itemId))
-      return;
+    const itemBoxIndex = boxRefs.findIndex((ref) => {
+      const dropZone = ref.current;
+      if (!dropZone) return false;
 
-    const dropZone = dropZoneRef.current;
-    if (dropZone) {
       const dropZoneRect = dropZone.getBoundingClientRect();
-
-      // Increase tolerance margin (10% of drop zone size)
-      const toleranceX = dropZoneRect.width * 0.1;
-      const toleranceY = dropZoneRect.height * 0.1;
+      const toleranceX = dropZoneRect.width * 0.05;
+      const toleranceY = dropZoneRect.height * 0.05;
 
       const adjustedDropZoneRect = {
         left: dropZoneRect.left - toleranceX,
@@ -163,7 +277,6 @@ const Blacksmith = () => {
         bottom: copyPosition.y + 100,
       };
 
-      // overalp area
       const overlapX = Math.max(
         0,
         Math.min(copyRect.right, adjustedDropZoneRect.right) -
@@ -174,31 +287,74 @@ const Blacksmith = () => {
         Math.min(copyRect.bottom, adjustedDropZoneRect.bottom) -
           Math.max(copyRect.top, adjustedDropZoneRect.top)
       );
+
       const overlapArea = overlapX * overlapY;
-      const draggedItemArea = 100 * 100; // Item is 100x100 px
-      const overlapPercentage = (overlapArea / draggedItemArea) * 100;
+      const overlapPercentage = (overlapArea / (100 * 100)) * 100;
 
-      console.log(`📌 Overlap Percentage: ${overlapPercentage.toFixed(2)}%`);
+      return overlapPercentage >= 20;
+    });
 
-      if (overlapPercentage >= 10) {
-        console.log("✅ Valid drop: Removing item from bag");
+    console.log("itemBoxIndex", itemBoxIndex);
 
-        setArbitaryBag((prevItems) =>
-          prevItems.filter((i) => i._id !== draggedItem._id)
-        );
+    if (itemBoxIndex !== -1) {
+      setBoxItems((prevBoxes) => {
+        const newBoxes = [...prevBoxes];
+        const targetBox = { ...newBoxes[itemBoxIndex] };
+        const fragmentData = {
+          _id: draggedItem._id,
+          fragmentId: draggedItem.fragmentId,
+        };
 
-        if (itemToTransfer == 0) {
-          setSelectedItem(draggedItem.itemId);
+        let itemInserted = false;
+
+        // check if exists in one of the boxes
+        for (let i = 0; i < newBoxes.length; i++) {
+          const box = newBoxes[i];
+          if (box[draggedItem.itemId]) {
+            const alreadyExists = box[draggedItem.itemId].some(
+              (frag) => frag._id === draggedItem._id
+            );
+
+            if (!alreadyExists) {
+              box[draggedItem.itemId].push(fragmentData);
+            }
+
+            itemInserted = true;
+            break;
+          }
         }
 
-        setItemsToTransfer((prev) =>
-          prev.includes(draggedItem._id) ? prev : [...prev, draggedItem._id]
-        );
-      } else {
-        console.log("❌ Drop rejected: Not enough overlap.");
-      }
-    }
+        // if not then insert in target box
+        if (!itemInserted) {
+          // if target box: chekc already itenm set
+          const hasAnyItemAssigned = Object.keys(targetBox).length > 0;
 
+          if (hasAnyItemAssigned) {
+            alert("Invalid drop: This box already contains an item.");
+            return prevBoxes;
+          }
+          if (!targetBox[draggedItem.itemId]) {
+            targetBox[draggedItem.itemId] = [];
+          }
+
+          const alreadyExists = targetBox[draggedItem.itemId].some(
+            (frag) => frag._id === draggedItem._id
+          );
+
+          if (!alreadyExists) {
+            targetBox[draggedItem.itemId].push(fragmentData);
+          }
+
+          newBoxes[itemBoxIndex] = targetBox;
+        }
+
+        return newBoxes;
+      });
+      const updatedBag = arbitaryBag.filter((i) => i._id !== draggedItem._id);
+      setArbitaryBag(updatedBag);
+      setSelectedItem(draggedItem.itemId);
+      setDraggedItem(null);
+    }
     setDraggedItem(null);
   };
 
@@ -207,61 +363,193 @@ const Blacksmith = () => {
   }, [selectedItem]);
 
   useEffect(() => {
-    if (selectedItem && !dragging) {
-      const allItemsTransfered =
-        gameItems.find((item) => item.id === selectedItem).fragments.length ===
-        itemToTransfer.length;
-      if (allItemsTransfered) {
-        setShowCard(
-          <MiscCard
-            Button={
-              <JoinButton
-                payWithOrb={() => handleCompleteItem(1)}
-                payWithCoin={() => handleCompleteItem(0)}
-              />
-            }
-          />
-        );
-      }
+    if (dragging) return;
+
+    const updatedFlags = [...boxFlags];
+    const allBoxes = boxItems || [];
+    let flagChanged = false;
+
+    gameItems.forEach((item) => {
+      const fragmentCount = item.fragments?.length || 0;
+
+      allBoxes.forEach((box, index) => {
+        const boxItemsForItem = box[item.id] || [];
+
+        if (boxItemsForItem.length === fragmentCount && !updatedFlags[index]) {
+          updatedFlags[index] = true;
+          flagChanged = true;
+        }
+      });
+    });
+
+    if (flagChanged) {
+      setSelectedItem(null);
+      0;
     }
-  }, [itemToTransfer]);
+
+    setBoxFlags(updatedFlags);
+  }, [boxItems, dragging, gameItems]);
 
   return (
     <div className="w-full h-fit">
       <RoRHeader
         CenterChild={
-          <CenterChild
-            dropZoneRef={dropZoneRef}
-            isDropActive={itemToTransfer.length === 0 || dragging}
-          />
+          <CenterChild isDropActive={itemToTransfer.length === 0 || dragging} />
         }
       />
-      <div className="w-[80%] mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3">
-        {arbitaryBag.map((item) => (
-          <div
-            key={item._id}
-            onTouchStart={(e) => handleTouchStart(e, item)}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className={`${scaleIcon && draggedItem === item && "scale-110"}`}
-          >
-            <GridItem
-              handleClick={() => {}}
-              itemObj={item}
-              scaleIcon={scaleIcon}
-              itemsWithAllFrags={activeItems}
-            />
-          </div>
-        ))}
-        {/* remaining places */}
-        {Array.from({ length: 9 - arbitaryBag.length }).map((_, index) => (
-          <div
-            key={`placeholder-${index}`}
-            className="relative h-[120px] w-[120px] overflow-hidden"
-          ></div>
-        ))}
 
-        {/* dragged copy of item */}
+      <div className="w-[80%] mt-[20dvh] h-[60dvh] mx-auto">
+        <div className="grid grid-cols-3 gap-x-1 p-1">
+          {/* items in build (reserved) */}
+          {gameData?.builder?.map((item, index) => (
+            <div
+              key={`box-${index}`}
+              className="w-[100%] relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/10 border border-white/10 shadow-2xl rounded-md overflow-auto"
+            >
+              <div className="w-full p-0.5" key={index}>
+                <GridItem
+                  isStage={true}
+                  handleClick={() => {}}
+                  itemObj={{
+                    itemId: item?.itemId,
+                    fragmentId: gameItems
+                      ?.find((itm) => itm.id == item.itemId)
+                      .fragments.map((frags) => frags.fragmentId),
+                    isComplete: true,
+                  }}
+                  scaleIcon={scaleIcon}
+                  itemsWithAllFrags={gameData?.bag.map((item) => item.itemId)}
+                />
+              </div>
+              {item?.exp - Date.now() > 0 ? (
+                <div className="absolute z-50 text-white text-2xl font-bold p-2">
+                  {calculateRemainingTime(item.exp - Date.now())}
+                </div>
+              ) : (
+                <div
+                  onClick={() => {
+                    handleCompleteItem(item.itemId);
+                  }}
+                  className="absolute z-50 bg-orange-600 font-bold p-2"
+                >
+                  Claim
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* reserved positions (reserved)  */}
+          {Array.from(
+            { length: 3 - gameData.builder.length },
+            (_, index) => index
+          ).map((index) => {
+            const isBoxFilled = Object.keys(boxItems[index]).length > 0;
+            const isBoxForClaim = boxFlags[index];
+            const x = Object.entries(boxItems[index]).map(
+              ([itemId, fragments]) => fragments
+            );
+
+            // this works
+            console.log(x[0]?.map((frags) => frags.fragmentId));
+
+            return (
+              <div
+                key={`box-${index}`}
+                ref={!isBoxForClaim ? boxRefs[index] : null}
+                className="w-[100%] relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/20 border border-white/10 shadow-2xl rounded-md overflow-auto"
+              >
+                {isBoxFilled ? (
+                  Object.entries(boxItems[index]).map(([itemId, fragments]) => (
+                    <div className="w-full p-0.5" key={itemId}>
+                      <GridItem
+                        handleClick={() => {}}
+                        itemObj={{
+                          itemId: itemId,
+                          fragmentId: (fragments || [])
+                            .map((frags) => frags.fragmentId)
+                            .sort((a, b) => a - b),
+
+                          isComplete: false,
+                        }}
+                        scaleIcon={scaleIcon}
+                        itemsWithAllFrags={gameData.bag.map(
+                          (item) => item.itemId
+                        )}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-booster font-symbols text-white">h</div>
+                )}
+
+                {boxFlags[index] && (
+                  <div
+                    onClick={() => {
+                      const box = boxItems[index];
+                      const [key] = Object.keys(box);
+                      const value = box[key];
+                      setShowCard(
+                        <MiscCard
+                          img={assets.boosters.minionCard}
+                          icon="w"
+                          Button={
+                            <RoRBtn
+                              left={value.length}
+                              right={value.length - 1}
+                              handleClick={() => handleJoinItem(index, 0)}
+                            />
+                          }
+                        />
+                      );
+                    }}
+                    className="absolute z-50 bg-orange-600 font-bold p-2"
+                  >
+                    MINT
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col justify-center h-[80%]">
+          <div className="relative grid grid-cols-3 gap-x-1 gap-y-16 p-1 border border-white/40 shadow-2xl rounded-md">
+            <div className="flex justify-center items-center absolute w-full h-full">
+              <div className="font-symbols text-[30vw] text-white/40">8</div>
+            </div>
+            {/* items */}
+            {paginatedVaultItems?.map((item) => (
+              <div
+                key={item._id}
+                onTouchStart={(e) => handleTouchStart(e, item)}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                className={`${
+                  scaleIcon && draggedItem === item && "scale-110"
+                }`}
+              >
+                <GridItem
+                  handleClick={() => {}}
+                  itemObj={item}
+                  scaleIcon={scaleIcon}
+                  itemsWithAllFrags={activeItems}
+                />
+              </div>
+            ))}
+
+            {/* remaining pieces */}
+            {Array?.from({ length: 6 - paginatedVaultItems?.length }).map(
+              (_, index) => (
+                <div
+                  key={`box-${index}`}
+                  className="relative w-[100%] aspect-square max-w-[120px] overflow-hidden"
+                ></div>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* copy */}
         {isTouched && draggedItem && (
           <div
             style={{
@@ -282,27 +570,16 @@ const Blacksmith = () => {
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
-
-              {/* <div
-                className={`absolute ${overlayStyle[2][1]} bg-gray-700 opacity-50`}
-                style={{
-                  maskImage: `url(/320px-celtic-item-example-transparent.png)`,
-                  WebkitMaskImage: `url(/320px-celtic-item-example-transparent.png)`,
-                  maskSize: "cover",
-                  WebkitMaskSize: "cover",
-                  maskPosition: "100% 20%",
-                  WebkitMaskPosition: "100% 20%",
-                  maskRepeat: "no-repeat",
-                  WebkitMaskRepeat: "no-repeat",
-                }}
-              ></div> */}
             </div>
           </div>
         )}
       </div>
-
-      {/* <ToggleLeft activeMyth={4} handleClick={() => {}} />
-      <ToggleRight activeMyth={4} handleClick={() => {}} /> */}
+      {gameData.bag.length > 6 && (
+        <>
+          <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
+          <ToggleRight activeMyth={4} handleClick={handlePageRight} />
+        </>
+      )}
     </div>
   );
 };

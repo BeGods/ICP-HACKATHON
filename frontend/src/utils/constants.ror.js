@@ -29,6 +29,15 @@ export const mythElementNames = {
   Other: "Aether",
 };
 
+export const mythElementNamesLowerCase = {
+  greek: "fire",
+  celtic: "earth",
+  norse: "water",
+  egyptian: "air",
+  other: "aether",
+};
+
+
 export const elementMythNames = {
   fire: "Greek",
   earth: "Celtic",
@@ -70,3 +79,4 @@ export const overlayStyle = {
     "bottom-0 right-0 h-1/2 w-1/2",
   ],
 };
+

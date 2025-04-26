@@ -1,12 +1,16 @@
 import React, { useContext, useState } from "react";
 import { RorContext } from "../../context/context";
 import IconBtn from "../Buttons/IconBtn";
-import { mythElementNames } from "../../utils/constants.ror";
+import { elementMythNames, mythElementNames } from "../../utils/constants.ror";
 import PotionBtn from "./PotionBtn";
 
 const PotionCard = ({ potion }) => {
-  const { assets, setShowCard, gameData } = useContext(RorContext);
+  const { assets, setShowCard, gameData, isTelegram } = useContext(RorContext);
   const [stage, setStage] = useState(false);
+  const element = potion?.split(".")[1];
+  const mythology = elementMythNames[element]?.toLowerCase();
+
+  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
@@ -85,54 +89,64 @@ const PotionCard = ({ potion }) => {
         </div>
       )}
 
-      <div className="relative w-[72%] h-[55%]  flex items-center justify-center rounded-primary card-shadow-white">
-        <div
-          className={`absolute inset-0 rounded-[15px]`}
-          style={{
-            backgroundImage: `${`url(/assets/320px-gemologist.jpeg)`}`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center ",
-          }}
-        />
-        <IconBtn
-          isInfo={false}
-          activeMyth={4}
-          handleClick={() => {
-            setShowCard(null);
-          }}
-          align={0}
-        />
-        <div className="relative h-full w-full flex flex-col items-center">
-          <div className="flex relative flex-col justify-center items-center h-full w-full">
+      <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+        <div className={`card  ${cardHeight} `}>
+          <div className="card__face card__face--front relative flex justify-center items-center">
             <div
-              className={`flex relative  mt-auto items-center h-[19%] w-full`}
-            >
-              <div
-                style={{
-                  backgroundImage: `url(${assets.uxui.paper})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  height: "100%",
-                  width: "100%",
-                }}
-                className={`rounded-b-primary`}
-              />
+              className={`absolute inset-0 bg-cover bg-center filter-${mythology} rounded-primary z-0`}
+              style={{ backgroundImage: `url(${assets.uxui.basebg})` }}
+            />
 
-              <div
-                className={`flex justify-center text-white text-black-contour w-full h-full items-center  z-10 font-symbols`}
-              >
+            <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
+              <div className="relative m-2 flex justify-center items-center w-[50px]">
                 <img
-                  src={`/assets/ror-cards/240px-${potion}_on.png`}
-                  alt="potion"
-                  className="w-[14vw]"
+                  src={`/assets/240px-gobcoin.png`}
+                  alt="relic"
+                  className="w-full"
                 />
+                <div
+                  className="absolute text-num font-roboto font-bold text-shadow grayscale"
+                  style={{
+                    backgroundImage: "url('/assets/metal.jpg')",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
+                  1
+                </div>
+              </div>
+              <div className="relative w-[240px] h-[240px] flex justify-center items-center">
+                <div className="relative w-full h-full">
+                  <img
+                    src={`/assets/ror-cards/240px-${potion}_on.png`}
+                    alt="relic"
+                    className="z-10 w-full h-full object-contain"
+                  />
+                </div>
+              </div>
+
+              <div className="relative w-full h-[19%] mt-auto card-shadow-white z-10">
+                <div
+                  className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary filter-paper-${mythology}`}
+                  style={{ backgroundImage: `url(${assets.uxui.paper})` }}
+                />
+                <div className="absolute text-[50px] font-symbols flex justify-center items-center w-full h-full">
+                  v
+                </div>
               </div>
             </div>
+            <IconBtn
+              isInfo={false}
+              activeMyth={4}
+              handleClick={() => {
+                setShowCard(null);
+              }}
+              align={0}
+            />
           </div>
         </div>
       </div>

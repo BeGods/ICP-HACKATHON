@@ -22,14 +22,32 @@ export const timeLeftUntil12Hours = (date) => {
 
 export const checkIsUnderworldActive = (gameSession, mythology, pouch) => {
 
-    const turns = gameSession.dailyQuota == 3 || gameSession.dailyQuota == 4; // evening time
-    const itemExists =
-        pouch?.includes(`${mythology.toLowerCase()}.artifact.treasure01`) ||
-        pouch?.includes(`${mythology.toLowerCase()}.artifact.common02`)
+    const turns = gameSession.dailyQuota >= 3;
 
-    if (turns && gameSession.isUnderworldActive && itemExists) {
-        return true;
+    const treasureKey = `${mythology.toLowerCase()}.artifact.treasure01`;
+    const commonKey = `${mythology.toLowerCase()}.artifact.common02`;
+
+    const hasDemonCoin = pouch?.includes(treasureKey);
+    const hasKey = pouch?.includes(commonKey);
+
+    const itemExists = hasDemonCoin || hasKey;
+
+    if (itemExists && turns) {
+        if (hasDemonCoin) return 1;
+        if (hasKey) return 2;
     }
 
-    return false;
+    return -1;
+};
+
+export const calculateRemainingTime = (ms) => {
+    const timeLeftInMs = ms;
+
+    const hoursLeft = Math.floor(timeLeftInMs / (1000 * 60 * 60));
+    const minutesLeft = Math.floor((timeLeftInMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    const paddedHours = hoursLeft.toString().padStart(2, '0');
+    const paddedMinutes = minutesLeft.toString().padStart(2, '0');
+
+    return `${paddedHours}:${paddedMinutes}`;
 };

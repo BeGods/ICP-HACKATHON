@@ -194,7 +194,27 @@ export const activateRest = async (accessToken) => {
   }
 };
 
-export const completeItem = async (accessToken, arrayOfIds, payMethod) => {
+export const completeItem = async (accessToken, itemId) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/blacksmith/claim`;
+
+  try {
+    const response = await axios.post(
+      url,
+      { itemId: itemId },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const joinItem = async (accessToken, arrayOfIds, payMethod) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/blacksmith/join`;
 
   try {
@@ -236,9 +256,23 @@ export const tradeItem = async (accessToken, itemId) => {
 
 
 export const claimItemAbility = async (accessToken, itemId) => {
-  let url = `${import.meta.env.VITE_API_ROR_URL}/game/claimItem`;
+  let url = `${import.meta.env.VITE_API_ROR_URL}/game/claim`;
 
+  try {
+    const response = await axios.post(url, { itemId: itemId }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
 
+export const claimArtifact = async (accessToken, itemId) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/artifact/claim`;
 
   try {
     const response = await axios.post(url, { itemId: itemId }, {
