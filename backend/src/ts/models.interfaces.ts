@@ -31,15 +31,24 @@ export interface IInventory {
   updatedAt: Date;
 }
 
+export interface IBuildStage {
+  _id: mongoose.Types.ObjectId;
+  itemId: string;
+  exp: number;
+}
+
 export interface IMilestone extends Document {
   userId: mongoose.Types.ObjectId;
   claimedQuests: IClaimedQuest[];
   sharedQuests: mongoose.Types.ObjectId[];
   bag?: IInventory[];
+  pouch?: string[];
   bank?: {
     vaultExpiryAt: number;
     vault: IInventory[];
   };
+  buildStage: IBuildStage[];
+  appearedUnderworldChars?: string[];
   claimedRoRItems?: string[];
   rewards: IRewards;
 }
@@ -202,8 +211,11 @@ export interface IUser extends Document {
     dailyGameQuota: number;
     lastSessionStartTime: number;
     competelvl: number;
-    underWorldActiveAt: number;
+    isUnderworldActive: number;
     restExpiresAt: number;
+    isThiefActive: boolean;
+    isBlackSmithActive: boolean;
+    isLibrnActive: boolean;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
@@ -335,4 +347,13 @@ export interface ITeam extends Document {
   teamCode?: string;
   totalOrbs: number;
   members: mongoose.Types.ObjectId[];
+}
+
+export interface itemInterface {
+  itemId?: string;
+  isComplete?: boolean;
+  fragmentId?: number;
+  _id?: mongoose.Types.ObjectId;
+  isChar?: boolean;
+  updatedAt?: Date;
 }

@@ -16,7 +16,7 @@ export const claimDailyBonus = async (req, res) => {
       },
     });
 
-    let bonusReward: {} = await generateDailyRwrd(userId);
+    let bonusReward = await generateDailyRwrd(userId);
 
     if (!bonusReward) {
       bonusReward = "shards";

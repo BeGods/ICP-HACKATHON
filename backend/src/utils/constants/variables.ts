@@ -1,6 +1,25 @@
 // mythology order
 export const mythOrder = ["Greek", "Celtic", "Norse", "Egyptian"];
+export const myths = ["greek", "celtic", "norse", "egyptian"];
+export const mythElementNames = {
+  fire: "Greek",
+  earth: "Celtic",
+  water: "Norse",
+  air: "Egyptian",
+  aether: "Aether",
+};
 export const validCountries = ["IND"];
+export const underworldItemsList = [
+  "relic.C01",
+  "relic.C02",
+  "relic.C03",
+  "relic.C04",
+  "relic.C05",
+  "relic.C09",
+  "artifact.treasure01",
+  "artifact.treasure02",
+  "artifact.treasure03",
+];
 
 // default mythologies
 export const defaultMythologies = [

@@ -2,111 +2,83 @@ import { gameItems } from "../../utils/constants/gameItems";
 import milestones from "../../common/models/milestones.models";
 import mongoose from "mongoose";
 import ranks from "../../common/models/ranks.models";
-
-interface itemInterface {
-  itemId?: string;
-  isComplete?: boolean;
-  fragmentId?: number;
-  _id?: mongoose.Types.ObjectId;
-  updatedAt?: Date;
-}
+import userMythologies from "../../common/models/mythologies.models";
+import { ItemsTransactions } from "../../common/models/transactions.models";
 
 export const generateDailyRwrd = async (userId) => {
   try {
     const userMilestones = await milestones.findOne({ userId: userId });
-
-    const claimedItems = [
-      ...(userMilestones?.bank?.vault ?? []),
-      ...(userMilestones?.bag ?? []),
-    ].reduce((acc, item) => {
-      const existingItem = acc.find((obj) => obj?.itemId === item?.itemId);
-      if (existingItem) {
-        existingItem?.fragments.push(item.fragmentId);
-      } else {
-        acc.push({
-          itemId: item.itemId,
-          fragments: [item.fragmentId],
-          isComplete: item.isComplete,
-          updatedAt: item.updatedAt,
-        });
-      }
-      return acc;
-    }, []);
-
-    const completedItemIds =
-      claimedItems
-        ?.filter(
-          (item) =>
-            item.isComplete === true ||
-            item.fragments.length ===
-              gameItems?.find((gameItem) => gameItem.id === item.itemId)
-                ?.fragments.length
-        )
-        .map((item) => item.itemId) ?? [];
+    const pouchItems = userMilestones?.pouch ?? [];
+    const ignoredItems = [
+      "starter00",
+      "treasure03",
+      "treasure02",
+      "treasure01",
+    ];
 
     const filteredClaimedItems =
       gameItems?.filter(
         (item) =>
           !userMilestones?.claimedRoRItems?.includes(item.id) &&
-          !completedItemIds?.includes(item.id) &&
-          item.id.includes("artifact")
+          !pouchItems?.includes(item.id) &&
+          item.id.includes("artifact") &&
+          !ignoredItems.some((ignore) => item.id.includes(ignore))
       ) ?? [];
 
-    // random item
+    // random reward
     const randomGenItem =
       filteredClaimedItems[
         Math.floor(Math.random() * filteredClaimedItems.length)
       ];
 
     let genRewardObj = null;
-    let itemAddedToBag: itemInterface = {};
 
-    // if random item exists
     if (randomGenItem) {
-      const alreadyClaimedItem = claimedItems.find(
-        (item) => item.itemId === randomGenItem.id
-      );
+      const itemId = randomGenItem.id;
+      let coins = 0;
+      let updateField = null;
 
-      let randomGenFragntIdx;
-
-      if (alreadyClaimedItem) {
-        // missing frags
-        const missingFragments = randomGenItem.fragments.filter(
-          (item) => !alreadyClaimedItem.fragments.includes(item)
-        );
-
-        randomGenFragntIdx =
-          missingFragments[Math.floor(Math.random() * missingFragments.length)];
+      if (/common0[1-4]/.test(itemId)) {
+        // gold coin
+        coins = 2;
+        updateField = "claimedRoRItems";
+      } else if (/common0[5-9]/.test(itemId)) {
+        // silver coin
+        coins = 1;
+        updateField = "claimedRoRItems";
       } else {
-        randomGenFragntIdx = Math.floor(
-          Math.random() * randomGenItem.fragments.length
+        // other
+        updateField = "pouch";
+      }
+
+      if (coins > 0) {
+        await userMythologies.findOneAndUpdate(
+          { userId },
+          { $inc: { gobcoin: coins } }
         );
       }
 
-      genRewardObj = {
-        itemId: randomGenItem.id,
-        fragmentId: randomGenFragntIdx,
-        isComplete: randomGenItem.fragments.length === 1,
-      };
-
-      let updatedBag = await milestones.findOneAndUpdate(
-        { userId: userId },
-        {
-          $push: { bag: genRewardObj },
-        },
+      await milestones.findOneAndUpdate(
+        { userId },
+        { $push: { [updateField]: itemId } },
         { new: true }
       );
 
-      itemAddedToBag = updatedBag.bag.find(
-        (item) =>
-          item.itemId === genRewardObj.itemId &&
-          item.fragmentId === genRewardObj.fragmentId
-      );
-    } else {
-      itemAddedToBag = null;
+      genRewardObj = itemId;
     }
 
-    return itemAddedToBag;
+    // trans maintain
+    if (genRewardObj) {
+      const newItemTransaction = new ItemsTransactions({
+        userId: userId,
+        underworld: false,
+        shards: 0,
+        item: genRewardObj,
+      });
+      await newItemTransaction.save();
+    }
+
+    return genRewardObj;
   } catch (error) {
     console.log(error);
     throw new Error(error.message);
