@@ -2,12 +2,64 @@ import { Crown } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import Scratch from "../../components/Common/ScratchCrd";
 import { RorContext } from "../../context/context";
-import { gameItems } from "../../utils/gameItems";
+import { fetchDailyBonus } from "../../utils/api.ror";
 
 const Gacha = () => {
-  const { setSection, isTelegram } = useContext(RorContext);
+  const { setSection, setGameData, isTelegram, assets, authToken } =
+    useContext(RorContext);
   const [changeText, setChangeText] = useState("SCRATCH");
   const [item, setItem] = useState(null);
+
+  const claimDailyBonus = async () => {
+    try {
+      const response = await fetchDailyBonus(authToken);
+
+      setItem(response.reward);
+
+      if (response && response.reward) {
+        const itemId = response.reward;
+        let coins = 0;
+        let updateField = null;
+
+        if (/common0[1-4]/.test(itemId)) {
+          // gold coin
+          coins = 2;
+          updateField = "claimedItems";
+        } else if (/common0[5-9]/.test(itemId)) {
+          // silver coin
+          coins = 1;
+          updateField = "claimedItems";
+        } else {
+          // other
+          updateField = "pouch";
+        }
+
+        setGameData((prev) => {
+          const newStats = { ...prev.stats };
+          let updatedPouch = [...prev.pouch];
+          let updatedClaimedItems = [...prev.claimedItems];
+
+          if (updateField == "pouch") {
+            updatedPouch.push(itemId);
+          } else {
+            updatedClaimedItems.push(itemId);
+          }
+
+          newStats.gobcoins = (prev.stats.gobcoin || 0) + coins;
+          return {
+            ...prev,
+            pouch: updatedPouch,
+            claimedItems: updatedClaimedItems,
+            stats: newStats,
+          };
+        });
+      } else {
+        console.error("No reward in response:", response);
+      }
+    } catch (error) {
+      console.error("Failed to claim daily bonus:", error);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -16,23 +68,24 @@ const Gacha = () => {
       );
     }, 1500);
 
-    const artifacts = gameItems.filter((item) =>
-      item.id.includes("celtic.artifact")
-    );
-    const randomItem = artifacts[Math.floor(Math.random() * artifacts.length)];
-    console.log(randomItem.id);
-
-    setItem(randomItem.id);
+    (async () => await claimDailyBonus())();
 
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div
       className={`flex flex-col ${
         isTelegram ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
-      <div className="flex flex-col w-full h-full items-center pt-4">
+      <div
+        className="absolute inset-0 w-full h-full opacity-80 z-0"
+        style={{
+          background: `url(${assets.uxui.rorspash}) no-repeat center / cover`,
+        }}
+      ></div>
+      <div className="flex flex-col w-full h-full z-50 items-center pt-4">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
           <Crown color="#FFD660" size={"20vw"} />

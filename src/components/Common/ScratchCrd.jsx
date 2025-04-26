@@ -36,7 +36,7 @@ const Scratch = ({ handleComplete, item }) => {
           <div
             className={`h-[240px] w-[240px]`}
             style={{
-              backgroundImage: `url(/assets/ror-cards/240px-${item}.png)`,
+              backgroundImage: `url(/assets/ror-cards/240px-${item}_on.png)`,
               backgroundSize: "cover",
               backgroundPosition: "100% 20%",
               backgroundRepeat: "no-repeat",

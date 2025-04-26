@@ -12,8 +12,6 @@
     "docker:build": "docker build . -t forges-of-faith-frontend"
   },
   "dependencies": {
-    "@kaiachain/ethers-ext": "^2.0.1",
-    "@kaiachain/js-ext-core": "^2.0.1",
     "@line/liff": "^2.25.1",
     "@linenext/dapp-portal-sdk": "^1.2.6",
     "@tauri-apps/plugin-haptics": "^2.0.0",
@@ -34,7 +32,6 @@
     "react-ga4": "^2.1.0",
     "react-howler": "^5.2.0",
     "react-i18next": "^15.0.1",
-    "react-image-mosaic": "^2.3.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-konva": "^18.2.10",
     "react-router-dom": "^6.24.1",

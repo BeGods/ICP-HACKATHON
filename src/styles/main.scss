@@ -235,6 +235,11 @@ text-shadow:
           drop-shadow(0 0 70px #FFD660);
 }
 
+.glow-thief {
+  filter: drop-shadow(0 0 10px #fe0000)
+          drop-shadow(0 0 70px #fe0000);
+}
+
 .glow-box-scale {
   filter: drop-shadow(0 0 10px #FFD660)
           drop-shadow(0 0 30px #FFD660)

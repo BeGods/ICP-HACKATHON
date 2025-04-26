@@ -5,10 +5,23 @@ import CitadelItem from "./CitadelItem";
 import MiscCard from "./MiscCard";
 import RoRBtn from "./RoRBtn";
 import { toast } from "react-toastify";
-import { activateRest, activateVault } from "../../utils/api.ror";
+import {
+  activateBlacksmith,
+  activateLibrarian,
+  activateRest,
+  activateVault,
+} from "../../utils/api.ror";
+import {
+  getActiveFeature,
+  getStorage,
+  setStorage,
+} from "../../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
 
 const CitadelCarousel = ({ enableGuide, mythData }) => {
   const {
+    assets,
     setShowCard,
     activeMyth,
     authToken,
@@ -21,23 +34,28 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
   const [items, setItems] = useState([]);
   const [showEffect, setShowEffect] = useState(false);
 
-  const handleActivateBank = async () => {
+  const handleActivateBank = async (isMulti) => {
     if (gameData.bank.isVaultActive) {
-      setSection(2);
+      setSection(4);
     } else {
       try {
-        const response = await activateVault(authToken);
+        const response = await activateVault(authToken, isMulti);
         setShowCard(null);
         setGameData((prev) => {
+          const newStats = { ...prev.stats };
+
+          newStats.gobcoin = prev.stats.gobcoin - (isMulti ? 5 : 1);
+
           return {
             ...prev,
+            stats: newStats,
             bank: {
               ...prev.bank,
               isVaultActive: true,
             },
           };
         });
-        setSection(0);
+        setSection(2);
         console.log(response);
         toast.success("vault activated");
       } catch (error) {
@@ -50,18 +68,19 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
 
   const handleActivateRest = async () => {
     if (gameData.stats.isRestActive) {
-      setSection(2);
+      setSection(13);
     } else {
       try {
         const response = await activateRest(authToken);
         setShowCard(null);
         setGameData((prev) => {
+          const newStats = { ...prev.stats };
+
+          newStats.gobcoins = (prev.stats.gobcoin || 0) - 1;
+          newStats.isRestActive = true;
           return {
             ...prev,
-            stats: {
-              ...prev.stats,
-              isRestActive: true,
-            },
+            stats: newStats,
           };
         });
         setSection(1);
@@ -75,28 +94,45 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
     }
   };
 
+  const handleActivate = async (key, value, navigateTo) => {
+    setSection(navigateTo);
+    setShowCard(null);
+    await setStorage(tele, key, value);
+  };
+
   useEffect(() => {
     const boosters = [
       {
         key: "blacksmith",
         component: (
           <CitadelItem
+            icon="h"
             isMulti={false}
-            itemKey="blacksmith"
-            handleClick={() => {
-              setSection(3);
-            }}
-          />
-        ),
-      },
-      {
-        key: "merchant",
-        component: (
-          <CitadelItem
-            isMulti={false}
-            itemKey="merchant"
-            handleClick={() => {
-              setSection(4);
+            itemKey="furnace"
+            handleClick={async () => {
+              const isActive = await getActiveFeature(tele, "blacksmith");
+              if (isActive) {
+                setSection(3);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    img={assets.boosters.minionCard}
+                    icon="w"
+                    isMulti={false}
+                    handleClick={() => handleActivate("blacksmith", "true", 3)}
+                    Button={
+                      <RoRBtn
+                        isNotPay={true}
+                        left={1}
+                        right={1}
+                        handleClick={() =>
+                          handleActivate("blacksmith", "true", 3)
+                        }
+                      />
+                    }
+                  />
+                );
+              }
             }}
           />
         ),
@@ -105,16 +141,94 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "vault",
         component: (
           <CitadelItem
-            itemKey="vault"
+            icon="A"
+            itemKey="bank"
             handleClick={() => {
               if (gameData.bank.isVaultActive) {
-                setSection(5);
+                setSection(4);
               } else {
                 setShowCard(
                   <MiscCard
+                    img={assets.boosters.bankerCard}
+                    icon="A"
                     isMulti={false}
                     handleClick={handleActivateBank}
-                    Button={<RoRBtn handleClick={handleActivateBank} />}
+                    Button={
+                      <RoRBtn
+                        left={1}
+                        right={1}
+                        handleClick={handleActivateBank}
+                      />
+                    }
+                  />
+                );
+              }
+            }}
+          />
+        ),
+      },
+      {
+        key: "gemologist",
+        component: (
+          <CitadelItem
+            icon="v"
+            isMulti={false}
+            itemKey="apothecary"
+            handleClick={async () => {
+              const isActive = await getActiveFeature(tele, "gemologist");
+              if (isActive) {
+                setSection(11);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    img={assets.boosters.gemologistCard}
+                    icon="A"
+                    isMulti={false}
+                    handleClick={() => handleActivate("gemologist", "true", 11)}
+                    Button={
+                      <RoRBtn
+                        isNotPay={true}
+                        left={1}
+                        right={1}
+                        handleClick={() =>
+                          handleActivate("gemologist", "true", 11)
+                        }
+                      />
+                    }
+                  />
+                );
+              }
+            }}
+          />
+        ),
+      },
+      {
+        key: "library",
+        component: (
+          <CitadelItem
+            icon="+"
+            isMulti={false}
+            itemKey="library"
+            handleClick={() => {
+              if (gameData.stats.isLibrnActive) {
+                setSection(12);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    img={assets.boosters.libCard}
+                    icon="Y"
+                    isMulti={false}
+                    handleClick={() => handleActivate("library", "true", 12)}
+                    Button={
+                      <RoRBtn
+                        isNotPay={true}
+                        left={1}
+                        right={1}
+                        handleClick={() =>
+                          handleActivate("library", "true", 12)
+                        }
+                      />
+                    }
                   />
                 );
               }
@@ -124,50 +238,33 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       },
     ];
 
-    if (!gameData.bank.isVaultActive) {
-      boosters.push({
-        key: "multiVault",
-        component: (
-          <CitadelItem
-            isMulti={true}
-            itemKey="multiVault"
-            handleClick={() => {
-              if (gameData.bank.isVaultActive) {
-                setSection(5);
-              } else {
-                setShowCard(
-                  <MiscCard
-                    isMulti={true}
-                    handleClick={handleActivateBank}
-                    Button={
-                      <RoRBtn isMulti={true} handleClick={handleActivateBank} />
-                    }
-                  />
-                );
-              }
-            }}
-          />
-        ),
-      });
-    }
-
-    if (!gameData.stats.isRestActive) {
+    if (gameData.stats.isThiefActive) {
       boosters.push({
         key: "rest",
         component: (
           <CitadelItem
+            icon="7"
             isMulti={false}
-            itemKey="rest"
+            itemKey="tavern"
             handleClick={() => {
-              setShowCard(
-                <MiscCard
-                  isMulti={false}
-                  handleClick={handleActivateRest}
-                  Button={
-                    <RoRBtn isMulti={false} handleClick={handleActivateRest} />
-                  }
-                />
-              );
+              if (gameData.stats.isRestActive) {
+                setSection(13);
+              } else {
+                setShowCard(
+                  <MiscCard
+                    isMulti={false}
+                    handleClick={handleActivateRest}
+                    Button={
+                      <RoRBtn
+                        left={1}
+                        right={1}
+                        isMulti={false}
+                        handleClick={handleActivateRest}
+                      />
+                    }
+                  />
+                );
+              }
             }}
           />
         ),
@@ -187,6 +284,8 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       "merchant",
       "multiVault",
       "vault",
+      "gemologist",
+      "library",
       "rest",
     ];
 

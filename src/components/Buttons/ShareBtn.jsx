@@ -1,10 +1,17 @@
 import React, { useContext, useRef, useState } from "react";
 import { mythSections, mythSymbols } from "../../utils/constants.fof";
 import { Share2, ThumbsUp } from "lucide-react";
-import { FofContext } from "../../context/context";
+import { MainContext } from "../../context/context";
 
-const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
-  const { assets } = useContext(FofContext);
+const ShareButton = ({
+  isShared,
+  isInfo,
+  handleClaim,
+  activeMyth,
+  link,
+  isCoin,
+}) => {
+  const { assets } = useContext(MainContext);
   const [isClicked, setIsClicked] = useState(false);
   const [showRedirect, setShowRedirect] = useState(true);
   let disableClick = useRef(false);
@@ -89,20 +96,46 @@ const ShareButton = ({ isShared, isInfo, handleClaim, activeMyth, link }) => {
             <div
               className={`flex justify-center items-center w-1/4 border-borderGray h-full`}
             >
-              <div
-                className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeMyth]} `}
-              >
-                <img
-                  src={`${assets.uxui.baseorb}`}
-                  alt="orb"
-                  className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
-                />
-                <span
-                  className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-symbol-sm mt-1`}
+              {isCoin ? (
+                <div
+                  className={`flex  relative text-center justify-center text-black-sm-contour items-center `}
                 >
-                  {mythSymbols[mythSections[activeMyth]]}
-                </span>
-              </div>
+                  <img
+                    src={`/assets/240px-gobcoin.png`}
+                    alt="orb"
+                    className={` overflow-hidden max-w-[10vw]`}
+                  />
+                  <div
+                    className="absolute text-[7vw] font-roboto font-bold text-shadow grayscale"
+                    style={{
+                      backgroundImage: "url('/assets/metal.jpg')",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      color: "transparent",
+                    }}
+                  >
+                    3
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeMyth]} `}
+                >
+                  <img
+                    src={`${assets.uxui.baseorb}`}
+                    alt="orb"
+                    className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
+                  />
+                  <span
+                    className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-symbol-sm mt-1`}
+                  >
+                    {mythSymbols[mythSections[activeMyth]]}
+                  </span>
+                </div>
+              )}
             </div>
           )}
         </div>
