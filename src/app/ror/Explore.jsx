@@ -11,8 +11,11 @@ import {
   timeLeftUntil12Hours,
   checkIsUnderworldActive,
 } from "../../helpers/ror.timers.helper";
-import { handleClickHaptic } from "../../helpers/cookie.helper";
-
+import {
+  getBubbleLastClaimedTime,
+  handleClickHaptic,
+} from "../../helpers/cookie.helper";
+import gsap from "gsap";
 import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import DefaultBtn from "../../components/Buttons/DefaultBtn";
@@ -57,6 +60,11 @@ const Explore = () => {
     setSection,
     setShowCard,
     isTelegram,
+    rewards,
+    setRewards,
+    setActiveReward,
+    setRewardsClaimedInLastHr,
+    rewardsClaimedInLastHr,
   } = useContext(RorContext);
   const [currStage, setCurrStage] = useState(0);
   const [countDown, setCountDown] = useState(5);
@@ -67,6 +75,18 @@ const Explore = () => {
   const [digMyth, setDigMyth] = useState(null);
   const [isInside, setIsInside] = useState(false);
   const skipSessionEndRef = useRef(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(0);
+  const [showPartner, setShowPartner] = useState(false);
+  const [randomReward, setRandomReward] = useState(null);
+  const [showBubble, setShowBubble] = useState(false);
+  const [counter, setCounter] = useState(1);
+  const direction = useRef({ x: 1, y: 1 });
+  const ballRef = useRef(null);
+  const [holdTime, setHoldTime] = useState({
+    holdStartTime: 0,
+    holdEndTime: 0,
+  });
 
   const hasItemInBag = (itemId) => gameData?.pouch?.includes(itemId);
 
@@ -499,6 +519,35 @@ const Explore = () => {
     }, 3000);
   };
 
+  const storeBubbleLastClaimedTime = () => {
+    const currentTime = Date.now();
+
+    localStorage.setItem("bubbleLastClaimed", currentTime.toString());
+  };
+
+  // useEffect(() => {
+  //   const filteredRewards = rewards.filter(
+  //     (reward) =>
+  //       !rewardsClaimedInLastHr.includes(reward.id) &&
+  //       reward.tokensCollected < 12
+  //   );
+
+  //   const lastBubbleClaimedTime = getBubbleLastClaimedTime();
+  //   const bubbleCooldown = 2 * 30 * 1000;
+  //   const canShowBubble =
+  //     !lastBubbleClaimedTime ||
+  //     Date.now() - lastBubbleClaimedTime >= bubbleCooldown;
+
+  //   if (filteredRewards.length > 0 && counter === 1) {
+  //     const randomIndex = Math.floor(Math.random() * filteredRewards.length);
+  //     const randomReward = filteredRewards[randomIndex];
+  //     setRandomReward(randomReward);
+  //     setShowBubble(true);
+  //     setShowPartner(true);
+  //     storeBubbleLastClaimedTime();
+  //   }
+  // }, []);
+
   useEffect(() => {
     if (
       startPlay &&
@@ -529,9 +578,6 @@ const Explore = () => {
     }
   }, [currStage, roundTimeElapsed]);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(0);
-
   useEffect(() => {
     images.forEach((src) => {
       const img = new Image();
@@ -550,6 +596,181 @@ const Explore = () => {
 
     return () => clearInterval(interval);
   }, [currentIndex, digMyth]);
+
+  // useEffect(() => {
+  //   if (showPartner) {
+  //     const ball = ballRef.current;
+  //     const parent = ball.parentNode;
+
+  //     const parentRect = parent.getBoundingClientRect();
+  //     const ballRect = ball.getBoundingClientRect();
+
+  //     const getRandomCornerPosition = () => {
+  //       const positions = [
+  //         { x: 0, y: 0 },
+  //         { x: parentRect.width - ballRect.width, y: 0 },
+  //         { x: 0, y: parentRect.height - ballRect.height },
+  //         {
+  //           x: parentRect.width - ballRect.width,
+  //           y: parentRect.height - ballRect.height,
+  //         },
+  //       ];
+  //       return positions[Math.floor(Math.random() * positions.length)];
+  //     };
+
+  //     const initialPosition = getRandomCornerPosition();
+
+  //     gsap.set(ball, {
+  //       x: initialPosition.x,
+  //       y: initialPosition.y,
+  //     });
+
+  //     const getRandomDirection = () => {
+  //       const angle = Math.random() * 2 * Math.PI;
+  //       return { x: Math.cos(angle), y: Math.sin(angle) };
+  //     };
+
+  //     const clampPosition = (pos, min, max) => {
+  //       return Math.min(Math.max(pos, min), max);
+  //     };
+
+  //     const updateDirection = (position) => {
+  //       if (
+  //         position.x <= 0 ||
+  //         position.x >= parentRect.width - ballRect.width
+  //       ) {
+  //         direction.current = getRandomDirection();
+  //       }
+  //       if (
+  //         position.y <= 0 ||
+  //         position.y >= parentRect.height - ballRect.height
+  //       ) {
+  //         direction.current = getRandomDirection();
+  //       }
+  //     };
+
+  //     const animateBall = () => {
+  //       const ballCurrentX = gsap.getProperty(ball, "x");
+  //       const ballCurrentY = gsap.getProperty(ball, "y");
+  //       const speed = 10;
+
+  //       let newPosX = ballCurrentX + speed * direction.current.x;
+  //       let newPosY = ballCurrentY + speed * direction.current.y;
+
+  //       newPosX = clampPosition(newPosX, 0, parentRect.width - ballRect.width);
+  //       newPosY = clampPosition(
+  //         newPosY,
+  //         0,
+  //         parentRect.height - ballRect.height
+  //       );
+
+  //       updateDirection({ x: newPosX, y: newPosY });
+
+  //       gsap.set(ball, { x: newPosX, y: newPosY });
+  //       animationFrameId.current = requestAnimationFrame(animateBall);
+  //     };
+
+  //     let animationFrameId = { current: null };
+  //     direction.current = getRandomDirection();
+  //     animateBall();
+
+  //     // Stop animation after 9 seconds
+  //     const timeoutId = setTimeout(() => {
+  //       setShowBubble(false);
+  //       setShowPartner(false);
+  //       autoCloseTimeoutId.current = setTimeout(() => {
+  //         handleSubmitSessionData();
+  //       }, 1500);
+  //       cancelAnimationFrame(animationFrameId.current);
+  //     }, 9000);
+
+  //     // SWIPE DETECTION
+  //     let startX = 0;
+  //     let startY = 0;
+  //     let isSwiping = false;
+
+  //     const onPointerDown = (e) => {
+  //       startX = e.clientX || (e.touches && e.touches[0].clientX);
+  //       startY = e.clientY || (e.touches && e.touches[0].clientY);
+  //       isSwiping = true;
+  //     };
+
+  //     const onPointerMove = (e) => {
+  //       if (!isSwiping) return;
+  //       const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+  //       const currentY = e.clientY || (e.touches && e.touches[0].clientY);
+
+  //       const deltaX = currentX - startX;
+  //       const deltaY = currentY - startY;
+  //       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+  //       if (distance > 50) {
+  //         // Threshold to consider it a swipe
+  //         isSwiping = false;
+  //         burstBubble();
+  //       }
+  //     };
+
+  //     const onPointerUp = () => {
+  //       isSwiping = false;
+  //     };
+
+  //     const burstBubble = () => {
+  //       cancelAnimationFrame(animationFrameId.current);
+  //       gsap.to(ball, { scale: 1.5, duration: 0.2 }).then(() => {
+  //         alert("Bubble burst!");
+
+  //         setShowPartner(false);
+  //         setActiveReward(randomReward);
+
+  //         const incrementedReward = {
+  //           ...randomReward,
+  //           tokensCollected: randomReward.tokensCollected + 1,
+  //         };
+
+  //         const updatedRewards = rewards.map((reward) => {
+  //           if (reward.id === randomReward.id) {
+  //             if (reward.tokensCollected + 1 === 12) {
+  //               setTriggerConf(true);
+  //             }
+  //             return {
+  //               ...reward,
+  //               tokensCollected: reward.tokensCollected + 1,
+  //             };
+  //           }
+  //           return reward;
+  //         });
+
+  //         trackEvent("action", "bubble_captured", "success");
+  //         setRewards(updatedRewards);
+  //         setActiveReward(incrementedReward);
+  //         setSection(6);
+  //       });
+  //     };
+
+  //     // Add swipe event listeners
+  //     ball.addEventListener("pointerdown", onPointerDown);
+  //     ball.addEventListener("pointermove", onPointerMove);
+  //     ball.addEventListener("pointerup", onPointerUp);
+  //     ball.addEventListener("touchstart", onPointerDown);
+  //     ball.addEventListener("touchmove", onPointerMove);
+  //     ball.addEventListener("touchend", onPointerUp);
+
+  //     return () => {
+  //       clearTimeout(timeoutId);
+  //       cancelAnimationFrame(animationFrameId.current);
+  //       gsap.killTweensOf(ball);
+
+  //       // Clean up swipe events
+  //       ball.removeEventListener("pointerdown", onPointerDown);
+  //       ball.removeEventListener("pointermove", onPointerMove);
+  //       ball.removeEventListener("pointerup", onPointerUp);
+  //       ball.removeEventListener("touchstart", onPointerDown);
+  //       ball.removeEventListener("touchmove", onPointerMove);
+  //       ball.removeEventListener("touchend", onPointerUp);
+  //     };
+  //   }
+  // }, [showPartner]);
 
   return (
     <div
@@ -612,55 +833,76 @@ const Explore = () => {
         }
       />
 
-      <div className="flex relative text-white justify-center items-center mt-[14vh] h-[65vh] w-full z-50">
-        <div className="absolute flex top-0 px-5 justify-between w-full">
-          <div>
-            {currStage === 0 &&
-              !isInside &&
-              startPlay &&
-              digMyth &&
-              checkIsUnderworldActive(gameData.stats, digMyth, gameData.pouch) >
-                0 && (
-                <div
-                  onClick={() => {
-                    handleClickHaptic(tele, enableHaptic);
-                    setIsInside(true);
-                    setGameData((prev) => {
-                      return {
-                        ...prev,
-                        stats: {
-                          ...prev.stats,
-                          dailyQuota: prev.stats.dailyQuota - 1,
-                        },
-                      };
-                    });
-                  }}
-                  className={`mt-4 text-[50px] font-symbols text-black-contour scale-point`}
-                >
-                  {checkIsUnderworldActive(
-                    gameData.stats,
-                    digMyth,
-                    gameData.pouch
-                  ) == 1
-                    ? "a"
-                    : "Z"}
-                </div>
-              )}
+      {showPartner ? (
+        <div className="h-[155dvw] mt-[18dvw] w-full absolute">
+          <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
+            <div className="bubble-spin-effect">
+              <img
+                src={
+                  randomReward?.partnerType == "playsuper"
+                    ? `${randomReward?.metadata?.campaignCoverImage}`
+                    : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward?.metadata?.campaignCoverImage}.bubble.png`
+                }
+                alt="icon"
+                className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
+              />
+            </div>
           </div>
         </div>
-        <>
-          {gameData.stats.dailyQuota == 0 && !startPlay ? (
-            <div className="text-[2rem] text-center">
-              Daily Turns Exhausted <br />
-              {timeLeftUntil12Hours(gameData.stats.sessionStartAt).countdown}
+      ) : (
+        <div className="flex relative text-white justify-center items-center mt-[14vh] h-[65vh] w-full z-50">
+          <div className="absolute flex top-0 px-5 justify-between w-full">
+            <div>
+              {currStage === 0 &&
+                !isInside &&
+                startPlay &&
+                digMyth &&
+                checkIsUnderworldActive(
+                  gameData.stats,
+                  digMyth,
+                  gameData.pouch
+                ) > 0 && (
+                  <div
+                    onClick={() => {
+                      handleClickHaptic(tele, enableHaptic);
+                      setIsInside(true);
+                      setGameData((prev) => {
+                        return {
+                          ...prev,
+                          stats: {
+                            ...prev.stats,
+                            dailyQuota: prev.stats.dailyQuota - 1,
+                          },
+                        };
+                      });
+                    }}
+                    className={`mt-4 text-[50px] font-symbols text-black-contour scale-point`}
+                  >
+                    {checkIsUnderworldActive(
+                      gameData.stats,
+                      digMyth,
+                      gameData.pouch
+                    ) == 1
+                      ? "a"
+                      : "Z"}
+                  </div>
+                )}
             </div>
-          ) : gameData.bag.length >= 12 && !startPlay ? (
-            <div className="text-[2rem]">Your Bag is Full</div>
-          ) : (
-            <>{renderStageContent()}</>
-          )}
-        </>
-      </div>
+          </div>
+          <>
+            {gameData.stats.dailyQuota == 0 && !startPlay ? (
+              <div className="text-[2rem] text-center">
+                Daily Turns Exhausted <br />
+                {timeLeftUntil12Hours(gameData.stats.sessionStartAt).countdown}
+              </div>
+            ) : gameData.bag.length >= 12 && !startPlay ? (
+              <div className="text-[2rem]">Your Bag is Full</div>
+            ) : (
+              <>{renderStageContent()}</>
+            )}
+          </>
+        </div>
+      )}
     </div>
   );
 };

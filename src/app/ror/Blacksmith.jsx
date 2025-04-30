@@ -10,9 +10,9 @@ import {
 } from "../../components/Common/SectionToggles";
 import MiscCard from "../../components/ror/MiscCard";
 import RoRBtn from "../../components/ror/RoRBtn";
-import { calculateRemainingTime } from "../../helpers/ror.timers.helper";
+import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 
-// {isDropActive ? "drop here" : "locked"}
+const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ handleClick }) => {
   return (
@@ -75,18 +75,6 @@ const Blacksmith = () => {
       ) ?? []
     );
   }, [sortedBag, currentPage]);
-
-  useEffect(() => {
-    if (gameData?.bag) {
-      const sorted =
-        [...gameData.bag].sort((a, b) => {
-          const aActive = activeItems.includes(a.itemId);
-          const bActive = activeItems.includes(b.itemId);
-          return aActive === bActive ? 0 : aActive ? -1 : 1;
-        }) ?? [];
-      setArbitaryBag(sorted);
-    }
-  }, []);
 
   const handlePageLeft = () => {
     setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
@@ -243,8 +231,8 @@ const Blacksmith = () => {
 
     const touch = e.touches[0];
     setCopyPosition({
-      x: touch.clientX - 80,
-      y: touch.clientY - 100,
+      x: touch.clientX - 100,
+      y: touch.clientY - 220,
     });
   };
 
@@ -270,11 +258,14 @@ const Blacksmith = () => {
         bottom: dropZoneRect.bottom + toleranceY,
       };
 
+      const arbitaryCopyX = copyPosition.x + 20;
+      const arbitaryCopyY = copyPosition.y + 120;
+
       const copyRect = {
-        left: copyPosition.x,
-        top: copyPosition.y,
-        right: copyPosition.x + 100,
-        bottom: copyPosition.y + 100,
+        left: arbitaryCopyX,
+        top: arbitaryCopyY,
+        right: arbitaryCopyX + 100,
+        bottom: arbitaryCopyY + 100,
       };
 
       const overlapX = Math.max(
@@ -293,8 +284,6 @@ const Blacksmith = () => {
 
       return overlapPercentage >= 20;
     });
-
-    console.log("itemBoxIndex", itemBoxIndex);
 
     if (itemBoxIndex !== -1) {
       setBoxItems((prevBoxes) => {
@@ -359,6 +348,24 @@ const Blacksmith = () => {
   };
 
   useEffect(() => {
+    if (gameData?.bag) {
+      const sorted =
+        [...gameData.bag].sort((a, b) => {
+          const aActive = activeItems.includes(a.itemId);
+          const bActive = activeItems.includes(b.itemId);
+          return aActive === bActive ? 0 : aActive ? -1 : 1;
+        }) ?? [];
+      setArbitaryBag(sorted);
+    }
+
+    // const isActive = await getActiveFeature(tele, "blacksmith");
+
+    // if(!isActive){
+    //   showInfoCard()
+    // }
+  }, []);
+
+  useEffect(() => {
     initializeActiveItems();
   }, [selectedItem]);
 
@@ -390,166 +397,229 @@ const Blacksmith = () => {
     setBoxFlags(updatedFlags);
   }, [boxItems, dragging, gameItems]);
 
-  return (
-    <div className="w-full h-fit">
-      <RoRHeader
-        CenterChild={
-          <CenterChild isDropActive={itemToTransfer.length === 0 || dragging} />
+  const showInfoCard = async () => {
+    setShowCard(
+      <MiscCard
+        showInfo={true}
+        img={assets.boosters.minionCard}
+        icon="Blacksmith"
+        isMulti={false}
+        handleClick={() => setShowCard(null)}
+        Button={
+          <RoRBtn
+            isNotPay={true}
+            left={1}
+            right={1}
+            handleClick={() => setShowCard(null)}
+          />
         }
       />
+    );
+  };
 
-      <div className="w-[80%] mt-[20dvh] h-[60dvh] mx-auto">
-        <div className="grid grid-cols-3 gap-x-1 p-1">
-          {/* items in build (reserved) */}
+  const handleActivate = async (key, value) => {
+    setShowCard(null);
+    await setStorage(tele, key, value);
+  };
+
+  useEffect(() => {
+    const checkFirstTime = async () => {
+      const isActive = await getActiveFeature(tele, "blacksmith01");
+
+      if (!isActive) {
+        setShowCard(
+          <MiscCard
+            showInfo={false}
+            img={assets.boosters.minionCard}
+            icon="Blacksmith"
+            isMulti={false}
+            handleClick={() => handleActivate("blacksmith01", true)}
+            Button={
+              <RoRBtn
+                isNotPay={true}
+                left={1}
+                right={1}
+                handleClick={() => handleActivate("blacksmith01", true)}
+              />
+            }
+          />
+        );
+      }
+    };
+    (async () => await checkFirstTime())();
+  }, []);
+
+  return (
+    <div className="w-full h-fit">
+      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+
+      <div className="w-[80%] mt-[18dvh] h-[60dvh] relative mx-auto">
+        <div
+          className="absolute inset-0 z-0 filter-orb-white"
+          style={{
+            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            opacity: 0.5,
+          }}
+        />
+        <div className="grid grid-cols-3 gap-2 p-1 w-full h-full overflow-y-auto">
+          {/* reserved slots */}
           {gameData?.builder?.map((item, index) => (
             <div
-              key={`box-${index}`}
-              className="w-[100%] relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/10 border border-white/10 shadow-2xl rounded-md overflow-auto"
+              key={`builder-${index}`}
+              className={`relative border border-${
+                item?.itemId?.split(".")[0]
+              }-primary text-white glow-button-${
+                item?.itemId?.split(".")[0]
+              } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
             >
-              <div className="w-full p-0.5" key={index}>
+              <div className="w-full">
                 <GridItem
-                  isStage={true}
-                  handleClick={() => {}}
+                  showClaim={item?.exp - Date.now() < 0}
+                  timer={item.exp}
+                  handleClick={() => {
+                    if (item?.exp - Date.now() <= 0) {
+                      handleCompleteItem(item.itemId);
+                    }
+                  }}
                   itemObj={{
                     itemId: item?.itemId,
                     fragmentId: gameItems
                       ?.find((itm) => itm.id == item.itemId)
-                      .fragments.map((frags) => frags.fragmentId),
+                      .fragments.map((frag) => frag.fragmentId),
                     isComplete: true,
                   }}
                   scaleIcon={scaleIcon}
-                  itemsWithAllFrags={gameData?.bag.map((item) => item.itemId)}
+                  itemsWithAllFrags={gameData?.bag.map((itm) => itm.itemId)}
                 />
               </div>
-              {item?.exp - Date.now() > 0 ? (
-                <div className="absolute z-50 text-white text-2xl font-bold p-2">
-                  {calculateRemainingTime(item.exp - Date.now())}
-                </div>
-              ) : (
-                <div
-                  onClick={() => {
-                    handleCompleteItem(item.itemId);
-                  }}
-                  className="absolute z-50 bg-orange-600 font-bold p-2"
-                >
-                  Claim
-                </div>
-              )}
             </div>
           ))}
 
-          {/* reserved positions (reserved)  */}
-          {Array.from(
-            { length: 3 - gameData.builder.length },
-            (_, index) => index
-          ).map((index) => {
-            const isBoxFilled = Object.keys(boxItems[index]).length > 0;
-            const isBoxForClaim = boxFlags[index];
-            const x = Object.entries(boxItems[index]).map(
-              ([itemId, fragments]) => fragments
-            );
+          {Array.from({ length: 3 - gameData.builder.length }).map(
+            (_, index) => {
+              const isBoxFilled = Object.keys(boxItems[index]).length > 0;
+              const isBoxForClaim = boxFlags[index];
+              let myth;
+              if (isBoxForClaim) {
+                const itm = Object.entries(boxItems[index]).map(
+                  ([itemId]) => itemId
+                );
+                myth = itm.toString().split(".")[0];
+              }
 
-            // this works
-            console.log(x[0]?.map((frags) => frags.fragmentId));
-
-            return (
-              <div
-                key={`box-${index}`}
-                ref={!isBoxForClaim ? boxRefs[index] : null}
-                className="w-[100%] relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/20 border border-white/10 shadow-2xl rounded-md overflow-auto"
-              >
-                {isBoxFilled ? (
-                  Object.entries(boxItems[index]).map(([itemId, fragments]) => (
-                    <div className="w-full p-0.5" key={itemId}>
-                      <GridItem
-                        handleClick={() => {}}
-                        itemObj={{
-                          itemId: itemId,
-                          fragmentId: (fragments || [])
-                            .map((frags) => frags.fragmentId)
-                            .sort((a, b) => a - b),
-
-                          isComplete: false,
-                        }}
-                        scaleIcon={scaleIcon}
-                        itemsWithAllFrags={gameData.bag.map(
-                          (item) => item.itemId
-                        )}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-booster font-symbols text-white">h</div>
-                )}
-
-                {boxFlags[index] && (
-                  <div
-                    onClick={() => {
-                      const box = boxItems[index];
-                      const [key] = Object.keys(box);
-                      const value = box[key];
-                      setShowCard(
-                        <MiscCard
-                          img={assets.boosters.minionCard}
-                          icon="w"
-                          Button={
-                            <RoRBtn
-                              left={value.length}
-                              right={value.length - 1}
-                              handleClick={() => handleJoinItem(index, 0)}
-                            />
-                          }
-                        />
-                      );
-                    }}
-                    className="absolute z-50 bg-orange-600 font-bold p-2"
-                  >
-                    MINT
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex flex-col justify-center h-[80%]">
-          <div className="relative grid grid-cols-3 gap-x-1 gap-y-16 p-1 border border-white/40 shadow-2xl rounded-md">
-            <div className="flex justify-center items-center absolute w-full h-full">
-              <div className="font-symbols text-[30vw] text-white/40">8</div>
-            </div>
-            {/* items */}
-            {paginatedVaultItems?.map((item) => (
-              <div
-                key={item._id}
-                onTouchStart={(e) => handleTouchStart(e, item)}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                className={`${
-                  scaleIcon && draggedItem === item && "scale-110"
-                }`}
-              >
-                <GridItem
-                  handleClick={() => {}}
-                  itemObj={item}
-                  scaleIcon={scaleIcon}
-                  itemsWithAllFrags={activeItems}
-                />
-              </div>
-            ))}
-
-            {/* remaining pieces */}
-            {Array?.from({ length: 6 - paginatedVaultItems?.length }).map(
-              (_, index) => (
+              return (
                 <div
-                  key={`box-${index}`}
-                  className="relative w-[100%] aspect-square max-w-[120px] overflow-hidden"
-                ></div>
-              )
-            )}
-          </div>
+                  key={`reserved-${index}`}
+                  ref={!isBoxForClaim ? boxRefs[index] : null}
+                  className={`relative border ${
+                    isBoxForClaim
+                      ? `border-${myth}-primary text-white glow-button-${myth}`
+                      : "border-white"
+                  } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
+                >
+                  {isBoxFilled ? (
+                    Object.entries(boxItems[index]).map(
+                      ([itemId, fragments]) => (
+                        <div className="w-full" key={itemId}>
+                          <GridItem
+                            showClaim={isBoxForClaim}
+                            handleClick={() => {
+                              if (isBoxForClaim) {
+                                const box = boxItems[index];
+                                const [key] = Object.keys(box);
+                                const value = box[key];
+                                setShowCard(
+                                  <MiscCard
+                                    img={assets.boosters.minionCard}
+                                    icon="blacksmith"
+                                    Button={
+                                      <RoRBtn
+                                        left={value.length}
+                                        right={value.length - 1}
+                                        handleClick={() =>
+                                          handleJoinItem(index, 0)
+                                        }
+                                      />
+                                    }
+                                  />
+                                );
+                              }
+                            }}
+                            itemObj={{
+                              itemId: itemId,
+                              fragmentId: fragments.map(
+                                (frag) => frag.fragmentId
+                              ),
+                              isComplete: fragments?.length >= 2 ?? 0,
+                            }}
+                            scaleIcon={scaleIcon}
+                            itemsWithAllFrags={gameData?.bag.map(
+                              (itm) => itm.itemId
+                            )}
+                          />
+                        </div>
+                      )
+                    )
+                  ) : (
+                    <>
+                      <div className="w-full aspect-square  rounded-md bg-white/20 flex justify-center items-center">
+                        <span className="text-iconLg font-symbols text-white">
+                          h
+                        </span>
+                      </div>
+                      <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
+                        Drop
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            }
+          )}
+
+          {/* bag item slots */}
+          {paginatedVaultItems?.map((item) => (
+            <div
+              key={item._id}
+              onTouchStart={(e) => handleTouchStart(e, item)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className={`relative flex flex-col justify-center items-center aspect-square max-w-[120px] max-h-[140px] h-full w-full ${
+                scaleIcon && draggedItem === item ? "scale-110" : ""
+              }`}
+            >
+              <GridItem
+                hideBg={false}
+                handleClick={() => {}}
+                itemObj={item}
+                isStage={true}
+                scaleIcon={scaleIcon}
+                itemsWithAllFrags={activeItems}
+              />
+            </div>
+          ))}
+
+          {/* empty slots */}
+          {Array.from({ length: 6 - paginatedVaultItems.length }).map(
+            (_, index) => (
+              <div
+                key={`placeholder-${index}`}
+                className="relative flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden"
+              >
+                <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
+                  <span className="text-iconLg font-symbols text-white">8</span>
+                </div>
+                <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
+                  slot {index + 1}
+                </div>
+              </div>
+            )
+          )}
         </div>
 
-        {/* copy */}
         {isTouched && draggedItem && (
           <div
             style={{
@@ -585,3 +655,33 @@ const Blacksmith = () => {
 };
 
 export default Blacksmith;
+
+{
+  /* {boxFlags[index] && (
+                    <div className="absolute w-full h-full flex justify-center items-center backdrop-blur-sm">
+                      <div
+                        onClick={() => {
+                          const box = boxItems[index];
+                          const [key] = Object.keys(box);
+                          const value = box[key];
+                          setShowCard(
+                            <MiscCard
+                              img={assets.boosters.minionCard}
+                              icon="w"
+                              Button={
+                                <RoRBtn
+                                  left={value.length}
+                                  right={value.length - 1}
+                                  handleClick={() => handleJoinItem(index, 0)}
+                                />
+                              }
+                            />
+                          );
+                        }}
+                        className="absolute z-50 bg-orange-600 font-bold p-2"
+                      >
+                        MINT
+                      </div>
+                    </div>
+                  )} */
+}

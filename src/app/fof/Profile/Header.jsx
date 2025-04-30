@@ -3,7 +3,6 @@ import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { determineStreakBadge } from "../../../helpers/streak.helper";
-import { getImage } from "../../../utils/line";
 
 const tele = window.Telegram?.WebApp;
 

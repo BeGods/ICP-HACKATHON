@@ -28,7 +28,9 @@
         "starlight": "https://media.publit.io/file/BattleofGods/FoF/Assets/UXUI/star.light.jpg",
         "gameEnd": "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px.fof.whitelist.jpg",
         "libbg": "/assets/1280px-ror.library_wide.jpg",
-        "shadow": "/assets/uxui/1280px-fof.base.shadow.png"
+        "shadow": "/assets/uxui/1280px-fof.base.shadow.png",
+        "bookBase": "/assets/240px-book.base.png",
+        "chestBase": "/assets/240px-chest-base.png"
     },
     "logos": {
         "captcha" : "https://media.publit.io/file/BattleofGods/FoF/Assets/LOGOS/320px-frogdog.captcha.png",
@@ -68,6 +70,10 @@
             "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.violet.on.png",
             "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/button.violet.off.png"
         },
+        "yellow": {
+            "on": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/240px-button.yellow.on.png",
+            "off": "https://media.publit.io/file/BattleofGods/FoF/Assets/buttons/240px-button.yellow.off.png"
+        },
         "line" : "/assets/line.png",
         "otp" : "/assets/mobile.png",
         "dapp" : "/assets/button.dapp.white.svg",
@@ -80,6 +86,8 @@
         "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.egyptian.base.svg"
     },
     "boosters": {
+        "tavernCard": "/assets/320px-tavernist.jpg",
+        "tavernHead": "/assets/240px-tavernist_head.jpg",
         "libCard": "/assets/320px-librarian.jpg",
         "bankerHead": "/assets/240px-banker_head.jpg",
         "bankerCard": "/assets/320px-banker.jpg",

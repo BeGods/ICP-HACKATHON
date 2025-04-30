@@ -34,6 +34,7 @@
     "react-i18next": "^15.0.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-konva": "^18.2.10",
+    "react-pageflip": "^2.0.3",
     "react-router-dom": "^6.24.1",
     "react-scratchcard-v2": "^1.1.1",
     "react-toastify": "^10.0.5",

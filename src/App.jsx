@@ -19,6 +19,7 @@ import {
 } from "./helpers/cookie.helper";
 import LineCallback from "./app/common/LineCallback";
 import { WalletProvider } from "./context/wallet";
+import Test from "./app/common/Test";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 

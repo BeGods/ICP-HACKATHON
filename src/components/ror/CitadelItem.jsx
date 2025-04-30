@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CitadelItem = ({ icon, itemKey, handleClick, isMulti }) => {
+const CitadelItem = ({ icon, itemKey, handleClick, isMulti, desc }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -41,7 +41,7 @@ const CitadelItem = ({ icon, itemKey, handleClick, isMulti }) => {
       </div>
       <div className={`flex flex-col flex-grow justify-center -ml-1`}>
         <h1 className="text-tertiary uppercase">{itemKey}</h1>
-        <h2 className="text-tertiary">{itemKey}</h2>
+        <h2 className="text-tertiary">{desc}</h2>
       </div>
     </div>
   );

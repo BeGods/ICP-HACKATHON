@@ -65,13 +65,13 @@ const JoinBonus = (props) => {
     }, 4000);
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setChangeText((prevText) => !prevText);
-      setFlipped((prev) => !prev);
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setChangeText((prevText) => !prevText);
+  //     setFlipped((prev) => !prev);
+  //   }, 1500);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div
@@ -92,13 +92,16 @@ const JoinBonus = (props) => {
           <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
             <div className={``}>
               <div className={`orb ${flipped ? "flipped" : ""}`}>
-                <div className="orb__face orb__face--front  flex justify-center items-center">
-                  <div className="flex justify-center items-center w-full absolute  h-full">
+                <div className="orb__face orb__face--front absolute flex justify-center items-center">
+                  <div className="flex justify-center items-center w-full relative  h-full">
                     <img
                       src={`/assets/240px-gobcoin.png`}
                       alt="coin"
                       className="glow-box rounded-full"
                     />
+                    <div className="absolute text-[40vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
+                      3
+                    </div>
                   </div>
                 </div>
                 <div className="orb__face orb__face--back flex justify-center items-center">
@@ -130,9 +133,9 @@ const JoinBonus = (props) => {
             </div>
           )}
         </div>
-        <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
+        {/* <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
           {changeText ? "3 Gobcoins" : "1 Bag"}
-        </div>
+        </div> */}
       </div>
       {showConfetti && (
         <Confetti

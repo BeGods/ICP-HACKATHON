@@ -50,3 +50,24 @@ export const formatDate = (givenDate) => {
 
   return formattedDate;
 };
+
+
+export const reformatPotion = (input) => {
+  const mapping = {
+    fire: "greek",
+    water: "norse",
+    air: "egyptian",
+    earth: "celtic",
+  };
+
+  const parts = input.split(".");
+  if (parts.length !== 3) return input;
+
+  const [potion, element, code] = parts;
+  const mythology = mapping[element];
+
+  if (!mythology) return input;
+
+  const newCode = code.replace("_", ".");
+  return `${mythology}.${potion}.${newCode}`;
+}

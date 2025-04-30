@@ -1,15 +1,20 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
-import GridItem from "../../components/ror/GridItem";
+import React, { useState, useContext, useEffect } from "react";
 import RoRHeader from "../../components/layouts/Header";
 import { gameItems } from "../../utils/gameItems";
 import { RorContext } from "../../context/context";
-import PotionCard from "../../components/ror/PotionCrd";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
+import { colorByMyth, elementMythNames } from "../../utils/constants.ror";
+import PotionCard from "../../components/ror/PotionCrd";
+import MiscCard from "../../components/ror/MiscCard";
+import RoRBtn from "../../components/ror/RoRBtn";
+import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 
-const CenterChild = ({}) => {
+const tele = window.Telegram?.WebApp;
+
+const CenterChild = ({ handleClick }) => {
   return (
     <div
       style={{
@@ -18,6 +23,7 @@ const CenterChild = ({}) => {
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
+      onClick={handleClick}
       className={`
             flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
     ></div>
@@ -25,22 +31,13 @@ const CenterChild = ({}) => {
 };
 
 const Potions = (props) => {
-  const { setShowCard } = useContext(RorContext);
-  const filteredItems = gameItems.filter((item) => item.id.includes("potion"));
-  const potions = filteredItems.map((item) => ({
-    ...item,
-    itemId: item.id,
-    fragmentId: 0,
-  }));
+  const { assets, setShowCard } = useContext(RorContext);
+  const potions = gameItems.filter((item) => item.id.includes("potion"));
   const [currentPage, setCurrentPage] = useState(0);
-
-  const itemsPerPage = 9;
-  const totalPages = Math.ceil(potions.length / itemsPerPage);
-
-  const paginatedVaultItems = potions.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+  const totalPages = potions.length;
+  const element = potions[currentPage].id?.split(".")[1];
+  const mythology = elementMythNames[element]?.toLowerCase();
+  const buttonColor = colorByMyth[mythology] ?? "black";
 
   const handlePageLeft = () => {
     setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
@@ -50,36 +47,121 @@ const Potions = (props) => {
     setCurrentPage((prev) => (prev + 1) % totalPages);
   };
 
+  const showInfoCard = async () => {
+    setShowCard(
+      <MiscCard
+        showInfo={true}
+        img={assets.boosters.gemologistCard}
+        icon="Gemologist"
+        isMulti={false}
+        handleClick={() => setShowCard(null)}
+        Button={
+          <RoRBtn
+            isNotPay={true}
+            left={1}
+            right={1}
+            handleClick={() => setShowCard(null)}
+          />
+        }
+      />
+    );
+  };
+
+  const handleActivate = async (key, value) => {
+    setShowCard(null);
+    await setStorage(tele, key, value);
+  };
+
+  useEffect(() => {
+    const checkFirstTime = async () => {
+      const isActive = await getActiveFeature(tele, "gemologist01");
+
+      if (!isActive) {
+        setShowCard(
+          <MiscCard
+            showInfo={false}
+            img={assets.boosters.gemologistCard}
+            icon="Gemologist"
+            isMulti={false}
+            handleClick={() => handleActivate("gemologist01", true)}
+            Button={
+              <RoRBtn
+                isNotPay={true}
+                left={1}
+                right={1}
+                handleClick={() => handleActivate("gemologist01", true)}
+              />
+            }
+          />
+        );
+      }
+    };
+    (async () => await checkFirstTime())();
+  }, []);
+
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild />} />
-      <div className="w-[80%]  mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3 gap-x-1">
-        {paginatedVaultItems.map((item) => (
-          <div key={item.itemId}>
-            <GridItem
-              handleClick={() => {
-                setShowCard(<PotionCard potion={item.itemId} />);
-              }}
-              itemObj={item}
-              itemsWithAllFrags={potions.map((item) => item.itemId)}
+      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <div className="flex flex-col relative w-[80%]  mt-[18dvh] h-[60dvh] mx-auto">
+        <div
+          className="absolute inset-0 z-0 filter-orb-white"
+          style={{
+            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            opacity: 0.5,
+          }}
+        />
+        <div className="grid grid-cols-3 gap-x-1 w-full h-fit">
+          {["", "v", ""].map((itm, index) => (
+            <div
+              key={`box-${index}`}
+              className={`relative border ${
+                index !== 1
+                  ? "text-white/50  border-white/50"
+                  : `border-${mythology}-primary text-white glow-button-${mythology}`
+              }  flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-[140px] rounded-md overflow-hidden`}
+            >
+              <div
+                className={`w-full aspect-square rounded-md bg-white/20 flex justify-center items-center`}
+              >
+                <span className="text-iconLg font-symbols">{itm}</span>
+              </div>
+              <div
+                className={`w-full uppercase text-center text-[1rem] mt-1 break-words px-1`}
+              >
+                potion
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-y-4 justify-center items-center h-full">
+          <div className="flex justify-center relative">
+            <img
+              src={`/assets/ror-cards/240px-${potions[currentPage]?.id}_on.png`}
+              alt="potion"
+              className="glow-text-white"
             />
           </div>
-        ))}
-        {Array.from({ length: 9 - paginatedVaultItems.length }).map(
-          (_, index) => (
-            <div
-              key={`placeholder-${index}`}
-              className="relative h-[120px] w-[120px] overflow-hidden"
-            ></div>
-          )
-        )}
+          <div
+            onClick={() =>
+              setShowCard(<PotionCard potion={potions[currentPage]?.id} />)
+            }
+            className="flex justify-center items-center relative h-fit"
+          >
+            <img src={assets.buttons[buttonColor]?.on} alt="button" />
+            <div className="absolute z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
+              OPEN
+            </div>
+          </div>
+        </div>
       </div>
-      {potions.length > 9 && (
-        <>
-          <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
-          <ToggleRight activeMyth={4} handleClick={handlePageRight} />
-        </>
-      )}
+
+      <>
+        <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
+        <ToggleRight activeMyth={4} handleClick={handlePageRight} />
+      </>
     </div>
   );
 };
