@@ -37,32 +37,21 @@ const RelicCrd = ({
             alt="relic"
             className="w-full"
           />
-          <div
-            className="absolute text-num font-roboto font-bold text-shadow grayscale"
-            style={{
-              backgroundImage: "url('/assets/metal.jpg')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              color: "transparent",
-            }}
-          >
+          <div className="absolute text-[10.5vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
             {itemDetails?.coins ?? 1}
           </div>
         </div>
         <div className="relative w-[240px] h-[240px] flex justify-center items-center">
           <div className="relative w-full h-full">
             <img
-              src={`/assets/ror-cards/240px-${itemId}_${
-                isComplete ? "on" : "off"
-              }.png`}
+              src={`/assets/ror-cards/240px-${itemId}_on.png`}
               alt="relic"
-              className="z-10 w-full h-full object-contain"
+              className={`z-10 w-full h-full object-contain ${
+                (!isComplete || isComplete == false) && "grayscale"
+              }`}
             />
-            {(!isComplete || isComplete == false) && !maskOff && mask}
           </div>
+          {(!isComplete || isComplete == false) && !maskOff && mask}
         </div>
 
         <div className="relative w-full h-[19%] mt-auto card-shadow-white-celtic z-10">

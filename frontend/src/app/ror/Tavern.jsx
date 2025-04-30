@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import GridItem from "../../components/ror/GridItem";
 import RoRHeader from "../../components/layouts/Header";
 import {
@@ -8,23 +8,32 @@ import {
 import { RorContext } from "../../context/context";
 import ArtifactCrd from "../../components/Cards/Reward/ArtiFactCrd";
 import { gameItems } from "../../utils/gameItems";
+import MiscCard from "../../components/ror/MiscCard";
+import RoRBtn from "../../components/ror/RoRBtn";
+import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
+import { toast } from "react-toastify";
+import { activateRest } from "../../utils/api.ror";
 
-const CenterChild = () => {
+const tele = window.Telegram?.WebApp;
+
+const CenterChild = ({ handleClick }) => {
   return (
     <div
       style={{
-        backgroundImage: `url('/assets/240px-librarian_head.jpg')`,
+        backgroundImage: `url('/assets/240px-tavernist_head.jpg')`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
+      onClick={handleClick}
       className="flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2"
     ></div>
   );
 };
 
 const Tavern = () => {
-  const { gameData, setShowCard } = useContext(RorContext);
+  const { gameData, setGameData, setShowCard, assets, authToken } =
+    useContext(RorContext);
   const [showItems, setShowItems] = useState(null);
   const bookItems = gameData.pouch.filter((item) =>
     item.includes("artifact.starter02")
@@ -60,63 +69,170 @@ const Tavern = () => {
     page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
   );
 
+  const showInfoCard = async () => {
+    setShowCard(
+      <MiscCard
+        showInfo={true}
+        img={assets.boosters.tavernCard}
+        icon="Tavern"
+        isMulti={false}
+        handleClick={() => setShowCard(null)}
+        Button={
+          <RoRBtn
+            isNotPay={true}
+            left={1}
+            right={1}
+            handleClick={() => setShowCard(null)}
+          />
+        }
+      />
+    );
+  };
+
+  const handleActivate = async (key, value) => {
+    setShowCard(null);
+    await setStorage(tele, key, value);
+  };
+
+  const handleActivateRest = async () => {
+    if (gameData.stats.isRestActive) {
+      setSection(13);
+    } else {
+      try {
+        const response = await activateRest(authToken);
+        setShowCard(null);
+        setGameData((prev) => {
+          const newStats = { ...prev.stats };
+
+          newStats.gobcoins = (prev.stats.gobcoin || 0) - 1;
+          newStats.isRestActive = true;
+          return {
+            ...prev,
+            stats: newStats,
+          };
+        });
+        handleActivate("tavern01", true);
+        console.log(response);
+        toast.success("rest activated");
+      } catch (error) {
+        console.log(error);
+        setShowCard(null);
+        toast.error("insufficient gobcoins");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const checkFirstTime = async () => {
+      const isActive = await getActiveFeature(tele, "tavern01");
+
+      if (!isActive) {
+        setShowCard(
+          <MiscCard
+            showInfo={false}
+            img={assets.boosters.tavernCard}
+            icon="tavernCard"
+            isMulti={false}
+            handleClick={() => handleActivate("tavern01", true)}
+            Button={
+              <RoRBtn
+                left={1}
+                right={1}
+                handleClick={() => {
+                  handleActivateRest();
+                }}
+              />
+            }
+          />
+        );
+      }
+    };
+    (async () => await checkFirstTime())();
+  }, []);
+
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild />} />
-      <div className="w-[80%] mt-[20dvh] h-[65dvh] mx-auto grid grid-cols-3 gap-x-1">
-        {!showItems &&
-          [")", "F", "z"].map((itm, index) => {
-            const items = gameItems
-              .filter((itm) => itm.id.includes("artifact.starter02"))
-              .filter((itm) => !gameData.pouch.includes(itm.id));
+      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <div className="w-[80%] mt-[18dvh] h-[60dvh] mx-auto relative">
+        <div
+          className="absolute inset-0 z-0 filter-orb-white"
+          style={{
+            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            opacity: 0.5,
+          }}
+        />
+        <div className="w-full h-full grid grid-cols-3 gap-x-1">
+          {!showItems &&
+            [")", "F", "z"].map((itm, index) => {
+              const items = gameItems
+                .filter((itm) => itm.id.includes("artifact.starter02"))
+                .filter((itm) => !gameData.pouch.includes(itm.id));
 
-            return (
-              <div
-                onClick={() => {
-                  items.length !== 0 &&
-                    setShowCard(
-                      <ArtifactCrd
-                        items={items}
-                        category={4}
-                        handleClick={() => {}}
-                      />
-                    );
+              return (
+                <div
+                  onClick={() => {
+                    items.length !== 0 &&
+                      setShowCard(
+                        <ArtifactCrd
+                          items={items}
+                          category={4}
+                          handleClick={() => {}}
+                        />
+                      );
+                  }}
+                  key={`box-${index}`}
+                  className={`relative border ${
+                    items.length == 0
+                      ? "text-white/20  border-white/20"
+                      : "text-white  border-white"
+                  }  flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
+                >
+                  <div
+                    className={`w-full aspect-square rounded-md bg-white/20 flex justify-center items-center`}
+                  >
+                    <span className="text-iconLg font-symbols">{itm}</span>
+                  </div>
+                  <div
+                    className={`w-full  text-center text-[1rem] mt-1 break-words px-1`}
+                  >
+                    Drop
+                  </div>
+                </div>
+              );
+            })}
+
+          {pagedItems.map((item) => (
+            <div key={item.itemId}>
+              <GridItem
+                handleClick={() => {
+                  const myth = item.itemId.split(".")[0];
+                  setShowItems(myth);
                 }}
-                key={`box-${index}`}
-                className={`w-[100%] ${
-                  items.length === 0 ? "text-white/50" : "text-white"
-                } relative flex flex-col gap-1 justify-center items-center aspect-square max-w-[120px] bg-gray-100/10 border border-white/10 shadow-2xl rounded-md overflow-auto`}
+                itemObj={item}
+                itemsWithAllFrags={pageItems.map((item) => item.itemId)}
+              />
+            </div>
+          ))}
+          {Array.from({ length: ITEMS_PER_PAGE - pagedItems.length }).map(
+            (_, index) => (
+              <div
+                key={`placeholder-${index}`}
+                className="relative w-full h-full max-w-[120px] max-h-[140px] flex flex-col items-center border border-white/10 shadow-2xl rounded-md overflow-hidden"
               >
-                {index == 2 ? (
-                  <div className="text-booster">zz</div>
-                ) : (
-                  <div className="text-booster font-symbols ">{itm}</div>
-                )}
+                <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
+                  <span className="text-iconLg font-symbols text-white">8</span>
+                </div>
+                <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
+                  slot {gameData.bag.length - index + 1}
+                </div>
               </div>
-            );
-          })}
-        {pagedItems.map((item) => (
-          <div key={item.itemId}>
-            <GridItem
-              handleClick={() => {
-                const myth = item.itemId.split(".")[0];
-                setShowItems(myth);
-              }}
-              itemObj={item}
-              itemsWithAllFrags={pageItems.map((item) => item.itemId)}
-            />
-          </div>
-        ))}
-        {Array.from({ length: ITEMS_PER_PAGE - pagedItems.length }).map(
-          (_, index) => (
-            <div
-              key={`placeholder-${index}`}
-              className="relative h-[120px] w-[120px] overflow-hidden"
-            ></div>
-          )
-        )}
+            )
+          )}
+        </div>
       </div>
-
       {pageItems.length > ITEMS_PER_PAGE && (
         <div className="">
           <ToggleLeft activeMyth={4} handleClick={handleLeft} />

@@ -1,29 +1,45 @@
 import React from "react";
+import HTMLFlipBook from "react-pageflip";
 
-const Test = (props) => {
+const backgroundImageUrl =
+  "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg";
+
+const Test = () => {
   return (
-    // <div
-    //   className={`bg-white text-black flex w-screen text-wrap ${
-    //     isTelegram ? "tg-container-height" : "browser-container-height"
-    //   }`}
-    // >
-    //   <div
-    //     className={`${
-    //       isTelegram ? "tg-container-height" : "browser-container-height"
-    //     }`}
-    //     style={{
-    //       background: `url(/assets/1280px-dod.loading.png)`,
-    //       backgroundPosition: "45.5% 0%",
-    //       backgroundRepeat: "no-repeat",
-    //       backgroundSize: "cover",
-    //       width: "100vw",
-    //       position: "fixed",
-    //       top: 0,
-    //       left: 0,
-    //     }}
-    //   ></div>
-    // </div>
-    <></>
+    <div className="flex justify-center items-center h-screen w-screen">
+      <div className="flex justify-center items-center w-full h-full">
+        <div className="w-3/4 aspect-[3/5] max-w-[600px]">
+          <HTMLFlipBook
+            width={300}
+            height={500}
+            size="stretch"
+            minWidth={300}
+            maxWidth={600}
+            minHeight={400}
+            maxHeight={800}
+            usePortrait={true}
+            autoSize={true}
+            className="w-full h-full"
+          >
+            {[1, 2, 3, 4].map((page) => (
+              <div
+                key={page}
+                className="relative w-full h-full text-white rounded-2xl"
+              >
+                <img
+                  src={backgroundImageUrl}
+                  alt={`page ${page}`}
+                  className="rounded-2xl h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center text-2xl font-bold text-card">
+                  Page {page}
+                </div>
+              </div>
+            ))}
+          </HTMLFlipBook>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -46,6 +46,12 @@ export const elementMythNames = {
   aether: "Aether"
 };
 
+export const colorByMyth = {
+  celtic: "green",
+  greek: "red",
+  norse: "blue",
+  egyptian: "yellow"
+}
 
 export const defaultIcons = {
   quest: "j",

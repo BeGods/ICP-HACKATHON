@@ -1,59 +1,108 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { RorContext } from "../../context/context";
 import IconBtn from "../Buttons/IconBtn";
+import { useTranslation } from "react-i18next";
 
-const MiscCard = ({ Button, img, icon }) => {
-  const { assets, setShowCard, section } = useContext(RorContext);
+const MiscCard = ({ Button, img, icon, showInfo }) => {
+  const { assets, setShowCard, setSection } = useContext(RorContext);
+  const { i18n } = useTranslation();
+  const [flipped, setFlipped] = useState(false);
+
+  const isTelegram = typeof Telegram !== "undefined"; // If not defined elsewhere
+  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+
+  const handleFlip = () => {
+    setFlipped((prev) => !prev);
+  };
+
   return (
-    <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
-      <div className="relative w-[72%] h-[55%] mt-[70px]  flex items-center justify-center rounded-primary card-shadow-white">
-        <div
-          className={`absolute inset-0 rounded-[15px]`}
-          style={{
-            backgroundImage: `${`url(${img ?? assets.boosters.burstCard})`}`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center ",
-          }}
-        />
-        <IconBtn
-          isInfo={false}
-          activeMyth={4}
-          handleClick={() => {
-            setShowCard(null);
-          }}
-          align={0}
-        />
-        <div className="relative h-full w-full flex flex-col items-center">
-          <div className="flex relative flex-col justify-center items-center h-full w-full">
+    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+      <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+        <div className={`card ${cardHeight} ${flipped ? "flipped" : ""}`}>
+          {/* Front Side */}
+          <div
+            onClick={handleFlip}
+            className="card__face card__face--front relative flex justify-center items-center"
+          >
             <div
-              className={`flex relative  mt-auto items-center h-[19%] w-full`}
-            >
-              <div
-                style={{
-                  backgroundImage: `url(${assets.uxui.paper})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  height: "100%",
-                  width: "100%",
-                }}
-                className={`rounded-b-primary`}
-              />
-
-              <div
-                className={`flex justify-center text-[60px] text-white text-black-contour w-full h-full items-center px-3 z-10 font-symbols`}
-              >
-                {icon ?? "a"}
+              className="absolute inset-0 bg-cover bg-center rounded-primary z-0"
+              style={{
+                backgroundImage: `url(${img ?? assets.boosters.burstCard})`,
+              }}
+            />
+            <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
+              <div className="relative w-full h-[19%] mt-auto card-shadow-white-celtic z-10">
+                <div
+                  className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary`}
+                  style={{ backgroundImage: `url(${assets.uxui.paper})` }}
+                />
+                <div className="absolute uppercase glow-text-quest flex justify-center items-center w-full h-full">
+                  {icon ?? "a"}
+                </div>
               </div>
             </div>
+            <IconBtn
+              isInfo={showInfo}
+              activeMyth={4}
+              handleClick={() => {
+                if (showInfo) {
+                  setFlipped(true);
+                } else {
+                  setSection(0);
+                  setShowCard(null);
+                }
+              }}
+              align={0}
+            />
+          </div>
+
+          {/* Back Side */}
+          <div
+            onClick={handleFlip}
+            className="card__face card__face--back relative flex justify-center items-center"
+          >
+            <div className="relative w-full h-full text-card">
+              <img
+                src={assets.uxui.info}
+                alt="info background"
+                className="w-full h-full object-cover rounded-primary z-10"
+              />
+            </div>
+            <div className="absolute flex flex-col top-0 z-20">
+              <div className="flex w-full">
+                <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
+                  <div className="text-left">
+                    <h1 className="text-paperHead font-bold uppercase">
+                      {icon ?? "a"}
+                    </h1>
+                  </div>
+                </div>
+              </div>
+              <div
+                className={`leading-[18px] text-para mt-[14px] text-justify mx-auto w-[85%] text-card font-[550] ${
+                  ["hi", "th", "ru"].includes(i18n.language) && "font-normal"
+                } ${i18n.language === "ru" && "leading-[15px]"}`}
+              >
+                As a female avatar in CELTIC mythology, you emerge as a
+                manifestation of valor and destiny, embodying both the essence
+                of a fierce warrior and a divine entity. - “Embrace
+                destiny--immortality awaits”
+              </div>
+            </div>
+            <IconBtn isInfo={false} activeMyth={5} align={10} />
           </div>
         </div>
       </div>
-      {Button}
+
+      {/* Button below the card */}
+      <div className={`button z-50 ${flipped ? "flipped mt-3" : "mt-2"}`}>
+        <div className="button__face button__face--front flex justify-center items-center">
+          {Button}
+        </div>
+        <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center">
+          {Button}
+        </div>
+      </div>
     </div>
   );
 };

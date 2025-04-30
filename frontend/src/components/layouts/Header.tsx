@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RorContext } from "../../context/context";
 
 const BottomChild = () => {
   const { gameData, section } = useContext(RorContext);
+  const [showEffect, setShowEffect] = useState(true);
 
   const sections = [
     {
@@ -84,32 +85,38 @@ const BottomChild = () => {
     }, // 0
   ];
 
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
-    <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
-      <div className="flex relative w-full px-7">
+    <div className="flex h-button-primary mt-[2.5vh] absolute z-50 text-black font-symbols justify-between w-screen">
+      <div
+        onClick={() => {}}
+        className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+      >
         <div
-          className={`flex border-white  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
-        >
-          <div className="flex items-center text-primary font-medium pl-headSides">
-            {sections[section].left}
-          </div>
-        </div>
-        <div
-          className={`flex justify-end border-white gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
-        >
-          <div className="flex text-black-contour items-center text-primary font-medium pr-headSides">
-            {sections[section].right}
-          </div>
-        </div>
-      </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`font-symbols text-iconLg text-black-lg-contour text-white`}
+          className={`flex ${
+            showEffect && "pulse-text"
+          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
           {sections[section].lIcon}
         </div>
+      </div>
+      <div
+        onClick={() => {}}
+        className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+      >
         <div
-          className={`font-symbols text-iconLg text-black-contour text-white`}
+          className={`flex font-symbols ${
+            showEffect && "pulse-text"
+          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
           {sections[section].rIcon}
         </div>

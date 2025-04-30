@@ -92,24 +92,6 @@ export default function Launcher({
             fadeout={fadeout}
           />
         </div>
-        <div className={`${fadeout && "fade-out"}`}>
-          {activeIndex > 0 && (
-            <button
-              className="absolute z-50 top-[50%] opacity-80"
-              onClick={prevSlide}
-            >
-              <ChevronLeft strokeWidth="3px" size={40} color="white" />
-            </button>
-          )}
-          {activeIndex < pos.length - 1 && (
-            <button
-              className="absolute right-0 top-[50%] z-50 opacity-80"
-              onClick={nextSlide}
-            >
-              <ChevronRight strokeWidth="3px" size={40} color="white" />
-            </button>
-          )}
-        </div>
 
         {showCard && (
           <div className="absolute z-[99] w-screen">
@@ -143,6 +125,24 @@ export default function Launcher({
           )}
         </div>
       </div>
+      {activeIndex > 0 && (
+        <div
+          className={`flex left-0 absolute justify-center items-center  w-[15%] h-full top-0 z-40`}
+        >
+          <div onClick={prevSlide} className={`cursor-pointer`}>
+            <ChevronLeft strokeWidth="3px" size={40} color="white" />
+          </div>
+        </div>
+      )}
+      {activeIndex < pos.length - 1 && (
+        <div
+          className={`flex right-0 absolute justify-center items-center  w-[15%] h-full top-0 z-40`}
+        >
+          <div onClick={nextSlide} className={`cursor-pointer`}>
+            <ChevronRight strokeWidth="3px" size={40} color="white" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -20,18 +20,18 @@ const RelicRwrdCrd = ({
 }) => {
   const { isTelegram, setShowCard } = useContext(RorContext);
   const [flipped, setFlipped] = useState(false);
-  alert;
+
   const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFlipped((prev) => !prev);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setFlipped((prev) => !prev);
+  //   }, 2500);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+    <div className="fixed inset-0 bg-black  bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
       {showBoots && (
         <div
           onClick={claimBoots}

@@ -67,6 +67,7 @@ const RoRMain = () => {
   const [rewards, setRewards] = useState([]);
   const [swipes, setSwipes] = useState(0);
   const [shiftBg, setShiftBg] = useState(50);
+  const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [battleData, setBattleData] = useState({
     currentRound: 1,
     roundData: [],
@@ -102,6 +103,8 @@ const RoRMain = () => {
     swipes,
     rewards,
     setRewards,
+    setRewardsClaimedInLastHr,
+    rewardsClaimedInLastHr,
     setSwipes,
     tasks,
     setTasks,
@@ -120,6 +123,8 @@ const RoRMain = () => {
         ...rewardsData?.rewards,
         ...rewardsData?.claimedRewards,
       ]);
+      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
+      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
     } catch (error) {
       await deleteAuthCookie(tele);
 
