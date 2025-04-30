@@ -45,6 +45,10 @@ const JoinBonus = (props) => {
           return {
             ...prevItems,
             stats: newStats,
+            bank: {
+              ...prev.bank,
+              isVaultActive: true,
+            },
           };
         });
       } catch (error) {
