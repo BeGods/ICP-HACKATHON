@@ -3,6 +3,7 @@ import userMythologies from "../../common/models/mythologies.models";
 import { generateDailyRwrd } from "../services/general.ror.services";
 import User from "../../common/models/user.models";
 import { CoinsTransactions } from "../../common/models/transactions.models";
+import milestones from "../../common/models/milestones.models";
 
 export const claimDailyBonus = async (req, res) => {
   const userId = req.user._id;
@@ -77,6 +78,14 @@ export const claimJoinBonus = async (req, res) => {
     await userMythologies.findOneAndUpdate(
       { userId: userId },
       { $inc: { gobcoin: 3 } }
+    );
+
+    await milestones.findOneAndUpdate(
+      { userId: userId },
+
+      {
+        $set: { "bank.vaultExpiryAt": Date.now() + 5 * 24 * 60 * 60 * 1000 },
+      }
     );
 
     const newCoinsTransaction = new CoinsTransactions({

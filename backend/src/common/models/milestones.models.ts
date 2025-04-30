@@ -138,30 +138,29 @@ const milestoneSchema = new Schema<IMilestone>({
     vault: {
       type: [
         {
-          itemId: {
+          name: {
             type: String,
             required: true,
           },
-          fragmentId: {
-            type: Number,
-            default: 0,
-          },
-          isComplete: {
-            type: Boolean,
-            default: false,
-          },
-          updatedAt: {
-            type: Date,
-            default: Date.now(),
+          items: {
+            type: [
+              {
+                itemId: { type: String, required: true },
+                fragmentId: { type: Number, default: 0 },
+                isComplete: { type: Boolean, default: false },
+                updatedAt: { type: Date, default: Date.now },
+              },
+            ],
+            validate: {
+              validator: function (array) {
+                return array.length <= 27;
+              },
+              message: "Each mythology can only have 27 items in the vault.",
+            },
           },
         },
       ],
-      validate: {
-        validator: function (array) {
-          return array.length <= 27;
-        },
-        message: "The vault cannot contain more than 27 items.",
-      },
+      default: [],
     },
   },
   claimedRoRItems: {

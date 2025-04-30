@@ -45,7 +45,7 @@ export interface IMilestone extends Document {
   pouch?: string[];
   bank?: {
     vaultExpiryAt: number;
-    vault: IInventory[];
+    vault: [{ name: string; items: IInventory[] }];
   };
   buildStage: IBuildStage[];
   appearedUnderworldChars?: string[];

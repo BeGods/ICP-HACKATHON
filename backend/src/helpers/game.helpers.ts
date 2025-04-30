@@ -106,3 +106,9 @@ export const checkIsUnderworldActive = (
 
   return false;
 };
+
+export const combineVaultItems = (vault) => {
+  if (!Array.isArray(vault)) return [];
+
+  return vault.flatMap((myth) => myth.items ?? []);
+};

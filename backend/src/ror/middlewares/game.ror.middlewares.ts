@@ -7,6 +7,7 @@ import {
   parsePotionType,
   validatePotionType,
 } from "../services/game.ror.services";
+import { mythElementNamesLowerCase } from "../../utils/constants/variables";
 
 export const validateSessionsStart = async (req, res, next) => {
   const user = req.user;
@@ -92,11 +93,6 @@ export const validTransferToVault = async (req, res, next) => {
       throw Error("Transfer failed. Please activate the vault.");
     }
 
-    // check if there is enough space in vault
-    if (userClaimedRewards.bank.vault.length >= 27) {
-      throw Error("Insufficient space inside vault. Try again later");
-    }
-
     const itemIdsObject = itemIds.map((id) => new mongoose.Types.ObjectId(id));
 
     const existingItemsInBag = userClaimedRewards.bag?.filter((itemId) =>
@@ -106,6 +102,26 @@ export const validTransferToVault = async (req, res, next) => {
     // chek if iten exists inside bag
     if (existingItemsInBag.length == 0) {
       throw Error("Invalid itemId. Item does not exists in the bag.");
+    }
+
+    // check space in vault
+    for (let item of existingItemsInBag) {
+      const mythology = item.itemId.includes("potion")
+        ? mythElementNamesLowerCase[item.itemId?.split(".")[1]]
+        : item.itemId?.split(".")[0];
+      const targetVault = userClaimedRewards.bank.vault.find(
+        (v) => v.name === mythology
+      );
+
+      if (!targetVault) {
+        throw Error(`Vault for mythology '${mythology}' not found.`);
+      }
+
+      if (targetVault.items.length >= 27) {
+        throw Error(
+          `Insufficient space in the '${mythology}' vault. Try again later.`
+        );
+      }
     }
 
     req.userClaimedRewards = userClaimedRewards;
@@ -127,6 +143,7 @@ export const validTransferToBag = async (req, res, next) => {
     const userClaimedRewards = await milestones.findOne({ userId });
     const itemIdsObject = itemIds.map((id) => new mongoose.Types.ObjectId(id));
 
+    // check if active
     if (
       !userClaimedRewards.bank.vaultExpiryAt ||
       userClaimedRewards.bank.vaultExpiryAt <= 0 ||
@@ -140,17 +157,22 @@ export const validTransferToBag = async (req, res, next) => {
       throw Error("Insufficient space inside vault. Try again later");
     }
 
-    const existingItemsInVault = userClaimedRewards.bank.vault.filter((obj) =>
-      itemIdsObject.some((id) => obj._id.equals(id))
+    // flatten and get all items in one array
+    const allItems = userClaimedRewards.bank.vault.flatMap(
+      (vaultEntry) => vaultEntry.items || []
     );
 
-    //check if iten exists inside bag
-    if (existingItemsInVault.length == 0) {
-      throw Error("Invalid Items. Please add valid itemIds.");
+    const existingItemsInVault = allItems.filter((item) =>
+      itemIdsObject.some((id) => id.equals(item._id))
+    );
+
+    // if any id missing then throw eorror
+    if (existingItemsInVault.length !== itemIdsObject.length) {
+      throw Error("Invalid Items. Some itemIds do not exist in the vault.");
     }
 
     req.userClaimedRewards = userClaimedRewards;
-    req.itemToTransfer = existingItemsInVault;
+    req.itemsToTransfer = existingItemsInVault;
     next();
   } catch (error) {
     console.log(error);
@@ -162,7 +184,6 @@ export const isValidVaultReq = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { isMulti } = req.query;
-  const expiryDays = Boolean(isMulti) ? 7 : 1;
   const deductValue = Boolean(isMulti) ? 5 : 1;
 
   try {
@@ -178,7 +199,7 @@ export const isValidVaultReq = async (req, res, next) => {
     }
 
     req.deductValue = deductValue;
-    req.expiryDays = expiryDays * 24 * 60 * 60 * 1000;
+    req.expiryDays = 5 * 24 * 60 * 60 * 1000;
     req.userMilestones = userClaimedRewards;
     req.userMythologies = userMythologyData;
     next();
@@ -237,9 +258,9 @@ export const validateJoinFrgmnt = async (req, res, next) => {
     );
 
     // if activate
-    if (!user.gameSession.isBlackSmithActive) {
-      throw new Error("Blacksmith is inactive. Please activate.");
-    }
+    // if (!user.gameSession.isBlackSmithActive) {
+    //   throw new Error("Blacksmith is inactive. Please activate.");
+    // }
 
     // space in builder
     if (userClaimedRewards?.buildStage?.length >= 3) {
