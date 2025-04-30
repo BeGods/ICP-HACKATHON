@@ -7,6 +7,7 @@ import {
   mythElementNames,
   underworldItemsList,
 } from "../../utils/constants/variables";
+import { combineVaultItems } from "../../helpers/game.helpers";
 
 export const fetchGameData = async (userId, includeQuests) => {
   try {
@@ -419,7 +420,7 @@ export const filterFetchedItem = (
   try {
     // combine bag and vault items
     const claimedItems = [
-      ...(userClaimedRewards?.bank?.vault ?? []),
+      ...(combineVaultItems(userClaimedRewards?.bank?.vault) ?? []),
       ...(userClaimedRewards?.bag ?? []),
     ].reduce((acc, item) => {
       const existingItem = acc.find((obj) => obj?.itemId === item?.itemId);

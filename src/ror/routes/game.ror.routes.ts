@@ -11,8 +11,6 @@ import {
   transferToBag,
   transferToVault,
   useItemAbility,
-  activateBlackSmith,
-  activateLibrarian,
   claimCompleteRelic,
   claimArtifact,
 } from "../controllers/game.ror.controllers";
@@ -27,9 +25,7 @@ import {
   validateSessionsStart,
   validateTradeFragment,
   validateTradePotion,
-  validBlksmthReq,
   validItemAbility,
-  validLibrnReq,
   validTransferToBag,
   validTransferToVault,
 } from "../middlewares/game.ror.middlewares";

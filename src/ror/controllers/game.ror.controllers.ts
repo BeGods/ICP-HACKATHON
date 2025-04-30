@@ -9,10 +9,15 @@ import {
   updatePotionTrade,
 } from "../services/game.ror.services";
 import userMythologies from "../../common/models/mythologies.models";
-import { defaultMythologies } from "../../utils/constants/variables";
+import {
+  defaultMythologies,
+  defaultVault,
+  mythElementNamesLowerCase,
+} from "../../utils/constants/variables";
 import { isVaultActive } from "../../helpers/general.helpers";
 import {
   checkIsUnderworldActive,
+  combineVaultItems,
   hasTwelveHoursElapsed,
 } from "../../helpers/game.helpers";
 import { ItemsTransactions } from "../../common/models/transactions.models";
@@ -20,6 +25,7 @@ import ranks from "../../common/models/ranks.models";
 import Stats from "../../common/models/Stats.models";
 import { itemInterface } from "../../ts/models.interfaces";
 import { checkBonus } from "../services/general.ror.services";
+import milestones from "../../common/models/milestones.models";
 
 export const getGameStats = async (req, res) => {
   try {
@@ -34,7 +40,7 @@ export const getGameStats = async (req, res) => {
         ?.map(({ updatedAt, ...itemWithoutUpdatedAt }) => itemWithoutUpdatedAt)
         ?.slice(0, 9) ?? [];
     let vaultData =
-      userGameData.userMilestones[0].bank?.vault
+      combineVaultItems(userGameData.userMilestones[0].bank?.vault)
         ?.map(({ updatedAt, ...itemWithoutUpdatedAt }) => itemWithoutUpdatedAt)
         ?.slice(0, 27) ?? [];
 
@@ -48,12 +54,23 @@ export const getGameStats = async (req, res) => {
     // add default mythologies
     const isMythAbsent =
       userGameData.userMythologies[0].mythologies.length === 0;
+    const isVaultAbsent =
+      userGameData.userMilestones[0].bank.vault.length === 0;
 
     // new user
     if (isMythAbsent) {
+      userGameData.userMythologies[0].mythologies = defaultMythologies;
       await userMythologies.findOneAndUpdate(
         { userId: userId },
         { $set: { mythologies: defaultMythologies } }
+      );
+    }
+
+    if (isVaultAbsent) {
+      userGameData.userMilestones[0].bank.vault = defaultVault;
+      await milestones.findOneAndUpdate(
+        { userId: userId },
+        { $set: { "bank.vault": defaultVault } }
       );
     }
 
@@ -154,7 +171,7 @@ export const getGameStats = async (req, res) => {
         isVaultActive: isVaultActive(
           userGameData.userMilestones[0]?.bank?.vaultExpiryAt ?? 0
         ),
-        vault: vaultData,
+        vault: userGameData.userMilestones[0]?.bank?.vault ?? defaultVault,
       },
       claimedItems: userGameData.userMilestones[0]?.claimedRoRItems ?? [],
       bag: bagData,
@@ -317,22 +334,51 @@ export const generateSessionReward = async (req, res) => {
 
 export const transferToVault = async (req, res) => {
   const userClaimedRewards = req.userClaimedRewards;
+  const vault = userClaimedRewards.bank?.vault ?? [];
   const itemsToTransfer = req.itemsToTransfer;
 
+  // classify items by mythology
+  const itemsByMythology = itemsToTransfer?.reduce((acc, item) => {
+    const mythology = item.itemId.includes("potion")
+      ? mythElementNamesLowerCase[item.itemId?.split(".")[1]]
+      : item.itemId?.split(".")[0];
+
+    if (!acc[mythology]) acc[mythology] = [];
+    acc[mythology].push({
+      _id: item._id,
+      itemId: item.itemId,
+      fragmentId: item.fragmentId,
+      isComplete: item.isComplete,
+      updatedAt: new Date(),
+    });
+
+    return acc;
+  }, {});
+
+  // align it with the valut arrau
+  for (const [mythology, items] of Object.entries(itemsByMythology)) {
+    const existingVault = vault.find((v) => v.name === mythology);
+
+    if (existingVault) {
+      existingVault.items.push(...(items as []));
+    } else {
+      vault.push({
+        name: mythology,
+        items: items,
+      });
+    }
+  }
+
+  userClaimedRewards.bank.vault = vault;
+
+  // update
   try {
     await userClaimedRewards.updateOne({
       $pull: {
         bag: { _id: { $in: itemsToTransfer } },
       },
-      $push: {
-        "bank.vault": {
-          $each: itemsToTransfer.map((item) => ({
-            _id: item._id,
-            itemId: item.itemId,
-            fragmentId: item.fragmentId,
-            isComplete: item.isComplete,
-          })),
-        },
+      $set: {
+        "bank.vault": userClaimedRewards.bank.vault,
       },
     });
 
@@ -348,12 +394,20 @@ export const transferToVault = async (req, res) => {
 
 export const transferToBag = async (req, res) => {
   const userClaimedRewards = req.userClaimedRewards;
-  const itemsToTransfer = req.itemToTransfer;
+  const itemsToTransfer = req.itemsToTransfer;
 
   try {
+    const vault = userClaimedRewards.bank.vault;
+
+    for (const vaultEntry of vault) {
+      vaultEntry.items = vaultEntry.items.filter(
+        (item) => !itemsToTransfer.some((id) => id.equals(item._id))
+      );
+    }
+
     await userClaimedRewards.updateOne({
-      $pull: {
-        "bank.vault": { _id: { $in: itemsToTransfer } },
+      $set: {
+        "bank.vault": vault,
       },
       $push: {
         bag: {

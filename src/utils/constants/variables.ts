@@ -112,3 +112,30 @@ export const defaultMythologies = [
     },
   },
 ];
+
+export const defaultVault = [
+  {
+    name: "celtic",
+    items: [],
+  },
+  {
+    name: "egyptian",
+    items: [],
+  },
+  {
+    name: "greek",
+    items: [],
+  },
+  {
+    name: "norse",
+    items: [],
+  },
+];
+
+export const mythElementNamesLowerCase = {
+  fire: "greek",
+  earth: "celtic",
+  water: "norse",
+  air: "egyptian",
+  aether: "aether",
+};
