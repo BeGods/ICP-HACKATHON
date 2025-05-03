@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Avatar from "../../../components/Common/Avatar";
-import { RorContext } from "../../../context/context";
+import { FofContext, RorContext } from "../../../context/context";
 
 const LeaderboardItem = ({
   rank,
@@ -10,6 +10,7 @@ const LeaderboardItem = ({
   isEmpty,
   prevRank,
   isKOL,
+  colorType,
 }) => {
   const { userData } = useContext(RorContext);
   const [avatarColor, setAvatarColor] = useState(null);
@@ -25,7 +26,7 @@ const LeaderboardItem = ({
       key={rank}
       className={`flex items-center ${
         rank % 2 === 0 && !isKOL ? "bg-borderGray" : ""
-      } ${rank % 2 === 0 && isKOL ? "bg-white" : ""} ${
+      } ${rank % 2 === 0 && isKOL ? "bg-black/10" : ""} ${
         isKOL ? "text-black" : "text-white"
       } font-medium text-tertiary w-[98%] h-fit mx-auto py-2`}
     >
@@ -44,6 +45,14 @@ const LeaderboardItem = ({
         <div className="flex w-full h-[35px] justify-between">
           <div className="flex justify-start pl-5 items-center w-[25%] h-full">
             <h1>{rank}</h1>
+            {isKOL && (
+              <h1
+                className={`font-symbols text-black-sm-contour text-[18px] text-${colorType} ml-1.5 -mt-0.5`}
+              >
+                %
+              </h1>
+            )}
+
             <div>
               {rank < prevRank && (
                 <h1 className="text-green-500 text-[18px]">▲</h1>
@@ -57,7 +66,7 @@ const LeaderboardItem = ({
             <div className="h-[35px] w-[35px]">
               {imageUrl ? (
                 <img
-                  src={`https://media.publit.io/file/UserAvatars/${imageUrl}.jpg`}
+                  src={imageUrl}
                   alt="profile-image"
                   className="rounded-full"
                 />

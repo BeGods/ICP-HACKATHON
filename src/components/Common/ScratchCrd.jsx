@@ -59,7 +59,7 @@ const Scratch = ({ handleComplete, item, image }) => {
         }}
       >
         <div
-          className={`relative h-[320px] rounded-md w-[320px] flex justify-center items-center  overflow-hidden ${
+          className={`relative h-[320px] w-[320px] flex justify-center items-center  overflow-hidden ${
             showEffect && "scale-125"
           } transition-all duration-1000`}
         >
