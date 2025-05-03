@@ -94,7 +94,7 @@ const milestoneSchema = new Schema<IMilestone>({
           default: 0,
           validate: {
             validator: function (value: number) {
-              return value <= 12;
+              return value <= 4;
             },
             message: "tokensCollected cannot be more than 12.",
           },

@@ -84,11 +84,11 @@ export const getAllPartners = async (req, res) => {
     //? till here I have fetched and mapped the custom-playsuper partners
     // active - custom
     activeCustomPartners = ourPartners.filter(
-      (item) => item.tokensCollected < 12
+      (item) => item.tokensCollected < 4
     );
     // completed - playsuper
     claimedCustomPartners = ourPartners.filter(
-      (item) => item.tokensCollected === 12
+      (item) => item.tokensCollected === 4
     );
 
     // manage number of parters

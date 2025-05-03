@@ -92,14 +92,12 @@ export const getGameStats = async (req, res) => {
           $set: {
             "gameSession.dailyGameQuota": 12,
             "gameSession.gameHrStartAt": Date.now(),
-            "gameSession.isUnderworldActive": 0,
           },
         },
         { new: true }
       );
       user.gameSession.dailyGameQuota = 12;
       user.gameSession.gameHrStartAt = Date.now();
-      user.gameSession.isUnderworldActive = 0;
     }
 
     if (thiefStole) {
@@ -111,12 +109,10 @@ export const getGameStats = async (req, res) => {
     userGameData.userMythologies[0].sessionStartAt =
       user.gameSession?.gameHrStartAt;
     userGameData.userMythologies[0].isRestActive = isRestActive;
-    userGameData.userMythologies[0].isUnderworldActive =
-      user.gameSession?.isUnderworldActive == 0 ? true : false;
 
     let userRank = await ranks.findOne({ userId: req.user._id });
     if (!userRank) {
-      const totalUsers = await Stats.findOne({ statId: "fof" });
+      const totalUsers = await Stats.findOne({ statId: "ror" });
       userRank = { coinRank: totalUsers?.totalUsers && 0 } as any;
     }
 
@@ -415,6 +411,8 @@ export const transferToBag = async (req, res) => {
             _id: item._id,
             itemId: item.itemId,
             fragmentId: item.fragmentId,
+            isComplete: item.isComplete,
+            updatedAt: new Date(),
           })),
         },
       },

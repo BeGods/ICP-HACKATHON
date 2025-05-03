@@ -223,6 +223,7 @@ export const validatePotionType = async (
     }
   }
 };
+
 export const updatePotionTrade = async (
   element,
   mythology,
@@ -437,7 +438,7 @@ export const filterFetchedItem = (
       return acc;
     }, []);
 
-    // remove completed items && filter based on mythology
+    // remove completed items amd filter based on mythology
     const completedItemIds =
       claimedItems
         ?.filter(
@@ -456,7 +457,8 @@ export const filterFetchedItem = (
       "artifact.treasure03",
     ];
 
-    const filteredNotClaimedItems =
+    // filter
+    const filteredRoRItems =
       gameItems?.filter((item) => {
         const id = item.id || "";
 
@@ -467,18 +469,34 @@ export const filterFetchedItem = (
           id.includes(`${mythology.toLowerCase()}.${code}`)
         );
 
-        const rewardCondn =
-          isUnderworld && rewardlvl === 4
-            ? [1, 4].includes(item.coins)
-            : item.coins === rewardlvl;
-
         return (
-          !userClaimedRewards?.claimedRoRItems?.includes(id) &&
-          !completedItemIds?.includes(id) &&
           (isRelicFromMythology || isTreasureFromMythology) &&
-          rewardCondn
+          !userClaimedRewards?.claimedRoRItems?.includes(id) &&
+          !completedItemIds?.includes(id)
         );
       }) ?? [];
+
+    const isUNWAllWins = isUnderworld && rewardlvl === 4;
+    const isMythAllWins = !isUnderworld && rewardlvl === 3;
+
+    // match reward lvl
+    let filteredNotClaimedItems = filteredRoRItems.filter((item) => {
+      if (isUnderworld && rewardlvl === 4) {
+        return [1, 4].includes(item.coins);
+      } else if (!isUnderworld && rewardlvl === 3) {
+        return [1, 2, 3].includes(item.coins);
+      } else {
+        return item.coins === rewardlvl;
+      }
+    });
+
+    // fallback for all wins
+    if (
+      filteredNotClaimedItems.length === 0 &&
+      (isUNWAllWins || isMythAllWins)
+    ) {
+      filteredNotClaimedItems = filteredRoRItems;
+    }
 
     return { claimedItems, filteredNotClaimedItems };
   } catch (error) {

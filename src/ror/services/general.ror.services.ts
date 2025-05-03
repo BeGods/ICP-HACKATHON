@@ -11,6 +11,8 @@ export const generateDailyRwrd = async (userId) => {
     const pouchItems = userMilestones?.pouch ?? [];
     const ignoredItems = [
       "starter00",
+      "starter01",
+      "starter10",
       "treasure03",
       "treasure02",
       "treasure01",
@@ -36,19 +38,25 @@ export const generateDailyRwrd = async (userId) => {
     if (randomGenItem) {
       const itemId = randomGenItem.id;
       let coins = 0;
-      let updateField = null;
+      // let updateField = null;
 
-      if (/common0[1-4]/.test(itemId)) {
+      if (itemId.includes("common01") || /starter0[3-4]/.test(itemId)) {
         // gold coin
         coins = 2;
-        updateField = "claimedRoRItems";
-      } else if (/common0[5-9]/.test(itemId)) {
+        // updateField = "claimedRoRItems";
+      } else if (/starter0[5-9]/.test(itemId)) {
         // silver coin
         coins = 1;
-        updateField = "claimedRoRItems";
+        // updateField = "claimedRoRItems";
       } else {
         // other
-        updateField = "pouch";
+        // updateField = "pouch";
+
+        await milestones.findOneAndUpdate(
+          { userId },
+          { $push: { pouch: itemId } },
+          { new: true }
+        );
       }
 
       if (coins > 0) {
@@ -57,12 +65,6 @@ export const generateDailyRwrd = async (userId) => {
           { $inc: { gobcoin: coins } }
         );
       }
-
-      await milestones.findOneAndUpdate(
-        { userId },
-        { $push: { [updateField]: itemId } },
-        { new: true }
-      );
 
       genRewardObj = itemId;
     }
@@ -84,6 +86,79 @@ export const generateDailyRwrd = async (userId) => {
     throw new Error(error.message);
   }
 };
+
+// export const getLeaderboardRanks = async (
+//   userRank = 1000,
+//   page = 0,
+//   limit = 100
+// ) => {
+//   let skip = page * limit;
+//   let matchStage: Record<string, any> = { totalGobcoin: { $lt: 999999 } };
+//   let fetchAll = false;
+
+//   if (userRank <= 12) {
+//     matchStage = { ...matchStage, coinRank: { $lte: 12 } }; // Gold
+//     fetchAll = true;
+//   } else if (userRank <= 99) {
+//     matchStage = { ...matchStage, coinRank: { $gte: 13, $lte: 99 } }; // Silver
+//     fetchAll = true;
+//   } else if (userRank <= 333) {
+//     matchStage = { ...matchStage, coinRank: { $gte: 100, $lte: 333 } }; // Bronze
+//   } else {
+//     matchStage = { ...matchStage, coinRank: { $gte: 334, $lte: 999 } }; // Wood
+//   }
+
+//   // else if (userRank <= 666) {
+//   //   matchStage = { ...matchStage, orbRank: { $gte: 334, $lte: 666 } }; // Bronze
+//   // }
+
+//   if (fetchAll) skip = 0;
+
+//   try {
+//     let ranksFilter = [
+//       { $match: matchStage },
+//       { $sort: { coinRank: 1 as 1 } },
+//       { $skip: skip },
+//       { $limit: limit },
+//       {
+//         $project: {
+//           __v: 0,
+//           createdAt: 0,
+//           updatedAt: 0,
+//           _id: 0,
+//           userId: 0,
+//         },
+//       },
+//     ];
+
+//     let pipelineObj = {
+//       $facet: {
+//         active: ranksFilter,
+//         finished: [
+//           { $match: { totalGobcoin: { $gte: 999999 } } },
+//           { $sort: { rorCompletedAt: 1 as 1 } },
+//           {
+//             $project: {
+//               __v: 0,
+//               createdAt: 0,
+//               updatedAt: 0,
+//               _id: 0,
+//               userId: 0,
+//             },
+//           },
+//         ],
+//       },
+//     };
+
+//     const pipeline = [pipelineObj];
+
+//     const results = await ranks.aggregate(pipeline).allowDiskUse(true).exec();
+
+//     return results;
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// };
 
 export const getLeaderboardRanks = async (
   userRank = 1000,
@@ -134,7 +209,7 @@ export const getLeaderboardRanks = async (
         active: ranksFilter,
         finished: [
           { $match: { totalGobcoin: { $gte: 999999 } } },
-          { $sort: { rorCompletedAt: 1 as 1 } },
+          { $sort: { fofCompletedAt: 1 as 1 } },
           {
             $project: {
               __v: 0,

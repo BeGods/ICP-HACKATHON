@@ -188,6 +188,7 @@ export const getLeaderboardRanks = async (
     throw new Error(error);
   }
 };
+
 export const getRandomValue = () => {
   const valuesWithProbabilities = [
     { value: "blackOrb", probability: 1 / 3 },
@@ -429,8 +430,6 @@ export const claimBonusQuest = async (userId) => {
     const unClaimedActiveQuests = quests[0].quests.filter(
       (item) => item.mythology !== "Other"
     );
-
-    console.log(unClaimedActiveQuests);
 
     const randomQuest =
       unClaimedActiveQuests[

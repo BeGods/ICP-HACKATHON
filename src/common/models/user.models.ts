@@ -81,21 +81,9 @@ const userSchema = new Schema<IUser>(
         default: 15,
       },
       restExpiresAt: Number,
-      isUnderworldActive: {
-        type: Number,
-        default: 0,
-      },
       undeworldLostCount: {
         type: Number,
         default: 0,
-      },
-      isBlackSmithActive: {
-        type: Boolean,
-        default: false,
-      },
-      isLibrnActive: {
-        type: Boolean,
-        default: false,
       },
     },
     mobileNumber: {
