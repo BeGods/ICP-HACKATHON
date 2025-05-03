@@ -130,7 +130,7 @@ const BottomChild = () => {
     return mythSections.indexOf(myth);
   };
 
-  const mythShards = gameData.stats.mythologies.map((myth) => myth.shards);
+  const mythShards = gameData.stats.mythologies.map((myth) => myth.shards ?? 0);
   const shardMap = [
     ...mythShards,
     gameData?.stats?.blackShards ?? 0,
@@ -167,7 +167,9 @@ const BottomChild = () => {
     );
 
     const totalShards =
-      mythShards + gameData.stats.whiteShards + gameData.stats.blackShards;
+      mythShards +
+      (gameData.stats.whiteShards ?? 0) +
+      (gameData.stats.blackShards ?? 0);
 
     return totalShards;
   };
