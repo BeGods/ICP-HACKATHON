@@ -147,7 +147,7 @@ export const validPlaysuperRedeem = async (req, res, next) => {
       throw new Error("You are not eligible to claim this reward.");
     }
 
-    if (partnerReward.tokensCollected !== 12 && partnerReward.isClaimed) {
+    if (partnerReward.tokensCollected !== 4 && partnerReward.isClaimed) {
       throw new Error("You are not eligible to claim this reward.");
     }
 
@@ -207,7 +207,7 @@ export const validPartnerRwrd = async (req, res, next) => {
       throw new Error("Invalid partnerId.");
     }
 
-    if (fetchedPartner.tokensCollected < 12) {
+    if (fetchedPartner.tokensCollected < 4) {
       throw new Error("Invalid request. Please complete all part to claim.");
     }
 

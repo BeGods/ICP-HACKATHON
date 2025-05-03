@@ -44,9 +44,9 @@ export const validateSessionReward = async (req, res, next) => {
     }
 
     // validate session duration
-    // if (sessionDuration > 60000 || sessionDuration < 25000) {
-    //   throw new Error("Invalid session. Please try again.");
-    // }
+    if (sessionDuration > 60000 || sessionDuration < 25000) {
+      throw new Error("Invalid session. Please try again.");
+    }
 
     // validate battle
     let competelvl = user.gameSession.competelvl;

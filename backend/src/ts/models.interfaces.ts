@@ -211,11 +211,8 @@ export interface IUser extends Document {
     dailyGameQuota: number;
     lastSessionStartTime: number;
     competelvl: number;
-    isUnderworldActive: number;
     restExpiresAt: number;
     isThiefActive: boolean;
-    isBlackSmithActive: boolean;
-    isLibrnActive: boolean;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
