@@ -11,12 +11,15 @@ import { mythSections } from "../../utils/constants.fof";
 import { colorByMyth } from "../../utils/constants.ror";
 import MiscCard from "../../components/ror/MiscCard";
 import RoRBtn from "../../components/ror/RoRBtn";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
-const CenterChild = ({ handleClick }) => {
+const tele = window.Telegram?.WebApp;
+
+const CenterChild = ({ handleClick, assets }) => {
   return (
     <div
       style={{
-        backgroundImage: `url('/assets/240px-banker_head.jpg')`,
+        backgroundImage: `url(${assets.boosters.bankerHead})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -29,8 +32,15 @@ const CenterChild = ({ handleClick }) => {
 };
 
 const Vault = (props) => {
-  const { gameData, setGameData, authToken, assets, setShowCard } =
-    useContext(RorContext);
+  const {
+    gameData,
+    setGameData,
+    authToken,
+    assets,
+    setShowCard,
+    setShiftBg,
+    enableHaptic,
+  } = useContext(RorContext);
   const [showVaultItems, setShowVaultItems] = useState(false);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
@@ -98,7 +108,7 @@ const Vault = (props) => {
     const touch = e.touches[0];
     setCopyPosition({
       x: touch.clientX - 100,
-      y: touch.clientY - 220,
+      y: touch.clientY - 250,
     });
   };
 
@@ -122,7 +132,7 @@ const Vault = (props) => {
       };
 
       const arbitaryCopyX = copyPosition.x + 20;
-      const arbitaryCopyY = copyPosition.y + 120;
+      const arbitaryCopyY = copyPosition.y + 150;
 
       const copyRect = {
         left: arbitaryCopyX,
@@ -146,7 +156,7 @@ const Vault = (props) => {
       const draggedItemArea = 100 * 100; // Item is 100x100 px
       const overlapPercentage = (overlapArea / draggedItemArea) * 100;
 
-      if (overlapPercentage >= 20) {
+      if (overlapPercentage >= 10) {
         // Remove the dragged item
         setGameData((prevItems) => {
           let updatedVaultItems = prevItems.bank.vault.map((group) => {
@@ -195,6 +205,8 @@ const Vault = (props) => {
   }, []);
 
   const showInfoCard = async () => {
+    handleClickHaptic(tele, enableHaptic);
+
     setShowCard(
       <MiscCard
         showInfo={true}
@@ -204,6 +216,7 @@ const Vault = (props) => {
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
+            message={"Enter"}
             isNotPay={true}
             left={1}
             right={1}
@@ -216,11 +229,13 @@ const Vault = (props) => {
 
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
 
       <div className="flex flex-col w-[80%] mt-[18dvh] h-[60dvh] relative mx-auto">
         <div
-          className="absolute inset-0 z-0 filter-orb-white"
+          className="absolute inset-0 z-0 filter-orb-white rounded-md"
           style={{
             backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundPosition: "center",
@@ -241,7 +256,7 @@ const Vault = (props) => {
             },
             {
               icon: "8",
-              label: "bag",
+              label: `${dragging ? "drop" : "bag"}`,
             },
             {
               icon: ",",
@@ -251,20 +266,24 @@ const Vault = (props) => {
             <div
               ref={index === 1 ? dropZoneRef : undefined}
               key={`box-${index}`}
-              className={`relative border ${
-                (!showVaultItems && index != 2) ||
-                (showVaultItems && index != 1)
-                  ? "text-white/20  border-white/20"
-                  : "text-white  border-white"
-              }  flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-[140px] rounded-md overflow-hidden`}
+              className={` relative text-white
+              max-w-[120px] w-full rounded-md overflow-hidden `}
             >
               <div
-                className={`w-full aspect-square rounded-md bg-white/20 flex justify-center items-center`}
+                className={`flex flex-col rounded-md border items-center w-full ${
+                  (!showVaultItems && index != 2) ||
+                  (showVaultItems && index != 2)
+                    ? "text-white border-white/70"
+                    : "text-white glow-inset-button-white"
+                }`}
               >
-                <span className="text-iconLg font-symbols">{itm.icon}</span>
-              </div>
-              <div className="w-full uppercase text-center text-[1rem] mt-1 break-words px-1">
-                {itm.label}
+                <div className="w-full aspect-square bg-white/20 flex justify-center items-center rounded-md">
+                  <span className="text-iconLg font-symbols">{itm.icon}</span>
+                </div>
+
+                <div className="w-full uppercase text-center text-sm leading-tight px-1 py-1 truncate">
+                  {itm.label}
+                </div>
               </div>
             </div>
           ))}
@@ -295,15 +314,19 @@ const Vault = (props) => {
               (_, index) => (
                 <div
                   key={`placeholder-${index}`}
-                  className="relative flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden"
+                  className="relative w-full max-w-[120px] flex flex-col opacity-50 items-center rounded-md overflow-hidden shadow-2xl"
                 >
-                  <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                    <span className="text-iconLg font-symbols text-white">
-                      6
-                    </span>
-                  </div>
-                  <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
-                    slot {index + 1}
+                  <div
+                    className={`flex flex-col rounded-md border items-center w-full`}
+                  >
+                    <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
+                      <span className="text-iconLg font-symbols text-white">
+                        8
+                      </span>
+                    </div>
+                    <div className="w-full text-white text-sm text-center px-1 py-1 leading-tight truncate">
+                      slot{index + 1}
+                    </div>
                   </div>
                 </div>
               )
@@ -316,14 +339,14 @@ const Vault = (props) => {
                 top: `${copyPosition.y}px`,
                 left: `${copyPosition.x}px`,
                 pointerEvents: "none",
-                zIndex: 30,
+                zIndex: 50,
               }}
             >
               <div className={`relative h-[120px] w-[120px] overflow-hidden`}>
                 <div
                   className="glow-icon-white h-full w-full"
                   style={{
-                    backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
+                    backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
                     backgroundSize: "cover",
                     backgroundPosition: "100% 20%",
                     backgroundRepeat: "no-repeat",
@@ -338,13 +361,13 @@ const Vault = (props) => {
           <div className="flex flex-col gap-y-4 justify-center items-center h-full">
             <div className="flex justify-center relative">
               <img
-                src={`/assets/240px-chest-.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-${mythSections[currMyth]}.artifact.starter00.png`}
                 alt="box"
                 className={`glow-text-white `}
               />
             </div>
             <div
-              onClick={() => setShowVaultItems(true)}
+              onClick={() => setShowVaultItems((prev) => !prev)}
               className="flex justify-center items-center relative h-fit"
             >
               <img src={assets.buttons[buttonColor]?.on} alt="button" />
@@ -352,6 +375,11 @@ const Vault = (props) => {
                 OPEN
               </div>
             </div>
+          </div>
+        )}
+        {mythVault.length <= 0 && showVaultItems && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-500 text-white px-4 py-2 rounded-full text-[1rem] font-roboto shadow-lg">
+            Vault is empty
           </div>
         )}
       </div>

@@ -17,6 +17,8 @@ const RelicRwrdCrd = ({
   maskOff,
   mythology,
   hasShards,
+  hideInfo,
+  isSell,
 }) => {
   const { isTelegram, setShowCard } = useContext(RorContext);
   const [flipped, setFlipped] = useState(false);
@@ -31,28 +33,17 @@ const RelicRwrdCrd = ({
   // }, []);
 
   return (
-    <div className="fixed inset-0 bg-black  bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+    <div className="fixed inset-0 select-none bg-black  bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
       {showBoots && (
         <div
           onClick={claimBoots}
           className="absolute mb-[5vh] flex justify-center w-full bottom-0  z-50"
         >
           <img
-            src={`/assets/ror-cards/240px-${mythology?.toLowerCase()}.artifact.starter02_on.png`}
+            src={`https://media.publit.io/file/BeGods/items/240px-${mythology?.toLowerCase()}.artifact.starter02.png`}
             alt="item"
             className="w-[14vw] scale-point"
           />
-        </div>
-      )}
-
-      {hasShards && (
-        <div className="flex flex-col justify-center items-center reward-pop-in">
-          <div className="flex relative justify-center items-center  rounded-full p-2.5 w-[60vw]">
-            <img src={`/assets/ror-cards/240px-shard.fire.png`} alt="item" />
-          </div>
-          <div className={`text-[12vw] -mt-4 ml-5 glow-icon-greek text-white`}>
-            +300
-          </div>
         </div>
       )}
 
@@ -64,9 +55,16 @@ const RelicRwrdCrd = ({
         />
       ) : (
         <>
-          <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
-            <div className={`card  ${cardHeight}  ${flipped ? "flipped" : ""}`}>
+          <div className="relative select-none w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+            <div
+              className={`card ${cardHeight} select-none  ${
+                flipped ? "flipped" : ""
+              }`}
+            >
               <RelicCrd
+                isSell={true}
+                handleClose={() => setShowCard(null)}
+                isClose={hideInfo}
                 fragmentId={fragmentId}
                 isComplete={isComplete}
                 itemId={itemId}

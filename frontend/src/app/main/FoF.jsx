@@ -41,10 +41,12 @@ import TgHeader from "../../components/Common/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import { determineIsTelegram } from "../../utils/device.info";
+import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
 const FoFMain = () => {
+  const navigate = useNavigate();
   const {
     assets,
     enableHaptic,
@@ -158,22 +160,6 @@ const FoFMain = () => {
     }
   };
 
-  const getPartnersData = async (token) => {
-    try {
-      const rewardsData = await fetchRewards(lang, country, token);
-      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
-      setGlobalRewards([
-        ...rewardsData?.rewards,
-        ...rewardsData?.claimedRewards,
-      ]);
-      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
-      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
-    } catch (error) {
-      console.log(error);
-      showToast("default");
-    }
-  };
-
   const getStreakBonus = async (token) => {
     try {
       const response = await claimStreakBonus(token);
@@ -213,51 +199,42 @@ const FoFMain = () => {
 
   // fetch all game data
   const getGameData = async (token) => {
-    try {
-      const response = await fetchGameStats(token);
-      const showAnmnt = await validateTutCookie(tele, "announcement08");
-      setGameData(response?.stats);
-      setQuestsData(response?.quests);
-      setTasks(response?.extraQuests);
-      setCountry(response?.user.country);
-      setUserData(response?.user);
-      setKeysData(response?.towerKeys);
-      if (response?.user?.streak?.isStreakActive) {
-        (async () => {
-          await getStreakBonus(token);
-        })();
-      } else if (!response?.user?.joiningBonus) {
-        setSection(9);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-        if (isTelegram) {
-          (async () => {
-            await getProfilePhoto(token);
-          })();
-        }
-      } else if (
-        response?.user?.joiningBonus &&
-        response?.user.isEligibleToClaim
-      ) {
-        setSection(8);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-      } else if (!showAnmnt) {
-        setSection(12);
-        setIsLoading(false);
-      } else {
-        setSection(0);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-      }
-    } catch (error) {
-      await deleteAuthCookie(tele);
-      console.log(error);
-      showToast("default");
+    const response = await fetchGameStats(token);
+    const showAnmnt = await validateTutCookie(tele, "announcement08");
+    setGameData(response?.stats);
+    setQuestsData(response?.quests);
+    setTasks(response?.extraQuests);
+    setCountry(response?.user.country);
+    setUserData(response?.user);
+    setKeysData(response?.towerKeys);
+
+    if (response?.user?.streak?.isStreakActive) {
+      await getStreakBonus(token);
+    } else if (!response?.user?.joiningBonus) {
+      setSection(9);
+      setTimeout(() => setIsLoading(false), 1000);
+      if (isTelegram) await getProfilePhoto(token);
+    } else if (
+      response?.user?.joiningBonus &&
+      response?.user.isEligibleToClaim
+    ) {
+      setSection(8);
+      setTimeout(() => setIsLoading(false), 1000);
+    } else if (!showAnmnt) {
+      setSection(12);
+      setIsLoading(false);
+    } else {
+      setSection(0);
+      setTimeout(() => setIsLoading(false), 1000);
     }
+  };
+
+  const getPartnersData = async (token) => {
+    const rewardsData = await fetchRewards(lang, country, token);
+    setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+    setGlobalRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+    setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
+    localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
   };
 
   const initializeGame = async () => {
@@ -265,8 +242,8 @@ const FoFMain = () => {
       const tokenExp = await getExpCookie(tele);
       const now = Date.now();
       let timeLeft = tokenExp - now;
-
       let token;
+
       if (timeLeft <= 0) {
         token = await handleRefreshToken();
         timeLeft = (await getExpCookie(tele)) - Date.now();
@@ -276,16 +253,26 @@ const FoFMain = () => {
 
       if (token) {
         setAuthToken(token);
-        await getGameData(token);
-        await getPartnersData(token);
-      }
 
-      refreshTimeoutRef.current = setTimeout(async () => {
-        await handleRefreshToken();
-      }, timeLeft - 10000);
+        try {
+          await getGameData(token);
+          await getPartnersData(token);
+        } catch (err) {
+          if (err?.response?.status === 401) {
+            await deleteAuthCookie(tele);
+            console.error("Unauthorized. Auth cookie deleted.");
+          } else {
+            console.error("Error during game init:", err);
+          }
+          showToast("default");
+        }
+
+        refreshTimeoutRef.current = setTimeout(async () => {
+          await handleRefreshToken();
+        }, timeLeft - 10000);
+      }
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error("Initialization error:", error);
       showToast("default");
     }
   };
@@ -299,6 +286,8 @@ const FoFMain = () => {
       setAuthToken(newToken);
       await setAuthCookie(tele, newToken);
     } catch (error) {
+      showToast("default");
+      navigate("/");
       console.log(error);
     }
   };

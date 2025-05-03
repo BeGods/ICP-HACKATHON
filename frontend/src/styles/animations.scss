@@ -459,6 +459,14 @@
   @include slideHeader(slide-header-right-animation, 100%, 0%, 42%);
   }
 
+.slide-ror-header-left{
+  @include slideHeader(slide-header-left-animation, -100%, 0%, -5%);
+}
+
+.slide-ror-header-right{
+  @include slideHeader(slide-header-right-animation, 100%, 0%, 5%);
+  }
+
 .slide-away-left{
   @include slide(slide-away-left-animation, 0%, -100%);
 }
@@ -729,6 +737,32 @@ $third-place-height: 17vh;
   cursor: pointer;
   text-align: center;
 }
+
+$myths: "greek", "celtic", "norse", "egyptian", "other", "white";
+
+@each $myth in $myths {
+  .pulse-drop-#{$myth} {
+    animation: pulse-drop-#{$myth} 1s infinite;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  @keyframes pulse-drop-#{$myth} {
+    0% {
+      transform: scale(0.99);
+      box-shadow: 0 0 0 0 var(--#{$myth}-color);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 20px var(--#{$myth}-color-transparent); 
+    }
+    100% {
+      transform: scale(0.99);
+      box-shadow: 0 0 0 0 var(--#{$myth}-color-transparent);
+    }
+  }
+}
+
 
 @keyframes pulse-orange {
   0% {

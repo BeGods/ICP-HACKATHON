@@ -388,7 +388,7 @@ export const showToast = (type) => {
       );
       break;
     case "onboard_success":
-      toast.error(
+      toast.success(
         <ToastMesg
           title={t("toasts.OnboardSuccess.success.title")}
           desc={t("toasts.OnboardSuccess.success.desc")}
@@ -426,7 +426,7 @@ export const showToast = (type) => {
       );
       break;
     case "voucher_success":
-      toast.error(
+      toast.success(
         <ToastMesg
           title={t("toasts.Voucher.success.title")}
           desc={t("toasts.Voucher.success.desc")}
@@ -463,7 +463,7 @@ export const showToast = (type) => {
         }
       );
     case "stake_success":
-      toast.error(
+      toast.success(
         <ToastMesg
           title={t("toasts.Stake.success.title")}
           desc={t("toasts.Stake.success.desc")}
@@ -519,7 +519,7 @@ export const showToast = (type) => {
       );
       break;
     case "success_avatar":
-      toast.error(
+      toast.success(
         <ToastMesg
           title={t("toasts.Profile.success.title")}
           desc={t("toasts.Profile.success.desc")}
@@ -556,6 +556,155 @@ export const showToast = (type) => {
         }
       );
       break;
+
+    case "item_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.RoRItem.success.title")}
+          desc={t("toasts.RoRItem.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "item_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.RoRItem.error.title")}
+          desc={t("toasts.RoRItem.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    case "join_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.JoinItem.success.title")}
+          desc={t("toasts.JoinItem.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "join_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.JoinItem.error.title")}
+          desc={t("toasts.JoinItem.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    case "sell_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.SellItem.success.title")}
+          desc={t("toasts.SellItem.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "sell_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.SellItem.error.title")}
+          desc={t("toasts.SellItem.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    case "vault_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.Vault.success.title")}
+          desc={t("toasts.Vault.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "vault_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Vault.error.title")}
+          desc={t("toasts.Vault.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
     default:
       toast.info(
         <ToastMesg

@@ -212,7 +212,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
           <div className="flex text-primary justify-center items-center w-1/4 h-full">
             <div className="relative flex justify-center items-center">
               <img
-                src={`/assets/ror-cards/240px-shard.${
+                src={`https://media.publit.io/file/BeGods/items/240px-shard.${
                   element === "aether"
                     ? typeCode !== "A"
                       ? "aether.black"
@@ -237,7 +237,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
           <div className="flex justify-center items-center w-1/4  h-full">
             <div className="relative flex justify-center items-center">
               <img
-                src={`/assets/ror-cards/240px-shard.aether.${
+                src={`https://media.publit.io/file/BeGods/items/240px-shard.${
                   element === "aether"
                     ? typeCode === "A"
                       ? "black"
@@ -257,7 +257,12 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
           </div>
         </div>
       ) : (
-        <RoRBtn left={1} right={1} handleClick={handleClaimPotion} />
+        <RoRBtn
+          message={"Close"}
+          left={1}
+          right={1}
+          handleClick={handleClaimPotion}
+        />
       )}
     </>
   );

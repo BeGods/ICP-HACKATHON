@@ -38,6 +38,8 @@ function App() {
   const [game, setGame] = useState("fof");
   const [lineWallet, setLineWallet] = useState(null);
   const [globalRewards, setGlobalRewards] = useState([]);
+  const [triggerConf, setTriggerConf] = useState(false);
+  const [activeReward, setActiveReward] = useState(null);
   const [enableHaptic, setEnableHaptic] = useState(true);
   const [isTelegram, setIsTelegram] = useState(false);
   const [enableSound, setEnableSound] = useState(true);
@@ -75,6 +77,10 @@ function App() {
     lineWallet,
     globalRewards,
     setGlobalRewards,
+    triggerConf,
+    setTriggerConf,
+    activeReward,
+    setActiveReward,
   };
 
   const syncAllCookies = async () => {

@@ -15,29 +15,41 @@ import { toast } from "react-toastify";
 import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import RoRBtn from "../../components/ror/RoRBtn";
-import { getActiveFeature } from "../../helpers/cookie.helper";
+import {
+  getActiveFeature,
+  handleClickHaptic,
+  setStorage,
+} from "../../helpers/cookie.helper";
 import MiscCard from "../../components/ror/MiscCard";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ handleClick }) => {
+const CenterChild = ({ handleClick, assets }) => {
   return (
     <div
       style={{
-        backgroundImage: `url('/assets/240px-librarian_head.jpg')`,
+        backgroundImage: `url(${assets.boosters.libHead})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
       onClick={handleClick}
-      className="flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2"
+      className="flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-50 left-1/2 -translate-x-1/2"
     ></div>
   );
 };
 
 const Book = () => {
-  const { gameData, setGameData, setShowCard, setShiftBg, assets, authToken } =
-    useContext(RorContext);
+  const {
+    gameData,
+    setGameData,
+    setShowCard,
+    setShiftBg,
+    assets,
+    authToken,
+    enableHaptic,
+  } = useContext(RorContext);
   const [page, setPage] = useState(0);
 
   const getMythOrder = (itemId) => {
@@ -143,8 +155,9 @@ const Book = () => {
           stats: updatdStats,
         };
       });
-      toast.success("Item claimed successfully");
+      showToast("item_success");
     } catch (error) {
+      showToast("item_error");
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
@@ -154,15 +167,17 @@ const Book = () => {
   };
 
   const showInfoCard = async () => {
+    handleClickHaptic(tele, enableHaptic);
     setShowCard(
       <MiscCard
         showInfo={true}
-        img={assets.boosters.gemologistCard}
-        icon="Gemologist"
+        img={assets.boosters.libCard}
+        icon="Librarian"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
+            message={"Close"}
             isNotPay={true}
             left={1}
             right={1}
@@ -180,7 +195,7 @@ const Book = () => {
 
   useEffect(() => {
     const checkFirstTime = async () => {
-      const isActive = await getActiveFeature(tele, "librarian01");
+      const isActive = await getActiveFeature(tele, "librarn01");
 
       if (!isActive) {
         setShowCard(
@@ -189,13 +204,14 @@ const Book = () => {
             img={assets.boosters.libCard}
             icon="Librarian"
             isMulti={false}
-            handleClick={() => handleActivate("librarian01", true)}
+            handleClick={() => handleActivate("librarn01", true)}
             Button={
               <RoRBtn
+                message={"Enter"}
                 isNotPay={true}
                 left={1}
                 right={1}
-                handleClick={() => handleActivate("librarian01", true)}
+                handleClick={() => handleActivate("librarn01", true)}
               />
             }
           />
@@ -207,7 +223,9 @@ const Book = () => {
 
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
       <div className="relative flex flex-col w-[80%] mt-[18dvh] h-[60dvh] mx-auto">
         <div
           className="absolute inset-0 z-0 filter-orb-white"
@@ -239,6 +257,8 @@ const Book = () => {
               <div
                 onClick={() => {
                   if (currItems == index) {
+                    handleClickHaptic(tele, enableHaptic);
+
                     setShowCard(
                       <RelicRwrdCrd
                         showBoots={false}
@@ -259,6 +279,8 @@ const Book = () => {
                         }
                         ButtonFront={
                           <RoRBtn
+                            itemId={`${myth}.${itemCode}`}
+                            message={"Enter"}
                             isNotPay={true}
                             left={1}
                             right={1}
@@ -268,6 +290,7 @@ const Book = () => {
                       />
                     );
                   } else {
+                    handleClickHaptic(tele, enableHaptic);
                     setCurrItems(index);
                   }
                 }}
@@ -297,17 +320,20 @@ const Book = () => {
 
         <div className="flex flex-col gap-y-4 justify-center items-center h-full">
           <div className="flex justify-center relative">
-            <div className="absolute mt-16 ml-3">
-              <Symbol isCard={true} showClaimEffect={() => {}} myth={myth} />
-            </div>
+            {currItems == 0 && (
+              <div className="absolute mt-16 ml-3">
+                <Symbol isCard={true} showClaimEffect={() => {}} myth={myth} />
+              </div>
+            )}
+
             <img
               src={
                 currItems == 0
                   ? "/assets/240px-book-.png"
                   : currItems == 1
-                  ? `/assets/ror-cards/240px-${myth}.artifact.common03_on.png`
+                  ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.common03.png`
                   : currItems == 2
-                  ? `/assets/ror-cards/240px-${myth}.artifact.starter01_on.png`
+                  ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.starter01.png`
                   : "/assets/240px-book-.png"
               }
               alt="book"

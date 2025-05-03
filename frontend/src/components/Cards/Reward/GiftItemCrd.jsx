@@ -1,12 +1,17 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const GiftItemCrd = ({ item }) => {
-  const { setActiveReward, setSection, enableHaptic } = useContext(FofContext);
+  const { setActiveReward, enableHaptic, game } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
+  const setSection =
+    game === "fof" ? fofContext.setSection : rorContext.setSection;
+  const redeemIdx = game === "fof" ? 6 : 14;
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -19,7 +24,7 @@ ${
         e.preventDefault();
         handleClickHaptic(tele, enableHaptic);
         setActiveReward(item);
-        setSection(6);
+        setSection(redeemIdx);
       }}
       onMouseDown={() => {
         setIsClicked(true);

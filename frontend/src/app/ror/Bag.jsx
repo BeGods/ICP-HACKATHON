@@ -5,17 +5,14 @@ import { updateVaultData } from "../../utils/api.ror";
 import RoRHeader from "../../components/layouts/Header";
 import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
-import DefaultBtn from "../../components/Buttons/DefaultBtn";
+import RoRBtn from "../../components/ror/RoRBtn";
 
-const CenterChild = ({ dropZoneRef, isDropActive }) => {
+const CenterChild = () => {
   return (
     <div
-      ref={dropZoneRef}
       className={`
             flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
-    >
-      <h1 className="">DROP HERE</h1>
-    </div>
+    ></div>
   );
 };
 
@@ -54,12 +51,12 @@ const Bag = (props) => {
           />
         }
       />
-      <div className="w-[80%] mt-[17.5dvh] h-[60dvh] mx-auto">
+      <div className="w-[80%] mt-[18dvh] h-[60dvh] mx-auto">
         <div className="grid grid-cols-3 auto-rows-fr gap-2 w-full h-full place-items-center">
           {[...gameData.bag].map((item) => (
             <div
               key={item._id}
-              className="relative w-full h-full max-w-[120px] max-h-[140px] flex flex-col items-center shadow-2xl rounded-md overflow-hidden"
+              className="relative w-full h-full flex flex-col justify-center items-center shadow-2xl rounded-md overflow-hidden"
             >
               <GridItem
                 hideBg={true}
@@ -83,9 +80,10 @@ const Bag = (props) => {
                         />
                       }
                       ButtonFront={
-                        <DefaultBtn
-                          message={2}
-                          activeMyth={1}
+                        <RoRBtn
+                          itemId={item.itemId}
+                          isNotPay={true}
+                          message={"Bag"}
                           handleClick={() => {
                             setShowCard(null);
                           }}
@@ -104,13 +102,17 @@ const Bag = (props) => {
           {Array.from({ length: 9 - gameData.bag.length }).map((_, index) => (
             <div
               key={`placeholder-${index}`}
-              className="relative w-full h-full max-w-[120px] max-h-[140px] flex flex-col items-center border border-white/10 shadow-2xl rounded-md overflow-hidden"
+              className="relative w-full max-w-[120px] flex flex-col opacity-50 items-center rounded-md overflow-hidden shadow-2xl"
             >
-              <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                <span className="text-iconLg font-symbols text-white">8</span>
-              </div>
-              <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
-                slot {gameData.bag.length - index + 1}
+              <div
+                className={`flex flex-col rounded-md border items-center w-full`}
+              >
+                <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
+                  <span className="text-iconLg font-symbols text-white">8</span>
+                </div>
+                <div className="w-full text-white text-sm text-center px-1 py-1 leading-tight truncate">
+                  slot{gameData.bag.length - index + 1}
+                </div>
               </div>
             </div>
           ))}

@@ -53,6 +53,27 @@ export const colorByMyth = {
   egyptian: "yellow"
 }
 
+export const bgLabel = {
+  earth01: "Forrest",
+  earth02: "Plain",
+  air01: "Deserts",
+  air02: "Highlands",
+  fire01: "Volcanos",
+  fire02: "Lava Fields",
+  water01: "Lakes",
+  water02: "Glaciers",
+  underworld01: "underworld",
+  underworld02: "underworld"
+}
+
+
+export const colorByElement = {
+  earth: "green",
+  fire: "red",
+  water: "blue",
+  air: "yellow"
+}
+
 export const defaultIcons = {
   quest: "j",
   automata: "o",

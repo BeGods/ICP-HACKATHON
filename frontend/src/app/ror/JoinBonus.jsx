@@ -99,7 +99,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--front absolute flex justify-center items-center">
                   <div className="flex justify-center items-center w-full relative  h-full">
                     <img
-                      src={`/assets/240px-gobcoin.png`}
+                      src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
                       alt="coin"
                       className="glow-box rounded-full"
                     />
@@ -111,7 +111,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--back flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute h-full glow-tap-white">
                     <img
-                      src={`/assets/ror-cards/240px-celtic.artifact.starter00_on.png`}
+                      src={`https://media.publit.io/file/BeGods/items/240px-celtic.artifact.starter00.png`}
                       alt="bag"
                     />
                   </div>

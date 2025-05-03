@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { RorContext } from "../../context/context";
 
-const SwipeArena = (props) => {
+const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
   const { battleData, setSwipes, swipes } = useContext(RorContext);
   const [swipeCount, setSwipeCount] = useState({ left: 0, right: 0 });
   const [touchStartX, setTouchStartX] = useState(null);
@@ -50,17 +50,49 @@ const SwipeArena = (props) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-full w-full">
+    <div className="flex relative flex-col mt-[6vh] justify-center items-center h-[65vh] w-full">
       <div
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="w-5/6  h-full "
+        className="w-[95%] h-full"
       >
-        <div>
+        {/* <div>
           <p>Left swipes: {swipeCount.left}</p>
           <p>Right swipes: {swipeCount.right}</p>
           <p>Swipe count: {swipes}</p>
+        </div> */}
+      </div>
+      <div className="flex items-center justify-between absolute bottom-0 w-full px-2 h-[6vh] -mb-[8vh]">
+        <div className="text-[5vh]">{roundTimeElapsed}s</div>
+        <div className="flex gap-x-4">
+          {[0, 1, 2].map((_, index) => {
+            const round = battleData.roundData[index];
+            const isOngoing = index + 1 === battleData.currentRound;
+
+            let styleClass = "text-white/20";
+            let extraClass = "";
+
+            if (round !== undefined) {
+              if (round.status === 1) {
+                styleClass = `text-${digMyth}-primary `; // win
+              } else if (round.status === 0) {
+                styleClass = "text-white"; // loss
+              }
+            } else if (isOngoing) {
+              styleClass = "text-white";
+              extraClass = `glow-text-${digMyth} text-[4vh]`; // ongoing
+            }
+
+            return (
+              <div
+                key={index}
+                className={`text-[4vh] font-symbols ${styleClass} ${extraClass}`}
+              >
+                5
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -80,8 +80,8 @@ const RedeemHeader = ({ pieces, name, bubble, action, currIndex, link }) => {
   }, []);
 
   return (
-    <div>
-      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+    <div className="w-full">
+      <div className="flex flex-col w-full gap-[5px] pt-[3.5vh]">
         {/* <div
           className={`text-sectionHead text-white -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >

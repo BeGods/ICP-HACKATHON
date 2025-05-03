@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { FofContext } from "../../../context/context";
+import { MainContext } from "../../../context/context";
 import { extractBotName, formatDate } from "../../../helpers/game.helper";
 
 const PartnerCard = ({ close, reward }) => {
-  const { assets, platform, isTelegram } = useContext(FofContext);
+  const { assets, platform, isTelegram } = useContext(MainContext);
 
   return (
     <div

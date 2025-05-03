@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext, RorContext } from "../../../context/context";
 import JigsawButton from "../../../components/Buttons/JigsawBtn";
 import JigsawImage from "../../../components/Cards/Jigsaw/JigsawCrd";
 import {
@@ -27,16 +27,24 @@ const Redeem = (props) => {
     activeReward,
     userData,
     authToken,
-    setShowCard,
     assets,
-    setSection,
-    rewards,
-    setRewards,
     triggerConf,
     setTriggerConf,
-    setGameData,
     isTelegram,
-  } = useContext(FofContext);
+    game,
+  } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
+  const setGameData =
+    game === "fof" ? fofContext.setGameData : rorContext.setGameData;
+  const setShowCard =
+    game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
+  const setRewards =
+    game === "fof" ? fofContext.setRewards : rorContext.setRewards;
+  const rewards = game === "fof" ? fofContext.rewards : rorContext.rewards;
+  const setSection =
+    game === "fof" ? fofContext.setSection : rorContext.setSection;
+  const onboardIdx = game === "fof" ? 11 : 15;
   const [showToggles, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const index = rewards.findIndex((item) => item.id === activeReward.id);
@@ -70,14 +78,14 @@ const Redeem = (props) => {
   };
 
   const handleClick = () => {
-    if (currReward.tokensCollected < 12) {
+    if (currReward.tokensCollected < 4) {
       const currLink = currReward.metadata.termsAndConditions;
       window.open(currLink, "_blank");
     } else if (currReward.partnerType == "playsuper") {
       if (userData.isPlaySuperVerified) {
         handleRedeen();
       } else {
-        setSection(11);
+        setSection(onboardIdx);
       }
     } else {
       if (currReward.isClaimed) {
@@ -184,7 +192,7 @@ const Redeem = (props) => {
     <div
       className={`flex flex-col ${
         isTelegram ? "tg-container-height" : "browser-container-height"
-      } overflow-hidden m-0`}
+      } overflow-hidden m-0 w-screen`}
     >
       <div
         style={{
@@ -282,7 +290,7 @@ const Redeem = (props) => {
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
                   isTelegram={isTelegram}
-                  grid={[3, 6]}
+                  grid={[2, 2]}
                   imageUrl={
                     currReward.partnerType == "playsuper"
                       ? `${currReward.metadata.campaignAssets.bannerView}`
@@ -290,7 +298,7 @@ const Redeem = (props) => {
                   }
                   activeParts={handleActiveParts(currReward.tokensCollected)}
                   handleClick={() => {
-                    if (currReward.tokensCollected === 12) {
+                    if (currReward.tokensCollected === 4) {
                       window.open(
                         `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.png`,
                         "_blank"
@@ -323,7 +331,7 @@ const Redeem = (props) => {
               </div>
             ) : (
               <JigsawButton
-                limit={12}
+                limit={4}
                 handleClick={handleClick}
                 activeMyth={4}
                 handleNext={() => {}}

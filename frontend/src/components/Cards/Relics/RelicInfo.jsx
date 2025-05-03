@@ -9,8 +9,11 @@ const RelicInfo = ({ handleFlip }) => {
 
   return (
     <div
+      style={{ userSelect: "none", WebkitUserDrag: "none" }}
+      onContextMenu={(e) => e.preventDefault()}
+      draggable={false}
       onClick={handleFlip}
-      className={`card__face card__face--back relative flex justify-center items-center`}
+      className={`card__face card__face--back relative flex select-none justify-center items-center`}
     >
       <div className="relative w-full h-full text-card">
         <img

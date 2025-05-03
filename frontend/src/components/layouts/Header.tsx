@@ -1,89 +1,213 @@
 import React, { useContext, useEffect, useState } from "react";
 import { RorContext } from "../../context/context";
+import ArtifactCrd from "../Cards/Reward/ArtiFactCrd";
+import { gameItems } from "../../utils/gameItems";
+import { ChevronRight } from "lucide-react";
+import { elements, mythSections } from "../../utils/constants.ror";
 
-const BottomChild = () => {
-  const { gameData, section } = useContext(RorContext);
-  const [showEffect, setShowEffect] = useState(true);
-
-  const sections = [
+const getSectionDetails = (
+  gobcoin,
+  totalShards,
+  showShards,
+  showGobCoins,
+  goBack
+) => {
+  return [
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "citadel",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
     }, // 0
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
-    }, // 0
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
+    }, // 1
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "bag",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
-    }, // 0
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
+    }, // 2
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "blacksmith",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
-    }, // 0
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
+    }, // 3
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "merchant",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
-    }, // 0
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
+    }, // 4
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "vault",
+      left: gobcoin,
+      right: "",
       hLeft: "Sessions",
-      hRight: "Coins",
+      hRight: "Back",
       lIcon: "A",
-      rIcon: "9",
-    }, // 0
+      rIcon: <ChevronRight />,
+      handleLeft: showGobCoins,
+      handleRight: goBack,
+    }, // 5
     {}, // 6,
     {}, // 7,
     {}, // 8,
     {}, // 9,
     {}, // 10,
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "apothecary",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
     }, // 0
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "library",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
     }, // 0
     {
-      left: gameData.stats.gobcoin,
-      right: gameData.stats.dailyQuota,
+      label: "tavern",
+      left: gobcoin,
+      right: totalShards,
       hLeft: "Sessions",
       hRight: "Coins",
       lIcon: "A",
-      rIcon: "9",
+      rIcon: "l",
+      handleLeft: showGobCoins,
+      handleRight: showShards,
     }, // 0
   ];
+};
+
+const BottomChild = () => {
+  const { gameData, section, setSection, setShowCard, shardReward } =
+    useContext(RorContext);
+  const [showEffect, setShowEffect] = useState(true);
+
+  const getMythOrder = (itemId) => {
+    const myth = itemId.split(".")[0];
+    return mythSections.indexOf(myth);
+  };
+
+  const mythShards = gameData.stats.mythologies.map((myth) => myth.shards);
+  const shardMap = [
+    ...mythShards,
+    gameData.stats.blackShards,
+    gameData.stats.whiteShards,
+  ];
+
+  const shards = [
+    "shard.fire",
+    "shard.earth",
+    "shard.water",
+    "shard.air",
+    "shard.black",
+    "shard.white",
+  ].map((item, idx) => ({
+    id: item,
+    name: `${shardMap[idx]} shards`,
+    fragmentId: 0,
+    isComplete: true,
+  }));
+
+  const coins = gameItems
+    .filter((itm) => /common01/.test(itm.id) || /starter0[5-9]/.test(itm.id))
+    .sort((a, b) => getMythOrder(a.id) - getMythOrder(b.id))
+    .map((item) => ({
+      ...item,
+      fragmentId: 0,
+      isComplete: true,
+    }));
+
+  const sumAllShards = () => {
+    const mythShards = gameData.stats.mythologies.reduce(
+      (sum, myth) => sum + (myth.shards || 0),
+      0
+    );
+
+    const totalShards =
+      mythShards + gameData.stats.whiteShards + gameData.stats.blackShards;
+
+    return totalShards;
+  };
+
+  const goBack = () => {
+    setSection(4);
+  };
+
+  const showShards = () => {
+    setShowCard(
+      <ArtifactCrd
+        category={0}
+        isCurrency={true}
+        items={shards}
+        initalIdx={0}
+        handleClick={() => setShowCard(null)}
+      />
+    );
+  };
+  const totalShards = sumAllShards();
+
+  const showGobCoins = () => {
+    setShowCard(
+      <ArtifactCrd
+        isCurrency={false}
+        category={0}
+        items={coins}
+        initalIdx={0}
+        handleClick={() => setShowCard(null)}
+      />
+    );
+  };
+
+  const sections = getSectionDetails(
+    gameData.stats.gobcoin,
+    totalShards,
+    showShards,
+    showGobCoins,
+    goBack
+  );
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -96,11 +220,14 @@ const BottomChild = () => {
   }, []);
 
   return (
-    <div className="flex h-button-primary mt-[2.5vh] absolute z-50 text-black font-symbols justify-between w-screen">
+    <div className="flex h-button-primary mt-[2.5vh] absolute z-20 text-black font-symbols justify-between w-screen">
       <div
-        onClick={() => {}}
-        className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+        onClick={() => sections[section].handleLeft()}
+        className="flex slide-ror-header-left header-shadow-black p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full"
       >
+        <div className="text-[8vw] font-medium font-fof px-1">
+          {sections[section].left}
+        </div>
         <div
           className={`flex ${
             showEffect && "pulse-text"
@@ -110,16 +237,30 @@ const BottomChild = () => {
         </div>
       </div>
       <div
-        onClick={() => {}}
-        className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+        onClick={() => sections[section].handleRight()}
+        className={`flex transition-all duration-500 slide-ror-header-right header-shadow-black p-0.5 justify-start items-center w-[32%] ${
+          shardReward ? `bg-${shardReward?.myth}-primary` : `bg-white`
+        } rounded-l-full`}
       >
         <div
           className={`flex font-symbols ${
             showEffect && "pulse-text"
-          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
+          } justify-center items-center  bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
-          {sections[section].rIcon}
+          <div className={`${shardReward && "tut-shake"}`}>
+            {sections[section].rIcon}
+          </div>
         </div>
+        {shardReward ? (
+          <div className="text-[8vw] flex items-center font-medium text-white px-1 font-fof">
+            <span className="text-[4vw] font-bold">+</span>
+            {shardReward?.count}
+          </div>
+        ) : (
+          <div className="text-[8vw] font-medium px-1 font-fof">
+            {sections[section].right}
+          </div>
+        )}
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
         <div className={`mr-auto slide-in-out-left`}>
@@ -134,8 +275,19 @@ const BottomChild = () => {
 };
 
 const RoRHeader = ({ CenterChild }) => {
+  const { section } = useContext(RorContext);
+  const sections = getSectionDetails(
+    0,
+    0,
+    () => {},
+    () => {}
+  );
+
   return (
     <div className="z-50">
+      <div className="absolute top-0 w-full flex justify-center z-[60] text-[5vw] uppercase glow-text-black font-bold text-white">
+        {sections[section].label}
+      </div>
       {CenterChild}
       <BottomChild />
     </div>

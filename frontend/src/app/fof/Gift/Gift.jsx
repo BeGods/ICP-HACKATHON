@@ -74,26 +74,6 @@ const Gift = () => {
           <GiftCarousel rewards={globalRewards} />
         </div>
       </div>
-
-      {/* Toggles */}
-      {/* {showToggles && (
-        <>
-          <ToggleLeft
-            minimize={2}
-            handleClick={() => {
-              setSection(3);
-            }}
-            activeMyth={4}
-          />
-          <ToggleRight
-            minimize={2}
-            handleClick={() => {
-              setSection(3);
-            }}
-            activeMyth={4}
-          />
-        </>
-      )} */}
     </div>
   );
 };

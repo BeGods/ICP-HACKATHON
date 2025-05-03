@@ -19,29 +19,29 @@ import gsap from "gsap";
 import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import DefaultBtn from "../../components/Buttons/DefaultBtn";
-import { mythSections } from "../../utils/constants.ror";
+import { bgLabel, mythSections } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
+import RoRBtn from "../../components/ror/RoRBtn";
 
 const tele = window.Telegram?.WebApp;
 
-const images = [
-  "/assets/explore/1280px-ror.celtic.earth01_wide.jpeg",
-  "/assets/explore/1280px-ror.celtic.earth02_wide.jpeg",
-  "/assets/explore/1280px-ror.egyptian01_wide.jpeg",
-  "/assets/explore/1280px-ror.egyptian02_wide.jpeg",
-  "/assets/explore/1280px-ror.greek.fire01_wide.jpeg",
-  "/assets/explore/1280px-ror.greek02_wide.jpeg",
-  "/assets/explore/1280px-ror.norse01_wide.jpeg",
-  "/assets/explore/1280px-ror.white.tower_wide.jpeg",
-];
-
-const CenterChild = ({ content, mythology }) => {
+const CenterChild = ({ assets, content, mythology, location }) => {
   return (
     <div
       className={`
-            flex justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary text-[20vw] rounded-full bg-black border border-${mythology}-primary top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary  rounded-full bg-black border border-${mythology}-primary top-0 z-20 left-1/2 -translate-x-1/2`}
     >
-      {content}
+      <img
+        src={assets.uxui.baseorb}
+        alt="base-orb"
+        className={`filter-orbs-${mythology} w-full h-full rounded-full pointer-events-none`}
+      />
+      <div className="absolute top-0 w-full flex justify-center z-[60] text-[5vw] uppercase glow-text-black font-bold text-white">
+        {bgLabel[location] ?? "Explore"}
+      </div>
+      <div className="absolute flex justify-center items-center inset-0 text-[16vw]">
+        {content}
+      </div>
     </div>
   );
 };
@@ -60,6 +60,8 @@ const Explore = () => {
     setSection,
     setShowCard,
     isTelegram,
+    assets,
+    setShardReward,
     rewards,
     setRewards,
     setActiveReward,
@@ -70,7 +72,7 @@ const Explore = () => {
   const [countDown, setCountDown] = useState(5);
   const [showItem, setShowItem] = useState(false);
   const [startPlay, setStartPlay] = useState(false);
-  const [mythBg, setMythBg] = useState("");
+  const [mythBg, setMythBg] = useState(null);
   const [roundTimeElapsed, setRoundTimeElapsed] = useState(10);
   const [digMyth, setDigMyth] = useState(null);
   const [isInside, setIsInside] = useState(false);
@@ -87,6 +89,19 @@ const Explore = () => {
     holdStartTime: 0,
     holdEndTime: 0,
   });
+
+  const images = [
+    "celtic.earth01",
+    "celtic.earth02",
+    "egyptian.air01",
+    "egyptian.air02",
+    "greek.fire01",
+    "greek.fire02",
+    "norse.water01",
+    "norse.water02",
+    "underworld01",
+    "underworld02",
+  ];
 
   const hasItemInBag = (itemId) => gameData?.pouch?.includes(itemId);
 
@@ -212,7 +227,13 @@ const Explore = () => {
     }
 
     if (currStage === 1) {
-      return <SwipeArena />;
+      return (
+        <SwipeArena
+          digMyth={digMyth}
+          roundTimeElapsed={roundTimeElapsed}
+          battleData={battleData}
+        />
+      );
     }
 
     if (currStage === 2) {
@@ -231,7 +252,7 @@ const Explore = () => {
                   }
                 >
                   <img
-                    src={`/assets/ror-cards/240px-${digMyth?.toLowerCase()}.artifact.common03_on.png`}
+                    src={`https://media.publit.io/file/BeGods/items/240px-${digMyth?.toLowerCase()}.artifact.common03.png`}
                     alt="item"
                     className="w-[14vw] scale-point"
                   />
@@ -249,14 +270,15 @@ const Explore = () => {
                   }
                 >
                   <img
-                    src={`/assets/ror-cards/240px-${digMyth?.toLowerCase()}.artifact.starter01_on.png`}
+                    src={`https://media.publit.io/file/BeGods/items/240px-${digMyth?.toLowerCase()}.artifact.starter01.png`}
                     alt="item"
                     className="w-[14vw] scale-point"
                   />
                 </div>
               )}
           </div>
-          <div className="text-[8vw]">
+
+          <div className="text-[20vw] reward-pop-in text-gold text-black-contour uppercase">
             {swipes >= gameData.stats.competelvl ? "Won" : "Lost"}
           </div>
         </div>
@@ -356,11 +378,22 @@ const Explore = () => {
               />
             }
             ButtonFront={
-              <DefaultBtn
-                message={2}
-                activeMyth={1}
+              <RoRBtn
+                isNotPay={true}
+                message={"claim"}
+                itemId={id}
+                disable={false}
                 handleClick={() => {
                   setShowCard(null);
+                  setShardReward({
+                    myth:
+                      parsedReward?.shardType?.toLowerCase() ??
+                      digMyth?.toLowerCase(),
+                    count: parsedReward?.shards,
+                  });
+                  setTimeout(() => {
+                    setShardReward(null);
+                  }, 2000);
                 }}
               />
             }
@@ -368,7 +401,15 @@ const Explore = () => {
         );
       } else {
         if (parsedReward?.shards > 0) {
-          toast.success(`You earned ${parsedReward?.shards} shards`);
+          // toast.success(`You earned ${parsedReward?.shards} shards`);
+          setShardReward({
+            myth:
+              parsedReward?.shardType?.toLowerCase() ?? digMyth?.toLowerCase(),
+            count: parsedReward?.shards,
+          });
+          setTimeout(() => {
+            setShardReward(null);
+          }, 2000);
         }
       }
 
@@ -387,30 +428,28 @@ const Explore = () => {
           "artifact.treasure01",
         ];
 
-        if (parsedReward.isDragon) {
+        if (parsedReward?.isDragon) {
           updatedBagItems = [];
         } else if (
-          parsedReward.fragment &&
-          ignoredItems.some((item) =>
-            parsedReward.fragment.itemId.includes(item)
+          parsedReward?.fragment &&
+          ignoredItems?.some((item) =>
+            parsedReward?.fragment?.itemId?.includes(item)
           )
         ) {
           updatedBagItems = [...prevItems.bag];
-          updatedPouch = [...prevItems.pouch, parsedReward.fragment.itemId];
+          updatedPouch = [...prevItems.pouch, parsedReward?.fragment.itemId];
         } else {
           updatedBagItems = shouldAddFragment
-            ? [...prevItems.bag, parsedReward.fragment]
+            ? [...prevItems.bag, parsedReward?.fragment]
             : [...prevItems.bag];
         }
 
         const updatedMythologies = prevItems.stats.mythologies.map(
           (mythology) => {
-            if (mythology.name === rewardResult.reward.shardType) {
-              console.log(mythology.name);
-
+            if (mythology?.name === rewardResult?.reward?.shardType) {
               return {
                 ...mythology,
-                shards: mythology.shards + parsedReward.shards,
+                shards: mythology.shards + parsedReward?.shards,
               };
             }
 
@@ -423,11 +462,9 @@ const Explore = () => {
           rewardResult.reward.shardType == "blackShards" ||
           rewardResult.reward.shardType == "whiteShards"
         ) {
-          console.log(rewardResult.reward.shardType);
-
           prevItems.stats[rewardResult.reward.shardType] =
             prevItems.stats[rewardResult.reward.shardType] +
-            parsedReward.shards;
+            parsedReward?.shards;
         }
 
         return {
@@ -451,6 +488,7 @@ const Explore = () => {
           currentRound: 1,
           roundData: [],
         });
+        setMythBg(null);
         setIsInside(false);
         setSwipes(0);
         setMinimize(0);
@@ -459,7 +497,6 @@ const Explore = () => {
             ...prev,
             stats: {
               ...prev.stats,
-              isUnderWorldActive: false,
               dailyQuota: prev.stats.dailyQuota - (prev?.isBootClaimed ? 0 : 1),
             },
           };
@@ -797,13 +834,13 @@ const Explore = () => {
         {!mythBg ? (
           <div className="background-container transition-all duration-300 blur-[2px]">
             <img
-              src={images[prevIndex]}
+              src={`/assets/locations/1280px-ror.${images[prevIndex]}_wide.jpg`}
               key={images[prevIndex]}
               className="bg-image bg-image--prev"
               alt="background previous"
             />
             <img
-              src={images[currentIndex]}
+              src={`/assets/locations/1280px-ror.${images[currentIndex]}_wide.jpg`}
               key={images[currentIndex]}
               className="bg-image bg-image--current"
               alt="background current"
@@ -812,7 +849,7 @@ const Explore = () => {
         ) : (
           <div className="background-container transition-all duration-300">
             <img
-              src={mythBg}
+              src={`/assets/locations/1280px-ror.${mythBg}_wide.jpg`}
               className="bg-image bg-image--current"
               alt="background current"
             />
@@ -822,13 +859,10 @@ const Explore = () => {
       <RoRHeader
         CenterChild={
           <CenterChild
+            assets={assets}
+            location={mythBg?.split(".")[1] ?? "Explore"}
             mythology={digMyth?.toLowerCase()}
-            content={
-              <span className="pt-4">
-                {roundTimeElapsed}
-                {isInside && "*"}
-              </span>
-            }
+            content={gameData.stats.dailyQuota}
           />
         }
       />
@@ -908,3 +942,5 @@ const Explore = () => {
 };
 
 export default Explore;
+
+// reward-pop-in
