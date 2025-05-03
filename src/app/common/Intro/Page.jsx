@@ -275,44 +275,49 @@ const IntroPage = (props) => {
       (async () => {
         setIsTelegram(isTg);
 
-        if (
-          platform === "macos" ||
-          platform === "windows" ||
-          platform === "tdesktop" ||
-          platform === "web" ||
-          platform === "weba"
-        ) {
+        const isTgDesktopPlatform = [
+          "macos",
+          "windows",
+          "tdesktop",
+          "web",
+          "weba",
+        ].includes(platform);
+        const isUnknownBrowser =
+          platform === "unknown" && !oneWaveParam && !liff.isInClient();
+
+        if (isTgDesktopPlatform) {
           setIsTgDesktop(true);
           setIsBrowser(false);
-        } else if (
-          platform === "unknown" &&
-          !oneWaveParam &&
-          !liff.isInClient()
-        ) {
+          return;
+        }
+
+        if (isUnknownBrowser) {
           setIsBrowser(true);
+          return;
+        }
+
+        setIsBrowser(false);
+
+        const tokenExpiry = await getExpCookie(tele);
+
+        console.log(tokenExpiry);
+
+        if (!tokenExpiry) {
+          console.log("No token found. Authenticating...");
+          await handleAuth(isTg);
         } else {
-          setIsBrowser(false);
-
-          if (liff.isInClient()) {
-            setIsLoading(true);
-            await handleAuth(isTg);
-          } else {
-            const tokenExpiry = await getExpCookie(tele);
-
-            if (tokenExpiry) {
-              try {
-                await isExistingTknValid(tokenExpiry);
-              } catch (error) {
-                if (error?.status === 401 || error?.response?.status === 401) {
-                  console.warn("Refresh token expired, proceeding with login");
-                } else {
-                  console.warn(
-                    "Unexpected error occurred, proceeding with login anyway"
-                  );
-                }
-                await handleAuth(isTg);
-              }
+          try {
+            await isExistingTknValid(tokenExpiry);
+          } catch (error) {
+            if (error?.status === 401 || error?.response?.status === 401) {
+              console.warn(
+                "Refresh token expired or invalid. Re-authenticating..."
+              );
+              await handleAuth(isTg);
             } else {
+              console.error(
+                "Unexpected validation error. Re-authenticating..."
+              );
               await handleAuth(isTg);
             }
           }
@@ -333,6 +338,10 @@ const IntroPage = (props) => {
   const handleUpdateIdx = (num) => {
     setActiveIndex(num);
   };
+
+  // useEffect(() => {
+  //   (async () => await deleteAuthCookie(tele))();
+  // }, []);
 
   return (
     <div

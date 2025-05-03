@@ -24,7 +24,7 @@ export const useMaskStyle = (itemId, length, hiddenFragmentIds = []) => {
     };
 
     const gradient = getLinearGradient();
-    const onUrl = `/assets/ror-cards/240px-${itemId}_on.png`;
+    const onUrl = `https://media.publit.io/file/BeGods/items/240px-${itemId}.png`;
 
     return (
       <div className="absolute inset-0 z-20 pointer-events-none">
@@ -64,7 +64,7 @@ export const useMaskStyle = (itemId, length, hiddenFragmentIds = []) => {
           <img
             src={onUrl}
             alt="relic-colored"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain select-none"
           />
         </div>
       </div>

@@ -13,19 +13,19 @@ const Gacha = () => {
   const claimDailyBonus = async () => {
     try {
       const response = await fetchDailyBonus(authToken);
+      const itemId = response.reward;
 
-      setItem(response.reward);
+      setItem(itemId);
 
-      if (response && response.reward) {
-        const itemId = response.reward;
+      if (response && itemId) {
         let coins = 0;
         let updateField = null;
 
-        if (/common0[1-4]/.test(itemId)) {
+        if (/common01/.test(itemId)) {
           // gold coin
           coins = 2;
           updateField = "claimedItems";
-        } else if (/common0[5-9]/.test(itemId)) {
+        } else if (/starter0[3-9]/.test(itemId)) {
           // silver coin
           coins = 1;
           updateField = "claimedItems";
@@ -80,9 +80,9 @@ const Gacha = () => {
       } w-screen justify-center font-fof items-center bg-black`}
     >
       <div
-        className="absolute inset-0 w-full h-full opacity-80 z-0"
+        className="absolute inset-0 w-full h-full opacity-70 z-0"
         style={{
-          background: `url(${assets.uxui.rorspash}) no-repeat center / cover`,
+          background: `url(${assets.uxui.rorsplash}) no-repeat center / cover`,
         }}
       ></div>
       <div className="flex flex-col w-full h-full z-50 items-center pt-4">
@@ -100,11 +100,12 @@ const Gacha = () => {
           } w-screen flex justify-center items-center`}
         >
           <Scratch
+            image={assets.uxui.info}
             item={item}
             handleComplete={() => {
               setTimeout(() => {
                 setSection(0);
-              }, 3000);
+              }, 5000);
             }}
           />
         </div>

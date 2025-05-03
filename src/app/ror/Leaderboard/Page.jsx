@@ -1,22 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
-import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api.fof";
 import { RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
-import {
-  formatRankOrbs,
-  timeRemainingForHourToFinishUTC,
-} from "../../../helpers/leaderboard.helper";
+import { timeRemainingForHourToFinishUTC } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import UserInfoCard from "../../../components/Cards/Info/UserInfoCrd";
-import { Crown } from "lucide-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../../utils/country";
-import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
-import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { rankPositions } from "../../../utils/constants.fof";
+import { fetchLeaderboard } from "../../../utils/api.ror";
 
 const tele = window.Telegram?.WebApp;
 
@@ -43,7 +37,7 @@ const UserAvatar = ({ user, index }) => {
         <img
           src={
             user?.profileImage
-              ? `https://media.publit.io/file/UserAvatars/${user?.profileImage}.jpg`
+              ? `${user?.profileImage}`
               : `${assets.uxui.baseorb}`
           }
           alt="base-orb"
@@ -80,6 +74,7 @@ const Leaderboard = (props) => {
     gameData,
     setShowCard,
     setUserData,
+    isTelegram,
   } = useContext(RorContext);
   const [activeTab, setActiveTab] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -98,9 +93,43 @@ const Leaderboard = (props) => {
   };
   const [animationKey, setAnimationKey] = useState(0);
 
+  const determineLevel = () => {
+    switch (true) {
+      case userData.coinRank <= 12:
+        return "gold";
+      case userData.coinRank <= 99:
+        return "silver";
+      case userData.coinRank <= 333:
+        return "bronze";
+      case userData.coinRank <= 666:
+        return "wood";
+      default:
+        return "wood";
+    }
+  };
+
+  const determineFinalLevel = (rank) => {
+    switch (true) {
+      case rank <= 12:
+        return "diamond";
+      case rank <= 99:
+        return "ruby";
+      case rank <= 333:
+        return "emberald";
+      case rank <= 666:
+        return "topaz";
+      default:
+        return "topaz";
+    }
+  };
+
   const getLeaderboardData = async (pageNum) => {
     try {
-      const response = await fetchLeaderboard(authToken, pageNum);
+      const response = await fetchLeaderboard(
+        authToken,
+        userData.coinRank,
+        pageNum
+      );
 
       if (response.leaderboard.length > 0) {
         sethallOfFameData(response.hallOfFame);
@@ -111,7 +140,6 @@ const Leaderboard = (props) => {
       } else {
         setHasMore(false);
       }
-
       // setUserData((prev) => {
       //   return {
       //     ...prev,
@@ -132,7 +160,7 @@ const Leaderboard = (props) => {
 
   const handleClaimReward = async () => {
     try {
-      const response = await updateRewardStatus(authToken);
+      // const response = await updateRewardStatus(authToken);
       setUserData((prev) => {
         return {
           ...prev,
@@ -184,26 +212,21 @@ const Leaderboard = (props) => {
   }, []);
 
   useEffect(() => {
-    if (!userData.stakeOn) {
-      const interval = setInterval(() => {
-        setFlipped((prev) => !prev);
-      }, 4000);
-      return () => clearInterval(interval);
-    } else {
-      setFlipped(false);
-    }
+    // if (!userData.stakeOn) {
+    //   const interval = setInterval(() => {
+    //     setFlipped((prev) => !prev);
+    //   }, 4000);
+    //   return () => clearInterval(interval);
+    // } else {
+    //   setFlipped(false);
+    // }
   }, []);
 
   return (
     <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        height: "100%",
-        width: "100vw",
-      }}
-      className="flex flex-col h-screen overflow-hidden m-0"
+      className={`flex ${
+        isTelegram ? "tg-container-height" : "browser-container-height"
+      } flex-col overflow-hidden w-screen m-0`}
     >
       <div
         style={{
@@ -219,7 +242,7 @@ const Leaderboard = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full blur-[3px]`}
           style={{
-            backgroundImage: `url(${assets.uxui.intro})`,
+            backgroundImage: `url(${assets.uxui.rorsplash})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -232,9 +255,9 @@ const Leaderboard = (props) => {
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            setSection(3);
+            setSection(6);
           }}
-          className="flex slide-inside-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+          className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
             0
@@ -246,10 +269,10 @@ const Leaderboard = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(0);
           }}
-          className="flex slide-inside-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+          className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
-            z
+            "
           </div>
         </div>
         <div
@@ -257,10 +280,7 @@ const Leaderboard = (props) => {
           className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase"
         >
           <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
-          <div className={`ml-auto slide-in-out-right`}>
-            {" "}
-            {t("sections.forges")}
-          </div>
+          <div className={`ml-auto slide-in-out-right`}>Citadel</div>
         </div>
       </div>
 
@@ -282,33 +302,29 @@ const Leaderboard = (props) => {
                   !isFinished ? "bg-black text-white" : "text-black"
                 } h-full font-symbols rounded-full w-1/2 text-[24px]`}
               >
-                r
+                $
               </div>
               <div
-                className={`flex justify-center items-center ${
+                className={`flex font-symbols justify-center items-center ${
                   isFinished ? "bg-black text-white" : "text-black"
-                } h-full uppercase rounded-full w-1/2 py-1`}
+                } h-full uppercase rounded-full w-1/2 py-1 text-[24px]`}
               >
-                <Crown size={"28px"} strokeWidth={"3px"} />
+                %
               </div>
             </div>
           </div>
           <div
             onClick={() => {
               handleClickHaptic(tele, enableHaptic);
-              if (gameData.blackOrbs < 1) {
-                showToast("stake_error");
-              } else if (
-                !isFinished &&
-                userData.overallRank !== 0 &&
-                !userData.stakeOn
-              ) {
-                setShowCard(
-                  <StakeCrd
-                    profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
-                  />
-                );
-              }
+              // if (gameData.blackOrbs < 1) {
+              //   showToast("stake_error");
+              // } else if (
+              //   !isFinished &&
+              //   userData.coinRank !== 0 &&
+              //   !userData.stakeOn
+              // ) {
+              //   setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
+              // }
             }}
             className="button__face button__face--back z-50 flex justify-center items-center"
           >
@@ -318,7 +334,7 @@ const Leaderboard = (props) => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center text-white text-black-contour mt-2">
+        <div className="w-full flex justify-center text-center text-white text-black-contour mt-2">
           ({t(`note.text`)} {updateTimeLeft.minutes}min)
         </div>
       </div>
@@ -354,6 +370,15 @@ const Leaderboard = (props) => {
                       }}
                       className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
+                      <div
+                        className={`absolute text-black-contour font-symbols text-${determineFinalLevel(
+                          index + 1
+                        )} text-[24px] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
+                      >
+                        %
+                      </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
@@ -397,12 +422,21 @@ const Leaderboard = (props) => {
                       className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
                     >
                       <div
+                        className={`absolute text-black-contour font-symbols text-${determineLevel(
+                          item.coinRank
+                        )} text-[24px] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
+                      >
+                        {userData.coinRank > 333 ? "&" : "$"}
+                      </div>
+                      <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
-                        {rankPositions[index].pos}
+                        {item.coinRank}
                       </div>
                       <div className="absolute text-white -bottom-1 text-tertiary font-normal">
-                        {formatRankOrbs(item.totalOrbs)}
+                        {item.totalGobcoin}
                       </div>
                       <UserAvatar user={item} index={index} />
                     </div>
@@ -416,89 +450,84 @@ const Leaderboard = (props) => {
 
       {/* Leaderboard list */}
       {isFinished ? (
-        <>
-          {activeTab ? (
-            <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
-              <div className="flex text-gold justify-between text-secondary uppercase items-center w-[90%] mx-auto py-3">
-                <h1>
-                  <span className="pr-6">#</span>
-                  {t(`profile.name`)}
-                </h1>
-                <h1>{t(`profile.country`)}</h1>
-              </div>
-              <div
-                id="scrollableDiv"
-                className="pb-[9vh] overflow-auto disable-scroll-bar"
-              >
-                {paddedHallOfFameData.slice(3).map((item, index) => {
-                  const { username, profileImage, id, isEmpty } = item;
+        <div className="flex z-50 flex-col w-full text-medium h-[49vh] bg-white text-black rounded-t-primary">
+          <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
+            <h1>
+              <span className="pr-12">#</span>
+              {t(`profile.name`)}
+            </h1>
 
-                  const countryFlag =
-                    countries.find((country) => country.code == item.country)
-                      .flag || "🌐";
+            <h1>{t(`profile.country`)}</h1>
+          </div>
+          <div
+            id="scrollableDiv"
+            className="pb-[9vh] overflow-auto disable-scroll-bar"
+          >
+            {paddedHallOfFameData.slice(3).map((item, index) => {
+              const { username, profileImage, id, isEmpty } = item;
 
-                  return (
-                    <div key={id || index} className="leaderboard-item">
-                      <LeaderboardItem
-                        isEmpty={isEmpty || false}
-                        rank={index}
-                        name={username}
-                        totalOrbs={countryFlag}
-                        imageUrl={profileImage}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
-                <div className="flex border border-gray-400 rounded-primary bg-black justify-center w-full">
-                  <div className="flex text-white justify-center items-center w-[20%] h-full">
-                    {userData.overallRank}
-                  </div>
-                  <div className="flex gap-3 items-center w-full">
-                    <div className="h-[35px] w-[35px]">
-                      {userData.avatarUrl ? (
-                        <img
-                          src={userData.avatarUrl}
-                          alt="profile-image"
-                          className="rounded-full"
-                        />
-                      ) : (
-                        <Avatar
-                          name={userData.username}
-                          className="h-full w-full"
-                          profile={0}
-                          color={avatarColor}
-                        />
-                      )}
-                    </div>
-                    <h1 className="text-white">
-                      {userData.username.length > 20
-                        ? userData.username.slice(0, 20)
-                        : userData.username}
-                    </h1>
-                  </div>
-                  <div className="flex flex-col text-white justify-center items-center text-tertiary w-[25%] h-full">
-                    <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
-                  </div>
+              const countryFlag =
+                countries.find((country) => country.code == item.country)
+                  .flag || "🌐";
+
+              return (
+                <div key={id || index} className="leaderboard-item">
+                  <LeaderboardItem
+                    colorType={determineFinalLevel(index + 1)}
+                    isKOL={true}
+                    isEmpty={isEmpty || false}
+                    rank={index + 4}
+                    name={username}
+                    totalOrbs={countryFlag}
+                    imageUrl={profileImage}
+                  />
                 </div>
+              );
+            })}
+          </div>
+          <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
+            <div className="flex border border-gray-400 rounded-primary bg-white justify-center w-full">
+              <div className="flex text-black justify-center items-center w-[20%] h-full">
+                {userData.coinRank}
+              </div>
+              <div className="flex gap-3 items-center  w-full">
+                <div className="h-[35px] w-[35px]">
+                  {userData.avatarUrl ? (
+                    <img
+                      src={userData.avatarUrl}
+                      alt="profile-image"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <Avatar
+                      name={userData.username.charAt(0).toUpperCase()}
+                      className="h-full w-full"
+                      profile={0}
+                      color={avatarColor}
+                    />
+                  )}
+                </div>
+                <h1 className="text-black">
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
+                </h1>
+              </div>
+              <div className="flex flex-col text-black justify-center items-end text-tertiary w-[30%] mr-4 h-full">
+                <h1>{userData.gobcoin}</h1>
               </div>
             </div>
-          ) : (
-            <div className="flex items-end w-full text-medium h-[60vh] bottom-0 text-black rounded-t-primary">
-              <div className="w-full text-center text-[11vw] ">COMING SOON</div>
-            </div>
-          )}
-        </>
+          </div>
+        </div>
       ) : (
-        <div className="flex flex-col w-full text-medium h-[52vh] bg-black text-black rounded-t-primary">
+        <div className="flex z-50 flex-col w-full text-medium h-[49vh] bg-black text-black rounded-t-primary">
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
               {t(`profile.name`)}
             </h1>
 
-            <h1>{t(`keywords.orbs`)}</h1>
+            <h1>coin(s)</h1>
           </div>
           <div
             id="scrollableDiv"
@@ -531,9 +560,9 @@ const Leaderboard = (props) => {
                 >
                   <LeaderboardItem
                     key={index}
-                    rank={index + 4}
+                    rank={item.coinRank}
                     name={item.username}
-                    totalOrbs={formatRankOrbs(item.totalOrbs)}
+                    totalOrbs={item.totalGobcoin}
                     imageUrl={item.profileImage}
                     prevRank={item.prevRank}
                   />
@@ -543,33 +572,29 @@ const Leaderboard = (props) => {
           </div>
           <div className="flex px-1 pb-1 justify-center absolute bottom-1 w-full h-[8vh]">
             <div
-              onClick={() => {
-                if (gameData.blackOrbs < 1) {
-                  showToast("stake_error");
-                } else if (
-                  !isFinished &&
-                  userData.overallRank !== 0 &&
-                  !userData.stakeOn
-                ) {
-                  setShowCard(
-                    <StakeCrd
-                      profileImg={`https://media.publit.io/file/UserAvatars/${userData.avatarUrl}.jpg`}
-                    />
-                  );
-                }
-              }}
+              // onClick={() => {
+              //   if (gameData.blackOrbs < 1) {
+              //     showToast("stake_error");
+              //   } else if (
+              //     !isFinished &&
+              //     userData.coinRank !== 0 &&
+              //     !userData.stakeOn
+              //   ) {
+              //     setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
+              //   }
+              // }}
               className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
             >
               <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
-                <h1>{userData.overallRank}</h1>
-                <div>
+                <h1>{userData.coinRank}</h1>
+                {/* <div>
                   {userData.stakeOn == "+" && (
                     <h1 className="text-green-500 text-[18px]">▲</h1>
                   )}
                   {userData.stakeOn == "-" && (
                     <h1 className="text-red-500 text-[18px]">▼</h1>
                   )}
-                </div>
+                </div> */}
               </div>
               <div className="flex gap-3 items-center w-full">
                 <div className="h-[35px] w-[35px]">
@@ -581,7 +606,7 @@ const Leaderboard = (props) => {
                     />
                   ) : (
                     <Avatar
-                      name={userData.username}
+                      name={userData.username.charAt(0).toUpperCase()}
                       className="h-full w-full"
                       profile={0}
                       color={avatarColor}
@@ -595,7 +620,7 @@ const Leaderboard = (props) => {
                 </h1>
               </div>
               <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">
-                {/* <h1>{formatRankOrbs(userData.totalOrbs)}</h1> */}
+                <h1>{userData.gobcoin}</h1>
               </div>
             </div>
           </div>

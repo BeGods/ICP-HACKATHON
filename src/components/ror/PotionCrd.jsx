@@ -21,7 +21,7 @@ const PotionCard = ({ potion }) => {
               className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white`}
             >
               <img
-                src={`/assets/ror-cards/240px-shard.aether.white.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-shard.white.png`}
                 alt="shards"
                 className=" max-w-orb "
               />
@@ -35,7 +35,7 @@ const PotionCard = ({ potion }) => {
               className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white`}
             >
               <img
-                src={`/assets/ror-cards/240px-shard.aether.black.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-shard.black.png`}
                 alt="shards"
                 className=" max-w-orb "
               />
@@ -53,7 +53,7 @@ const PotionCard = ({ potion }) => {
                   className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name?.toLowerCase()}`}
                 >
                   <img
-                    src={`/assets/ror-cards/240px-shard.${mythElementNames[
+                    src={`https://media.publit.io/file/BeGods/items/240px-shard.${mythElementNames[
                       item.name
                     ]?.toLowerCase()}.png`}
                     alt="shards"
@@ -75,7 +75,7 @@ const PotionCard = ({ potion }) => {
               className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white`}
             >
               <img
-                src={`/assets/240px-gobcoin.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
                 alt="shards"
                 className=" max-w-orb"
               />
@@ -100,7 +100,7 @@ const PotionCard = ({ potion }) => {
             <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
               <div className="relative m-2 flex justify-center items-center w-[50px]">
                 <img
-                  src={`/assets/240px-gobcoin.png`}
+                  src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
                   alt="relic"
                   className="w-full"
                 />
@@ -122,7 +122,7 @@ const PotionCard = ({ potion }) => {
               <div className="relative w-[240px] h-[240px] flex justify-center items-center">
                 <div className="relative w-full h-full">
                   <img
-                    src={`/assets/ror-cards/240px-${potion}_on.png`}
+                    src={`https://media.publit.io/file/BeGods/items/240px-${potion}.png`}
                     alt="relic"
                     className="z-10 w-full h-full object-contain"
                   />

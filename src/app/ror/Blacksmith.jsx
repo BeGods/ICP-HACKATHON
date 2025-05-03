@@ -10,29 +10,41 @@ import {
 } from "../../components/Common/SectionToggles";
 import MiscCard from "../../components/ror/MiscCard";
 import RoRBtn from "../../components/ror/RoRBtn";
-import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
+import {
+  getActiveFeature,
+  handleClickHaptic,
+  setStorage,
+} from "../../helpers/cookie.helper";
+import { calculateRemainingTime } from "../../helpers/ror.timers.helper";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ handleClick }) => {
+const CenterChild = ({ handleClick, assets }) => {
   return (
     <div
       onClick={handleClick}
       style={{
-        backgroundImage: `url('/assets/240px-blacksmith_head.jpg')`,
+        backgroundImage: `url(${assets.boosters.minionHead})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}
       className={`
-           flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+           flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-50 left-1/2 -translate-x-1/2`}
     ></div>
   );
 };
 
 const Blacksmith = () => {
-  const { gameData, setGameData, authToken, setShowCard, assets } =
-    useContext(RorContext);
+  const {
+    gameData,
+    setGameData,
+    authToken,
+    setShowCard,
+    assets,
+    enableHaptic,
+  } = useContext(RorContext);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
   const [copyPosition, setCopyPosition] = useState({ x: 0, y: 0 });
@@ -125,6 +137,8 @@ const Blacksmith = () => {
   const handleJoinItem = async (itemIdx, payMethod = 0) => {
     if (!disableClick.current) {
       disableClick.current = true;
+      handleClickHaptic(tele, enableHaptic);
+
       try {
         const box = boxItems[itemIdx];
         const [key] = Object.keys(box);
@@ -133,15 +147,9 @@ const Blacksmith = () => {
 
         await joinItem(authToken, itemToTransfer, payMethod);
         setBoxItems((prevItems) => {
-          const updatedItems = [...prevItems];
-          updatedItems[itemIdx] = {};
+          const updatedItems = prevItems.filter((_, idx) => idx !== itemIdx);
+          updatedItems.push({});
           return updatedItems;
-        });
-
-        setBoxFlags((prevFlags) => {
-          const updatedFlags = [...prevFlags];
-          updatedFlags[itemIdx] = false;
-          return updatedFlags;
         });
 
         setGameData((prevItems) => {
@@ -170,10 +178,12 @@ const Blacksmith = () => {
           };
         });
 
+        showToast("join_success");
         setItemsToTransfer([]);
         setShowCard(null);
         disableClick.current = false;
       } catch (error) {
+        showToast("join_error");
         setItemsToTransfer([]);
         console.error("Error completing item:", error);
         disableClick.current = false;
@@ -184,6 +194,8 @@ const Blacksmith = () => {
   const handleCompleteItem = async (itemId) => {
     if (!disableClick.current) {
       disableClick.current = true;
+      handleClickHaptic(tele, enableHaptic);
+
       try {
         await completeItem(authToken, itemId);
         setGameData((prevItems) => {
@@ -207,9 +219,11 @@ const Blacksmith = () => {
           };
         });
 
+        showToast("item_success");
         setShowCard(null);
         disableClick.current = false;
       } catch (error) {
+        showToast("item_error");
         console.error("Error completing item:", error);
         disableClick.current = false;
       }
@@ -232,7 +246,7 @@ const Blacksmith = () => {
     const touch = e.touches[0];
     setCopyPosition({
       x: touch.clientX - 100,
-      y: touch.clientY - 220,
+      y: touch.clientY - 250,
     });
   };
 
@@ -259,7 +273,7 @@ const Blacksmith = () => {
       };
 
       const arbitaryCopyX = copyPosition.x + 20;
-      const arbitaryCopyY = copyPosition.y + 120;
+      const arbitaryCopyY = copyPosition.y + 150;
 
       const copyRect = {
         left: arbitaryCopyX,
@@ -282,13 +296,12 @@ const Blacksmith = () => {
       const overlapArea = overlapX * overlapY;
       const overlapPercentage = (overlapArea / (100 * 100)) * 100;
 
-      return overlapPercentage >= 20;
+      return overlapPercentage >= 15;
     });
 
     if (itemBoxIndex !== -1) {
       setBoxItems((prevBoxes) => {
         const newBoxes = [...prevBoxes];
-        const targetBox = { ...newBoxes[itemBoxIndex] };
         const fragmentData = {
           _id: draggedItem._id,
           fragmentId: draggedItem.fragmentId,
@@ -296,7 +309,7 @@ const Blacksmith = () => {
 
         let itemInserted = false;
 
-        // check if exists in one of the boxes
+        // case1: check if exists in one of the boxes
         for (let i = 0; i < newBoxes.length; i++) {
           const box = newBoxes[i];
           if (box[draggedItem.itemId]) {
@@ -313,28 +326,27 @@ const Blacksmith = () => {
           }
         }
 
-        // if not then insert in target box
+        // case2: if not then insert in the first empty box
         if (!itemInserted) {
-          // if target box: chekc already itenm set
-          const hasAnyItemAssigned = Object.keys(targetBox).length > 0;
+          let insertedInEmptyBox = false;
 
-          if (hasAnyItemAssigned) {
-            alert("Invalid drop: This box already contains an item.");
+          for (let i = 0; i < newBoxes.length; i++) {
+            const box = newBoxes[i];
+            const isEmpty = Object.keys(box).length === 0;
+
+            if (isEmpty) {
+              const newBox = { ...box };
+              newBox[draggedItem.itemId] = [fragmentData];
+              newBoxes[i] = newBox;
+              insertedInEmptyBox = true;
+              break;
+            }
+          }
+
+          if (!insertedInEmptyBox) {
+            alert("No empty box available to insert the item.");
             return prevBoxes;
           }
-          if (!targetBox[draggedItem.itemId]) {
-            targetBox[draggedItem.itemId] = [];
-          }
-
-          const alreadyExists = targetBox[draggedItem.itemId].some(
-            (frag) => frag._id === draggedItem._id
-          );
-
-          if (!alreadyExists) {
-            targetBox[draggedItem.itemId].push(fragmentData);
-          }
-
-          newBoxes[itemBoxIndex] = targetBox;
         }
 
         return newBoxes;
@@ -398,6 +410,8 @@ const Blacksmith = () => {
   }, [boxItems, dragging, gameItems]);
 
   const showInfoCard = async () => {
+    handleClickHaptic(tele, enableHaptic);
+
     setShowCard(
       <MiscCard
         showInfo={true}
@@ -407,6 +421,7 @@ const Blacksmith = () => {
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
+            message={"Close"}
             isNotPay={true}
             left={1}
             right={1}
@@ -436,6 +451,7 @@ const Blacksmith = () => {
             handleClick={() => handleActivate("blacksmith01", true)}
             Button={
               <RoRBtn
+                message={"Enter"}
                 isNotPay={true}
                 left={1}
                 right={1}
@@ -451,11 +467,13 @@ const Blacksmith = () => {
 
   return (
     <div className="w-full h-fit">
-      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
 
       <div className="w-[80%] mt-[18dvh] h-[60dvh] relative mx-auto">
         <div
-          className="absolute inset-0 z-0 filter-orb-white"
+          className="absolute inset-0 z-0 filter-orb-white rounded-md"
           style={{
             backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundPosition: "center",
@@ -471,17 +489,21 @@ const Blacksmith = () => {
               key={`builder-${index}`}
               className={`relative border border-${
                 item?.itemId?.split(".")[0]
-              }-primary text-white glow-button-${
+              }-primary text-white glow-inset-button-${
                 item?.itemId?.split(".")[0]
               } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
             >
               <div className="w-full">
                 <GridItem
-                  showClaim={item?.exp - Date.now() < 0}
-                  timer={item.exp}
+                  showClaim={
+                    item?.exp - Date.now() <= 0
+                      ? "Claim"
+                      : `${calculateRemainingTime(item?.exp - Date.now())}`
+                  }
                   handleClick={() => {
                     if (item?.exp - Date.now() <= 0) {
                       handleCompleteItem(item.itemId);
+                    } else {
                     }
                   }}
                   itemObj={{
@@ -514,39 +536,30 @@ const Blacksmith = () => {
                 <div
                   key={`reserved-${index}`}
                   ref={!isBoxForClaim ? boxRefs[index] : null}
-                  className={`relative border ${
-                    isBoxForClaim
-                      ? `border-${myth}-primary text-white glow-button-${myth}`
-                      : "border-white"
-                  } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
+                  className={` relative text-white
+                    max-w-[120px] w-full rounded-md overflow-hidden `}
                 >
                   {isBoxFilled ? (
                     Object.entries(boxItems[index]).map(
                       ([itemId, fragments]) => (
-                        <div className="w-full" key={itemId}>
+                        <div
+                          className={`w-full flex flex-col rounded-md border items-center ${
+                            isBoxForClaim
+                              ? `border-${myth}-primary text-white glow-inset-button-${myth}`
+                              : "border-white"
+                          }`}
+                          key={itemId}
+                        >
                           <GridItem
-                            showClaim={isBoxForClaim}
+                            showClaim={
+                              isBoxForClaim ? (
+                                <>
+                                  <span className="font-symbols px-2">A</span>1
+                                </>
+                              ) : undefined
+                            }
                             handleClick={() => {
-                              if (isBoxForClaim) {
-                                const box = boxItems[index];
-                                const [key] = Object.keys(box);
-                                const value = box[key];
-                                setShowCard(
-                                  <MiscCard
-                                    img={assets.boosters.minionCard}
-                                    icon="blacksmith"
-                                    Button={
-                                      <RoRBtn
-                                        left={value.length}
-                                        right={value.length - 1}
-                                        handleClick={() =>
-                                          handleJoinItem(index, 0)
-                                        }
-                                      />
-                                    }
-                                  />
-                                );
-                              }
+                              handleJoinItem(index, 0);
                             }}
                             itemObj={{
                               itemId: itemId,
@@ -564,16 +577,18 @@ const Blacksmith = () => {
                       )
                     )
                   ) : (
-                    <>
-                      <div className="w-full aspect-square  rounded-md bg-white/20 flex justify-center items-center">
+                    <div
+                      className={`flex flex-col rounded-md border items-center w-full`}
+                    >
+                      <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
                         <span className="text-iconLg font-symbols text-white">
                           h
                         </span>
                       </div>
-                      <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
+                      <div className="w-full text-white text-sm uppercase text-center px-1 py-1 leading-tight truncate">
                         Drop
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               );
@@ -587,7 +602,7 @@ const Blacksmith = () => {
               onTouchStart={(e) => handleTouchStart(e, item)}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              className={`relative flex flex-col justify-center items-center aspect-square max-w-[120px] max-h-[140px] h-full w-full ${
+              className={`relative  ${
                 scaleIcon && draggedItem === item ? "scale-110" : ""
               }`}
             >
@@ -607,13 +622,19 @@ const Blacksmith = () => {
             (_, index) => (
               <div
                 key={`placeholder-${index}`}
-                className="relative flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden"
+                className="relative w-full max-w-[120px] flex flex-col opacity-50 items-center rounded-md overflow-hidden shadow-2xl"
               >
-                <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                  <span className="text-iconLg font-symbols text-white">8</span>
-                </div>
-                <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
-                  slot {index + 1}
+                <div
+                  className={`flex flex-col rounded-md border items-center w-full`}
+                >
+                  <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
+                    <span className="text-iconLg font-symbols text-white">
+                      8
+                    </span>
+                  </div>
+                  <div className="w-full text-white text-sm text-center px-1 py-1 leading-tight truncate">
+                    slot{gameData.bag.length - index + 1}
+                  </div>
                 </div>
               </div>
             )
@@ -634,13 +655,18 @@ const Blacksmith = () => {
               <div
                 className="glow-icon-white h-full w-full"
                 style={{
-                  backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
+                  backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
                   backgroundSize: "cover",
                   backgroundPosition: "100% 20%",
                   backgroundRepeat: "no-repeat",
                 }}
               ></div>
             </div>
+          </div>
+        )}
+        {gameData.bag.length <= 0 && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-500 text-white px-4 py-2 rounded-full text-[1rem] font-roboto shadow-lg">
+            Bag is empty
           </div>
         )}
       </div>
@@ -655,33 +681,3 @@ const Blacksmith = () => {
 };
 
 export default Blacksmith;
-
-{
-  /* {boxFlags[index] && (
-                    <div className="absolute w-full h-full flex justify-center items-center backdrop-blur-sm">
-                      <div
-                        onClick={() => {
-                          const box = boxItems[index];
-                          const [key] = Object.keys(box);
-                          const value = box[key];
-                          setShowCard(
-                            <MiscCard
-                              img={assets.boosters.minionCard}
-                              icon="w"
-                              Button={
-                                <RoRBtn
-                                  left={value.length}
-                                  right={value.length - 1}
-                                  handleClick={() => handleJoinItem(index, 0)}
-                                />
-                              }
-                            />
-                          );
-                        }}
-                        className="absolute z-50 bg-orange-600 font-bold p-2"
-                      >
-                        MINT
-                      </div>
-                    </div>
-                  )} */
-}

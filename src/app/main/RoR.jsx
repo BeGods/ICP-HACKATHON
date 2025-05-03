@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MainContext, RorContext } from "../../context/context";
 import { fetchGameStats } from "../../utils/api.ror";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import {
   deleteAuthCookie,
   fetchHapticStatus,
+  getExpCookie,
+  setAuthCookie,
   validateAuth,
   validateCountryCode,
   validateLang,
@@ -23,7 +25,11 @@ import Blacksmith from "../ror/Blacksmith";
 import Merchant from "../ror/Merchant";
 import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Common/TgHeader";
-import { fetchProfilePhoto, fetchRewards } from "../../utils/api.fof";
+import {
+  fetchProfilePhoto,
+  fetchRewards,
+  refreshAuthToken,
+} from "../../utils/api.fof";
 import Profile from "../fof/Profile/Page";
 import Gift from "../fof/Gift/Gift";
 import Gacha from "../ror/Gacha";
@@ -32,10 +38,14 @@ import JoinBonus from "../ror/JoinBonus";
 import Potions from "../ror/Potions";
 import Book from "../ror/Book";
 import Tavern from "../ror/Tavern";
+import Redeem from "../fof/Redeem/Redeem";
+import OnboardPage from "../fof/Onboard/Page";
+import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
 const RoRMain = () => {
+  const navigate = useNavigate();
   const {
     assets,
     enableHaptic,
@@ -58,6 +68,10 @@ const RoRMain = () => {
     setGlobalRewards,
     setIsTelegram,
     setPlatform,
+    triggerConf,
+    setTriggerConf,
+    activeReward,
+    setActiveReward,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -67,6 +81,7 @@ const RoRMain = () => {
   const [rewards, setRewards] = useState([]);
   const [swipes, setSwipes] = useState(0);
   const [shiftBg, setShiftBg] = useState(50);
+  const [shardReward, setShardReward] = useState(null);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [battleData, setBattleData] = useState({
     currentRound: 1,
@@ -113,25 +128,14 @@ const RoRMain = () => {
     globalRewards,
     setGlobalRewards,
     setShiftBg,
+    shardReward,
+    setShardReward,
+    triggerConf,
+    setTriggerConf,
+    activeReward,
+    setActiveReward,
   };
-
-  const getPartnersData = async (token) => {
-    try {
-      const rewardsData = await fetchRewards(lang, country, token);
-      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
-      setGlobalRewards([
-        ...rewardsData?.rewards,
-        ...rewardsData?.claimedRewards,
-      ]);
-      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
-      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
-    } catch (error) {
-      await deleteAuthCookie(tele);
-
-      console.log(error);
-      showToast("default");
-    }
-  };
+  const refreshTimeoutRef = useRef();
 
   const getProfilePhoto = async (token) => {
     try {
@@ -149,56 +153,51 @@ const RoRMain = () => {
 
   // fetch all game data
   const getGameData = async (token) => {
-    try {
-      const response = await fetchGameStats(token);
-      setUserData(response.user);
-      setGameData((prev) => {
-        return {
-          stats: response.stats,
-          bag: response.bag,
-          bank: response.bank,
-          pouch: response.pouch,
-          claimedItems: response.claimedItems,
-          builder: response.builder,
-        };
-      });
-      setTasks(response.quests);
-      if (!response.user?.joiningBonus) {
-        setSection(10);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-        if (isTelegram) {
-          (async () => {
-            await getProfilePhoto(token);
-          })();
-        }
-      } else if (response.user.isEligibleToClaim) {
-        setTimeout(() => {
-          setSection(9);
-          setIsLoading(false);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setSection(0);
-          setIsLoading(false);
-        }, 1000);
-      }
+    const response = await fetchGameStats(token);
+    setUserData(response.user);
+    setGameData({
+      stats: response.stats,
+      bag: response.bag,
+      bank: response.bank,
+      pouch: response.pouch,
+      claimedItems: response.claimedItems,
+      builder: response.builder,
+    });
+    setTasks(response.quests);
 
-      // else if (
-      //   response?.user?.joiningBonus &&
-      //   response?.user.isEligibleToClaim
-      // ) {
-      //   setSection(9);
-      //   setTimeout(() => {
-      //     setIsLoading(false);
-      //   }, 1000);
-      // }
-    } catch (error) {
-      await deleteAuthCookie(tele);
-      console.log(error);
-      showToast("default");
+    if (!response.user?.joiningBonus) {
+      setSection(10);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+      if (isTelegram) {
+        (async () => {
+          await getProfilePhoto(token);
+        })();
+      }
+    } else if (response.user.isEligibleToClaim) {
+      setTimeout(() => {
+        setSection(9);
+        setIsLoading(false);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        setSection(0);
+        setIsLoading(false);
+      }, 1000);
     }
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const getPartnersData = async (token) => {
+    const rewardsData = await fetchRewards(lang, country, token);
+    setRewards([...rewardsData.rewards, ...rewardsData.claimedRewards]);
+    setGlobalRewards([...rewardsData.rewards, ...rewardsData.claimedRewards]);
+    setRewardsClaimedInLastHr(rewardsData.rewardsClaimedInLastHr);
+    localStorage.setItem("bubbleLastClaimed", rewardsData.bubbleLastClaimed);
   };
 
   const syncAllCookies = async () => {
@@ -221,16 +220,57 @@ const RoRMain = () => {
     }
   };
 
+  const handleRefreshToken = async () => {
+    try {
+      const response = await refreshAuthToken();
+      const newToken = response.data.accessToken;
+      clearTimeout(refreshTimeoutRef.current);
+      refreshTimeoutRef.current = null;
+      setAuthToken(newToken);
+      await setAuthCookie(tele, newToken);
+    } catch (error) {
+      showToast("default");
+      navigate("/");
+      console.log(error);
+    }
+  };
+
   const initializeGame = async () => {
     try {
-      const token = await validateAuth(tele);
+      const tokenExp = await getExpCookie(tele);
+      const now = Date.now();
+      let timeLeft = tokenExp - now;
+      let token;
+
+      if (timeLeft <= 0) {
+        token = await handleRefreshToken();
+        timeLeft = (await getExpCookie(tele)) - Date.now();
+      } else {
+        token = await validateAuth(tele);
+      }
+
       if (token) {
         setAuthToken(token);
-        (async () => await getGameData(token))();
-        (async () => await getPartnersData(token))();
+
+        try {
+          await getGameData(token);
+          await getPartnersData(token);
+        } catch (err) {
+          if (err?.response?.status === 401) {
+            await deleteAuthCookie(tele);
+            console.error("Unauthorized. Auth cookie deleted.");
+          } else {
+            console.error("Error during game init:", err);
+          }
+          showToast("default");
+        }
+
+        refreshTimeoutRef.current = setTimeout(async () => {
+          await handleRefreshToken();
+        }, timeLeft - 10000);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Initialization error:", error);
       showToast("default");
     }
   };
@@ -284,24 +324,26 @@ const RoRMain = () => {
     <Potions />, // 11
     <Book />, // 12,
     <Tavern />, // 13
+    <Redeem />, //  14
+    <OnboardPage />, // 15
   ];
 
   const bgs = {
-    0: "/assets/bg/1280px-ror.citadel_wide.jpeg",
+    0: assets.locations.citadel,
     1: assets.uxui.basebg,
     2: assets.uxui.basebg,
-    3: "/assets/bg/1280px-ror.citadel.foundry_wide.jpeg",
-    4: "/assets/bg/1280px-ror.citadel.bank_wide.jpeg",
-    5: "/assets/bg/1280px-ror.citadel.bank_wide.jpeg",
+    3: assets.locations.foundry,
+    4: assets.locations.bank,
+    5: assets.locations.bank,
     6: assets.uxui.basebg,
     7: assets.uxui.basebg,
     8: assets.uxui.basebg,
     9: assets.uxui.basebg,
     10: assets.uxui.basebg,
     10: assets.uxui.basebg,
-    11: "/assets/bg/1280px-ror.citadel.apothecary_wide.jpeg",
-    12: "/assets/bg/1280px-ror.citadel.library_wide.jpeg",
-    13: "/assets/bg/1280px-ror.citadel.tavern_wide.jpeg",
+    11: assets.locations.apothecary,
+    12: assets.locations.library,
+    13: assets.locations.tavern,
   };
 
   useEffect(() => {

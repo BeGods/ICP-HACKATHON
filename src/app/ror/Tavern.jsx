@@ -16,11 +16,11 @@ import { activateRest } from "../../utils/api.ror";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ handleClick }) => {
+const CenterChild = ({ handleClick, assets }) => {
   return (
     <div
       style={{
-        backgroundImage: `url('/assets/240px-tavernist_head.jpg')`,
+        backgroundImage: `url(${assets.boosters.tavernHead})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -79,6 +79,7 @@ const Tavern = () => {
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
+            message={"Close"}
             isNotPay={true}
             left={1}
             right={1}
@@ -136,6 +137,7 @@ const Tavern = () => {
             handleClick={() => handleActivate("tavern01", true)}
             Button={
               <RoRBtn
+                message={"Enter"}
                 left={1}
                 right={1}
                 handleClick={() => {
@@ -152,7 +154,9 @@ const Tavern = () => {
 
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
       <div className="w-[80%] mt-[18dvh] h-[60dvh] mx-auto relative">
         <div
           className="absolute inset-0 z-0 filter-orb-white"
@@ -164,9 +168,22 @@ const Tavern = () => {
             opacity: 0.5,
           }}
         />
-        <div className="w-full h-full grid grid-cols-3 gap-x-1">
-          {!showItems &&
-            [")", "F", "z"].map((itm, index) => {
+        <div className="h-full flex justify-center items-center">
+          <div className="h-full grid grid-cols-1 items-center ">
+            {[
+              {
+                icon: ")",
+                label: "meal",
+              },
+              {
+                icon: "F",
+                label: "rest",
+              },
+              {
+                icon: "z",
+                label: "statue",
+              },
+            ].map((itm, index) => {
               const items = gameItems
                 .filter((itm) => itm.id.includes("artifact.starter02"))
                 .filter((itm) => !gameData.pouch.includes(itm.id));
@@ -184,53 +201,18 @@ const Tavern = () => {
                       );
                   }}
                   key={`box-${index}`}
-                  className={`relative border ${
-                    items.length == 0
-                      ? "text-white/20  border-white/20"
-                      : "text-white  border-white"
-                  }  flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
+                  className={`relative border text-white border-white/70 flex flex-col items-center aspect-square shadow-2xl max-w-[120px] h-[140px] w-full rounded-md overflow-hidden`}
                 >
-                  <div
-                    className={`w-full aspect-square rounded-md bg-white/20 flex justify-center items-center`}
-                  >
-                    <span className="text-iconLg font-symbols">{itm}</span>
+                  <div className="w-full aspect-square rounded-t-md bg-white/20 h-[110px] flex justify-center items-center">
+                    <span className="text-iconLg font-symbols">{itm.icon}</span>
                   </div>
-                  <div
-                    className={`w-full  text-center text-[1rem] mt-1 break-words px-1`}
-                  >
-                    Drop
+                  <div className="w-full uppercase text-center text-[1rem] break-words px-1 flex justify-center items-center">
+                    {itm.label}
                   </div>
                 </div>
               );
             })}
-
-          {pagedItems.map((item) => (
-            <div key={item.itemId}>
-              <GridItem
-                handleClick={() => {
-                  const myth = item.itemId.split(".")[0];
-                  setShowItems(myth);
-                }}
-                itemObj={item}
-                itemsWithAllFrags={pageItems.map((item) => item.itemId)}
-              />
-            </div>
-          ))}
-          {Array.from({ length: ITEMS_PER_PAGE - pagedItems.length }).map(
-            (_, index) => (
-              <div
-                key={`placeholder-${index}`}
-                className="relative w-full h-full max-w-[120px] max-h-[140px] flex flex-col items-center border border-white/10 shadow-2xl rounded-md overflow-hidden"
-              >
-                <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                  <span className="text-iconLg font-symbols text-white">8</span>
-                </div>
-                <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
-                  slot {gameData.bag.length - index + 1}
-                </div>
-              </div>
-            )
-          )}
+          </div>
         </div>
       </div>
       {pageItems.length > ITEMS_PER_PAGE && (

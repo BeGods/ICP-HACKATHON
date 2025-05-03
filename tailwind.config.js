@@ -52,6 +52,12 @@ export default {
     "text-emberald",
     "text-wood",
     "text-gold",
+
+    "pulse-drop-greek",
+    "pulse-drop-celtic",
+    "pulse-drop-norse",
+    "pulse-drop-eygptian",
+    "pulse-drop-other"
   ],
   theme: {
     extend: {

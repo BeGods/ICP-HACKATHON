@@ -2,43 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
 import { RorContext } from "../../context/context";
 import CitadelItem from "./CitadelItem";
-import MiscCard from "./MiscCard";
-import RoRBtn from "./RoRBtn";
-import { toast } from "react-toastify";
-import {
-  activateBlacksmith,
-  activateLibrarian,
-  activateRest,
-  activateVault,
-} from "../../utils/api.ror";
-import {
-  getActiveFeature,
-  getStorage,
-  setStorage,
-} from "../../helpers/cookie.helper";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const CitadelCarousel = ({ enableGuide, mythData }) => {
-  const {
-    assets,
-    setShowCard,
-    activeMyth,
-    authToken,
-    gameData,
-    setSection,
-    setGameData,
-  } = useContext(RorContext);
+  const { activeMyth, gameData, setSection, enableHaptic } =
+    useContext(RorContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
-  const [showEffect, setShowEffect] = useState(false);
-
-  const handleActivate = async (key, value, navigateTo) => {
-    setSection(navigateTo);
-    setShowCard(null);
-    await setStorage(tele, key, value);
-  };
 
   useEffect(() => {
     const boosters = [
@@ -51,6 +24,8 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             itemKey="furnace"
             desc="Blacksmith"
             handleClick={async () => {
+              handleClickHaptic(tele, enableHaptic);
+
               setSection(3);
             }}
           />
@@ -64,61 +39,9 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             itemKey="bank"
             desc="Banker"
             handleClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+
               setSection(4);
-            }}
-          />
-        ),
-      },
-      {
-        key: "gemologist",
-        component: (
-          <CitadelItem
-            icon="v"
-            isMulti={false}
-            itemKey="apothecary"
-            desc="Gemologist"
-            handleClick={async () => {
-              setSection(11);
-              // setShowCard(
-              //   <MiscCard
-              //     showInfo={false}
-              //     img={assets.boosters.gemologistCard}
-              //     icon="Gemologist"
-              //     isMulti={false}
-              //     handleClick={() => handleActivate("gemologist", "true", 11)}
-              //     Button={
-              //       <RoRBtn
-              //         isNotPay={true}
-              //         left={1}
-              //         right={1}
-              //         handleClick={() =>
-              //           handleActivate("gemologist", "true", 11)
-              //         }
-              //       />
-              //     }
-              //   />
-              // );
-              // const isActive = await getActiveFeature(tele, "gemologist");
-              // if (!isActive) {
-              //   setShowCard(
-              //     <MiscCard
-              //       img={assets.boosters.gemologistCard}
-              //       icon="A"
-              //       isMulti={false}
-              //       handleClick={() => handleActivate("gemologist", "true", 11)}
-              //       Button={
-              //         <RoRBtn
-              //           isNotPay={true}
-              //           left={1}
-              //           right={1}
-              //           handleClick={() =>
-              //             handleActivate("gemologist", "true", 11)
-              //           }
-              //         />
-              //       }
-              //     />
-              //   );
-              // }
             }}
           />
         ),
@@ -132,91 +55,72 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             itemKey="library"
             desc="Librarian"
             handleClick={async () => {
+              handleClickHaptic(tele, enableHaptic);
+
               setSection(12);
+            }}
+          />
+        ),
+      },
+      {
+        key: "rest",
+        component: (
+          <CitadelItem
+            disable={true}
+            icon="7"
+            isMulti={false}
+            itemKey="tavern"
+            desc="Bartender"
+            handleClick={() => {
+              handleClickHaptic(tele, enableHaptic);
 
-              // const isActive = await getActiveFeature(tele, "library");
+              setSection(13);
+            }}
+          />
+        ),
+      },
+      {
+        key: "gemologist",
+        component: (
+          <CitadelItem
+            disable={
+              gameData.stats.blackShards < 100 ||
+              gameData.stats.whiteShards < 100
+            }
+            icon="v"
+            isMulti={false}
+            itemKey="apothecary"
+            desc="Gemologist"
+            handleClick={async () => {
+              if (
+                gameData.stats.blackShards >= 100 ||
+                gameData.stats.whiteShards >= 100
+              ) {
+                handleClickHaptic(tele, enableHaptic);
 
-              // if (isActive) {
-              //   setSection(12);
-              // } else {
-              //   setShowCard(
-              //     <MiscCard
-              //       img={assets.boosters.libCard}
-              //       icon="Librarian"
-              //       isMulti={false}
-              //       handleClick={() => handleActivate("library", "true", 12)}
-              //       Button={
-              //         <RoRBtn
-              //           isNotPay={true}
-              //           left={1}
-              //           right={1}
-              //           handleClick={() =>
-              //             handleActivate("library", "true", 12)
-              //           }
-              //         />
-              //       }
-              //     />
-              //   );
-              // }
+                setSection(11);
+              }
             }}
           />
         ),
       },
     ];
 
-    if (gameData.stats.isThiefActive) {
-      boosters.push({
-        key: "rest",
-        component: (
-          <CitadelItem
-            icon="7"
-            isMulti={false}
-            itemKey="tavern"
-            desc="Bartender"
-            handleClick={() => {
-              setSection(13);
-
-              // if (gameData.stats.isRestActive) {
-              //   setSection(13);
-              // } else {
-              //   setShowCard(
-              //     <MiscCard
-              //       img={assets.boosters.tavernCard}
-              //       isMulti={false}
-              //       handleClick={handleActivateRest}
-              //       Button={
-              //         <RoRBtn
-              //           left={1}
-              //           right={1}
-              //           isMulti={false}
-              //           handleClick={handleActivateRest}
-              //         />
-              //       }
-              //     />
-              //   );
-              // }
-            }}
-          />
-        ),
-      });
-    }
-
     const boosterStatus = {
-      multiVault: !gameData.bank.isVaultActive,
-      vault: !gameData.bank.isVaultActive,
-      blacksmith: true,
-      merchant: false,
+      blacksmith: false,
+      vault: false,
+      library: false,
       rest: false,
+      gemologist:
+        gameData.stats.blackShards >= 100 || gameData.stats.whiteShards >= 100,
     };
 
     const predefinedOrder = [
       "blacksmith",
-      "merchant",
-      "multiVault",
       "vault",
-      "gemologist",
       "library",
       "rest",
+      "gemologist",
     ];
 
     const sortedItems = boosters
@@ -225,11 +129,9 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         const statusA = boosterStatus[a.key] || false;
         const statusB = boosterStatus[b.key] || false;
 
-        // If status is true, prioritize it
         if (statusA && !statusB) return -1;
         if (!statusA && statusB) return 1;
 
-        // If both statuses are equal, fall back to predefined order
         const orderA = predefinedOrder.indexOf(a.key);
         const orderB = predefinedOrder.indexOf(b.key);
         return orderA - orderB;
@@ -252,15 +154,6 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
-
-  useEffect(() => {
-    setShowEffect(false);
-    const resetTimeout = setTimeout(() => {
-      setShowEffect(true);
-    }, 50);
-
-    return () => clearTimeout(resetTimeout);
-  }, [activeMyth]);
 
   return (
     <div

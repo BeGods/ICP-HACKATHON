@@ -12,16 +12,22 @@ import { toast } from "react-toastify";
 import { elementMythNames } from "../../utils/constants.ror";
 import MiscCard from "../../components/ror/MiscCard";
 import RoRBtn from "../../components/ror/RoRBtn";
-import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
+import {
+  getActiveFeature,
+  handleClickHaptic,
+  setStorage,
+} from "../../helpers/cookie.helper";
+import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ handleClick }) => {
+const CenterChild = ({ handleClick, assets }) => {
   return (
     <div
       onClick={handleClick}
       style={{
-        backgroundImage: `url('/assets/240px-banker_head.jpg')`,
+        backgroundImage: `url(${assets.boosters.bankerHead})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -33,8 +39,15 @@ const CenterChild = ({ handleClick }) => {
 };
 
 const Merchant = (props) => {
-  const { gameData, setGameData, authToken, setSection, assets, setShowCard } =
-    useContext(RorContext);
+  const {
+    gameData,
+    setGameData,
+    authToken,
+    setSection,
+    assets,
+    setShowCard,
+    enableHaptic,
+  } = useContext(RorContext);
   const [isLoading, setIsLoading] = useState(false);
   const [draggedItem, setDraggedItem] = useState(null);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
@@ -96,7 +109,9 @@ const Merchant = (props) => {
           },
         };
       });
+      showToast("sell_success");
     } catch (error) {
+      showToast("sell_error");
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -119,7 +134,7 @@ const Merchant = (props) => {
     const touch = e.touches[0];
     setCopyPosition({
       x: touch.clientX - 100,
-      y: touch.clientY - 220,
+      y: touch.clientY - 250,
     });
   };
 
@@ -141,12 +156,11 @@ const Merchant = (props) => {
           },
         };
       });
-      console.log(response);
-      toast.success("vault activated");
+      showToast("vault_success");
     } catch (error) {
       console.log(error);
       setShowCard(null);
-      toast.error("insufficient gobcoins");
+      showToast("vault_error");
     }
   };
 
@@ -173,7 +187,7 @@ const Merchant = (props) => {
       };
 
       const arbitaryCopyX = copyPosition.x + 20;
-      const arbitaryCopyY = copyPosition.y + 120;
+      const arbitaryCopyY = copyPosition.y + 150;
 
       const copyRect = {
         left: arbitaryCopyX,
@@ -196,12 +210,30 @@ const Merchant = (props) => {
       const overlapArea = overlapX * overlapY;
       const overlapPercentage = (overlapArea / (100 * 100)) * 100;
 
-      return overlapPercentage >= 15;
+      return overlapPercentage >= 20;
     });
 
     if (itemBoxIndex !== -1) {
       if (itemBoxIndex == 0) {
-        handleItemToTrade(draggedItem._id);
+        setShowCard(
+          <RelicRwrdCrd
+            isSell={true}
+            mythology={draggedItem?.itemId?.split(".")[0]}
+            itemId={draggedItem?.itemId}
+            isChar={false}
+            hideInfo={true}
+            fragmentId={draggedItem?.fragmentId}
+            isComplete={draggedItem?.isComplete}
+            ButtonFront={
+              <RoRBtn
+                isNotPay={true}
+                handleClick={() => handleItemToTrade(draggedItem._id)}
+                itemId={draggedItem?.itemId}
+                message={"sell"}
+              />
+            }
+          />
+        );
       } else if (itemBoxIndex == 2) {
         if (!gameData.bank.isVaultActive) {
           setShowCard(
@@ -258,6 +290,8 @@ const Merchant = (props) => {
   };
 
   const showInfoCard = async () => {
+    handleClickHaptic(tele, enableHaptic);
+
     setShowCard(
       <MiscCard
         showInfo={true}
@@ -267,6 +301,7 @@ const Merchant = (props) => {
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
+            message={"Close"}
             isNotPay={true}
             left={1}
             right={1}
@@ -296,6 +331,7 @@ const Merchant = (props) => {
             handleClick={() => handleActivate("banker01", true)}
             Button={
               <RoRBtn
+                message={"Enter"}
                 isNotPay={true}
                 left={1}
                 right={1}
@@ -316,10 +352,12 @@ const Merchant = (props) => {
 
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
       <div className="w-[80%] mt-[18dvh] h-[60dvh] mx-auto relative">
         <div
-          className="absolute inset-0 z-0 filter-orb-white"
+          className="absolute inset-0 z-0 filter-orb-white rounded-md"
           style={{
             backgroundImage: `url(${assets.uxui.basebg})`,
             backgroundPosition: "center",
@@ -340,7 +378,7 @@ const Merchant = (props) => {
             },
             {
               icon: ",",
-              label: "vault",
+              label: `vault`,
             },
           ].map((itm, index) => (
             <div
@@ -349,6 +387,8 @@ const Merchant = (props) => {
               onClick={() => {
                 if (index === 2) {
                   if (!gameData.bank.isVaultActive) {
+                    handleClickHaptic(tele, enableHaptic);
+
                     setShowCard(
                       <MiscCard
                         img={assets.boosters.bankerCard}
@@ -365,23 +405,31 @@ const Merchant = (props) => {
                       />
                     );
                   } else {
+                    handleClickHaptic(tele, enableHaptic);
                     setSection(5);
                   }
                 }
               }}
-              className={`relative border ${
-                index == 1
-                  ? "text-white/20  border-white/20"
-                  : "text-white  border-white"
-              }  flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
+              className={`relative text-white
+              max-w-[120px] w-full rounded-md overflow-hidden `}
             >
               <div
-                className={`w-full aspect-square rounded-md bg-white/20 flex justify-center items-center`}
+                className={`flex flex-col rounded-md border ${
+                  index == 1 ? "glow-inset-button-white" : "border-white/70"
+                } items-center w-full`}
               >
-                <span className="text-iconLg font-symbols">{itm.icon}</span>
-              </div>
-              <div className="w-full uppercase text-center text-[1rem] mt-1 break-words px-1">
-                {itm.label}
+                <div className="w-full aspect-square bg-white/20 flex justify-center items-center rounded-md">
+                  <span className="text-iconLg font-symbols">{itm.icon}</span>
+                </div>
+                <div className="w-full uppercase text-center text-sm leading-tight px-1 py-0.5 truncate">
+                  {index === 2
+                    ? !gameData.bank.isVaultActive
+                      ? "Buy"
+                      : dragging
+                      ? "Drop"
+                      : itm.label
+                    : itm.label}
+                </div>
               </div>
             </div>
           ))}
@@ -400,7 +448,7 @@ const Merchant = (props) => {
                 <div
                   className="glow-icon-white h-full w-full"
                   style={{
-                    backgroundImage: `url(/assets/ror-cards/240px-${draggedItem.itemId}_on.png)`,
+                    backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
                     backgroundSize: "cover",
                     backgroundPosition: "100% 20%",
                     backgroundRepeat: "no-repeat",
@@ -416,7 +464,7 @@ const Merchant = (props) => {
               onTouchStart={(e) => handleTouchStart(e, item)}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              className={`relative flex flex-col justify-center items-center aspect-square max-w-[120px] max-h-[140px] h-full w-full ${
+              className={` ${
                 scaleIcon && draggedItem === item ? "scale-110" : ""
               }`}
             >
@@ -435,16 +483,27 @@ const Merchant = (props) => {
             (_, index) => (
               <div
                 key={`placeholder-${index}`}
-                className="relative flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden"
+                className="relative w-full max-w-[120px] flex flex-col opacity-50 items-center rounded-md overflow-hidden shadow-2xl"
               >
-                <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                  <span className="text-iconLg font-symbols text-white">8</span>
-                </div>
-                <div className="w-full text-center text-white text-[1rem] mt-1 break-words px-1">
-                  slot {index + 1}
+                <div
+                  className={`flex flex-col rounded-md border items-center w-full`}
+                >
+                  <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
+                    <span className="text-iconLg font-symbols text-white">
+                      8
+                    </span>
+                  </div>
+                  <div className="w-full text-white text-sm text-center px-1 py-1 leading-tight truncate">
+                    slot{gameData.bag.length - index + 1}
+                  </div>
                 </div>
               </div>
             )
+          )}
+          {gameData.bag.length <= 0 && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white/90 text-black px-4 py-2 rounded-full text-[1rem] font-roboto shadow-lg">
+              Bag is empty
+            </div>
           )}
         </div>
       </div>

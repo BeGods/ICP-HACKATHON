@@ -307,3 +307,24 @@ export const claimPotion = async (accessToken, type) => {
     throw error;
   }
 }
+
+export const fetchLeaderboard = async (accessToken, userRank, pageNum) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/leaderboard`;
+
+  url += `?userRank=${userRank}`;
+  if (pageNum != 0) {
+    url += `&page=${pageNum}`;
+  }
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};

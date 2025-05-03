@@ -1,18 +1,16 @@
 import React, { useContext } from "react";
-import {
-  ToggleLeft,
-  ToggleRight,
-} from "../../components/Common/SectionToggles";
 import { RorContext } from "../../context/context";
 import CitadelCarousel from "../../components/ror/CitadelCarousel";
 import RoRHeader from "../../components/layouts/Header";
 
-const CenterChild = () => {
+const CenterChild = ({ gameData }) => {
   return (
     <div
       className={`
-            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
-    ></div>
+            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full text-white text-[16vw] bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
+    >
+      {gameData.stats.dailyQuotaa ?? 0}
+    </div>
   );
 };
 
@@ -25,7 +23,7 @@ const Citadel = (props) => {
         isTelegram ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0`}
     >
-      <RoRHeader CenterChild={<CenterChild />} />
+      <RoRHeader CenterChild={<CenterChild gameData={gameData} />} />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] min-h-[60vh] flex-col">
           <CitadelCarousel />

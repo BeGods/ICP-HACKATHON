@@ -3,6 +3,11 @@ import { RorContext } from "../../../context/context";
 import { gameItems } from "../../../utils/gameItems";
 import IconBtn from "../../Buttons/IconBtn";
 import { useMaskStyle } from "../../../hooks/MaskStyle";
+import {
+  elementMythNames,
+  elements,
+  mythSections,
+} from "../../../utils/constants.ror";
 
 const RelicCrd = ({
   itemId,
@@ -12,13 +17,24 @@ const RelicCrd = ({
   isClose,
   handleClose,
   maskOff,
+  isSell,
+  hideInfo,
 }) => {
   const { assets } = useContext(RorContext);
-  const mythology = itemId.split(".")[0];
+  let mythology = "other";
   const itemDetails = gameItems.find((item) => item.id === itemId);
   const mask = useMaskStyle(itemId, itemDetails?.fragments?.length ?? 1, [
     fragmentId,
   ]);
+  const matchedElement =
+    elements.find((element) => itemId?.includes(element)) || null;
+  const matchedMyth =
+    mythSections.find((element) => itemId?.includes(element)) || null;
+  if (matchedMyth && itemId) {
+    mythology = matchedMyth;
+  } else if (matchedElement && itemId) {
+    mythology = elementMythNames[matchedElement]?.toLowerCase();
+  }
 
   return (
     <div
@@ -30,27 +46,34 @@ const RelicCrd = ({
         style={{ backgroundImage: `url(${assets.uxui.basebg})` }}
       />
 
-      <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
+      <div className="relative z-20 flex flex-col select-none items-center justify-center w-full h-full">
         <div className="relative m-2 flex justify-center items-center w-[50px]">
           <img
-            src={`/assets/240px-gobcoin.png`}
+            src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
             alt="relic"
-            className="w-full"
+            className="w-full select-none"
           />
           <div className="absolute text-[10.5vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
-            {itemDetails?.coins ?? 1}
+            {isSell && !isComplete ? 1 : itemDetails.coins}
           </div>
         </div>
-        <div className="relative w-[240px] h-[240px] flex justify-center items-center">
-          <div className="relative w-full h-full">
+        <div className="relative w-[240px] h-[240px] select-none mt-4 flex justify-center items-center">
+          <div
+            onContextMenu={(e) => e.preventDefault()}
+            draggable={false}
+            className="relative w-full select-none h-full"
+          >
             <img
-              src={`/assets/ror-cards/240px-${itemId}_on.png`}
+              src={`https://media.publit.io/file/BeGods/items/240px-${itemId}.png`}
               alt="relic"
-              className={`z-10 w-full h-full object-contain ${
-                (!isComplete || isComplete == false) && "grayscale"
+              draggable={false}
+              style={{ userSelect: "none", WebkitUserDrag: "none" }}
+              className={`w-full h-full object-contain ${
+                !isComplete ? "grayscale" : ""
               }`}
             />
           </div>
+
           {(!isComplete || isComplete == false) && !maskOff && mask}
         </div>
 

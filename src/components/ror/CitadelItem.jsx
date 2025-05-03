@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 
-const CitadelItem = ({ icon, itemKey, handleClick, isMulti, desc }) => {
+const CitadelItem = ({
+  icon,
+  itemKey,
+  handleClick,
+  isMulti,
+  desc,
+  disable,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
     <div
-      onClick={handleClick}
-      className={`flex gap-1 border  text-white ${
-        isMulti ? "border-multiColor" : "border-white"
-      } ${
-        isClicked ? `glow-button-white` : ""
+      onClick={!disable && handleClick}
+      className={`flex gap-1 border  ${
+        disable
+          ? "text-gray-400 border-gray-400 grayscale"
+          : "text-white border-white"
+      }  ${
+        isClicked && !disable ? `glow-button-white` : ""
       } rounded-primary h-[90px] w-full bg-glass-black p-[15px]`}
       onMouseDown={() => {
         setIsClicked(true);

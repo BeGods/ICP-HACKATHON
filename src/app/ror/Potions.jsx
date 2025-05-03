@@ -14,11 +14,11 @@ import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ handleClick }) => {
+const CenterChild = ({ handleClick, assets }) => {
   return (
     <div
       style={{
-        backgroundImage: `url(/assets/240px-gemologist_head.png)`,
+        backgroundImage: `url(${assets.boosters.gemologistHead})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -57,6 +57,7 @@ const Potions = (props) => {
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
+            message={"Close"}
             isNotPay={true}
             left={1}
             right={1}
@@ -86,6 +87,7 @@ const Potions = (props) => {
             handleClick={() => handleActivate("gemologist01", true)}
             Button={
               <RoRBtn
+                message={"Enter"}
                 isNotPay={true}
                 left={1}
                 right={1}
@@ -101,7 +103,9 @@ const Potions = (props) => {
 
   return (
     <div className="w-full h-full">
-      <RoRHeader CenterChild={<CenterChild handleClick={showInfoCard} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
       <div className="flex flex-col relative w-[80%]  mt-[18dvh] h-[60dvh] mx-auto">
         <div
           className="absolute inset-0 z-0 filter-orb-white"
@@ -139,7 +143,7 @@ const Potions = (props) => {
         <div className="flex flex-col gap-y-4 justify-center items-center h-full">
           <div className="flex justify-center relative">
             <img
-              src={`/assets/ror-cards/240px-${potions[currentPage]?.id}_on.png`}
+              src={`https://media.publit.io/file/BeGods/items/240px-${potions[currentPage]?.id}.png`}
               alt="potion"
               className="glow-text-white"
             />

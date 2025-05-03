@@ -101,7 +101,7 @@ const ShareButton = ({
                   className={`flex  relative text-center justify-center text-black-sm-contour items-center `}
                 >
                   <img
-                    src={`/assets/240px-gobcoin.png`}
+                    src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
                     alt="orb"
                     className={` overflow-hidden max-w-[10vw]`}
                   />

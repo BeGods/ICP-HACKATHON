@@ -3,13 +3,13 @@ import IconBtn from "../../Buttons/IconBtn";
 
 const CharCrd = ({ handleClose, itemId }) => {
   return (
-    <div className="relative w-[72%] h-[53%]">
+    <div className="relative select-none w-[72%] h-[53%]">
       <div
         className={`relative card-shadow-white flex justify-center items-center`}
       >
         <div className="relative w-full h-full text-card">
           <img
-            src={`/assets/ror-cards/240px-${itemId}.png`}
+            src={`https://media.publit.io/file/BeGods/items/240px-${itemId}.png`}
             alt="info background"
             className="w-full h-full object-cover rounded-primary z-10"
           />

@@ -7,87 +7,75 @@ import DefaultBtn from "../../Buttons/DefaultBtn";
 import { mythSections } from "../../../utils/constants.fof";
 import { claimArtifact } from "../../../utils/api.ror";
 import { toast } from "react-toastify";
+import CurrencyCrd from "../Relics/CurrencyCrd";
+import RelicInfo from "../Relics/RelicInfo";
 
-const ArtifactCrd = ({ category, handleClick, items, initalIdx = 0 }) => {
+const ArtifactCrd = ({
+  category,
+  handleClick,
+  items,
+  initalIdx = 0,
+  isCurrency,
+}) => {
   const { isTelegram, setShowCard, gameData, setGameData, authToken } =
     useContext(RorContext);
   const [idx, setIdx] = useState(initalIdx);
   const [flipped, setFlipped] = useState(false);
 
-  const itemExists = gameData?.pouch?.includes(items[idx].id) ? true : false;
+  // const itemExists = gameData?.pouch?.includes(items[idx].id) ? true : false;
 
   const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
-
-  const handleClaimItem = async () => {
-    try {
-      await claimArtifact(authToken, items[idx].id);
-      setGameData((prev) => {
-        let updatedPouch = [...prev.pouch, items[idx].id];
-        let updatdStats = { ...prev.stats };
-
-        updatdStats.gobcoin -= 1;
-
-        return {
-          ...prev,
-          pouch: updatedPouch,
-          stats: updatdStats,
-        };
-      });
-
-      handleClick();
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "An unexpected error occurred";
-      toast.error(errorMessage);
-    }
-  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
       <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
         <div className={`card  ${cardHeight}  ${flipped ? "flipped" : ""}`}>
-          <RelicCrd
-            isClose={true}
-            fragmentId={0}
-            isComplete={true}
-            itemId={items[idx].id}
-            handleClose={() => setShowCard(false)}
-            handleFlip={() => {}}
-          />
+          {isCurrency ? (
+            <CurrencyCrd
+              itemId={items[idx]}
+              handleClose={handleClick}
+              handleFlip={() => setFlipped((prev) => !prev)}
+            />
+          ) : (
+            <RelicCrd
+              isClose={true}
+              fragmentId={0}
+              isComplete={true}
+              itemId={items[idx].id}
+              handleClose={() => setShowCard(false)}
+              handleFlip={() => setFlipped((prev) => !prev)}
+            />
+          )}
+
+          <RelicInfo handleFlip={() => setFlipped((prev) => !prev)} />
         </div>
       </div>
       <div className={`button  z-50 ${flipped ? "flipped mt-3" : "mt-2"}`}>
         <div
           className={`button__face button__face--front flex justify-center items-center`}
         >
-          {itemExists ? (
-            <DefaultBtn
-              message={3}
-              activeMyth={mythSections.indexOf(items[idx]?.id?.split(".")[0])}
-              handleClick={() => {
-                const myth = items[idx]?.id?.split(".")[0];
-                if (category == 0) {
-                  handleClick(myth);
-                }
-                setShowCard(null);
-              }}
-            />
-          ) : (
-            <RoRBtn
-              left={1}
-              right={1}
-              handleClick={handleClaimItem}
-              disable={itemExists}
-            />
-          )}
+          <RoRBtn
+            itemId={items[idx].id}
+            message={"Close"}
+            left={1}
+            right={1}
+            isNotPay={true}
+            handleClick={handleClick}
+            disable={false}
+          />
         </div>
         <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center">
-          <></>
+          <RoRBtn
+            itemId={items[idx].id}
+            message={"Close"}
+            left={1}
+            right={1}
+            isNotPay={true}
+            handleClick={handleClick}
+            disable={false}
+          />
         </div>
       </div>
-
       <div>
         <ToggleLeft
           activeMyth={4}
@@ -107,3 +95,33 @@ const ArtifactCrd = ({ category, handleClick, items, initalIdx = 0 }) => {
 };
 
 export default ArtifactCrd;
+
+// const handleClaimItem = async () => {
+//   try {
+//     await claimArtifact(authToken, items[idx].id);
+//     setGameData((prev) => {
+//       let updatedPouch = [...prev.pouch, items[idx].id];
+//       let updatdStats = { ...prev.stats };
+
+//       updatdStats.gobcoin -= 1;
+
+//       return {
+//         ...prev,
+//         pouch: updatedPouch,
+//         stats: updatdStats,
+//       };
+//     });
+
+//     handleClick();
+//   } catch (error) {
+//     const errorMessage =
+//       error.response?.data?.message ||
+//       error.message ||
+//       "An unexpected error occurred";
+//     toast.error(errorMessage);
+//   }
+// };
+
+{
+  /* */
+}

@@ -21,7 +21,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
       <div
         className="absolute inset-0 w-full h-full z-0"
         style={{
-          background: `url(${assets.uxui.rorspash}) no-repeat center / cover`,
+          background: `url(${assets.uxui.rorsplash}) no-repeat center / cover`,
         }}
       ></div>
 

@@ -31,7 +31,7 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
           className="absolute mb-[5vh] flex justify-center w-full bottom-0  z-50"
         >
           <img
-            src={`/assets/ror-cards/240px-${"celtic"?.toLowerCase()}.artifact.starter02_on.png`}
+            src={`https://media.publit.io/file/BeGods/items/240px-${"celtic"?.toLowerCase()}.artifact.starter02.png`}
             alt="item"
             className="w-[14vw] scale-point"
           />
@@ -84,7 +84,7 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
                   src={
                     reward.fragment?.isChar
                       ? `/assets/ror-cards/240px-${destrItemIds[0]}.char.${destrItemIds[2]}.png`
-                      : `/assets/ror-cards/240px-${reward.fragment.itemId}_on.png`
+                      : `https://media.publit.io/file/BeGods/items/240px-${reward.fragment.itemId}.png`
                   }
                   alt="fragment"
                 />
@@ -118,7 +118,7 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
               </div>
               <div className="absolute flex flex-col justify-center items-center z-20">
                 <img
-                  src={`/assets/ror-cards/240px-shard.water.png`}
+                  src={`https://media.publit.io/file/BeGods/items/240px-shard.water.png`}
                   alt="shards"
                 />
                 <div className="text-num mt-5">Shards x{reward.shards}</div>
