@@ -46,7 +46,7 @@ const JoinBonus = (props) => {
             ...prevItems,
             stats: newStats,
             bank: {
-              ...prev.bank,
+              ...prevItems.bank,
               isVaultActive: true,
             },
           };

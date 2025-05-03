@@ -95,7 +95,7 @@ const Gacha = () => {
         </div>
         {/* Scratch */}
         <div
-          className={`absolute ${
+          className={`absolute rounded-md ${
             isTelegram ? "tg-container-height" : "browser-container-height"
           } w-screen flex justify-center items-center`}
         >

@@ -133,15 +133,15 @@ const BottomChild = () => {
   const mythShards = gameData.stats.mythologies.map((myth) => myth.shards);
   const shardMap = [
     ...mythShards,
-    gameData.stats.blackShards,
-    gameData.stats.whiteShards,
+    gameData?.stats?.blackShards ?? 0,
+    gameData?.stats?.whiteShards ?? 0,
   ];
 
   const shards = [
-    "shard.fire",
-    "shard.earth",
-    "shard.water",
-    "shard.air",
+    "shard.red",
+    "shard.green",
+    "shard.blue",
+    "shard.yellow",
     "shard.black",
     "shard.white",
   ].map((item, idx) => ({

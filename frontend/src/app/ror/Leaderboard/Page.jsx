@@ -295,22 +295,22 @@ const Leaderboard = (props) => {
             className={`button__face button__face--front flex-col flex justify-center items-center`}
           >
             <div
-              className={`flex z-50 transition-all p-0.5  duration-1000 bg-white mx-auto border border-black w-[60%] rounded-full`}
+              className={`flex z-50 transition-all p-0.5  duration-1000 bg-white mx-auto border border-black w-[30%] rounded-full`}
             >
               <div
                 className={`flex justify-center items-center ${
                   !isFinished ? "bg-black text-white" : "text-black"
-                } h-full font-symbols rounded-full w-1/2 text-[24px]`}
+                } h-full font-symbols rounded-full w-full text-[24px]`}
               >
                 $
               </div>
-              <div
+              {/* <div
                 className={`flex font-symbols justify-center items-center ${
                   isFinished ? "bg-black text-white" : "text-black"
                 } h-full uppercase rounded-full w-1/2 py-1 text-[24px]`}
               >
                 %
-              </div>
+              </div> */}
             </div>
           </div>
           <div
