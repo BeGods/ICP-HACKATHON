@@ -36,7 +36,7 @@ const JoinBonus = (props) => {
         await fetchJoiningBonus(authToken);
         trackEvent("rewards", "claim_join_reward", "success");
         setTimeout(() => {
-          setSection(0);
+          setSection(1);
         }, 1000);
         setGameData((prevItems) => {
           const newStats = { ...prevItems.stats };

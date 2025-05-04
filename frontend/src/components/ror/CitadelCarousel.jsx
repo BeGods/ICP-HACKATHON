@@ -50,6 +50,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "library",
         component: (
           <CitadelItem
+            disable={true}
             icon="+"
             isMulti={false}
             itemKey="library"

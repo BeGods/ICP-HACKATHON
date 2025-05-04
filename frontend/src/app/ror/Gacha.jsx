@@ -95,7 +95,7 @@ const Gacha = () => {
         </div>
         {/* Scratch */}
         <div
-          className={`absolute rounded-md ${
+          className={`absolute rounded-lg ${
             isTelegram ? "tg-container-height" : "browser-container-height"
           } w-screen flex justify-center items-center`}
         >
@@ -104,7 +104,7 @@ const Gacha = () => {
             item={item}
             handleComplete={() => {
               setTimeout(() => {
-                setSection(0);
+                setSection(1);
               }, 5000);
             }}
           />

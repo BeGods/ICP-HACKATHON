@@ -433,7 +433,7 @@ const Leaderboard = (props) => {
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
-                        {item.coinRank}
+                        {index + 1}
                       </div>
                       <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                         {item.totalGobcoin}
@@ -560,7 +560,7 @@ const Leaderboard = (props) => {
                 >
                   <LeaderboardItem
                     key={index}
-                    rank={item.coinRank}
+                    rank={index + 4}
                     name={item.username}
                     totalOrbs={item.totalGobcoin}
                     imageUrl={item.profileImage}

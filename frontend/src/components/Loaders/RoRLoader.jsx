@@ -30,7 +30,16 @@ const RoRLoader = (props) => {
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
         <div className="flex flex-col justify-between items-center w-full h-full pt-[3vh] pb-[2vh]">
-          <img src={assets.logos.ror} alt="ror" className="ror-text-shadow" />
+          <div>
+            <img
+              src={assets.logos.ror}
+              alt="dod"
+              className={` transition-all duration-300`}
+            />
+            <div className="flex justify-center text-white font-fof text-[7vw] glow-text-norse">
+              BETA
+            </div>
+          </div>
           <div className="flex flex-col w-full">
             <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />

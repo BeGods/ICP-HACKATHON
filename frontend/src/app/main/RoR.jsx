@@ -41,6 +41,7 @@ import Tavern from "../ror/Tavern";
 import Redeem from "../fof/Redeem/Redeem";
 import OnboardPage from "../fof/Onboard/Page";
 import { useNavigate } from "react-router-dom";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
@@ -182,7 +183,7 @@ const RoRMain = () => {
       }, 1000);
     } else {
       setTimeout(() => {
-        setSection(0);
+        setSection(1);
         setIsLoading(false);
       }, 1000);
     }

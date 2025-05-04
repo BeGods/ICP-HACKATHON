@@ -361,7 +361,7 @@ const Vault = (props) => {
           <div className="flex flex-col gap-y-4 justify-center items-center h-full">
             <div className="flex justify-center relative">
               <img
-                src={`https://media.publit.io/file/BeGods/items/240px-${mythSections[currMyth]}.artifact.starter00.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-${mythSections[currMyth]}.artifact.starter00-off.png`}
                 alt="box"
                 className={`glow-text-white `}
               />
