@@ -5,7 +5,8 @@ import { elementMythNames } from "../../../utils/constants.ror";
 
 const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
   const { assets } = useContext(RorContext);
-  const element = itemId.id.split(".")[1];
+  const element = itemId.name?.split(" ")[0];
+
   const mythology = elementMythNames[element]?.toLowerCase();
 
   return (
@@ -14,19 +15,14 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
       className="card__face card__face--front relative flex justify-center items-center"
     >
       <div
-        className={`absolute inset-0 bg-cover bg-center filter-${mythology} rounded-primary z-0`}
+        className={`absolute inset-0 bg-cover bg-center rounded-primary z-0`}
         style={{ backgroundImage: `url(${assets.uxui.basebg})` }}
       />
 
       <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
-        <div className="relative m-2 flex justify-center items-center w-[50px]">
-          <img
-            src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
-            alt="relic"
-            className="w-full"
-          />
-          <div className="absolute text-[10.5vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
-            1
+        <div className="relative m-2 flex justify-center items-center w-[50px] h-[7vh]">
+          <div className="absolute text-[10.5vw] font-fof font-bold text-shadow text-white">
+            {itemId.count}
           </div>
         </div>
         <div className="relative w-[240px] h-[240px] flex justify-center items-center">

@@ -39,7 +39,7 @@ const CenterChild = ({ assets, content, mythology, location }) => {
       <div className="absolute top-0 w-full flex justify-center z-[60] text-[5vw] uppercase glow-text-black font-bold text-white">
         {bgLabel[location] ?? "Explore"}
       </div>
-      <div className="absolute flex justify-center items-center inset-0 text-[16vw]">
+      <div className="absolute flex justify-center items-center inset-0 text-[24vw] mt-4">
         {content}
       </div>
     </div>
@@ -205,10 +205,13 @@ const Explore = () => {
     if (!startPlay) {
       return (
         <div
-          onClick={handlePlay}
-          className="bg-white text-center font-medium uppercase text-black text-[6vw] p-3"
+          onTouchStart={handlePlay}
+          className="text-center font-medium uppercase text-black-contour text-white text-[12vw] p-3"
         >
-          Swipe To Dig
+          Swipe To Dig <br />{" "}
+          <span className="font-symbols lowercase text-[24vw] text-black-contour">
+            b
+          </span>
         </div>
       );
     }
@@ -223,7 +226,7 @@ const Explore = () => {
           </div>
         );
       }
-      return <div className="text-[12vw]">{countDown}</div>;
+      return <div className="text-[60vw] text-black-contour">{countDown}</div>;
     }
 
     if (currStage === 1) {
@@ -278,7 +281,7 @@ const Explore = () => {
               )}
           </div>
 
-          <div className="text-[20vw] reward-pop-in text-gold text-black-contour uppercase">
+          <div className="text-[22vw] reward-pop-in text-gold text-black-contour uppercase">
             {swipes >= gameData.stats.competelvl ? "Won" : "Lost"}
           </div>
         </div>
@@ -593,6 +596,18 @@ const Explore = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (digMyth) return;
+
+    const interval = setInterval(() => {
+      setPrevIndex(currentIndex);
+      const randomIndex = Math.floor(Math.random() * images.length);
+      setCurrentIndex(randomIndex);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [currentIndex, digMyth]);
+
   return (
     <div
       style={{
@@ -619,13 +634,13 @@ const Explore = () => {
           <div className="background-container transition-all duration-300 blur-[2px]">
             <img
               src={`/assets/locations/1280px-ror.${images[prevIndex]}_wide.jpg`}
-              key={`prev-${images[prevIndex]}`}
+              key={images[prevIndex]}
               className="bg-image bg-image--prev"
               alt="background previous"
             />
             <img
               src={`/assets/locations/1280px-ror.${images[currentIndex]}_wide.jpg`}
-              key={`curr-${images[currentIndex]}`}
+              key={images[currentIndex]}
               className="bg-image bg-image--current"
               alt="background current"
             />

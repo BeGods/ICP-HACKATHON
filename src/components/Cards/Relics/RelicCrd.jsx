@@ -47,16 +47,21 @@ const RelicCrd = ({
       />
 
       <div className="relative z-20 flex flex-col select-none items-center justify-center w-full h-full">
-        <div className="relative m-2 flex justify-center items-center w-[50px]">
-          <img
-            src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
-            alt="relic"
-            className="w-full select-none"
-          />
-          <div className="absolute text-[10.5vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
-            {isSell && !isComplete ? 1 : itemDetails.coins}
+        {isSell ? (
+          <div className="relative m-2 flex justify-center items-center w-[50px]">
+            <img
+              src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
+              alt="relic"
+              className="w-full select-none"
+            />
+            <div className="absolute text-[10.5vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
+              {!isComplete ? 1 : itemDetails.coins}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="relative m-2 flex justify-center items-center w-[50px] h-[5vh]"></div>
+        )}
+
         <div className="relative w-[240px] h-[240px] select-none mt-4 flex justify-center items-center">
           <div
             onContextMenu={(e) => e.preventDefault()}
