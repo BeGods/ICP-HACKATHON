@@ -78,7 +78,10 @@ export const getGameStats = async (req, res) => {
     const isRestActive = isVaultActive(user.gameSession?.restExpiresAt);
 
     // reset game session
-    if (hasTwelveHoursElapsed(user.gameSession.gameHrStartAt)) {
+    if (
+      !user?.gameSession?.gameHrStartAt ||
+      hasTwelveHoursElapsed(user?.gameSession?.gameHrStartAt)
+    ) {
       // thief: steal item
       if (user.gameSession.isThiefActive && !isRestActive) {
         thiefStole = true;
