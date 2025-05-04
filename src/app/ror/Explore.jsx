@@ -206,9 +206,9 @@ const Explore = () => {
       return (
         <div
           onClick={handlePlay}
-          className="bg-white text-black text-[6vw] p-3"
+          className="bg-white text-center font-medium uppercase text-black text-[6vw] p-3"
         >
-          PLAY
+          Swipe To Dig
         </div>
       );
     }
@@ -556,35 +556,6 @@ const Explore = () => {
     }, 3000);
   };
 
-  const storeBubbleLastClaimedTime = () => {
-    const currentTime = Date.now();
-
-    localStorage.setItem("bubbleLastClaimed", currentTime.toString());
-  };
-
-  // useEffect(() => {
-  //   const filteredRewards = rewards.filter(
-  //     (reward) =>
-  //       !rewardsClaimedInLastHr.includes(reward.id) &&
-  //       reward.tokensCollected < 12
-  //   );
-
-  //   const lastBubbleClaimedTime = getBubbleLastClaimedTime();
-  //   const bubbleCooldown = 2 * 30 * 1000;
-  //   const canShowBubble =
-  //     !lastBubbleClaimedTime ||
-  //     Date.now() - lastBubbleClaimedTime >= bubbleCooldown;
-
-  //   if (filteredRewards.length > 0 && counter === 1) {
-  //     const randomIndex = Math.floor(Math.random() * filteredRewards.length);
-  //     const randomReward = filteredRewards[randomIndex];
-  //     setRandomReward(randomReward);
-  //     setShowBubble(true);
-  //     setShowPartner(true);
-  //     storeBubbleLastClaimedTime();
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (
       startPlay &&
@@ -622,193 +593,6 @@ const Explore = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (digMyth) return;
-
-    const interval = setInterval(() => {
-      setPrevIndex(currentIndex);
-      const randomIndex = Math.floor(Math.random() * images.length);
-      setCurrentIndex(randomIndex);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [currentIndex, digMyth]);
-
-  // useEffect(() => {
-  //   if (showPartner) {
-  //     const ball = ballRef.current;
-  //     const parent = ball.parentNode;
-
-  //     const parentRect = parent.getBoundingClientRect();
-  //     const ballRect = ball.getBoundingClientRect();
-
-  //     const getRandomCornerPosition = () => {
-  //       const positions = [
-  //         { x: 0, y: 0 },
-  //         { x: parentRect.width - ballRect.width, y: 0 },
-  //         { x: 0, y: parentRect.height - ballRect.height },
-  //         {
-  //           x: parentRect.width - ballRect.width,
-  //           y: parentRect.height - ballRect.height,
-  //         },
-  //       ];
-  //       return positions[Math.floor(Math.random() * positions.length)];
-  //     };
-
-  //     const initialPosition = getRandomCornerPosition();
-
-  //     gsap.set(ball, {
-  //       x: initialPosition.x,
-  //       y: initialPosition.y,
-  //     });
-
-  //     const getRandomDirection = () => {
-  //       const angle = Math.random() * 2 * Math.PI;
-  //       return { x: Math.cos(angle), y: Math.sin(angle) };
-  //     };
-
-  //     const clampPosition = (pos, min, max) => {
-  //       return Math.min(Math.max(pos, min), max);
-  //     };
-
-  //     const updateDirection = (position) => {
-  //       if (
-  //         position.x <= 0 ||
-  //         position.x >= parentRect.width - ballRect.width
-  //       ) {
-  //         direction.current = getRandomDirection();
-  //       }
-  //       if (
-  //         position.y <= 0 ||
-  //         position.y >= parentRect.height - ballRect.height
-  //       ) {
-  //         direction.current = getRandomDirection();
-  //       }
-  //     };
-
-  //     const animateBall = () => {
-  //       const ballCurrentX = gsap.getProperty(ball, "x");
-  //       const ballCurrentY = gsap.getProperty(ball, "y");
-  //       const speed = 10;
-
-  //       let newPosX = ballCurrentX + speed * direction.current.x;
-  //       let newPosY = ballCurrentY + speed * direction.current.y;
-
-  //       newPosX = clampPosition(newPosX, 0, parentRect.width - ballRect.width);
-  //       newPosY = clampPosition(
-  //         newPosY,
-  //         0,
-  //         parentRect.height - ballRect.height
-  //       );
-
-  //       updateDirection({ x: newPosX, y: newPosY });
-
-  //       gsap.set(ball, { x: newPosX, y: newPosY });
-  //       animationFrameId.current = requestAnimationFrame(animateBall);
-  //     };
-
-  //     let animationFrameId = { current: null };
-  //     direction.current = getRandomDirection();
-  //     animateBall();
-
-  //     // Stop animation after 9 seconds
-  //     const timeoutId = setTimeout(() => {
-  //       setShowBubble(false);
-  //       setShowPartner(false);
-  //       autoCloseTimeoutId.current = setTimeout(() => {
-  //         handleSubmitSessionData();
-  //       }, 1500);
-  //       cancelAnimationFrame(animationFrameId.current);
-  //     }, 9000);
-
-  //     // SWIPE DETECTION
-  //     let startX = 0;
-  //     let startY = 0;
-  //     let isSwiping = false;
-
-  //     const onPointerDown = (e) => {
-  //       startX = e.clientX || (e.touches && e.touches[0].clientX);
-  //       startY = e.clientY || (e.touches && e.touches[0].clientY);
-  //       isSwiping = true;
-  //     };
-
-  //     const onPointerMove = (e) => {
-  //       if (!isSwiping) return;
-  //       const currentX = e.clientX || (e.touches && e.touches[0].clientX);
-  //       const currentY = e.clientY || (e.touches && e.touches[0].clientY);
-
-  //       const deltaX = currentX - startX;
-  //       const deltaY = currentY - startY;
-  //       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-  //       if (distance > 50) {
-  //         // Threshold to consider it a swipe
-  //         isSwiping = false;
-  //         burstBubble();
-  //       }
-  //     };
-
-  //     const onPointerUp = () => {
-  //       isSwiping = false;
-  //     };
-
-  //     const burstBubble = () => {
-  //       cancelAnimationFrame(animationFrameId.current);
-  //       gsap.to(ball, { scale: 1.5, duration: 0.2 }).then(() => {
-  //         alert("Bubble burst!");
-
-  //         setShowPartner(false);
-  //         setActiveReward(randomReward);
-
-  //         const incrementedReward = {
-  //           ...randomReward,
-  //           tokensCollected: randomReward.tokensCollected + 1,
-  //         };
-
-  //         const updatedRewards = rewards.map((reward) => {
-  //           if (reward.id === randomReward.id) {
-  //             if (reward.tokensCollected + 1 === 12) {
-  //               setTriggerConf(true);
-  //             }
-  //             return {
-  //               ...reward,
-  //               tokensCollected: reward.tokensCollected + 1,
-  //             };
-  //           }
-  //           return reward;
-  //         });
-
-  //         trackEvent("action", "bubble_captured", "success");
-  //         setRewards(updatedRewards);
-  //         setActiveReward(incrementedReward);
-  //         setSection(6);
-  //       });
-  //     };
-
-  //     // Add swipe event listeners
-  //     ball.addEventListener("pointerdown", onPointerDown);
-  //     ball.addEventListener("pointermove", onPointerMove);
-  //     ball.addEventListener("pointerup", onPointerUp);
-  //     ball.addEventListener("touchstart", onPointerDown);
-  //     ball.addEventListener("touchmove", onPointerMove);
-  //     ball.addEventListener("touchend", onPointerUp);
-
-  //     return () => {
-  //       clearTimeout(timeoutId);
-  //       cancelAnimationFrame(animationFrameId.current);
-  //       gsap.killTweensOf(ball);
-
-  //       // Clean up swipe events
-  //       ball.removeEventListener("pointerdown", onPointerDown);
-  //       ball.removeEventListener("pointermove", onPointerMove);
-  //       ball.removeEventListener("pointerup", onPointerUp);
-  //       ball.removeEventListener("touchstart", onPointerDown);
-  //       ball.removeEventListener("touchmove", onPointerMove);
-  //       ball.removeEventListener("touchend", onPointerUp);
-  //     };
-  //   }
-  // }, [showPartner]);
-
   return (
     <div
       style={{
@@ -835,13 +619,13 @@ const Explore = () => {
           <div className="background-container transition-all duration-300 blur-[2px]">
             <img
               src={`/assets/locations/1280px-ror.${images[prevIndex]}_wide.jpg`}
-              key={images[prevIndex]}
+              key={`prev-${images[prevIndex]}`}
               className="bg-image bg-image--prev"
               alt="background previous"
             />
             <img
               src={`/assets/locations/1280px-ror.${images[currentIndex]}_wide.jpg`}
-              key={images[currentIndex]}
+              key={`curr-${images[currentIndex]}`}
               className="bg-image bg-image--current"
               alt="background current"
             />
