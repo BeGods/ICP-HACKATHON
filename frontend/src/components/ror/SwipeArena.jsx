@@ -63,6 +63,7 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
           <p>Swipe count: {swipes}</p>
         </div> */}
       </div>
+
       <div className="flex items-center justify-between absolute bottom-0 w-full px-2 h-[6vh] -mb-[8vh]">
         <div className="text-[5vh]">{roundTimeElapsed}s</div>
         <div className="flex gap-x-4">

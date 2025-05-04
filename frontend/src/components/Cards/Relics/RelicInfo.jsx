@@ -36,9 +36,10 @@ const RelicInfo = ({ handleFlip }) => {
             "font-normal"
           } ${i18n.language === "ru" && "leading-[15px]"}`}
         >
-          As a female avatar in CELTIC mythology, you emerge as a manifestation
-          of valor and destiny, embodying both the essence of a fierce warrior
-          and a divine entity. - “Embrace destiny--immortality awaits”
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat.
         </div>
       </div>
       <IconBtn isInfo={false} activeMyth={5} align={10} />
