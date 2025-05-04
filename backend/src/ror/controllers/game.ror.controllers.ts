@@ -119,8 +119,8 @@ export const getGameStats = async (req, res) => {
     const isEligibleToClaim = await checkBonus(user);
 
     const memberData = {
-      coinRank: userRank?.coinRank,
-      gobcoin: userRank?.totalGobcoin,
+      coinRank: userRank?.coinRank ?? 0,
+      gobcoin: userRank?.totalGobcoin ?? 0,
     };
 
     // is eligible to claim, streak, joining bonus

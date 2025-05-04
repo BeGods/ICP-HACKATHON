@@ -208,8 +208,8 @@ export const getLeaderboardRanks = async (
       $facet: {
         active: ranksFilter,
         finished: [
-          { $match: { totalGobcoin: { $gte: 999999 } } },
-          { $sort: { fofCompletedAt: 1 as 1 } },
+          { $match: { totalGobcoin: { $gte: 999 } } },
+          { $sort: { rorCompletedAt: 1 as 1 } },
           {
             $project: {
               __v: 0,

@@ -1,6 +1,8 @@
-import { getLeaderboardRanks } from "../../ror/services/general.ror.services";
 import userMythologies from "../../common/models/mythologies.models";
-import { generateDailyRwrd } from "../services/general.ror.services";
+import {
+  generateDailyRwrd,
+  getLeaderboardRanks,
+} from "../services/general.ror.services";
 import User from "../../common/models/user.models";
 import { CoinsTransactions } from "../../common/models/transactions.models";
 import milestones from "../../common/models/milestones.models";
@@ -41,6 +43,7 @@ export const claimDailyBonus = async (req, res) => {
 
 export const getLeaderboard = async (req, res) => {
   const { page, userRank } = req.query;
+
   // const user = req.user;
   const requestPage = parseInt(page, 10) || 0;
 
