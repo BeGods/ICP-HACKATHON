@@ -50,7 +50,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "library",
         component: (
           <CitadelItem
-            disable={false}
+            disable={true}
             icon="+"
             isMulti={false}
             itemKey="library"
@@ -67,7 +67,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "rest",
         component: (
           <CitadelItem
-            disable={false}
+            disable={true}
             icon="7"
             isMulti={false}
             itemKey="tavern"
@@ -84,7 +84,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "gemologist",
         component: (
           <CitadelItem
-            disable={false}
+            disable={true}
             icon="v"
             isMulti={false}
             itemKey="apothecary"
