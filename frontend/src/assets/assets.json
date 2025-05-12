@@ -95,7 +95,7 @@
         },
         "line" : "/assets/line.png",
         "otp" : "/assets/mobile.png",
-        "dapp" : "/assets/button.dapp.white.svg",
+        "dapp" : "https://media.publit.io/file/BeGods/buttons/280px-button.dapp.on.png",
         "telegram" : "/assets/telegram.png"
     },
     "symbols": {

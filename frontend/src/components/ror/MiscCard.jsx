@@ -36,7 +36,7 @@ const MiscCard = ({ Button, img, icon, showInfo }) => {
                   className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary`}
                   style={{ backgroundImage: `url(${assets.uxui.paper})` }}
                 />
-                <div className="absolute uppercase glow-text-quest flex justify-center items-center w-full h-full">
+                <div className="absolute uppercase text-black-contour flex justify-center items-center w-full h-full">
                   {icon ?? "a"}
                 </div>
               </div>

@@ -82,6 +82,7 @@ const RoRMain = () => {
   const [rewards, setRewards] = useState([]);
   const [swipes, setSwipes] = useState(0);
   const [shiftBg, setShiftBg] = useState(50);
+  const [isSwiping, setIsSwiping] = useState(false);
   const [shardReward, setShardReward] = useState(null);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [battleData, setBattleData] = useState({
@@ -135,6 +136,8 @@ const RoRMain = () => {
     setTriggerConf,
     activeReward,
     setActiveReward,
+    isSwiping,
+    setIsSwiping,
   };
   const refreshTimeoutRef = useRef();
 

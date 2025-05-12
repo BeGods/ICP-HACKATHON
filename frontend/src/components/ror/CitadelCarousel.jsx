@@ -50,7 +50,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "library",
         component: (
           <CitadelItem
-            disable={true}
+            disable={false}
             icon="+"
             isMulti={false}
             itemKey="library"
@@ -67,7 +67,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "rest",
         component: (
           <CitadelItem
-            disable={true}
+            disable={false}
             icon="7"
             isMulti={false}
             itemKey="tavern"
@@ -84,7 +84,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "gemologist",
         component: (
           <CitadelItem
-            disable={true}
+            disable={false}
             icon="v"
             isMulti={false}
             itemKey="apothecary"
@@ -99,6 +99,19 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
                 setSection(11);
               }
             }}
+          />
+        ),
+      },
+      {
+        key: "port",
+        component: (
+          <CitadelItem
+            disable={true}
+            icon="E"
+            isMulti={false}
+            itemKey="port"
+            desc="Port"
+            handleClick={() => {}}
           />
         ),
       },
@@ -119,6 +132,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       "library",
       "rest",
       "gemologist",
+      "port",
     ];
 
     const sortedItems = boosters

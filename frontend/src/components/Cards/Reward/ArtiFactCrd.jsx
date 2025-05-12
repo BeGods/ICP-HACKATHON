@@ -34,7 +34,7 @@ const ArtifactCrd = ({
             <CurrencyCrd
               itemId={items[idx]}
               handleClose={handleClick}
-              handleFlip={() => setFlipped((prev) => !prev)}
+              handleFlip={() => setShowCard(false)}
             />
           ) : (
             <RelicCrd
@@ -56,7 +56,7 @@ const ArtifactCrd = ({
         >
           <RoRBtn
             itemId={items[idx].id}
-            message={"Close"}
+            message={isCurrency ? items[idx].count : "Close"}
             left={1}
             right={1}
             isNotPay={true}

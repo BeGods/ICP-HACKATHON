@@ -48,11 +48,27 @@ const RelicRwrdCrd = ({
       )}
 
       {isChar ? (
-        <CharCrd
-          cardHeight={cardHeight}
-          itemId={itemId}
-          handleClose={() => setShowCard(null)}
-        />
+        <>
+          <div className="relative select-none w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+            <div className={`card ${cardHeight} select-none`}>
+              <CharCrd
+                cardHeight={cardHeight}
+                itemId={itemId}
+                handleClose={() => setShowCard(null)}
+              />
+            </div>
+          </div>
+          <div className={`button  z-50 mt-2`}>
+            <div
+              className={`button__face button__face--front flex justify-center items-center`}
+            >
+              {ButtonFront}
+            </div>
+            <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center">
+              {ButtonBack}
+            </div>
+          </div>
+        </>
       ) : (
         <>
           <div className="relative select-none w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">

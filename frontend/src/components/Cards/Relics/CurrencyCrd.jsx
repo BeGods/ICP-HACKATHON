@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { RorContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
-import { elementMythNames } from "../../../utils/constants.ror";
+import { elementMythNames, mythSymbols } from "../../../utils/constants.ror";
 
 const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
   const { assets } = useContext(RorContext);
-  const element = itemId.name?.split(" ")[0];
-
-  const mythology = elementMythNames[element]?.toLowerCase();
+  const element = itemId.id?.split(".")[1];
+  const mythology = elementMythNames[element]?.toLowerCase() ?? element;
 
   return (
     <div
@@ -20,11 +19,38 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
       />
 
       <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
-        <div className="relative m-2 flex justify-center items-center w-[50px] h-[7vh]">
+        {/* <div className="relative m-2 flex justify-center items-center w-[50px] h-[4rem]">
           <div className="absolute text-[10.5vw] font-fof font-bold text-shadow text-white">
             {itemId.count}
           </div>
+        </div> */}
+        <div
+          className={`flex m-2  relative text-center justify-center text-black-sm-contour items-center glow-icon-${
+            mythology === "black"
+              ? "white"
+              : mythology === "white"
+              ? "black"
+              : mythology
+          } `}
+        >
+          <img
+            src={`${assets.uxui.baseorb}`}
+            alt="orb"
+            className={`filter-orbs-${mythology} overflow-hidden max-w-[50px]`}
+          />
+          <span
+            className={`absolute z-1 text-black-sm-contour  ${
+              mythology === "white"
+                ? "text-black opacity-80"
+                : "text-white opacity-50"
+            } font-symbols  text-symbol-sm mt-1`}
+          >
+            {mythology === "black" || mythology === "white"
+              ? "g"
+              : mythSymbols[mythology]}
+          </span>
         </div>
+
         <div className="relative w-[240px] h-[240px] flex justify-center items-center">
           <div className="relative w-full h-full">
             <img
@@ -40,13 +66,13 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
             className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary filter-paper-${mythology}`}
             style={{ backgroundImage: `url(${assets.uxui.paper})` }}
           />
-          <div className="absolute uppercase glow-text-quest flex justify-center items-center w-full h-full">
-            {itemId.name}
+          <div className="absolute font-symbols text-black-contour text-[50px] flex justify-center items-center w-full h-full">
+            l
           </div>
         </div>
       </div>
       <IconBtn
-        isInfo={true}
+        isInfo={false}
         activeMyth={5}
         align={10}
         handleClick={handleClose}
