@@ -268,7 +268,8 @@ const IntroPage = (props) => {
     if (platform) {
       const isTg = determineIsTelegram(platform);
       const isBrowserDesktop = isDesktop();
-      if (isBrowserDesktop) {
+
+      if (isBrowserDesktop && !oneWaveParam) {
         setIsTgDesktop(true);
       }
 
@@ -299,8 +300,6 @@ const IntroPage = (props) => {
         setIsBrowser(false);
 
         const tokenExpiry = await getExpCookie(tele);
-
-        console.log(tokenExpiry);
 
         if (!tokenExpiry) {
           console.log("No token found. Authenticating...");
@@ -342,6 +341,8 @@ const IntroPage = (props) => {
   // useEffect(() => {
   //   (async () => await deleteAuthCookie(tele))();
   // }, []);
+
+  useEffect(() => {}, [isTgDesktop, oneWaveParam]);
 
   return (
     <div

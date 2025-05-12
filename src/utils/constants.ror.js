@@ -35,6 +35,8 @@ export const mythElementNamesLowerCase = {
   norse: "water",
   egyptian: "air",
   other: "aether",
+  whiteShards: "white",
+  blackShards: "black",
 };
 
 
@@ -50,20 +52,22 @@ export const colorByMyth = {
   celtic: "green",
   greek: "red",
   norse: "blue",
-  egyptian: "yellow"
+  egyptian: "yellow",
+  whiteShards: "white",
+  blackShards: "black",
 }
 
 export const bgLabel = {
   earth01: "Forrest",
-  earth02: "Plain",
+  earth02: "Plains",
   air01: "Deserts",
   air02: "Highlands",
   fire01: "Volcanos",
   fire02: "Lava Fields",
-  water01: "Lakes",
-  water02: "Glaciers",
-  underworld01: "underworld",
-  underworld02: "underworld"
+  water01: "Glaciers",
+  water02: "Lakes",
+  underworld01: "Underworld",
+  underworld02: "Underworld"
 }
 
 

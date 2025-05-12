@@ -19,9 +19,15 @@ import gsap from "gsap";
 import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import DefaultBtn from "../../components/Buttons/DefaultBtn";
-import { bgLabel, mythSections } from "../../utils/constants.ror";
+import {
+  bgLabel,
+  colorByMyth,
+  mythElementNamesLowerCase,
+  mythSections,
+} from "../../utils/constants.ror";
 import { toast } from "react-toastify";
 import RoRBtn from "../../components/ror/RoRBtn";
+import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
 
 const tele = window.Telegram?.WebApp;
 
@@ -62,6 +68,7 @@ const Explore = () => {
     isTelegram,
     assets,
     setShardReward,
+    setIsSwiping,
     rewards,
     setRewards,
     setActiveReward,
@@ -89,6 +96,7 @@ const Explore = () => {
     holdStartTime: 0,
     holdEndTime: 0,
   });
+  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   const images = [
     "celtic.earth01",
@@ -246,16 +254,16 @@ const Explore = () => {
             {!isInside &&
               showItem &&
               battleData.roundData.at(-1)?.status === 0 &&
-              hasItemInBag(`${digMyth?.toLowerCase()}.artifact.common03`) && (
+              hasItemInBag(`${digMyth?.toLowerCase()}.artifact.starter02`) && (
                 <div
                   onClick={() =>
                     handleClaimItem(
-                      `${digMyth?.toLowerCase()}.artifact.common03`
+                      `${digMyth?.toLowerCase()}.artifact.starter02`
                     )
                   }
                 >
                   <img
-                    src={`https://media.publit.io/file/BeGods/items/240px-${digMyth?.toLowerCase()}.artifact.common03.png`}
+                    src={`https://media.publit.io/file/BeGods/items/240px-${digMyth?.toLowerCase()}.artifact.starter02.png`}
                     alt="item"
                     className="w-[14vw] scale-point"
                   />
@@ -309,6 +317,7 @@ const Explore = () => {
           },
         };
       });
+      setIsSwiping(true);
       setShowItem(true);
     } catch (error) {
       console.log(error);
@@ -339,19 +348,97 @@ const Explore = () => {
 
       const destrItemIds = parsedReward?.fragment?.itemId?.split(".");
       const id = parsedReward?.isDragon
-        ? `${destrItemIds[0]}.char.00`
+        ? `240px-${parsedReward?.mythology?.toLowerCase()}.char.C00`
         : parsedReward?.fragment?.isChar
         ? `${destrItemIds[0]}.char.${destrItemIds[2]}`
         : parsedReward?.fragment?.itemId;
 
       if (parsedReward?.isDragon) {
+        parsedReward.fragment = parsedReward.fragment || {};
         parsedReward.fragment.isChar = true;
       }
 
-      if (
+      const showRelic =
         parsedReward?.fragment &&
-        Object.keys(parsedReward.fragment).length > 0
-      ) {
+        Object.keys(parsedReward?.fragment).length > 0;
+      const showCurrency = parsedReward?.shards > 0;
+
+      const handleShowCurrencyCard = () => {
+        const shardType = parsedReward?.shardType?.toLowerCase();
+
+        let element = mythElementNamesLowerCase[shardType];
+
+        if (!element) {
+          if (shardType === "whiteshards") {
+            element = "white";
+          } else if (shardType === "blackshards") {
+            element = "black";
+          }
+        }
+
+        setShowCard(
+          <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+            <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+              <div className={`card ${cardHeight}`}>
+                <CurrencyCrd
+                  itemId={{
+                    id: `shard.${element}`,
+                    name: `shard.${element}`,
+                  }}
+                  handleClose={() => {
+                    setShowCard(null);
+                    setShardReward({
+                      myth:
+                        parsedReward?.shardType?.toLowerCase() ??
+                        digMyth?.toLowerCase(),
+                      count: parsedReward?.shards,
+                    });
+                  }}
+                  handleFlip={() => {
+                    setShowCard(null);
+                    setShardReward({
+                      myth:
+                        parsedReward?.shardType?.toLowerCase() ??
+                        digMyth?.toLowerCase(),
+                      count: parsedReward?.shards,
+                    });
+                    setTimeout(() => {
+                      setShardReward(null);
+                    }, 2000);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="button z-50 mt-2">
+              <div className="button__face button__face--front flex justify-center items-center">
+                <RoRBtn
+                  itemId={`shard.${element}`}
+                  message={parsedReward?.shards}
+                  left={1}
+                  right={1}
+                  isNotPay={true}
+                  handleClick={() => {
+                    setShowCard(null);
+                    setShardReward({
+                      myth:
+                        parsedReward?.shardType?.toLowerCase() ??
+                        digMyth?.toLowerCase(),
+                      count: parsedReward?.shards,
+                    });
+                    setTimeout(() => {
+                      setShardReward(null);
+                    }, 2000);
+                  }}
+                  disable={false}
+                />
+              </div>
+              <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center" />
+            </div>
+          </div>
+        );
+      };
+
+      if (showRelic) {
         setShowCard(
           <RelicRwrdCrd
             claimBoots={async () => {
@@ -359,6 +446,12 @@ const Explore = () => {
                 `${digMyth?.toLowerCase()}.artifact.starter02`
               );
               setShowCard(null);
+
+              if (showCurrency) {
+                setTimeout(() => {
+                  handleShowCurrencyCard();
+                }, 100);
+              }
             }}
             showBoots={
               isInside &&
@@ -388,32 +481,18 @@ const Explore = () => {
                 disable={false}
                 handleClick={() => {
                   setShowCard(null);
-                  setShardReward({
-                    myth:
-                      parsedReward?.shardType?.toLowerCase() ??
-                      digMyth?.toLowerCase(),
-                    count: parsedReward?.shards,
-                  });
-                  setTimeout(() => {
-                    setShardReward(null);
-                  }, 2000);
+                  if (showCurrency) {
+                    setTimeout(() => {
+                      handleShowCurrencyCard();
+                    }, 300);
+                  }
                 }}
               />
             }
           />
         );
-      } else {
-        if (parsedReward?.shards > 0) {
-          // toast.success(`You earned ${parsedReward?.shards} shards`);
-          setShardReward({
-            myth:
-              parsedReward?.shardType?.toLowerCase() ?? digMyth?.toLowerCase(),
-            count: parsedReward?.shards,
-          });
-          setTimeout(() => {
-            setShardReward(null);
-          }, 2000);
-        }
+      } else if (showCurrency) {
+        handleShowCurrencyCard();
       }
 
       setGameData((prevItems) => {
@@ -433,6 +512,9 @@ const Explore = () => {
 
         if (parsedReward?.isDragon) {
           updatedBagItems = [];
+          updatedPouch = updatedPouch.filter((itm) =>
+            itm.includes("artifact.treasure01")
+          );
         } else if (
           parsedReward?.fragment &&
           ignoredItems?.some((item) =>
@@ -481,6 +563,7 @@ const Explore = () => {
         };
       });
 
+      setIsSwiping(false);
       setTimeout(() => {
         setCurrStage(0);
         setStartPlay(false);
@@ -500,7 +583,9 @@ const Explore = () => {
             ...prev,
             stats: {
               ...prev.stats,
-              dailyQuota: prev.stats.dailyQuota - (prev?.isBootClaimed ? 0 : 1),
+              dailyQuota:
+                prev.stats.dailyQuota -
+                (!prev?.isBootClaimed && isInside ? 1 : 0),
             },
           };
         });
@@ -510,9 +595,21 @@ const Explore = () => {
     }
   };
 
+  // toast.success(`You earned ${parsedReward?.shards} shards`);
+
+  // setShardReward({
+  //   myth:
+  //     parsedReward?.shardType?.toLowerCase() ?? digMyth?.toLowerCase(),
+  //   count: parsedReward?.shards,
+  // });
+  // setTimeout(() => {
+  //   setShardReward(null);
+  // }, 2000);
+
   const handleUpdateRoundData = async () => {
     const result = swipes >= gameData.stats.competelvl ? 1 : 0;
     let currRoundData = null;
+    setIsSwiping(false);
 
     setBattleData((prev) => {
       currRoundData = [...prev.roundData, { swipes: swipes, status: result }];
@@ -548,7 +645,7 @@ const Explore = () => {
 
         if (updatedRoundCount === 3 && startPlay) {
           if (!skipSessionEndRef.current) {
-            handleSessionEnd(prev.roundData); // use freshest round data
+            handleSessionEnd(prev.roundData);
           } else {
             skipSessionEndRef.current = false;
           }
@@ -556,6 +653,7 @@ const Explore = () => {
 
         return prev;
       });
+      setIsSwiping(true);
     }, 3000);
   };
 
@@ -633,13 +731,13 @@ const Explore = () => {
         {!mythBg ? (
           <div className="background-container transition-all duration-300 blur-[2px]">
             <img
-              src={`/assets/locations/1280px-ror.${images[prevIndex]}_wide.jpg`}
+              src={`https://media.publit.io/file/BeGods/locations/1280px-ror.${images[prevIndex]}-wide.jpg`}
               key={images[prevIndex]}
               className="bg-image bg-image--prev"
               alt="background previous"
             />
             <img
-              src={`/assets/locations/1280px-ror.${images[currentIndex]}_wide.jpg`}
+              src={`https://media.publit.io/file/BeGods/locations/1280px-ror.${images[currentIndex]}-wide.jpg`}
               key={images[currentIndex]}
               className="bg-image bg-image--current"
               alt="background current"
@@ -648,7 +746,7 @@ const Explore = () => {
         ) : (
           <div className="background-container transition-all duration-300">
             <img
-              src={`/assets/locations/1280px-ror.${mythBg}_wide.jpg`}
+              src={`https://media.publit.io/file/BeGods/locations/1280px-ror.${mythBg}-wide.jpg`}
               className="bg-image bg-image--current"
               alt="background current"
             />
@@ -699,6 +797,13 @@ const Explore = () => {
                     onClick={() => {
                       handleClickHaptic(tele, enableHaptic);
                       setIsInside(true);
+                      const underworldLocs = images.filter((itm) =>
+                        itm.includes("underworld")
+                      );
+                      const randomIdx = Math.floor(
+                        Math.random() * underworldLocs.length
+                      );
+                      setMythBg(underworldLocs[randomIdx]);
                       setGameData((prev) => {
                         return {
                           ...prev,

@@ -10,7 +10,8 @@ const getSectionDetails = (
   totalShards,
   showShards,
   showGobCoins,
-  goBack
+  goBack,
+  swipes
 ) => {
   return [
     {
@@ -26,11 +27,11 @@ const getSectionDetails = (
     }, // 0
     {
       label: "",
-      left: gobcoin,
+      left: swipes ?? 0,
       right: totalShards,
-      hLeft: "Coins",
+      hLeft: "Swipes",
       hRight: "Shards",
-      lIcon: "A",
+      lIcon: "b",
       rIcon: "l",
       handleLeft: showGobCoins,
       handleRight: showShards,
@@ -121,8 +122,15 @@ const getSectionDetails = (
 };
 
 const BottomChild = () => {
-  const { gameData, section, setSection, setShowCard, shardReward } =
-    useContext(RorContext);
+  const {
+    gameData,
+    section,
+    setSection,
+    setShowCard,
+    shardReward,
+    swipes,
+    isSwiping,
+  } = useContext(RorContext);
   const [showEffect, setShowEffect] = useState(true);
 
   const getMythOrder = (itemId) => {
@@ -138,10 +146,10 @@ const BottomChild = () => {
   ];
 
   const shards = [
-    { path: "shard.red", element: "fire" },
-    { path: "shard.green", element: "earth" },
-    { path: "shard.blue", element: "water" },
-    { path: "shard.yellow", element: "air" },
+    { path: "shard.fire", element: "fire" },
+    { path: "shard.earth", element: "earth" },
+    { path: "shard.water", element: "water" },
+    { path: "shard.air", element: "air" },
     { path: "shard.black", element: "black" },
     { path: "shard.white", element: "white" },
   ].map((item, idx) => ({
@@ -209,7 +217,8 @@ const BottomChild = () => {
     totalShards,
     showShards,
     showGobCoins,
-    goBack
+    goBack,
+    swipes
   );
 
   useEffect(() => {
@@ -236,13 +245,17 @@ const BottomChild = () => {
             showEffect && "pulse-text"
           } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
         >
-          {sections[section].lIcon}
+          <div className={`${isSwiping && "tut-shake"}`}>
+            {sections[section].lIcon}
+          </div>
         </div>
       </div>
       <div
         onClick={() => sections[section].handleRight()}
         className={`flex transition-all duration-500 slide-ror-header-right header-shadow-black p-0.5 justify-start items-center w-[32%] ${
-          shardReward ? `bg-${shardReward?.myth}-primary` : `bg-white`
+          shardReward && mythSections?.includes(shardReward?.myth)
+            ? `bg-${shardReward?.myth}-primary`
+            : `bg-white`
         } rounded-l-full`}
       >
         <div
@@ -283,7 +296,9 @@ const RoRHeader = ({ CenterChild }) => {
     0,
     0,
     () => {},
-    () => {}
+    () => {},
+    () => {},
+    0
   );
 
   return (
