@@ -251,6 +251,7 @@ export const generateSessionReward = async (req, res) => {
     // call dragon
     if (isUnderworld && totalUNWLoss > 5) {
       await claimDragon(user, competelvl, userClaimedRewards.bag);
+
       res.status(200).json({
         reward: { isDragon: true, mythology: mythology },
       });

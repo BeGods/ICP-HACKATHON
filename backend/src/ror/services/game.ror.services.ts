@@ -355,8 +355,8 @@ export const genRandomUNDWItem = async (
 
     const ignoredItems = [
       "starter00",
-      "treasure03",
-      "treasure02",
+      // "treasure03",
+      // "treasure02",
       "treasure01",
     ];
 
@@ -539,11 +539,14 @@ export const updateDigSessionData = async (
 
       if (randomShard == 0) {
         // white
-        userMythlogyData.whiteOrbs += Math.floor(
-          (userMythlogyData.whiteShards + updatedShards) / 1000
-        );
-        userMythlogyData.whiteShards =
-          (userMythlogyData.whiteShards + updatedShards) % 1000;
+        const currentWhiteShards = Number(userMythlogyData.whiteShards) || 0;
+        const currentWhiteOrbs = Number(userMythlogyData.whiteOrbs) || 0;
+        const newShardTotal = currentWhiteShards + Number(updatedShards || 0);
+        const gainedOrbs = Math.floor(newShardTotal / 1000);
+        const remainingShards = newShardTotal % 1000;
+
+        userMythlogyData.whiteShards = remainingShards;
+        userMythlogyData.whiteOrbs = currentWhiteOrbs + gainedOrbs;
 
         await userMythologies.updateOne(
           { userId },
@@ -556,11 +559,16 @@ export const updateDigSessionData = async (
         );
       } else {
         // black
-        userMythlogyData.blackOrbs += Math.floor(
-          (userMythlogyData.blackShards + updatedShards) / 1000
-        );
-        userMythlogyData.blackShards =
-          (userMythlogyData.blackShards + updatedShards) % 1000;
+        const currentBlackShards = Number(userMythlogyData.blackShards) || 0;
+        const currentBlackOrbs = Number(userMythlogyData.blackOrbs) || 0;
+        const totalBlackShards =
+          currentBlackShards + Number(updatedShards || 0);
+
+        const gainedBlackOrbs = Math.floor(totalBlackShards / 1000);
+        const remainingBlackShards = totalBlackShards % 1000;
+
+        userMythlogyData.blackShards = remainingBlackShards;
+        userMythlogyData.blackOrbs = currentBlackOrbs + gainedBlackOrbs;
 
         await userMythologies.updateOne(
           { userId },
@@ -575,11 +583,19 @@ export const updateDigSessionData = async (
     } else {
       // mythology
       let mythData = userMythlogyData.mythologies.find(
-        (myth) => myth.name == mythology
+        (myth) => myth.name === mythology
       );
 
-      mythData.orbs += Math.floor((mythData.shards + updatedShards) / 1000);
-      mythData.shards = (mythData.shards + updatedShards) % 1000;
+      const currentShards = Number(mythData?.shards) || 0;
+      const currentOrbs = Number(mythData?.orbs) || 0;
+      const incomingShards = Number(updatedShards) || 0;
+
+      const totalShards = currentShards + incomingShards;
+      const gainedOrbs = Math.floor(totalShards / 1000);
+      const remainingShards = totalShards % 1000;
+
+      mythData.shards = remainingShards;
+      mythData.orbs = currentOrbs + gainedOrbs;
 
       await userMythologies.updateOne(
         { userId, "mythologies.name": mythology },
@@ -599,15 +615,16 @@ export const updateDigSessionData = async (
 
 export const claimDragon = async (user, competelvl, bag) => {
   try {
-    const filteredBag =
-      bag?.filter((item) => item.itemId.includes("artifact.treasure01")) || [];
+    const filteredPouch =
+      bag?.filter((item) => item.includes("artifact.treasure01")) || [];
 
     // empty the bnag except special coin
     await milestones.findOneAndUpdate(
       { userId: user._id },
       {
         $set: {
-          bag: filteredBag,
+          bag: [],
+          pouch: filteredPouch,
         },
       }
     );
