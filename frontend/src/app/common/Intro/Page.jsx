@@ -349,8 +349,13 @@ const IntroPage = (props) => {
       return /Mobi|Android|iPhone|iPad/.test(navigator.userAgent);
     }
 
-    if (isIframe() && isMobile()) {
-      document.body.classList.add("iframe-mobile");
+    if (isIframe()) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+
+      if (isMobile()) {
+        document.body.classList.add("iframe-mobile");
+      }
     }
   }, []);
 
