@@ -117,7 +117,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
         <LogOut
           onClick={async () => {
             handleClickHaptic(tele, enableHaptic);
-            await deleteExpCookie(tele);
+            // await deleteExpCookie(tele);
             navigate(-1);
           }}
           size={24}

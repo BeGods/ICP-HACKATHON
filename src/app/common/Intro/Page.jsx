@@ -340,6 +340,20 @@ const IntroPage = (props) => {
     setActiveIndex(num);
   };
 
+  useEffect(() => {
+    function isIframe() {
+      return window.self !== window.top;
+    }
+
+    function isMobile() {
+      return /Mobi|Android|iPhone|iPad/.test(navigator.userAgent);
+    }
+
+    if (isIframe() && isMobile()) {
+      document.body.classList.add("iframe-mobile");
+    }
+  }, []);
+
   // useEffect(() => {
   //   (async () => await deleteAuthCookie(tele))();
   // }, []);
