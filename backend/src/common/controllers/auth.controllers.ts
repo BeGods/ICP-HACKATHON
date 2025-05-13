@@ -223,6 +223,7 @@ export const authenticateLine = async (
 ): Promise<void> => {
   try {
     const { token, code } = req.body;
+    const { referralCode } = req.query as { referralCode?: string | null };
 
     let idToken = token;
     let isUpdated = false;
@@ -265,8 +266,22 @@ export const authenticateLine = async (
         }),
       };
 
+      let existingReferrer: IUser;
+
+      //check referrer
+      if (referralCode) {
+        existingReferrer = await User.findOne({ referralCode });
+
+        if (!existingReferrer) {
+          res.status(404).json({ message: "Invalid referral code." });
+        }
+
+        newUser.parentReferrerId = existingReferrer._id as ObjectId;
+      }
+
       // create new  user
       existingUser = await addNewLineUser(newUser);
+      await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
 
@@ -295,6 +310,7 @@ export const authenticateKaiaAddr = async (
 ): Promise<void> => {
   try {
     const { signature, message } = req.body;
+    const { referralCode } = req.query as { referralCode?: string | null };
 
     const recoveredAddress = verifyMessage(message, signature);
 
@@ -314,8 +330,20 @@ export const authenticateKaiaAddr = async (
       let newUser: Partial<IUser> = {
         kaiaAddress: recoveredAddress,
       };
+
+      let existingReferrer: IUser;
+      if (referralCode) {
+        existingReferrer = await User.findOne({ referralCode });
+
+        if (!existingReferrer) {
+          res.status(404).json({ message: "Invalid referral code." });
+        }
+
+        newUser.parentReferrerId = existingReferrer._id as ObjectId;
+      }
       // create new  user
       existingUser = await addNewLineUser(newUser);
+      await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
 
