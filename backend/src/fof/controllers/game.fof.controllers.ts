@@ -207,6 +207,26 @@ export const getGameStats = async (req, res) => {
       user.bonus.fof.streak.count
     );
 
+    // additioonal case
+    if (
+      !userMythologiesData?.userMythologies[0]?.autoPay
+        ?.isAutomataAutoPayEnabled
+    ) {
+      userMythologiesData.userMythologies[0].autoPay.isAutomataAutoPayEnabled =
+        true;
+
+      await userMythologies.findOneAndUpdate(
+        {
+          userId: userId,
+        },
+        {
+          $set: {
+            "autoPay.isAutomataAutoPayEnabled": true,
+          },
+        }
+      );
+    }
+
     const userData = {
       username: user.telegramUsername,
       tonAddress: user.tonAddress,
