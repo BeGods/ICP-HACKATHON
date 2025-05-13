@@ -165,15 +165,14 @@ img {
   transform: translateZ(0);
 }
 
-body {
-  position: fixed;
+html, body {
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  position: fixed;
   background-color: black;
 }
-
 
 .tg-container-height {
   height: calc(100dvh - var(--tg-safe-area-inset-top) - 45px);
@@ -181,6 +180,15 @@ body {
 
 .browser-container-height {
   height: 94.5dvh
+}
+
+
+body.iframe-mobile {
+  padding-bottom: 5vh; 
+}
+
+body.iframe-mobile .browser-container-height {
+  height: calc(94.5dvh - 5vh);
 }
 
 .jigsaw::before {
