@@ -403,13 +403,19 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const refer = queryParams.get("refer");
+  let isReferLink = refer?.includes("FDG");
+  let referrer = isReferLink ? refer : null;
 
   const handleConnectLineWallet = async () => {
     handleClickHaptic(tele, true);
     try {
       const { accountAddress, signature, message } = await connectWallet();
       if (accountAddress) {
-        const response = await authenticateLineWallet(message, signature);
+        const response = await authenticateLineWallet(
+          message,
+          signature,
+          referrer
+        );
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
         window.location.reload();

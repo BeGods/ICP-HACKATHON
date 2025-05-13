@@ -118,11 +118,13 @@ const IntroPage = (props) => {
   };
 
   const lineAuth = async (idToken) => {
+    let isReferLink = refer?.includes("FDG");
+    let referrer = isReferLink ? refer : null;
     if (!lineCalledRef.current) {
       lineCalledRef.current = true;
       try {
         console.log("Authenticating with LINE...");
-        const response = await authenticateLine(idToken, null);
+        const response = await authenticateLine(idToken, null, referrer);
         setAuthToken(response.data.accessToken);
         await setAuthCookie(tele, response.data.accessToken);
         console.log("LINE Authentication successful!");
@@ -341,8 +343,6 @@ const IntroPage = (props) => {
   // useEffect(() => {
   //   (async () => await deleteAuthCookie(tele))();
   // }, []);
-
-  useEffect(() => {}, [isTgDesktop, oneWaveParam]);
 
   return (
     <div

@@ -30,8 +30,12 @@ export const authenticateOneWave = async (param) => {
   }
 };
 
-export const authenticateLineWallet = async (message, signature) => {
+export const authenticateLineWallet = async (message, signature, referrer) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/wallet/auth`;
+
+  if (referrer) {
+    url += `?referralCode=${referrer}`;
+  }
 
   try {
     const response = await axios.post(url, { message: message, signature: signature }, { withCredentials: true });
@@ -43,12 +47,15 @@ export const authenticateLineWallet = async (message, signature) => {
 };
 
 
-export const authenticateLine = async (token, code) => {
+export const authenticateLine = async (token, code, referrer) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
 
+  if (referrer) {
+    url += `?referralCode=${referrer}`;
+  }
 
   try {
-    const response = await axios.post(url, { token: token, code: code }, { withCredentials: true });
+    const response = await axios.post(url, { token: token, code: code, }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.log(`Error: ${error.message}`);
