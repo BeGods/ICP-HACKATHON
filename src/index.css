@@ -184,11 +184,11 @@ html, body {
 
 
 body.iframe-mobile {
-  padding-bottom: 3vh; 
+  padding-bottom: 4.5vh; 
 }
 
 body.iframe-mobile .browser-container-height {
-  height: calc(94.5dvh - 3vh);
+  height: calc(94.5dvh - 4.5vh);
 }
 
 .jigsaw::before {
