@@ -52,7 +52,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
         );
       } else {
         const permanentLink = await liff.permanentLink.createUrlBy(
-          `https://2r2cf484-5174.inc1.devtunnels.ms?refer=${userData.referralCode}`
+          `${import.meta.env.VITE_CLIENT}?refer=${userData.referralCode}`
         );
 
         await navigator.clipboard.writeText(permanentLink);
