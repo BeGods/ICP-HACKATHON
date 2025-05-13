@@ -119,6 +119,11 @@ export const getGameStats = async (req, res) => {
       userRank = { coinRank: totalUsers?.totalUsers && 0 } as any;
     }
 
+    // additioonal case
+    if (!userGameData?.userMythologies[0]?.autoPay?.isAutomataAutoPayEnabled) {
+      userGameData.userMythologies[0].autoPay.isAutomataAutoPayEnabled = true;
+    }
+
     const isEligibleToClaim = await checkBonus(user);
 
     const memberData = {
