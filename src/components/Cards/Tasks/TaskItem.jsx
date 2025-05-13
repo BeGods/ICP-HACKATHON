@@ -7,28 +7,23 @@ import React, {
 } from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
 import { validateCountryCode } from "../../../helpers/cookie.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { useAdsgram } from "../../../hooks/Adsgram";
+import liff from "@line/liff";
 
 const tele = window.Telegram?.WebApp;
 
 const TaskItem = ({ quest, showSetting, showWallet }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const {
-    gameData,
-    authToken,
-    socialQuestData,
-    setSocialQuestData,
-    setGameData,
-    userData,
-    country,
-    enableHaptic,
-  } = useContext(FofContext);
+  const { authToken, userData, country, enableHaptic, isTelegram } =
+    useContext(MainContext);
+  const { gameData, socialQuestData, setSocialQuestData, setGameData } =
+    useContext(FofContext);
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
   const disableClick = useRef(false);
@@ -48,12 +43,25 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
   });
 
   const handleCopyLink = async () => {
-    handleClickHaptic(tele, enableHaptic);
+    try {
+      handleClickHaptic(tele, enableHaptic);
 
-    await navigator.clipboard.writeText(
-      `https://t.me/BeGods_bot/forgesoffaith?startapp=${userData.referralCode}`
-    );
-    showToast("copy_link");
+      if (isTelegram) {
+        await navigator.clipboard.writeText(
+          `https://t.me/BeGods_bot/games?startapp=${userData.referralCode}`
+        );
+      } else {
+        const permanentLink = await liff.permanentLink.createUrlBy(
+          `https://2r2cf484-5174.inc1.devtunnels.ms?refer=${userData.referralCode}`
+        );
+
+        await navigator.clipboard.writeText(permanentLink);
+      }
+
+      showToast("copy_link");
+    } catch (error) {
+      alert(error?.message || String(error));
+    }
   };
 
   const handleClaimTask = async () => {
