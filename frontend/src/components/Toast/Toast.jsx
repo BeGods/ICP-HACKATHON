@@ -557,11 +557,30 @@ export const showToast = (type) => {
       );
       break;
 
-    case "item_success":
+    case "item_success_bag":
       toast.success(
         <ToastMesg
-          title={t("toasts.RoRItem.success.title")}
-          desc={t("toasts.RoRItem.success.desc")}
+          title={t("toasts.RoRItem.success-bag.title")}
+          desc={t("toasts.RoRItem.success-bag.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "item_success_pouch":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.RoRItem.success-pouch.title")}
+          desc={t("toasts.RoRItem.success-pouch.desc")}
           status={"success"}
         />,
         {
@@ -618,6 +637,43 @@ export const showToast = (type) => {
         <ToastMesg
           title={t("toasts.JoinItem.error.title")}
           desc={t("toasts.JoinItem.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    case "meal_success":
+      toast.success(
+        <ToastMesg
+          title={t("toasts.Meal.success.title")}
+          desc={t("toasts.Meal.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "meal_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Meal.error.title")}
+          desc={t("toasts.Meal.error.desc")}
           status={"fail"}
         />,
         {

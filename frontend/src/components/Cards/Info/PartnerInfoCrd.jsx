@@ -48,13 +48,15 @@ const PartnerCard = ({ close, reward }) => {
           </div>
         </div>
       </div>
-      {!isTelegram ? (
-        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={7} />
-      ) : platform === "ios" ? (
-        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={6} />
-      ) : (
-        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={0} />
-      )}
+
+      <IconBtn
+        isJigsaw={true}
+        isInfo={false}
+        activeMyth={4}
+        handleClick={close}
+        align={7}
+      />
+
       <div
         className={`absolute font-semibold italic ${
           isTelegram ? "bottom-0" : "bottom-6"

@@ -105,6 +105,8 @@
         "egyptian": "https://media.publit.io/file/BattleofGods/FoF/Assets/MYTH/mythology.egyptian.base.svg"
     },
     "boosters": {
+        "minionPop": "https://media.publit.io/file/BeGods/chars/160px-blacksmith.char-sticker.png",
+        "mealCard": "https://media.publit.io/file/BeGods/items/320px-tavern-meal.jpg",
         "tavernCard": "https://media.publit.io/file/BeGods/chars/320px-tavernist.char.jpg",
         "tavernHead": "https://media.publit.io/file/BeGods/chars/240px-tavernist.char-head.jpg",
         "libCard": "https://media.publit.io/file/BeGods/chars/320px-librarian.char.jpg",

@@ -23,7 +23,7 @@ const alignBasedOnCard = [
   "mt-[0.7vh] ml-[10vw]",
   "-mt-[2.5vh] ml-[10vw]",
 ];
-const IconBtn = ({ isInfo, handleClick, align }) => {
+const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const { enableHaptic } = useContext(FofContext);
 
@@ -41,22 +41,29 @@ const IconBtn = ({ isInfo, handleClick, align }) => {
   return (
     <div
       onClick={handleButtonClick}
-      className={`absolute  flex w-full justify-end top-0 ${alignBasedOnCard[align]} `}
+      className={`absolute  flex w-full justify-end top-0  right-0 ${
+        isJigsaw && "mt-[1.45rem]"
+      } `}
     >
-      {isInfo ? (
-        <div className="bg-black flex justify-center items-center w-[40px] h-[40px] z-20 rounded-full">
-          <h1
-            className={`text-white italic mr-1 text-[30px]`}
+      <img
+        src="/assets/72px-corner.png"
+        alt="cutout"
+        className="rounded-tr-primary w-1/5"
+      />
+      <div className="absolute flex justify-center items-center w-[40px] h-[40px]">
+        {isInfo ? (
+          <div
+            className={`text-white italic text-black-contour text-[30px]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
-          </h1>
-        </div>
-      ) : (
-        <div className="flex justify-center items-center bg-black w-[40px] h-[40px] z-50 rounded-full">
-          <X color="white" size={"30px"} />
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="text-white font-roboto -mt-1 -mr-1 text-black-contour text-[24px]">
+            {"\u2715"}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

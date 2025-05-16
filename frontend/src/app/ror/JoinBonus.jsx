@@ -40,15 +40,11 @@ const JoinBonus = (props) => {
         }, 1000);
         setGameData((prevItems) => {
           const newStats = { ...prevItems.stats };
-          newStats.gobcoins = prevItems.stats.gobcoin + 3;
+          newStats.gobcoins = prevItems.stats.gobcoin + 9;
 
           return {
             ...prevItems,
             stats: newStats,
-            bank: {
-              ...prevItems.bank,
-              isVaultActive: true,
-            },
           };
         });
       } catch (error) {
@@ -104,7 +100,7 @@ const JoinBonus = (props) => {
                       className="glow-box rounded-full"
                     />
                     <div className="absolute text-[40vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
-                      3
+                      9
                     </div>
                   </div>
                 </div>

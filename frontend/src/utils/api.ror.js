@@ -1,4 +1,6 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
+
 
 export const fetchGameStats = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/game/stats`;
@@ -179,7 +181,7 @@ export const activateVault = async (accessToken, isMulti) => {
 };
 
 export const activateRest = async (accessToken) => {
-  let url = `${import.meta.env.VITE_API_ROR_URL}/rest/activate`;
+  let url = `${import.meta.env.VITE_API_ROR_URL}/meal/activate`;
 
   try {
     const response = await axios.get(url, {
@@ -271,11 +273,21 @@ export const claimItemAbility = async (accessToken, itemId) => {
   }
 };
 
-export const claimArtifact = async (accessToken, itemId) => {
+export const claimArtifact = async (accessToken, itemId, adId) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/artifact/claim`;
 
+  const gameData = {
+    itemId: itemId,
+    adId: adId,
+  };
+  const secretKey = import.meta.env.VITE_HASH_KEY;
+  const hashedData = CryptoJS.AES.encrypt(
+    JSON.stringify(gameData),
+    secretKey
+  ).toString();
+
   try {
-    const response = await axios.post(url, { itemId: itemId }, {
+    const response = await axios.post(url, { data: hashedData }, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

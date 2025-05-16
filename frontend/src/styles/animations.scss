@@ -327,6 +327,22 @@
   }
 }
 
+@mixin slideTitle($name, $initial, $final) {
+  @keyframes #{$name} {
+    0%{
+      transform: translateX($initial);
+    }
+    100% {
+      transform: translateX($final);
+    }
+  }
+
+  & {
+    animation: #{$name} 1s ease-in-out forwards;
+    animation-delay: 2s;
+  }
+}
+
 @mixin slideHeader($name, $initial, $final, $after) {
   @keyframes #{$name} {
     0%{
@@ -341,7 +357,7 @@
   }
 
   & {
-    animation: #{$name} 1.25s  ease-in-out forwards;
+    animation: #{$name} 3s  ease-in-out forwards;
   }
 }
 
@@ -460,11 +476,19 @@
   }
 
 .slide-ror-header-left{
-  @include slideHeader(slide-header-left-animation, -100%, 0%, -5%);
+  @include slideHeader(slide-header-left-animation, -100%, 0%, -40%);
 }
 
 .slide-ror-header-right{
-  @include slideHeader(slide-header-right-animation, 100%, 0%, 5%);
+  @include slideHeader(slide-header-right-animation, 100%, 0%, 40%);
+  }
+
+.slide-ror-title-left{
+  @include slideTitle(slide-title-left-animation, 0, -100%);
+}
+
+.slide-ror-title-right{
+  @include slideTitle(slide-title-right-animation, 0,  100%);
   }
 
 .slide-away-left{

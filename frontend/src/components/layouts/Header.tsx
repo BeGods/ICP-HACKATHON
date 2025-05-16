@@ -190,6 +190,7 @@ const BottomChild = () => {
   const showShards = () => {
     setShowCard(
       <ArtifactCrd
+        isPay={false}
         category={0}
         isCurrency={true}
         items={shards}
@@ -203,6 +204,7 @@ const BottomChild = () => {
   const showGobCoins = () => {
     setShowCard(
       <ArtifactCrd
+        isPay={false}
         isCurrency={false}
         category={0}
         items={coins}
@@ -237,7 +239,7 @@ const BottomChild = () => {
         onClick={() => sections[section].handleLeft()}
         className="flex slide-ror-header-left header-shadow-black p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full"
       >
-        <div className="text-[8vw] font-medium font-fof px-1">
+        <div className="text-[8vw] font-medium font-fof px-1 slide-ror-title-left">
           {sections[section].left}
         </div>
         <div
@@ -267,16 +269,18 @@ const BottomChild = () => {
             {sections[section].rIcon}
           </div>
         </div>
-        {shardReward ? (
-          <div className="text-[8vw] flex items-center font-medium text-white px-1 font-fof">
-            <span className="text-[4vw] font-bold">+</span>
-            {shardReward?.count}
-          </div>
-        ) : (
-          <div className="text-[8vw] font-medium px-1 font-fof">
-            {sections[section].right}
-          </div>
-        )}
+        <div>
+          {shardReward ? (
+            <div className="text-[8vw] flex items-center font-medium text-white px-1 font-fof">
+              <span className="text-[4vw] font-bold">+</span>
+              {shardReward?.count}
+            </div>
+          ) : (
+            <div className="text-[8vw] font-medium px-1 font-fof slide-ror-title-right">
+              {sections[section].right}
+            </div>
+          )}
+        </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
         <div className={`mr-auto slide-in-out-left`}>

@@ -306,7 +306,9 @@ const Redeem = (props) => {
                     }
                   }}
                 />
+
                 <IconBtn
+                  isJigsaw={true}
                   isInfo={true}
                   activeMyth={4}
                   handleClick={() => {
