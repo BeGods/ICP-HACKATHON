@@ -219,7 +219,7 @@ const Blacksmith = () => {
           };
         });
 
-        showToast("item_success");
+        showToast("item_success_bag");
         setShowCard(null);
         disableClick.current = false;
       } catch (error) {

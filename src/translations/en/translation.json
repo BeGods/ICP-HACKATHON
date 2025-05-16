@@ -671,13 +671,27 @@
       }
     },
     "RoRItem": {
-      "success": {
+      "success-bag": {
         "title": "Success!",
         "desc": "Item added to your bag."
+      },
+      "success-pouch": {
+        "title": "Success!",
+        "desc": "Item added to your pouch."
       },
       "error": {
         "title": "Failed to Claim",
         "desc": "There was a problem claiming the item. Please try again."
+      }
+    },
+    "Meal": {
+      "success": {
+        "title": "Meal Eaten",
+        "desc": "Digging power has been boosted."
+      },
+      "error": {
+        "title": "Meal Failed",
+        "desc": "Couldn’t eat the meal. Please try again."
       }
     },
     "JoinItem": {

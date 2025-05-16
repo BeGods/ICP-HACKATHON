@@ -1,4 +1,10 @@
-import React, { useState, useContext, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react";
 import RoRHeader from "../../components/layouts/Header";
 import { gameItems } from "../../utils/gameItems";
 
@@ -22,6 +28,9 @@ import {
 } from "../../helpers/cookie.helper";
 import MiscCard from "../../components/ror/MiscCard";
 import { showToast } from "../../components/Toast/Toast";
+import { Clapperboard } from "lucide-react";
+import { trackEvent } from "../../utils/ga";
+import { useAdsgram } from "../../hooks/Adsgram";
 
 const tele = window.Telegram?.WebApp;
 
@@ -140,14 +149,21 @@ const Book = () => {
     });
   };
 
-  const handleClaimItem = async (itemId) => {
+  const adsgramId = import.meta.env.VITE_AD_BOOSTER;
+
+  const handleClaimItem = async (itemId, isAdPlayed) => {
+    const adId = isAdPlayed ? adsgramId : null;
+    const deductValue = isAdPlayed ? 0 : 1;
+
     try {
-      await claimArtifact(authToken, itemId);
+      await claimArtifact(authToken, itemId, adId);
+      trackEvent("purchase", "claim_lib_item", "success");
+
       setGameData((prev) => {
         let updatedPouch = [...prev.pouch, itemId];
         let updatdStats = { ...prev.stats };
 
-        updatdStats.gobcoin -= 1;
+        updatdStats.gobcoin -= deductValue;
 
         return {
           ...prev,
@@ -155,14 +171,14 @@ const Book = () => {
           stats: updatdStats,
         };
       });
-      showToast("item_success");
+      showToast("item_success_pouch");
     } catch (error) {
       showToast("item_error");
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "An unexpected error occurred";
-      toast.error(errorMessage);
+      console.log(error);
     }
   };
 
@@ -220,6 +236,20 @@ const Book = () => {
     };
     (async () => await checkFirstTime())();
   }, []);
+
+  const onReward = useCallback(() => {
+    handleClaimItem(`${myth}.${itemCode}`, true);
+  }, []);
+
+  const onError = useCallback((result) => {
+    showToast("ad_error");
+  }, []);
+
+  const showAd = useAdsgram({
+    blockId: adsgramId,
+    onReward,
+    onError,
+  });
 
   return (
     <div className="w-full h-full">
@@ -318,7 +348,24 @@ const Book = () => {
           })}
         </div>
 
-        <div className="flex flex-col gap-y-4 justify-center items-center h-full">
+        <div className="flex flex-col gap-y-4 relative justify-center items-center h-full">
+          {!gameData?.pouch?.includes(`${myth}.${itemCode}`) && (
+            <div
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                showAd();
+              }}
+              className="flex flex-col justify-center items-center mx-4 mt-5 absolute top-0 right-0"
+            >
+              <Clapperboard
+                color="white"
+                size={"10vw"}
+                className="text-black-contour"
+              />
+              <div className="text-white text-black-contour">FREE</div>
+            </div>
+          )}
+
           <div className="flex justify-center relative">
             {currItems == 0 && (
               <div className="absolute mt-16 ml-3">
@@ -356,7 +403,7 @@ const Book = () => {
                   toast.success("not sure what to do here!");
                 }
               } else {
-                handleClaimItem(`${myth}.${itemCode}`);
+                handleClaimItem(`${myth}.${itemCode}`, null);
               }
             }}
             className="flex justify-center items-center relative h-fit"

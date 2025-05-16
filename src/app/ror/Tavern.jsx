@@ -1,10 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import GridItem from "../../components/ror/GridItem";
+import React, { useContext, useEffect } from "react";
 import RoRHeader from "../../components/layouts/Header";
-import {
-  ToggleLeft,
-  ToggleRight,
-} from "../../components/Common/SectionToggles";
 import { RorContext } from "../../context/context";
 import ArtifactCrd from "../../components/Cards/Reward/ArtiFactCrd";
 import { gameItems } from "../../utils/gameItems";
@@ -12,7 +7,9 @@ import MiscCard from "../../components/ror/MiscCard";
 import RoRBtn from "../../components/ror/RoRBtn";
 import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 import { toast } from "react-toastify";
-import { activateRest } from "../../utils/api.ror";
+import { activateRest, claimArtifact } from "../../utils/api.ror";
+import { showToast } from "../../components/Toast/Toast";
+import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
@@ -32,43 +29,9 @@ const CenterChild = ({ handleClick, assets }) => {
 };
 
 const Tavern = () => {
+  const navigate = useNavigate();
   const { gameData, setGameData, setShowCard, assets, authToken } =
     useContext(RorContext);
-  const [showItems, setShowItems] = useState(null);
-  const bookItems = gameData.pouch.filter((item) =>
-    item.includes("artifact.starter02")
-  );
-  const books = bookItems.map((item) => ({
-    ...item,
-    id: item,
-    fragmentId: 0,
-    isComplete: true,
-  }));
-  const items = books;
-  const pageItems = items?.map((item) => ({
-    ...item,
-    itemId: item.id,
-    fragmentId: 0,
-    isComplete: true,
-  }));
-  const [page, setPage] = useState(0);
-
-  const ITEMS_PER_PAGE = showItems ? 9 : 6;
-  const totalPages = Math.ceil(pageItems.length / ITEMS_PER_PAGE);
-
-  const handleLeft = () => {
-    setPage((prev) => (prev - 1 + totalPages) % totalPages);
-  };
-
-  const handleRight = () => {
-    setPage((prev) => (prev + 1) % totalPages);
-  };
-
-  const pagedItems = pageItems.slice(
-    page * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-  );
-
   const showInfoCard = async () => {
     setShowCard(
       <MiscCard
@@ -97,7 +60,6 @@ const Tavern = () => {
 
   const handleActivateRest = async () => {
     if (gameData.stats.isRestActive) {
-      setSection(13);
     } else {
       try {
         const response = await activateRest(authToken);
@@ -107,18 +69,19 @@ const Tavern = () => {
 
           newStats.gobcoins = (prev.stats.gobcoin || 0) - 1;
           newStats.isRestActive = true;
+          newStats.digLvl += 1;
+
           return {
             ...prev,
             stats: newStats,
           };
         });
-        handleActivate("tavern01", true);
         console.log(response);
-        toast.success("rest activated");
+        showToast("meal_success");
       } catch (error) {
         console.log(error);
         setShowCard(null);
-        toast.error("insufficient gobcoins");
+        showToast("meal_error");
       }
     }
   };
@@ -140,9 +103,7 @@ const Tavern = () => {
                 message={"Enter"}
                 left={1}
                 right={1}
-                handleClick={() => {
-                  handleActivateRest();
-                }}
+                handleClick={() => handleActivate("tavern01", true)}
               />
             }
           />
@@ -151,6 +112,33 @@ const Tavern = () => {
     };
     (async () => await checkFirstTime())();
   }, []);
+
+  const handleClaimItem = async (itemId) => {
+    try {
+      await claimArtifact(authToken, itemId);
+      setShowCard(null);
+      setGameData((prev) => {
+        let updatedPouch = [...prev.pouch, itemId];
+        let updatdStats = { ...prev.stats };
+
+        updatdStats.gobcoin -= 1;
+
+        return {
+          ...prev,
+          pouch: updatedPouch,
+          stats: updatdStats,
+        };
+      });
+      showToast("item_success_pouch");
+    } catch (error) {
+      showToast("item_error");
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+    }
+  };
 
   return (
     <div className="w-full h-full">
@@ -169,58 +157,96 @@ const Tavern = () => {
           }}
         />
         <div className="h-full flex justify-center items-center">
-          <div className="h-full grid grid-cols-1 items-center ">
-            {[
-              {
-                icon: ")",
-                label: "meal",
-              },
-              {
-                icon: "F",
-                label: "rest",
-              },
-              {
-                icon: "z",
-                label: "statue",
-              },
-            ].map((itm, index) => {
-              const items = gameItems
-                .filter((itm) => itm.id.includes("artifact.starter02"))
-                .filter((itm) => !gameData.pouch.includes(itm.id));
+          <div className="h-full w-full flex justify-center items-center">
+            <div className="grid grid-cols-2 gap-6 items-center">
+              {[
+                { icon: ")", label: `meal - ${gameData.stats.digLvl ?? 1}` },
+                { icon: "zz", label: "sleep" },
+                { icon: "F", label: "shoes" },
+                { icon: "Z", label: "key" },
+              ].map((itm, index) => {
+                const shoes = gameItems
+                  .filter((itm) => itm.id.includes("artifact.common03"))
+                  .filter((itm) => !gameData.pouch.includes(itm.id));
 
-              return (
-                <div
-                  onClick={() => {
-                    items.length !== 0 &&
-                      setShowCard(
-                        <ArtifactCrd
-                          items={items}
-                          category={4}
-                          handleClick={() => {}}
-                        />
-                      );
-                  }}
-                  key={`box-${index}`}
-                  className={`relative border text-white border-white/70 flex flex-col items-center aspect-square shadow-2xl max-w-[120px] h-[140px] w-full rounded-md overflow-hidden`}
-                >
-                  <div className="w-full aspect-square rounded-t-md bg-white/20 h-[110px] flex justify-center items-center">
-                    <span className="text-iconLg font-symbols">{itm.icon}</span>
+                const keys = gameItems
+                  .filter((itm) => itm.id.includes("artifact.common02"))
+                  .filter((itm) => !gameData.pouch.includes(itm.id));
+
+                const items = index == 2 ? shoes : keys;
+
+                return (
+                  <div
+                    onClick={() => {
+                      if (
+                        (index == 2 && items.length > 0) ||
+                        (index == 3 && items.length > 0)
+                      ) {
+                        setShowCard(
+                          <ArtifactCrd
+                            items={items}
+                            category={4}
+                            isPay={true}
+                            handleClick={(id) => {
+                              handleClaimItem(id);
+                            }}
+                          />
+                        );
+                      } else if (index == 1) {
+                        navigate(-1);
+                      } else if (index == 0) {
+                        if (gameData.stats.isRestActive) {
+                        } else {
+                          setShowCard(
+                            <MiscCard
+                              onlyBack={true}
+                              showInfo={false}
+                              img={assets.boosters.mealCard}
+                              icon="Meal"
+                              isMulti={false}
+                              handleClick={handleActivateRest}
+                              Button={
+                                <RoRBtn
+                                  message={"EAT"}
+                                  isNotPay={false}
+                                  left={1}
+                                  right={1}
+                                  handleClick={handleActivateRest}
+                                />
+                              }
+                            />
+                          );
+                        }
+                      }
+                    }}
+                    key={`box-${index}`}
+                    className={`relative border ${
+                      (index == 0 && gameData.stats.isRestActive) ||
+                      (index == 2 && items.length == 0) ||
+                      (index == 3 && items.length == 0)
+                        ? "text-white/50 border-white/50"
+                        : "text-white border-white/70"
+                    } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] h-[140px] w-full rounded-md overflow-hidden`}
+                  >
+                    <div className="w-full aspect-square rounded-t-md bg-white/20 h-[110px] flex justify-center items-center">
+                      <span
+                        className={`text-iconLg ${
+                          index !== 1 && "font-symbols"
+                        }`}
+                      >
+                        {itm.icon}
+                      </span>
+                    </div>
+                    <div className="w-full uppercase text-center text-[1rem] break-words px-1 flex justify-center items-center">
+                      {itm.label}
+                    </div>
                   </div>
-                  <div className="w-full uppercase text-center text-[1rem] break-words px-1 flex justify-center items-center">
-                    {itm.label}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
-      {pageItems.length > ITEMS_PER_PAGE && (
-        <div className="">
-          <ToggleLeft activeMyth={4} handleClick={handleLeft} />
-          <ToggleRight activeMyth={4} handleClick={handleRight} />
-        </div>
-      )}
     </div>
   );
 };

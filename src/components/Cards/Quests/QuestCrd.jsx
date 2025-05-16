@@ -62,9 +62,8 @@ const QuestCard = ({
                     <MappedOrbs quest={quest} />
                   </div>
                 </div>
-                {!isGuideActive && !flipped && (
-                  <IconBtn isInfo={true} activeMyth={activeMyth} align={1} />
-                )}
+
+                <IconBtn isInfo={true} activeMyth={activeMyth} align={1} />
               </div>
               <div
                 className={`flex relative items-center h-[19%] uppercase glow-text-quest text-white`}

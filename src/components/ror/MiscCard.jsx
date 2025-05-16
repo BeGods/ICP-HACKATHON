@@ -3,7 +3,7 @@ import { RorContext } from "../../context/context";
 import IconBtn from "../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 
-const MiscCard = ({ Button, img, icon, showInfo }) => {
+const MiscCard = ({ Button, img, icon, showInfo, onlyBack }) => {
   const { assets, setShowCard, setSection } = useContext(RorContext);
   const { i18n } = useTranslation();
   const [flipped, setFlipped] = useState(false);
@@ -48,7 +48,9 @@ const MiscCard = ({ Button, img, icon, showInfo }) => {
                 if (showInfo) {
                   setFlipped(true);
                 } else {
-                  setSection(0);
+                  if (!onlyBack) {
+                    setSection(0);
+                  }
                   setShowCard(null);
                 }
               }}

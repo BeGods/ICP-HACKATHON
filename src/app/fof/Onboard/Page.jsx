@@ -459,23 +459,15 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
             className="w-[85px] begod-text-shadow pointer-events-none"
           />
           {!showMobileAuth && (
-            <div className="flex flex-col z-[99] gap-[1.5dvh] mb-[8dvh]">
-              {/* <img
-                src={assets.buttons.otp}
-                alt="otp-button"
-                className="begod-text-shadow w-[215px]"
-                onClick={() => {
-                  handleClickHaptic(tele, true);
-                  openModal();
-                }}
-              />
-            */}
-              {/* <img
+            <div className="flex flex-col items-center z-[99] gap-[1.5dvh] mb-[5dvh]">
+              {/*
+               */}
+              <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              /> */}
+              />
               {/* <div className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]">
                 <img
                   src="/assets/dapp.logo.png"
@@ -486,6 +478,23 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   Connect
                 </h1>
               </div> */}
+              <img
+                src={assets.buttons.otp}
+                alt="otp-button"
+                className="begod-text-shadow w-[215px]"
+                onClick={() => {
+                  handleClickHaptic(tele, true);
+                  openModal();
+                }}
+              />
+              {/* <img
+                src={assets.buttons.telegram}
+                alt="dapp-button"
+                className="begod-text-shadow w-[215px]"
+                onClick={() => {
+                  alert("Coming Soon");
+                }}
+              /> */}
               <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
@@ -507,14 +516,7 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   onClick={handleConnectLineWallet}
                 />
               ) : (
-                <img
-                  src={assets.buttons.telegram}
-                  alt="dapp-button"
-                  className="begod-text-shadow w-[215px]"
-                  onClick={() => {
-                    alert("Coming Soon");
-                  }}
-                />
+   
               )} */}
             </div>
           )}

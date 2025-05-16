@@ -28,6 +28,7 @@ import {
 import { toast } from "react-toastify";
 import RoRBtn from "../../components/ror/RoRBtn";
 import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
+import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
 
@@ -439,6 +440,8 @@ const Explore = () => {
       };
 
       if (showRelic) {
+        showToast("item_success_bag");
+
         setShowCard(
           <RelicRwrdCrd
             claimBoots={async () => {
@@ -519,7 +522,8 @@ const Explore = () => {
           parsedReward?.fragment &&
           ignoredItems?.some((item) =>
             parsedReward?.fragment?.itemId?.includes(item)
-          )
+          ) &&
+          /starter0[3-9]/?.test(randomGenItem.id)
         ) {
           updatedBagItems = [...prevItems.bag];
           updatedPouch = [...prevItems.pouch, parsedReward?.fragment.itemId];
@@ -592,6 +596,7 @@ const Explore = () => {
       }, 3500);
     } catch (error) {
       console.log(error);
+      showToast("item_error");
     }
   };
 
@@ -607,12 +612,16 @@ const Explore = () => {
   // }, 2000);
 
   const handleUpdateRoundData = async () => {
+    const digLvl = gameData?.stats?.digLvl ?? 1;
     const result = swipes >= gameData.stats.competelvl ? 1 : 0;
     let currRoundData = null;
     setIsSwiping(false);
 
     setBattleData((prev) => {
-      currRoundData = [...prev.roundData, { swipes: swipes, status: result }];
+      currRoundData = [
+        ...prev.roundData,
+        { swipes: swipes / digLvl, status: result },
+      ];
       return {
         currentRound: prev.currentRound + 1,
         roundData: currRoundData,

@@ -15,7 +15,7 @@ const CenterChild = ({ gameData }) => {
 };
 
 const Citadel = (props) => {
-  const { isTelegram, gameData } = useContext(RorContext);
+  const { isTelegram, gameData, assets } = useContext(RorContext);
 
   return (
     <div

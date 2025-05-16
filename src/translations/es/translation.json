@@ -679,6 +679,60 @@
         "title": "Actualización Iniciada",
         "desc": "¡Tu avatar de perfil se actualizará en breve!"
       }
+    },
+    "RoRItem": {
+      "success-bag": {
+        "title": "Success!",
+        "desc": "Item added to your bag."
+      },
+      "success-pouch": {
+        "title": "Success!",
+        "desc": "Item added to your pouch."
+      },
+      "error": {
+        "title": "Failed to Claim",
+        "desc": "There was a problem claiming the item. Please try again."
+      }
+    },
+    "Meal": {
+      "success": {
+        "title": "Meal Eaten",
+        "desc": "Digging power has been boosted."
+      },
+      "error": {
+        "title": "Meal Failed",
+        "desc": "Couldn’t eat the meal. Please try again."
+      }
+    },
+    "JoinItem": {
+      "success": {
+        "title": "Item Added to Build",
+        "desc": "It will take 1 hour to complete. Please check back later."
+      },
+      "error": {
+        "title": "Build Failed",
+        "desc": "Unable to add the item to build. Please try again."
+      }
+    },
+    "SellItem": {
+      "success": {
+        "title": "Trade Successful",
+        "desc": "Item sold! Gobcoins credited."
+      },
+      "error": {
+        "title": "Trade Failed",
+        "desc": "Failed to sell the item. Please try again."
+      }
+    },
+    "Vault": {
+      "success": {
+        "title": "Vault Activated",
+        "desc": "Add items to keep them safe from theft."
+      },
+      "error": {
+        "title": "Vault Activation Failed",
+        "desc": "Unable to activate the vault. Please try again."
+      }
     }
   }
 }

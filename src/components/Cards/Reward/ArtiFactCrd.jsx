@@ -16,6 +16,7 @@ const ArtifactCrd = ({
   items,
   initalIdx = 0,
   isCurrency,
+  isPay,
 }) => {
   const { isTelegram, setShowCard, gameData, setGameData, authToken } =
     useContext(RorContext);
@@ -59,8 +60,10 @@ const ArtifactCrd = ({
             message={isCurrency ? items[idx].count : "Close"}
             left={1}
             right={1}
-            isNotPay={true}
-            handleClick={handleClick}
+            isNotPay={!isPay}
+            handleClick={() => {
+              handleClick(items[idx].id);
+            }}
             disable={false}
           />
         </div>
@@ -71,25 +74,29 @@ const ArtifactCrd = ({
             left={1}
             right={1}
             isNotPay={true}
-            handleClick={handleClick}
+            handleClick={() => {
+              handleClick(items[idx].id);
+            }}
             disable={false}
           />
         </div>
       </div>
-      <div>
-        <ToggleLeft
-          activeMyth={4}
-          handleClick={() => {
-            setIdx((prev) => (prev - 1 + items.length) % items.length);
-          }}
-        />
-        <ToggleRight
-          activeMyth={4}
-          handleClick={() => {
-            setIdx((prev) => (prev + 1) % items.length);
-          }}
-        />
-      </div>
+      {items.length > 1 && (
+        <div>
+          <ToggleLeft
+            activeMyth={4}
+            handleClick={() => {
+              setIdx((prev) => (prev - 1 + items.length) % items.length);
+            }}
+          />
+          <ToggleRight
+            activeMyth={4}
+            handleClick={() => {
+              setIdx((prev) => (prev + 1) % items.length);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

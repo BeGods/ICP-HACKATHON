@@ -21,14 +21,12 @@ const Gacha = () => {
         let coins = 0;
         let updateField = null;
 
-        if (/common01/.test(itemId)) {
+        if (itemId?.includes("coin 2")) {
           // gold coin
           coins = 2;
-          updateField = "claimedItems";
-        } else if (/starter0[3-9]/.test(itemId)) {
+        } else if (item?.includes("coin 1")) {
           // silver coin
           coins = 1;
-          updateField = "claimedItems";
         } else {
           // other
           updateField = "pouch";
@@ -41,8 +39,6 @@ const Gacha = () => {
 
           if (updateField == "pouch") {
             updatedPouch.push(itemId);
-          } else {
-            updatedClaimedItems.push(itemId);
           }
 
           newStats.gobcoins = (prev.stats.gobcoin || 0) + coins;
