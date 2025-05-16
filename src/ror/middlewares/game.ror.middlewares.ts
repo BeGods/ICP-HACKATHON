@@ -584,8 +584,7 @@ export const validArtifactClaim = async (req, res, next) => {
       req.deductValue = -1;
     }
 
-    console.log(req.deductValue);
-
+    req.itemId = itemId;
     req.userMilestones = userMilestones;
     next();
   } catch (error) {

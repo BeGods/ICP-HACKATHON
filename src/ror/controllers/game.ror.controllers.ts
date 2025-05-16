@@ -761,8 +761,7 @@ export const activateGemologist = async (req, res) => {
 };
 
 export const claimArtifact = async (req, res) => {
-  const { itemId } = req.body;
-  const { userMilestones, deductValue } = req;
+  const { userMilestones, deductValue, itemId } = req;
 
   try {
     await userMilestones.updateOne({
