@@ -339,7 +339,7 @@
 
   & {
     animation: #{$name} 1s ease-in-out forwards;
-    animation-delay: 2s;
+    animation-delay: 1.5s;
   }
 }
 
@@ -357,7 +357,7 @@
   }
 
   & {
-    animation: #{$name} 3s  ease-in-out forwards;
+    animation: #{$name} 2.5s  ease-in-out forwards;
   }
 }
 
@@ -481,7 +481,15 @@
 
 .slide-ror-header-right{
   @include slideHeader(slide-header-right-animation, 100%, 0%, 40%);
-  }
+}
+
+.slide-swipe-header-left{
+  @include slideHeader(slide-swipe-left-animation, -100%, 0%, -5%);
+}
+
+.slide-swipe-header-right{
+  @include slideHeader(slide-swipe-right-animation, 100%, 0%, 5%);
+}
 
 .slide-ror-title-left{
   @include slideTitle(slide-title-left-animation, 0, -100%);
