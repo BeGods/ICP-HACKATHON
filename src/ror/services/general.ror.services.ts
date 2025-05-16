@@ -3,50 +3,72 @@ import milestones from "../../common/models/milestones.models";
 import mongoose from "mongoose";
 import ranks from "../../common/models/ranks.models";
 import userMythologies from "../../common/models/mythologies.models";
-import { ItemsTransactions } from "../../common/models/transactions.models";
+import {
+  CoinsTransactions,
+  ItemsTransactions,
+} from "../../common/models/transactions.models";
 
 export const generateDailyRwrd = async (userId) => {
   try {
     const userMilestones = await milestones.findOne({ userId: userId });
     const pouchItems = userMilestones?.pouch ?? [];
-    const ignoredItems = [
-      "starter00",
-      "starter01",
-      "starter10",
-      "treasure03",
-      "treasure02",
-      "treasure01",
-    ];
+    const includeItems = ["common02", "common03", "starter01", "starter02"];
+    const coins = ["coin 1", "coin 2"];
+    let coin = 0;
+    let reward: string;
 
     const filteredClaimedItems =
       gameItems?.filter(
         (item) =>
-          !userMilestones?.claimedRoRItems?.includes(item.id) &&
-          !pouchItems?.includes(item.id) &&
           item.id.includes("artifact") &&
-          !ignoredItems.some((ignore) => item.id.includes(ignore))
+          includeItems.some((ignore) => item.id.includes(ignore)) &&
+          !pouchItems?.includes(item.id)
       ) ?? [];
 
-    // random reward
-    const randomGenItem =
-      filteredClaimedItems[
-        Math.floor(Math.random() * filteredClaimedItems.length)
-      ];
+    function pickByProbability(
+      valuesWithProbabilities: { value: string; probability: number }[]
+    ) {
+      const rand = Math.random();
+      let cumulative = 0;
+      for (const item of valuesWithProbabilities) {
+        cumulative += item.probability;
+        if (rand <= cumulative) {
+          return item.value;
+        }
+      }
+      return valuesWithProbabilities[0]?.value ?? "coin 1";
+    }
 
-    let genRewardObj = null;
+    if (filteredClaimedItems.length > 0) {
+      // If items available, use 50% item, 25% coin 1, 25% coin 2
+      const randomItem =
+        filteredClaimedItems[
+          Math.floor(Math.random() * filteredClaimedItems.length)
+        ];
+      reward = pickByProbability([
+        { value: randomItem.id, probability: 0.5 },
+        { value: coins[0], probability: 0.25 },
+        { value: coins[1], probability: 0.25 },
+      ]);
+    } else {
+      // If no items available, 50-50 coins
+      reward = pickByProbability([
+        { value: coins[0], probability: 0.5 },
+        { value: coins[1], probability: 0.5 },
+      ]);
+    }
 
-    if (randomGenItem) {
-      const itemId = randomGenItem.id;
-      let coins = 0;
+    if (reward) {
+      const itemId = reward;
       // let updateField = null;
 
-      if (itemId.includes("common01") || /starter0[3-4]/.test(itemId)) {
+      if (reward === "coin 2") {
         // gold coin
-        coins = 2;
+        coin = 2;
         // updateField = "claimedRoRItems";
-      } else if (/starter0[5-9]/.test(itemId)) {
+      } else if (reward === "coin 1") {
         // silver coin
-        coins = 1;
+        coin = 1;
         // updateField = "claimedRoRItems";
       } else {
         // other
@@ -59,28 +81,33 @@ export const generateDailyRwrd = async (userId) => {
         );
       }
 
-      if (coins > 0) {
+      if (coin > 0) {
         await userMythologies.findOneAndUpdate(
           { userId },
-          { $inc: { gobcoin: coins } }
+          { $inc: { gobcoin: coin } }
         );
       }
-
-      genRewardObj = itemId;
     }
 
     // trans maintain
-    if (genRewardObj) {
+    if (reward.includes("coin")) {
+      const newCoinsTransaction = new CoinsTransactions({
+        userId: userId,
+        source: "daily",
+        coins: coin,
+      });
+      await newCoinsTransaction.save();
+    } else {
       const newItemTransaction = new ItemsTransactions({
         userId: userId,
         underworld: false,
         shards: 0,
-        item: genRewardObj,
+        item: reward,
       });
       await newItemTransaction.save();
     }
 
-    return genRewardObj;
+    return reward;
   } catch (error) {
     console.log(error);
     throw new Error(error.message);

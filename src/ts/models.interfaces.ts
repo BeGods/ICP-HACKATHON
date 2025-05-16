@@ -213,6 +213,8 @@ export interface IUser extends Document {
     competelvl: number;
     restExpiresAt: number;
     isThiefActive: boolean;
+    lastPenaltyAt: number;
+    digLvl: number;
   };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;

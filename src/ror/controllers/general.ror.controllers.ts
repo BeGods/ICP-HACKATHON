@@ -5,7 +5,7 @@ import {
 } from "../services/general.ror.services";
 import User from "../../common/models/user.models";
 import { CoinsTransactions } from "../../common/models/transactions.models";
-import milestones from "../../common/models/milestones.models";
+import Stats from "../../common/models/Stats.models";
 
 export const claimDailyBonus = async (req, res) => {
   const userId = req.user._id;
@@ -80,23 +80,21 @@ export const claimJoinBonus = async (req, res) => {
 
     await userMythologies.findOneAndUpdate(
       { userId: userId },
-      { $inc: { gobcoin: 3 } }
-    );
-
-    await milestones.findOneAndUpdate(
-      { userId: userId },
-
-      {
-        $set: { "bank.vaultExpiryAt": Date.now() + 5 * 24 * 60 * 60 * 1000 },
-      }
+      { $inc: { gobcoin: 9 } }
     );
 
     const newCoinsTransaction = new CoinsTransactions({
       userId: userId,
       source: "join",
-      coins: 3,
+      coins: 9,
     });
     await newCoinsTransaction.save();
+
+    await Stats.findOneAndUpdate(
+      { statId: "ror" },
+      { $inc: { totalUsers: 1 } },
+      { upsert: true, new: true }
+    );
 
     res.status(200).json({ message: "Joining bonus claimed successfully." });
   } catch (error) {

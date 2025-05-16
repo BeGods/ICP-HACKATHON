@@ -172,7 +172,7 @@ export const updateLeadboardRanks = async (req, res) => {
 
     const totalUsers = await User.countDocuments({});
     await Stats.findOneAndUpdate(
-      { statId: "fof" },
+      { statId: "begods" },
       { $set: { totalUsers: totalUsers } },
       { upsert: true }
     );
@@ -315,6 +315,12 @@ export const claimJoinBonus = async (req, res) => {
       orbs: { MultiOrb: 3, Greek: 2 },
     });
     await newOrbsTransaction.save();
+
+    await Stats.findOneAndUpdate(
+      { statId: "fof" },
+      { $inc: { totalUsers: 1 } },
+      { upsert: true, new: true }
+    );
 
     res.status(200).json({ message: "Joining bonus claimed successfully." });
   } catch (error) {

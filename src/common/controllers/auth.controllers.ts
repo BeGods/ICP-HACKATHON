@@ -451,7 +451,7 @@ export const authenticateOneWave = async (
       let usernameToAdd = oneWaveUsername;
       const usernameExists = await validateUsername(usernameToAdd);
       if (usernameExists) {
-        const randomSuffix = Math.random().toString(36).substring(2, 5); // random 3-letter string
+        const randomSuffix = Math.random().toString(36).substring(2, 5);
         usernameToAdd = `${usernameToAdd}_${randomSuffix}`;
       }
       let newUser: Partial<IUser> = {
@@ -459,7 +459,7 @@ export const authenticateOneWave = async (
         telegramUsername: usernameToAdd,
       };
 
-      const refPartner = refer === "ONW" ? refer : "";
+      const refPartner = "OW";
 
       // create new  user
       existingUser = await addNewOneWaveUser(newUser, refPartner);

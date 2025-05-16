@@ -1,6 +1,5 @@
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
-  activateRest,
   activateVault,
   generateSessionReward,
   getGameStats,
@@ -13,10 +12,11 @@ import {
   useItemAbility,
   claimCompleteRelic,
   claimArtifact,
+  activateMeal,
 } from "../controllers/game.ror.controllers";
 import express from "express";
 import {
-  isValidRestReq,
+  isValidMealReq,
   isValidVaultReq,
   validArtifactClaim,
   validateCompleteItem,
@@ -87,7 +87,7 @@ router.post(
 //   activateLibrarian
 // );
 router.get("/vault/activate", authMiddleware, isValidVaultReq, activateVault);
-router.get("/rest/activate", authMiddleware, isValidRestReq, activateRest);
+router.get("/meal/activate", authMiddleware, isValidMealReq, activateMeal);
 
 // potion
 router.post(
