@@ -85,6 +85,11 @@ const userSchema = new Schema<IUser>(
         type: Number,
         default: 0,
       },
+      digLvl: {
+        type: Number,
+        default: 1,
+      },
+      lastMealPenaltyAt: Number,
     },
     mobileNumber: {
       type: String,

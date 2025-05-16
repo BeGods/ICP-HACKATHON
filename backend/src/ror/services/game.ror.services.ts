@@ -288,40 +288,63 @@ export const genRandomMythItem = async (
 
       let randomGenFragntIdx;
 
-      if (alreadyClaimedItem) {
-        // missing frags
-        const missingFragments = randomGenItem.fragments.filter(
-          (item) => !alreadyClaimedItem.fragments.includes(item)
+      // coins
+      if (/starter0[3-9]/?.test(randomGenItem.id)) {
+        await milestones.findOneAndUpdate(
+          { userId: userId },
+          {
+            $push: { pouch: randomGenItem.id },
+          },
+          { new: true }
         );
 
-        randomGenFragntIdx =
-          missingFragments[Math.floor(Math.random() * missingFragments.length)];
+        let genRewardObj = {
+          itemId: randomGenItem?.id ?? null,
+          fragmentId: 0,
+          isComplete: true,
+          isChar: false,
+        };
+
+        itemAddedToBag = genRewardObj;
       } else {
-        randomGenFragntIdx = Math.floor(
-          Math.random() * randomGenItem.fragments.length
+        // relics
+        if (alreadyClaimedItem) {
+          // missing frags
+          const missingFragments = randomGenItem.fragments.filter(
+            (item) => !alreadyClaimedItem.fragments.includes(item)
+          );
+
+          randomGenFragntIdx =
+            missingFragments[
+              Math.floor(Math.random() * missingFragments.length)
+            ];
+        } else {
+          randomGenFragntIdx = Math.floor(
+            Math.random() * randomGenItem.fragments.length
+          );
+        }
+
+        genRewardObj = {
+          itemId: randomGenItem.id,
+          fragmentId: randomGenFragntIdx,
+          isComplete: randomGenItem.fragments.length === 1,
+        };
+
+        // update bag
+        let updatedBag = await milestones.findOneAndUpdate(
+          { userId: userId },
+          {
+            $push: { bag: genRewardObj },
+          },
+          { new: true }
+        );
+
+        itemAddedToBag = updatedBag.bag?.find(
+          (item) =>
+            item.itemId === genRewardObj.itemId &&
+            item.fragmentId === genRewardObj.fragmentId
         );
       }
-
-      genRewardObj = {
-        itemId: randomGenItem.id,
-        fragmentId: randomGenFragntIdx,
-        isComplete: randomGenItem.fragments.length === 1,
-      };
-
-      // update bag
-      let updatedBag = await milestones.findOneAndUpdate(
-        { userId: userId },
-        {
-          $push: { bag: genRewardObj },
-        },
-        { new: true }
-      );
-
-      itemAddedToBag = updatedBag.bag?.find(
-        (item) =>
-          item.itemId === genRewardObj.itemId &&
-          item.fragmentId === genRewardObj.fragmentId
-      );
     }
 
     return { randomGenItem, itemAddedToBag };
@@ -354,7 +377,7 @@ export const genRandomUNDWItem = async (
     let itemAddedToBag: itemInterface = genRewardObj;
 
     const ignoredItems = [
-      "starter00",
+      // "starter00",
       // "treasure03",
       // "treasure02",
       "treasure01",
@@ -462,6 +485,11 @@ export const filterFetchedItem = (
       gameItems?.filter((item) => {
         const id = item.id || "";
 
+        const isCoinFromMythology =
+          /starter0[3-9]/?.test(id) &&
+          id.includes("treasure01") &&
+          id.includes(mythology.toLowerCase());
+
         const isRelicFromMythology =
           id.includes("relic") && id.includes(mythology.toLowerCase());
 
@@ -470,7 +498,9 @@ export const filterFetchedItem = (
         );
 
         return (
-          (isRelicFromMythology || isTreasureFromMythology) &&
+          (isRelicFromMythology ||
+            isTreasureFromMythology ||
+            isCoinFromMythology) &&
           !userClaimedRewards?.claimedRoRItems?.includes(id) &&
           !completedItemIds?.includes(id)
         );
@@ -641,6 +671,46 @@ export const claimDragon = async (user, competelvl, bag) => {
         "gameSession.dailyGameQuota": -1,
       },
     });
+  } catch (error) {
+    console.log(error);
+    throw Error(error);
+  }
+};
+
+export const checkIfMealSkipped = async (user) => {
+  try {
+    const now = Date.now();
+    const lastRest = user.gameSession.restExpiresAt || 0;
+    const lastPenalty = user.gameSession.lastMealPenaltyAt || 0;
+    const currentSwipePower = user.gameSession.digLvl || 1;
+    const expiryMs = 24 * 60 * 60 * 1000;
+
+    let updatedSwipePower = currentSwipePower;
+
+    const decayStartTime = lastRest + 2 * expiryMs;
+    const shouldDeductPenalty =
+      !lastPenalty || lastPenalty === 0 || now > lastPenalty + expiryMs;
+
+    const shouldDecay =
+      lastRest !== 0 && now > decayStartTime && shouldDeductPenalty;
+
+    if (shouldDecay) {
+      console.log("mean deduct called");
+
+      updatedSwipePower = Math.max(updatedSwipePower - 1, 1);
+
+      user.gameSession.digLvl = updatedSwipePower;
+      user.gameSession.lastMealPenaltyAt = now;
+
+      await user.updateOne({
+        $set: {
+          "gameSession.digLvl": updatedSwipePower,
+          "gameSession.lastMealPenaltyAt": now,
+        },
+      });
+    }
+
+    return updatedSwipePower;
   } catch (error) {
     console.log(error);
     throw Error(error);

@@ -1,4 +1,5 @@
 import {
+  checkIfMealSkipped,
   claimDragon,
   fetchGameData,
   filterFetchedItem,
@@ -112,6 +113,7 @@ export const getGameStats = async (req, res) => {
     userGameData.userMythologies[0].sessionStartAt =
       user.gameSession?.gameHrStartAt;
     userGameData.userMythologies[0].isRestActive = isRestActive;
+    userGameData.userMythologies[0].digLvl = await checkIfMealSkipped(user);
 
     let userRank = await ranks.findOne({ userId: req.user._id });
     if (!userRank) {
@@ -455,15 +457,34 @@ export const activateVault = async (req, res) => {
   }
 };
 
-export const activateRest = async (req, res) => {
+export const activateMeal = async (req, res) => {
   const userMythologies = req.userMythologies;
   const user = req.user;
   const deductValue = req.deductValue;
   const expiryDays = req.expiryDays;
 
+  const now = Date.now();
+  const lastRest = user.gameSession.restExpiresAt || 0;
+  const currentSwipePower = user.gameSession.digLvl || 1;
+
+  let updatedSwipePower = currentSwipePower;
+
+  // if (lastRest !== 0 && now > lastRest + 2 * expiryDays) {
+  //   updatedSwipePower = Math.max(updatedSwipePower - 1, 1);
+  // } else {
+  //   updatedSwipePower += 1;
+  // }
+
+  if (lastRest === 0 || now < lastRest + 2 * expiryDays) {
+    updatedSwipePower += 1;
+  }
+
   try {
     await user.updateOne({
-      $set: { "gameSession.restExpiresAt": Date.now() + expiryDays },
+      $set: {
+        "gameSession.restExpiresAt": Date.now() + expiryDays,
+        "gameSession.digLvl": updatedSwipePower,
+      },
     });
     await userMythologies.updateOne({
       $inc: { gobcoin: -deductValue },
@@ -741,7 +762,7 @@ export const activateGemologist = async (req, res) => {
 
 export const claimArtifact = async (req, res) => {
   const { itemId } = req.body;
-  const { userMilestones } = req;
+  const { userMilestones, deductValue } = req;
 
   try {
     await userMilestones.updateOne({
@@ -750,11 +771,13 @@ export const claimArtifact = async (req, res) => {
       },
     });
 
-    await userMythologies.updateOne({
-      $inc: {
-        gobcoin: -1,
-      },
-    });
+    if (deductValue !== 0) {
+      await userMythologies.updateOne({
+        $inc: {
+          gobcoin: -deductValue,
+        },
+      });
+    }
 
     res.status(200).json({ message: "Artifact claimed successfully." });
   } catch (error) {

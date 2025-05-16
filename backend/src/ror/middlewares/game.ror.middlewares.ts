@@ -8,6 +8,8 @@ import {
   validatePotionType,
 } from "../services/game.ror.services";
 import { mythElementNamesLowerCase } from "../../utils/constants/variables";
+import { decryptHash } from "../../helpers/crypt.helpers";
+import config from "../../config/config";
 
 export const validateSessionsStart = async (req, res, next) => {
   const user = req.user;
@@ -29,6 +31,7 @@ export const validateSessionReward = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { battleData } = req.body;
+  const digLvl = user?.gameSession?.digLvl ?? 1;
 
   // 1 - win
   // 0 - loss
@@ -51,8 +54,8 @@ export const validateSessionReward = async (req, res, next) => {
     // validate battle
     let competelvl = user.gameSession.competelvl;
     battleData.forEach((round, index) => {
-      const isWin = round.swipes >= competelvl && round.status === 1;
-      const isLoss = round.swipes < competelvl && round.status === 0;
+      const isWin = round.swipes * digLvl >= competelvl && round.status === 1;
+      const isLoss = round.swipes * digLvl < competelvl && round.status === 0;
 
       if (isWin) {
         competelvl = Math.min(40, competelvl + 5);
@@ -209,7 +212,7 @@ export const isValidVaultReq = async (req, res, next) => {
   }
 };
 
-export const isValidRestReq = async (req, res, next) => {
+export const isValidMealReq = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { isMulti } = req.query;
@@ -533,15 +536,21 @@ export const validLibrnReq = async (req, res, next) => {
 };
 
 export const validArtifactClaim = async (req, res, next) => {
-  const { itemId } = req.body;
   const { user } = req;
+  const { adId, itemId } = await decryptHash(req.body.data);
 
   const artifactType = [
     "artifact.starter01",
     "artifact.starter02",
     "artifact.common03",
+    "artifact.common02",
     "artifact.starter10",
   ];
+
+  // validate ad
+  if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
+    return res.status(400).json({ error: "Invalid ad request." });
+  }
 
   try {
     const matchedType = artifactType.some((itm) => itemId.includes(itm));
@@ -568,6 +577,14 @@ export const validArtifactClaim = async (req, res, next) => {
     if (userMythData.gobcoin < 1) {
       return res.status(400).json({ message: "Insufficient gobcoins." });
     }
+
+    if (adId) {
+      req.deductValue = 0;
+    } else {
+      req.deductValue = -1;
+    }
+
+    console.log(req.deductValue);
 
     req.userMilestones = userMilestones;
     next();
