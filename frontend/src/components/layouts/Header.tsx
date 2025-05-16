@@ -237,9 +237,15 @@ const BottomChild = () => {
     <div className="flex h-button-primary mt-[2.5vh] absolute z-20 text-black font-symbols justify-between w-screen">
       <div
         onClick={() => sections[section].handleLeft()}
-        className="flex slide-ror-header-left header-shadow-black p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full"
+        className={`flex ${
+          section == 1 ? "slide-swipe-header-left" : "slide-ror-header-left"
+        }  header-shadow-black p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full`}
       >
-        <div className="text-[8vw] font-medium font-fof px-1 slide-ror-title-left">
+        <div
+          className={`text-[8vw] font-medium font-fof px-1 ${
+            section != 1 && "slide-ror-title-left"
+          }`}
+        >
           {sections[section].left}
         </div>
         <div
@@ -254,7 +260,9 @@ const BottomChild = () => {
       </div>
       <div
         onClick={() => sections[section].handleRight()}
-        className={`flex transition-all duration-500 slide-ror-header-right header-shadow-black p-0.5 justify-start items-center w-[32%] ${
+        className={`flex transition-all duration-500 ${
+          section == 1 ? "slide-swipe-header-right" : "slide-ror-header-right"
+        } header-shadow-black p-0.5 justify-start items-center w-[32%] ${
           shardReward && mythSections?.includes(shardReward?.myth)
             ? `bg-${shardReward?.myth}-primary`
             : `bg-white`
@@ -276,7 +284,11 @@ const BottomChild = () => {
               {shardReward?.count}
             </div>
           ) : (
-            <div className="text-[8vw] font-medium px-1 font-fof slide-ror-title-right">
+            <div
+              className={`text-[8vw] font-medium px-1 font-fof ${
+                section != 1 && "slide-ror-title-right"
+              }`}
+            >
               {sections[section].right}
             </div>
           )}
