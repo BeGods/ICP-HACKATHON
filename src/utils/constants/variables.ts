@@ -17,8 +17,6 @@ export const underworldItemsList = [
   "relic.C05",
   "relic.C09",
   "artifact.treasure01",
-  "artifact.treasure02",
-  "artifact.treasure03",
 ];
 
 // default mythologies

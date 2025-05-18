@@ -273,7 +273,8 @@ export interface ICoinTransactions extends Document {
     | "voucher"
     | "moon"
     | "share"
-    | "bonus";
+    | "bonus"
+    | "daily";
   date?: Date;
   createdAt?: Date;
   updatedAt?: Date;
@@ -301,7 +302,7 @@ export interface IKaiaTransactions extends Document {
 export interface IShardsTransactions extends Document {
   userId: mongoose.Types.ObjectId;
   shards: number;
-  source: "game" | "burst";
+  source: "game" | "burst" | "daily";
   date?: Date;
   createdAt?: Date;
   updatedAt?: Date;

@@ -19,14 +19,14 @@ export const claimDailyBonus = async (req, res) => {
       },
     });
 
-    let bonusReward = await generateDailyRwrd(userId);
+    let bonusReward = await generateDailyRwrd(user, userId);
 
     if (!bonusReward) {
-      bonusReward = "shards";
+      bonusReward = "shards.aether02";
 
       await userMythologies.findOneAndUpdate(
         { userId: userId },
-        { $inc: { blackShards: 10 } }
+        { $inc: { blackShards: 100 } }
       );
     }
 
