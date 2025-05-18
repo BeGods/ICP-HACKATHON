@@ -84,7 +84,10 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "gemologist",
         component: (
           <CitadelItem
-            disable={false}
+            disable={
+              gameData.stats.blackShards >= 100 ||
+              gameData.stats.whiteShards >= 100
+            }
             icon="v"
             isMulti={false}
             itemKey="apothecary"

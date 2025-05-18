@@ -491,6 +491,14 @@
   @include slideHeader(slide-swipe-right-animation, 100%, 0%, 5%);
 }
 
+  .slide-swipe-header-left{
+  @include slideHeader(swipe-header-left-animation, -100%, 0%, -5%);
+}
+
+.slide-swipe-header-right{
+  @include slideHeader(swipe-header-right-animation, 100%, 0%, 5%);
+  }
+
 .slide-ror-title-left{
   @include slideTitle(slide-title-left-animation, 0, -100%);
 }
