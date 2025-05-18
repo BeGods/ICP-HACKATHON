@@ -178,6 +178,8 @@ const Explore = () => {
         });
       } else if (itemId?.includes("artifact.treasure03")) {
         // moon amulet
+      } else if (itemId?.includes("artifact.common02")) {
+        // key
       }
 
       setGameData((prevData) => {
@@ -822,6 +824,19 @@ const Explore = () => {
                           },
                         };
                       });
+
+                      // claim key
+                      if (
+                        checkIsUnderworldActive(
+                          gameData.stats,
+                          digMyth,
+                          gameData.pouch
+                        ) == 2
+                      ) {
+                        handleClaimItem(
+                          `${digMyth?.toLowerCase()}.artifact.common02`
+                        );
+                      }
                     }}
                     className={`mt-4 text-[50px] font-symbols text-black-contour scale-point`}
                   >
