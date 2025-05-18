@@ -9,6 +9,20 @@ export const gameItems = [
   { id: "potion.air.A01", name: "air-potion-A", fragments: [0], coins: 1 },
   { id: "potion.air.B01", name: "air-potion-B", fragments: [0], coins: 1 },
 
+  // undeworld amulets
+  {
+    id: "underworld.artifact.treasure01-on",
+    name: "sun amulet",
+    fragments: [0],
+    coins: 1,
+  },
+  {
+    id: "underworld.artifact.treasure02-on",
+    name: "moon amulet",
+    fragments: [0],
+    coins: 1,
+  },
+
   // ======== CELTIC =======
   // celtic: relics
   {
@@ -194,8 +208,7 @@ export const gameItems = [
     orbs: "Celtic",
   },
   {
-    id: "celtic.relic.C09",
-    isMonster: true,
+    id: "celtic.relic.C08",
     name: "cogar",
     fragments: [0],
     coins: 1,
@@ -210,36 +223,64 @@ export const gameItems = [
   },
 
   // celtic: artifacts
-  { id: "celtic.artifact.common01", name: "gold coin 1", fragments: [0, 1], coins: 2 },
+  {
+    id: "celtic.artifact.common01",
+    name: "gold coin 1",
+    fragments: [0, 1],
+    coins: 2,
+  },
   { id: "celtic.artifact.common02", name: "key", fragments: [0], coins: 1 },
   { id: "celtic.artifact.common03", name: "boots", fragments: [0], coins: 1 },
   { id: "celtic.artifact.starter01", name: "statue", fragments: [0], coins: 1 },
   { id: "celtic.artifact.starter02", name: "map", fragments: [0], coins: 1 },
-  { id: "celtic.artifact.starter03", name: "gold coin 2", fragments: [0, 1], coins: 2 },
-  { id: "celtic.artifact.starter04", name: "gold coin 3", fragments: [0, 1], coins: 2 },
-  { id: "celtic.artifact.starter05", name: "silver coin 1", fragments: [0, 1], coins: 1 },
-  { id: "celtic.artifact.starter06", name: "silver coin 2", fragments: [0, 1], coins: 1 },
-  { id: "celtic.artifact.starter07", name: "silver coin 3", fragments: [0, 1], coins: 1 },
-  { id: "celtic.artifact.starter08", name: "silver coin 4", fragments: [0, 1], coins: 1 },
-  { id: "celtic.artifact.starter09", name: "silver coin 5", fragments: [0, 1], coins: 1 },
+  {
+    id: "celtic.artifact.starter03",
+    name: "gold coin 2",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "celtic.artifact.starter04",
+    name: "gold coin 3",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "celtic.artifact.starter05",
+    name: "silver coin 1",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "celtic.artifact.starter06",
+    name: "silver coin 2",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "celtic.artifact.starter07",
+    name: "silver coin 3",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "celtic.artifact.starter08",
+    name: "silver coin 4",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "celtic.artifact.starter09",
+    name: "silver coin 5",
+    fragments: [0, 1],
+    coins: 1,
+  },
   { id: "celtic.artifact.starter10", name: "book", fragments: [0], coins: 1 },
 
   // celtic: tresures
   {
     id: "celtic.artifact.treasure01",
     name: "underworld coin",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "celtic.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "celtic.artifact.treasure03",
-    name: "moon amulet",
     fragments: [0],
     coins: 1,
   },
@@ -444,20 +485,64 @@ export const gameItems = [
   },
 
   // egyptian: artifacts
-  { id: "egyptian.artifact.common01", name: "gold coin 1", fragments: [0, 1], coins: 2 },
+  {
+    id: "egyptian.artifact.common01",
+    name: "gold coin 1",
+    fragments: [0, 1],
+    coins: 2,
+  },
   { id: "egyptian.artifact.common02", name: "key", fragments: [0], coins: 1 },
   { id: "egyptian.artifact.common03", name: "boots", fragments: [0], coins: 1 },
-  { id: "egyptian.artifact.starter01", name: "statue", fragments: [0], coins: 1 },
+  {
+    id: "egyptian.artifact.starter01",
+    name: "statue",
+    fragments: [0],
+    coins: 1,
+  },
   { id: "egyptian.artifact.starter02", name: "map", fragments: [0], coins: 1 },
-  { id: "egyptian.artifact.starter03", name: "gold coin 2", fragments: [0, 1], coins: 2 },
-  { id: "egyptian.artifact.starter04", name: "gold coin 3", fragments: [0, 1], coins: 2 },
-  { id: "egyptian.artifact.starter05", name: "silver coin 1", fragments: [0, 1], coins: 1 },
-  { id: "egyptian.artifact.starter06", name: "silver coin 2", fragments: [0, 1], coins: 1 },
-  { id: "egyptian.artifact.starter07", name: "silver coin 3", fragments: [0, 1], coins: 1 },
-  { id: "egyptian.artifact.starter08", name: "silver coin 4", fragments: [0, 1], coins: 1 },
-  { id: "egyptian.artifact.starter09", name: "silver coin 5", fragments: [0, 1], coins: 1 },
+  {
+    id: "egyptian.artifact.starter03",
+    name: "gold coin 2",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "egyptian.artifact.starter04",
+    name: "gold coin 3",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "egyptian.artifact.starter05",
+    name: "silver coin 1",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "egyptian.artifact.starter06",
+    name: "silver coin 2",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "egyptian.artifact.starter07",
+    name: "silver coin 3",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "egyptian.artifact.starter08",
+    name: "silver coin 4",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "egyptian.artifact.starter09",
+    name: "silver coin 5",
+    fragments: [0, 1],
+    coins: 1,
+  },
   { id: "egyptian.artifact.starter10", name: "book", fragments: [0], coins: 1 },
-
 
   // egyptian: tresures
   {
@@ -466,19 +551,6 @@ export const gameItems = [
     fragments: [0],
     coins: 1,
   },
-  {
-    id: "egyptian.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "egyptian.artifact.treasure03",
-    name: "moon amulet",
-    fragments: [0],
-    coins: 1,
-  },
-
   // ======== GREEK =======
   // greek: relics
   {
@@ -679,36 +751,64 @@ export const gameItems = [
   },
 
   // greek: artifacts
-  { id: "greek.artifact.common01", name: "gold coin 1", fragments: [0, 1], coins: 2 },
+  {
+    id: "greek.artifact.common01",
+    name: "gold coin 1",
+    fragments: [0, 1],
+    coins: 2,
+  },
   { id: "greek.artifact.common02", name: "key", fragments: [0], coins: 1 },
   { id: "greek.artifact.common03", name: "boots", fragments: [0], coins: 1 },
   { id: "greek.artifact.starter01", name: "statue", fragments: [0], coins: 1 },
   { id: "greek.artifact.starter02", name: "map", fragments: [0], coins: 1 },
-  { id: "greek.artifact.starter03", name: "gold coin 2", fragments: [0, 1], coins: 2 },
-  { id: "greek.artifact.starter04", name: "gold coin 3", fragments: [0, 1], coins: 2 },
-  { id: "greek.artifact.starter05", name: "silver coin 1", fragments: [0, 1], coins: 1 },
-  { id: "greek.artifact.starter06", name: "silver coin 2", fragments: [0, 1], coins: 1 },
-  { id: "greek.artifact.starter07", name: "silver coin 3", fragments: [0, 1], coins: 1 },
-  { id: "greek.artifact.starter08", name: "silver coin 4", fragments: [0, 1], coins: 1 },
-  { id: "greek.artifact.starter09", name: "silver coin 5", fragments: [0, 1], coins: 1 },
+  {
+    id: "greek.artifact.starter03",
+    name: "gold coin 2",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "greek.artifact.starter04",
+    name: "gold coin 3",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "greek.artifact.starter05",
+    name: "silver coin 1",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "greek.artifact.starter06",
+    name: "silver coin 2",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "greek.artifact.starter07",
+    name: "silver coin 3",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "greek.artifact.starter08",
+    name: "silver coin 4",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "greek.artifact.starter09",
+    name: "silver coin 5",
+    fragments: [0, 1],
+    coins: 1,
+  },
   { id: "greek.artifact.starter10", name: "book", fragments: [0], coins: 1 },
 
   // greek: tresures
   {
     id: "greek.artifact.treasure01",
     name: "underworld coin",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "greek.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "greek.artifact.treasure03",
-    name: "moon amulet",
     fragments: [0],
     coins: 1,
   },
@@ -913,18 +1013,58 @@ export const gameItems = [
   },
 
   // norse: artifacts
-  { id: "norse.artifact.common01", name: "gold coin 1", fragments: [0, 1], coins: 2 },
+  {
+    id: "norse.artifact.common01",
+    name: "gold coin 1",
+    fragments: [0, 1],
+    coins: 2,
+  },
   { id: "norse.artifact.common02", name: "key", fragments: [0], coins: 1 },
   { id: "norse.artifact.common03", name: "boots", fragments: [0], coins: 1 },
   { id: "norse.artifact.starter01", name: "statue", fragments: [0], coins: 1 },
   { id: "norse.artifact.starter02", name: "map", fragments: [0], coins: 1 },
-  { id: "norse.artifact.starter03", name: "gold coin 2", fragments: [0, 1], coins: 2 },
-  { id: "norse.artifact.starter04", name: "gold coin 3", fragments: [0, 1], coins: 2 },
-  { id: "norse.artifact.starter05", name: "silver coin 1", fragments: [0, 1], coins: 1 },
-  { id: "norse.artifact.starter06", name: "silver coin 2", fragments: [0, 1], coins: 1 },
-  { id: "norse.artifact.starter07", name: "silver coin 3", fragments: [0, 1], coins: 1 },
-  { id: "norse.artifact.starter08", name: "silver coin 4", fragments: [0, 1], coins: 1 },
-  { id: "norse.artifact.starter09", name: "silver coin 5", fragments: [0, 1], coins: 1 },
+  {
+    id: "norse.artifact.starter03",
+    name: "gold coin 2",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "norse.artifact.starter04",
+    name: "gold coin 3",
+    fragments: [0, 1],
+    coins: 2,
+  },
+  {
+    id: "norse.artifact.starter05",
+    name: "silver coin 1",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "norse.artifact.starter06",
+    name: "silver coin 2",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "norse.artifact.starter07",
+    name: "silver coin 3",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "norse.artifact.starter08",
+    name: "silver coin 4",
+    fragments: [0, 1],
+    coins: 1,
+  },
+  {
+    id: "norse.artifact.starter09",
+    name: "silver coin 5",
+    fragments: [0, 1],
+    coins: 1,
+  },
   { id: "norse.artifact.starter10", name: "book", fragments: [0], coins: 1 },
 
   // norse: tresures
@@ -934,17 +1074,4 @@ export const gameItems = [
     fragments: [0],
     coins: 1,
   },
-  {
-    id: "norse.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "norse.artifact.treasure03",
-    name: "moon amulet",
-    fragments: [0],
-    coins: 1,
-  },
-
 ];
