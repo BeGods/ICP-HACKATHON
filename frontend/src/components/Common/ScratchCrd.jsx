@@ -2,13 +2,13 @@ import confetti from "canvas-confetti";
 import React, { useEffect, useRef, useState } from "react";
 import ScratchCard from "react-scratchcard-v2";
 
-const Scratch = ({ handleComplete, item, image }) => {
+const Scratch = ({ handleComplete, item, image, src }) => {
   const [showEffect, setShowEffect] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const [showFlip, setShowFlip] = useState(false);
   const [coins, setCoins] = useState(0);
+  const [shards, setShards] = useState(null);
   const [icon, setIcon] = useState("A");
-  const scratchRef = useRef();
 
   useEffect(() => {
     if (!item) {
@@ -21,6 +21,12 @@ const Scratch = ({ handleComplete, item, image }) => {
     } else if (item?.includes("coin 1")) {
       setCoins(1);
       setIcon("A");
+    } else if (item?.includes("shard")) {
+      setShards(100);
+    } else if (item === "meal") {
+      setShards("Meal");
+    } else if (item?.includes("starter02")) {
+      setShards("Map");
     }
   }, [item, showFlip]);
 
@@ -47,23 +53,24 @@ const Scratch = ({ handleComplete, item, image }) => {
   return (
     <div>
       <div
-        className={`relative h-[320px] w-[320px] flex justify-center items-center  overflow-hidden reward-pop-in transition-all duration-1000`}
+        className={`relative h-[320px] w-[320px] flex justify-center items-center reward-pop-in transition-all duration-1000`}
       >
         <div className={`orb ${flipped ? "flipped" : ""}`}>
-          <div className="flex justify-center items-center w-full relative h-full orb__face orb__face--front">
+          <div className="flex flex-col justify-center items-center w-full relative h-full orb__face orb__face--front">
             <div
               className={`h-[240px] w-[240px]`}
               style={{
-                backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${
-                  item?.includes("coin") ? "gobcoin" : item
-                }.png)`,
+                backgroundImage: `url(${src})`,
                 backgroundSize: "cover",
                 backgroundPosition: "100% 20%",
                 backgroundRepeat: "no-repeat",
               }}
             ></div>
-            <div className="absolute text-num text-white text-black-contour">
+            <div className="absolute w-full h-full flex justify-center  items-center text-[30vw] mt-2 text-white text-black-contour">
               {coins > 0 && coins}
+            </div>
+            <div className="absolute w-full h-full flex justify-center  items-end text-[14vw] mb-0 mt-10 ml-5 text-white text-black-contour">
+              {shards && shards}
             </div>
           </div>
           <div

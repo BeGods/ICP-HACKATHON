@@ -33,8 +33,8 @@ export const checkIsUnderworldActive = (gameSession, mythology, pouch) => {
     const itemExists = hasDemonCoin || hasKey;
 
     if (itemExists && turns) {
-        if (hasDemonCoin) return 1;
         if (hasKey) return 2;
+        if (hasDemonCoin) return 1;
     }
 
     return -1;
