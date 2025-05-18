@@ -266,7 +266,8 @@ export const updatePotionTrade = async (
 export const genRandomMythItem = async (
   userId,
   filteredNotClaimedItems,
-  claimedItems
+  claimedItems,
+  alreadyAppearChar
 ) => {
   try {
     const outsideItems = filteredNotClaimedItems.filter((item) =>
@@ -277,8 +278,14 @@ export const genRandomMythItem = async (
     const randomGenItem =
       outsideItems[Math.floor(Math.random() * filteredNotClaimedItems.length)];
 
-    let genRewardObj = null;
-    let itemAddedToBag: itemInterface = {};
+    let genRewardObj = {
+      itemId: randomGenItem?.id ?? null,
+      fragmentId: 0,
+      isComplete: true,
+      isChar: false,
+    };
+
+    let itemAddedToBag: itemInterface = genRewardObj;
 
     // if random item exists
     if (randomGenItem) {
@@ -298,14 +305,39 @@ export const genRandomMythItem = async (
           { new: true }
         );
 
-        let genRewardObj = {
-          itemId: randomGenItem?.id ?? null,
-          fragmentId: 0,
-          isComplete: true,
-          isChar: false,
-        };
-
         itemAddedToBag = genRewardObj;
+      } else if (/relic.C0[6-8]/?.test(randomGenItem.id)) {
+        const charAppearedBefore = alreadyAppearChar.includes(randomGenItem.id);
+
+        if (charAppearedBefore) {
+          // yes
+          let updatedBag = await milestones.findOneAndUpdate(
+            { userId: userId },
+            {
+              $push: { bag: genRewardObj },
+              $pull: { appearedUnderworldChars: genRewardObj.itemId },
+            },
+            { new: true }
+          );
+
+          itemAddedToBag = updatedBag.bag?.find(
+            (item) =>
+              item.itemId === genRewardObj.itemId && item.fragmentId === 0
+          );
+        } else {
+          // no
+          if (charAppearedBefore) {
+            throw Error("Invalid item.");
+          }
+          genRewardObj.isChar = true;
+          await milestones.findOneAndUpdate(
+            { userId: userId },
+            {
+              $push: { appearedUnderworldChars: genRewardObj.itemId },
+            },
+            { new: true }
+          );
+        }
       } else {
         // relics
         if (alreadyClaimedItem) {
@@ -324,11 +356,8 @@ export const genRandomMythItem = async (
           );
         }
 
-        genRewardObj = {
-          itemId: randomGenItem.id,
-          fragmentId: randomGenFragntIdx,
-          isComplete: randomGenItem.fragments.length === 1,
-        };
+        genRewardObj.fragmentId = randomGenFragntIdx;
+        genRewardObj.isComplete = randomGenItem.fragments.length === 1;
 
         // update bag
         let updatedBag = await milestones.findOneAndUpdate(
@@ -347,6 +376,12 @@ export const genRandomMythItem = async (
       }
     }
 
+    if (!itemAddedToBag.itemId) {
+      console.log("item is empty");
+
+      itemAddedToBag = {};
+    }
+
     return { randomGenItem, itemAddedToBag };
   } catch (error) {
     console.log(error);
@@ -356,7 +391,7 @@ export const genRandomMythItem = async (
 export const genRandomUNDWItem = async (
   userId,
   filteredNotClaimedItems,
-  claimedItems
+  alreadyAppearChar
 ) => {
   try {
     const underWorldItems = filteredNotClaimedItems.filter((item) =>
@@ -386,7 +421,7 @@ export const genRandomUNDWItem = async (
     // if random item exists
     if (randomGenItem) {
       // check char has appeared before
-      const alreadyClaimedItem = claimedItems.includes(randomGenItem.id);
+      const alreadyClaimedItem = alreadyAppearChar.includes(randomGenItem.id);
 
       // if char has appeared already
       if (ignoredItems.some((ignore) => genRewardObj.itemId.includes(ignore))) {
@@ -411,7 +446,7 @@ export const genRandomUNDWItem = async (
           (item) => item.itemId === genRewardObj.itemId && item.fragmentId === 0
         );
       } else {
-        if (claimedItems.includes(genRewardObj.itemId)) {
+        if (alreadyAppearChar.includes(genRewardObj.itemId)) {
           throw Error("Invalid item.");
         }
         genRewardObj.isChar = true;
@@ -474,11 +509,7 @@ export const filterFetchedItem = (
         )
         .map((item) => item.itemId) ?? [];
 
-    const treasureCodes = [
-      "artifact.treasure01",
-      "artifact.treasure02",
-      "artifact.treasure03",
-    ];
+    const treasureCodes = ["artifact.treasure01"];
 
     // filter
     const filteredRoRItems =
@@ -486,16 +517,17 @@ export const filterFetchedItem = (
         const id = item.id || "";
 
         const isCoinFromMythology =
-          /starter0[3-9]/?.test(id) &&
-          id.includes("treasure01") &&
-          id.includes(mythology.toLowerCase());
+          id.includes(mythology.toLowerCase()) &&
+          (/starter0[3-9]/?.test(id) || id.includes("treasure01"));
 
         const isRelicFromMythology =
           id.includes("relic") && id.includes(mythology.toLowerCase());
 
-        const isTreasureFromMythology = treasureCodes.some((code) =>
-          id.includes(`${mythology.toLowerCase()}.${code}`)
-        );
+        const isTreasureFromMythology = isUnderworld
+          ? id.includes(`${mythology.toLowerCase()}.01`) ||
+            id.includes(`underworld.artifact.treasure01`) ||
+            id.includes(`underworld.artifact.treasure02`)
+          : [];
 
         return (
           (isRelicFromMythology ||

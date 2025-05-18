@@ -230,7 +230,7 @@ export const isValidMealReq = async (req, res, next) => {
     }
 
     req.deductValue = deductValue;
-    req.expiryDays = expiryDays * 24 * 60 * 60 * 1000;
+    req.expiryDays = 1 * 24 * 60 * 60 * 1000;
     req.userMythologies = userMythologyData;
     next();
   } catch (error) {
@@ -451,6 +451,7 @@ export const validItemAbility = async (req, res, next) => {
     "artifact.common03": "map",
     "artifact.treasure02": "sun.amulet",
     "artifact.treasure03": "moon.amulet",
+    "artifact.common02": "key",
   };
 
   try {

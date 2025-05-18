@@ -278,7 +278,8 @@ export const generateSessionReward = async (req, res) => {
       const { randomGenItem, itemAddedToBag } = await genRandomMythItem(
         userId,
         filteredNotClaimedItems,
-        claimedItems
+        claimedItems,
+        userClaimedRewards.appearedUnderworldChars ?? []
       );
       rewardItem = randomGenItem;
       addedBagItem = itemAddedToBag;
@@ -701,8 +702,6 @@ export const useItemAbility = async (req, res) => {
           "gameSession.competelvl": -5,
         },
       });
-    } else {
-      throw Error("Invalid item.");
     }
 
     await userMilestones.updateOne({

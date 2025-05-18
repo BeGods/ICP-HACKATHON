@@ -9,6 +9,20 @@ export const gameItems = [
   { id: "potion.air.A01", name: "air-potion-A", fragments: [0], coins: 1 },
   { id: "potion.air.B01", name: "air-potion-B", fragments: [0], coins: 1 },
 
+  // undeworld amulets
+  {
+    id: "underworld.artifact.treasure01-on",
+    name: "sun amulet",
+    fragments: [0],
+    coins: 1,
+  },
+  {
+    id: "underworld.artifact.treasure02-on",
+    name: "moon amulet",
+    fragments: [0],
+    coins: 1,
+  },
+
   // ======== CELTIC =======
   // celtic: relics
   {
@@ -194,8 +208,7 @@ export const gameItems = [
     orbs: "Celtic",
   },
   {
-    id: "celtic.relic.C09",
-    isMonster: true,
+    id: "celtic.relic.C08",
     name: "cogar",
     fragments: [0],
     coins: 1,
@@ -268,18 +281,6 @@ export const gameItems = [
   {
     id: "celtic.artifact.treasure01",
     name: "underworld coin",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "celtic.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "celtic.artifact.treasure03",
-    name: "moon amulet",
     fragments: [0],
     coins: 1,
   },
@@ -550,19 +551,6 @@ export const gameItems = [
     fragments: [0],
     coins: 1,
   },
-  {
-    id: "egyptian.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "egyptian.artifact.treasure03",
-    name: "moon amulet",
-    fragments: [0],
-    coins: 1,
-  },
-
   // ======== GREEK =======
   // greek: relics
   {
@@ -821,18 +809,6 @@ export const gameItems = [
   {
     id: "greek.artifact.treasure01",
     name: "underworld coin",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "greek.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "greek.artifact.treasure03",
-    name: "moon amulet",
     fragments: [0],
     coins: 1,
   },
@@ -1095,18 +1071,6 @@ export const gameItems = [
   {
     id: "norse.artifact.treasure01",
     name: "underworld coin",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "norse.artifact.treasure02",
-    name: "sun amulet",
-    fragments: [0],
-    coins: 1,
-  },
-  {
-    id: "norse.artifact.treasure03",
-    name: "moon amulet",
     fragments: [0],
     coins: 1,
   },

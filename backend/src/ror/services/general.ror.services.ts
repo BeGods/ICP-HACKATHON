@@ -6,100 +6,177 @@ import userMythologies from "../../common/models/mythologies.models";
 import {
   CoinsTransactions,
   ItemsTransactions,
+  ShardsTransactions,
 } from "../../common/models/transactions.models";
 
-export const generateDailyRwrd = async (userId) => {
+// function pickByProbability(
+//   valuesWithProbabilities: { value: string; probability: number }[]
+// ) {
+//   const rand = Math.random();
+//   let cumulative = 0;
+//   for (const item of valuesWithProbabilities) {
+//     cumulative += item.probability;
+//     if (rand <= cumulative) {
+//       return item.value;
+//     }
+//   }
+//   return valuesWithProbabilities[0]?.value ?? "coin 1";
+// }
+
+// if (filteredClaimedItems.length > 0) {
+//   // If items available, use 50% item, 25% coin 1, 25% coin 2
+//   const randomItem =
+//     filteredClaimedItems[
+//       Math.floor(Math.random() * filteredClaimedItems.length)
+//     ];
+//   reward = pickByProbability([
+//     { value: randomItem.id, probability: 0.5 },
+//     { value: coins[0], probability: 0.25 },
+//     { value: coins[1], probability: 0.25 },
+//   ]);
+// } else {
+//   // If no items available, 50-50 coins
+//   reward = pickByProbability([
+//     { value: coins[0], probability: 0.5 },
+//     { value: coins[1], probability: 0.5 },
+//   ]);
+// }
+
+export const generateDailyRwrd = async (user, userId) => {
   try {
-    const userMilestones = await milestones.findOne({ userId: userId });
+    const userMilestones = await milestones.findOne({ userId });
     const pouchItems = userMilestones?.pouch ?? [];
-    const includeItems = ["common02", "common03", "starter01", "starter02"];
-    const coins = ["coin 1", "coin 2"];
+
+    const includeItems = [
+      "coin 1",
+      "coin 2",
+      "meal",
+      "starter02",
+      "shard.earth01",
+      "shard.air01",
+      "shard.water01",
+      "shard.fire01",
+      "shard.aether01",
+      "shard.aether02",
+    ];
+
+    let reward = "";
     let coin = 0;
-    let reward: string;
 
     const filteredClaimedItems =
       gameItems?.filter(
         (item) =>
-          item.id.includes("artifact") &&
-          includeItems.some((ignore) => item.id.includes(ignore)) &&
+          item.id.includes("artifact.starter02") &&
           !pouchItems?.includes(item.id)
       ) ?? [];
 
-    function pickByProbability(
-      valuesWithProbabilities: { value: string; probability: number }[]
-    ) {
-      const rand = Math.random();
-      let cumulative = 0;
-      for (const item of valuesWithProbabilities) {
-        cumulative += item.probability;
-        if (rand <= cumulative) {
-          return item.value;
-        }
-      }
-      return valuesWithProbabilities[0]?.value ?? "coin 1";
-    }
+    const randomReward =
+      includeItems[Math.floor(Math.random() * includeItems.length)];
 
-    if (filteredClaimedItems.length > 0) {
-      // If items available, use 50% item, 25% coin 1, 25% coin 2
-      const randomItem =
+    if (randomReward === "starter02" && filteredClaimedItems.length > 0) {
+      console.log(randomReward);
+
+      const selectedArtifact =
         filteredClaimedItems[
           Math.floor(Math.random() * filteredClaimedItems.length)
-        ];
-      reward = pickByProbability([
-        { value: randomItem.id, probability: 0.5 },
-        { value: coins[0], probability: 0.25 },
-        { value: coins[1], probability: 0.25 },
-      ]);
-    } else {
-      // If no items available, 50-50 coins
-      reward = pickByProbability([
-        { value: coins[0], probability: 0.5 },
-        { value: coins[1], probability: 0.5 },
-      ]);
+        ].id;
+
+      reward = selectedArtifact;
+
+      await milestones.findOneAndUpdate(
+        { userId },
+        { $push: { pouch: reward } },
+        { new: true }
+      );
+
+      const newItemTransaction = new ItemsTransactions({
+        userId,
+        underworld: false,
+        shards: 0,
+        item: reward,
+      });
+      await newItemTransaction.save();
+
+      return reward;
     }
 
-    if (reward) {
-      const itemId = reward;
-      // let updateField = null;
+    reward = randomReward;
 
-      if (reward === "coin 2") {
-        // gold coin
-        coin = 2;
-        // updateField = "claimedRoRItems";
-      } else if (reward === "coin 1") {
-        // silver coin
-        coin = 1;
-        // updateField = "claimedRoRItems";
-      } else {
-        // other
-        // updateField = "pouch";
+    if (reward === "coin 2") {
+      coin = 2;
+      await userMythologies.findOneAndUpdate(
+        { userId },
+        { $inc: { gobcoin: coin } }
+      );
+    } else if (reward === "coin 1") {
+      coin = 1;
+      await userMythologies.findOneAndUpdate(
+        { userId },
+        { $inc: { gobcoin: coin } }
+      );
+    } else if (reward === "meal") {
+      await user.updateOne({
+        $set: {
+          "gameSession.restExpiresAt": Date.now() + 1 * 24 * 60 * 60 * 1000,
+        },
+        $inc: {
+          "gameSession.digLvl": 1,
+        },
+      });
+    } else if (reward.startsWith("shard.")) {
+      const shardType = reward.split(".")[1];
 
-        await milestones.findOneAndUpdate(
-          { userId },
-          { $push: { pouch: itemId } },
-          { new: true }
-        );
-      }
+      const mythologyMap = {
+        earth01: "Celtic",
+        air01: "Egyptian",
+        water01: "Norse",
+        fire01: "Greek",
+      };
 
-      if (coin > 0) {
+      if (shardType === "aether01") {
         await userMythologies.findOneAndUpdate(
           { userId },
-          { $inc: { gobcoin: coin } }
+          { $inc: { whiteShards: 100 } }
         );
+      } else if (shardType === "aether02") {
+        await userMythologies.findOneAndUpdate(
+          { userId },
+          { $inc: { blackShards: 100 } }
+        );
+      } else {
+        const mythologyName = mythologyMap[shardType];
+        if (mythologyName) {
+          await userMythologies.findOneAndUpdate(
+            { userId, "mythologies.name": mythologyName },
+            { $inc: { "mythologies.$.shards": 100 } }
+          );
+        }
       }
+
+      const newShardsTransaction = new ShardsTransactions({
+        userId,
+        source: "daily",
+        coins: 100,
+      });
+      await newShardsTransaction.save();
     }
 
-    // trans maintain
     if (reward.includes("coin")) {
       const newCoinsTransaction = new CoinsTransactions({
-        userId: userId,
+        userId,
         source: "daily",
         coins: coin,
       });
       await newCoinsTransaction.save();
-    } else {
+    }
+
+    if (
+      !reward.includes("coin") &&
+      !reward.includes("shard") &&
+      reward !== "meal"
+    ) {
       const newItemTransaction = new ItemsTransactions({
-        userId: userId,
+        userId,
         underworld: false,
         shards: 0,
         item: reward,

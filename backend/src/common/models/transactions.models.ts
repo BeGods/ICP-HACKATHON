@@ -67,6 +67,7 @@ const coinTransactionsSchema = new Schema<ICoinTransactions>(
         "moon",
         "share",
         "bonus",
+        "daily",
       ],
       required: true,
     },
@@ -84,7 +85,7 @@ const shardsTransactionsSchema = new Schema<IShardsTransactions>(
     },
     source: {
       type: String,
-      enum: ["game", "burst"],
+      enum: ["game", "burst", "daily"],
       required: true,
     },
   },
@@ -164,7 +165,7 @@ const ItemsTransactions = model<IItemTransactions>(
 
 const CoinsTransactions = model<ICoinTransactions>(
   "CoinsTransaction",
-  itemsTransactionsSchema
+  coinTransactionsSchema
 );
 
 const StarsTransactions = model<IStarTransactions>(
