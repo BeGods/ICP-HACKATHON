@@ -112,6 +112,16 @@ export interface IUserMyths extends Document {
     isBurstAutoPayEnabled: boolean;
     burstAutoPayExpiration: number;
   };
+  rorStats: {
+    gameHrStartAt: number;
+    dailyGameQuota: number;
+    lastSessionStartTime: number;
+    competelvl: number;
+    restExpiresAt: number;
+    isThiefActive: boolean;
+    lastPenaltyAt: number;
+    digLvl: number;
+  };
 }
 
 // partner

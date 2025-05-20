@@ -5,6 +5,7 @@ import User from "../models/user.models";
 import axios from "axios";
 import { Request, Response } from "express";
 import { IQuest, IStats } from "../../ts/models.interfaces";
+import userMythologies from "../models/mythologies.models";
 
 // get
 // test server
@@ -258,6 +259,70 @@ export const createQuest = async (
     });
   }
 };
+
+// db migrate and shift fields from User to usermyth
+
+export async function migrate() {
+  const usersWithGameSession = await User.find({
+    gameSession: { $exists: true },
+  }).lean();
+
+  const bulkUserUpdates = [];
+  const bulkMythUpdates = [];
+
+  for (const user of usersWithGameSession) {
+    const userId = user._id;
+    const gameSession = user.gameSession;
+
+    if (!gameSession) continue;
+
+    const userMyths = await userMythologies.findOne({ userId });
+
+    if (!userMyths) {
+      continue;
+    }
+
+    const newRorStats = {
+      ...userMyths.rorStats,
+      ...gameSession,
+    };
+
+    bulkMythUpdates.push({
+      updateOne: {
+        filter: { userId },
+        update: { $set: { rorStats: newRorStats } },
+      },
+    });
+
+    bulkUserUpdates.push({
+      updateOne: {
+        filter: { _id: userId },
+        update: {
+          $unset: {
+            gameSession: "",
+            announcements: "",
+            playsuper: "",
+          },
+        },
+      },
+    });
+  }
+
+  // Run bulk writes
+  if (bulkMythUpdates.length > 0) {
+    await userMythologies.bulkWrite(bulkMythUpdates);
+    console.log(`✅ Updated rorStats for ${bulkMythUpdates.length} users`);
+  }
+
+  if (bulkUserUpdates.length > 0) {
+    await User.bulkWrite(bulkUserUpdates);
+    console.log(
+      `🧹 Cleaned fields in User model for ${bulkUserUpdates.length} users`
+    );
+  }
+
+  console.log("🎉 Migration complete.");
+}
 
 // db migrations
 // export const migrateDb = async (req: Request, res: Response): Promise<void> => {

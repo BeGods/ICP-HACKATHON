@@ -74,8 +74,6 @@ export const generateDailyRwrd = async (user, userId) => {
       includeItems[Math.floor(Math.random() * includeItems.length)];
 
     if (randomReward === "starter02" && filteredClaimedItems.length > 0) {
-      console.log(randomReward);
-
       const selectedArtifact =
         filteredClaimedItems[
           Math.floor(Math.random() * filteredClaimedItems.length)
@@ -115,14 +113,17 @@ export const generateDailyRwrd = async (user, userId) => {
         { $inc: { gobcoin: coin } }
       );
     } else if (reward === "meal") {
-      await user.updateOne({
-        $set: {
-          "gameSession.restExpiresAt": Date.now() + 1 * 24 * 60 * 60 * 1000,
-        },
-        $inc: {
-          "gameSession.digLvl": 1,
-        },
-      });
+      await userMythologies.updateOne(
+        { userId: userId },
+        {
+          $set: {
+            "rorStats.restExpiresAt": Date.now() + 1 * 24 * 60 * 60 * 1000,
+          },
+          $inc: {
+            "rorStats.digLvl": 1,
+          },
+        }
+      );
     } else if (reward.startsWith("shard.")) {
       const shardType = reward.split(".")[1];
 

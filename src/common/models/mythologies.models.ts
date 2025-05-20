@@ -173,6 +173,38 @@ const userMythologySchema = new Schema<IUserMyths>(
         default: 0,
       },
     },
+    rorStats: {
+      isThiefActive: {
+        type: Boolean,
+        default: false,
+      },
+      gameHrStartAt: {
+        type: Number,
+        default: () => new Date().setHours(9, 0, 0, 0),
+      },
+      dailyGameQuota: {
+        type: Number,
+        default: 12,
+      },
+      lastSessionStartTime: {
+        type: Number,
+        default: 0,
+      },
+      competelvl: {
+        type: Number,
+        default: 15,
+      },
+      restExpiresAt: Number,
+      undeworldLostCount: {
+        type: Number,
+        default: 0,
+      },
+      digLvl: {
+        type: Number,
+        default: 1,
+      },
+      lastMealPenaltyAt: Number,
+    },
   },
   { timestamps: true }
 );

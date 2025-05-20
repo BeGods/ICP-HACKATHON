@@ -13,6 +13,7 @@ import {
   getDailyUsers,
   getHourlyUsers,
   getTotalUsers,
+  migrate,
   ping,
 } from "../controllers/admin.controllers";
 const router = express.Router();
@@ -44,7 +45,7 @@ router.post(
 router.post("/partners/create", adminMiddleware, createPartner);
 
 // migrate db
-// router.get(`/${config.security.ADMIN_KEY}/migrate`, updateFileCode);
+router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);
 
 // schedule leaderboard
 cron.schedule("0 * * * *", updateLeadboardRanks);
