@@ -260,7 +260,7 @@ const Book = () => {
         <div
           className="absolute inset-0 z-0 filter-orb-white"
           style={{
-            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -376,12 +376,12 @@ const Book = () => {
             <img
               src={
                 currItems == 0
-                  ? "/assets/240px-book-.png"
+                  ? assets.uxui.baseBook
                   : currItems == 1
                   ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.common03.png`
                   : currItems == 2
                   ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.starter01.png`
-                  : "/assets/240px-book-.png"
+                  : assets.uxui.baseBook
               }
               alt="book"
               className={`glow-text-white`}

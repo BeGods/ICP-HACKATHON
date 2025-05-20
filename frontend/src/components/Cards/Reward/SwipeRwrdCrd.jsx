@@ -52,14 +52,14 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
             >
               <div className="relative w-full h-full text-card">
                 <img
-                  src={assets.uxui.info}
+                  src={assets.uxui.bgInfo}
                   alt="info background"
                   className="w-full h-full object-cover grayscale rounded-primary z-10"
                 />
               </div>
               <div className="absolute flex flex-col justify-center items-center z-20">
                 <img
-                  src={`/assets/ror-cards/240px-${reward?.mythology.toLowerCase()}.char.C00.png`}
+                  src={`https://media.publit.io/file/BeGods/chars/240px-${reward?.mythology.toLowerCase()}.char.C00.png`}
                   alt="dragon"
                 />
               </div>
@@ -74,7 +74,7 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
             >
               <div className="relative w-full h-full text-card">
                 <img
-                  src={assets.uxui.info}
+                  src={assets.uxui.bgInfo}
                   alt="info background"
                   className="w-full h-full object-cover grayscale rounded-primary z-10"
                 />
@@ -83,7 +83,7 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
                 <img
                   src={
                     reward.fragment?.isChar
-                      ? `/assets/ror-cards/240px-${destrItemIds[0]}.char.${destrItemIds[2]}.png`
+                      ? `https://media.publit.io/file/BeGods/chars/240px-${destrItemIds[0]}.char.${destrItemIds[2]}.png`
                       : `https://media.publit.io/file/BeGods/items/240px-${reward.fragment.itemId}.png`
                   }
                   alt="fragment"
@@ -111,7 +111,7 @@ const SwipeRwrdCrd = ({ reward, showBoots, digMyth, claimBoots }) => {
             >
               <div className="relative w-full h-full text-card">
                 <img
-                  src={assets.uxui.info}
+                  src={assets.uxui.bgInfo}
                   alt="info background"
                   className="w-full h-full object-cover grayscale rounded-primary z-10"
                 />

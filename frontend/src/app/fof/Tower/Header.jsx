@@ -39,7 +39,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
         >
           <img
-            src={`${assets.uxui.baseorb}`}
+            src={`${assets.uxui.baseOrb}`}
             alt="base-orb"
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
@@ -76,7 +76,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
                 ></div>
               </div>
               <img
-                src={`${assets.uxui.baseorb}`}
+                src={`${assets.uxui.baseOrb}`}
                 alt="moon-phase"
                 className={`moon-base`}
               />
@@ -141,7 +141,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
           className={`flex relative text-center justify-center items-center w-[14vw] h-[14vw] mt-[16px]  rounded-full`}
         >
           <img
-            src={`${assets.uxui.multiorb}`}
+            src={`${assets.items.multiorb}`}
             alt="multiOrb"
             className="w-full h-full"
           />

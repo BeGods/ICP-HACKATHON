@@ -144,17 +144,17 @@ const BottomChild = () => {
     gameData?.stats?.blackShards ?? 0,
     gameData?.stats?.whiteShards ?? 0,
   ];
-
   const shards = [
-    { path: "shard.fire", element: "fire" },
-    { path: "shard.earth", element: "earth" },
-    { path: "shard.water", element: "water" },
-    { path: "shard.air", element: "air" },
-    { path: "shard.black", element: "black" },
-    { path: "shard.white", element: "white" },
+    { path: "shard.fire01", element: "fire" },
+    { path: "shard.earth01", element: "earth" },
+    { path: "shard.water01", element: "water" },
+    { path: "shard.air01", element: "air" },
+    { path: "shard.aether02", element: "black" },
+    { path: "shard.aether01", element: "white" },
   ].map((item, idx) => ({
     id: item.path,
     count: shardMap[idx],
+    element: item.element,
     name: `${item.element} shards`,
     fragmentId: 0,
     isComplete: true,

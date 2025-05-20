@@ -36,7 +36,7 @@ const Tavern = () => {
     setShowCard(
       <MiscCard
         showInfo={true}
-        img={assets.boosters.tavernCard}
+        img={assets.items.cardTavern}
         icon="Tavern"
         isMulti={false}
         handleClick={() => setShowCard(null)}
@@ -94,7 +94,7 @@ const Tavern = () => {
         setShowCard(
           <MiscCard
             showInfo={false}
-            img={assets.boosters.tavernCard}
+            img={assets.items.tavernCard}
             icon="tavernCard"
             isMulti={false}
             handleClick={() => handleActivate("tavern01", true)}
@@ -149,7 +149,7 @@ const Tavern = () => {
         <div
           className="absolute inset-0 z-0 filter-orb-white"
           style={{
-            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
@@ -201,7 +201,7 @@ const Tavern = () => {
                             <MiscCard
                               onlyBack={true}
                               showInfo={false}
-                              img={assets.boosters.mealCard}
+                              img={assets.boosters.cardMeal}
                               icon="Meal"
                               isMulti={false}
                               handleClick={handleActivateRest}

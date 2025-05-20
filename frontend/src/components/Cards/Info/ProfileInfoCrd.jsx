@@ -12,7 +12,7 @@ const ProfileInfoCard = ({ close }) => {
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
-            src={assets.uxui.info}
+            src={assets.uxui.bgInfo}
             alt="info card background"
             className="w-full h-full object-cover rounded-primary z-10"
           />

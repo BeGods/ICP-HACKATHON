@@ -75,7 +75,7 @@ const PotionCard = ({ potion }) => {
               className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white`}
             >
               <img
-                src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
+                src={assets.uxui.gobcoin}
                 alt="shards"
                 className=" max-w-orb"
               />
@@ -94,28 +94,13 @@ const PotionCard = ({ potion }) => {
           <div className="card__face card__face--front relative flex justify-center items-center">
             <div
               className={`absolute inset-0 bg-cover bg-center filter-${mythology} rounded-primary z-0`}
-              style={{ backgroundImage: `url(${assets.uxui.basebg})` }}
+              style={{ backgroundImage: `url(${assets.uxui.baseBgA})` }}
             />
 
             <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
               <div className="relative m-2 flex justify-center items-center w-[50px]">
-                <img
-                  src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
-                  alt="relic"
-                  className="w-full"
-                />
-                <div
-                  className="absolute text-num font-roboto font-bold text-shadow grayscale"
-                  style={{
-                    backgroundImage: "url('/assets/metal.jpg')",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    color: "transparent",
-                  }}
-                >
+                <img src={assets.uxui.gobcoin} alt="relic" className="w-full" />
+                <div className="absolute text-num font-roboto font-bold text-shadow text-gray-500 grayscale">
                   1
                 </div>
               </div>
@@ -132,7 +117,7 @@ const PotionCard = ({ potion }) => {
               <div className="relative w-full h-[19%] mt-auto card-shadow-white z-10">
                 <div
                   className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary filter-paper-${mythology}`}
-                  style={{ backgroundImage: `url(${assets.uxui.paper})` }}
+                  style={{ backgroundImage: `url(${assets.uxui.footer})` }}
                 />
                 <div className="absolute text-[50px] font-symbols flex justify-center items-center w-full h-full">
                   v

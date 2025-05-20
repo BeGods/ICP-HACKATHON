@@ -60,7 +60,7 @@ const Gift = () => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",

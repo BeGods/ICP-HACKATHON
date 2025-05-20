@@ -97,7 +97,7 @@ const Redeem = (props) => {
             className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
           >
             <img
-              src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.png`}
+              src={`https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.png`}
               alt="campaign"
               className="w-full h-4/5"
             />
@@ -142,7 +142,7 @@ const Redeem = (props) => {
             reward={
               currReward.partnerType == "playsuper"
                 ? `${currReward.metadata.campaignCoverImage}`
-                : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
+                : `https://media.publit.io/file/Partners/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
             }
             blackorbs={3}
             value={0}
@@ -208,7 +208,7 @@ const Redeem = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full filter-other`}
           style={{
-            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",
@@ -233,7 +233,7 @@ const Redeem = (props) => {
           //       src={
           //         currReward.partnerType == "playsuper"
           //           ? `${currReward.metadata.campaignAssets.bannerView}`
-          //           : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.png`
+          //           : `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.png`
           //       }
           //       alt="campaign"
           //       className="w-full h-4/5"
@@ -247,14 +247,14 @@ const Redeem = (props) => {
         bubble={
           currReward.partnerType == "playsuper"
             ? `${currReward.metadata.campaignCoverImage}`
-            : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
+            : `https://media.publit.io/file/Partners/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
         }
         action={() => {
           setShowCard(
             <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
               <div className="relative w-full  shadow-lg card-shadow-white">
                 <img
-                  src={`https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.category}.png`}
+                  src={`https://media.publit.io/file/Partners/320px-${currReward.category}.png`}
                   alt="campaign"
                   className="w-full h-full rounded-primary"
                   onClick={() => {
@@ -294,13 +294,13 @@ const Redeem = (props) => {
                   imageUrl={
                     currReward.partnerType == "playsuper"
                       ? `${currReward.metadata.campaignAssets.bannerView}`
-                      : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.png`
+                      : `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.png`
                   }
                   activeParts={handleActiveParts(currReward.tokensCollected)}
                   handleClick={() => {
                     if (currReward.tokensCollected === 4) {
                       window.open(
-                        `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.png`,
+                        `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.png`,
                         "_blank"
                       );
                     }
@@ -388,7 +388,7 @@ export default Redeem;
 //       window.open(
 //         currReward.partnerType == "playsuper"
 //           ? `${currReward.metadata.campaignAssets.bannerView}`
-//           : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
+//           : `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.brand.png`,
 //         "_blank"
 //       );
 //     }}

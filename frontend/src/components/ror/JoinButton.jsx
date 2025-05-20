@@ -17,11 +17,7 @@ const JoinButton = ({ payWithOrb, payWithCoin }) => {
       >
         <div className="flex justify-center items-center  h-full">
           <div className={`relative flex justify-center items-center`}>
-            <img
-              src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
-              alt="orb"
-              className="p-5"
-            />
+            <img src={assets.uxui.gobcoin} alt="orb" className="p-5" />
             <div className="absolute z-10">
               <div className="text-num text-white glow-text-black">3</div>
             </div>
@@ -39,7 +35,7 @@ const JoinButton = ({ payWithOrb, payWithCoin }) => {
         <div className="flex justify-center items-center  h-full">
           <div className={`relative flex justify-center items-center`}>
             <img
-              src={`${assets.uxui.baseorb}`}
+              src={`${assets.uxui.baseOrb}`}
               alt="orb"
               className="p-5 filter-orbs-celtic"
             />
@@ -62,7 +58,7 @@ export default JoinButton;
   className={`relative flex justify-center items-center`}
 >
   <img
-    src={`${assets.uxui.baseorb}`}
+    src={`${assets.uxui.baseOrb}`}
     alt="orb"
     className="p-5 filter-orbs-celtic"
   />

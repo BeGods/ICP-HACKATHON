@@ -47,7 +47,7 @@ const CenterChild = (props) => {
         className={`flex text-center justify-center h-symbol-primary w-symbol-primary overflow-hidden items-center rounded-full`}
       >
         <img
-          src={assets.uxui.baseorb}
+          src={assets.uxui.baseOrb}
           alt="base-orb"
           className={`w-full h-full`}
         />

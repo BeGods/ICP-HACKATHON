@@ -36,7 +36,7 @@ const MilestoneCard = ({
         <div
           className="absolute inset-0 filter-card rounded-[15px]"
           style={{
-            backgroundImage: `url(${assets.uxui.info})`,
+            backgroundImage: `url(${assets.uxui.bgInfo})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center ",
@@ -57,7 +57,7 @@ const MilestoneCard = ({
                 className={`flex absolute  text-center justify-center items-center h-full w-[72%] glow-symbol-black`}
               >
                 <img
-                  src={assets.uxui.multiorb}
+                  src={assets.items.multiorb}
                   alt="orb"
                   className={`w-full rounded-full orb`}
                 />
@@ -70,7 +70,7 @@ const MilestoneCard = ({
               >
                 <div className="relative w-full h-full flex justify-center items-center">
                   <img
-                    src={assets.uxui.baseorb}
+                    src={assets.uxui.baseOrb}
                     alt="orb"
                     className={`w-full filter-orbs-${
                       isBlack ? "black" : mythSections[activeMyth]
@@ -89,7 +89,7 @@ const MilestoneCard = ({
                 className={`flex relative text-center justify-center items-center w-[72%] h-full`}
               >
                 <img
-                  src="/assets/uxui/240px-shard.base.png"
+                  src={assets.uxui.baseShards}
                   alt="orb"
                   className={`w-full filter-orbs-${
                     isBlack ? "black" : mythSections[activeMyth]
@@ -102,7 +102,7 @@ const MilestoneCard = ({
             >
               <div
                 style={{
-                  backgroundImage: `url(${assets.uxui.paper})`,
+                  backgroundImage: `url(${assets.uxui.footer})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center center",

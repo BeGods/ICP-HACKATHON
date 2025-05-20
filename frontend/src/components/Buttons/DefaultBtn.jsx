@@ -71,7 +71,7 @@ const DefaultBtn = ({
       <div className="flex justify-center items-center w-1/4  h-full">
         {isBooster && (
           <div className="relative flex justify-center items-center">
-            <img src={`${assets.uxui.multiorb}`} alt="orb" className="p-1.5" />
+            <img src={`${assets.items.multiorb}`} alt="orb" className="p-1.5" />
             <div className="absolute z-10">
               <div className="font-medium text-[40px] text-white glow-text-black">
                 1

@@ -143,7 +143,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
             </div>
             <div className="flex relative justify-center items-center w-[30%] h-full pr-1">
               <img
-                src={`${assets.uxui.multiorb}`}
+                src={`${assets.items.multiorb}`}
                 alt="orb"
                 className="p-1.5"
               />

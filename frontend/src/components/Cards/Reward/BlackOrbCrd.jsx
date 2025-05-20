@@ -36,7 +36,7 @@ const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
                 <div className="orb__face orb__face--front  flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute glow-tap-white h-full">
                     <img
-                      src={`${assets.uxui.baseorb}`}
+                      src={`${assets.uxui.baseOrb}`}
                       alt="orb"
                       className="filter-orbs-black rounded-full"
                     />

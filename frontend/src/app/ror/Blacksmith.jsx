@@ -475,7 +475,7 @@ const Blacksmith = () => {
         <div
           className="absolute inset-0 z-0 filter-orb-white rounded-md"
           style={{
-            backgroundImage: `url(${assets.uxui.basebg})`,
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",

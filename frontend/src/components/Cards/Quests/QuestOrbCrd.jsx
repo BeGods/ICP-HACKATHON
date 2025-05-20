@@ -79,7 +79,7 @@ const OrbClaimCard = ({
               >
                 <div
                   style={{
-                    backgroundImage: `url(${assets.uxui.paper})`,
+                    backgroundImage: `url(${assets.uxui.footer})`,
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     backgroundPosition: "center center",

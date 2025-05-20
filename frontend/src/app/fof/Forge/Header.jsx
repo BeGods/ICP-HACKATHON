@@ -50,7 +50,7 @@ const CenterChild = ({
           ></div>
         </div>
         <img
-          src={assets.uxui.baseorb}
+          src={assets.uxui.baseOrb}
           alt="base-orb"
           className={`filter-orbs-${mythSections[activeMyth]} w-full h-full`}
         />
@@ -192,7 +192,7 @@ const ForgeHeader = ({
   return (
     <div>
       {/* <img
-        src={assets.uxui.paper}
+        src={assets.uxui.footer}
         alt="paper"
         className={`w-full absolute rotate-180 h-auto filter-paper-${
           section === 3 ||

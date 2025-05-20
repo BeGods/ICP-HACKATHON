@@ -81,7 +81,7 @@ const CenterChild = ({ userData }) => {
       >
         <img
           src={
-            userData.avatarUrl ? userData.avatarUrl : `${assets.uxui.baseorb}`
+            userData.avatarUrl ? userData.avatarUrl : `${assets.uxui.baseOrb}`
           }
           alt="base-orb"
           className={`${

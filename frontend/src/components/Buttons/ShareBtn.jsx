@@ -87,7 +87,7 @@ const ShareButton = ({
           {isInfo ? (
             <div className="flex justify-end items-center w-1/4  h-full">
               <img
-                src={`${assets.uxui.multiorb}`}
+                src={`${assets.items.multiorb}`}
                 alt="orb"
                 className="w-[85%]"
               />
@@ -101,22 +101,11 @@ const ShareButton = ({
                   className={`flex  relative text-center justify-center text-black-sm-contour items-center `}
                 >
                   <img
-                    src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
+                    src={assets.uxui.gobcoin}
                     alt="orb"
                     className={` overflow-hidden max-w-[10vw]`}
                   />
-                  <div
-                    className="absolute text-[7vw] font-roboto font-bold text-shadow grayscale"
-                    style={{
-                      backgroundImage: "url('/assets/metal.jpg')",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      color: "transparent",
-                    }}
-                  >
+                  <div className="absolute text-[7vw] text-gray-600 font-roboto font-bold text-shadow grayscale">
                     3
                   </div>
                 </div>
@@ -125,7 +114,7 @@ const ShareButton = ({
                   className={`flex  relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeMyth]} `}
                 >
                   <img
-                    src={`${assets.uxui.baseorb}`}
+                    src={`${assets.uxui.baseOrb}`}
                     alt="orb"
                     className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
                   />

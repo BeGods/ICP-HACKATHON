@@ -162,7 +162,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
               >
                 <img
-                  src={assets.uxui.baseorb}
+                  src={assets.uxui.baseOrb}
                   alt="orb"
                   className={`filter-orbs-${avatarColor} overflow-hidden max-w-[65px] pointer-events-none`}
                 />
@@ -204,7 +204,7 @@ const Footer = ({}) => {
       }`}
     >
       <img
-        src={assets.uxui.paper}
+        src={assets.uxui.footer}
         alt="paper"
         className={`w-full h-auto filter-paper-${
           section === 3 ||

@@ -232,7 +232,7 @@ const Gacha = (props) => {
       <div
         className="absolute inset-0 w-full h-full opacity-80 z-0"
         style={{
-          background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+          background: `url(${assets.locations.fof}) no-repeat center / cover`,
         }}
       ></div>
 
@@ -277,7 +277,7 @@ const Gacha = (props) => {
               className="flex flex-grow justify-center items-center relative w-full h-full"
             >
               <img
-                src={`${assets.uxui.pandora}`}
+                src={`${assets.items.pandora}`}
                 alt="pandora"
                 className={`w-fit h-fit transition-transform duration-1000  ${
                   !showScale

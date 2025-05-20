@@ -445,7 +445,7 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
     <div
       className="absolute ml-[150vw] top-0 bottom-0 left-0 w-screen h-full z-[99]"
       style={{
-        background: `url(${assets.uxui.dodsplash}) no-repeat center / cover`,
+        background: `url(${assets.uxui.dodLoad}) no-repeat center / cover`,
         backgroundPosition: "45.75% 0%",
       }}
     >

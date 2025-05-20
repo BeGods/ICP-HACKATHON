@@ -9,7 +9,7 @@ const PartnerCard = ({ close, reward }) => {
   return (
     <div
       style={{
-        backgroundImage: `url(${assets.uxui.info})`,
+        backgroundImage: `url(${assets.uxui.bgInfo})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",

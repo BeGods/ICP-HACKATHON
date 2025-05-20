@@ -49,7 +49,7 @@ const UserAvatar = ({ user, index }) => {
           src={
             user?.profileImage
               ? `https://media.publit.io/file/UserAvatars/${user?.profileImage}.jpg`
-              : `${assets.uxui.baseorb}`
+              : `${assets.uxui.baseOrb}`
           }
           alt="base-orb"
           className={`${
@@ -173,7 +173,7 @@ const KOLboard = (props) => {
           className={`absolute top-0 left-0 h-full w-full blur-[3px]`}
           style={{
             backgroundImage: `url(${
-              activeTab ? assets.uxui.fofsplash : assets.uxui.rorspash
+              activeTab ? assets.locations.fof : assets.uxui.rorspash
             })`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",

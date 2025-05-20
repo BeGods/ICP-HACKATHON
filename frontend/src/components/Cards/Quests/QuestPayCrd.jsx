@@ -81,7 +81,7 @@ function PayCard({
             className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white} `}
           >
             <img
-              src={assets.uxui.multiorb}
+              src={assets.items.multiorb}
               alt="orb"
               className={`glow-icon-white max-w-[10vw]`}
             />
@@ -101,7 +101,7 @@ function PayCard({
                 className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${item.name?.toLowerCase()}`}
               >
                 <img
-                  src={assets.uxui.baseorb}
+                  src={assets.uxui.baseOrb}
                   alt="orb"
                   className={`filter-orbs-${item.name?.toLowerCase()}`}
                 />
@@ -155,7 +155,7 @@ function PayCard({
             >
               <div
                 style={{
-                  backgroundImage: `url(${assets.uxui.paper})`,
+                  backgroundImage: `url(${assets.uxui.footer})`,
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "cover",
                   backgroundPosition: "center center",

@@ -18,7 +18,7 @@ const Symbol = ({ myth, isCard, showClaimEffect }) => {
       <div className={`flex justify-center items-center absolute z-10  `}>
         <div className={`w-[65%] h-[65%] glow-symbol-${myth}`}>
           <img
-            src={assets.uxui.baseorb}
+            src={assets.uxui.baseOrb}
             alt="orb"
             className={`w-full h-full filter-orbs-${myth} `}
           />

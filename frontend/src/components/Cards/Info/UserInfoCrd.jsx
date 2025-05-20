@@ -13,7 +13,7 @@ const UserInfoCard = ({ close, userData }) => {
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
-            src={assets.uxui.info}
+            src={assets.uxui.bgInfo}
             alt="info card background"
             className="w-full h-full object-cover rounded-primary z-10"
           />
@@ -35,7 +35,7 @@ const UserInfoCard = ({ close, userData }) => {
               <div
                 className={`flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black`}
               >
-                <img src={assets.uxui.multiorb} alt="multi orb" />
+                <img src={assets.items.multiorb} alt="multi orb" />
               </div>
               <div
                 className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
@@ -48,7 +48,7 @@ const UserInfoCard = ({ close, userData }) => {
                 className={`flex relative text-center overflow-hidden justify-center max-w-orb items-center rounded-full glow-icon-black`}
               >
                 <img
-                  src={assets.uxui.baseorb}
+                  src={assets.uxui.baseOrb}
                   alt="orb"
                   className={`filter-orbs-black`}
                 />
@@ -72,7 +72,7 @@ const UserInfoCard = ({ close, userData }) => {
                     className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${key}`}
                   >
                     <img
-                      src={assets.uxui.baseorb}
+                      src={assets.uxui.baseOrb}
                       alt="orb"
                       className={`filter-orbs-${key}`}
                     />
@@ -99,7 +99,7 @@ const UserInfoCard = ({ close, userData }) => {
                     className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${key}`}
                   >
                     <img
-                      src={assets.uxui.baseorb}
+                      src={assets.uxui.baseOrb}
                       alt="orb"
                       className={`filter-orbs-${key}`}
                     />

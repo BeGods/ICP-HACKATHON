@@ -1393,7 +1393,7 @@ const Forges = () => {
           <div
             className={`absolute top-0 left-0 h-full w-full filter-orbs-${mythSections[activeMyth]}`}
             style={{
-              backgroundImage: `url(${assets.uxui.forgebg})`,
+              backgroundImage: `url(${assets.uxui.baseBgForge})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundPosition: "44% 0%",
@@ -1473,7 +1473,7 @@ const Forges = () => {
                     src={
                       randomReward.partnerType == "playsuper"
                         ? `${randomReward.metadata.campaignCoverImage}`
-                        : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward.metadata.campaignCoverImage}.bubble.png`
+                        : `https://media.publit.io/file/Partners/160px-${randomReward.metadata.campaignCoverImage}.bubble.png`
                     }
                     alt="icon"
                     className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
