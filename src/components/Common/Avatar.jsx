@@ -25,7 +25,7 @@ const Avatar = ({ name, color }) => {
       className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${avatarColor}`}
     >
       <img
-        src={assets.uxui.baseorb}
+        src={assets.uxui.baseOrb}
         alt="orb"
         className={`filter-orbs-${avatarColor} overflow-hidden max-w-[10vw]`}
       />

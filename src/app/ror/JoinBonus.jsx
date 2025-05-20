@@ -11,8 +11,14 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, setGameData, enableHaptic, isTelegram } =
-    useContext(RorContext);
+  const {
+    setSection,
+    authToken,
+    setGameData,
+    enableHaptic,
+    isTelegram,
+    assets,
+  } = useContext(RorContext);
   const [changeText, setChangeText] = useState(true);
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -95,7 +101,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--front absolute flex justify-center items-center">
                   <div className="flex justify-center items-center w-full relative  h-full">
                     <img
-                      src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
+                      src={assets.uxui.gobcoin}
                       alt="coin"
                       className="glow-box rounded-full"
                     />

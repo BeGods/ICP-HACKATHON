@@ -31,7 +31,7 @@ const Loader = (props) => {
         isTelegram ? "tg-container-height" : "browser-container-height"
       }`}
       style={{
-        background: `url(${assets.uxui.intro})`,
+        background: `url(${assets.locations.fof})`,
         backgroundPosition: "50.5% 0%",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -63,7 +63,7 @@ const Loader = (props) => {
               className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}
             >
               <img
-                src={`${assets.uxui.baseorb}`}
+                src={`${assets.uxui.baseOrb}`}
                 alt="orb"
                 className={`filter-orbs-${item.toLowerCase()}`}
               />

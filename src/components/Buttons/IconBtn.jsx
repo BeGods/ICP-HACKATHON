@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
-import { X } from "lucide-react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import { FofContext } from "../../context/context";
+import { MainContext } from "../../context/context";
 
 // mr-[55px] mt-7 - convert info
 // -mt-6 ml-6 - jigsaw info
@@ -25,7 +24,7 @@ const alignBasedOnCard = [
 ];
 const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const { enableHaptic } = useContext(FofContext);
+  const { enableHaptic, assets } = useContext(MainContext);
 
   const handleButtonClick = () => {
     handleClickHaptic(tele, enableHaptic);
@@ -46,7 +45,7 @@ const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
       } `}
     >
       <img
-        src="/assets/72px-corner.png"
+        src={assets.uxui.corner}
         alt="cutout"
         className="rounded-tr-primary w-1/5"
       />

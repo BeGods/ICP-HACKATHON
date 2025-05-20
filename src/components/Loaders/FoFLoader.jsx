@@ -17,14 +17,14 @@ const FoFLoader = (props) => {
       <div
         className="absolute inset-0 w-full h-full z-0"
         style={{
-          background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+          background: `url(${assets.locations.fof}) no-repeat center / cover`,
         }}
       ></div>
       {/* img 2 */}
       <div
         className="absolute inset-0 w-full h-full z-10"
         style={{
-          background: `url(${assets.uxui.fofsplashOn}) no-repeat center / cover`,
+          background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
         }}
       ></div>
       <div className="absolute inset-0 flex z-[20] -mt-[8vh] fade-in justify-center items-center">

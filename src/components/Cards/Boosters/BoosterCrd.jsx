@@ -66,7 +66,7 @@ const PayModal = ({
       <div
         className={`absolute inset-0 rounded-primary`}
         style={{
-          backgroundImage: `${`url(${assets.uxui.info})`}`,
+          backgroundImage: `${`url(${assets.uxui.bgInfo})`}`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center center ",
@@ -82,7 +82,7 @@ const PayModal = ({
               <div
                 className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
               >
-                <img src={assets.uxui.kaia} alt="kaia" className="w-[2.5rem]" />
+                <img src={assets.misc.kaia} alt="kaia" className="w-[2.5rem]" />
                 <div className="font-medium text-[40px] text-white glow-text-black">
                   {activeCard === "automata"
                     ? getKaiaValue(1)
@@ -665,7 +665,7 @@ const BoosterClaim = ({
                       {activeCard === "automata" ? 1 : 3}
                     </div>{" "}
                     <img
-                      src={assets.uxui.tgStar}
+                      src={assets.misc.tgStar}
                       alt="star"
                       className="w-[18vw] h-[18vw]"
                     />
@@ -699,7 +699,7 @@ const BoosterClaim = ({
                 <div className="flex uppercase flex-col items-center gap-2 w-fit">
                   <div className="flex gap-x-1 relative items-center justify-center">
                     <img
-                      src={assets.uxui.kaia}
+                      src={assets.misc.kaia}
                       alt="star"
                       className="h-[8vw]"
                     />
@@ -781,7 +781,7 @@ const BoosterClaim = ({
                 <div
                   className={`flex relative text-center justify-center max-w-orb p-0.5 items-center rounded-full glow-icon-white`}
                 >
-                  <img src={assets.uxui.multiorb} alt="orb" />
+                  <img src={assets.items.multiorb} alt="orb" />
                 </div>
                 <div
                   className={`font-fof text-[28px] font-normal text-white text-black-sm-contour transition-all duration-1000`}
@@ -820,7 +820,7 @@ const BoosterClaim = ({
                 >
                   <div
                     style={{
-                      backgroundImage: `url(${assets.uxui.paper})`,
+                      backgroundImage: `url(${assets.uxui.footer})`,
                       backgroundRepeat: "no-repeat",
                       backgroundSize: "cover",
                       backgroundPosition: "center center",
@@ -842,7 +842,7 @@ const BoosterClaim = ({
                         className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeColor]} `}
                       >
                         <img
-                          src={assets.uxui.baseorb}
+                          src={assets.uxui.baseOrb}
                           alt="orb"
                           className={`filter-orbs-${mythSections[activeColor]} overflow-hidden max-w-[14vw]`}
                         />

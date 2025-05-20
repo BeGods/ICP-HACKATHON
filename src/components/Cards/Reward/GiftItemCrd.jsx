@@ -50,7 +50,7 @@ ${
           src={
             item.partnerType == "playsuper"
               ? `${item.metadata.campaignCoverImage}`
-              : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${item.metadata.campaignCoverImage}.bubble.png`
+              : `https://media.publit.io/file/Partners/160px-${item.metadata.campaignCoverImage}.bubble.png`
           }
           alt="partner"
           className="rounded-full"

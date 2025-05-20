@@ -51,7 +51,7 @@ const GridItem = ({
               }`}
               style={{
                 backgroundImage: `url(${
-                  isInfo ? assets.uxui.info : assets.uxui.basebg
+                  isInfo ? assets.uxui.bgInfo : assets.uxui.baseBgA
                 })`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",

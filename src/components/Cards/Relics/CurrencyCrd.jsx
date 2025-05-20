@@ -5,7 +5,7 @@ import { elementMythNames, mythSymbols } from "../../../utils/constants.ror";
 
 const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
   const { assets } = useContext(RorContext);
-  const element = itemId.id?.split(".")[1];
+  const element = itemId.id?.split(".")[1]?.slice(0, -2);
   const mythology = elementMythNames[element]?.toLowerCase() ?? element;
 
   return (
@@ -15,7 +15,7 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
     >
       <div
         className={`absolute inset-0 bg-cover bg-center rounded-primary z-0`}
-        style={{ backgroundImage: `url(${assets.uxui.basebg})` }}
+        style={{ backgroundImage: `url(${assets.uxui.baseBgA})` }}
       />
 
       <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
@@ -34,7 +34,7 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
           } `}
         >
           <img
-            src={`${assets.uxui.baseorb}`}
+            src={`${assets.uxui.baseOrb}`}
             alt="orb"
             className={`filter-orbs-${mythology} overflow-hidden max-w-[50px]`}
           />
@@ -64,7 +64,7 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
         <div className="relative w-full h-[19%] mt-auto card-shadow-white-celtic z-10">
           <div
             className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary filter-paper-${mythology}`}
-            style={{ backgroundImage: `url(${assets.uxui.paper})` }}
+            style={{ backgroundImage: `url(${assets.uxui.footer})` }}
           />
           <div className="absolute font-symbols text-black-contour text-[50px] flex justify-center items-center w-full h-full">
             l

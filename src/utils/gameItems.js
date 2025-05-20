@@ -104,7 +104,7 @@ export const gameItems = [
   },
   {
     id: "celtic.relic.B03",
-    name: "conaire mor",
+    name: "CRUAIDIN",
     fragments: [0, 1],
     coins: 3,
     orbs: "Greek",

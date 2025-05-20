@@ -21,7 +21,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
       <div
         className="absolute inset-0 w-full h-full z-0"
         style={{
-          background: `url(${assets.uxui.fofsplash}) no-repeat center / cover`,
+          background: `url(${assets.locations.fof}) no-repeat center / cover`,
         }}
       ></div>
       {/* img 2  */}
@@ -29,7 +29,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
         <div
           className="absolute inset-0 w-full h-full z-10"
           style={{
-            background: `url(${assets.uxui.fofsplashOn}) no-repeat center / cover`,
+            background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
           }}
         ></div>
       )}

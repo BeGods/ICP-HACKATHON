@@ -9,7 +9,7 @@ const MoonInfoCard = ({ handleClick }) => {
       <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
-            src={assets.uxui.infomoon}
+            src={assets.uxui.bgInfomoon}
             alt="info card background"
             className="w-full h-full object-cover rounded-primary z-10"
           />

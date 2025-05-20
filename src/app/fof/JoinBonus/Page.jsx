@@ -111,7 +111,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--front  flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute  h-full">
                     <img
-                      src={`${assets.uxui.multiorb}`}
+                      src={`${assets.items.multiorb}`}
                       alt="multicolor"
                       className="glow-box rounded-full"
                     />
@@ -120,7 +120,7 @@ const JoinBonus = (props) => {
                 <div className="orb__face orb__face--back flex justify-center items-center">
                   <div className="flex justify-center items-center w-full absolute h-full glow-tap-greek">
                     <img
-                      src={`${assets.uxui.baseorb}`}
+                      src={`${assets.uxui.baseOrb}`}
                       alt="orb"
                       className="filter-orbs-greek rounded-full"
                     />

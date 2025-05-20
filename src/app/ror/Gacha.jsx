@@ -29,9 +29,7 @@ const Gacha = () => {
 
       if (response && itemId) {
         if (itemId === "coin 2") {
-          setItemSrc(
-            `https://media.publit.io/file/BeGods/items/240px-gobcoin.png`
-          );
+          setItemSrc(assets.uxui.gobcoin);
           setGameData((prev) => {
             const newStats = { ...prev.stats };
 
@@ -42,9 +40,7 @@ const Gacha = () => {
             };
           });
         } else if (itemId === "coin 1") {
-          setItemSrc(
-            `https://media.publit.io/file/BeGods/items/240px-gobcoin.png`
-          );
+          setItemSrc(assets.uxui.gobcoin);
           setGameData((prev) => {
             const newStats = { ...prev.stats };
 
@@ -143,7 +139,7 @@ const Gacha = () => {
       <div
         className="absolute inset-0 w-full h-full opacity-70 z-0"
         style={{
-          background: `url(${assets.uxui.rorsplash}) no-repeat center / cover`,
+          background: `url(${assets.locations.ror}) no-repeat center / cover`,
         }}
       ></div>
       <div className="flex flex-col w-full h-full z-50 items-center pt-4">
@@ -162,7 +158,7 @@ const Gacha = () => {
         >
           <Scratch
             src={itemSrc}
-            image={assets.uxui.info}
+            image={assets.uxui.bgInfo}
             item={item}
             handleComplete={() => {
               setTimeout(() => {

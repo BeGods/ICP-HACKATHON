@@ -39,7 +39,7 @@ const CenterChild = ({ assets, content, mythology, location }) => {
             flex justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary  rounded-full bg-black border border-${mythology}-primary top-0 z-20 left-1/2 -translate-x-1/2`}
     >
       <img
-        src={assets.uxui.baseorb}
+        src={assets.uxui.baseOrb}
         alt="base-orb"
         className={`filter-orbs-${mythology} w-full h-full rounded-full pointer-events-none`}
       />
@@ -783,7 +783,7 @@ const Explore = () => {
                 src={
                   randomReward?.partnerType == "playsuper"
                     ? `${randomReward?.metadata?.campaignCoverImage}`
-                    : `https://media.publit.io/file/BattleofGods/FoF/Assets/PARTNERS/160px-${randomReward?.metadata?.campaignCoverImage}.bubble.png`
+                    : `https://media.publit.io/file/Partners/160px-${randomReward?.metadata?.campaignCoverImage}.bubble.png`
                 }
                 alt="icon"
                 className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"

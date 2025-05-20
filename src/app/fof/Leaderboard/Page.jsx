@@ -43,7 +43,7 @@ const UserAvatar = ({ user, index }) => {
           src={
             user?.profileImage
               ? `${user?.profileImage}`
-              : `${assets.uxui.baseorb}`
+              : `${assets.uxui.baseOrb}`
           }
           alt="base-orb"
           className={`${
@@ -257,7 +257,7 @@ const Leaderboard = (props) => {
         <div
           className={`absolute top-0 left-0 h-full w-full blur-[3px]`}
           style={{
-            backgroundImage: `url(${assets.uxui.intro})`,
+            backgroundImage: `url(${assets.locations.fof})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center center",

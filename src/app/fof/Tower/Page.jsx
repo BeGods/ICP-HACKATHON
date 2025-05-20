@@ -202,7 +202,7 @@ const Tower = () => {
         <div
           className={`absolute top-0 left-0 w-full h-full pointer-events-none`}
           style={{
-            backgroundImage: `url(${assets.uxui.intro})`,
+            backgroundImage: `url(${assets.locations.fof})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "50% 0%",
@@ -320,7 +320,9 @@ const Tower = () => {
             isTelegram ? "scale-[120%]" : "scale-[100%] mt-3.5"
           } flex justify-center items-center w-full h-full pointer-events-none`}
           style={{
-            backgroundImage: `url(${assets.uxui[`dial-${wheelNames[myth]}`]})`,
+            backgroundImage: `url(${
+              assets.uxui[`pointer-${wheelNames[myth]}`]
+            })`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -352,7 +354,7 @@ const Tower = () => {
                 } scale-orb-${item.toLowerCase()} items-center rounded-full `}
               >
                 <img
-                  src={`${assets.uxui.baseorb}`}
+                  src={`${assets.uxui.baseOrb}`}
                   alt="orb"
                   className={`filter-orbs-${item.toLowerCase()} `}
                 />

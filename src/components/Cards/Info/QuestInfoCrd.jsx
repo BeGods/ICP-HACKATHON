@@ -13,7 +13,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   return (
     <div
       style={{
-        backgroundImage: `url(${assets.uxui.info})`,
+        backgroundImage: `url(${assets.uxui.bgInfo})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center center",

@@ -17,17 +17,17 @@ const RelicInfo = ({ handleFlip }) => {
     >
       <div className="relative w-full h-full text-card">
         <img
-          src={assets.uxui.info}
+          src={assets.uxui.bgInfo}
           alt="info background"
           className="w-full h-full object-cover rounded-primary z-10"
         />
       </div>
       <div className="absolute flex flex-col top-0 z-20">
-        <img
+        {/* <img
           src={`/assets/char.info.png`}
           alt="shards"
           className="rounded-t-primary"
-        />
+        /> */}
         <div
           className={`leading-[18px] text-para mt-[14px] text-justify  mx-auto w-[85%] text-card font-[550] ${
             (i18n.language === "hi" ||

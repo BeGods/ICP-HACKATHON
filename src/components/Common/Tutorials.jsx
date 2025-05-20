@@ -338,7 +338,7 @@ export const TowerGuide = ({ handleClick, isTelegram }) => {
         <div
           className="relative scale-110 flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"
           style={{
-            backgroundImage: `url(${assets.uxui.tower})`,
+            backgroundImage: `url(${assets.uxui.towerOff})`,
             backgroundSize: "contain",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -356,7 +356,7 @@ export const TowerGuide = ({ handleClick, isTelegram }) => {
           className={`flex transition-all duration-1000  relative text-center justify-center items-center max-w-[12vw] rounded-full glow-icon-${mythSections[activeColor]}`}
         >
           <img
-            src={assets.uxui.baseorb}
+            src={assets.uxui.baseOrb}
             alt={`gray orb`}
             className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
           />
@@ -372,7 +372,7 @@ export const TowerGuide = ({ handleClick, isTelegram }) => {
         <div
           className={`flex relative text-center justify-end items-center max-w-[12vw] -mr-2 rounded-full glow-icon-white`}
         >
-          <img src={assets.uxui.multiorb} alt={`gray orb`} />
+          <img src={assets.items.multiorb} alt={`gray orb`} />
         </div>
       </div>
     </div>

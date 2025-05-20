@@ -38,7 +38,7 @@ const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
                     className="relative w-full h-full text-white rounded-2xl"
                   >
                     <img
-                      src={`https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg`}
+                      src={assets.uxui.bgInfo}
                       alt={`page ${idx}`}
                       className="rounded-2xl h-full w-full object-cover"
                     />
@@ -57,7 +57,7 @@ const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
                     className="relative w-full h-full text-white rounded-2xl"
                   >
                     <img
-                      src={`/assets/mythopedia/320px-${code}_info_page.jpg`}
+                      src={`https://media.publit.io/file/BeGods/mythopedia/320px-${code}-info-page.jpg`}
                       alt={`page ${idx}`}
                       className="rounded-2xl h-full w-full object-cover"
                     />

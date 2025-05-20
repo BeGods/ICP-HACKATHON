@@ -84,7 +84,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               isTelegram ? "scale-[95%]" : "scale-[80%] mt-4 mr-1"
             }  items-center w-full h-full pointer-events-none`}
             style={{
-              backgroundImage: `url(${assets.uxui.tower})`,
+              backgroundImage: `url(${assets.uxui.towerOff})`,
               backgroundSize: "contain",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -116,7 +116,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   } items-center rounded-full `}
                 >
                   <img
-                    src={`${assets.uxui.baseorb}`}
+                    src={`${assets.uxui.baseOrb}`}
                     alt="orb"
                     className={`filter-orbs-${item.toLowerCase()} `}
                   />
@@ -155,7 +155,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                     : "w-[15vw] glow-icon-white"
                 } items-center rounded-full z-50 `}
               >
-                <img src={`${assets.uxui.multiorb}`} alt="orb" />
+                <img src={`${assets.items.multiorb}`} alt="orb" />
               </div>
             </div>
           </div>

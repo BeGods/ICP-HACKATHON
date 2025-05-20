@@ -2,7 +2,7 @@ import React from "react";
 import HTMLFlipBook from "react-pageflip";
 
 const backgroundImageUrl =
-  "https://media.publit.io/file/BattleofGods/FoF/Assets/CARDS/320px-info-background.jpg";
+  "https://media.publit.io/file/BeGods/uxui/320px-info-background.jpg";
 
 const Test = () => {
   return (

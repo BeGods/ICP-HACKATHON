@@ -17,14 +17,14 @@ const RoRLoader = (props) => {
       <div
         className="absolute inset-0 w-full h-full z-0"
         style={{
-          background: `url(${assets.uxui.rorsplash}) no-repeat center / cover`,
+          background: `url(${assets.locations.ror}) no-repeat center / cover`,
         }}
       ></div>
       {/* img 2 */}
       <div
         className="absolute inset-0 w-full h-full z-10"
         style={{
-          background: `url(${assets.uxui.rorspashOn}) no-repeat center / cover`,
+          background: `url(${assets.uxui.rorSplash}) no-repeat center / cover`,
         }}
       ></div>
       {/* content */}

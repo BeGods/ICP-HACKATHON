@@ -43,14 +43,14 @@ const RelicCrd = ({
     >
       <div
         className={`absolute inset-0 bg-cover bg-center filter-${mythology} rounded-primary z-0`}
-        style={{ backgroundImage: `url(${assets.uxui.basebg})` }}
+        style={{ backgroundImage: `url(${assets.uxui.baseBgA})` }}
       />
 
       <div className="relative z-20 flex flex-col select-none items-center justify-center w-full h-full">
         {isSell ? (
           <div className="relative m-2 flex justify-center items-center w-[50px]">
             <img
-              src={`https://media.publit.io/file/BeGods/items/240px-gobcoin.png`}
+              src={assets.uxui.gobcoin}
               alt="relic"
               className="w-full select-none"
             />
@@ -85,7 +85,7 @@ const RelicCrd = ({
         <div className="relative w-full h-[19%] mt-auto card-shadow-white-celtic z-10">
           <div
             className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary filter-paper-${mythology}`}
-            style={{ backgroundImage: `url(${assets.uxui.paper})` }}
+            style={{ backgroundImage: `url(${assets.uxui.footer})` }}
           />
           <div className="absolute uppercase glow-text-quest flex justify-center items-center w-full h-full">
             {itemDetails.name}

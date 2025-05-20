@@ -289,7 +289,7 @@ const OrbCard = ({ reward }) => {
       className={`flex justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
     >
       <img
-        src={`${assets.uxui.baseorb}`}
+        src={`${assets.uxui.baseOrb}`}
         alt="orb"
         className={`filter-orbs-${currReward.toLowerCase()} rounded-full`}
       />
@@ -348,7 +348,7 @@ const QuestCard = ({ reward }) => {
           >
             <div
               style={{
-                backgroundImage: `url(${assets.uxui.paper})`,
+                backgroundImage: `url(${assets.uxui.footer})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
