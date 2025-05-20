@@ -13,13 +13,16 @@ import config from "../../config/config";
 
 export const validateSessionsStart = async (req, res, next) => {
   const user = req.user;
+  const userId = user._id;
 
   try {
+    const userMythData = await userMythologies.findOne({ userId: userId });
     // check daily quota
-    if (user.gameSession.dailyGameQuota <= 0) {
+    if (userMythData.rorStats.dailyGameQuota <= 0) {
       throw new Error("Invalid Session. Daily quota is exausted");
     }
 
+    req.userMythData = userMythData;
     next();
   } catch (error) {
     console.log(error);
@@ -31,18 +34,19 @@ export const validateSessionReward = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { battleData } = req.body;
-  const digLvl = user?.gameSession?.digLvl ?? 1;
 
   // 1 - win
   // 0 - loss
 
   try {
+    const userMythData = await userMythologies.findOne({ userId });
+    const rorStats = userMythData.rorStats;
+    const digLvl = rorStats.digLvl ?? 1;
     const userClaimedRewards = await milestones.findOne({ userId });
-
-    const sessionDuration = Date.now() - user.gameSession.lastSessionStartTime;
+    const sessionDuration = Date.now() - (rorStats.lastSessionStartTime ?? 0);
 
     // validate daily quota
-    if (user.gameSession.dailyQuota === 0) {
+    if ((rorStats.dailyGameQuota ?? 0) === 0) {
       throw new Error("Invalid session. Please try again.");
     }
 
@@ -52,7 +56,7 @@ export const validateSessionReward = async (req, res, next) => {
     }
 
     // validate battle
-    let competelvl = user.gameSession.competelvl;
+    let competelvl = rorStats.competelvl ?? 0;
     battleData.forEach((round, index) => {
       const isWin = round.swipes * digLvl >= competelvl && round.status === 1;
       const isLoss = round.swipes * digLvl < competelvl && round.status === 0;
@@ -221,7 +225,8 @@ export const isValidMealReq = async (req, res, next) => {
 
   try {
     const userMythologyData = await userMythologies.findOne({ userId });
-    if (Date.now() < user.gameSession?.restExpiresAt) {
+    const rorStats = userMythologyData.rorStats;
+    if (Date.now() < (rorStats?.restExpiresAt ?? 0)) {
       throw new Error("Rest is already active. Please try again later.");
     }
 

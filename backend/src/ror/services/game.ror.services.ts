@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import milestones from "../../common/models/milestones.models";
 import { IMyth, itemInterface } from "../../ts/models.interfaces";
 import {
+  defaultMythologies,
+  defaultVault,
   mythElementNames,
   underworldItemsList,
 } from "../../utils/constants/variables";
@@ -28,6 +30,7 @@ export const fetchGameData = async (userId, includeQuests) => {
                 whiteShards: 1,
                 blackShards: 1,
                 gobcoin: 1,
+                rorStats: 1,
                 mythologies: {
                   $map: {
                     input: "$mythologies",
@@ -575,25 +578,28 @@ export const updateDigSessionData = async (
   updatedShards,
   mythology,
   userMythlogyData,
-  user
+  user,
+  rorStats
 ) => {
   const userId = user._id;
   try {
     // user session update
     const updateData = {
-      "gameSession.lastSessionStartTime": 0,
-      "gameSession.competelvl": competelvl,
+      "rorStats.lastSessionStartTime": 0,
+      "rorStats.competelvl": competelvl,
     };
 
     if (isUnderworld) {
-      updateData["gameSession.isUnderworldActive"] = 1;
-      updateData["gameSession.dailyGameQuota"] =
-        user.gameSession.dailyGameQuota - 1;
-      updateData["gameSession.undeworldLostCount"] =
-        user.gameSession.undeworldLostCount + totalUNWLoss;
+      updateData["rorStats.isUnderworldActive"] = 1;
+      updateData["rorStats.dailyGameQuota"] = rorStats.dailyGameQuota - 1;
+      updateData["rorStats.undeworldLostCount"] =
+        rorStats.undeworldLostCount + totalUNWLoss;
     }
 
-    await user.updateOne({ $set: updateData });
+    await userMythologies.findOneAndUpdate(
+      { userId: userId },
+      { $set: updateData }
+    );
 
     // shards update
     if (isUnderworld) {
@@ -692,15 +698,15 @@ export const claimDragon = async (user, competelvl, bag) => {
     );
 
     // reset count
-    await user.updateOne({
+    await userMythologies.findOneAndUpdate({
       $set: {
-        "gameSession.undeworldLostCount": 0,
-        "gameSession.lastSessionStartTime": 0,
-        "gameSession.competelvl": competelvl,
-        "gameSession.isUnderworldActive": 1,
+        "rorStats.undeworldLostCount": 0,
+        "rorStats.lastSessionStartTime": 0,
+        "rorStats.competelvl": competelvl,
+        "rorStats.isUnderworldActive": 1,
       },
       $inc: {
-        "gameSession.dailyGameQuota": -1,
+        "rorStats.dailyGameQuota": -1,
       },
     });
   } catch (error) {
@@ -709,12 +715,12 @@ export const claimDragon = async (user, competelvl, bag) => {
   }
 };
 
-export const checkIfMealSkipped = async (user) => {
+export const checkIfMealSkipped = async (userId, rorStats) => {
   try {
     const now = Date.now();
-    const lastRest = user.gameSession.restExpiresAt || 0;
-    const lastPenalty = user.gameSession.lastMealPenaltyAt || 0;
-    const currentSwipePower = user.gameSession.digLvl || 1;
+    const lastRest = rorStats.restExpiresAt || 0;
+    const lastPenalty = rorStats.lastMealPenaltyAt || 0;
+    const currentSwipePower = rorStats.digLvl || 1;
     const expiryMs = 24 * 60 * 60 * 1000;
 
     let updatedSwipePower = currentSwipePower;
@@ -731,18 +737,91 @@ export const checkIfMealSkipped = async (user) => {
 
       updatedSwipePower = Math.max(updatedSwipePower - 1, 1);
 
-      user.gameSession.digLvl = updatedSwipePower;
-      user.gameSession.lastMealPenaltyAt = now;
+      rorStats.digLvl = updatedSwipePower;
+      rorStats.lastMealPenaltyAt = now;
 
-      await user.updateOne({
-        $set: {
-          "gameSession.digLvl": updatedSwipePower,
-          "gameSession.lastMealPenaltyAt": now,
-        },
-      });
+      await userMythologies.findOneAndUpdate(
+        { userId: userId },
+        {
+          $set: {
+            "rorStats.digLvl": updatedSwipePower,
+            "rorStats.lastMealPenaltyAt": now,
+          },
+        }
+      );
     }
 
     return updatedSwipePower;
+  } catch (error) {
+    console.log(error);
+    throw Error(error);
+  }
+};
+
+export const fillDefaultMythAndVault = async (userId, userMyth, userVault) => {
+  try {
+    const isMythAbsent = userMyth?.length === 0;
+    const isVaultAbsent = userVault?.length === 0;
+
+    // new user
+    if (isMythAbsent) {
+      userMyth = defaultMythologies;
+      await userMythologies.findOneAndUpdate(
+        { userId: userId },
+        { $set: { mythologies: defaultMythologies } }
+      );
+    }
+
+    // default vault
+    if (isVaultAbsent) {
+      userVault = defaultVault;
+      await milestones.findOneAndUpdate(
+        { userId: userId },
+        { $set: { "bank.vault": defaultVault } }
+      );
+    }
+
+    return { userMyth, userVault };
+  } catch (error) {
+    console.log(error);
+    throw Error(error);
+  }
+};
+
+export const updateDailySession = async (
+  userId,
+  rorStats,
+  isRestActive,
+  bagData
+) => {
+  let thiefStole = false;
+  try {
+    // thief: steal item
+    if (rorStats.isThiefActive && !isRestActive) {
+      thiefStole = true;
+
+      bagData = await removeRandomItemFrmBag(userId, bagData);
+    }
+
+    // update session details
+    await userMythologies.findOneAndUpdate(
+      {
+        userId: userId,
+      },
+      {
+        $set: {
+          "rorStats.dailyGameQuota": 12,
+          "rorStats.gameHrStartAt": Date.now(),
+        },
+      },
+      { new: true }
+    );
+    rorStats.dailyGameQuota = 12;
+    rorStats.gameHrStartAt = Date.now();
+
+    const updatedStats = rorStats;
+
+    return { updatedStats, thiefStole };
   } catch (error) {
     console.log(error);
     throw Error(error);
