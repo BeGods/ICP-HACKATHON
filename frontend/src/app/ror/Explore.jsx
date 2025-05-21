@@ -4,9 +4,9 @@ import {
   claimSessionReward,
   startSession,
 } from "../../utils/api.ror";
-import SwipeArena from "../../components/ror/SwipeArena";
+import SwipeArena from "../../components/Common/SwipeArena";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import {
   timeLeftUntil12Hours,
   checkIsUnderworldActive,
@@ -16,7 +16,7 @@ import {
   handleClickHaptic,
 } from "../../helpers/cookie.helper";
 import gsap from "gsap";
-import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
+import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
 import DefaultBtn from "../../components/Buttons/DefaultBtn";
 import {
@@ -26,7 +26,7 @@ import {
   mythSections,
 } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
-import RoRBtn from "../../components/ror/RoRBtn";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
 import { showToast } from "../../components/Toast/Toast";
 
@@ -264,12 +264,9 @@ const Explore = () => {
                       `${digMyth?.toLowerCase()}.artifact.starter02`
                     )
                   }
+                  className="mt-4 text-[50px] font-symbols text-black-contour scale-point"
                 >
-                  <img
-                    src={`https://media.publit.io/file/BeGods/items/240px-${digMyth?.toLowerCase()}.artifact.starter02.png`}
-                    alt="item"
-                    className="w-[14vw] scale-point"
-                  />
+                  *
                 </div>
               )}
             {isInside &&
@@ -282,12 +279,9 @@ const Explore = () => {
                       `${digMyth?.toLowerCase()}.artifact.starter01`
                     )
                   }
+                  className="mt-4 text-[50px] font-symbols text-black-contour scale-point"
                 >
-                  <img
-                    src={`https://media.publit.io/file/BeGods/items/240px-${digMyth?.toLowerCase()}.artifact.starter01.png`}
-                    alt="item"
-                    className="w-[14vw] scale-point"
-                  />
+                  Y
                 </div>
               )}
           </div>
@@ -522,10 +516,7 @@ const Explore = () => {
           );
         } else if (
           parsedReward?.fragment &&
-          ignoredItems?.some((item) =>
-            parsedReward?.fragment?.itemId?.includes(item)
-          ) &&
-          /starter0[3-9]/?.test(randomGenItem.id)
+          /common02/?.test(randomGenItem.id)
         ) {
           updatedBagItems = [...prevItems.bag];
           updatedPouch = [...prevItems.pouch, parsedReward?.fragment.itemId];

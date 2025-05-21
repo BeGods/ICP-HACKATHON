@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { RorContext } from "../../../context/context";
-import RelicCrd from "../Relics/RelicCrd";
-import RelicInfo from "../Relics/RelicInfo";
-import CharCrd from "../Relics/CharCrd";
+import RelicCrd from "./RelicCrd";
+import RelicInfo from "./RelicInfo";
+import CharCrd from "./CharCrd";
 import { mythElementNamesLowerCase } from "../../../utils/constants.ror";
 
 const RelicRwrdCrd = ({

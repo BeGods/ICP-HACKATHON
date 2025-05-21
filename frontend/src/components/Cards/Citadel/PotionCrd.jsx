@@ -1,8 +1,11 @@
 import React, { useContext, useState } from "react";
-import { RorContext } from "../../context/context";
-import IconBtn from "../Buttons/IconBtn";
-import { elementMythNames, mythElementNames } from "../../utils/constants.ror";
-import PotionBtn from "./PotionBtn";
+import { RorContext } from "../../../context/context";
+import IconBtn from "../../Buttons/IconBtn";
+import {
+  elementMythNames,
+  mythElementNames,
+} from "../../../utils/constants.ror";
+import PotionBtn from "../../Buttons/PotionBtn";
 
 const PotionCard = ({ potion }) => {
   const { assets, setShowCard, gameData, isTelegram } = useContext(RorContext);

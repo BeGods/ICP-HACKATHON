@@ -18,7 +18,7 @@ import {
 import { X } from "lucide-react";
 import ToastMesg from "../../../components/Toast/ToastMesg";
 import { toast } from "react-toastify";
-import TgHeader from "../../../components/Common/TgHeader";
+import TgHeader from "../../../components/Layouts/TgHeader";
 import FoFIntro from "../../common/Intro/FoFIntro";
 import RoRIntro from "../../common/Intro/RoRIntro";
 import assets from "../../../assets/assets.json";

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
 import { RorContext } from "../../context/context";
-import CitadelItem from "./CitadelItem";
+import CitadelItem from "../Cards/Citadel/CitadelItem";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;

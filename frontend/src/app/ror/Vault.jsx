@@ -1,16 +1,16 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import GridItem from "../../components/ror/GridItem";
+import GridItem from "../../components/Layouts/GridItem";
 import { RorContext } from "../../context/context";
 import { updateBagData } from "../../utils/api.ror";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import { mythSections } from "../../utils/constants.fof";
 import { colorByMyth } from "../../utils/constants.ror";
-import MiscCard from "../../components/ror/MiscCard";
-import RoRBtn from "../../components/ror/RoRBtn";
+import MiscCard from "../../components/Cards/Citadel/MiscCard";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;

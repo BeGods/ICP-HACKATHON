@@ -1,15 +1,15 @@
 import React, { useState, useRef, useContext, useEffect, useMemo } from "react";
-import GridItem from "../../components/ror/GridItem";
+import GridItem from "../../components/Layouts/GridItem";
 import { RorContext } from "../../context/context";
 import { completeItem, joinItem } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
-import MiscCard from "../../components/ror/MiscCard";
-import RoRBtn from "../../components/ror/RoRBtn";
+import MiscCard from "../../components/Cards/Citadel/MiscCard";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import {
   getActiveFeature,
   handleClickHaptic,
@@ -566,7 +566,7 @@ const Blacksmith = () => {
                               fragmentId: fragments.map(
                                 (frag) => frag.fragmentId
                               ),
-                              isComplete: fragments?.length >= 2 ?? 0,
+                              isComplete: (fragments?.length ?? 0) >= 2,
                             }}
                             scaleIcon={scaleIcon}
                             itemsWithAllFrags={gameData?.bag.map(

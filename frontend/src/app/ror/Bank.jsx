@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import GridItem from "../../components/ror/GridItem";
+import GridItem from "../../components/Layouts/GridItem";
 import {
   ToggleLeft,
   ToggleRight,
@@ -7,17 +7,17 @@ import {
 import { RorContext } from "../../context/context";
 import { activateVault, tradeItem, updateVaultData } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import { toast } from "react-toastify";
 import { elementMythNames } from "../../utils/constants.ror";
-import MiscCard from "../../components/ror/MiscCard";
-import RoRBtn from "../../components/ror/RoRBtn";
+import MiscCard from "../../components/Cards/Citadel/MiscCard";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import {
   getActiveFeature,
   handleClickHaptic,
   setStorage,
 } from "../../helpers/cookie.helper";
-import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
+import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import { showToast } from "../../components/Toast/Toast";
 
 const tele = window.Telegram?.WebApp;
@@ -38,7 +38,7 @@ const CenterChild = ({ handleClick, assets }) => {
   );
 };
 
-const Merchant = (props) => {
+const Bank = (props) => {
   const {
     gameData,
     setGameData,
@@ -87,7 +87,7 @@ const Merchant = (props) => {
     setIsLoading(true);
     try {
       await tradeItem(authToken, item);
-
+      setShowCard(null);
       // remove draggedItem
       setGameData((prevItems) => {
         let updatedBagItems = prevItems.bag.filter(
@@ -109,6 +109,7 @@ const Merchant = (props) => {
           },
         };
       });
+
       showToast("sell_success");
     } catch (error) {
       showToast("sell_error");
@@ -517,4 +518,4 @@ const Merchant = (props) => {
   );
 };
 
-export default Merchant;
+export default Bank;

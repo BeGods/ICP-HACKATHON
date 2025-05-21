@@ -1,11 +1,11 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import GridItem from "../../components/ror/GridItem";
+import GridItem from "../../components/Layouts/GridItem";
 import { RorContext } from "../../context/context";
 import { updateVaultData } from "../../utils/api.ror";
-import RoRHeader from "../../components/layouts/Header";
-import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
+import RoRHeader from "../../components/Layouts/Header";
+import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
-import RoRBtn from "../../components/ror/RoRBtn";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 
 const CenterChild = () => {
   return (

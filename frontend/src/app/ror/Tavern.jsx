@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import { RorContext } from "../../context/context";
 import ArtifactCrd from "../../components/Cards/Reward/ArtiFactCrd";
 import { gameItems } from "../../utils/gameItems";
-import MiscCard from "../../components/ror/MiscCard";
-import RoRBtn from "../../components/ror/RoRBtn";
+import MiscCard from "../../components/Cards/Citadel/MiscCard";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 import { toast } from "react-toastify";
 import { activateRest, claimArtifact } from "../../utils/api.ror";
