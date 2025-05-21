@@ -95,6 +95,16 @@ export interface IMyth extends Document {
   faith: number;
   isEligibleForBurst: boolean;
   boosters?: IBooster;
+  rorStats: {
+    gameHrStartAt: number;
+    dailyGameQuota: number;
+    lastSessionStartTime: number;
+    competelvl: number;
+    restExpiresAt: number;
+    isThiefActive: boolean;
+    lastPenaltyAt: number;
+    digLvl: number;
+  };
 }
 
 export interface IUserMyths extends Document {
@@ -216,16 +226,6 @@ export interface IUser extends Document {
   kaiaAddress: string;
   premiumReferralCount: number;
   mobileNumber: string;
-  gameSession: {
-    gameHrStartAt: number;
-    dailyGameQuota: number;
-    lastSessionStartTime: number;
-    competelvl: number;
-    restExpiresAt: number;
-    isThiefActive: boolean;
-    lastPenaltyAt: number;
-    digLvl: number;
-  };
   parentReferrerId?: mongoose.Types.ObjectId;
   squadOwner: mongoose.Types.ObjectId;
   referralCode: string;
@@ -233,12 +233,6 @@ export interface IUser extends Document {
     avatarUrl: string;
     updateAt: Date;
   };
-  playsuper?: {
-    isVerified: boolean;
-    key: string;
-    createdAt: Date;
-  };
-  announcements: number;
   country: string;
   lastLoginAt: Date;
   partOfGames: string[];
@@ -247,6 +241,8 @@ export interface IUser extends Document {
     hasClaimedFoFRwrd: boolean;
   };
   userBetAt: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 // orbs transaction

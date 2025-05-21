@@ -299,7 +299,22 @@ export const genRandomMythItem = async (
       let randomGenFragntIdx;
 
       // coins
-      if (/starter0[3-9]/?.test(randomGenItem.id)) {
+      //  if (/starter0[3-9]/?.test(randomGenItem.id)) {
+      //   await milestones.findOneAndUpdate(
+      //     { userId: userId },
+      //     {
+      //       $push: { pouch: randomGenItem.id },
+      //     },
+      //     { new: true }
+      //   );
+
+      //   itemAddedToBag = genRewardObj;
+      // }
+
+      // /starter0[3-9]/?.test(randomGenItem.id) || randomGenItem.id?.includes("common01")
+
+      // chars
+      if (/common02/?.test(randomGenItem.id)) {
         await milestones.findOneAndUpdate(
           { userId: userId },
           {
@@ -380,8 +395,6 @@ export const genRandomMythItem = async (
     }
 
     if (!itemAddedToBag.itemId) {
-      console.log("item is empty");
-
       itemAddedToBag = {};
     }
 
@@ -416,9 +429,9 @@ export const genRandomUNDWItem = async (
 
     const ignoredItems = [
       // "starter00",
-      // "treasure03",
-      // "treasure02",
-      "treasure01",
+      "underworld.artifact.treasure01",
+      "underworld.artifact.treasure02",
+      "artifact.treasure01",
     ];
 
     // if random item exists
@@ -427,13 +440,26 @@ export const genRandomUNDWItem = async (
       const alreadyClaimedItem = alreadyAppearChar.includes(randomGenItem.id);
 
       // if char has appeared already
+      // if (ignoredItems.some((ignore) => genRewardObj.itemId.includes(ignore))) {
+      //   await milestones.findOneAndUpdate(
+      //     { userId: userId },
+      //     {
+      //       $push: { pouch: genRewardObj.itemId },
+      //     },
+      //     { new: true }
+      //   );
+      // } else
       if (ignoredItems.some((ignore) => genRewardObj.itemId.includes(ignore))) {
-        await milestones.findOneAndUpdate(
+        let updatedBag = await milestones.findOneAndUpdate(
           { userId: userId },
           {
-            $push: { pouch: genRewardObj.itemId },
+            $push: { bag: genRewardObj },
           },
           { new: true }
+        );
+
+        itemAddedToBag = updatedBag.bag?.find(
+          (item) => item.itemId === genRewardObj.itemId && item.fragmentId === 0
         );
       } else if (alreadyClaimedItem) {
         let updatedBag = await milestones.findOneAndUpdate(
@@ -512,16 +538,20 @@ export const filterFetchedItem = (
         )
         .map((item) => item.itemId) ?? [];
 
-    const treasureCodes = ["artifact.treasure01"];
-
     // filter
     const filteredRoRItems =
       gameItems?.filter((item) => {
         const id = item.id || "";
 
-        const isCoinFromMythology =
+        const isKeyFromMythology =
+          !isUnderworld &&
           id.includes(mythology.toLowerCase()) &&
-          (/starter0[3-9]/?.test(id) || id.includes("treasure01"));
+          /common02/?.test(id);
+
+        const isCoinFromMythology =
+          !isUnderworld &&
+          id.includes(mythology.toLowerCase()) &&
+          (/starter0[3-9]/?.test(id) || id.includes("commonn01"));
 
         const isRelicFromMythology =
           id.includes("relic") && id.includes(mythology.toLowerCase());
@@ -535,7 +565,8 @@ export const filterFetchedItem = (
         return (
           (isRelicFromMythology ||
             isTreasureFromMythology ||
-            isCoinFromMythology) &&
+            isCoinFromMythology ||
+            isKeyFromMythology) &&
           !userClaimedRewards?.claimedRoRItems?.includes(id) &&
           !completedItemIds?.includes(id)
         );

@@ -645,9 +645,9 @@ export const updateUserData = async (user, isEligibleToClaim) => {
     }
 
     if (user.playsuper?.isVerified && hasPlaysuperExpired) {
-      updates["playsuper.isVerified"] = false;
-      updates["playsuper.key"] = null;
-      updates["playsuper.createdAt"] = null;
+      // updates["playsuper.isVerified"] = false;
+      // updates["playsuper.key"] = null;
+      // updates["playsuper.createdAt"] = null;
     }
 
     let updatedUser;
