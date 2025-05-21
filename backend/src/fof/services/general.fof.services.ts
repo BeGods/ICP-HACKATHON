@@ -510,7 +510,7 @@ export const checkBonus = async (user) => {
       return true;
     }
   } catch (error) {
-    console.log(error);
+    console.log("Bonus Error:", error);
     throw new Error(error.message);
   }
 };

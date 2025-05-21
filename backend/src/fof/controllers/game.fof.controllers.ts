@@ -252,7 +252,6 @@ export const getGameStats = async (req, res) => {
         lastMythClaimed: user.bonus.fof.streak.lastMythClaimed,
       },
       joiningBonus: user.bonus.fof.joiningBonus,
-      isPlaySuperVerified: user.playsuper.isVerified,
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
       stakeReward: user.bonus.fof.extraBlackOrb,
       country: user.country ?? "NA",
@@ -296,7 +295,6 @@ export const getGameStats = async (req, res) => {
       towerKeys: towerKeys,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       message: "Failed to fetch game data.",
       error: error.message,

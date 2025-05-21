@@ -566,12 +566,29 @@ export const tradeFragments = async (req, res) => {
   const itemObj = req.itemObj;
   const { itemId } = req.body;
   let incVal = 0;
+  const ignoredItems = [
+    // "starter00",
+    "underworld.artifact.treasure01",
+    "underworld.artifact.treasure02",
+    "treasure01",
+  ];
 
   // 1 fragment  = 1 gobcoin
   // if complete item then 1 extra
 
   try {
-    if (itemObj.isComplete) {
+    if (
+      /starter0[3-9]/?.test(itemId) ||
+      itemId?.includes("common01") ||
+      ignoredItems.some((ignore) => itemId.includes(ignore))
+    ) {
+      await userMilestones.updateOne({
+        $pull: {
+          bag: { _id: itemId },
+        },
+      });
+      incVal = itemObj.coins;
+    } else if (itemObj.isComplete) {
       await userMilestones.updateOne({
         $push: {
           claimedRoRItems: itemObj.id,
