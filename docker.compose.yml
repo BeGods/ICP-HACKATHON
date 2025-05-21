@@ -32,7 +32,7 @@ services:
   api-dev:
     container_name: api-dev
     restart: unless-stopped
-    build: ../dev-server/begods-backend
+    build: ../../dev/backend
     ports:
       - 5000:5000
     env_file: .env.dev
@@ -44,13 +44,13 @@ services:
     container_name: web-dev
     restart: unless-stopped
     build:
-      context: ../dev-server/begods-frontend
+      context: ../../dev/frontend
       dockerfile: Dockerfile.dev
     ports:
       - 5001:8084
     env_file: .env.dev
     volumes:
-      - ../dev-server/begods-frontend:/src
+      - ../../dev/frontend:/src
 
   # =======================
   # Production Services
@@ -71,13 +71,13 @@ services:
     container_name: web
     restart: unless-stopped
     build:
-      context: ../forges-of-faith-frontend
+      context: ../frontend
       dockerfile: Dockerfile
     ports:
       - 4001:8083
     env_file: .env.prod
     volumes:
-      - ../forges-of-faith-frontend:/src
+      - ../frontend:/src
 
 volumes:
   mongo_data:
