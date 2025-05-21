@@ -720,8 +720,8 @@
         "desc": "Add items to keep them safe from theft."
       },
       "error": {
-        "title": "Vault Activation Failed",
-        "desc": "Unable to activate the vault. Please try again."
+        "title": "Vault Activated",
+        "desc": "Add items to keep them safe from theft."
       }
     }
   }

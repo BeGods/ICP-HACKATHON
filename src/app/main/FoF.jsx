@@ -8,23 +8,22 @@ import {
 } from "../../utils/api.fof";
 import { FofContext, MainContext } from "../../context/context";
 import Quests from "../fof/Quest/Page";
-import Profile from "../fof/Profile/Page";
+import Profile from "../common/Profile/Page";
 import Boosters from "../fof/Booster/Page";
 import Leaderboard from "../fof/Leaderboard/Page";
 import Forges from "../fof/Forge/Page";
 import Gacha from "../fof/Gacha/Page";
 import Tower from "../fof/Tower/Page";
 import JoinBonus from "../fof/JoinBonus/Page";
-import Redeem from "../fof/Redeem/Redeem";
-import Footer from "../../components/Common/FoFFooter";
-import Gift from "../fof/Gift/Gift";
+import Redeem from "../common/Redeem/Redeem";
+import Footer from "../../components/Layouts/FoFFooter";
+import Gift from "../common/Gift/Gift";
 import { showToast } from "../../components/Toast/Toast";
 import StreakBonus from "../fof/Streak/StreakBonus";
 import {
   deleteAuthCookie,
   fetchHapticStatus,
   getExpCookie,
-  getStorage,
   setAuthCookie,
   validateAuth,
   validateCountryCode,
@@ -37,7 +36,7 @@ import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import Announcement from "../fof/Announcement/Page";
 import FoFLoader from "../../components/Loaders/FoFLoader";
 import SettingModal from "../../components/Modals/Settings";
-import TgHeader from "../../components/Common/TgHeader";
+import TgHeader from "../../components/Layouts/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import { determineIsTelegram } from "../../utils/device.info";

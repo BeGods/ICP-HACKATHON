@@ -5,7 +5,7 @@ import FoFIntro from "./FoFIntro";
 import RoRIntro from "./RoRIntro";
 import ReactHowler from "react-howler";
 import DoDIntro from "./DoDIntro";
-import TgHeader from "../../../components/Common/TgHeader";
+import TgHeader from "../../../components/Layouts/TgHeader";
 import SettingModal from "../../../components/Modals/Settings";
 import { validateSoundCookie } from "../../../helpers/cookie.helper";
 

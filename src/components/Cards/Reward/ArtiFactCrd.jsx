@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { RorContext } from "../../../context/context";
 import RelicCrd from "../Relics/RelicCrd";
 import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
-import RoRBtn from "../../ror/RoRBtn";
+import RoRBtn from "../../Buttons/RoRBtn";
 import DefaultBtn from "../../Buttons/DefaultBtn";
 import { mythSections } from "../../../utils/constants.fof";
 import { claimArtifact } from "../../../utils/api.ror";

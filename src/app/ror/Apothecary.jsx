@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import { gameItems } from "../../utils/gameItems";
 import { RorContext } from "../../context/context";
 import {
@@ -7,9 +7,9 @@ import {
   ToggleRight,
 } from "../../components/Common/SectionToggles";
 import { colorByMyth, elementMythNames } from "../../utils/constants.ror";
-import PotionCard from "../../components/ror/PotionCrd";
-import MiscCard from "../../components/ror/MiscCard";
-import RoRBtn from "../../components/ror/RoRBtn";
+import PotionCard from "../../components/Cards/Citadel/PotionCrd";
+import MiscCard from "../../components/Cards/Citadel/MiscCard";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
@@ -30,7 +30,7 @@ const CenterChild = ({ handleClick, assets }) => {
   );
 };
 
-const Potions = (props) => {
+const Apothecary = (props) => {
   const { assets, setShowCard } = useContext(RorContext);
   const potions = gameItems.filter((item) => item.id.includes("potion"));
   const [currentPage, setCurrentPage] = useState(0);
@@ -170,4 +170,4 @@ const Potions = (props) => {
   );
 };
 
-export default Potions;
+export default Apothecary;

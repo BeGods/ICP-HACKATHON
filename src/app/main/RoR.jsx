@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext, RorContext } from "../../context/context";
 import { fetchGameStats } from "../../utils/api.ror";
 import { getRandomColor } from "../../helpers/randomColor.helper";
@@ -15,33 +15,33 @@ import {
 import i18next from "i18next";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import RoRLoader from "../../components/Loaders/RoRLoader";
-import Footer from "../../components/Common/RoRFooter";
+import Footer from "../../components/Layouts/RoRFooter";
 import Citadel from "../ror/Citadel";
 import Explore from "../ror/Explore";
 import Leaderboard from "../ror/Leaderboard/Page";
 import Bag from "../ror/Bag";
 import Vault from "../ror/Vault";
 import Blacksmith from "../ror/Blacksmith";
-import Merchant from "../ror/Merchant";
 import SettingModal from "../../components/Modals/Settings";
-import TgHeader from "../../components/Common/TgHeader";
+import TgHeader from "../../components/Layouts/TgHeader";
 import {
   fetchProfilePhoto,
   fetchRewards,
   refreshAuthToken,
 } from "../../utils/api.fof";
-import Profile from "../fof/Profile/Page";
-import Gift from "../fof/Gift/Gift";
+import Profile from "../common/Profile/Page";
+import Gift from "../common/Gift/Gift";
 import Gacha from "../ror/Gacha";
 import { determineIsTelegram } from "../../utils/device.info";
 import JoinBonus from "../ror/JoinBonus";
-import Potions from "../ror/Potions";
-import Book from "../ror/Book";
+import Library from "../ror/Library";
 import Tavern from "../ror/Tavern";
-import Redeem from "../fof/Redeem/Redeem";
+import Redeem from "../common/Redeem/Redeem";
 import OnboardPage from "../fof/Onboard/Page";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../../components/Toast/Toast";
+import Apothecary from "../ror/Apothecary";
+import Bank from "../ror/Bank";
 
 const tele = window.Telegram?.WebApp;
 
@@ -318,15 +318,15 @@ const RoRMain = () => {
     <Explore />, // 1
     <Bag />, // 2
     <Blacksmith />, //  3
-    <Merchant />, // 4
+    <Bank />, // 4
     <Vault />, // 5
     <Profile />, // 6
     <Leaderboard />, // 7
     <Gift />, // 8
     <Gacha />, // 9
     <JoinBonus />, // 10
-    <Potions />, // 11
-    <Book />, // 12,
+    <Apothecary />, // 11
+    <Library />, // 12,
     <Tavern />, // 13
     <Redeem />, //  14
     <OnboardPage />, // 15

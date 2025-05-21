@@ -1,6 +1,6 @@
 import React from "react";
 import HTMLFlipBook from "react-pageflip";
-import { gameItems } from "../../utils/gameItems";
+import { gameItems } from "../../../utils/gameItems";
 
 const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
   let relicItems = gameItems.filter(

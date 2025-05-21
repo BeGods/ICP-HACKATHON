@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { RorContext } from "../../context/context";
-import CitadelCarousel from "../../components/ror/CitadelCarousel";
-import RoRHeader from "../../components/layouts/Header";
+import CitadelCarousel from "../../components/Carousel/CitadelCarousel";
+import RoRHeader from "../../components/Layouts/Header";
 
 const CenterChild = ({ gameData }) => {
   return (

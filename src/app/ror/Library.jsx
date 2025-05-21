@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import RoRHeader from "../../components/layouts/Header";
+import RoRHeader from "../../components/Layouts/Header";
 import { gameItems } from "../../utils/gameItems";
 
 import {
@@ -15,18 +15,18 @@ import {
 import { RorContext } from "../../context/context";
 import { colorByMyth, mythSections } from "../../utils/constants.ror";
 import Symbol from "../../components/Common/Symbol";
-import BookCrd from "../../components/ror/BookCrd";
+import BookCrd from "../../components/Cards/Citadel/BookCrd";
 import { claimArtifact } from "../../utils/api.ror";
 import { toast } from "react-toastify";
-import RelicRwrdCrd from "../../components/Cards/Reward/RelicRwrdCrd";
+import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
-import RoRBtn from "../../components/ror/RoRBtn";
+import RoRBtn from "../../components/Buttons/RoRBtn";
 import {
   getActiveFeature,
   handleClickHaptic,
   setStorage,
 } from "../../helpers/cookie.helper";
-import MiscCard from "../../components/ror/MiscCard";
+import MiscCard from "../../components/Cards/Citadel/MiscCard";
 import { showToast } from "../../components/Toast/Toast";
 import { Clapperboard } from "lucide-react";
 import { trackEvent } from "../../utils/ga";
@@ -49,7 +49,7 @@ const CenterChild = ({ handleClick, assets }) => {
   );
 };
 
-const Book = () => {
+const Library = () => {
   const {
     gameData,
     setGameData,
@@ -430,4 +430,4 @@ const Book = () => {
   );
 };
 
-export default Book;
+export default Library;

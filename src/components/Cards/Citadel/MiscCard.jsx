@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { RorContext } from "../../context/context";
-import IconBtn from "../Buttons/IconBtn";
+import { RorContext } from "../../../context/context";
+import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 
 const MiscCard = ({ Button, img, icon, showInfo, onlyBack }) => {

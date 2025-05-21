@@ -3,8 +3,8 @@ import { RorContext } from "../../context/context";
 import { elementMythNames } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
 import { claimPotion } from "../../utils/api.ror";
-import RoRBtn from "./RoRBtn";
-import MiscCard from "./MiscCard";
+import RoRBtn from "../Buttons/RoRBtn";
+import MiscCard from "../Cards/Citadel/MiscCard";
 
 const PotionBtn = ({ potion, stage, showGobCoin }) => {
   const { gameData, setGameData, setShowCard, authToken, setSection, assets } =
