@@ -553,6 +553,8 @@ export const validArtifactClaim = async (req, res, next) => {
     "artifact.starter10",
   ];
 
+  const itemType = ["statue", "map", "boots", "key", "book"];
+
   // validate ad
   if (adId && String(adId) !== String(config.adsgram.AD_BOOSTER_ID)) {
     return res.status(400).json({ error: "Invalid ad request." });
@@ -590,6 +592,7 @@ export const validArtifactClaim = async (req, res, next) => {
       req.deductValue = -1;
     }
 
+    req.type = itemType[artifactType.indexOf(itemId)];
     req.itemId = itemId;
     req.userMilestones = userMilestones;
     next();

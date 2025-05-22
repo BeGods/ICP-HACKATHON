@@ -23,7 +23,10 @@ import {
   combineVaultItems,
   hasTwelveHoursElapsed,
 } from "../../helpers/game.helpers";
-import { ItemsTransactions } from "../../common/models/transactions.models";
+import {
+  CoinsTransactions,
+  ItemsTransactions,
+} from "../../common/models/transactions.models";
 import ranks from "../../common/models/ranks.models";
 import Stats from "../../common/models/Stats.models";
 import { itemInterface } from "../../ts/models.interfaces";
@@ -405,6 +408,8 @@ export const transferToBag = async (req, res) => {
 };
 
 export const activateVault = async (req, res) => {
+  const user = req.user;
+  const userId = user._id;
   const userMythologies = req.userMythologies;
   const userMilestones = req.userMilestones;
   const deductValue = req.deductValue;
@@ -417,6 +422,16 @@ export const activateVault = async (req, res) => {
     await userMythologies.updateOne({
       $inc: { gobcoin: -deductValue },
     });
+
+    if (deductValue !== 0) {
+      const newCoinTransaction = new CoinsTransactions({
+        userId: userId,
+        source: "blacksmith",
+        coins: -deductValue,
+      });
+      await newCoinTransaction.save();
+    }
+
     res.status(200).json({ message: "Vault activated successfully." });
   } catch (error) {
     console.log(error);
@@ -463,6 +478,15 @@ export const activateMeal = async (req, res) => {
     await userMythologies.updateOne({
       $inc: { gobcoin: -deductValue },
     });
+
+    if (deductValue !== 0) {
+      const newCoinTransaction = new CoinsTransactions({
+        userId: userId,
+        source: "blacksmith",
+        coins: -deductValue,
+      });
+      await newCoinTransaction.save();
+    }
     res.status(200).json({ message: "Rest activated successfully." });
   } catch (error) {
     console.log(error);
@@ -520,6 +544,13 @@ export const joinFragments = async (req, res) => {
       },
     });
 
+    const newCoinTransaction = new CoinsTransactions({
+      userId: userId,
+      source: "blacksmith",
+      coins: -noOfJoins,
+    });
+    await newCoinTransaction.save();
+
     res.status(200).json({ message: "Blacksmith started build successfully." });
   } catch (error) {
     console.log(error);
@@ -561,6 +592,8 @@ export const claimCompleteRelic = async (req, res) => {
 };
 
 export const tradeFragments = async (req, res) => {
+  const user = req.user;
+  const userId = user._id;
   const userMythologies = req.userMythologies;
   const userMilestones = req.userMilestones;
   const itemObj = req.itemObj;
@@ -610,6 +643,13 @@ export const tradeFragments = async (req, res) => {
     await userMythologies.updateOne({
       $inc: { gobcoin: incVal },
     });
+
+    const newCoinTransaction = new CoinsTransactions({
+      userId: userId,
+      source: "trade",
+      coins: itemObj.coins,
+    });
+    await newCoinTransaction.save();
 
     res.status(200).json({ message: "Item traded successfully." });
   } catch (error) {
@@ -722,7 +762,7 @@ export const activateBlackSmith = async (req, res) => {
   const { user, userMythData } = req;
 
   await userMythData.updateOne({
-    $inc: { gobcoins: -1 },
+    $inc: { gobcoin: -1 },
     $set: { "rorStats.isBlackSmithActive": true },
   });
 
@@ -737,7 +777,7 @@ export const activateLibrarian = async (req, res) => {
   const { user, userMythData } = req;
 
   await userMythData.updateOne({
-    $inc: { gobcoins: -1 },
+    $inc: { gobcoin: -1 },
     $set: { "rorStats.isLibrnActive": true },
   });
 
@@ -752,7 +792,7 @@ export const activateGemologist = async (req, res) => {
   const { user, userMythData } = req;
 
   await userMythData.updateOne({
-    $inc: { gobcoins: -1 },
+    $inc: { gobcoin: -1 },
     $set: { "rorStats.isLibrnActive": true },
   });
 
@@ -764,7 +804,8 @@ export const activateGemologist = async (req, res) => {
 };
 
 export const claimArtifact = async (req, res) => {
-  const { userMilestones, deductValue, itemId } = req;
+  const { userMilestones, deductValue, itemId, user, type } = req;
+  const userId = user._id;
 
   try {
     await userMilestones.updateOne({
@@ -779,6 +820,15 @@ export const claimArtifact = async (req, res) => {
           gobcoin: -deductValue,
         },
       });
+    }
+
+    if (deductValue !== 0) {
+      const newCoinTransaction = new CoinsTransactions({
+        userId: userId,
+        source: type,
+        coins: 1,
+      });
+      await newCoinTransaction.save();
     }
 
     res.status(200).json({ message: "Artifact claimed successfully." });
