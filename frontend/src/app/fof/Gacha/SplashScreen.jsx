@@ -196,8 +196,8 @@ const SplashScreen = ({ reward, exploitReward }) => {
       <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
         <div
           className={`flex relative flex-col items-center cursor-pointer z-50 card ${
-            isTelegram ? "h-[45.35vh] mt-5" : "h-[50dvh]"
-          }${flipped ? "flipped" : ""}`}
+            flipped ? "flipped" : ""
+          }`}
         >
           <div className="card__face card__face--front flex justify-center items-center">
             <div
@@ -205,21 +205,23 @@ const SplashScreen = ({ reward, exploitReward }) => {
                 handleClickHaptic(tele, enableHaptic);
                 handleClick();
               }}
-              className={`text-white transition-transform duration-1000 font-symbols scale-${showScale} text-[55vw]  mx-auto icon-black-contour`}
+              className={`text-white transition-all duration-500 font-symbols scale-${showScale} text-[55vw] mx-auto icon-black-contour`}
             >
               {currReward.type === "mythOrb"
                 ? defaultIcons[currReward.mythology]
                 : defaultIcons[currReward.type]}
             </div>
           </div>
-          <div className="card__face card__face--back flex justify-center items-center">
+          <div
+            className={`card__face card__face--back flex justify-center items-center`}
+          >
             {currReward.type === "mythOrb" || currReward.type === "blackOrb" ? (
-              <OrbCard reward={currReward} />
+              <OrbCard isTelegram={isTelegram} reward={currReward} />
             ) : currReward.type === "automata" ||
               currReward.type === "minion" ? (
-              <BoosterCard reward={currReward} />
+              <BoosterCard isTelegram={isTelegram} reward={currReward} />
             ) : (
-              <QuestCard reward={currReward} />
+              <QuestCard isTelegram={isTelegram} reward={currReward} />
             )}
           </div>
         </div>
@@ -282,11 +284,13 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
 export default SplashScreen;
 
-const OrbCard = ({ reward }) => {
+const OrbCard = ({ reward, isTelegram }) => {
   const currReward = reward.type === "mythOrb" ? reward.mythology : reward.type;
   return (
     <div
-      className={`flex justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
+      className={`flex ${
+        isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+      } justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
     >
       <img
         src={`${assets.uxui.baseOrb}`}
@@ -302,31 +306,36 @@ const OrbCard = ({ reward }) => {
   );
 };
 
-const BoosterCard = ({ reward }) => {
+const BoosterCard = ({ reward, isTelegram }) => {
+  const cardType = reward.type === "minion" ? "alchemist" : reward.type;
+
   return (
-    <div className="relative h-full -mt-8 w-[72%] flex items-center justify-center rounded-primary crd-shadow-black">
+    <div
+      className={`relative w-[72%] ${
+        isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+      } flex items-center justify-center rounded-primary crd-shadow-black`}
+    >
       <div
-        className={`absolute inset-0 rounded-[15px]`}
+        className="absolute inset-0 rounded-[15px]"
         style={{
-          backgroundImage: `url(${
-            assets.boosters[
-              `${reward.type === "minion" ? "alchemist" : reward.type}Card`
-            ]
-          })`,
+          backgroundImage: `url(${assets.boosters[`${cardType}Card`]})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-          backgroundPosition: "center center ",
+          backgroundPosition: "center",
         }}
       />
     </div>
   );
 };
 
-const QuestCard = ({ reward }) => {
+const QuestCard = ({ reward, isTelegram }) => {
   return (
-    <div className="relative w-[72%] rounded-lg shadow-lg -mt-8 flex flex-col z-50">
+    <div
+      className={`relative w-[72%] rounded-lg shadow-lg  ${
+        isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+      }  flex flex-col z-50`}
+    >
       <div className="relative crd-shadow-black">
-        {/* Card Image */}
         <img
           src={
             assets.questCards?.[reward.quest.mythology.toLowerCase()]?.[

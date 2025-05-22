@@ -165,7 +165,7 @@ const Blacksmith = () => {
             _id: "sdfsdkjfj",
           };
 
-          updatedStats.gobcoins -= value.length - 1;
+          updatedStats.gobcoin -= value.length - 1;
           const updatedBuilder = [...prevItems.builder, combinedItem];
 
           setArbitaryBag(updatedBagItems);

@@ -1,13 +1,7 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
-import { FofContext, MainContext } from "../../../context/context";
+import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
@@ -20,10 +14,20 @@ const tele = window.Telegram?.WebApp;
 
 const TaskItem = ({ quest, showSetting, showWallet }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const { authToken, userData, country, enableHaptic, isTelegram } =
-    useContext(MainContext);
-  const { gameData, socialQuestData, setSocialQuestData, setGameData } =
-    useContext(FofContext);
+  const {
+    authToken,
+    userData,
+    country,
+    enableHaptic,
+    tasks,
+    setTasks,
+    isTelegram,
+    game,
+  } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
+  const setGameData =
+    game === "fof" ? fofContext.setGameData : rorContext.setGameData;
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
   const disableClick = useRef(false);
@@ -71,18 +75,33 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
         disableClick.current = false;
       }, 2000);
       try {
-        await claimSocialTask({ questId: quest._id }, authToken);
-        const updatedQuestData = socialQuestData.map((item) =>
+        await claimSocialTask({ questId: quest._id, game: game }, authToken);
+        const updatedQuestData = tasks.map((item) =>
           item._id === quest._id ? { ...item, isQuestClaimed: true } : item
         );
-        const updatedGameData = {
-          ...gameData,
-          multiColorOrbs:
-            gameData.multiColorOrbs + quest.requiredOrbs.multiOrbs,
-        };
         setClaim(false);
-        setGameData(updatedGameData);
-        setSocialQuestData(updatedQuestData);
+        if (game == "fof") {
+          setGameData((prev) => {
+            let updatedStats = { ...prev };
+
+            updatedStats.multiColorOrbs += quest.requiredOrbs.multiOrbs;
+            return {
+              ...prev,
+              multiColorOrbs: updatedStats.multiColorOrbs,
+            };
+          });
+        } else {
+          setGameData((prev) => {
+            let updatedStats = { ...prev.stats };
+            updatedStats.gobcoin += quest.requiredOrbs.multiOrbs;
+            return {
+              ...prev,
+              stats: updatedStats,
+            };
+          });
+        }
+
+        setTasks(updatedQuestData);
         showToast("task_success");
       } catch (error) {
         const errorMessage =
@@ -163,10 +182,21 @@ ${
             ? quest.questName
             : t(`profile.${quest.questName.toLowerCase()}`)}
         </h1>
-        <h2 className="text-tertiary">
-          +{quest.requiredOrbs.multiOrbs}
-          <span className="pl-1 gradient-multi">ORB(S)</span>
-        </h2>
+        <div>
+          {game == "fof" ? (
+            <h2 className="text-tertiary">
+              +{quest.requiredOrbs.multiOrbs}
+              <span className="pl-1 gradient-multi">ORB(S)</span>
+            </h2>
+          ) : (
+            <div className="text-tertiary  flex items-center">
+              <span className="text-[1.5rem]">
+                +{quest.requiredOrbs.multiOrbs}
+              </span>
+              <span className="pl-1 font-symbols">A</span>
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex justify-center items-center w-[8%] pr-4">
         {quest.isQuestClaimed ? (
