@@ -76,7 +76,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
           return;
         }
 
-        if (gameData.stats.gobcoins < 1) {
+        if (gameData.stats.gobcoin < 1) {
           toast.error("Error: You don't have enough gobcoins");
           return;
         }
@@ -104,7 +104,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
           return;
         }
 
-        if (gameData.stats.gobcoins < 1) {
+        if (gameData.stats.gobcoin < 1) {
           toast.error("Error: You don't have enough gobcoins");
           return;
         }

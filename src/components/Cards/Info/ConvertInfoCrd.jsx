@@ -127,7 +127,10 @@ const ConvertInfo = ({ t, handleClick }) => {
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
-      <div className="relative w-[72%] rounded-lg shadow-lg -mt-[30px] flex flex-col z-50">
+      <div
+        onClick={handleClick}
+        className="relative w-[72%] rounded-lg shadow-lg -mt-[30px] flex flex-col z-50"
+      >
         <div
           className={`card ${
             isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
@@ -146,6 +149,12 @@ const ConvertInfo = ({ t, handleClick }) => {
               handleClick={handleClick}
               activeColor={activeColor}
             />
+            <IconBtn
+              isInfo={false}
+              activeMyth={4}
+              handleClick={handleClick}
+              align={8}
+            />
           </div>
           <div
             onClick={(e) => {
@@ -155,19 +164,13 @@ const ConvertInfo = ({ t, handleClick }) => {
           >
             <div className="relative w-full h-full text-card">
               <img
-                src={assets.uxui.bgInfomoon}
+                src={assets.uxui.bgInfoMoon}
                 alt="info card background"
                 className="w-full h-full object-cover rounded-primary z-10"
               />
             </div>
           </div>
         </div>
-        <IconBtn
-          isInfo={false}
-          activeMyth={4}
-          handleClick={handleClick}
-          align={8}
-        />
       </div>
     </div>
   );

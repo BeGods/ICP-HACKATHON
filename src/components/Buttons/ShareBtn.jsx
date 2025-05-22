@@ -65,7 +65,7 @@ const ShareButton = ({
           <div className="flex justify-center items-center h-full">
             <div className="flex justify-center items-center w-[40px] h-[40px]  bg-black rounded-full">
               <img
-                src={`https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/x-social-media-white-icon.png`}
+                src={`https://i.postimg.cc/VsZkyTm2/x-social-media-white-icon.png`}
                 alt="orb"
                 className="w-[25px]"
               />

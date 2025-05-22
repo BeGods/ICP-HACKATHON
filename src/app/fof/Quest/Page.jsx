@@ -455,17 +455,11 @@ const Quests = () => {
             }
           />
         ) : (
-          <div
-            className={`flex ${
-              isTelegram
-                ? "tg-container-height mt-[7vh]"
-                : "browser-container-height mt-[4vh]"
-            } flex-col  gap-[3vw] items-center justify-center w-full`}
-          >
+          <div className="flex flex-col gap-8 items-center justify-center w-full h-full">
             <div
-              className={`card ${isTelegram ? "h-[55%]" : "h-[60%]"} ${
-                flipped ? "flipped" : ""
-              } w-[70%] z-[99]`}
+              className={`card mt-[4.75rem] ${
+                isTelegram ? "h-[50%]" : "h-[53.5%] -mt-6"
+              } ${flipped ? "flipped" : ""} w-[70%] z-[99]`}
             >
               <div
                 className={`card__face card__face--front ${
@@ -473,6 +467,7 @@ const Quests = () => {
                 }  relative flex justify-center items-center`}
               >
                 <JigsawImage
+                  isTelegram={isTelegram}
                   grid={[3, 6]}
                   handleClick={() => {}}
                   imageUrl={assets.whitelist[mythSections[activeMyth]]}

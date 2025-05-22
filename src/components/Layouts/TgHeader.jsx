@@ -83,55 +83,61 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
 
   return (
     <div
-      className={`absolute flex gap-x-5 ${
-        isTelegram ? "right-[94px] top-[-35px]" : "right-[20px] top-[-32px]"
+      className={`absolute flex justify-between w-full gap-x-5 ${
+        isTelegram ? "pr-[94px] pl-[95px] top-[-35px]" : "px-[20px] top-[-32px]"
       } text-white z-50`}
     >
-      {!hideExit && !isTelegram && (
-        <>
-          {lineWallet && isLoaded ? (
-            <div
-              className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full cursor-pointer"
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setShowModal((prev) => !prev);
-              }}
-            >
-              <h1 className="text-gray-300">{lineWallet?.slice(0, 5)}</h1>
-              {showModal ? (
-                <ChevronUp size={20} strokeWidth={2} />
-              ) : (
-                <ChevronDown size={20} strokeWidth={2} />
-              )}
-            </div>
-          ) : (
-            <Wallet
-              size={24}
-              onClick={handleConnectLineWallet}
-              className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
-            />
-          )}
-        </>
-      )}
-      {!hideExit && (
-        <LogOut
-          onClick={async () => {
-            handleClickHaptic(tele, enableHaptic);
-            // await deleteExpCookie(tele);
-            navigate(-1);
-          }}
+      <div>
+        {!hideExit && (
+          <LogOut
+            onClick={async () => {
+              handleClickHaptic(tele, enableHaptic);
+              // await deleteExpCookie(tele);
+              navigate(-1);
+            }}
+            size={24}
+            className="cursor-pointer"
+          />
+        )}
+      </div>
+
+      <div className="flex gap-x-4">
+        {!hideExit && !isTelegram && (
+          <>
+            {lineWallet && isLoaded ? (
+              <div
+                className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full cursor-pointer"
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  setShowModal((prev) => !prev);
+                }}
+              >
+                <h1 className="text-gray-300">{lineWallet?.slice(0, 5)}</h1>
+                {showModal ? (
+                  <ChevronUp size={20} strokeWidth={2} />
+                ) : (
+                  <ChevronDown size={20} strokeWidth={2} />
+                )}
+              </div>
+            ) : (
+              <Wallet
+                size={24}
+                onClick={handleConnectLineWallet}
+                className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
+              />
+            )}
+          </>
+        )}
+
+        <Settings
           size={24}
+          onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
+            openSettings();
+          }}
           className="cursor-pointer"
         />
-      )}
-      <Settings
-        size={24}
-        onClick={() => {
-          handleClickHaptic(tele, enableHaptic);
-          openSettings();
-        }}
-        className="cursor-pointer"
-      />
+      </div>
       {showModal && (
         <div className="bg-black p-3 flex flex-col gap-y-4 rounded-md absolute mt-9">
           <button

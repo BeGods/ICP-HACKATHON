@@ -67,7 +67,7 @@ const Tavern = () => {
         setGameData((prev) => {
           const newStats = { ...prev.stats };
 
-          newStats.gobcoins = (prev.stats.gobcoin || 0) - 1;
+          newStats.gobcoin = (prev.stats.gobcoin || 0) - 1;
           newStats.isRestActive = true;
           newStats.digLvl += 1;
 

@@ -19,7 +19,7 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
         left: 0,
       }}
       className={`flex ${
-        isTelegram ? "h-[90%]" : "h-[88%] mt-1"
+        isTelegram ? "h-[100%]" : "h-[100%]"
       } flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black`}
     >
       <IconBtn

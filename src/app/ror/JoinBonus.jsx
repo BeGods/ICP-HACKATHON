@@ -46,7 +46,7 @@ const JoinBonus = (props) => {
         }, 1000);
         setGameData((prevItems) => {
           const newStats = { ...prevItems.stats };
-          newStats.gobcoins = prevItems.stats.gobcoin + 9;
+          newStats.gobcoin = prevItems.stats.gobcoin + 9;
 
           return {
             ...prevItems,

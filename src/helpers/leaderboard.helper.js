@@ -22,16 +22,19 @@ export const formatTwoNums = (num) => {
 };
 
 export const formatThreeNums = (num) => {
-  if (num > 999) {
+  num = Math.floor(num);
+
+  if (num >= 1000) {
     return (Math.floor(num / 100) / 10).toFixed(1) + "K";
-  } else if (num > 99) {
+  } else if (num >= 100) {
     return num.toString();
   } else if (num < 10) {
-    num = "00" + num.toString();
-  } else if (num < 99) {
-    num = "0" + num.toString();
+    return "00" + num.toString();
+  } else if (num < 100) {
+    return "0" + num.toString();
   }
-  return num;
+
+  return num.toString();
 };
 
 export const formatRankOrbs = (num) => {
