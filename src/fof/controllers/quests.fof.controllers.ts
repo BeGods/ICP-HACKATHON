@@ -1,7 +1,10 @@
 import quest from "../../common/models/quests.models";
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
-import { OrbsTransactions } from "../../common/models/transactions.models";
+import {
+  CoinsTransactions,
+  OrbsTransactions,
+} from "../../common/models/transactions.models";
 import mongoose from "mongoose";
 
 export const claimQuest = async (req, res) => {
@@ -88,6 +91,7 @@ export const claimTask = async (req, res) => {
   try {
     const userId = req.user._id;
     const quest = req.quest;
+    const { game } = req.body;
 
     // Add to claimed quests
     await milestones.findOneAndUpdate(
@@ -102,19 +106,37 @@ export const claimTask = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    await userMythologies.findOneAndUpdate(
-      { userId: userId },
-      {
-        $inc: { multiColorOrbs: quest.requiredOrbs.multiOrbs },
-      }
-    );
+    if (game == "fof") {
+      await userMythologies.findOneAndUpdate(
+        { userId: userId },
+        {
+          $inc: { multiColorOrbs: quest.requiredOrbs.multiOrbs },
+        }
+      );
 
-    const newOrbTransaction = new OrbsTransactions({
-      userId: userId,
-      source: "quests",
-      orbs: { multiColorOrbs: quest.requiredOrbs.multiOrbs },
-    });
-    await newOrbTransaction.save();
+      const newOrbTransaction = new OrbsTransactions({
+        userId: userId,
+        source: "quests",
+        orbs: { multiColorOrbs: quest.requiredOrbs.multiOrbs },
+      });
+      await newOrbTransaction.save();
+    } else if (game == "ror") {
+      await userMythologies.findOneAndUpdate(
+        { userId: userId },
+        {
+          $inc: { gobcoin: quest.requiredOrbs.multiOrbs },
+        }
+      );
+
+      const newCoinTransaction = new CoinsTransactions({
+        userId: userId,
+        source: "quests",
+        coins: quest.requiredOrbs.multiOrbs,
+      });
+      await newCoinTransaction.save();
+    } else {
+      res.stats(400).json({ message: "Invalid game." });
+    }
 
     res.status(200).json({ message: "Quest claimed successfully." });
   } catch (error) {
