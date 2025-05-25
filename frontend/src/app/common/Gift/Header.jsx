@@ -6,28 +6,26 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 const BottomChild = ({ partners }) => {
   return (
     <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
-      <div className="flex relative w-full px-7">
+      <div className="flex justify-between  relative w-full max-w-[720px] px-7">
         <div
-          className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex relative   gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
+          <div
+            className={`font-symbols absolute -ml-[2rem] text-iconLg text-black-lg-contour text-white`}
+          >
+            1
+          </div>
           <div className="text-primary pl-headSides"></div>
         </div>
         <div
-          className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+          className={`flex   relative justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
           <div className="text-primary pr-headSides"></div>
-        </div>
-      </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`font-symbols  text-iconLg text-black-lg-contour text-white z-50`}
-        >
-          1
-        </div>
-        <div
-          className={`font-symbols text-iconLg text-black-contour z-50 text-white`}
-        >
-          4
+          <div
+            className={`font-symbols absolute -mr-[2rem] text-iconLg text-black-lg-contour text-white`}
+          >
+            4
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +50,7 @@ const CenterChild = (props) => {
           className={`w-full h-full`}
         />
         <div
-          className={`z-1 opacity-50 flex justify-center items-start font-symbols text-white text-[22vw] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+          className={`z-1 opacity-50 flex justify-center items-center font-symbols text-white text-[6rem] transition-all duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
           <div className={`${platform === "ios" ? "mt-4 ml-2" : "mt-5 ml-2"}`}>
             3

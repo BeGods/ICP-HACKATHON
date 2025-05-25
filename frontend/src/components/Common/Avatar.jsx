@@ -27,7 +27,7 @@ const Avatar = ({ name, color }) => {
       <img
         src={assets.uxui.baseOrb}
         alt="orb"
-        className={`filter-orbs-${avatarColor} overflow-hidden max-w-[10vw]`}
+        className={`filter-orbs-${avatarColor} overflow-hidden max-w-orb`}
       />
       <span
         className={`absolute z-1 text-black-sm-contour transition-all text-white duration-1000  text-[25px] mt-1 opacity-70`}

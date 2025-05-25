@@ -45,7 +45,7 @@ const RoRBtn = ({
           }, 2000);
         }
       }}
-      className="flex justify-center items-center relative h-fit mt-1"
+      className="flex cursor-pointer justify-center items-center relative h-fit mt-1"
     >
       <img
         src={assets.buttons[buttonColor]?.on ?? assets.buttons.black.on}

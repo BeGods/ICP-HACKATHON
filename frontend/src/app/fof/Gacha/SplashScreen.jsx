@@ -170,21 +170,21 @@ const SplashScreen = ({ reward, exploitReward }) => {
       } relative`}
     >
       {/* You Won Text */}
-      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[60px] text-gold text-center text-black-contour  uppercase z-20">
+      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[65px] text-gold text-center text-black-contour  uppercase z-20">
         {t("bonus.youwon")
           .split(" ")
           .map((word, index) => (
             <div key={index}>
               {index === 0 ? (
                 <h1
-                  className={`scale-[${showYouScale}%] text-[22vw] mt-7 text-center transition-transform duration-500`}
+                  className={`scale-[${showYouScale}%] text-[6rem] mt-7 text-center transition-transform duration-500`}
                 >
                   {word}
                 </h1>
               ) : (
                 <>
                   {showWon && (
-                    <h1 className="text-[14.2vw] text-center transition-opacity duration-250">
+                    <h1 className="text-[4rem] text-center transition-opacity duration-250">
                       {word}
                     </h1>
                   )}
@@ -205,7 +205,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
                 handleClickHaptic(tele, enableHaptic);
                 handleClick();
               }}
-              className={`text-white transition-all duration-500 font-symbols scale-${showScale} text-[55vw] mx-auto icon-black-contour`}
+              className={`text-white transition-all duration-500 font-symbols scale-${showScale} text-[15rem] mx-auto icon-black-contour`}
             >
               {currReward.type === "mythOrb"
                 ? defaultIcons[currReward.mythology]
@@ -226,21 +226,21 @@ const SplashScreen = ({ reward, exploitReward }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0 text-[9vw] text-gold uppercase z-20">
+      <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0 text-gold uppercase z-20">
         <div>
           {showHand && (
             <ThumbsUp
               onClick={() => {
                 handleClick();
               }}
-              size={"18vw"}
+              size={"4rem"}
               color="#FFD660"
               className="mx-auto drop-shadow-xl scale-more mt-6"
             />
           )}
         </div>
         <h1
-          className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} transition-all duration-1000`}
+          className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} text-[2.5rem] transition-all duration-1000`}
         >
           {currReward?.type === "mythOrb"
             ? `${
@@ -288,7 +288,7 @@ const OrbCard = ({ reward, isTelegram }) => {
   const currReward = reward.type === "mythOrb" ? reward.mythology : reward.type;
   return (
     <div
-      className={`flex ${
+      className={`flex card-width ${
         isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
       } justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
     >
@@ -311,7 +311,7 @@ const BoosterCard = ({ reward, isTelegram }) => {
 
   return (
     <div
-      className={`relative w-[72%] ${
+      className={`relative card-width ${
         isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
       } flex items-center justify-center rounded-primary crd-shadow-black`}
     >
@@ -331,7 +331,7 @@ const BoosterCard = ({ reward, isTelegram }) => {
 const QuestCard = ({ reward, isTelegram }) => {
   return (
     <div
-      className={`relative w-[72%] rounded-lg shadow-lg  ${
+      className={`relative card-width rounded-lg shadow-lg  ${
         isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
       }  flex flex-col z-50`}
     >

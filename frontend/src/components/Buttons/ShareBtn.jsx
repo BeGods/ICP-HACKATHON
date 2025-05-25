@@ -73,15 +73,15 @@ const ShareButton = ({
           </div>
           {showRedirect ? (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[1rem] rounded-full`}
             >
-              <Share2 size={"7.5vw"} color="white" />
+              <Share2 size={"2rem"} color="white" />
             </div>
           ) : (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[1rem] rounded-full`}
             >
-              <ThumbsUp size={"7.5vw"} color="white" />
+              <ThumbsUp size={"2rem"} color="white" />
             </div>
           )}
           {isInfo ? (
@@ -103,7 +103,7 @@ const ShareButton = ({
                   <img
                     src={assets.uxui.gobcoin}
                     alt="orb"
-                    className={` overflow-hidden max-w-[10vw]`}
+                    className={` overflow-hidden max-w-orb`}
                   />
                   <div className="absolute text-[7vw] text-gray-600 font-roboto font-bold text-shadow grayscale">
                     3
@@ -116,7 +116,7 @@ const ShareButton = ({
                   <img
                     src={`${assets.uxui.baseOrb}`}
                     alt="orb"
-                    className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-[10vw]`}
+                    className={`filter-orbs-${mythSections[activeMyth]} overflow-hidden max-w-orb`}
                   />
                   <span
                     className={`absolute z-1  text-black-sm-contour opacity-50 text-white font-symbols  text-symbol-sm mt-1`}
@@ -134,7 +134,7 @@ const ShareButton = ({
             rounded-primary`}
         >
           <div className="flex justify-center items-center w-1/4 h-full"></div>
-          <Share2 size={"7.5vw"} />
+          <Share2 size={"2rem"} />
           <div className="flex justify-center items-center w-1/4  h-full"></div>
         </div>
       )}

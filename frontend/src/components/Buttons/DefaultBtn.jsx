@@ -43,7 +43,7 @@ const DefaultBtn = ({
       onTouchCancel={() => {
         setIsClicked(false);
       }}
-      className={`flex items-center ${
+      className={`flex cursor-pointer items-center ${
         isGold
           ? "text-gold border border-gold"
           : ` border text-white border-${mythSections[activeMyth]}-primary ${
@@ -53,16 +53,16 @@ const DefaultBtn = ({
     >
       <div className="flex justify-center items-center w-1/4 h-full"></div>
       <div
-        className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
+        className={`flex shadow-black shadow-2xl justify-center text-[2rem] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
       >
         {message === 0 ? (
           "V"
         ) : message === 1 ? (
-          <Handshake size={"7.5vw"} />
+          <Handshake size={"2rem"} />
         ) : message === 2 ? (
           "8"
         ) : message === 3 ? (
-          <BookOpenText size={"7.5vw"} />
+          <BookOpenText size={"2rem"} />
         ) : (
           ""
         )}

@@ -36,7 +36,7 @@ const RoRLoader = (props) => {
               alt="dod"
               className={` transition-all duration-300`}
             />
-            <div className="flex justify-center text-white font-fof text-[7vw] glow-text-norse">
+            <div className="flex justify-center text-white font-fof text-[2rem] glow-text-norse">
               BETA
             </div>
           </div>

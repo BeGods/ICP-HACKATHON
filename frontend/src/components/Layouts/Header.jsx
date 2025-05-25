@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { RorContext } from "../../context/context";
-import ArtifactCrd from "../Cards/Reward/ArtiFactCrd";
+import ArtifactCrd from "../Cards/Relics/ArtiFactCrd";
 import { gameItems } from "../../utils/gameItems";
 import { ChevronRight } from "lucide-react";
 import { elements, mythSections } from "../../utils/constants.ror";
@@ -145,12 +145,12 @@ const BottomChild = () => {
     gameData?.stats?.whiteShards ?? 0,
   ];
   const shards = [
-    { path: "shard.fire01", element: "fire" },
-    { path: "shard.earth01", element: "earth" },
-    { path: "shard.water01", element: "water" },
-    { path: "shard.air01", element: "air" },
-    { path: "shard.aether02", element: "black" },
-    { path: "shard.aether01", element: "white" },
+    { path: "shard.fire", element: "fire" },
+    { path: "shard.earth", element: "earth" },
+    { path: "shard.water", element: "water" },
+    { path: "shard.air", element: "air" },
+    { path: "shard.blackShards", element: "black" },
+    { path: "shard.whiteShards", element: "white" },
   ].map((item, idx) => ({
     id: item.path,
     count: shardMap[idx],
@@ -237,12 +237,12 @@ const BottomChild = () => {
     <div className="flex h-button-primary mt-[2.5vh] absolute z-20 text-black font-symbols justify-between w-screen">
       <div
         onClick={() => sections[section].handleLeft()}
-        className={`flex ${
+        className={`flex cursor-pointer ${
           section == 1 ? "slide-swipe-header-left" : "slide-ror-header-left"
         }  header-shadow-black p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full`}
       >
         <div
-          className={`text-[8vw] font-medium font-fof px-1 ${
+          className={`text-[2.2rem] font-medium font-fof px-1 ${
             section != 1 && "slide-ror-title-left"
           }`}
         >
@@ -251,7 +251,7 @@ const BottomChild = () => {
         <div
           className={`flex ${
             showEffect && "pulse-text"
-          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
+          } justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
         >
           <div className={`${isSwiping && "tut-shake"}`}>
             {sections[section].lIcon}
@@ -260,7 +260,7 @@ const BottomChild = () => {
       </div>
       <div
         onClick={() => sections[section].handleRight()}
-        className={`flex transition-all duration-500 ${
+        className={`flex cursor-pointer transition-all duration-500 ${
           section == 1 ? "slide-swipe-header-right" : "slide-ror-header-right"
         } header-shadow-black p-0.5 justify-start items-center w-[32%] ${
           shardReward && mythSections?.includes(shardReward?.myth)
@@ -271,7 +271,7 @@ const BottomChild = () => {
         <div
           className={`flex font-symbols ${
             showEffect && "pulse-text"
-          } justify-center items-center  bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
+          } justify-center items-center  bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
         >
           <div className={`${shardReward && "tut-shake"}`}>
             {sections[section].rIcon}
@@ -279,13 +279,13 @@ const BottomChild = () => {
         </div>
         <div>
           {shardReward ? (
-            <div className="text-[8vw] flex items-center font-medium text-white px-1 font-fof">
-              <span className="text-[4vw] font-bold">+</span>
+            <div className="text-[2.2rem] flex items-center font-medium text-white px-1 font-fof">
+              <span className="text-[1rem] font-bold">+</span>
               {shardReward?.count}
             </div>
           ) : (
             <div
-              className={`text-[8vw] font-medium px-1 font-fof ${
+              className={`text-[2.2rem] font-medium px-1 font-fof ${
                 section != 1 && "slide-ror-title-right"
               }`}
             >
@@ -319,7 +319,7 @@ const RoRHeader = ({ CenterChild }) => {
 
   return (
     <div className="z-50">
-      <div className="absolute top-0 w-full flex justify-center z-[60] text-[5vw] uppercase glow-text-black font-bold text-white">
+      <div className="absolute top-0 w-full flex justify-center z-[60] text-[1.5rem] uppercase glow-text-black font-bold text-white">
         {sections[section].label}
       </div>
       {CenterChild}

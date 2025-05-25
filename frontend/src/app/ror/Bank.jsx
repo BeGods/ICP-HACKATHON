@@ -33,7 +33,7 @@ const CenterChild = ({ handleClick, assets }) => {
         backgroundSize: "cover",
       }}
       className={`
-            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
     ></div>
   );
 };
@@ -121,6 +121,8 @@ const Bank = (props) => {
 
   const handleTouchStart = (e, item) => {
     if (!isLoading) {
+      e.target.setPointerCapture(e.pointerId);
+
       setDraggedItem(item);
       setDragging(true);
       setScaleIcon(true);
@@ -129,10 +131,11 @@ const Bank = (props) => {
 
   const handleTouchMove = (e) => {
     if (!dragging) return;
+
     setIsTouched(true);
     setScaleIcon(false);
 
-    const touch = e.touches[0];
+    const touch = e;
     setCopyPosition({
       x: touch.clientX - 100,
       y: touch.clientY - 250,
@@ -367,7 +370,7 @@ const Bank = (props) => {
             opacity: 0.5,
           }}
         />
-        <div className="grid grid-cols-3  gap-x-2 w-full h-full">
+        <div className="grid grid-cols-3  gap-x-2 w-full h-full place-items-center">
           {[
             {
               icon: "#",
@@ -411,7 +414,7 @@ const Bank = (props) => {
                   }
                 }
               }}
-              className={`relative text-white
+              className={`relative ${index === 2 && "cursor-pointer"} text-white
               max-w-[120px] w-full rounded-md overflow-hidden `}
             >
               <div
@@ -462,10 +465,10 @@ const Bank = (props) => {
           {paginatedVaultItems.map((item) => (
             <div
               key={item._id}
-              onTouchStart={(e) => handleTouchStart(e, item)}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              className={` ${
+              onPointerDown={(e) => handleTouchStart(e, item)}
+              onPointerMove={handleTouchMove}
+              onPointerUp={handleTouchEnd}
+              className={` relative w-full touch-none max-w-[120px] flex flex-col items-center  ${
                 scaleIcon && draggedItem === item ? "scale-110" : ""
               }`}
             >

@@ -63,7 +63,7 @@ const CenterChild = ({
               : showBlackOrb === 1
               ? "text-white"
               : "text-white"
-          } text-[22vw] transition-all ${
+          } text-[5.5rem] transition-all ${
             starIsHeld && "z-20"
           } duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
@@ -99,21 +99,30 @@ const BottomChild = ({
 
   return (
     <div className="flex relative justify-center px-2 -mt-3">
-      <div className="flex w-full px-7">
+      <div className="flex w-full max-w-[720px] px-7">
         <div
-          className={`flex  ${
+          className={`flex  relative ${
             showEffect &&
             `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
           }  border-${
             mythSections[activeMyth]
           }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
+          <div
+            className={`font-symbols text-black-lg-contour absolute -ml-[2rem] text-iconLg ${
+              showTut == 0 && "tut-shake"
+            } ${glowShards && `scale-125`}   text-${
+              mythSections[activeMyth]
+            }-text transition-all duration-500`}
+          >
+            l
+          </div>
           <div className="text-primary text-black-contour font-medium pl-headSides">
             {formatThreeNums(shards)}
           </div>
         </div>
         <div
-          className={`flex  justify-end ${
+          className={`flex relative justify-end ${
             showEffect &&
             `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
           }  border-${
@@ -123,26 +132,15 @@ const BottomChild = ({
           <div className="text-primary text-black-contour font-medium pr-headSides">
             {formatThreeNums(orbs)}
           </div>
-        </div>
-      </div>
-      <div className="flex justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`font-symbols text-black-lg-contour text-iconLg ${
-            showTut == 0 && "tut-shake"
-          } ${glowShards && `scale-125`}   text-${
-            mythSections[activeMyth]
-          }-text transition-all duration-500`}
-        >
-          l
-        </div>
-        <div
-          className={`font-symbols text-black-lg-contour text-iconLg ${
-            (glowSymbol || glowBooster === 3) && `scale-125`
-          } ${showTut == 1 && "tut-shake"} text-${
-            mythSections[activeMyth]
-          }-text transition-all duration-500`}
-        >
-          {mythSymbols[mythSections[activeMyth]]}
+          <div
+            className={`font-symbols absolute -mr-[2rem] text-black-lg-contour text-iconLg ${
+              (glowSymbol || glowBooster === 3) && `scale-125`
+            } ${showTut == 1 && "tut-shake"} text-${
+              mythSections[activeMyth]
+            }-text transition-all duration-500`}
+          >
+            {mythSymbols[mythSections[activeMyth]]}
+          </div>
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
@@ -207,7 +205,7 @@ const ForgeHeader = ({
 
       <div className="flex flex-col gap-[5px] pt-[3.5vh]">
         <div
-          className={`text-[5vw] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${
+          className={`text-[1.5rem] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${
             minimize == 1 && "minimize-head"
           } ${
             minimize == 2 && "maximize-head"

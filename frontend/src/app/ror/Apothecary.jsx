@@ -25,7 +25,7 @@ const CenterChild = ({ handleClick, assets }) => {
       }}
       onClick={handleClick}
       className={`
-            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
     ></div>
   );
 };
@@ -117,24 +117,23 @@ const Apothecary = (props) => {
             opacity: 0.5,
           }}
         />
-        <div className="grid grid-cols-3 gap-x-1 w-full h-fit">
+        <div className="grid grid-cols-3 gap-x-1 w-full h-fit place-items-center mt-[1rem]">
           {["", "v", ""].map((itm, index) => (
             <div
               key={`box-${index}`}
-              className={`relative border ${
+              className={` border ${
                 index !== 1
-                  ? "text-white/50  border-white/50"
+                  ? "text-white border-white/70"
                   : `border-${mythology}-primary text-white glow-button-${mythology}`
-              }  flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-[140px] rounded-md overflow-hidden`}
+              }  relative text-white max-w-[120px] w-full rounded-md overflow-hidden `}
             >
               <div
                 className={`w-full aspect-square rounded-md bg-white/20 flex justify-center items-center`}
               >
                 <span className="text-iconLg font-symbols">{itm}</span>
               </div>
-              <div
-                className={`w-full uppercase text-center text-[1rem] mt-1 break-words px-1`}
-              >
+
+              <div className="w-full uppercase text-center text-sm leading-tight px-1 py-1 truncate">
                 potion
               </div>
             </div>
@@ -152,7 +151,7 @@ const Apothecary = (props) => {
             onClick={() =>
               setShowCard(<PotionCard potion={potions[currentPage]?.id} />)
             }
-            className="flex justify-center items-center relative h-fit"
+            className="flex cursor-pointer justify-center items-center relative h-fit"
           >
             <img src={assets.buttons[buttonColor]?.on} alt="button" />
             <div className="absolute z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">

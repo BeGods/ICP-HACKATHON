@@ -49,7 +49,7 @@ const CarouselBtn = ({
       <div
         className={`flex text-[40px] font-symbols shadow-black shadow-2xl justify-center items-center bg-${
           activeMyth === 4 ? "black" : `${mythSections[activeMyth]}-text`
-        } w-[18vw] h-[18vw] border-[3px] border-${
+        } w-[4rem] h-[4rem] border-[3px] border-${
           mythSections[activeMyth]
         }-primary rounded-full`}
       >

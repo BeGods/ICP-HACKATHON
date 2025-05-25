@@ -66,10 +66,10 @@ const Scratch = ({ handleComplete, item, image, src }) => {
                 backgroundRepeat: "no-repeat",
               }}
             ></div>
-            <div className="absolute w-full h-full flex justify-center  items-center text-[30vw] mt-2 text-white text-black-contour">
+            <div className="absolute w-full h-full flex justify-center  items-center text-[8rem] mt-2 text-white text-black-contour">
               {coins > 0 && coins}
             </div>
-            <div className="absolute w-full h-full flex justify-center  items-end text-[14vw] mb-0 mt-10 ml-5 text-white text-black-contour">
+            <div className="absolute w-full h-full flex justify-center  items-end text-[4rem] mb-0 mt-10 ml-5 text-white text-black-contour">
               {shards && shards}
             </div>
           </div>
@@ -79,7 +79,7 @@ const Scratch = ({ handleComplete, item, image, src }) => {
             <div className="text-white transition-transform duration-1000 font-symbols text-[40vw]  mx-auto icon-black-contour">
               {icon}
             </div>
-            <div className="font-fof uppercase text-gold text-[10vw] font-bold -mt-[2vh] text-black-contour">
+            <div className="font-fof uppercase text-gold text-[4rem] font-bold -mt-[2vh] text-black-contour">
               {coins + (coins > 0 && " Gobcoin")}
             </div>
           </div>

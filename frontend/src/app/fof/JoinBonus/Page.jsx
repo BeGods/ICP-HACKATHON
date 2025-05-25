@@ -98,8 +98,8 @@ const JoinBonus = (props) => {
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
-          <div className="text-gold text-[60px] font-symbols">t</div>
-          <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+          <div className="text-gold text-[4.5rem] font-symbols">t</div>
+          <h1 className="uppercase text-gold text-[4rem] text-center -mt-2 text-black-contour break-words leading-[55px]">
             {changeText ? bonusText[0] : bonusText[1]}
           </h1>
         </div>
@@ -142,7 +142,7 @@ const JoinBonus = (props) => {
           className="flex absolute items-start bottom-[92px] justify-center w-full"
         >
           <ThumbsUp
-            size={"18vw"}
+            size={"4rem"}
             color="#FFD660"
             className="mx-auto drop-shadow-xl scale-more"
           />
@@ -152,7 +152,7 @@ const JoinBonus = (props) => {
             </div>
           )}
         </div>
-        <div className="text-gold text-[12.2vw] absolute bottom-6 mt-4 w-full flex justify-center items-center">
+        <div className="text-gold text-[3rem] absolute bottom-6 mt-4 w-full flex justify-center items-center">
           {changeText ? "3 Multi Orbs" : "2 Fire Orbs"}
         </div>
       </div>

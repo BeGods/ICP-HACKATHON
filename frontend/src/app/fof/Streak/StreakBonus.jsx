@@ -41,8 +41,8 @@ const StreakBonus = (props) => {
       <div className="flex flex-col w-full h-full items-center">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
-          <div className="text-gold text-[60px] font-symbols">t</div>
-          <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+          <div className="text-gold text-[4rem] font-symbols">t</div>
+          <h1 className="uppercase text-gold text-[4rem] text-center -mt-2 text-black-contour break-words leading-[55px]">
             {changeText
               ? `${userData.streak.streakCount + " " + t("misc.day")}`
               : "Streak"}
@@ -50,7 +50,9 @@ const StreakBonus = (props) => {
         </div>
         {/* Main */}
         <div className="flex justify-center items-center w-full absolute  h-full">
-          <div className="relative h-[55%] w-[72%] flex items-center justify-center rounded-primary card-shadow-white">
+          <div
+            className={`relative card-width flex items-center justify-center rounded-primary card-shadow-white`}
+          >
             <div
               className={`absolute inset-0 rounded-[15px]`}
               style={{
@@ -104,7 +106,7 @@ const StreakBonus = (props) => {
           <img
             src="/assets/badges/superstar.svg"
             alt="badge"
-            className="w-[16vw] h-[16vw]"
+            className="w-[4.5rem] h-[4.5rem]"
           />
 
           {disableHand && (

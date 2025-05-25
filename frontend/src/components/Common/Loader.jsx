@@ -9,7 +9,7 @@ const orbPos = [
   "mt-[45vw] mr-[32vw]",
   "-ml-[52vw] -mt-[17vw]",
   "-mt-[45vw] ml-[32vw]",
-  "mt-[18vw] ml-[52vw]",
+  "mt-[4rem] ml-[52vw]",
 ];
 
 const Loader = (props) => {
@@ -57,7 +57,7 @@ const Loader = (props) => {
         {/* {mythologies.map((item, index) => (
           <div
             key={index}
-            className={`absolute max-w-[10vw] transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
+            className={`absolute max-w-orb transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
           >
             <div
               className={`flex relative transition-all duration-1000 text-center justify-center scale-orb-${item.toLowerCase()} items-center rounded-full `}

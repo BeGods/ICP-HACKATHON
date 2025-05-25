@@ -1,12 +1,19 @@
 import React, { useContext } from "react";
 import { RorContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
-import { elementMythNames, mythSymbols } from "../../../utils/constants.ror";
+import {
+  elementFileType,
+  elementMythNames,
+  mythElementNamesLowerCase,
+  mythSections,
+  mythSymbols,
+} from "../../../utils/constants.ror";
 
 const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
   const { assets } = useContext(RorContext);
-  const element = itemId.id?.split(".")[1]?.slice(0, -2);
+  const element = itemId.id?.split(".")[1];
   const mythology = elementMythNames[element]?.toLowerCase() ?? element;
+  const file = elementFileType[mythology]?.toLowerCase() ?? element;
 
   return (
     <div
@@ -26,9 +33,9 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
         </div> */}
         <div
           className={`flex m-2  relative text-center justify-center text-black-sm-contour items-center glow-icon-${
-            mythology === "black"
+            element === "blackShards"
               ? "white"
-              : mythology === "white"
+              : element === "whiteShards"
               ? "black"
               : mythology
           } `}
@@ -36,7 +43,13 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
           <img
             src={`${assets.uxui.baseOrb}`}
             alt="orb"
-            className={`filter-orbs-${mythology} overflow-hidden max-w-[50px]`}
+            className={`filter-orbs-${
+              element === "blackShards"
+                ? "black"
+                : element === "whiteShards"
+                ? "white"
+                : mythology
+            } overflow-hidden max-w-[50px]`}
           />
           <span
             className={`absolute z-1 text-black-sm-contour  ${
@@ -45,16 +58,14 @@ const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
                 : "text-white opacity-50"
             } font-symbols  text-symbol-sm mt-1`}
           >
-            {mythology === "black" || mythology === "white"
-              ? "g"
-              : mythSymbols[mythology]}
+            {!mythSections.includes(mythology) ? "g" : mythSymbols[mythology]}
           </span>
         </div>
 
         <div className="relative w-[240px] h-[240px] flex justify-center items-center">
           <div className="relative w-full h-full">
             <img
-              src={`https://media.publit.io/file/BeGods/items/240px-${itemId.id}.png`}
+              src={`https://media.publit.io/file/BeGods/items/240px-shard.${file}.png`}
               alt="relic"
               className={`z-10 w-full h-full object-contain`}
             />

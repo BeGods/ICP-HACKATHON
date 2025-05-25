@@ -254,8 +254,8 @@ const Gacha = (props) => {
           <div className="flex flex-col z-50 items-center justify-center w-full h-1/5">
             {!showScale && (
               <>
-                <Crown color="#FFD660" size={"20vw"} />
-                <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero text-black-contour">
+                <Crown color="#FFD660" size={"4.5rem"} />
+                <h1 className="uppercase text-gold text-[4rem] -mt-4 scale-zero text-black-contour">
                   {changeText}
                 </h1>
               </>
@@ -285,7 +285,7 @@ const Gacha = (props) => {
                     : "glow-box scale-box"
                 }`}
               />
-              <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
+              <div className={`absolute ${showSpin && "scale-100"} -mt-20`}>
                 <GachaRoll showSpin={spinSound} />
               </div>
             </div>
@@ -302,7 +302,7 @@ const Gacha = (props) => {
                 )}
                 <LoaderPinwheel
                   color="#FFD660"
-                  size={"18vw"}
+                  size={"4.5rem"}
                   className={`${disableHand && "animate-spin-slow"}`}
                 />
               </div>

@@ -75,7 +75,7 @@ function PayCard({
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
-      <div className="flex flex-col absolute bottom-1.5">
+      <div className="flex flex-col absolute gap-y-1 bottom-1.5">
         <div>
           <div
             className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white} `}
@@ -83,7 +83,7 @@ function PayCard({
             <img
               src={assets.items.multiorb}
               alt="orb"
-              className={`glow-icon-white max-w-[10vw]`}
+              className={`glow-icon-white max-w-orb`}
             />
             <div
               className={`font-fof text-[28px] font-normal  text-black-sm-contour transition-all duration-1000 ${
@@ -128,7 +128,9 @@ function PayCard({
           ))}
         </div>
       </div>
-      <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
+      <div
+        className={`relative card-width rounded-lg shadow-lg  flex flex-col z-50`}
+      >
         <div className="relative card-shadow-white">
           <div className="absolute  bg-black h-full w-full z-10 opacity-50 rounded-xl"></div>
           {/* Card Image */}
@@ -186,7 +188,6 @@ function PayCard({
           isBooster={isBooster}
         />
       </div>
-      c
     </div>
   );
 }

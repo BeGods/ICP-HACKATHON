@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import { RorContext } from "../../../context/context";
-import RelicCrd from "../Relics/RelicCrd";
+import RelicCrd from "./RelicCrd";
 import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
 import RoRBtn from "../../Buttons/RoRBtn";
 import DefaultBtn from "../../Buttons/DefaultBtn";
 import { mythSections } from "../../../utils/constants.fof";
 import { claimArtifact } from "../../../utils/api.ror";
 import { toast } from "react-toastify";
-import CurrencyCrd from "../Relics/CurrencyCrd";
-import RelicInfo from "../Relics/RelicInfo";
+import CurrencyCrd from "./CurrencyCrd";
+import RelicInfo from "./RelicInfo";
 
 const ArtifactCrd = ({
   category,
@@ -29,7 +29,9 @@ const ArtifactCrd = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
-      <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+      <div
+        className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+      >
         <div className={`card  ${cardHeight}  ${flipped ? "flipped" : ""}`}>
           {isCurrency ? (
             <CurrencyCrd

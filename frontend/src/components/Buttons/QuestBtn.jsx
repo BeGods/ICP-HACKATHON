@@ -51,16 +51,16 @@ const QuestButton = ({
       {/* Click */}
       {isCompleted ? (
         <div
-          className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text p-[5vw] rounded-full`}
+          className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text p-[1rem] rounded-full`}
         >
-          <Check size={"7.5vw"} strokeWidth={5} />
+          <Check size={"2rem"} strokeWidth={5} />
         </div>
       ) : (
         <div
           onClick={action}
-          className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[5vw] rounded-full`}
+          className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[1rem] rounded-full`}
         >
-          <Check size={"7.5vw"} strokeWidth={5} />
+          <Check size={"2rem"} strokeWidth={5} />
         </div>
       )}
       {/* Right Arrow */}

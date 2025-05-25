@@ -13,7 +13,7 @@ const CitadelItem = ({
   return (
     <div
       onClick={!disable && handleClick}
-      className={`flex gap-1 border  ${
+      className={`flex cursor-pointer gap-1 border  ${
         disable
           ? "text-gray-400 border-gray-400 grayscale"
           : "text-white border-white"

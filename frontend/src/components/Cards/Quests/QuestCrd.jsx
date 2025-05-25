@@ -23,7 +23,7 @@ const QuestCard = ({
 
   return (
     <div
-      className={`w-[70%] relative flex flex-col gap-3 justify-center items-center mx-auto`}
+      className={`card-width relative flex flex-col gap-3 justify-center items-center mx-auto`}
     >
       <div
         className={`card ${

@@ -8,14 +8,14 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
   const [lastDirection, setLastDirection] = useState(null);
 
   const handleTouchStart = (e) => {
-    setTouchStartX(e.touches[0].clientX);
+    setTouchStartX(e.clientX);
   };
 
   const handleTouchMove = (e) => {
     const digLvl = gameData?.stats?.digLvl ?? 1;
     if (touchStartX === null) return;
 
-    const touchX = e.touches[0].clientX;
+    const touchX = e.clientX;
     const deltaX = touchX - touchStartX;
 
     // right swipe
@@ -51,12 +51,12 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
   };
 
   return (
-    <div className="flex relative flex-col mt-[6vh] justify-center items-center h-[65vh] w-full">
+    <div className="flex relative flex-col mt-[6dvh] justify-center items-center h-[65dvh] w-full">
       <div
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className="w-[95%] h-full"
+        onPointerDown={handleTouchStart}
+        onPointerMove={handleTouchMove}
+        onPointerUp={handleTouchEnd}
+        className="w-[95%] h-full bg-red-400 touch-none"
       >
         {/* <div>
           <p>Left swipes: {swipeCount.left}</p>

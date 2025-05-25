@@ -13,6 +13,8 @@ const BottomChild = () => {
   const [showEffect, setShowEffect] = useState(true);
   const { t } = useTranslation();
 
+  console.log(game);
+
   const setSection =
     game === "fof" ? fofContext.setSection : rorContext.setSection;
   const giftIdx = game === "fof" ? 5 : 8;
@@ -28,18 +30,18 @@ const BottomChild = () => {
   }, []);
 
   return (
-    <div className="flex h-button-primary -mt-3 absolute z-50 text-black font-symbols justify-between w-screen">
+    <div className="flex h-button-primary z-[60] -mt-3 absolute text-black font-symbols justify-between w-screen">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
           setSection(giftIdx);
         }}
-        className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+        className="flex slide-header-left cursor-pointer p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
       >
         <div
           className={`flex ${
             showEffect && "pulse-text"
-          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
+          } justify-center items-centerc  bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
         >
           t
         </div>
@@ -49,12 +51,12 @@ const BottomChild = () => {
           handleClickHaptic(tele, enableHaptic);
           setSection(7);
         }}
-        className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+        className="flex slide-header-right cursor-pointer p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
       >
         <div
           className={`flex font-symbols ${
             showEffect && "pulse-text"
-          } justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full`}
+          } justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
         >
           $
         </div>
@@ -75,9 +77,9 @@ const CenterChild = ({ userData }) => {
   const streakBadge = determineStreakBadge(userData.streak.streakCount);
 
   return (
-    <div className="flex absolute top-0 justify-center z-50 left-[34vw]">
+    <div className="flex absolute top-0 justify-center z-50 w-full pl-1.5">
       <div
-        className={`z-20 flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
+        className={`z-20  flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
           src={
@@ -90,19 +92,15 @@ const CenterChild = ({ userData }) => {
         />
         {!userData.avatarUrl && (
           <div
-            className={`z-1 flex justify-center items-start text-white  text-[22vw] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
+            className={`z-1 flex justify-center items-center text-white  text-[5.5rem] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
           >
-            <div
-              className={`uppercase ${
-                platform === "ios" ? "mt-2" : "mt-4"
-              } text-white opacity-70`}
-            >
+            <div className={`uppercase text-white opacity-70`}>
               {userData.username.charAt(0).toUpperCase()}
             </div>
           </div>
         )}
         {streakBadge && (
-          <div className="mx-auto absolute bottom-0">
+          <div className="mx-auto absolute -bottom-4">
             <img src={`/assets/badges/${streakBadge}.svg`} alt="badge" />
           </div>
         )}

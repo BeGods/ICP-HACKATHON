@@ -32,9 +32,8 @@ const GridItem = ({
   return (
     <div
       onClick={handleClick}
-      className={`relative ${isGrayscale ? "grayscale" : ""} 
-    w-full h-auto 
-    max-w-[120px] flex flex-col items-center 
+      className={`relative cursor-pointer ${isGrayscale ? "grayscale" : ""} 
+    w-full h-auto max-w-[120px] flex flex-col items-center 
     shadow-2xl rounded-md overflow-hidden`}
     >
       <div className={`flex flex-col rounded-md border items-center w-full`}>

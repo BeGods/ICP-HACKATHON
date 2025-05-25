@@ -32,7 +32,7 @@ import {
 import Profile from "../common/Profile/Page";
 import Gift from "../common/Gift/Gift";
 import Gacha from "../ror/Gacha";
-import { determineIsTelegram } from "../../utils/device.info";
+import { determineIsTelegram, isDesktop } from "../../utils/device.info";
 import JoinBonus from "../ror/JoinBonus";
 import Library from "../ror/Library";
 import Tavern from "../ror/Tavern";
@@ -73,6 +73,8 @@ const RoRMain = () => {
     setTriggerConf,
     activeReward,
     setActiveReward,
+    isBrowser,
+    setIsBrowser,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -138,6 +140,8 @@ const RoRMain = () => {
     setActiveReward,
     isSwiping,
     setIsSwiping,
+    isBrowser,
+    setIsBrowser,
   };
   const refreshTimeoutRef = useRef();
 
@@ -311,6 +315,9 @@ const RoRMain = () => {
       document.body.style.right = "0";
       document.body.style.overflow = "hidden";
     }
+
+    const isBrowserDesktop = isDesktop();
+    setIsBrowser(isBrowserDesktop);
   }, [platform]);
 
   const sections = [

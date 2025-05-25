@@ -61,6 +61,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'tablet': '640px',
+        'desktop': '1024px',
+      },
       fontFamily: {
         fof: ["FOF", "sans-serif"],
         celtic: ["Celtic", "FOF"],
@@ -110,10 +114,10 @@ export default {
         primary: "20px",
       },
       fontSize: {
-        primary: "10vw",
-        "symbol-sm": "8vw",
+        primary: "2.5rem",
+        "symbol-sm": "2rem",
         secondary: "14px",
-        para: "4.3vw",
+        para: "1.2rem",
         tertiary: "18px",
         "button-primary": "18px",
         "orb-primary": "120px",
@@ -124,16 +128,16 @@ export default {
         num: "9vw",
         numHead: "9vw",
         head: "30px",
-        paperHead: "7.65vw",
-        paperSub: "6.5vw",
+        paperHead: "2rem",
+        paperSub: "1.5rem",
         icon: "50px",
-        iconLg: "14vw",
+        iconLg: "3.75rem",
       },
       width: {
         "icon-primary": "55px",
         "icon-secondary": "20px",
         "button-primary": "192px",
-        "symbol-primary": "33vw",
+        "symbol-primary": "8rem",
         "symbol-secondary": "45px",
       },
       height: {
@@ -142,14 +146,14 @@ export default {
         "icon-secondary": "20px",
         "button-primary": "60px",
         "button-secondary": "30px",
-        "symbol-primary": "33vw",
+        "symbol-primary": "8rem",
         "symbol-secondary": "45px",
       },
       borderWidth: {
         secondary: "0.5px",
       },
       maxWidth: {
-        orb: "10vw",
+        orb: "2.6rem",
       },
       padding: {
         headSides: "5.5vw",

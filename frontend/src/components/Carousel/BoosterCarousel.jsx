@@ -235,14 +235,14 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     setShowEffect(false);
     const resetTimeout = setTimeout(() => {
       setShowEffect(true);
-    }, 50);
+    }, 500);
 
     return () => clearTimeout(resetTimeout);
   }, [activeMyth]);
 
   return (
     <div
-      className="wrapper h-[60vh]"
+      className="wrapper h-[60dvh]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -251,7 +251,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[24%] mr-[2vw] w-full z-50"
+          className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
         </div>
@@ -259,15 +259,15 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         <div
           className={`flex absolute ${
             showEffect && "disappear"
-          } opacity-100 text-[8vw] uppercase text-white glow-icon-${
+          } opacity-100 text-[2.5rem] uppercase text-white glow-icon-${
             mythSections[activeMyth]
-          } h-fit justify-center items-start mt-[2vh]`}
+          } h-fit justify-center items-start mt-[1.75vh]`}
         >
           {mythologies[activeMyth]}
         </div>
       )}
 
-      <div className="carousel">
+      <div className={`carousel carousel-width`}>
         {items.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
           className +=
@@ -283,7 +283,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[22%] w-full"
+          className="absolute cursor-pointer bottom-[22%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

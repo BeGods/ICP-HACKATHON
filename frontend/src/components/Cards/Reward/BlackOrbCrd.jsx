@@ -28,7 +28,9 @@ const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
-      <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
+      <div
+        className={`relative card-width rounded-lg shadow-lg flex flex-col z-50`}
+      >
         <div className="flex justify-center items-center w-full absolute  h-full">
           <div className="flex relative flex-col items-center cursor-pointer mt-5 z-50">
             <div className={``}>
@@ -58,7 +60,7 @@ const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
                 </div>
               </div>
             </div>
-            <div className="text-gold text-[12.2vw] w-full flex justify-center">
+            <div className="text-gold text-[3rem] w-full flex justify-center">
               {blackorbs == 1 ? `${value} Black ORB` : "3 Black ORBS"}
             </div>
             <ClaimRewardBtn

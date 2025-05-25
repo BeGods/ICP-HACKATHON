@@ -1,5 +1,5 @@
 import { Crown } from "lucide-react";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Scratch from "../../components/Common/ScratchCrd";
 import { RorContext } from "../../context/context";
 import { fetchDailyBonus } from "../../utils/api.ror";
@@ -145,8 +145,8 @@ const Gacha = () => {
       <div className="flex flex-col w-full h-full z-50 items-center pt-4">
         {/* Heading */}
         <div className="flex flex-col items-center justify-center w-full h-1/5">
-          <Crown color="#FFD660" size={"20vw"} />
-          <h1 className="uppercase text-gold text-[14.2vw] -mt-4 scale-zero text-black-contour">
+          <Crown color="#FFD660" size={"4.5rem"} />
+          <h1 className="uppercase text-gold text-[4rem] -mt-4 scale-zero text-black-contour">
             {changeText}
           </h1>
         </div>

@@ -32,6 +32,7 @@ const Redeem = (props) => {
     setTriggerConf,
     isTelegram,
     game,
+    isBrowser,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
@@ -281,11 +282,15 @@ const Redeem = (props) => {
         } justify-center items-center w-screen absolute mx-auto`}
       >
         <div className={`flex items-center justify-center w-full h-full`}>
-          <div className="flex flex-col gap-[3vw] items-center justify-center w-full h-full">
+          <div className="flex flex-col gap-[12px] items-center justify-center w-full h-full">
             <div
-              className={`card ${isTelegram ? "h-[55%]" : "h-[59%] -mt-6"} ${
-                flipped ? "flipped" : ""
-              } w-[70%] z-[99]`}
+              className={`card ${
+                isBrowser
+                  ? "h-[59%] -mt-1"
+                  : isTelegram
+                  ? "h-[55%]"
+                  : "h-[60%] -mt-1"
+              } ${flipped ? "flipped" : ""} card-width z-[99]`}
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
@@ -349,7 +354,7 @@ const Redeem = (props) => {
               handleClickHaptic(tele);
               setFlipped((prev) => !prev);
             }}
-            className="absolute -mt-[60px] flex justify-end w-[70%] h-[55%] z-[99]"
+            className="absolute -mt-[60px] flex justify-end card-width z-[99]"
           >
             <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
           </div>

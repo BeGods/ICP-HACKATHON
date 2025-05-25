@@ -24,11 +24,11 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const orbPos = [
-  "mt-[54vw] mr-[0vw]",
-  "mt-[45vw] mr-[32vw]",
-  "-ml-[52vw] -mt-[17vw]",
-  "-mt-[45vw] ml-[32vw]",
-  "mt-[18vw] ml-[52vw]",
+  "mt-[16rem] mr-[-0.5rem]",
+  "mt-[13rem] mr-[9rem]",
+  "-ml-[15rem] -mt-[5rem]",
+  "-mt-[13rem] ml-[10rem]",
+  "mt-[5.5rem] ml-[16rem]",
 ];
 
 const Tower = () => {
@@ -47,6 +47,7 @@ const Tower = () => {
     assets,
     enableHaptic,
     isTelegram,
+    isBrowser,
   } = useContext(FofContext);
   const [myth, setMyth] = useState(0);
   const [showClaim, setShowClaim] = useState(false);
@@ -65,7 +66,7 @@ const Tower = () => {
     setDisappearEffect(false);
     const resetTimeout = setTimeout(() => {
       setDisappearEffect(true);
-    }, 50);
+    }, 500);
 
     return () => clearTimeout(resetTimeout);
   }, []);
@@ -232,13 +233,15 @@ const Tower = () => {
         }}
       />
 
-      <div
+      {/* <div
         className={`flex w-full ${
           disappearEffect && "disappear"
-        } absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[17.5vh]`}
+        } absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start ${
+          isBrowser ? "mt-[16vh]" : isTelegram ? "mt-[16vh]" : "mt-[17vh]"
+        } `}
       >
         DOME
-      </div>
+      </div> */}
 
       {/* Wheel */}
       <div className="flex flex-col items-center justify-center w-full">
@@ -274,13 +277,13 @@ const Tower = () => {
               className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
             >
               <div
-                className={`p-[3.5vw] -mt-[9.5dvh] border flex justify-center items-center rounded-full ${
+                className={`p-[0.75rem] -mt-[9.5dvh] border flex justify-center items-center rounded-full ${
                   myth === 0 ? "bg-black" : `bg-${wheel[myth]}-text`
                 }`}
               >
                 <Repeat2
                   strokeWidth={3}
-                  size={"7.5vw"}
+                  size={"2rem"}
                   color={`${myth === 0 ? "white" : `white`}`}
                 />
               </div>
@@ -294,16 +297,22 @@ const Tower = () => {
               }}
               className="text-button-primary uppercase shadow-2xl z-[99]"
             >
-              <RotateCw size={"12vw"} strokeWidth={3} color="gold" />
+              <RotateCw size={"3rem"} strokeWidth={3} color="gold" />
             </div>
           )}
         </div>
       </div>
 
-      <div className="absolute flex justify-center items-center h-full w-full">
+      <div
+        className={`absolute flex justify-center items-center -mt-3 h-full w-full`}
+      >
         <div
           className={`relative flex justify-center items-center ${
-            isTelegram ? "h-[100%] w-[100%]" : "h-[85%] w-[85%] mt-3.5"
+            isBrowser
+              ? "w-[50%] h-[50%]"
+              : isTelegram
+              ? "h-[100%] w-[100%]"
+              : "h-[85%] w-[85%]"
           } pointer-events-none scale-wheel-glow`}
           style={{
             backgroundImage: `url(${assets.uxui.towerOn})`,
@@ -314,20 +323,16 @@ const Tower = () => {
         ></div>
       </div>
 
-      <div className="absolute flex justify-center items-center h-full w-full z-50">
+      <div
+        className={`absolute flex justify-center items-center h-full -mt-3 ${
+          isBrowser ? "" : isTelegram ? "scale-105" : "scale-90"
+        } w-full z-50`}
+      >
         <div
-          className={`relative ${
-            isTelegram ? "scale-[120%]" : "scale-[100%] mt-3.5"
-          } flex justify-center items-center w-full h-full pointer-events-none`}
-          style={{
-            backgroundImage: `url(${
-              assets.uxui[`pointer-${wheelNames[myth]}`]
-            })`,
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
+          className={`relative flex justify-center items-center w-full h-full pointer-events-none`}
         >
+          <img src={assets.uxui[`pointer-${wheelNames[myth]}`]} alt="pointer" />
+
           {wheelMyths.map((item, index) => (
             <div
               onTouchStart={() => {
@@ -346,11 +351,11 @@ const Tower = () => {
                 }
               }}
               key={index}
-              className={`absolute transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
+              className={`absolute cursor-pointer transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
             >
               <div
                 className={`flex relative transition-all duration-1000 text-center justify-center ${
-                  scaleOrb == index ? "w-[11vw]" : "max-w-orb"
+                  scaleOrb == index ? "w-[3rem]" : "max-w-orb"
                 } scale-orb-${item.toLowerCase()} items-center rounded-full `}
               >
                 <img
@@ -360,7 +365,7 @@ const Tower = () => {
                 />
                 <span
                   className={`absolute z-1 font-symbols text-white opacity-50 ${
-                    scaleOrb == index ? "text-[9vw]" : "text-symbol-sm"
+                    scaleOrb == index ? "text-[2.5]" : "text-symbol-sm"
                   }  mt-1 text-black-sm-contour`}
                 >
                   <>{mythSymbols[item.toLowerCase()]}</>{" "}
@@ -369,6 +374,7 @@ const Tower = () => {
             </div>
           ))}
         </div>
+
         {sessionOrbs !== 0 && (
           <div className="absolute flex flex-col justify-center items-center">
             <div

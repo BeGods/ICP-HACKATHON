@@ -40,7 +40,7 @@ const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
   return (
     <div
       onClick={handleButtonClick}
-      className={`absolute  flex w-full justify-end top-0  right-0 ${
+      className={`absolute cursor-pointer z-[60] flex w-full justify-end top-0  right-0 ${
         isJigsaw && "mt-[1.45rem]"
       } `}
     >
@@ -52,13 +52,13 @@ const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
       <div className="absolute flex justify-center items-center w-[40px] h-[40px]">
         {isInfo ? (
           <div
-            className={`text-white italic text-black-contour text-[30px]`}
+            className={`text-white italic text-black-contour text-[1.7rem]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
           </div>
         ) : (
-          <div className="text-white font-roboto -mt-1 -mr-1 text-black-contour text-[24px]">
+          <div className="text-white font-roboto -mt-1 -mr-1 text-black-contour text-[1.25rem]">
             {"\u2715"}
           </div>
         )}

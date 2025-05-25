@@ -21,15 +21,13 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
     };
   }, []);
   return (
-    <div className="flex  absolute justify-center w-full top-0 z-20">
+    <div className="flex cursor-pointer absolute justify-center w-full top-0 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
           showSymbol();
         }}
-        className={`h-full z-20 transition-all duration-500 ${
-          showEffect && "pulse-text"
-        }`}
+        className={`h-full z-20 transition-all duration-500 `}
       >
         <Symbol myth={mythSections[activeMyth]} isCard={2} />
       </div>
@@ -47,7 +45,7 @@ const BottomChild = ({
 }) => {
   return (
     <div className="flex relative justify-center px-2 -mt-3">
-      <div className="flex w-full px-7">
+      <div className="flex w-full max-w-[720px] px-7">
         <div
           className={`flex border-${
             mythSections[activeMyth]
@@ -57,6 +55,11 @@ const BottomChild = ({
               : "text-white"
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
+          <div
+            className={`font-symbols absolute  -ml-[2rem] text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
+          >
+            i
+          </div>
           <div className="text-primary text-black-contour pl-headSides">
             {" "}
             {formatTwoNums(lostQuests)}
@@ -75,20 +78,14 @@ const BottomChild = ({
             {" "}
             {formatTwoNums(completedQuests.length)}
           </div>
+          <div
+            className={`font-symbols absolute -mr-[2rem] text-iconLg text-black-contour  text-${mythSections[activeMyth]}-text`}
+          >
+            j
+          </div>
         </div>
       </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`font-symbols  text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
-        >
-          i
-        </div>
-        <div
-          className={`font-symbols text-iconLg text-black-contour  text-${mythSections[activeMyth]}-text`}
-        >
-          j
-        </div>
-      </div>
+      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4"></div>
     </div>
   );
 };

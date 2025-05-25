@@ -16,7 +16,7 @@ const GiftItemCrd = ({ item }) => {
 
   return (
     <div
-      className={`flex gap-1 border
+      className={`flex cursor-pointer gap-1 border
 ${
   isClicked ? `glow-button-white` : ""
 } rounded-primary h-[90px] w-full  bg-glass-black border text-white p-[10px]`}
@@ -45,7 +45,7 @@ ${
         setIsClicked(false);
       }}
     >
-      <div className="w-[27%] rounded-full flex justify-start items-center">
+      <div className=" rounded-full flex justify-start items-center">
         <img
           src={
             item.partnerType == "playsuper"
@@ -53,7 +53,7 @@ ${
               : `https://media.publit.io/file/Partners/160px-${item.metadata.campaignCoverImage}.bubble.png`
           }
           alt="partner"
-          className="rounded-full"
+          className="rounded-full w-[70px]"
         />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>

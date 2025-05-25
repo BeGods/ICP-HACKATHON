@@ -54,7 +54,7 @@ const RelicCrd = ({
               alt="relic"
               className="w-full select-none"
             />
-            <div className="absolute text-[10.5vw] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
+            <div className="absolute text-[2.5rem] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
               {!isComplete ? 1 : itemDetails.coins}
             </div>
           </div>

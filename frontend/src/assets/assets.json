@@ -58,7 +58,8 @@
         "begodsWhite": "https://media.publit.io/file/BeGods/logos/battle.gods.white.svg",
         "fof": "https://media.publit.io/file/BeGods/logos/forges.of.faith-on.png",
         "ror": "https://media.publit.io/file/BeGods/logos/requiem.of.relics-on.png",
-        "dod": "https://media.publit.io/file/BeGods/logos/dawn.of.duels.png"
+        "dod": "https://media.publit.io/file/BeGods/logos/dawn.of.duels.png",
+        "captcha": "https://media.publit.io/file/BeGods/320px-frogdog.captcha.png"
     },
     "buttons": {
         "orange": {
@@ -127,7 +128,7 @@
         "gemologistCard": "https://media.publit.io/file/BeGods/chars/320px-alchemist.char.jpg",
         "thiefCard": "https://media.publit.io/file/BeGods/chars/320px-thief.char.jpg",
         "ratCard": "https://media.publit.io/file/BeGods/chars/320px-tavernist.char.jpg",
-        "tavernCard": "https://media.publit.io/file/BeGods/items/320px-tavern-meal.jpg",
+        "tavernCard": "https://media.publit.io/file/BeGods/chars/320px-tavernist.char.jpg",
         "cardMeal": "https://media.publit.io/file/BeGods/items/320px-tavern-meal.jpg",
         "cardMoon": "https://media.publit.io/file/BeGods/items/320px-moon-amulet.jpg"
     },

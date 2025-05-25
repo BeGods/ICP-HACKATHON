@@ -1396,18 +1396,9 @@ const Forges = () => {
               backgroundImage: `url(${assets.uxui.baseBgForge})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
-              backgroundPosition: "44% 0%",
+              backgroundPosition: "44% 50%",
             }}
           />
-          {/* <div
-            className={`absolute top-0 left-0 h-full w-full filter-orbs-${mythSections[activeMyth]}`}
-            style={{
-              backgroundImage: `url(${assets.uxui.forgefx})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          /> */}
         </div>
         <ForgeHeader
           activeMyth={activeMyth}
@@ -1507,7 +1498,7 @@ const Forges = () => {
           <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
             <div
               className={`bg-white  ${
-                isStarHolding ? "w-[24vw]" : "w-[14vw]"
+                isStarHolding ? "w-[5rem]" : "w-[5rem]"
               } glow-box-${mythSections[activeMyth]}  ${
                 isStarHolding === 1 && "star-beam-active"
               } ${isStarHolding === 2 && "star-beam-inactive"} -mb-8`}
@@ -1526,12 +1517,12 @@ const Forges = () => {
                 isStarHold.current = false;
                 setshowStarBoosters(2);
               }}
-              className="flex justify-center items-center relative"
+              className="flex justify-center cursor-pointer items-center relative"
             >
               <div
                 fill={"white"}
                 color={"white"}
-                className={`font-symbols text-[18vw] text-white glow-star-${
+                className={`font-symbols text-[4.5rem] text-white glow-star-${
                   mythSections[activeMyth]
                 } duration-500 transition-all ${
                   showBlackOrb === 1 && "maximize-star"
@@ -1546,7 +1537,7 @@ const Forges = () => {
                   showBlackOrb === 1 && "maximize-star"
                 } ${showBlackOrb === 2 && "minimize-star"} ${
                   isStarHolding === 1 ? "scale-150" : "scale-100"
-                } text-[7vw] text-black-contour`}
+                } text-[2rem] text-black-contour`}
               >
                 {mythStates[activeMyth].burstlvl}
               </div>
@@ -1575,7 +1566,7 @@ const Forges = () => {
                 className={`plus-one glow-text-${mythSections[activeMyth]}`}
                 style={{
                   bottom: `-12vh`,
-                  left: `7.5vw`,
+                  left: `2rem`,
                   zIndex: 99,
                 }}
               >
