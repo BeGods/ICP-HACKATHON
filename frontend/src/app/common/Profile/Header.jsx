@@ -70,7 +70,7 @@ const BottomChild = () => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform, isTelegram } = useContext(MainContext);
+  const { assets, platform } = useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });

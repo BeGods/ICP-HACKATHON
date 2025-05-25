@@ -46,7 +46,7 @@ const Tower = () => {
     setShowCard,
     assets,
     enableHaptic,
-    isTelegram,
+    isTgMobile,
     isBrowser,
   } = useContext(FofContext);
   const [myth, setMyth] = useState(0);
@@ -158,7 +158,7 @@ const Tower = () => {
     if (enableGuide) {
       setShowCard(
         <TowerGuide
-          isTelegram={isTelegram}
+          isTgMobile={isTgMobile}
           currGuide={0}
           Header={
             <TowerHeader
@@ -186,7 +186,7 @@ const Tower = () => {
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0`}
     >
       <div
@@ -237,7 +237,7 @@ const Tower = () => {
         className={`flex w-full ${
           disappearEffect && "disappear"
         } absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start ${
-          isBrowser ? "mt-[16vh]" : isTelegram ? "mt-[16vh]" : "mt-[17vh]"
+          isBrowser ? "mt-[16vh]" : isTgMobile ? "mt-[16vh]" : "mt-[17vh]"
         } `}
       >
         DOME
@@ -310,7 +310,7 @@ const Tower = () => {
           className={`relative flex justify-center items-center ${
             isBrowser
               ? "w-[50%] h-[50%]"
-              : isTelegram
+              : isTgMobile
               ? "h-[100%] w-[100%]"
               : "h-[85%] w-[85%]"
           } pointer-events-none scale-wheel-glow`}
@@ -325,7 +325,7 @@ const Tower = () => {
 
       <div
         className={`absolute flex justify-center items-center h-full -mt-3 ${
-          isBrowser ? "" : isTelegram ? "scale-105" : "scale-90"
+          isBrowser ? "" : isTgMobile ? "scale-105" : "scale-90"
         } w-full z-50`}
       >
         <div

@@ -7,7 +7,7 @@ const JigsawImage = ({
   activeParts,
   handleClick,
   grid,
-  isTelegram,
+  isTgMobile,
 }) => {
   const [image] = useImage(imageUrl);
   const divRef = useRef(null);
@@ -54,7 +54,7 @@ const JigsawImage = ({
       style={{
         position: "relative",
         width: "71vw",
-        height: `${isTelegram ? "45.25vh" : "50.5dvh"}`,
+        height: `${isTgMobile ? "45.25vh" : "50.5dvh"}`,
         overflow: "hidden",
         borderRadius: "16px",
         backgroundSize: "cover",

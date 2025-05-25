@@ -15,7 +15,7 @@ const orbPos = [
 const Loader = (props) => {
   const { t } = useTranslation();
   const [dots, setDots] = useState(1);
-  const { isTelegram } = useContext(MainContext);
+  const { isTgMobile } = useContext(MainContext);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,7 +28,7 @@ const Loader = (props) => {
   return (
     <div
       className={`${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       }`}
       style={{
         background: `url(${assets.locations.fof})`,
@@ -42,7 +42,7 @@ const Loader = (props) => {
     >
       <div
         className={`absolute flex justify-center items-center w-full ${
-          isTelegram ? "tg-container-height" : "browser-container-height"
+          isTgMobile ? "tg-container-height" : "browser-container-height"
         }`}
       >
         <div

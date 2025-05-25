@@ -18,14 +18,14 @@ const ArtifactCrd = ({
   isCurrency,
   isPay,
 }) => {
-  const { isTelegram, setShowCard, gameData, setGameData, authToken } =
+  const { isTgMobile, setShowCard, gameData, setGameData, authToken } =
     useContext(RorContext);
   const [idx, setIdx] = useState(initalIdx);
   const [flipped, setFlipped] = useState(false);
 
   // const itemExists = gameData?.pouch?.includes(items[idx].id) ? true : false;
 
-  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">

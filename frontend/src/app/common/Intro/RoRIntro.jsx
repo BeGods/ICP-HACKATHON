@@ -6,7 +6,7 @@ import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
-const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
+const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
   const { setGame } = useContext(MainContext);
@@ -14,7 +14,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   return (
     <div
       className={`w-[200vw] ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } relative`}
     >
       {/* img 1 */}
@@ -23,6 +23,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
         style={{
           background: `url(${assets.locations.ror}) no-repeat center / cover`,
         }}
+        draggable={false}
       ></div>
 
       {/* img 2 */}
@@ -32,6 +33,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
           style={{
             background: `url(${assets.uxui.rorSplash}) no-repeat center / cover`,
           }}
+          draggable={false}
         ></div>
       )}
 
@@ -40,6 +42,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <div>
             <img
+              draggable={false}
               src={assets.logos.ror}
               alt="dod"
               className={`${
@@ -57,6 +60,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
               }   justify-center items-center z-[100]`}
             >
               <img
+                draggable={false}
                 src={assets.logos.begodsWhite}
                 alt="logo"
                 className="w-[67px] begod-blue-shadow pointer-events-none"

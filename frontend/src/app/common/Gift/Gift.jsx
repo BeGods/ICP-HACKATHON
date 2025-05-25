@@ -4,7 +4,7 @@ import GiftHeader from "./Header";
 import GiftCarousel from "../../../components/Carousel/GiftCarousel";
 
 const Gift = () => {
-  const { globalRewards, assets, isTelegram } = useContext(MainContext);
+  const { globalRewards, assets, isTgMobile } = useContext(MainContext);
   // const [showToggles, setShowToggles] = useState(false);
   // const adsgramId = import.meta.env.VITE_AD_GIFT_CLAIM;
 
@@ -43,7 +43,7 @@ const Gift = () => {
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0`}
     >
       <div

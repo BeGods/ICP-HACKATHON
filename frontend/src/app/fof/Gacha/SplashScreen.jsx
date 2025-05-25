@@ -22,7 +22,7 @@ const tele = window.Telegram?.WebApp;
 
 const SplashScreen = ({ reward, exploitReward }) => {
   const { t } = useTranslation();
-  const { setSection, setActiveMyth, enableSound, enableHaptic, isTelegram } =
+  const { setSection, setActiveMyth, enableSound, enableHaptic, isTgMobile } =
     useContext(FofContext);
   const [currReward, setCurrReward] = useState(reward);
   const [showScale, setShowScale] = useState(0);
@@ -166,7 +166,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
   return (
     <div
       className={`w-screen ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } relative`}
     >
       {/* You Won Text */}
@@ -216,12 +216,12 @@ const SplashScreen = ({ reward, exploitReward }) => {
             className={`card__face card__face--back flex justify-center items-center`}
           >
             {currReward.type === "mythOrb" || currReward.type === "blackOrb" ? (
-              <OrbCard isTelegram={isTelegram} reward={currReward} />
+              <OrbCard isTgMobile={isTgMobile} reward={currReward} />
             ) : currReward.type === "automata" ||
               currReward.type === "minion" ? (
-              <BoosterCard isTelegram={isTelegram} reward={currReward} />
+              <BoosterCard isTgMobile={isTgMobile} reward={currReward} />
             ) : (
-              <QuestCard isTelegram={isTelegram} reward={currReward} />
+              <QuestCard isTgMobile={isTgMobile} reward={currReward} />
             )}
           </div>
         </div>
@@ -284,12 +284,12 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
 export default SplashScreen;
 
-const OrbCard = ({ reward, isTelegram }) => {
+const OrbCard = ({ reward, isTgMobile }) => {
   const currReward = reward.type === "mythOrb" ? reward.mythology : reward.type;
   return (
     <div
       className={`flex card-width ${
-        isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+        isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
       } justify-center items-center w-full absolute h-full glow-tap-${currReward.toLowerCase()}`}
     >
       <img
@@ -306,13 +306,13 @@ const OrbCard = ({ reward, isTelegram }) => {
   );
 };
 
-const BoosterCard = ({ reward, isTelegram }) => {
+const BoosterCard = ({ reward, isTgMobile }) => {
   const cardType = reward.type === "minion" ? "alchemist" : reward.type;
 
   return (
     <div
       className={`relative card-width ${
-        isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+        isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
       } flex items-center justify-center rounded-primary crd-shadow-black`}
     >
       <div
@@ -328,11 +328,11 @@ const BoosterCard = ({ reward, isTelegram }) => {
   );
 };
 
-const QuestCard = ({ reward, isTelegram }) => {
+const QuestCard = ({ reward, isTgMobile }) => {
   return (
     <div
       className={`relative card-width rounded-lg shadow-lg  ${
-        isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+        isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
       }  flex flex-col z-50`}
     >
       <div className="relative crd-shadow-black">

@@ -633,10 +633,10 @@ const BoosterClaim = ({
               >
                 <div className="flex uppercase flex-col items-center gap-2 w-fit">
                   <div className="flex relative items-center justify-center">
-                    <Clapperboard color="#ffd660" size={"16vw"} />
+                    <Clapperboard color="#ffd660" size={"4rem"} />
                   </div>
                   <div className="flex flex-col text-white">
-                    <div className="text-[6vw] -mt-2">
+                    <div className="text-[2rem] -mt-2">
                       <span className="text-gold">Watch</span> {t("note.ad")}
                     </div>
                   </div>

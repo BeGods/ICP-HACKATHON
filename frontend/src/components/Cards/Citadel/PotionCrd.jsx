@@ -8,12 +8,12 @@ import {
 import PotionBtn from "../../Buttons/PotionBtn";
 
 const PotionCard = ({ potion }) => {
-  const { assets, setShowCard, gameData, isTelegram } = useContext(RorContext);
+  const { assets, setShowCard, gameData, isTgMobile } = useContext(RorContext);
   const [stage, setStage] = useState(false);
   const element = potion?.split(".")[1];
   const mythology = elementMythNames[element]?.toLowerCase();
 
-  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">

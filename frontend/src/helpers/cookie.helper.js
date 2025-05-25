@@ -108,9 +108,9 @@ export const deleteExpCookie = async (tele) => {
   await tele.ready();
 
   if (tele.platform === "ios" || tele.platform === "android") {
-    await tele.CloudStorage.removeItem("token_exp");
+    await tele.CloudStorage.setItem("token_exp", 0);
   } else {
-    localStorage.removeItem("token_exp");
+    localStorage.setItem("token_exp", 0);
   }
 };
 

@@ -79,7 +79,7 @@ const Leaderboard = (props) => {
     gameData,
     setShowCard,
     setUserData,
-    isTelegram,
+    isTgMobile,
     platform,
   } = useContext(FofContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -240,7 +240,7 @@ const Leaderboard = (props) => {
   return (
     <div
       className={`flex ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } flex-col overflow-hidden m-0`}
     >
       <div

@@ -30,7 +30,7 @@ const Redeem = (props) => {
     assets,
     triggerConf,
     setTriggerConf,
-    isTelegram,
+    isTgMobile,
     game,
     isBrowser,
   } = useContext(MainContext);
@@ -192,7 +192,7 @@ const Redeem = (props) => {
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0 w-screen`}
     >
       <div
@@ -278,7 +278,7 @@ const Redeem = (props) => {
       {/* Content */}
       <div
         className={`flex mt-7 ${
-          isTelegram ? "tg-container-height" : "browser-container-height"
+          isTgMobile ? "tg-container-height" : "browser-container-height"
         } justify-center items-center w-screen absolute mx-auto`}
       >
         <div className={`flex items-center justify-center w-full h-full`}>
@@ -287,14 +287,14 @@ const Redeem = (props) => {
               className={`card ${
                 isBrowser
                   ? "h-[59%] -mt-1"
-                  : isTelegram
+                  : isTgMobile
                   ? "h-[55%]"
                   : "h-[60%] -mt-1"
               } ${flipped ? "flipped" : ""} card-width z-[99]`}
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
                 <JigsawImage
-                  isTelegram={isTelegram}
+                  isTgMobile={isTgMobile}
                   grid={[2, 2]}
                   imageUrl={
                     currReward.partnerType == "playsuper"

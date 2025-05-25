@@ -67,7 +67,7 @@ const Explore = () => {
     enableHaptic,
     setSection,
     setShowCard,
-    isTelegram,
+    isTgMobile,
     assets,
     setShardReward,
     setIsSwiping,
@@ -98,7 +98,7 @@ const Explore = () => {
     holdStartTime: 0,
     holdEndTime: 0,
   });
-  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   const images = [
     "celtic.earth01",
@@ -719,7 +719,7 @@ const Explore = () => {
         width: "100vw",
       }}
       className={`flex ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } flex-col overflow-hidden m-0 relative`}
     >
       <div

@@ -15,12 +15,12 @@ const CenterChild = ({ gameData }) => {
 };
 
 const Citadel = (props) => {
-  const { isTelegram, gameData, assets } = useContext(RorContext);
+  const { isTgMobile, gameData, assets } = useContext(RorContext);
 
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0`}
     >
       <RoRHeader CenterChild={<CenterChild gameData={gameData} />} />

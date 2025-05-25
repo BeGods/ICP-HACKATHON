@@ -4,12 +4,12 @@ import LoadRoll from "../Fx/LoadRoll";
 import { MainContext } from "../../context/context";
 
 const FoFLoader = (props) => {
-  const { isTelegram, isBrowser } = useContext(MainContext);
+  const { isBrowser, isTgMobile } = useContext(MainContext);
 
   return (
     <div
       className={`w-[100vw] relative ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       }
           `}
     >
@@ -34,7 +34,7 @@ const FoFLoader = (props) => {
           className={`${
             isBrowser
               ? "w-[30%] h-auto"
-              : isTelegram
+              : isTgMobile
               ? "max-w-full h-auto"
               : "w-[85%] h-auto"
           }`}

@@ -39,7 +39,11 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Layouts/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
-import { determineIsTelegram, isDesktop } from "../../utils/device.info";
+import {
+  determineIsTelegram,
+  determineIsTgDesktop,
+  isDesktop,
+} from "../../utils/device.info";
 import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
@@ -69,6 +73,8 @@ const FoFMain = () => {
     setGlobalRewards,
     setIsBrowser,
     isBrowser,
+    isTgMobile,
+    setIsTgMobile,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -132,6 +138,8 @@ const FoFMain = () => {
     setLineWallet,
     setIsBrowser,
     isBrowser,
+    isTgMobile,
+    setIsTgMobile,
   };
   const sections = [
     <Forges />, // 0
@@ -331,6 +339,11 @@ const FoFMain = () => {
       tele.setBottomBarColor("#000000");
       setPlatform(tele.platform);
       const isTg = determineIsTelegram(tele.platform);
+      const validtgDesktop = determineIsTgDesktop(platform);
+
+      if (isTg && !validtgDesktop) {
+        setIsTgMobile(true);
+      }
       setIsTelegram(isTg);
     }
   }, []);
@@ -374,7 +387,7 @@ const FoFMain = () => {
       {!isLoading ? (
         <div
           className={`w-screen ${
-            isTelegram ? "tg-container-height" : "browser-container-height"
+            isTgMobile ? "tg-container-height" : "browser-container-height"
           } bg-white select-none font-fof overflow-hidden`}
         >
           <FofContext.Provider value={initalStates}>

@@ -26,12 +26,15 @@ import { MainContext } from "../../../context/context";
 import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
-import { determineIsTelegram, isDesktop } from "../../../utils/device.info";
+import {
+  determineIsTelegram,
+  determineIsTgDesktop,
+  isDesktop,
+} from "../../../utils/device.info";
 import { useLocation } from "react-router-dom";
 import liff from "@line/liff";
 import { validate as isValidUUID } from "uuid";
 import OnboardPage from "../../fof/Onboard/Page";
-import DesktopScreen from "./Desktop";
 
 const tele = window.Telegram?.WebApp;
 
@@ -47,6 +50,9 @@ const IntroPage = (props) => {
     isTelegram,
     setIsTelegram,
     setIsBrowser,
+    isBrowser,
+    isTgMobile,
+    setIsTgMobile,
   } = useContext(MainContext);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -57,7 +63,6 @@ const IntroPage = (props) => {
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isTgDesktop, setIsTgDesktop] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const lineCalledRef = useRef(false);
   const onewaveCalledRef = useRef(false);
@@ -141,9 +146,10 @@ const IntroPage = (props) => {
       const newToken = response.data.accessToken;
       setAuthToken(newToken);
       await setAuthCookie(tele, newToken);
+      return newToken;
     } catch (error) {
       await deleteAuthCookie();
-      handleAuth(isTelegram);
+      await handleAuth(isTelegram);
     }
   };
 
@@ -209,10 +215,12 @@ const IntroPage = (props) => {
     try {
       const now = Date.now();
       let timeLeft = tokenExp - now;
+      console.log(timeLeft);
 
       let token;
       if (timeLeft <= 0) {
         token = await handleRefreshToken();
+        console.log("new token from existing one");
 
         if (!token) {
           throw new Error("Token refresh failed, no new token received");
@@ -223,8 +231,11 @@ const IntroPage = (props) => {
         token = await validateAuth(tele);
 
         if (!token) {
+          console.log("Token validation failed");
+
           throw new Error("Token validation failed");
         }
+        console.log("new token not from represh");
 
         setAuthToken(token);
       }
@@ -267,62 +278,63 @@ const IntroPage = (props) => {
 
   useEffect(() => {
     if (platform) {
-      const isTg = determineIsTelegram(platform);
-      const isBrowserDesktop = isDesktop();
+      const isTg = determineIsTelegram(platform); //  tg mobile
+      const validtgDesktop = determineIsTgDesktop(platform); //  tg mobile
 
-      if (isBrowserDesktop && !oneWaveParam) {
-        setIsTgDesktop(true);
+      if (isTg && !validtgDesktop) {
+        setIsTgMobile(true);
       }
 
-      (async () => {
-        setIsTelegram(isTg);
+      // const isBrowserDesktop = isDesktop();
 
-        const isTgDesktopPlatform = [
-          "macos",
-          "windows",
-          "tdesktop",
-          "web",
-          "weba",
-        ].includes(platform);
-        const isUnknownBrowser =
-          platform === "unknown" && !oneWaveParam && !liff.isInClient();
+      // if (isBrowserDesktop && !oneWaveParam) {
+      // }
 
-        if (isTgDesktopPlatform) {
-          setIsTgDesktop(true);
+      {
+        (async () => {
+          setIsTelegram(isTg);
+
+          const isUnknownBrowser =
+            platform === "unknown" && !oneWaveParam && !liff.isInClient();
+
+          // if (blockForTg) {
+          //   setIsBrowser(false);
+          //   return;
+          // }
+
+          if (isUnknownBrowser) {
+            setIsBrowser(true);
+            return;
+          }
+
           setIsBrowser(false);
-          return;
-        }
 
-        if (isUnknownBrowser) {
-          setIsBrowser(true);
-          return;
-        }
+          const tokenExpiry = await getExpCookie(tele);
 
-        setIsBrowser(false);
+          if (!tokenExpiry) {
+            console.log("No token found. Authenticating...");
+            await handleAuth(isTg);
+          } else {
+            console.log("Expiry exists");
 
-        const tokenExpiry = await getExpCookie(tele);
-
-        if (!tokenExpiry) {
-          console.log("No token found. Authenticating...");
-          await handleAuth(isTg);
-        } else {
-          try {
-            await isExistingTknValid(tokenExpiry);
-          } catch (error) {
-            if (error?.status === 401 || error?.response?.status === 401) {
-              console.warn(
-                "Refresh token expired or invalid. Re-authenticating..."
-              );
-              await handleAuth(isTg);
-            } else {
-              console.error(
-                "Unexpected validation error. Re-authenticating..."
-              );
-              await handleAuth(isTg);
+            try {
+              await isExistingTknValid(tokenExpiry);
+            } catch (error) {
+              if (error?.status === 401 || error?.response?.status === 401) {
+                console.warn(
+                  "Refresh token expired or invalid. Re-authenticating..."
+                );
+                await handleAuth(isTg);
+              } else {
+                console.error(
+                  "Unexpected validation error. Re-authenticating..."
+                );
+                await handleAuth(isTg);
+              }
             }
           }
-        }
-      })();
+        })();
+      }
 
       if (platform === "ios") {
         document.body.style.position = "fixed";
@@ -354,24 +366,31 @@ const IntroPage = (props) => {
   }, []);
 
   // useEffect(() => {
-  //   (async () => await deleteAuthCookie(tele))();
+  //   (async () => await deleteExpCookie(tele))();
   // }, []);
 
   return (
     <div
       className={` ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } ${activeIndex == 2 ? "bg-white" : "bg-black"}`}
     >
-      {
+      {isBrowser && tokenExpired ? (
+        <OnboardPage
+          handleTokenUpdated={() => {
+            setTokenExpired(false);
+          }}
+          refer={refer || null}
+        />
+      ) : (
         <Launcher
           isLoading={isLoading}
           enableSound={enableSound}
-          isTelegram={isTelegram}
+          isTgMobile={isTgMobile}
           handleUpdateIdx={handleUpdateIdx}
           activeIndex={activeIndex}
         />
-      }
+      )}
     </div>
   );
 };

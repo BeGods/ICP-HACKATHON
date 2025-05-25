@@ -14,7 +14,7 @@ const tele = window.Telegram?.WebApp;
 export default function Launcher({
   handleUpdateIdx,
   activeIndex,
-  isTelegram,
+  isTgMobile,
   isLoading,
 }) {
   const menuRef = useRef(null);
@@ -61,7 +61,7 @@ export default function Launcher({
   return (
     <div
       className={`flex ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } w-screen text-wrap`}
     >
       <TgHeader hideExit={true} openSettings={() => setShowCard(true)} />
@@ -75,19 +75,19 @@ export default function Launcher({
         >
           <FoFIntro
             isLoading={isLoading}
-            isTelegram={isTelegram}
+            isTgMobile={isTgMobile}
             handleFadeout={() => setFadeout(true)}
             fadeout={fadeout}
           />
           <RoRIntro
             isLoading={isLoading}
-            isTelegram={isTelegram}
+            isTgMobile={isTgMobile}
             handleFadeout={() => setFadeout(true)}
             fadeout={fadeout}
           />
           <DoDIntro
             isLoading={isLoading}
-            isTelegram={isTelegram}
+            isTgMobile={isTgMobile}
             handleFadeout={() => setFadeout(true)}
             fadeout={fadeout}
           />

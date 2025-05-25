@@ -74,7 +74,7 @@ const Leaderboard = (props) => {
     gameData,
     setShowCard,
     setUserData,
-    isTelegram,
+    isTgMobile,
     isBrowser,
   } = useContext(RorContext);
   const [activeTab, setActiveTab] = useState(true);
@@ -226,7 +226,7 @@ const Leaderboard = (props) => {
   return (
     <div
       className={`flex ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } flex-col overflow-hidden w-screen m-0`}
     >
       <div

@@ -22,7 +22,7 @@ const orbPos = [
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { t } = useTranslation();
-  const { enableSound, assets, enableHaptic, isTelegram, isBrowser } =
+  const { enableSound, assets, enableHaptic, isBrowser } =
     useContext(FofContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);

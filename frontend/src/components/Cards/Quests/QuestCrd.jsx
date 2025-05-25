@@ -17,7 +17,7 @@ const QuestCard = ({
   InfoCard,
   isGuideActive,
 }) => {
-  const { assets, enableHaptic, isTelegram } = useContext(FofContext);
+  const { assets, enableHaptic, isTgMobile } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [buttonFlip, setButtonFlip] = useState(false);
 
@@ -27,7 +27,7 @@ const QuestCard = ({
     >
       <div
         className={`card ${
-          isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+          isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
         } ${flipped ? "flipped" : ""}`}
       >
         <div
