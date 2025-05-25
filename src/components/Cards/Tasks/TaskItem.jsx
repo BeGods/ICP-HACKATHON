@@ -169,8 +169,8 @@ ${
         setIsClicked(false);
       }}
     >
-      <div className="w-[22%] flex justify-start items-center">
-        <img src={quest.type} alt="task-icon" className="w-fullb grayscale" />
+      <div className="flex cursor-pointer justify-start items-center">
+        <img src={quest.type} alt="task-icon" className=" w-[55px] grayscale" />
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
         <h1 className="text-tertiary uppercase">

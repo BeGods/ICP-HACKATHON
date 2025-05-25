@@ -32,6 +32,7 @@ import {
   clearAllGuideCookie,
   deleteAuthCookie,
   deleteHapticCookie,
+  handleClickHaptic,
   setCountryCookie,
   setHapticCookie,
   setLangCookie,
@@ -233,6 +234,7 @@ const SettingModal = ({ close }) => {
   // }, [state]);
 
   const handleClose = () => {
+    handleClickHaptic(tele, enableHaptic);
     close();
     if (isChanged) {
       getPartnersData(i18n.language, country);
@@ -241,8 +243,19 @@ const SettingModal = ({ close }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
-      <div className="flex relative w-[72%] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4">
-        <IconBtn align={0} handleClick={handleClose} activeMyth={4} />
+      <div
+        className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
+      >
+        <div
+          onClick={handleClose}
+          className={`absolute cursor-pointer flex w-full justify-end top-0 right-0 -mt-4 -mr-4 `}
+        >
+          <div className="absolute flex justify-center items-center  bg-black rounded-full w-[40px] h-[40px]">
+            <div className="text-white font-roboto text-black-contour text-[1.25rem]">
+              {"\u2715"}
+            </div>
+          </div>
+        </div>
         <div className="flex w-full">
           <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
             <Globe />
@@ -372,13 +385,6 @@ const SettingModal = ({ close }) => {
             </div>
           </div>
         )}
-
-        <div
-          onClick={handleClose}
-          className="bg-white w-full flex justify-center items-center py-2.5 mt-3 rounded-md"
-        >
-          <Check strokeWidth={4} size={"25px"} />
-        </div>
       </div>
     </div>
   );

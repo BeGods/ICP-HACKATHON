@@ -5,32 +5,30 @@ import { formatTwoNums } from "../../../helpers/leaderboard.helper";
 const BottomChild = ({ pieces, currIndex }) => {
   return (
     <div className="flex relative justify-center px-2 -mt-3">
-      <div className="flex w-full px-7">
+      <div className="flex w-full max-w-[720px] px-7">
         <div
-          className={`flex broder  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex relative gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
+          <div
+            className={`font-symbols absolute -ml-[2rem] text-iconLg text-black-lg-contour text-white`}
+          >
+            1
+          </div>
           <div className="text-primary pl-headSides">
             {/* {formatTwoNums(currIndex + 1)} */}
           </div>
         </div>
         <div
-          className={`flex justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+          className={`flex relative justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
         >
           <div className="text-primary pr-headSides">
             {/* {formatTwoNums(pieces)} */}
           </div>
-        </div>
-      </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`font-symbols text-iconLg text-black-lg-contour text-white`}
-        >
-          1
-        </div>
-        <div
-          className={`font-symbols text-iconLg text-black-lg-contour text-white`}
-        >
-          4
+          <div
+            className={`font-symbols absolute -mr-[2rem] text-iconLg text-black-lg-contour text-white`}
+          >
+            4
+          </div>
         </div>
       </div>
     </div>

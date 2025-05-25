@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../../styles/carousel.scss";
 import GiftItemCrd from "../Cards/Reward/GiftItemCrd";
 
@@ -30,12 +30,12 @@ const GiftCarousel = ({ rewards }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[24%] mr-[2vw] w-full z-50"
+          className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
         </div>
       )}
-      <div className="carousel">
+      <div className={`carousel carousel-width`}>
         {rewards.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
           if (index === 0) {
@@ -56,7 +56,7 @@ const GiftCarousel = ({ rewards }) => {
       {currentIndex < rewards.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[22%] w-full"
+          className="absolute cursor-pointer bottom-[22%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

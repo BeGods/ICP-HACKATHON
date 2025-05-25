@@ -14,15 +14,15 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const orbPos = [
-  "mt-[55vw] mr-[38vw]",
-  "-ml-[62vw] -mt-[19vw]",
-  "-mt-[52vw] ml-[40vw]",
-  "mt-[21vw] ml-[65vw]",
+  "-mt-[7.5rem] ml-[6.5rem]",
+  "ml-[3.5rem] -mt-[16.8rem]",
+  "-mt-[21rem] ml-[16rem]",
+  "-mt-[11.65rem] ml-[19.25rem]",
 ];
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { t } = useTranslation();
-  const { enableSound, assets, enableHaptic, isTelegram } =
+  const { enableSound, assets, enableHaptic, isTelegram, isBrowser } =
     useContext(FofContext);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
@@ -50,16 +50,24 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
     <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
       {!showPlay ? (
         <div className="flex flex-col w-full items-center justify-center">
-          <div className="uppercase text-center leading-[60px] top-0 text-gold text-[14.2vw] px-0.5 scale-zero text-black-contour">
+          <div className="uppercase text-center leading-[60px] top-0 text-gold text-[3rem] px-0.5 scale-zero text-black-contour">
             {t("tower.tune")}
           </div>
-          <div className="flex text-[10vw] w-2/3 mt-10 justify-between text-gold">
+          <div
+            className={`flex ${
+              isBrowser ? "w-1/4" : "w-2/3"
+            } mt-10 justify-between text-gold`}
+          >
             <div
               onClick={() => {
                 setShowPlay(true);
               }}
             >
-              <CircleCheck size={"18vw"} color="green" />
+              <CircleCheck
+                size={"6rem"}
+                color="green"
+                className="cursor-pointer"
+              />
             </div>
             <div
               onClick={() => {
@@ -67,30 +75,17 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                 handleSubmit();
               }}
             >
-              <CircleX size={"18vw"} color="red" />
+              <CircleX size={"6rem"} color="red" className="cursor-pointer" />
             </div>
           </div>
         </div>
       ) : (
         <div className="flex flex-col gap-10 flex-grow w-full justify-center items-center">
-          <div className="uppercase text-center absolute leading-[60px] top-0 text-gold text-[14.2vw] px-0.5 scale-zero text-black-contour">
+          <div className="uppercase text-center absolute leading-[60px] top-0 text-gold text-[3rem] mt-3 px-2 scale-zero text-black-contour">
             {t("tower.play")}
           </div>
-          <div
-            className={`relative flex justify-center
-              ${showEffect === -1 && "glow-tap-white"} ${
-              showEffect && `glow-tap-${mythSections[showEffect - 1]}`
-            } ${
-              isTelegram ? "scale-[95%]" : "scale-[80%] mt-4 mr-1"
-            }  items-center w-full h-full pointer-events-none`}
-            style={{
-              backgroundImage: `url(${assets.uxui.towerOff})`,
-              backgroundSize: "contain",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            {" "}
+          <div className="relative -mt-[1.25rem]">
+            <img src={assets.uxui.towerOff} alt="tower" />
             {mythologies.map((item, index) => (
               <div
                 onClick={() => {
@@ -108,11 +103,11 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   }
                 }}
                 key={index}
-                className={`absolute ${orbPos[index]}  pointer-events-auto z-50`}
+                className={`absolute cursor-pointer ${orbPos[index]}  pointer-events-auto z-50`}
               >
                 <div
                   className={`flex relative transition-all duration-1000 glow-icon-${item.toLowerCase()} text-center justify-center ${
-                    showEffect - 1 === index ? "w-[12vw]" : "max-w-orb"
+                    showEffect - 1 === index ? "w-[2.8rem]" : "max-w-orb"
                   } items-center rounded-full `}
                 >
                   <img
@@ -146,13 +141,13 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   prev.length <= 6 ? [...prev, "multiorb"] : prev
                 );
               }}
-              className="flex items-center z-50 pointer-events-auto"
+              className="flex absolute items-center -mt-[15rem] ml-[10.5rem] z-50 pointer-events-auto"
             >
               <div
-                className={`flex relative text-center ml-1 justify-center ${
+                className={`flex relative text-center justify-center ${
                   showEffect === -1
-                    ? "w-[17vw] glow-icon-lg-white"
-                    : "w-[15vw] glow-icon-white"
+                    ? "w-[4.5rem] glow-icon-lg-white"
+                    : "w-[4.25rem] glow-icon-white"
                 } items-center rounded-full z-50 `}
               >
                 <img src={`${assets.items.multiorb}`} alt="orb" />
@@ -161,52 +156,52 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
           </div>
           <div className="absolute bottom-0">
             <CircleCheck
-              size={"18vw"}
+              size={"4rem"}
               color="white"
               onClick={handleKeys}
-              className={`scale-icon mb-[12vh]`}
+              className={`scale-icon mb-[15vh]`}
             />
           </div>
-          <div className="absolute bottom-0 text-[14.2vw] text-white text-black-contour font-roboto flex gap-2">
+          <div className="absolute bottom-0 text-[3rem] text-white text-black-contour font-roboto flex gap-2">
             <div
-              className={`${clickedOrbs.length === 0 ? "hidden" : ""} ${
-                clickedOrbs.length === 1 ? "scale-point" : ""
-              }`}
+              className={`cursor-pointer ${
+                clickedOrbs.length === 0 ? "hidden" : ""
+              } ${clickedOrbs.length === 1 ? "scale-point" : ""}`}
             >
               *
             </div>
             <div
-              className={`${clickedOrbs.length < 2 ? "hidden" : ""} ${
-                clickedOrbs.length === 2 ? "scale-point" : ""
-              }`}
+              className={`cursor-pointer ${
+                clickedOrbs.length < 2 ? "hidden" : ""
+              } ${clickedOrbs.length === 2 ? "scale-point" : ""}`}
             >
               *
             </div>
             <div
-              className={`${clickedOrbs.length < 3 ? "hidden" : ""} ${
-                clickedOrbs.length === 3 ? "scale-point" : ""
-              }`}
+              className={`cursor-pointer ${
+                clickedOrbs.length < 3 ? "hidden" : ""
+              } ${clickedOrbs.length === 3 ? "scale-point" : ""}`}
             >
               *
             </div>
             <div
-              className={`${clickedOrbs.length < 4 ? "hidden" : ""} ${
-                clickedOrbs.length === 4 ? "scale-point" : ""
-              }`}
+              className={`cursor-pointer ${
+                clickedOrbs.length < 4 ? "hidden" : ""
+              } ${clickedOrbs.length === 4 ? "scale-point" : ""}`}
             >
               *
             </div>
             <div
-              className={`${clickedOrbs.length < 5 ? "hidden" : ""} ${
-                clickedOrbs.length === 5 ? "scale-point" : ""
-              }`}
+              className={`cursor-pointer ${
+                clickedOrbs.length < 5 ? "hidden" : ""
+              } ${clickedOrbs.length === 5 ? "scale-point" : ""}`}
             >
               *
             </div>
             <div
-              className={`${clickedOrbs.length < 6 ? "hidden" : ""} ${
-                clickedOrbs.length === 6 ? "scale-point" : ""
-              }`}
+              className={`cursor-pointer ${
+                clickedOrbs.length < 6 ? "hidden" : ""
+              } ${clickedOrbs.length === 6 ? "scale-point" : ""}`}
             >
               *
             </div>

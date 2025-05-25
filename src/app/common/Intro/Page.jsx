@@ -46,7 +46,7 @@ const IntroPage = (props) => {
     setCountry,
     isTelegram,
     setIsTelegram,
-    assets,
+    setIsBrowser,
   } = useContext(MainContext);
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -56,7 +56,6 @@ const IntroPage = (props) => {
   const [tokenExpired, setTokenExpired] = useState(false);
   const [tgUserData, setTgUserData] = useState(null);
   const [referralCode, setReferralCode] = useState(null);
-  const [isBrowser, setIsBrowser] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTgDesktop, setIsTgDesktop] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -364,16 +363,7 @@ const IntroPage = (props) => {
         isTelegram ? "tg-container-height" : "browser-container-height"
       } ${activeIndex == 2 ? "bg-white" : "bg-black"}`}
     >
-      {isTgDesktop ? (
-        <DesktopScreen assets={assets} />
-      ) : isBrowser && tokenExpired ? (
-        <OnboardPage
-          handleTokenUpdated={() => {
-            setTokenExpired(false);
-          }}
-          refer={refer || null}
-        />
-      ) : (
+      {
         <Launcher
           isLoading={isLoading}
           enableSound={enableSound}
@@ -381,7 +371,7 @@ const IntroPage = (props) => {
           handleUpdateIdx={handleUpdateIdx}
           activeIndex={activeIndex}
         />
-      )}
+      }
     </div>
   );
 };

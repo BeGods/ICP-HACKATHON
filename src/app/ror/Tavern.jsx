@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import RoRHeader from "../../components/Layouts/Header";
 import { RorContext } from "../../context/context";
-import ArtifactCrd from "../../components/Cards/Reward/ArtiFactCrd";
+import ArtifactCrd from "../../components/Cards/Relics/ArtiFactCrd";
 import { gameItems } from "../../utils/gameItems";
 import MiscCard from "../../components/Cards/Citadel/MiscCard";
 import RoRBtn from "../../components/Buttons/RoRBtn";
@@ -23,7 +23,7 @@ const CenterChild = ({ handleClick, assets }) => {
         backgroundSize: "cover",
       }}
       onClick={handleClick}
-      className="flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2"
+      className="flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2"
     ></div>
   );
 };
@@ -36,7 +36,7 @@ const Tavern = () => {
     setShowCard(
       <MiscCard
         showInfo={true}
-        img={assets.items.cardTavern}
+        img={assets.boosters.tavernCard}
         icon="Tavern"
         isMulti={false}
         handleClick={() => setShowCard(null)}
@@ -94,12 +94,13 @@ const Tavern = () => {
         setShowCard(
           <MiscCard
             showInfo={false}
-            img={assets.items.tavernCard}
+            img={assets.boosters.tavernCard}
             icon="tavernCard"
             isMulti={false}
             handleClick={() => handleActivate("tavern01", true)}
             Button={
               <RoRBtn
+                isNotPay={true}
                 message={"Enter"}
                 left={1}
                 right={1}
@@ -220,7 +221,7 @@ const Tavern = () => {
                       }
                     }}
                     key={`box-${index}`}
-                    className={`relative border ${
+                    className={`relative border cursor-pointer ${
                       (index == 0 && gameData.stats.isRestActive) ||
                       (index == 2 && items.length == 0) ||
                       (index == 3 && items.length == 0)

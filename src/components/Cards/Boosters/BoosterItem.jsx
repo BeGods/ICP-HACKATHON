@@ -41,7 +41,7 @@ const BoosterItem = ({
   return (
     <div
       onClick={handleClick}
-      className={`flex gap-1 border ${
+      className={`flex gap-1 border cursor-pointer ${
         !gameData.mythologies[activeMyth].isEligibleForBurst &&
         booster === 6 &&
         "grayscale"

@@ -9,10 +9,10 @@ const MythInfoCard = ({ close }) => {
   const { activeMyth, assets } = useContext(FofContext);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div className="fixed inset-0 cursor-pointer bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div
         onClick={close}
-        className="relative w-[72%] rounded-lg shadow-lg card-shadow-white"
+        className={`relative card-width rounded-lg shadow-lg card-shadow-white`}
       >
         <div className="relative w-full h-full text-card">
           <img

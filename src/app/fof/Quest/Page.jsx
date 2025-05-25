@@ -457,9 +457,12 @@ const Quests = () => {
         ) : (
           <div className="flex flex-col gap-8 items-center justify-center w-full h-full">
             <div
-              className={`card mt-[4.75rem] ${
-                isTelegram ? "h-[50%]" : "h-[53.5%] -mt-6"
-              } ${flipped ? "flipped" : ""} w-[70%] z-[99]`}
+              onClick={() => {
+                setFlipped((prev) => !prev);
+              }}
+              className={`card  ${
+                isTelegram ? "h-[50%] mt-[4.75rem]" : "h-[54%] mt-[3.25rem]"
+              } card-width ${flipped ? "flipped" : ""} z-[99]`}
             >
               <div
                 className={`card__face card__face--front ${
@@ -540,9 +543,7 @@ const Quests = () => {
               handleClickHaptic(tele, enableHaptic);
               setFlipped((prev) => !prev);
             }}
-            className={`absolute  flex justify-end  w-[70%] ${
-              isTelegram ? "h-[50%]" : "h-[55%] -mt-10"
-            }  z-[99]`}
+            className={`absolute  flex justify-end  card-width -mt-12 z-[99]`}
           >
             <div
               className={`h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]`}

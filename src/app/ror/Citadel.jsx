@@ -7,7 +7,7 @@ const CenterChild = ({ gameData }) => {
   return (
     <div
       className={`
-            flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full text-white text-[16vw] bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full text-white text-[5rem] bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
     >
       {gameData.stats.dailyQuotaa ?? 0}
     </div>

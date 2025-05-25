@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { RorContext } from "../../context/context";
 import { footerIcons, mythSections } from "../../utils/constants.ror";
 import ReactHowler from "react-howler";
@@ -22,8 +22,14 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     assets,
     userData,
     enableHaptic,
+    tasks,
   } = useContext(RorContext);
   const [clickEffect, setClickEffect] = useState(false);
+  const [showEffect, setShowEffect] = useState(true);
+
+  const countOfInCompleteQuests = tasks.filter(
+    (item) => item.isQuestClaimed === false
+  ).length;
 
   const playAudio = () => {
     handleClickHaptic(tele, enableHaptic);
@@ -40,6 +46,16 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
       setActiveMyth(0);
     }
   };
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowEffect(false);
+    }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <>
@@ -87,6 +103,15 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             clickEffect && "click-effect"
           } flex-col items-center mb-2`}
         >
+          {icon === 3 && (
+            <div
+              className={`absolute ${
+                showEffect && "pulse-text"
+              } gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[1.2rem] font-medium bg-black text-white  h-7 w-7 text-black-sm-contour -mr-4 -mt-1 z-[60] rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+            >
+              {countOfInCompleteQuests}
+            </div>
+          )}
           {userData.avatarUrl ? (
             <div
               className="flex flex-col items-center cursor-pointer z-50 h-full transition-all duration-500"
@@ -125,19 +150,20 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
 
-      <ReactHowler
-        src={assets.audio.menu}
-        playing={false}
-        preload={true}
-        ref={howlerRef}
-        html5={true}
-      />
+      <div className="absolute z-0">
+        <ReactHowler
+          src={assets.audio.menu}
+          playing={false}
+          preload={true}
+          ref={howlerRef}
+          html5={true}
+        />
+      </div>
     </>
   );
 };
 const Footer = ({}) => {
-  const { section, activeMyth, enableSound, minimize, assets, platform } =
-    useContext(RorContext);
+  const { enableSound, minimize, assets, platform } = useContext(RorContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
@@ -149,25 +175,28 @@ const Footer = ({}) => {
       }`}
     >
       <img
+        draggable={false}
         src={assets.uxui.footer}
         alt="paper"
-        className={`w-full h-auto filter-paper-${mythSections[8]}`}
+        className={`w-full h-auto max-h-[7rem] filter-paper-${mythSections[8]}`}
       />
-
-      <div
-        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 ml-2 w-full px-2 flex justify-between text-white ${
-          platform === "ios" ? "-mt-5.5" : "-mt-3"
-        }`}
-      >
-        {footerIcons.map((item, index) => (
-          <FooterItem
-            key={index}
-            enableSound={enableSound}
-            icon={index}
-            avatarColor={avatarColor}
-          />
-        ))}
+      <div className="flex justify-center w-full px-2 -ml-1.5 bg-green-200">
+        <div
+          className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-50  flex justify-between text-white ${
+            platform === "ios" ? "-mt-5.5" : "-mt-4"
+          }`}
+        >
+          {footerIcons.map((item, index) => (
+            <FooterItem
+              key={index}
+              enableSound={enableSound}
+              icon={index}
+              avatarColor={avatarColor}
+            />
+          ))}
+        </div>
       </div>
+
       <ReactHowler
         src={assets.audio.fofIntro}
         playing={enableSound}

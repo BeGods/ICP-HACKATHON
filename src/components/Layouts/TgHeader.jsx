@@ -1,18 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  ChevronDown,
-  ChevronUp,
-  LogOut,
-  Settings,
-  Wallet,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, LogOut, Settings, Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MainContext } from "../../context/context";
-import {
-  deleteExpCookie,
-  handleClickHaptic,
-} from "../../helpers/cookie.helper";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useTranslation } from "react-i18next";
 import useWalletPayment from "../../hooks/LineWallet";
 import { connectLineWallet } from "../../utils/api.fof";
@@ -81,6 +71,10 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
     }
   };
 
+  const handleExit = () => {
+    navigate(-1);
+  };
+
   return (
     <div
       className={`absolute flex justify-between w-full gap-x-5 ${
@@ -89,15 +83,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
     >
       <div>
         {!hideExit && (
-          <LogOut
-            onClick={async () => {
-              handleClickHaptic(tele, enableHaptic);
-              // await deleteExpCookie(tele);
-              navigate(-1);
-            }}
-            size={24}
-            className="cursor-pointer"
-          />
+          <LogOut onClick={handleExit} size={24} className="cursor-pointer" />
         )}
       </div>
 

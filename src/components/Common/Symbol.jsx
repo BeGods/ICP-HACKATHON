@@ -10,7 +10,7 @@ const Symbol = ({ myth, isCard, showClaimEffect }) => {
           ? "h-symbol-secondary w-symbol-secondary"
           : isCard === 2
           ? "h-symbol-primary w-symbol-primary"
-          : "h-[50vw] w-[50vw]"
+          : "h-[10rem] w-[10rem]"
       } bg-black border border-white rounded-full outline-[2px] transition-all duration-1000  z-50 ${
         showClaimEffect ? `glow-tap-${myth}` : `glow-symbol-${myth}`
       }`}

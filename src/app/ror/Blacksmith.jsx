@@ -31,7 +31,7 @@ const CenterChild = ({ handleClick, assets }) => {
         backgroundSize: "cover",
       }}
       className={`
-           flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-50 left-1/2 -translate-x-1/2`}
+           flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-50 left-1/2 -translate-x-1/2`}
     ></div>
   );
 };
@@ -232,6 +232,7 @@ const Blacksmith = () => {
 
   const handleTouchStart = (e, item) => {
     if (!activeItems.includes(item.itemId)) return;
+    e.target.setPointerCapture(e.pointerId);
 
     setDraggedItem(item);
     setDragging(true);
@@ -243,7 +244,7 @@ const Blacksmith = () => {
     setIsTouched(true);
     setScaleIcon(false);
 
-    const touch = e.touches[0];
+    const touch = e;
     setCopyPosition({
       x: touch.clientX - 100,
       y: touch.clientY - 250,
@@ -471,7 +472,7 @@ const Blacksmith = () => {
         CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
       />
 
-      <div className="w-[80%] mt-[18dvh] h-[60dvh] relative mx-auto">
+      <div className="w-[80%] mt-[18dvh] h-[60dvh] relative mx-auto flex justify-center">
         <div
           className="absolute inset-0 z-0 filter-orb-white rounded-md"
           style={{
@@ -482,7 +483,7 @@ const Blacksmith = () => {
             opacity: 0.5,
           }}
         />
-        <div className="grid grid-cols-3 gap-2 p-1 w-full h-full overflow-y-auto">
+        <div className="grid grid-cols-3 gap-2 p-1 w-full h-full overflow-y-auto place-items-center">
           {/* reserved slots */}
           {gameData?.builder?.map((item, index) => (
             <div
@@ -599,10 +600,10 @@ const Blacksmith = () => {
           {paginatedVaultItems?.map((item) => (
             <div
               key={item._id}
-              onTouchStart={(e) => handleTouchStart(e, item)}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              className={`relative  ${
+              onPointerDown={(e) => handleTouchStart(e, item)}
+              onPointerMove={handleTouchMove}
+              onPointerUp={handleTouchEnd}
+              className={`relative touch-none w-full max-w-[120px] flex flex-col  ${
                 scaleIcon && draggedItem === item ? "scale-110" : ""
               }`}
             >

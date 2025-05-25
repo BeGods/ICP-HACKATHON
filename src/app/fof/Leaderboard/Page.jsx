@@ -31,7 +31,7 @@ const UserAvatar = ({ user, index }) => {
   });
 
   return (
-    <div className="absolute rounded-full min-w-[31vw] min-h-[31vw] bg-white top-0 -mt-[15vw]">
+    <div className="absolute rounded-full min-w-[8rem] min-h-[8rem] bg-white top-0 -mt-[5rem]">
       <div
         style={{
           boxShadow:
@@ -88,7 +88,7 @@ const Leaderboard = (props) => {
   const [isFinished, setIsFinished] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [hallOfFameData, sethallOfFameData] = useState([]);
-  const [flipped, setFlipped] = useState(false);
+  const [flipped, setFlipped] = useState(true);
   const avatarColor = localStorage.getItem("avatarColor");
   const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
@@ -226,16 +226,16 @@ const Leaderboard = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!userData.stakeOn) {
-      const interval = setInterval(() => {
-        setFlipped((prev) => !prev);
-      }, 4000);
-      return () => clearInterval(interval);
-    } else {
-      setFlipped(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!userData.stakeOn) {
+  //     const interval = setInterval(() => {
+  //       setFlipped((prev) => !prev);
+  //     }, 4000);
+  //     return () => clearInterval(interval);
+  //   } else {
+  //     setFlipped(false);
+  //   }
+  // }, []);
 
   return (
     <div
@@ -274,7 +274,7 @@ const Leaderboard = (props) => {
           }}
           className="flex slide-header-left p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
         >
-          <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
+          <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
             0
           </div>
         </div>
@@ -286,7 +286,7 @@ const Leaderboard = (props) => {
           }}
           className="flex slide-header-right p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
         >
-          <div className="flex justify-center items-center bg-black text-white w-[12vw] h-[12vw] text-symbol-sm rounded-full">
+          <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
             z
           </div>
         </div>
@@ -341,10 +341,17 @@ const Leaderboard = (props) => {
                 userData.orbRank !== 0 &&
                 !userData.stakeOn
               ) {
-                setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
+                setShowCard(
+                  <StakeCrd
+                    username={userData.username}
+                    profileImg={userData.avatarUrl}
+                  />
+                );
+              } else {
+                showToast("stake_error");
               }
             }}
-            className="button__face button__face--back z-50 flex justify-center items-center"
+            className="button__face button__face--back z-[60] cursor-pointer flex justify-center items-center"
           >
             <div className="custom-button bg-black text-white text-center text-[24px] rounded-full">
               <span className="text w-full text-gold px-6 py-1">STAKE</span>
@@ -361,7 +368,7 @@ const Leaderboard = (props) => {
       {isFinished ? (
         <div className="flex flex-grow justify-center">
           {isLoading && (
-            <div className="flex items-end w-[90%] gap-2">
+            <div className={`flex items-end ranker-width gap-2`}>
               {[hallOfFameData[1], hallOfFameData[0], hallOfFameData[2]].map(
                 (item, index) => {
                   const countryFlag =
@@ -416,7 +423,7 @@ const Leaderboard = (props) => {
       ) : (
         <div className="flex flex-grow justify-center">
           {isLoading && (
-            <div className="flex items-end w-[90%] gap-2">
+            <div className={`flex items-end ranker-width gap-2`}>
               {[leaderboardData[1], leaderboardData[0], leaderboardData[2]].map(
                 (item, index) => {
                   return (
@@ -468,7 +475,9 @@ const Leaderboard = (props) => {
 
       {/* Leaderboard list */}
       {isFinished ? (
-        <div className="flex z-50 flex-col w-full text-medium h-[49vh] bg-white text-black rounded-t-primary">
+        <div
+          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[49vh] bg-white text-black rounded-t-primary`}
+        >
           <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
@@ -504,7 +513,9 @@ const Leaderboard = (props) => {
             })}
           </div>
           <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
-            <div className="flex border border-gray-400 rounded-primary bg-white justify-center w-full">
+            <div
+              className={`flex border border-gray-400 rounded-primary bg-white justify-center leaderboard-width`}
+            >
               <div className="flex text-black justify-center items-center w-[20%] h-full">
                 {userData.orbRank}
               </div>
@@ -538,7 +549,9 @@ const Leaderboard = (props) => {
           </div>
         </div>
       ) : (
-        <div className="flex z-50 flex-col w-full text-medium h-[49vh] bg-black text-black rounded-t-primary">
+        <div
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[49vh] bg-black text-black rounded-t-primary`}
+        >
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
               <span className="pr-12">#</span>
@@ -588,7 +601,9 @@ const Leaderboard = (props) => {
               ))}
             </InfiniteScroll>
           </div>
-          <div className="flex px-1 pb-1 justify-center absolute bottom-1 w-full h-[8vh]">
+          <div
+            className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[8vh]`}
+          >
             <div
               onClick={() => {
                 if (gameData.blackOrbs < 1) {

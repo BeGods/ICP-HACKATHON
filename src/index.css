@@ -290,3 +290,28 @@ body.iframe-mobile .browser-container-height {
   width: 0;
   height: 0;
 }
+
+
+.ranker-width {
+  @apply w-[90%] tablet:w-[65%] desktop:w-[30%];
+}
+
+.leaderboard-width {
+  @apply w-[100%] tablet:w-[100%] desktop:w-[50%];
+}
+
+.modal-width {
+  @apply w-[72%] tablet:w-[47%] desktop:w-[22%];
+}
+
+.card-width {
+  @apply w-[72%] tablet:w-[47%] desktop:w-[22%] aspect-[3/4];
+}
+
+.carousel-width {
+  @apply w-[100%] tablet:w-[75%] desktop:w-[50%];
+}
+
+.footer-width {
+  @apply w-[92%] tablet:w-[75%] desktop:w-[50%];
+}

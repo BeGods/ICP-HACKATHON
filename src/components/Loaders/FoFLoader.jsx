@@ -4,7 +4,7 @@ import LoadRoll from "../Fx/LoadRoll";
 import { MainContext } from "../../context/context";
 
 const FoFLoader = (props) => {
-  const { isTelegram } = useContext(MainContext);
+  const { isTelegram, isBrowser } = useContext(MainContext);
 
   return (
     <div
@@ -31,7 +31,13 @@ const FoFLoader = (props) => {
         <img
           src={assets.uxui.towerOn}
           alt="tower"
-          className={`${isTelegram ? "max-w-full h-auto" : "w-[85%] h-auto"}`}
+          className={`${
+            isBrowser
+              ? "w-[30%] h-auto"
+              : isTelegram
+              ? "max-w-full h-auto"
+              : "w-[85%] h-auto"
+          }`}
         />
       </div>
       {/* content */}

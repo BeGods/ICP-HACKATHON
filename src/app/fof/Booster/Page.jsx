@@ -189,7 +189,7 @@ const Boosters = () => {
 
       {/* BOOSTER CARDS */}
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="flex w-[75%] min-h-[60vh] flex-col">
+        <div className="flex w-[75%] min-h-[60dvh] flex-col">
           <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
         </div>
       </div>

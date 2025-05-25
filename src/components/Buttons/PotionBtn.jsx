@@ -222,14 +222,14 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
                 alt="shard"
               />
               <div className="absolute z-10">
-                <div className="text-[7vw] text-white glow-text-black pl-1.5">
+                <div className="text-[2rem] text-white glow-text-black pl-1.5">
                   900
                 </div>
               </div>
             </div>
           </div>
           <div
-            className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px] rounded-full`}
+            className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px] rounded-full`}
           >
             V
           </div>
@@ -249,7 +249,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
                 alt="shard"
               />
               <div className="absolute z-10">
-                <div className="text-[7vw] text-white glow-text-black pr-1.5">
+                <div className="text-[2rem] text-white glow-text-black pr-1.5">
                   100
                 </div>
               </div>

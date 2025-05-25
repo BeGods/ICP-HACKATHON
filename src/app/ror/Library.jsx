@@ -44,7 +44,7 @@ const CenterChild = ({ handleClick, assets }) => {
         backgroundSize: "cover",
       }}
       onClick={handleClick}
-      className="flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-50 left-1/2 -translate-x-1/2"
+      className="flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-50 left-1/2 -translate-x-1/2"
     ></div>
   );
 };
@@ -58,6 +58,7 @@ const Library = () => {
     assets,
     authToken,
     enableHaptic,
+    isBrowser,
   } = useContext(RorContext);
   const [page, setPage] = useState(0);
 
@@ -268,7 +269,7 @@ const Library = () => {
           }}
         />
 
-        <div className="h-fit w-full grid grid-cols-3 gap-x-1">
+        <div className="h-fit w-full grid grid-cols-3 gap-x-1 place-items-center mt-[1rem]">
           {[
             {
               icon: "+",
@@ -325,7 +326,7 @@ const Library = () => {
                   }
                 }}
                 key={`box-${index}`}
-                className={`relative border ${
+                className={`relative border cursor-pointer ${
                   index === currItems
                     ? `border-${myth}-primary text-white glow-button-${myth}`
                     : "text-white border-white/70"
@@ -335,11 +336,11 @@ const Library = () => {
                   <span className="text-iconLg font-symbols">{itm.icon}</span>
                 </div>
                 {index == currItems ? (
-                  <div className="w-full uppercase text-center text-[1rem] break-words px-1 bg-black py-1 rounded-md">
+                  <div className="w-full uppercase text-center text-sm leading-tight px-1 py-0.5  bg-black truncate">
                     INFO
                   </div>
                 ) : (
-                  <div className="w-full uppercase text-center text-[1rem] mt-1 break-words px-1">
+                  <div className="w-full uppercase text-center text-sm leading-tight px-1 py-0.5 truncate">
                     {itm.label}
                   </div>
                 )}
@@ -348,24 +349,25 @@ const Library = () => {
           })}
         </div>
 
-        <div className="flex flex-col gap-y-4 relative justify-center items-center h-full">
-          {!gameData?.pouch?.includes(`${myth}.${itemCode}`) && (
-            <div
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                showAd();
-              }}
-              className="flex flex-col justify-center items-center mx-4 mt-5 absolute top-0 right-0"
-            >
-              <Clapperboard
-                color="white"
-                size={"10vw"}
-                className="text-black-contour"
-              />
-              <div className="text-white text-black-contour">FREE</div>
-            </div>
-          )}
-
+        <div
+          className={`flex flex-col gap-y-4 relative justify-center items-center h-full ${
+            isBrowser ? "w-1/2" : "w-full"
+          } mx-auto`}
+        >
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              showAd();
+            }}
+            className="flex flex-col justify-center items-center z-[99] absolute top-4 right-2"
+          >
+            <Clapperboard
+              color="white"
+              size={"3rem"}
+              className="text-black-contour"
+            />
+            <div className="text-white text-black-contour">FREE</div>
+          </div>
           <div className="flex justify-center relative">
             {currItems == 0 && (
               <div className="absolute mt-16 ml-3">

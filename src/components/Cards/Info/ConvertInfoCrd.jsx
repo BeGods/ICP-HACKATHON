@@ -129,7 +129,7 @@ const ConvertInfo = ({ t, handleClick }) => {
     <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
       <div
         onClick={handleClick}
-        className="relative w-[72%] rounded-lg shadow-lg -mt-[30px] flex flex-col z-50"
+        className={`relative card-width rounded-lg shadow-lg -mt-[30px] flex flex-col z-50`}
       >
         <div
           className={`card ${

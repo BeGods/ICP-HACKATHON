@@ -34,9 +34,17 @@ export const mythElementNamesLowerCase = {
   celtic: "earth",
   norse: "water",
   egyptian: "air",
-  other: "aether",
   whiteShards: "white",
   blackShards: "black",
+};
+
+export const elementFileType = {
+  greek: "fire01",
+  celtic: "earth01",
+  norse: "water01",
+  egyptian: "air01",
+  whiteShards: "aether01",
+  blackShards: "aether02",
 };
 
 

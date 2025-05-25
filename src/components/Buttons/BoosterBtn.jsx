@@ -137,9 +137,9 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
               </h1>
             </div>
             <div
-              className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[18vw] h-[18vw] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center  font-symbols items-center bg-black w-[4.5rem] h-[4.5rem] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
             >
-              <div>V</div>
+              <div className="text-[2rem]">V</div>
             </div>
             <div className="flex relative justify-center items-center w-[30%] h-full pr-1">
               <img
@@ -148,7 +148,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
                 className="p-1.5"
               />
               <div className="absolute z-10">
-                <div className="font-medium text-[40px] text-white glow-text-black">
+                <div className="font-medium text-[2rem] text-white glow-text-black">
                   {activeCard == "burst" && isAutoPay
                     ? 9
                     : (activeCard == "burst" && !isAutoPay) ||

@@ -23,15 +23,13 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
   }, []);
 
   return (
-    <div className="flex absolute justify-center w-full top-0 z-20">
+    <div className="flex cursor-pointer absolute justify-center w-full top-0 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
           showSymbol();
         }}
-        className={`h-full z-20 transition-all duration-500 ${
-          showEffect && "pulse-text"
-        }`}
+        className={`h-full flex justify-center items-center z-20 transition-all duration-500`}
       >
         <Symbol myth={mythSections[activeMyth]} isCard={2} />
       </div>
@@ -43,15 +41,22 @@ const BottomChild = ({ activeMyth, gameData }) => {
   const { t } = useTranslation();
   return (
     <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
-      <div className="flex relative w-full px-7">
+      <div className="flex relative w-full max-w-[720px] px-7">
         <div
-          className={`flex border-${mythSections[activeMyth]}-primary  ${
+          className={`flex relative border-${
+            mythSections[activeMyth]
+          }-primary  ${
             !gameData.isShardsClaimActive &&
             `glow-button-${mythSections[activeMyth]}`
           }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
+          <div
+            className={`font-symbols absolute -ml-[2rem] text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
+          >
+            9
+          </div>
           <div className="flex items-center text-primary font-medium pl-headSides">
-            <span className="font-roboto text-black-contour font-normal text-[6vw] pr-1">
+            <span className="font-roboto text-black-contour font-normal text-[2rem] pr-1">
               x
             </span>
 
@@ -59,7 +64,7 @@ const BottomChild = ({ activeMyth, gameData }) => {
           </div>
         </div>
         <div
-          className={`flex justify-end ${
+          className={`flex relative justify-end ${
             gameData.isAutomataActive &&
             `glow-button-${mythSections[activeMyth]}`
           } border-${
@@ -70,20 +75,14 @@ const BottomChild = ({ activeMyth, gameData }) => {
             {gameData?.automatalvl
               ? formatTwoNums(gameData.automatalvl + 1)
               : 1}
-            <span className="font-roboto font-normal text-[6vw] pl-1">x</span>
+            <span className="font-roboto font-normal text-[2rem] pl-1">x</span>
           </div>
-        </div>
-      </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`font-symbols  text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
-        >
-          9
-        </div>
-        <div
-          className={`font-symbols text-iconLg text-black-contour  text-${mythSections[activeMyth]}-text`}
-        >
-          n
+
+          <div
+            className={`font-symbols absolute -mr-[2rem] text-iconLg text-black-contour  text-${mythSections[activeMyth]}-text`}
+          >
+            n
+          </div>
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">

@@ -18,7 +18,7 @@ const LoadRoll = () => {
   }, []);
 
   return (
-    <div className="relative h-[15vh] w-full flex justify-center items-center overflow-hidden">
+    <div className="relative h-[9rem] w-full flex justify-center items-center overflow-hidden">
       <div className="carousel-load transition-all duration-500 flex justify-center items-center">
         {images.map((src, index) => {
           let position = "behind";

@@ -49,7 +49,9 @@ const RelicRwrdCrd = ({
 
       {isChar ? (
         <>
-          <div className="relative select-none w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+          <div
+            className={`relative select-none card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+          >
             <div className={`card ${cardHeight} select-none`}>
               <CharCrd
                 cardHeight={cardHeight}
@@ -71,7 +73,9 @@ const RelicRwrdCrd = ({
         </>
       ) : (
         <>
-          <div className="relative select-none w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+          <div
+            className={`relative select-none card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+          >
             <div
               className={`card ${cardHeight} select-none  ${
                 flipped ? "flipped" : ""

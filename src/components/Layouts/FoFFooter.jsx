@@ -108,9 +108,9 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             <div
               className={`absolute ${
                 showEffect && "pulse-text"
-              } gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
+              } gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[1.2rem] font-medium bg-${
                 mythSections[activeMyth]
-              }-text text-white  h-7 w-7 text-black-sm-contour -mr-1 mt-[0.3vh] z-50 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+              }-text text-white  h-7 w-7 text-black-sm-contour -mr-1 mt-[0.5rem] z-50 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
             >
               {boostersActiveCnt}
             </div>
@@ -127,7 +127,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             }, 500);
             handleSectionChange(icon);
           }}
-          className={`flex relative ${
+          className={`flex cursor-pointer relative ${
             clickEffect && "click-effect"
           } flex-col items-center mb-2`}
         >
@@ -135,9 +135,9 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             <div
               className={`absolute ${
                 showEffect && "pulse-text"
-              } gelatine flex justify-center items-center border-[1.5px] font-roboto text-[5vw] font-medium bg-${
+              } gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-[1.2rem] font-medium bg-${
                 mythSections[activeMyth]
-              }-text text-white text-black-sm-contour h-7 w-7 -mr-4 -mt-1 z-[60] right-0 rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
+              }-text text-white  h-7 w-7 text-black-sm-contour -mr-4 -mt-1 z-[60] rounded-full shadow-[0px_4px_15px_rgba(0,0,0,0.7)]`}
             >
               {countOfInCompleteQuests}
             </div>
@@ -150,7 +150,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
               <img
                 src={userData.avatarUrl}
                 alt="profile-image"
-                className={`w-[16vw] transition-all duration-500 ${
+                className={`w-[4rem] transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
                   "glow-icon-white"
                 } border border-black  rounded-full pointer-events-none`}
@@ -164,10 +164,10 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 <img
                   src={assets.uxui.baseOrb}
                   alt="orb"
-                  className={`filter-orbs-${avatarColor} overflow-hidden max-w-[65px] pointer-events-none`}
+                  className={`filter-orbs-${avatarColor} overflow-hidden w-[4.5rem] pointer-events-none`}
                 />
                 <span
-                  className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[35px] mt-1 opacity-50`}
+                  className={`absolute z-1 text-black-sm-contour transition-all duration-1000  text-[2.5rem] mt-1 opacity-50`}
                 >
                   {userData.username.charAt(0).toUpperCase()}
                 </span>
@@ -180,13 +180,15 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         </div>
       )}
 
-      <ReactHowler
-        src={assets.audio.menu}
-        playing={false}
-        preload={true}
-        ref={howlerRef}
-        html5={true}
-      />
+      <div className="absolute z-0">
+        <ReactHowler
+          src={assets.audio.menu}
+          playing={false}
+          preload={true}
+          ref={howlerRef}
+          html5={true}
+        />
+      </div>
     </>
   );
 };
@@ -206,7 +208,8 @@ const Footer = ({}) => {
       <img
         src={assets.uxui.footer}
         alt="paper"
-        className={`w-full h-auto filter-paper-${
+        draggable={false}
+        className={`w-full select-none h-auto max-h-[7rem] filter-paper-${
           section === 3 ||
           section === 4 ||
           section === 5 ||
@@ -216,20 +219,21 @@ const Footer = ({}) => {
             : mythSections[activeMyth]
         }`}
       />
-
-      <div
-        className={`transition-all absolute duration-1000 items-end h-[12%] z-50 w-full px-2 flex justify-between text-white ${
-          platform === "ios" ? "-mt-5.5" : "-mt-3"
-        }`}
-      >
-        {footerIcons.map((item, index) => (
-          <FooterItem
-            key={index}
-            enableSound={enableSound}
-            icon={index}
-            avatarColor={avatarColor}
-          />
-        ))}
+      <div className="flex justify-center w-full px-2 -ml-1.5 bg-green-200">
+        <div
+          className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-50  flex justify-between text-white ${
+            platform === "ios" ? "-mt-5.5" : "-mt-4"
+          }`}
+        >
+          {footerIcons.map((item, index) => (
+            <FooterItem
+              key={index}
+              enableSound={enableSound}
+              icon={index}
+              avatarColor={avatarColor}
+            />
+          ))}
+        </div>
       </div>
       <ReactHowler
         src={assets.audio.fofIntro}

@@ -77,11 +77,11 @@ const Announcement = (props) => {
       } relative flex-col w-screen justify-center font-fof items-center bg-black`}
     >
       <div className="flex flex-col w-full h-full items-center">
-        <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
+        <div className="flex flex-col items-center justify-center w-full z-50 h-1/5">
           <div className="text-gold font-symbols">
-            <Megaphone size={"20vw"} />
+            <Megaphone size={"4.5rem"} />
           </div>
-          <h1 className="uppercase text-gold text-[12.2vw] text-center -mt-2 text-black-contour break-words leading-[55px]">
+          <h1 className="uppercase text-gold text-[4rem] text-center mt-1 text-black-contour break-words leading-[55px]">
             IS LIVE
           </h1>
         </div>
@@ -97,7 +97,7 @@ const Announcement = (props) => {
         <div className="flex absolute items-start bottom-[75px] justify-center w-full">
           <ThumbsUp
             onClick={getAnmntReward}
-            size={"18vw"}
+            size={"4rem"}
             color="#FFD660"
             className="mx-auto drop-shadow-xl scale-more"
           />

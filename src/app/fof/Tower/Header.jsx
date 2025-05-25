@@ -28,12 +28,6 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
 
   return (
     <div className={`flex absolute justify-center w-full z-[60] top-0`}>
-      <div className="top-0 absolute h-[20vw] w-[20vw] z-50 mt-0.5 ml-[21vw]">
-        {!showInfo && (
-          <IconBtn handleClick={handleInfoClk} isInfo={true} activeMyth={4} />
-        )}
-      </div>
-
       {myth !== 0 ? (
         <div
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
@@ -44,7 +38,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
           <span
-            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[26vw] ${
+            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[6rem] ${
               platform === "ios" ? "mt-8 ml-2" : "mt-5 ml-2"
             } opacity-70  orb-symbol-shadow`}
           >
@@ -55,13 +49,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            setShowCard(
-              <MoonInfoCard
-                handleClick={() => {
-                  setShowCard(null);
-                }}
-              />
-            );
+            handleInfoClk();
           }}
           className={`z-20 glow-icon-white transition-all duration-500`}
         >
@@ -81,7 +69,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
                 className={`moon-base`}
               />
               <span
-                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[28vw] ${
+                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[6rem] ${
                   platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
                 } orb-symbol-shadow z-50`}
               >
@@ -100,19 +88,28 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
   const { t } = useTranslation();
   return (
     <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
-      <div className="flex relative w-full px-7">
+      <div className="flex relative w-full max-w-[720px] px-7">
         <div
-          className={`flex justify-start ${
+          className={`flex relative justify-start ${
             showGlow && "glow-button-white"
           } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
+          <div
+            className={`flex absolute text-center justify-center items-center w-[4rem] h-[4rem] -ml-[2rem]  rounded-full`}
+          >
+            <img
+              src={`${assets.items.multiorb}`}
+              alt="multiOrb"
+              className="w-full h-full"
+            />
+          </div>
           <div className="text-primary text-black-contour font-medium pl-headSides">
             {" "}
             {formatThreeNums(gameData.multiColorOrbs)}
           </div>
         </div>
         <div
-          className={`flex border justify-end ${
+          className={`flex relative border justify-end ${
             myth === 0 || showGlow
               ? `glow-button-white border-white`
               : `glow-button-${mythSections[myth - 1]} border-${
@@ -134,37 +131,29 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
               <>{formatThreeNums(gameData.blackOrbs)}</>
             )}
           </div>
+          <div className="absolute -mr-[2rem]">
+            {myth !== 0 ? (
+              <>
+                <div
+                  className={`font-symbols  text-iconLg mt-0.5  text-black-lg-contour transition-all duration-1000 text-${wheel[myth]}-text`}
+                >
+                  {mythSymbols[wheel[myth]]}
+                </div>
+              </>
+            ) : (
+              <>
+                {" "}
+                <div
+                  className={`font-symbols  mt-0.5 text-[3.5rem] text-black-lg-contour transition-all duration-1000 text-white`}
+                >
+                  {mythSymbols["other"]}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4">
-        <div
-          className={`flex relative text-center justify-center items-center w-[14vw] h-[14vw] mt-[16px]  rounded-full`}
-        >
-          <img
-            src={`${assets.items.multiorb}`}
-            alt="multiOrb"
-            className="w-full h-full"
-          />
-        </div>
-        {myth !== 0 ? (
-          <>
-            <div
-              className={`font-symbols  text-iconLg mt-0.5  text-black-lg-contour transition-all duration-1000 text-${wheel[myth]}-text`}
-            >
-              {mythSymbols[wheel[myth]]}
-            </div>
-          </>
-        ) : (
-          <>
-            {" "}
-            <div
-              className={`font-symbols  mt-0.5 text-iconLg text-black-lg-contour transition-all duration-1000 text-white`}
-            >
-              {mythSymbols["other"]}
-            </div>
-          </>
-        )}
-      </div>
+
       <div className="absolute flex text-white  px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
         <div className={`mr-auto slide-in-out-left gradient-multi`}>
           {t(`keywords.orbs`)}

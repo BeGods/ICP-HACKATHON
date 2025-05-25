@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { MainContext } from "../../../context/context";
+import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { ProfileGuide } from "../../../components/Common/Tutorials";
 import { useProfileGuide } from "../../../hooks/Tutorial";
 import ProfileHeader from "./Header";
@@ -14,8 +14,11 @@ import { trackComponentView } from "../../../utils/ga";
 const tele = window.Telegram?.WebApp;
 
 const Profile = (props) => {
-  const { userData, tasks, setShowCard, assets, setSection } =
-    useContext(MainContext);
+  const { userData, tasks, assets, setSection, game } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
+  const setShowCard =
+    game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
@@ -50,7 +53,7 @@ const Profile = (props) => {
               />
             </>
           }
-          currQuest={socialQuestData[0]}
+          currQuest={tasks[0]}
           handleClick={() => {
             setShowCard(null);
           }}

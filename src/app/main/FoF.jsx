@@ -39,7 +39,7 @@ import SettingModal from "../../components/Modals/Settings";
 import TgHeader from "../../components/Layouts/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
-import { determineIsTelegram } from "../../utils/device.info";
+import { determineIsTelegram, isDesktop } from "../../utils/device.info";
 import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
@@ -67,6 +67,8 @@ const FoFMain = () => {
     setPlatform,
     setIsTelegram,
     setGlobalRewards,
+    setIsBrowser,
+    isBrowser,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -128,6 +130,8 @@ const FoFMain = () => {
     setLeaderboard,
     isTelegram,
     setLineWallet,
+    setIsBrowser,
+    isBrowser,
   };
   const sections = [
     <Forges />, // 0
@@ -347,6 +351,9 @@ const FoFMain = () => {
       document.body.style.right = "0";
       document.body.style.overflow = "hidden";
     }
+
+    const isBrowserDesktop = isDesktop();
+    setIsBrowser(isBrowserDesktop);
   }, [platform]);
 
   return (

@@ -56,7 +56,7 @@ const PayModal = ({
   }, []);
 
   return (
-    <div className="relative w-[72%] h-[55%] flex items-center justify-center rounded-primary card-shadow-white">
+    <div className="relative card-width flex items-center justify-center rounded-primary card-shadow-white">
       {!isLoading && (
         <div className="absolute text-card z-50 top-0 w-full text-center text-paperHead font-bold mt-2 uppercase">
           <div>{t(`buttons.pay`)}</div>
@@ -661,17 +661,17 @@ const BoosterClaim = ({
               >
                 <div className="flex uppercase flex-col items-center gap-2 w-fit">
                   <div className="flex relative items-center justify-center">
-                    <div className="text-white text-black-contour mt-1 z-10 absolute text-[8vw]">
+                    <div className="text-white text-black-contour mt-1 z-10 absolute text-[2rem]">
                       {activeCard === "automata" ? 1 : 3}
                     </div>{" "}
                     <img
                       src={assets.misc.tgStar}
                       alt="star"
-                      className="w-[18vw] h-[18vw]"
+                      className="w-[4rem] h-[4rem]"
                     />
                   </div>
                   <div className="flex flex-col text-white">
-                    <div className="text-[6vw] -mt-2">
+                    <div className="text-[2rem] -mt-2">
                       <span className="text-gold">{t("buttons.pay")}</span>{" "}
                       {t("note.ad")}
                     </div>
@@ -701,22 +701,22 @@ const BoosterClaim = ({
                     <img
                       src={assets.misc.kaia}
                       alt="star"
-                      className="h-[8vw]"
+                      className="h-[2rem]"
                     />
-                    <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
+                    <div className="text-white text-black-contour mt-1 z-10 text-[2rem]">
                       {activeCard === "automata"
                         ? getKaiaValue(1)
                         : getKaiaValue(3)}
                     </div>{" "}
-                    <div className="text-white text-black-contour mt-1 z-10 text-[8vw] px-1">
+                    <div className="text-white text-black-contour mt-1 z-10 text-[2rem] px-1">
                       |
                     </div>
-                    <div className="text-white text-black-contour mt-1 z-10 text-[8vw]">
+                    <div className="text-white text-black-contour mt-1 z-10 text-[2rem]">
                       ${activeCard === "automata" ? 1 : 3}
                     </div>
                   </div>
                   <div className="flex flex-col text-white">
-                    <div className="text-[6vw] -mt-3">
+                    <div className="text-[2rem] -mt-3">
                       <span className="text-gold">{t("buttons.pay")}</span>{" "}
                       {t("note.ad")}
                     </div>
@@ -773,7 +773,7 @@ const BoosterClaim = ({
                 handleButton();
               }
             }}
-            className="absolute  w-[72%] h-[50%] mt-10 cursor-pointer z-50 rounded-primary"
+            className={`absolute  card-width mt-10 cursor-pointer z-50 rounded-primary`}
           ></div>
           {section === 2 && (
             <div className="flex gap-3 absolute bottom-5">
@@ -784,14 +784,16 @@ const BoosterClaim = ({
                   <img src={assets.items.multiorb} alt="orb" />
                 </div>
                 <div
-                  className={`font-fof text-[28px] font-normal text-white text-black-sm-contour transition-all duration-1000`}
+                  className={`font-fof text-[2rem] font-normal text-white text-black-sm-contour transition-all duration-1000`}
                 >
                   {gameData.multiColorOrbs}
                 </div>
               </div>
             </div>
           )}
-          <div className="relative w-[72%] h-[55%] mt-[70px] flex items-center justify-center rounded-primary card-shadow-white">
+          <div
+            className={`relative card-width mt-[2.5rem] flex items-center justify-center rounded-primary card-shadow-white`}
+          >
             <div
               className={`absolute inset-0 rounded-primary`}
               style={{

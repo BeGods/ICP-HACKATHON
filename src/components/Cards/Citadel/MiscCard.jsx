@@ -17,7 +17,9 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
-      <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+      <div
+        className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+      >
         <div className={`card ${cardHeight} ${flipped ? "flipped" : ""}`}>
           {/* Front Side */}
           <div

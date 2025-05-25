@@ -1,13 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../styles/carousel.scss";
-import { FofContext } from "../../context/context";
+import { FofContext, MainContext, RorContext } from "../../context/context";
 import TaskItem from "../Cards/Tasks/TaskItem";
 import SettingModal from "../Modals/Settings";
 
 const tele = window.Telegram?.WebApp;
 
 const TaskCarousel = ({ quests, userData }) => {
-  const { setShowCard, isTelegram } = useContext(FofContext);
+  const { game } = useContext(MainContext);
+  const fofContext = useContext(FofContext);
+  const rorContext = useContext(RorContext);
+  const setShowCard =
+    game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
 
@@ -56,16 +60,16 @@ const TaskCarousel = ({ quests, userData }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[24%] mr-[2vw] w-full z-50"
+          className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
         </div>
       ) : (
-        <div className="flex absolute text-[8vw] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[2vh]">
+        <div className="flex absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[2.5vh]">
           {userData.username.toUpperCase()}
         </div>
       )}
-      <div className="carousel">
+      <div className={`carousel carousel-width`}>
         {quests
           .sort((a, b) => {
             if (a._id === "fjkddfakj138338huadla") return -1;
@@ -121,7 +125,7 @@ const TaskCarousel = ({ quests, userData }) => {
       {currentIndex < quests.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[22%] w-full"
+          className="absolute cursor-pointer bottom-[22%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

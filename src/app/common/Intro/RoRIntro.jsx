@@ -46,7 +46,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
                 showGlow && "ror-text-shadow"
               } transition-all duration-300`}
             />
-            <div className="flex justify-center text-white font-fof text-[7vw] glow-text-norse">
+            <div className="flex justify-center text-white font-fof text-[2rem] glow-text-norse">
               BETA
             </div>
           </div>
@@ -84,7 +84,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTelegram }) => {
                 alt="Button"
                 className="h-auto"
               />
-              <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
+              <span className="absolute cursor-pointer inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
                 {showGlow ? "LOADING" : "PLAY"}
               </span>
               {/* <h1 className="text-white font-fof text-[1.75rem] text-black-contour">

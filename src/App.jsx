@@ -15,6 +15,7 @@ import assets from "./assets/assets.json";
 import {
   fetchHapticStatus,
   getStorage,
+  setStorage,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
 import LineCallback from "./app/common/LineCallback";
@@ -34,6 +35,7 @@ function usePageTracking() {
 }
 
 function App() {
+  const [isBrowser, setIsBrowser] = useState(false);
   const [game, setGame] = useState("fof");
   const [lineWallet, setLineWallet] = useState(null);
   const [globalRewards, setGlobalRewards] = useState([]);
@@ -48,6 +50,7 @@ function App() {
   const [country, setCountry] = useState("NA");
   const [lang, setLang] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const location = useLocation();
   usePageTracking();
 
   const initalStates = {
@@ -80,6 +83,8 @@ function App() {
     setTriggerConf,
     activeReward,
     setActiveReward,
+    setIsBrowser,
+    isBrowser,
   };
 
   const syncAllCookies = async () => {
@@ -95,6 +100,24 @@ function App() {
   useEffect(() => {
     syncAllCookies();
   }, []);
+
+  const handleCurrGame = async () => {
+    try {
+      if (location.pathname.startsWith("/fof")) {
+        setGame("fof");
+        await setStorage(tele, "game", "fof");
+      } else if (location.pathname.startsWith("/ror")) {
+        setGame("ror");
+        await setStorage(tele, "game", "ror");
+      }
+    } catch (Error) {
+      console.log(Error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => handleCurrGame())();
+  }, [location]);
 
   return (
     <MainContext.Provider value={initalStates}>

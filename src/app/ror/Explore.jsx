@@ -22,6 +22,7 @@ import DefaultBtn from "../../components/Buttons/DefaultBtn";
 import {
   bgLabel,
   colorByMyth,
+  elementFileType,
   mythElementNamesLowerCase,
   mythSections,
 } from "../../utils/constants.ror";
@@ -36,17 +37,17 @@ const CenterChild = ({ assets, content, mythology, location }) => {
   return (
     <div
       className={`
-            flex justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary  rounded-full bg-black border border-${mythology}-primary top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex  cursor-pointer justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary  rounded-full bg-black border border-${mythology}-primary top-0 z-20 left-1/2 -translate-x-1/2`}
     >
       <img
         src={assets.uxui.baseOrb}
         alt="base-orb"
         className={`filter-orbs-${mythology} w-full h-full rounded-full pointer-events-none`}
       />
-      <div className="absolute top-0 w-full flex justify-center z-[60] text-[5vw] uppercase glow-text-black font-bold text-white">
+      <div className="absolute top-0 w-full flex justify-center z-[60] text-[1.5rem] uppercase glow-text-black font-bold text-white">
         {bgLabel[location] ?? "Explore"}
       </div>
-      <div className="absolute flex justify-center items-center inset-0 text-[24vw] mt-4">
+      <div className="absolute flex justify-center items-center inset-0 text-[5rem] mt-4">
         {content}
       </div>
     </div>
@@ -216,11 +217,11 @@ const Explore = () => {
     if (!startPlay) {
       return (
         <div
-          onTouchStart={handlePlay}
-          className="text-center font-medium uppercase text-black-contour text-white text-[12vw] p-3"
+          onPointerDown={handlePlay}
+          className="text-center cursor-pointer font-medium uppercase text-black-contour text-white text-[3rem] p-3"
         >
           Swipe To Dig <br />{" "}
-          <span className="font-symbols lowercase text-[24vw] text-black-contour">
+          <span className="font-symbols lowercase text-[6rem] text-black-contour">
             b
           </span>
         </div>
@@ -230,14 +231,14 @@ const Explore = () => {
     if (currStage === 0) {
       if (gameData.bag.length >= 9 || gameData.stats.dailyQuota <= 0) {
         return (
-          <div className="text-[6vw]">
+          <div className="text-[3rem] break-words">
             {gameData.bag.length >= 9
               ? "Your bag is full!"
               : "Daily quota exhausted"}
           </div>
         );
       }
-      return <div className="text-[60vw] text-black-contour">{countDown}</div>;
+      return <div className="text-[15rem] text-black-contour">{countDown}</div>;
     }
 
     if (currStage === 1) {
@@ -286,7 +287,7 @@ const Explore = () => {
               )}
           </div>
 
-          <div className="text-[22vw] reward-pop-in text-gold text-black-contour uppercase">
+          <div className="text-[7rem] reward-pop-in text-gold text-black-contour uppercase">
             {swipes >= gameData.stats.competelvl ? "Won" : "Lost"}
           </div>
         </div>
@@ -375,7 +376,9 @@ const Explore = () => {
 
         setShowCard(
           <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
-            <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+            <div
+              className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+            >
               <div className={`card ${cardHeight}`}>
                 <CurrencyCrd
                   itemId={{
@@ -516,7 +519,7 @@ const Explore = () => {
           );
         } else if (
           parsedReward?.fragment &&
-          /common02/?.test(randomGenItem.id)
+          /common02/?.test(parsedReward?.fragment.itemId)
         ) {
           updatedBagItems = [...prevItems.bag];
           updatedPouch = [...prevItems.pouch, parsedReward?.fragment.itemId];

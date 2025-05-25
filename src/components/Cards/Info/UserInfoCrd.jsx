@@ -5,12 +5,14 @@ import { mythSymbols } from "../../../utils/constants.fof";
 import { countries } from "../../../utils/country";
 
 const UserInfoCard = ({ close, userData }) => {
-  const { assets, isTelegram } = useContext(FofContext);
+  const { assets } = useContext(FofContext);
   const countryFlag = countries.find((item) => item.code == userData.country);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
-      <div className="relative w-[72%] rounded-lg shadow-lg card-shadow-white">
+      <div
+        className={`relative card-width rounded-lg shadow-lg card-shadow-white`}
+      >
         <div className="relative w-full h-full text-card">
           <img
             src={assets.uxui.bgInfo}
@@ -30,7 +32,7 @@ const UserInfoCard = ({ close, userData }) => {
         <div
           className={`absolute leading-[18px] text-paperSub text-card inset-0 w-[85%] mx-auto flex gap-6 justify-start pt-[32%] font-[550] z-30 `}
         >
-          <div className="flex flex-col gap-[6vw] w-full">
+          <div className="flex flex-col gap-[2rem] w-full">
             <div className="flex gap-2 items-center">
               <div
                 className={`flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black`}

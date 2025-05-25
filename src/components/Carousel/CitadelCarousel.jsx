@@ -84,23 +84,15 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "gemologist",
         component: (
           <CitadelItem
-            disable={
-              gameData.stats.blackShards >= 100 ||
-              gameData.stats.whiteShards >= 100
-            }
+            disable={false}
             icon="v"
             isMulti={false}
             itemKey="apothecary"
             desc="Gemologist"
             handleClick={async () => {
-              if (
-                gameData.stats.blackShards >= 100 ||
-                gameData.stats.whiteShards >= 100
-              ) {
-                handleClickHaptic(tele, enableHaptic);
+              handleClickHaptic(tele, enableHaptic);
 
-                setSection(11);
-              }
+              setSection(11);
             }}
           />
         ),
@@ -181,12 +173,12 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
           onClick={() => {
             setCurrentIndex((prevIndex) => prevIndex - 1);
           }}
-          className="absolute top-[24%] mr-[2vw] w-full z-50"
+          className="absolute top-[24%] cursor-pointer mr-[2vw] w-full z-50"
         >
           <div className="arrows-up"></div>
         </div>
       )}
-      <div className="carousel">
+      <div className={`carousel carousel-width`}>
         {items.slice(currentIndex, currentIndex + 3).map((item, index) => {
           let className = "carousel__item";
           className +=
@@ -202,7 +194,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute bottom-[22%] w-full"
+          className="absolute cursor-pointer  bottom-[22%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

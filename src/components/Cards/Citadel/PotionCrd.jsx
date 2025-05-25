@@ -24,7 +24,7 @@ const PotionCard = ({ potion }) => {
               className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white`}
             >
               <img
-                src={`https://media.publit.io/file/BeGods/items/240px-shard.white.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-shard.aether01.png`}
                 alt="shards"
                 className=" max-w-orb "
               />
@@ -38,7 +38,7 @@ const PotionCard = ({ potion }) => {
               className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white`}
             >
               <img
-                src={`https://media.publit.io/file/BeGods/items/240px-shard.black.png`}
+                src={`https://media.publit.io/file/BeGods/items/240px-shard.aether02.png`}
                 alt="shards"
                 className=" max-w-orb "
               />
@@ -58,7 +58,7 @@ const PotionCard = ({ potion }) => {
                   <img
                     src={`https://media.publit.io/file/BeGods/items/240px-shard.${mythElementNames[
                       item.name
-                    ]?.toLowerCase()}.png`}
+                    ]?.toLowerCase()}01.png`}
                     alt="shards"
                   />
                 </div>
@@ -92,7 +92,9 @@ const PotionCard = ({ potion }) => {
         </div>
       )}
 
-      <div className="relative w-[72%] h-[57%] card-shadow-white rounded-lg shadow-lg flex flex-col z-50">
+      <div
+        className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+      >
         <div className={`card  ${cardHeight} `}>
           <div className="card__face card__face--front relative flex justify-center items-center">
             <div
@@ -103,7 +105,7 @@ const PotionCard = ({ potion }) => {
             <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
               <div className="relative m-2 flex justify-center items-center w-[50px]">
                 <img src={assets.uxui.gobcoin} alt="relic" className="w-full" />
-                <div className="absolute text-num font-roboto font-bold text-shadow text-gray-500 grayscale">
+                <div className="absolute text-[2.5rem] font-roboto font-bold text-shadow text-gray-500 grayscale">
                   1
                 </div>
               </div>

@@ -13,7 +13,7 @@ const OrbCard = ({ activeMyth }) => {
       className={`flex flex-col justify-center items-center w-full absolute h-full`}
     >
       <Symbol myth={mythSections[activeMyth]} isCard={3} />
-      <div className="absolute bottom-0 text-[9vw] mt-4 text-gold text-black-contour">
+      <div className="absolute bottom-0 text-[2.5rem] mt-4 text-gold text-black-contour">
         $FAITH TOKEN
       </div>
     </div>
@@ -27,7 +27,7 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { enableSound, assets } = useContext(FofContext);
+  const { enableSound, assets, isTelegram } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -48,8 +48,14 @@ const OrbClaimCard = ({
 
   return (
     <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
-      <div className="relative w-[72%] rounded-lg shadow-lg mt-[70px] flex flex-col z-50">
-        <div className={`card ${flipped ? "flipped" : ""} text-black-contour`}>
+      <div
+        className={`relative card-width rounded-lg shadow-lg flex flex-col z-50`}
+      >
+        <div
+          className={`card ${flipped ? "flipped" : ""} ${
+            isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+          }  text-black-contour`}
+        >
           <div
             onClick={(e) => {
               setFlipped((prev) => !prev);
