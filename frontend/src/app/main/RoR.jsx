@@ -244,6 +244,7 @@ const RoRMain = () => {
       refreshTimeoutRef.current = null;
       setAuthToken(newToken);
       await setAuthCookie(tele, newToken);
+      setSection(0);
     } catch (error) {
       showToast("default");
       navigate("/");

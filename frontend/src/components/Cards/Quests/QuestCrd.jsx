@@ -23,6 +23,9 @@ const QuestCard = ({
 
   return (
     <div
+      style={{
+        perspective: "1000px",
+      }}
       className={`card-width relative flex flex-col gap-3 justify-center items-center mx-auto`}
     >
       <div

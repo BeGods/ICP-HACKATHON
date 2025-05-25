@@ -617,13 +617,12 @@ const BoosterClaim = ({
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {!showPayModal ? (
         <>
-          {((activeCard === "automata" &&
-            !boostersData?.isAutomataActive &&
-            !isAutoPay) ||
-            (activeCard === "minion" &&
-              boostersData?.isShardsClaimActive &&
-              !isAutoPay)) &&
-            isTelegram && (
+          {/* Adsgram */}
+          {isTelegram &&
+            !isAutoPay &&
+            ((activeCard === "automata" && !boostersData?.isAutomataActive) ||
+              (activeCard === "minion" &&
+                boostersData?.isShardsClaimActive)) && (
               <div
                 onClick={() => {
                   handleClickHaptic(tele, enableHaptic);
@@ -644,14 +643,17 @@ const BoosterClaim = ({
               </div>
             )}
 
-          {((activeCard === "automata" &&
-            !boostersData?.isAutomataActive &&
-            isAutoPay) ||
-            (activeCard === "burst" &&
-              boostersData?.isShardsClaimActive &&
-              isAutoPay)) &&
+          {/* Telegram Stars */}
+          {isAutoPay &&
             !payIsActive &&
-            isTelegram && (
+            isTelegram &&
+            ((activeCard === "automata" &&
+              gameData?.isEligibleToAutomataAuto &&
+              gameData?.isAutomataAutoActive === -1 &&
+              !boostersData.isAutomataActive) ||
+              (activeCard === "burst" &&
+                !boostersData.isBurstActive &&
+                hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
               <div
                 onClick={() => {
                   handleClickHaptic(tele, enableHaptic);
@@ -680,14 +682,17 @@ const BoosterClaim = ({
               </div>
             )}
 
-          {((activeCard === "automata" &&
-            !boostersData?.isAutomataActive &&
-            isAutoPay) ||
-            (activeCard === "burst" &&
-              boostersData?.isShardsClaimActive &&
-              isAutoPay)) &&
+          {/* Kaia */}
+          {isAutoPay &&
             !payIsActive &&
-            !isTelegram && (
+            !isTelegram &&
+            ((activeCard === "automata" &&
+              gameData?.isEligibleToAutomataAuto &&
+              gameData?.isAutomataAutoActive !== -1 &&
+              !boostersData.isAutomataActive) ||
+              (activeCard === "burst" &&
+                !boostersData.isBurstActive &&
+                hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
               <div
                 onClick={() => {
                   handleClickHaptic(tele, enableHaptic);
@@ -725,6 +730,7 @@ const BoosterClaim = ({
               </div>
             )}
 
+          {/* Loading */}
           {((activeCard === "automata" &&
             !boostersData?.isAutomataActive &&
             isAutoPay) ||
@@ -747,6 +753,8 @@ const BoosterClaim = ({
                 </div>
               </div>
             )}
+
+          {/* Content */}
           <div
             onClick={() => {
               const conditions = {

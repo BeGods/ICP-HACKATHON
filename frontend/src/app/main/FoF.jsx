@@ -296,6 +296,7 @@ const FoFMain = () => {
       refreshTimeoutRef.current = null;
       setAuthToken(newToken);
       await setAuthCookie(tele, newToken);
+      setSection(0);
     } catch (error) {
       showToast("default");
       navigate("/");

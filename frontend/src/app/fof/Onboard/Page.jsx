@@ -462,12 +462,12 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
             <div className="flex flex-col items-center z-[99] gap-[1.5dvh] mb-[5dvh]">
               {/*
                */}
-              <img
+              {/* <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              />
+              /> */}
               {/* <div className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]">
                 <img
                   src="/assets/dapp.logo.png"
@@ -478,7 +478,7 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   Connect
                 </h1>
               </div> */}
-              <img
+              {/* <img
                 src={assets.buttons.otp}
                 alt="otp-button"
                 className="begod-text-shadow w-[215px]"
@@ -486,7 +486,7 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   handleClickHaptic(tele, true);
                   openModal();
                 }}
-              />
+              /> */}
               {/* <img
                 src={assets.buttons.telegram}
                 alt="dapp-button"
