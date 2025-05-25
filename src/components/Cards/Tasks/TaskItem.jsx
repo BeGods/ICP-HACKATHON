@@ -54,12 +54,16 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
         await navigator.clipboard.writeText(
           `https://t.me/BeGods_bot/games?startapp=${userData.referralCode}`
         );
-      } else {
+      } else if (liff.isInClient()) {
         const permanentLink = await liff.permanentLink.createUrlBy(
           `${import.meta.env.VITE_CLIENT}?refer=${userData.referralCode}`
         );
 
         await navigator.clipboard.writeText(permanentLink);
+      } else {
+        await navigator.clipboard.writeText(
+          `${import.meta.env.VITE_CLIENT}?refer=${userData.referralCode}`
+        );
       }
 
       showToast("copy_link");

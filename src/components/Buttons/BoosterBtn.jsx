@@ -32,6 +32,19 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
         ) : activeCard === "automata" &&
           mythData?.isAutomataActive &&
           !hasTimeElapsed(mythData.automataStartTime) &&
+          isAutoPay ? (
+          <div
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+          >
+            <div className="flex justify-center items-center w-1/4 h-full"></div>
+            <div className="text-primary uppercase">
+              <Lock />
+            </div>
+            <div className="flex justify-center items-center w-1/4  h-full"></div>
+          </div>
+        ) : activeCard === "automata" &&
+          mythData?.isAutomataActive &&
+          !hasTimeElapsed(mythData.automataStartTime) &&
           !isAutoPay ? (
           <div
             className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}

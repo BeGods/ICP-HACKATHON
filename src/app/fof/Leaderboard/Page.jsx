@@ -226,16 +226,16 @@ const Leaderboard = (props) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!userData.stakeOn) {
-  //     const interval = setInterval(() => {
-  //       setFlipped((prev) => !prev);
-  //     }, 4000);
-  //     return () => clearInterval(interval);
-  //   } else {
-  //     setFlipped(false);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (!userData.stakeOn) {
+      const interval = setInterval(() => {
+        setFlipped((prev) => !prev);
+      }, 4000);
+      return () => clearInterval(interval);
+    } else {
+      setFlipped(false);
+    }
+  }, []);
 
   return (
     <div
