@@ -27,7 +27,9 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
   }, []);
 
   return (
-    <div className={`flex absolute justify-center w-full z-[60] top-0`}>
+    <div
+      className={`flex cursor-pointer absolute justify-center w-full z-[60] top-0`}
+    >
       {myth !== 0 ? (
         <div
           className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}

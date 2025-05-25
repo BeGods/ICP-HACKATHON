@@ -289,7 +289,7 @@ export const BoosterGuide = ({ handleClick }) => {
   );
 };
 
-export const TowerGuide = ({ handleClick, isTelegram }) => {
+export const TowerGuide = ({ handleClick, isTgMobile }) => {
   const { assets, activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
   const [activeColor, setActiveColor] = useState(0);
@@ -332,7 +332,7 @@ export const TowerGuide = ({ handleClick, isTelegram }) => {
       <div
         onClick={handleClick}
         className={`absolute flex justify-center items-center ${
-          isTelegram ? "w-[90%] mt-4 h-[95%]" : "w-[78%] h-auto mt-[24vh]"
+          isTgMobile ? "w-[90%] mt-4 h-[95%]" : "w-[78%] h-auto mt-[24vh]"
         }`}
       >
         <div

@@ -102,7 +102,7 @@ const ConvertCard = ({ t, assets, myths, activeColor }) => {
 };
 
 const ConvertInfo = ({ t, handleClick }) => {
-  const { assets, isTelegram } = useContext(FofContext);
+  const { assets, isTgMobile } = useContext(FofContext);
   const [activeColor, setActiveColor] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const myths = ["greek", "celtic", "norse", "egyptian"];
@@ -133,7 +133,7 @@ const ConvertInfo = ({ t, handleClick }) => {
       >
         <div
           className={`card ${
-            isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+            isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
           } ${flipped ? "flipped" : ""}`}
         >
           <div

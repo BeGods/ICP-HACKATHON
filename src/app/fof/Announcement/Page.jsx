@@ -20,7 +20,7 @@ const tele = window.Telegram?.WebApp;
 const Announcement = (props) => {
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { setSection, setShowAnmt, enableHaptic, isTelegram } =
+  const { setSection, setShowAnmt, enableHaptic, isTgMobile } =
     useContext(FofContext);
   let disableRef = useRef(false);
 
@@ -73,7 +73,7 @@ const Announcement = (props) => {
   return (
     <div
       className={`flex ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } relative flex-col w-screen justify-center font-fof items-center bg-black`}
     >
       <div className="flex flex-col w-full h-full items-center">

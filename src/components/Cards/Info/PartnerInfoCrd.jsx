@@ -4,7 +4,7 @@ import { MainContext } from "../../../context/context";
 import { extractBotName, formatDate } from "../../../helpers/game.helper";
 
 const PartnerCard = ({ close, reward }) => {
-  const { assets, platform, isTelegram } = useContext(MainContext);
+  const { assets, platform, isTgMobile } = useContext(MainContext);
 
   return (
     <div
@@ -59,7 +59,7 @@ const PartnerCard = ({ close, reward }) => {
 
       <div
         className={`absolute font-semibold italic ${
-          isTelegram ? "bottom-0" : "bottom-6"
+          isTgMobile ? "bottom-0" : "bottom-6"
         } text-para text-card mx-auto px-2 py-1`}
       >
         {formatDate(reward.endDate)}

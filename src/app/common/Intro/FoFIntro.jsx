@@ -6,7 +6,7 @@ import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
-const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
+const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
   const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
   const { setGame } = useContext(MainContext);
@@ -14,32 +14,35 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
   return (
     <div
       className={`w-[200vw] ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } relative`}
     >
       {/* img 1 */}
       <div
-        className="absolute inset-0 w-full h-full z-0"
+        className="absolute inset-0 w-full h-full z-0 select-none"
         style={{
           background: `url(${assets.locations.fof}) no-repeat center / cover`,
         }}
+        draggable={false}
       ></div>
       {/* img 2  */}
       {showGlow && (
         <div
-          className="absolute inset-0 w-full h-full z-10"
+          className="absolute inset-0 w-full h-full z-10 select-none"
           style={{
             background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
           }}
+          draggable={false}
         ></div>
       )}
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <img
+            draggable={false}
             src={assets.logos.fof}
             alt="fof"
-            className={`${
+            className={` select-none${
               showGlow && "fof-text-shadow"
             } transition-all duration-300`}
           />
@@ -50,9 +53,10 @@ const FoFIntro = ({ handleFadeout, fadeout, isTelegram }) => {
               } justify-center items-center z-[100]`}
             >
               <img
+                draggable={false}
                 src={assets.logos.begodsBlack}
                 alt="logo"
-                className="w-[65px] begod-orange-shadow pointer-events-none"
+                className="w-[65px] begod-orange-shadow pointer-events-none select-none"
               />
             </div>
             <div

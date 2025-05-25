@@ -20,10 +20,10 @@ const RelicRwrdCrd = ({
   hideInfo,
   isSell,
 }) => {
-  const { isTelegram, setShowCard } = useContext(RorContext);
+  const { isTgMobile, setShowCard } = useContext(RorContext);
   const [flipped, setFlipped] = useState(false);
 
-  const cardHeight = isTelegram ? "h-[49vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+  const cardHeight = isTgMobile ? "h-[49vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   // useEffect(() => {
   //   const interval = setInterval(() => {

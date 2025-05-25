@@ -28,7 +28,7 @@ const Gacha = (props) => {
     assets,
     platform,
     showAnmt,
-    isTelegram,
+    isTgMobile,
   } = useContext(FofContext);
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
@@ -226,7 +226,7 @@ const Gacha = (props) => {
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
       <div
@@ -264,7 +264,7 @@ const Gacha = (props) => {
           {/* Main */}
           <div
             className={`absolute ${
-              isTelegram ? "tg-container-height" : "browser-container-height"
+              isTgMobile ? "tg-container-height" : "browser-container-height"
             }`}
           >
             <div

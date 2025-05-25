@@ -59,6 +59,7 @@ const Quests = () => {
     enableSound,
     enableHaptic,
     isTelegram,
+    isTgMobile,
   } = useContext(FofContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
@@ -359,7 +360,7 @@ const Quests = () => {
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0`}
     >
       <div
@@ -407,7 +408,7 @@ const Quests = () => {
 
       <div
         className={`flex ${
-          isTelegram ? "tg-container-height" : "browser-container-height"
+          isTgMobile ? "tg-container-height" : "browser-container-height"
         } justify-center items-center w-screen absolute mx-auto`}
       >
         {currQuest < quests.length ? (
@@ -461,7 +462,7 @@ const Quests = () => {
                 setFlipped((prev) => !prev);
               }}
               className={`card  ${
-                isTelegram ? "h-[50%] mt-[4.75rem]" : "h-[54%] mt-[3.25rem]"
+                isTgMobile ? "h-[50%] mt-[4.75rem]" : "h-[54%] mt-[3.25rem]"
               } card-width ${flipped ? "flipped" : ""} z-[99]`}
             >
               <div

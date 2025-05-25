@@ -27,7 +27,7 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { enableSound, assets, isTelegram } = useContext(FofContext);
+  const { enableSound, assets, isTgMobile } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -53,7 +53,7 @@ const OrbClaimCard = ({
       >
         <div
           className={`card ${flipped ? "flipped" : ""} ${
-            isTelegram ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+            isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
           }  text-black-contour`}
         >
           <div

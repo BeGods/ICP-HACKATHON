@@ -32,7 +32,11 @@ import {
 import Profile from "../common/Profile/Page";
 import Gift from "../common/Gift/Gift";
 import Gacha from "../ror/Gacha";
-import { determineIsTelegram, isDesktop } from "../../utils/device.info";
+import {
+  determineIsTelegram,
+  determineIsTgDesktop,
+  isDesktop,
+} from "../../utils/device.info";
 import JoinBonus from "../ror/JoinBonus";
 import Library from "../ror/Library";
 import Tavern from "../ror/Tavern";
@@ -75,6 +79,8 @@ const RoRMain = () => {
     setActiveReward,
     isBrowser,
     setIsBrowser,
+    isTgMobile,
+    setIsTgMobile,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -142,6 +148,8 @@ const RoRMain = () => {
     setIsSwiping,
     isBrowser,
     setIsBrowser,
+    isTgMobile,
+    setIsTgMobile,
   };
   const refreshTimeoutRef = useRef();
 
@@ -294,7 +302,13 @@ const RoRMain = () => {
       tele.setBackgroundColor("#000000");
       tele.setBottomBarColor("#000000");
       setPlatform(tele.platform);
+
       const isTg = determineIsTelegram(tele.platform);
+      const validtgDesktop = determineIsTgDesktop(platform);
+
+      if (isTg && !validtgDesktop) {
+        setIsTgMobile(true);
+      }
       setIsTelegram(isTg);
     }
   }, []);
@@ -384,7 +398,7 @@ const RoRMain = () => {
             backgroundPosition: `${shiftBg}%`,
           }}
           className={`w-screen transition-all duration-500 ${
-            isTelegram ? "tg-container-height" : "browser-container-height"
+            isTgMobile ? "tg-container-height" : "browser-container-height"
           } bg-white select-none font-fof overflow-hidden`}
         >
           <RorContext.Provider value={contextValues}>

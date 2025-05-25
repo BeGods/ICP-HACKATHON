@@ -6,7 +6,7 @@ import { fetchDailyBonus } from "../../utils/api.ror";
 import { mythologies } from "../../utils/constants.ror";
 
 const Gacha = () => {
-  const { setSection, setGameData, isTelegram, assets, authToken } =
+  const { setSection, setGameData, isTgMobile, assets, authToken } =
     useContext(RorContext);
   const [changeText, setChangeText] = useState("SCRATCH");
   const [item, setItem] = useState(null);
@@ -133,7 +133,7 @@ const Gacha = () => {
   return (
     <div
       className={`flex flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
       <div
@@ -153,7 +153,7 @@ const Gacha = () => {
         {/* Scratch */}
         <div
           className={`absolute rounded-lg ${
-            isTelegram ? "tg-container-height" : "browser-container-height"
+            isTgMobile ? "tg-container-height" : "browser-container-height"
           } w-screen flex justify-center items-center`}
         >
           <Scratch

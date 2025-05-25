@@ -5,12 +5,12 @@ import ReactHowler from "react-howler";
 import { MainContext } from "../../context/context";
 
 const RoRLoader = (props) => {
-  const { isTelegram } = useContext(MainContext);
+  const { isTgMobile } = useContext(MainContext);
 
   return (
     <div
       className={`w-[100vw] relative ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       }`}
     >
       {/* img 1 */}

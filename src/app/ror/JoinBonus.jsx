@@ -16,7 +16,7 @@ const JoinBonus = (props) => {
     authToken,
     setGameData,
     enableHaptic,
-    isTelegram,
+    isTgMobile,
     assets,
   } = useContext(RorContext);
   const [changeText, setChangeText] = useState(true);
@@ -82,7 +82,7 @@ const JoinBonus = (props) => {
   return (
     <div
       className={`flex relative flex-col ${
-        isTelegram ? "tg-container-height" : "browser-container-height"
+        isTgMobile ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
       <div className="flex flex-col w-full h-full items-center">

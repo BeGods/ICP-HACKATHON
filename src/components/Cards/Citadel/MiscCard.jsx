@@ -8,8 +8,8 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack }) => {
   const { i18n } = useTranslation();
   const [flipped, setFlipped] = useState(false);
 
-  const isTelegram = typeof Telegram !== "undefined"; // If not defined elsewhere
-  const cardHeight = isTelegram ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+  const isTgMobile = typeof Telegram !== "undefined"; // If not defined elsewhere
+  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   const handleFlip = () => {
     setFlipped((prev) => !prev);

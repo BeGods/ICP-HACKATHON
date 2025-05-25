@@ -43,6 +43,8 @@ function App() {
   const [activeReward, setActiveReward] = useState(null);
   const [enableHaptic, setEnableHaptic] = useState(true);
   const [isTelegram, setIsTelegram] = useState(false);
+  const [isTgDesktop, setIsTgDesktop] = useState(false);
+  const [isTgMobile, setIsTgMobile] = useState(false);
   const [enableSound, setEnableSound] = useState(true);
   const [userData, setUserData] = useState(null);
   const [platform, setPlatform] = useState(null);
@@ -85,6 +87,10 @@ function App() {
     setActiveReward,
     setIsBrowser,
     isBrowser,
+    isTgDesktop,
+    setIsTgDesktop,
+    isTgMobile,
+    setIsTgMobile,
   };
 
   const syncAllCookies = async () => {
