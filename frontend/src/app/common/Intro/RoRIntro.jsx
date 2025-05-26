@@ -38,7 +38,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
       )}
 
       {/* content */}
-      {/* <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <div>
             <img
@@ -66,7 +66,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
                 className="w-[67px] begod-blue-shadow pointer-events-none"
               />
             </div>
-            <div
+            {/* <div
               onClick={async () => {
                 handleClickHaptic(tele, true);
                 setGame("ror");
@@ -91,12 +91,19 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
               <span className="absolute cursor-pointer inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
                 {showGlow ? "LOADING" : "PLAY"}
               </span>
+            </div> */}
+            <div onClick={() => {}} className="relative inline-block">
+              <div className="relative inline-block">
+                <h1 className="text-white font-fof text-[1.75rem] text-black-contour">
+                  COMING SOON
+                </h1>
+              </div>
             </div>
           </div>
         </div>
-      </div> */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[0.5vh] pb-[3vh]">
+      </div>
+      {/* <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[3.5vh]">
           <img
             src={assets.logos.ror}
             alt="dod"
@@ -127,22 +134,16 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
               className="relative inline-block"
             >
               <div className="relative inline-block">
-                <h1 className="text-white font-fof text-[1.75rem] text-black-contour">
+                <h1 className="text-white font-fof text-[9vw] text-black-contour">
                   COMING SOON
                 </h1>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
 
 export default RoRIntro;
-
-{
-  /* <h1 className="text-white font-fof text-[1.75rem] text-black-contour">
-                COMING SOON
-              </h1> */
-}
