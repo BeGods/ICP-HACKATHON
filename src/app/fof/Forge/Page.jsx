@@ -1757,24 +1757,18 @@ const Forges = () => {
             preload={true}
             loop
           />
-          {(isStarHold.current === true || isMinionHold.current === true) && (
+          {isMinionHold.current === true && (
             <ReactHowler
-              src={`${assets.audio.alchemistLong}`}
-              playing={
-                enableSound &&
-                (isStarHold.current === true || isMinionHold.current === true)
-              }
+              src={`${assets.audio.alchemist}`}
+              playing={enableSound && isMinionHold.current === true}
               preload={true}
               html5={true}
             />
           )}
-          {(isStarHold.current === true || showRatEffect == 1) && (
+          {isStarHold.current === true && (
             <ReactHowler
-              src={`${assets.audio.automataLong}`}
-              playing={
-                enableSound &&
-                (isStarHold.current === true || showRatEffect == 1)
-              }
+              src={`${assets.audio.star}`}
+              playing={enableSound && isStarHold.current === true}
               preload={true}
               html5={true}
             />
