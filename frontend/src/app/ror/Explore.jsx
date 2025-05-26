@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 import RoRBtn from "../../components/Buttons/RoRBtn";
 import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
 import { showToast } from "../../components/Toast/Toast";
+import ReactHowler from "react-howler";
 
 const tele = window.Telegram?.WebApp;
 
@@ -76,6 +77,7 @@ const Explore = () => {
     setActiveReward,
     setRewardsClaimedInLastHr,
     rewardsClaimedInLastHr,
+    enableSound,
   } = useContext(RorContext);
   const [currStage, setCurrStage] = useState(0);
   const [countDown, setCountDown] = useState(5);
@@ -92,6 +94,7 @@ const Explore = () => {
   const [randomReward, setRandomReward] = useState(null);
   const [showBubble, setShowBubble] = useState(false);
   const [counter, setCounter] = useState(1);
+  const [playSound, setPlaySound] = useState(0);
   const direction = useRef({ x: 1, y: 1 });
   const ballRef = useRef(null);
   const [holdTime, setHoldTime] = useState({
@@ -210,6 +213,7 @@ const Explore = () => {
 
     setMythBg(randomImage);
     setDigMyth(randomMyth);
+    setPlaySound(1);
     setStartPlay(true);
   };
 
@@ -351,7 +355,20 @@ const Explore = () => {
         ? `${destrItemIds[0]}.char.${destrItemIds[2]}`
         : parsedReward?.fragment?.itemId;
 
+      if (id?.includes("C00")) {
+        setPlaySound(4);
+      } else if (
+        id?.includes("C06") ||
+        id?.includes("C07") ||
+        id?.includes("C08")
+      ) {
+        setPlaySound(5);
+      } else {
+        setPlaySound(6);
+      }
+
       if (parsedReward?.isDragon) {
+        setPlaySound(4);
         parsedReward.fragment = parsedReward.fragment || {};
         parsedReward.fragment.isChar = true;
       }
@@ -589,6 +606,7 @@ const Explore = () => {
             },
           };
         });
+        setPlaySound(0);
       }, 3500);
     } catch (error) {
       console.log(error);
@@ -610,6 +628,13 @@ const Explore = () => {
   const handleUpdateRoundData = async () => {
     const digLvl = gameData?.stats?.digLvl ?? 1;
     const result = swipes >= gameData.stats.competelvl ? 1 : 0;
+
+    if (swipes >= gameData.stats.competelvl) {
+      setPlaySound(2);
+    } else {
+      setPlaySound(3);
+    }
+
     let currRoundData = null;
     setIsSwiping(false);
 
@@ -659,6 +684,7 @@ const Explore = () => {
         return prev;
       });
       setIsSwiping(true);
+      setPlaySound(1);
     }, 3000);
   };
 
@@ -859,6 +885,36 @@ const Explore = () => {
           </>
         </div>
       )}
+
+      <div className="absolute">
+        {playSound != 0 && (
+          <>
+            <ReactHowler
+              src={
+                assets.audio[
+                  playSound == 1
+                    ? `${mythBg}`
+                    : playSound == 2
+                    ? "won"
+                    : playSound == 3
+                    ? "lost"
+                    : playSound == 4
+                    ? "dragon"
+                    : playSound == 5
+                    ? "monster"
+                    : playSound == 6
+                    ? "unique"
+                    : ""
+                ]
+              }
+              playing={enableSound}
+              loop
+              preload={true}
+              onEnd={() => setPlaySound(0)}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 };

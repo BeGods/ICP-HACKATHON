@@ -53,6 +53,7 @@ const Apothecary = (props) => {
         showInfo={true}
         img={assets.boosters.gemologistCard}
         icon="Gemologist"
+        sound="apothecary"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
@@ -83,6 +84,7 @@ const Apothecary = (props) => {
             showInfo={false}
             img={assets.boosters.gemologistCard}
             icon="Gemologist"
+            sound="apothecary"
             isMulti={false}
             handleClick={() => handleActivate("gemologist01", true)}
             Button={

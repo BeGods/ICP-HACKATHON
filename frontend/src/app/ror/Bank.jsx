@@ -301,6 +301,7 @@ const Bank = (props) => {
         showInfo={true}
         img={assets.boosters.bankerCard}
         icon="Banker"
+        sound="banker"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
@@ -331,6 +332,7 @@ const Bank = (props) => {
             showInfo={false}
             img={assets.boosters.bankerCard}
             icon="Banker"
+            sound="banker"
             isMulti={false}
             handleClick={() => handleActivate("banker01", true)}
             Button={

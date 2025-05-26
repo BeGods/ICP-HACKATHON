@@ -196,13 +196,6 @@ const Footer = ({}) => {
           ))}
         </div>
       </div>
-
-      <ReactHowler
-        src={assets.audio.fofIntro}
-        playing={enableSound}
-        preload={true}
-        html5={true}
-      />
     </div>
   );
 };

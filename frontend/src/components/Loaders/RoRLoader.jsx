@@ -57,14 +57,6 @@ const RoRLoader = (props) => {
           </div>
         </div>
       </div>
-      <div className="absolute">
-        <ReactHowler
-          src={`${assets.audio.rorIntro}`}
-          playing={true}
-          preload={true}
-          html5={true}
-        />
-      </div>
     </div>
   );
 };

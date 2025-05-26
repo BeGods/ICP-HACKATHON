@@ -38,6 +38,7 @@ const Tavern = () => {
         showInfo={true}
         img={assets.boosters.tavernCard}
         icon="Tavern"
+        sound="tavernist"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
@@ -96,6 +97,7 @@ const Tavern = () => {
             showInfo={false}
             img={assets.boosters.tavernCard}
             icon="tavernCard"
+            sound="tavernist"
             isMulti={false}
             handleClick={() => handleActivate("tavern01", true)}
             Button={

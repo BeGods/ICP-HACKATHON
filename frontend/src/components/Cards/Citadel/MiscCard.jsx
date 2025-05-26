@@ -2,9 +2,11 @@ import React, { useContext, useState } from "react";
 import { RorContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
+import ReactHowler from "react-howler";
 
-const MiscCard = ({ Button, img, icon, showInfo, onlyBack }) => {
-  const { assets, setShowCard, setSection } = useContext(RorContext);
+const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
+  const { assets, setShowCard, setSection, enableSound } =
+    useContext(RorContext);
   const { i18n } = useTranslation();
   const [flipped, setFlipped] = useState(false);
 
@@ -109,6 +111,15 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack }) => {
           {Button}
         </div>
       </div>
+      {sound && (
+        <ReactHowler
+          src={assets.audio[sound]}
+          playing={enableSound}
+          loop
+          preload={true}
+          html5={true}
+        />
+      )}
     </div>
   );
 };
