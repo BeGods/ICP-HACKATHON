@@ -688,7 +688,7 @@ const BoosterClaim = ({
             !isTelegram &&
             ((activeCard === "automata" &&
               gameData?.isEligibleToAutomataAuto &&
-              gameData?.isAutomataAutoActive !== -1 &&
+              gameData?.isAutomataAutoActive === -1 &&
               !boostersData.isAutomataActive) ||
               (activeCard === "burst" &&
                 !boostersData.isBurstActive &&
@@ -912,9 +912,7 @@ const BoosterClaim = ({
         (activeCard === "automata" || activeCard === "minion") && (
           <ReactHowler
             src={
-              assets.audio[
-                activeCard === "automata" ? "automataShort" : "alchemistShort"
-              ]
+              assets.audio[activeCard === "automata" ? "automata" : "alchemist"]
             }
             playing={enableSound}
             preload={true}
