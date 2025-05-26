@@ -190,6 +190,7 @@ const Library = () => {
         showInfo={true}
         img={assets.boosters.libCard}
         icon="Librarian"
+        sound="librarian"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
@@ -218,6 +219,7 @@ const Library = () => {
         setShowCard(
           <MiscCard
             showInfo={false}
+            sound="librarian"
             img={assets.boosters.libCard}
             icon="Librarian"
             isMulti={false}

@@ -56,7 +56,7 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
         onPointerDown={handleTouchStart}
         onPointerMove={handleTouchMove}
         onPointerUp={handleTouchEnd}
-        className="w-[95%] h-full bg-red-400 touch-none"
+        className="w-[95%] h-full touch-none"
       >
         {/* <div>
           <p>Left swipes: {swipeCount.left}</p>

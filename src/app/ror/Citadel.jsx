@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { RorContext } from "../../context/context";
 import CitadelCarousel from "../../components/Carousel/CitadelCarousel";
 import RoRHeader from "../../components/Layouts/Header";
+import ReactHowler from "react-howler";
 
 const CenterChild = ({ gameData }) => {
   return (
@@ -15,7 +16,7 @@ const CenterChild = ({ gameData }) => {
 };
 
 const Citadel = (props) => {
-  const { isTgMobile, gameData, assets } = useContext(RorContext);
+  const { isTgMobile, gameData, assets, enableSound } = useContext(RorContext);
 
   return (
     <div
@@ -39,6 +40,15 @@ const Citadel = (props) => {
             </div>
           )}
         </div>
+      </div>
+
+      <div className="absolute">
+        <ReactHowler
+          src={`${assets.audio["location.citadel"]}`}
+          playing={enableSound}
+          preload={true}
+          loop
+        />
       </div>
     </div>
   );

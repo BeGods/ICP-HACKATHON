@@ -418,6 +418,7 @@ const Blacksmith = () => {
         showInfo={true}
         img={assets.boosters.minionCard}
         icon="Blacksmith"
+        sound="furnace"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
@@ -448,6 +449,7 @@ const Blacksmith = () => {
             showInfo={false}
             img={assets.boosters.minionCard}
             icon="Blacksmith"
+            sound="furnace"
             isMulti={false}
             handleClick={() => handleActivate("blacksmith01", true)}
             Button={
