@@ -476,11 +476,11 @@
   }
 
 .slide-ror-header-left{
-  @include slideHeader(slide-header-left-animation, -100%, 0%, -40%);
+  @include slideHeader(slide-ror-header-left-animation, -100%, 0%, -40%);
 }
 
 .slide-ror-header-right{
-  @include slideHeader(slide-header-right-animation, 100%, 0%, 40%);
+  @include slideHeader(slide-ror-header-right-animation, 100%, 0%, 40%);
 }
 
 .slide-swipe-header-left{

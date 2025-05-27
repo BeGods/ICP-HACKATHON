@@ -4,13 +4,20 @@ import CitadelCarousel from "../../components/Carousel/CitadelCarousel";
 import RoRHeader from "../../components/Layouts/Header";
 import ReactHowler from "react-howler";
 
-const CenterChild = ({ gameData }) => {
+const CenterChild = ({ gameData, assets }) => {
   return (
     <div
       className={`
-            flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full text-white text-[5rem] bg-black border border-white top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex cursor-pointer justify-center items-center absolute w-[8rem] rounded-full text-white text-[5rem] top-0 z-20 left-1/2 -translate-x-1/2`}
     >
-      {gameData.stats.dailyQuotaa ?? 0}
+      <img
+        src={assets.uxui.citadelHead}
+        alt="base-orb"
+        className={`w-full h-full rounded-full pointer-events-none`}
+      />
+      <div className="absolute flex justify-center items-center inset-0 text-[3rem] text-black-contour">
+        {gameData.stats.dailyQuota ?? 0}
+      </div>
     </div>
   );
 };
@@ -24,7 +31,9 @@ const Citadel = (props) => {
         isTgMobile ? "tg-container-height" : "browser-container-height"
       } overflow-hidden m-0`}
     >
-      <RoRHeader CenterChild={<CenterChild gameData={gameData} />} />
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} gameData={gameData} />}
+      />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] min-h-[60vh] flex-col">
           <CitadelCarousel />

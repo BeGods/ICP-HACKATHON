@@ -122,8 +122,8 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
     };
 
     const predefinedOrder = [
-      "blacksmith",
       "vault",
+      "blacksmith",
       "library",
       "rest",
       "gemologist",

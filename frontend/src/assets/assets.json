@@ -63,41 +63,41 @@
     },
     "buttons": {
         "orange": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.orange.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.orange.off.png"
+            "on": "/assets/buttons/280px-button.orange.on.png",
+            "off": "/assets/buttons/280px-button.orange.off.png"
         },
         "black": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.black.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.black.off.png"
+            "on": "/assets/buttons/280px-button.black.on.png",
+            "off": "/assets/buttons/280px-button.black.off.png"
         },
         "blue": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.blue.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.blue.off.png"
+            "on": "/assets/buttons/280px-button.blue.on.png",
+            "off": "/assets/buttons/280px-button.blue.off.png"
         },
         "green": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.green.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.green.off.png"
+            "on": "/assets/buttons/280px-button.green.on.png",
+            "off": "/assets/buttons/280px-button.green.off.png"
         },
         "pink": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.pink.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.pink.off.png"
+            "on": "/assets/buttons/280px-button.pink.on.png",
+            "off": "/assets/buttons/280px-button.pink.off.png"
         },
         "red": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.red.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.red.off.png"
+            "on": "/assets/buttons/280px-button.red.on.png",
+            "off": "/assets/buttons/280px-button.red.off.png"
         },
         "violet": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.violet.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.violet.off.png"
+            "on": "/assets/buttons/280px-button.violet.on.png",
+            "off": "/assets/buttons/280px-button.violet.off.png"
         },
         "yellow": {
-            "on": "https://media.publit.io/file/BeGods/buttons/240px-button.yellow.on.png",
-            "off": "https://media.publit.io/file/BeGods/buttons/240px-button.yellow.off.png"
+            "on": "/assets/buttons/280px-button.yellow.on.png",
+            "off": "/assets/buttons/280px-button.yellow.off.png"
         },
-        "line" : "https://media.publit.io/file/BeGods/buttons/240px-button.line.png",
-        "otp" : "https://media.publit.io/file/BeGods/buttons/240px-button.mobile.png",
-        "dapp" : "https://media.publit.io/file/BeGods/buttons/280px-button.dapp.on.png",
-        "telegram" : "https://media.publit.io/file/BeGods/buttons/240px-button.telegram.png"
+        "line" : "/assets/buttons/280px-button.line.png",
+        "otp" : "/assets/buttons/280px-button.mobile.png",
+        "dapp" : "/assets/buttons/280px-button.dapp.on.png",
+        "telegram" : "/assets/buttons/280px-button.telegram.png"
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BeGods/myths/mythology.greek.base.svg",

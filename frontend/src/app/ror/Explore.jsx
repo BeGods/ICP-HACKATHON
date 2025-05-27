@@ -350,7 +350,7 @@ const Explore = () => {
 
       const destrItemIds = parsedReward?.fragment?.itemId?.split(".");
       const id = parsedReward?.isDragon
-        ? `240px-${parsedReward?.mythology?.toLowerCase()}.char.C00`
+        ? `${parsedReward?.mythology?.toLowerCase()}.char.C00`
         : parsedReward?.fragment?.isChar
         ? `${destrItemIds[0]}.char.${destrItemIds[2]}`
         : parsedReward?.fragment?.itemId;
