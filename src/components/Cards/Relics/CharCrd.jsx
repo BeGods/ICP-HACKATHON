@@ -9,7 +9,7 @@ const CharCrd = ({ handleClose, itemId }) => {
       >
         <div className="relative w-full h-full text-card">
           <img
-            src={`https://media.publit.io/file/BeGods/chars/${itemId}.png`}
+            src={`https://media.publit.io/file/BeGods/chars/240px-${itemId}.png`}
             alt="info background"
             className="w-full h-full object-cover rounded-primary z-10"
           />

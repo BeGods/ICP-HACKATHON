@@ -34,7 +34,7 @@ const RoRLoader = (props) => {
             <img
               src={assets.logos.ror}
               alt="dod"
-              className={` transition-all duration-300`}
+              className={` transition-all ror-text-shadow duration-300`}
             />
             <div className="flex justify-center text-white font-fof text-[2rem] glow-text-norse">
               BETA

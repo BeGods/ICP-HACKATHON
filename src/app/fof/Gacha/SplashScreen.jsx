@@ -240,7 +240,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
           )}
         </div>
         <h1
-          className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} text-[2.5rem] transition-all duration-1000`}
+          className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} text-[2rem] transition-all duration-1000`}
         >
           {currReward?.type === "mythOrb"
             ? `${
