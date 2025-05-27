@@ -551,7 +551,7 @@ export const filterFetchedItem = (
         const isCoinFromMythology =
           !isUnderworld &&
           id.includes(mythology.toLowerCase()) &&
-          (/starter0[3-9]/?.test(id) || id.includes("commonn01"));
+          (/starter0[3-9]/?.test(id) || id.includes("common01"));
 
         const isRelicFromMythology =
           id.includes("relic") && id.includes(mythology.toLowerCase());
