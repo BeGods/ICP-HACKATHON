@@ -9,7 +9,7 @@ import {
   mythElementNames,
   underworldItemsList,
 } from "../../utils/constants/variables";
-import { combineVaultItems } from "../../helpers/game.helpers";
+import { combineVaultItems, isCoin } from "../../helpers/game.helpers";
 
 export const fetchGameData = async (userId, includeQuests) => {
   try {
@@ -298,23 +298,11 @@ export const genRandomMythItem = async (
 
       let randomGenFragntIdx;
 
-      // coins
-      //  if (/starter0[3-9]/?.test(randomGenItem.id)) {
-      //   await milestones.findOneAndUpdate(
-      //     { userId: userId },
-      //     {
-      //       $push: { pouch: randomGenItem.id },
-      //     },
-      //     { new: true }
-      //   );
-
-      //   itemAddedToBag = genRewardObj;
-      // }
-
-      // /starter0[3-9]/?.test(randomGenItem.id) || randomGenItem.id?.includes("common01")
-
-      // chars
-      if (/common02/?.test(randomGenItem.id)) {
+      // coins || keys
+      if (
+        /common02/?.test(randomGenItem.id) ||
+        isCoin(randomGenItem.id, false)
+      ) {
         await milestones.findOneAndUpdate(
           { userId: userId },
           {
@@ -325,37 +313,20 @@ export const genRandomMythItem = async (
 
         itemAddedToBag = genRewardObj;
       } else if (/relic.C0[6-8]/?.test(randomGenItem.id)) {
-        const charAppearedBefore = alreadyAppearChar.includes(randomGenItem.id);
+        // encounters
+        let updatedBag = await milestones.findOneAndUpdate(
+          { userId: userId },
+          {
+            $push: { bag: genRewardObj },
+          },
+          { new: true }
+        );
 
-        if (charAppearedBefore) {
-          // yes
-          let updatedBag = await milestones.findOneAndUpdate(
-            { userId: userId },
-            {
-              $push: { bag: genRewardObj },
-              $pull: { appearedUnderworldChars: genRewardObj.itemId },
-            },
-            { new: true }
-          );
+        itemAddedToBag = updatedBag.bag?.find(
+          (item) => item.itemId === genRewardObj.itemId && item.fragmentId === 0
+        );
 
-          itemAddedToBag = updatedBag.bag?.find(
-            (item) =>
-              item.itemId === genRewardObj.itemId && item.fragmentId === 0
-          );
-        } else {
-          // no
-          if (charAppearedBefore) {
-            throw Error("Invalid item.");
-          }
-          genRewardObj.isChar = true;
-          await milestones.findOneAndUpdate(
-            { userId: userId },
-            {
-              $push: { appearedUnderworldChars: genRewardObj.itemId },
-            },
-            { new: true }
-          );
-        }
+        itemAddedToBag.isChar = true;
       } else {
         // relics
         if (alreadyClaimedItem) {
@@ -510,6 +481,7 @@ export const filterFetchedItem = (
     const claimedItems = [
       ...(combineVaultItems(userClaimedRewards?.bank?.vault) ?? []),
       ...(userClaimedRewards?.bag ?? []),
+      ...(userClaimedRewards?.pouch ?? []),
     ].reduce((acc, item) => {
       const existingItem = acc.find((obj) => obj?.itemId === item?.itemId);
       if (existingItem) {
@@ -715,7 +687,7 @@ export const updateDigSessionData = async (
 export const claimDragon = async (user, competelvl, bag) => {
   try {
     const filteredPouch =
-      bag?.filter((item) => item.includes("artifact.treasure01")) || [];
+      bag?.filter((item) => item.includes("artifact.treasure")) || [];
 
     // empty the bnag except special coin
     await milestones.findOneAndUpdate(

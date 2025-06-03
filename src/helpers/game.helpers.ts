@@ -112,3 +112,19 @@ export const combineVaultItems = (vault) => {
 
   return vault.flatMap((myth) => myth.items ?? []);
 };
+
+export const isCoin = (itemId, checkForTreaure) => {
+  const starterCoin = /starter0[3-9]/?.test(itemId);
+  const commonCoin = itemId?.includes("artifact.common01");
+  const treasureCoin = itemId?.includes("artifact.treasure01");
+
+  if (checkForTreaure && treasureCoin) {
+    return true;
+  } else {
+    if (starterCoin || commonCoin) {
+      return true;
+    }
+  }
+
+  return false;
+};

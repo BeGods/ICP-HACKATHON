@@ -597,7 +597,7 @@ export const tradeFragments = async (req, res) => {
   const userMythologies = req.userMythologies;
   const userMilestones = req.userMilestones;
   const itemObj = req.itemObj;
-  const { itemId } = req.body;
+  const { itemId, isPouch, isVault } = req.body;
   let incVal = 0;
   const ignoredItems = [
     // "starter00",
@@ -610,7 +610,28 @@ export const tradeFragments = async (req, res) => {
   // if complete item then 1 extra
 
   try {
-    if (
+    if (isPouch) {
+      await userMilestones.updateOne({
+        $pull: {
+          pouch: itemId,
+        },
+      });
+      incVal = itemObj.coins;
+    } else if (isVault) {
+      const vault = userMilestones.bank.vault;
+
+      for (const vaultEntry of vault) {
+        vaultEntry.items = vaultEntry.items.filter(
+          (item) => !itemId?.includes(item._id)
+        );
+      }
+
+      await userMilestones.updateOne({
+        $set: {
+          "bank.vault": vault,
+        },
+      });
+    } else if (
       /starter0[3-9]/?.test(itemId) ||
       itemId?.includes("common01") ||
       ignoredItems.some((ignore) => itemId.includes(ignore))
@@ -692,7 +713,7 @@ export const tradeShardsToPotion = async (req, res) => {
     };
     await milestones.updateOne(
       {
-        $push: { bag: genRewardObj },
+        $push: { pouch: genRewardObj.itemId },
       },
       { new: true }
     );

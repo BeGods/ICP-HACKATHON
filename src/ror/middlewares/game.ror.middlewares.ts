@@ -10,6 +10,7 @@ import {
 import { mythElementNamesLowerCase } from "../../utils/constants/variables";
 import { decryptHash } from "../../helpers/crypt.helpers";
 import config from "../../config/config";
+import { combineVaultItems } from "../../helpers/game.helpers";
 
 export const validateSessionsStart = async (req, res, next) => {
   const user = req.user;
@@ -58,8 +59,8 @@ export const validateSessionReward = async (req, res, next) => {
     // validate battle
     let competelvl = rorStats.competelvl ?? 0;
     battleData.forEach((round, index) => {
-      const isWin = round.swipes * digLvl >= competelvl && round.status === 1;
-      const isLoss = round.swipes * digLvl < competelvl && round.status === 0;
+      const isWin = round.swipes + digLvl >= competelvl && round.status === 1;
+      const isLoss = round.swipes + digLvl < competelvl && round.status === 0;
 
       if (isWin) {
         competelvl = Math.min(40, competelvl + 5);
@@ -191,7 +192,7 @@ export const isValidVaultReq = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
   const { isMulti } = req.query;
-  const deductValue = Boolean(isMulti) ? 5 : 1;
+  const deductValue = Boolean(isMulti) ? 5 : 4;
 
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
@@ -367,23 +368,34 @@ export const validateCompleteItem = async (req, res, next) => {
 export const validateTradeFragment = async (req, res, next) => {
   const user = req.user;
   const userId = user._id;
-  const { itemId } = req.body;
+  const { itemId, isPouch, isVault } = req.body;
 
   try {
     const userClaimedRewards = await milestones.findOne({ userId });
     const userMythologyData = await userMythologies.findOne({ userId });
+    let existingItem;
 
-    const existingItemInBag = userClaimedRewards.bag?.find((obj) =>
-      obj._id.equals(new mongoose.Types.ObjectId(itemId))
-    );
+    if (isPouch) {
+      existingItem = userClaimedRewards.pouch?.find((itm) =>
+        itm?.includes(itemId)
+      );
+    } else {
+      const combinedItems = [
+        ...combineVaultItems(userClaimedRewards?.bank?.vault),
+        ...userClaimedRewards.bag,
+      ];
+      existingItem = combinedItems.find((obj) =>
+        obj._id.equals(new mongoose.Types.ObjectId(itemId))
+      );
+    }
 
     // check if item exists in bag
-    if (!existingItemInBag) {
+    if (!existingItem) {
       throw new Error("Inavlid Item. Please provide correct item.");
     }
 
     const gameItemObj = gameItems.find(
-      (item) => item.id === existingItemInBag.itemId
+      (item) => item.id === (isPouch ? itemId : existingItem.itemId)
     );
 
     // check if item already completed
@@ -393,9 +405,10 @@ export const validateTradeFragment = async (req, res, next) => {
 
     req.userMilestones = userClaimedRewards;
     req.userMythologies = userMythologyData;
+    req.isVault = isVault ?? false;
     req.itemObj = {
       ...gameItemObj,
-      isComplete: existingItemInBag.isComplete,
+      isComplete: isPouch ? true : existingItem.isComplete,
     };
     next();
   } catch (error) {
@@ -413,11 +426,6 @@ export const validateTradePotion = async (req, res, next) => {
 
     // user bag data
     const userClaimedRewards = await milestones.findOne({ userId });
-
-    // check if there is space in bag
-    if (userClaimedRewards.bag.length >= 9) {
-      throw Error("Insufficient space inside vault. Try again later");
-    }
 
     // user myth data
     const userMythology = (await userMythologies.findOne({
@@ -592,8 +600,12 @@ export const validArtifactClaim = async (req, res, next) => {
       req.deductValue = -1;
     }
 
-    req.type = itemType[artifactType.indexOf(itemId)];
+    const splitArray = itemId.split(".");
+    const index = artifactType.indexOf(`${splitArray[1]}.${splitArray[2]}`);
+    const type = index !== -1 ? itemType[index] : null;
+
     req.itemId = itemId;
+    req.type = type;
     req.userMilestones = userMilestones;
     next();
   } catch (error) {

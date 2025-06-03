@@ -40,6 +40,23 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  const problematicOrigin = "https://2r2cf484-5174.inc1.devtunnels.ms";
+
+  if (
+    origin === problematicOrigin &&
+    req.originalUrl === "/api/v1/auth/refresh"
+  ) {
+    console.warn("Removing duplicated CORS headers for:", req.originalUrl);
+    res.removeHeader("Access-Control-Allow-Origin");
+    res.removeHeader("Access-Control-Allow-Credentials");
+  }
+
+  next();
+});
+
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());

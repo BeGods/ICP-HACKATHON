@@ -201,7 +201,7 @@ const userMythologySchema = new Schema<IUserMyths>(
       },
       digLvl: {
         type: Number,
-        default: 1,
+        default: 0,
       },
       lastMealPenaltyAt: Number,
     },
