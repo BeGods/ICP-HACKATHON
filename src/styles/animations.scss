@@ -357,7 +357,7 @@
   }
 
   & {
-    animation: #{$name} 2.5s  ease-in-out forwards;
+    animation: #{$name} 1.5s  ease-in-out forwards;
   }
 }
 
@@ -476,11 +476,11 @@
   }
 
 .slide-ror-header-left{
-  @include slideHeader(slide-ror-header-left-animation, -100%, 0%, -40%);
+  @include slideHeader(slide-ror-header-left-animation, -100%, 0%, -5%);
 }
 
 .slide-ror-header-right{
-  @include slideHeader(slide-ror-header-right-animation, 100%, 0%, 40%);
+  @include slideHeader(slide-ror-header-right-animation, 100%, 0%, 5%);
 }
 
 .slide-swipe-header-left{
@@ -877,6 +877,38 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
 }
 
 
+@keyframes drag-and-scale {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    top: 20%;
+    left: 20%;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+.drag-hand {
+  animation: drag-and-scale 0.8s ease-in-out forwards;
+}
+
+@keyframes swipe-and-dig {
+  0% {
+    transform: translate(100%, 0%) scale(1);
+  }
+  50% {
+    transform: translate(0%, 100%) scale(1);
+  }
+  100% {
+    transform: translate(100%, 0%) scale(1);
+  }
+}
+
+.swipe-dig-hand {
+  animation: swipe-and-dig  1s ease-in-out infinite;
+}
 
 @keyframes disappear-effect {
   0% {

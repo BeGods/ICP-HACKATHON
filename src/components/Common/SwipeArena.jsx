@@ -12,7 +12,6 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
   };
 
   const handleTouchMove = (e) => {
-    const digLvl = gameData?.stats?.digLvl ?? 1;
     if (touchStartX === null) return;
 
     const touchX = e.clientX;
@@ -22,7 +21,7 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
     if (deltaX > 20) {
       // direction left to right
       if (swipeCount.left > 5 && lastDirection === "left") {
-        setSwipes((count) => count + digLvl);
+        setSwipes((count) => count + 1);
         setSwipeCount((prev) => ({ ...prev, right: prev.right + 1, left: 0 }));
       } else {
         setSwipeCount((prev) => ({ ...prev, right: prev.right + 1 }));
@@ -34,7 +33,7 @@ const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
     } else if (deltaX < -20) {
       // direction right to left
       if (swipeCount.right > 5 && lastDirection === "right") {
-        setSwipes((count) => count + digLvl);
+        setSwipes((count) => count + 1);
         setSwipeCount((prev) => ({ ...prev, left: prev.left + 1, right: 0 }));
       } else {
         setSwipeCount((prev) => ({ ...prev, left: prev.left + 1 }));

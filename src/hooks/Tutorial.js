@@ -110,3 +110,22 @@ export const useTowerGuide = (key) => {
 
   return [enableGuide, setEnableGuide];
 };
+
+
+export const useRoRGuide = (key) => {
+  const [enableGuide, setEnableGuide] = useState(false);
+
+  const checkTutExists = async () => {
+    const itExists = await validateTutCookie(tele, key);
+    if (!itExists) {
+      setEnableGuide(true);
+      setTutKey(tele, key, 5);
+    }
+  };
+
+  useEffect(() => {
+    (async () => await checkTutExists())();
+  }, []);
+
+  return [enableGuide, setEnableGuide];
+};

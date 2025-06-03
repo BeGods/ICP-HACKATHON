@@ -120,6 +120,7 @@ const RoRMain = () => {
     userData,
     gameData,
     setGameData,
+    showCard,
     setShowCard,
     minimize,
     setMinimize,
@@ -180,6 +181,7 @@ const RoRMain = () => {
       builder: response.builder,
     });
     setTasks(response.quests);
+    setSwipes(response?.stats?.digLvl ?? 1 ?? 1);
 
     if (!response.user?.joiningBonus) {
       setSection(10);
@@ -398,7 +400,7 @@ const RoRMain = () => {
             backgroundSize: "cover",
             backgroundPosition: `${shiftBg}%`,
           }}
-          className={`w-screen transition-all duration-500 ${
+          className={`w-screen transition-all duration-75 ${
             isTgMobile ? "tg-container-height" : "browser-container-height"
           } bg-white select-none font-fof overflow-hidden`}
         >

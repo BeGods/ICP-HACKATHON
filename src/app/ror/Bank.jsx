@@ -19,6 +19,9 @@ import {
 } from "../../helpers/cookie.helper";
 import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import { showToast } from "../../components/Toast/Toast";
+import { useRoRGuide } from "../../hooks/Tutorial";
+import { BankGuide } from "../../components/Common/RorTutorial.";
+import { isCoin } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -33,7 +36,7 @@ const CenterChild = ({ handleClick, assets }) => {
         backgroundSize: "cover",
       }}
       className={`
-            flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 z-20 left-1/2 -translate-x-1/2`}
+            flex cursor-pointer justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 left-1/2 -translate-x-1/2`}
     ></div>
   );
 };
@@ -47,6 +50,7 @@ const Bank = (props) => {
     assets,
     setShowCard,
     enableHaptic,
+    isTgMobile,
   } = useContext(RorContext);
   const [isLoading, setIsLoading] = useState(false);
   const [draggedItem, setDraggedItem] = useState(null);
@@ -57,11 +61,29 @@ const Bank = (props) => {
   const [scaleIcon, setScaleIcon] = useState(false);
   const boxRefs = [useRef(null), useRef(null), useRef(null)];
   const [currentPage, setCurrentPage] = useState(0);
-
+  const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial01");
+  const pouchItems =
+    gameData.pouch
+      .filter(
+        (itm) =>
+          /common02/?.test(itm) ||
+          isCoin(itm) === true ||
+          itm?.includes("potion")
+      )
+      .map((itm, idx) => {
+        return {
+          _id: `daskjfjk${idx}`,
+          itemId: itm,
+          fragmentId: 0,
+          isComplete: true,
+          isPouch: true,
+        };
+      }) ?? [];
+  const currItem = [...gameData.bag, ...pouchItems];
   const itemsPerPage = 6;
-  const totalPages = Math.ceil(gameData.bag.length / itemsPerPage);
+  const totalPages = Math.ceil(currItem.length / itemsPerPage);
 
-  const paginatedVaultItems = gameData.bag.slice(
+  const paginatedVaultItems = [...currItem].slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
@@ -83,16 +105,27 @@ const Bank = (props) => {
     }
   };
 
-  const handleItemToTrade = async (item) => {
+  const handleItemToTrade = async (draggedItem) => {
     setIsLoading(true);
     try {
-      await tradeItem(authToken, item);
+      const itemId = draggedItem.isPouch ? draggedItem.itemId : draggedItem._id;
+      await tradeItem(authToken, itemId, draggedItem.isPouch);
       setShowCard(null);
       // remove draggedItem
       setGameData((prevItems) => {
-        let updatedBagItems = prevItems.bag.filter(
-          (i) => i._id !== draggedItem._id
-        );
+        let updatedBagItems = prevItems.bag;
+        let updatedPouchItems = prevItems.pouch;
+
+        if (draggedItem.isPouch) {
+          updatedPouchItems = prevItems.pouch.filter(
+            (i) => i !== draggedItem.itemId
+          );
+        } else {
+          updatedBagItems = prevItems.bag.filter(
+            (i) => i._id !== draggedItem._id
+          );
+        }
+
         const itemData = gameItems.find(
           (item) => item.id == draggedItem.itemId
         );
@@ -103,6 +136,7 @@ const Bank = (props) => {
         return {
           ...prevItems,
           bag: updatedBagItems,
+          pouch: updatedPouchItems,
           stats: {
             ...prevItems.stats,
             gobcoin: updatedCoins,
@@ -149,7 +183,7 @@ const Bank = (props) => {
       setGameData((prev) => {
         const newStats = { ...prev.stats };
 
-        newStats.gobcoin = prev.stats.gobcoin - (isMulti ? 5 : 1);
+        newStats.gobcoin = prev.stats.gobcoin - 4;
 
         return {
           ...prev,
@@ -231,7 +265,7 @@ const Bank = (props) => {
             ButtonFront={
               <RoRBtn
                 isNotPay={true}
-                handleClick={() => handleItemToTrade(draggedItem._id)}
+                handleClick={() => handleItemToTrade(draggedItem)}
                 itemId={draggedItem?.itemId}
                 message={"sell"}
               />
@@ -239,7 +273,9 @@ const Bank = (props) => {
           />
         );
       } else if (itemBoxIndex == 2) {
-        if (!gameData.bank.isVaultActive) {
+        if (draggedItem.isPouch) {
+          showToast("pouch_error");
+        } else if (!gameData.bank.isVaultActive) {
           setShowCard(
             <MiscCard
               img={assets.boosters.bankerCard}
@@ -300,13 +336,14 @@ const Bank = (props) => {
       <MiscCard
         showInfo={true}
         img={assets.boosters.bankerCard}
-        icon="Banker"
+        icon="A"
+        hideClose={true}
         sound="banker"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
-            message={"Close"}
+            message={"LEAVE"}
             isNotPay={true}
             left={1}
             right={1}
@@ -331,13 +368,14 @@ const Bank = (props) => {
           <MiscCard
             showInfo={false}
             img={assets.boosters.bankerCard}
-            icon="Banker"
+            icon="A"
+            hideClose={true}
             sound="banker"
             isMulti={false}
             handleClick={() => handleActivate("banker01", true)}
             Button={
               <RoRBtn
-                message={"Enter"}
+                message={"LEAVE"}
                 isNotPay={true}
                 left={1}
                 right={1}
@@ -356,45 +394,21 @@ const Bank = (props) => {
     };
   }, []);
 
-  return (
-    <div className="w-full h-full">
-      <RoRHeader
-        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
-      />
-      <div className="w-[80%] mt-[18dvh] h-[60dvh] mx-auto relative">
-        <div
-          className="absolute inset-0 z-0 filter-orb-white rounded-md"
-          style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            opacity: 0.5,
-          }}
-        />
-        <div className="grid grid-cols-3  gap-x-2 w-full h-full place-items-center">
-          {[
-            {
-              icon: "#",
-              label: "banker",
-            },
-            {
-              icon: "8",
-              label: "bag",
-            },
-            {
-              icon: ",",
-              label: `vault`,
-            },
-          ].map((itm, index) => (
-            <div
-              ref={boxRefs[index]}
-              key={`box-${index}`}
-              onClick={() => {
-                if (index === 2) {
-                  if (!gameData.bank.isVaultActive) {
-                    handleClickHaptic(tele, enableHaptic);
-
+  useEffect(() => {
+    if (enableGuide) {
+      setShowCard(
+        <BankGuide
+          currTut={0}
+          handleClick={() => {
+            setShowCard(
+              <BankGuide
+                currTut={1}
+                handleClick={() => {
+                  setShowCard(null);
+                  setEnableGuide(false);
+                  if (gameData.bank.isVaultActive) {
+                    setSection(5);
+                  } else {
                     setShowCard(
                       <MiscCard
                         img={assets.boosters.bankerCard}
@@ -410,113 +424,209 @@ const Bank = (props) => {
                         }
                       />
                     );
-                  } else {
-                    handleClickHaptic(tele, enableHaptic);
-                    setSection(5);
                   }
-                }
-              }}
-              className={`relative ${index === 2 && "cursor-pointer"} text-white
-              max-w-[120px] w-full rounded-md overflow-hidden `}
-            >
-              <div
-                className={`flex flex-col rounded-md border ${
-                  index == 1 ? "glow-inset-button-white" : "border-white/70"
-                } items-center w-full`}
-              >
-                <div className="w-full aspect-square bg-white/20 flex justify-center items-center rounded-md">
-                  <span className="text-iconLg font-symbols">{itm.icon}</span>
-                </div>
-                <div className="w-full uppercase text-center text-sm leading-tight px-1 py-0.5 truncate">
-                  {index === 2
-                    ? !gameData.bank.isVaultActive
-                      ? "Buy"
-                      : dragging
-                      ? "Drop"
-                      : itm.label
-                    : itm.label}
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {isTouched && draggedItem && (
-            <div
-              style={{
-                position: "absolute",
-                top: `${copyPosition.y}px`,
-                left: `${copyPosition.x}px`,
-                pointerEvents: "none",
-                zIndex: 30,
-              }}
-            >
-              <div className={`relative h-[120px] w-[120px] overflow-hidden`}>
-                <div
-                  className="glow-icon-white h-full w-full"
-                  style={{
-                    backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "100% 20%",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                ></div>
-              </div>
-            </div>
-          )}
-
-          {paginatedVaultItems.map((item) => (
-            <div
-              key={item._id}
-              onPointerDown={(e) => handleTouchStart(e, item)}
-              onPointerMove={handleTouchMove}
-              onPointerUp={handleTouchEnd}
-              className={` relative w-full touch-none max-w-[120px] flex flex-col items-center  ${
-                scaleIcon && draggedItem === item ? "scale-110" : ""
-              }`}
-            >
-              <GridItem
-                handleClick={() => {}}
-                itemObj={item}
-                scaleIcon={scaleIcon}
-                itemsWithAllFrags={
-                  isLoading ? [] : gameData.bag.map((item) => item.itemId)
-                }
+                }}
               />
-            </div>
-          ))}
+            );
+          }}
+        />
+      );
+    }
+  }, [enableGuide]);
 
-          {Array.from({ length: 6 - paginatedVaultItems.length }).map(
-            (_, index) => (
+  return (
+    <div className="w-full h-full">
+      <RoRHeader
+        CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
+      />
+      <div
+        className={`${
+          isTgMobile ? "tg-container-height" : "browser-container-height"
+        } flex flex-col items-center justify-center`}
+      >
+        <div className={`grid-width h-[55dvh] mt-[7dvh] mx-auto relative p-1`}>
+          <div
+            className="absolute inset-0 z-0 filter-orb-white rounded-md"
+            style={{
+              backgroundImage: `url(${assets.uxui.baseBgA})`,
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              opacity: 0.5,
+            }}
+          />
+          <div className="grid grid-cols-3  gap-x-1.5 w-full h-full place-items-center place-content-between">
+            {/* feature slots */}
+            {[
+              {
+                icon: "A",
+                label: "sell",
+              },
+              {
+                icon: "8",
+                label: "bag",
+              },
+              {
+                icon: ",",
+                label: `keep`,
+              },
+            ].map((itm, index) => (
               <div
-                key={`placeholder-${index}`}
-                className="relative w-full max-w-[120px] flex flex-col opacity-50 items-center rounded-md overflow-hidden shadow-2xl"
+                ref={boxRefs[index]}
+                key={`box-${index}`}
+                onClick={() => {
+                  if (index === 2) {
+                    if (!gameData.bank.isVaultActive) {
+                      handleClickHaptic(tele, enableHaptic);
+
+                      setShowCard(
+                        <MiscCard
+                          img={assets.boosters.bankerCard}
+                          icon="A"
+                          isMulti={false}
+                          handleClick={handleActivateBank}
+                          Button={
+                            <RoRBtn
+                              left={4}
+                              right={4}
+                              handleClick={handleActivateBank}
+                            />
+                          }
+                        />
+                      );
+                    } else {
+                      handleClickHaptic(tele, enableHaptic);
+                      setSection(5);
+                    }
+                  }
+                }}
+                className={`relative ${
+                  index === 2 ? "cursor-pointer" : ""
+                } text-white max-w-[120px] w-full transition-all duration-300 rounded-md overflow-hidden ${
+                  draggedItem &&
+                  ((draggedItem.isPouch && (index === 1 || index === 2)) ||
+                    (!draggedItem.isPouch && index === 1))
+                    ? "opacity-50"
+                    : ""
+                }`}
               >
                 <div
-                  className={`flex flex-col rounded-md border items-center w-full`}
+                  className={`flex flex-col rounded-md border  ${
+                    index == 1 ? "" : "border-white/70"
+                  } items-center w-full`}
                 >
-                  <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                    <span className="text-iconLg font-symbols text-white">
-                      8
+                  <div className="w-full aspect-square border-b border-white/50 bg-white/20 flex justify-center items-center rounded-t-md">
+                    <span className={`text-iconLg font-symbols `}>
+                      {itm.icon}
                     </span>
                   </div>
-                  <div className="w-full text-white text-sm text-center px-1 py-1 leading-tight truncate">
-                    slot{gameData.bag.length - index + 1}
+                  <div className="w-full uppercase bg-black/50 rounded-b-md text-center text-sm leading-tight px-1 py-1.5 truncate">
+                    {index === 2
+                      ? !gameData.bank.isVaultActive
+                        ? "Buy"
+                        : dragging
+                        ? "Drop"
+                        : itm.label
+                      : itm.label}
                   </div>
                 </div>
               </div>
-            )
-          )}
-          {gameData.bag.length <= 0 && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white/90 text-black px-4 py-2 rounded-full text-[1rem] font-roboto shadow-lg">
-              Bag is empty
-            </div>
-          )}
+            ))}
+
+            {/* draggedItem */}
+            {isTouched && draggedItem && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: `${copyPosition.y}px`,
+                  left: `${copyPosition.x}px`,
+                  pointerEvents: "none",
+                  zIndex: 30,
+                }}
+              >
+                <div className={`relative h-[120px] w-[120px] overflow-hidden`}>
+                  <div
+                    className="glow-icon-white h-full w-full"
+                    style={{
+                      backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "100% 20%",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+
+            {/* item slots */}
+            {paginatedVaultItems.map((item) => (
+              <div
+                key={item._id}
+                onPointerDown={(e) => handleTouchStart(e, item)}
+                onPointerMove={handleTouchMove}
+                onPointerUp={handleTouchEnd}
+                className={` relative w-full touch-none max-w-[120px] flex flex-col items-center  ${
+                  scaleIcon && draggedItem === item ? "scale-110" : ""
+                }`}
+              >
+                <GridItem
+                  handleClick={() => {}}
+                  itemObj={item}
+                  scaleIcon={scaleIcon}
+                  itemsWithAllFrags={
+                    isLoading ? [] : currItem.map((item) => item.itemId)
+                  }
+                />
+              </div>
+            ))}
+
+            {/* empty slots */}
+            {Array.from({ length: 6 - paginatedVaultItems.length }).map(
+              (_, index) => (
+                <div
+                  key={`placeholder-${index}`}
+                  className="relative w-full max-w-[120px] flex flex-col opacity-60 items-center rounded-md overflow-hidden shadow-2xl"
+                >
+                  <div
+                    className={`flex flex-col rounded-md border items-center w-full`}
+                  >
+                    <div className="w-full border-b border-white/50 aspect-square bg-white/20 flex justify-center items-center">
+                      <span className="text-iconLg font-symbols text-white">
+                        8
+                      </span>
+                    </div>
+                    <div className="w-full bg-black/50 rounded-b-md uppercase text-white text-sm text-center px-1 py-1.5 leading-tight truncate">
+                      slot {currItem.length + index + 1}
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
+          </div>
         </div>
+        {/* <div className="w-full flex justify-center items-center absolute bottom-[2vh]">
+          <div className="flex gap-x-1 justify-center items-center w-full">
+            <div className={`font-symbols text-white  text-[2.15rem]`}>A</div>
+            <div
+              className={`font-fof text-[2rem] font-normal  text-black-contour transition-all duration-1000 text-white`}
+            >
+              {gameData.stats.gobcoin}
+            </div>
+          </div>
+        </div> */}
       </div>
-      {gameData.bag.length > 6 && (
+      {currItem.length > 6 && (
         <>
-          <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
-          <ToggleRight activeMyth={4} handleClick={handlePageRight} />
+          <ToggleLeft
+            positionBottom={true}
+            activeMyth={4}
+            handleClick={handlePageLeft}
+          />
+          <ToggleRight
+            positionBottom={true}
+            activeMyth={4}
+            handleClick={handlePageRight}
+          />
         </>
       )}
     </div>

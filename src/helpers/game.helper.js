@@ -71,3 +71,15 @@ export const reformatPotion = (input) => {
   const newCode = code.replace("_", ".");
   return `${mythology}.${potion}.${newCode}`;
 }
+
+export const isCoin = (itemId) => {
+  const starterCoin = /starter0[3-9]/?.test(itemId);
+  const commonCoin = itemId?.includes("artifact.common01");
+  const treasureCoin = itemId?.includes("artifact.treasure01");
+
+  if (treasureCoin || starterCoin || commonCoin) {
+    return true;
+  }
+
+  return false;
+};

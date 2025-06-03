@@ -18,7 +18,7 @@ const RelicCrd = ({
   handleClose,
   maskOff,
   isSell,
-  hideInfo,
+  icon,
 }) => {
   const { assets } = useContext(RorContext);
   let mythology = "other";
@@ -47,20 +47,16 @@ const RelicCrd = ({
       />
 
       <div className="relative z-20 flex flex-col select-none items-center justify-center w-full h-full">
-        {isSell ? (
-          <div className="relative m-2 flex justify-center items-center w-[50px]">
-            <img
-              src={assets.uxui.gobcoin}
-              alt="relic"
-              className="w-full select-none"
-            />
-            <div className="absolute text-[2.5rem] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
-              {!isComplete ? 1 : itemDetails.coins}
-            </div>
+        <div className="relative m-2 flex justify-center items-center w-[50px]">
+          <img
+            src={assets.uxui.gobcoin}
+            alt="relic"
+            className="w-full select-none"
+          />
+          <div className="absolute text-[2.5rem] font-roboto font-bold text-shadow text-gray-600 opacity-85 grayscale">
+            {!isComplete ? 1 : itemDetails.coins}
           </div>
-        ) : (
-          <div className="relative m-2 flex justify-center items-center w-[50px] h-[5vh]"></div>
-        )}
+        </div>
 
         <div className="relative w-[240px] h-[240px] select-none mt-4 flex justify-center items-center">
           <div
@@ -87,9 +83,15 @@ const RelicCrd = ({
             className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary filter-paper-${mythology}`}
             style={{ backgroundImage: `url(${assets.uxui.footer})` }}
           />
-          <div className="absolute uppercase glow-text-quest flex justify-center items-center w-full h-full">
-            {itemDetails.name}
-          </div>
+          {icon ? (
+            <div className="absolute text-[50px] text-black-contour font-symbols flex justify-center items-center w-full h-full">
+              {icon}
+            </div>
+          ) : (
+            <div className="absolute uppercase glow-text-quest flex justify-center items-center w-full h-full">
+              {itemDetails.name}
+            </div>
+          )}
         </div>
       </div>
       <IconBtn

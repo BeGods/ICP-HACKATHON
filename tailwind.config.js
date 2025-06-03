@@ -139,6 +139,7 @@ export default {
         "button-primary": "192px",
         "symbol-primary": "8rem",
         "symbol-secondary": "45px",
+        "item": "14rem"
       },
       height: {
         tgHeight: "90vh",

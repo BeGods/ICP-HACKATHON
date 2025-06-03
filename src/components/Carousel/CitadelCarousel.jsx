@@ -7,8 +7,14 @@ import { handleClickHaptic } from "../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const CitadelCarousel = ({ enableGuide, mythData }) => {
-  const { activeMyth, gameData, setSection, enableHaptic } =
-    useContext(RorContext);
+  const {
+    activeMyth,
+    gameData,
+    setSection,
+    enableHaptic,
+    minimize,
+    setMinimize,
+  } = useContext(RorContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
   const [items, setItems] = useState([]);
@@ -25,7 +31,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             desc="Blacksmith"
             handleClick={async () => {
               handleClickHaptic(tele, enableHaptic);
-
+              setMinimize(1);
               setSection(3);
             }}
           />
@@ -40,7 +46,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             desc="Banker"
             handleClick={() => {
               handleClickHaptic(tele, enableHaptic);
-
+              setMinimize(1);
               setSection(4);
             }}
           />
@@ -57,7 +63,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             desc="Librarian"
             handleClick={async () => {
               handleClickHaptic(tele, enableHaptic);
-
+              setMinimize(1);
               setSection(12);
             }}
           />
@@ -74,7 +80,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             desc="Bartender"
             handleClick={() => {
               handleClickHaptic(tele, enableHaptic);
-
+              setMinimize(1);
               setSection(13);
             }}
           />
@@ -91,7 +97,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             desc="Gemologist"
             handleClick={async () => {
               handleClickHaptic(tele, enableHaptic);
-
+              setMinimize(1);
               setSection(11);
             }}
           />
@@ -101,7 +107,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         key: "port",
         component: (
           <CitadelItem
-            disable={false}
+            disable={true}
             icon="E"
             isMulti={false}
             itemKey="port"
@@ -114,7 +120,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
 
     const boosterStatus = {
       blacksmith: false,
-      vault: false,
+      vault: true,
       library: false,
       rest: false,
       gemologist:
@@ -148,6 +154,12 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
     setItems(sortedItems);
     setCurrentIndex(0);
   }, [activeMyth, enableGuide, mythData, gameData]);
+
+  useEffect(() => {
+    if (minimize == 1) {
+      setMinimize(2);
+    }
+  }, []);
 
   const handleTouchStart = (e) => setStartY(e.touches[0].clientY);
 

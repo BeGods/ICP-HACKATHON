@@ -31,6 +31,8 @@ import { showToast } from "../../components/Toast/Toast";
 import { Clapperboard } from "lucide-react";
 import { trackEvent } from "../../utils/ga";
 import { useAdsgram } from "../../hooks/Adsgram";
+import { useRoRGuide } from "../../hooks/Tutorial";
+import { LibraryGuide } from "../../components/Common/RorTutorial.";
 
 const tele = window.Telegram?.WebApp;
 
@@ -54,14 +56,13 @@ const Library = () => {
     gameData,
     setGameData,
     setShowCard,
-    setShiftBg,
     assets,
     authToken,
     enableHaptic,
-    isBrowser,
+    isTgMobile,
   } = useContext(RorContext);
   const [page, setPage] = useState(0);
-
+  const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial03");
   const getMythOrder = (itemId) => {
     const myth = itemId.split(".")[0];
     return mythSections.indexOf(myth);
@@ -127,6 +128,11 @@ const Library = () => {
       : "artifact.starter10";
 
   const buttonColor = colorByMyth[myth] ?? "black";
+  const [isClicked, setIsClicked] = useState(false);
+  const itemId = `${myth}.${itemCode}`;
+  const isOwned = gameData?.pouch.includes(itemId);
+  const label =
+    isOwned && currItems == 2 ? "consult" : isOwned ? "read" : "pay";
 
   const handleLeft = () => {
     setPage((prev) => {
@@ -189,13 +195,14 @@ const Library = () => {
       <MiscCard
         showInfo={true}
         img={assets.boosters.libCard}
-        icon="Librarian"
+        icon="+"
+        hideClose={true}
         sound="librarian"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
-            message={"Close"}
+            message={"LEAVE"}
             isNotPay={true}
             left={1}
             right={1}
@@ -221,12 +228,13 @@ const Library = () => {
             showInfo={false}
             sound="librarian"
             img={assets.boosters.libCard}
-            icon="Librarian"
+            icon="+"
+            hideClose={true}
             isMulti={false}
             handleClick={() => handleActivate("librarn01", true)}
             Button={
               <RoRBtn
-                message={"Enter"}
+                message={"LEAVE"}
                 isNotPay={true}
                 left={1}
                 right={1}
@@ -254,44 +262,77 @@ const Library = () => {
     onError,
   });
 
+  useEffect(() => {
+    if (enableGuide) {
+      setShowCard(
+        <LibraryGuide
+          currTut={0}
+          handleClick={() => {
+            setCurrItems(1);
+            setShowCard(
+              <LibraryGuide
+                currTut={1}
+                handleClick={() => {
+                  setCurrItems(2);
+                  setShowCard(
+                    <LibraryGuide
+                      currTut={2}
+                      handleClick={() => {
+                        setCurrItems(0);
+                        setEnableGuide(false);
+                        setShowCard(null);
+                      }}
+                    />
+                  );
+                }}
+              />
+            );
+          }}
+        />
+      );
+    }
+  }, [enableGuide]);
+
   return (
     <div className="w-full h-full">
       <RoRHeader
         CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
       />
-      <div className="relative flex flex-col w-[80%] mt-[18dvh] h-[60dvh] mx-auto">
-        <div
-          className="absolute inset-0 z-0 filter-orb-white"
-          style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            opacity: 0.5,
-          }}
-        />
-
-        <div className="h-fit w-full grid grid-cols-3 gap-x-1 place-items-center mt-[1rem]">
-          {[
-            {
-              icon: "+",
-              label: "book",
-            },
-            {
-              icon: "*",
-              label: "map",
-            },
-            {
-              icon: "Y",
-              label: "statue",
-            },
-          ].map((itm, index) => {
-            return (
+      <div
+        className={`${
+          isTgMobile ? "tg-container-height" : "browser-container-height"
+        } flex flex-col items-center justify-center`}
+      >
+        <div className={`grid-width h-[55dvh] mt-[7dvh] mx-auto relative p-1`}>
+          <div
+            className="absolute inset-0 z-0 filter-orb-white"
+            style={{
+              backgroundImage: `url(${assets.uxui.baseBgA})`,
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              opacity: 0.5,
+            }}
+          />
+          <div className="grid grid-cols-3 gap-x-1.5 w-full h-fit place-items-center place-content-between">
+            {[
+              {
+                icon: "+",
+                label: "book",
+              },
+              {
+                icon: "*",
+                label: "map",
+              },
+              {
+                icon: "Y",
+                label: "totem",
+              },
+            ].map((itm, index) => (
               <div
                 onClick={() => {
                   if (currItems == index) {
                     handleClickHaptic(tele, enableHaptic);
-
                     setShowCard(
                       <RelicRwrdCrd
                         showBoots={false}
@@ -328,72 +369,101 @@ const Library = () => {
                   }
                 }}
                 key={`box-${index}`}
-                className={`relative border cursor-pointer ${
+                className={` border ${
                   index === currItems
-                    ? `border-${myth}-primary text-white glow-button-${myth}`
+                    ? `border-${myth}-primary text-black-contour text-${myth}-primary glow-button-${myth}`
                     : "text-white border-white/70"
-                } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-[140px] rounded-md overflow-hidden`}
+                }  relative max-w-[120px] w-full rounded-md overflow-hidden `}
               >
-                <div className="w-full aspect-square rounded-md bg-white/20 flex justify-center items-center">
+                <div
+                  className={`w-full aspect-square rounded-t-md border-b border-white/50 bg-white/20 flex justify-center items-center`}
+                >
                   <span className="text-iconLg font-symbols">{itm.icon}</span>
                 </div>
-                {index == currItems ? (
-                  <div className="w-full uppercase text-center text-sm leading-tight px-1 py-0.5  bg-black truncate">
-                    INFO
-                  </div>
-                ) : (
-                  <div className="w-full uppercase text-center text-sm leading-tight px-1 py-0.5 truncate">
-                    {itm.label}
-                  </div>
-                )}
+                <div
+                  className={`w-full text-white uppercase text-center text-sm leading-tight px-1 py-1.5 truncate  bg-black/50 rounded-b-md`}
+                >
+                  {index == currItems
+                    ? `${index == 2 ? "consult" : "read"}`
+                    : itm.label}
+                </div>
               </div>
-            );
-          })}
-        </div>
-
-        <div
-          className={`flex flex-col gap-y-4 relative justify-center items-center h-full ${
-            isBrowser ? "w-1/2" : "w-full"
-          } mx-auto`}
-        >
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              showAd();
-            }}
-            className="flex flex-col justify-center items-center z-[99] absolute top-4 right-2"
-          >
-            <Clapperboard
-              color="white"
-              size={"3rem"}
-              className="text-black-contour"
-            />
-            <div className="text-white text-black-contour">FREE</div>
+            ))}
           </div>
-          <div className="flex justify-center relative">
-            {currItems == 0 && (
-              <div className="absolute mt-16 ml-3">
-                <Symbol isCard={true} showClaimEffect={() => {}} myth={myth} />
+
+          {/* ad */}
+          <div className="flex relative flex-col justify-center items-center gap-y-4 h-[68%]">
+            {!gameData?.pouch?.includes(`${myth}.${itemCode}`) && (
+              <div className="flex justify-center items-center text-center text-white h-fit w-full">
+                <div className="flex gap-x-2 justify-center items-center w-full">
+                  <div className={`font-symbols text-gold text-[2rem]`}>A</div>
+                  <div
+                    className={`font-fof text-[1.75rem] font-normal  text-black-contour transition-all duration-1000 text-white`}
+                  >
+                    1
+                  </div>
+                </div>
+                <div className="text-[1.75rem]">|</div>
+                <div
+                  onClick={() => {
+                    handleClickHaptic(tele, enableHaptic);
+                    showAd();
+                  }}
+                  className="flex gap-x-2 justify-center items-center w-full"
+                >
+                  <Clapperboard
+                    color="white"
+                    size={"2.15rem"}
+                    className="text-black-contour"
+                  />
+                  <div className="text-white text-[1.75rem] text-black-contour">
+                    FREE
+                  </div>
+                </div>
               </div>
             )}
-
-            <img
-              src={
-                currItems == 0
-                  ? assets.uxui.baseBook
-                  : currItems == 1
-                  ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.common03.png`
-                  : currItems == 2
-                  ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.starter01.png`
-                  : assets.uxui.baseBook
-              }
-              alt="book"
-              className={`glow-text-white`}
-            />
+            <div className="flex justify-center relative">
+              <img
+                src={
+                  currItems == 0
+                    ? assets.uxui.baseBook
+                    : currItems == 1
+                    ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.starter02.png`
+                    : currItems == 2
+                    ? `https://media.publit.io/file/BeGods/items/240px-${myth}.artifact.starter01.png`
+                    : assets.uxui.baseBook
+                }
+                alt="book"
+                className={`glow-text-white w-item`}
+              />
+            </div>
           </div>
+        </div>
+
+        <div className="absolute bottom-[2dvh]">
           <div
+            onMouseDown={() => {
+              setIsClicked(true);
+            }}
+            onMouseUp={() => {
+              setIsClicked(false);
+            }}
+            onMouseLeave={() => {
+              setIsClicked(false);
+            }}
+            onTouchStart={() => {
+              setIsClicked(true);
+            }}
+            onTouchEnd={() => {
+              setIsClicked(false);
+            }}
+            onTouchCancel={() => {
+              setIsClicked(false);
+            }}
             onClick={() => {
-              if (gameData?.pouch.includes(`${myth}.${itemCode}`)) {
+              setTimeout(() => setIsClicked(false), 150);
+
+              if (isOwned) {
                 if (currItems == 0) {
                   setShowCard(
                     <BookCrd
@@ -407,29 +477,38 @@ const Library = () => {
                   toast.success("not sure what to do here!");
                 }
               } else {
-                handleClaimItem(`${myth}.${itemCode}`, null);
+                handleClaimItem(itemId, null);
               }
             }}
             className="flex justify-center items-center relative h-fit"
           >
-            <img src={assets.buttons[buttonColor]?.on} alt="button" />
-            <div className="absolute flex justify-center  w-full z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
-              {gameData?.pouch?.includes(`${myth}.${itemCode}`) ? (
-                <div className="uppercase">Read</div>
-              ) : (
-                <>
-                  <span className="font-symbols px-2">A</span>1
-                </>
-              )}
+            <img
+              src={
+                isClicked || isOwned
+                  ? assets.buttons[buttonColor]?.off
+                  : assets.buttons[buttonColor]?.on
+              }
+              alt="button"
+            />
+            <div className="absolute z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
+              {label}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="">
-        <ToggleLeft activeMyth={4} handleClick={handleLeft} />
-        <ToggleRight activeMyth={4} handleClick={handleRight} />
-      </div>
+      <>
+        <ToggleLeft
+          positionBottom={true}
+          activeMyth={4}
+          handleClick={handleLeft}
+        />
+        <ToggleRight
+          positionBottom={true}
+          activeMyth={4}
+          handleClick={handleRight}
+        />
+      </>
     </div>
   );
 };

@@ -3,10 +3,9 @@ import { RorContext } from "../../context/context";
 import { elementMythNames } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
 import { claimPotion } from "../../utils/api.ror";
-import RoRBtn from "../Buttons/RoRBtn";
 import MiscCard from "../Cards/Citadel/MiscCard";
 
-const PotionBtn = ({ potion, stage, showGobCoin }) => {
+const PotionBtn = ({ currSection, buttonColor, potion }) => {
   const { gameData, setGameData, setShowCard, authToken, setSection, assets } =
     useContext(RorContext);
   const [isClicked, setIsClicked] = useState(false);
@@ -53,7 +52,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
       }
     }
 
-    showGobCoin();
+    handleClaimPotion();
   };
 
   const handleClaimPotion = async () => {
@@ -112,13 +111,6 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
 
       await claimPotion(authToken, potion);
 
-      const potionItem = {
-        _id: "dhflhfhdj",
-        itemId: potion,
-        fragmentId: 0,
-        isComplete: true,
-      };
-
       let showThief = false;
 
       // update
@@ -147,16 +139,16 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
           });
         }
 
-        const updatedBag = [...prev.bag, potionItem];
+        const updatedPouch = [...prev.pouch, potion];
 
         return {
           ...prev,
           stats: newStats,
-          bag: updatedBag,
+          pouch: updatedPouch,
         };
       });
 
-      toast.success(potion);
+      toast.success("Potion added to pouch successfully!");
       setShowCard(null);
       setSection(2);
 
@@ -169,7 +161,7 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
               isMulti={false}
               handleClick={() => setShowCard(null)}
               Button={
-                <div className="text-white uppercase h-button-primary mt-[4px] text-num">
+                <div className="text-white uppercase h-button-primary mt-[4px] text-[2.5rem]">
                   thief infestation
                 </div>
               }
@@ -183,88 +175,44 @@ const PotionBtn = ({ potion, stage, showGobCoin }) => {
   };
 
   return (
-    <>
-      {!stage ? (
-        <div
-          onClick={validateShards}
-          onMouseDown={() => {
-            setIsClicked(true);
-          }}
-          onMouseUp={() => {
-            setIsClicked(false);
-          }}
-          onMouseLeave={() => {
-            setIsClicked(false);
-          }}
-          onTouchStart={() => {
-            setIsClicked(true);
-          }}
-          onTouchEnd={() => {
-            setIsClicked(false);
-          }}
-          onTouchCancel={() => {
-            setIsClicked(false);
-          }}
-          className={`flex items-center border text-white ${
-            isClicked && `glow-button-white`
-          } justify-between h-button-primary w-button-primary mt-[4px] mx-auto px-1 bg-glass-black z-50 rounded-primary`}
-        >
-          <div className="flex text-primary justify-center items-center w-1/4 h-full">
-            <div className="relative flex justify-center items-center">
-              <img
-                src={`https://media.publit.io/file/BeGods/items/240px-shard.${
-                  element === "aether"
-                    ? typeCode !== "A"
-                      ? "aether.black"
-                      : "aether.white"
-                    : element
-                }.png`}
-                alt="shard"
-              />
-              <div className="absolute z-10">
-                <div className="text-[2rem] text-white glow-text-black pl-1.5">
-                  900
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px] rounded-full`}
-          >
-            V
-          </div>
-
-          <div className="flex justify-center items-center w-1/4  h-full">
-            <div className="relative flex justify-center items-center">
-              <img
-                src={`https://media.publit.io/file/BeGods/items/240px-shard.${
-                  element === "aether"
-                    ? typeCode === "A"
-                      ? "black"
-                      : "white"
-                    : typeCode === "A"
-                    ? "white"
-                    : "black"
-                }.png`}
-                alt="shard"
-              />
-              <div className="absolute z-10">
-                <div className="text-[2rem] text-white glow-text-black pr-1.5">
-                  100
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <RoRBtn
-          message={"Close"}
-          left={1}
-          right={1}
-          handleClick={handleClaimPotion}
-        />
-      )}
-    </>
+    <div
+      onClick={validateShards}
+      onMouseDown={() => {
+        setIsClicked(true);
+      }}
+      onMouseUp={() => {
+        setIsClicked(false);
+      }}
+      onMouseLeave={() => {
+        setIsClicked(false);
+      }}
+      onTouchStart={() => {
+        setIsClicked(true);
+      }}
+      onTouchEnd={() => {
+        setIsClicked(false);
+      }}
+      onTouchCancel={() => {
+        setIsClicked(false);
+      }}
+      className="flex justify-center items-center relative h-fit"
+    >
+      <img
+        src={
+          currSection === 1
+            ? isClicked
+              ? assets.buttons[buttonColor]?.off
+              : assets.buttons[buttonColor]?.on
+            : isClicked
+            ? assets.buttons.black.off
+            : assets.buttons.black.on
+        }
+        alt="button"
+      />
+      <div className="absolute z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
+        pay
+      </div>
+    </div>
   );
 };
 

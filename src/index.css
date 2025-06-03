@@ -309,6 +309,10 @@ body.iframe-mobile .browser-container-height {
   @apply w-[72%] tablet:w-[47%] desktop:w-[22%];
 }
 
+.grid-width {
+  @apply w-[90%] tablet:w-[50%] desktop:w-[50%];
+}
+
 .card-width {
   @apply w-[72%] tablet:w-[47%] desktop:w-[22%] aspect-[3/4];
 }
