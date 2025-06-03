@@ -1,5 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, LogOut, Settings, Wallet } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Expand,
+  LogOut,
+  Maximize2,
+  Minimize2,
+  Settings,
+  Wallet,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -75,6 +84,33 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
     navigate(-1);
   };
 
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      // Not in fullscreen: request it
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        // Safari
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        // IE/Edge
+        elem.msRequestFullscreen();
+      }
+    } else {
+      // Already in fullscreen: exit it
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        // Safari
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        // IE/Edge
+        document.msExitFullscreen();
+      }
+    }
+  };
+
   return (
     <div
       className={`absolute flex justify-between w-full gap-x-5 ${
@@ -112,6 +148,29 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
                 size={24}
                 onClick={handleConnectLineWallet}
                 className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
+              />
+            )}
+          </>
+        )}
+        {!isTelegram && (
+          <>
+            {!document.fullscreenElement ? (
+              <Maximize2
+                size={24}
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  toggleFullScreen();
+                }}
+                className="cursor-pointer"
+              />
+            ) : (
+              <Minimize2
+                size={24}
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  toggleFullScreen();
+                }}
+                className="cursor-pointer"
               />
             )}
           </>
