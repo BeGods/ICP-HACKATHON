@@ -83,7 +83,9 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
     >
       <div>
         {!hideExit && (
-          <LogOut onClick={handleExit} size={24} className="cursor-pointer" />
+          <div onClick={handleExit} className="text-[1.25rem] cursor-pointer">
+            💤
+          </div>
         )}
       </div>
 

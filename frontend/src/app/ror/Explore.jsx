@@ -26,30 +26,45 @@ import {
   mythElementNamesLowerCase,
   mythSections,
 } from "../../utils/constants.ror";
-import { toast } from "react-toastify";
 import RoRBtn from "../../components/Buttons/RoRBtn";
 import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
 import { showToast } from "../../components/Toast/Toast";
 import ReactHowler from "react-howler";
+import { useRoRGuide } from "../../hooks/Tutorial";
+import { ExploreGuide } from "../../components/Common/RorTutorial.";
+import { isCoin } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ assets, content, mythology, location }) => {
+const CenterChild = ({ assets, content, mythology, location, gameData }) => {
   return (
-    <div
-      className={`
-            flex  cursor-pointer justify-center items-center absolute h-symbol-primary text-white text-black-md-contour w-symbol-primary  rounded-full bg-black border border-${mythology}-primary top-0 z-20 left-1/2 -translate-x-1/2`}
-    >
-      <img
-        src={assets.uxui.baseOrb}
-        alt="base-orb"
-        className={`filter-orbs-${mythology} w-full h-full rounded-full pointer-events-none`}
-      />
-      <div className="absolute top-0 w-full flex justify-center z-[60] text-[1.5rem] uppercase glow-text-black font-bold text-white">
-        {bgLabel[location] ?? "Explore"}
+    <div className="flex cursor-pointer justify-center items-center absolute w-[8rem] h-[8rem] shadow-lg rounded-full text-white text-[5rem] top-0 z-20 left-1/2 -translate-x-1/2">
+      <div className="relative w-full h-full">
+        <img
+          src={assets.uxui.sundial}
+          alt="sundial"
+          className={`absolute ${
+            gameData.stats.dailyQuota < 4 && "grayscale"
+          } z-30 w-auto h-auto max-w-full max-h-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none`}
+        />
+
+        <img
+          src={
+            assets.items[
+              `amulet.${gameData.stats.dailyQuota < 4 ? "moon" : "sun"}`
+            ]
+          }
+          alt="amulet"
+          className="w-full h-full rounded-full shadow-2xl pointer-events-none z-40 relative"
+        />
+
+        <div className="absolute z-40 flex justify-center items-center inset-0 text-[5rem] text-black-contour">
+          {content}
+        </div>
       </div>
-      <div className="absolute flex justify-center items-center inset-0 text-[5rem] mt-4">
-        {content}
+
+      <div className="absolute top-0 w-full flex text-center leading-6 mt-[7rem] justify-center z-[60] text-[1.5rem] uppercase glow-text-black font-bold text-white">
+        TURNS
       </div>
     </div>
   );
@@ -80,11 +95,11 @@ const Explore = () => {
     enableSound,
   } = useContext(RorContext);
   const [currStage, setCurrStage] = useState(0);
-  const [countDown, setCountDown] = useState(5);
+  const [countDown, setCountDown] = useState(3);
   const [showItem, setShowItem] = useState(false);
   const [startPlay, setStartPlay] = useState(false);
   const [mythBg, setMythBg] = useState(null);
-  const [roundTimeElapsed, setRoundTimeElapsed] = useState(10);
+  const [roundTimeElapsed, setRoundTimeElapsed] = useState(9);
   const [digMyth, setDigMyth] = useState(null);
   const [isInside, setIsInside] = useState(false);
   const skipSessionEndRef = useRef(false);
@@ -97,6 +112,7 @@ const Explore = () => {
   const [playSound, setPlaySound] = useState(0);
   const direction = useRef({ x: 1, y: 1 });
   const ballRef = useRef(null);
+  const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial06");
   const [holdTime, setHoldTime] = useState({
     holdStartTime: 0,
     holdEndTime: 0,
@@ -211,23 +227,53 @@ const Explore = () => {
     const randomImage =
       matchingImages[Math.floor(Math.random() * matchingImages.length)];
 
+    setMinimize(1);
     setMythBg(randomImage);
     setDigMyth(randomMyth);
     setPlaySound(1);
     setStartPlay(true);
   };
 
+  useEffect(() => {
+    if (enableGuide) {
+      setShowCard(
+        <ExploreGuide
+          currTut={0}
+          handleClick={() => {
+            setShowCard(
+              <ExploreGuide
+                currTut={1}
+                handleClick={() => {
+                  setShowCard(
+                    <ExploreGuide
+                      currTut={2}
+                      handleClick={() => {
+                        setEnableGuide(false);
+                        setShowCard(null);
+                      }}
+                    />
+                  );
+                }}
+              />
+            );
+          }}
+        />
+      );
+    }
+  }, [enableGuide]);
+
   const renderStageContent = () => {
     if (!startPlay) {
       return (
         <div
           onPointerDown={handlePlay}
-          className="text-center cursor-pointer font-medium uppercase text-black-contour text-white text-[3rem] p-3"
+          className="flex justify-center items-center text-center h-full w-full relative cursor-pointer font-medium uppercase text-black-contour text-white text-[3rem]"
         >
-          Swipe To Dig <br />{" "}
-          <span className="font-symbols lowercase text-[6rem] text-black-contour">
-            b
-          </span>
+          {!enableGuide && (
+            <span className="font-symbols lowercase text-[6rem] swipe-dig-hand absolute text-black-contour mb-[18vh] mr-[18vw]">
+              b
+            </span>
+          )}
         </div>
       );
     }
@@ -242,7 +288,16 @@ const Explore = () => {
           </div>
         );
       }
-      return <div className="text-[15rem] text-black-contour">{countDown}</div>;
+      return (
+        <div className="flex justify-center items-center text-center h-full w-full relative  uppercase text-black-contour text-white">
+          <div className="text-[15rem] text-black-contour">{countDown}</div>
+          <div
+            className={`absolute bottom-0 text-[2.5rem] -mb-[8vh] text-white glow-text-${digMyth} mx-auto w-full flex justify-center items-center text-center`}
+          >
+            {bgLabel[mythBg?.split(".")[1] ?? "Explore"] ?? ""}
+          </div>
+        </div>
+      );
     }
 
     if (currStage === 1) {
@@ -269,7 +324,7 @@ const Explore = () => {
                       `${digMyth?.toLowerCase()}.artifact.starter02`
                     )
                   }
-                  className="mt-4 text-[50px] font-symbols text-black-contour scale-point"
+                  className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
                 >
                   *
                 </div>
@@ -284,15 +339,15 @@ const Explore = () => {
                       `${digMyth?.toLowerCase()}.artifact.starter01`
                     )
                   }
-                  className="mt-4 text-[50px] font-symbols text-black-contour scale-point"
+                  className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
                 >
                   Y
                 </div>
               )}
           </div>
 
-          <div className="text-[7rem] reward-pop-in text-gold text-black-contour uppercase">
-            {swipes >= gameData.stats.competelvl ? "Won" : "Lost"}
+          <div className="text-[4rem] text-center reward-pop-in text-gold text-black-contour uppercase break-normal whitespace-normal">
+            {swipes >= gameData.stats.competelvl ? "Win" : "SO CLOSE"}
           </div>
         </div>
       );
@@ -307,7 +362,6 @@ const Explore = () => {
 
   const handleStateSession = async () => {
     setCurrStage(1);
-    setMinimize(1);
     try {
       await startSession(authToken, isInside);
       setGameData((prev) => {
@@ -344,7 +398,7 @@ const Explore = () => {
         currentRound: 1,
         roundData: [],
       });
-      setSwipes(0);
+      setSwipes(gameData?.stats?.digLvl ?? 1);
 
       let parsedReward = rewardResult.reward;
 
@@ -391,73 +445,23 @@ const Explore = () => {
           }
         }
 
-        setShowCard(
-          <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
-            <div
-              className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
-            >
-              <div className={`card ${cardHeight}`}>
-                <CurrencyCrd
-                  itemId={{
-                    id: `shard.${element}`,
-                    name: `shard.${element}`,
-                  }}
-                  handleClose={() => {
-                    setShowCard(null);
-                    setShardReward({
-                      myth:
-                        parsedReward?.shardType?.toLowerCase() ??
-                        digMyth?.toLowerCase(),
-                      count: parsedReward?.shards,
-                    });
-                  }}
-                  handleFlip={() => {
-                    setShowCard(null);
-                    setShardReward({
-                      myth:
-                        parsedReward?.shardType?.toLowerCase() ??
-                        digMyth?.toLowerCase(),
-                      count: parsedReward?.shards,
-                    });
-                    setTimeout(() => {
-                      setShardReward(null);
-                    }, 2000);
-                  }}
-                />
-              </div>
-            </div>
-            <div className="button z-50 mt-2">
-              <div className="button__face button__face--front flex justify-center items-center">
-                <RoRBtn
-                  itemId={`shard.${element}`}
-                  message={parsedReward?.shards}
-                  left={1}
-                  right={1}
-                  isNotPay={true}
-                  handleClick={() => {
-                    setShowCard(null);
-                    setShardReward({
-                      myth:
-                        parsedReward?.shardType?.toLowerCase() ??
-                        digMyth?.toLowerCase(),
-                      count: parsedReward?.shards,
-                    });
-                    setTimeout(() => {
-                      setShardReward(null);
-                    }, 2000);
-                  }}
-                  disable={false}
-                />
-              </div>
-              <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center" />
-            </div>
-          </div>
-        );
+        alert(parsedReward?.shards);
+
+        setShowCard(null);
+        setTimeout(() => {
+          setShardReward({
+            myth:
+              parsedReward?.shardType?.toLowerCase() ?? digMyth?.toLowerCase(),
+            count: parsedReward?.shards,
+          });
+
+          setTimeout(() => {
+            setShardReward(null);
+          }, 3000);
+        }, 2500);
       };
 
       if (showRelic) {
-        showToast("item_success_bag");
-
         setShowCard(
           <RelicRwrdCrd
             claimBoots={async () => {
@@ -500,10 +504,52 @@ const Explore = () => {
                 disable={false}
                 handleClick={() => {
                   setShowCard(null);
-                  if (showCurrency) {
-                    setTimeout(() => {
-                      handleShowCurrencyCard();
-                    }, 300);
+
+                  // if outside and encounter then show char after it
+                  if (!isInside && parsedReward?.fragment?.isChar) {
+                    <RelicRwrdCrd
+                      claimBoots={async () => {}}
+                      showBoots={false}
+                      itemId={id}
+                      isChar={false}
+                      fragmentId={parsedReward?.fragment?.fragmentId}
+                      isComplete={parsedReward?.fragment?.isComplete}
+                      hasShards={parsedReward?.shards ?? 0}
+                      mythology={parsedReward?.shardType ?? digMyth}
+                      ButtonBack={
+                        <ShareButton
+                          isShared={false}
+                          isInfo={false}
+                          handleClaim={() => {}}
+                          activeMyth={1}
+                          isCoin={true}
+                          link={"sdjkfds"}
+                        />
+                      }
+                      ButtonFront={
+                        <RoRBtn
+                          isNotPay={true}
+                          message={"claim"}
+                          itemId={id}
+                          disable={false}
+                          handleClick={() => {
+                            setShowCard(null);
+
+                            if (showCurrency) {
+                              setTimeout(() => {
+                                handleShowCurrencyCard();
+                              }, 300);
+                            }
+                          }}
+                        />
+                      }
+                    />;
+                  } else {
+                    if (showCurrency) {
+                      setTimeout(() => {
+                        handleShowCurrencyCard();
+                      }, 300);
+                    }
                   }
                 }}
               />
@@ -523,12 +569,6 @@ const Explore = () => {
         let updatedBagItems;
         let updatedPouch = [...prevItems.pouch];
 
-        const ignoredItems = [
-          "artifact.treasure03",
-          "artifact.treasure02",
-          "artifact.treasure01",
-        ];
-
         if (parsedReward?.isDragon) {
           updatedBagItems = [];
           updatedPouch = updatedPouch.filter((itm) =>
@@ -536,8 +576,10 @@ const Explore = () => {
           );
         } else if (
           parsedReward?.fragment &&
-          /common02/?.test(parsedReward?.fragment.itemId)
+          (/common02/?.test(parsedReward?.fragment.itemId) ||
+            isCoin(parsedReward?.fragment.itemId))
         ) {
+          showToast("item_success_bag");
           updatedBagItems = [...prevItems.bag];
           updatedPouch = [...prevItems.pouch, parsedReward?.fragment.itemId];
         } else {
@@ -545,7 +587,7 @@ const Explore = () => {
             ? [...prevItems.bag, parsedReward?.fragment]
             : [...prevItems.bag];
         }
-
+        showToast("item_success_pouch");
         const updatedMythologies = prevItems.stats.mythologies.map(
           (mythology) => {
             if (mythology?.name === rewardResult?.reward?.shardType) {
@@ -585,7 +627,7 @@ const Explore = () => {
         setCurrStage(0);
         setStartPlay(false);
         setCountDown(3);
-        setRoundTimeElapsed(10);
+        setRoundTimeElapsed(9);
         setDigMyth(null);
         setBattleData({
           currentRound: 1,
@@ -593,7 +635,7 @@ const Explore = () => {
         });
         setMythBg(null);
         setIsInside(false);
-        setSwipes(0);
+        setSwipes(gameData?.stats?.digLvl ?? 1);
         setMinimize(0);
         setGameData((prev) => {
           return {
@@ -626,7 +668,6 @@ const Explore = () => {
   // }, 2000);
 
   const handleUpdateRoundData = async () => {
-    const digLvl = gameData?.stats?.digLvl ?? 1;
     const result = swipes >= gameData.stats.competelvl ? 1 : 0;
 
     if (swipes >= gameData.stats.competelvl) {
@@ -639,10 +680,7 @@ const Explore = () => {
     setIsSwiping(false);
 
     setBattleData((prev) => {
-      currRoundData = [
-        ...prev.roundData,
-        { swipes: swipes / digLvl, status: result },
-      ];
+      currRoundData = [...prev.roundData, { swipes: swipes, status: result }];
       return {
         currentRound: prev.currentRound + 1,
         roundData: currRoundData,
@@ -651,8 +689,8 @@ const Explore = () => {
 
     setCurrStage(2);
     setTimeout(() => {
-      setSwipes(0);
-      setRoundTimeElapsed(10);
+      setSwipes(gameData?.stats?.digLvl ?? 1);
+      setRoundTimeElapsed(9);
       setCurrStage(1);
 
       setGameData((prev) => {
@@ -787,6 +825,7 @@ const Explore = () => {
       <RoRHeader
         CenterChild={
           <CenterChild
+            gameData={gameData}
             assets={assets}
             location={mythBg?.split(".")[1] ?? "Explore"}
             mythology={digMyth?.toLowerCase()}
@@ -814,6 +853,7 @@ const Explore = () => {
       ) : (
         <div className="flex relative text-white justify-center items-center mt-[14vh] h-[65vh] w-full z-50">
           <div className="absolute flex top-0 px-5 justify-between w-full">
+            {/* keys // demoncoin */}
             <div>
               {currStage === 0 &&
                 !isInside &&
@@ -858,7 +898,7 @@ const Explore = () => {
                         );
                       }
                     }}
-                    className={`mt-4 text-[50px] font-symbols text-black-contour scale-point`}
+                    className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
                   >
                     {checkIsUnderworldActive(
                       gameData.stats,

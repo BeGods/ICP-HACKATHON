@@ -4,6 +4,7 @@ import RelicCrd from "./RelicCrd";
 import RelicInfo from "./RelicInfo";
 import CharCrd from "./CharCrd";
 import { mythElementNamesLowerCase } from "../../../utils/constants.ror";
+import { X } from "lucide-react";
 
 const RelicRwrdCrd = ({
   showBoots,
@@ -16,9 +17,9 @@ const RelicRwrdCrd = ({
   isComplete,
   maskOff,
   mythology,
-  hasShards,
   hideInfo,
   isSell,
+  hideClose,
 }) => {
   const { isTgMobile, setShowCard } = useContext(RorContext);
   const [flipped, setFlipped] = useState(false);
@@ -33,10 +34,16 @@ const RelicRwrdCrd = ({
   // }, []);
 
   return (
-    <div className="fixed inset-0 select-none bg-black  bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+    <div
+      onClick={() => setShowCard(null)}
+      className="fixed inset-0 select-none bg-black  bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]"
+    >
       {showBoots && (
         <div
-          onClick={claimBoots}
+          onClick={(e) => {
+            e.stopPropagation();
+            claimBoots();
+          }}
           className="absolute mb-[5vh] flex justify-center w-full bottom-0  z-50"
         >
           <img
@@ -47,9 +54,16 @@ const RelicRwrdCrd = ({
         </div>
       )}
 
+      {!hideClose && (
+        <div className="absolute top-0 right-0 p-6">
+          <X color="white" size={"2rem"} />
+        </div>
+      )}
+
       {isChar ? (
         <>
           <div
+            onClick={(e) => e.stopPropagation()}
             className={`relative select-none card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
           >
             <div className={`card ${cardHeight} select-none`}>
@@ -74,6 +88,7 @@ const RelicRwrdCrd = ({
       ) : (
         <>
           <div
+            onClick={(e) => e.stopPropagation()}
             className={`relative select-none card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
           >
             <div

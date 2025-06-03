@@ -236,13 +236,13 @@ export const joinItem = async (accessToken, arrayOfIds, payMethod) => {
   }
 };
 
-export const tradeItem = async (accessToken, itemId) => {
+export const tradeItem = async (accessToken, itemId, isPouch, isVault) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/merchant/trade`;
 
   try {
     const response = await axios.post(
       url,
-      { itemId: itemId },
+      { itemId: itemId, isPouch: isPouch, isVault: isVault },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

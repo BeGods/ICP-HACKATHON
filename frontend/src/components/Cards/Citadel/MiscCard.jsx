@@ -3,8 +3,17 @@ import { RorContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import ReactHowler from "react-howler";
+import { X } from "lucide-react";
 
-const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
+const MiscCard = ({
+  Button,
+  img,
+  icon,
+  showInfo,
+  hideClose,
+  onlyBack,
+  sound,
+}) => {
   const { assets, setShowCard, setSection, enableSound } =
     useContext(RorContext);
   const { i18n } = useTranslation();
@@ -18,12 +27,21 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+    <div
+      onClick={() => setShowCard(null)}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]"
+    >
+      {showInfo && !hideClose && (
+        <div className="absolute top-0 right-0 p-6">
+          <X color="white" size={"2rem"} />
+        </div>
+      )}
+      {/* card */}
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
       >
         <div className={`card ${cardHeight} ${flipped ? "flipped" : ""}`}>
-          {/* Front Side */}
           <div
             onClick={handleFlip}
             className="card__face card__face--front relative flex justify-center items-center"
@@ -40,7 +58,7 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
                   className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary`}
                   style={{ backgroundImage: `url(${assets.uxui.footer})` }}
                 />
-                <div className="absolute uppercase text-black-contour flex justify-center items-center w-full h-full">
+                <div className="absolute font-symbols text-[3.5rem] text-black-contour flex justify-center items-center w-full h-full">
                   {icon ?? "a"}
                 </div>
               </div>
@@ -62,7 +80,6 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
             />
           </div>
 
-          {/* Back Side */}
           <div
             onClick={handleFlip}
             className="card__face card__face--back relative flex justify-center items-center"
@@ -78,9 +95,7 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
               <div className="flex w-full">
                 <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
                   <div className="text-left">
-                    <h1 className="text-paperHead font-bold uppercase">
-                      {icon ?? "a"}
-                    </h1>
+                    <h1 className="text-paperHead font-bold">{icon ?? "a"}</h1>
                   </div>
                 </div>
               </div>
@@ -102,7 +117,7 @@ const MiscCard = ({ Button, img, icon, showInfo, onlyBack, sound }) => {
         </div>
       </div>
 
-      {/* Button below the card */}
+      {/* Button */}
       <div className={`button z-50 ${flipped ? "flipped mt-3" : "mt-2"}`}>
         <div className="button__face button__face--front flex justify-center items-center">
           {Button}

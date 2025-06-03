@@ -96,6 +96,8 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
   }
 }
 
+
+
 // Milestone Card
 .filter-card {
   filter: brightness(66%) contrast(172%) grayscale(100%) saturate(151%);
@@ -326,4 +328,8 @@ background-color: #fed700;
 
 .leaderboard-third{
   background-color:  #9b5e20;
+}
+
+.glow-text-gold {
+  text-shadow: 0 0 5px #FFD660, 0 0 10px #FFD660, 0 0 15px #FFD660;
 }

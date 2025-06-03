@@ -7,6 +7,7 @@ import {
 } from "../../../utils/api.fof";
 import {
   deleteAuthCookie,
+  deleteExpCookie,
   fetchHapticStatus,
   getExpCookie,
   setAuthCookie,
@@ -126,6 +127,7 @@ const IntroPage = (props) => {
     let referrer = isReferLink ? refer : null;
     if (!lineCalledRef.current) {
       lineCalledRef.current = true;
+
       try {
         console.log("Authenticating with LINE...");
         const response = await authenticateLine(idToken, null, referrer);
@@ -144,6 +146,8 @@ const IntroPage = (props) => {
     try {
       const response = await refreshAuthToken();
       const newToken = response.data.accessToken;
+      console.log("new token via refresh: ", response);
+
       setAuthToken(newToken);
       await setAuthCookie(tele, newToken);
       return newToken;
@@ -213,8 +217,10 @@ const IntroPage = (props) => {
 
   const isExistingTknValid = async (tokenExp) => {
     try {
+      console.log("checking token exists");
       const now = Date.now();
       let timeLeft = tokenExp - now;
+
       console.log(timeLeft);
 
       let token;
@@ -235,7 +241,7 @@ const IntroPage = (props) => {
 
           throw new Error("Token validation failed");
         }
-        console.log("new token not from represh");
+        console.log("existing token");
 
         setAuthToken(token);
       }
@@ -310,6 +316,7 @@ const IntroPage = (props) => {
           setIsBrowser(false);
 
           const tokenExpiry = await getExpCookie(tele);
+          await handleAuth(isTg);
 
           if (!tokenExpiry) {
             console.log("No token found. Authenticating...");

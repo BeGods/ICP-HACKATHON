@@ -35,9 +35,10 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
           draggable={false}
         ></div>
       )}
+
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
+        <div className="flex flex-col justify-between items-center h-full pt-[3dvh] pb-[2dvh]">
           <img
             draggable={false}
             src={assets.logos.fof}

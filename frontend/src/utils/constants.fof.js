@@ -1,5 +1,6 @@
 export const mythologies = ["Greek", "Celtic", "Norse", "Egyptian"];
 export const mythSections = ["greek", "celtic", "norse", "egyptian", "other"];
+export const mythOrder = ["celtic", "egyptian", "greek", "norse", "other"];
 export const elements = ["fire", "earth", "water", "air"];
 export const elementNames = ["Fire", "Earth", "Water", "Air", "Aether"];
 export const wheelNames = ["aether", "fire", "earth", "water", "air"];

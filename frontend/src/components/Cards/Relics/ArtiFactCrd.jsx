@@ -9,14 +9,17 @@ import { claimArtifact } from "../../../utils/api.ror";
 import { toast } from "react-toastify";
 import CurrencyCrd from "./CurrencyCrd";
 import RelicInfo from "./RelicInfo";
+import { X } from "lucide-react";
 
 const ArtifactCrd = ({
   category,
+  isClose,
   handleClick,
   items,
   initalIdx = 0,
   isCurrency,
   isPay,
+  icon,
 }) => {
   const { isTgMobile, setShowCard, gameData, setGameData, authToken } =
     useContext(RorContext);
@@ -28,8 +31,17 @@ const ArtifactCrd = ({
   const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]">
+    <div
+      onClick={() => setShowCard(null)}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]"
+    >
+      {!isClose && (
+        <div className="absolute top-0 right-0 p-6">
+          <X color="white" size={"2rem"} />
+        </div>
+      )}
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
       >
         <div className={`card  ${cardHeight}  ${flipped ? "flipped" : ""}`}>
@@ -41,9 +53,10 @@ const ArtifactCrd = ({
             />
           ) : (
             <RelicCrd
-              isClose={true}
+              isClose={isClose}
               fragmentId={0}
               isComplete={true}
+              icon={icon}
               itemId={items[idx].id}
               handleClose={() => setShowCard(false)}
               handleFlip={() => setFlipped((prev) => !prev)}
@@ -84,7 +97,7 @@ const ArtifactCrd = ({
         </div>
       </div>
       {items.length > 1 && (
-        <div>
+        <div onClick={(e) => e.stopPropagation()} className="w-full z-50">
           <ToggleLeft
             activeMyth={4}
             handleClick={() => {

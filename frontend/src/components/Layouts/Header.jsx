@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RorContext } from "../../context/context";
 import ArtifactCrd from "../Cards/Relics/ArtiFactCrd";
 import { gameItems } from "../../utils/gameItems";
-import { ChevronRight } from "lucide-react";
-import { elements, mythSections } from "../../utils/constants.ror";
+import { LogOut, X } from "lucide-react";
+import { mythSections } from "../../utils/constants.ror";
 
 const getSectionDetails = (
   gobcoin,
@@ -11,63 +11,64 @@ const getSectionDetails = (
   showShards,
   showGobCoins,
   goBack,
-  swipes
+  swipes,
+  isFurnaceBuild
 ) => {
   return [
     {
-      label: "citadel",
+      label: "",
       left: gobcoin,
       right: totalShards,
       hLeft: "Coins",
       hRight: "Shards",
       lIcon: "A",
       rIcon: "l",
-      handleLeft: showGobCoins,
+      handleLeft: () => {},
       handleRight: showShards,
     }, // 0
     {
       label: "",
-      left: swipes ?? 0,
-      right: totalShards,
-      hLeft: "Swipes",
-      hRight: "Shards",
-      lIcon: "b",
-      rIcon: "l",
-      handleLeft: showGobCoins,
-      handleRight: showShards,
+      left: 0,
+      right: swipes ?? 0,
+      hleft: "Shards",
+      hRight: "Swipes",
+      lIcon: "l",
+      rIcon: "b",
+      handleLeft: () => {},
+      handleRight: () => {},
     }, // 1
     {
-      label: "bag",
+      label: "",
       left: gobcoin,
-      right: totalShards,
+      right: "",
       hLeft: "Coins",
       hRight: "Shards",
       lIcon: "A",
-      rIcon: "l",
-      handleLeft: showGobCoins,
-      handleRight: showShards,
+      rIcon: <LogOut />,
+      handleLeft: () => {},
+      handleRight: goBack,
     }, // 2
     {
       label: "blacksmith",
       left: gobcoin,
-      right: totalShards,
+      right: "",
       hLeft: "Coins",
       hRight: "Shards",
       lIcon: "A",
-      rIcon: "l",
-      handleLeft: showGobCoins,
-      handleRight: showShards,
+      rIcon: isFurnaceBuild ? <X /> : <LogOut />,
+      handleLeft: () => {},
+      handleRight: goBack,
     }, // 3
     {
       label: "banker",
       left: gobcoin,
-      right: totalShards,
+      right: "",
       hLeft: "Coins",
       hRight: "Shards",
       lIcon: "A",
-      rIcon: "l",
-      handleLeft: showGobCoins,
-      handleRight: showShards,
+      rIcon: <LogOut />,
+      handleLeft: () => {},
+      handleRight: goBack,
     }, // 4
     {
       label: "vault",
@@ -76,8 +77,8 @@ const getSectionDetails = (
       hLeft: "Coins",
       hRight: "Back",
       lIcon: "A",
-      rIcon: <ChevronRight />,
-      handleLeft: showGobCoins,
+      rIcon: <LogOut />,
+      handleLeft: () => {},
       handleRight: goBack,
     }, // 5
     {}, // 6,
@@ -86,42 +87,42 @@ const getSectionDetails = (
     {}, // 9,
     {}, // 10,
     {
-      label: "apothecary",
+      label: "alchemist",
       left: gobcoin,
-      right: totalShards,
+      right: "",
       hLeft: "Coins",
-      hRight: "Shards",
+      hRight: "Back",
       lIcon: "A",
-      rIcon: "l",
+      rIcon: <LogOut />,
       handleLeft: showGobCoins,
-      handleRight: showShards,
-    }, // 0
+      handleRight: goBack,
+    }, // 11
     {
-      label: "library",
+      label: "librarian",
       left: gobcoin,
-      right: totalShards,
+      right: "",
       hLeft: "Coins",
-      hRight: "Shards",
+      hRight: "Back",
       lIcon: "A",
-      rIcon: "l",
-      handleLeft: showGobCoins,
-      handleRight: showShards,
-    }, // 0
+      rIcon: <LogOut />,
+      handleLeft: () => {},
+      handleRight: goBack,
+    }, // 12
     {
-      label: "tavern",
+      label: "tavernist",
       left: gobcoin,
-      right: totalShards,
+      right: "",
       hLeft: "Coins",
       hRight: "Shards",
       lIcon: "A",
-      rIcon: "l",
-      handleLeft: showGobCoins,
-      handleRight: showShards,
-    }, // 0
+      rIcon: <LogOut />,
+      handleLeft: () => {},
+      handleRight: goBack,
+    }, // 13
   ];
 };
 
-const BottomChild = () => {
+const BottomChild = ({ isGuide, isOpenVault, isFurnaceBuild, handleClick }) => {
   const {
     gameData,
     section,
@@ -130,6 +131,7 @@ const BottomChild = () => {
     shardReward,
     swipes,
     isSwiping,
+    setMinimize,
   } = useContext(RorContext);
   const [showEffect, setShowEffect] = useState(true);
 
@@ -184,7 +186,16 @@ const BottomChild = () => {
   };
 
   const goBack = () => {
-    setSection(4);
+    if (isOpenVault) {
+      handleClick();
+    } else if (isFurnaceBuild) {
+      handleClick();
+    } else if (section == 5) {
+      setSection(4);
+    } else {
+      setSection(0);
+      setMinimize(2);
+    }
   };
 
   const showShards = () => {
@@ -220,7 +231,8 @@ const BottomChild = () => {
     showShards,
     showGobCoins,
     goBack,
-    swipes
+    swipes,
+    isFurnaceBuild
   );
 
   useEffect(() => {
@@ -234,64 +246,52 @@ const BottomChild = () => {
   }, []);
 
   return (
-    <div className="flex h-button-primary mt-[2.5vh] absolute z-20 text-black font-symbols justify-between w-screen">
+    <div className="flex h-button-primary mt-[1.5dvh] absolute z-20 text-black font-symbols justify-between w-screen">
       <div
         onClick={() => sections[section].handleLeft()}
-        className={`flex cursor-pointer ${
-          section == 1 ? "slide-swipe-header-left" : "slide-ror-header-left"
-        }  header-shadow-black p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full`}
+        className={`flex cursor-pointer slide-ror-header-left  header-shadow-black p-0.5 justify-end items-center w-[32%] ${
+          shardReward && mythSections?.includes(shardReward?.myth)
+            ? `bg-${shardReward?.myth}-primary`
+            : `bg-white`
+        }  rounded-r-full`}
       >
-        <div
-          className={`text-[2.2rem] font-medium font-fof px-1 ${
-            section != 1 && "slide-ror-title-left"
-          }`}
-        >
-          {sections[section].left}
+        <div>
+          {shardReward ? (
+            <div className="text-[2rem] flex items-center font-medium text-white px-1 font-fof">
+              <span className="text-[1rem] font-bold">+</span>
+              {shardReward?.count}
+            </div>
+          ) : (
+            <div className={`text-[2rem] font-medium font-fof px-1`}>
+              {sections[section].left}
+            </div>
+          )}
         </div>
         <div
           className={`flex ${
             showEffect && "pulse-text"
-          } justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
+          } justify-center items-center bg-black  text-white w-[3rem] h-[3rem] aspect-square text-symbol-sm rounded-full`}
         >
-          <div className={`${isSwiping && "tut-shake"}`}>
+          <div className={`${shardReward && "tut-shake"}`}>
             {sections[section].lIcon}
           </div>
         </div>
       </div>
       <div
         onClick={() => sections[section].handleRight()}
-        className={`flex cursor-pointer transition-all duration-500 ${
-          section == 1 ? "slide-swipe-header-right" : "slide-ror-header-right"
-        } header-shadow-black p-0.5 justify-start items-center w-[32%] ${
-          shardReward && mythSections?.includes(shardReward?.myth)
-            ? `bg-${shardReward?.myth}-primary`
-            : `bg-white`
-        } rounded-l-full`}
+        className={`flex cursor-pointer transition-all duration-500 slide-ror-header-right header-shadow-black p-0.5 justify-start items-center w-[32%] bg-white rounded-l-full`}
       >
         <div
           className={`flex font-symbols ${
             showEffect && "pulse-text"
-          } justify-center items-center  bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
+          } justify-center items-center  bg-black text-white w-[3rem] h-[3rem] aspect-square text-symbol-sm rounded-full`}
         >
-          <div className={`${shardReward && "tut-shake"}`}>
+          <div className={`${(isSwiping || isGuide) && "tut-shake"}`}>
             {sections[section].rIcon}
           </div>
         </div>
-        <div>
-          {shardReward ? (
-            <div className="text-[2.2rem] flex items-center font-medium text-white px-1 font-fof">
-              <span className="text-[1rem] font-bold">+</span>
-              {shardReward?.count}
-            </div>
-          ) : (
-            <div
-              className={`text-[2.2rem] font-medium px-1 font-fof ${
-                section != 1 && "slide-ror-title-right"
-              }`}
-            >
-              {sections[section].right}
-            </div>
-          )}
+        <div className={`text-[2rem] font-medium px-1 font-fof`}>
+          {sections[section].right}
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
@@ -306,7 +306,13 @@ const BottomChild = () => {
   );
 };
 
-const RoRHeader = ({ CenterChild }) => {
+const RoRHeader = ({
+  CenterChild,
+  isGuide,
+  isOpenVault,
+  isFurnaceBuild,
+  handleClick,
+}) => {
   const { section } = useContext(RorContext);
   const sections = getSectionDetails(
     0,
@@ -319,11 +325,16 @@ const RoRHeader = ({ CenterChild }) => {
 
   return (
     <div className="z-50">
-      <div className="absolute top-0 w-full flex justify-center z-[60] text-[1.5rem] uppercase glow-text-black font-bold text-white">
+      <div className="absolute mt-[7rem] w-full flex justify-center z-[70] text-[1.25rem] uppercase glow-text-black font-bold text-white">
         {sections[section].label}
       </div>
       {CenterChild}
-      <BottomChild />
+      <BottomChild
+        handleClick={handleClick}
+        isOpenVault={isOpenVault}
+        isGuide={isGuide}
+        isFurnaceBuild={isFurnaceBuild}
+      />
     </div>
   );
 };

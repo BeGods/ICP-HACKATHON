@@ -650,6 +650,7 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+      break;
     case "meal_success":
       toast.success(
         <ToastMesg
@@ -687,6 +688,7 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+      break;
     case "sell_success":
       toast.success(
         <ToastMesg
@@ -724,6 +726,7 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+      break;
     case "vault_success":
       toast.success(
         <ToastMesg
@@ -761,6 +764,26 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+      break;
+    case "pouch_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Vault.pouch_error.title")}
+          desc={t("toasts.Vault.pouch_error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     default:
       toast.info(
         <ToastMesg

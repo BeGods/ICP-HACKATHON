@@ -6,6 +6,7 @@
     "uxui": {
         "gobcoin": "https://media.publit.io/file/BeGods/uxui/240px-gobcoin.png",
         "move": "https://media.publit.io/file/BeGods/uxui/240px-move.png",
+        "sundial": "https://media.publit.io/file/BeGods/uxui/240px-sundial.png",
         "baseShards": "https://media.publit.io/file/BeGods/uxui/240px-shard.base.png",
         "bgInfo": "https://media.publit.io/file/BeGods/uxui/320px-info-background.jpg",
         "bgInfoMoon":"https://media.publit.io/file/BeGods/uxui/320px-info-moon.jpg",
@@ -31,27 +32,31 @@
     },
     "items": {
         "multiorb" : "https://media.publit.io/file/BeGods/items/240px-orb.multicolor.png",
-        "pandora": "https://media.publit.io/file/BeGods/items/320px-pandora.png"
+        "pandora": "https://media.publit.io/file/BeGods/items/320px-pandora.png",
+        "bag": "https://media.publit.io/file/BeGods/items/240px-bag.jpg",
+        "meal": "/assets/240px-meal.png",
+        "amulet.sun": "https://media.publit.io/file/BeGods/items/240px-underworld.artifact.treasure01-off.png",
+        "amulet.moon": "https://media.publit.io/file/BeGods/items/240px-underworld.artifact.treasure02-off.png"
     },
     "locations": {
-        "celtic01": "https://media.publit.io/file/BeGods/locations/1280px-ror.celtic.earth01-wide.jpg",
-        "celtic02": "https://media.publit.io/file/BeGods/locations/1280px-ror.celtic.earth02-wide.jpg",
-        "egyptian01": "https://media.publit.io/file/BeGods/locations/1280px-ror.egyptian.air01-wide.jpg",
-        "egyptian02": "https://media.publit.io/file/BeGods/locations/1280px-ror.egyptian.air02-wide.jpg",
-        "greek01": "https://media.publit.io/file/BeGods/locations/1280px-ror.greek.fire01-wide.jpg",
-        "greek02": "https://media.publit.io/file/BeGods/locations/1280px-ror.greek.fire02-wide.jpg", 
-        "norse01": "https://media.publit.io/file/BeGods/locations/1280px-ror.norse.water01-wide.jpg",
-        "norse02": "https://media.publit.io/file/BeGods/locations/1280px-ror.norse.water02-wide.jpg",
-        "underworld01": "https://media.publit.io/file/BeGods/locations/1280px-ror.underworld01-wide.jpg",
-        "underworld02": "https://media.publit.io/file/BeGods/locations/1280px-ror.underworld02-wide.jpg",
-        "bank": "https://media.publit.io/file/BeGods/locations/1280px-ror.citadel.bank-wide.jpg",
-        "citadel": "https://media.publit.io/file/BeGods/locations/1280px-ror.citadel-wide.jpg",
-        "tavern": "https://media.publit.io/file/BeGods/locations/1280px-ror.citadel.tavern-wide.jpg",
-        "apothecary": "https://media.publit.io/file/BeGods/locations/1280px-ror.citadel.apothecary-wide.jpg",
-        "foundry": "https://media.publit.io/file/BeGods/locations/1280px-ror.citadel.foundry-wide.jpg",
-        "library": "https://media.publit.io/file/BeGods/locations/1280px-ror.citadel.library-wide.jpg",
-        "fof": "https://media.publit.io/file/BeGods/locations/1280px-fof.black.tower-wide-off.jpg",
-        "ror": "https://media.publit.io/file/BeGods/locations/1280px-ror.white.tower-wide-off.jpg"
+        "celtic01": "/assets/locations/1280px-ror.celtic.earth01_wide.jpg",
+        "celtic02": "/assets/locations/1280px-ror.celtic.earth02_wide.jpg",
+        "egyptian01": "/assets/locations/1280px-ror.egyptian.air01_wide.jpg",
+        "egyptian02": "/assets/locations/1280px-ror.egyptian.air02_wide.jpg",
+        "greek01": "/assets/locations/1280px-ror.greek.fire01_wide.jpg",
+        "greek02": "/assets/locations/1280px-ror.greek.fire02_wide.jpg", 
+        "norse01": "/assets/locations/1280px-ror.norse.water01_wide.jpg",
+        "norse02": "/assets/locations/1280px-ror.norse.water02_wide.jpg",
+        "underworld01": "/assets/locations/1280px-ror.underworld01_wide.jpg",
+        "underworld02": "/assets/locations/1280px-ror.underworld02_wide.jpg",
+        "bank": "/assets/locations/1280px-ror.citadel.bank_wide.jpg",
+        "citadel": "/assets/locations/1280px-ror.citadel_wide.jpg",
+        "tavern": "/assets/locations/1280px-ror.citadel.tavern_wide.jpg",
+        "apothecary": "/assets/locations/1280px-ror.citadel.apothecary_wide.jpg",
+        "foundry": "/assets/locations/1280px-ror.citadel.foundry_wide.jpg",
+        "library": "/assets/locations/1280px-ror.citadel.library_wide.jpg",
+        "fof": "/assets/locations/1280px-fof.black.tower_wide_off.jpg",
+        "ror": "/assets/locations/1280px-ror.white.tower_wide_off.jpg"
     },
     "logos": {
         "begodsBlack": "https://media.publit.io/file/BeGods/logos/battle.gods.black.svg",
@@ -63,41 +68,41 @@
     },
     "buttons": {
         "orange": {
-            "on": "/assets/buttons/280px-button.orange.on.png",
-            "off": "/assets/buttons/280px-button.orange.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.orange.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.orange.off.png"
         },
         "black": {
-            "on": "/assets/buttons/280px-button.black.on.png",
-            "off": "/assets/buttons/280px-button.black.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.black.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.black.off.png"
         },
         "blue": {
-            "on": "/assets/buttons/280px-button.blue.on.png",
-            "off": "/assets/buttons/280px-button.blue.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.blue.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.blue.off.png"
         },
         "green": {
-            "on": "/assets/buttons/280px-button.green.on.png",
-            "off": "/assets/buttons/280px-button.green.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.green.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.green.off.png"
         },
         "pink": {
-            "on": "/assets/buttons/280px-button.pink.on.png",
-            "off": "/assets/buttons/280px-button.pink.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.pink.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.pink.off.png"
         },
         "red": {
-            "on": "/assets/buttons/280px-button.red.on.png",
-            "off": "/assets/buttons/280px-button.red.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.red.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.red.off.png"
         },
         "violet": {
-            "on": "/assets/buttons/280px-button.violet.on.png",
-            "off": "/assets/buttons/280px-button.violet.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.violet.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.violet.off.png"
         },
         "yellow": {
-            "on": "/assets/buttons/280px-button.yellow.on.png",
-            "off": "/assets/buttons/280px-button.yellow.off.png"
+            "on": "https://media.publit.io/file/BeGods/buttons/280px-button.yellow.on.png",
+            "off": "https://media.publit.io/file/BeGods/buttons/280px-button.yellow.off.png"
         },
-        "line" : "/assets/buttons/280px-button.line.png",
-        "otp" : "/assets/buttons/280px-button.mobile.png",
-        "dapp" : "/assets/buttons/280px-button.dapp.on.png",
-        "telegram" : "/assets/buttons/280px-button.telegram.png"
+        "line" : "https://media.publit.io/file/BeGods/buttons/280px-button.line.png",
+        "otp" : "https://media.publit.io/file/begods/buttons/280px-button.mobile.png",
+        "dapp" : "https://media.publit.io/file/BeGods/buttons/280px-button.dapp.on.png",
+        "telegram" : "https://media.publit.io/file/BeGods/buttons/280px-button.telegram.png"
     },
     "symbols": {
         "greek": "https://media.publit.io/file/BeGods/myths/mythology.greek.base.svg",
@@ -111,7 +116,7 @@
         "alchemistPop": "https://media.publit.io/file/BeGods/chars/160px-alchemist.char-sticker.png",
         "automataPop": "https://media.publit.io/file/BeGods/chars/160px-automata.char-sticker.png",
         "ratPop": "https://media.publit.io/file/BeGods/chars/160px-rat.char-sticker.png",
-        "thiePop": "https://media.publit.io/file/BeGods/chars/160px-thief.char-sticker.png",
+        "thiefPop": "https://media.publit.io/file/BeGods/chars/160px-thief.char-sticker.png",
         "minionHead": "https://media.publit.io/file/BeGods/chars/240px-blacksmith.char-head.jpg",
         "bankerHead": "https://media.publit.io/file/BeGods/chars/240px-banker.char-head.jpg",
         "libHead": "https://media.publit.io/file/BeGods/chars/240px-librarian.char-head.jpg",
@@ -149,8 +154,6 @@
         "monster": "/assets/audio/ror.encounter.monster.wav",
         "unique": "/assets/audio/ror.encounter.unique.wav",
         "dragon": "/assets/audio/ror.encounter.dragon.wav", 
-
-
         "apothecary": "/assets/audio/ror.apothecary.wav",
         "furnace": "/assets/audio/ror.furnace.wav",
         "librarian": "/assets/audio/ror.char.librarian.wav",

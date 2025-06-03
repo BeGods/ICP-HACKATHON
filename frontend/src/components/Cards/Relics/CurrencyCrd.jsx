@@ -9,7 +9,7 @@ import {
   mythSymbols,
 } from "../../../utils/constants.ror";
 
-const CurrencyCrd = ({ itemId, handleFlip, handleClose }) => {
+const CurrencyCrd = ({ itemId, hideBtn, handleFlip, handleClose }) => {
   const { assets } = useContext(RorContext);
   const element = itemId.id?.split(".")[1];
   const mythology = elementMythNames[element]?.toLowerCase() ?? element;

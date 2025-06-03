@@ -183,7 +183,7 @@ const Footer = ({}) => {
       <div className="flex justify-center w-full px-2 -ml-1.5 bg-green-200">
         <div
           className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-50  flex justify-between text-white ${
-            platform === "ios" ? "-mt-5.5" : "-mt-4"
+            platform === "ios" ? "-mt-4.5" : "-mt-3"
           }`}
         >
           {footerIcons.map((item, index) => (

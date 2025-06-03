@@ -17,6 +17,8 @@ import {
 } from "../../helpers/cookie.helper";
 import { calculateRemainingTime } from "../../helpers/ror.timers.helper";
 import { showToast } from "../../components/Toast/Toast";
+import { useRoRGuide } from "../../hooks/Tutorial";
+import { FurnaceGuide } from "../../components/Common/RorTutorial.";
 
 const tele = window.Telegram?.WebApp;
 
@@ -44,6 +46,7 @@ const Blacksmith = () => {
     setShowCard,
     assets,
     enableHaptic,
+    isTgMobile,
   } = useContext(RorContext);
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [draggedItem, setDraggedItem] = useState(null);
@@ -58,6 +61,7 @@ const Blacksmith = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [boxFlags, setBoxFlags] = useState([false, false, false]);
   const boxRefs = [useRef(null), useRef(null), useRef(null)];
+  const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial02");
   const [boxItems, setBoxItems] = useState([{}, {}, {}]);
 
   const itemsPerPage = 6;
@@ -370,12 +374,6 @@ const Blacksmith = () => {
         }) ?? [];
       setArbitaryBag(sorted);
     }
-
-    // const isActive = await getActiveFeature(tele, "blacksmith");
-
-    // if(!isActive){
-    //   showInfoCard()
-    // }
   }, []);
 
   useEffect(() => {
@@ -417,13 +415,14 @@ const Blacksmith = () => {
       <MiscCard
         showInfo={true}
         img={assets.boosters.minionCard}
-        icon="Blacksmith"
+        icon="h"
+        hideClose={true}
         sound="furnace"
         isMulti={false}
         handleClick={() => setShowCard(null)}
         Button={
           <RoRBtn
-            message={"Close"}
+            message={"LEAVE"}
             isNotPay={true}
             left={1}
             right={1}
@@ -448,13 +447,14 @@ const Blacksmith = () => {
           <MiscCard
             showInfo={false}
             img={assets.boosters.minionCard}
-            icon="Blacksmith"
+            icon="h"
+            hideClose={true}
             sound="furnace"
             isMulti={false}
             handleClick={() => handleActivate("blacksmith01", true)}
             Button={
               <RoRBtn
-                message={"Enter"}
+                message={"LEAVE"}
                 isNotPay={true}
                 left={1}
                 right={1}
@@ -468,35 +468,59 @@ const Blacksmith = () => {
     (async () => await checkFirstTime())();
   }, []);
 
+  useEffect(() => {
+    if (enableGuide) {
+      setShowCard(
+        <FurnaceGuide
+          handleClick={() => {
+            setEnableGuide(false);
+            setShowCard(null);
+          }}
+        />
+      );
+    }
+  }, [enableGuide]);
+
+  useEffect(() => {
+    console.log(boxItems.some((item) => Object.keys(item).length > 0));
+    console.log(boxItems);
+  }, [boxItems]);
+
   return (
     <div className="w-full h-fit">
       <RoRHeader
+        isFurnaceBuild={boxItems.some((item) => Object.keys(item).length > 0)}
+        handleClick={() => {
+          if (boxItems.some((item) => Object.keys(item).length > 0)) {
+            setBoxItems([{}, {}, {}]);
+          }
+        }}
         CenterChild={<CenterChild assets={assets} handleClick={showInfoCard} />}
       />
 
-      <div className="w-[80%] mt-[18dvh] h-[60dvh] relative mx-auto flex justify-center">
-        <div
-          className="absolute inset-0 z-0 filter-orb-white rounded-md"
-          style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            opacity: 0.5,
-          }}
-        />
-        <div className="grid grid-cols-3 gap-2 p-1 w-full h-full overflow-y-auto place-items-center">
-          {/* reserved slots */}
-          {gameData?.builder?.map((item, index) => (
-            <div
-              key={`builder-${index}`}
-              className={`relative border border-${
-                item?.itemId?.split(".")[0]
-              }-primary text-white glow-inset-button-${
-                item?.itemId?.split(".")[0]
-              } flex flex-col items-center aspect-square shadow-2xl max-w-[120px] w-full h-full max-h-[140px] rounded-md overflow-hidden`}
-            >
-              <div className="w-full">
+      <div
+        className={`${
+          isTgMobile ? "tg-container-height" : "browser-container-height"
+        } flex flex-col items-center justify-center`}
+      >
+        <div className={`grid-width h-[55dvh] mt-[7dvh] mx-auto relative p-1`}>
+          <div
+            className="absolute inset-0 z-0 filter-orb-white"
+            style={{
+              backgroundImage: `url(${assets.uxui.baseBgA})`,
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+              opacity: 0.5,
+            }}
+          />
+          <div className="grid grid-cols-3 gap-x-1.5 w-full h-full place-items-center place-content-between">
+            {/* build slots */}
+            {gameData?.builder?.map((item, index) => (
+              <div
+                key={`builder-${index}`}
+                className={`border relative text-white max-w-[120px] w-full rounded-md overflow-hidden `}
+              >
                 <GridItem
                   showClaim={
                     item?.exp - Date.now() <= 0
@@ -520,163 +544,170 @@ const Blacksmith = () => {
                   itemsWithAllFrags={gameData?.bag.map((itm) => itm.itemId)}
                 />
               </div>
-            </div>
-          ))}
+            ))}
 
-          {Array.from({ length: 3 - gameData.builder.length }).map(
-            (_, index) => {
-              const isBoxFilled = Object.keys(boxItems[index]).length > 0;
-              const isBoxForClaim = boxFlags[index];
-              let myth;
-              if (isBoxForClaim) {
-                const itm = Object.entries(boxItems[index]).map(
-                  ([itemId]) => itemId
-                );
-                myth = itm.toString().split(".")[0];
-              }
+            {/* forge slots */}
+            {Array.from({ length: 3 - gameData.builder.length }).map(
+              (_, index) => {
+                const isBoxFilled = Object.keys(boxItems[index]).length > 0;
+                const isBoxForClaim = boxFlags[index];
+                let myth;
+                if (isBoxForClaim) {
+                  const itm = Object.entries(boxItems[index]).map(
+                    ([itemId]) => itemId
+                  );
+                  myth = itm.toString().split(".")[0];
+                }
 
-              return (
-                <div
-                  key={`reserved-${index}`}
-                  ref={!isBoxForClaim ? boxRefs[index] : null}
-                  className={` relative text-white
+                return (
+                  <div
+                    key={`reserved-${index}`}
+                    ref={!isBoxForClaim ? boxRefs[index] : null}
+                    className={` relative text-white
                     max-w-[120px] w-full rounded-md overflow-hidden `}
-                >
-                  {isBoxFilled ? (
-                    Object.entries(boxItems[index]).map(
-                      ([itemId, fragments]) => (
-                        <div
-                          className={`w-full flex flex-col rounded-md border items-center ${
-                            isBoxForClaim
-                              ? `border-${myth}-primary text-white glow-inset-button-${myth}`
-                              : "border-white"
-                          }`}
-                          key={itemId}
-                        >
-                          <GridItem
-                            showClaim={
-                              isBoxForClaim ? (
-                                <>
-                                  <span className="font-symbols px-2">A</span>1
-                                </>
-                              ) : undefined
-                            }
-                            handleClick={() => {
-                              handleJoinItem(index, 0);
-                            }}
-                            itemObj={{
-                              itemId: itemId,
-                              fragmentId: fragments.map(
-                                (frag) => frag.fragmentId
-                              ),
-                              isComplete: (fragments?.length ?? 0) >= 2,
-                            }}
-                            scaleIcon={scaleIcon}
-                            itemsWithAllFrags={gameData?.bag.map(
-                              (itm) => itm.itemId
-                            )}
-                          />
-                        </div>
+                  >
+                    {isBoxFilled ? (
+                      Object.entries(boxItems[index]).map(
+                        ([itemId, fragments]) => (
+                          <div
+                            className={`w-full flex flex-col rounded-md border items-center ${
+                              isBoxForClaim
+                                ? `border-${myth}-primary text-white glow-inset-button-${myth}`
+                                : "border-white"
+                            }`}
+                            key={itemId}
+                          >
+                            <GridItem
+                              showClaim={
+                                isBoxForClaim ? (
+                                  <>
+                                    <span className="font-symbols px-2">A</span>
+                                    1
+                                  </>
+                                ) : undefined
+                              }
+                              handleClick={() => {
+                                handleJoinItem(index, 0);
+                              }}
+                              itemObj={{
+                                itemId: itemId,
+                                fragmentId: fragments.map(
+                                  (frag) => frag.fragmentId
+                                ),
+                                isComplete: (fragments?.length ?? 0) >= 2,
+                              }}
+                              scaleIcon={scaleIcon}
+                              itemsWithAllFrags={gameData?.bag.map(
+                                (itm) => itm.itemId
+                              )}
+                            />
+                          </div>
+                        )
                       )
-                    )
-                  ) : (
-                    <div
-                      className={`flex flex-col rounded-md border items-center w-full`}
-                    >
-                      <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                        <span className="text-iconLg font-symbols text-white">
-                          h
-                        </span>
+                    ) : (
+                      <div
+                        className={`flex flex-col rounded-md border items-center w-full`}
+                      >
+                        <div className="w-full aspect-square  border-b border-white/50 bg-white/20 flex justify-center items-center">
+                          <span className="text-iconLg font-symbols text-white">
+                            {index == 0 ? "q" : "h"}
+                          </span>
+                        </div>
+                        <div className="w-full text-white text-sm uppercase bg-black/50 rounded-b-md text-center px-1 py-1.5 leading-tight truncate">
+                          {index == 0 ? "DROP" : "FORGE"}
+                        </div>
                       </div>
-                      <div className="w-full text-white text-sm uppercase text-center px-1 py-1 leading-tight truncate">
-                        Drop
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            }
-          )}
+                    )}
+                  </div>
+                );
+              }
+            )}
 
-          {/* bag item slots */}
-          {paginatedVaultItems?.map((item) => (
-            <div
-              key={item._id}
-              onPointerDown={(e) => handleTouchStart(e, item)}
-              onPointerMove={handleTouchMove}
-              onPointerUp={handleTouchEnd}
-              className={`relative touch-none w-full max-w-[120px] flex flex-col  ${
-                scaleIcon && draggedItem === item ? "scale-110" : ""
-              }`}
-            >
-              <GridItem
-                hideBg={false}
-                handleClick={() => {}}
-                itemObj={item}
-                isStage={true}
-                scaleIcon={scaleIcon}
-                itemsWithAllFrags={activeItems}
-              />
-            </div>
-          ))}
-
-          {/* empty slots */}
-          {Array.from({ length: 6 - paginatedVaultItems.length }).map(
-            (_, index) => (
+            {/* bag item slots */}
+            {paginatedVaultItems?.map((item) => (
               <div
-                key={`placeholder-${index}`}
-                className="relative w-full max-w-[120px] flex flex-col opacity-50 items-center rounded-md overflow-hidden shadow-2xl"
+                key={item._id}
+                onPointerDown={(e) => handleTouchStart(e, item)}
+                onPointerMove={handleTouchMove}
+                onPointerUp={handleTouchEnd}
+                className={`relative touch-none w-full max-w-[120px] flex flex-col  ${
+                  scaleIcon && draggedItem === item ? "scale-110" : ""
+                }`}
               >
+                <GridItem
+                  hideBg={false}
+                  handleClick={() => {}}
+                  itemObj={item}
+                  isStage={true}
+                  scaleIcon={scaleIcon}
+                  itemsWithAllFrags={activeItems}
+                />
+              </div>
+            ))}
+
+            {/* empty slots */}
+            {Array.from({ length: 6 - paginatedVaultItems.length }).map(
+              (_, index) => (
                 <div
-                  className={`flex flex-col rounded-md border items-center w-full`}
+                  key={`placeholder-${index}`}
+                  className="relative w-full max-w-[120px] flex flex-col opacity-60 items-center rounded-md overflow-hidden shadow-2xl"
                 >
-                  <div className="w-full aspect-square bg-white/20 flex justify-center items-center">
-                    <span className="text-iconLg font-symbols text-white">
-                      8
-                    </span>
-                  </div>
-                  <div className="w-full text-white text-sm text-center px-1 py-1 leading-tight truncate">
-                    slot{gameData.bag.length - index + 1}
+                  <div
+                    className={`flex flex-col rounded-md border items-center w-full`}
+                  >
+                    <div className="w-full aspect-square border-b border-white/50 bg-white/20 flex justify-center items-center">
+                      <span className="text-iconLg font-symbols text-white">
+                        8
+                      </span>
+                    </div>
+                    <div className="w-full bg-black/50 rounded-b-md uppercase text-white text-sm text-center px-1 py-1.5 leading-tight truncate">
+                      slot {gameData.bag.length + index + 1}
+                    </div>
                   </div>
                 </div>
+              )
+            )}
+          </div>
+
+          {/* draggedItem */}
+          {isTouched && draggedItem && (
+            <div
+              style={{
+                position: "absolute",
+                top: `${copyPosition.y}px`,
+                left: `${copyPosition.x}px`,
+                pointerEvents: "none",
+                zIndex: 30,
+              }}
+            >
+              <div className={`relative h-[120px] w-[120px] overflow-hidden`}>
+                <div
+                  className="glow-icon-white h-full w-full"
+                  style={{
+                    backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "100% 20%",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                ></div>
               </div>
-            )
+            </div>
           )}
         </div>
-
-        {isTouched && draggedItem && (
-          <div
-            style={{
-              position: "absolute",
-              top: `${copyPosition.y}px`,
-              left: `${copyPosition.x}px`,
-              pointerEvents: "none",
-              zIndex: 30,
-            }}
-          >
-            <div className={`relative h-[120px] w-[120px] overflow-hidden`}>
-              <div
-                className="glow-icon-white h-full w-full"
-                style={{
-                  backgroundImage: `url(https://media.publit.io/file/BeGods/items/240px-${draggedItem.itemId}.png)`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "100% 20%",
-                  backgroundRepeat: "no-repeat",
-                }}
-              ></div>
-            </div>
-          </div>
-        )}
-        {gameData.bag.length <= 0 && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-gray-500 text-white px-4 py-2 rounded-full text-[1rem] font-roboto shadow-lg">
-            Bag is empty
-          </div>
-        )}
       </div>
+
       {gameData.bag.length > 6 && (
         <>
-          <ToggleLeft activeMyth={4} handleClick={handlePageLeft} />
-          <ToggleRight activeMyth={4} handleClick={handlePageRight} />
+          <ToggleLeft
+            positionBottom={true}
+            activeMyth={4}
+            handleClick={handlePageLeft}
+          />
+          <ToggleRight
+            positionBottom={true}
+            activeMyth={4}
+            handleClick={handlePageRight}
+          />
         </>
       )}
     </div>
