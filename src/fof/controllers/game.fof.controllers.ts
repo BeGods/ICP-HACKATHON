@@ -30,6 +30,7 @@ import {
 } from "../../helpers/booster.helpers";
 import { IMyth, IUserMyths } from "../../ts/models.interfaces";
 import { validStreakReward } from "../../helpers/streak.helpers";
+import { fetchKaiaValue } from "../../common/services/redis.services";
 
 // start tap session
 export const startGameSession = async (req, res) => {
@@ -227,6 +228,9 @@ export const getGameStats = async (req, res) => {
       );
     }
 
+    // kaia value
+    const kaiaValue = await fetchKaiaValue();
+
     const userData = {
       username: user.telegramUsername,
       tonAddress: user.tonAddress,
@@ -293,6 +297,9 @@ export const getGameStats = async (req, res) => {
       quests: mythologyQuests,
       extraQuests: otherQuests,
       towerKeys: towerKeys,
+      tokens: {
+        kaia: kaiaValue,
+      },
     });
   } catch (error) {
     res.status(500).json({

@@ -10,6 +10,7 @@ import {
 } from "../../fof/services/boosters.fof.services";
 import { verifyMessage } from "ethers";
 import { getKaiaValue } from "../../helpers/crypt.helpers";
+import { fetchKaiaValue } from "../services/redis.services";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -181,18 +182,20 @@ export const createLinePayment = async (req, res) => {
     return res.status(400).json({ message: "Invalid payment method." });
   }
 
+  const kaiaValue = await fetchKaiaValue();
+
   const kaiaPayment = {
     automata: {
       itemIdentifier: "automata-pack",
       name: "Automata Pack",
-      price: String(getKaiaValue(1)),
+      price: String(getKaiaValue(1, kaiaValue)),
       pgType: "CRYPTO",
       currencyCode: "KAIA",
     },
     burst: {
       itemIdentifier: "burst-pack",
       name: "Burst Pack",
-      price: String(getKaiaValue(3)),
+      price: String(getKaiaValue(3, kaiaValue)),
       pgType: "CRYPTO",
       currencyCode: "KAIA",
     },

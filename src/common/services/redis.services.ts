@@ -1,3 +1,4 @@
+import axios from "axios";
 import { connectRedis } from "../../config/database/redis";
 
 export const setOTP = async (key, value, expiry) => {
@@ -67,6 +68,28 @@ export const setOneWaveSession = async (key, value, expiry) => {
     const redisClient = await connectRedis(1);
 
     await redisClient.set(key, value, { EX: expiry });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchKaiaValue = async () => {
+  try {
+    const redisClient = await connectRedis(2);
+    let result = await redisClient.get("kaia");
+
+    if (result) {
+      return JSON.parse(result);
+    } else {
+      const response = await axios(
+        "https://api.coingecko.com/api/v3/simple/price?ids=kaia&vs_currencies=usd"
+      );
+      result = response.data;
+
+      await redisClient.set("kaia", result?.kaia?.usd, { EX: 120 }); // 2min
+    }
+
+    return result;
   } catch (error) {
     console.log(error);
   }
