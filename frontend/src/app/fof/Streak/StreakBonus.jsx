@@ -3,7 +3,6 @@ import { FofContext } from "../../../context/context";
 import { t } from "i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { determineStreak } from "../../../helpers/streak.helper";
-import { mythSections } from "../../../utils/constants.fof";
 
 const tele = window.Telegram?.WebApp;
 
@@ -98,7 +97,6 @@ const StreakBonus = (props) => {
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            updateRewards();
             setSection(6);
           }}
           className="flex absolute items-start bottom-[92px] justify-center w-full"

@@ -85,8 +85,8 @@ const PayModal = ({
                 <img src={assets.misc.kaia} alt="kaia" className="w-[2.5rem]" />
                 <div className="font-medium text-[40px] text-white glow-text-black">
                   {activeCard === "automata"
-                    ? getKaiaValue(1)
-                    : getKaiaValue(3)}
+                    ? getKaiaValue(1, tokens.kaia)
+                    : getKaiaValue(3, tokens.kaia)}
                 </div>
               </div>
             </div>
@@ -160,6 +160,7 @@ const BoosterClaim = ({
     setShowCard,
     enableHaptic,
     isTelegram,
+    tokens,
   } = useContext(FofContext);
   const { createLinePayment } = useWalletPayment();
   const { t } = useTranslation();
@@ -710,8 +711,8 @@ const BoosterClaim = ({
                     />
                     <div className="text-white text-black-contour mt-1 z-10 text-[2rem]">
                       {activeCard === "automata"
-                        ? getKaiaValue(1)
-                        : getKaiaValue(3)}
+                        ? getKaiaValue(1, tokens.kaia)
+                        : getKaiaValue(3, tokens.kaia)}
                     </div>{" "}
                     <div className="text-white text-black-contour mt-1 z-10 text-[2rem] px-1">
                       |

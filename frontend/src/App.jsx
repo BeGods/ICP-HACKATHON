@@ -37,6 +37,7 @@ function usePageTracking() {
 function App() {
   const [isBrowser, setIsBrowser] = useState(false);
   const [game, setGame] = useState("fof");
+  const [tokens, setTokens] = useState(null);
   const [lineWallet, setLineWallet] = useState(null);
   const [globalRewards, setGlobalRewards] = useState([]);
   const [triggerConf, setTriggerConf] = useState(false);
@@ -91,6 +92,8 @@ function App() {
     setIsTgDesktop,
     isTgMobile,
     setIsTgMobile,
+    tokens,
+    setTokens,
   };
 
   const syncAllCookies = async () => {
