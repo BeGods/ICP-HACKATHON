@@ -75,6 +75,8 @@ const FoFMain = () => {
     isBrowser,
     isTgMobile,
     setIsTgMobile,
+    tokens,
+    setTokens,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -140,6 +142,8 @@ const FoFMain = () => {
     isBrowser,
     isTgMobile,
     setIsTgMobile,
+    tokens,
+    setTokens,
   };
   const sections = [
     <Forges />, // 0
@@ -218,6 +222,7 @@ const FoFMain = () => {
     setCountry(response?.user.country);
     setUserData(response?.user);
     setKeysData(response?.towerKeys);
+    setTokens(response?.tokens);
 
     if (response?.user?.streak?.isStreakActive) {
       await getStreakBonus(token);

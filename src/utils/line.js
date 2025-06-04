@@ -8,7 +8,7 @@ export const getImage = (platform, avatar) => {
   }
 }
 
-export const getKaiaValue = (usdAmount) => {
+export const getKaiaValue = (usdAmount, kaiaExchangeRate) => {
   try {
     const kaiaExchangeRate = 0.107903;
     return (usdAmount / kaiaExchangeRate).toFixed(4);

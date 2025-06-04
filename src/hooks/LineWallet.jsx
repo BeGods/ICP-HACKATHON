@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { useWallet } from "../context/wallet";
 import { getPaymentId } from "../utils/api.fof";
 import { v4 as uuidv4 } from "uuid";
+import { MainContext } from "../context/context";
 
 const useWalletPayment = () => {
   const {
@@ -11,8 +13,8 @@ const useWalletPayment = () => {
     lineWallet,
     setPaymentProvider,
     setLineWallet,
-    authToken,
   } = useWallet();
+  const { authToken } = useContext(MainContext);
 
   const connectWallet = async () => {
     if (!lineProvider) {
