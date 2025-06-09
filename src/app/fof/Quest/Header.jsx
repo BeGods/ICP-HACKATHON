@@ -110,7 +110,7 @@ const QuestHeader = ({
 
   return (
     <div>
-      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+      <div className="flex flex-col gap-[5px] pt-headTop">
         {/* <div
           className={`text-sectionHead ${
             changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`

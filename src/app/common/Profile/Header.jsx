@@ -120,7 +120,7 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
   }, []);
   return (
     <div>
-      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+      <div className="flex flex-col gap-[5px] pt-headTop">
         {/* <div
           className={`text-sectionHead -mt-2.5 text-center top-0 text-white text-black-lg-contour  absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >

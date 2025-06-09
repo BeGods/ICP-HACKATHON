@@ -89,7 +89,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
   const { assets, activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
   return (
-    <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
+    <div className="flex w-full justify-center px-2 mt-3 top-0 absolute">
       <div className="flex relative w-full max-w-[720px] px-7">
         <div
           className={`flex relative justify-start ${
@@ -188,7 +188,7 @@ const TowerHeader = ({
 
   return (
     <div>
-      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+      <div className="flex flex-col gap-[5px] pt-headTop">
         {/* <div
           className={`text-sectionHead ${
             changeText
