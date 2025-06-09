@@ -159,6 +159,7 @@ export default {
       padding: {
         headSides: "5.5vw",
         headSidesMd: "2vw",
+        headTop: "1.35rem"
       },
       keyframes: {
         shimmer: {},

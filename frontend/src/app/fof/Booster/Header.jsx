@@ -40,7 +40,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
 const BottomChild = ({ activeMyth, gameData }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex w-full justify-center px-2 mt-4 top-0 absolute">
+    <div className="flex w-full justify-center px-2 mt-3 top-0 absolute">
       <div className="flex relative w-full max-w-[720px] px-7">
         <div
           className={`flex relative border-${
@@ -110,7 +110,7 @@ const BoosterHeader = ({ activeMyth, showSymbol, gameData }) => {
 
   return (
     <div>
-      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
+      <div className="flex flex-col gap-[5px] pt-headTop">
         {/* <div
           className={`text-sectionHead ${
             changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`

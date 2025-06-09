@@ -98,7 +98,7 @@ const BottomChild = ({
   }, [glowShards, showEffect]);
 
   return (
-    <div className="flex relative justify-center px-2 -mt-3">
+    <div className="flex relative justify-center -mt-3 px-2">
       <div className="flex w-full max-w-[720px] px-7">
         <div
           className={`flex  relative ${
@@ -188,56 +188,40 @@ const ForgeHeader = ({
   }, []);
 
   return (
-    <div>
-      {/* <img
-        src={assets.uxui.footer}
-        alt="paper"
-        className={`w-full absolute rotate-180 h-auto filter-paper-${
-          section === 3 ||
-          section === 4 ||
-          section === 5 ||
-          section === 6 ||
-          section === 11
-            ? mythSections[8]
-            : mythSections[activeMyth]
-        }`}
-      /> */}
-
-      <div className="flex flex-col gap-[5px] pt-[3.5vh]">
-        <div
-          className={`text-[1.5rem] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${
-            minimize == 1 && "minimize-head"
-          } ${
-            minimize == 2 && "maximize-head"
-          } text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
-        >
-          <h1 className="">
-            {Math.floor(mythData.energy / 10)}
-            <span className="text-[16px] font-bold">%</span>
-          </h1>
-        </div>
-        <BottomChild
-          shards={shards}
-          orbs={orbs}
-          activeMyth={activeMyth}
-          glowShards={glowShards}
-          showTut={showTut}
-          glowBooster={glowBooster}
-          glowSymbol={glowSymbol}
-          minimize={minimize}
-        />
-        <CenterChild
-          starIsHeld={starIsHeld}
-          tapGlow={tapGlow}
-          height={height}
-          glowReward={glowReward}
-          showBlackOrb={showBlackOrb}
-          orbGlow={orbGlow}
-          platform={platform}
-          activeMyth={activeMyth}
-          mythData={mythData}
-        />
+    <div className="flex flex-col gap-[5px] pt-headTop">
+      <div
+        className={`text-[1.5rem] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${
+          minimize == 1 && "minimize-head"
+        } ${
+          minimize == 2 && "maximize-head"
+        } text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+      >
+        <h1 className="">
+          {Math.floor(mythData.energy / 10)}
+          <span className="text-[16px] font-bold">%</span>
+        </h1>
       </div>
+      <BottomChild
+        shards={shards}
+        orbs={orbs}
+        activeMyth={activeMyth}
+        glowShards={glowShards}
+        showTut={showTut}
+        glowBooster={glowBooster}
+        glowSymbol={glowSymbol}
+        minimize={minimize}
+      />
+      <CenterChild
+        starIsHeld={starIsHeld}
+        tapGlow={tapGlow}
+        height={height}
+        glowReward={glowReward}
+        showBlackOrb={showBlackOrb}
+        orbGlow={orbGlow}
+        platform={platform}
+        activeMyth={activeMyth}
+        mythData={mythData}
+      />
     </div>
   );
 };
