@@ -44,6 +44,7 @@ const PayModal = ({
   closeModal,
   handlePayment,
   isLoading,
+  tokens,
 }) => {
   const [dots, setDots] = useState(1);
 
@@ -899,6 +900,7 @@ const BoosterClaim = ({
           isLoading={payIsActive}
           enableHaptic={enableHaptic}
           t={t}
+          tokens={tokens}
           activeMyth={activeMyth}
           assets={assets}
           activeCard={activeCard}

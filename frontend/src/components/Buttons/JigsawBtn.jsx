@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
 import {
   CornerUpLeft,
@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useAdsgram } from "../../hooks/Adsgram";
 import { showToast } from "../Toast/Toast";
+import { MainContext } from "../../context/context";
 
 const JigsawButton = ({
   activeMyth,
@@ -20,6 +21,7 @@ const JigsawButton = ({
   isPartner,
   limit,
 }) => {
+  const { isTelegram } = useContext(MainContext);
   const [isClicked, setIsClicked] = useState(false);
   const adsgramId = import.meta.env.VITE_AD_VOUCHER_CLAIM;
 
@@ -41,7 +43,11 @@ const JigsawButton = ({
     <div
       onClick={() => {
         if (faith == limit) {
-          showAd();
+          if (isTelegram) {
+            showAd();
+          } else {
+            handleClick();
+          }
         } else if (faith < limit && isPartner) {
           handleClick();
         }

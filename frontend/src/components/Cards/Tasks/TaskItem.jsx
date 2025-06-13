@@ -149,7 +149,11 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
               showWallet();
             }
           } else if (quest._id == "6762964c296034c3b3342548") {
-            showAd();
+            if (isTelegram) {
+              showAd();
+            } else {
+              setClaim(true);
+            }
           } else {
             setClaim(true);
 
