@@ -9,6 +9,11 @@ export default defineConfig({
       targets: ["defaults", "not IE 11"],
     }),
   ],
+  build: {
+    rollupOptions: {
+      external: ["@aptos-connect/wallet-adapter-plugin"],
+    },
+  },
   optimizeDeps: {
     include: ["konva"],
   },
