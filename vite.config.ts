@@ -13,6 +13,7 @@ export default defineConfig({
     rollupOptions: {
       external: ["@aptos-connect/wallet-adapter-plugin"],
     },
+    target: "es2021", // or higher
   },
   optimizeDeps: {
     include: ["konva"],
