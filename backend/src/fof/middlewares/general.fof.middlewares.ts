@@ -1,6 +1,8 @@
 import { IClaimedReward } from "../../ts/models.interfaces";
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
+import mongoose from "mongoose";
+import rewards from "../../common/models/rewards.models";
 
 export const validDailyBonusReq = async (req, res, next) => {
   try {
@@ -246,6 +248,53 @@ export const validateUserBet = async (req, res, next) => {
   } catch (error) {
     console.log(error);
 
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const validateMonetaryReward = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { rewardId, paymentType } = req.body;
+
+    // valid rewardId
+    if (!mongoose.Types.ObjectId.isValid(rewardId)) {
+      throw new Error("Invalid reward Id.");
+    }
+
+    // check valid reward
+    const rewardDetails = await rewards.findOne({
+      _id: new mongoose.Types.ObjectId(rewardId),
+    });
+
+    if (!rewardDetails) {
+      throw new Error("Invalid reward.");
+    }
+
+    // check if rewards already claimed
+    const userMilestones = await milestones.findOne({
+      userId: user._id,
+    });
+    const rewardExists = userMilestones.rewards.monetaryRewards.find(
+      (itm) => itm.rewardId == new mongoose.Types.ObjectId(rewardId)
+    );
+
+    if (rewardExists) {
+      throw new Error("Reward already claimed.");
+    }
+
+    // checl valid payment type
+    if (!rewardDetails.paymentType?.includes(paymentType)) {
+      throw new Error("Invalid payment type.");
+    }
+
+    // validate action
+
+    req.reward = rewardDetails;
+    req.userMilestones = userMilestones;
+    next();
+  } catch (error) {
+    console.log(error);
     res.status(400).json({ error: error.message });
   }
 };

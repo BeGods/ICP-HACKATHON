@@ -16,11 +16,18 @@ export interface IClaimedReward {
   tokensCollected: number;
 }
 
+export interface IMonetaryReward {
+  rewardId: mongoose.Types.ObjectId;
+  status: "pending" | "success" | "failed" | "rewarded";
+  claimedAt: Date;
+}
+
 export interface IRewards {
   rewardsInLastHr: string[];
   updatedAt: number;
   lastResetAt: number;
   claimedRewards: IClaimedReward[];
+  monetaryRewards: IMonetaryReward[];
 }
 
 export interface IInventory {
@@ -134,6 +141,41 @@ export interface IUserMyths extends Document {
   };
 }
 
+// rewards
+export interface IReward extends Document {
+  title: string;
+  description: string;
+  category: string;
+  startDate: Date;
+  endDate: Date;
+  status: boolean;
+  paymentType: ("KAIA" | "USDT" | "ICP" | "BEGODS" | "BNB")[];
+  amount: number;
+  redirect?: string;
+  limit: number;
+  game: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+// voucher
+export interface IVoucher extends Document {
+  rewardId: string;
+  type: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+// monetary
+export interface IMonetary extends Document {
+  rewardId: string;
+  status: "pending" | "success" | "failed" | "rewarded";
+  transactionId?: string;
+  processedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 // partner
 export interface IPartner extends Document {
   name: string;
@@ -198,6 +240,10 @@ export interface IUser extends Document {
   telegramUsername?: string;
   name: string;
   isPremium?: boolean;
+  holdings?: {
+    kaia: number;
+    usdt: number;
+  };
   role: "user" | "admin" | "partner";
   bonus: {
     fof: {
@@ -295,11 +341,16 @@ export interface IStarTransactions extends Document {
   updatedAt?: Date;
 }
 
-export interface IKaiaTransactions extends Document {
+export interface IPaymentLogs extends Document {
   userId: mongoose.Types.ObjectId;
+  transactionId: string;
   paymentId: string;
-  reward: "automata-pack" | "burst-pack";
+  reward: string;
+  paymentType: string;
   status: "pending" | "success" | "failed" | "rewarded";
+  transferType: "send" | "recieve";
+  amount: number;
+  currency: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

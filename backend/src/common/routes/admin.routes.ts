@@ -2,13 +2,11 @@ import { updateLeadboardRanks } from "../../fof/controllers/general.fof.controll
 import cron from "node-cron";
 import express from "express";
 import config from "../../config/config";
-import {
-  adminMiddleware,
-  authMiddleware,
-} from "../middlewares/auth.middlewares";
+import { adminMiddleware } from "../middlewares/auth.middlewares";
 import {
   createPartner,
   createQuest,
+  createReward,
   getActiveUsers,
   getDailyUsers,
   getHourlyUsers,
@@ -42,6 +40,11 @@ router.post(
 
 // admin: create partner
 router.post("/partners/create", adminMiddleware, createPartner);
+
+// admin: create reward
+router.post("/rewards/create", adminMiddleware, createReward);
+// admin: update status
+router.post("/payments/verify", adminMiddleware, createReward);
 
 // migrate db
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);

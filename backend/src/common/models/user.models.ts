@@ -9,6 +9,16 @@ const userSchema = new Schema<IUser>(
     stanId: { type: String, unique: true, sparse: true },
     telegramUsername: { type: String, sparse: true },
     isPremium: { type: Boolean },
+    holdings: {
+      kaia: {
+        type: Number,
+        default: 0,
+      },
+      usdt: {
+        type: Number,
+        default: 0,
+      },
+    },
     bonus: {
       fof: {
         extraBlackOrb: {
