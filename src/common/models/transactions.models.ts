@@ -2,8 +2,8 @@ import { Schema, model } from "mongoose";
 import {
   ICoinTransactions,
   IItemTransactions,
-  IKaiaTransactions,
   IOrbsTransactions,
+  IPaymentLogs,
   IRewardTransactions,
   IShardsTransactions,
   IStarTransactions,
@@ -119,17 +119,44 @@ const starsTransactionsSchema = new Schema<IStarTransactions>(
     ...baseTransactionSchema,
     paymentId: String,
     transcationId: String,
-    status: ["pending", "failed", "success", "rewarded"],
+    status: {
+      type: String,
+      required: true,
+      enum: ["pending", "failed", "success", "rewarded"],
+    },
   },
   { timestamps: true }
 );
 
-const kaiaTransactionsSchema = new Schema<IKaiaTransactions>(
+const PaymentLogsSchema = new Schema<IPaymentLogs>(
   {
     ...baseTransactionSchema,
-    paymentId: String,
+    paymentId: {
+      type: String,
+    },
     reward: String,
-    status: String,
+    status: {
+      type: String,
+      required: true,
+      enum: ["pending", "failed", "success", "rewarded"],
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    currency: {
+      type: String,
+      required: true,
+    },
+    transactionId: {
+      type: String,
+      required: true,
+    },
+    transferType: {
+      type: String,
+      required: true,
+      enum: ["send", "recieve"],
+    },
   },
   { timestamps: true }
 );
@@ -150,10 +177,7 @@ const itemsTransactionsSchema = new Schema(
   { timestamps: true }
 );
 
-const KaiaTransactions = model<IKaiaTransactions>(
-  "KaiaTransaction",
-  kaiaTransactionsSchema
-);
+const PaymentLogs = model<IPaymentLogs>("PaymentLogs", PaymentLogsSchema);
 
 const OrbsTransactions = model<IOrbsTransactions>(
   "OrbsTransaction",
@@ -192,5 +216,5 @@ export {
   CoinsTransactions,
   StarsTransactions,
   ItemsTransactions,
-  KaiaTransactions,
+  PaymentLogs,
 };

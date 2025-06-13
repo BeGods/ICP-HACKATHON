@@ -2,7 +2,7 @@ import { countries } from "../../utils/constants/country";
 import { deleteImage, storeImage } from "../services/storage.services";
 import axios from "axios";
 import config from "../../config/config";
-import { KaiaTransactions } from "../models/transactions.models";
+import { PaymentLogs } from "../models/transactions.models";
 import userMythologies from "../models/mythologies.models";
 import {
   updateMultiAutomata,
@@ -11,6 +11,7 @@ import {
 import { verifyMessage } from "ethers";
 import { getKaiaValue } from "../../helpers/crypt.helpers";
 import { fetchKaiaValue } from "../services/redis.services";
+import { v4 as uuidv4 } from "uuid";
 
 export const connectTonWallet = async (req, res) => {
   try {
@@ -255,10 +256,13 @@ export const createLinePayment = async (req, res) => {
 
     const response = await axios.post(url, data, { headers });
 
-    const newTransaction = new KaiaTransactions({
+    const newTransaction = new PaymentLogs({
       userId: req.user._id,
-      paymentId: response.data.id,
+      transactionId: response.data.id,
       reward: boosters[booster].itemIdentifier,
+      amount: boosters[booster].price,
+      currency: boosters[booster].pgType,
+      transferType: "recieve",
       status: "pending",
     });
 
@@ -282,15 +286,15 @@ export const updateLinePaymentStatus = async (req, res) => {
     const { paymentId, status } = req.body;
 
     if (status !== "CONFIRMED") {
-      await KaiaTransactions.findOneAndUpdate(
-        { paymentId: paymentId },
+      await PaymentLogs.findOneAndUpdate(
+        { transactionId: paymentId },
         { $set: { status: "failed" } }
       );
       console.error(`Payment failed with status ${status}`);
       return res.status(400).json({ message: "Payment not confirmed" });
     }
 
-    const transaction = await KaiaTransactions.findOne({
+    const transaction = await PaymentLogs.findOne({
       paymentId,
       status: "pending",
     });
@@ -394,5 +398,36 @@ export const getLinePaymentStatus = async (req, res) => {
   } catch (error) {
     console.error("Error in payment confirmation:", error);
     res.status(500).json({ message: "Error processing payment" });
+  }
+};
+
+export const withdrawReward = async (req, res) => {
+  const user = req.user;
+  const { type } = req.query;
+  const transactionId = uuidv4();
+
+  try {
+    const newTransaction = new PaymentLogs({
+      userId: user._id,
+      transactionId: transactionId,
+      reward: "withdraw",
+      amount: 10,
+      currency: type?.toUpperCase(),
+      transferType: "send",
+      status: "pending",
+    });
+
+    await newTransaction.save();
+
+    await user.updateOne({
+      $inc: {
+        [`holdings.${type}`]: -10,
+      },
+    });
+
+    res.status(200).json({ message: "Withdrawal has been processed." });
+  } catch (error) {
+    console.error("Withdrawal request failed.", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };

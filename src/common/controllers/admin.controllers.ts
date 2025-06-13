@@ -5,7 +5,8 @@ import User from "../models/user.models";
 import axios from "axios";
 import { Request, Response } from "express";
 import { IQuest, IStats } from "../../ts/models.interfaces";
-import userMythologies from "../models/mythologies.models";
+import rewards from "../models/rewards.models";
+import mongoose from "mongoose";
 
 // get
 // test server
@@ -227,6 +228,65 @@ export const createPartner = async (
 
     await newPartner.save();
     res.status(201).json({ message: "Partner added successfully." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to create partner.",
+      error: error.message,
+    });
+  }
+};
+
+// create
+export const createReward = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { data } = req.body;
+
+    const newReward = new rewards(data);
+
+    await newReward.save();
+    res.status(201).json({ message: "Reward added successfully." });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to create partner.",
+      error: error.message,
+    });
+  }
+};
+
+export const verifyPayment = async (req, res): Promise<void> => {
+  try {
+    const { paymentDetails, paymentId, status } = req;
+
+    if (status) {
+      await paymentDetails.updateOne({
+        $set: {
+          status: "success",
+          paymentId: paymentId,
+        },
+      });
+    } else {
+      // refund
+      await User.findOneAndUpdate(
+        {
+          _id: new mongoose.Types.ObjectId(paymentDetails.userId),
+        },
+        {
+          $inc: {
+            [`holdings.${paymentDetails?.currency?.toLowerCase()}`]:
+              paymentDetails?.amount,
+          },
+        }
+      );
+    }
+
+    res.status(201).json({ message: "Payment status updated successfully." });
   } catch (error) {
     console.log(error);
 

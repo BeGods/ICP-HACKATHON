@@ -14,6 +14,7 @@ import Stats from "../../common/models/Stats.models";
 import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import { determineStreak } from "../../helpers/streak.helpers";
+import { updateTokenReward } from "../../common/services/reward.services";
 
 export const validateUserPlayed = async (req, res) => {
   try {
@@ -401,6 +402,25 @@ export const claimStreakBonus = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Failed to update streak bonus.",
+      error: error.message,
+    });
+  }
+};
+
+export const claimMonetaryReward = async (req, res) => {
+  try {
+    const reward = req.reward;
+    const userMilestones = req.userMilestones;
+    const user = req.user;
+    const { rewardId, paymentType } = req.body;
+
+    await updateTokenReward(user._id, userMilestones, reward, paymentType);
+
+    res.status(200).json({ message: "Reward claimed successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to claim reward",
       error: error.message,
     });
   }

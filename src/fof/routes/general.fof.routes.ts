@@ -6,9 +6,11 @@ import {
   addUserBet,
   updateBetRwrdStatus,
   validateUserPlayed,
+  claimMonetaryReward,
 } from "../controllers/general.fof.controllers";
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
+  validateMonetaryReward,
   validateStreakBonus,
   validateUserBet,
   validDailyBonusReq,
@@ -35,6 +37,9 @@ router.get(
 );
 
 router.get("/validate/user", validateUserPlayed);
+
+// reward
+router.post("/reward/claim", validateMonetaryReward, claimMonetaryReward);
 
 // router.get("/test/script", runProfileScript);
 

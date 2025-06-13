@@ -63,6 +63,23 @@ const milestoneSchema = new Schema<IMilestone>({
       type: Number,
       default: 0,
     },
+    monetaryRewards: [
+      {
+        rewardId: {
+          type: Schema.Types.ObjectId,
+          required: true,
+        },
+        status: {
+          type: String,
+          required: true,
+          enum: ["pending", "failed", "success", "rewarded"],
+        },
+        claimedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     claimedRewards: [
       {
         partnerId: {

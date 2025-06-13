@@ -1,10 +1,7 @@
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
 import partners from "../../common/models/partners.models";
-import {
-  OrbsTransactions,
-  RewardsTransactions,
-} from "../../common/models/transactions.models";
+import { OrbsTransactions } from "../../common/models/transactions.models";
 import User from "../../common/models/user.models";
 import { updatePartnersInLastHr } from "../services/general.fof.services";
 import {
@@ -13,6 +10,7 @@ import {
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
 } from "../../common/services/playsuper.services";
+import { fetchUserRewards } from "../services/rewards.fof.services";
 
 // operations
 export const getAllPartners = async (req, res) => {
@@ -21,16 +19,13 @@ export const getAllPartners = async (req, res) => {
     // const playusperCred = req.user.playsuper;
     const country = req.user.country ?? null;
 
-    let userMilestones = await milestones.findOne({ userId });
+    let { activePartners, activeRewards, userMilestones } =
+      await fetchUserRewards(userId);
     userMilestones = await updatePartnersInLastHr(userMilestones);
 
     const claimedRewards = userMilestones.rewards.claimedRewards;
     const rewardsClaimedInLastHr = userMilestones.rewards.rewardsInLastHr;
-
-    const activePartners = await partners
-      .find({ status: true })
-      .lean()
-      .select("-__v -createdAt -updatedAt");
+    const monetaryRewardsAdded = userMilestones.rewards.monetaryRewards;
 
     // let playsuper = [];
     let activeCustomPartners = [];
@@ -120,8 +115,27 @@ export const getAllPartners = async (req, res) => {
     //     };
     //   });
 
+    const userRewards = activeRewards.map((reward) => {
+      const monetaryReward = monetaryRewardsAdded.find(
+        (claimed) => claimed.rewardId.toString() == reward._id.toString()
+      );
+
+      const isClaimed = monetaryReward ? monetaryReward.status : false;
+
+      const rewardId = reward._id;
+
+      delete reward._id;
+
+      return {
+        ...reward,
+        id: rewardId,
+        isClaimed,
+      };
+    });
+
     res.status(200).json({
-      rewards: [...partnerItems],
+      vouchers: [...partnerItems],
+      payouts: userRewards,
       claimedRewards: [...claimedCustomPartners],
       rewardsClaimedInLastHr: rewardsClaimedInLastHr,
       bubbleLastClaimed: userMilestones.rewards.updatedAt,
@@ -160,12 +174,12 @@ export const redeemPlayuperRwrd = async (req, res) => {
       );
     }
 
-    const newRewardTransaction = new RewardsTransactions({
-      userId: userId,
-      rewardId: rewardId,
-      type: "playsuper",
-    });
-    await newRewardTransaction.save();
+    // const newRewardTransaction = new RewardsTransactions({
+    //   userId: userId,
+    //   rewardId: rewardId,
+    //   type: "playsuper",
+    // });
+    // await newRewardTransaction.save();
 
     res.status(200).json({
       couponCode: reward.data.couponCode,
@@ -204,12 +218,12 @@ export const redeemCustomRwrd = async (req, res) => {
       }
     );
 
-    const newRewardTransaction = new RewardsTransactions({
-      userId: userId,
-      rewardId: partnerId,
-      type: "custom",
-    });
-    await newRewardTransaction.save();
+    // const newRewardTransaction = new RewardsTransactions({
+    //   userId: userId,
+    //   rewardId: partnerId,
+    //   type: "custom",
+    // });
+    // await newRewardTransaction.save();
 
     const newOrbTransaction = new OrbsTransactions({
       userId: userId,

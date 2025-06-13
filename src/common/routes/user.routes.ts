@@ -12,10 +12,14 @@ import {
   updateAvatar,
   updateCountry,
   updateLinePaymentStatus,
+  withdrawReward,
 } from "../controllers/user.controllers";
 import express from "express";
 import { createNewUserIfNoExists } from "../controllers/auth.controllers";
-import { validateFinishedRwrd } from "../middlewares/user.middlewares";
+import {
+  validateFinishedRwrd,
+  validateWithdrawRwrd,
+} from "../middlewares/user.middlewares";
 
 const router = express.Router();
 
@@ -36,6 +40,6 @@ router.get(
 router.post("/user/refer", validateBotNewUser, createNewUserIfNoExists);
 router.get("/line/createPayment", authMiddleware, createLinePayment);
 router.post("/line/paymentStatus", updateLinePaymentStatus);
-router.get("/line/paymentStatus", updateLinePaymentStatus);
+router.post("/rewards/withdraw", validateWithdrawRwrd, withdrawReward);
 
 export default router;
