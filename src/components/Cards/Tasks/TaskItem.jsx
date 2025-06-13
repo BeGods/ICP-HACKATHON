@@ -55,28 +55,21 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
           `https://t.me/BeGods_bot/games?startapp=${userData.referralCode}`
         );
       } else if (liff.isInClient()) {
-        alert("inside");
         const permanentLink = await liff.permanentLink.createUrlBy(
           `${import.meta.env.VITE_CLIENT}?refer=${userData.referralCode}`
         );
 
         if (liff.isApiAvailable("shareTargetPicker")) {
-          alert("available");
-
-          liff.shareTargetPicker([
+          liff.sendMessages([
             {
               type: "text",
               text: `🚀 Join BeGods Launcher! ${permanentLink}`,
             },
           ]);
-        } else {
-          alert("no available");
         }
 
         await navigator.clipboard.writeText(permanentLink);
       } else {
-        alert("outside");
-
         await navigator.clipboard.writeText(
           `${import.meta.env.VITE_CLIENT}?refer=${userData.referralCode}`
         );
