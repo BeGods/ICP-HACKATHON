@@ -48,7 +48,7 @@ const CenterChild = ({ name, bubble, action, link }) => {
     };
   }, []);
   return (
-    <div className="flex absolute justify-center w-full top-0 z-20">
+    <div className="flex absolute justify-center w-full top-0  z-20">
       {/* Orb */}
       <div
         onClick={link}

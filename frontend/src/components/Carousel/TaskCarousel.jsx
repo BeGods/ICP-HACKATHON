@@ -55,20 +55,15 @@ const TaskCarousel = ({ quests, userData }) => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {quests.length > 3 && currentIndex >= 1 ? (
-        <div
-          onClick={() => {
-            setCurrentIndex((prevIndex) => prevIndex - 1);
-          }}
-          className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
-        >
-          <div className="arrows-up"></div>
-        </div>
-      ) : (
-        <div className="flex absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start mt-[2.5vh]">
-          {userData.username.toUpperCase()}
-        </div>
-      )}
+      <div
+        onClick={() => {
+          setCurrentIndex((prevIndex) => prevIndex - 1);
+        }}
+        className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
+      >
+        <div className="arrows-up"></div>
+      </div>
+
       <div className={`carousel carousel-width`}>
         {quests
           .sort((a, b) => {

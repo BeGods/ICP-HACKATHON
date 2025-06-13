@@ -14,10 +14,10 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const orbPos = [
-  "-mt-[7.5rem] ml-[6.5rem]",
-  "ml-[3.5rem] -mt-[16.8rem]",
-  "-mt-[21rem] ml-[16rem]",
-  "-mt-[11.65rem] ml-[19.25rem]",
+  "top-[69%] left-[26%]",
+  "top-[35%] left-[14%]",
+  "top-[20%] left-[65%]",
+  "top-[54%] left-[77%]",
 ];
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
@@ -54,9 +54,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
             {t("tower.tune")}
           </div>
           <div
-            className={`flex ${
-              isBrowser ? "w-1/4" : "w-2/3"
-            } mt-10 justify-between text-gold`}
+            className={`flex w-fit gap-x-10 mt-10 justify-between text-gold`}
           >
             <div
               onClick={() => {
@@ -81,11 +79,19 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
         </div>
       ) : (
         <div className="flex flex-col gap-10 flex-grow w-full justify-center items-center">
-          <div className="uppercase text-center absolute leading-[60px] top-0 text-gold text-[3rem] mt-3 px-2 scale-zero text-black-contour">
+          <div className="uppercase inset-0 text-center absolute leading-[60px] top-0 text-gold text-[3rem] mt-3 px-2 scale-zero text-black-contour">
             {t("tower.play")}
           </div>
           <div className="relative -mt-[1.25rem]">
-            <img src={assets.uxui.towerOff} alt="tower" />
+            <img
+              src={assets.uxui.towerOff}
+              alt="tower"
+              style={{
+                height: "47dvh",
+                width: "45dvh",
+                aspectRatio: "1 / 1.4",
+              }}
+            />
             {mythologies.map((item, index) => (
               <div
                 onClick={() => {
@@ -107,7 +113,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
               >
                 <div
                   className={`flex relative transition-all duration-1000 glow-icon-${item.toLowerCase()} text-center justify-center ${
-                    showEffect - 1 === index ? "w-[2.8rem]" : "max-w-orb"
+                    showEffect - 1 === index ? "w-[6dvh]" : "w-[5.5dvh]"
                   } items-center rounded-full `}
                 >
                   <img
@@ -120,7 +126,7 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                       showEffect - 1 === index
                         ? ` transition-all duration-1000 opacity-100 text-${item.toLowerCase()}-text`
                         : "text-white opacity-50"
-                    } text-symbol-sm mt-1 text-black-sm-contour`}
+                    } text-[4dvh] mt-1 text-black-sm-contour`}
                   >
                     <>{mythSymbols[item.toLowerCase()]}</>
                   </span>
@@ -141,13 +147,13 @@ const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
                   prev.length <= 6 ? [...prev, "multiorb"] : prev
                 );
               }}
-              className="flex absolute items-center -mt-[15rem] ml-[10.5rem] z-50 pointer-events-auto"
+              className="flex absolute items-center -mt-[27.5dvh] ml-[19dvh] z-50 pointer-events-auto"
             >
               <div
                 className={`flex relative text-center justify-center ${
                   showEffect === -1
-                    ? "w-[4.5rem] glow-icon-lg-white"
-                    : "w-[4.25rem] glow-icon-white"
+                    ? "w-[5.5dvh] glow-icon-lg-white"
+                    : "w-[8dvh] glow-icon-white"
                 } items-center rounded-full z-50 `}
               >
                 <img src={`${assets.items.multiorb}`} alt="orb" />

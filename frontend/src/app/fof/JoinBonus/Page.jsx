@@ -95,10 +95,10 @@ const JoinBonus = (props) => {
         isTgMobile ? "tg-container-height" : "browser-container-height"
       } w-screen justify-center font-fof items-center bg-black`}
     >
-      <div className="flex flex-col w-full h-full items-center">
+      <div className="flex flex-col w-full h-full items-center bg-black">
         {/* Heading */}
-        <div className="flex flex-col items-center justify-center  pt-4 w-full z-50 h-1/5">
-          <div className="text-gold text-[4.5rem] font-symbols">t</div>
+        <div className="flex flex-col items-center justify-start  pt-4 w-full z-50 h-1/5">
+          {/* <div className="text-gold text-[4.5rem] font-symbols">t</div> */}
           <h1 className="uppercase text-gold text-[4rem] text-center -mt-2 text-black-contour break-words leading-[55px]">
             {changeText ? bonusText[0] : bonusText[1]}
           </h1>

@@ -251,11 +251,11 @@ const Gacha = (props) => {
       ) : (
         <div className="flex flex-col w-full h-full items-center pt-4">
           {/* Heading */}
-          <div className="flex flex-col z-50 items-center justify-center w-full h-1/5">
+          <div className="flex flex-col z-50 items-center justify-start w-full h-1/5">
             {!showScale && (
               <>
-                <Crown color="#FFD660" size={"4.5rem"} />
-                <h1 className="uppercase text-gold text-[4rem] -mt-4 scale-zero text-black-contour">
+                {/* <Crown color="#FFD660" size={"4.5rem"} /> */}
+                <h1 className="uppercase text-gold text-[4rem] scale-zero text-black-contour">
                   {changeText}
                 </h1>
               </>
@@ -279,13 +279,13 @@ const Gacha = (props) => {
               <img
                 src={`${assets.items.pandora}`}
                 alt="pandora"
-                className={`w-fit h-fit transition-transform duration-1000  ${
+                className={`w-[40dvh] h-fit transition-transform duration-1000  ${
                   !showScale
                     ? "scale-golden-glow glow-box"
                     : "glow-box scale-box"
                 }`}
               />
-              <div className={`absolute ${showSpin && "scale-100"} -mt-20`}>
+              <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
                 <GachaRoll showSpin={spinSound} />
               </div>
             </div>

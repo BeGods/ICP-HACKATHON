@@ -1,44 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { MainContext } from "../../../context/context";
 import GiftHeader from "./Header";
 import GiftCarousel from "../../../components/Carousel/GiftCarousel";
+import TaskCarousel from "../../../components/Carousel/TaskCarousel";
+import RewardCarousel from "../../../components/Carousel/RewardCarousel";
 
 const Gift = () => {
-  const { globalRewards, assets, isTgMobile } = useContext(MainContext);
-  // const [showToggles, setShowToggles] = useState(false);
-  // const adsgramId = import.meta.env.VITE_AD_GIFT_CLAIM;
-
-  // useEffect(() => {
-  //   trackComponentView("gifts");
-  //   setTimeout(() => {
-  //     setShowToggles(true);
-  //   }, 300);
-  // }, []);
-
-  // const onReward = async () => {
-  //   const lastValue = await validateGiftAdStatus(tele);
-  //   setGiftAdStatus(tele, lastValue + 1);
-  // };
-
-  // const showAd = callAdsgram({
-  //   blockId: adsgramId,
-  //   onReward,
-  // });
-
-  // const checkGiftAdCookie = async () => {
-  //   const lastValue = await validateGiftAdStatus(tele);
-
-  //   // not even
-  //   if (lastValue % 2 !== 0) {
-  //     showAd();
-  //   } else {
-  //     setGiftAdStatus(tele, lastValue + 1);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   checkGiftAdCookie();
-  // }, []);
+  const { globalRewards, payouts, assets, tasks, userData, isTgMobile } =
+    useContext(MainContext);
+  const [category, setCategory] = useState(1);
 
   return (
     <div
@@ -68,10 +38,16 @@ const Gift = () => {
         />
       </div>
       {/* Header */}
-      <GiftHeader partners={globalRewards.length} />
+      <GiftHeader category={category} setCategory={(idx) => setCategory(idx)} />
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
         <div className="flex w-[75%] flex-col gap-y-[15px]">
-          <GiftCarousel rewards={globalRewards} />
+          {category == 0 ? (
+            <GiftCarousel rewards={globalRewards} />
+          ) : category == 1 ? (
+            <TaskCarousel quests={tasks} userData={userData} />
+          ) : (
+            <RewardCarousel rewards={payouts} />
+          )}
         </div>
       </div>
     </div>

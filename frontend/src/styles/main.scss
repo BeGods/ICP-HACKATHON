@@ -96,7 +96,9 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
   }
 }
 
-
+  .glow-orb-black {
+    filter: drop-shadow(0 0 5px black);
+  }
 
 // Milestone Card
 .filter-card {

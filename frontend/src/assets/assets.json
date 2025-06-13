@@ -55,8 +55,8 @@
         "apothecary": "/assets/locations/1280px-ror.citadel.apothecary_wide.jpg",
         "foundry": "/assets/locations/1280px-ror.citadel.foundry_wide.jpg",
         "library": "/assets/locations/1280px-ror.citadel.library_wide.jpg",
-        "fof": "/assets/locations/1280px-fof.black.tower_wide_off.jpg",
-        "ror": "/assets/locations/1280px-ror.white.tower_wide_off.jpg"
+        "fof": "https://media.publit.io/file/BeGods/locations/1280px-fof.black.tower-wide-off.jpg",
+        "ror": "https://media.publit.io/file/BeGods/locations/1280px-ror.white.tower-wide-off.jpg"
     },
     "logos": {
         "begodsBlack": "https://media.publit.io/file/BeGods/logos/battle.gods.black.svg",
