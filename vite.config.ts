@@ -1,19 +1,11 @@
+// vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig({
-  plugins: [
-    react(),
-    legacy({
-      targets: ["defaults", "not IE 11"],
-    }),
-  ],
+  plugins: [react()],
   build: {
-    rollupOptions: {
-      external: ["@aptos-connect/wallet-adapter-plugin"],
-    },
-    target: "es2021", // or higher
+    target: "esnext",
   },
   optimizeDeps: {
     include: ["konva"],
