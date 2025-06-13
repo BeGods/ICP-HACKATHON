@@ -79,6 +79,8 @@ const FoFMain = () => {
     setTokens,
     payouts,
     setPayouts,
+    activeReward,
+    setActiveReward,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -90,7 +92,6 @@ const FoFMain = () => {
   const [rewards, setRewards] = useState([]);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [showAnmt, setShowAnmt] = useState(false);
-  const [activeReward, setActiveReward] = useState(null);
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
   const [section, setSection] = useState(1);

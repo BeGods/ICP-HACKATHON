@@ -65,7 +65,6 @@ const Profile = (props) => {
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
-  const [showModal, setShowModal] = useState(false);
   const avatarColor = localStorage.getItem("avatarColor");
   const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
@@ -75,45 +74,6 @@ const Profile = (props) => {
   const gameData = game === "fof" ? fofContext.gameData : rorContext.gameData;
   const { connectWallet } = useWalletPayment();
   const [isConnecting, setIsConnecting] = useState(false);
-
-  // useEffect(() => {
-  //   if (enableGuide) {
-  //     setShowCard(
-  //       <ProfileGuide
-  //         Header={
-  //           <ProfileHeader
-  //             showGuide={0}
-  //             userData={userData}
-  //             avatarColor={avatarColor}
-  //           />
-  //         }
-  //         currGuide={0}
-  //         Toggles={
-  //           <>
-  //             <ToggleLeft
-  //               minimize={2}
-  //               handleClick={() => {
-  //                 setSection(5);
-  //               }}
-  //               activeMyth={4}
-  //             />
-  //             <ToggleRight
-  //               minimize={2}
-  //               handleClick={() => {
-  //                 setSection(5);
-  //               }}
-  //               activeMyth={4}
-  //             />
-  //           </>
-  //         }
-  //         currQuest={tasks[0]}
-  //         handleClick={() => {
-  //           setShowCard(null);
-  //         }}
-  //       />
-  //     );
-  //   }
-  // }, [enableGuide]);
 
   useEffect(() => {
     // ga
@@ -174,7 +134,6 @@ const Profile = (props) => {
       await connectLineWallet(signature, message, authToken);
     } catch (error) {
       console.error("Wallet Connection Error:", error);
-      alert("An error occurred while connecting the wallet.");
     } finally {
       setIsConnecting(false);
     }
@@ -233,9 +192,9 @@ const Profile = (props) => {
       value: isTelegram
         ? "Coming Soon"
         : lineWallet
-        ? lineWallet?.slice(0, 5)
+        ? `${lineWallet?.slice(0, 6)}...`
         : "Connect",
-      disabled: !userData.kaiaAddress ? true : false,
+      disabled: !lineWallet ? true : false,
       handleClick: () => {
         if (!isTelegram) {
           if (lineWallet) {
@@ -302,23 +261,47 @@ const Profile = (props) => {
           </div>
         </div>
       </div>
-
-      {/* <div className="bg-black p-3 flex flex-col gap-y-4 rounded-md absolute mt-9">
-        <button
-          onClick={handleDisconnectLineWallet}
-          className="bg-white px-2 py-1 rounded-md text-black text-md"
-        >
-          Disconnect
-        </button>
-        <button
-          onClick={handleFetchLineHistory}
-          className="bg-white px-2 py-1 rounded-md text-black text-md"
-        >
-          Payment History
-        </button>
-      </div> */}
     </div>
   );
 };
 
 export default Profile;
+
+// useEffect(() => {
+//   if (enableGuide) {
+//     setShowCard(
+//       <ProfileGuide
+//         Header={
+//           <ProfileHeader
+//             showGuide={0}
+//             userData={userData}
+//             avatarColor={avatarColor}
+//           />
+//         }
+//         currGuide={0}
+//         Toggles={
+//           <>
+//             <ToggleLeft
+//               minimize={2}
+//               handleClick={() => {
+//                 setSection(5);
+//               }}
+//               activeMyth={4}
+//             />
+//             <ToggleRight
+//               minimize={2}
+//               handleClick={() => {
+//                 setSection(5);
+//               }}
+//               activeMyth={4}
+//             />
+//           </>
+//         }
+//         currQuest={tasks[0]}
+//         handleClick={() => {
+//           setShowCard(null);
+//         }}
+//       />
+//     );
+//   }
+// }, [enableGuide]);

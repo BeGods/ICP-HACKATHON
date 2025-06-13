@@ -56,7 +56,7 @@ const WalletsModal = ({ handleClose }) => {
           <div className="flex justify-between w-full">
             <div className="pl-3">
               {lineWallet
-                ? `${lineWallet?.slice(0, 14)}}......${lineWallet?.slice(-4)}`
+                ? `${lineWallet?.slice(0, 14)}......${lineWallet?.slice(-4)}`
                 : "Not Connected"}
             </div>
           </div>
