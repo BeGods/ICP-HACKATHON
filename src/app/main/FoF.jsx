@@ -77,6 +77,8 @@ const FoFMain = () => {
     setIsTgMobile,
     tokens,
     setTokens,
+    payouts,
+    setPayouts,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);
@@ -144,6 +146,8 @@ const FoFMain = () => {
     setIsTgMobile,
     tokens,
     setTokens,
+    payouts,
+    setPayouts,
   };
   const sections = [
     <Forges />, // 0
@@ -236,7 +240,7 @@ const FoFMain = () => {
     ) {
       setSection(8);
       setTimeout(() => setIsLoading(false), 1000);
-    } else if (!showAnmnt) {
+    } else if (!showAnmnt && isTelegram) {
       setSection(12);
       setIsLoading(false);
     } else {
@@ -247,9 +251,13 @@ const FoFMain = () => {
 
   const getPartnersData = async (token) => {
     const rewardsData = await fetchRewards(lang, country, token);
-    setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
-    setGlobalRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+    setRewards([...rewardsData?.vouchers, ...rewardsData?.claimedRewards]);
+    setGlobalRewards([
+      ...rewardsData?.vouchers,
+      ...rewardsData?.claimedRewards,
+    ]);
     setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
+    setPayouts([...rewardsData?.payouts]);
     localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
   };
 

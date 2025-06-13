@@ -15,6 +15,7 @@ import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useTranslation } from "react-i18next";
 import useWalletPayment from "../../hooks/LineWallet";
 import { connectLineWallet } from "../../utils/api.fof";
+import { isDesktop } from "../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
@@ -52,31 +53,6 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
       alert("An error occurred while connecting the wallet.");
     } finally {
       setIsConnecting(false);
-    }
-  };
-
-  const handleDisconnectLineWallet = async () => {
-    handleClickHaptic(tele, enableHaptic);
-    try {
-      await disconnectLineWallet();
-      setShowModal(false);
-    } catch (error) {
-      console.error("Error disconnecting wallet:", error);
-      alert("Failed to disconnect the wallet. Please try again.");
-    }
-  };
-
-  const handleFetchLineHistory = async () => {
-    handleClickHaptic(tele, enableHaptic);
-    setShowLoading(true);
-    try {
-      await fetchLinePayHistory();
-    } catch (error) {
-      console.error("Payment History Error:", error);
-      alert("Failed to fetch payment history.");
-    } finally {
-      setShowLoading(false);
-      setShowModal(false);
     }
   };
 
@@ -128,7 +104,14 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
       <div className="flex gap-x-4">
         {!hideExit && !isTelegram && (
           <>
-            {lineWallet && isLoaded ? (
+            {(!lineWallet || !isLoaded) && (
+              <Wallet
+                size={24}
+                onClick={handleConnectLineWallet}
+                className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
+              />
+            )}
+            {/* {lineWallet && isLoaded ? (
               <div
                 className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full cursor-pointer"
                 onClick={() => {
@@ -149,10 +132,10 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
                 onClick={handleConnectLineWallet}
                 className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
               />
-            )}
+            )} */}
           </>
         )}
-        {!isTelegram && (
+        {!isTelegram && !isDesktop() && (
           <>
             {!document.fullscreenElement ? (
               <Maximize2
@@ -185,7 +168,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
           className="cursor-pointer"
         />
       </div>
-      {showModal && (
+      {/* {showModal && (
         <div className="bg-black p-3 flex flex-col gap-y-4 rounded-md absolute mt-9">
           <button
             onClick={handleDisconnectLineWallet}
@@ -200,7 +183,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
             Payment History
           </button>
         </div>
-      )}
+      )} */}
       {showLoading && (
         <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
           <div className="text-white font-fof text-black-contour text-[1.5rem] relative font-medium">

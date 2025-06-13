@@ -28,17 +28,7 @@ const FoFLoader = (props) => {
         }}
       ></div>
       <div className="absolute inset-0 flex z-[20] -mt-[8vh] fade-in justify-center items-center">
-        <img
-          src={assets.uxui.towerOn}
-          alt="tower"
-          className={`${
-            isBrowser
-              ? "w-[30%] h-auto"
-              : isTgMobile
-              ? "max-w-full h-auto"
-              : "w-[85%] h-auto"
-          }`}
-        />
+        <img src={assets.uxui.towerOn} alt="tower" className={`w-[45dvh]`} />
       </div>
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">

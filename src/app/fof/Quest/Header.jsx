@@ -21,7 +21,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
     };
   }, []);
   return (
-    <div className="flex cursor-pointer absolute justify-center w-full top-0 z-20">
+    <div className="flex cursor-pointer absolute  justify-center w-full top-0 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);

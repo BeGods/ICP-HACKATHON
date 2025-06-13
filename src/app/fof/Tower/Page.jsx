@@ -24,11 +24,11 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 const tele = window.Telegram?.WebApp;
 
 const orbPos = [
-  "mt-[16rem] mr-[-0.5rem]",
-  "mt-[13rem] mr-[9rem]",
-  "-ml-[15rem] -mt-[5rem]",
-  "-mt-[13rem] ml-[10rem]",
-  "mt-[5.5rem] ml-[16rem]",
+  "top-[70%] left-[45.5%]",
+  "top-[66%] left-[26%]",
+  "top-[39.5%] left-[14%]",
+  "top-[27.5%] left-[65%]",
+  "top-[54%] left-[77%]",
 ];
 
 const Tower = () => {
@@ -183,6 +183,33 @@ const Tower = () => {
     trackComponentView("tower");
   }, []);
 
+  const triggerConvert = () => {
+    handleClickHaptic(tele, enableHaptic);
+
+    if (myth !== 0) {
+      setShowEffect(true);
+      setTimeout(() => {
+        setShowEffect(false);
+      }, 300);
+
+      if (handTimeoutRef.current) {
+        clearTimeout(handTimeoutRef.current);
+        handTimeoutRef.current = null;
+      }
+      handTimeoutRef.current = setTimeout(() => {
+        setShowHand(true);
+        handTimeoutRef.current = setTimeout(() => {
+          setShowHand(false);
+        }, 2000);
+      }, 2000);
+
+      setSessionOrbs((prev) => {
+        const orbs = gameData.mythologies[myth - 1]?.orbs || 0;
+        return orbs != 0 && orbs - prev * 2 > 1 ? prev + 1 : prev;
+      });
+    }
+  };
+
   return (
     <div
       className={`flex flex-col ${
@@ -233,47 +260,97 @@ const Tower = () => {
         }}
       />
 
-      {/* <div
-        className={`flex w-full ${
-          disappearEffect && "disappear"
-        } absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start ${
-          isBrowser ? "mt-[16vh]" : isTgMobile ? "mt-[16vh]" : "mt-[17vh]"
-        } `}
-      >
-        DOME
-      </div> */}
+      <div className="absolute inset-0 flex justify-center items-center -mt-3">
+        <div
+          className="relative"
+          style={{
+            width: "45dvh",
+            aspectRatio: "1 / 1.4",
+            backgroundImage: `url(${assets.uxui.towerOn})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <img
+            src={assets.uxui[`pointer-${wheelNames[myth]}`]}
+            alt="pointer"
+            className="absolute cursor-pointer w-full mt-[8.1dvh] z-50"
+          />
 
-      {/* Wheel */}
+          {sessionOrbs !== 0 && (
+            <div
+              onClick={() => {
+                if (handTimeoutRef.current) {
+                  setShowHand(false);
+                  clearTimeout(handTimeoutRef.current);
+                  handTimeoutRef.current = null;
+                }
+                setShowClaim(true);
+                setShowCard(
+                  <ConvertClaimCard
+                    keysData={keysData}
+                    handleClose={() => {
+                      setShowClaim(false);
+                      setShowCard(null);
+                    }}
+                    handleSubmit={handleOrbsConversion}
+                  />
+                );
+              }}
+              className="absolute z-[55] pointer-events-auto cursor-pointer w-[3.5rem] h-[3.5rem] rounded-full flex mt-[28dvh] ml-[19dvh] flex-col justify-center items-center"
+            >
+              <div
+                className={`font-medium cursor-pointer ${
+                  showEffect && "scale-150"
+                } transition-all duration-250 text-[2.85rem] text-white glow-text-black`}
+              >
+                {sessionOrbs}
+              </div>
+
+              {showHand && (
+                <div className="font-symbols  scale-point mx-auto my-auto absolute  ml-[14dvw] mt-[10dvh] text-white text-[2.5rem] text-black-contour">
+                  b
+                </div>
+              )}
+            </div>
+          )}
+
+          {wheelMyths.map((item, index) => (
+            <div
+              onTouchStart={() => setScaleOrb(index)}
+              onTouchEnd={() => setScaleOrb(null)}
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setMyth(index);
+              }}
+              key={index}
+              className={`absolute z-50 ${orbPos[index]} transition-all duration-500`}
+            >
+              <div
+                className={`flex justify-center items-center relative ${
+                  scaleOrb === index ? "scale-110" : ""
+                }`}
+              >
+                <img
+                  src={`${assets.uxui.baseOrb}`}
+                  alt="orb"
+                  className={`w-[5.5dvh] filter-orbs-${item.toLowerCase()}`}
+                />
+                <span className="absolute font-symbols text-white opacity-50 text-[4dvh]">
+                  {mythSymbols[item.toLowerCase()]}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="flex flex-col items-center justify-center w-full">
         <div className="absolute h-full flex justify-center items-end bottom-[15%]">
           {myth !== 0 && (
             <div
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-
-                if (myth !== 0) {
-                  setShowEffect(true);
-                  setTimeout(() => {
-                    setShowEffect(false);
-                  }, 300);
-
-                  if (handTimeoutRef.current) {
-                    clearTimeout(handTimeoutRef.current);
-                    handTimeoutRef.current = null;
-                  }
-                  handTimeoutRef.current = setTimeout(() => {
-                    setShowHand(true);
-                    handTimeoutRef.current = setTimeout(() => {
-                      setShowHand(false);
-                    }, 2000);
-                  }, 2000);
-
-                  setSessionOrbs((prev) => {
-                    const orbs = gameData.mythologies[myth - 1]?.orbs || 0;
-                    return orbs != 0 && orbs - prev * 2 > 1 ? prev + 1 : prev;
-                  });
-                }
-              }}
+              onClick={triggerConvert}
               className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
             >
               <div
@@ -303,114 +380,6 @@ const Tower = () => {
         </div>
       </div>
 
-      <div
-        className={`absolute flex justify-center items-center -mt-3 h-full w-full`}
-      >
-        <div
-          className={`relative flex justify-center items-center ${
-            isBrowser
-              ? "w-[50%] h-[50%]"
-              : isTgMobile
-              ? "h-[100%] w-[100%]"
-              : "h-[85%] w-[85%]"
-          } pointer-events-none scale-wheel-glow`}
-          style={{
-            backgroundImage: `url(${assets.uxui.towerOn})`,
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        ></div>
-      </div>
-
-      <div
-        className={`absolute flex justify-center items-center h-full -mt-3 ${
-          isBrowser ? "" : isTgMobile ? "scale-105" : "scale-90"
-        } w-full z-50`}
-      >
-        <div
-          className={`relative flex justify-center items-center w-full h-full pointer-events-none`}
-        >
-          <img src={assets.uxui[`pointer-${wheelNames[myth]}`]} alt="pointer" />
-
-          {wheelMyths.map((item, index) => (
-            <div
-              onTouchStart={() => {
-                setScaleOrb(index);
-              }}
-              onTouchEnd={() => {
-                setScaleOrb(null);
-              }}
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-
-                if (index == 0) {
-                  setMyth(index);
-                } else {
-                  setMyth(index);
-                }
-              }}
-              key={index}
-              className={`absolute cursor-pointer transition-all duration-1000 z-50 pointer-events-auto ${orbPos[index]}`}
-            >
-              <div
-                className={`flex relative transition-all duration-1000 text-center justify-center ${
-                  scaleOrb == index ? "w-[3rem]" : "max-w-orb"
-                } scale-orb-${item.toLowerCase()} items-center rounded-full `}
-              >
-                <img
-                  src={`${assets.uxui.baseOrb}`}
-                  alt="orb"
-                  className={`filter-orbs-${item.toLowerCase()} `}
-                />
-                <span
-                  className={`absolute z-1 font-symbols text-white opacity-50 ${
-                    scaleOrb == index ? "text-[2.5]" : "text-symbol-sm"
-                  }  mt-1 text-black-sm-contour`}
-                >
-                  <>{mythSymbols[item.toLowerCase()]}</>{" "}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {sessionOrbs !== 0 && (
-          <div className="absolute flex flex-col justify-center items-center">
-            <div
-              onClick={() => {
-                if (handTimeoutRef.current) {
-                  setShowHand(false);
-                  clearTimeout(handTimeoutRef.current);
-                  handTimeoutRef.current = null;
-                }
-                setShowClaim(true);
-                setShowCard(
-                  <ConvertClaimCard
-                    keysData={keysData}
-                    handleClose={() => {
-                      setShowClaim(false);
-                      setShowCard(null);
-                    }}
-                    handleSubmit={handleOrbsConversion}
-                  />
-                );
-              }}
-              className={`font-medium ${
-                showEffect && "scale-150"
-              } transition-all duration-250 text-[60px] text-white glow-text-black`}
-            >
-              {sessionOrbs}
-            </div>
-            {showHand && (
-              <div className="font-symbols  scale-point mx-auto my-auto absolute  ml-[16vw] mt-[14vh] text-white text-[60px] text-black-contour">
-                b
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
       <div className="absolute">
         <ReactHowler
           src={`${assets.audio.towerBg}`}
@@ -424,3 +393,19 @@ const Tower = () => {
 };
 
 export default Tower;
+
+{
+  /* <div
+        className={`flex w-full ${
+          disappearEffect && "disappear"
+        } absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start ${
+          isBrowser ? "mt-[16vh]" : isTgMobile ? "mt-[16vh]" : "mt-[17vh]"
+        } `}
+      >
+        DOME
+      </div> */
+}
+
+{
+  /* Wheel */
+}

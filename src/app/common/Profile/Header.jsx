@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { determineStreakBadge } from "../../../helpers/streak.helper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -12,8 +11,6 @@ const BottomChild = () => {
   const rorContext = useContext(RorContext);
   const [showEffect, setShowEffect] = useState(true);
   const { t } = useTranslation();
-
-  console.log(game);
 
   const setSection =
     game === "fof" ? fofContext.setSection : rorContext.setSection;
@@ -36,7 +33,7 @@ const BottomChild = () => {
           handleClickHaptic(tele, enableHaptic);
           setSection(giftIdx);
         }}
-        className="flex slide-header-left cursor-pointer p-0.5 justify-end items-center w-1/4 bg-white rounded-r-full"
+        className="flex slide-header-left cursor-pointer p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full"
       >
         <div
           className={`flex ${
@@ -51,7 +48,7 @@ const BottomChild = () => {
           handleClickHaptic(tele, enableHaptic);
           setSection(7);
         }}
-        className="flex slide-header-right cursor-pointer p-0.5 justify-start items-center w-1/4 bg-white rounded-l-full"
+        className="flex slide-header-right cursor-pointer p-0.5 justify-start items-center w-[32%] bg-white rounded-l-full"
       >
         <div
           className={`flex font-symbols ${
@@ -74,12 +71,11 @@ const CenterChild = ({ userData }) => {
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
-  const streakBadge = determineStreakBadge(userData.streak.streakCount);
 
   return (
     <div className="flex absolute top-0 justify-center z-50 w-full pl-1.5">
       <div
-        className={`z-20  flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
+        className={`z-20  flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
           src={
@@ -97,11 +93,6 @@ const CenterChild = ({ userData }) => {
             <div className={`uppercase text-white opacity-70`}>
               {userData.username.charAt(0).toUpperCase()}
             </div>
-          </div>
-        )}
-        {streakBadge && (
-          <div className="mx-auto absolute -bottom-4">
-            <img src={`/assets/badges/${streakBadge}.svg`} alt="badge" />
           </div>
         )}
       </div>

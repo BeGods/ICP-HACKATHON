@@ -975,3 +975,33 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
   animation: reward-pop-in 0.5s ease-out forwards;
 }
 
+@keyframes riseAndFade {
+  0% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px); 
+  }
+}
+
+.rise-and-fade {
+  animation: riseAndFade 0.6s ease-out forwards;
+}
+
+
+@keyframes dropAndFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px); 
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+}
+
+.drop-and-fade-in {
+  animation: dropAndFadeIn 0.4s ease-out forwards;
+}

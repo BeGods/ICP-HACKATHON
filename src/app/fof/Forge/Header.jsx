@@ -42,7 +42,7 @@ const CenterChild = ({
         }`}
       >
         <div
-          className={`absolute z-10 h-symbol-primary w-symbol-primary overflow-hidden rounded-full outline outline-${mythSections[activeMyth]}-primary`}
+          className={`absolute h-symbol-primary w-symbol-primary overflow-hidden rounded-full outline outline-${mythSections[activeMyth]}-primary`}
         >
           <div
             style={{ height: `${height}%` }}
@@ -190,11 +190,11 @@ const ForgeHeader = ({
   return (
     <div className="flex flex-col gap-[5px] pt-headTop">
       <div
-        className={`text-[1.5rem] opacity-50 absolute z-10 text-white-lg-contour font-semibold ${
-          minimize == 1 && "minimize-head"
+        className={`text-[1.5rem] opacity-50 absolute z-30 text-white-lg-contour font-semibold ${
+          minimize == 1 && "rise-and-fade"
         } ${
-          minimize == 2 && "maximize-head"
-        } text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+          minimize == 2 && "drop-and-fade-in"
+        } text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit mx-auto`}
       >
         <h1 className="">
           {Math.floor(mythData.energy / 10)}

@@ -28,7 +28,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
 
   return (
     <div
-      className={`flex cursor-pointer absolute justify-center w-full z-[60] top-0`}
+      className={`flex cursor-pointer absolute justify-center w-full  z-[60] top-0`}
     >
       {myth !== 0 ? (
         <div
@@ -97,7 +97,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
           } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
         >
           <div
-            className={`flex absolute text-center justify-center items-center w-[4rem] h-[4rem] -ml-[2rem]  rounded-full`}
+            className={`flex absolute text-center justify-center items-center w-[3.5rem] h-[3.5rem] -ml-[2rem] glow-orb-black rounded-full`}
           >
             <img
               src={`${assets.items.multiorb}`}

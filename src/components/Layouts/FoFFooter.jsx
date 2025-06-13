@@ -131,7 +131,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             clickEffect && "click-effect"
           } flex-col items-center mb-2`}
         >
-          {icon === 3 && (
+          {/* {icon === 3 && (
             <div
               className={`absolute ${
                 showEffect && "pulse-text"
@@ -141,7 +141,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             >
               {countOfInCompleteQuests}
             </div>
-          )}
+          )} */}
           {userData.avatarUrl ? (
             <div
               className="flex flex-col items-center cursor-pointer z-50 h-full transition-all duration-500"
@@ -193,8 +193,15 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
   );
 };
 const Footer = ({}) => {
-  const { section, activeMyth, enableSound, minimize, assets, platform } =
-    useContext(FofContext);
+  const {
+    section,
+    activeMyth,
+    enableSound,
+    minimize,
+    assets,
+    platform,
+    isTgMobile,
+  } = useContext(FofContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
@@ -222,7 +229,11 @@ const Footer = ({}) => {
       <div className="flex justify-center w-full px-2 -ml-1.5 bg-green-200">
         <div
           className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-50  flex justify-between text-white ${
-            platform === "ios" ? "-mt-5.5" : "-mt-4"
+            isTgMobile && platform === "ios"
+              ? "-mt-5.5"
+              : isTgMobile && platform !== "ios"
+              ? "-mt-4"
+              : "-mt-2.5"
           }`}
         >
           {footerIcons.map((item, index) => (

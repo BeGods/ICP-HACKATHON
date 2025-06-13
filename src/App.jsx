@@ -38,6 +38,7 @@ function App() {
   const [isBrowser, setIsBrowser] = useState(false);
   const [game, setGame] = useState("fof");
   const [tokens, setTokens] = useState(null);
+  const [payouts, setPayouts] = useState([]);
   const [lineWallet, setLineWallet] = useState(null);
   const [globalRewards, setGlobalRewards] = useState([]);
   const [triggerConf, setTriggerConf] = useState(false);
@@ -94,6 +95,8 @@ function App() {
     setIsTgMobile,
     tokens,
     setTokens,
+    payouts,
+    setPayouts,
   };
 
   const syncAllCookies = async () => {
