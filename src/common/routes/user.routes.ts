@@ -9,6 +9,7 @@ import {
   createLinePayment,
   disconnectLineWallet,
   disconnectTonWallet,
+  getUserWithdrawHistory,
   updateAvatar,
   updateCountry,
   updateLinePaymentStatus,
@@ -40,6 +41,13 @@ router.get(
 router.post("/user/refer", validateBotNewUser, createNewUserIfNoExists);
 router.get("/line/createPayment", authMiddleware, createLinePayment);
 router.post("/line/paymentStatus", updateLinePaymentStatus);
-router.post("/rewards/withdraw", validateWithdrawRwrd, withdrawReward);
+router.post(
+  "/holdings/withdraw",
+  authMiddleware,
+  validateWithdrawRwrd,
+  withdrawReward
+);
+
+router.get("/holdings/history", authMiddleware, getUserWithdrawHistory);
 
 export default router;

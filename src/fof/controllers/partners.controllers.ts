@@ -120,7 +120,7 @@ export const getAllPartners = async (req, res) => {
         (claimed) => claimed.rewardId.toString() == reward._id.toString()
       );
 
-      const isClaimed = monetaryReward ? monetaryReward.status : false;
+      const isClaimed = monetaryReward ? true : false;
 
       const rewardId = reward._id;
 
