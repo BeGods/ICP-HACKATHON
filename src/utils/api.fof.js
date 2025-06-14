@@ -852,6 +852,54 @@ export const updateRewardStatus = async (accessToken) => {
   }
 };
 
+export const updateMsnStatus = async (accessToken, rewardId, paymentType) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/reward/claim`;
+
+  try {
+    const response = await axios.post(url, { rewardId: rewardId, paymentType: paymentType }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const requestWithdraw = async (accessToken, type) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/holdings/withdraw`;
+
+  try {
+    const response = await axios.post(url, { type: type }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const fetchWithdrawHistory = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/holdings/history`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const claimRatUpdate = async (mythologyName, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/game/rat`;
 

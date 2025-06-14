@@ -622,6 +622,20 @@
       "error": {
         "title": "ওয়ালেট সংযোগ ব্যর্থ হয়েছে",
         "desc": "আপনার TON ওয়ালেটের সাথে সংযোগ করতে একটি সমস্যা হয়েছে৷ অনুগ্রহ করে পরে আবার চেষ্টা করুন৷"
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {
@@ -667,7 +681,7 @@
         "desc": "আপনার প্রোফাইল অবতার শীঘ্রই আপডেট করা হবে!"
       }
     },
-        "RoRItem": {
+    "RoRItem": {
       "success-bag": {
         "title": "Success!",
         "desc": "Item added to your bag."

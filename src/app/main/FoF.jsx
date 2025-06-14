@@ -81,6 +81,8 @@ const FoFMain = () => {
     setPayouts,
     activeReward,
     setActiveReward,
+    withdrawals,
+    setWithdrawals,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showCard, setShowCard] = useState(null);

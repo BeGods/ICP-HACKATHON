@@ -616,6 +616,20 @@
       "error": {
         "title": "지갑 연결 실패",
         "desc": "TON 지갑을 연결하는 동안 문제가 발생했습니다. 나중에 다시 시도하세요."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {

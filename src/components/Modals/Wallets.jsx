@@ -9,7 +9,6 @@ const tele = window.Telegram?.WebApp;
 const WalletsModal = ({ handleClose }) => {
   const { fetchLinePayHistory, disconnectLineWallet } = useWalletPayment();
   const { enableHaptic, lineWallet } = useContext(MainContext);
-  const address = "0x0F680658fA71fC67Eb9de751138D553871B6E7E6";
 
   const handleDisconnectLineWallet = async () => {
     handleClickHaptic(tele, enableHaptic);
@@ -87,7 +86,7 @@ const WalletsModal = ({ handleClose }) => {
             onClick={handleDisconnectLineWallet}
             className="flex justify-between w-full"
           >
-            <div className="pl-3">Payment History</div>
+            <div className="pl-3">Dapp History</div>
 
             <ChevronRight />
           </div>

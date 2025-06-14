@@ -616,13 +616,27 @@
       }
     },
     "TonConnect": {
-      "success": {
+      "success": {  
         "title": "Dompet Berhasil Terhubung!",
         "desc": "Dompet TON Anda telah terhubung."
       },
       "error": {
         "title": "Koneksi Dompet Gagal",
         "desc": "Terjadi masalah saat menghubungkan ke dompet TON Anda. Silakan coba lagi nanti."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {

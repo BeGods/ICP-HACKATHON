@@ -2,13 +2,66 @@ import React, { useContext } from "react";
 import { MainContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
+import { updateMsnStatus } from "../../../utils/api.fof";
+import { Lock } from "lucide-react";
+import { showToast } from "../../Toast/Toast";
 
 const PayoutInfoCard = ({ close, data }) => {
-  const { t, i18n } = useTranslation();
-  const { assets, isTelegram, userData } = useContext(MainContext);
+  const { i18n } = useTranslation();
+  const { assets, isTelegram, authToken, setUserData, setPayouts } =
+    useContext(MainContext);
+
+  const handleClaimMsn = async () => {
+    const paymentType = data.paymentType?.includes("USDT")
+      ? "usdt"
+      : isTelegram
+      ? "stars"
+      : "kaia";
+
+    if (data.id == "684882aa7c77e14a7262bbcc") {
+      alert("Coming Soon");
+      return;
+    }
+
+    try {
+      await updateMsnStatus(authToken, data.id, paymentType);
+
+      setUserData((prev) => {
+        const prevHoldings = prev.holdings || {};
+        const currentTokenAmount = prevHoldings[paymentType] || 0;
+        const updatedTokenAmount = currentTokenAmount + data.amount;
+
+        return {
+          ...prev,
+          holdings: {
+            ...prevHoldings,
+            [paymentType]: updatedTokenAmount,
+          },
+        };
+      });
+
+      setPayouts((prev) => {
+        const updatedPayouts = prev.map((payout) => {
+          if (payout.id === data.id) {
+            return { ...payout, isClaimed: true };
+          }
+          return payout;
+        });
+
+        return updatedPayouts;
+      });
+      close();
+      showToast("payout_success");
+    } catch (error) {
+      console.log(error);
+      showToast("payout_error");
+
+      close();
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
       <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
@@ -21,7 +74,15 @@ const PayoutInfoCard = ({ close, data }) => {
         <div className="absolute top-0 w-full flex flex-col justify-center leading-8 items-center text-center text-card text-paperHead font-bold mt-2 uppercase z-30">
           <div className="w-3/4">{data?.title}</div>
           <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
-            {data?.amount} <span>{isTelegram ? "STAR" : "KAIA"}</span>
+            {data?.amount}{" "}
+            <span>
+              {" "}
+              {data.paymentType?.includes("USDT")
+                ? "USDT"
+                : isTelegram
+                ? "STAR"
+                : "KAIA"}
+            </span>
           </h2>
         </div>
 
@@ -36,12 +97,30 @@ const PayoutInfoCard = ({ close, data }) => {
           <div className="flex flex-col gap-y-4">{data?.description}</div>
         </div>
 
-        <div className="absolute w-full flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
+        <div className="absolute w-full uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
           {data?.limit} <span>Left</span>
         </div>
 
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
       </div>
+
+      {!data.isClaimed && data.limit > 0 && (
+        <div
+          onClick={handleClaimMsn}
+          className="flex cursor-pointer justify-center items-center relative h-fit mt-1"
+        >
+          <img src={assets.buttons.black.off} alt="button" />
+          <div className="absolute z-50 flex items-center justify-center  text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
+            <h1 className="uppercase">
+              {data.id == "684882aa7c77e14a7262bbcc" ? (
+                <Lock strokeWidth={3} />
+              ) : (
+                "Verify"
+              )}{" "}
+            </h1>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

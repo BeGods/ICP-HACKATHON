@@ -658,6 +658,20 @@
       "error": {
         "title": "Nabigong Kumonekta ang Wallet",
         "desc": "Nagkaroon ng problema sa pagkonekta sa iyong TON wallet. Pakisubukang muli mamaya."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {

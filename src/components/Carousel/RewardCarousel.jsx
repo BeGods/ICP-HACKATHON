@@ -37,22 +37,25 @@ const RewardCarousel = ({ rewards }) => {
         </div>
       )}
       <div className={`carousel carousel-width`}>
-        {rewards.slice(currentIndex, currentIndex + 3).map((item, index) => {
-          let className = "carousel__item";
-          if (index === 0) {
-            className += " previous";
-          } else if (index === 1) {
-            className += " active";
-          } else if (index === 2) {
-            className += " next";
-          }
+        {rewards
+          .slice(currentIndex, currentIndex + 3)
+          .sort((a, b) => Number(a.isClaimed) - Number(b.isClaimed))
+          .map((item, index) => {
+            let className = "carousel__item";
+            if (index === 0) {
+              className += " previous";
+            } else if (index === 1) {
+              className += " active";
+            } else if (index === 2) {
+              className += " next";
+            }
 
-          return (
-            <div className={className} key={currentIndex + index}>
-              <PayoutItem key={item.id} item={item} />
-            </div>
-          );
-        })}
+            return (
+              <div className={className} key={currentIndex + index}>
+                <PayoutItem key={item.id} item={item} />
+              </div>
+            );
+          })}
       </div>
       {currentIndex < rewards.length - 3 && (
         <div

@@ -23,10 +23,11 @@ import WalletsModal from "../../../components/Modals/Wallets";
 import { showToast } from "../../../components/Toast/Toast";
 import { toast } from "react-toastify";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
+import HoldingsModal from "../../../components/Modals/Holdings";
 
 const tele = window.Telegram?.WebApp;
 
-const ProfileItem = ({ content, index }) => {
+const ProfileItem = ({ content, index, assets, userData }) => {
   return (
     <div
       onClick={content.handleClick}
@@ -36,7 +37,21 @@ const ProfileItem = ({ content, index }) => {
           : "text-white border-white"
       } w-full bg-glass-black border  rounded-primary p-4 shadow-md`}
     >
-      <div className="rounded-full mr-3">{content.icon}</div>
+      {index == 5 ? (
+        <div className="flex items-center rounded-full mr-3">
+          <div className="z-20">{content.icon}</div>
+          <div className="z-10 -ml-3">
+            {" "}
+            <img
+              src={assets.misc.usdt}
+              alt="earn"
+              className="w-[2rem] h-[2rem]"
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-full mr-3">{content.icon}</div>
+      )}
       <div>
         <div className="text-[0.8rem] text-gray-300 uppercase">
           {content.label}
@@ -46,7 +61,14 @@ const ProfileItem = ({ content, index }) => {
             index == 4 ? "text-[1rem]" : "text-[1.25rem]"
           }  font-semibold`}
         >
-          {content.value}
+          {index == 5 ? (
+            <div className="flex justify-between w-full">
+              <span>{content.value}</span> <span>|</span>{" "}
+              <span>{userData.holdings.usdt}</span>
+            </div>
+          ) : (
+            content.value
+          )}
         </div>
       </div>
     </div>
@@ -175,7 +197,7 @@ const Profile = (props) => {
     {
       icon: <div className="font-symbols text-[1.8rem]">u</div>,
       label: "Referrals",
-      value: userData.referrals ?? 0,
+      value: userData.directReferralCount ?? 0,
       handleClick: () => {
         (async () => await handleCopyLink())();
       },
@@ -203,7 +225,7 @@ const Profile = (props) => {
             (async () => await handleConnectLineWallet())();
           }
         } else {
-          alert("Coming Soon.");
+          alert("Coming Soon");
         }
       },
     },
@@ -215,10 +237,12 @@ const Profile = (props) => {
           className="w-[2.2rem] h-[2.2rem]"
         />
       ),
-      label: "Earned",
-      value: 0,
+      label: "Withdraw",
+      value: isTelegram
+        ? userData.holdings.stars ?? 0
+        : userData.holdings.kaia ?? 0,
       handleClick: () => {
-        toast.info("Atleast need 10 Kaia to withdraw");
+        setShowCard(<HoldingsModal handleClose={() => setShowCard(null)} />);
       },
     },
   ];
@@ -256,7 +280,13 @@ const Profile = (props) => {
         <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">
           <div className="grid grid-cols-2 gap-x-1.5 gap-y-4 w-full h-fit place-items-center">
             {profileDetails.map((itm, idx) => (
-              <ProfileItem key={idx} index={idx} content={itm} />
+              <ProfileItem
+                key={idx}
+                assets={assets}
+                index={idx}
+                content={itm}
+                userData={userData}
+              />
             ))}
           </div>
         </div>
@@ -266,42 +296,3 @@ const Profile = (props) => {
 };
 
 export default Profile;
-
-// useEffect(() => {
-//   if (enableGuide) {
-//     setShowCard(
-//       <ProfileGuide
-//         Header={
-//           <ProfileHeader
-//             showGuide={0}
-//             userData={userData}
-//             avatarColor={avatarColor}
-//           />
-//         }
-//         currGuide={0}
-//         Toggles={
-//           <>
-//             <ToggleLeft
-//               minimize={2}
-//               handleClick={() => {
-//                 setSection(5);
-//               }}
-//               activeMyth={4}
-//             />
-//             <ToggleRight
-//               minimize={2}
-//               handleClick={() => {
-//                 setSection(5);
-//               }}
-//               activeMyth={4}
-//             />
-//           </>
-//         }
-//         currQuest={tasks[0]}
-//         handleClick={() => {
-//           setShowCard(null);
-//         }}
-//       />
-//     );
-//   }
-// }, [enableGuide]);
