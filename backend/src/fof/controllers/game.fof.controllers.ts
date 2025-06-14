@@ -196,6 +196,7 @@ export const getGameStats = async (req, res) => {
     const memberData = {
       orbRank: userRank?.orbRank,
       totalOrbs: userRank?.totalOrbs ?? 0,
+      countryRank: userRank?.countryRank ?? 0,
     };
 
     // update userdata
@@ -259,6 +260,7 @@ export const getGameStats = async (req, res) => {
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
       stakeReward: user.bonus.fof.extraBlackOrb,
       country: user.country ?? "NA",
+      holdings: user.holdings ?? { stars: 0, usdt: 0, kaia: 0 },
       ...memberData,
     };
     const gameData = {

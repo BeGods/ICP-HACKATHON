@@ -18,7 +18,6 @@ export interface IClaimedReward {
 
 export interface IMonetaryReward {
   rewardId: mongoose.Types.ObjectId;
-  status: "pending" | "success" | "failed" | "rewarded";
   claimedAt: Date;
 }
 

@@ -403,15 +403,18 @@ export const getLinePaymentStatus = async (req, res) => {
 
 export const withdrawReward = async (req, res) => {
   const user = req.user;
-  const { type } = req.query;
+  const { type } = req.body;
+  const amount = req.amount;
   const transactionId = uuidv4();
+
+  console.log(amount);
 
   try {
     const newTransaction = new PaymentLogs({
       userId: user._id,
       transactionId: transactionId,
       reward: "withdraw",
-      amount: 10,
+      amount: amount,
       currency: type?.toUpperCase(),
       transferType: "send",
       status: "pending",
@@ -421,7 +424,7 @@ export const withdrawReward = async (req, res) => {
 
     await user.updateOne({
       $inc: {
-        [`holdings.${type}`]: -10,
+        [`holdings.${type}`]: -amount,
       },
     });
 
@@ -429,5 +432,24 @@ export const withdrawReward = async (req, res) => {
   } catch (error) {
     console.error("Withdrawal request failed.", error);
     return res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+export const getUserWithdrawHistory = async (req, res) => {
+  try {
+    const user = req.user;
+
+    const transactions = await PaymentLogs.find({
+      userId: user._id,
+      transferType: "send",
+      reward: "withdraw",
+    }).select(
+      "-__v -_id -userId -reward -transactionId -transferType -createdAt"
+    );
+
+    res.status(200).json({ data: transactions });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching history" });
   }
 };

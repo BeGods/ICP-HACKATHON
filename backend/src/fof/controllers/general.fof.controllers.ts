@@ -407,14 +407,14 @@ export const claimStreakBonus = async (req, res) => {
   }
 };
 
-export const claimMonetaryReward = async (req, res) => {
+export const claimMsnReward = async (req, res) => {
   try {
-    const reward = req.reward;
+    const reward = req.rewardDetails;
     const userMilestones = req.userMilestones;
     const user = req.user;
-    const { rewardId, paymentType } = req.body;
+    const { paymentType } = req.body;
 
-    await updateTokenReward(user._id, userMilestones, reward, paymentType);
+    await updateTokenReward(user, userMilestones, reward, paymentType);
 
     res.status(200).json({ message: "Reward claimed successfully." });
   } catch (error) {

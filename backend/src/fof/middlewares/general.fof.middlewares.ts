@@ -3,6 +3,11 @@ import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
 import mongoose from "mongoose";
 import rewards from "../../common/models/rewards.models";
+import {
+  validateBurstReward,
+  validateInviteReward,
+  validateMultiOrbReward,
+} from "../../common/services/rewards.services";
 
 export const validDailyBonusReq = async (req, res, next) => {
   try {
@@ -252,9 +257,10 @@ export const validateUserBet = async (req, res, next) => {
   }
 };
 
-export const validateMonetaryReward = async (req, res, next) => {
+export const validateValidReward = async (req, res, next) => {
   try {
     const user = req.user;
+    const userId = user._id;
     const { rewardId, paymentType } = req.body;
 
     // valid rewardId
@@ -276,25 +282,47 @@ export const validateMonetaryReward = async (req, res, next) => {
       userId: user._id,
     });
     const rewardExists = userMilestones.rewards.monetaryRewards.find(
-      (itm) => itm.rewardId == new mongoose.Types.ObjectId(rewardId)
+      (itm) => itm.rewardId.toString() == rewardId.toString()
     );
 
     if (rewardExists) {
       throw new Error("Reward already claimed.");
     }
 
+    if (rewardDetails.limit <= 0) {
+      throw new Error("Reward has reached its quota");
+    }
+
     // checl valid payment type
-    if (!rewardDetails.paymentType?.includes(paymentType)) {
+    if (!rewardDetails.paymentType?.includes(paymentType?.toUpperCase())) {
       throw new Error("Invalid payment type.");
     }
 
     // validate action
+    const conversionMsnId = new mongoose.Types.ObjectId(
+      "6848818c7c77e14a7262bbc9"
+    );
+    const burstMsnId = new mongoose.Types.ObjectId("684882aa7c77e14a7262bbcc");
+    const playMsnId = new mongoose.Types.ObjectId("6848842225befb7c13c9dcaa");
+    const inviteMsnId = new mongoose.Types.ObjectId("684dd99f96c75496c97db98f");
 
-    req.reward = rewardDetails;
+    // validate mission action
+    if (rewardDetails._id.toString() === conversionMsnId.toString()) {
+      await validateMultiOrbReward(userId);
+    } else if (rewardDetails._id.toString() === burstMsnId.toString()) {
+      await validateBurstReward(userId);
+    } else if (rewardDetails._id.toString() === playMsnId.toString()) {
+      return res.status(400).json({ message: "Coming Soon" });
+    } else if (rewardDetails._id.toString() === inviteMsnId.toString()) {
+      await validateInviteReward(user);
+    } else {
+      return res.status(400).json({ message: "Invalid rewardId." });
+    }
+
+    req.rewardDetails = rewardDetails;
     req.userMilestones = userMilestones;
     next();
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: error.message });
   }
 };

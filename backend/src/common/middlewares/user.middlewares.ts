@@ -18,18 +18,20 @@ export const validateFinishedRwrd = async (req, res, next) => {
 export const validateWithdrawRwrd = async (req, res, next) => {
   const user = req.user;
   const { type } = req.body;
+  const amount = user.holdings[type] ?? 0;
 
   try {
     // chekc valid balance
-    if (user.holdings[type] < 10) {
+    if (amount < 10) {
       throw new Error(`Failed to withdraw. Atleast need 10 ${type}.`);
     }
 
     // check wallet connected
-    if (user.kaiaAddress) {
+    if (type == "kaia" && user.kaiaAddress) {
       throw new Error(`Failed to withdraw. Wallet not connected.`);
     }
 
+    req.amount = amount;
     next();
   } catch (error) {
     console.log(error);

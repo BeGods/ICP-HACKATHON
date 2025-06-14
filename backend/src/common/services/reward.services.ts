@@ -9,44 +9,64 @@ export const updateTokenReward = async (
 ) => {
   try {
     const token = paymentType;
+    const validTokens = ["stars", "usdt", "kaia"];
+    const precision = 1e6;
+    const rewardAmount = Math.round(reward.amount * precision);
 
-    if (!paymentType) {
+    if (!token || !validTokens?.includes(token)) {
       throw new Error("Invalid payment type.");
     }
 
     // add to milestones
     await milestones.updateOne(
       {
-        userId: user._id,
-      },
-      {
         $push: {
           "rewards.monetaryRewards": {
             rewardId: reward._id,
+            status: "pending",
             claimedAt: new Date(),
           },
         },
+      },
+      {
+        upsert: true,
+        new: true,
       }
     );
 
     // update token balance
-    await user.updateOne({
-      $inc: {
-        [token]: reward.amount,
+    await user.updateOne(
+      {
+        $inc: {
+          [`holdings.${token}`]: rewardAmount,
+        },
       },
-    });
+      {
+        upsert: true,
+        new: true,
+      }
+    );
 
     // register transaction
     const newTransaction = {
       rewardId: reward._id,
-      type: token,
+      type: token.toUpperCase(),
     };
+
+    // deduct reward limit
+    await reward.updateOne({
+      $inc: {
+        limit: -1,
+      },
+    });
 
     await RewardsTransactions.findOneAndUpdate(
       { userId: user._id },
       { $set: newTransaction },
       { upsert: true, new: true }
     );
+
+    return true;
   } catch (error) {
     console.log(error);
   }

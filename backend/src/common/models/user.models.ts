@@ -18,6 +18,10 @@ const userSchema = new Schema<IUser>(
         type: Number,
         default: 0,
       },
+      stars: {
+        type: Number,
+        default: 0,
+      },
     },
     bonus: {
       fof: {

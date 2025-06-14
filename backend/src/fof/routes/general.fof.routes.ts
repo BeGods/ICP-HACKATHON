@@ -6,13 +6,13 @@ import {
   addUserBet,
   updateBetRwrdStatus,
   validateUserPlayed,
-  claimMonetaryReward,
+  claimMsnReward,
 } from "../controllers/general.fof.controllers";
 import { authMiddleware } from "../../common/middlewares/auth.middlewares";
 import {
-  validateMonetaryReward,
   validateStreakBonus,
   validateUserBet,
+  validateValidReward,
   validDailyBonusReq,
   validDailyHackBonus,
   validJoinBonusReq,
@@ -39,7 +39,12 @@ router.get(
 router.get("/validate/user", validateUserPlayed);
 
 // reward
-router.post("/reward/claim", validateMonetaryReward, claimMonetaryReward);
+router.post(
+  "/reward/claim",
+  authMiddleware,
+  validateValidReward,
+  claimMsnReward
+);
 
 // router.get("/test/script", runProfileScript);
 

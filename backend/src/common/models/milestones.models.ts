@@ -69,11 +69,6 @@ const milestoneSchema = new Schema<IMilestone>({
           type: Schema.Types.ObjectId,
           required: true,
         },
-        status: {
-          type: String,
-          required: true,
-          enum: ["pending", "failed", "success", "rewarded"],
-        },
         claimedAt: {
           type: Date,
           default: Date.now,
