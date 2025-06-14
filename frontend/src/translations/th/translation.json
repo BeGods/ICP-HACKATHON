@@ -622,6 +622,20 @@
       "error": {
         "title": "การเชื่อมต่อกระเป๋าเงินล้มเหลว",
         "desc": "มีปัญหาในการเชื่อมต่อกับกระเป๋าเงิน TON ของคุณ กรุณาลองใหม่ในภายหลัง."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {

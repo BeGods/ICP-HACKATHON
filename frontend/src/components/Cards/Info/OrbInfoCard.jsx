@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import { MainContext } from "../../../context/context";
 import { mythSymbols } from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
+import { countries } from "../../../utils/country";
 
 const OrbInfoCard = ({ gameData, close }) => {
   const { assets, userData } = useContext(MainContext);
-  console.log(gameData);
+  const countryFlag = countries.find((item) => item.code == userData.country);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
@@ -24,7 +25,7 @@ const OrbInfoCard = ({ gameData, close }) => {
           <h1>{userData.username.toUpperCase().slice(0, 11)}</h1>
 
           <h2 className={`-mt-[2vh] text-paperSub font-medium uppercase`}>
-            #{userData.overallRank ?? 0}{" "}
+            #{userData.rank ?? 0}{" "}
             {userData.country != "NA" &&
               `| ${countryFlag.flag} ${userData.countryRank}`}
           </h2>

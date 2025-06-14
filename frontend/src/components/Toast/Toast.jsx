@@ -784,6 +784,63 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "wallet_unlinked":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.TonConnect.notConnected.title")}
+          desc={t("toasts.TonConnect.notConnected.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "payout_success":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Payout.success.title")}
+          desc={t("toasts.Payout.success.desc")}
+          status={"success"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
+    case "payout_error":
+      toast.error(
+        <ToastMesg
+          title={t("toasts.Payout.error.title")}
+          desc={t("toasts.Payout.error.desc")}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     default:
       toast.info(
         <ToastMesg

@@ -286,24 +286,26 @@ const Tower = () => {
                   clearTimeout(handTimeoutRef.current);
                   handTimeoutRef.current = null;
                 }
-                setShowClaim(true);
-                setShowCard(
-                  <ConvertClaimCard
-                    keysData={keysData}
-                    handleClose={() => {
-                      setShowClaim(false);
-                      setShowCard(null);
-                    }}
-                    handleSubmit={handleOrbsConversion}
-                  />
-                );
+                // setShowClaim(true);
+                handleOrbsConversion();
+
+                // setShowCard(
+                //   <ConvertClaimCard
+                //     keysData={keysData}
+                //     handleClose={() => {
+                //       setShowClaim(false);
+                //       setShowCard(null);
+                //     }}
+                //     handleSubmit={handleOrbsConversion}
+                //   />
+                // );
               }}
-              className="absolute z-[55] pointer-events-auto cursor-pointer w-[3.5rem] h-[3.5rem] rounded-full flex mt-[28dvh] ml-[19dvh] flex-col justify-center items-center"
+              className="absolute z-[55] pointer-events-auto cursor-pointer w-[7.5dvh] h-[7.5dvh] rounded-full flex mt-[28dvh] ml-[19dvh] flex-col justify-center items-center"
             >
               <div
                 className={`font-medium cursor-pointer ${
                   showEffect && "scale-150"
-                } transition-all duration-250 text-[2.85rem] text-white glow-text-black`}
+                } transition-all duration-250 text-[6dvh] text-white glow-text-black`}
               >
                 {sessionOrbs}
               </div>

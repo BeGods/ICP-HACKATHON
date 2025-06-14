@@ -285,7 +285,7 @@ const Gacha = (props) => {
                     : "glow-box scale-box"
                 }`}
               />
-              <div className={`absolute ${showSpin && "scale-110"} -mt-20`}>
+              <div className={`absolute ${showSpin && "scale-105"} -mt-20`}>
                 <GachaRoll showSpin={spinSound} />
               </div>
             </div>

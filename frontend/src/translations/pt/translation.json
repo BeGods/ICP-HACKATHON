@@ -625,6 +625,20 @@
       "error": {
         "title": "Falha na conexão da carteira",
         "desc": "Houve um problema ao conectar-se à sua carteira TON. Tente novamente mais tarde."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {

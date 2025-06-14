@@ -628,6 +628,20 @@
       "error": {
         "title": "Ошибка подключения кошелька",
         "desc": "Произошла проблема с подключением к вашему кошельку TON. Пожалуйста, попробуйте снова позже."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "<currency> credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
       }
     },
     "InputValidate": {

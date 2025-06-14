@@ -31,7 +31,7 @@ const UserAvatar = ({ user, index }) => {
   });
 
   return (
-    <div className="absolute rounded-full min-w-[8rem] min-h-[8rem] bg-white top-0 -mt-[5rem]">
+    <div className="absolute rounded-full min-w-[8dvh] min-h-[8dvh] bg-white top-0 -mt-[8dvh]">
       <div
         style={{
           boxShadow:
@@ -449,7 +449,7 @@ const Leaderboard = (props) => {
                       <div
                         className={`absolute text-black-contour font-symbols text-${determineLevel(
                           item.orbRank
-                        )} text-[24px] z-[50] w-[40%] ${
+                        )} text-[1.75rem] z-[50] w-[40%] ${
                           rankPositions[index].alignIcon
                         }`}
                       >
