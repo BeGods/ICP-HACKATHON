@@ -32,7 +32,9 @@ export const validateBurstReward = async (userId) => {
       throw new Error("Failed to game data.");
     }
 
-    const isAutoBurstActive = userMyth.autoPay.isBurstAutoPayEnabled;
+    const isAutoBurstActive = userMyth.mythologies?.some(
+      (myth) => myth.boosters.isBurstActiveToClaim === true
+    );
 
     if (!isAutoBurstActive) {
       throw new Error("Failed to verify. Please complete the mission.");
