@@ -230,7 +230,7 @@ const Leaderboard = (props) => {
     if (!userData.stakeOn) {
       const interval = setInterval(() => {
         setFlipped((prev) => !prev);
-      }, 4000);
+      }, 3000);
       return () => clearInterval(interval);
     } else {
       setFlipped(false);
@@ -275,7 +275,7 @@ const Leaderboard = (props) => {
           className="flex slide-header-left p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
-            0
+            u
           </div>
         </div>
 
@@ -292,7 +292,7 @@ const Leaderboard = (props) => {
         </div>
         <div
           key={animationKey}
-          className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase"
+          className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[2dvh] uppercase"
         >
           <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
           <div className={`ml-auto slide-in-out-right`}>
@@ -512,7 +512,7 @@ const Leaderboard = (props) => {
               );
             })}
           </div>
-          <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[8vh]">
+          <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[4rem]">
             <div
               className={`flex border border-gray-400 rounded-primary bg-white justify-center leaderboard-width`}
             >
@@ -602,7 +602,7 @@ const Leaderboard = (props) => {
             </InfiniteScroll>
           </div>
           <div
-            className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[8vh]`}
+            className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[4rem]`}
           >
             <div
               onClick={() => {

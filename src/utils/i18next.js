@@ -13,6 +13,8 @@ import Bengalli from "../translations/bn/translation.json";
 import Hausa from "../translations/ha/translation.json";
 import Japanese from "../translations/ja/translation.json";
 import Korean from "../translations/ko/translation.json";
+import Chineese from "../translations/cn/translation.json";
+import Yoruba from "../translations/yo/translation.json";
 
 
 i18next.use(initReactI18next).init({
@@ -59,17 +61,19 @@ i18next.use(initReactI18next).init({
       translation: Bengalli,
     },
     zh: {
-      translation: English,
+      translation: Chineese,
     },
 
     ja: {
       translation: Japanese,
     },
     yo: {
-      translation: English,
+      translation: Yoruba,
     },
     ko: {
       translation: Korean,
     },
+
+
   },
 });

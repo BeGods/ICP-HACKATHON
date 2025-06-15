@@ -10,681 +10,680 @@
     "norse": "Norse mythology unveils a fantastical realm of swirling realms and legendary beasts, where valiant heroes embark on daring quests against looming shadows. Epic sagas brim with magical artifacts and cosmic trees that bridge worlds, while fierce battles echo through the ages. Enigmatic creatures roam the landscapes, and the air crackles with ancient magic. Themes of bravery, sacrifice, and the inexorable dance of fate intertwine, creating a vivid tapestry of wonder and peril that captivates the imagination."
   },
   "mythologies": {
-    "celtic": "Celtic",
-    "egyptian": "Mesir",
-    "greek": "Yunani",
-    "norse": "Nordik",
-    "dark": "Dark"
+    "celtic": "凯尔特",
+    "egyptian": "埃及",
+    "greek": "希腊",
+    "norse": "北欧",
+    "dark": "黑暗"
   },
   "keywords": {
-    "orb": "Orb",
-    "orbs": "ORB(S)",
-    "conversion": "Konversi",
-    "discover": "Menemukan",
-    "whitelist": "Whitelist",
-    "load": "Memuat",
-    "shards": "Pecahan"
+    "orb": "宝珠",
+    "orbs": "宝珠",
+    "conversion": "转换",
+    "discover": "发现",
+    "whitelist": "白名单",
+    "load": "加载中",
+    "shards": "碎片"
   },
   "buttons": {
-    "buy": "Beli",
-    "hire": "Mempekerjakan",
-    "redeem": "Menukarkan",
-    "pay": "Bayar",
-    "share": "Membagikan",
-    "shared": "Dibagikan"
+    "buy": "购买",
+    "hire": "雇佣",
+    "redeem": "兑换",
+    "pay": "支付",
+    "share": "分享",
+    "shared": "已分享"
   },
   "tower": {
-    "tune": "Tahukah kamu♪ lagu ♪ ?",
-    "play": "Mainkan dengan urutan yang benar!"
+    "tune": "你知道这段旋律吗♪？",
+    "play": "按正确的顺序演奏！"
   },
   "sections": {
-    "forges": "Menempa",
-    "boosters": "Penguat",
-    "quests": "Pencarian",
-    "leaderboard": "Papan Peringkat",
-    "tower": "Tower",
-    "brand": "Merek",
-    "profile": "Profil",
-    "gifts": "Hadiah",
-    "voucher": "Vouchers"
+    "forges": "锻造",
+    "boosters": "增益道具",
+    "quests": "任务",
+    "leaderboard": "排行榜",
+    "tower": "高塔",
+    "brand": "品牌",
+    "profile": "个人资料",
+    "gifts": "礼物",
+    "voucher": "代金券"
   },
   "boosters": [
-    { "title": "Automata", "desc": "Ketuk Otomatis" },
-    { "title": "Misi yang Hilang", "desc": "Energi 200%" },
-    { "title": "Alkemis", "desc": "Ketuk Ganda" },
+    { "title": "自动机", "desc": "自动点击" },
+    { "title": "任务", "desc": "能量" },
+    { "title": "炼金术士", "desc": "提升点击力" },
     {},
     {},
     {},
-    { "title": "Meledak", "desc": "Tekan Daya ke Bawah" },
-    { "title": "Paket Automata", "desc": "4X Automata" },
-    { "title": "Paket Burst", "desc": "Bintang 4X" },
-    { "title": "Amulet Bulan", "desc": "Konversi 2X" }
+    { "title": "爆发", "desc": "强力按压" },
+    { "title": "自动机礼包", "desc": "4倍自动机" },
+    { "title": "爆发礼包", "desc": "4倍星星" },
+    { "title": "月亮护符", "desc": "2倍宝珠转换" }
   ],
   "profile": {
-    "premium": "Premium",
-    "invite": "Undang",
-    "squad": "pasukan",
-    "player": "Pemain",
-    "name": "Nama",
-    "apply": "Menerapkan",
-    "referrals": "Referensi",
-    "team": "Tim",
-    "guide": "Jagora",
-    "causes": "Penyebab",
-    "partners": "Amal",
-    "partner": "Amal",
-    "charity": "Charity",
-    "rewards": "Hadiah",
-    "task": "Tugas",
-    "connect": "Terhubung",
-    "follow": "Mengikuti",
-    "select": "Pilih",
-    "music": "Musik",
-    "wallet": "Dompet",
-    "watch": "Melihat",
-    "country": "Negara",
-    "updatePhoto": "Perbarui foto",
-    "addToHome": "Tambahkan Pintasan"
+    "premium": "高级版",
+    "invite": "邀请",
+    "squad": "小队",
+    "player": "玩家",
+    "name": "名称",
+    "apply": "申请",
+    "referrals": "推荐",
+    "team": "团队",
+    "guide": "指南",
+    "causes": "事业",
+    "partners": "合作伙伴",
+    "partner": "合作方",
+    "charity": "慈善",
+    "rewards": "奖励",
+    "task": "任务",
+    "connect": "连接",
+    "follow": "关注",
+    "select": "选择",
+    "music": "音乐",
+    "wallet": "钱包",
+    "watch": "观看",
+    "country": "国家",
+    "updatePhoto": "更新头像",
+    "addToHome": "添加快捷方式"
   },
   "misc": {
-    "name": "Nama",
-    "enterOTP": "Masukan OTP",
-    "phone": "Nomor Telpon",
-    "day": "Hari",
-    "verify": "Verifikasi ",
-    "resendOTP": "Kirim Ulang OTP",
-    "getOTP": "Dapatkan OTP",
-    "terms": "Terima Syarat & Ketentuan",
-    "policy": "Kebijakan Privasi",
-    "haptic": "Haptik"
+    "name": "名称",
+    "enterOTP": "输入验证码",
+    "phone": "手机号码",
+    "day": "天",
+    "verify": "验证",
+    "resendOTP": "重新发送验证码",
+    "getOTP": "获取验证码",
+    "terms": "接受条款与条件",
+    "policy": "隐私政策",
+    "haptic": "触感反馈"
   },
   "note": {
-    "text": "Pembaruan di",
-    "tower": "Ketuk ORBS untuk mengonversi",
-    "bonus": "untuk melihat promosi aktif",
-    "ad": "Untuk mendapatkan booster!",
+    "text": "更新于",
+    "tower": "点击宝珠进行转换",
+    "bonus": "查看当前促销活动",
+    "ad": "获取加成道具！",
     "whitelist": {
-      "QuestName": "Whitelist",
-      "desc": "An NFT whitelist is a selected collection of crypto wallet addresses with early access to BeGODS ecosystem. This NFT allows the owner to buy 30USD of our BGODS Token, after it is listed."
+      "QuestName": "白名单",
+      "desc": "NFT 白名单是一个经过筛选的钱包地址列表，拥有提前访问 BeGODS 生态系统的权限。该 NFT 允许持有者在 BGODS 代币上线后购买价值 30 美元的代币。"
     }
   },
   "bonus": {
-    "join": "BONUS SELAMAT DATANG",
-    "box": "KOTAK",
-    "youwon": "KAMU MENANG!",
-    "win": "nasara"
+    "join": "欢迎奖励",
+    "box": "宝箱",
+    "youwon": "你赢了！",
+    "win": "赢得"
   },
   "elements": {
-    "earth": "Tanah",
-    "air": "Udara",
-    "fire": "Api",
-    "water": "Air",
-    "aether": "Aether"
+    "earth": "土",
+    "air": "风",
+    "fire": "火",
+    "water": "水",
+    "aether": "以太"
   },
   "tutorial": {
-    "forgeShard": { "title": "Ketik untuk mendapatkan Pecahan", "desc": "" },
-    "forgeOrbs": { "title": "1 Bola = 1,000 Pecahan", "desc": "" },
-    "forgeBubble": {
-      "title": "Pop Bubble untuk mendapatkan Hadiah",
-      "desc": ""
-    },
-    "forgeMinion": { "title": "Tangkap & tahan 2x pecahan", "desc": "" },
-    "forgeExplore": { "title": "Jelajahi +lebih lanjut", "desc": "" },
-    "quests": { "title": "Selesaikan Misi", "desc": "Dapatkan $faith" },
-    "boosters": { "title": "DAPATKAN BOOSTER", "desc": "UNTUK HADIAH GAME" },
-    "profileTask": {
-      "title": "Selesaikan Tugas",
-      "desc": "Untuk mendapatkan hadiah dalam game"
-    },
-    "gift": { "title": "Mitra Pembayaran", "desc": "" },
-    "tower": { "title": "Konversi Orb", "desc": "" }
+    "forgeShard": { "title": "点击获取碎片", "desc": "" },
+    "forgeOrbs": { "title": "1 宝珠 = 1,000 碎片", "desc": "" },
+    "forgeBubble": { "title": "点击气泡获得礼物", "desc": "" },
+    "forgeMinion": { "title": "抓住并持有以获得 2 倍碎片", "desc": "" },
+    "forgeExplore": { "title": "探索更多内容", "desc": "" },
+    "quests": { "title": "完成任务", "desc": "赚取 $faith" },
+    "boosters": { "title": "获取增益道具", "desc": "赚取 $faith" },
+    "profileTask": { "title": "完成任务", "desc": "获取游戏内奖励" },
+    "gift": { "title": "查看合作伙伴", "desc": "" },
+    "tower": { "title": "转换宝珠", "desc": "" }
   },
   "quests": {
     "celtic": {
       "A01": {
         "artist": "John Duncan, 1909",
-        "QuestName": "Pelarian Heptu",
-        "desc": "Heptu Bidding Farewell to The City of Obb', sekitar tahun 1909, adalah lukisan karya John Duncan, seorang pelukis simbolis Skotlandia. Kunjungi lukisan aslinya di Whitehouse Terrace, Edinburgh - Skotlandia."
+        "QuestName": "Heptu's Escape",
+        "desc": "'Heptu Bidding Farewell to The City of Obb', ca 1909, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B01": {
         "artist": "Jose de Madrazo y Agudo, 1807",
-        "QuestName": "Pengkhianatan Viriato",
-        "desc": "\"The Death of Viriatus, Chief of the Lusitanians\", sekitar tahun 1807, adalah lukisan karya Jose de Madrazo y Agudo, seorang pelukis neoklasik asal Spanyol. Kunjungi lukisan aslinya di Museo del Prado, Madrid - Spanyol."
+        "QuestName": "Viriato's Betrayal",
+        "desc": "'The Death of Viriatus, Chief of the Lusitanians', ca 1807, is a painting by Jose de Madrazo y Agudo, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
       },
       "A02": {
         "artist": "John Duncan, 1912",
         "QuestName": "Tristan & Iseult",
-        "desc": "\"Tristan dan Isolde\", sekitar tahun 1912, adalah lukisan karya John Duncan, seorang pelukis simbolis Skotlandia. Kunjungi lukisan aslinya di Whitehouse Terrace, Edinburgh - Skotlandia."
+        "desc": "'Tristan and Isolde', ca 1912, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Whitehouse Terrace, Edinburgh - Scotland."
       },
       "B02": {
         "artist": "Gaston Bussiere, 1912",
-        "QuestName": "Putri yang Sedih",
-        "desc": "\"Isolde: The Celt Princess\", sekitar tahun 1912, adalah lukisan karya Gaston Bussiere, seorang pelukis simbolis Prancis. Kunjungi lukisan aslinya di Musee des Ursulines, Macon - Prancis."
+        "QuestName": "The Sad Princess",
+        "desc": "'Isolde: The Celt Princess', ca 1912, is a painting by Gaston Gaston Bussiere, a French symbolist painter. Visit the original in Musee des Ursulines, Macon - France."
       },
       "A03": {
         "artist": "John Duncan, 1913",
-        "QuestName": "Imbolc milik Brigid",
-        "desc": "\"The Saint Bride\", sekitar tahun 1913, adalah lukisan karya John Duncan, seorang pelukis simbolis Skotlandia. Kunjungi lukisan aslinya di Galeri Nasional, Edinburgh - Skotlandia."
+        "QuestName": "Brigid's Imbolc",
+        "desc": "'The Saint Bride', ca 1913, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "B03": {
         "artist": "Edward Robert Hughes, 1911",
-        "QuestName": "Fantasi Musim Panas",
-        "desc": "\"Fantasy in Twilight\", sekitar tahun 1911, adalah lukisan karya Edward Robert Hughes, seorang pelukis simbolis Inggris. Kunjungi lukisan aslinya di Galeri Artchiv, Praha - Republik Ceko."
+        "QuestName": "Summer Fantasy",
+        "desc": "'Fantasy in Twilight', ca 1911, is a painting by Edward Robert Hughes, a British symbolist painter. Visit the original in Artchiv Gallery, Prague - Czech Republic."
       },
       "A04": {
         "artist": "John Duncan, 1924",
-        "QuestName": "Klan Lir",
-        "desc": "\"Children of Lir\", sekitar tahun 1924, adalah lukisan karya John Duncan, seorang pelukis simbolis Skotlandia. Kunjungi lukisan aslinya di Galeri Seni Dundee, Edinburgh - Skotlandia."
+        "QuestName": "Lir Clann1",
+        "desc": "'Children of Lir', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
       },
       "B04": {
         "artist": "Jan Asselijn, 1650",
-        "QuestName": "Kekasih Aengus",
-        "desc": "\"The Threatened Swan\", sekitar tahun 1650, adalah lukisan karya Jan Asselijn, seorang pelukis Belanda di zaman keemasan. Kunjungi lukisan aslinya di Rijksmuseum Amsterdam, Amsterdam - Belanda."
+        "QuestName": "Aengus' Lover",
+        "desc": "'The Threatened Swan', ca 1650, is a painting by Jan Asselijn, a Dutch golden age painter. Visit the original in Rijksmuseum Amsterdam, Amsterdam - Netherlands."
       },
       "A05": {
         "artist": "John Duncan, 1924",
-        "QuestName": "PUTRI TIDUR",
-        "desc": "\"The Sleeping Princess\", sekitar tahun 1924, adalah lukisan karya John Duncan, seorang pelukis simbolis Skotlandia. Kunjungi lukisan aslinya di Galeri Seni Perth, Perth - Skotlandia."
+        "QuestName": "SLEEPING BEAUTY",
+        "desc": "'The Sleeping Princess', ca 1924, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Perth Art Gallery, Perth - Scotland."
       },
       "B05": {
         "artist": "Frank Bernard Dicksee, 1913",
         "QuestName": "Leanan Sidhe",
-        "desc": "\"\"\"La Belle Dame sans Merci\"\", sekitar tahun 1913, adalah lukisan karya Frank Bernard Dicksee, seorang pelukis Inggris dari era Victoria. Kunjungi lukisan aslinya di Museum Kota Bristol, Bristol - Inggris.\""
+        "desc": "'La Belle Dame sans Merci', ca 1913, is a painting by Frank Bernard Dicksee, a British victorian Painter. Visit the original in Bristol City Museum, Bristol - England."
       },
       "A06": {
         "artist": "John Duncan, 1911",
-        "QuestName": "pengendara sidhe",
-        "desc": "\"Riders of the Sidhe\", sekitar tahun 1911, adalah lukisan karya John Duncan, seorang pelukis simbolis Skotlandia. Kunjungi lukisan aslinya di Galeri Seni Dundee, Edinburgh - Skotlandia."
+        "QuestName": "Sidhe Riders",
+        "desc": "'Riders of the Sidhe', ca 1911, is a painting by John Duncan, a Scottish symbolist painter. Visit the original in Dundee Art Galleries, Edinburgh - Scotland."
       },
       "B06": {
         "artist": "Lionel Royer, 1899",
         "QuestName": "Vercingetorix",
-        "desc": "Vercingetorix before Caesar', sekitar tahun 1899, adalah lukisan karya Lionel Royer, seorang pelukis sejarah Prancis. Kunjungi lukisan aslinya di Musee Crozatier, Auvergne - Prancis."
+        "desc": "'Vercingetorix before Caesar', ca 1899, is a painting by Lionel Royer, a French historical painter. Visit the original in Musee Crozatier, Auvergne - France."
       },
       "C01": {
         "artist": "Joseph Noel Pato, 1849",
         "QuestName": "Tuath Danann I",
-        "desc": "The Quarrel of Oberon and Titania', sekitar tahun 1849, adalah lukisan karya Joseph Noel Pato, seorang pelukis sejarah Skotlandia. Kunjungi lukisan aslinya di Galeri Nasional, Edinburgh - Skotlandia."
+        "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "C02": {
         "artist": "Ulpiano Checa,1890",
         "QuestName": "TIR NA NOG I",
-        "desc": "Twilight', sekitar tahun 1890, adalah lukisan karya Ulpiano Checa, seorang pelukis sejarah asal Spanyol. Kunjungi lukisan aslinya di Museum Ulpiano Checa, Madrid - Spanyol."
+        "desc": "'Twilight', ca 1890, is a painting by Ulpiano Checa, a Spanish  historical painter. Visit the original in Ulpiano Checa Museum, Madrid - Spain."
       },
       "C03": {
         "artist": "Joseph Noel Pato, 1849",
         "QuestName": "Tuath Danann II",
-        "desc": "The Quarrel of Oberon and Titania', sekitar tahun 1849, adalah lukisan karya Joseph Noel Pato, seorang pelukis sejarah Skotlandia. Kunjungi lukisan aslinya di Galeri Nasional, Edinburgh - Skotlandia."
+        "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "C04": {
         "artist": "Ulpiano Checa,1890",
         "QuestName": "TIR NA NOG II",
-        "desc": "Twilight', sekitar tahun 1890, adalah lukisan karya Ulpiano Checa, seorang pelukis sejarah asal Spanyol. Kunjungi lukisan aslinya di Museum Ulpiano Checa, Madrid - Spanyol."
+        "desc": "'Twilight', ca 1890, is a painting by Ulpiano Checa, a Spanish  historical painter. Visit the original in Ulpiano Checa Museum, Madrid - Spain."
       },
       "C05": {
         "artist": "Joseph Noel Pato, 1849",
         "QuestName": "Tuath Danann III",
-        "desc": "The Quarrel of Oberon and Titania', sekitar tahun 1849, adalah lukisan karya Joseph Noel Pato, seorang pelukis sejarah Skotlandia. Kunjungi lukisan aslinya di Galeri Nasional, Edinburgh - Skotlandia."
+        "desc": "'The Quarrel of Oberon and Titania', ca 1849, is a painting by Joseph Noel Pato, a Scottish painter historical painter. Visit the original in National Gallery, Edinburgh - Scotland."
       },
       "C06": {
         "artist": "Ulpiano Checa,1890",
         "QuestName": "TIR NA NOG III",
-        "desc": "Twilight', sekitar tahun 1890, adalah lukisan karya Ulpiano Checa, seorang pelukis sejarah asal Spanyol. Kunjungi lukisan aslinya di Museum Ulpiano Checa, Madrid - Spanyol."
+        "desc": "'Twilight', ca 1890, is a painting by Ulpiano Checa, a Spanish  historical painter. Visit the original in Ulpiano Checa Museum, Madrid - Spain."
       }
     },
     "egyptian": {
       "A01": {
         "artist": "Eugene Pierre Francois Giraud, 1864",
-        "QuestName": "Bisikan Burung",
-        "desc": "The Egyptian Dove Seller', sekitar tahun 1864, adalah lukisan karya Eugene Pierre Francois Giraud, seorang pelukis Prancis. Kunjungi lukisan aslinya di Museo de Bellas Artes, Valencia - Spanyol."
+        "QuestName": "Bird Whisperer",
+        "desc": "'The Egyptian Dove Seller', ca 1864, is a painting by Eugene Pierre Francois Giraud, a French painter. Visit the original in Museo de Bellas Artes, Valencia - Spain."
       },
       "B01": {
         "artist": "Arthur Drummond, 1890",
-        "QuestName": "Pesona Hathor",
-        "desc": "The Harpist', sekitar tahun 1890, adalah lukisan karya Arthur Drummond, seorang pelukis Inggris. Kunjungi lukisan aslinya di Sothebys, London - Inggris."
+        "QuestName": "Hathor's Charm",
+        "desc": "'The Harpist', ca 1890, is a painting by Arthur Drummond, a British painter. Visit the original in Sothebys, London - England."
       },
       "A02": {
         "artist": "Lawrence Alma-Tadema, 1904",
-        "QuestName": "KEAJAIBAN SUNGAI NIL",
-        "desc": "\"The Finding of Moses\", sekitar tahun 1904, adalah lukisan karya Lawrence Alma-Tadema, seorang pelukis Belanda dari era Victoria. Kunjungi lukisan aslinya di Sothebys, London - Inggris."
+        "QuestName": "NILE'S MIRACLE",
+        "desc": "'The Finding of Moses', ca 1904, is a painting by Lawrence Alma-Tadema, a Dutch victorian painter. Visit the original in Sothebys, London - England."
       },
       "B02": {
         "artist": "Edwin Longsden Long, 1883",
-        "QuestName": "PROSESI ISIS",
-        "desc": "\"The Flight into Egypt\", sekitar tahun 1883, adalah lukisan karya Edwin Longsden Long, seorang pelukis Alkitab asal Inggris. Kunjungi lukisan aslinya di Museum Russell-Cotes, Bournemouth - Inggris."
+        "QuestName": "ISIS PROCESSION",
+        "desc": "'The Flight into Egypt', ca 1883, is a painting by Edwin Longsden Long, a British biblical painter. Visit the original in Russell-Cotes Museum, Bournemouth - England."
       },
       "A03": {
         "artist": "Alexandre Cabanel, 1887",
-        "QuestName": "Parfum Shezmus I",
-        "desc": "\"Cleopatra menguji racun pada tahanan yang dihukum\", sekitar tahun 1887, adalah lukisan karya Alexandre Cabanel, seorang pelukis klasik Prancis. Kunjungi lukisan aslinya di Royal Museum, Antwerp - Belgia."
+        "QuestName": "Shezmus' Perfume I",
+        "desc": "'Cleopatra testing poisons on condemned prisoners', ca 1887, is a painting by Alexandre Cabanel, a French classical painter. Visit the original in Royal Museum, Antwerp - Belgium."
       },
       "B03": {
         "artist": "John Collier, 1890",
-        "QuestName": "Makam Cleopatra",
-        "desc": "\"The Death of Cleopatra\", sekitar tahun 1890, adalah lukisan karya John Collier, seorang pelukis Pra-Rafael Inggris. Kunjungi lukisan aslinya di Galeri Seni, Oldham - Inggris."
+        "QuestName": "Cleopatra's Tomb",
+        "desc": "'The Death of Cleopatra', ca 1890, is a painting by John Collier, a British Pre-Raphaelite painter. Visit the original in Art Gallery, Oldham - England."
       },
       "A04": {
         "artist": "Edward Poynter, 1867",
-        "QuestName": "Parfum Shezmus II",
-        "desc": "\"Cleopatra menguji racun pada tahanan yang dihukum\", sekitar tahun 1887, adalah lukisan karya Alexandre Cabanel, seorang pelukis klasik Prancis. Kunjungi lukisan aslinya di Royal Museum, Antwerp - Belgia."
+        "QuestName": "Shezmus' Perfume II",
+        "desc": "'Cleopatra testing poisons on condemned prisoners', ca 1887, is a painting by Alexandre Cabanel, a French classical painter. Visit the original in Royal Museum, Antwerp - Belgium."
       },
       "B04": {
         "artist": "Edwin Long, 1878",
-        "QuestName": "Kultus Bastet",
-        "desc": "\"The Gods and Their Makers\", sekitar tahun 1878, adalah lukisan karya pelukis Alkitab Inggris Edwin Long. Kunjungi lukisan aslinya di Galeri Seni Towneley Hall, Burnley - Inggris."
+        "QuestName": "Bastet's Cult",
+        "desc": "'The Gods and Their Makers', ca 1878, is a painting by the English biblical painter Edwin Long. Visit the original in Towneley Hall Art Gallery, Burnley - England."
       },
       "A05": {
         "artist": "Edward Poynter, 1867",
-        "QuestName": "Mimpi Firaun I",
-        "desc": "Joseph Interpreting Pharaoh's Dream', sekitar tahun 1894, adalah lukisan karya Reginald Arthur, seorang pelukis sejarah Inggris. Kunjungi lukisan aslinya di Sotheby's, London - Inggris."
+        "QuestName": "Pharao's Dream I",
+        "desc": "'Joseph Interpreting Pharaoh's Dream', ca 1894, is a painting by Reginald Arthur, a British historical painter. Visit the original in Sotheby's, London - England."
       },
       "B05": {
         "artist": "John Weguelin, 1886",
-        "QuestName": "Kultus Maahes",
-        "desc": "The Obsequies of an Egyptian Cat', sekitar tahun 1886, adalah lukisan karya John Weguelin, seorang pelukis klasik Inggris. Kunjungi lukisan aslinya di Galeri Seni Auckland, Auckland - Selandia Baru."
+        "QuestName": "Maahes' Cult",
+        "desc": "'The Obsequies of an Egyptian Cat', ca 1886, is a painting by John Weguelin, a British classical painter. Visit the original in Auckland Art Gallery, Auckland - New Zealand."
       },
       "A06": {
         "artist": "Reginald Arthur, 1894",
-        "QuestName": "Mimpi Firaun II",
-        "desc": "Joseph Interpreting Pharaoh's Dream', sekitar tahun 1894, adalah lukisan karya Reginald Arthur, seorang pelukis sejarah Inggris. Kunjungi lukisan aslinya di Sotheby's, London - Inggris."
+        "QuestName": "Pharao's Dream II",
+        "desc": "'Joseph Interpreting Pharaoh's Dream', ca 1894, is a painting by Reginald Arthur, a British historical painter. Visit the original in Sotheby's, London - England."
       },
       "B06": {
         "artist": "Lawrence Alma-Tadema, 1855",
-        "QuestName": "Ancaman Asing",
-        "desc": "\"The Meeting of Antony and Cleopatra\", sekitar tahun 1885, adalah lukisan karya Lawrence Alma-Tadema, seorang pelukis Belanda dari era Victoria. Kunjungi lukisan aslinya di Sotheby's, London - Inggris."
+        "QuestName": "Foreign Threat",
+        "desc": "'The Meeting of Antony and Cleopatra', ca 1885, is a painting Lawrence Alma-Tadema, a Dutch victorian painter. Visit the original in Sotheby's, London - England."
       },
       "C01": {
         "artist": "Frederick Arthur Bridgman, 1879",
-        "QuestName": "Kultus Apis Banteng I",
-        "desc": "\"The Procession of the Bull Apis\", sekitar tahun 1879, adalah lukisan karya Frederick Arthur Bridgman, seorang pelukis orientalis Amerika. Kunjungi koleksi aslinya di Koleksi Pribadi, AS."
+        "QuestName": "Bull Apis Cult I",
+        "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
       },
       "C02": {
         "artist": "Edward Poynter, 1867",
-        "QuestName": "Darah Sekhmet I",
-        "desc": "\"Israel di Mesir\", sekitar tahun 1867, adalah lukisan karya Edward Poynter, seorang pelukis sejarah Inggris. Kunjungi lukisan aslinya di Galeri Seni Guildhall, London - Inggris."
+        "QuestName": "Sekhmet's Blood I",
+        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
       },
       "C03": {
-        "artist": "Frederick Arthur Bridgman",
-        "QuestName": "Kultus Apis Banteng II",
-        "desc": "\"The Procession of the Bull Apis\", sekitar tahun 1879, adalah lukisan karya Frederick Arthur Bridgman, seorang pelukis orientalis Amerika. Kunjungi koleksi aslinya di Koleksi Pribadi, AS."
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Bull Apis Cult II",
+        "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
       },
       "C04": {
         "artist": "Edward Poynter, 1867",
-        "QuestName": "Darah Sekhmet II",
-        "desc": "Israel di Mesir', sekitar tahun 1867, adalah lukisan karya Edward Poynter, seorang pelukis sejarah Inggris. Kunjungi lukisan aslinya di Galeri Seni Guildhall, London - Inggris."
+        "QuestName": "Sekhmet's Blood II",
+        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
       },
       "C05": {
-        "artist": "Frederick Arthur Bridgman",
-        "QuestName": "Kultus Apis Banteng III",
-        "desc": "\"The Procession of the Bull Apis\", sekitar tahun 1879, adalah lukisan karya Frederick Arthur Bridgman, seorang pelukis orientalis Amerika. Kunjungi koleksi aslinya di Koleksi Pribadi, AS."
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Bull Apis Cult III",
+        "desc": "'The Procession of the Bull Apis', ca 1879, is a painting by Frederick Arthur Bridgman, an American orientalist painter. Visit the original in a Private Collection, USA."
       },
       "C06": {
         "artist": "Edward Poynter, 1867",
-        "QuestName": "Darah Sekhmet III",
-        "desc": "Israel di Mesir', sekitar tahun 1867, adalah lukisan karya Edward Poynter, seorang pelukis sejarah Inggris. Kunjungi lukisan aslinya di Galeri Seni Guildhall, London - Inggris."
+        "QuestName": "Sekhmet's Blood III",
+        "desc": "'Israel in Egypt', ca 1867, is a painting by Edward Poynter, a British historical painter. Visit the original in Guildhall Art Gallery, London - England."
       }
     },
     "greek": {
       "A01": {
         "artist": "Frederick Arthur Bridgman, 1903",
-        "QuestName": "Narcissus dan Gema",
-        "desc": "Echo and Narcissus', sekitar tahun 1903, adalah lukisan karya John William Waterhouse, seorang pelukis klasik Inggris. Kunjungi lukisan aslinya di Galeri Seni Walker, Liverpool - Inggris."
+        "QuestName": "Narcyssus & Echo",
+        "desc": "'Echo and Narcissus', ca 1903, is a painting by John William Waterhouse, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England."
       },
       "B01": {
         "artist": "Henrietta Rae, 1909",
-        "QuestName": "AIR NIMFA",
-        "desc": "Hylas and the Water Nymphs', sekitar tahun 1909, adalah lukisan karya Henrietta Rae, seorang pelukis klasik Inggris. Kunjungi lukisan aslinya di Galeri Seni Walker, Liverpool - Inggris."
+        "QuestName": "WATER NYMPHS",
+        "desc": "'Hylas and the Water Nymphs', ca 1909, is a painting by Henrietta Rae, a British classical painter. Visit the original in Walker Art Gallery, Liverpool - England."
       },
       "A02": {
         "artist": "Charles-Antoine Coypel, 1737",
-        "QuestName": "Kemarahan Achilles",
-        "desc": "Fury of Achilles', sekitar tahun 1737, adalah lukisan karya Charles-Antoine Coypel, seorang pelukis klasik Prancis. Kunjungi lukisan aslinya di Galeri Seni Walker, Saint Petersburg - Rusia."
+        "QuestName": "Achilles' Fury",
+        "desc": "'Fury of Achilles', ca 1737, is a painting by Charles-Antoine Coypel, a French classical painter. Visit the original in Walker Art Gallery, Saint Petersburg - Russia."
       },
       "B02": {
         "artist": "Carlo Perugini, 1893",
-        "QuestName": "Kotak Pandora",
-        "desc": "\"Kotak Pandora\", sekitar tahun 1893, adalah lukisan karya Carlo Perugini, seorang pelukis Neoklasik Victoria asal Italia. Koleksi Pribadi, London - Inggris."
+        "QuestName": "Pandora's Box",
+        "desc": "''Pandora's Box', ca 1893, is a painting by Carlo Perugini, an Italian Victorian Neoclassical painter. Private Collection,  London - England."
       },
       "A03": {
         "artist": "Merry Joseph Blondel, 1819",
         "QuestName": "Icarus & Daedalus",
-        "desc": "The Sun or the Fall of Icarus', sekitar tahun 1819, adalah lukisan karya Merry Joseph Blondel, seorang pelukis neoklasik Prancis. Kunjungi lukisan aslinya di Museum Louvre, Paris - Prancis."
+        "desc": "'The Sun or the Fall of Icarus', ca 1819, is a painting by Merry Joseph Blondel, a French neoclassical painter. Visit the original in Louvre Museum, Paris - France."
       },
       "B03": {
         "artist": "Theodoor Rombouts, 1620",
-        "QuestName": "HADIAH PROMETHEUS",
-        "desc": "Prometheus', sekitar tahun 1620, adalah lukisan karya Theodoor Rombouts, seorang pelukis karavag Flemish. Kunjungi lukisan aslinya di Royal Museums of Fine Arts, Antwerp - Belgia."
+        "QuestName": "PROMETHEUS' GIFT",
+        "desc": "'Prometheus', ca 1620, is a painting by Theodoor Rombouts, a Flemish caravaggesque painter. Visit the original in Royal Museums of Fine Arts, Antwerp - Belgium."
       },
       "A04": {
         "artist": "Camillo Miola, 1880",
-        "QuestName": "Peramal Delphi",
-        "desc": "Pythia: Oracle and High Priestess of Delphi', sekitar tahun 1880, adalah lukisan karya Camillo Miola, seorang pelukis sejarah Italia. Kunjungi lukisan aslinya di J. Paul Getty Center, Los Angeles - AS."
+        "QuestName": "Oracle Of Delphi",
+        "desc": "'Pythia: Oracle and High Priestess of Delphi', ca 1880, is a painting by Camillo Miola, an Italian historical painter. Visit the original in J. Paul Getty Center, Los Angeles - USA."
       },
       "B04": {
         "artist": "Karl Pavlovich Bryullov, 1833",
-        "QuestName": "Nasib Hephaestus",
-        "desc": "\"Hari Terakhir Pompeii\", sekitar tahun 1833, adalah lukisan karya Karl Pavlovich Bryullov, seorang pelukis neoklasik Rusia. Kunjungi lukisan aslinya di Museum Negara Rusia, Saint Petersburg - Rusia."
+        "QuestName": "Hephaestus' Fate",
+        "desc": "'The Last Day of Pompeii', ca 1833, is a painting by Karl Pavlovich Bryullov, a Russian neoclassical painter. Visit the original in State Russian Museum, Saint Petersburg - Russia."
       },
       "A05": {
         "artist": "Herbert James Draper, 1904",
-        "QuestName": "BULU DOMBA EMAS",
-        "desc": "The Golden Fleece', sekitar tahun 1904, adalah lukisan karya Herbert James Draper, seorang pelukis neoklasik Inggris. Kunjungi lukisan aslinya di Cartwright Hall, Bradford - Inggris."
+        "QuestName": "GOLDEN FLEECE",
+        "desc": "'The Golden Fleece', ca 1904, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Cartwright Hall, Bradford - England."
       },
       "B05": {
         "artist": "Herbert James Draper, 1909",
-        "QuestName": "Sirene Odysseus",
-        "desc": "Ulysses and the Sirens', sekitar tahun 1909, adalah lukisan karya Herbert James Draper, seorang pelukis neoklasik Inggris. Kunjungi lukisan aslinya di Galeri Seni Ferens, Hull - Inggris."
+        "QuestName": "Odysseus' Sirens",
+        "desc": "'Ulysses and the Sirens', ca 1909, is a painting by Herbert James Draper, a British neoclassical painter. Visit the original in Ferens Art Gallery, Hull - England."
       },
       "A06": {
         "artist": "Cole Thomas, 1836",
-        "QuestName": "BANGKITNYA KERAJAAN",
-        "desc": "The Consummation The Course of the Empire', sekitar tahun 1836, adalah lukisan karya Cole Thomas, seorang pelukis lanskap Amerika. Kunjungi lukisan aslinya di Historical Society, New York - AS."
+        "QuestName": "EMPIRE'S RISE",
+        "desc": "'The Consummation The Course of the Empire', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
       },
       "B06": {
         "artist": "Cole Thomas, 1836",
-        "QuestName": "JATUHNYA KERAJAAN",
-        "desc": "The Course of Empire Destruction', sekitar tahun 1836, adalah lukisan karya Cole Thomas, seorang pelukis lanskap Amerika. Kunjungi lukisan aslinya di Historical Society, New York - AS."
+        "QuestName": "EMPIRE'S FALL",
+        "desc": "'The Course of Empire Destruction', ca 1836, is a painting by Cole Thomas, an American landscape painter. Visit the original in Historical Society, New-York - USA."
       },
       "C01": {
         "artist": "Francisco Bayeu y Subías, 1764",
         "QuestName": "Titanomachia I",
-        "desc": "Olympus: The Fall of the Giants', sekitar tahun 1764, adalah lukisan karya Francisco Bayeu y Subías, seorang pelukis neoklasik asal Spanyol. Kunjungi lukisan aslinya di Museo del Prado, Madrid - Spanyol."
+        "desc": "'Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
       },
       "C02": {
         "artist": "Peter Paul Rubens, 1604",
-        "QuestName": "JATUHNYA PHAETON I",
-        "desc": "The Fall of Phaeton', sekitar tahun 1604, adalah lukisan karya Peter Paul Rubens, seorang pelukis barok Flemish. Kunjungi lukisan aslinya di Galeri Seni Nasional, Washington D.C. - Amerika Serikat."
+        "QuestName": "PHAETON'S FALL I",
+        "desc": "'The Fall of Phaeton', ca 1604, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
       },
       "C03": {
         "artist": "Francisco Bayeu y Subías, 1764",
         "QuestName": "Titanomachia II",
-        "desc": "Olympus: The Fall of the Giants', sekitar tahun 1764, adalah lukisan karya Francisco Bayeu y Subías, seorang pelukis neoklasik asal Spanyol. Kunjungi lukisan aslinya di Museo del Prado, Madrid - Spanyol."
+        "desc": "''Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
       },
       "C04": {
         "artist": "Peter Paul Rubens, 1604",
-        "QuestName": "JATUHNYA PHAETON II",
-        "desc": "The Fall of Phaeton', sekitar tahun 1604, adalah lukisan karya Peter Paul Rubens, seorang pelukis barok Flemish. Kunjungi lukisan aslinya di Galeri Seni Nasional, Washington D.C. - Amerika Serikat."
+        "QuestName": "PHAETON'S FALL II",
+        "desc": "'The Fall of Phaeton', ca 1604, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
       },
       "C05": {
         "artist": "Francisco Bayeu y Subías, 1764",
         "QuestName": "Titanomachia III",
-        "desc": "Olympus: The Fall of the Giants', sekitar tahun 1764, adalah lukisan karya Francisco Bayeu y Subías, seorang pelukis neoklasik asal Spanyol. Kunjungi lukisan aslinya di Museo del Prado, Madrid - Spanyol."
+        "desc": "''Olympus: The Fall of the Giants', ca 1764, is a painting by Francisco Bayeu y Subías, a Spanish neoclassical painter. Visit the original in Museo del Prado, Madrid - Spain."
       },
       "C06": {
         "artist": "Peter Paul Rubens, 1604",
-        "QuestName": "JATUHNYA PHAETON III",
-        "desc": "The Fall of Phaeton', sekitar tahun 1604, adalah lukisan karya Peter Paul Rubens, seorang pelukis barok Flemish. Kunjungi lukisan aslinya di Galeri Seni Nasional, Washington D.C. - Amerika Serikat."
+        "QuestName": "PHAETON'S FALL III",
+        "desc": "'The Fall of Phaeton', ca 1604, is a painting by Peter Paul Rubens, a Flemish baroque painter. Visit the original in National Gallery of Art, Washington D.C. - United States."
       }
     },
     "norse": {
       "A01": {
         "artist": "Peter Nicolai Arbo, 1874",
-        "QuestName": "Fajar Baru",
-        "desc": "Dagr (Hari)', sekitar tahun 1874, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Museum Nasional, Stockholm - Swedia."
+        "QuestName": "A New Dawn",
+        "desc": "'Dagr (Day)', ca 1874, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
       },
       "B01": {
         "artist": "Peter Nicolai Arbo, 1887",
-        "QuestName": "Senja",
-        "desc": "Nott (Night)', sekitar tahun 1887, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Museum Nasional, Stockholm - Swedia."
+        "QuestName": "Twilight",
+        "desc": "'Nott (Night)', ca 1887, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
       },
       "A02": {
         "artist": "Edward Robert Hughes, 1915",
-        "QuestName": "Penjara Valkyrie",
-        "desc": "The Valkyrie's Vigil', sekitar tahun 1915, adalah lukisan karya Edward Robert Hughes, seorang pelukis cat air asal Inggris. Kunjungi lukisan aslinya di Museum dan Galeri Seni, Birmingham - Inggris."
+        "QuestName": "A Valkyrie Prison",
+        "desc": "'The Valkyrie's Vigil', ca 1915, is a painting by Edward Robert Hughes, a British watercolor painter. Visit the original in Museum and Art Gallery, Birmingham - England."
       },
       "B02": {
         "artist": "Peter Nicolai Arbo, 1892",
-        "QuestName": "Penjara Valkyrie",
-        "desc": "\"Kematian Hervor\", sekitar tahun 1892, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Museum Nasional, Stockholm - Swedia."
+        "QuestName": "Valkyries' Touch",
+        "desc": "'Hervor's Death', ca 1892, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
       },
       "A03": {
         "artist": "Christian Krohg, 1893",
-        "QuestName": "Vinland (Amerika)",
-        "desc": "Leiv Eirikson menemukan Amerika', sekitar tahun 1893, adalah lukisan karya Christian Krohg, seorang pelukis naturalis Norwegia. Kunjungi lukisan aslinya di Museum Nasional, Oslo - Norwegia."
+        "QuestName": "Vinland (America)",
+        "desc": "'Leiv Eirikson descing America', ca 1893, is a painting by Christian Krohg, a Norwegian naturalist painter. Visit the original in National Museum, Oslo - Norway."
       },
       "B03": {
         "artist": "Oscar Arnold Wergeland, 1877",
-        "QuestName": "Penemuan Islandia",
-        "desc": "\"Tanah Orang Norse di Islandia\", sekitar tahun 1877, adalah lukisan karya Oscar Arnold Wergeland, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Museum Nasional, Oslo - Norwegia."
+        "QuestName": "Iceland Discovery",
+        "desc": "'The Norseman land in Iceland', ca 1877, is a painting by Oscar Arnold Wergeland, a Norwegian historical painter. Visit the original in National Museum, Oslo - Norway."
       },
       "A04": {
         "artist": "Ferdinand Leek, 1901",
-        "QuestName": "Serangan Viking",
-        "desc": "A Viking Raid', sekitar tahun 1901, adalah lukisan karya Ferdinand Leek, seorang pelukis modernis Jerman. Kunjungi lukisan aslinya di Galeri Seni Schloss, Ahlden - Jerman."
+        "QuestName": "A Vikings Raid",
+        "desc": "'A Viking Raid', ca 1901, is a painting by Ferdinand Leek, a German modernist painter. Visit the original in Schloss Art Gallery, Ahlden - Germany."
       },
       "B04": {
         "artist": "Frank Bernard Dicksee, 1893",
-        "QuestName": "Pemakaman Viking",
-        "desc": "The Funeral of a Viking', sekitar tahun 1893, adalah lukisan karya Frank Bernard Dicksee, seorang pelukis Inggris dari era Victoria. Kunjungi lukisan aslinya di Galeri Seni, Manchester - Inggris."
+        "QuestName": "Vikings Funeral",
+        "desc": "'The Funeral of a Viking', ca 1893, is a painting by Frank Bernard Dicksee, a British Victorian painter. Visit the original in Art Gallery, Manchester - England."
       },
       "A05": {
         "artist": "Peter Nicolai Arbo, 1876",
-        "QuestName": "Raja Ding",
-        "desc": "Hakon the good', sekitar tahun 1876, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Museum Nasional, Stockholm - Swedia."
+        "QuestName": "The King's Ding",
+        "desc": "'Hakon the Good', ca 1876, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in National Museum, Stockholm - Sweden."
       },
       "B05": {
         "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "PERTEMPURAN SVOLD I",
-        "desc": "\"Pertempuran Svolder\", sekitar tahun 1883, adalah lukisan karya Peter Otto Sinding, seorang pelukis sejarah Norwegia. Kunjungi koleksi aslinya di Koleksi Pribadi, Stockholm - Swedia."
+        "QuestName": "SVOLD'S BATTLE I",
+        "desc": "'Battle of Svolder', ca 1883, is a painting by Peter Otto Sinding, a Norwegian historical painter. Visit the original in Private Collection, Stockholm - Sweden."
       },
       "A06": {
         "artist": "Peter Nicolai Arbo, 1883",
-        "QuestName": "Viking vs Celtic",
-        "desc": "\"Pertempuran Stamford Bridge\", sekitar tahun 1870, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Nordnorsk Kunstmuseum, Tromso - Norwegia."
+        "QuestName": "Vikings vs Celts",
+        "desc": "'Battle of Stamford Bridge', ca 1870, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in Nordnorsk Kunstmuseum, Tromso - Norway."
       },
       "B06": {
         "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "PERTEMPURAN SVOLD II",
-        "desc": "\"Pertempuran Svolder\", sekitar tahun 1883, adalah lukisan karya pelukis sejarah Norwegia Peter Otto Sinding. Kunjungi koleksi aslinya di Koleksi Pribadi, Stockholm - Swedia."
+        "QuestName": "SVOLD'S BATTLE II",
+        "desc": "'Battle of Svolder', ca 1883, is a painting by the Norwegian historical painter Peter Otto Sinding. Visit the original in Private Collection, Stockholm - Sweden."
       },
       "C01": {
         "artist": "Peter Otto Sinding, 1870",
-        "QuestName": "Kehidupan Idun Apel I",
-        "desc": "Idun and the Apples', sekitar tahun 1890, adalah lukisan karya James Doyle Penrose, seorang pelukis sejarah Norwegia. Koleksi Pribadi, London - Inggris."
+        "QuestName": "Idun's Life Apple I",
+        "desc": "'Idun and the Apples', ca 1890, is a painting by James Doyle Penrose, a Norwegian historical painter. Private Collection, London - England."
       },
       "C02": {
         "artist": "Peter Nicolai Arbo, 1872",
         "QuestName": "Ragnarok I",
-        "desc": "Asgardsreien', sekitar tahun 1872, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Galeri Nasional, Oslo - Norwegia."
+        "desc": "'Asgardsreien', ca 1872, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in the National Gallery, Oslo - Norway."
       },
       "C03": {
         "artist": "James Doyle Penrose, 1890",
-        "QuestName": "Kehidupan Idun Apple II",
-        "desc": "Idun and the Apples', sekitar tahun 1890, adalah lukisan karya James Doyle Penrose, seorang pelukis sejarah Norwegia. Koleksi Pribadi, London - Inggris."
+        "QuestName": "Idun's Life Apple II",
+        "desc": "'Idun and the Apples', ca 1890, is a painting by James Doyle Penrose, a Norwegian historical painter. Private Collection, London - England."
       },
       "C04": {
         "artist": "Peter Nicolai Arbo, 1872",
         "QuestName": "Ragnarok II",
-        "desc": "Asgardsreien', sekitar tahun 1872, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Galeri Nasional, Oslo - Norwegia."
+        "desc": "'Asgardsreien', ca 1872, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in the National Gallery, Oslo - Norway."
       },
       "C05": {
         "artist": "James Doyle Penrose, 1890",
-        "QuestName": "Kehidupan Idun Apple III",
-        "desc": "Idun and the Apples', sekitar tahun 1890, adalah lukisan karya James Doyle Penrose, seorang pelukis sejarah Norwegia. Koleksi Pribadi, London - Inggris."
+        "QuestName": "Idun's Life Apple III",
+        "desc": "'Idun and the Apples', ca 1890, is a painting by James Doyle Penrose, a Norwegian historical painter. Private Collection, London - England."
       },
       "C06": {
         "artist": "Peter Nicolai Arbo, 1872",
         "QuestName": "Ragnarok III",
-        "desc": "Asgardsreien', sekitar tahun 1872, adalah lukisan karya Peter Nicolai Arbo, seorang pelukis sejarah Norwegia. Kunjungi lukisan aslinya di Galeri Nasional, Oslo - Norwegia."
+        "desc": "'Asgardsreien', ca 1872, is a painting by Peter Nicolai Arbo, a Norwegian historical painter. Visit the original in the National Gallery, Oslo - Norway."
       }
     }
   },
   "toasts": {
-    "default": {
-      "error": {
-        "title": "Tidak Dapat Terhubung ke Server",
-        "desc": "Ada yang tidak beres. Harap segarkan atau coba lagi dalam beberapa saat."
-      }
+  "default": {
+    "error": {
+      "title": "无法连接服务器",
+      "desc": "出现了问题。请刷新页面或稍后再试。"
+    }
+  },
+  "Convert": {
+    "success": {
+      "title": "宝珠转换成功！",
+      "desc": "干得好！继续保持热情！"
     },
-    "Convert": {
-      "success": {
-        "title": "Orb Berhasil Dikonversi!",
-        "desc": "Bagus sekali! Pertahankan momentumnya!"
-      },
-      "error": {
-        "title": "Orb Tidak Mencukupi",
-        "desc": "Anda memerlukan lebih banyak orb untuk menyelesaikan transaksi ini."
-      }
+    "error": {
+      "title": "宝珠不足",
+      "desc": "您需要更多宝珠才能完成此操作。"
+    }
+  },
+  "Booster_Claim": {
+    "success": {
+      "title": "力量提升达成！",
+      "desc": "因为我凭信心走路，而不是凭眼睛！"
     },
-    "Booster_Claim": {
-      "success": {
-        "title": "Peningkatan Kekuatan Tercapai!",
-        "desc": "Karena aku hidup karena iman, bukan karena penglihatan!"
-      },
-      "error": {
-        "title": "Klaim Booster Gagal!",
-        "desc": "Ups! Terjadi kesalahan saat mengklaim booster Anda. Silakan coba lagi!"
-      }
+    "error": {
+      "title": "领取增益失败！",
+      "desc": "哎呀！领取增益时出了点问题，请重试！"
+    }
+  },
+  "Conversion_Multiplier": {
+    "success": {
+      "title": "调子匹配成功！",
+      "desc": "你做对了！密钥正确，倍率已应用！"
     },
-    "Conversion_Multiplier": {
-      "success": {
-        "title": "Tune Matched!",
-        "desc": "Anda berhasil! Kuncinya benar, dan pengali telah diterapkan!"
-      },
-      "error": {
-        "title": "Tune Mismatch",
-        "desc": "Kunci yang Anda masukkan salah. Sayangnya, tidak ada pengali yang diterapkan."
-      }
+    "error": {
+      "title": "调子不匹配！",
+      "desc": "您输入的密钥不正确，倍率未生效。"
+    }
+  },
+  "Tasks": {
+    "success": {
+      "title": "任务完成成功！",
+      "desc": "干得漂亮！你已获得 3 个多重宝珠。"
     },
-    "Tasks": {
-      "success": {
-        "title": "Tugas Berhasil Diselesaikan!",
-        "desc": "Bagus sekali! Anda telah memperoleh 3 MultiOrb."
-      },
-      "error": {
-        "title": "Tugas Tidak Selesai",
-        "desc": "Tugas tidak dapat diselesaikan. Silakan coba lagi untuk mendapatkan hadiah Anda."
-      }
+    "error": {
+      "title": "任务未完成！",
+      "desc": "任务未能完成。请重试以获取奖励。"
+    }
+  },
+  "Booster_Lost_Not_Available": {
+    "error": {
+      "title": "任务不可用",
+      "desc": "明天再来！"
+    }
+  },
+  "Quest_complete": {
+    "success": {
+      "title": "恭喜！任务完成！",
+      "desc": "祝贺你，你已完成该任务。"
     },
-    "Booster_Lost_Not_Available": {
-      "error": { "title": "Misi Tidak Tersedia", "desc": "Kembali Besok!" }
+    "error": {
+      "title": "任务完成失败",
+      "desc": "完成任务时出现问题。请确认任务已真正完成，稍后再试。"
+    }
+  },
+  "Quest_claim": {
+    "success": {
+      "title": "任务领取成功！",
+      "desc": "你已成功领取任务奖励。继续解锁更多奖励吧！"
     },
-    "Quest_complete": {
-      "success": {
-        "title": "Selamat! Misi Selesai!",
-        "desc": "Selamat! Anda telah menyelesaikan misi."
-      },
-      "error": {
-        "title": "Penyelesaian Misi Gagal",
-        "desc": "Terjadi masalah saat menyelesaikan misi. Pastikan misi telah diselesaikan sepenuhnya dan coba lagi nanti."
-      }
+    "error": {
+      "title": "宝珠不足以领取任务",
+      "desc": "你没有足够的宝珠领取此任务奖励。请收集更多再试。"
+    }
+  },
+  "Quest_claim_InsufficientOrbs": {
+    "error": {
+      "title": "宝珠不足以领取任务",
+      "desc": "你没有足够的宝珠领取此任务奖励。请收集更多再试。"
+    }
+  },
+  "Quest_claim_AlreadyClaimed": {
+    "error": {
+      "title": "任务已领取",
+      "desc": "该任务奖励已领取。请查看您当前的任务详情。"
+    }
+  },
+  "Quest_orb_claim": {
+    "success": {
+      "title": "宝珠领取成功！",
+      "desc": "你已成功领取宝珠奖励。尽情使用并继续前进吧！"
     },
-    "Quest_claim": {
-      "success": {
-        "title": "Quest Berhasil Diklaim!",
-        "desc": "Anda telah berhasil mengklaim quest. Teruslah maju untuk membuka lebih banyak hadiah!"
-      },
-      "error": {
-        "title": "Insufficient Orbs for Quest Claim",
-        "desc": "You don’t have enough orbs to claim this quest. Please collect more and try again."
-      }
+    "error": {
+      "title": "宝珠领取失败",
+      "desc": "领取宝珠时出现问题。请稍后再试。"
+    }
+  },
+  "Quest_share": {
+    "success": {
+      "title": "任务成功分享！",
+      "desc": "恭喜！你已成功分享任务并获得额外宝珠。"
     },
-    "Quest_claim_InsufficientOrbs": {
-      "title": "Orb Tidak Cukup untuk Klaim Quest",
-      "desc": "Anda tidak memiliki cukup orb untuk mengklaim quest ini. Harap kumpulkan lebih banyak dan coba lagi."
+    "error": {
+      "title": "任务分享失败",
+      "desc": "分享任务时出现问题。请稍后再试。"
+    }
+  },
+  "ReferralCopy": {
+    "success": {
+      "title": "推荐链接已复制！",
+      "desc": "分享链接给好友，让他们也获得 3 个彩色宝珠！"
+    }
+  },
+  "TonConnect": {
+    "success": {
+      "title": "钱包连接成功！",
+      "desc": "您的 TON 钱包已连接。"
     },
-    "Quest_claim_AlreadyClaimed": {
-      "error": {
-        "title": "Quest Sudah Diklaim",
-        "desc": "Anda sudah mengklaim quest ini. Periksa quest aktif Anda untuk detailnya."
-      }
+    "error": {
+      "title": "钱包连接失败",
+      "desc": "连接 TON 钱包时出现问题。请稍后再试。"
     },
-    "Quest_orb_claim": {
-      "success": {
-        "title": "Orb Berhasil Diklaim!",
-        "desc": "Anda telah berhasil mengklaim orb Anda. Nikmati hadiah Anda dan teruslah maju!"
-      },
-      "error": {
-        "title": "Klaim Orb Gagal",
-        "desc": "Terjadi masalah saat mengklaim orb Anda. Silakan coba lagi nanti."
-      }
+    "notConnected": {
+      "title": "钱包未连接",
+      "desc": "请连接钱包以进行此操作。"
+    }
+  },
+  "Payout": {
+    "success": {
+      "title": "任务完成",
+      "desc": "奖励已记入您的账户。"
     },
-    "Quest_share": {
-      "success": {
-        "title": "Quest Berhasil Dibagikan!",
-        "desc": "Selamat! Anda telah berhasil membagikan quest dan memperoleh orb tambahan."
-      },
-      "error": {
-        "title": "Berbagi Quest Gagal",
-        "desc": "terjadi masalah saat membagikan quest Anda. Silakan coba lagi nanti."
-      }
+    "error": {
+      "title": "验证失败",
+      "desc": "请完成任务以领取奖励。"
+    }
+  },
+  "InputValidate": {
+    "success": {
+      "title": "验证码已发送！",
+      "desc": "验证码发送成功。"
     },
-    "ReferralCopy": {
-      "success": {
-        "title": "Link Rujukan Disalin!",
-        "desc": "Bagikan dengan teman Anda untuk mengklaim 3 ORB multiwarna!"
-      }
+    "error": {
+      "title": "输入无效！",
+      "desc": "请正确填写所有必填项。"
+    }
+  },
+  "OnboardSuccess": {
+    "success": {
+      "title": "验证码验证成功！",
+      "desc": "感谢您与 FrogDog 成功连接！"
     },
-    "TonConnect": {
-      "success": {  
-        "title": "Dompet Berhasil Terhubung!",
-        "desc": "Dompet TON Anda telah terhubung."
-      },
-      "error": {
-        "title": "Koneksi Dompet Gagal",
-        "desc": "Terjadi masalah saat menghubungkan ke dompet TON Anda. Silakan coba lagi nanti."
-      },
-      "notConnected": {
-        "title": "Wallet Not Connected",
-        "desc": "Please connect your wallet to perform this action."
-      }
+    "error": {
+      "title": "验证码无效！",
+      "desc": "请输入正确的验证码。"
+    }
+  },
+  "Voucher": {
+    "success": {
+      "title": "恭喜！礼品已解锁",
+      "desc": "您的优惠券已成功领取。"
     },
-    "Payout": {
-      "success": {
-        "title": "Mission Completed",
-        "desc": "Reward has been credited to your holdings."
-      },
-      "error": {
-        "title": "Verification Failed",
-        "desc": "Please complete the mission to claim your reward."
-      }
+    "error": {
+      "title": "领取失败：碎片未完成",
+      "desc": "完成全部 12 个碎片以解锁优惠券。"
+    }
+  },
+  "Stake": {
+    "success": {
+      "title": "质押成功",
+      "desc": "您已成功质押 1 个黑宝珠。祝您好运！"
     },
-    "InputValidate": {
-      "success": {
-        "title": "OTP Terkirim!",
-        "desc": "OTP berhasil dikirim."
-      },
-      "error": {
-        "title": "Input Tidak Valid!",
-        "desc": "Harap isi semua kolom yang diperlukan dengan benar."
-      }
-    },
-    "OnboardSuccess": {
-      "success": {
-        "title": "OTP Terverifikasi!",
-        "desc": "Terima kasih telah menghubungi FrogDog Games!"
-      },
-      "error": {
-        "title": "OTP Terverifikasi!",
-        "desc": "Terima kasih telah menghubungi FrogDog Games!"
-      }
-    },
-    "Voucher": {
-      "success": {
-        "title": "Selamat! Hadiah Telah Dibuka",
-        "desc": "Voucher Anda berhasil diklaim."
-      },
-      "error": {
-        "title": "Klaim Gagal: Potongan Tidak Lengkap",
-        "desc": "Selesaikan semua 12 potongan untuk membuka voucher Anda."
-      }
-    },
-    "Stake": {
-      "success": {
-        "title": "Stake Berhasil",
-        "desc": "Anda telah berhasil stake 1 Black Orb. Semoga beruntung!"
-      },
-      "error": {
-        "title": "Tidak Dapat Dipertaruhkan",
-        "desc": "Anda harus memiliki setidaknya 1 Black Orb untuk dipertaruhkan."
-      }
-    },
-    "Profile": {
-      "success": {
-        "title": "Pembaruan Dimulai",
-        "desc": "Avatar profil Anda akan segera diperbarui!"
-      }
-    },
+    "error": {
+      "title": "无法质押",
+      "desc": "您需要至少 1 个黑宝珠才能质押。"
+    }
+  },
+  "Profile": {
+    "success": {
+      "title": "更新已开始",
+      "desc": "您的头像将在稍后更新！"
+    }
+  },
     "RoRItem": {
       "success-bag": {
         "title": "Success!",
@@ -731,12 +730,12 @@
     },
     "Vault": {
       "success": {
-        "title": "Vault Activated",
+        "title": "Vault Failed",
         "desc": "Add items to keep them safe from theft."
       },
       "error": {
-        "title": "Vault Activation Failed",
-        "desc": "Unable to activate the vault. Please try again."
+        "title": "Vault Activated",
+        "desc": "Failed to activate the vault. Please try again."
       },
       "pouch_error": {
         "title": "Drop Failed",
