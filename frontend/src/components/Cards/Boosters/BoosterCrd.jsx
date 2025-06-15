@@ -636,8 +636,8 @@ const BoosterClaim = ({
                   <div className="flex relative items-center justify-center">
                     <Clapperboard color="#ffd660" size={"4rem"} />
                   </div>
-                  <div className="flex flex-col text-white">
-                    <div className="text-[2rem] -mt-2">
+                  <div className="flex flex-col w-full text-center text-white">
+                    <div className="text-[2rem] w-full -mt-2">
                       <span className="text-gold">Watch</span> {t("note.ad")}
                     </div>
                   </div>
@@ -674,8 +674,8 @@ const BoosterClaim = ({
                       className="w-[4rem] h-[4rem]"
                     />
                   </div>
-                  <div className="flex flex-col text-white">
-                    <div className="text-[2rem] -mt-2">
+                  <div className="flex flex-col w-full text-white">
+                    <div className="text-[2rem] w-full text-center -mt-2">
                       <span className="text-gold">{t("buttons.pay")}</span>{" "}
                       {t("note.ad")}
                     </div>
@@ -722,8 +722,8 @@ const BoosterClaim = ({
                       ${activeCard === "automata" ? 1 : 3}
                     </div>
                   </div>
-                  <div className="flex flex-col text-white">
-                    <div className="text-[2rem] -mt-3">
+                  <div className="flex flex-col w-full text-white">
+                    <div className="text-[2rem] w-full text-center -mt-3">
                       <span className="text-gold">{t("buttons.pay")}</span>{" "}
                       {t("note.ad")}
                     </div>
@@ -744,7 +744,7 @@ const BoosterClaim = ({
                 <div className="flex uppercase flex-col items-center gap-2 w-fit">
                   <div className="flex pt-8 relative items-center justify-center">
                     <div className="text-white text-black-contour  text-[8vw]">
-                      <div className="w-full relative font-medium text-secondary">
+                      <div className="w-full text-center relative font-medium text-secondary">
                         {t("keywords.load")}
                         <span className="absolute">{`${".".repeat(
                           dots

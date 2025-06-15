@@ -641,7 +641,7 @@
     "Payout": {
       "success": {
         "title": "Mission Completed",
-        "desc": "<currency> credited to your holdings."
+        "desc": "Reward has been credited to your holdings."
       },
       "error": {
         "title": "Verification Failed",

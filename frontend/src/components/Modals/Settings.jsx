@@ -57,7 +57,7 @@ const languages = [
   { name: "Hausa", code: "ha" },
   { name: "မြန်မာ", code: "my" },
 
-  { name: "Indonasia", code: "id" },
+  { name: "Indonesia", code: "id" },
   { name: "বাংলা", code: "bn" },
   { name: "Yorùbá", code: "yo" },
 

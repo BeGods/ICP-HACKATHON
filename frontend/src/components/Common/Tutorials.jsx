@@ -331,9 +331,7 @@ export const TowerGuide = ({ handleClick, isTgMobile }) => {
 
       <div
         onClick={handleClick}
-        className={`absolute flex justify-center items-center ${
-          isTgMobile ? "w-[90%] mt-4 h-[95%]" : "w-[78%] h-auto mt-[24vh]"
-        }`}
+        className={`absolute flex justify-center items-center w-[44dvh] h-[44dvh] mt-[24dvh]`}
       >
         <div
           className="relative scale-105 flex justify-center items-center w-full h-full pointer-events-none scale-wheel-glow"

@@ -23,7 +23,7 @@
     "discover": "Gano",
     "whitelist": "Whitelist",
     "load": "lodi",
-    "shards": "gutsuttsura"
+    "shards": "ƙashi"
   },
   "buttons": {
     "buy": "Saya",
@@ -44,13 +44,13 @@
     "leaderboard": "Papan Peringkat",
     "tower": "hasumiya",
     "brand": "iri",
-    "profile": "bayanin martaba",
+    "profile": "Bayani",
     "gifts": "kyautai",
     "voucher": "bauchi"
   },
   "boosters": [
     { "title": "Ta atomatik", "desc": "Taɓa ta atomatik" },
-    { "title": "Abubuwan da aka rasa ", "desc": "Makamashi 200%" },
+    { "title": "Pencarian", "desc": "Makamashi 200%" },
     { "title": "Likitan asali", "desc": "Taɓa sau biyu" },
     {},
     {},
@@ -628,7 +628,7 @@
     "Payout": {
       "success": {
         "title": "Mission Completed",
-        "desc": "<currency> credited to your holdings."
+        "desc": "Reward has been credited to your holdings."
       },
       "error": {
         "title": "Verification Failed",

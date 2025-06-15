@@ -623,21 +623,22 @@
         "title": "ウォレット接続に失敗",
         "desc": "TONウォレットの接続中に問題が発生しました。後でもう一度お試しください。"
       },
-      "notConnected": {
-        "title": "Wallet Not Connected",
-        "desc": "Please connect your wallet to perform this action."
-      }
+"notConnected": {
+  "title": "ウォレットが接続されていません",
+  "desc": "この操作を行うにはウォレットを接続してください。"
+}
+
     },
-    "Payout": {
-      "success": {
-        "title": "Mission Completed",
-        "desc": "<currency> credited to your holdings."
-      },
-      "error": {
-        "title": "Verification Failed",
-        "desc": "Please complete the mission to claim your reward."
-      }
-    },
+"Payout": {
+  "success": {
+    "title": "ミッション完了",
+    "desc": "報酬が保有資産に加算されました。"
+  },
+  "error": {
+    "title": "認証に失敗しました",
+    "desc": "報酬を受け取るにはミッションを完了してください。"
+  }
+},
     "InputValidate": {
       "success": {
         "title": "OTP送信！",

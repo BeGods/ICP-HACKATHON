@@ -294,7 +294,7 @@ const BottomChild = ({ isGuide, isOpenVault, isFurnaceBuild, handleClick }) => {
           {sections[section].right}
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[17px] uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[2dvh] uppercase">
         <div className={`mr-auto slide-in-out-left`}>
           {sections[section].hLeft}
         </div>
