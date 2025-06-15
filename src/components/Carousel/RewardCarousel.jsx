@@ -39,7 +39,12 @@ const RewardCarousel = ({ rewards }) => {
       <div className={`carousel carousel-width`}>
         {rewards
           .slice(currentIndex, currentIndex + 3)
-          .sort((a, b) => Number(a.isClaimed) - Number(b.isClaimed))
+          .sort((a, b) => {
+            if (a.isClaimed !== b.isClaimed) {
+              return Number(a.isClaimed) - Number(b.isClaimed);
+            }
+            return b.limit - a.limit;
+          })
           .map((item, index) => {
             let className = "carousel__item";
             if (index === 0) {

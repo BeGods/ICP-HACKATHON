@@ -136,7 +136,7 @@ const HoldingsModal = ({ handleClose }) => {
                 {(userData.holdings.usdt ?? 2) > 1 ? (
                   <Download />
                 ) : (
-                  <div className="text-red-500">Min. 1</div>
+                  <div className="text-red-500">Min. 1 USDT</div>
                 )}
               </div>
             </div>
@@ -162,7 +162,7 @@ const HoldingsModal = ({ handleClose }) => {
                   {(userData.holdings.stars ?? 0) > 10 ? (
                     <Download />
                   ) : (
-                    <div className="text-red-500">Min. 10</div>
+                    <div className="text-red-500">Min. 10 STARS</div>
                   )}
                 </div>
               </div>
@@ -188,7 +188,7 @@ const HoldingsModal = ({ handleClose }) => {
                     {(userData.holdings.kaia ?? 0) > 10 ? (
                       <Download />
                     ) : (
-                      <div className="text-red-500">Min. 10</div>
+                      <div className="text-red-500">Min. 10 KAIA</div>
                     )}
                   </div>
                 </div>
