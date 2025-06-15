@@ -304,7 +304,7 @@ export const validateValidReward = async (req, res, next) => {
     );
     const burstMsnId = new mongoose.Types.ObjectId("684882aa7c77e14a7262bbcc");
     const playMsnId = new mongoose.Types.ObjectId("6848842225befb7c13c9dcaa");
-    const inviteMsnId = new mongoose.Types.ObjectId("684dd99f96c75496c97db98f");
+    const inviteMsnId = new mongoose.Types.ObjectId("684deac96a2ad7c99d758973");
 
     // validate mission action
     if (rewardDetails._id.toString() === conversionMsnId.toString()) {
