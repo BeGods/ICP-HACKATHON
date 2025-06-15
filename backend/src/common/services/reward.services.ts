@@ -10,8 +10,7 @@ export const updateTokenReward = async (
   try {
     const token = paymentType;
     const validTokens = ["stars", "usdt", "kaia"];
-    const precision = 1e6;
-    const rewardAmount = Math.round(reward.amount * precision);
+    const rewardAmount = Number(reward.amount.toFixed(6));
 
     if (!token || !validTokens?.includes(token)) {
       throw new Error("Invalid payment type.");
