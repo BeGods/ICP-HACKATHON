@@ -97,9 +97,15 @@ const PayoutInfoCard = ({ close, data }) => {
           <div className="flex flex-col gap-y-4">{data?.description}</div>
         </div>
 
-        <div className="absolute w-full uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
-          {data?.limit} <span>Left</span>
-        </div>
+        {data?.limit > 0 ? (
+          <div className="absolute w-full uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
+            {data.limit} <span>Slots Left</span>
+          </div>
+        ) : (
+          <div className="absolute w-full text-center uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-red-500 text-black-contour">
+            {data?.limit + "  "} Slots Exhausted
+          </div>
+        )}
 
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
       </div>

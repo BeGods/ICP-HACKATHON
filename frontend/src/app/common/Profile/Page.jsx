@@ -167,7 +167,7 @@ const Profile = (props) => {
     {
       icon: <div className="font-symbols text-[1.8rem]">$</div>,
       label: "Rank",
-      value: userData.rank ?? 0,
+      value: userData.orbRank ?? 0,
       handleClick: () => {
         setShowCard(
           <OrbInfoCard

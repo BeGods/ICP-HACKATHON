@@ -25,7 +25,7 @@ const OrbInfoCard = ({ gameData, close }) => {
           <h1>{userData.username.toUpperCase().slice(0, 11)}</h1>
 
           <h2 className={`-mt-[2vh] text-paperSub font-medium uppercase`}>
-            #{userData.rank ?? 0}{" "}
+            #{userData.orbRank ?? 0}{" "}
             {userData.country != "NA" &&
               `| ${countryFlag.flag} ${userData.countryRank}`}
           </h2>
