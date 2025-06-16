@@ -2,11 +2,16 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import liff from "@line/liff";
 import DappPortalSDK from "@linenext/dapp-portal-sdk";
 import { MainContext } from "./context";
+import { deleteAuthCookie } from "../helpers/cookie.helper";
+import { useNavigate } from "react-router-dom";
 
 export const WalletContext = createContext(null);
+const tele = window.Telegram?.WebApp;
 
 export const WalletProvider = ({ children }) => {
-  const { lineWallet, setLineWallet, authToken } = useContext(MainContext);
+  const { lineWallet, setLineWallet, authToken, isTelegram } =
+    useContext(MainContext);
+  const navigate = useNavigate();
   const [lineProvider, setLineProvider] = useState(null);
   const [dappSdk, setDappSdk] = useState(null);
   const [isInitializing, setIsInitializing] = useState(true);
@@ -35,9 +40,15 @@ export const WalletProvider = ({ children }) => {
         const accountAddress = accounts?.[0];
 
         if (accountAddress) {
-          console.log("Wallet already connected:", accountAddress);
           setLineWallet(accountAddress);
           sessionStorage.setItem("accountAddress", accountAddress);
+        } else {
+          if (!liff.isInClient() || !isTelegram) {
+            (async () => await deleteAuthCookie(tele))();
+            setTimeout(() => {
+              navigate("/");
+            }, 200);
+          }
         }
 
         console.log("SDK Initialized");
