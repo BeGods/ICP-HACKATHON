@@ -1,19 +1,32 @@
 import React, { useContext } from "react";
 import { MainContext } from "../../context/context";
-import { handleClickHaptic } from "../../helpers/cookie.helper";
+import {
+  deleteAuthCookie,
+  handleClickHaptic,
+} from "../../helpers/cookie.helper";
 import useWalletPayment from "../../hooks/LineWallet";
 import { ChevronRight, History, Wallet } from "lucide-react";
+import liff from "@line/liff";
+import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
 const WalletsModal = ({ handleClose }) => {
+  const navigate = useNavigate();
   const { fetchLinePayHistory, disconnectLineWallet } = useWalletPayment();
-  const { enableHaptic, lineWallet } = useContext(MainContext);
+  const { enableHaptic, lineWallet, isTelegram } = useContext(MainContext);
 
   const handleDisconnectLineWallet = async () => {
     handleClickHaptic(tele, enableHaptic);
     try {
       await disconnectLineWallet();
+
+      if (!liff.isInClient() || !isTelegram) {
+        (async () => await deleteAuthCookie(tele))();
+        setTimeout(() => {
+          navigate("/");
+        }, 200);
+      }
     } catch (error) {
       console.error("Error disconnecting wallet:", error);
       alert("Failed to disconnect the wallet. Please try again.");

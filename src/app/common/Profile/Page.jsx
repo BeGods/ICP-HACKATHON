@@ -1,29 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FofContext, MainContext, RorContext } from "../../../context/context";
-import { ProfileGuide } from "../../../components/Common/Tutorials";
 import { useProfileGuide } from "../../../hooks/Tutorial";
 import ProfileHeader from "./Header";
-import TaskCarousel from "../../../components/Carousel/TaskCarousel";
 import { determineStreakBadge } from "../../../helpers/streak.helper";
-import {
-  ToggleLeft,
-  ToggleRight,
-} from "../../../components/Common/SectionToggles";
 import { hideBackButton } from "../../../utils/teleBackButton";
 import { trackComponentView } from "../../../utils/ga";
 import { CalendarCheck, Sigma, Wallet } from "lucide-react";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import {
-  connectLineWallet,
-  disconnectLineWallet,
-} from "../../../utils/api.fof";
+import { connectLineWallet } from "../../../utils/api.fof";
 import useWalletPayment from "../../../hooks/LineWallet";
-import WalletsModal from "../../../components/Modals/Wallets";
 import { showToast } from "../../../components/Toast/Toast";
-import { toast } from "react-toastify";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
 import HoldingsModal from "../../../components/Modals/Holdings";
+import liff from "@line/liff";
 
 const tele = window.Telegram?.WebApp;
 
@@ -76,19 +66,11 @@ const ProfileItem = ({ content, index, assets, userData }) => {
 };
 
 const Profile = (props) => {
-  const {
-    userData,
-    assets,
-    setSection,
-    game,
-    lineWallet,
-    isTelegram,
-    enableHaptic,
-  } = useContext(MainContext);
+  const { userData, assets, game, lineWallet, isTelegram, enableHaptic } =
+    useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
   const avatarColor = localStorage.getItem("avatarColor");
-  const [enableGuide, setEnableGuide] = useProfileGuide("tutorial04");
   const [showToggles, setShowToggles] = useState(false);
   const streakBadge = determineStreakBadge(userData.streak.streakCount);
   const setShowCard =
@@ -237,7 +219,7 @@ const Profile = (props) => {
           className="w-[2.2rem] h-[2.2rem]"
         />
       ),
-      label: "Withdraw",
+      label: "Holdings",
       value: isTelegram
         ? userData.holdings.stars ?? 0
         : userData.holdings.kaia ?? 0,

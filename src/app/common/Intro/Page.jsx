@@ -221,12 +221,9 @@ const IntroPage = (props) => {
       const now = Date.now();
       let timeLeft = tokenExp - now;
 
-      console.log(timeLeft);
-
       let token;
       if (timeLeft <= 0) {
         token = await handleRefreshToken();
-        console.log("new token from existing one");
 
         if (!token) {
           throw new Error("Token refresh failed, no new token received");
@@ -237,11 +234,8 @@ const IntroPage = (props) => {
         token = await validateAuth(tele);
 
         if (!token) {
-          console.log("Token validation failed");
-
           throw new Error("Token validation failed");
         }
-        console.log("existing token");
 
         setAuthToken(token);
       }
@@ -319,11 +313,8 @@ const IntroPage = (props) => {
           await handleAuth(isTg);
 
           if (!tokenExpiry) {
-            console.log("No token found. Authenticating...");
             await handleAuth(isTg);
           } else {
-            console.log("Expiry exists");
-
             try {
               await isExistingTknValid(tokenExpiry);
             } catch (error) {
