@@ -23,9 +23,22 @@ export const WalletProvider = ({ children }) => {
           chainId: import.meta.env.VITE_LINE_CHAIN_ID || "8217",
         });
 
+        const provider = sdk.getWalletProvider();
+
         setDappSdk(sdk);
-        setLineProvider(sdk.getWalletProvider());
+        setLineProvider(provider);
         setPaymentProvider(sdk.getPaymentProvider());
+
+        const accounts = await provider.request({
+          method: "kaia_accounts",
+        });
+        const accountAddress = accounts?.[0];
+
+        if (accountAddress) {
+          console.log("Wallet already connected:", accountAddress);
+          setLineWallet(accountAddress);
+          sessionStorage.setItem("accountAddress", accountAddress);
+        }
 
         console.log("SDK Initialized");
       } catch (error) {
