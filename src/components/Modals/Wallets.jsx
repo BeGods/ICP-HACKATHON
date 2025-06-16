@@ -82,10 +82,7 @@ const WalletsModal = ({ handleClose }) => {
           <div className="flex justify-start -ml-3">
             <History />
           </div>
-          <div
-            onClick={handleDisconnectLineWallet}
-            className="flex justify-between w-full"
-          >
+          <div className="flex justify-between w-full">
             <div className="pl-3">Dapp History</div>
 
             <ChevronRight />

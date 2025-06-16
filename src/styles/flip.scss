@@ -74,13 +74,13 @@
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   transition: transform 0.6s ease-in-out;
-  transform: rotateX(0deg);
-  -webkit-transform: rotateX(0deg);
+  transform: rotateX(0turn);
+  -webkit-transform: rotateX(0turn);
   will-change: transform;
 
   &.flipped {
-    transform: rotateX(180deg);
-    -webkit-transform: rotateX(180deg);
+    transform: rotateX(0.5turn);
+    -webkit-transform: rotateX(0.5turn);
   }
 
   .button__face {
@@ -96,18 +96,19 @@
     align-items: center;
 
     &--front {
-      transform: rotateX(0deg);
-      -webkit-transform: rotateX(0deg);
+      transform: rotateX(0turn);
+      -webkit-transform: rotateX(0turn);
       z-index: 0;
     }
 
     &--back {
-      transform: rotateX(180deg);
-      -webkit-transform: rotateX(180deg);
+      transform: rotateX(0.5turn);
+      -webkit-transform: rotateX(0.5turn);
       z-index: 100;
     }
   }
 }
+
 
 
 .orb {
