@@ -14,6 +14,7 @@ import { showToast } from "../../../components/Toast/Toast";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
 import HoldingsModal from "../../../components/Modals/Holdings";
 import liff from "@line/liff";
+import WalletsModal from "../../../components/Modals/Wallets";
 
 const tele = window.Telegram?.WebApp;
 
