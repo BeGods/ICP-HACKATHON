@@ -27,6 +27,12 @@ export const WalletProvider = ({ children }) => {
         setLineProvider(sdk.getWalletProvider());
         setPaymentProvider(sdk.getPaymentProvider());
 
+        if (accountAddress) {
+          console.log("Wallet already connected:", accountAddress);
+          setLineWallet(accountAddress);
+          sessionStorage.setItem("accountAddress", accountAddress);
+        }
+
         console.log("SDK Initialized");
       } catch (error) {
         console.error("SDK Initialization Error:", error);

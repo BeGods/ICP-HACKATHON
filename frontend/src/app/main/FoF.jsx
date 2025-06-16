@@ -336,9 +336,9 @@ const FoFMain = () => {
       const device = getDeviceAndOS(tele.platform);
       trackEvent("device", device, "success");
       const existingAddr = sessionStorage.getItem("accountAddress");
-      if (existingAddr) {
-        setLineWallet(existingAddr);
-      }
+      // if (existingAddr) {
+      //   setLineWallet(existingAddr);
+      // }
     } catch (error) {
       showToast("default");
     }

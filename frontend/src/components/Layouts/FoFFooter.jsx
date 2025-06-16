@@ -230,10 +230,10 @@ const Footer = ({}) => {
         <div
           className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-50  flex justify-between text-white ${
             isTgMobile && platform === "ios"
-              ? "-mt-5.5"
+              ? "-mt-[2dvh]"
               : isTgMobile && platform !== "ios"
-              ? "-mt-4"
-              : "-mt-2.5"
+              ? "-mt-[1.65dvh]"
+              : "-mt-[1dvh]"
           }`}
         >
           {footerIcons.map((item, index) => (

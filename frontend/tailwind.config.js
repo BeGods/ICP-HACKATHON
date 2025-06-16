@@ -117,7 +117,7 @@ export default {
         primary: "2.5rem",
         "symbol-sm": "2rem",
         secondary: "14px",
-        para: "1.2rem",
+        para: "2dvh",
         tertiary: "18px",
         "button-primary": "18px",
         "orb-primary": "120px",
