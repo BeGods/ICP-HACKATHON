@@ -47,10 +47,10 @@ export const validateBurstReward = async (userId) => {
   }
 };
 
-export const validateInviteReward = async (user) => {
+export const validateInviteReward = async (user, num) => {
   try {
     // check valid invite
-    if (!user.directReferralCount || user.directReferralCount < 6) {
+    if (!user.directReferralCount || user.directReferralCount < num) {
       throw new Error("Failed to verify. Please complete the mission.");
     }
 

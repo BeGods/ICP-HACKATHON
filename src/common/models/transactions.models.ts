@@ -50,6 +50,8 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
   { timestamps: true }
 );
 
+orbsTransactionsSchema.index({ userId: 1 });
+
 const coinTransactionsSchema = new Schema<ICoinTransactions>(
   {
     ...baseTransactionSchema,
@@ -82,6 +84,8 @@ const coinTransactionsSchema = new Schema<ICoinTransactions>(
   { timestamps: true }
 );
 
+coinTransactionsSchema.index({ userId: 1 });
+
 const shardsTransactionsSchema = new Schema<IShardsTransactions>(
   {
     ...baseTransactionSchema,
@@ -99,6 +103,8 @@ const shardsTransactionsSchema = new Schema<IShardsTransactions>(
   { timestamps: true }
 );
 
+shardsTransactionsSchema.index({ userId: 1 });
+
 const rewardsTransactionsSchema = new Schema(
   {
     ...baseTransactionSchema,
@@ -114,6 +120,9 @@ const rewardsTransactionsSchema = new Schema(
   { timestamps: true }
 );
 
+rewardsTransactionsSchema.index({ userId: 1 });
+rewardsTransactionsSchema.index({ rewardId: 1 });
+
 const starsTransactionsSchema = new Schema<IStarTransactions>(
   {
     ...baseTransactionSchema,
@@ -127,6 +136,9 @@ const starsTransactionsSchema = new Schema<IStarTransactions>(
   },
   { timestamps: true }
 );
+
+starsTransactionsSchema.index({ userId: 1 });
+starsTransactionsSchema.index({ transcationId: 1 });
 
 const PaymentLogsSchema = new Schema<IPaymentLogs>(
   {
@@ -161,6 +173,10 @@ const PaymentLogsSchema = new Schema<IPaymentLogs>(
   { timestamps: true }
 );
 
+PaymentLogsSchema.index({ userId: 1 });
+PaymentLogsSchema.index({ transactionId: 1 });
+PaymentLogsSchema.index({ status: 1 });
+
 const itemsTransactionsSchema = new Schema(
   {
     ...baseTransactionSchema,
@@ -176,6 +192,8 @@ const itemsTransactionsSchema = new Schema(
   },
   { timestamps: true }
 );
+
+itemsTransactionsSchema.index({ userId: 1 });
 
 const PaymentLogs = model<IPaymentLogs>("PaymentLogs", PaymentLogsSchema);
 
