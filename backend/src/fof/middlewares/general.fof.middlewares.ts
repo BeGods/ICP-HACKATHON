@@ -304,7 +304,12 @@ export const validateValidReward = async (req, res, next) => {
     );
     const playMsnId = new mongoose.Types.ObjectId("684882aa7c77e14a7262bbcc");
     const burstMsnId = new mongoose.Types.ObjectId("6848842225befb7c13c9dcaa");
-    const inviteMsnId = new mongoose.Types.ObjectId("684deac96a2ad7c99d758973");
+    const inviteSixMsnId = new mongoose.Types.ObjectId(
+      "684deac96a2ad7c99d758973"
+    );
+    const inviteTwelveMsnId = new mongoose.Types.ObjectId(
+      "685111495e5f4cc871608299"
+    );
 
     // validate mission action
     if (rewardDetails._id.toString() === conversionMsnId.toString()) {
@@ -313,8 +318,10 @@ export const validateValidReward = async (req, res, next) => {
       await validateBurstReward(userId);
     } else if (rewardDetails._id.toString() === playMsnId.toString()) {
       return res.status(400).json({ message: "Coming Soon" });
-    } else if (rewardDetails._id.toString() === inviteMsnId.toString()) {
-      await validateInviteReward(user);
+    } else if (rewardDetails._id.toString() === inviteSixMsnId.toString()) {
+      await validateInviteReward(user, 6);
+    } else if (rewardDetails._id.toString() === inviteTwelveMsnId.toString()) {
+      await validateInviteReward(user, 12);
     } else {
       return res.status(400).json({ message: "Invalid rewardId." });
     }
