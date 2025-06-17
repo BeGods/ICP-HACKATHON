@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 import { IQuest, IStats } from "../../ts/models.interfaces";
 import rewards from "../models/rewards.models";
 import mongoose from "mongoose";
+import { getDailyActiveUsers } from "../services/admin.services";
 
 // get
 // test server
@@ -21,122 +22,29 @@ export const ping = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// total users
-export const getTotalUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getAdminUpdates = async (req, res) => {
   try {
-    const totalUsers: IStats | null = await Stats.findOne({ statId: "fof" });
-    res.status(200).json({ totalUsers: totalUsers.totalUsers });
-  } catch (error: any) {
-    console.log(error);
+    const stats = await Stats.find();
+    const userCounts = stats.map((stat) => stat.totalUsers);
+    const { dailyActive, weeklyActive, monthlyActive } =
+      await getDailyActiveUsers();
 
-    res.status(500).json({
-      message: "Failed to fetch totalUsers.",
-      error: error.message,
-    });
-  }
-};
-
-// daily new users
-export const getDailyUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    const query = {
-      createdAt: {
-        $gte: startOfDay,
-        $lte: endOfDay,
-      },
+    const data = {
+      totalUsers: userCounts[4],
+      tgUsers: userCounts[1],
+      dapp: userCounts[2],
+      onewave: userCounts[3],
+      fof: userCounts[0],
+      ror: userCounts[5],
+      dailyActive: dailyActive,
+      weeklyActive: weeklyActive,
+      monthlyActive: monthlyActive,
     };
 
-    const count: number | 0 = await User.countDocuments(query);
-    res.status(200).json({ totalUsers: count });
+    res.status(200).json(data);
   } catch (error: any) {
-    console.log(error);
-
     res.status(500).json({
-      message: "Failed to fetch daily new users.",
-      error: error.message,
-    });
-  }
-};
-
-// daily active users
-export const getActiveUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const now = new Date();
-
-    // Daily Range (00:00 to 23:59 of the current day)
-    const startOfDay = new Date(now);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(now);
-    endOfDay.setHours(23, 59, 59, 999);
-
-    // Weekly Range (Start of current week to now)
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay());
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    // Monthly Range (Start of current month to now)
-    const startOfMonth = new Date(now);
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const [dailyActive, weeklyActive, monthlyActive] = await Promise.all([
-      User.countDocuments({
-        lastLoginAt: { $gte: startOfDay, $lte: endOfDay },
-      }),
-      User.countDocuments({ lastLoginAt: { $gte: startOfWeek, $lte: now } }),
-      User.countDocuments({ lastLoginAt: { $gte: startOfMonth, $lte: now } }),
-    ]);
-
-    res.status(200).json({
-      dailyActive,
-      weeklyActive,
-      monthlyActive,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Failed to fetch active users.",
-      error: error.message,
-    });
-  }
-};
-
-export const getHourlyUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const now = new Date();
-    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-
-    const query = {
-      createdAt: {
-        $gte: oneHourAgo,
-        $lte: now,
-      },
-    };
-
-    const count: number | 0 = await User.countDocuments(query);
-    res.status(200).json({ totalUsers: count });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      message: "Failed to fetch hourly users.",
+      message: "Internal server error.",
       error: error.message,
     });
   }
