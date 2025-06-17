@@ -30,7 +30,7 @@ const QuestCard = ({
     >
       <div
         className={`card ${
-          isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
+          isTgMobile ? "h-[45.35dvh] mt-[4.5dvh]" : "h-[50dvh] mt-[2dvh]"
         } ${flipped ? "flipped" : ""}`}
       >
         <div
@@ -116,13 +116,11 @@ const QuestCard = ({
       </div>
       <div className={`button ${buttonFlip ? "flipped" : ""}`}>
         <div
-          className={`button__face button__face--front ${
-            flipped && "-mt-2"
-          } flex justify-center items-center`}
+          className={`button__face button__face--front flex justify-center items-center`}
         >
           {Button}
         </div>
-        <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center">
+        <div className="button__face button__face--back z-50 flex justify-center items-center">
           {ShareButton}
         </div>
       </div>

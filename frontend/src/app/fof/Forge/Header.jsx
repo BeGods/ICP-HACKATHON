@@ -63,11 +63,13 @@ const CenterChild = ({
               : showBlackOrb === 1
               ? "text-white"
               : "text-white"
-          } text-[5.5rem] transition-all ${
+          } text-[5rem] transition-all ${
             starIsHeld && "z-20"
           } duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
-          <div className={`${platform === "ios" ? "mt-3" : "mt-4"}`}>
+          <div
+            className={`${platform === "ios" ? "mt-[1rem]" : "mt-[1.25rem]"}`}
+          >
             {mythSymbols[mythSections[activeMyth]]}
           </div>
         </div>
@@ -143,7 +145,7 @@ const BottomChild = ({
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[2dvh] uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
         <div className={`mr-auto slide-in-out-left`}>
           {t(`keywords.shards`)}
         </div>

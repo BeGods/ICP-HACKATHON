@@ -29,7 +29,7 @@ const RelicInfo = ({ handleFlip }) => {
           className="rounded-t-primary"
         /> */}
         <div
-          className={`leading-[18px] text-para mt-[14px] text-justify  mx-auto w-[85%] text-card font-[550] ${
+          className={`leading-[2.25dvh] text-para mt-[14px] text-justify  mx-auto w-[85%] text-card font-[550] ${
             (i18n.language === "hi" ||
               i18n.language === "th" ||
               i18n.language === "ru") &&

@@ -34,7 +34,7 @@ const QuestButton = ({
       onTouchCancel={() => {
         setIsClicked(false);
       }}
-      className={`flex items-center justify-between h-button-primary mt-[6px] w-button-primary mx-auto ${
+      className={`flex items-center justify-between h-button-primary w-button-primary mx-auto ${
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       }  border border-${
         mythSections[activeMyth]
@@ -51,16 +51,16 @@ const QuestButton = ({
       {/* Click */}
       {isCompleted ? (
         <div
-          className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text p-[1rem] rounded-full`}
+          className={`flex shadow-black shadow-2xl justify-center items-center bg-${mythSections[activeMyth]}-text w-[4rem] h-[4rem] rounded-full`}
         >
-          <Check size={"2rem"} strokeWidth={5} />
+          <Check size={"1.75rem"} strokeWidth={5} />
         </div>
       ) : (
         <div
           onClick={action}
-          className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[1rem] rounded-full`}
+          className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] w-[4rem] h-[4rem] rounded-full`}
         >
-          <Check size={"2rem"} strokeWidth={5} />
+          <Check size={"1.75rem"} strokeWidth={5} />
         </div>
       )}
       {/* Right Arrow */}

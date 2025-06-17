@@ -56,7 +56,7 @@ const ShareButton = ({
     >
       {!isShared ? (
         <div
-          className={`flex items-center  mt-[10px] justify-between ${
+          className={`flex items-center justify-between ${
             isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
           }  border border-black h-button-primary w-button-primary mx-auto  bg-${
             mythSections[activeMyth]
@@ -73,15 +73,15 @@ const ShareButton = ({
           </div>
           {showRedirect ? (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[1rem] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] w-[4rem] h-[4rem] rounded-full`}
             >
-              <Share2 size={"2rem"} color="white" />
+              <Share2 size={"1.75rem"} color="white" />
             </div>
           ) : (
             <div
-              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] p-[1rem] rounded-full`}
+              className={`flex shadow-black shadow-2xl justify-center items-center bg-black border-[3px] w-[4rem] h-[4rem] rounded-full`}
             >
-              <ThumbsUp size={"2rem"} color="white" />
+              <ThumbsUp size={"1.75rem"} color="white" />
             </div>
           )}
           {isInfo ? (
@@ -130,11 +130,11 @@ const ShareButton = ({
         </div>
       ) : (
         <div
-          className={`flex items-center justify-between  h-button-primary w-button-primary mt-[10px] mx-auto border border-cardsGray  bg-glass-black z-50 text-cardsGray
+          className={`flex items-center justify-between  h-button-primary w-button-primary mx-auto border border-cardsGray  bg-glass-black z-50 text-cardsGray
             rounded-primary`}
         >
           <div className="flex justify-center items-center w-1/4 h-full"></div>
-          <Share2 size={"2rem"} />
+          <Share2 size={"1.75rem"} />
           <div className="flex justify-center items-center w-1/4  h-full"></div>
         </div>
       )}

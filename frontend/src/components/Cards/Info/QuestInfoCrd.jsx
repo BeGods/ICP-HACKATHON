@@ -4,8 +4,6 @@ import { mythSections } from "../../../utils/constants.fof";
 import { useTranslation } from "react-i18next";
 import { FofContext } from "../../../context/context";
 
-const tele = window.Telegram?.WebApp;
-
 const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   const { i18n } = useTranslation();
   const { assets, platform } = useContext(FofContext);
@@ -38,35 +36,35 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
         />
       )}
       <div className="flex w-full">
-        <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
+        <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[0.5dvh]">
           <div className="text-left">
             <h1 className="text-paperHead font-bold uppercase">
               {t("keywords.discover")}
             </h1>
-            <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
+            <h2 className={`-mt-1.5 text-paperSub font-medium uppercase`}>
               {t(`mythologies.${mythSections[activeMyth]}`)}
             </h2>
           </div>
         </div>
       </div>
-      <div className="flex -mt-[5px]">
+      <div className="flex -mt-[1.5dvh]">
         <img
           src={assets.questFrames?.[mythSections[activeMyth]]?.[quest?.type]}
           alt="info_painting"
-          className="w-[82%] mx-auto card-shadow-black pointer-events-none"
+          className="h-[18dvh] mx-auto card-shadow-black pointer-events-none"
         />
       </div>
       <div
-        className={`leading-[18px] text-para -mt-[5px] text-left mx-auto w-[85%] text-card font-[550] ${
+        className={`leading-[2.5dvh] text-para -mt-[5px] text-left mx-auto w-[93%] text-card font-[550] ${
           (i18n.language === "hi" ||
             i18n.language === "th" ||
             i18n.language === "ru") &&
           "font-normal"
-        } ${i18n.language === "ru" && "leading-[15px]"}`}
+        } ${i18n.language === "ru" && "leading-[2dvh]"}`}
       >
         {t(`quests.${mythSections[activeMyth]}.${quest.type}.desc`)}
       </div>
-      <div className="absolute bottom-0 text-para mx-auto px-2 py-1 text-card">
+      <div className="absolute italic bottom-0 text-para mx-auto px-2 py-1 text-card">
         {t(`quests.${mythSections[activeMyth]}.${quest.type}.artist`)}
       </div>
     </div>

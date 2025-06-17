@@ -53,7 +53,7 @@ const DefaultBtn = ({
     >
       <div className="flex justify-center items-center w-1/4 h-full"></div>
       <div
-        className={`flex shadow-black shadow-2xl justify-center text-[2rem] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
+        className={`flex shadow-black shadow-2xl justify-center text-[1.75rem] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
       >
         {message === 0 ? (
           "V"

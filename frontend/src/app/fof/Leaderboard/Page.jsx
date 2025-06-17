@@ -292,7 +292,7 @@ const Leaderboard = (props) => {
         </div>
         <div
           key={animationKey}
-          className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[2dvh] uppercase"
+          className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase"
         >
           <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
           <div className={`ml-auto slide-in-out-right`}>
@@ -409,7 +409,7 @@ const Leaderboard = (props) => {
                       >
                         {rankPositions[index].pos}
                       </div>
-                      <div className="absolute text-white -bottom-1 text-[24px] font-normal">
+                      <div className="absolute text-white -bottom-1 text-[1.25rem] font-normal">
                         {countryFlag}
                       </div>
                       <UserAvatar user={item} index={index} />
@@ -476,7 +476,7 @@ const Leaderboard = (props) => {
       {/* Leaderboard list */}
       {isFinished ? (
         <div
-          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[49vh] bg-white text-black rounded-t-primary`}
+          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[46vh] bg-white text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
             <h1>
@@ -550,7 +550,7 @@ const Leaderboard = (props) => {
         </div>
       ) : (
         <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[49vh] bg-black text-black rounded-t-primary`}
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[46vh] bg-black text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>

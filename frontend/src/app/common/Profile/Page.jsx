@@ -257,7 +257,7 @@ const Profile = (props) => {
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="font-fof absolute top-0 text-[2rem] mt-[9rem] uppercase text-gold drop-shadow z-50 text-black-contour">
+        <div className="font-fof absolute top-0 text-[4.5dvh] mt-[17vh] uppercase text-gold drop-shadow z-50 text-black-contour">
           {userData.username}
         </div>
         <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">

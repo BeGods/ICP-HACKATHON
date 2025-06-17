@@ -49,19 +49,19 @@ export const orbSounds = {
 export const rankPositions = [
   {
     pos: 2,
-    size: "text-[50px]",
+    size: "text-[7dvh]",
     align: 5,
     alignIcon: "-mt-[8.5dvh] ml-[2dvh]"
   },
   {
     pos: 1,
-    size: "text-[60px]",
+    size: "text-[9dvh]",
     align: 10,
     alignIcon: "-mt-[10.5dvh] ml-[2dvh]"
   },
   {
     pos: 3,
-    size: "text-[40px]",
+    size: "text-[5dvh]",
     align: 5,
     alignIcon: "-mt-[6.5dvh] ml-[2dvh]"
   },

@@ -100,9 +100,9 @@ const MiscCard = ({
                 </div>
               </div>
               <div
-                className={`leading-[18px] text-para mt-[14px] text-justify mx-auto w-[85%] text-card font-[550] ${
+                className={`leading-[2.5dvh] text-para mt-[14px] text-justify mx-auto w-[85%] text-card font-[550] ${
                   ["hi", "th", "ru"].includes(i18n.language) && "font-normal"
-                } ${i18n.language === "ru" && "leading-[15px]"}`}
+                } ${i18n.language === "ru" && "leading-[2dvh]"}`}
               >
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy

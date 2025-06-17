@@ -9,7 +9,7 @@ export const WalletContext = createContext(null);
 const tele = window.Telegram?.WebApp;
 
 export const WalletProvider = ({ children }) => {
-  const { lineWallet, setLineWallet, authToken, isTelegram } =
+  const { lineWallet, setLineWallet, authToken, isTelegram, userData } =
     useContext(MainContext);
   const navigate = useNavigate();
   const [lineProvider, setLineProvider] = useState(null);
@@ -43,7 +43,7 @@ export const WalletProvider = ({ children }) => {
           setLineWallet(accountAddress);
           sessionStorage.setItem("accountAddress", accountAddress);
         } else {
-          if (!liff.isInClient() || !isTelegram) {
+          if (!liff.isInClient() || !isTelegram || !userData.isOneWaveUser) {
             (async () => await deleteAuthCookie(tele))();
             setTimeout(() => {
               navigate("/");

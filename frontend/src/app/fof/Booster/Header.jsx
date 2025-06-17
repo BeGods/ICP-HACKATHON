@@ -85,7 +85,7 @@ const BottomChild = ({ activeMyth, gameData }) => {
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[9vh] font-fof text-[2dvh] uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
         <div className={`mr-auto slide-in-out-left`}>
           {t(`boosters.${2}.title`)}
         </div>
