@@ -60,7 +60,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
         );
 
         if (liff.isApiAvailable("shareTargetPicker")) {
-          liff.sendMessages([
+          liff.shareTargetPicker([
             {
               type: "text",
               text: `🚀 Join BeGods Launcher! ${permanentLink}`,
