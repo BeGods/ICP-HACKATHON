@@ -31,6 +31,7 @@ import {
 import { IMyth, IUserMyths } from "../../ts/models.interfaces";
 import { validStreakReward } from "../../helpers/streak.helpers";
 import { fetchKaiaValue } from "../../common/services/redis.services";
+import { IUserData } from "../../ts/objects.interfaces";
 
 // start tap session
 export const startGameSession = async (req, res) => {
@@ -232,7 +233,7 @@ export const getGameStats = async (req, res) => {
     // kaia value
     const kaiaValue = await fetchKaiaValue();
 
-    const userData = {
+    let userData: IUserData = {
       username: user.telegramUsername,
       tonAddress: user.tonAddress,
       kaiaAddress: user.kaiaAddress,
@@ -263,6 +264,10 @@ export const getGameStats = async (req, res) => {
       holdings: user.holdings ?? { stars: 0, usdt: 0, kaia: 0 },
       ...memberData,
     };
+
+    if (user.oneWaveId) {
+      userData.isOneWaveUser = true;
+    }
     const gameData = {
       isMoonActive: userMythologiesData.userMythologies[0].lastMoonClaimAt
         ? hasBeenFourDaysSinceClaimedUTC(
