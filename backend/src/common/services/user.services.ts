@@ -33,11 +33,8 @@ export const addNewTelegramUser = async (userData) => {
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
 
-    await Stats.findOneAndUpdate(
-      { statId: "telegram" },
-      { $inc: { totalUsers: 1 } },
-      { upsert: true, new: true }
-    );
+    // update user count
+    await updateUserCount("telegram");
 
     return newUserCreated;
   } catch (error) {
@@ -73,11 +70,8 @@ export const addNewKaiaAddrUser = async (userData) => {
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
 
-    await Stats.findOneAndUpdate(
-      { statId: "line" },
-      { $inc: { totalUsers: 1 } },
-      { upsert: true, new: true }
-    );
+    // update user count
+    await updateUserCount("line");
 
     return newUserCreated;
   } catch (error) {
@@ -115,11 +109,8 @@ export const addNewLineUser = async (userData) => {
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
 
-    await Stats.findOneAndUpdate(
-      { statId: "line" },
-      { $inc: { totalUsers: 1 } },
-      { upsert: true, new: true }
-    );
+    // update user count
+    await updateUserCount("line");
 
     return newUserCreated;
   } catch (error) {
@@ -158,13 +149,8 @@ export const addNewOTPUser = async (userData, referPartner) => {
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
 
-    if (referPartner !== "") {
-      await Stats.findOneAndUpdate(
-        { statId: referPartner },
-        { $inc: { totalUsers: 1 } },
-        { upsert: true, new: true }
-      );
-    }
+    // update user count
+    await updateUserCount(referPartner);
 
     return newUserCreated;
   } catch (error) {
@@ -198,11 +184,8 @@ export const addNewOneWaveUser = async (userData, referPartner) => {
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
 
-    await Stats.findOneAndUpdate(
-      { statId: "onewave" },
-      { $inc: { totalUsers: 1 } },
-      { upsert: true, new: true }
-    );
+    // update user count
+    await updateUserCount("onewave");
 
     const newUser = new User(userData);
     const newUserCreated = await newUser.save();
@@ -277,5 +260,25 @@ export const validateUsername = async (username) => {
     }
   } catch (error) {
     throw new Error("Failed to validate username.");
+  }
+};
+
+export const updateUserCount = async (key) => {
+  try {
+    await Stats.findOneAndUpdate(
+      { statId: "begods" },
+      { $inc: { totalUsers: 1 } },
+      { upsert: true, new: true }
+    );
+
+    if (key && key !== "") {
+      await Stats.findOneAndUpdate(
+        { statId: key },
+        { $inc: { totalUsers: 1 } },
+        { upsert: true, new: true }
+      );
+    }
+  } catch (error) {
+    throw new Error("Failed to update stats.");
   }
 };

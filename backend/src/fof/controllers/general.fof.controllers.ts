@@ -171,13 +171,6 @@ export const updateLeadboardRanks = async (req, res) => {
     await bulkUpdateFoFComplete(fofUnmarkedUsers);
     await bulkUpdateBetResult(bettedUsers);
 
-    const totalUsers = await User.countDocuments({});
-    await Stats.findOneAndUpdate(
-      { statId: "begods" },
-      { $set: { totalUsers: totalUsers } },
-      { upsert: true }
-    );
-
     console.log("Leaderboard updated successfully.");
   } catch (error) {
     console.error(error);
@@ -317,6 +310,7 @@ export const claimJoinBonus = async (req, res) => {
     });
     await newOrbsTransaction.save();
 
+    // update usercount
     await Stats.findOneAndUpdate(
       { statId: "fof" },
       { $inc: { totalUsers: 1 } },
