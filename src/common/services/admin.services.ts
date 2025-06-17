@@ -1,30 +1,5 @@
 import User from "../models/user.models";
 
-// daily new users
-export const getDailyNewUsers = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    const query = {
-      createdAt: {
-        $gte: startOfDay,
-        $lte: endOfDay,
-      },
-    };
-
-    // const count: number | 0 = await User.countDocuments(query);
-  } catch (error: any) {
-    console.log(error);
-    throw new Error("Failed to fetch daily new users.");
-  }
-};
-
 // daily active users
 export const getDailyActiveUsers = async () => {
   try {
@@ -34,16 +9,19 @@ export const getDailyActiveUsers = async () => {
     const last7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [dailyActive, weeklyActive, monthlyActive] = await Promise.all([
-      User.countDocuments({ lastLoginAt: { $gte: last24Hours } }),
-      User.countDocuments({ lastLoginAt: { $gte: last7Days } }),
-      User.countDocuments({ lastLoginAt: { $gte: last30Days } }),
-    ]);
+    const [dailyActive, weeklyActive, monthlyActive, dailyNewUsers] =
+      await Promise.all([
+        User.countDocuments({ lastLoginAt: { $gte: last24Hours } }),
+        User.countDocuments({ lastLoginAt: { $gte: last7Days } }),
+        User.countDocuments({ lastLoginAt: { $gte: last30Days } }),
+        User.countDocuments({ createdAt: { $gte: last24Hours, $lte: now } }),
+      ]);
 
     return {
       dailyActive,
       weeklyActive,
       monthlyActive,
+      dailyNewUsers,
     };
   } catch (error) {
     console.error(error);
