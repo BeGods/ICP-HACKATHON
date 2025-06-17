@@ -259,7 +259,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         <div
           className={`flex absolute ${
             showEffect && "disappear"
-          } opacity-100 text-[2.5rem] uppercase text-white glow-icon-${
+          } opacity-100 text-[4.5dvh] uppercase text-white glow-icon-${
             mythSections[activeMyth]
           } h-fit justify-center items-start mt-[1.75vh]`}
         >

@@ -19,7 +19,7 @@ const ClaimRewardBtn = ({ handleClick }) => {
       <div
         className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px] rounded-full`}
       >
-        <ThumbsUp size={"2rem"} />
+        <ThumbsUp size={"1.75rem"} />
       </div>
 
       <div className="flex justify-center items-center w-1/4  h-full"></div>

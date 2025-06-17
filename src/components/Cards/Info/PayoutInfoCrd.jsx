@@ -87,7 +87,7 @@ const PayoutInfoCard = ({ close, data }) => {
         </div>
 
         <div
-          className={`absolute leading-[1.25rem] text-paperSub text-card inset-0 w-[85%] mx-auto flex flex-col justify-start pt-[50%] font-[550] z-30 ${
+          className={`absolute leading-[3dvh] text-paperSub text-card inset-0 w-[85%] mx-auto flex flex-col justify-start pt-[50%] font-[550] z-30 ${
             (i18n.language === "hi" ||
               i18n.language === "th" ||
               i18n.language === "ru") &&

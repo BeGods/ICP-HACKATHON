@@ -51,7 +51,7 @@ const BoosterItem = ({
           : `border-${mythSections[activeMyth]}-primary`
       } text-white ${
         isActive && isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
-      } rounded-primary h-[90px] w-full bg-glass-black p-[10px]`}
+      } rounded-primary h-[5.65rem] w-full bg-glass-black p-[10px]`}
       onTouchStart={() => {
         touchTimer.current = setTimeout(() => {
           setIsClicked(true);

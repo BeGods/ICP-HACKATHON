@@ -60,7 +60,7 @@ const PartnerCard = ({ close, reward }) => {
       <div
         className={`absolute font-semibold italic ${
           isTgMobile ? "bottom-0" : "bottom-6"
-        } text-para text-card mx-auto px-2 py-1`}
+        } text-para leading-[2.5dvh] text-card mx-auto px-2 py-1`}
       >
         {formatDate(reward.endDate)}
       </div>

@@ -1495,7 +1495,7 @@ const Forges = () => {
         )}
 
         {showBlackOrb > 0 && (
-          <div className="flex flex-col bottom-[12%] w-full justify-center items-center absolute z-10">
+          <div className="flex flex-col bottom-[12dvh] w-full justify-center items-center absolute z-10">
             <div
               className={`bg-white  ${
                 isStarHolding ? "w-[5rem]" : "w-[5rem]"
@@ -1522,7 +1522,7 @@ const Forges = () => {
               <div
                 fill={"white"}
                 color={"white"}
-                className={`font-symbols text-[4.5rem] text-white glow-star-${
+                className={`font-symbols text-[4.25rem] text-white glow-star-${
                   mythSections[activeMyth]
                 } duration-500 transition-all ${
                   showBlackOrb === 1 && "maximize-star"

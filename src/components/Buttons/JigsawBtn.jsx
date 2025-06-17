@@ -88,9 +88,9 @@ const JigsawButton = ({
       </div>
       {faith < limit && isPartner ? (
         <div
-          className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black text-white border-white p-[1rem] border-[3px] rounded-full`}
+          className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black text-white border-white w-[4rem] h-[4rem] border-[3px] rounded-full`}
         >
-          <Share2 size={"2rem"} />
+          <Share2 size={"1.75rem"} />
         </div>
       ) : (
         <div
@@ -100,7 +100,7 @@ const JigsawButton = ({
               : "text-white border-white"
           }  p-[1rem] border-[3px] rounded-full`}
         >
-          <ThumbsUp size={"2rem"} />
+          <ThumbsUp size={"1.75rem"} />
         </div>
       )}
 

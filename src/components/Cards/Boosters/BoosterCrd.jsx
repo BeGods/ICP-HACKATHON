@@ -104,7 +104,7 @@ const PayModal = ({
                 </div>
               </div>
             </div>
-            <div className="leading-[18px] text-para mt-1 text-left mx-auto w-[85%] text-card font-[550]">
+            <div className="leading-[2.5dvh] text-para mt-1 text-left mx-auto w-[93%] text-card font-[550]">
               <h2 className={`font-medium uppercase mb-1`}>Note: </h2>
               <p>1. You agree that the product(s) is/are non-refundable.</p>
               <p>

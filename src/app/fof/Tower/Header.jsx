@@ -40,8 +40,8 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
           <span
-            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[6rem] ${
-              platform === "ios" ? "mt-8 ml-2" : "mt-5 ml-2"
+            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[5rem] ${
+              platform === "ios" ? "mt-14" : "mt-9"
             } opacity-70  orb-symbol-shadow`}
           >
             {mythSymbols[wheel[myth]]}
@@ -71,7 +71,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
                 className={`moon-base`}
               />
               <span
-                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[6rem] ${
+                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[5rem] ${
                   platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
                 } orb-symbol-shadow z-50`}
               >
@@ -156,7 +156,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
         </div>
       </div>
 
-      <div className="absolute flex text-white  px-1 w-full mt-[9vh] font-fof text-[2dvh] uppercase">
+      <div className="absolute flex text-white  px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
         <div className={`mr-auto slide-in-out-left gradient-multi`}>
           {t(`keywords.orbs`)}
         </div>
