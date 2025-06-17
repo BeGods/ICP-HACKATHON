@@ -26,11 +26,12 @@ export const getAdminUpdates = async (req, res) => {
   try {
     const stats = await Stats.find();
     const userCounts = stats.map((stat) => stat.totalUsers);
-    const { dailyActive, weeklyActive, monthlyActive } =
+    const { dailyActive, weeklyActive, monthlyActive, dailyNewUsers } =
       await getDailyActiveUsers();
 
     const data = {
       totalUsers: userCounts[4],
+      newUsers: dailyNewUsers,
       tgUsers: userCounts[1],
       dapp: userCounts[2],
       onewave: userCounts[3],
