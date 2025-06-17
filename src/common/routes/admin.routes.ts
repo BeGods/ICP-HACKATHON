@@ -7,10 +7,7 @@ import {
   createPartner,
   createQuest,
   createReward,
-  getActiveUsers,
-  getDailyUsers,
-  getHourlyUsers,
-  getTotalUsers,
+  getAdminUpdates,
   ping,
 } from "../controllers/admin.controllers";
 const router = express.Router();
@@ -19,10 +16,7 @@ const router = express.Router();
 router.get("/ping", ping);
 
 // get total routes
-router.get(`/${config.security.ADMIN_KEY}/totalUsers`, getTotalUsers);
-router.get(`/${config.security.ADMIN_KEY}/dailyUsers`, getDailyUsers);
-router.get(`/${config.security.ADMIN_KEY}/hourlyUsers`, getHourlyUsers);
-router.get(`/${config.security.ADMIN_KEY}/activeUsers`, getActiveUsers);
+router.get(`/${config.security.ADMIN_KEY}/updates`, getAdminUpdates);
 
 // admin: update leaderboard
 router.get(
