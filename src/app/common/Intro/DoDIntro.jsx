@@ -5,8 +5,6 @@ import { useOpenAd } from "../../../hooks/DappAds";
 const DoDIntro = (props) => {
   const zoneId = import.meta.env.VITE_LMA_ZONE;
   const publisherId = import.meta.env.VITE_PUBLISHER_ID;
-  const userId = "tanmay";
-  const displayName = "tanmay";
 
   const callReward = () => {
     try {
@@ -14,22 +12,15 @@ const DoDIntro = (props) => {
     } catch (error) {}
   };
 
-  const { loadAd, showAd, isReady, adStatus } = useOpenAd({
+  const { loadAd, isReady, adStatus } = useOpenAd({
     zoneId,
     publisherId,
-    displayName,
     callReward,
   });
 
   useEffect(() => {
     loadAd();
   }, [loadAd]);
-
-  useEffect(() => {
-    if (isReady) {
-      showAd();
-    }
-  }, [isReady]);
 
   return (
     <div
@@ -61,7 +52,6 @@ const DoDIntro = (props) => {
             </div>
             <div className="relative inline-block">
               <button
-                onClick={showAd}
                 disabled={!isReady}
                 className={`px-6 py-2 rounded-lg text-white ${
                   isReady
