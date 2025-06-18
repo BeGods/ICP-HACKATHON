@@ -17,7 +17,6 @@ const DoDIntro = (props) => {
   const { loadAd, showAd, isReady, adStatus } = useOpenAd({
     zoneId,
     publisherId,
-    userId,
     displayName,
     callReward,
   });
