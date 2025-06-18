@@ -14,7 +14,7 @@ const DoDIntro = (props) => {
     } catch (error) {}
   };
 
-  const { loadAd, isReady, adStatus } = useOpenAd({
+  const { loadAd, showAd, isReady, adStatus } = useOpenAd({
     zoneId,
     publisherId,
     userId,
@@ -23,9 +23,14 @@ const DoDIntro = (props) => {
   });
 
   useEffect(() => {
-    console.log("🧩 Calling loadAd on mount");
     loadAd();
   }, [loadAd]);
+
+  useEffect(() => {
+    if (isReady) {
+      showAd();
+    }
+  }, [isReady]);
 
   return (
     <div
@@ -57,7 +62,7 @@ const DoDIntro = (props) => {
             </div>
             <div className="relative inline-block">
               <button
-                onClick={loadAd}
+                onClick={showAd}
                 disabled={!isReady}
                 className={`px-6 py-2 rounded-lg text-white ${
                   isReady
