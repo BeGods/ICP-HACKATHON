@@ -6,66 +6,75 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
   const [adStatus, setAdStatus] = useState("idle");
 
   const loadAd = useCallback(async () => {
-    setAdStatus("loading");
-    liff.login();
-    const liffId = import.meta.env.VITE_LINE_ID;
-    if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
-      console.warn("❌ Missing LIFF SDK or OpenAD SDK or liffId");
-      setAdStatus("error");
-      return;
-    }
+    liff
+      .init({
+        liffId: import.meta.env.VITE_LINE_ID,
+      })
+      .then(async () => {
+        setAdStatus("loading");
+        const liffId = import.meta.env.VITE_LINE_ID;
+        if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
+          console.warn("❌ Missing LIFF SDK or OpenAD SDK or liffId");
+          setAdStatus("error");
+          return;
+        }
 
-    const adInfo = { zoneId, publisherId, eventId: 0 };
-    const adParams = {
-      line: {
-        type: "LMA", // or "LMA" if inside LINE Mini App
-        liffId,
-        prototype: window.liff,
-        isFullscreen: true,
-      },
-      wallet: {
-        // If you have a web3 wallet components, Optional
-        type: "eth", // eth: eth wallet, kaia: line wallet, ton: ton wallet;
-        provider: null, // here is a provider object after wallet initialization.
-        components: "", // web3 wallet components name
-      },
-    };
-    const userInfo = {}; // leave empty for LWA/LMA
+        const adInfo = { zoneId, publisherId, eventId: 0 };
+        const adParams = {
+          line: {
+            type: "LMA", // or "LMA" if inside LINE Mini App
+            liffId,
+            prototype: window.liff,
+            isFullscreen: true,
+          },
+          wallet: {
+            // If you have a web3 wallet components, Optional
+            type: "eth", // eth: eth wallet, kaia: line wallet, ton: ton wallet;
+            provider: null, // here is a provider object after wallet initialization.
+            components: "", // web3 wallet components name
+          },
+        };
+        const userInfo = {}; // leave empty for LWA/LMA
 
-    try {
-      const sdk = window.OpenADLineJsSDK;
+        try {
+          const sdk = window.OpenADLineJsSDK;
 
-      const result = await sdk.interactive.init({ adInfo, adParams, userInfo });
+          const result = await sdk.interactive.init({
+            adInfo,
+            adParams,
+            userInfo,
+          });
 
-      if (!result || result.code !== 0) {
-        console.warn("❌ Ad init failed:", result);
-        setIsReady(false);
-        setAdStatus("notAvailable");
-        return;
-      }
+          if (!result || result.code !== 0) {
+            console.warn("❌ Ad init failed:", result);
+            setIsReady(false);
+            setAdStatus("notAvailable");
+            return;
+          }
 
-      setIsReady(true);
+          setIsReady(true);
 
-      const callbackFunc = {
-        onAdResourceLoad: (e) => console.log("✅ Ad resource loaded:", e),
-        onAdOpening: (e) => console.log("Ad opening:", e),
-        onAdOpened: (e) => console.log("Ad opened:", e),
-        onAdTaskFinished: (e) => console.log("🎯 Ad task finished:", e),
-        onAdClosing: (e) => console.log("Ad closing:", e),
-        onAdClick: (e) => console.log("🖱️ Ad clicked:", e),
-        onAdClosed: (e) => {
-          console.log("🎬 Ad closed with status:", e);
-          setAdStatus(e);
-          if (e === "view" || e === "click") callReward();
-        },
-      };
+          const callbackFunc = {
+            onAdResourceLoad: (e) => console.log("✅ Ad resource loaded:", e),
+            onAdOpening: (e) => console.log("Ad opening:", e),
+            onAdOpened: (e) => console.log("Ad opened:", e),
+            onAdTaskFinished: (e) => console.log("🎯 Ad task finished:", e),
+            onAdClosing: (e) => console.log("Ad closing:", e),
+            onAdClick: (e) => console.log("🖱️ Ad clicked:", e),
+            onAdClosed: (e) => {
+              console.log("🎬 Ad closed with status:", e);
+              setAdStatus(e);
+              if (e === "view" || e === "click") callReward();
+            },
+          };
 
-      // ✅ must call immediately after init
-      sdk.interactive.getRender({ adInfo, cb: callbackFunc });
-    } catch (err) {
-      console.error("❌ Error during ad loading", err);
-      setAdStatus("error");
-    }
+          // ✅ must call immediately after init
+          sdk.interactive.getRender({ adInfo, cb: callbackFunc });
+        } catch (err) {
+          console.error("❌ Error during ad loading", err);
+          setAdStatus("error");
+        }
+      });
   }, [zoneId, publisherId, callReward]);
 
   return { loadAd, isReady, adStatus };
