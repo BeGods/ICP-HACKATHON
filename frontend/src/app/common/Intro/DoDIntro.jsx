@@ -21,6 +21,12 @@ const DoDIntro = (props) => {
     displayName,
     callReward,
   });
+
+  useEffect(() => {
+    console.log("🧩 Calling loadAd on mount");
+    loadAd();
+  }, [loadAd]);
+
   return (
     <div
       draggable={false}

@@ -24,7 +24,7 @@ export const useOpenAd = ({
       adInfo: { zoneId, publisherId, eventId: 0 },
       adParams: {
         line: {
-          type: "LWA",
+          type: "LMA",
           liffId,
           prototype: window.liff,
           isFullscreen: true,
