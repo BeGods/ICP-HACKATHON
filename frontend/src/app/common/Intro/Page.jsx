@@ -372,22 +372,13 @@ const IntroPage = (props) => {
         isTgMobile ? "tg-container-height" : "browser-container-height"
       } ${activeIndex == 2 ? "bg-white" : "bg-black"}`}
     >
-      {isBrowser && tokenExpired ? (
-        <OnboardPage
-          handleTokenUpdated={() => {
-            setTokenExpired(false);
-          }}
-          refer={refer || null}
-        />
-      ) : (
-        <Launcher
-          isLoading={isLoading}
-          enableSound={enableSound}
-          isTgMobile={isTgMobile}
-          handleUpdateIdx={handleUpdateIdx}
-          activeIndex={activeIndex}
-        />
-      )}
+      <Launcher
+        isLoading={isLoading}
+        enableSound={enableSound}
+        isTgMobile={isTgMobile}
+        handleUpdateIdx={handleUpdateIdx}
+        activeIndex={activeIndex}
+      />
     </div>
   );
 };
