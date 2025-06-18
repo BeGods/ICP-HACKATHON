@@ -84,10 +84,23 @@ const DoDIntro = (props) => {
                   </p>
                 )}
               </p>
-              {/* <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DoDIntro;
+
+{
+  /* <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
                 COMING SOON
-              </h1> */}
-              {/* <img
+              </h1> */
+}
+{
+  /* <img
                 src={
                   showGlow
                     ? `${assets.buttons.black.off}`
@@ -98,13 +111,5 @@ const DoDIntro = (props) => {
               />
               <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
                 PLAY
-              </span> */}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default DoDIntro;
+              </span> */
+}
