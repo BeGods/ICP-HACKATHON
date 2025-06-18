@@ -59,11 +59,19 @@ const DoDIntro = (props) => {
                     : "bg-gray-400 cursor-not-allowed"
                 }`}
               >
-                {isReady ? "Watch Ad to Get Reward" : "Loading Ad..."}
+                {isReady
+                  ? "Watch Ad to Get Reward"
+                  : adStatus === "notAvailable"
+                  ? "Ad Not Available"
+                  : "Loading Ad..."}
               </button>
 
               <p className="text-sm text-gray-300 mt-2">
-                Ad Status: {adStatus}
+                {adStatus === "error" && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Failed to load ad. Try again later.
+                  </p>
+                )}
               </p>
               {/* <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
                 COMING SOON
