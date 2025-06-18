@@ -519,18 +519,18 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   alert("Coming Soon");
                 }}
               /> */}
-              {/* <img
+              <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
                 className="cursor-pointer w-full"
                 onClick={handleConnectLineWallet}
-              /> */}
-              <img
+              />
+              {/* <img
                 src={assets.buttons.telegram}
                 alt="x"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleTwitterLogin}
-              />
+              /> */}
 
               {/* <img
                 src={assets.buttons.dapp}

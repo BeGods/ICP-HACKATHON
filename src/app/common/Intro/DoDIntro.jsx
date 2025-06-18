@@ -1,7 +1,26 @@
 import React from "react";
 import assets from "../../../assets/assets.json";
+import { useOpenAd } from "../../../hooks/DappAds";
 
 const DoDIntro = (props) => {
+  const zoneId = import.meta.env.VITE_LMA_ZONE;
+  const publisherId = import.meta.env.VITE_PUBLISHER_ID;
+  const userId = "tanmay";
+  const displayName = "tanmay";
+
+  const callReward = () => {
+    try {
+      console.log("claimed");
+    } catch (error) {}
+  };
+
+  const { loadAd, isReady, adStatus } = useOpenAd({
+    zoneId,
+    publisherId,
+    userId,
+    displayName,
+    callReward,
+  });
   return (
     <div
       draggable={false}
@@ -31,9 +50,24 @@ const DoDIntro = (props) => {
               />
             </div>
             <div className="relative inline-block">
-              <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
+              <button
+                onClick={loadAd}
+                disabled={!isReady}
+                className={`px-6 py-2 rounded-lg text-white ${
+                  isReady
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+              >
+                {isReady ? "Watch Ad to Get Reward" : "Loading Ad..."}
+              </button>
+
+              <p className="text-sm text-gray-300 mt-2">
+                Ad Status: {adStatus}
+              </p>
+              {/* <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
                 COMING SOON
-              </h1>
+              </h1> */}
               {/* <img
                 src={
                   showGlow
