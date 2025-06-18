@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export const useOpenAd = ({
   zoneId,
@@ -9,13 +9,13 @@ export const useOpenAd = ({
 }) => {
   const [isReady, setIsReady] = useState(false);
   const [adStatus, setAdStatus] = useState("idle");
+  const showAdRef = useRef(null);
 
   const loadAd = useCallback(async () => {
     setAdStatus("loading");
 
     const liffId = import.meta.env.VITE_LINE_ID;
     if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
-      alert("❌ Missing LIFF SDK or OpenAD SDK or liffId");
       setAdStatus("error");
       return;
     }
@@ -38,7 +38,6 @@ export const useOpenAd = ({
       const result = await sdk?.interactive?.init(LineAD);
 
       if (!result || result.code !== 0) {
-        alert("no result");
         setIsReady(false);
         setAdStatus("notAvailable");
         return;
@@ -60,12 +59,24 @@ export const useOpenAd = ({
         },
       };
 
-      sdk.interactive.getRender({ adInfo: LineAD.adInfo, cb: callbackFunc });
+      // ✅ store the showAd function to call later on button click
+      showAdRef.current = () => {
+        sdk.interactive.getRender({ adInfo: LineAD.adInfo, cb: callbackFunc });
+      };
     } catch (err) {
-      alert("❌ Error during ad loading:", err);
+      alert("❌ Error during ad loading");
       setAdStatus("error");
     }
   }, [zoneId, publisherId, userId, displayName, callReward]);
 
-  return { loadAd, isReady, adStatus };
+  // ✅ Expose a function that triggers showAd
+  const showAd = () => {
+    if (showAdRef.current) {
+      showAdRef.current();
+    } else {
+      console.warn("❌ Ad not ready");
+    }
+  };
+
+  return { loadAd, showAd, isReady, adStatus };
 };
