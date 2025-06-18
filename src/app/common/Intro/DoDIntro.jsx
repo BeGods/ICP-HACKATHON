@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import assets from "../../../assets/assets.json";
 import { useOpenAd } from "../../../hooks/DappAds";
 
