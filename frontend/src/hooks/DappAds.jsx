@@ -7,22 +7,29 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
   const loadAd = useCallback(async () => {
     setAdStatus("loading");
 
-    if (!window.OpenADLineJsSDK) {
-      console.warn("❌ OpenAD SDK is missing");
+    const liffId = import.meta.env.VITE_LINE_ID;
+    if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
+      console.warn("❌ Missing LIFF SDK or OpenAD SDK or liffId");
       setAdStatus("error");
       return;
     }
 
     const adInfo = { zoneId, publisherId, eventId: 0 };
-
     const adParams = {
-      web: {
-        type: "web",
-        isFullscreen: true, // optional
+      line: {
+        type: "LMA", // or "LMA" if inside LINE Mini App
+        liffId,
+        prototype: window.liff,
+        isFullscreen: true,
+      },
+      wallet: {
+        // If you have a web3 wallet components, Optional
+        type: "eth", // eth: eth wallet, kaia: line wallet, ton: ton wallet;
+        provider: null, // here is a provider object after wallet initialization.
+        components: "", // web3 wallet components name
       },
     };
-
-    const userInfo = {}; // You can add userId/displayName if needed
+    const userInfo = {}; // leave empty for LWA/LMA
 
     try {
       const sdk = window.OpenADLineJsSDK;
@@ -52,7 +59,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
         },
       };
 
-      // ✅ Immediately trigger the ad render after init
+      // ✅ must call immediately after init
       sdk.interactive.getRender({ adInfo, cb: callbackFunc });
     } catch (err) {
       console.error("❌ Error during ad loading", err);
