@@ -3,24 +3,24 @@ import assets from "../../../assets/assets.json";
 import { useOpenAd } from "../../../hooks/DappAds";
 
 const DoDIntro = (props) => {
-  const zoneId = import.meta.env.VITE_LMA_ZONE;
-  const publisherId = import.meta.env.VITE_PUBLISHER_ID;
+  // const zoneId = import.meta.env.VITE_LMA_ZONE;
+  // const publisherId = import.meta.env.VITE_PUBLISHER_ID;
 
-  const callReward = () => {
-    try {
-      console.log("claimed");
-    } catch (error) {}
-  };
+  // const callReward = () => {
+  //   try {
+  //     console.log("claimed");
+  //   } catch (error) {}
+  // };
 
-  const { loadAd, isReady, adStatus } = useOpenAd({
-    zoneId,
-    publisherId,
-    callReward,
-  });
+  // const { loadAd, isReady, adStatus } = useOpenAd({
+  //   zoneId,
+  //   publisherId,
+  //   callReward,
+  // });
 
-  useEffect(() => {
-    loadAd();
-  }, [loadAd]);
+  // useEffect(() => {
+  //   loadAd();
+  // }, [loadAd]);
 
   return (
     <div
@@ -51,7 +51,7 @@ const DoDIntro = (props) => {
               />
             </div>
             <div className="relative inline-block">
-              <button
+              {/* <button
                 disabled={!isReady}
                 className={`px-6 py-2 rounded-lg text-white ${
                   isReady
@@ -72,7 +72,10 @@ const DoDIntro = (props) => {
                     Failed to load ad. Try again later.
                   </p>
                 )}
-              </p>
+              </p> */}
+              <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
+                COMING SOON
+              </h1>
             </div>
           </div>
         </div>
@@ -83,11 +86,6 @@ const DoDIntro = (props) => {
 
 export default DoDIntro;
 
-{
-  /* <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
-                COMING SOON
-              </h1> */
-}
 {
   /* <img
                 src={
