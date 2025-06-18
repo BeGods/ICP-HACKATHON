@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { countries } from "../../../utils/country";
 import {
   authenticateLineWallet,
+  authenticateTwitter,
   fetchOTP,
   fetchResendOTP,
   fetchRewards,
@@ -25,6 +26,7 @@ import assets from "../../../assets/assets.json";
 import { useLocation } from "react-router-dom";
 import SettingModal from "../../../components/Modals/Settings";
 import useWalletPayment from "../../../hooks/LineWallet";
+import { useTwitterAuth } from "../../../hooks/TwitterLogin";
 
 const tele = window.Telegram?.WebApp;
 
@@ -399,6 +401,7 @@ const OnboardOTP = ({ handleTokenUpdated, refer, closeModal }) => {
 
 const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
   const { setLineWallet, setAuthToken } = useContext(MainContext);
+  const { loginWithTwitter } = useTwitterAuth();
   const { connectWallet } = useWalletPayment();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
@@ -438,6 +441,27 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
       window.location.href = lineAuthUrl;
     } catch (error) {
       console.log("LINE login error:", error);
+    }
+  };
+
+  const handleTwitterLogin = async () => {
+    try {
+      const { token, twitterUsername } = await loginWithTwitter();
+
+      if (!token) {
+        console.log("Failed to login twitter.");
+      }
+
+      const response = await authenticateTwitter(
+        { token: token, twitterUsername: twitterUsername },
+        referrer
+      );
+
+      setAuthToken(response.data.accessToken);
+      await setAuthCookie(tele, response.data.accessToken);
+      window.location.reload();
+    } catch (error) {
+      console.log("Twitter login error:", error);
     }
   };
 
@@ -495,11 +519,17 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   alert("Coming Soon");
                 }}
               /> */}
-              <img
+              {/* <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
                 className="cursor-pointer w-full"
                 onClick={handleConnectLineWallet}
+              /> */}
+              <img
+                src={assets.buttons.telegram}
+                alt="x"
+                className="begod-text-shadow w-[215px]"
+                onClick={handleTwitterLogin}
               />
 
               {/* <img

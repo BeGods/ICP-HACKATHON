@@ -7,7 +7,6 @@ import {
 } from "../../../utils/api.fof";
 import {
   deleteAuthCookie,
-  deleteExpCookie,
   fetchHapticStatus,
   getExpCookie,
   setAuthCookie,

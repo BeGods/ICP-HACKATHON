@@ -26,6 +26,7 @@
     "axios": "^1.7.2",
     "canvas-confetti": "^1.9.3",
     "crypto-js": "^4.2.0",
+    "firebase": "^11.9.1",
     "gsap": "^3.12.5",
     "i18next": "^23.12.2",
     "konva": "^9.3.14",
