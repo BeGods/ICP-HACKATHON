@@ -17,6 +17,22 @@ export const authenticateTg = async (userData, referralCode) => {
   }
 };
 
+export const authenticateTwitter = async (userData, referralCode) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/twitter/auth`;
+  if (referralCode) {
+    url += `?refer=${referralCode}`;
+  }
+
+  try {
+    const response = await axios.post(url, userData, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+
 export const authenticateOneWave = async (param) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/onewave/auth`;
 

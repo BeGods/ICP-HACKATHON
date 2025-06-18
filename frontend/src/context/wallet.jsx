@@ -43,12 +43,12 @@ export const WalletProvider = ({ children }) => {
           setLineWallet(accountAddress);
           sessionStorage.setItem("accountAddress", accountAddress);
         } else {
-          if (!liff.isInClient() || !isTelegram || !userData.isOneWaveUser) {
-            (async () => await deleteAuthCookie(tele))();
-            setTimeout(() => {
-              navigate("/");
-            }, 200);
-          }
+          // if (!liff.isInClient() || !isTelegram || !userData.isOneWaveUser) {
+          //   (async () => await deleteAuthCookie(tele))();
+          //   setTimeout(() => {
+          //     navigate("/");
+          //   }, 200);
+          // }
         }
 
         console.log("SDK Initialized");
