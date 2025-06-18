@@ -7,23 +7,22 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
   const loadAd = useCallback(async () => {
     setAdStatus("loading");
 
-    const liffId = import.meta.env.VITE_LINE_ID;
-    if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
-      console.warn("❌ Missing LIFF SDK or OpenAD SDK or liffId");
+    if (!window.OpenADLineJsSDK) {
+      console.warn("❌ OpenAD SDK is missing");
       setAdStatus("error");
       return;
     }
 
     const adInfo = { zoneId, publisherId, eventId: 0 };
+
     const adParams = {
-      line: {
-        type: "LMA", // or "LMA" if inside LINE Mini App
-        liffId,
-        prototype: window.liff,
-        isFullscreen: true,
+      web: {
+        type: "web",
+        isFullscreen: true, // optional
       },
     };
-    const userInfo = {}; // leave empty for LWA/LMA
+
+    const userInfo = {}; // You can add userId/displayName if needed
 
     try {
       const sdk = window.OpenADLineJsSDK;
@@ -53,7 +52,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
         },
       };
 
-      // ✅ must call immediately after init
+      // ✅ Immediately trigger the ad render after init
       sdk.interactive.getRender({ adInfo, cb: callbackFunc });
     } catch (err) {
       console.error("❌ Error during ad loading", err);
