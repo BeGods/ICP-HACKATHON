@@ -17,7 +17,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
     const adInfo = { zoneId, publisherId, eventId: 0 };
     const adParams = {
       line: {
-        type: "LWA", // or "LMA" if inside LINE Mini App
+        type: "LMA", // or "LMA" if inside LINE Mini App
         liffId,
         prototype: window.liff,
         isFullscreen: true,
