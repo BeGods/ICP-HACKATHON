@@ -9,6 +9,9 @@ export const useOpenAd = ({
 }) => {
   const [isReady, setIsReady] = useState(false);
   const [adStatus, setAdStatus] = useState("idle");
+
+  const sdkRef = useRef(null);
+  const adInfoRef = useRef(null); // ✅ store adInfo separately
   const showAdRef = useRef(null);
 
   const loadAd = useCallback(async () => {
@@ -16,28 +19,31 @@ export const useOpenAd = ({
 
     const liffId = import.meta.env.VITE_LINE_ID;
     if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
+      console.warn("❌ Missing LIFF SDK or OpenAD SDK or liffId");
       setAdStatus("error");
       return;
     }
 
-    const LineAD = {
-      adInfo: { zoneId, publisherId, eventId: 0 },
-      adParams: {
-        line: {
-          type: "LMA",
-          liffId,
-          prototype: window.liff,
-          isFullscreen: true,
-        },
+    const adInfo = { zoneId, publisherId, eventId: 0 };
+    const adParams = {
+      line: {
+        type: "LMA", // or LWA / web
+        liffId,
+        prototype: window.liff,
+        isFullscreen: true,
       },
-      userInfo: { userId, displayName },
     };
+    const userInfo = { userId, displayName };
 
     try {
       const sdk = window.OpenADLineJsSDK;
-      const result = await sdk?.interactive?.init(LineAD);
+      sdkRef.current = sdk;
+      adInfoRef.current = adInfo;
+
+      const result = await sdk.interactive.init({ adInfo, adParams, userInfo });
 
       if (!result || result.code !== 0) {
+        console.warn("❌ Ad init failed:", result);
         setIsReady(false);
         setAdStatus("notAvailable");
         return;
@@ -45,36 +51,35 @@ export const useOpenAd = ({
 
       setIsReady(true);
 
-      const callbackFunc = {
-        onAdResourceLoad: (e) => console.log("✅ Ad resource loaded:", e),
-        onAdOpening: (e) => console.log("Ad opening:", e),
-        onAdOpened: (e) => console.log("Ad opened:", e),
-        onAdTaskFinished: (e) => console.log("🎯 Ad task finished:", e),
-        onAdClosing: (e) => console.log("Ad closing:", e),
-        onAdClick: (e) => console.log("🖱️ Ad clicked:", e),
-        onAdClosed: (e) => {
-          console.log("🎬 Ad closed with status:", e);
-          setAdStatus(e);
-          if (e === "view" || e === "click") callReward();
-        },
-      };
-
-      // ✅ store the showAd function to call later on button click
       showAdRef.current = () => {
-        sdk.interactive.getRender({ adInfo: LineAD.adInfo, cb: callbackFunc });
+        const callbackFunc = {
+          onAdResourceLoad: (e) => console.log("✅ Ad resource loaded:", e),
+          onAdOpening: (e) => console.log("Ad opening:", e),
+          onAdOpened: (e) => console.log("Ad opened:", e),
+          onAdTaskFinished: (e) => console.log("🎯 Ad task finished:", e),
+          onAdClosing: (e) => console.log("Ad closing:", e),
+          onAdClick: (e) => console.log("🖱️ Ad clicked:", e),
+          onAdClosed: (e) => {
+            console.log("🎬 Ad closed with status:", e);
+            setAdStatus(e);
+            if (e === "view" || e === "click") callReward();
+          },
+        };
+
+        sdk.interactive.getRender({ adInfo, cb: callbackFunc });
       };
     } catch (err) {
-      alert("❌ Error during ad loading");
+      console.error("❌ Error during ad loading", err);
       setAdStatus("error");
     }
   }, [zoneId, publisherId, userId, displayName, callReward]);
 
-  // ✅ Expose a function that triggers showAd
   const showAd = () => {
     if (showAdRef.current) {
+      alert("📣 Showing ad now...");
       showAdRef.current();
     } else {
-      console.warn("❌ Ad not ready");
+      alert("❌ Ad not ready or showAdRef is empty");
     }
   };
 
