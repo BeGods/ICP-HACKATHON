@@ -136,3 +136,6 @@ dist
 .env.production
 .env.docker
 volumes/mongo
+
+# firebase
+/secrets/
