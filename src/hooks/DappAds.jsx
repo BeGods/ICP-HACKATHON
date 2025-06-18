@@ -11,6 +11,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
 
     if (!window.OpenADLineJsSDK || !window.liff) {
       console.warn("❌ Missing OpenAD SDK or LIFF");
+      alert("❌ Missing OpenAD SDK or LIFF");
       setAdStatus("error");
       return;
     }
@@ -18,6 +19,8 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
     try {
       if (!window.liff.isLoggedIn()) {
         console.warn("❌ User not logged in to LINE");
+        alert("❌ User not logged in to LINE");
+
         setAdStatus("error");
         return;
       }
@@ -48,6 +51,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
 
       if (!result || result.code !== 0) {
         console.warn("❌ Ad init failed:", result);
+        alert("❌ Ad init failed:", result);
         setIsReady(false);
         setAdStatus("notAvailable");
         return;
@@ -72,6 +76,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
       sdk.interactive.getRender({ adInfo, cb: callbackFunc });
     } catch (err) {
       console.error("❌ Error during ad loading", err);
+      alert("❌ Error during ad loading", err);
       setAdStatus("error");
     }
   }, [zoneId, publisherId, callReward]);
