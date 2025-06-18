@@ -232,6 +232,7 @@ export interface IRank extends Document {
 
 // user
 export interface IUser extends Document {
+  xId?: string;
   telegramId?: string;
   stanId?: string;
   lineId?: string;

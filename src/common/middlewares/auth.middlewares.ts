@@ -14,7 +14,8 @@ export const authMiddleware = async (req, res, next) => {
     const decodedUserData = jwt.verify(
       token,
       config.security.ACCESS_TOKEN_SECRET
-    );
+    ) as jwt.JwtPayload & { _id: string };
+
     const user = await User.findOne({ _id: decodedUserData._id });
 
     if (!user) {
@@ -53,7 +54,7 @@ export const adminMiddleware = async (req, res, next) => {
     const decodedUserData = jwt.verify(
       token,
       config.security.ACCESS_TOKEN_SECRET
-    );
+    ) as jwt.JwtPayload & { _id: string };
     const user = await User.findOne({ _id: decodedUserData._id });
 
     if (!user) {
@@ -63,12 +64,10 @@ export const adminMiddleware = async (req, res, next) => {
     }
 
     if (user.role !== "admin") {
-      return res
-        .status(401)
-        .json({
-          error:
-            "Not authorized to access this resource. Admin permissions needed.",
-        });
+      return res.status(401).json({
+        error:
+          "Not authorized to access this resource. Admin permissions needed.",
+      });
     }
 
     req.user = user;

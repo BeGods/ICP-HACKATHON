@@ -5,6 +5,7 @@ import {
   authenticateOneWave,
   authenticateOTP,
   authenticateTg,
+  authenticateTwitter,
   createOneWaveSession,
   generateOtp,
   generateRefreshToken,
@@ -18,6 +19,7 @@ authRouter.post("/auth/otp", generateOtp);
 authRouter.get("/auth/logout", logoutUser);
 authRouter.post("/auth/verify", authenticateOTP);
 authRouter.post("/tele/auth", authenticateTg);
+authRouter.post("/twitter/auth", authenticateTwitter);
 authRouter.post("/line/auth", authenticateLine);
 authRouter.post("/wallet/auth", authenticateKaiaAddr);
 authRouter.get("/auth/refresh", generateRefreshToken);

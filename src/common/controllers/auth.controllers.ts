@@ -15,12 +15,14 @@ import {
   addNewOneWaveUser,
   addNewOTPUser,
   validateUsername,
+  addNewTwitterUser,
 } from "../services/user.services";
 import { Request, Response } from "express";
 import { IUser } from "../../ts/models.interfaces";
 import {
   encryptOneWaveHash,
   decryptOneWaveHash,
+  decryptHash,
 } from "../../helpers/crypt.helpers";
 import config from "../../config/config";
 import {
@@ -30,6 +32,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { generateAliOTP, verifyOtp } from "../services/otp.services";
 import { verifyMessage } from "ethers";
+import admin from "../../config/firebase";
 
 // login
 export const authenticateTg = async (
@@ -576,6 +579,98 @@ export const authenticateOTP = async (
       // create new  user
       const refPartner = refer === "STAN" ? refer : "";
       existingUser = await addNewOTPUser(newUser, refPartner);
+
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const { accessToken } = await generateAuthToken(existingUser, res);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+export const authenticateTwitter = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { token, twitterUsername } = req.body;
+    const { refer } = req.query;
+    let isUpdated = false;
+
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const userRecord = await admin.auth().getUser(decodedToken.uid);
+    const twitterInfo = userRecord.providerData.find(
+      (provider) => provider.providerId === "twitter.com"
+    );
+    const xId = twitterInfo.uid;
+    const photoUrl = twitterInfo.photoURL;
+    const username = twitterUsername ?? twitterInfo.displayName;
+
+    // existing user or not
+    let existingUser: IUser | null = await User.findOne({
+      xId: xId,
+    });
+
+    if (existingUser) {
+      // check if user details have updated
+      if (username !== existingUser.telegramUsername) {
+        existingUser.telegramUsername = username;
+        isUpdated = true;
+      }
+      if (isUpdated) {
+        existingUser.save();
+      }
+    } else {
+      if (!username) {
+        res.status(400).json({
+          message: "Invalid input. Please provide a valid username.",
+        });
+      }
+      let usernameToAdd = username;
+      const usernameExists = await validateUsername(usernameToAdd);
+      if (usernameExists) {
+        const randomSuffix = Math.random().toString(36).substring(2, 5);
+        usernameToAdd = `${usernameToAdd}_${randomSuffix}`;
+      }
+      let newUser: Partial<IUser> = {
+        xId,
+        telegramUsername: usernameToAdd,
+        ...(photoUrl && {
+          profile: {
+            avatarUrl: photoUrl,
+            updateAt: new Date(),
+          },
+        }),
+      };
+
+      let existingReferrer: IUser;
+      if (refer) {
+        existingReferrer = await User.findOne({ refer });
+
+        if (!existingReferrer) {
+          res.status(404).json({ message: "Invalid referral code." });
+        }
+
+        newUser.parentReferrerId = existingReferrer._id as ObjectId;
+      }
+
+      // create new  user
+      existingUser = await addNewTwitterUser(newUser);
+      await addTeamMember(existingUser, existingReferrer, refer);
       await createDefaultUserMyth(existingUser);
     }
 

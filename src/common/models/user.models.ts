@@ -3,6 +3,7 @@ import { IUser } from "../../ts/models.interfaces";
 
 const userSchema = new Schema<IUser>(
   {
+    xId: { type: String, unique: true, sparse: true },
     telegramId: { type: String, unique: true, sparse: true },
     lineId: { type: String, unique: true, sparse: true },
     oneWaveId: { type: String, unique: true, sparse: true },

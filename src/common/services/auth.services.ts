@@ -55,14 +55,14 @@ export const generateAuthToken = async (user: any, res) => {
     const userObj = { _id: user._id, role: "user" };
 
     const accessToken = jwt.sign(userObj, config.security.ACCESS_TOKEN_SECRET, {
-      expiresIn: config.security.ACCESS_TOKEN_EXPIRE,
+      expiresIn: config.security.ACCESS_TOKEN_EXPIRE as any,
     });
 
     const refreshToken = jwt.sign(
       userObj,
       config.security.REFRESH_TOKEN_SECRET,
       {
-        expiresIn: config.security.REFRESH_TOKEN_EXPIRE,
+        expiresIn: config.security.REFRESH_TOKEN_EXPIRE as any,
       }
     );
 
@@ -88,7 +88,7 @@ export const validateRefreshToken = async (refreshToken, res) => {
     const decodedUserData = jwt.verify(
       refreshToken,
       config.security.REFRESH_TOKEN_SECRET
-    );
+    ) as jwt.JwtPayload & { _id: string };
 
     if (!decodedUserData) {
       res.clearCookie("refreshToken", {
@@ -114,7 +114,7 @@ export const validateRefreshToken = async (refreshToken, res) => {
 
     const userObj = { _id: user._id, role: "user" };
     const accessToken = jwt.sign(userObj, config.security.ACCESS_TOKEN_SECRET, {
-      expiresIn: config.security.ACCESS_TOKEN_EXPIRE,
+      expiresIn: config.security.ACCESS_TOKEN_EXPIRE as any,
     });
 
     let newRefreshToken = null;
@@ -136,7 +136,7 @@ export const validateRefreshToken = async (refreshToken, res) => {
         refreshUserObj,
         config.security.REFRESH_TOKEN_SECRET,
         {
-          expiresIn: config.security.REFRESH_TOKEN_EXPIRE,
+          expiresIn: config.security.REFRESH_TOKEN_EXPIRE as any,
         }
       );
       res.cookie("refreshToken", newRefreshToken, {
