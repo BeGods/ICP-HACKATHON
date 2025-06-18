@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import liff from "@line/liff";
 
 export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
   const [isReady, setIsReady] = useState(false);
@@ -6,7 +7,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
 
   const loadAd = useCallback(async () => {
     setAdStatus("loading");
-
+    liff.login();
     const liffId = import.meta.env.VITE_LINE_ID;
     if (!liffId || !window.OpenADLineJsSDK || !window.liff) {
       console.warn("❌ Missing LIFF SDK or OpenAD SDK or liffId");
