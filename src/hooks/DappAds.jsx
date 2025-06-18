@@ -24,7 +24,7 @@ export const useOpenAd = ({
       adInfo: { zoneId, publisherId, eventId: 0 },
       adParams: {
         line: {
-          type: "LMA",
+          type: "LWA",
           liffId,
           prototype: window.liff,
           isFullscreen: true,
@@ -38,6 +38,7 @@ export const useOpenAd = ({
       const result = await sdk?.interactive?.init(LineAD);
 
       if (!result || result.code !== 0) {
+        alert("no result");
         setIsReady(false);
         setAdStatus("notAvailable");
         return;
