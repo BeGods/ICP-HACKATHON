@@ -1,27 +1,6 @@
-import React, { useEffect } from "react";
 import assets from "../../../assets/assets.json";
-import { useOpenAd } from "../../../hooks/DappAds";
 
 const DoDIntro = (props) => {
-  // const zoneId = import.meta.env.VITE_LMA_ZONE;
-  // const publisherId = import.meta.env.VITE_PUBLISHER_ID;
-
-  // const callReward = () => {
-  //   try {
-  //     console.log("claimed");
-  //   } catch (error) {}
-  // };
-
-  // const { loadAd, isReady, adStatus } = useOpenAd({
-  //   zoneId,
-  //   publisherId,
-  //   callReward,
-  // });
-
-  // useEffect(() => {
-  //   loadAd();
-  // }, [loadAd]);
-
   return (
     <div
       draggable={false}
@@ -51,52 +30,19 @@ const DoDIntro = (props) => {
               />
             </div>
             <div className="relative inline-block">
-              {/* <button
-                disabled={!isReady}
-                className={`px-6 py-2 rounded-lg text-white ${
-                  isReady
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-              >
-                {isReady
-                  ? "Watch Ad to Get Reward"
-                  : adStatus === "notAvailable"
-                  ? "Ad Not Available"
-                  : "Loading Ad..."}
-              </button>
-
-              <p className="text-sm text-gray-300 mt-2">
-                {adStatus === "error" && (
-                  <p className="text-red-500 text-sm mt-2">
-                    Failed to load ad. Try again later.
-                  </p>
-                )}
-              </p> */}
               <h1 className="text-gold font-fof text-[1.75rem] text-black-contour">
                 COMING SOON
               </h1>
             </div>
           </div>
         </div>
+        <div
+          id="openad-container"
+          style={{ position: "fixed", top: 0, left: 0, zIndex: 9999 }}
+        />
       </div>
     </div>
   );
 };
 
 export default DoDIntro;
-
-{
-  /* <img
-                src={
-                  showGlow
-                    ? `${assets.buttons.black.off}`
-                    : `${assets.buttons.black.on}`
-                }
-                alt="Button"
-                className="h-auto"
-              />
-              <span className="absolute inset-0 flex text-black-contour items-center justify-center opacity-80 text-white font-fof font-semibold text-[6vw]">
-                PLAY
-              </span> */
-}

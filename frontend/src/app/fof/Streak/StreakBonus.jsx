@@ -97,7 +97,7 @@ const StreakBonus = (props) => {
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            setSection(6);
+            setSection(8);
           }}
           className="flex absolute items-start bottom-[92px] justify-center w-full"
         >

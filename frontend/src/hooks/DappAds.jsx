@@ -1,8 +1,15 @@
 import { useCallback, useState } from "react";
+import liff from "@line/liff";
+import { showToast } from "../components/Toast/Toast";
 
-export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
+export const useOpenAd = ({ callReward }) => {
+  const zoneId = liff.isInClient()
+    ? import.meta.env.VITE_OPENAD_LMA_ZONE
+    : import.meta.env.VITE_OPENAD_WEB_ZONE;
+  const publisherId = import.meta.env.VITE_OPENAD_PUBLISHER_ID;
   const [isReady, setIsReady] = useState(false);
   const [adStatus, setAdStatus] = useState("idle");
+  let type = liff.isInClient() ? "LMA" : "WEB";
 
   const loadAd = useCallback(async () => {
     setAdStatus("loading");
@@ -12,20 +19,24 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
     if (!window.OpenADLineJsSDK || !window.liff) {
       console.warn("❌ Missing OpenAD SDK or LIFF");
       alert("❌ Missing OpenAD SDK or LIFF");
+
+      showToast("ad_error");
       setAdStatus("error");
       return;
     }
 
     try {
-      if (!window.liff.isLoggedIn()) {
-        console.warn("❌ User not logged in to LINE");
-        alert("❌ User not logged in to LINE");
+      // if (!window.liff.isLoggedIn()) {
+      //   console.warn("❌ User not logged in to LINE");
 
-        setAdStatus("error");
-        return;
-      }
+      //   alert("❌ User not logged in to LINE");
 
-      const profile = await window.liff.getProfile(); // ⬅️ important!
+      //   showToast("ad_error");
+      //   setAdStatus("error");
+      //   return;
+      // }
+
+      const profile = await window.liff.getProfile();
       const userInfo = {
         userId: profile.userId,
         displayName: profile.displayName,
@@ -34,7 +45,7 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
       const adInfo = { zoneId, publisherId, eventId: 0 };
       const adParams = {
         line: {
-          type: "LMA",
+          type: type,
           liffId,
           prototype: window.liff,
           isFullscreen: true,
@@ -52,6 +63,8 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
       if (!result || result.code !== 0) {
         console.warn("❌ Ad init failed:", result);
         alert("❌ Ad init failed:", result);
+
+        showToast("ad_error");
         setIsReady(false);
         setAdStatus("notAvailable");
         return;
@@ -67,16 +80,26 @@ export const useOpenAd = ({ zoneId, publisherId, callReward }) => {
         onAdClosing: (e) => console.log("Ad closing:", e),
         onAdClick: (e) => console.log("🖱️ Ad clicked:", e),
         onAdClosed: (e) => {
-          console.log("🎬 Ad closed with status:", e);
           setAdStatus(e);
-          if (e === "view" || e === "click") callReward();
+          if (e === "view" || e === "click") {
+            callReward();
+          } else {
+            showToast("ad_watch_error");
+          }
         },
       };
 
-      sdk.interactive.getRender({ adInfo, cb: callbackFunc });
+      await sdk.interactive.getRender({
+        adInfo,
+        cb: callbackFunc,
+        clickReward: () => {
+          callReward();
+        },
+      });
     } catch (err) {
       console.error("❌ Error during ad loading", err);
-      alert("❌ Error during ad loading", err);
+      showToast("ad_error");
+
       setAdStatus("error");
     }
   }, [zoneId, publisherId, callReward]);

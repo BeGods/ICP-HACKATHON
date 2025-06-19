@@ -518,6 +518,25 @@ export const showToast = (type) => {
         }
       );
       break;
+    case "ad_watch_error":
+      toast.error(
+        <ToastMesg
+          title={"Failed to claim reward."}
+          desc={"Please watch the full ad to receive your reward."}
+          status={"fail"}
+        />,
+        {
+          icon: false,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+      break;
     case "success_avatar":
       toast.success(
         <ToastMesg
