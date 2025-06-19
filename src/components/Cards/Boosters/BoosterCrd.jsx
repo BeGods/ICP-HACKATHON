@@ -33,6 +33,7 @@ import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
 import useWalletPayment from "../../../hooks/LineWallet";
 import { getKaiaValue } from "../../../utils/line";
+import { useOpenAd } from "../../../hooks/DappAds";
 
 const tele = window.Telegram?.WebApp;
 
@@ -168,11 +169,12 @@ const BoosterClaim = ({
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
-  const adsgramId = import.meta.env.VITE_AD_BOOSTER;
+  const adsgramId = import.meta.env.VITE_AD_VERIFY_ID;
   const myths = ["greek", "celtic", "norse", "egyptian", "other"];
   const [activeColor, setActiveColor] = useState(0);
   const [showPayModal, setShowPayModal] = useState(false);
   const [dots, setDots] = useState(1);
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -552,6 +554,7 @@ const BoosterClaim = ({
     if (activeCard == "minion") {
       handleClaimShards(true);
     }
+    setIsClicked(false);
   }, []);
 
   const onError = useCallback((result) => {
@@ -610,38 +613,66 @@ const BoosterClaim = ({
   };
 
   const showAd = useAdsgram({
-    blockId: adsgramId,
+    blockId: import.meta.env.VITE_AD_BOOSTER,
     onReward,
     onError,
+  });
+
+  const { loadAd, isReady } = useOpenAd({
+    callReward: onReward,
   });
 
   return (
     <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
       {!showPayModal ? (
         <>
-          {/* Adsgram */}
-          {isTelegram &&
-            !isAutoPay &&
+          {/* Adsgram & OpenAds */}
+          {!isAutoPay &&
             ((activeCard === "automata" && !boostersData?.isAutomataActive) ||
               (activeCard === "minion" &&
                 boostersData?.isShardsClaimActive)) && (
               <div
                 onClick={() => {
                   handleClickHaptic(tele, enableHaptic);
-                  showAd();
+                  if (isTelegram) {
+                    showAd();
+                  } else {
+                    if (!isReady && !isClicked) {
+                      setIsClicked(true);
+                      loadAd();
+                      setTimeout(() => {
+                        setIsClicked(false);
+                      }, 9000);
+                    }
+                  }
                 }}
                 className="absolute flex items-center justify-center top-0 w-screen pt-2"
               >
-                <div className="flex uppercase flex-col items-center gap-2 w-fit">
-                  <div className="flex relative items-center justify-center">
-                    <Clapperboard color="#ffd660" size={"4rem"} />
-                  </div>
-                  <div className="flex flex-col w-full text-center text-white">
-                    <div className="text-[2rem] w-full -mt-2">
-                      <span className="text-gold">Watch</span> {t("note.ad")}
+                {!isTelegram && !isReady && isClicked ? (
+                  <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                    <div className="flex pt-8 relative items-center justify-center">
+                      <div className="text-white text-black-contour  text-[8vw]">
+                        <div className="w-full text-center relative font-medium text-secondary">
+                          {t("keywords.load")}
+                          <span className="absolute">{`${".".repeat(
+                            dots
+                          )}`}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                    <div className="flex relative items-center justify-center">
+                      <Clapperboard color="#ffd660" size={"4rem"} />
+                    </div>
+                    <div className="flex flex-col w-full text-center text-white">
+                      <div className="text-[2rem] w-full -mt-2">
+                        <span className="text-gold">Watch</span> {t("note.ad")}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

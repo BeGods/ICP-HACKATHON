@@ -9,6 +9,7 @@ import { validateCountryCode } from "../../../helpers/cookie.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { useAdsgram } from "../../../hooks/Adsgram";
 import liff from "@line/liff";
+import { useOpenAd } from "../../../hooks/DappAds";
 
 const tele = window.Telegram?.WebApp;
 
@@ -44,6 +45,10 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
     blockId: adsgramId,
     onReward,
     onError,
+  });
+
+  const { loadAd, isReady } = useOpenAd({
+    callReward: onReward,
   });
 
   const handleCopyLink = async () => {
@@ -152,7 +157,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
             if (isTelegram) {
               showAd();
             } else {
-              setClaim(true);
+              loadAd();
             }
           } else {
             setClaim(true);

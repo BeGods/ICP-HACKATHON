@@ -284,22 +284,12 @@ const IntroPage = (props) => {
         setIsTgMobile(true);
       }
 
-      // const isBrowserDesktop = isDesktop();
-
-      // if (isBrowserDesktop && !oneWaveParam) {
-      // }
-
       {
         (async () => {
           setIsTelegram(isTg);
 
           const isUnknownBrowser =
             platform === "unknown" && !oneWaveParam && !liff.isInClient();
-
-          // if (blockForTg) {
-          //   setIsBrowser(false);
-          //   return;
-          // }
 
           if (isUnknownBrowser) {
             setIsBrowser(true);
