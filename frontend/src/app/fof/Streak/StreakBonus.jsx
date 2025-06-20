@@ -99,7 +99,7 @@ const StreakBonus = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(8);
           }}
-          className="flex absolute items-start bottom-[92px] justify-center w-full"
+          className="flex absolute items-start bottom-[6dvh] justify-center w-full"
         >
           <img
             src="/assets/badges/superstar.svg"

@@ -19,7 +19,7 @@ const GachaRoll = ({ showSpin }) => {
   }, [showSpin]);
 
   return (
-    <ul className={`circle-container font-symbols text-white text-[9dvh]`}>
+    <ul className={`circle-container font-symbols text-white text-[8dvh]`}>
       {itemArr.map((item, index) => (
         <li key={index}>
           <h1
