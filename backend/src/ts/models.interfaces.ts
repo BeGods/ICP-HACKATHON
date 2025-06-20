@@ -286,6 +286,7 @@ export interface IUser extends Document {
     fof: Date;
     hasClaimedFoFRwrd: boolean;
   };
+  isBlacklisted?: boolean;
   userBetAt: string;
   createdAt?: Date;
   updatedAt?: Date;

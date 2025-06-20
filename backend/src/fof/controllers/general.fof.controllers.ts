@@ -15,6 +15,7 @@ import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import { determineStreak } from "../../helpers/streak.helpers";
 import { updateTokenReward } from "../../common/services/reward.services";
+import mongoose from "mongoose";
 
 export const validateUserPlayed = async (req, res) => {
   try {
@@ -291,12 +292,21 @@ export const claimDailyBonus = async (req, res) => {
 // bonus --gacha
 export const claimJoinBonus = async (req, res) => {
   try {
+    const user = req.user;
     const userId = req.user._id;
 
-    await User.findOneAndUpdate(
-      { _id: userId },
-      { "bonus.fof.joiningBonus": true }
-    );
+    await user.updateOne({ "bonus.fof.joiningBonus": true });
+
+    if (user.parentReferrerId) {
+      await User.findOneAndUpdate(
+        { _id: new mongoose.Types.ObjectId(user.parentReferrerId) },
+        {
+          $inc: {
+            directReferralCount: 1,
+          },
+        }
+      );
+    }
 
     await userMythologies.findOneAndUpdate(
       { userId: userId, "mythologies.name": "Greek" },

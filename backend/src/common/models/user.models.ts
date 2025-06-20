@@ -151,6 +151,9 @@ const userSchema = new Schema<IUser>(
     userBetAt: {
       type: String,
     },
+    isBlacklisted: {
+      type: Boolean,
+    },
   },
 
   { timestamps: true }
