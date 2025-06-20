@@ -22,7 +22,11 @@ export const validateWithdrawRwrd = async (req, res, next) => {
 
   try {
     // chekc valid balance
-    if (amount < 10) {
+    if (type === "usdt" && amount < 1) {
+      throw new Error(`Failed to withdraw. Atleast need 1 ${type}.`);
+    }
+
+    if (type !== "usdt" && amount < 10) {
       throw new Error(`Failed to withdraw. Atleast need 10 ${type}.`);
     }
 
