@@ -24,6 +24,14 @@ export const authMiddleware = async (req, res, next) => {
         .json({ error: "Not authorized to access this resource" });
     }
 
+    if (user.isBlacklisted === true) {
+      return res
+        .status(403)
+        .json({
+          error: "Your account has been blacklisted. Please connect support.",
+        });
+    }
+
     req.user = user;
     next();
   } catch (error) {

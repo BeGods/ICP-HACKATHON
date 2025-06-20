@@ -25,6 +25,20 @@ app.use(express.json());
 app.use(limiter);
 app.set("trust proxy", 1);
 
+const blockedIPs = new Set(config.server.BLOCKED_IPS);
+
+app.use((req, res, next) => {
+  const ip = req.ip;
+
+  // Optional: normalize IPv6-style localhost ::ffff:127.0.0.1
+  const cleanIP = ip.startsWith("::ffff:") ? ip.replace("::ffff:", "") : ip;
+
+  if (blockedIPs.has(cleanIP)) {
+    return res.status(403).json({ message: "Your IP is blocked." });
+  }
+
+  next();
+});
 app.use(
   cors({
     origin: (origin, callback) => {

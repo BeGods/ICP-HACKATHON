@@ -265,7 +265,7 @@ export const addTeamMember = async (user, existingReferrer, referralCode) => {
         existingReferrer.squadOwner = existingReferrer._id;
       }
 
-      existingReferrer.directReferralCount += 1;
+      // existingReferrer.directReferralCount += 1;
       existingReferrer.save();
     }
   } catch (error) {

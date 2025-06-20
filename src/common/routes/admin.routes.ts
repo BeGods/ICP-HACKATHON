@@ -4,10 +4,14 @@ import express from "express";
 import config from "../../config/config";
 import { adminMiddleware } from "../middlewares/auth.middlewares";
 import {
+  blacklistAndCleanupUsers,
   createPartner,
   createQuest,
   createReward,
   getAdminUpdates,
+  getAllReferralsById,
+  getPlayedUserCount,
+  getUserIdsByReferral,
   ping,
 } from "../controllers/admin.controllers";
 const router = express.Router();
@@ -39,6 +43,12 @@ router.post("/partners/create", adminMiddleware, createPartner);
 router.post("/rewards/create", adminMiddleware, createReward);
 // admin: update status
 router.post("/payments/verify", adminMiddleware, createReward);
+router.post(
+  `/admin${config.security.ADMIN_KEY}/blacklist`,
+  adminMiddleware,
+  blacklistAndCleanupUsers
+);
+// router.post("/admin/played", adminMiddleware, getPlayedUserCount);
 
 // migrate db
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);
