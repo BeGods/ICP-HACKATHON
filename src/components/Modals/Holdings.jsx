@@ -59,6 +59,7 @@ const HoldingsModal = ({ handleClose }) => {
     } catch (error) {
       // toast
       handleClose();
+      alert(error);
       console.log(error);
     }
   };
@@ -218,7 +219,9 @@ const HoldingsModal = ({ handleClose }) => {
                       className="w-[1.8rem]"
                     />
                     <div>
-                      <div className="text-white font-medium">{itm.amount}</div>
+                      <div className="text-white font-medium">
+                        {itm.amount + " " + itm.currency}
+                      </div>
                       <div className="text-sm text-gray-400">
                         {itm.updatedAt.split("T")[0]}
                       </div>
@@ -244,10 +247,24 @@ const HoldingsModal = ({ handleClose }) => {
           </div>
         )}
       </div>
-      <div className="flex text-tertiary  text-white text-left modal-width mt-6 pl-2">
-        Note: You can withdraw only if you have at least{" "}
-        {isTelegram ? "10 STARS" : "10 KAIA"} or 1 USDT. Withdrawals are
-        processed and credited within 48 hours.
+      <div className="flex flex-col text-tertiary  text-white text-left modal-width mt-6 pl-2">
+        <span>
+          Note: You can withdraw only if you have at least{" "}
+          {isTelegram ? "10 STARS" : "10 KAIA"} or 1 USDT. Withdrawals are
+          processed and credited within 48 hours.
+        </span>
+        <div className="flex flex-col mt-4">
+          {!isHistory &&
+            ((userData.holdings.kaia ?? 0) > 10 ||
+              (userData.holdings.usdt ?? 2) > 1 ||
+              (userData.holdings.kaia ?? 0) > 10) && (
+              <div className="flex w-full justify-center uppercase text-gold gap-x-2">
+                <span>Click</span>
+                <Download color="gold" />
+                <span>Withdraw</span>
+              </div>
+            )}
+        </div>
       </div>
     </div>
   );

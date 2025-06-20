@@ -18,7 +18,6 @@ export const useOpenAd = ({ callReward }) => {
 
     if (!window.OpenADLineJsSDK || !window.liff) {
       console.warn("❌ Missing OpenAD SDK or LIFF");
-      alert("❌ Missing OpenAD SDK or LIFF");
 
       showToast("ad_error");
       setAdStatus("error");
@@ -26,16 +25,6 @@ export const useOpenAd = ({ callReward }) => {
     }
 
     try {
-      // if (!window.liff.isLoggedIn()) {
-      //   console.warn("❌ User not logged in to LINE");
-
-      //   alert("❌ User not logged in to LINE");
-
-      //   showToast("ad_error");
-      //   setAdStatus("error");
-      //   return;
-      // }
-
       const profile = await window.liff.getProfile();
       const userInfo = {
         userId: profile.userId,
@@ -61,8 +50,7 @@ export const useOpenAd = ({ callReward }) => {
       const result = await sdk.interactive.init({ adInfo, adParams, userInfo });
 
       if (!result || result.code !== 0) {
-        console.warn("❌ Ad init failed:", result);
-        alert("❌ Ad init failed:", result);
+        console.warn("❌ Ad init failed:", JSON.stringify(result));
 
         showToast("ad_error");
         setIsReady(false);
