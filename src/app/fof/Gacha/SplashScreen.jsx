@@ -229,7 +229,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
       {/* Bottom */}
       <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
-      <div className="flex absolute items-start bottom-[92px] justify-center w-full">
+      {/* <div className="flex absolute items-start bottom-[92px] justify-center w-full">
         {showHand && (
           <ThumbsUp
             onClick={() => {
@@ -240,34 +240,11 @@ const SplashScreen = ({ reward, exploitReward }) => {
             className="mx-auto drop-shadow-xl scale-more mt-6"
           />
         )}
-      </div>
+      </div> */}
       <div
-        className={`text-gold text-[3rem] absolute bottom-6 mt-4 scale-${showScale} w-full flex justify-center items-center`}
+        className={`text-gold leading-[3rem] text-[3rem] text-center absolute bottom-[6dvh] mt-4 uppercase transition-all duration-500 scale-${showScale} w-full flex justify-center items-center`}
       >
-        {currReward?.type === "mythOrb"
-          ? `${
-              t(
-                `elements.${mythElementNames[
-                  currReward.mythology
-                ]?.toLowerCase()}`
-              ) +
-              " " +
-              t("keywords.orb")
-            }`
-          : currReward?.type === "blackOrb"
-          ? `${t("elements.aether") + " " + t("keywords.orb")}`
-          : currReward?.type === "quest"
-          ? `${t("sections.quests")}`
-          : currReward?.type === "minion"
-          ? `1 ${
-              wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
-              " ALCHEMIST"
-            }`
-          : `1 ${
-              wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
-              " " +
-              currReward?.type?.toUpperCase()
-            }`}
+        1 water alchemist
       </div>
 
       {/* Audios */}
