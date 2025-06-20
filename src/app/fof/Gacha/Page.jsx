@@ -292,7 +292,7 @@ const Gacha = (props) => {
           </div>
           {/* Bottom */}
           <div className="flex items-start justify-center w-full h-1/5"></div>
-          <div className="flex absolute items-start bottom-[92px] justify-center w-full">
+          <div className="flex absolute items-start bottom-[6dvh] justify-center w-full">
             {!showScale && (
               <div className="relative">
                 {!disableHand && (
