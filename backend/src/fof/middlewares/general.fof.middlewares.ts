@@ -310,6 +310,9 @@ export const validateValidReward = async (req, res, next) => {
     const inviteTwelveMsnId = new mongoose.Types.ObjectId(
       "685111495e5f4cc871608299"
     );
+    const inviteEighteenMsnId = new mongoose.Types.ObjectId(
+      "6854f8053caa936e11321a6f"
+    );
 
     // validate mission action
     if (rewardDetails._id.toString() === conversionMsnId.toString()) {
@@ -322,6 +325,10 @@ export const validateValidReward = async (req, res, next) => {
       await validateInviteReward(user, 6);
     } else if (rewardDetails._id.toString() === inviteTwelveMsnId.toString()) {
       await validateInviteReward(user, 12);
+    } else if (
+      rewardDetails._id.toString() === inviteEighteenMsnId.toString()
+    ) {
+      await validateInviteReward(user, 18);
     } else {
       return res.status(400).json({ message: "Invalid rewardId." });
     }
