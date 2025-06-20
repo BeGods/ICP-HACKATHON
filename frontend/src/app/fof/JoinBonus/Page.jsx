@@ -139,7 +139,7 @@ const JoinBonus = (props) => {
         <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
         <div
           onClick={handleClaimBonus}
-          className="flex absolute items-start bottom-[92px] justify-center w-full"
+          className="flex absolute items-start bottom-[6dvh] justify-center w-full"
         >
           <ThumbsUp
             size={"4rem"}
