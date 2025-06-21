@@ -31,7 +31,8 @@ export const validateWithdrawRwrd = async (req, res, next) => {
     }
 
     // check wallet connected
-    if ((type == "kaia" || type == "usdt") && !user.kaiaAddress) {
+    const walletRequiredTypes = ["usdt", "kaia", "sol", "eth"];
+    if (walletRequiredTypes.includes(type) && !user.kaiaAddress) {
       throw new Error(`Failed to withdraw. Wallet not connected.`);
     }
 
