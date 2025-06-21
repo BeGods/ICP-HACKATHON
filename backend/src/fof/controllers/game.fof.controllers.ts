@@ -265,8 +265,6 @@ export const getGameStats = async (req, res) => {
       ...memberData,
     };
 
-    console.log(userData);
-
     if (user.oneWaveId) {
       userData.isOneWaveUser = true;
     }

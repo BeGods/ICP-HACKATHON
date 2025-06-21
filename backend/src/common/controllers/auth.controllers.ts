@@ -220,10 +220,7 @@ export const createNewUserIfNoExists = async (req, res) => {
   }
 };
 
-export const authenticateLine = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const authenticateLine = async (req: Request, res: Response) => {
   try {
     const { token, code } = req.body;
     const { referralCode } = req.query as { referralCode?: string | null };
@@ -244,7 +241,19 @@ export const authenticateLine = async (
       const baseUsername = match ? match[1] : existingUser.telegramUsername;
       if (lineName !== baseUsername) {
         existingUser.telegramUsername = lineName;
-        isUpdated = true;
+
+        try {
+          await existingUser.save();
+        } catch (err: any) {
+          if (err.code === 11000) {
+            console.warn(
+              "Duplicate telegramUsername while updating:",
+              lineName
+            );
+          } else {
+            throw err;
+          }
+        }
       }
 
       if (isUpdated) {
@@ -253,11 +262,17 @@ export const authenticateLine = async (
     } else {
       // handle this
       let usernameToAdd = lineName;
-      const usernameExists = await validateUsername(usernameToAdd);
-      if (usernameExists) {
-        const randomSuffix = Math.random().toString(36).substring(2, 5); // random 3-letter string
-        usernameToAdd = `${usernameToAdd}_${randomSuffix}`;
+      let maxAttempts = 3;
+
+      // Retry username generation on duplicate
+      while (maxAttempts-- > 0) {
+        const usernameExists = await validateUsername(usernameToAdd);
+        if (!usernameExists) break;
+
+        const randomSuffix = Math.random().toString(36).substring(2, 5);
+        usernameToAdd = `${lineName}_${randomSuffix}`;
       }
+
       let newUser: Partial<IUser> = {
         lineId: lineId,
         telegramUsername: usernameToAdd,
@@ -283,7 +298,16 @@ export const authenticateLine = async (
       }
 
       // create new  user
-      existingUser = await addNewLineUser(newUser);
+      try {
+        existingUser = await addNewLineUser(newUser);
+      } catch (err: any) {
+        if (err.code === 11000) {
+          return res
+            .status(409)
+            .json({ message: "Username conflict. Try again." });
+        }
+        throw err;
+      }
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }

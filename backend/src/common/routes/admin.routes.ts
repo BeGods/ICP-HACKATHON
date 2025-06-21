@@ -13,7 +13,9 @@ import {
   getPlayedUserCount,
   getUserIdsByReferral,
   ping,
+  verifyPayment,
 } from "../controllers/admin.controllers";
+import { validatePayment } from "../middlewares/admin.middlewares";
 const router = express.Router();
 
 // ping
@@ -42,7 +44,12 @@ router.post("/partners/create", adminMiddleware, createPartner);
 // admin: create reward
 router.post("/rewards/create", adminMiddleware, createReward);
 // admin: update status
-router.post("/payments/verify", adminMiddleware, createReward);
+router.post(
+  "/payments/verify",
+  adminMiddleware,
+  validatePayment,
+  verifyPayment
+);
 router.post(
   `/admin${config.security.ADMIN_KEY}/blacklist`,
   adminMiddleware,
