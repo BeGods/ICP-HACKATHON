@@ -3,7 +3,7 @@ import { PaymentLogs } from "../models/transactions.models";
 
 export const validatePayment = async (req, res, next) => {
   try {
-    let { paymentId, status, transactionId } = await decryptHash(req.body.data);
+    let { paymentId, status, transactionId } = req.body.data;
 
     // check if payment exists
     const paymentDetails = await PaymentLogs.findOne({
