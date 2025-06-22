@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { MainContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
@@ -8,54 +8,51 @@ import { showToast } from "../../Toast/Toast";
 
 const PayoutInfoCard = ({ close, data }) => {
   const { i18n } = useTranslation();
+  let disableClick = useRef(false);
   const { assets, isTelegram, authToken, setUserData, setPayouts } =
     useContext(MainContext);
 
   const handleClaimMsn = async () => {
-    const paymentType = data.paymentType?.includes("USDT")
-      ? "usdt"
-      : isTelegram
-      ? "stars"
-      : "kaia";
+    if (disableClick.current) return;
 
-    if (data.id == "684882aa7c77e14a7262bbcc") {
-      alert("Coming Soon");
-      return;
-    }
+    disableClick.current = true;
 
     try {
+      const paymentType = data.paymentType?.includes("USDT")
+        ? "usdt"
+        : isTelegram
+        ? "stars"
+        : "kaia";
+
       await updateMsnStatus(authToken, data.id, paymentType);
 
       setUserData((prev) => {
         const prevHoldings = prev.holdings || {};
-        const currentTokenAmount = prevHoldings[paymentType] || 0;
-        const updatedTokenAmount = currentTokenAmount + data.amount;
+        const updatedAmount = (prevHoldings[paymentType] || 0) + data.amount;
 
         return {
           ...prev,
           holdings: {
             ...prevHoldings,
-            [paymentType]: updatedTokenAmount,
+            [paymentType]: updatedAmount,
           },
         };
       });
 
-      setPayouts((prev) => {
-        const updatedPayouts = prev.map((payout) => {
-          if (payout.id === data.id) {
-            return { ...payout, isClaimed: true };
-          }
-          return payout;
-        });
+      setPayouts((prev) =>
+        prev.map((payout) =>
+          payout.id === data.id ? { ...payout, isClaimed: true } : payout
+        )
+      );
 
-        return updatedPayouts;
-      });
-      close();
       showToast("payout_success");
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
       showToast("payout_error");
-
+    } finally {
+      setTimeout(() => {
+        disableClick.current = false;
+      }, 2000);
       close();
     }
   };
@@ -99,7 +96,13 @@ const PayoutInfoCard = ({ close, data }) => {
 
         {data?.limit > 0 ? (
           <div className="absolute w-full uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
-            {data.limit} <span>Slots Left</span>
+            {data.isClaimed ? (
+              "CLAIMED"
+            ) : (
+              <>
+                {data.limit} <span>Slots Left</span>
+              </>
+            )}
           </div>
         ) : (
           <div className="absolute w-full text-center uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-red-500 text-black-contour">

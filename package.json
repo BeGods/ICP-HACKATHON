@@ -45,6 +45,7 @@
     "react-scratchcard-v2": "^1.1.1",
     "react-toastify": "^10.0.5",
     "sass": "^1.77.8",
+    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.12",
     "use-image": "^1.1.1",
     "uuid": "^11.1.0"

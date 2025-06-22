@@ -487,12 +487,12 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
             <div className="flex flex-col items-center z-[99] gap-[1.5dvh] mb-[5dvh]">
               {/*
                */}
-              <img
+              {/* <img
                 src={assets.buttons.line}
                 alt="line-button"
                 className="begod-text-shadow w-[215px]"
                 onClick={handleLineLogin}
-              />
+              /> */}
               {/* <div className="flex cursor-pointer justify-center items-center rounded-[12px] w-[240px] bg-[#06C755] text-[#FFFFFF] h-[60px] px-[28px] gap-[10px]">
                 <img
                   src="/assets/dapp.logo.png"
@@ -520,12 +520,12 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
                   alert("Coming Soon");
                 }}
               /> */}
-              {/* <img
+              <img
                 src={assets.buttons.dapp}
                 alt="dapp-button"
                 className="cursor-pointer w-full"
                 onClick={handleConnectLineWallet}
-              /> */}
+              />
               {/* <img
                 src={assets.buttons.telegram}
                 alt="x"

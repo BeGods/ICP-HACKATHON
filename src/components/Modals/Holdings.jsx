@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../context/context";
 import {
   Check,
@@ -19,6 +19,7 @@ const tele = window.Telegram?.WebApp;
 const HoldingsModal = ({ handleClose }) => {
   const { enableHaptic, userData, setUserData, assets, isTelegram, authToken } =
     useContext(MainContext);
+  let disableClick = useRef(false);
   const [history, setHistory] = useState([]);
   const [isHistory, setIsHistory] = useState(false);
 
@@ -33,9 +34,17 @@ const HoldingsModal = ({ handleClose }) => {
   };
 
   const initateWithdraw = async (type) => {
-    if (type !== "stars" && !userData.kaiaAddress) {
-      showToast("wallet_unlinked");
+    if (disableClick.current === true) {
+      return;
     }
+
+    disableClick.current = true;
+
+    if (!userData.kaiaAddress) {
+      showToast("wallet_unlinked");
+      disableClick.current = false;
+    }
+
     try {
       handleClickHaptic(tele, enableHaptic);
 
@@ -59,8 +68,11 @@ const HoldingsModal = ({ handleClose }) => {
     } catch (error) {
       // toast
       handleClose();
-      alert(error);
       console.log(error);
+    } finally {
+      setTimeout(() => {
+        disableClick.current = false;
+      }, 2000);
     }
   };
 
@@ -123,7 +135,7 @@ const HoldingsModal = ({ handleClose }) => {
           <>
             <div
               onClick={() => {
-                if ((userData.holdings.usdt ?? 2) > 1) {
+                if ((userData.holdings.usdt ?? 0) > 1) {
                   initateWithdraw("usdt");
                 }
               }}

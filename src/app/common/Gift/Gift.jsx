@@ -1,14 +1,44 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../../context/context";
 import GiftHeader from "./Header";
 import GiftCarousel from "../../../components/Carousel/GiftCarousel";
 import TaskCarousel from "../../../components/Carousel/TaskCarousel";
 import RewardCarousel from "../../../components/Carousel/RewardCarousel";
+import { socket } from "../../../utils/socket";
 
 const Gift = () => {
-  const { globalRewards, payouts, assets, tasks, userData, isTgMobile } =
-    useContext(MainContext);
+  const {
+    globalRewards,
+    payouts,
+    setPayouts,
+    assets,
+    tasks,
+    userData,
+    isTgMobile,
+  } = useContext(MainContext);
   const [category, setCategory] = useState(1);
+
+  // useEffect(() => {
+  //   if (!socket.connected) socket.connect();
+
+  //   socket.on("connect", () => {
+  //     console.log("Connected to socket server");
+  //   });
+
+  //   socket.on("reward_limit_updated", ({ rewardId, newLimit }) => {
+  //     setPayouts((prevPayouts) =>
+  //       prevPayouts.map((payout) =>
+  //         payout.id === rewardId
+  //           ? { ...payout, limit: newLimit ?? payout.limit }
+  //           : payout
+  //       )
+  //     );
+  //   });
+
+  //   return () => {
+  //     socket.off("reward_limit_updated");
+  //   };
+  // }, []);
 
   return (
     <div

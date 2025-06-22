@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "../../styles/carousel.scss";
-import GiftItemCrd from "../Cards/Reward/GiftItemCrd";
 import PayoutItem from "../Cards/Reward/PayoutItm";
 
 const RewardCarousel = ({ rewards }) => {
@@ -46,6 +45,7 @@ const RewardCarousel = ({ rewards }) => {
             }
             return b.limit - a.limit;
           })
+          .filter((itm) => itm.limit > 0)
           .slice(currentIndex, currentIndex + 3)
           .map((item, index) => {
             let className = "carousel__item";

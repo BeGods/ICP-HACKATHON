@@ -137,7 +137,7 @@ const JoinBonus = (props) => {
         </div>
         {/* Bottom */}
         <div className="flex items-start text-color  justify-start w-full h-1/5"></div>
-        <div
+        {/* <div
           onClick={handleClaimBonus}
           className="flex absolute items-start bottom-[6dvh] justify-center w-full"
         >
@@ -151,7 +151,7 @@ const JoinBonus = (props) => {
               b
             </div>
           )}
-        </div>
+        </div> */}
         <div className="text-gold text-[3rem] absolute bottom-6 mt-4 w-full flex justify-center items-center">
           {changeText ? "3 Multi Orbs" : "2 Fire Orbs"}
         </div>
