@@ -9,7 +9,11 @@ import rewards from "../models/rewards.models";
 import mongoose from "mongoose";
 import { getDailyActiveUsers } from "../services/admin.services";
 import { Referral } from "../models/referral.models";
-import { RewardsTransactions } from "../models/transactions.models";
+import {
+  PaymentLogs,
+  RewardsTransactions,
+} from "../models/transactions.models";
+import milestones from "../models/milestones.models";
 
 // get
 // test server
@@ -509,6 +513,83 @@ export const getAllReferralsById = async (req, res) => {
   } catch (error) {
     console.error("Error in getAllReferralsById:", error);
     res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};
+
+export const fetchPayouts = async (req, res) => {
+  try {
+    const pendingTrx = await PaymentLogs.find({
+      reward: "withdraw",
+      transferType: "send",
+      status: "pending",
+    }).select("userId amount currency");
+
+    const userIds = pendingTrx.map((itm) => itm.userId);
+
+    const users = await User.find({
+      _id: { $in: userIds },
+    }).select("_id telegramUsername kaiaAddress");
+
+    const rewards = await milestones
+      .find({
+        userId: { $in: userIds },
+      })
+      .select("userId rewards");
+
+    const userMap = new Map();
+    users.forEach((user) => {
+      userMap.set(user._id.toString(), user);
+    });
+
+    const rewardMap = new Map();
+    rewards.forEach((rewardEntry) => {
+      rewardMap.set(rewardEntry.userId.toString(), rewardEntry);
+    });
+
+    const rewardValues = [
+      { id: "6854f8053caa936e11321a6f", amount: 1 },
+      { id: "685111495e5f4cc871608299", amount: 0.3 },
+      { id: "684deac96a2ad7c99d758973", amount: 0.3 },
+    ];
+
+    // Convert rewardValues to a Map for fast lookup
+    const rewardValueMap = new Map(rewardValues.map((r) => [r.id, r.amount]));
+
+    const mergedData = pendingTrx.map((trx) => {
+      const user = userMap.get(trx.userId.toString());
+      const rewardEntry = rewardMap.get(trx.userId.toString());
+
+      let totalClaimedRewardValue = 0;
+
+      if (
+        rewardEntry?.rewards?.monetaryRewards &&
+        Array.isArray(rewardEntry.rewards.monetaryRewards)
+      ) {
+        for (const itm of rewardEntry.rewards.monetaryRewards) {
+          const rewardId = itm.rewardId;
+          const value = rewardValueMap.get(rewardId?.toString());
+          if (value) totalClaimedRewardValue += value;
+        }
+      }
+
+      const isRewardClaimed =
+        Math.abs(totalClaimedRewardValue - trx.amount) < 0.0001;
+
+      const userData = user ? user.toObject() : null;
+
+      return {
+        ...trx.toObject(),
+        username: userData.telegramUsername,
+        kaiaAddress: userData.kaiaAddress,
+        isRewardClaimed,
+        totalClaimedRewardValue,
+      };
+    });
+
+    res.status(200).json({ data: mergedData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong." });
   }
 };
 

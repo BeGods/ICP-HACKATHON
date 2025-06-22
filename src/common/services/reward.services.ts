@@ -1,10 +1,12 @@
+import mongoose from "mongoose";
 import { IReward } from "../../ts/models.interfaces";
 import { RewardsTransactions } from "../models/transactions.models";
+import { io } from "../../config/socket";
 
 export const updateTokenReward = async (
   user,
   milestones,
-  reward: IReward,
+  reward,
   paymentType
 ) => {
   try {
@@ -12,11 +14,11 @@ export const updateTokenReward = async (
     const validTokens = ["stars", "usdt", "kaia"];
     const rewardAmount = Number(reward.amount.toFixed(6));
 
-    if (!token || !validTokens?.includes(token)) {
+    if (!token || !validTokens.includes(token)) {
       throw new Error("Invalid payment type.");
     }
 
-    // add to milestones
+    // add milestone
     await milestones.updateOne(
       {
         $push: {
@@ -29,11 +31,10 @@ export const updateTokenReward = async (
       },
       {
         upsert: true,
-        new: true,
       }
     );
 
-    // update token balance
+    // update balance
     await user.updateOne(
       {
         $inc: {
@@ -42,36 +43,35 @@ export const updateTokenReward = async (
       },
       {
         upsert: true,
-        new: true,
       }
     );
 
-    // register transaction
-    const newTransaction = {
-      rewardId: reward._id,
-      type: token.toUpperCase(),
-    };
-
-    // deduct reward limit
+    // deduct slot
     await reward.updateOne({
-      $inc: {
-        limit: -1,
-      },
+      $inc: { limit: -1 },
     });
 
-    await RewardsTransactions.findOneAndUpdate(
-      { userId: user._id },
-      { $set: newTransaction },
-      { upsert: true, new: true }
-    );
+    io.emit("reward_limit_updated", {
+      rewardId: reward._id,
+      newLimit: reward.limit - 1,
+    });
+
+    const newTransaction = new RewardsTransactions({
+      userId: user._id,
+      rewardId: reward._id,
+      type: token.toUpperCase(),
+    });
+
+    await newTransaction.save();
 
     return true;
   } catch (error) {
-    console.log(error);
+    console.log("Update Token Reward Error:", error);
+    return false;
   }
 };
 
-export const initalizeWithdraw = async (userId, rewardId) => {
+export const initalizeWithdraw = async () => {
   try {
     return true;
   } catch (error) {

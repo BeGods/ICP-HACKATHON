@@ -68,6 +68,7 @@ const milestoneSchema = new Schema<IMilestone>({
         rewardId: {
           type: Schema.Types.ObjectId,
           required: true,
+          unique: true,
         },
         claimedAt: {
           type: Date,

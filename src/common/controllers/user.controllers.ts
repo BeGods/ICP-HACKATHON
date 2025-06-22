@@ -407,8 +407,6 @@ export const withdrawReward = async (req, res) => {
   const amount = req.amount;
   const transactionId = uuidv4();
 
-  console.log(amount);
-
   try {
     const newTransaction = new PaymentLogs({
       userId: user._id,

@@ -8,6 +8,7 @@ import {
   createPartner,
   createQuest,
   createReward,
+  fetchPayouts,
   getAdminUpdates,
   getAllReferralsById,
   getPlayedUserCount,
@@ -55,6 +56,8 @@ router.post(
   adminMiddleware,
   blacklistAndCleanupUsers
 );
+
+router.get(`/admin/pending`, adminMiddleware, fetchPayouts);
 // router.post("/admin/played", adminMiddleware, getPlayedUserCount);
 
 // migrate db

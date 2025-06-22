@@ -31,8 +31,7 @@ export const validateWithdrawRwrd = async (req, res, next) => {
     }
 
     // check wallet connected
-    const walletRequiredTypes = ["usdt", "kaia", "sol", "eth"];
-    if (walletRequiredTypes.includes(type) && !user.kaiaAddress) {
+    if (!user.kaiaAddress) {
       throw new Error(`Failed to withdraw. Wallet not connected.`);
     }
 
@@ -41,7 +40,7 @@ export const validateWithdrawRwrd = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Failed to validate user.",
+      message: error.message,
       error: error.message,
     });
   }
