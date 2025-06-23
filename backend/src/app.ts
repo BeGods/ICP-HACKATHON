@@ -6,7 +6,7 @@ import hpp from "hpp";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import config from "./config/config";
-import { getClientIP, normalizeUserAgent } from "./utils/morgan/ua";
+import { normalizeUserAgent } from "./utils/morgan/ua";
 const express = require("express");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -28,8 +28,13 @@ app.use(express.json());
 app.use(limiter);
 
 const getRealClientIP = (req) => {
+  const cfIP = req.headers["cf-connecting-ip"];
+  if (cfIP) return cfIP.trim();
+
   const xfwd = req.headers["x-forwarded-for"];
-  return xfwd?.split(",")[0]?.trim() || req.ip;
+  if (xfwd) return xfwd.split(",")[0].trim();
+
+  return req.ip;
 };
 
 const blockedIPs = new Set(config.server.BLOCKED_IPS);
