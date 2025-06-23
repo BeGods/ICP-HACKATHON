@@ -42,6 +42,7 @@ const allowedUserAgents = new Set([
   "line-browser",
   "android-browser",
   "ios-browser",
+  "PostmanRuntime/7.44.1",
 ]);
 
 app.use((req, res, next) => {
