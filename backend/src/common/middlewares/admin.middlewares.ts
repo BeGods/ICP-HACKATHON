@@ -35,7 +35,7 @@ export const validatePayment = async (req, res, next) => {
 
 export const authLimiter = rateLimit({
   windowMs: 3 * 60 * 60 * 1000,
-  max: 4,
+  max: 2,
   handler: (req, res) => {
     console.warn(`⚠️ Rate limit hit for IP: ${req.ip} on /wallet/auth`);
     res.status(429).json({
