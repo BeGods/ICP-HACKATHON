@@ -11,22 +11,20 @@ export const addNewTelegramUser = async (userData) => {
     userData.squadOwner = userData.parentReferrerId;
 
     if (!userData.telegramUsername) {
-      const lastUser = await User.findOne({
-        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
-      })
-        .sort({ telegramUsername: -1 })
-        .exec();
+      const allAvatarUsers = await User.find({
+        telegramUsername: { $regex: /^AVATAR\d+$/ },
+      });
 
-      let newEndingNumber = "0001";
+      let maxNumber = 0;
 
-      if (lastUser) {
-        const lastEndingNumber = parseInt(
-          lastUser.telegramUsername.slice(-4),
-          10
-        );
-        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
-      }
+      allAvatarUsers.forEach((user) => {
+        const number = parseInt(user.telegramUsername.slice(6), 10);
+        if (!isNaN(number) && number > maxNumber) {
+          maxNumber = number;
+        }
+      });
 
+      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
 
@@ -48,22 +46,20 @@ export const addNewKaiaAddrUser = async (userData) => {
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
     if (!userData.telegramUsername) {
-      const lastUser = await User.findOne({
-        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
-      })
-        .sort({ telegramUsername: -1 })
-        .exec();
+      const allAvatarUsers = await User.find({
+        telegramUsername: { $regex: /^AVATAR\d+$/ },
+      });
 
-      let newEndingNumber = "0001";
+      let maxNumber = 0;
 
-      if (lastUser) {
-        const lastEndingNumber = parseInt(
-          lastUser.telegramUsername.slice(-4),
-          10
-        );
-        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
-      }
+      allAvatarUsers.forEach((user) => {
+        const number = parseInt(user.telegramUsername.slice(6), 10);
+        if (!isNaN(number) && number > maxNumber) {
+          maxNumber = number;
+        }
+      });
 
+      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
 
@@ -87,22 +83,20 @@ export const addNewLineUser = async (userData) => {
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
     if (!userData.telegramUsername) {
-      const lastUser = await User.findOne({
-        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
-      })
-        .sort({ telegramUsername: -1 })
-        .exec();
+      const allAvatarUsers = await User.find({
+        telegramUsername: { $regex: /^AVATAR\d+$/ },
+      });
 
-      let newEndingNumber = "0001";
+      let maxNumber = 0;
 
-      if (lastUser) {
-        const lastEndingNumber = parseInt(
-          lastUser.telegramUsername.slice(-4),
-          10
-        );
-        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
-      }
+      allAvatarUsers.forEach((user) => {
+        const number = parseInt(user.telegramUsername.slice(6), 10);
+        if (!isNaN(number) && number > maxNumber) {
+          maxNumber = number;
+        }
+      });
 
+      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
 
@@ -127,22 +121,20 @@ export const addNewTwitterUser = async (userData) => {
     userData.referralCode = `FDGXT${genRandomCode}`;
 
     if (!userData.telegramUsername) {
-      const lastUser = await User.findOne({
-        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
-      })
-        .sort({ telegramUsername: -1 })
-        .exec();
+      const allAvatarUsers = await User.find({
+        telegramUsername: { $regex: /^AVATAR\d+$/ },
+      });
 
-      let newEndingNumber = "0001";
+      let maxNumber = 0;
 
-      if (lastUser) {
-        const lastEndingNumber = parseInt(
-          lastUser.telegramUsername.slice(-4),
-          10
-        );
-        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
-      }
+      allAvatarUsers.forEach((user) => {
+        const number = parseInt(user.telegramUsername.slice(6), 10);
+        if (!isNaN(number) && number > maxNumber) {
+          maxNumber = number;
+        }
+      });
 
+      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
 
@@ -205,22 +197,20 @@ export const addNewOneWaveUser = async (userData, referPartner) => {
     userData.referralCode = `FDG${referPartner + genRandomCode}`;
 
     if (!userData.telegramUsername) {
-      const lastUser = await User.findOne({
-        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
-      })
-        .sort({ telegramUsername: -1 })
-        .exec();
+      const allAvatarUsers = await User.find({
+        telegramUsername: { $regex: /^AVATAR\d+$/ },
+      });
 
-      let newEndingNumber = "0001";
+      let maxNumber = 0;
 
-      if (lastUser) {
-        const lastEndingNumber = parseInt(
-          lastUser.telegramUsername.slice(-4),
-          10
-        );
-        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
-      }
+      allAvatarUsers.forEach((user) => {
+        const number = parseInt(user.telegramUsername.slice(6), 10);
+        if (!isNaN(number) && number > maxNumber) {
+          maxNumber = number;
+        }
+      });
 
+      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
       userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
 
