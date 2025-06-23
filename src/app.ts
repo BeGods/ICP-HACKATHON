@@ -27,9 +27,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(limiter);
 
+const getRealClientIP = (req) => {
+  const xfwd = req.headers["x-forwarded-for"];
+  return xfwd?.split(",")[0]?.trim() || req.ip;
+};
+
 const blockedIPs = new Set(config.server.BLOCKED_IPS);
 app.use((req, res, next) => {
-  const realIP = getClientIP(req);
+  const realIP = getRealClientIP(req);
   if (blockedIPs.has(realIP)) {
     return res.status(403).json({ message: "Your IP is blocked." });
   }
@@ -70,7 +75,7 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 
-morgan.token("real-ip", (req) => getClientIP(req));
+morgan.token("real-ip", (req) => getRealClientIP(req));
 morgan.token("origin", (req) => req.headers.origin || "No-Origin");
 morgan.token("body", (req) => JSON.stringify(req.body));
 morgan.token("ua-type", (req) => normalizeUserAgent(req.headers["user-agent"]));
