@@ -231,7 +231,7 @@ export const getGameStats = async (req, res) => {
     }
 
     // kaia value
-    const kaiaValue = await fetchKaiaValue();
+    const kaiaValue = 0.11;
 
     let userData: IUserData = {
       username: user.telegramUsername,

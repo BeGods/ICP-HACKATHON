@@ -51,9 +51,11 @@ export const authLimiter = rateLimit({
 });
 
 function getRealClientIP(req: any): string {
+  const cfIP = req.headers["cf-connecting-ip"];
+  if (cfIP) return cfIP.trim();
+
   const forwarded = req.headers["x-forwarded-for"];
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
+  if (forwarded) return forwarded.split(",")[0].trim();
+
   return req.ip?.startsWith("::ffff:") ? req.ip.replace("::ffff:", "") : req.ip;
 }
