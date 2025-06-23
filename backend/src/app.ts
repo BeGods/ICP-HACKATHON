@@ -37,6 +37,29 @@ const getRealClientIP = (req) => {
   return req.ip;
 };
 
+const allowedUserAgents = new Set([
+  "telegram-browser",
+  "line-browser",
+  "android-browser",
+  "ios-browser",
+]);
+
+app.use((req, res, next) => {
+  const uaType = normalizeUserAgent(req.headers["user-agent"] || "");
+
+  if (!allowedUserAgents.has(uaType)) {
+    console.warn(
+      `Blocked User-Agent: ${uaType} from IP: ${getRealClientIP(req)}`
+    );
+    return res.status(403).json({
+      success: false,
+      message: "Access denied: Unsupported device or browser.",
+    });
+  }
+
+  next();
+});
+
 const blockedIPs = new Set(config.server.BLOCKED_IPS);
 app.use((req, res, next) => {
   const realIP = getRealClientIP(req);
@@ -84,9 +107,12 @@ morgan.token("real-ip", (req) => getRealClientIP(req));
 morgan.token("origin", (req) => req.headers.origin || "No-Origin");
 morgan.token("body", (req) => JSON.stringify(req.body));
 morgan.token("ua-type", (req) => normalizeUserAgent(req.headers["user-agent"]));
+morgan.token("timestamp", () => {
+  return new Date().toISOString();
+});
 
 const loggerFormat =
-  ":real-ip - :method :url :status - :response-time ms - UA: :ua-type - Origin: :origin";
+  ":real-ip - :method :url :status - :response-time ms - UA: :ua-type - Origin: :origin :timestamp";
 
 app.use(morgan(loggerFormat));
 

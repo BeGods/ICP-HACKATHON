@@ -35,7 +35,7 @@ export const validatePayment = async (req, res, next) => {
 
 export const authLimiter = rateLimit({
   windowMs: 3 * 60 * 60 * 1000, // 3 hours
-  max: 3,
+  max: 4,
   handler: (req, res) => {
     const realIp = getRealClientIP(req);
     console.warn(`⚠️ Rate limit hit for IP: ${realIp} on /wallet/auth`);
