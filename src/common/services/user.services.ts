@@ -53,8 +53,6 @@ export const addNewTelegramUser = async (userData) => {
         }
       }
     }
-    const newUser = new User(userData);
-    newUserCreated = await newUser.save();
 
     // update user count
     await updateUserCount("telegram");
@@ -70,7 +68,7 @@ export const addNewKaiaAddrUser = async (userData) => {
     const genRandomCode = generateCode(6);
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
-    const MAX_RETRIES = 5;
+    const MAX_RETRIES = 10;
     let attempt = 0;
     let newUserCreated = null;
 
@@ -113,9 +111,6 @@ export const addNewKaiaAddrUser = async (userData) => {
         }
       }
     }
-
-    const newUser = new User(userData);
-    newUserCreated = await newUser.save();
 
     // update user count
     await updateUserCount("line");
@@ -133,7 +128,7 @@ export const addNewLineUser = async (userData) => {
     const genRandomCode = generateCode(6);
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
-    const MAX_RETRIES = 5;
+    const MAX_RETRIES = 10;
     let attempt = 0;
     let newUserCreated = null;
 
@@ -176,8 +171,6 @@ export const addNewLineUser = async (userData) => {
         }
       }
     }
-    const newUser = new User(userData);
-    newUserCreated = await newUser.save();
 
     if (!newUserCreated) {
       throw new Error(
@@ -323,9 +316,6 @@ export const addNewOneWaveUser = async (userData, referPartner) => {
     }
     // update user count
     await updateUserCount("onewave");
-
-    const newUser = new User(userData);
-    newUserCreated = await newUser.save();
 
     return newUserCreated;
   } catch (error) {
