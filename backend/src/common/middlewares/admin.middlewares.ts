@@ -1,4 +1,4 @@
-import { decryptHash } from "../../helpers/crypt.helpers";
+import rateLimit from "express-rate-limit";
 import { PaymentLogs } from "../models/transactions.models";
 
 export const validatePayment = async (req, res, next) => {
@@ -32,3 +32,22 @@ export const validatePayment = async (req, res, next) => {
     });
   }
 };
+
+export const authLimiter = rateLimit({
+  windowMs: 3 * 60 * 60 * 1000,
+  max: 4,
+  handler: (req, res) => {
+    console.warn(`⚠️ Rate limit hit for IP: ${req.ip} on /wallet/auth`);
+    res.status(429).json({
+      message: "Too many login attempts from this IP. Try again after 3 hours.",
+    });
+  },
+  keyGenerator: (req) => {
+    const ip = req.ip.startsWith("::ffff:")
+      ? req.ip.replace("::ffff:", "")
+      : req.ip;
+    return ip;
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

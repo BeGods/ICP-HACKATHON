@@ -12,6 +12,7 @@ import {
   logoutUser,
   testAuthenticate,
 } from "../../common/controllers/auth.controllers";
+import { authLimiter } from "../middlewares/admin.middlewares";
 const authRouter = express.Router();
 
 // login
@@ -21,7 +22,7 @@ authRouter.post("/auth/verify", authenticateOTP);
 authRouter.post("/tele/auth", authenticateTg);
 authRouter.post("/twitter/auth", authenticateTwitter);
 authRouter.post("/line/auth", authenticateLine);
-authRouter.post("/wallet/auth", authenticateKaiaAddr);
+authRouter.post("/wallet/auth", authLimiter, authenticateKaiaAddr);
 authRouter.get("/auth/refresh", generateRefreshToken);
 authRouter.post("/onewave/session", createOneWaveSession);
 authRouter.post("/onewave/auth", authenticateOneWave);
