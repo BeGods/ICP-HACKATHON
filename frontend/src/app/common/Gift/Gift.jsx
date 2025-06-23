@@ -4,7 +4,7 @@ import GiftHeader from "./Header";
 import GiftCarousel from "../../../components/Carousel/GiftCarousel";
 import TaskCarousel from "../../../components/Carousel/TaskCarousel";
 import RewardCarousel from "../../../components/Carousel/RewardCarousel";
-import { socket } from "../../../utils/socket";
+// import { socket } from "../../../utils/socket";
 
 const Gift = () => {
   const {
