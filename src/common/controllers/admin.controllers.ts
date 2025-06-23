@@ -306,16 +306,63 @@ export const blacklistAndCleanupUsers = async (req, res) => {
       await rewards.bulkWrite(rewardUpdates);
     }
 
+    const deleteResult = await PaymentLogs.deleteMany({
+      userId: { $in: userIds },
+    });
+
     // Step 4: Respond
     res.status(200).json({
       success: true,
       blacklistedCount: usersToBlacklist.length,
       joiningBonusUserIds,
       rewardTransactionDeletionCount,
+      paymentLogsDeleted: deleteResult.deletedCount,
     });
   } catch (error) {
     console.error("Error in blacklistAndCleanupUsers:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getBlacklistedUserRewardCollected = async (req, res) => {
+  try {
+    const { userIds } = req.body;
+
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "userIds are required" });
+    }
+
+    const ids = userIds.map((id) => new mongoose.Types.ObjectId(id));
+
+    // Fetch reward transactions for these users
+    const transactions = await RewardsTransactions.find({
+      userId: { $in: ids },
+    }).lean();
+
+    // Group by rewardId
+    const groupedByRewardId = {};
+
+    for (const tx of transactions) {
+      const rewardId = tx.rewardId?.toString();
+      if (!rewardId) continue;
+
+      if (!groupedByRewardId[rewardId]) {
+        groupedByRewardId[rewardId] = [];
+      }
+      groupedByRewardId[rewardId].push(tx);
+    }
+
+    res.status(200).json({
+      success: true,
+      totalTransactions: transactions.length,
+      rewardIds: Object.keys(groupedByRewardId),
+      data: groupedByRewardId,
+    });
+  } catch (error) {
+    console.error("Error in getBlacklistedUserRewardCollected:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
 
@@ -353,29 +400,9 @@ export const getPlayedUserCount = async (req, res) => {
 
 export const getUserIdsByReferral = async (req, res) => {
   try {
-    const referralCodes = [
-      "FDGLINZJ2TIC",
-      "FDGLINXYKA3N",
-      "FDGLINWRPX85",
-      "FDGLINRTNTKA",
-      "FDGLINRM4V61",
-      "FDGLINP5RZPZ",
-      "FDGLINOS6WY3",
-      "FDGLINNFAM1W",
-      "FDGLINMXSIPK",
-      "FDGLINLPET7H",
-      "FDGLINLOCFLX",
-      "FDGLINLCJ543",
-      "FDGLINKEZRVM",
-      "FDGLINJK4JJ9",
-      "FDGLINIJO64I",
-      "FDGLINGELYMK",
-      "FDGLINFA4AIP",
-      "FDGLIN8G2JB9",
-      "FDGLIN5N9C5U",
-      "FDGLINNP9AP8",
-      "FDGLINZFBSDO",
-    ];
+    const { referralCodes } = req.body;
+
+    console.log(referralCodes?.length);
 
     const users = await User.find({
       referralCode: { $in: referralCodes },
@@ -397,96 +424,123 @@ export const getUserIdsByReferral = async (req, res) => {
 export const getAllReferralsById = async (req, res) => {
   try {
     const userIds = [
-      "684cd23ba3c5867db5a6cc2d",
-      "684cd23ba3c5867db5a6cc3f",
-      "684cd23ba3c5867db5a6cc51",
-      "684cd23ba3c5867db5a6cc64",
-      "684cd23ba3c5867db5a6cc70",
-      "684cd23ba3c5867db5a6cc87",
-      "684cd23ba3c5867db5a6cc96",
-      "684cd23ba3c5867db5a6cca8",
-      "684cd23ba3c5867db5a6ccaf",
-      "684cd23ba3c5867db5a6ccc5",
-      "684cd23ba3c5867db5a6ccdf",
-      "684cd23ca3c5867db5a6cd07",
-      "684cd23ca3c5867db5a6cd1b",
-      "684cd23ca3c5867db5a6cd20",
-      "684cd23ca3c5867db5a6cd3d",
-      "684cd23da3c5867db5a6cd4f",
-      "684cd27aa3c5867db5a6cd61",
-      "684cd27ba3c5867db5a6cd73",
-      "684cd27ba3c5867db5a6cd85",
-      "684cd27ca3c5867db5a6cd97",
-      "684cd27da3c5867db5a6cda9",
-      "684cd27da3c5867db5a6cdbb",
-      "684cd27ea3c5867db5a6cdcd",
-      "684cd27fa3c5867db5a6cddf",
-      "684cd27fa3c5867db5a6cdf1",
-      "684cd280a3c5867db5a6ce03",
-      "684cd281a3c5867db5a6ce15",
-      "684cd282a3c5867db5a6ce27",
-      "684cd282a3c5867db5a6ce39",
-      "684cd283a3c5867db5a6ce4b",
-      "684ce0afa3c5867db5a6f69b",
-      "684ce0b2a3c5867db5a6f6ad",
-      "684ce0b3a3c5867db5a6f6bf",
-      "684ce0b3a3c5867db5a6f6d1",
-      "684ce0b3a3c5867db5a6f6ee",
-      "684ce0b3a3c5867db5a6f70d",
-      "684ce0b3a3c5867db5a6f71e",
-      "684ce0b3a3c5867db5a6f733",
-      "684ce0f1a3c5867db5a6f767",
-      "684ce170a3c5867db5a6f7c3",
-      "684ce170a3c5867db5a6f7cd",
-      "684ce170a3c5867db5a6f7d4",
-      "684ce171a3c5867db5a6f7f4",
-      "684ce17aa3c5867db5a6f813",
-      "684ce17aa3c5867db5a6f825",
-      "684ce1afa3c5867db5a6f8e3",
-      "684ce1b3a3c5867db5a6f8f5",
-      "684ce1b7a3c5867db5a6f907",
-      "684ce1baa3c5867db5a6f919",
-      "684ce1c2a3c5867db5a6f966",
-      "684ce1c3a3c5867db5a6f99d",
-      "684ce1c4a3c5867db5a6f9af",
-      "684ce1c5a3c5867db5a6f9c1",
-      "684ce223a3c5867db5a6fa2b",
-      "684ce224a3c5867db5a6fa3d",
-      "684ce226a3c5867db5a6fa4f",
-      "684ce228a3c5867db5a6fa61",
-      "684ce229a3c5867db5a6fa73",
-      "684ce22ba3c5867db5a6fa85",
-      "684ce22da3c5867db5a6fa97",
-      "684ceca9a3c5867db5a71845",
-      "684cecaaa3c5867db5a71857",
-      "684cecaba3c5867db5a71869",
-      "684cecaca3c5867db5a7187b",
-      "684cecada3c5867db5a7188d",
-      "684cecaea3c5867db5a7189f",
-      "684cecafa3c5867db5a718b1",
-      "684cecb1a3c5867db5a718c3",
-      "684cecb1a3c5867db5a718d5",
-      "684cecb2a3c5867db5a718e7",
-      "684cece6a3c5867db5a7196b",
-      "684cece6a3c5867db5a71980",
-      "684cece7a3c5867db5a71995",
-      "684cece7a3c5867db5a7199f",
-      "684cece7a3c5867db5a719b7",
-      "684cecf3a3c5867db5a719de",
-      "684cecf3a3c5867db5a719f0",
-      "684cecf4a3c5867db5a71a01",
-      "684cecf7a3c5867db5a71a14",
-      "684cecf7a3c5867db5a71a1d",
-      "684ced22a3c5867db5a71a7e",
-      "684ced23a3c5867db5a71a90",
-      "684ced24a3c5867db5a71aa2",
-      "684ced3ba3c5867db5a71ab4",
-      "684ced3ca3c5867db5a71ac6",
-      "684ced3da3c5867db5a71ad8",
-      "684ced3ea3c5867db5a71ae9",
-      "684ced3fa3c5867db5a71afc",
-      "684ced40a3c5867db5a71b0e",
-      "684ced41a3c5867db5a71b1f",
+      "6858d020755d12dc36187522",
+      "6858d00c755d12dc3618701a",
+      "6858cff6755d12dc361869d8",
+      "6858d018755d12dc3618732f",
+      "6858d022755d12dc361875fe",
+      "6858d004755d12dc36186e1c",
+      "6858d018755d12dc36187347",
+      "6858d00e755d12dc361870be",
+      "6858d00b755d12dc36186fbc",
+      "6858d011755d12dc3618714f",
+      "6858d022755d12dc361875ec",
+      "6858cff7755d12dc36186a02",
+      "6858d026755d12dc3618772c",
+      "6858cffe755d12dc36186c55",
+      "6858d033755d12dc36187a3e",
+      "6858d00a755d12dc36186f84",
+      "6858d01e755d12dc36187493",
+      "6858d008755d12dc36186f31",
+      "6858d015755d12dc361872b7",
+      "6858d029755d12dc361877f0",
+      "6858d024755d12dc36187681",
+      "6858d013755d12dc36187208",
+      "6858cfff755d12dc36186c99",
+      "6858cfff755d12dc36186cd3",
+      "6858d007755d12dc36186ec7",
+      "6858d029755d12dc361877d0",
+      "6858d01b755d12dc361873ff",
+      "6858cff8755d12dc36186a3a",
+      "6858d027755d12dc3618777b",
+      "6858d02e755d12dc36187966",
+      "6858d021755d12dc361875dd",
+      "6858d020755d12dc3618756e",
+      "6858d01d755d12dc3618745a",
+      "6858d00d755d12dc3618705e",
+      "6858cffd755d12dc36186c0c",
+      "6858cff5755d12dc361869b8",
+      "6858d006755d12dc36186ea0",
+      "6858d002755d12dc36186d64",
+      "6858d003755d12dc36186da5",
+      "6858d013755d12dc36187214",
+      "6858d016755d12dc361872c4",
+      "6858cf93755d12dc361867fa",
+      "6858d02f755d12dc36187984",
+      "6858d02c755d12dc361878d9",
+      "6858d011755d12dc36187166",
+      "6858d015755d12dc361872a8",
+      "6858d015755d12dc36187295",
+      "6858d02e755d12dc3618793c",
+      "6858d00b755d12dc36186fd0",
+      "6858cff9755d12dc36186a9f",
+      "6858cffb755d12dc36186b31",
+      "6858d019755d12dc36187371",
+      "6858d025755d12dc36187706",
+      "6858d002755d12dc36186d9e",
+      "6858d02a755d12dc36187810",
+      "6858d005755d12dc36186e5d",
+      "6858cffa755d12dc36186aee",
+      "6858d01c755d12dc36187439",
+      "6858d02e755d12dc3618795c",
+      "6858d023755d12dc36187648",
+      "6858d021755d12dc361875a2",
+      "6858d030755d12dc361879e6",
+      "6858d021755d12dc361875a8",
+      "6858d027755d12dc3618776d",
+      "6858d00e755d12dc36187086",
+      "6858d001755d12dc36186d2d",
+      "6858cffe755d12dc36186c7c",
+      "6858cff4755d12dc361869a8",
+      "6858d01b755d12dc361873ce",
+      "6858d007755d12dc36186ee0",
+      "6858d00b755d12dc36186fe4",
+      "6858cffa755d12dc36186b10",
+      "6858d003755d12dc36186db0",
+      "6858cffe755d12dc36186c5a",
+      "6858d010755d12dc3618712e",
+      "6858d002755d12dc36186d86",
+      "6858cffc755d12dc36186bd0",
+      "6858d028755d12dc3618778d",
+      "6858d01c755d12dc36187445",
+      "6858d011755d12dc3618717a",
+      "6858d017755d12dc361872fd",
+      "6858d00f755d12dc361870e3",
+      "6858d021755d12dc361875d3",
+      "6858cffc755d12dc36186bc2",
+      "6858d02b755d12dc3618787c",
+      "6858cffc755d12dc36186bdc",
+      "6858d004755d12dc36186e2a",
+      "6858d02a755d12dc3618782b",
+      "6858d008755d12dc36186f0a",
+      "6858cffe755d12dc36186c4a",
+      "6858d011755d12dc36187145",
+      "6858cff7755d12dc36186a30",
+      "6858d024755d12dc3618766b",
+      "6858d00e755d12dc36187092",
+      "6858d016755d12dc361872d5",
+      "6858d00a755d12dc36186f62",
+      "6858d002755d12dc36186d6d",
+      "6858d025755d12dc361876f5",
+      "6858d013755d12dc361871f2",
+      "6858d00b755d12dc36186fef",
+      "6858d02a755d12dc36187835",
+      "6858cff9755d12dc36186aac",
+      "6858cffb755d12dc36186b3e",
+      "6858d01d755d12dc3618747b",
+      "6858d01c755d12dc36187429",
+      "6858d01e755d12dc36187499",
+      "6858d02c755d12dc361878f2",
+      "6858cff9755d12dc36186ab9",
+      "6858d025755d12dc361876b7",
+      "6858cff5755d12dc361869c4",
+      "6858d015755d12dc36187298",
+      "6858d00d755d12dc3618703c",
+      "6858cff9755d12dc36186a8d",
+      "6858d007755d12dc36186ed6",
+      "6858cffb755d12dc36186ba2",
+      "6858d011755d12dc36187170",
+      "6858d001755d12dc36186d29",
     ].map((id) => new mongoose.Types.ObjectId(id));
 
     const referrals = await Referral.find({ userId: { $in: userIds } }).select(
@@ -507,8 +561,10 @@ export const getAllReferralsById = async (req, res) => {
       .map((id) => `ObjectId("${id}")`)
       .join(",\n  ")}\n] }`;
 
-    res.status(200).send(compassQuery);
-    // res.status(200).json({ data: Array.from(flatIds) });
+    // res.status(200).send(compassQuery);
+    res
+      .status(200)
+      .json({ count: Array.from(flatIds).length, data: Array.from(flatIds) });
     // res.status(200).json({ data: Array.from(referrals) });
   } catch (error) {
     console.error("Error in getAllReferralsById:", error);
@@ -550,6 +606,7 @@ export const fetchPayouts = async (req, res) => {
       { id: "6854f8053caa936e11321a6f", amount: 1 },
       { id: "685111495e5f4cc871608299", amount: 0.3 },
       { id: "684deac96a2ad7c99d758973", amount: 0.3 },
+      { id: "68586fc397c39c48458214a7", amount: 2 },
     ];
 
     // Convert rewardValues to a Map for fast lookup
@@ -586,7 +643,10 @@ export const fetchPayouts = async (req, res) => {
       };
     });
 
-    res.status(200).json({ data: mergedData });
+    res.status(200).json({
+      count: mergedData.length,
+      data: mergedData.filter((itm) => itm.isRewardClaimed === false),
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something went wrong." });

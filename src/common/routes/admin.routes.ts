@@ -11,6 +11,7 @@ import {
   fetchPayouts,
   getAdminUpdates,
   getAllReferralsById,
+  getBlacklistedUserRewardCollected,
   getPlayedUserCount,
   getUserIdsByReferral,
   ping,
@@ -58,7 +59,17 @@ router.post(
 );
 
 router.get(`/admin/pending`, adminMiddleware, fetchPayouts);
-// router.post("/admin/played", adminMiddleware, getPlayedUserCount);
+router.post(
+  "/admin/played",
+  adminMiddleware,
+  getBlacklistedUserRewardCollected
+);
+
+router.post(
+  "/admin/blacklistedRewards",
+  adminMiddleware,
+  blacklistAndCleanupUsers
+);
 
 // migrate db
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);

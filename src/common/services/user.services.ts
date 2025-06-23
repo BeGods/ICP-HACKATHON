@@ -11,7 +11,7 @@ export const addNewTelegramUser = async (userData) => {
     userData.referralCode = `FDG${userData.telegramId}`;
     userData.squadOwner = userData.parentReferrerId;
 
-    const MAX_RETRIES = 3;
+    const MAX_RETRIES = 5;
     let attempt = 0;
     let newUserCreated = null;
 
@@ -19,6 +19,7 @@ export const addNewTelegramUser = async (userData) => {
       try {
         if (!userData.telegramUsername) {
           userData.telegramUsername = await getAvatarCounter(User);
+          await new Promise((res) => setTimeout(res, 50));
         }
 
         const newUser = new User(userData);
@@ -55,7 +56,7 @@ export const addNewKaiaAddrUser = async (userData) => {
     const genRandomCode = generateCode(6);
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
-    const MAX_RETRIES = 3;
+    const MAX_RETRIES = 5;
     let attempt = 0;
     let newUserCreated = null;
 
@@ -63,6 +64,7 @@ export const addNewKaiaAddrUser = async (userData) => {
       try {
         if (!userData.telegramUsername) {
           userData.telegramUsername = await getAvatarCounter(User);
+          await new Promise((res) => setTimeout(res, 50));
         }
 
         const newUser = new User(userData);
@@ -101,7 +103,7 @@ export const addNewLineUser = async (userData) => {
     const genRandomCode = generateCode(6);
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
-    const MAX_RETRIES = 3;
+    const MAX_RETRIES = 5;
     let attempt = 0;
     let newUserCreated = null;
 
@@ -109,6 +111,7 @@ export const addNewLineUser = async (userData) => {
       try {
         if (!userData.telegramUsername) {
           userData.telegramUsername = await getAvatarCounter(User);
+          await new Promise((res) => setTimeout(res, 50));
         }
 
         const newUser = new User(userData);
@@ -154,7 +157,7 @@ export const addNewTwitterUser = async (userData) => {
 
     userData.referralCode = `FDGXT${genRandomCode}`;
 
-    const MAX_RETRIES = 3;
+    const MAX_RETRIES = 5;
     let attempt = 0;
     let newUserCreated = null;
 
@@ -162,6 +165,7 @@ export const addNewTwitterUser = async (userData) => {
       try {
         if (!userData.telegramUsername) {
           userData.telegramUsername = await getAvatarCounter(User);
+          await new Promise((res) => setTimeout(res, 50));
         }
 
         const newUser = new User(userData);
@@ -201,29 +205,36 @@ export const addNewOTPUser = async (userData, referPartner) => {
       referPartner == "" ? generateCode(8) : generateCode(6);
     userData.referralCode = `FDG${referPartner + genRandomCode}`;
 
-    if (!userData.telegramUsername) {
-      const lastUser = await User.findOne({
-        telegramUsername: { $regex: /^AVATAR\d{4}$/ },
-      })
-        .sort({ telegramUsername: -1 })
-        .exec();
+    const MAX_RETRIES = 5;
+    let attempt = 0;
+    let newUserCreated = null;
 
-      let newEndingNumber = "0001";
+    while (attempt < MAX_RETRIES) {
+      try {
+        if (!userData.telegramUsername) {
+          userData.telegramUsername = await getAvatarCounter(User);
+          await new Promise((res) => setTimeout(res, 50));
+        }
 
-      if (lastUser) {
-        const lastEndingNumber = parseInt(
-          lastUser.telegramUsername.slice(-4),
-          10
-        );
-        newEndingNumber = String(lastEndingNumber + 1).padStart(4, "0");
+        const newUser = new User(userData);
+        newUserCreated = await newUser.save();
+        break;
+      } catch (err) {
+        if (
+          err.code === 11000 &&
+          err.keyPattern &&
+          err.keyPattern.telegramUsername
+        ) {
+          console.warn(
+            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
+          );
+          userData.telegramUsername = null;
+          attempt++;
+        } else {
+          throw err;
+        }
       }
-
-      userData.telegramUsername = `AVATAR${newEndingNumber}`;
     }
-
-    const newUser = new User(userData);
-    const newUserCreated = await newUser.save();
-
     // update user count
     await updateUserCount(referPartner);
 
@@ -247,6 +258,7 @@ export const addNewOneWaveUser = async (userData, referPartner) => {
       try {
         if (!userData.telegramUsername) {
           userData.telegramUsername = await getAvatarCounter(User);
+          await new Promise((res) => setTimeout(res, 50));
         }
 
         const newUser = new User(userData);

@@ -145,8 +145,6 @@ export const getAvatarCounter = async (User) => {
         : 1;
     }
 
-    console.log(current);
-
     return `AVATAR${current}`;
   } catch (error) {
     console.error("Error generating avatar username:", error);
