@@ -6,6 +6,7 @@ import hpp from "hpp";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import config from "./config/config";
+import { getRealClientIP, normalizeUserAgent } from "./utils/morgan/ua";
 const express = require("express");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -25,11 +26,6 @@ const limiter = rateLimit({
 app.use(cookieParser());
 app.use(express.json());
 app.use(limiter);
-
-const getRealClientIP = (req) => {
-  const xfwd = req.headers["x-forwarded-for"];
-  return xfwd?.split(",")[0]?.trim() || req.ip;
-};
 
 const blockedIPs = new Set(config.server.BLOCKED_IPS);
 app.use((req, res, next) => {
@@ -77,9 +73,10 @@ app.use(hpp());
 morgan.token("real-ip", (req) => getRealClientIP(req));
 morgan.token("origin", (req) => req.headers.origin || "No-Origin");
 morgan.token("body", (req) => JSON.stringify(req.body));
+morgan.token("ua-type", (req) => normalizeUserAgent(req.headers["user-agent"]));
 
 const loggerFormat =
-  ":real-ip - :method :url :status - :response-time ms - Origin: :origin";
+  ":real-ip - :method :url :status - :response-time ms - UA: :ua-type - Origin: :origin";
 
 app.use(morgan(loggerFormat));
 

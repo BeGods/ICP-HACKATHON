@@ -80,17 +80,29 @@ export const fetchKaiaValue = async () => {
 
     if (result) {
       return JSON.parse(result);
-    } else {
-      const response = await axios(
-        "https://api.coingecko.com/api/v3/simple/price?ids=kaia&vs_currencies=usd"
-      );
-      result = response.data;
-
-      await redisClient.set("kaia", result?.kaia?.usd, { EX: 120 }); // 2min
     }
 
-    return result;
+    let price = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await axios.get(
+          "https://api.coingecko.com/api/v3/simple/price?ids=kaia&vs_currencies=usd",
+          { timeout: 2000 }
+        );
+        price = response.data?.kaia?.usd;
+        if (price != null) {
+          await redisClient.set("kaia", JSON.stringify(price), { EX: 300 });
+          return price;
+        }
+      } catch (err) {
+        console.warn(`Retry ${attempt + 1} failed:`, err.message);
+      }
+    }
+
+    console.warn("All attempts failed, returning fallback KAIA value.");
+    return 0.11;
   } catch (error) {
-    console.log(error);
+    console.error("Unexpected error in fetchKaiaValue:", error.message);
+    return 0.11;
   }
 };

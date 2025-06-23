@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { IReward } from "../../ts/models.interfaces";
 import { RewardsTransactions } from "../models/transactions.models";
-import { io } from "../../config/socket";
+// import { io } from "../../config/socket";
 
 export const updateTokenReward = async (
   user,
@@ -51,10 +51,10 @@ export const updateTokenReward = async (
       $inc: { limit: -1 },
     });
 
-    io.emit("reward_limit_updated", {
-      rewardId: reward._id,
-      newLimit: reward.limit - 1,
-    });
+    // io.emit("reward_limit_updated", {
+    //   rewardId: reward._id,
+    //   newLimit: reward.limit - 1,
+    // });
 
     const newTransaction = new RewardsTransactions({
       userId: user._id,
