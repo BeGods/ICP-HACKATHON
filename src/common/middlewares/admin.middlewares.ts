@@ -1,5 +1,6 @@
 import rateLimit from "express-rate-limit";
 import { PaymentLogs } from "../models/transactions.models";
+import { getAuthRealClientIP } from "../../utils/morgan/ua";
 
 export const validatePayment = async (req, res, next) => {
   try {
@@ -35,25 +36,17 @@ export const validatePayment = async (req, res, next) => {
 
 export const authLimiter = rateLimit({
   windowMs: 3 * 60 * 60 * 1000, // 3 hours
-  max: 2,
+  max: 3,
   handler: (req, res) => {
-    const realIp = getRealClientIP(req);
+    const realIp = getAuthRealClientIP(req);
     console.warn(`⚠️ Rate limit hit for IP: ${realIp} on /wallet/auth`);
     res.status(429).json({
       message: "Too many login attempts from this IP. Try again after 3 hours.",
     });
   },
   keyGenerator: (req) => {
-    return getRealClientIP(req);
+    return getAuthRealClientIP(req);
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
-
-function getRealClientIP(req: any): string {
-  const forwarded = req.headers["x-forwarded-for"];
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
-  return req.ip?.startsWith("::ffff:") ? req.ip.replace("::ffff:", "") : req.ip;
-}
