@@ -10,26 +10,51 @@ export const addNewTelegramUser = async (userData) => {
     userData.referralCode = `FDG${userData.telegramId}`;
     userData.squadOwner = userData.parentReferrerId;
 
-    if (!userData.telegramUsername) {
-      const allAvatarUsers = await User.find({
-        telegramUsername: { $regex: /^AVATAR\d+$/ },
-      });
+    const MAX_RETRIES = 5;
+    let attempt = 0;
+    let newUserCreated = null;
 
-      let maxNumber = 0;
+    while (attempt < MAX_RETRIES) {
+      try {
+        if (!userData.telegramUsername) {
+          const allAvatarUsers = await User.find({
+            telegramUsername: { $regex: /^AVATAR\d+$/ },
+          });
 
-      allAvatarUsers.forEach((user) => {
-        const number = parseInt(user.telegramUsername.slice(6), 10);
-        if (!isNaN(number) && number > maxNumber) {
-          maxNumber = number;
+          let maxNumber = 0;
+
+          allAvatarUsers.forEach((user) => {
+            const number = parseInt(user.telegramUsername.slice(6), 10);
+            if (!isNaN(number) && number > maxNumber) {
+              maxNumber = number;
+            }
+          });
+
+          const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
+          userData.telegramUsername = `AVATAR${newEndingNumber}`;
         }
-      });
 
-      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
-      userData.telegramUsername = `AVATAR${newEndingNumber}`;
+        const newUser = new User(userData);
+        newUserCreated = await newUser.save();
+        break;
+      } catch (err) {
+        if (
+          err.code === 11000 &&
+          err.keyPattern &&
+          err.keyPattern.telegramUsername
+        ) {
+          console.warn(
+            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
+          );
+          userData.telegramUsername = null;
+          attempt++;
+        } else {
+          throw err;
+        }
+      }
     }
-
     const newUser = new User(userData);
-    const newUserCreated = await newUser.save();
+    newUserCreated = await newUser.save();
 
     // update user count
     await updateUserCount("telegram");
@@ -45,26 +70,52 @@ export const addNewKaiaAddrUser = async (userData) => {
     const genRandomCode = generateCode(6);
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
-    if (!userData.telegramUsername) {
-      const allAvatarUsers = await User.find({
-        telegramUsername: { $regex: /^AVATAR\d+$/ },
-      });
+    const MAX_RETRIES = 5;
+    let attempt = 0;
+    let newUserCreated = null;
 
-      let maxNumber = 0;
+    while (attempt < MAX_RETRIES) {
+      try {
+        if (!userData.telegramUsername) {
+          const allAvatarUsers = await User.find({
+            telegramUsername: { $regex: /^AVATAR\d+$/ },
+          });
 
-      allAvatarUsers.forEach((user) => {
-        const number = parseInt(user.telegramUsername.slice(6), 10);
-        if (!isNaN(number) && number > maxNumber) {
-          maxNumber = number;
+          let maxNumber = 0;
+
+          allAvatarUsers.forEach((user) => {
+            const number = parseInt(user.telegramUsername.slice(6), 10);
+            if (!isNaN(number) && number > maxNumber) {
+              maxNumber = number;
+            }
+          });
+
+          const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
+          userData.telegramUsername = `AVATAR${newEndingNumber}`;
         }
-      });
 
-      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
-      userData.telegramUsername = `AVATAR${newEndingNumber}`;
+        const newUser = new User(userData);
+        newUserCreated = await newUser.save();
+        break;
+      } catch (err) {
+        if (
+          err.code === 11000 &&
+          err.keyPattern &&
+          err.keyPattern.telegramUsername
+        ) {
+          console.warn(
+            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
+          );
+          userData.telegramUsername = null;
+          attempt++;
+        } else {
+          throw err;
+        }
+      }
     }
 
     const newUser = new User(userData);
-    const newUserCreated = await newUser.save();
+    newUserCreated = await newUser.save();
 
     // update user count
     await updateUserCount("line");
@@ -82,26 +133,57 @@ export const addNewLineUser = async (userData) => {
     const genRandomCode = generateCode(6);
     userData.referralCode = `FDGLIN${genRandomCode}`;
 
-    if (!userData.telegramUsername) {
-      const allAvatarUsers = await User.find({
-        telegramUsername: { $regex: /^AVATAR\d+$/ },
-      });
+    const MAX_RETRIES = 5;
+    let attempt = 0;
+    let newUserCreated = null;
 
-      let maxNumber = 0;
+    while (attempt < MAX_RETRIES) {
+      try {
+        if (!userData.telegramUsername) {
+          const allAvatarUsers = await User.find({
+            telegramUsername: { $regex: /^AVATAR\d+$/ },
+          });
 
-      allAvatarUsers.forEach((user) => {
-        const number = parseInt(user.telegramUsername.slice(6), 10);
-        if (!isNaN(number) && number > maxNumber) {
-          maxNumber = number;
+          let maxNumber = 0;
+
+          allAvatarUsers.forEach((user) => {
+            const number = parseInt(user.telegramUsername.slice(6), 10);
+            if (!isNaN(number) && number > maxNumber) {
+              maxNumber = number;
+            }
+          });
+
+          const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
+          userData.telegramUsername = `AVATAR${newEndingNumber}`;
         }
-      });
 
-      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
-      userData.telegramUsername = `AVATAR${newEndingNumber}`;
+        const newUser = new User(userData);
+        newUserCreated = await newUser.save();
+        break;
+      } catch (err) {
+        if (
+          err.code === 11000 &&
+          err.keyPattern &&
+          err.keyPattern.telegramUsername
+        ) {
+          console.warn(
+            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
+          );
+          userData.telegramUsername = null;
+          attempt++;
+        } else {
+          throw err;
+        }
+      }
     }
-
     const newUser = new User(userData);
-    const newUserCreated = await newUser.save();
+    newUserCreated = await newUser.save();
+
+    if (!newUserCreated) {
+      throw new Error(
+        "Failed to generate unique telegramUsername after retries."
+      );
+    }
 
     // update user count
     await updateUserCount("line");
@@ -196,29 +278,54 @@ export const addNewOneWaveUser = async (userData, referPartner) => {
       referPartner == "" ? generateCode(8) : generateCode(6);
     userData.referralCode = `FDG${referPartner + genRandomCode}`;
 
-    if (!userData.telegramUsername) {
-      const allAvatarUsers = await User.find({
-        telegramUsername: { $regex: /^AVATAR\d+$/ },
-      });
+    const MAX_RETRIES = 5;
+    let attempt = 0;
+    let newUserCreated = null;
 
-      let maxNumber = 0;
+    while (attempt < MAX_RETRIES) {
+      try {
+        if (!userData.telegramUsername) {
+          const allAvatarUsers = await User.find({
+            telegramUsername: { $regex: /^AVATAR\d+$/ },
+          });
 
-      allAvatarUsers.forEach((user) => {
-        const number = parseInt(user.telegramUsername.slice(6), 10);
-        if (!isNaN(number) && number > maxNumber) {
-          maxNumber = number;
+          let maxNumber = 0;
+
+          allAvatarUsers.forEach((user) => {
+            const number = parseInt(user.telegramUsername.slice(6), 10);
+            if (!isNaN(number) && number > maxNumber) {
+              maxNumber = number;
+            }
+          });
+
+          const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
+          userData.telegramUsername = `AVATAR${newEndingNumber}`;
         }
-      });
 
-      const newEndingNumber = String(maxNumber + 1).padStart(4, "0");
-      userData.telegramUsername = `AVATAR${newEndingNumber}`;
+        const newUser = new User(userData);
+        newUserCreated = await newUser.save();
+        break;
+      } catch (err) {
+        if (
+          err.code === 11000 &&
+          err.keyPattern &&
+          err.keyPattern.telegramUsername
+        ) {
+          console.warn(
+            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
+          );
+          userData.telegramUsername = null;
+          attempt++;
+        } else {
+          throw err;
+        }
+      }
     }
-
     // update user count
     await updateUserCount("onewave");
 
     const newUser = new User(userData);
-    const newUserCreated = await newUser.save();
+    newUserCreated = await newUser.save();
 
     return newUserCreated;
   } catch (error) {
