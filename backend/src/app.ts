@@ -6,7 +6,7 @@ import hpp from "hpp";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import config from "./config/config";
-import { getRealClientIP, normalizeUserAgent } from "./utils/morgan/ua";
+import { getClientIP, normalizeUserAgent } from "./utils/morgan/ua";
 const express = require("express");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -29,7 +29,7 @@ app.use(limiter);
 
 const blockedIPs = new Set(config.server.BLOCKED_IPS);
 app.use((req, res, next) => {
-  const realIP = getRealClientIP(req);
+  const realIP = getClientIP(req);
   if (blockedIPs.has(realIP)) {
     return res.status(403).json({ message: "Your IP is blocked." });
   }
@@ -70,7 +70,7 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 
-morgan.token("real-ip", (req) => getRealClientIP(req));
+morgan.token("real-ip", (req) => getClientIP(req));
 morgan.token("origin", (req) => req.headers.origin || "No-Origin");
 morgan.token("body", (req) => JSON.stringify(req.body));
 morgan.token("ua-type", (req) => normalizeUserAgent(req.headers["user-agent"]));
@@ -82,5 +82,8 @@ app.use(morgan(loggerFormat));
 
 app.use("/api/v1", fofRoutes);
 app.use("/api/v2", rorRoutes);
+app.get("/socket.io/*", (_, res) => {
+  res.status(204).end();
+});
 
 export default app;
