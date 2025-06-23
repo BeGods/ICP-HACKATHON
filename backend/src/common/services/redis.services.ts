@@ -106,3 +106,50 @@ export const fetchKaiaValue = async () => {
     return 0.11;
   }
 };
+
+export const getAvatarCounter = async (User) => {
+  try {
+    const redisClient = await connectRedis(2);
+
+    let current;
+
+    if (redisClient) {
+      const cached = await redisClient.get("avatar:counter");
+
+      if (!cached) {
+        const lastUser = await User.findOne({
+          telegramUsername: { $regex: /^AVATAR\d+$/ },
+        })
+          .sort({ telegramUsername: -1 })
+          .exec();
+
+        const lastId = lastUser
+          ? parseInt(lastUser.telegramUsername.replace("AVATAR", ""), 10)
+          : 0;
+
+        const startFrom = lastId + 1;
+        await redisClient.set("avatar:counter", startFrom);
+        current = startFrom;
+      } else {
+        current = await redisClient.incr("avatar:counter");
+      }
+    } else {
+      const lastUser = await User.findOne({
+        telegramUsername: { $regex: /^AVATAR\d+$/ },
+      })
+        .sort({ telegramUsername: -1 })
+        .exec();
+
+      current = lastUser
+        ? parseInt(lastUser.telegramUsername.replace("AVATAR", ""), 10) + 1
+        : 1;
+    }
+
+    console.log(current);
+
+    return `AVATAR${current}`;
+  } catch (error) {
+    console.error("Error generating avatar username:", error);
+    throw new Error("Failed to generate avatar username");
+  }
+};
