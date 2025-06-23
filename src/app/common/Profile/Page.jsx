@@ -67,8 +67,15 @@ const ProfileItem = ({ content, index, assets, userData }) => {
 };
 
 const Profile = (props) => {
-  const { userData, assets, game, lineWallet, isTelegram, enableHaptic } =
-    useContext(MainContext);
+  const {
+    userData,
+    assets,
+    game,
+    lineWallet,
+    isTelegram,
+    enableHaptic,
+    authToken,
+  } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
   const avatarColor = localStorage.getItem("avatarColor");
@@ -131,11 +138,8 @@ const Profile = (props) => {
     if (isConnecting) return;
     setIsConnecting(true);
     try {
-      const walletData = await connectWallet();
-      if (!walletData) {
-        return;
-      }
-      const { signature, message } = walletData;
+      const { signature, message } = await connectWallet();
+
       await connectLineWallet(signature, message, authToken);
     } catch (error) {
       console.error("Wallet Connection Error:", error);
