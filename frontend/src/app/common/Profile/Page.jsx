@@ -75,6 +75,7 @@ const Profile = (props) => {
     isTelegram,
     enableHaptic,
     authToken,
+    setUserData,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
@@ -138,9 +139,16 @@ const Profile = (props) => {
     if (isConnecting) return;
     setIsConnecting(true);
     try {
-      const { signature, message } = await connectWallet();
+      const { accountAddress, signature, message } = await connectWallet();
 
       await connectLineWallet(signature, message, authToken);
+
+      setUserData((prev) => {
+        return {
+          ...prev,
+          kaiaAddress: accountAddress,
+        };
+      });
     } catch (error) {
       console.error("Wallet Connection Error:", error);
     } finally {
