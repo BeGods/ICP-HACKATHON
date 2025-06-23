@@ -1,11 +1,6 @@
 import { UAParser } from "ua-parser-js";
 
-export const getRealClientIP = (req) => {
-  const xfwd = req.headers["x-forwarded-for"];
-  return xfwd?.split(",")[0]?.trim() || req.ip;
-};
-
-export const getAuthRealClientIP = (req: any) => {
+export const getClientIP = (req: any) => {
   const forwarded = req.headers["x-forwarded-for"];
   if (forwarded) {
     return forwarded.split(",")[0].trim();
