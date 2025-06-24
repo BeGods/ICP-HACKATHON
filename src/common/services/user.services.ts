@@ -17,7 +17,7 @@ export const addNewUser = async (userData, prefix, key) => {
     }
 
     if (!userData.telegramUsername) {
-      const nanoId = generateNanoId();
+      const nanoId = await generateNanoId();
       userData.telegramUsername = `${prefix}${nanoId}`;
     }
 
