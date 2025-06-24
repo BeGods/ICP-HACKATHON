@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 
 
 export const authenticateTg = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/tele/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/tele`;
   if (referralCode) {
     url += `?referralCode=${referralCode}`;
   }
@@ -18,7 +18,7 @@ export const authenticateTg = async (userData, referralCode) => {
 };
 
 export const authenticateTwitter = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/twitter/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/twitter`;
   if (referralCode) {
     url += `?refer=${referralCode}`;
   }
@@ -34,7 +34,7 @@ export const authenticateTwitter = async (userData, referralCode) => {
 
 
 export const authenticateOneWave = async (param) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/onewave/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/onewave`;
 
 
   try {
@@ -47,7 +47,7 @@ export const authenticateOneWave = async (param) => {
 };
 
 export const authenticateLineWallet = async (message, signature, referrer) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/wallet/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/wallet`;
 
   if (referrer) {
     url += `?referralCode=${referrer}`;
@@ -64,7 +64,7 @@ export const authenticateLineWallet = async (message, signature, referrer) => {
 
 
 export const authenticateLine = async (token, code, referrer) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/line`;
 
   if (referrer) {
     url += `?referralCode=${referrer}`;
@@ -816,6 +816,25 @@ export const updateCountry = async (country, accessToken) => {
   }
 };
 
+export const fetchKaiaValue = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/pull/kaia`;
+
+  try {
+    const response = await axios.get(
+      url,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const claimAnmntReward = async (accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/reward/claim`;
 
@@ -933,7 +952,7 @@ export const claimRatUpdate = async (mythologyName, accessToken) => {
 };
 
 export const generateStarInvoice = async (accessToken, type) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/stars/invoice`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/tele/stars/invoice`;
   if (type) {
     url += `?type=${type}`;
   }

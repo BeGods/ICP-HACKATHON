@@ -39,9 +39,9 @@ const GiftHeader = ({ category, setCategory }) => {
           }}
           className={`flex-1 flex items-center justify-center rounded-full ${
             category == 2 ? "bg-black text-white " : "text-black"
-          } font-fof py-1`}
+          } font-symbols py-1`}
         >
-          $
+          t
         </div>
       </div>
       <div className="font-fof text-[2rem] mt-1 uppercase text-white drop-shadow">

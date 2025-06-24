@@ -7,6 +7,7 @@ import {
 } from "../../../utils/api.fof";
 import {
   deleteAuthCookie,
+  deleteExpCookie,
   fetchHapticStatus,
   getExpCookie,
   setAuthCookie,
@@ -352,9 +353,9 @@ const IntroPage = (props) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   (async () => await deleteExpCookie(tele))();
-  // }, []);
+  useEffect(() => {
+    (async () => await deleteAuthCookie(tele))();
+  }, []);
 
   return (
     <div

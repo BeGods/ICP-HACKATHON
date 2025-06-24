@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -23,6 +24,7 @@ import {
   claimBurstBooster,
   claimMoonBoost,
   claimShardsBooster,
+  fetchKaiaValue,
   generateStarInvoice,
 } from "../../../utils/api.fof";
 import { trackEvent } from "../../../utils/ga";
@@ -45,11 +47,28 @@ const PayModal = ({
   closeModal,
   handlePayment,
   isLoading,
-  tokens,
+  authToken,
 }) => {
   const [dots, setDots] = useState(1);
+  const [tokens, setTokens] = useState(0);
+
+  const getUpdatedKaiaVal = async (req, res) => {
+    try {
+      const response = await fetchKaiaValue(authToken);
+
+      setTokens(response.data);
+    } catch (error) {
+      console.log(err);
+    }
+  };
+
+  const kaiaDisplayValue = useMemo(() => {
+    const multiplier = activeCard === "automata" ? 1 : 3;
+    return getKaiaValue(multiplier, tokens);
+  }, [tokens, activeCard]);
 
   useEffect(() => {
+    (async () => await getUpdatedKaiaVal())();
     const interval = setInterval(() => {
       setDots((prev) => (prev === 3 ? 1 : prev + 1));
     }, 500);
@@ -86,9 +105,7 @@ const PayModal = ({
               >
                 <img src={assets.misc.kaia} alt="kaia" className="w-[2.5rem]" />
                 <div className="font-medium text-[40px] text-white glow-text-black">
-                  {activeCard === "automata"
-                    ? getKaiaValue(1, tokens.kaia)
-                    : getKaiaValue(3, tokens.kaia)}
+                  {kaiaDisplayValue}
                 </div>
               </div>
             </div>
@@ -741,16 +758,12 @@ const BoosterClaim = ({
                       alt="star"
                       className="h-[2rem]"
                     />
-                    <div className="text-white text-black-contour mt-1 z-10 text-[2rem]">
-                      {activeCard === "automata"
-                        ? getKaiaValue(1, tokens.kaia)
-                        : getKaiaValue(3, tokens.kaia)}
-                    </div>{" "}
+
                     <div className="text-white text-black-contour mt-1 z-10 text-[2rem] px-1">
                       |
                     </div>
                     <div className="text-white text-black-contour mt-1 z-10 text-[2rem]">
-                      ${activeCard === "automata" ? 1 : 3}
+                      USD
                     </div>
                   </div>
                   <div className="flex flex-col w-full text-white">
@@ -931,7 +944,7 @@ const BoosterClaim = ({
           isLoading={payIsActive}
           enableHaptic={enableHaptic}
           t={t}
-          tokens={tokens}
+          authToken={authToken}
           activeMyth={activeMyth}
           assets={assets}
           activeCard={activeCard}
