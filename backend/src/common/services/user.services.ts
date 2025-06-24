@@ -4,7 +4,6 @@ import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
 import Stats from "../models/Stats.models";
 import User from "../models/user.models";
-import { getAvatarCounter } from "./redis.services";
 import { generateNanoId } from "../../utils/nanoId";
 
 export const addNewUser = async (userData, prefix, key) => {
@@ -17,7 +16,7 @@ export const addNewUser = async (userData, prefix, key) => {
     }
 
     if (!userData.telegramUsername) {
-      const nanoId = await generateNanoId();
+      const nanoId = generateNanoId();
       userData.telegramUsername = `${prefix}${nanoId}`;
     }
 
