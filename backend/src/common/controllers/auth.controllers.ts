@@ -18,7 +18,6 @@ import { IUser } from "../../ts/models.interfaces";
 import {
   encryptOneWaveHash,
   decryptOneWaveHash,
-  decryptHash,
 } from "../../helpers/crypt.helpers";
 import config from "../../config/config";
 import {
@@ -26,7 +25,7 @@ import {
   setOneWaveSession,
 } from "../services/redis.services";
 import { v4 as uuidv4 } from "uuid";
-import { generateAliOTP, verifyOtp } from "../services/otp.services";
+import { genOTP, verifyOtp } from "../services/otp.services";
 import { verifyMessage } from "ethers";
 import admin from "../../config/firebase";
 
@@ -541,7 +540,7 @@ export const generateOtp = async (req, res) => {
       return;
     }
 
-    const result = await generateAliOTP(sanitizedNumber);
+    const result = await genOTP(sanitizedNumber);
 
     return res.status(result.status).json({ message: result.message });
   } catch (error) {

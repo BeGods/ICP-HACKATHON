@@ -10,4 +10,6 @@ const StatsSchema: Schema<IStats> = new Schema<IStats>(
 );
 
 const Stats = model<IStats>("Stats", StatsSchema);
+StatsSchema.index({ statId: 1 }, { unique: true });
+
 export default Stats;

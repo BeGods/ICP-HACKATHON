@@ -87,6 +87,7 @@ export const getLeaderboardSnapshot = async () => {
         $project: {
           userId: "$_id",
           telegramId: "$userDetails.telegramId",
+          isArchived: "$userDetails.isArchived",
           telegramUsername: "$userDetails.telegramUsername",
           profileImage: "$userDetails.profile.avatarUrl",
           directReferralCount: "$userDetails.directReferralCount",
@@ -162,7 +163,10 @@ export const getLeaderboardRanks = async (
 
     let pipelineObj = {
       $facet: {
-        active: ranksFilter,
+        active: [
+          { $match: { isArchived: { $ne: true } } }, // filter here
+          ...ranksFilter,
+        ],
         finished: [
           { $match: { totalOrbs: { $gte: 999999 } } },
           { $sort: { fofCompletedAt: 1 as 1 } },
@@ -511,27 +515,6 @@ export const checkBonus = async (user) => {
     }
   } catch (error) {
     console.log("Bonus Error:", error);
-    throw new Error(error.message);
-  }
-};
-
-export const updatePartnersInLastHr = async (userMilestones) => {
-  try {
-    const now = Date.now();
-    const oneHour = 60 * 60 * 1000;
-    const timeElapsed = now - userMilestones.rewards.lastResetAt;
-
-    if (userMilestones.rewards.lastResetAt === 0 || timeElapsed > oneHour) {
-      userMilestones.updateOne({
-        $set: {
-          "rewards.rewardsInLastHr": [],
-          "rewards.lastResetAt": now,
-        },
-      });
-    }
-
-    return userMilestones;
-  } catch (error) {
     throw new Error(error.message);
   }
 };

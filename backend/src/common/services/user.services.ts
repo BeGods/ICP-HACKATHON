@@ -2,7 +2,7 @@ import { generateCode } from "../../helpers/general.helpers";
 import milestones from "../models/milestones.models";
 import userMythologies from "../models/mythologies.models";
 import { Team, Referral } from "../models/referral.models";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import User from "../models/user.models";
 import { generateNanoId } from "../../utils/nanoId";
 

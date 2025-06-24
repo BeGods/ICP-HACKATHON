@@ -18,7 +18,7 @@ import {
   updateUserData,
 } from "../services/game.fof.services";
 import ranks from "../../common/models/ranks.models";
-import Stats from "../../common/models/Stats.models";
+import Stats from "../../common/models/stats.models";
 import { checkBonus } from "../services/general.fof.services";
 import { mythOrder } from "../../utils/constants/variables";
 import milestones from "../../common/models/milestones.models";

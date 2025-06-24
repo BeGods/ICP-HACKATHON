@@ -154,6 +154,9 @@ const userSchema = new Schema<IUser>(
     isBlacklisted: {
       type: Boolean,
     },
+    isArchived: {
+      type: Boolean,
+    },
   },
 
   { timestamps: true }

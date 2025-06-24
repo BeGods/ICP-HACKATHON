@@ -15,7 +15,7 @@ import {
   getUserIdsByRefer,
   getReferTreeOfUsers,
 } from "../controllers/admin.controllers";
-import { validatePayment } from "../middlewares/admin.middlewares";
+import { validateTrx } from "../middlewares/admin.middlewares";
 const router = express.Router();
 
 // ping
@@ -48,17 +48,12 @@ router.post("/rewards/create", adminMiddleware, createReward);
 router.post(
   "/admin/payments/verify",
   adminMiddleware,
-  validatePayment,
+  validateTrx,
   verifyPayment
 );
-router.get(
-  "/admin/payments/pending",
-  adminMiddleware,
-  validatePayment,
-  verifyPayment
-);
+router.get("/admin/payments/pending", adminMiddleware, verifyPayment);
 
-// blacklist
+// admin: blacklist
 router.post(
   `/admin/${config.security.ADMIN_KEY}/blacklist`,
   adminMiddleware,
@@ -82,8 +77,6 @@ router.post(
 
 // migrate db
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);
-
-// schedule leaderboard
 
 // cron.schedule("0 0 * * *", updateDailyQuest);
 

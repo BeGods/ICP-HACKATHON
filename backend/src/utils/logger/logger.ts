@@ -1,12 +1,14 @@
 import { UAParser } from "ua-parser-js";
 
-export const getClientIP = (req: any) => {
+export function getRealClientIP(req: any): string {
+  const cfIP = req.headers["cf-connecting-ip"];
+  if (cfIP) return cfIP.trim();
+
   const forwarded = req.headers["x-forwarded-for"];
-  if (forwarded) {
-    return forwarded.split(",")[0].trim();
-  }
+  if (forwarded) return forwarded.split(",")[0].trim();
+
   return req.ip?.startsWith("::ffff:") ? req.ip.replace("::ffff:", "") : req.ip;
-};
+}
 
 export function normalizeUserAgent(uaString: string = ""): string {
   const parser = new UAParser(uaString);

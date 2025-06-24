@@ -1,6 +1,25 @@
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import User from "../models/user.models";
+import rateLimit from "express-rate-limit";
+import { getRealClientIP } from "../../utils/logger/logger";
+
+export const authLimiter = rateLimit({
+  windowMs: 3 * 60 * 60 * 1000, // 3 hours
+  max: 3,
+  handler: (req, res) => {
+    const realIp = getRealClientIP(req);
+    console.warn(`⚠️ Rate limit hit for IP: ${realIp} on /wallet/auth`);
+    res.status(429).json({
+      message: "Too many login attempts from this IP. Try again after 3 hours.",
+    });
+  },
+  keyGenerator: (req) => {
+    return getRealClientIP(req);
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -25,11 +44,9 @@ export const authMiddleware = async (req, res, next) => {
     }
 
     if (user.isBlacklisted === true) {
-      return res
-        .status(403)
-        .json({
-          error: "Your account has been blacklisted. Please connect support.",
-        });
+      return res.status(403).json({
+        error: "Your account has been blacklisted. Please connect support.",
+      });
     }
 
     req.user = user;
@@ -96,7 +113,7 @@ export const adminMiddleware = async (req, res, next) => {
   }
 };
 
-export const validateBotNewUser = async (req, res, next) => {
+export const validateTgUser = async (req, res, next) => {
   const { telegramId } = req.body;
 
   try {

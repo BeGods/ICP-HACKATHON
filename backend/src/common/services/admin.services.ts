@@ -1,7 +1,7 @@
 import User from "../models/user.models";
 
 // daily active users
-export const getDailyActiveUsers = async () => {
+export const fetchAdminStats = async () => {
   try {
     const now = new Date();
 

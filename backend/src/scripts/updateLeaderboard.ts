@@ -1,20 +1,26 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 import { updateLeadboardRanks } from "../fof/controllers/general.fof.controllers";
 
-dotenv.config();
+const dotenv = require("dotenv");
+
+dotenv.config({ path: ".env.script" });
 
 (async () => {
   try {
-    await mongoose.connect(process.env.MONGO_CONNECT_URL);
+    await mongoose.connect(process.env.MONGO_CONNECT_URL, {
+      serverSelectionTimeoutMS: 5000,
+    });
 
     console.log("MongoDB connected");
 
     await updateLeadboardRanks();
 
+    console.log("Leaderboard updated successfully.");
+
     process.exit(0);
   } catch (error) {
-    console.error("Error running leaderboard cron", error);
+    console.error("Error running leaderboard cron:", error.message);
+    console.error(error.stack);
     process.exit(1);
   }
 })();

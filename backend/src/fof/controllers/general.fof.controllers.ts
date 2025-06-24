@@ -10,11 +10,10 @@ import {
   getLeaderboardSnapshot,
   getRandomValue,
 } from "../services/general.fof.services";
-import Stats from "../../common/models/Stats.models";
+import Stats from "../../common/models/stats.models";
 import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import { determineStreak } from "../../helpers/streak.helpers";
-import { updateTokenReward } from "../../common/services/reward.services";
 import mongoose from "mongoose";
 
 export const validateUserPlayed = async (req, res) => {
@@ -66,7 +65,9 @@ export const getLeaderboard = async (req, res) => {
 
 export const updateLeadboardRanks = async () => {
   try {
-    const leaderboard = await getLeaderboardSnapshot();
+    let leaderboard = await getLeaderboardSnapshot();
+
+    leaderboard = leaderboard.filter((user) => !user.isArchived);
 
     // Segregate Users
     const fofFinishedUsers = leaderboard.filter(
@@ -140,6 +141,7 @@ export const updateLeadboardRanks = async () => {
             coinRank: user.coinRank,
             country: user.country ?? "NA",
             prevRank: user.prevRank,
+            isArchived: user.isArchived,
             rorCompletedAt: user.finishedAt ?? new Date(),
             directReferralCount: user.directReferralCount,
             gameData: {
@@ -402,25 +404,6 @@ export const claimStreakBonus = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Failed to update streak bonus.",
-      error: error.message,
-    });
-  }
-};
-
-export const claimMsnReward = async (req, res) => {
-  try {
-    const reward = req.rewardDetails;
-    const userMilestones = req.userMilestones;
-    const user = req.user;
-    const { paymentType } = req.body;
-
-    await updateTokenReward(user, userMilestones, reward, paymentType);
-
-    res.status(200).json({ message: "Reward claimed successfully." });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Failed to claim reward",
       error: error.message,
     });
   }

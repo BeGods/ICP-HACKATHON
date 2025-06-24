@@ -1,13 +1,13 @@
 import partners from "../models/partners.models";
 import quest from "../models/quests.models";
-import Stats from "../models/Stats.models";
+import Stats from "../models/stats.models";
 import User from "../models/user.models";
 import axios from "axios";
 import { Request, Response } from "express";
 import { IQuest, IStats } from "../../ts/models.interfaces";
 import rewards from "../models/rewards.models";
 import mongoose from "mongoose";
-import { getDailyActiveUsers } from "../services/admin.services";
+import { fetchAdminStats } from "../services/admin.services";
 import { Referral } from "../models/referral.models";
 import {
   PaymentLogs,
@@ -33,13 +33,14 @@ export const getAdminUpdates = async (req, res) => {
     const stats = await Stats.find();
     const userCounts = stats.map((stat) => stat.totalUsers);
     const { dailyActive, weeklyActive, monthlyActive, dailyNewUsers } =
-      await getDailyActiveUsers();
+      await fetchAdminStats();
 
     const data = {
       totalUsers: userCounts[4],
       newUsers: dailyNewUsers,
       tgUsers: userCounts[1],
-      dapp: userCounts[2],
+      line: userCounts[2],
+      dapp: userCounts[6],
       onewave: userCounts[3],
       fof: userCounts[0],
       ror: userCounts[5],
@@ -82,7 +83,6 @@ export const updateDailyQuest = async (
       )
     );
 
-    // inactive previous quests
     await quest.updateMany(
       {
         createdAt: {
