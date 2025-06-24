@@ -73,29 +73,32 @@ export const setOneWaveSession = async (key, value, expiry) => {
   }
 };
 
+const axiosInstance = axios.create({
+  baseURL: "https://api.coingecko.com/api/v3",
+  timeout: 2000,
+});
+
 export const fetchKaiaValue = async () => {
   try {
     const redisClient = await connectRedis(2);
-    let result = await redisClient.get("kaia");
+    const cached = await redisClient.get("kaia");
 
-    if (result) {
-      return JSON.parse(result);
-    }
+    if (cached) return parseFloat(cached);
 
-    let price = null;
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
-        const response = await axios.get(
-          "https://api.coingecko.com/api/v3/simple/price?ids=kaia&vs_currencies=usd",
-          { timeout: 2000 }
+        const res = await axiosInstance.get(
+          "/simple/price?ids=kaia&vs_currencies=usd"
         );
-        price = response.data?.kaia?.usd;
-        if (price != null) {
-          await redisClient.set("kaia", JSON.stringify(price), { EX: 300 });
+        const price = res.data?.kaia?.usd;
+
+        if (typeof price === "number") {
+          await redisClient.set("kaia", price.toString(), { EX: 300 });
           return price;
         }
       } catch (err) {
         console.warn(`Retry ${attempt + 1} failed:`, err.message);
+        new Promise((res) => setTimeout(res, 50));
       }
     }
 
@@ -106,7 +109,6 @@ export const fetchKaiaValue = async () => {
     return 0.11;
   }
 };
-
 export const getAvatarCounter = async (User) => {
   try {
     const redisClient = await connectRedis(2);

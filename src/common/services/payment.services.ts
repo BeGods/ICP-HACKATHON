@@ -1,9 +1,6 @@
-import mongoose from "mongoose";
-import { IReward } from "../../ts/models.interfaces";
 import { RewardsTransactions } from "../models/transactions.models";
-// import { io } from "../../config/socket";
 
-export const updateTokenReward = async (
+export const updateMntryRwrd = async (
   user,
   milestones,
   reward,
@@ -71,46 +68,55 @@ export const updateTokenReward = async (
   }
 };
 
-export const initalizeWithdraw = async () => {
-  try {
-    return true;
-  } catch (error) {
-    console.log(error);
-  }
+import axios from "axios";
+import config from "../../config/config";
+
+const invoiceDetails = {
+  automata: {
+    title: "Automata Pack",
+    description: "Claim Automata pack all at once for all mythologies.",
+    currency: "XTR",
+    amount: 1,
+    photo_url: "https://i.postimg.cc/2yztL9mh/tg-star.png",
+  },
+  burst: {
+    title: "Burst Pack",
+    description: "Claim Burst pack all at once for all mythologies.",
+    currency: "XTR",
+    amount: 3,
+    photo_url: "https://i.postimg.cc/2yztL9mh/tg-star.png",
+  },
 };
 
-export const successPayment = async (userId, rewardId, transactionId) => {
-  try {
-    await RewardsTransactions.findOneAndUpdate(
-      { userId: userId, rewardId: rewardId, status: "pending" },
-      {
-        $set: {
-          status: "success",
-        },
-      },
-      { new: true }
-    );
+export const createTGStarInvoice = async (rewardType, uuid) => {
+  const { title, description, currency, amount, payload, photo_url } =
+    invoiceDetails[rewardType];
+  const totalAmount = amount;
 
-    return true;
-  } catch (error) {
-    console.log(error);
+  const data = {
+    title,
+    description,
+    payload,
+    provider_token: "",
+    photo_url,
+    currency,
+    prices: [{ label: title, amount: totalAmount }],
+  };
+
+  if (uuid) {
+    data["payload"] = uuid;
   }
-};
 
-export const failedPayment = async (userId, rewardId) => {
   try {
-    await RewardsTransactions.findOneAndUpdate(
-      { userId: userId, "monetary.rewardId": rewardId },
-      {
-        $set: {
-          "monetary.$.status": "failed",
-        },
-      },
-      { new: true }
-    );
+    const TELEGRAM_BOT_TOKEN = config.security.TMA_BOT_TOKEN;
 
-    return true;
+    const response = await axios.post(
+      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/createInvoiceLink`,
+      data
+    );
+    return response.data.result;
   } catch (error) {
-    console.log(error);
+    console.error("Error creating invoice:", error);
+    throw new Error("Failed to create invoice");
   }
 };

@@ -5,14 +5,14 @@ import {
   redeemPlayuperRwrd,
   resendOtp,
   verifyOtp,
-} from "../controllers/partners.controllers";
-import { authMiddleware } from "../../common/middlewares/auth.middlewares";
+} from "../controllers/missions.controllers";
+import { authMiddleware } from "../middlewares/auth.middlewares";
 import {
   validMobileNo,
   validOnboardInput,
   validPartnerRwrd,
   validPlaysuperRedeem,
-} from "../middlewares/general.fof.middlewares";
+} from "../../fof/middlewares/general.fof.middlewares";
 import express from "express";
 const router = express.Router();
 

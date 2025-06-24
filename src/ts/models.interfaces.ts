@@ -226,6 +226,7 @@ export interface IRank extends Document {
   profile: {
     avatarUrl: String;
   };
+  isArchived?: Boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -287,6 +288,7 @@ export interface IUser extends Document {
     hasClaimedFoFRwrd: boolean;
   };
   isBlacklisted?: boolean;
+  isArchived?: Boolean;
   userBetAt: string;
   createdAt?: Date;
   updatedAt?: Date;

@@ -1,16 +1,17 @@
-import milestones from "../../common/models/milestones.models";
-import userMythologies from "../../common/models/mythologies.models";
-import partners from "../../common/models/partners.models";
-import { OrbsTransactions } from "../../common/models/transactions.models";
-import User from "../../common/models/user.models";
-import { updatePartnersInLastHr } from "../services/general.fof.services";
+import milestones from "../models/milestones.models";
+import userMythologies from "../models/mythologies.models";
+import { OrbsTransactions } from "../models/transactions.models";
+import User from "../models/user.models";
 import {
   claimPlaysuperReward,
   getPlaysuperOtp,
   resendPlaysuperOtp,
   verifyPlaysuperOtp,
-} from "../../common/services/playsuper.services";
-import { fetchUserRewards } from "../services/rewards.fof.services";
+} from "../services/playsuper.services";
+import {
+  fetchUserRewards,
+  updatePartnersInLastHr,
+} from "../services/missions.services";
 
 // operations
 export const getAllPartners = async (req, res) => {

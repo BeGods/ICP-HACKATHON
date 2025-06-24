@@ -5,47 +5,7 @@ import axios from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import User from "../models/user.models";
 import qs from "qs";
-
-const getTokenExpiryMs = (expiry: string): number => {
-  const timeUnit = expiry.slice(-1);
-  const timeValue = parseInt(expiry.slice(0, -1));
-
-  switch (timeUnit) {
-    case "s":
-      return timeValue * 1000;
-    case "m":
-      return timeValue * 60 * 1000;
-    case "h":
-      return timeValue * 60 * 60 * 1000;
-    case "d":
-      return timeValue * 24 * 60 * 60 * 1000;
-    default:
-      throw new Error("Invalid token expiry format");
-  }
-};
-
-const parseTimeToMs = (timeString: string) => {
-  const match = timeString.match(/^(\d+)([smhd])$/);
-  if (!match) {
-    throw new Error(`Invalid time format: ${timeString}`);
-  }
-
-  const timeValue = parseInt(match[1]);
-  const timeUnit = match[2];
-
-  switch (timeUnit) {
-    case "s":
-      return timeValue * 1000; // Convert seconds to ms
-    case "m":
-      return timeValue * 60 * 1000; // Convert minutes to ms
-    case "h":
-      return timeValue * 60 * 60 * 1000; // Convert hours to ms
-    case "d":
-      return timeValue * 24 * 60 * 60 * 1000; // Convert days to ms
-    default:
-      throw new Error(`Unsupported time unit: ${timeUnit}`);
-  }
-};
+import { getTokenExpiryMs, parseTimeToMs } from "../../helpers/auth.helpers";
 
 export const generateAuthToken = async (user: any, res) => {
   try {
@@ -66,7 +26,6 @@ export const generateAuthToken = async (user: any, res) => {
       }
     );
 
-    // Only set cookies if response hasn't been sent
     if (!res.headersSent) {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -184,83 +143,107 @@ export const decryptTelegramData = async (initData) => {
 };
 
 export const decryptLineData = async (token) => {
-  try {
-    if (!token) {
-      throw Error("Invalid input. Line initData is required.");
-    }
-    let parsedData;
+  if (!token) {
+    throw new Error("Missing LINE id_token.");
+  }
 
-    const clientID = config.security.LINE_CHANNEL_ID;
+  const clientID = config.security.LINE_CHANNEL_ID;
+  const agent = new HttpsProxyAgent(config.source.PROXY_SERVER_JP);
+  const url = `https://api.line.me/oauth2/v2.1/verify?id_token=${token}&client_id=${clientID}`;
 
-    const agent = new HttpsProxyAgent(config.source.PROXY_SERVER_JP);
+  const axiosOptions = {
+    httpsAgent: agent,
+    timeout: 3000,
+  };
 
-    // validate initData
+  let lastError = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const response = await axios.post(
-        `https://api.line.me/oauth2/v2.1/verify?id_token=${token}&client_id=${clientID}`,
-        {},
-        {
-          httpsAgent: agent,
-        }
+      const response = await axios.post(url, {}, axiosOptions);
+      const parsedData = response.data;
+
+      const lineId = parsedData?.sub;
+      const lineName = parsedData?.name;
+      const photoUrl = parsedData?.picture;
+
+      if (!lineId) {
+        throw new Error("Ivalid user Id");
+      }
+
+      return { lineId, lineName, photoUrl };
+    } catch (err) {
+      lastError = err;
+      console.warn(
+        `Decryption attempt ${attempt + 1} failed:`,
+        err.response?.data || err.message
       );
 
-      parsedData = response.data;
-    } catch (validateError) {
-      console.log(validateError);
-      throw new Error(validateError);
+      if (attempt === 0) {
+        await new Promise((res) => setTimeout(res, 1000));
+      }
     }
-
-    const lineId = parsedData.sub;
-    const lineName = parsedData.name;
-    const photoUrl = parsedData.picture;
-
-    if (!lineId) {
-      throw new Error("Invalid userId. User not found.");
-    }
-
-    return { lineId, lineName, photoUrl };
-  } catch (error) {
-    throw new Error(error);
   }
+
+  throw new Error(
+    `LINE id_token verification failed: ${
+      lastError?.response?.data?.error_description || lastError?.message
+    }`
+  );
 };
 
 export const getLineIdToken = async (code) => {
-  try {
-    if (!code) {
-      throw new Error("Invalid input. Line code is required.");
-    }
-
-    const agent = new HttpsProxyAgent(config.source.PROXY_SERVER_JP);
-
-    const data = qs.stringify({
-      grant_type: "authorization_code",
-      code: code,
-      redirect_uri: config.source.client + "/auth/line/callback",
-      client_id: config.security.LINE_CHANNEL_ID,
-      client_secret: config.security.LINE_CHANNEL_SECRET,
-    });
-
-    const response = await axios.post(
-      "https://api.line.me/oauth2/v2.1/token",
-      data,
-      {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        httpsAgent: agent,
-      }
-    );
-
-    if (!response.data) {
-      throw new Error("Invalid response from LINE API.");
-    }
-
-    return response.data.id_token;
-  } catch (error) {
-    console.error(
-      "Error fetching LINE ID token:",
-      error.response?.data || error.message
-    );
-    throw new Error(
-      error.response?.data?.error_description || "Failed to retrieve token."
-    );
+  if (!code) {
+    throw new Error("Line code misising");
   }
+
+  const agent = new HttpsProxyAgent(config.source.PROXY_SERVER_JP);
+
+  const data = qs.stringify({
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: `${config.source.client}/auth/line/callback`,
+    client_id: config.security.LINE_CHANNEL_ID,
+    client_secret: config.security.LINE_CHANNEL_SECRET,
+  });
+
+  const axiosOptions = {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    httpsAgent: agent,
+    timeout: 3000,
+  };
+
+  let lastError = null;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const response = await axios.post(
+        "https://api.line.me/oauth2/v2.1/token",
+        data,
+        axiosOptions
+      );
+
+      if (!response.data?.id_token) {
+        throw new Error("Failed to get id token from line.");
+      }
+
+      return response.data.id_token;
+    } catch (err) {
+      lastError = err;
+      console.warn(
+        `fetch attempt ${attempt + 1} failed:`,
+        err.response?.data || err.message
+      );
+
+      if (attempt === 0) {
+        await new Promise((res) => setTimeout(res, 1000));
+      }
+    }
+  }
+
+  throw new Error(
+    `Token request failed after 2 attempts: ${
+      lastError?.response?.data?.error_description || lastError?.message
+    }`
+  );
 };

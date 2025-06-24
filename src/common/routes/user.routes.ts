@@ -1,53 +1,56 @@
 import {
   authMiddleware,
-  validateBotNewUser,
+  validateTgUser,
 } from "../middlewares/auth.middlewares";
 import {
   claimFinishRwrd,
   connectLineWallet,
   connectTonWallet,
-  createLinePayment,
   disconnectLineWallet,
   disconnectTonWallet,
-  getUserWithdrawHistory,
+  getWithdrawHistory,
   updateAvatar,
   updateCountry,
-  updateLinePaymentStatus,
-  withdrawReward,
+  updateBalance,
+  claimMsnReward,
 } from "../controllers/user.controllers";
 import express from "express";
 import { createNewUserIfNoExists } from "../controllers/auth.controllers";
 import {
-  validateFinishedRwrd,
-  validateWithdrawRwrd,
+  validateFoFEnd,
+  validateValidMsn,
+  validateWithdrawBal,
 } from "../middlewares/user.middlewares";
 
 const router = express.Router();
 
-router.post("/user/country", authMiddleware, updateCountry);
+// wallets
 router.post("/connect/ton", authMiddleware, connectTonWallet);
 router.get("/disconnect/ton", authMiddleware, disconnectTonWallet);
 router.post("/connect/line", authMiddleware, connectLineWallet);
 router.get("/disconnect/line", authMiddleware, disconnectLineWallet);
+
+// profile
+router.post("/user/country", authMiddleware, updateCountry);
 router.get("/profile/avatar", authMiddleware, updateAvatar);
-router.get(
-  "/user/finish",
-  authMiddleware,
-  validateFinishedRwrd,
-  claimFinishRwrd
-);
+
+// fof
+router.get("/user/finish", authMiddleware, validateFoFEnd, claimFinishRwrd);
 
 // new user
-router.post("/user/refer", validateBotNewUser, createNewUserIfNoExists);
-router.get("/line/createPayment", authMiddleware, createLinePayment);
-router.post("/line/paymentStatus", updateLinePaymentStatus);
+router.post("/user/refer", validateTgUser, createNewUserIfNoExists);
+
+// balance
 router.post(
   "/holdings/withdraw",
   authMiddleware,
-  validateWithdrawRwrd,
-  withdrawReward
+  validateWithdrawBal,
+  updateBalance
 );
+router.get("/holdings/history", authMiddleware, getWithdrawHistory);
 
-router.get("/holdings/history", authMiddleware, getUserWithdrawHistory);
+// rewards
+// reward
+router.post("/reward/claim", authMiddleware, validateValidMsn, claimMsnReward);
 
 export default router;

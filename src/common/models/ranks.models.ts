@@ -58,6 +58,9 @@ const rankSchema = new Schema<IRank>(
       type: Number,
       default: 0,
     },
+    isArchived: {
+      type: Boolean,
+    },
   },
   { timestamps: true }
 );

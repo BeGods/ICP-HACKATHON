@@ -6,7 +6,7 @@ import hpp from "hpp";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import config from "./config/config";
-import { normalizeUserAgent } from "./utils/morgan/ua";
+import { normalizeUserAgent } from "./utils/logger/logger";
 const express = require("express");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");

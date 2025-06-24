@@ -8,7 +8,7 @@ import {
 } from "./redis.services";
 import config from "../../config/config";
 
-export const generateAliOTP = async (mobileNumber) => {
+export const genOTP = async (mobileNumber) => {
   try {
     const requestCount = await setRequestCnt(mobileNumber);
 

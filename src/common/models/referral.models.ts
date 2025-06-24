@@ -46,4 +46,6 @@ const teamSchema = new Schema<ITeam>({
 const Referral = model<IReferral>("Referral", referralSchema);
 const Team = model<ITeam>("Team", teamSchema);
 
+referralSchema.index({ userId: 1 }, { unique: true });
+
 export { Referral, Team };
