@@ -7,7 +7,7 @@ import {
   IRewardTransactions,
   IShardsTransactions,
   IStarTransactions,
-} from "src/ts/models.interfaces";
+} from "../../ts/models.interfaces";
 
 const baseTransactionSchema = {
   userId: {
