@@ -6,7 +6,7 @@ export const filterAllQuests = (quests) => {
       .filter((item) => item.mythology === "Other")
       .sort(
         (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          new Date(a?.createdAt).getTime() - new Date(b?.createdAt).getTime()
       );
 
     const mythologyQuests = quests
@@ -35,6 +35,6 @@ export const filterAllQuests = (quests) => {
 
     return { otherQuests, mythologyQuests, towerKeys };
   } catch (error) {
-    console.log(error);
+    console.log("Filter quests", error);
   }
 };

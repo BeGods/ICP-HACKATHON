@@ -4,18 +4,16 @@ import express from "express";
 import config from "../../config/config";
 import { adminMiddleware } from "../middlewares/auth.middlewares";
 import {
-  blacklistAndCleanupUsers,
+  updateBlacklistStatus,
   createPartner,
   createQuest,
   createReward,
-  fetchPayouts,
   getAdminUpdates,
-  getAllReferralsById,
-  getBlacklistedUserRewardCollected,
-  getPlayedUserCount,
-  getUserIdsByReferral,
+  getBlacklistedRwrds,
   ping,
   verifyPayment,
+  getUserIdsByRefer,
+  getReferTreeOfUsers,
 } from "../controllers/admin.controllers";
 import { validatePayment } from "../middlewares/admin.middlewares";
 const router = express.Router();
@@ -45,30 +43,41 @@ router.post("/partners/create", adminMiddleware, createPartner);
 
 // admin: create reward
 router.post("/rewards/create", adminMiddleware, createReward);
+
 // admin: update status
 router.post(
-  "/payments/verify",
+  "/admin/payments/verify",
   adminMiddleware,
   validatePayment,
   verifyPayment
 );
-router.post(
-  `/admin${config.security.ADMIN_KEY}/blacklist`,
+router.get(
+  "/admin/payments/pending",
   adminMiddleware,
-  blacklistAndCleanupUsers
+  validatePayment,
+  verifyPayment
 );
 
-router.get(`/admin/pending`, adminMiddleware, fetchPayouts);
+// blacklist
 router.post(
-  "/admin/played",
+  `/admin/${config.security.ADMIN_KEY}/blacklist`,
   adminMiddleware,
-  getBlacklistedUserRewardCollected
+  updateBlacklistStatus
 );
-
 router.post(
-  "/admin/blacklistedRewards",
+  `/admin/${config.security.ADMIN_KEY}/blacklisted-rewards`,
   adminMiddleware,
-  blacklistAndCleanupUsers
+  getBlacklistedRwrds
+);
+router.post(
+  `/admin/${config.security.ADMIN_KEY}/refer-tree`,
+  adminMiddleware,
+  getReferTreeOfUsers
+);
+router.post(
+  `/admin/${config.security.ADMIN_KEY}/idByrefer`,
+  adminMiddleware,
+  getUserIdsByRefer
 );
 
 // migrate db

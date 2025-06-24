@@ -29,7 +29,6 @@ export const validateAlchemist = async (req, res, next) => {
 
     if (!mythData.boosters.isShardsClaimActive) {
       mythData.boosters = validateBooster(mythData.boosters);
-      console.log(mythData);
 
       if (!mythData.boosters.isShardsClaimActive) {
         throw new Error(

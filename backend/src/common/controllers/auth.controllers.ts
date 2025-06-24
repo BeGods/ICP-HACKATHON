@@ -10,12 +10,8 @@ import {
 import {
   addTeamMember,
   createDefaultUserMyth,
-  addNewTelegramUser,
-  addNewLineUser,
-  addNewOneWaveUser,
-  addNewOTPUser,
   validateUsername,
-  addNewTwitterUser,
+  addNewUser,
 } from "../services/user.services";
 import { Request, Response } from "express";
 import { IUser } from "../../ts/models.interfaces";
@@ -33,84 +29,6 @@ import { v4 as uuidv4 } from "uuid";
 import { generateAliOTP, verifyOtp } from "../services/otp.services";
 import { verifyMessage } from "ethers";
 import admin from "../../config/firebase";
-
-// login
-export const authenticateTg = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const { initData } = req.body;
-    const { referralCode } = req.query as { referralCode?: string | null };
-    let isUpdated = false;
-
-    const { telegramId, telegramUsername, isPremium } =
-      await decryptTelegramData(initData);
-
-    // existing user or not
-    let existingUser: IUser | null = await User.findOne({ telegramId });
-
-    if (existingUser) {
-      // check if user details have updated
-      if (isPremium !== existingUser.isPremium) {
-        existingUser.isPremium = isPremium;
-        isUpdated = true;
-      }
-
-      const match = existingUser.telegramUsername.match(/^(.*)_\w{3}$/);
-      const baseUsername = match ? match[1] : existingUser.telegramUsername;
-
-      if (telegramUsername && telegramUsername !== baseUsername) {
-        existingUser.telegramUsername = telegramUsername;
-        isUpdated = true;
-      }
-      if (isUpdated) {
-        existingUser.save();
-      }
-    } else {
-      let newUser: Partial<IUser> = {
-        telegramId,
-        telegramUsername,
-        isPremium,
-      };
-
-      let existingReferrer: IUser;
-
-      //check referrer
-      if (referralCode) {
-        existingReferrer = await User.findOne({ referralCode });
-
-        if (!existingReferrer) {
-          res.status(404).json({ message: "Invalid referral code." });
-        }
-
-        newUser.parentReferrerId = existingReferrer._id as ObjectId;
-      }
-
-      // create new  user
-      existingUser = await addNewTelegramUser(newUser);
-      await addTeamMember(existingUser, existingReferrer, referralCode);
-      await createDefaultUserMyth(existingUser);
-    }
-
-    // response token
-    const { accessToken } = await generateAuthToken(existingUser, res);
-    res.status(200).json({
-      message: "User authenticated successfully.",
-      data: {
-        accessToken: accessToken,
-        // refreshToken: refreshToken
-      },
-    });
-  } catch (error: any) {
-    console.log(error);
-
-    res.status(500).json({
-      message: "Failed to authenticate user.",
-      error: error.message,
-    });
-  }
-};
 
 //test login
 export const testAuthenticate = async (
@@ -168,7 +86,7 @@ export const testAuthenticate = async (
       }
 
       // create new  user
-      existingUser = await addNewTelegramUser(newUser);
+      existingUser = await addNewUser(newUser, "TG", "telegram");
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -190,6 +108,85 @@ export const testAuthenticate = async (
   }
 };
 
+// telegram
+export const authenticateTg = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { initData } = req.body;
+    const { referralCode } = req.query as { referralCode?: string | null };
+    let isUpdated = false;
+
+    const { telegramId, telegramUsername, isPremium } =
+      await decryptTelegramData(initData);
+
+    // existing user or not
+    let existingUser: IUser | null = await User.findOne({ telegramId });
+
+    if (existingUser) {
+      // check if user details have updated
+      if (isPremium !== existingUser.isPremium) {
+        existingUser.isPremium = isPremium;
+        isUpdated = true;
+      }
+
+      const match = existingUser.telegramUsername.match(/^(.*)_\w{3}$/);
+      const baseUsername = match ? match[1] : existingUser.telegramUsername;
+
+      if (telegramUsername && telegramUsername !== baseUsername) {
+        existingUser.telegramUsername = telegramUsername;
+        isUpdated = true;
+      }
+      if (isUpdated) {
+        existingUser.save();
+      }
+    } else {
+      let newUser: Partial<IUser> = {
+        telegramId,
+        telegramUsername,
+        isPremium,
+      };
+
+      let existingReferrer: IUser;
+
+      //check referrer
+      if (referralCode) {
+        existingReferrer = await User.findOne({ referralCode });
+
+        if (!existingReferrer) {
+          res.status(404).json({ message: "Invalid referral code." });
+        }
+
+        newUser.parentReferrerId = existingReferrer._id as ObjectId;
+      }
+
+      // create new  user
+      existingUser = await addNewUser(newUser, "TG", "telegram");
+      await addTeamMember(existingUser, existingReferrer, referralCode);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const { accessToken } = await generateAuthToken(existingUser, res);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+// telegram -- non auth
 export const createNewUserIfNoExists = async (req, res) => {
   const { telegramId, telegramUsername, isPremium } = req.body;
 
@@ -206,7 +203,7 @@ export const createNewUserIfNoExists = async (req, res) => {
       isPremium,
     };
 
-    const createdUser = await addNewTelegramUser(newUser);
+    const createdUser = await addNewUser(newUser, "TG", "telegram");
     await createDefaultUserMyth(createdUser);
 
     return res.json({ refers: 0 });
@@ -220,6 +217,7 @@ export const createNewUserIfNoExists = async (req, res) => {
   }
 };
 
+// ine
 export const authenticateLine = async (req: Request, res: Response) => {
   try {
     const { token, code } = req.body;
@@ -299,7 +297,7 @@ export const authenticateLine = async (req: Request, res: Response) => {
 
       // create new  user
       try {
-        existingUser = await addNewLineUser(newUser);
+        existingUser = await addNewUser(newUser, "LN", "line");
       } catch (err: any) {
         if (err.code === 11000) {
           return res
@@ -308,6 +306,7 @@ export const authenticateLine = async (req: Request, res: Response) => {
         }
         throw err;
       }
+
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -331,6 +330,7 @@ export const authenticateLine = async (req: Request, res: Response) => {
   }
 };
 
+//  dapp
 export const authenticateKaiaAddr = async (
   req: Request,
   res: Response
@@ -369,7 +369,7 @@ export const authenticateKaiaAddr = async (
         newUser.parentReferrerId = existingReferrer._id as ObjectId;
       }
       // create new  user
-      existingUser = await addNewLineUser(newUser);
+      existingUser = await addNewUser(newUser, "dp", "dapp");
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
@@ -393,6 +393,7 @@ export const authenticateKaiaAddr = async (
   }
 };
 
+// onewave - create
 export const createOneWaveSession = async (
   req: Request,
   res: Response
@@ -430,6 +431,7 @@ export const createOneWaveSession = async (
   }
 };
 
+// onewave
 export const authenticateOneWave = async (
   req: Request,
   res: Response
@@ -489,7 +491,7 @@ export const authenticateOneWave = async (
       const refPartner = "OW";
 
       // create new  user
-      existingUser = await addNewOneWaveUser(newUser, refPartner);
+      existingUser = await addNewUser(newUser, "OW", "onewave");
       await createDefaultUserMyth(existingUser);
     }
 
@@ -512,6 +514,7 @@ export const authenticateOneWave = async (
   }
 };
 
+// otp - create
 export const generateOtp = async (req, res) => {
   try {
     const { mobileNumber, username } = req.body;
@@ -550,6 +553,7 @@ export const generateOtp = async (req, res) => {
   }
 };
 
+// otp
 export const authenticateOTP = async (
   req: Request,
   res: Response
@@ -601,8 +605,8 @@ export const authenticateOTP = async (
       };
 
       // create new  user
-      const refPartner = refer === "STAN" ? refer : "";
-      existingUser = await addNewOTPUser(newUser, refPartner);
+      const refPartner = refer === "stab" ? refer : "";
+      existingUser = await addNewUser(newUser, "OT", "OTP");
 
       await createDefaultUserMyth(existingUser);
     }
@@ -626,6 +630,7 @@ export const authenticateOTP = async (
   }
 };
 
+// twitter
 export const authenticateTwitter = async (
   req: Request,
   res: Response
@@ -693,7 +698,7 @@ export const authenticateTwitter = async (
       }
 
       // create new  user
-      existingUser = await addNewTwitterUser(newUser);
+      existingUser = await addNewUser(newUser, "X", "x");
       await addTeamMember(existingUser, existingReferrer, refer);
       await createDefaultUserMyth(existingUser);
     }
@@ -717,6 +722,7 @@ export const authenticateTwitter = async (
   }
 };
 
+// create refresh token
 export const generateRefreshToken = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken || req.cookies.refreshToken;
@@ -747,6 +753,7 @@ export const generateRefreshToken = async (req, res) => {
   }
 };
 
+// delete refresh token
 export const logoutUser = async (req, res) => {
   try {
     res.clearCookie("refreshToken", {
