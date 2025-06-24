@@ -1,5 +1,10 @@
-export const generateNanoId = async () => {
-  const { customAlphabet } = await import("nanoid");
-  const nanoid = customAlphabet("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 5);
-  return nanoid();
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+export const generateNanoId = (length: number = 6): string => {
+  let id = "";
+  for (let i = 0; i < length; i++) {
+    const index = Math.floor(Math.random() * ALPHABET.length);
+    id += ALPHABET[index];
+  }
+  return id;
 };
