@@ -45,7 +45,7 @@ const RewardCarousel = ({ rewards }) => {
             }
             return b.limit - a.limit;
           })
-          .filter((itm) => itm.limit > 0)
+          .filter((itm) => itm.limit > 0 || itm.isClaimed)
           .slice(currentIndex, currentIndex + 3)
           .map((item, index) => {
             let className = "carousel__item";

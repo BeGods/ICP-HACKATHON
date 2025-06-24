@@ -40,7 +40,7 @@ const BottomChild = () => {
             showEffect && "pulse-text"
           } justify-center items-centerc  bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
         >
-          t
+          0
         </div>
       </div>
       <div
