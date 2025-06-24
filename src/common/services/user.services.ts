@@ -23,7 +23,7 @@ export const addNewUser = async (userData, prefix, key) => {
     } catch (e) {
       console.warn("Redis fallback activated. Using NanoID for username.");
       const nanoId = generateNanoId();
-      userData.telegramUsername = `TG${nanoId}`;
+      userData.telegramUsername = `${prefix}${nanoId}`;
     }
 
     const newUser = new User(userData);
