@@ -84,7 +84,7 @@ router.post(
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);
 
 // schedule leaderboard
-cron.schedule("0 * * * *", updateLeadboardRanks);
+
 // cron.schedule("0 0 * * *", updateDailyQuest);
 
 export default router;
