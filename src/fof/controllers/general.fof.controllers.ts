@@ -64,7 +64,7 @@ export const getLeaderboard = async (req, res) => {
   }
 };
 
-export const updateLeadboardRanks = async (req, res) => {
+export const updateLeadboardRanks = async () => {
   try {
     const leaderboard = await getLeaderboardSnapshot();
 
@@ -175,10 +175,6 @@ export const updateLeadboardRanks = async (req, res) => {
     console.log("Leaderboard updated successfully.");
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "Failed to update leaderboard.",
-      error: error.message,
-    });
   }
 };
 // bet
