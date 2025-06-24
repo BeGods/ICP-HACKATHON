@@ -16,12 +16,7 @@ export const addNewUser = async (userData, prefix, key) => {
       userData.referralCode = `FDG${prefix}${genRandomCode}`;
     }
 
-    try {
-      if (!userData.telegramUsername) {
-        userData.telegramUsername = await getAvatarCounter(User);
-      }
-    } catch (e) {
-      console.warn("Redis fallback activated. Using NanoID for username.");
+    if (!userData.telegramUsername) {
       const nanoId = generateNanoId();
       userData.telegramUsername = `${prefix}${nanoId}`;
     }
