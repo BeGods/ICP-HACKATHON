@@ -10,7 +10,7 @@ import {
   getLeaderboardSnapshot,
   getRandomValue,
 } from "../services/general.fof.services";
-import Stats from "../../common/models/stats.models";
+import Stats from "../../common/models/Stats.models";
 import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import { determineStreak } from "../../helpers/streak.helpers";
