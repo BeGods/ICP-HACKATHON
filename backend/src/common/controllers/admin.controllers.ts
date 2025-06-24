@@ -1,6 +1,6 @@
 import partners from "../models/partners.models";
 import quest from "../models/quests.models";
-import Stats from "../models/stats.models";
+import Stats from "../models/Stats.models";
 import User from "../models/user.models";
 import axios from "axios";
 import { Request, Response } from "express";

@@ -5,7 +5,7 @@ import {
 } from "../services/general.ror.services";
 import User from "../../common/models/user.models";
 import { CoinsTransactions } from "../../common/models/transactions.models";
-import Stats from "../../common/models/stats.models";
+import Stats from "../../common/models/Stats.models";
 
 export const claimDailyBonus = async (req, res) => {
   const userId = req.user._id;

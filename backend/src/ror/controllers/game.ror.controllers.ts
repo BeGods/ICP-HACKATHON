@@ -28,7 +28,7 @@ import {
   ItemsTransactions,
 } from "../../common/models/transactions.models";
 import ranks from "../../common/models/ranks.models";
-import Stats from "../../common/models/stats.models";
+import Stats from "../../common/models/Stats.models";
 import { itemInterface } from "../../ts/models.interfaces";
 import { checkBonus } from "../services/general.ror.services";
 
