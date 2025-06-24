@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 
 
 export const authenticateTg = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/tele`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/tele/auth`;
   if (referralCode) {
     url += `?referralCode=${referralCode}`;
   }
@@ -18,7 +18,7 @@ export const authenticateTg = async (userData, referralCode) => {
 };
 
 export const authenticateTwitter = async (userData, referralCode) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/twitter`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/twitter/auth`;
   if (referralCode) {
     url += `?refer=${referralCode}`;
   }
@@ -47,7 +47,7 @@ export const authenticateOneWave = async (param) => {
 };
 
 export const authenticateLineWallet = async (message, signature, referrer) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/wallet`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/wallet/auth`;
 
   if (referrer) {
     url += `?referralCode=${referrer}`;
@@ -64,7 +64,7 @@ export const authenticateLineWallet = async (message, signature, referrer) => {
 
 
 export const authenticateLine = async (token, code, referrer) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/auth/line`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/line/auth`;
 
   if (referrer) {
     url += `?referralCode=${referrer}`;
