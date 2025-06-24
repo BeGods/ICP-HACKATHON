@@ -154,6 +154,30 @@ export const createPartner = async (
 };
 
 // create
+export const createQuest = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { questData }: { questData: Partial<IQuest> } = req.body;
+
+    if (!questData) {
+      throw new Error("Invalid quest data.");
+    }
+
+    const newQuest = new quest(questData);
+    const newQuestCreated = await newQuest.save();
+
+    res.status(200).json({ data: newQuestCreated });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create quest.",
+      error: error.message,
+    });
+  }
+};
+
+// create
 export const createReward = async (
   req: Request,
   res: Response
@@ -212,30 +236,89 @@ export const verifyPayment = async (req, res): Promise<void> => {
   }
 };
 
-export const createQuest = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getPendingWithdrawals = async (req, res) => {
   try {
-    const { questData }: { questData: Partial<IQuest> } = req.body;
+    const pendingTrx = await PaymentLogs.find({
+      reward: "withdraw",
+      transferType: "send",
+      status: "pending",
+    }).select("userId amount currency");
 
-    if (!questData) {
-      throw new Error("Invalid quest data.");
-    }
+    const userIds = pendingTrx.map((itm) => itm.userId);
 
-    const newQuest = new quest(questData);
-    const newQuestCreated = await newQuest.save();
+    const users = await User.find({
+      _id: { $in: userIds },
+    }).select("_id telegramUsername kaiaAddress");
 
-    res.status(200).json({ data: newQuestCreated });
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to create quest.",
-      error: error.message,
+    const rewards = await milestones
+      .find({
+        userId: { $in: userIds },
+      })
+      .select("userId rewards");
+
+    const userMap = new Map();
+    users.forEach((user) => {
+      userMap.set(user._id.toString(), user);
     });
+
+    const rewardMap = new Map();
+    rewards.forEach((rewardEntry) => {
+      rewardMap.set(rewardEntry.userId.toString(), rewardEntry);
+    });
+
+    const rewardValues = [
+      { id: "6854f8053caa936e11321a6f", amount: 1 },
+      { id: "685111495e5f4cc871608299", amount: 0.3 },
+      { id: "684deac96a2ad7c99d758973", amount: 0.3 },
+      { id: "68586fc397c39c48458214a7", amount: 2 },
+    ];
+
+    // Convert rewardValues to a Map for fast lookup
+    const rewardValueMap = new Map(rewardValues.map((r) => [r.id, r.amount]));
+
+    const mergedData = pendingTrx.map((trx) => {
+      const user = userMap.get(trx.userId.toString());
+      const rewardEntry = rewardMap.get(trx.userId.toString());
+
+      let totalClaimedRewardValue = 0;
+
+      if (
+        rewardEntry?.rewards?.monetaryRewards &&
+        Array.isArray(rewardEntry.rewards.monetaryRewards)
+      ) {
+        for (const itm of rewardEntry.rewards.monetaryRewards) {
+          const rewardId = itm.rewardId;
+          const value = rewardValueMap.get(rewardId?.toString());
+          if (value) totalClaimedRewardValue += value;
+        }
+      }
+
+      const isRewardClaimed =
+        Math.abs(totalClaimedRewardValue - trx.amount) < 0.0001;
+
+      const userData = user ? user.toObject() : null;
+
+      return {
+        ...trx.toObject(),
+        username: userData.telegramUsername,
+        kaiaAddress: userData.kaiaAddress,
+        isRewardClaimed,
+        totalClaimedRewardValue,
+      };
+    });
+
+    res.status(200).json({
+      count: mergedData.length,
+      data: mergedData.filter((itm) => itm.isRewardClaimed === false),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong." });
   }
 };
 
-export const blacklistAndCleanupUsers = async (req, res) => {
+// blacklist
+export const updateBlacklistStatus = async (req, res) => {
   try {
     const { userIds } = req.body;
 
@@ -324,7 +407,7 @@ export const blacklistAndCleanupUsers = async (req, res) => {
   }
 };
 
-export const getBlacklistedUserRewardCollected = async (req, res) => {
+export const getBlacklistedRwrds = async (req, res) => {
   try {
     const { userIds } = req.body;
 
@@ -366,43 +449,9 @@ export const getBlacklistedUserRewardCollected = async (req, res) => {
   }
 };
 
-export const getPlayedUserCount = async (req, res) => {
-  try {
-    const { userIds } = req.body;
-
-    const users = await User.find({
-      _id: { $in: userIds },
-    }).select("_id telegramUsername bonus.fof.joiningBonus");
-
-    let joiningBonusTrue = 0;
-    let joiningBonusFalse = 0;
-
-    users.forEach((user) => {
-      if (user?.bonus?.fof?.joiningBonus) {
-        joiningBonusTrue++;
-      } else {
-        joiningBonusFalse++;
-      }
-    });
-
-    res.status(200).json({
-      success: true,
-      total: users.length,
-      joiningBonusTrue,
-      joiningBonusFalse,
-      users,
-    });
-  } catch (error) {
-    console.error("Error in getPlayedUserCount:", error);
-    res.status(500).json({ success: false, error: "Internal server error" });
-  }
-};
-
-export const getUserIdsByReferral = async (req, res) => {
+export const getUserIdsByRefer = async (req, res) => {
   try {
     const { referralCodes } = req.body;
-
-    console.log(referralCodes?.length);
 
     const users = await User.find({
       referralCode: { $in: referralCodes },
@@ -421,7 +470,7 @@ export const getUserIdsByReferral = async (req, res) => {
   }
 };
 
-export const getAllReferralsById = async (req, res) => {
+export const getReferTreeOfUsers = async (req, res) => {
   try {
     const userIds = [
       "6858d020755d12dc36187522",
@@ -569,87 +618,6 @@ export const getAllReferralsById = async (req, res) => {
   } catch (error) {
     console.error("Error in getAllReferralsById:", error);
     res.status(500).json({ success: false, error: "Internal server error" });
-  }
-};
-
-export const fetchPayouts = async (req, res) => {
-  try {
-    const pendingTrx = await PaymentLogs.find({
-      reward: "withdraw",
-      transferType: "send",
-      status: "pending",
-    }).select("userId amount currency");
-
-    const userIds = pendingTrx.map((itm) => itm.userId);
-
-    const users = await User.find({
-      _id: { $in: userIds },
-    }).select("_id telegramUsername kaiaAddress");
-
-    const rewards = await milestones
-      .find({
-        userId: { $in: userIds },
-      })
-      .select("userId rewards");
-
-    const userMap = new Map();
-    users.forEach((user) => {
-      userMap.set(user._id.toString(), user);
-    });
-
-    const rewardMap = new Map();
-    rewards.forEach((rewardEntry) => {
-      rewardMap.set(rewardEntry.userId.toString(), rewardEntry);
-    });
-
-    const rewardValues = [
-      { id: "6854f8053caa936e11321a6f", amount: 1 },
-      { id: "685111495e5f4cc871608299", amount: 0.3 },
-      { id: "684deac96a2ad7c99d758973", amount: 0.3 },
-      { id: "68586fc397c39c48458214a7", amount: 2 },
-    ];
-
-    // Convert rewardValues to a Map for fast lookup
-    const rewardValueMap = new Map(rewardValues.map((r) => [r.id, r.amount]));
-
-    const mergedData = pendingTrx.map((trx) => {
-      const user = userMap.get(trx.userId.toString());
-      const rewardEntry = rewardMap.get(trx.userId.toString());
-
-      let totalClaimedRewardValue = 0;
-
-      if (
-        rewardEntry?.rewards?.monetaryRewards &&
-        Array.isArray(rewardEntry.rewards.monetaryRewards)
-      ) {
-        for (const itm of rewardEntry.rewards.monetaryRewards) {
-          const rewardId = itm.rewardId;
-          const value = rewardValueMap.get(rewardId?.toString());
-          if (value) totalClaimedRewardValue += value;
-        }
-      }
-
-      const isRewardClaimed =
-        Math.abs(totalClaimedRewardValue - trx.amount) < 0.0001;
-
-      const userData = user ? user.toObject() : null;
-
-      return {
-        ...trx.toObject(),
-        username: userData.telegramUsername,
-        kaiaAddress: userData.kaiaAddress,
-        isRewardClaimed,
-        totalClaimedRewardValue,
-      };
-    });
-
-    res.status(200).json({
-      count: mergedData.length,
-      data: mergedData.filter((itm) => itm.isRewardClaimed === false),
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Something went wrong." });
   }
 };
 

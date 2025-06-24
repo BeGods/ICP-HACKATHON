@@ -5,287 +5,36 @@ import { Team, Referral } from "../models/referral.models";
 import Stats from "../models/Stats.models";
 import User from "../models/user.models";
 import { getAvatarCounter } from "./redis.services";
+import { generateNanoId } from "../../utils/nanoId";
 
-export const addNewTelegramUser = async (userData) => {
+export const addNewUser = async (userData, prefix, key) => {
   try {
-    userData.referralCode = `FDG${userData.telegramId}`;
-    userData.squadOwner = userData.parentReferrerId;
-
-    const MAX_RETRIES = 5;
-    let attempt = 0;
-    let newUserCreated = null;
-
-    while (attempt < MAX_RETRIES) {
-      try {
-        if (!userData.telegramUsername) {
-          userData.telegramUsername = await getAvatarCounter(User);
-          await new Promise((res) => setTimeout(res, 50));
-        }
-
-        const newUser = new User(userData);
-        newUserCreated = await newUser.save();
-        break;
-      } catch (err) {
-        if (
-          err.code === 11000 &&
-          err.keyPattern &&
-          err.keyPattern.telegramUsername
-        ) {
-          console.warn(
-            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
-          );
-          userData.telegramUsername = null;
-          attempt++;
-        } else {
-          throw err;
-        }
-      }
+    if (userData.telegramId) {
+      userData.referralCode = `FDG${userData.telegramId}`;
+    } else {
+      const genRandomCode = generateCode(6);
+      userData.referralCode = `FDG${prefix}${genRandomCode}`;
     }
 
+    try {
+      if (!userData.telegramUsername) {
+        userData.telegramUsername = await getAvatarCounter(User);
+      }
+    } catch (e) {
+      console.warn("Redis fallback activated. Using NanoID for username.");
+      const nanoId = generateNanoId();
+      userData.telegramUsername = `TG${nanoId}`;
+    }
+
+    const newUser = new User(userData);
+    const newUserCreated = await newUser.save();
+
     // update user count
-    await updateUserCount("telegram");
+    await updateUserCount(key);
 
     return newUserCreated;
   } catch (error) {
-    throw new Error("Failed to create a new user.");
-  }
-};
-
-export const addNewKaiaAddrUser = async (userData) => {
-  try {
-    const genRandomCode = generateCode(6);
-    userData.referralCode = `FDGLIN${genRandomCode}`;
-
-    const MAX_RETRIES = 5;
-    let attempt = 0;
-    let newUserCreated = null;
-
-    while (attempt < MAX_RETRIES) {
-      try {
-        if (!userData.telegramUsername) {
-          userData.telegramUsername = await getAvatarCounter(User);
-          await new Promise((res) => setTimeout(res, 50));
-        }
-
-        const newUser = new User(userData);
-        newUserCreated = await newUser.save();
-        break;
-      } catch (err) {
-        if (
-          err.code === 11000 &&
-          err.keyPattern &&
-          err.keyPattern.telegramUsername
-        ) {
-          console.warn(
-            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
-          );
-          userData.telegramUsername = null;
-          attempt++;
-        } else {
-          throw err;
-        }
-      }
-    }
-
-    // update user count
-    await updateUserCount("line");
-
-    return newUserCreated;
-  } catch (error) {
-    console.log(error);
-
-    throw new Error("Failed to create a new user.");
-  }
-};
-
-export const addNewLineUser = async (userData) => {
-  try {
-    const genRandomCode = generateCode(6);
-    userData.referralCode = `FDGLIN${genRandomCode}`;
-
-    const MAX_RETRIES = 5;
-    let attempt = 0;
-    let newUserCreated = null;
-
-    while (attempt < MAX_RETRIES) {
-      try {
-        if (!userData.telegramUsername) {
-          userData.telegramUsername = await getAvatarCounter(User);
-          await new Promise((res) => setTimeout(res, 50));
-        }
-
-        const newUser = new User(userData);
-        newUserCreated = await newUser.save();
-        break;
-      } catch (err) {
-        if (
-          err.code === 11000 &&
-          err.keyPattern &&
-          err.keyPattern.telegramUsername
-        ) {
-          console.warn(
-            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
-          );
-          userData.telegramUsername = null;
-          attempt++;
-        } else {
-          throw err;
-        }
-      }
-    }
-
-    if (!newUserCreated) {
-      throw new Error(
-        "Failed to generate unique telegramUsername after retries."
-      );
-    }
-
-    // update user count
-    await updateUserCount("line");
-
-    return newUserCreated;
-  } catch (error) {
-    console.log(error);
-
-    throw new Error("Failed to create a new user.");
-  }
-};
-
-export const addNewTwitterUser = async (userData) => {
-  try {
-    const genRandomCode = generateCode(6);
-
-    userData.referralCode = `FDGXT${genRandomCode}`;
-
-    const MAX_RETRIES = 5;
-    let attempt = 0;
-    let newUserCreated = null;
-
-    while (attempt < MAX_RETRIES) {
-      try {
-        if (!userData.telegramUsername) {
-          userData.telegramUsername = await getAvatarCounter(User);
-          await new Promise((res) => setTimeout(res, 50));
-        }
-
-        const newUser = new User(userData);
-        newUserCreated = await newUser.save();
-        break;
-      } catch (err) {
-        if (
-          err.code === 11000 &&
-          err.keyPattern &&
-          err.keyPattern.telegramUsername
-        ) {
-          console.warn(
-            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
-          );
-          userData.telegramUsername = null;
-          attempt++;
-        } else {
-          throw err;
-        }
-      }
-    }
-
-    // update user count
-    await updateUserCount("X");
-
-    return newUserCreated;
-  } catch (error) {
-    console.log(error);
-
-    throw new Error("Failed to create a new user.");
-  }
-};
-
-export const addNewOTPUser = async (userData, referPartner) => {
-  try {
-    const genRandomCode =
-      referPartner == "" ? generateCode(8) : generateCode(6);
-    userData.referralCode = `FDG${referPartner + genRandomCode}`;
-
-    const MAX_RETRIES = 5;
-    let attempt = 0;
-    let newUserCreated = null;
-
-    while (attempt < MAX_RETRIES) {
-      try {
-        if (!userData.telegramUsername) {
-          userData.telegramUsername = await getAvatarCounter(User);
-          await new Promise((res) => setTimeout(res, 50));
-        }
-
-        const newUser = new User(userData);
-        newUserCreated = await newUser.save();
-        break;
-      } catch (err) {
-        if (
-          err.code === 11000 &&
-          err.keyPattern &&
-          err.keyPattern.telegramUsername
-        ) {
-          console.warn(
-            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
-          );
-          userData.telegramUsername = null;
-          attempt++;
-        } else {
-          throw err;
-        }
-      }
-    }
-    // update user count
-    await updateUserCount(referPartner);
-
-    return newUserCreated;
-  } catch (error) {
-    throw new Error("Failed to create a new user.");
-  }
-};
-
-export const addNewOneWaveUser = async (userData, referPartner) => {
-  try {
-    const genRandomCode =
-      referPartner == "" ? generateCode(8) : generateCode(6);
-    userData.referralCode = `FDG${referPartner + genRandomCode}`;
-
-    const MAX_RETRIES = 3;
-    let attempt = 0;
-    let newUserCreated = null;
-
-    while (attempt < MAX_RETRIES) {
-      try {
-        if (!userData.telegramUsername) {
-          userData.telegramUsername = await getAvatarCounter(User);
-          await new Promise((res) => setTimeout(res, 50));
-        }
-
-        const newUser = new User(userData);
-        newUserCreated = await newUser.save();
-        break;
-      } catch (err) {
-        if (
-          err.code === 11000 &&
-          err.keyPattern &&
-          err.keyPattern.telegramUsername
-        ) {
-          console.warn(
-            `Duplicate telegramUsername ${userData.telegramUsername}, retrying...`
-          );
-          userData.telegramUsername = null;
-          attempt++;
-        } else {
-          throw err;
-        }
-      }
-    }
-    // update user count
-    await updateUserCount("onewave");
-
-    return newUserCreated;
-  } catch (error) {
-    throw new Error("Failed to create a new user.");
+    throw new Error(`Failed to create a new user: ${error}`);
   }
 };
 
@@ -339,6 +88,8 @@ export const createDefaultUserMyth = async (user) => {
     await newUserMyth.save();
     await newMilestone.save();
   } catch (error) {
+    console.log(error);
+
     throw new Error("Failed to add default usermythology.");
   }
 };
