@@ -4,7 +4,9 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
+  ExternalLink,
   History,
   Loader,
   Wallet,
@@ -131,133 +133,150 @@ const HoldingsModal = ({ handleClose }) => {
           </div>
         </div>
 
-        {!isHistory ? (
-          <>
-            <div
-              onClick={() => {
-                if ((userData.holdings.usdt ?? 0) > 1) {
-                  initateWithdraw("usdt");
-                }
-              }}
-              className="flex items-center text-tertiary text-white text-left w-full mt-6 pl-4"
-            >
-              <div className="flex justify-start relative -ml-3">
-                <img src={assets.misc.usdt} alt="usdt" className="w-[1.8rem]" />
-              </div>
-              <div className="flex justify-between w-full">
-                <div className="pl-2">{userData.holdings.usdt ?? 0}</div>
-                {(userData.holdings.usdt ?? 2) > 1 ? (
-                  <Download />
-                ) : (
-                  <div className="text-red-500">Min. 1 USDT</div>
-                )}
-              </div>
-            </div>
-
-            {isTelegram ? (
+        <div className="w-full flex flex-col gap-y-2">
+          {!isHistory ? (
+            <>
               <div
                 onClick={() => {
-                  if ((userData.holdings.stars ?? 0) > 10) {
-                    initateWithdraw("stars");
+                  if ((userData.holdings.usdt ?? 0) > 1) {
+                    initateWithdraw("usdt");
                   }
                 }}
                 className="flex items-center text-tertiary text-white text-left w-full mt-6 pl-4"
               >
                 <div className="flex justify-start relative -ml-3">
                   <img
-                    src={assets.misc.tgStar}
-                    alt="star"
+                    src={assets.misc.usdt}
+                    alt="usdt"
                     className="w-[1.8rem]"
                   />
                 </div>
-                <div className="flex items-center justify-between w-full">
-                  <div className="pl-2">{userData.holdings.stars ?? 0}</div>
-                  {(userData.holdings.stars ?? 0) > 10 ? (
+                <div className="flex justify-between w-full">
+                  <div className="pl-2">{userData.holdings.usdt ?? 0}</div>
+                  {(userData.holdings.usdt ?? 2) > 1 ? (
                     <Download />
                   ) : (
-                    <div className="text-red-500">Min. 10 STARS</div>
+                    <div className="text-red-500">Min. 1 USDT</div>
                   )}
                 </div>
               </div>
-            ) : (
-              <div
-                onClick={() => {
-                  if ((userData.holdings.kaia ?? 0) > 10) {
-                    initateWithdraw("kaia");
-                  }
-                }}
-                className="flex items-center text-tertiary text-white text-left w-full mt-6 pl-4"
-              >
-                <div className="flex justify-start relative -ml-3">
-                  <img
-                    src={assets.misc.kaia}
-                    alt="kaia"
-                    className="w-[1.8rem]"
-                  />
-                </div>
-                <div className="flex items-center justify-between w-full">
-                  <div className="pl-2">{userData.holdings.kaia ?? 0}</div>
-                  <div>
-                    {(userData.holdings.kaia ?? 0) > 10 ? (
+
+              {isTelegram ? (
+                <div
+                  onClick={() => {
+                    if ((userData.holdings.stars ?? 0) > 10) {
+                      initateWithdraw("stars");
+                    }
+                  }}
+                  className="flex items-center text-tertiary text-white text-left w-full mt-6 pl-4"
+                >
+                  <div className="flex justify-start relative -ml-3">
+                    <img
+                      src={assets.misc.tgStar}
+                      alt="star"
+                      className="w-[1.8rem]"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="pl-2">{userData.holdings.stars ?? 0}</div>
+                    {(userData.holdings.stars ?? 0) > 10 ? (
                       <Download />
                     ) : (
-                      <div className="text-red-500">Min. 10 KAIA</div>
+                      <div className="text-red-500">Min. 10 STARS</div>
                     )}
                   </div>
                 </div>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="w-full pt-4">
-            {history.length == 0 ? (
-              <div className="flex justify-center text-tertiary  text-white text-center w-full mt-1 pl-4"></div>
-            ) : (
-              history?.map((itm, idx) => (
+              ) : (
                 <div
-                  key={idx}
-                  className="flex items-center justify-between bg-black/30 rounded-xl px-2 py-1 shadow-sm"
+                  onClick={() => {
+                    if ((userData.holdings.kaia ?? 0) > 10) {
+                      initateWithdraw("kaia");
+                    }
+                  }}
+                  className="flex items-center text-tertiary text-white text-left w-full mt-6 pl-4"
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex justify-start relative -ml-3">
                     <img
-                      src={
-                        itm.currency == "STAR"
-                          ? assets.misc.tgStar
-                          : itm.currency == "KAIA"
-                          ? assets.misc.kaia
-                          : assets.misc.usdt
-                      }
-                      alt="currency"
+                      src={assets.misc.kaia}
+                      alt="kaia"
                       className="w-[1.8rem]"
                     />
+                  </div>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="pl-2">{userData.holdings.kaia ?? 0}</div>
                     <div>
-                      <div className="text-white font-medium">
-                        {itm.amount + " " + itm.currency}
-                      </div>
-                      <div className="text-sm text-gray-400">
-                        {itm.updatedAt.split("T")[0]}
-                      </div>
+                      {(userData.holdings.kaia ?? 0) > 10 ? (
+                        <Download />
+                      ) : (
+                        <div className="text-red-500">Min. 10 KAIA</div>
+                      )}
                     </div>
                   </div>
-
-                  {itm.status === "success" ? (
-                    <span className="text-sm px-1 py-1 rounded-full bg-green-600/20 text-green-400">
-                      <Check />
-                    </span>
-                  ) : itm.status === "failed" ? (
-                    <span className="text-sm px-1 py-1 rounded-full bg-red-600/20 text-red-400">
-                      <X />
-                    </span>
-                  ) : (
-                    <span className="text-sm px-1 py-1 rounded-full bg-yellow-600/20 text-yellow-400">
-                      <Loader />
-                    </span>
-                  )}
                 </div>
-              ))
-            )}
-          </div>
-        )}
+              )}
+            </>
+          ) : (
+            <div className="w-full pt-4">
+              {history.length == 0 ? (
+                <div className="flex justify-center text-tertiary  text-white text-center w-full mt-1 pl-4"></div>
+              ) : (
+                history?.map((itm, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col gap-1 bg-black/30 rounded-xl px-3 py-2 shadow-md"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={
+                            itm.currency === "STAR"
+                              ? assets.misc.tgStar
+                              : itm.currency === "KAIA"
+                              ? assets.misc.kaia
+                              : assets.misc.usdt
+                          }
+                          alt="currency"
+                          className="w-7 h-7"
+                        />
+                        <div>
+                          <div className="text-white font-semibold">
+                            {itm.amount} {itm.currency}
+                          </div>
+                          <div className="text-sm text-gray-400">
+                            {itm.walletAddress.slice(0, 12)}...
+                            {itm.walletAddress.slice(-6)}
+                          </div>
+                        </div>
+                      </div>
+
+                      {itm.status === "success" ? (
+                        <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-green-600/20 text-green-400">
+                          <ExternalLink
+                            onClick={() => {
+                              window.open(
+                                `https://kaiascan.io/tx/${itm.paymentId}`,
+                                "_blank"
+                              );
+                            }}
+                            className="w-4 h-4"
+                          />
+                        </span>
+                      ) : itm.status === "failed" ? (
+                        <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-red-600/20 text-red-400">
+                          <X className="w-4 h-4" />
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-yellow-600/20 text-yellow-400">
+                          <Loader className="w-4 h-4 animate-spin" />
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex flex-col text-tertiary  text-white text-left modal-width mt-6 pl-2">
         <span>
