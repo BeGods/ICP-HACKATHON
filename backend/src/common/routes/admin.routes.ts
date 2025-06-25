@@ -11,9 +11,10 @@ import {
   getAdminUpdates,
   getBlacklistedRwrds,
   ping,
-  verifyPayment,
   getUserIdsByRefer,
   getReferTreeOfUsers,
+  getTrxById,
+  getPendingWithdrawals,
 } from "../controllers/admin.controllers";
 import { validateTrx } from "../middlewares/admin.middlewares";
 const router = express.Router();
@@ -45,13 +46,8 @@ router.post("/partners/create", adminMiddleware, createPartner);
 router.post("/rewards/create", adminMiddleware, createReward);
 
 // admin: update status
-router.post(
-  "/admin/payments/verify",
-  adminMiddleware,
-  validateTrx,
-  verifyPayment
-);
-router.get("/admin/payments/pending", adminMiddleware, verifyPayment);
+router.post("/admin/payments/verify", adminMiddleware, getTrxById);
+router.get("/admin/payments/pending", adminMiddleware, getPendingWithdrawals);
 
 // admin: blacklist
 router.post(
@@ -74,7 +70,11 @@ router.post(
   adminMiddleware,
   getUserIdsByRefer
 );
-
+router.post(
+  `/admin/${config.security.ADMIN_KEY}/idByAddr`,
+  adminMiddleware,
+  getTrxById
+);
 // migrate db
 // router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);
 

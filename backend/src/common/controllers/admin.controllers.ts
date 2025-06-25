@@ -242,29 +242,54 @@ export const getPendingWithdrawals = async (req, res) => {
       reward: "withdraw",
       transferType: "send",
       status: "pending",
+      currency: "USDT",
     }).select("userId amount currency");
 
     const userIds = pendingTrx.map((itm) => itm.userId);
 
-    const users = await User.find({
-      _id: { $in: userIds },
-    }).select("_id telegramUsername kaiaAddress");
+    const [users, rewards, paidTrxs, referrals] = await Promise.all([
+      User.find({ _id: { $in: userIds } }).select(
+        "_id telegramUsername kaiaAddress bonus isBlacklisted directReferralCount lineId"
+      ),
+      milestones.find({ userId: { $in: userIds } }).select("userId rewards"),
+      PaymentLogs.aggregate([
+        {
+          $match: {
+            userId: { $in: userIds },
+            status: "success",
+            transferType: "send",
+            reward: "withdraw",
+          },
+        },
+        {
+          $group: {
+            _id: "$userId",
+            totalPaid: { $sum: "$amount" },
+          },
+        },
+      ]),
+      Referral.find({ userId: { $in: userIds } }).select(
+        "userId directInvites"
+      ),
+    ]);
 
-    const rewards = await milestones
-      .find({
-        userId: { $in: userIds },
-      })
-      .select("userId rewards");
+    const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+    const rewardMap = new Map(rewards.map((r) => [r.userId.toString(), r]));
+    const paidMap = new Map(
+      paidTrxs.map((p) => [p._id.toString(), p.totalPaid])
+    );
+    const referralMap = new Map(
+      referrals.map((r) => [r.userId.toString(), r.directInvites])
+    );
 
-    const userMap = new Map();
-    users.forEach((user) => {
-      userMap.set(user._id.toString(), user);
-    });
+    const allReferralIds = referrals.flatMap((r) => r.directInvites || []);
+    const referredUsers = await User.find({
+      _id: { $in: allReferralIds },
+    }).select("_id bonus");
 
-    const rewardMap = new Map();
-    rewards.forEach((rewardEntry) => {
-      rewardMap.set(rewardEntry.userId.toString(), rewardEntry);
-    });
+    const referredUserMap = new Map(
+      referredUsers.map((u) => [u._id.toString(), u])
+    );
 
     const rewardValues = [
       { id: "6854f8053caa936e11321a6f", amount: 1 },
@@ -273,12 +298,13 @@ export const getPendingWithdrawals = async (req, res) => {
       { id: "68586fc397c39c48458214a7", amount: 2 },
     ];
 
-    // Convert rewardValues to a Map for fast lookup
     const rewardValueMap = new Map(rewardValues.map((r) => [r.id, r.amount]));
 
     const mergedData = pendingTrx.map((trx) => {
-      const user = userMap.get(trx.userId.toString());
-      const rewardEntry = rewardMap.get(trx.userId.toString());
+      const userId = trx.userId.toString();
+      const user = userMap.get(userId);
+      const rewardEntry = rewardMap.get(userId);
+      const alreadyPaid = paidMap.get(userId) || 0;
 
       let totalClaimedRewardValue = 0;
 
@@ -293,23 +319,70 @@ export const getPendingWithdrawals = async (req, res) => {
         }
       }
 
+      const netRewardAvailable = totalClaimedRewardValue - alreadyPaid;
       const isRewardClaimed =
-        Math.abs(totalClaimedRewardValue - trx.amount) < 0.0001;
+        Math.abs(netRewardAvailable - trx.amount) < 0.0001;
 
-      const userData = user ? user.toObject() : null;
+      const bonus = user?.bonus?.fof;
+      const isJoinClaimed = !!bonus?.joiningBonus;
+      const isDailyClaimed =
+        bonus?.dailyBonusClaimedAt &&
+        new Date(bonus.dailyBonusClaimedAt).getFullYear() === 2025;
+
+      // ➕ Referral join/daily bonus count
+      const directInvites = referralMap.get(userId) || [];
+      let referredJoinBonus = 0;
+      let referredDailyBonus = 0;
+
+      for (const inviteId of directInvites) {
+        const referred = referredUserMap.get(inviteId.toString());
+        const referredBonus = referred?.bonus?.fof;
+
+        if (referredBonus?.joiningBonus) referredJoinBonus++;
+        if (
+          referredBonus?.dailyBonusClaimedAt &&
+          new Date(referredBonus.dailyBonusClaimedAt).getFullYear() === 2025
+        )
+          referredDailyBonus++;
+      }
 
       return {
         ...trx.toObject(),
-        username: userData.telegramUsername,
-        kaiaAddress: userData.kaiaAddress,
-        isRewardClaimed,
+        username: user?.telegramUsername,
+        kaiaAddress: user?.kaiaAddress,
+        refers: user?.directReferralCount,
         totalClaimedRewardValue,
+        alreadyPaid,
+        netRewardAvailable,
+        isRewardClaimed,
+        isJoinClaimed,
+        isDailyClaimed,
+        isBlacklisted: user?.isBlacklisted ?? false,
+        referredJoinBonus,
+        referredDailyBonus,
+        lineId: user?.lineId,
       };
     });
 
+    const claimed = mergedData.filter(
+      (itm) =>
+        itm.isRewardClaimed &&
+        !itm.isBlacklisted &&
+        itm.referredJoinBonus > 0 &&
+        itm.kaiaAddress &&
+        !itm.username?.includes("AVATAR") &&
+        !itm.username?.startsWith("dp") &&
+        itm.lineId
+    );
+
     res.status(200).json({
-      count: mergedData.length,
-      data: mergedData.filter((itm) => itm.isRewardClaimed === false),
+      count: claimed.length,
+      data: claimed.map((itm) => ({
+        userId: itm.userId,
+        username: itm.username,
+        kaiaAddress: itm.kaiaAddress,
+        amount: itm.amount,
+      })),
     });
   } catch (error) {
     console.error(error);
@@ -328,13 +401,15 @@ export const updateBlacklistStatus = async (req, res) => {
         .json({ success: false, message: "userIds are required" });
     }
 
-    // Step 1: Fetch all users
     const users = await User.find({ _id: { $in: userIds } }).lean();
 
     const joiningBonusUserIds = [];
+    const dailyBonusUserIds = [];
     const usersToBlacklist = [];
 
     for (const user of users) {
+      const bonus = user.bonus?.fof;
+
       if (!user.isBlacklisted) {
         usersToBlacklist.push({
           updateOne: {
@@ -343,18 +418,23 @@ export const updateBlacklistStatus = async (req, res) => {
           },
         });
 
-        if (user.bonus?.fof?.joiningBonus === true) {
+        if (bonus?.joiningBonus === true) {
           joiningBonusUserIds.push(user._id.toString());
+        }
+
+        if (
+          bonus?.dailyBonusClaimedAt &&
+          new Date(bonus.dailyBonusClaimedAt).getFullYear() === 2025
+        ) {
+          dailyBonusUserIds.push(user._id.toString());
         }
       }
     }
 
-    // Bulk update users to isBlacklisted = true
     if (usersToBlacklist.length > 0) {
       await User.bulkWrite(usersToBlacklist);
     }
 
-    // Step 2: Find all reward transactions for these users
     const transactions = await RewardsTransactions.find({
       userId: { $in: userIds },
     }).lean();
@@ -375,7 +455,6 @@ export const updateBlacklistStatus = async (req, res) => {
       });
     }
 
-    // Step 3: Bulk increment rewards limit
     const rewardUpdates = Object.entries(rewardTransactionDeletionCount).map(
       ([rewardId, count]) => ({
         updateOne: {
@@ -389,20 +468,22 @@ export const updateBlacklistStatus = async (req, res) => {
       await rewards.bulkWrite(rewardUpdates);
     }
 
+    // Step 4: Delete payment logs
     const deleteResult = await PaymentLogs.deleteMany({
       userId: { $in: userIds },
     });
 
-    // Step 4: Respond
+    // Step 5: Respond
     res.status(200).json({
       success: true,
       blacklistedCount: usersToBlacklist.length,
       joiningBonusUserIds,
+      dailyBonusUserIds,
       rewardTransactionDeletionCount,
       paymentLogsDeleted: deleteResult.deletedCount,
     });
   } catch (error) {
-    console.error("Error in blacklistAndCleanupUsers:", error);
+    console.error("Error in updateBlacklistStatus:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -472,151 +553,173 @@ export const getUserIdsByRefer = async (req, res) => {
 
 export const getReferTreeOfUsers = async (req, res) => {
   try {
-    const userIds = [
-      "6858d020755d12dc36187522",
-      "6858d00c755d12dc3618701a",
-      "6858cff6755d12dc361869d8",
-      "6858d018755d12dc3618732f",
-      "6858d022755d12dc361875fe",
-      "6858d004755d12dc36186e1c",
-      "6858d018755d12dc36187347",
-      "6858d00e755d12dc361870be",
-      "6858d00b755d12dc36186fbc",
-      "6858d011755d12dc3618714f",
-      "6858d022755d12dc361875ec",
-      "6858cff7755d12dc36186a02",
-      "6858d026755d12dc3618772c",
-      "6858cffe755d12dc36186c55",
-      "6858d033755d12dc36187a3e",
-      "6858d00a755d12dc36186f84",
-      "6858d01e755d12dc36187493",
-      "6858d008755d12dc36186f31",
-      "6858d015755d12dc361872b7",
-      "6858d029755d12dc361877f0",
-      "6858d024755d12dc36187681",
-      "6858d013755d12dc36187208",
-      "6858cfff755d12dc36186c99",
-      "6858cfff755d12dc36186cd3",
-      "6858d007755d12dc36186ec7",
-      "6858d029755d12dc361877d0",
-      "6858d01b755d12dc361873ff",
-      "6858cff8755d12dc36186a3a",
-      "6858d027755d12dc3618777b",
-      "6858d02e755d12dc36187966",
-      "6858d021755d12dc361875dd",
-      "6858d020755d12dc3618756e",
-      "6858d01d755d12dc3618745a",
-      "6858d00d755d12dc3618705e",
-      "6858cffd755d12dc36186c0c",
-      "6858cff5755d12dc361869b8",
-      "6858d006755d12dc36186ea0",
-      "6858d002755d12dc36186d64",
-      "6858d003755d12dc36186da5",
-      "6858d013755d12dc36187214",
-      "6858d016755d12dc361872c4",
-      "6858cf93755d12dc361867fa",
-      "6858d02f755d12dc36187984",
-      "6858d02c755d12dc361878d9",
-      "6858d011755d12dc36187166",
-      "6858d015755d12dc361872a8",
-      "6858d015755d12dc36187295",
-      "6858d02e755d12dc3618793c",
-      "6858d00b755d12dc36186fd0",
-      "6858cff9755d12dc36186a9f",
-      "6858cffb755d12dc36186b31",
-      "6858d019755d12dc36187371",
-      "6858d025755d12dc36187706",
-      "6858d002755d12dc36186d9e",
-      "6858d02a755d12dc36187810",
-      "6858d005755d12dc36186e5d",
-      "6858cffa755d12dc36186aee",
-      "6858d01c755d12dc36187439",
-      "6858d02e755d12dc3618795c",
-      "6858d023755d12dc36187648",
-      "6858d021755d12dc361875a2",
-      "6858d030755d12dc361879e6",
-      "6858d021755d12dc361875a8",
-      "6858d027755d12dc3618776d",
-      "6858d00e755d12dc36187086",
-      "6858d001755d12dc36186d2d",
-      "6858cffe755d12dc36186c7c",
-      "6858cff4755d12dc361869a8",
-      "6858d01b755d12dc361873ce",
-      "6858d007755d12dc36186ee0",
-      "6858d00b755d12dc36186fe4",
-      "6858cffa755d12dc36186b10",
-      "6858d003755d12dc36186db0",
-      "6858cffe755d12dc36186c5a",
-      "6858d010755d12dc3618712e",
-      "6858d002755d12dc36186d86",
-      "6858cffc755d12dc36186bd0",
-      "6858d028755d12dc3618778d",
-      "6858d01c755d12dc36187445",
-      "6858d011755d12dc3618717a",
-      "6858d017755d12dc361872fd",
-      "6858d00f755d12dc361870e3",
-      "6858d021755d12dc361875d3",
-      "6858cffc755d12dc36186bc2",
-      "6858d02b755d12dc3618787c",
-      "6858cffc755d12dc36186bdc",
-      "6858d004755d12dc36186e2a",
-      "6858d02a755d12dc3618782b",
-      "6858d008755d12dc36186f0a",
-      "6858cffe755d12dc36186c4a",
-      "6858d011755d12dc36187145",
-      "6858cff7755d12dc36186a30",
-      "6858d024755d12dc3618766b",
-      "6858d00e755d12dc36187092",
-      "6858d016755d12dc361872d5",
-      "6858d00a755d12dc36186f62",
-      "6858d002755d12dc36186d6d",
-      "6858d025755d12dc361876f5",
-      "6858d013755d12dc361871f2",
-      "6858d00b755d12dc36186fef",
-      "6858d02a755d12dc36187835",
-      "6858cff9755d12dc36186aac",
-      "6858cffb755d12dc36186b3e",
-      "6858d01d755d12dc3618747b",
-      "6858d01c755d12dc36187429",
-      "6858d01e755d12dc36187499",
-      "6858d02c755d12dc361878f2",
-      "6858cff9755d12dc36186ab9",
-      "6858d025755d12dc361876b7",
-      "6858cff5755d12dc361869c4",
-      "6858d015755d12dc36187298",
-      "6858d00d755d12dc3618703c",
-      "6858cff9755d12dc36186a8d",
-      "6858d007755d12dc36186ed6",
-      "6858cffb755d12dc36186ba2",
-      "6858d011755d12dc36187170",
-      "6858d001755d12dc36186d29",
-    ].map((id) => new mongoose.Types.ObjectId(id));
-
-    const referrals = await Referral.find({ userId: { $in: userIds } }).select(
-      "userId directInvites"
+    const rootUserIds = ["685acee52a243da9916ff8db"].map(
+      (id) => new mongoose.Types.ObjectId(id)
     );
+
+    const referrals = await Referral.find({
+      userId: { $in: rootUserIds },
+    }).select("userId directInvites");
 
     const flatIds = new Set<string>();
 
     referrals.forEach((ref) => {
       flatIds.add(ref.userId.toString());
-
       (ref.directInvites as mongoose.Types.ObjectId[]).forEach((inviteId) => {
         flatIds.add(inviteId.toString());
       });
     });
 
-    const compassQuery = `_id: { $in: [\n  ${Array.from(flatIds)
-      .map((id) => `ObjectId("${id}")`)
-      .join(",\n  ")}\n] }`;
+    const userIds = Array.from(flatIds).map(
+      (id) => new mongoose.Types.ObjectId(id)
+    );
 
-    // res.status(200).send(compassQuery);
-    res
-      .status(200)
-      .json({ count: Array.from(flatIds).length, data: Array.from(flatIds) });
-    // res.status(200).json({ data: Array.from(referrals) });
+    const users = await User.find({ _id: { $in: userIds } }).select(
+      "_id telegramUsername bonus"
+    );
+
+    const result = users.map((user) => {
+      const bonus = user?.bonus?.fof;
+      const isJoinClaimed = !!bonus?.joiningBonus;
+      const isDailyClaimed =
+        bonus?.dailyBonusClaimedAt &&
+        new Date(bonus.dailyBonusClaimedAt).getFullYear() === 2025;
+
+      return {
+        userId: user._id.toString(),
+        telegramUsername: user.telegramUsername,
+        isJoinClaimed,
+        isDailyClaimed,
+      };
+    });
+
+    res.status(200).json({
+      count: result.length,
+      ids: result.map((itm) => itm.userId),
+      users: result,
+    });
   } catch (error) {
-    console.error("Error in getAllReferralsById:", error);
+    console.error("Error in getReferTreeOfUsers:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};
+
+export const userIdByAddr = async (req, res) => {
+  try {
+    const { allAddress } = req.body;
+
+    const users = await User.find({
+      kaiaAddress: { $in: allAddress },
+    }).select("_id telegramUsername kaiaAddress");
+
+    const userMap = new Map(
+      users.map((user) => [user.kaiaAddress.toLowerCase(), user])
+    );
+
+    const orderedUsers = allAddress.map(
+      (addr) => userMap.get(addr.toLowerCase()) || null
+    );
+
+    res.status(200).json({
+      success: true,
+      length: orderedUsers.filter(Boolean).length,
+      users: orderedUsers.filter(Boolean),
+    });
+  } catch (error) {
+    console.error("Error in userIdByAddr:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};
+
+export const getTrxById = async (req, res) => {
+  try {
+    const { userData } = req.body;
+
+    let updated = 0;
+    let notFound = 0;
+    let updatedTrxs = [];
+
+    for (const { userId, amount, paymentId } of userData) {
+      const trx = await PaymentLogs.findOneAndUpdate(
+        {
+          userId: new mongoose.Types.ObjectId(userId),
+          status: "pending",
+          amount: amount,
+          transferType: "send",
+        },
+        {
+          $set: {
+            paymentId: paymentId,
+            status: "success",
+          },
+        },
+        {
+          new: true,
+        }
+      );
+
+      if (trx) {
+        updated += 1;
+        updatedTrxs.push(trx);
+      } else {
+        notFound += 1;
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      givenCount: userData.length,
+      updatedCount: updated,
+      notFoundCount: notFound,
+      updatedTrxs,
+    });
+  } catch (error) {
+    console.error("Error in getTrxById:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+};
+
+export const updateWalletAddr = async (req, res) => {
+  try {
+    const pendingTrx = await PaymentLogs.find({
+      reward: "withdraw",
+      transferType: "send",
+    }).select("userId amount currency");
+
+    const userIds = [
+      ...new Set(pendingTrx.map((trx) => trx.userId.toString())),
+    ];
+
+    const users = await User.find({ _id: { $in: userIds } }).select(
+      "kaiaAddress"
+    );
+
+    const userMap = {};
+    users.forEach((user) => {
+      userMap[user._id.toString()] = user.kaiaAddress;
+    });
+
+    const updatedTrx = pendingTrx.map((trx) => {
+      const kaiaAddress = userMap[trx.userId.toString()] || null;
+      return {
+        ...trx.toObject(),
+        walletAddress: kaiaAddress,
+      };
+    });
+
+    await Promise.all(
+      pendingTrx.map(async (trx) => {
+        const kaiaAddress = userMap[trx.userId.toString()];
+        if (kaiaAddress) {
+          trx.walletAddress = kaiaAddress;
+          await trx.save();
+        }
+      })
+    );
+
+    res.status(200).json({ success: true, data: updatedTrx });
+  } catch (error) {
+    console.error("Error in updateWalletAddr:", error);
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 };

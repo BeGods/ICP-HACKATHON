@@ -368,7 +368,7 @@ export const authenticateKaiaAddr = async (
         newUser.parentReferrerId = existingReferrer._id as ObjectId;
       }
       // create new  user
-      existingUser = await addNewUser(newUser, "dp", "dapp");
+      existingUser = await addNewUser(newUser, "DP", "dapp");
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }

@@ -11,7 +11,7 @@ import {
   getWithdrawHistory,
   updateAvatar,
   updateCountry,
-  updateBalance,
+  initateWithdraw,
   claimMsnReward,
 } from "../controllers/user.controllers";
 import express from "express";
@@ -45,7 +45,7 @@ router.post(
   "/holdings/withdraw",
   authMiddleware,
   validateWithdrawBal,
-  updateBalance
+  initateWithdraw
 );
 router.get("/holdings/history", authMiddleware, getWithdrawHistory);
 
