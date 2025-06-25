@@ -160,6 +160,9 @@ const PaymentLogsSchema = new Schema<IPaymentLogs>(
       type: String,
       required: true,
     },
+    walletAddress: {
+      type: String,
+    },
     transactionId: {
       type: String,
       required: true,

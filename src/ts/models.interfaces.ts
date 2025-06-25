@@ -349,6 +349,7 @@ export interface IPaymentLogs extends Document {
   transactionId: string;
   paymentId: string;
   reward: string;
+  walletAddress?: string;
   paymentType: string;
   status: "pending" | "success" | "failed" | "rewarded";
   transferType: "send" | "recieve";

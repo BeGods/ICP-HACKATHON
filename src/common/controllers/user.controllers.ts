@@ -161,7 +161,7 @@ export const claimFinishRwrd = async (req, res) => {
   }
 };
 
-export const updateBalance = async (req, res) => {
+export const initateWithdraw = async (req, res) => {
   const user = req.user;
   const { type } = req.body;
   const amount = req.amount;
@@ -173,6 +173,7 @@ export const updateBalance = async (req, res) => {
       transactionId: transactionId,
       reward: "withdraw",
       amount: amount,
+      walletAddress: user.kaiaAddress,
       currency: type?.toUpperCase(),
       transferType: "send",
       status: "pending",
