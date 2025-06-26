@@ -20,6 +20,7 @@ import {
 import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
 import {
+  connectLineWallet,
   connectTonWallet,
   disconnectTonWallet,
   fetchProfilePhoto,
@@ -41,6 +42,9 @@ import {
 import { trackEvent } from "../../utils/ga";
 import liff from "@line/liff";
 import { useLocation, useNavigate } from "react-router-dom";
+import useWalletPayment from "../../hooks/LineWallet";
+import WalletsModal from "./Wallets";
+import { useTonWalletConnector } from "../../hooks/TonWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -79,12 +83,26 @@ const SettingModal = ({ close }) => {
     enableHaptic,
     setEnableHaptic,
     isTelegram,
+    lineWallet,
   } = useContext(MainContext);
-  const { setRewards, setRewardsClaimedInLastHr, setUserData, setSection } =
-    useContext(FofContext);
-  const [tonConnectUI] = useTonConnectUI();
+  const { connectWallet } = useWalletPayment();
+  const {
+    setRewards,
+    setRewardsClaimedInLastHr,
+    setUserData,
+    setSection,
+    setShowCard,
+  } = useContext(FofContext);
   const userFriendlyAddress = useTonAddress();
   const [isChanged, setIsChanged] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { handleConnectTonWallet } = useTonWalletConnector();
+  const walletLabel =
+    isTelegram && userFriendlyAddress
+      ? `${userFriendlyAddress.slice(0, 9)}...${userFriendlyAddress.slice(-6)}`
+      : !isTelegram && lineWallet
+      ? `${lineWallet?.slice(0, 9)}...${lineWallet.slice(-6)}`
+      : "Connect";
 
   const handleSoundToggle = () => {
     setEnableSound((prev) => {
@@ -156,46 +174,25 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  const handleConnectTon = async () => {
+  const handleConnectLineWallet = async () => {
+    if (isConnecting) return;
+    setIsConnecting(true);
     try {
-      await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
-      trackEvent("misc", "connect_wallet", "success");
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: userFriendlyAddress,
-      }));
-
-      showToast("ton_connect_success");
+      if (isTelegram) {
+        handleConnectTonWallet();
+      } else {
+        const walletData = await connectWallet();
+        if (!walletData) {
+          return;
+        }
+        const { signature, message } = walletData;
+        await connectLineWallet(signature, message, authToken);
+      }
     } catch (error) {
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-
-      console.log(errorMessage);
-      showToast("ton_connect_error");
-    }
-  };
-
-  const handleDisconnectTon = async () => {
-    try {
-      await disconnectTonWallet(authToken);
-      tonConnectUI.disconnect();
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: null,
-      }));
-      showToast("ton_connect_success");
-    } catch (error) {
-      console.log(error);
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-      console.log(errorMessage);
-      showToast("ton_connect_error");
+      console.error("Wallet Connection Error:", error);
+      alert("An error occurred while connecting the wallet.");
+    } finally {
+      setIsConnecting(false);
     }
   };
 
@@ -363,6 +360,27 @@ const SettingModal = ({ close }) => {
             <ChevronRight />
           </div>
         </div>
+
+        {location.pathname !== "/" && (
+          <div
+            onClick={() => {
+              if (!lineWallet) {
+                handleConnectLineWallet();
+              } else {
+                setShowCard(<WalletsModal />);
+              }
+            }}
+            className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
+          >
+            <div className="flex justify-start -ml-3 pr-3">
+              <Wallet />
+            </div>
+            <div className="flex justify-between w-full">
+              {walletLabel}
+              <ChevronRight />
+            </div>
+          </div>
+        )}
 
         {!liff.isInClient() && !isTelegram && (
           <div

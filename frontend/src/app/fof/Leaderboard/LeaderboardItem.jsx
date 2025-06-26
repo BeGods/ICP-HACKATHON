@@ -53,14 +53,16 @@ const LeaderboardItem = ({
               </h1>
             )}
 
-            <div>
-              {rank < prevRank && (
-                <h1 className="text-green-500 text-[18px]">▲</h1>
-              )}
-              {rank > prevRank && (
-                <h1 className="text-red-500 text-[18px]">▼</h1>
-              )}
-            </div>
+            {prevRank !== null && (
+              <div>
+                {rank < prevRank && (
+                  <h1 className="text-green-500 text-[18px]">▲</h1>
+                )}
+                {rank > prevRank && (
+                  <h1 className="text-red-500 text-[18px]">▼</h1>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex gap-3 items-center  w-full">
             <div className="h-[35px] w-[35px]">

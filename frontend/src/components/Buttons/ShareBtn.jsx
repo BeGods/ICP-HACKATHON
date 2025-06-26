@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { mythSections, mythSymbols } from "../../utils/constants.fof";
 import { Share2, ThumbsUp } from "lucide-react";
 import { MainContext } from "../../context/context";
@@ -15,6 +15,10 @@ const ShareButton = ({
   const [isClicked, setIsClicked] = useState(false);
   const [showRedirect, setShowRedirect] = useState(true);
   let disableClick = useRef(false);
+
+  useEffect(() => {
+    setShowRedirect(true);
+  }, [link]);
 
   return (
     <div

@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../context/context";
 import {
-  Check,
   ChevronLeft,
   ChevronRight,
-  Copy,
   Download,
   ExternalLink,
   History,
@@ -24,6 +22,14 @@ const HoldingsModal = ({ handleClose }) => {
   let disableClick = useRef(false);
   const [history, setHistory] = useState([]);
   const [isHistory, setIsHistory] = useState(false);
+  const walletLabel =
+    isTelegram && userData.tonAddress
+      ? `${userData.tonAddress.slice(0, 9)}...${userData.tonAddress.slice(-6)}`
+      : !isTelegram && userData.kaiaAddress
+      ? `${userData.kaiaAddress?.slice(0, 9)}...${userData.kaiaAddress.slice(
+          -6
+        )}`
+      : "Wallet Unlinked";
 
   const getHistory = async () => {
     try {
@@ -103,14 +109,7 @@ const HoldingsModal = ({ handleClose }) => {
             <Wallet />
           </div>
           <div className="flex justify-between w-full">
-            <div className="pl-3">
-              {userData.kaiaAddress
-                ? `${userData.kaiaAddress?.slice(
-                    0,
-                    14
-                  )}......${userData.kaiaAddress?.slice(-4)}`
-                : "Wallet Unlinked"}
-            </div>
+            <div className="pl-3">{walletLabel}</div>
           </div>
         </div>
 

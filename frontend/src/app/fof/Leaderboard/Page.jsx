@@ -85,11 +85,12 @@ const Leaderboard = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [isFinished, setIsFinished] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [hallOfFameData, sethallOfFameData] = useState([]);
-  const [flipped, setFlipped] = useState(true);
+  const [ReferData, setReferData] = useState([]);
+  const [flipped, setFlipped] = useState(false);
   const avatarColor = localStorage.getItem("avatarColor");
+  const [category, setCategory] = useState(1);
   const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
     0: "second",
@@ -138,6 +139,7 @@ const Leaderboard = (props) => {
 
       if (response.leaderboard.length > 0) {
         sethallOfFameData(response.hallOfFame);
+        setReferData(response.refer);
         setLeaderboardData((prevData) => [
           ...prevData,
           ...response.leaderboard,
@@ -205,7 +207,7 @@ const Leaderboard = (props) => {
 
   useEffect(() => {
     setAnimationKey((prevKey) => prevKey + 1);
-  }, [isFinished]);
+  }, [category]);
 
   useEffect(() => {
     getLeaderboardData(page);
@@ -226,16 +228,16 @@ const Leaderboard = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!userData.stakeOn) {
-      const interval = setInterval(() => {
-        setFlipped((prev) => !prev);
-      }, 3000);
-      return () => clearInterval(interval);
-    } else {
-      setFlipped(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!userData.stakeOn) {
+  //     const interval = setInterval(() => {
+  //       setFlipped((prev) => !prev);
+  //     }, 3000);
+  //     return () => clearInterval(interval);
+  //   } else {
+  //     setFlipped(false);
+  //   }
+  // }, []);
 
   return (
     <div
@@ -294,7 +296,9 @@ const Leaderboard = (props) => {
           key={animationKey}
           className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase"
         >
-          <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
+          <div className={`mr-auto slide-in-out-left`}>
+            {t("sections.profile")}
+          </div>
           <div className={`ml-auto slide-in-out-right`}>
             {" "}
             {t("sections.forges")}
@@ -304,68 +308,59 @@ const Leaderboard = (props) => {
 
       {/* Flipper */}
       <div className="font-fof z-50 top-0 mx-auto mt-[1.5vh] w-1/2">
-        <div className={`w-full button ${flipped ? "flipped" : ""}`}>
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              setIsFinished((prev) => !prev);
-            }}
-            className={`button__face button__face--front flex-col flex justify-center items-center`}
-          >
+        <div
+          className={`w-full flex justify-center items-center button ${
+            flipped ? "flipped" : ""
+          }`}
+        >
+          <div className="flex items-center justify-center w-full z-50 mt-2 p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
             <div
-              className={`flex z-50 transition-all p-0.5  duration-1000 bg-white mx-auto border border-black w-[60%] rounded-full`}
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setCategory(0);
+              }}
+              className={`flex-1 flex items-center justify-center rounded-full ${
+                category == 0 ? "bg-black text-white " : "text-black"
+              } font-symbols py-1`}
             >
-              <div
-                className={`flex justify-center items-center ${
-                  !isFinished ? "bg-black text-white" : "text-black"
-                } h-full font-symbols rounded-full w-1/2 text-[24px]`}
-              >
-                $
-              </div>
-              <div
-                className={`flex font-symbols justify-center items-center ${
-                  isFinished ? "bg-black text-white" : "text-black"
-                } h-full uppercase rounded-full w-1/2 py-1 text-[24px]`}
-              >
-                %
-              </div>
+              u
             </div>
-          </div>
-          <div
-            onClick={() => {
-              handleClickHaptic(tele, enableHaptic);
-              if (gameData.blackOrbs < 1) {
-                showToast("stake_error");
-              } else if (
-                !isFinished &&
-                userData.orbRank !== 0 &&
-                !userData.stakeOn
-              ) {
-                setShowCard(
-                  <StakeCrd
-                    username={userData.username}
-                    profileImg={userData.avatarUrl}
-                  />
-                );
-              } else {
-                showToast("stake_error");
-              }
-            }}
-            className="button__face button__face--back z-[60] cursor-pointer flex justify-center items-center"
-          >
-            <div className="custom-button bg-black text-white text-center text-[24px] rounded-full">
-              <span className="text w-full text-gold px-6 py-1">STAKE</span>
-              <span className="shimmer"></span>
+            <div
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setCategory(1);
+              }}
+              className={`flex-1 flex items-center justify-center rounded-full ${
+                category == 1 ? "bg-black text-white " : "text-black"
+              } font-symbols py-1`}
+            >
+              $
+            </div>
+            <div
+              onClick={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setCategory(2);
+              }}
+              className={`flex-1 flex items-center justify-center rounded-full ${
+                category == 2 ? "bg-black text-white " : "text-black"
+              } font-symbols py-1`}
+            >
+              %
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center text-center text-white text-black-contour mt-2">
-          ({t(`note.text`)} {updateTimeLeft.minutes}min)
+
+        <div className="w-full uppercase flex justify-center text-center text-white text-black-contour mt-2">
+          {category == 0
+            ? "Referrals"
+            : category == 1
+            ? "Leaderboard"
+            : "Hall Of Fame"}
         </div>
       </div>
 
       {/* Rankers */}
-      {isFinished ? (
+      {category == 2 ? (
         <div className="flex flex-grow justify-center">
           {isLoading && (
             <div className={`flex items-end ranker-width gap-2`}>
@@ -417,6 +412,55 @@ const Leaderboard = (props) => {
                   );
                 }
               )}
+            </div>
+          )}
+        </div>
+      ) : category == 0 ? (
+        <div className="flex flex-grow justify-center">
+          {isLoading && (
+            <div className={`flex items-end ranker-width gap-2`}>
+              {[ReferData[1], ReferData[0], ReferData[2]].map((item, index) => {
+                return (
+                  <div
+                    onClick={() => {
+                      handleClickHaptic(tele, enableHaptic);
+                      setShowCard(
+                        <UserInfoCard
+                          close={() => {
+                            setShowCard(null);
+                          }}
+                          userData={item}
+                        />
+                      );
+                    }}
+                    key={index}
+                    style={{
+                      boxShadow:
+                        "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
+                    }}
+                    className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
+                  >
+                    {/* <div
+                        className={`absolute text-black-contour font-symbols text-${determineLevel(
+                          item.orbRank
+                        )} text-[1.75rem] z-[50] w-[40%] ${
+                          rankPositions[index].alignIcon
+                        }`}
+                      >
+                        {userData.orbRank > 333 ? "&" : "$"}
+                      </div> */}
+                    <div
+                      className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
+                    >
+                      {item.referRank}
+                    </div>
+                    <div className="absolute text-white -bottom-1 text-tertiary font-normal">
+                      {item.directReferralCount}
+                    </div>
+                    <UserAvatar user={item} index={index} />
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -474,7 +518,7 @@ const Leaderboard = (props) => {
       )}
 
       {/* Leaderboard list */}
-      {isFinished ? (
+      {category == 2 ? (
         <div
           className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[46vh] bg-white text-black rounded-t-primary`}
         >
@@ -548,6 +592,107 @@ const Leaderboard = (props) => {
             </div>
           </div>
         </div>
+      ) : category == 0 ? (
+        <div
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[46vh] bg-black text-black rounded-t-primary`}
+        >
+          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
+            <h1>
+              <span className="pr-12">#</span>
+              {t(`profile.name`)}
+            </h1>
+            <h1>{t(`profile.referrals`)}</h1>
+          </div>
+          <div
+            id="scrollableDiv"
+            className="pb-[9vh] overflow-auto disable-scroll-bar"
+          >
+            <InfiniteScroll
+              dataLength={ReferData.length}
+              next={() => {
+                page < 4 && loadMoreData();
+              }}
+              hasMore={hasMore}
+              loader={<h4>Loading...</h4>}
+              scrollableTarget="scrollableDiv"
+            >
+              {ReferData.slice(3, 111).map((item, index) => (
+                <div
+                  onClick={() => {
+                    handleClickHaptic(tele, enableHaptic);
+                    setShowCard(
+                      <UserInfoCard
+                        close={() => {
+                          setShowCard(null);
+                        }}
+                        userData={item}
+                      />
+                    );
+                  }}
+                  key={index}
+                  className=""
+                >
+                  <LeaderboardItem
+                    key={index}
+                    rank={item.referRank}
+                    name={item.username}
+                    totalOrbs={item.directReferralCount}
+                    imageUrl={item.profileImage}
+                    prevRank={null}
+                  />
+                </div>
+              ))}
+            </InfiniteScroll>
+          </div>
+          <div
+            className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[4rem]`}
+          >
+            <div
+              onClick={() => {
+                if (gameData.blackOrbs < 1) {
+                  showToast("stake_error");
+                } else if (
+                  category == 1 &&
+                  userData.orbRank !== 0 &&
+                  !userData.stakeOn
+                ) {
+                  setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
+                }
+              }}
+              className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
+            >
+              <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
+                <h1>{userData.referRank}</h1>
+              </div>
+              <div className="flex gap-3 items-center w-full">
+                <div className="h-[35px] w-[35px]">
+                  {userData.avatarUrl ? (
+                    <img
+                      src={userData.avatarUrl}
+                      alt="profile-image"
+                      className="rounded-full"
+                    />
+                  ) : (
+                    <Avatar
+                      name={userData.username.charAt(0).toUpperCase()}
+                      className="h-full w-full"
+                      profile={0}
+                      color={avatarColor}
+                    />
+                  )}
+                </div>
+                <h1 className="text-white text-tertiary">
+                  {userData.username.length > 20
+                    ? userData.username.slice(0, 20)
+                    : userData.username}
+                </h1>
+              </div>
+              <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">
+                <h1>{formatRankOrbs(userData.directReferralCount)}</h1>
+              </div>
+            </div>
+          </div>
+        </div>
       ) : (
         <div
           className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[46vh] bg-black text-black rounded-t-primary`}
@@ -609,7 +754,7 @@ const Leaderboard = (props) => {
                 if (gameData.blackOrbs < 1) {
                   showToast("stake_error");
                 } else if (
-                  !isFinished &&
+                  category === 1 &&
                   userData.orbRank !== 0 &&
                   !userData.stakeOn
                 ) {
@@ -664,3 +809,31 @@ const Leaderboard = (props) => {
 };
 
 export default Leaderboard;
+
+//  <div
+//             onClick={() => {
+//               handleClickHaptic(tele, enableHaptic);
+//               if (gameData.blackOrbs < 1) {
+//                 showToast("stake_error");
+//               } else if (
+//                 category == 1 &&
+//                 userData.orbRank !== 0 &&
+//                 !userData.stakeOn
+//               ) {
+//                 setShowCard(
+//                   <StakeCrd
+//                     username={userData.username}
+//                     profileImg={userData.avatarUrl}
+//                   />
+//                 );
+//               } else {
+//                 showToast("stake_error");
+//               }
+//             }}
+//             className="button__face button__face--back z-[60] cursor-pointer flex justify-center items-center"
+//           >
+//             <div className="custom-button bg-black text-white text-center text-[24px] rounded-full">
+//               <span className="text w-full text-gold px-6 py-1">STAKE</span>
+//               <span className="shimmer"></span>
+//             </div>
+//           </div>

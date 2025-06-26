@@ -408,7 +408,7 @@ export const claimAutoBurst = async (accessToken, adId) => {
 };
 
 export const connectTonWallet = async (tonAddress, accessToken) => {
-  let url = `${import.meta.env.VITE_API_FOF_URL}/user/connectTon`;
+  let url = `${import.meta.env.VITE_API_FOF_URL}/connect/ton`;
 
   try {
     const response = await axios.post(url, tonAddress, {

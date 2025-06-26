@@ -5,7 +5,6 @@ import {
   wheelNames,
 } from "../../../utils/constants.fof";
 import confetti from "canvas-confetti";
-import { ThumbsUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FofContext } from "../../../context/context";
@@ -143,7 +142,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
               setPlayFlip(true);
               setTimeout(() => {
                 handleClick(lastThreeRewards[index - 1]);
-              }, 3000);
+              }, 2500);
             }, 1000);
             clearInterval(interval);
           }
@@ -151,17 +150,17 @@ const SplashScreen = ({ reward, exploitReward }) => {
 
         return () => clearInterval(interval);
       }
-    }, 2500);
+    }, 2000);
   }, []);
 
-  useEffect(() => {
-    if (playFlip) {
-      const interval = setInterval(() => {
-        setFlipped((prev) => !prev);
-      }, 1500);
-      return () => clearInterval(interval);
-    }
-  }, [playFlip]);
+  // useEffect(() => {
+  //   if (playFlip) {
+  //     const interval = setInterval(() => {
+  //       setFlipped((prev) => !prev);
+  //     }, 1500);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [playFlip]);
 
   return (
     <div
@@ -244,7 +243,30 @@ const SplashScreen = ({ reward, exploitReward }) => {
       <div
         className={`text-gold leading-[3rem] text-[3rem] text-center absolute bottom-[6dvh] mt-4 uppercase transition-all duration-500 scale-${showScale} w-full flex justify-center items-center`}
       >
-        1 water alchemist
+        {currReward?.type === "mythOrb"
+          ? `${
+              t(
+                `elements.${mythElementNames[
+                  currReward.mythology
+                ]?.toLowerCase()}`
+              ) +
+              " " +
+              t("keywords.orb")
+            }`
+          : currReward?.type === "blackOrb"
+          ? `${t("elements.aether") + " " + t("keywords.orb")}`
+          : currReward?.type === "quest"
+          ? `${t("sections.quests")}`
+          : currReward?.type === "minion"
+          ? `1 ${
+              wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
+              " ALCHEMIST"
+            }`
+          : `1 ${
+              wheelNames[mythologies.indexOf(currReward.mythology) + 1] +
+              " " +
+              currReward?.type?.toUpperCase()
+            }`}
       </div>
 
       {/* Audios */}

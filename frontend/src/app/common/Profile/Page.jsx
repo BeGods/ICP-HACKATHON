@@ -8,13 +8,15 @@ import { trackComponentView } from "../../../utils/ga";
 import { CalendarCheck, Sigma, Wallet } from "lucide-react";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { connectLineWallet } from "../../../utils/api.fof";
+import { connectLineWallet, connectTonWallet } from "../../../utils/api.fof";
 import useWalletPayment from "../../../hooks/LineWallet";
 import { showToast } from "../../../components/Toast/Toast";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
 import HoldingsModal from "../../../components/Modals/Holdings";
 import liff from "@line/liff";
 import WalletsModal from "../../../components/Modals/Wallets";
+import { useTonAddress, useTonConnectModal } from "@tonconnect/ui-react";
+import { useTonWalletConnector } from "../../../hooks/TonWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -75,7 +77,6 @@ const Profile = (props) => {
     isTelegram,
     enableHaptic,
     authToken,
-    setUserData,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
@@ -87,6 +88,14 @@ const Profile = (props) => {
   const gameData = game === "fof" ? fofContext.gameData : rorContext.gameData;
   const { connectWallet } = useWalletPayment();
   const [isConnecting, setIsConnecting] = useState(false);
+  const userFriendlyAddress = useTonAddress();
+  const { handleConnectTonWallet } = useTonWalletConnector();
+  const walletLabel =
+    isTelegram && userFriendlyAddress
+      ? `${userFriendlyAddress.slice(0, 4)}...${userFriendlyAddress.slice(-4)}`
+      : !isTelegram && lineWallet
+      ? `${lineWallet?.slice(0, 6)}...${lineWallet.slice(-4)}`
+      : "Connect";
 
   useEffect(() => {
     // ga
@@ -142,13 +151,6 @@ const Profile = (props) => {
       const { accountAddress, signature, message } = await connectWallet();
 
       await connectLineWallet(signature, message, authToken);
-
-      setUserData((prev) => {
-        return {
-          ...prev,
-          kaiaAddress: accountAddress,
-        };
-      });
     } catch (error) {
       console.error("Wallet Connection Error:", error);
     } finally {
@@ -206,12 +208,8 @@ const Profile = (props) => {
     {
       icon: <Wallet size={"1.8rem"} />,
       label: "Wallet",
-      value: isTelegram
-        ? "Coming Soon"
-        : lineWallet
-        ? `${lineWallet?.slice(0, 6)}...`
-        : "Connect",
-      disabled: !lineWallet ? true : false,
+      value: walletLabel,
+      disabled: false,
       handleClick: () => {
         if (!isTelegram) {
           if (lineWallet) {
@@ -220,7 +218,11 @@ const Profile = (props) => {
             (async () => await handleConnectLineWallet())();
           }
         } else {
-          alert("Coming Soon");
+          if (userFriendlyAddress) {
+            setShowCard(<WalletsModal handleClose={() => setShowCard(null)} />);
+          } else {
+            handleConnectTonWallet();
+          }
         }
       },
     },
@@ -269,7 +271,7 @@ const Profile = (props) => {
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
 
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="font-fof absolute top-0 text-[4.5dvh] mt-[17vh] uppercase text-gold drop-shadow z-50 text-black-contour">
+        <div className="font-fof absolute top-0 text-[4.5dvh] mt-[20vh] uppercase text-gold drop-shadow z-50 text-black-contour">
           {userData.username}
         </div>
         <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">

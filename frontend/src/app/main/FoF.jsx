@@ -222,7 +222,7 @@ const FoFMain = () => {
   // fetch all game data
   const getGameData = async (token) => {
     const response = await fetchGameStats(token);
-    const showAnmnt = await validateTutCookie(tele, "announcement08");
+
     setGameData(response?.stats);
     setQuestsData(response?.quests);
     setTasks(response?.extraQuests);
@@ -243,9 +243,6 @@ const FoFMain = () => {
     ) {
       setSection(8);
       setTimeout(() => setIsLoading(false), 1000);
-    } else if (!showAnmnt && isTelegram) {
-      setSection(12);
-      setIsLoading(false);
     } else {
       setSection(0);
       setTimeout(() => setIsLoading(false), 1000);

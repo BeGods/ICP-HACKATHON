@@ -114,7 +114,7 @@ export default {
         primary: "20px",
       },
       fontSize: {
-        primary: "2.5rem",
+        primary: "2.25rem",
         "symbol-sm": "2rem",
         secondary: "14px",
         para: "2.25dvh",
