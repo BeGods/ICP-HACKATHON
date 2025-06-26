@@ -8,25 +8,47 @@ import useWalletPayment from "../../hooks/LineWallet";
 import { ChevronRight, History, Wallet } from "lucide-react";
 import liff from "@line/liff";
 import { useNavigate } from "react-router-dom";
+import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 
 const tele = window.Telegram?.WebApp;
 
 const WalletsModal = ({ handleClose }) => {
   const navigate = useNavigate();
   const { fetchLinePayHistory, disconnectLineWallet } = useWalletPayment();
-  const { enableHaptic, lineWallet, isTelegram } = useContext(MainContext);
+  const { enableHaptic, lineWallet, isTelegram, setUserData } =
+    useContext(MainContext);
+  const userFriendlyAddress = useTonAddress();
+  const [tonConnectUI, setOptions] = useTonConnectUI();
 
-  const handleDisconnectLineWallet = async () => {
+  const walletLabel =
+    isTelegram && userFriendlyAddress
+      ? `${userFriendlyAddress.slice(0, 9)}...${userFriendlyAddress.slice(-6)}`
+      : !isTelegram && lineWallet
+      ? `${lineWallet?.slice(0, 9)}...${lineWallet.slice(-6)}`
+      : "Not Connected";
+
+  const handleDisconnectWallet = async () => {
     handleClickHaptic(tele, enableHaptic);
     try {
-      await disconnectLineWallet();
+      if (isTelegram) {
+        await tonConnectUI.disconnect();
+        setUserData((prev) => {
+          return {
+            ...prev,
+            tonAddress: null,
+          };
+        });
+      } else {
+        await disconnectLineWallet();
 
-      if (!liff.isInClient() || !isTelegram) {
-        (async () => await deleteAuthCookie(tele))();
-        setTimeout(() => {
-          navigate("/");
-        }, 200);
+        if (!liff.isInClient() || !isTelegram) {
+          (async () => await deleteAuthCookie(tele))();
+          setTimeout(() => {
+            navigate("/");
+          }, 200);
+        }
       }
+      handleClose();
     } catch (error) {
       console.error("Error disconnecting wallet:", error);
       alert("Failed to disconnect the wallet. Please try again.");
@@ -45,6 +67,7 @@ const WalletsModal = ({ handleClose }) => {
       handleClose();
     }
   };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
       <div
@@ -66,11 +89,7 @@ const WalletsModal = ({ handleClose }) => {
             <Wallet />
           </div>
           <div className="flex justify-between w-full">
-            <div className="pl-3">
-              {lineWallet
-                ? `${lineWallet?.slice(0, 14)}......${lineWallet?.slice(-4)}`
-                : "Not Connected"}
-            </div>
+            <div className="pl-3">{walletLabel}</div>
           </div>
         </div>
 
@@ -80,7 +99,7 @@ const WalletsModal = ({ handleClose }) => {
             <div className="border-[1.5px] -ml-3 -rotate-45"></div>
           </div>
           <div
-            onClick={handleDisconnectLineWallet}
+            onClick={handleDisconnectWallet}
             className="flex justify-between w-full"
           >
             <div className="pl-6">Disconnect</div>
@@ -88,19 +107,21 @@ const WalletsModal = ({ handleClose }) => {
           </div>
         </div>
 
-        <div
-          onClick={handleFetchLineHistory}
-          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
-        >
-          <div className="flex justify-start -ml-3">
-            <History />
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">Dapp History</div>
+        {!isTelegram && (
+          <div
+            onClick={handleFetchLineHistory}
+            className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
+          >
+            <div className="flex justify-start -ml-3">
+              <History />
+            </div>
+            <div className="flex justify-between w-full">
+              <div className="pl-3">Dapp History</div>
 
-            <ChevronRight />
+              <ChevronRight />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

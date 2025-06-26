@@ -14,7 +14,7 @@ const useWalletPayment = () => {
     setPaymentProvider,
     setLineWallet,
   } = useWallet();
-  const { authToken } = useContext(MainContext);
+  const { authToken, setUserData } = useContext(MainContext);
 
   const connectWallet = async () => {
     if (!lineProvider) {
@@ -34,6 +34,12 @@ const useWalletPayment = () => {
         return null;
       }
 
+      setUserData((prev) => {
+        return {
+          ...prev,
+          kaiaAddress: accountAddress,
+        };
+      });
       setLineWallet(accountAddress);
       sessionStorage.setItem("accountAddress", accountAddress);
 
@@ -146,6 +152,13 @@ const useWalletPayment = () => {
       if (lineProvider.disconnectWallet) {
         await lineProvider.disconnectWallet();
       }
+
+      setUserData((prev) => {
+        return {
+          ...prev,
+          kaiaAddress: null,
+        };
+      });
 
       if (lineProvider.disconnect) {
         await lineProvider.disconnect();

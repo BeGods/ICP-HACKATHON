@@ -4,6 +4,10 @@ import GiftHeader from "./Header";
 import GiftCarousel from "../../../components/Carousel/GiftCarousel";
 import TaskCarousel from "../../../components/Carousel/TaskCarousel";
 import RewardCarousel from "../../../components/Carousel/RewardCarousel";
+import {
+  ToggleLeft,
+  ToggleRight,
+} from "../../../components/Common/SectionToggles";
 // import { socket } from "../../../utils/socket";
 
 const Gift = () => {
@@ -80,6 +84,22 @@ const Gift = () => {
           )}
         </div>
       </div>
+      <>
+        <ToggleLeft
+          minimize={2}
+          handleClick={() => {
+            setCategory((prev) => (prev - 1 + 3) % 3);
+          }}
+          activeMyth={4}
+        />
+        <ToggleRight
+          minimize={2}
+          handleClick={() => {
+            setCategory((prev) => (prev + 1) % 3);
+          }}
+          activeMyth={4}
+        />
+      </>
     </div>
   );
 };

@@ -20,15 +20,12 @@ import { isDesktop } from "../../utils/device.info";
 const tele = window.Telegram?.WebApp;
 
 const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
-  const { connectWallet, fetchLinePayHistory, disconnectLineWallet } =
-    useWalletPayment();
-  const { enableHaptic, isTelegram, authToken, lineWallet } =
-    useContext(MainContext);
+  const { enableHaptic, isTelegram, authToken } = useContext(MainContext);
   const { t } = useTranslation();
-  const [showModal, setShowModal] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
   const [dots, setDots] = useState(1);
   const [isConnecting, setIsConnecting] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,14 +101,14 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
       <div className="flex gap-x-4">
         {!hideExit && !isTelegram && (
           <>
-            {(!lineWallet || !isLoaded) && (
+            {/* {(!lineWallet || !isLoaded) && (
               <Wallet
                 size={24}
                 onClick={handleConnectLineWallet}
                 className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
               />
             )}
-            {/* {lineWallet && isLoaded ? (
+            {lineWallet && isLoaded ? (
               <div
                 className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full cursor-pointer"
                 onClick={() => {

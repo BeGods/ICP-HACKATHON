@@ -59,7 +59,7 @@ const BottomChild = () => {
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
-        <div className={`mr-auto slide-in-out-left`}>{t("sections.task")}</div>
+        <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
         <div className={`ml-auto slide-in-out-right`}>Ranking</div>
       </div>
     </div>
