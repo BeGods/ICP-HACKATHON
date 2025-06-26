@@ -50,7 +50,7 @@ router.post("/rewards/create", adminMiddleware, createReward);
 // admin: update status
 router.get("/admin/payments", getAdminPayments);
 router.post("/admin/payments/verify", adminMiddleware, getTrxById);
-router.get("/admin/payments/pending", adminMiddleware, userIdByAddr);
+router.get("/admin/payments/pending", adminMiddleware, getPendingWithdrawals);
 
 // admin: blacklist
 router.post(
