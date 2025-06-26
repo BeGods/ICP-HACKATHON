@@ -49,6 +49,7 @@ export const getLeaderboard = async (req, res) => {
     );
 
     res.status(200).json({
+      refer: overallLeaderboard[0]?.refer || [],
       leaderboard: overallLeaderboard[0]?.active || [],
       hallOfFame: overallLeaderboard[0]?.finished || [],
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
@@ -67,12 +68,22 @@ export const updateLeadboardRanks = async () => {
   try {
     let leaderboard = await getLeaderboardSnapshot();
 
-    leaderboard = leaderboard.filter((user) => !user.isArchived);
+    const archivedUsers = leaderboard
+      .filter((u) => u.isArchived || u.isBlacklisted)
+      .map((u) => u.userId);
 
-    // Segregate Users
+    await ranks.deleteMany({
+      userId: { $in: archivedUsers },
+    });
+
+    leaderboard = leaderboard.filter(
+      (user) => !user.isArchived || !user.isBlacklisted
+    );
+
     const fofFinishedUsers = leaderboard.filter(
       (user) => user.totalOrbs > 999999
     );
+
     const fofFinishedUserIds = fofFinishedUsers.map((user) =>
       user.userId.toString()
     );
@@ -107,6 +118,14 @@ export const updateLeadboardRanks = async () => {
           : index + 1,
       }));
 
+    // calculate referRank
+    const sortedReferUsers = leaderboard
+      .sort((a, b) => b.directReferralCount - a.directReferralCount)
+      .map((user, index) => ({
+        ...user,
+        referRank: index + 1,
+      }));
+
     const allUsers = leaderboard.map((user) => {
       return {
         ...user,
@@ -118,6 +137,10 @@ export const updateLeadboardRanks = async () => {
           sortedRorUsers.find(
             (u) => u.userId.toString() === user.userId.toString()
           )?.coinRank || 0,
+        referRank:
+          sortedReferUsers.find(
+            (u) => u.userId.toString() === user.userId.toString()
+          )?.referRank || 0,
       };
     });
 
@@ -139,6 +162,7 @@ export const updateLeadboardRanks = async () => {
             squadOwner: user.squadOwner,
             orbRank: user.orbRank,
             coinRank: user.coinRank,
+            referRank: user.referRank,
             country: user.country ?? "NA",
             prevRank: user.prevRank,
             isArchived: user.isArchived,
@@ -164,15 +188,15 @@ export const updateLeadboardRanks = async () => {
     // bulk update
     await ranks.bulkWrite(bulkOps);
 
-    const bettedUsers = sortedFofUsers.filter(
-      (user) => user.totalOrbs <= 999999 && user.userBetAt
-    );
+    // const bettedUsers = sortedFofUsers.filter(
+    //   (user) => user.totalOrbs <= 999999 && user.userBetAt
+    // );
     const fofUnmarkedUsers = fofFinishedUsers.filter(
       (user) => !user.finishedAt
     );
 
     await bulkUpdateFoFComplete(fofUnmarkedUsers);
-    await bulkUpdateBetResult(bettedUsers);
+    // await bulkUpdateBetResult(bettedUsers);
 
     console.log("Leaderboard updated successfully.");
   } catch (error) {
