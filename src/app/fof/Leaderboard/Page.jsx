@@ -16,6 +16,7 @@ import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { rankPositions } from "../../../utils/constants.fof";
+import { User, UserPen } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -274,10 +275,10 @@ const Leaderboard = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(3);
           }}
-          className="flex slide-header-left p-0.5 justify-end items-center w-[32%] bg-white rounded-r-full"
+          className="flex  p-0.5 justify-end items-center w-[19%] bg-white rounded-r-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
-            u
+            <User fill="white" size={30} />
           </div>
         </div>
 
@@ -286,7 +287,7 @@ const Leaderboard = (props) => {
             handleClickHaptic(tele, enableHaptic);
             setSection(0);
           }}
-          className="flex slide-header-right p-0.5 justify-start items-center w-[32%] bg-white rounded-l-full"
+          className="flex  p-0.5 justify-start items-center w-[19%] bg-white rounded-l-full"
         >
           <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
             z
