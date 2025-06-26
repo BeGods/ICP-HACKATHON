@@ -211,6 +211,7 @@ export interface IRank extends Document {
   profileImage: string;
   orbRank: number;
   coinRank: number;
+  referRank: number;
   prevOrbRank: number;
   prevCoinRank: number;
   countryRank: number;

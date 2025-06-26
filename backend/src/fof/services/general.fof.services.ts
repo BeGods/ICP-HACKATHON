@@ -88,6 +88,7 @@ export const getLeaderboardSnapshot = async () => {
           userId: "$_id",
           telegramId: "$userDetails.telegramId",
           isArchived: "$userDetails.isArchived",
+          isBlacklisted: "$userDetails.isBlacklisted",
           telegramUsername: "$userDetails.telegramUsername",
           profileImage: "$userDetails.profile.avatarUrl",
           directReferralCount: "$userDetails.directReferralCount",
@@ -163,13 +164,15 @@ export const getLeaderboardRanks = async (
 
     let pipelineObj = {
       $facet: {
+        refer: [{ $sort: { directReferralCount: -1 as -1 } }, { $limit: 111 }],
         active: [
-          { $match: { isArchived: { $ne: true } } }, // filter here
+          { $match: { isArchived: { $exists: false } } },
           ...ranksFilter,
         ],
         finished: [
           { $match: { totalOrbs: { $gte: 999999 } } },
           { $sort: { fofCompletedAt: 1 as 1 } },
+          { $limit: 111 },
           {
             $project: {
               __v: 0,

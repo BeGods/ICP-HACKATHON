@@ -32,12 +32,19 @@ export const getAdminUpdates = async (req, res) => {
   try {
     const stats = await Stats.find();
     const userCounts = stats.map((stat) => stat.totalUsers);
-    const { dailyActive, weeklyActive, monthlyActive, dailyNewUsers } =
-      await fetchAdminStats();
+    const {
+      dailyActive,
+      weeklyActive,
+      monthlyActive,
+      dailyNewUsers,
+      hourlyActive,
+      hourlyNewUsers,
+    } = await fetchAdminStats();
 
     const data = {
       totalUsers: userCounts[4],
       newUsers: dailyNewUsers,
+      hourlyNewUsers: hourlyNewUsers,
       tgUsers: userCounts[1],
       line: userCounts[2],
       dapp: userCounts[6],
@@ -47,6 +54,7 @@ export const getAdminUpdates = async (req, res) => {
       dailyActive: dailyActive,
       weeklyActive: weeklyActive,
       monthlyActive: monthlyActive,
+      hourlyActive: hourlyActive,
     };
 
     res.status(200).json(data);
@@ -377,12 +385,202 @@ export const getPendingWithdrawals = async (req, res) => {
 
     res.status(200).json({
       count: claimed.length,
-      data: claimed.map((itm) => ({
-        userId: itm.userId,
-        username: itm.username,
-        kaiaAddress: itm.kaiaAddress,
-        amount: itm.amount,
-      })),
+      data: claimed,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something went wrong." });
+  }
+};
+
+export const getAdminPayments = async (req, res) => {
+  try {
+    const {
+      isRewardClaimed,
+      isBlacklisted,
+      minReferredJoinBonus,
+      minReferredDailyBonus,
+      usernameIncludes,
+      hasLineId,
+      hasTelegramUsername,
+      status = "pending",
+      currency,
+    } = req.query;
+
+    const currencyFilter = currency ? { currency } : {};
+    const statusFilter = status
+      ? { status }
+      : { status: { $in: ["pending", "success"] } };
+
+    const pendingTrx = await PaymentLogs.find({
+      reward: "withdraw",
+      transferType: "send",
+      ...statusFilter,
+      ...currencyFilter,
+    }).select("userId amount currency status");
+
+    const userIds = pendingTrx.map((itm) => itm.userId);
+
+    const [users, rewards, paidTrxs, referrals] = await Promise.all([
+      User.find({ _id: { $in: userIds } }).select(
+        "_id telegramUsername kaiaAddress bonus isBlacklisted directReferralCount lineId referralCode"
+      ),
+      milestones.find({ userId: { $in: userIds } }).select("userId rewards"),
+      PaymentLogs.aggregate([
+        {
+          $match: {
+            userId: { $in: userIds },
+            status: "success",
+            transferType: "send",
+            reward: "withdraw",
+          },
+        },
+        {
+          $group: {
+            _id: "$userId",
+            totalPaid: { $sum: "$amount" },
+          },
+        },
+      ]),
+      Referral.find({ userId: { $in: userIds } }).select(
+        "userId directInvites"
+      ),
+    ]);
+
+    const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+    const rewardMap = new Map(rewards.map((r) => [r.userId.toString(), r]));
+    const paidMap = new Map(
+      paidTrxs.map((p) => [p._id.toString(), p.totalPaid])
+    );
+    const referralMap = new Map(
+      referrals.map((r) => [r.userId.toString(), r.directInvites])
+    );
+
+    const allReferralIds = referrals.flatMap((r) => r.directInvites || []);
+    const referredUsers = await User.find({
+      _id: { $in: allReferralIds },
+    }).select("_id bonus");
+
+    const referredUserMap = new Map(
+      referredUsers.map((u) => [u._id.toString(), u])
+    );
+
+    const rewardValues = [
+      { id: "6854f8053caa936e11321a6f", amount: 1 },
+      { id: "685111495e5f4cc871608299", amount: 0.3 },
+      { id: "684deac96a2ad7c99d758973", amount: 0.3 },
+      { id: "68586fc397c39c48458214a7", amount: 2 },
+    ];
+
+    const rewardValueMap = new Map(rewardValues.map((r) => [r.id, r.amount]));
+
+    const mergedData = pendingTrx.map((trx) => {
+      const userId = trx.userId.toString();
+      const user = userMap.get(userId);
+      const rewardEntry = rewardMap.get(userId);
+      const alreadyPaid = paidMap.get(userId) || 0;
+
+      let totalClaimedRewardValue = 0;
+
+      if (
+        rewardEntry?.rewards?.monetaryRewards &&
+        Array.isArray(rewardEntry.rewards.monetaryRewards)
+      ) {
+        for (const itm of rewardEntry.rewards.monetaryRewards) {
+          const rewardId = itm.rewardId;
+          const value = rewardValueMap.get(rewardId?.toString());
+          if (value) totalClaimedRewardValue += value;
+        }
+      }
+
+      const netRewardAvailable = totalClaimedRewardValue - alreadyPaid;
+      const isRewardClaimedCalc =
+        Math.abs(netRewardAvailable - trx.amount) < 0.0001;
+
+      const bonus = user?.bonus?.fof;
+      const isJoinClaimed = !!bonus?.joiningBonus;
+      const isDailyClaimed =
+        bonus?.dailyBonusClaimedAt &&
+        new Date(bonus.dailyBonusClaimedAt).getFullYear() === 2025;
+
+      const directInvites = referralMap.get(userId) || [];
+      let referredJoinBonus = 0;
+      let referredDailyBonus = 0;
+
+      for (const inviteId of directInvites) {
+        const referred = referredUserMap.get(inviteId.toString());
+        const referredBonus = referred?.bonus?.fof;
+
+        if (referredBonus?.joiningBonus) referredJoinBonus++;
+        if (
+          referredBonus?.dailyBonusClaimedAt &&
+          new Date(referredBonus.dailyBonusClaimedAt).getFullYear() === 2025
+        )
+          referredDailyBonus++;
+      }
+
+      return {
+        ...trx.toObject(),
+        username: user?.telegramUsername,
+        kaiaAddress: user?.kaiaAddress,
+        refers: user?.directReferralCount,
+        referralCode: user?.referralCode,
+        totalClaimedRewardValue,
+        alreadyPaid,
+        netRewardAvailable,
+        isRewardClaimed: isRewardClaimedCalc,
+        isJoinClaimed,
+        isDailyClaimed,
+        isBlacklisted: user?.isBlacklisted ?? false,
+        referredJoinBonus,
+        referredDailyBonus,
+        lineId: user?.lineId,
+      };
+    });
+
+    const filtered = mergedData.filter((itm) => {
+      if (
+        isRewardClaimed !== undefined &&
+        itm.isRewardClaimed !== (isRewardClaimed === "yes")
+      )
+        return false;
+
+      if (
+        isBlacklisted !== undefined &&
+        itm.isBlacklisted !== (isBlacklisted === "yes")
+      )
+        return false;
+
+      if (
+        minReferredJoinBonus !== undefined &&
+        itm.referredJoinBonus < Number(minReferredJoinBonus)
+      )
+        return false;
+
+      if (
+        minReferredDailyBonus !== undefined &&
+        itm.referredDailyBonus < Number(minReferredDailyBonus)
+      )
+        return false;
+
+      if (
+        usernameIncludes &&
+        !itm.username?.toLowerCase().includes(usernameIncludes.toLowerCase())
+      )
+        return false;
+
+      if (hasLineId === "yes" && !itm.lineId) return false;
+      if (hasLineId === "no" && itm.lineId) return false;
+
+      if (hasTelegramUsername === "yes" && !itm.username) return false;
+      if (hasTelegramUsername === "no" && itm.username) return false;
+
+      return true;
+    });
+
+    res.status(200).json({
+      count: filtered.length,
+      data: filtered,
     });
   } catch (error) {
     console.error(error);
@@ -723,6 +921,8 @@ export const updateWalletAddr = async (req, res) => {
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
+
+export const getAllPayments = async (req, res) => {};
 
 // export const getAllReferralsById = async (req, res) => {
 //   try {

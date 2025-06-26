@@ -18,6 +18,11 @@ const rankSchema = new Schema<IRank>(
       required: true,
       default: 1,
     },
+    referRank: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
     squadOwner: {
       type: mongoose.Schema.Types.ObjectId,
     },

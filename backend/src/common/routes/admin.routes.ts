@@ -15,6 +15,8 @@ import {
   getReferTreeOfUsers,
   getTrxById,
   getPendingWithdrawals,
+  getAdminPayments,
+  userIdByAddr,
 } from "../controllers/admin.controllers";
 import { validateTrx } from "../middlewares/admin.middlewares";
 const router = express.Router();
@@ -46,8 +48,9 @@ router.post("/partners/create", adminMiddleware, createPartner);
 router.post("/rewards/create", adminMiddleware, createReward);
 
 // admin: update status
+router.get("/admin/payments", getAdminPayments);
 router.post("/admin/payments/verify", adminMiddleware, getTrxById);
-router.get("/admin/payments/pending", adminMiddleware, getPendingWithdrawals);
+router.get("/admin/payments/pending", adminMiddleware, userIdByAddr);
 
 // admin: blacklist
 router.post(

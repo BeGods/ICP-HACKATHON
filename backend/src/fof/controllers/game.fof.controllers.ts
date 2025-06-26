@@ -195,7 +195,8 @@ export const getGameStats = async (req, res) => {
     // is sligible for gacha
     const isEligibleToClaim = await checkBonus(user);
     const memberData = {
-      orbRank: userRank?.orbRank,
+      orbRank: userRank?.orbRank ?? 0,
+      referRank: userRank?.referRank ?? 0,
       totalOrbs: userRank?.totalOrbs ?? 0,
       countryRank: userRank?.countryRank ?? 0,
     };
