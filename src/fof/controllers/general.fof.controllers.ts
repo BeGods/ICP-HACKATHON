@@ -72,13 +72,13 @@ export const updateLeadboardRanks = async () => {
       .filter((u) => u.isArchived || u.isBlacklisted)
       .map((u) => u.userId);
 
+    leaderboard = leaderboard.filter(
+      (user) => !user.isArchived && !user.isBlacklisted
+    );
+
     await ranks.deleteMany({
       userId: { $in: archivedUsers },
     });
-
-    leaderboard = leaderboard.filter(
-      (user) => !user.isArchived || !user.isBlacklisted
-    );
 
     const fofFinishedUsers = leaderboard.filter(
       (user) => user.totalOrbs > 999999
