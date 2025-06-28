@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Avatar from "../../../components/Common/Avatar";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext } from "../../../context/context";
 
 const LeaderboardItem = ({
   rank,
@@ -12,8 +12,9 @@ const LeaderboardItem = ({
   isKOL,
   colorType,
 }) => {
-  const { userData } = useContext(FofContext);
+  const { userData, assets } = useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     if (name === userData.username) {
@@ -28,7 +29,7 @@ const LeaderboardItem = ({
         rank % 2 === 0 && !isKOL ? "bg-borderGray" : ""
       } ${rank % 2 === 0 && isKOL ? "bg-black/10" : ""} ${
         isKOL ? "text-black" : "text-white"
-      } font-medium text-tertiary w-[98%] h-fit mx-auto py-2`}
+      } font-medium text-tertiary w-[98%] h-fit mx-auto py-1`}
     >
       {isEmpty ? (
         <div className="flex w-full h-fit justify-between">
@@ -65,10 +66,13 @@ const LeaderboardItem = ({
             )}
           </div>
           <div className="flex gap-3 items-center  w-full">
-            <div className="h-[35px] w-[35px]">
-              {imageUrl ? (
+            <div className="h-[30px] w-[30px]">
+              {imageUrl && !error ? (
                 <img
                   src={imageUrl}
+                  onError={() => {
+                    setError(true);
+                  }}
                   alt="profile-image"
                   className="rounded-full"
                 />

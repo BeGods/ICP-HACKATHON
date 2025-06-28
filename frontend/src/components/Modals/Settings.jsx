@@ -168,7 +168,12 @@ const SettingModal = ({ close }) => {
 
   const handleUpdateCountry = async (updatedCountry) => {
     try {
-      const response = await updateCountry(updatedCountry, authToken);
+      await updateCountry(updatedCountry, authToken);
+
+      setUserData((prev) => ({
+        ...prev,
+        country: updateCountry,
+      }));
     } catch (error) {
       console.log(error);
     }

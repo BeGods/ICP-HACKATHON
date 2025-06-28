@@ -122,7 +122,7 @@ const PayModal = ({
                 </div>
               </div>
             </div>
-            <div className="leading-[2.5dvh] text-para mt-1 text-left mx-auto w-[93%] text-card font-[550]">
+            <div className="leading-para text-para mt-1 text-left mx-auto w-[93%] text-card font-[550]">
               <h2 className={`font-medium uppercase mb-1`}>Note: </h2>
               <p>1. You agree that the product(s) is/are non-refundable.</p>
               <p>
@@ -164,6 +164,7 @@ const BoosterClaim = ({
   closeCard,
   disableIcon,
   isAutoPay,
+  booster,
 }) => {
   const {
     gameData,
@@ -179,10 +180,10 @@ const BoosterClaim = ({
     setShowCard,
     enableHaptic,
     isTelegram,
-    tokens,
+    isTgMobile,
   } = useContext(FofContext);
   const { createLinePayment } = useWalletPayment();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);
   const boostersData = gameData.mythologies[activeMyth].boosters;
@@ -192,6 +193,9 @@ const BoosterClaim = ({
   const [showPayModal, setShowPayModal] = useState(false);
   const [dots, setDots] = useState(1);
   const [isClicked, setIsClicked] = useState(false);
+  const disableSoundRef = useRef();
+  const [flipped, setFlipped] = useState(false);
+  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -640,7 +644,10 @@ const BoosterClaim = ({
   });
 
   return (
-    <div className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
+    <div
+      onClick={closeCard}
+      className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
+    >
       {!showPayModal ? (
         <>
           {/* Adsgram & OpenAds */}
@@ -649,7 +656,9 @@ const BoosterClaim = ({
               (activeCard === "minion" &&
                 boostersData?.isShardsClaimActive)) && (
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+
                   handleClickHaptic(tele, enableHaptic);
                   if (isTelegram) {
                     showAd();
@@ -705,7 +714,8 @@ const BoosterClaim = ({
                 !boostersData.isBurstActive &&
                 hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   handleClickHaptic(tele, enableHaptic);
                   handleGenerateInvoice();
                 }}
@@ -744,7 +754,8 @@ const BoosterClaim = ({
                 !boostersData.isBurstActive &&
                 hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   handleClickHaptic(tele, enableHaptic);
                   // handleLinePayment();
                   setShowPayModal(true);
@@ -800,35 +811,129 @@ const BoosterClaim = ({
               </div>
             )}
 
-          {/* Content */}
           <div
-            onClick={() => {
-              const conditions = {
-                automata: [
-                  gameData?.isAutomataAutoActive === -1 && isAutoPay,
-                  !mythData?.isAutomataActive && !isAutoPay,
-                ],
-                minion: [mythData?.isShardsClaimActive],
-                burst: [
-                  !mythData.isBurstActive,
-                  !mythData.isBurstActive &&
-                    mythData?.isBurstActiveToClaim &&
-                    !isAutoPay,
-                  !mythData.isBurstActive &&
-                    hasTimeElapsed(gameData.autoPayBurstExpiry) &&
-                    isAutoPay,
-                ],
-                moon: [!gameData.isMoonActive],
-              };
-
-              const shouldHandleButton = conditions[activeCard]?.some(Boolean);
-
-              if (shouldHandleButton) {
-                handleButton();
-              }
-            }}
-            className={`absolute  card-width mt-10 cursor-pointer z-50 rounded-primary`}
-          ></div>
+            onClick={(e) => e.stopPropagation()}
+            className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
+          >
+            <div
+              onClick={() => {
+                setFlipped((prev) => !prev);
+              }}
+              className={`card  ${cardHeight}  ${flipped ? "flipped" : ""}`}
+            >
+              <div className="card__face card__face--front relative flex justify-center items-center">
+                <div
+                  className={`absolute inset-0 rounded-primary`}
+                  style={{
+                    backgroundImage: `${`url(${
+                      assets.boosters[
+                        `${
+                          activeCard === "minion" ? "alchemist" : activeCard
+                        }Card`
+                      ]
+                    })`}`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center center ",
+                  }}
+                />
+                <div
+                  className={`absolute top-0 left-3 ${
+                    isAutoPay ? "gradient-multi" : "text-white  glow-text-black"
+                  } text-[2.75rem] font-symbols z-10`}
+                >
+                  {activeCard === "automata"
+                    ? "n"
+                    : activeCard === "minion"
+                    ? "9"
+                    : "s"}
+                </div>
+                <div className="relative h-full w-full flex flex-col items-center">
+                  <div className="flex z-50 relative flex-col justify-center items-center h-full w-full">
+                    {!disableIcon && (
+                      <IconBtn
+                        isInfo={true}
+                        activeMyth={activeMyth}
+                        align={0}
+                      />
+                    )}
+                    <div
+                      className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
+                    >
+                      <div
+                        style={{
+                          backgroundImage: `url(${assets.uxui.footer})`,
+                          backgroundRepeat: "no-repeat",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center center",
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          height: "100%",
+                          width: "100%",
+                        }}
+                        className={`rounded-b-primary filter-paper-${
+                          !isAutoPay &&
+                          activeCard !== "moon" &&
+                          mythSections[activeMyth]
+                        }`}
+                      />
+                      <div className="flex justify-center w-full h-full items-center glow-text-quest px-2 z-10">
+                        <div className="uppercase glow-text-quest text-white z-10">
+                          {t(`boosters.${booster}.title`)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                handleClick={() => setFlipped((prev) => !prev)}
+                className={`card__face card__face--back relative flex select-none justify-center items-center`}
+              >
+                <div className="relative w-full h-full text-card">
+                  <img
+                    src={assets.uxui.bgInfo}
+                    alt="info background"
+                    className="w-full h-full object-cover rounded-primary z-10"
+                  />
+                </div>
+                <div className="absolute flex flex-col top-0 z-20 w-full">
+                  <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[0.5dvh]">
+                    <div className="text-left">
+                      <h1 className="text-paperHead font-bold uppercase">
+                        {t(`boosters.${booster}.title`)}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className={`absolute h-full pt-[35%] leading-para text-para -mt-[5px] text-center mx-auto w-[93%] text-card font-[550] ${
+                    (i18n.language === "hi" ||
+                      i18n.language === "th" ||
+                      i18n.language === "ru") &&
+                    "font-normal"
+                  } ${i18n.language === "ru" && "leading-[2dvh]"}`}
+                >
+                  {t(`boosters.${booster}.desc`)}
+                </div>
+                <IconBtn
+                  isFlip={true}
+                  isInfo={false}
+                  activeMyth={5}
+                  align={10}
+                />
+              </div>
+            </div>
+          </div>
+          <BoosterBtn
+            isAutoPay={isAutoPay}
+            activeCard={activeCard}
+            mythData={mythData}
+            handleClaim={handleButton}
+            activeMyth={activeMyth}
+            t={t}
+          />
           {section === 2 && (
             <div className="flex gap-3 absolute bottom-5">
               <div className="flex gap-1 items-center">
@@ -845,99 +950,6 @@ const BoosterClaim = ({
               </div>
             </div>
           )}
-          <div
-            className={`relative card-width mt-[2.5rem] flex items-center justify-center rounded-primary card-shadow-white`}
-          >
-            <div
-              className={`absolute inset-0 rounded-primary`}
-              style={{
-                backgroundImage: `${`url(${
-                  assets.boosters[
-                    `${activeCard === "minion" ? "alchemist" : activeCard}Card`
-                  ]
-                })`}`,
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "cover",
-                backgroundPosition: "center center ",
-              }}
-            />
-            <div className="relative h-full w-full flex flex-col items-center">
-              <div className="flex z-50 relative flex-col justify-center items-center h-full w-full">
-                {!disableIcon && (
-                  <IconBtn
-                    isInfo={false}
-                    activeMyth={activeMyth}
-                    handleClick={closeCard}
-                    align={0}
-                  />
-                )}
-                <div
-                  className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
-                >
-                  <div
-                    style={{
-                      backgroundImage: `url(${assets.uxui.footer})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center center",
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      height: "100%",
-                      width: "100%",
-                    }}
-                    className={`rounded-b-primary filter-paper-${
-                      !isAutoPay &&
-                      activeCard !== "moon" &&
-                      mythSections[activeMyth]
-                    }`}
-                  />
-                  {activeCard === "moon" ? (
-                    <div className="flex justify-center items-center w-full">
-                      <div
-                        className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-${mythSections[activeColor]} `}
-                      >
-                        <img
-                          src={assets.uxui.baseOrb}
-                          alt="orb"
-                          className={`filter-orbs-${mythSections[activeColor]} overflow-hidden max-w-[14vw]`}
-                        />
-                        <span
-                          className={`absolute z-1  text-black-sm-contour transition-all duration-1000 text-white  font-symbols  text-[10vw] mt-1 opacity-50`}
-                        >
-                          {mythSymbols[mythSections[activeColor]]}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex w-full justify-center items-center">
-                      <div
-                        className={`${
-                          isAutoPay
-                            ? "gradient-multi"
-                            : "text-white  glow-text-black"
-                        } text-[60px] font-symbols z-10`}
-                      >
-                        {activeCard === "automata"
-                          ? "n"
-                          : activeCard === "minion"
-                          ? "9"
-                          : "s"}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-          <BoosterBtn
-            isAutoPay={isAutoPay}
-            activeCard={activeCard}
-            mythData={mythData}
-            handleClaim={handleButton}
-            activeMyth={activeMyth}
-            t={t}
-          />
         </>
       ) : (
         <PayModal
@@ -961,27 +973,36 @@ const BoosterClaim = ({
             src={
               assets.audio[activeCard === "automata" ? "automata" : "alchemist"]
             }
-            playing={enableSound}
+            playing={enableSound && !disableSoundRef.current}
             preload={true}
+            loop={false}
+            onEnd={() => {
+              disableSoundRef.current = true;
+            }}
           />
         )}
 
-      <>
-        <ToggleLeft
-          minimize={2}
-          handleClick={() => {
-            setActiveMyth((prev) => (prev - 1 + 4) % 4);
-          }}
-          activeMyth={activeMyth}
-        />
-        <ToggleRight
-          minimize={2}
-          handleClick={() => {
-            setActiveMyth((prev) => (prev + 1) % 4);
-          }}
-          activeMyth={activeMyth}
-        />
-      </>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute inset-0 pointer-events-none"
+      >
+        <div className="pointer-events-auto">
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setActiveMyth((prev) => (prev - 1 + 4) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              setActiveMyth((prev) => (prev + 1) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+        </div>
+      </div>
     </div>
   );
 };

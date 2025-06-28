@@ -179,7 +179,12 @@ const Profile = (props) => {
     {
       icon: <Sigma size={"1.8rem"} />,
       label: "Total Orbs",
-      value: formatRankOrbs(userData.totalOrbs) ?? 0,
+      value:
+        formatRankOrbs(
+          1000 * gameData.blackOrbs +
+            2 * gameData.multiColorOrbs +
+            gameData.mythologies.reduce((sum, itm) => sum + itm.orbs, 0)
+        ) ?? 0,
       handleClick: () => {
         setShowCard(
           <OrbInfoCard

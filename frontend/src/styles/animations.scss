@@ -615,9 +615,9 @@
 }
 
 
-$first-place-height: 25.5dvh;
-$second-place-height: 21.25dvh;
-$third-place-height: 18.5dvh;
+$first-place-height: 29dvh;
+$second-place-height: 24dvh;
+$third-place-height: 20dvh;
 
 @mixin rise-up($name, $height, $delay) {
   @keyframes rise-up-#{$name} {

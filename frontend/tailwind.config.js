@@ -18,6 +18,11 @@ export default {
     "bg-greek-primary",
     "bg-norse-primary",
     "bg-black",
+    "bg-gold",
+    "bg-silver",
+    "bg-bronze",
+    "bg-darker",
+
 
     "bg-celtic-text",
     "bg-egyptian-text",
@@ -108,7 +113,8 @@ export default {
         topaz: "#FFC067",
         silver: "#808080",
         bronze: "#9b5e20",
-        wood: "#A1662F"
+        wood: "#A1662F",
+        darker: "#1D1D1D"
       },
       borderRadius: {
         primary: "20px",
@@ -116,8 +122,9 @@ export default {
       fontSize: {
         primary: "2.25rem",
         "symbol-sm": "2rem",
+        "symbol-xs": "1.75rem",
         secondary: "14px",
-        para: "2.25dvh",
+        para: "5vw",
         tertiary: "18px",
         "button-primary": "18px",
         "orb-primary": "120px",
@@ -128,8 +135,8 @@ export default {
         num: "9vw",
         numHead: "9vw",
         head: "30px",
-        paperHead: "3.5dvh",
-        paperSub: "3dvh",
+        paperHead: "6.5vw",
+        paperSub: "5.5vw",
         icon: "50px",
         iconLg: "3.75rem",
       },
@@ -150,11 +157,16 @@ export default {
         "symbol-primary": "7.5rem",
         "symbol-secondary": "45px",
       },
+      lineHeight: {
+        para: "5.5vw"
+      }
+      ,
       borderWidth: {
         secondary: "0.5px",
       },
       maxWidth: {
         orb: "2.6rem",
+        "xs-orb": "2.25rem"
       },
       padding: {
         headSides: "5.5vw",

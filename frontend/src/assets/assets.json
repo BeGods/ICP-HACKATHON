@@ -172,7 +172,7 @@
         "rorIntro": "/assets/audio/ror.music.intro.wav",
         "alchemist": "/assets/audio/fof.char.alchemist.wav",
         "automata": "/assets/audio/fof.char.automata.wav",
-        "star": "fof.star.wav",
+        "star": "/assets/audio/fof.star.wav",
         "toggle": "/assets/audio/base.side.button.wav",
         "orb.multi": "/assets/audio/fof.orb.multi01.wav",
         "orb.fire" : "/assets/audio/fof.orb.fire02.wav",

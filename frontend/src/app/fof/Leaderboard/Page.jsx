@@ -15,21 +15,48 @@ import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
 import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
 import Avatar from "../../../components/Common/Avatar";
-import { rankPositions } from "../../../utils/constants.fof";
+import { mythSections, rankPositions } from "../../../utils/constants.fof";
 import { User, UserPen } from "lucide-react";
+import {
+  ToggleLeft,
+  ToggleRight,
+} from "../../../components/Common/SectionToggles";
 
 const tele = window.Telegram?.WebApp;
 
-const UserAvatar = ({ user, index }) => {
-  const { assets, platform } = useContext(FofContext);
+const getRandomColor = () => {
+  return mythSections[Math.floor(Math.random() * mythSections.length)];
+};
+
+const UserAvatar = ({ user, index, category }) => {
+  const { assets, platform, userData } = useContext(FofContext);
+
   const util = {
     0: "second",
     1: "first",
     2: "third",
   };
-  const [avatarColor, setAvatarColor] = useState(() => {
-    return localStorage.getItem("avatarColor");
+
+  const avatarColor = getRandomColor();
+  const [image, setImage] = useState(() => {
+    return user?.profileImage || assets.uxui.baseOrb;
   });
+  const [error, setError] = useState(false);
+
+  const determineLevel = () => {
+    switch (true) {
+      case userData.orbRank <= 12:
+        return "gold";
+      case userData.orbRank <= 99:
+        return "silver";
+      case userData.orbRank <= 333:
+        return "bronze";
+      case userData.orbRank <= 666:
+        return "[#1D1D1D]";
+      default:
+        return "[#1D1D1D]";
+    }
+  };
 
   return (
     <div className="absolute rounded-full min-w-[8dvh] min-h-[8dvh] bg-white top-0 -mt-[8dvh]">
@@ -38,30 +65,28 @@ const UserAvatar = ({ user, index }) => {
           boxShadow:
             "rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 1) 0px 1px 12px",
         }}
-        className={`flex flex-col items-start relative leaderboard-${util[index]} rounded-full `}
+        className={`flex flex-col items-start relative ${
+          category == 2
+            ? "bg-[#b9f2ff]"
+            : category == 1
+            ? `bg-${determineLevel()}`
+            : "bg-darker"
+        }  rounded-full`}
       >
         <img
-          src={
-            user?.profileImage
-              ? `${user?.profileImage}`
-              : `${assets.uxui.baseOrb}`
-          }
+          src={image}
           alt="base-orb"
-          className={`${
-            !user?.profileImage && `filter-orbs-${avatarColor}`
+          onError={() => {
+            setImage(assets.uxui.baseOrb);
+            setError(true);
+          }}
+          className={` ${
+            (error || !user?.profileImage) && `filter-orbs-${avatarColor} `
           } w-full h-full rounded-full p-[5px] pointer-events-none`}
         />
-        {!user?.profileImage && (
-          <div
-            className={`z-1 flex justify-center items-start text-white text-[22vw] transition-all duration-1000  text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
-          >
-            <div
-              className={`uppercase ${
-                platform === "ios" ? "" : "mt-1"
-              } text-white`}
-            >
-              {user.username[0]}
-            </div>
+        {(!user?.profileImage || error) && (
+          <div className="z-1 flex justify-center items-start text-white text-[22vw] transition-all duration-1000 text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full">
+            <div className={`uppercase text-white`}>{user.username[0]}</div>
           </div>
         )}
       </div>
@@ -81,7 +106,6 @@ const Leaderboard = (props) => {
     setShowCard,
     setUserData,
     isTgMobile,
-    platform,
   } = useContext(FofContext);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
@@ -109,9 +133,9 @@ const Leaderboard = (props) => {
       case userData.orbRank <= 333:
         return "bronze";
       case userData.orbRank <= 666:
-        return "wood";
+        return "[#1D1D1D]";
       default:
-        return "wood";
+        return "[#1D1D1D]";
     }
   };
 
@@ -206,6 +230,11 @@ const Leaderboard = (props) => {
     ),
   ];
 
+  const paddedReferData = [
+    ...ReferData,
+    ...Array.from({ length: 99 - ReferData.length }, () => placeholderItem),
+  ];
+
   useEffect(() => {
     setAnimationKey((prevKey) => prevKey + 1);
   }, [category]);
@@ -269,7 +298,7 @@ const Leaderboard = (props) => {
       </div>
 
       {/* Toggles */}
-      <div className="flex h-button-primary mt-[1.5vh] absolute z-50 text-black font-symbols justify-between w-screen">
+      <div className="flex h-button-primary mt-1 absolute z-50 text-black font-symbols justify-between w-screen">
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
@@ -308,13 +337,13 @@ const Leaderboard = (props) => {
       </div>
 
       {/* Flipper */}
-      <div className="font-fof z-50 top-0 mx-auto mt-[1.5vh] w-1/2">
+      <div className="font-fof z-50 top-0 mt-1.5 mx-auto w-1/2">
         <div
           className={`w-full flex justify-center items-center button ${
             flipped ? "flipped" : ""
           }`}
         >
-          <div className="flex items-center justify-center w-full z-50 mt-2 p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
+          <div className="flex items-center justify-center w-full z-50  p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
             <div
               onClick={() => {
                 handleClickHaptic(tele, enableHaptic);
@@ -389,17 +418,8 @@ const Leaderboard = (props) => {
                         boxShadow:
                           "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
                       }}
-                      className={`flex leaderboard-${util[index]} relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
+                      className={`flex bg-[#b9f2ff] relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                     >
-                      <div
-                        className={`absolute text-black-contour font-symbols text-${determineFinalLevel(
-                          index + 1
-                        )} text-[24px] z-[50] w-[40%] ${
-                          rankPositions[index].alignIcon
-                        }`}
-                      >
-                        %
-                      </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
@@ -408,7 +428,11 @@ const Leaderboard = (props) => {
                       <div className="absolute text-white -bottom-1 text-[1.25rem] font-normal">
                         {countryFlag}
                       </div>
-                      <UserAvatar user={item} index={index} />
+                      <UserAvatar
+                        user={item}
+                        index={index}
+                        category={category}
+                      />
                     </div>
                   );
                 }
@@ -439,7 +463,7 @@ const Leaderboard = (props) => {
                       boxShadow:
                         "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
                     }}
-                    className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
+                    className={`flex bg-darker border-l border-r border-white/50 relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
                   >
                     {/* <div
                         className={`absolute text-black-contour font-symbols text-${determineLevel(
@@ -458,7 +482,7 @@ const Leaderboard = (props) => {
                     <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                       {item.directReferralCount}
                     </div>
-                    <UserAvatar user={item} index={index} />
+                    <UserAvatar user={item} index={index} category={category} />
                   </div>
                 );
               })}
@@ -489,17 +513,16 @@ const Leaderboard = (props) => {
                         boxShadow:
                           "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
                       }}
-                      className={`flex leaderboard-${util[index]} relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
+                      className={`flex border-l border-r  ${
+                        determineLevel === "darker"
+                          ? "border-white/50"
+                          : "border-black"
+                      } bg-${determineLevel(
+                        item.orbRank
+                      )} relative justify-center items-center h-[0] rise-up-${
+                        util[index]
+                      } w-full uppercase`}
                     >
-                      <div
-                        className={`absolute text-black-contour font-symbols text-${determineLevel(
-                          item.orbRank
-                        )} text-[1.75rem] z-[50] w-[40%] ${
-                          rankPositions[index].alignIcon
-                        }`}
-                      >
-                        {userData.orbRank > 333 ? "&" : "$"}
-                      </div>
                       <div
                         className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
                       >
@@ -508,7 +531,11 @@ const Leaderboard = (props) => {
                       <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                         {formatRankOrbs(item.totalOrbs)}
                       </div>
-                      <UserAvatar user={item} index={index} />
+                      <UserAvatar
+                        user={item}
+                        index={index}
+                        category={category}
+                      />
                     </div>
                   );
                 }
@@ -521,7 +548,7 @@ const Leaderboard = (props) => {
       {/* Leaderboard list */}
       {category == 2 ? (
         <div
-          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[46vh] bg-white text-black rounded-t-primary`}
+          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[42vh] bg-white text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
             <h1>
@@ -595,7 +622,7 @@ const Leaderboard = (props) => {
         </div>
       ) : category == 0 ? (
         <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[46vh] bg-black text-black rounded-t-primary`}
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42vh] bg-black text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
@@ -605,6 +632,32 @@ const Leaderboard = (props) => {
             <h1>{t(`profile.referrals`)}</h1>
           </div>
           <div
+            id="scrollableDiv"
+            className="pb-[9vh] overflow-auto disable-scroll-bar"
+          >
+            {paddedReferData.slice(3).map((item, index) => {
+              const { username, profileImage, id, isEmpty } = item;
+
+              const countryFlag =
+                countries.find((country) => country.code == item.country)
+                  .flag || "🌐";
+
+              return (
+                <div key={id || index} className="leaderboard-item">
+                  <LeaderboardItem
+                    colorType={determineFinalLevel(index + 1)}
+                    isKOL={false}
+                    isEmpty={isEmpty || false}
+                    rank={index + 4}
+                    name={username}
+                    totalOrbs={item.directReferralCount}
+                    imageUrl={profileImage}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          {/* <div
             id="scrollableDiv"
             className="pb-[9vh] overflow-auto disable-scroll-bar"
           >
@@ -644,7 +697,7 @@ const Leaderboard = (props) => {
                 </div>
               ))}
             </InfiniteScroll>
-          </div>
+          </div> */}
           <div
             className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[4rem]`}
           >
@@ -696,7 +749,7 @@ const Leaderboard = (props) => {
         </div>
       ) : (
         <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[46vh] bg-black text-black rounded-t-primary`}
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42vh] bg-black text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
@@ -805,6 +858,25 @@ const Leaderboard = (props) => {
           </div>
         </div>
       )}
+
+      <>
+        <ToggleLeft
+          minimize={2}
+          handleClick={() => {
+            setCategory((prev) => (prev - 1 + 3) % 3);
+          }}
+          activeMyth={4}
+          isShrinked={true}
+        />
+        <ToggleRight
+          minimize={2}
+          handleClick={() => {
+            setCategory((prev) => (prev + 1) % 3);
+          }}
+          activeMyth={4}
+          isShrinked={true}
+        />
+      </>
     </div>
   );
 };

@@ -53,7 +53,7 @@ const JigsawImage = ({
       ref={divRef}
       style={{
         position: "relative",
-        width: "71vw",
+        width: "70vw",
         height: `${isTgMobile ? "45.25vh" : "50.5dvh"}`,
         overflow: "hidden",
         borderRadius: "16px",

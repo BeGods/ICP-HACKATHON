@@ -84,7 +84,7 @@ const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
                       className="rounded-2xl h-full w-full object-cover"
                     />
 
-                    <div className="absolute inset-0 leading-[2.5dvh] flex flex-col items-center justify-end p-4 text-para font-medium text-card">
+                    <div className="absolute inset-0 leading-para flex flex-col items-center justify-end p-4 text-para font-medium text-card">
                       {t(`characters.${mythology}.${id}.desc`)}
                     </div>
                   </div>
