@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Bell,
   ChevronDown,
   ChevronUp,
   Expand,
@@ -130,6 +131,9 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
                 className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
               />
             )} */}
+            <div className="relative">
+              <Bell />
+            </div>
           </>
         )}
         {!isTelegram && !isDesktop() && (

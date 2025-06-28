@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { MainContext } from "../../context/context";
+import { Undo2 } from "lucide-react";
 
 // mr-[55px] mt-7 - convert info
 // -mt-6 ml-6 - jigsaw info
@@ -22,7 +23,7 @@ const alignBasedOnCard = [
   "mt-[0.7vh] ml-[10vw]",
   "-mt-[2.5vh] ml-[10vw]",
 ];
-const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
+const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const { enableHaptic, assets } = useContext(MainContext);
 
@@ -47,20 +48,31 @@ const IconBtn = ({ isInfo, handleClick, align, isJigsaw }) => {
       <img
         src={assets.uxui.corner}
         alt="cutout"
-        className="rounded-tr-primary w-1/5"
+        className="rounded-tr-primary w-[18%]"
       />
-      <div className="absolute flex justify-center items-center w-[40px] h-[40px]">
+      <div className="absolute flex justify-center items-center w-[2.5rem] h-[2.5rem]">
         {isInfo ? (
           <div
-            className={`text-white italic text-black-contour text-[1.7rem]`}
+            className={`text-white italic text-black-contour -mt-1 -mr-1 text-[1.7rem]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
           </div>
         ) : (
-          <div className="text-white font-roboto -mt-1 -mr-1 text-black-contour text-[1.25rem]">
-            {"\u2715"}
-          </div>
+          <>
+            {isFlip ? (
+              <div
+                className="text-white -mr-1 text-black-contour text-[2.25rem]"
+                style={{ transform: "rotate(-180deg) scaleX(-1)" }}
+              >
+                {"\u2936"}
+              </div>
+            ) : (
+              <div className="text-white font-roboto -mt-2 -mr-2 text-black-contour text-[1.25rem]">
+                {"\u2715"}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

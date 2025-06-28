@@ -55,7 +55,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
         />
       </div>
       <div
-        className={`leading-[2.5dvh] text-para -mt-[5px] text-left mx-auto w-[93%] text-card font-[550] ${
+        className={`leading-para text-para -mt-[5px] text-left mx-auto w-[93%] text-card font-[550] ${
           (i18n.language === "hi" ||
             i18n.language === "th" ||
             i18n.language === "ru") &&

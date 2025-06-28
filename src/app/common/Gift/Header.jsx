@@ -9,7 +9,7 @@ const GiftHeader = ({ category, setCategory }) => {
 
   return (
     <div className="relative w-full flex flex-col items-center">
-      <div className="flex items-center max-w-[720px] justify-center w-[80%] z-50 mt-2 p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
+      <div className="flex items-center max-w-[720px] justify-center w-[80%] z-50 mt-2.5 p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);

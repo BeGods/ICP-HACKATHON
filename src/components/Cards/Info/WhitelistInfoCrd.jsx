@@ -24,6 +24,7 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
     >
       <IconBtn
         isInfo={false}
+        isFlip={true}
         activeMyth={activeMyth}
         handleClick={handleShowInfo}
         align={isTelegram ? 0 : 7}

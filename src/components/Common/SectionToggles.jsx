@@ -12,6 +12,7 @@ export const ToggleLeft = ({
   activeMyth,
   minimize,
   positionBottom,
+  isShrinked,
 }) => {
   const howlerRef = useRef(null);
   const { enableSound, assets, enableHaptic } = useContext(MainContext);
@@ -38,7 +39,7 @@ export const ToggleLeft = ({
 
   return (
     <div
-      className={`flex absolute left-0 ${
+      className={`flex absolute ${isShrinked ? "-left-8" : "left-0"} ${
         minimize === 2 && "slide-inside-left"
       } ${
         minimize === 1 && "slide-away-left"
@@ -77,6 +78,7 @@ export const ToggleRight = ({
   activeMyth,
   minimize,
   positionBottom,
+  isShrinked,
 }) => {
   const howlerRef = useRef(null);
   const { enableSound, assets, enableHaptic } = useContext(MainContext);
@@ -102,7 +104,9 @@ export const ToggleRight = ({
 
   return (
     <div
-      className={`flex right-0 ${minimize === 2 && "slide-inside-right"} ${
+      className={`flex ${isShrinked ? "-right-8" : "right-0"}  ${
+        minimize === 2 && "slide-inside-right"
+      } ${
         minimize === 1 && "slide-away-right"
       }  absolute justify-center items-center ${
         positionBottom ? "bottom-[3.5dvh]" : "top-1/2 -mt-4"

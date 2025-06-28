@@ -298,7 +298,7 @@ body.iframe-mobile .browser-container-height {
 
 
 .ranker-width {
-  @apply w-[90%] tablet:w-[65%] desktop:w-[30%];
+  @apply w-[86%] tablet:w-[65%] desktop:w-[30%];
 }
 
 .leaderboard-width {

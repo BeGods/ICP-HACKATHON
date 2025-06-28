@@ -71,6 +71,7 @@ const CenterChild = ({ userData }) => {
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
+  const [error, setError] = useState(false);
 
   return (
     <div className="flex absolute top-0 justify-center z-50 w-full pl-1.5">
@@ -79,14 +80,19 @@ const CenterChild = ({ userData }) => {
       >
         <img
           src={
-            userData.avatarUrl ? userData.avatarUrl : `${assets.uxui.baseOrb}`
+            !error && userData.avatarUrl
+              ? userData.avatarUrl
+              : `${assets.uxui.baseOrb}`
           }
+          onError={() => {
+            setError(true);
+          }}
           alt="base-orb"
           className={`${
             !userData.avatarUrl && `filter-orbs-${avatarColor}`
           } w-full h-full rounded-full pointer-events-none`}
         />
-        {!userData.avatarUrl && (
+        {(!userData.avatarUrl || error) && (
           <div
             className={`z-1 flex justify-center items-center text-white  text-[5.5rem] transition-all duration-1000 myth-glow-greek text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
           >

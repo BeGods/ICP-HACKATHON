@@ -100,7 +100,7 @@ const MiscCard = ({
                 </div>
               </div>
               <div
-                className={`leading-[2.5dvh] text-para mt-[14px] text-justify mx-auto w-[85%] text-card font-[550] ${
+                className={`leading-para text-para mt-[14px] text-justify mx-auto w-[85%] text-card font-[550] ${
                   ["hi", "th", "ru"].includes(i18n.language) && "font-normal"
                 } ${i18n.language === "ru" && "leading-[2dvh]"}`}
               >

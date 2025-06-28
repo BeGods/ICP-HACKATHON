@@ -1,13 +1,32 @@
-import React, { useContext } from "react";
-import PropTypes from "prop-types";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../../context/context";
 import { mythSymbols } from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import { countries } from "../../../utils/country";
+import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 
 const OrbInfoCard = ({ gameData, close }) => {
   const { assets, userData } = useContext(MainContext);
   const countryFlag = countries.find((item) => item.code == userData.country);
+  const elementalOrbs = gameData.mythologies.reduce(
+    (sum, itm) => sum + itm.orbs,
+    0
+  );
+  const myths = ["greek", "celtic", "norse", "egyptian"];
+  const [activeColor, setActiveColor] = useState(0);
+  const activeColorRef = useRef(activeColor);
+  const updatedOrbs =
+    1000 * gameData.blackOrbs + 2 * gameData.multiColorOrbs + elementalOrbs;
+
+  activeColorRef.current = activeColor;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveColor((prev) => (prev + 1) % myths.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [myths.length]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
@@ -24,102 +43,171 @@ const OrbInfoCard = ({ gameData, close }) => {
         <div className="absolute top-0 w-full text-center text-card text-paperHead font-bold mt-2 uppercase z-30">
           <h1>{userData.username.toUpperCase().slice(0, 11)}</h1>
 
-          <h2 className={`-mt-[2vh] text-paperSub font-medium uppercase`}>
-            #{userData.orbRank ?? 0}{" "}
-            {userData.country != "NA" &&
-              `| ${countryFlag.flag} ${userData.countryRank}`}
+          <h2 className={`-mt-[1.5vh] text-paperSub font-medium uppercase`}>
+            {userData.country != "NA" && ` ${countryFlag.flag}  `} | #{" "}
+            {userData.orbRank ?? 0}
           </h2>
         </div>
 
         <div
-          className={`absolute leading-[18px] text-paperSub text-card inset-0 w-[85%] mx-auto flex gap-6 justify-start pt-[32%] font-[550] z-30 `}
+          className={`absolute leading-[18px] text-paperSub text-card inset-0 w-[85%] mx-auto flex gap-[1.5dvh]  flex-col justify-start pt-[32%] font-[550] z-30 `}
         >
-          <div className="flex flex-col gap-[2rem] w-full">
-            <div className="flex gap-2 items-center">
-              <div
-                className={`flex relative text-center justify-center items-center max-w-orb -mt-1 rounded-full glow-icon-black`}
-              >
-                <img src={assets.items.multiorb} alt="multi orb" />
-              </div>
-              <div
-                className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
-              >
-                {gameData.multiColorOrbs}
-              </div>
-            </div>
-            <div className="flex gap-2 items-center">
-              <div
-                className={`flex relative text-center overflow-hidden justify-center max-w-orb items-center rounded-full glow-icon-black`}
-              >
-                <img
-                  src={assets.uxui.baseOrb}
-                  alt="orb"
-                  className={`filter-orbs-black`}
-                />
-                <span
-                  className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-sm mt-1 transition-all duration-1000`}
-                >
-                  <>{mythSymbols["other"]}</>
-                </span>
-              </div>
-              <div
-                className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
-              >
-                {gameData.blackOrbs}
-              </div>
-            </div>
-            {gameData.mythologies.slice(0, 2).map((myth, index) => (
-              <div key={index} className="flex gap-2 items-center">
+          <h2 className={` text-paperSub font-medium uppercase`}>
+            ORB(S): {formatRankOrbs(updatedOrbs)}
+          </h2>
+          <div className={`flex w-full`}>
+            <div className="flex flex-col gap-[2.5dvh] w-full">
+              <div className="flex gap-2 items-center">
                 <div
-                  className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${myth.name.toLowerCase()}`}
+                  className={`flex relative text-center overflow-hidden justify-center max-w-xs-orb items-center rounded-full glow-icon-black`}
                 >
                   <img
                     src={assets.uxui.baseOrb}
                     alt="orb"
-                    className={`filter-orbs-${myth.name.toLowerCase()}`}
+                    className={`filter-orbs-black`}
                   />
                   <span
-                    className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-sm mt-1 transition-all duration-1000`}
+                    className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-xs mt-1 transition-all duration-1000`}
                   >
-                    <>{mythSymbols[myth.name.toLowerCase()]}</>
+                    <>{mythSymbols["other"]}</>
                   </span>
                 </div>
                 <div
-                  className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
+                  className={`font-fof text-paperHead font-medium transition-all duration-1000 text-card`}
                 >
-                  {myth.orbs}
+                  {gameData.blackOrbs}
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="flex flex-col gap-[6vw] w-full">
-            {gameData.mythologies.slice(2, 4).map((myth, index) => (
-              <div key={index} className="flex gap-2 items-center">
+              <div className="flex gap-2 items-center">
                 <div
-                  className={`flex relative text-center justify-center max-w-orb items-center rounded-full glow-icon-${myth.name.toLowerCase()}`}
+                  className={`flex relative text-center justify-center items-center max-w-[2.3rem] -mt-1 rounded-full glow-icon-black`}
                 >
-                  <img
-                    src={assets.uxui.baseOrb}
-                    alt="orb"
-                    className={`filter-orbs-${myth.name.toLowerCase()}`}
-                  />
-                  <span
-                    className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-sm mt-1 transition-all duration-1000`}
+                  <img src={assets.items.multiorb} alt="multi orb" />
+                </div>
+                <div
+                  className={`font-fof text-paperHead font-medium transition-all duration-1000 text-card`}
+                >
+                  {gameData.multiColorOrbs}
+                </div>
+              </div>
+              {gameData.mythologies.slice(0, 1).map((myth, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <div
+                    className={`flex relative text-center justify-center max-w-xs-orb items-center rounded-full glow-icon-${myth.name.toLowerCase()}`}
                   >
-                    <>{mythSymbols[myth.name.toLowerCase()]}</>
-                  </span>
+                    <img
+                      src={assets.uxui.baseOrb}
+                      alt="orb"
+                      className={`filter-orbs-${myth.name.toLowerCase()}`}
+                    />
+                    <span
+                      className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-xs mt-1 transition-all duration-1000`}
+                    >
+                      <>{mythSymbols[myth.name.toLowerCase()]}</>
+                    </span>
+                  </div>
+                  <div
+                    className={`font-fof text-paperHead font-medium transition-all duration-1000 text-card`}
+                  >
+                    {myth.orbs}
+                  </div>
                 </div>
-                <div
-                  className={`font-fof text-[28px] font-medium transition-all duration-1000 text-card`}
-                >
-                  {myth.orbs}
+              ))}
+            </div>
+            <div className="flex flex-col gap-[2.25dvh] w-full">
+              {gameData.mythologies.slice(1, 4).map((myth, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <div
+                    className={`flex relative text-center justify-center max-w-xs-orb items-center rounded-full glow-icon-${myth.name.toLowerCase()}`}
+                  >
+                    <img
+                      src={assets.uxui.baseOrb}
+                      alt="orb"
+                      className={`filter-orbs-${myth.name.toLowerCase()}`}
+                    />
+                    <span
+                      className={`absolute opacity-50 orb-symbol-shadow text-white z-1 font-symbols  text-symbol-xs mt-1 transition-all duration-1000`}
+                    >
+                      <>{mythSymbols[myth.name.toLowerCase()]}</>
+                    </span>
+                  </div>
+                  <div
+                    className={`font-fof text-paperHead font-medium transition-all duration-1000 text-card`}
+                  >
+                    {myth.orbs}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
+      </div>
+
+      <div className="absolute flex bottom-0 w-full pl-[10%] gap-x-4">
+        <div className="text-paperHead text-white flex justify-center items-center">
+          Note:{" "}
+        </div>
+        <div className="flex flex-col justify-start items-start text-white my-3">
+          <div className="flex justify-start items-center gap-x-3">
+            <div
+              className={`flex relative text-center justify-center items-end max-w-xs-orb  rounded-full glow-icon-black`}
+            >
+              <img src={assets.uxui.baseOrb} alt={`gray orb`} />
+              <span
+                className={`absolute z-1 text-[1.5rem] ml-0.5 opacity-50 orb-symbol-shadow   font-symbols text-white `}
+              >
+                g
+              </span>
+            </div>
+            <h1 className="text-primary font-semibold">=</h1>
+            <div className="text-[28px] -ml-2.5">1000</div>
+            <div className="text-[24px] font-roboto font-medium">X</div>{" "}
+            <div
+              className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
+            >
+              <img
+                src={assets.uxui.baseOrb}
+                alt={`gray orb`}
+                className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
+              />
+              <span
+                className={`absolute z-1  justify-center items-center font-symbols text-white `}
+              >
+                <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                  {mythSymbols[myths[activeColor]]}
+                </div>
+              </span>
+            </div>
+          </div>
+          <div className="flex justify-start items-center gap-x-3">
+            <div
+              className={`flex relative text-center justify-center items-center max-w-[2.3rem] -mt-1 rounded-full glow-icon-black`}
+            >
+              <img src={assets.items.multiorb} alt="multi orb" />
+            </div>
+            <h1 className="text-primary font-semibold">=</h1>
+            <div className="text-[28px] -ml-2.5">2</div>
+            <div className="text-[24px] font-roboto font-medium">X</div>{" "}
+            <div
+              className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
+            >
+              <img
+                src={assets.uxui.baseOrb}
+                alt={`gray orb`}
+                className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
+              />
+              <span
+                className={`absolute z-1  justify-center items-center font-symbols text-white `}
+              >
+                <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                  {mythSymbols[myths[activeColor]]}
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

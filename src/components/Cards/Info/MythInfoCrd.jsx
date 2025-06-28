@@ -34,7 +34,7 @@ const MythInfoCard = ({ close }) => {
           </div>
 
           <div
-            className={`absolute leading-[2.5dvh] text-para inset-0 w-[93%] mx-auto flex flex-col items-center justify-center font-[550] z-30 ${
+            className={`absolute leading-para text-para inset-0 w-[93%] mx-auto flex flex-col items-center justify-center font-[550] z-30 ${
               (i18n.language === "hi" ||
                 i18n.language === "th" ||
                 i18n.language === "ru") &&

@@ -23,11 +23,6 @@ const RelicInfo = ({ handleFlip }) => {
         />
       </div>
       <div className="absolute flex flex-col top-0 z-20">
-        {/* <img
-          src={`/assets/char.info.png`}
-          alt="shards"
-          className="rounded-t-primary"
-        /> */}
         <div
           className={`leading-[2.25dvh] text-para mt-[14px] text-justify  mx-auto w-[85%] text-card font-[550] ${
             (i18n.language === "hi" ||

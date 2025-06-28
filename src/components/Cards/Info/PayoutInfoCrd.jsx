@@ -1,16 +1,20 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import { updateMsnStatus } from "../../../utils/api.fof";
 import { Lock } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
+import { mythSymbols } from "../../../utils/constants.fof";
 
 const PayoutInfoCard = ({ close, data }) => {
   const { i18n } = useTranslation();
   let disableClick = useRef(false);
   const { assets, isTelegram, authToken, setUserData, setPayouts } =
     useContext(MainContext);
+  const myths = ["greek", "celtic", "norse", "egyptian"];
+  const [activeColor, setActiveColor] = useState(0);
+  const activeColorRef = useRef(activeColor);
 
   const handleClaimMsn = async () => {
     if (disableClick.current) return;
@@ -57,6 +61,18 @@ const PayoutInfoCard = ({ close, data }) => {
     }
   };
 
+  activeColorRef.current = activeColor;
+
+  useEffect(() => {
+    if (data.id == "685d8eb394c823384381ede1") {
+      const interval = setInterval(() => {
+        setActiveColor((prev) => (prev + 1) % myths.length);
+      }, 2000);
+
+      return () => clearInterval(interval);
+    }
+  }, [myths.length]);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
       <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
@@ -68,8 +84,8 @@ const PayoutInfoCard = ({ close, data }) => {
           />
         </div>
 
-        <div className="absolute top-0 w-full flex flex-col justify-center leading-8 items-center text-center text-card text-paperHead font-bold mt-2 uppercase z-30">
-          <div className="w-3/4">{data?.title}</div>
+        <div className="absolute top-0 w-full flex flex-col justify-center leading-8 items-center text-center text-card font-bold mt-2 uppercase z-30">
+          <div className="w-3/4 text-paperHead">{data?.title}</div>
           <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
             {data?.amount}{" "}
             <span>
@@ -84,14 +100,81 @@ const PayoutInfoCard = ({ close, data }) => {
         </div>
 
         <div
-          className={`absolute leading-[3dvh] text-paperSub text-card inset-0 w-[85%] mx-auto flex flex-col justify-start pt-[50%] font-[550] z-30 ${
+          className={`absolute leading-[3dvh]  text-card inset-0 w-[85%] mx-auto flex flex-col justify-center font-[550] z-30 ${
             (i18n.language === "hi" ||
               i18n.language === "th" ||
               i18n.language === "ru") &&
             "font-normal"
           }`}
         >
-          <div className="flex flex-col gap-y-4">{data?.description}</div>
+          <div className="flex flex-col text-para gap-y-4">
+            {data?.description}
+          </div>
+          {data.id == "685d8eb394c823384381ede1" && (
+            <div className="flex flex-col justify-center items-start gap-y-3 my-3">
+              <div className="flex justify-start items-center gap-x-3">
+                <div
+                  className={`flex relative text-center justify-center items-end max-w-xs-orb  rounded-full glow-icon-black`}
+                >
+                  <img src={assets.uxui.baseOrb} alt={`gray orb`} />
+                  <span
+                    className={`absolute z-1 text-[1.5rem] ml-0.5 opacity-50 orb-symbol-shadow mb-1  font-symbols text-white `}
+                  >
+                    g
+                  </span>
+                </div>
+                <h1 className="text-primary font-semibold">=</h1>
+                <div className="text-[28px] -ml-2.5">1000</div>
+                <div className="text-[24px] font-roboto font-medium">
+                  X
+                </div>{" "}
+                <div
+                  className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
+                >
+                  <img
+                    src={assets.uxui.baseOrb}
+                    alt={`gray orb`}
+                    className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
+                  />
+                  <span
+                    className={`absolute z-1  justify-center items-center font-symbols text-white `}
+                  >
+                    <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                      {mythSymbols[myths[activeColor]]}
+                    </div>
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-start items-center gap-x-3">
+                <div
+                  className={`flex relative text-center justify-center items-center max-w-[2.3rem] -mt-1 rounded-full glow-icon-black`}
+                >
+                  <img src={assets.items.multiorb} alt="multi orb" />
+                </div>
+                <h1 className="text-primary font-semibold">=</h1>
+                <div className="text-[28px] -ml-2.5">2</div>
+                <div className="text-[24px] font-roboto font-medium">
+                  X
+                </div>{" "}
+                <div
+                  className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
+                >
+                  <img
+                    src={assets.uxui.baseOrb}
+                    alt={`gray orb`}
+                    className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
+                  />
+                  <span
+                    className={`absolute z-1  justify-center items-center font-symbols text-white `}
+                  >
+                    <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                      {mythSymbols[myths[activeColor]]}
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {data?.limit > 0 ? (
