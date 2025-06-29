@@ -1,26 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  Bell,
-  ChevronDown,
-  ChevronUp,
-  Expand,
-  LogOut,
-  Maximize2,
-  Minimize2,
-  Settings,
-  Wallet,
-} from "lucide-react";
+import { Bell, Maximize2, Minimize2, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { MainContext } from "../../context/context";
+import { FofContext, MainContext, RorContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useTranslation } from "react-i18next";
-import useWalletPayment from "../../hooks/LineWallet";
 import { connectLineWallet } from "../../utils/api.fof";
 import { isDesktop } from "../../utils/device.info";
 
 const tele = window.Telegram?.WebApp;
 
-const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
+const TgHeader = ({ openSettings, hideExit, openNotifications }) => {
   const { enableHaptic, isTelegram, authToken } = useContext(MainContext);
   const { t } = useTranslation();
   const [showLoading, setShowLoading] = useState(false);
@@ -100,40 +89,17 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
       </div>
 
       <div className="flex gap-x-4">
-        {!hideExit && !isTelegram && (
+        {!hideExit && (
           <>
-            {/* {(!lineWallet || !isLoaded) && (
-              <Wallet
+            {/* <div className="relative mt-0.5">
+              <Bell
                 size={24}
-                onClick={handleConnectLineWallet}
-                className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
-              />
-            )}
-            {lineWallet && isLoaded ? (
-              <div
-                className="flex items-center bg-gray-800 pr-1 pl-3 py-0.5 -mt-0.5 rounded-full cursor-pointer"
                 onClick={() => {
                   handleClickHaptic(tele, enableHaptic);
-                  setShowModal((prev) => !prev);
+                  openNotifications();
                 }}
-              >
-                <h1 className="text-gray-300">{lineWallet?.slice(0, 5)}</h1>
-                {showModal ? (
-                  <ChevronUp size={20} strokeWidth={2} />
-                ) : (
-                  <ChevronDown size={20} strokeWidth={2} />
-                )}
-              </div>
-            ) : (
-              <Wallet
-                size={24}
-                onClick={handleConnectLineWallet}
-                className={`cursor-pointer ${isConnecting ? "opacity-50" : ""}`}
               />
-            )} */}
-            <div className="relative">
-              <Bell />
-            </div>
+            </div> */}
           </>
         )}
         {!isTelegram && !isDesktop() && (
@@ -169,22 +135,7 @@ const TgHeader = ({ openSettings, hideExit, isLoaded }) => {
           className="cursor-pointer"
         />
       </div>
-      {/* {showModal && (
-        <div className="bg-black p-3 flex flex-col gap-y-4 rounded-md absolute mt-9">
-          <button
-            onClick={handleDisconnectLineWallet}
-            className="bg-white px-2 py-1 rounded-md text-black text-md"
-          >
-            Disconnect
-          </button>
-          <button
-            onClick={handleFetchLineHistory}
-            className="bg-white px-2 py-1 rounded-md text-black text-md"
-          >
-            Payment History
-          </button>
-        </div>
-      )} */}
+
       {showLoading && (
         <div className="fixed flex flex-col justify-center items-center inset-0 bg-black backdrop-blur-[3px] bg-opacity-85 z-50">
           <div className="text-white font-fof text-black-contour text-[1.5rem] relative font-medium">

@@ -36,6 +36,7 @@ function usePageTracking() {
 
 function App() {
   const [isBrowser, setIsBrowser] = useState(false);
+  const [recentToasts, setRecentToasts] = useState([]);
   const [game, setGame] = useState("fof");
   const [tokens, setTokens] = useState(null);
   const [payouts, setPayouts] = useState([]);
@@ -97,6 +98,8 @@ function App() {
     setTokens,
     payouts,
     setPayouts,
+    recentToasts,
+    setRecentToasts,
   };
 
   const syncAllCookies = async () => {
