@@ -22,7 +22,7 @@ authRouter.post("/auth/verify", authenticateOTP);
 authRouter.post("/tele/auth", authenticateTg);
 authRouter.post("/twitter/auth", authenticateTwitter);
 authRouter.post("/line/auth", authenticateLine);
-authRouter.post("/wallet/auth", authenticateKaiaAddr);
+authRouter.post("/wallet/auth", authLimiter, authenticateKaiaAddr);
 authRouter.get("/auth/refresh", generateRefreshToken);
 authRouter.post("/onewave/session", createOneWaveSession);
 authRouter.post("/auth/onewave", authenticateOneWave);
