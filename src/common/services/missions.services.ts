@@ -3,6 +3,7 @@ import userMythologies from "../models/mythologies.models";
 import partners from "../models/partners.models";
 import rewards from "../models/rewards.models";
 import milestones from "../models/milestones.models";
+import ranks from "../models/ranks.models";
 
 export const validateMultiOrbReward = async (userId) => {
   try {
@@ -52,6 +53,21 @@ export const validateInviteReward = async (user, num) => {
     // check valid invite
     if (!user.directReferralCount || user.directReferralCount < num) {
       throw new Error("Failed to verify. Please complete the mission.");
+    }
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const validateHOFReward = async (user, num) => {
+  try {
+    // check valid HOF
+    const userRank = await ranks.findOne({ userId: user._id });
+
+    if (userRank.orbRank == 0) {
     }
 
     return true;

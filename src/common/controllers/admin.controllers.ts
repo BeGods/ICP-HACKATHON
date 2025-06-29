@@ -837,10 +837,11 @@ export const getTrxById = async (req, res) => {
     let notFound = 0;
     let updatedTrxs = [];
 
-    for (const { userId, amount, paymentId } of userData) {
+    for (const { userId, amount, paymentId, kaiaAddress } of userData) {
       const trx = await PaymentLogs.findOneAndUpdate(
         {
           userId: new mongoose.Types.ObjectId(userId),
+          walletAddress: kaiaAddress,
           status: "pending",
           amount: amount,
           transferType: "send",
