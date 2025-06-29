@@ -39,7 +39,7 @@ export const ToggleLeft = ({
 
   return (
     <div
-      className={`flex absolute ${isShrinked ? "-left-8" : "left-0"} ${
+      className={`flex absolute ${isShrinked ? "-left-[1.95rem]" : "left-0"} ${
         minimize === 2 && "slide-inside-left"
       } ${
         minimize === 1 && "slide-away-left"
@@ -104,7 +104,7 @@ export const ToggleRight = ({
 
   return (
     <div
-      className={`flex ${isShrinked ? "-right-8" : "right-0"}  ${
+      className={`flex ${isShrinked ? "-right-[1.95rem]" : "right-0"}  ${
         minimize === 2 && "slide-inside-right"
       } ${
         minimize === 1 && "slide-away-right"

@@ -915,9 +915,9 @@
         "desc": "GEB, god of the earth, rules over physical world with his KHET-GEB, a belt that binds the forces of growth, stone, and quake. He is father to OSIRIS, ISIS, SET, and NEPHTHYS, and consort to sky goddess NUT."
       },
       "A07": {
-        "item": "ANKH & WAS",
-        "char": "ANUBIS",
-        "desc": "ANUBIS, god of mummification and the afterlife, is the protector of the dead. Holding ANKH (life) and the WAS sceptre (power), he guides souls to the underworld. Son of NEPHTHYS and SET, shares an antagonistic relationship with his father."
+          "item": "KOPESH",
+        "char": "SOBEK",
+        "desc": "SOBEK, son of ATUM-RA, is the divine protector of the Nile and its crocodiles. His KOPESH swords, embody both earthly and divine strength. The Nile’s flooding, a symbol of creation, reflects his role in preserving life and cosmic order."
       },
       "A08": {
         "item": " HEKA-ITERU",
@@ -960,9 +960,10 @@
         "desc": "NUT, goddess of the sky, stars, and cosmic rebirth, swallows the sun each night and births it anew each morning. Mother of OSIRIS, ISIS, SET, and NEPHTHYS, she wields the SAWJALAN staff to command the stars and shroud the heavens."
       },
       "B07": {
-        "item": "KOPESH",
-        "char": "SOBEK",
-        "desc": "SOBEK, son of ATUM-RA, is the divine protector of the Nile and its crocodiles. His KOPESH swords, embody both earthly and divine strength. The Nile’s flooding, a symbol of creation, reflects his role in preserving life and cosmic order."
+         "item": "ANKH & WAS",
+        "char": "ANUBIS",
+        "desc": "ANUBIS, god of mummification and the afterlife, is the protector of the dead. Holding ANKH (life) and the WAS sceptre (power), he guides souls to the underworld. Son of NEPHTHYS and SET, shares an antagonistic relationship with his father."
+     
       },
       "B08": {
         "item": "NEHASI",

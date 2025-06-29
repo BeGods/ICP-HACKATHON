@@ -426,7 +426,7 @@ const AuthMenu = ({ showMobileAuth, closeModal, openModal }) => {
       }
     } catch (error) {
       console.log(error);
-      alert("Failed");
+      alert("Authentication Failed");
     }
   };
 

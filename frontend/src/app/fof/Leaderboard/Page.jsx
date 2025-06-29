@@ -544,7 +544,7 @@ const Leaderboard = (props) => {
       {/* Leaderboard list */}
       {category == 2 ? (
         <div
-          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[42vh] bg-white text-black rounded-t-primary`}
+          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[42dvh] bg-white text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
             <h1>
@@ -618,7 +618,7 @@ const Leaderboard = (props) => {
         </div>
       ) : category == 0 ? (
         <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42vh] bg-black text-black rounded-t-primary`}
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
@@ -745,7 +745,7 @@ const Leaderboard = (props) => {
         </div>
       ) : (
         <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42vh] bg-black text-black rounded-t-primary`}
+          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
         >
           <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
             <h1>
