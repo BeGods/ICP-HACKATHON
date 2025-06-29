@@ -114,6 +114,9 @@ export const validateValidMsn = async (req, res, next) => {
     const inviteThirtySixMsnId = new mongoose.Types.ObjectId(
       "68586fc397c39c48458214a7"
     );
+    const hallOfFameMsnId = new mongoose.Types.ObjectId(
+      "685d8eb394c823384381ede1"
+    );
 
     // validate mission action
     if (rewardDetails._id.toString() === conversionMsnId.toString()) {
