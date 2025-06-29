@@ -258,17 +258,6 @@ const Leaderboard = (props) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!userData.stakeOn) {
-  //     const interval = setInterval(() => {
-  //       setFlipped((prev) => !prev);
-  //     }, 3000);
-  //     return () => clearInterval(interval);
-  //   } else {
-  //     setFlipped(false);
-  //   }
-  // }, []);
-
   return (
     <div
       className={`flex ${
@@ -429,6 +418,7 @@ const Leaderboard = (props) => {
                         {countryFlag}
                       </div>
                       <UserAvatar
+                        key={`category-${category}-${index}`}
                         user={item}
                         index={index}
                         category={category}
@@ -482,7 +472,12 @@ const Leaderboard = (props) => {
                     <div className="absolute text-white -bottom-1 text-tertiary font-normal">
                       {item.directReferralCount}
                     </div>
-                    <UserAvatar user={item} index={index} category={category} />
+                    <UserAvatar
+                      key={`category-${category}-${index}`}
+                      user={item}
+                      index={index}
+                      category={category}
+                    />
                   </div>
                 );
               })}
@@ -532,6 +527,7 @@ const Leaderboard = (props) => {
                         {formatRankOrbs(item.totalOrbs)}
                       </div>
                       <UserAvatar
+                        key={`category-${category}-${index}`}
                         user={item}
                         index={index}
                         category={category}

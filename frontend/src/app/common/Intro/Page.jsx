@@ -353,10 +353,6 @@ const IntroPage = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    (async () => await deleteAuthCookie(tele))();
-  }, []);
-
   return (
     <div
       className={` ${

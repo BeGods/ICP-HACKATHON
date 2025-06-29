@@ -11,7 +11,6 @@ import "./styles/lottie.scss";
 import "./styles/glowButton.scss";
 import "./styles/dnd.scss";
 import "./styles/scratch.scss";
-import "./styles/toast.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./utils/i18next.js";

@@ -45,6 +45,7 @@ import {
   isDesktop,
 } from "../../utils/device.info";
 import { useNavigate } from "react-router-dom";
+import NotificationsModal from "../../components/Modals/Notifications";
 
 const tele = window.Telegram?.WebApp;
 
@@ -394,6 +395,11 @@ const FoFMain = () => {
                 setShowCard(null);
               }}
             />
+          );
+        }}
+        openNotifications={() => {
+          setShowCard(
+            <NotificationsModal handleClose={() => setShowCard(null)} />
           );
         }}
       />
