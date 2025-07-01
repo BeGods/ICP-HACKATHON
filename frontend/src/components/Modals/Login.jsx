@@ -18,6 +18,7 @@ import { trackComponentView, trackEvent } from "../../utils/ga";
 import { X } from "lucide-react";
 import { countries } from "../../utils/country";
 import { showToast } from "../Toast/Toast";
+import TelegramLogin from "../../hooks/TelegramLogin";
 
 const tele = window.Telegram?.WebApp;
 
@@ -493,17 +494,8 @@ export default function LoginModal() {
             showVerify && "hidden"
           }`}
         >
+          <TelegramLogin botUsername={process.env.BOT_USERNAME} />
           {[
-            {
-              alt: "Telegram",
-              src: "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/telegram02.png",
-              func: () => {
-                window.open(
-                  "https://t.me/BeGods_bot/games?startapp=FDG1126065333",
-                  "_blank"
-                );
-              },
-            },
             {
               alt: "X",
               src: "https://i.postimg.cc/VsZkyTm2/x-social-media-white-icon.png",
@@ -559,3 +551,11 @@ export default function LoginModal() {
     </div>
   );
 }
+
+// {
+//     alt: "Telegram",
+//     src: "https://raw.githubusercontent.com/BeGods/public-assets/refs/heads/main/telegram02.png",
+//     func: () => {
+//       handleCustomClick();
+//     },
+//   },

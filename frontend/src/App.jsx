@@ -20,6 +20,7 @@ import {
 } from "./helpers/cookie.helper";
 import LineCallback from "./app/common/LineCallback";
 import { WalletProvider } from "./context/wallet";
+import TelegramCallback from "./app/common/TelegramCallback";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -138,6 +139,10 @@ function App() {
           <Routes>
             <Route path="/" element={<IntroPage />} />
             <Route path="/auth/line/callback" element={<LineCallback />} />
+            <Route
+              path="/auth/telegram/callback"
+              element={<TelegramCallback />}
+            />
             <Route path="/fof" element={<FoFMain />} />
             <Route path="/ror" element={<RoRMain />} />
           </Routes>
