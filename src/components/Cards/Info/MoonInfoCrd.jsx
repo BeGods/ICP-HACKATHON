@@ -4,8 +4,19 @@ import { FofContext } from "../../../context/context";
 
 const MoonInfoCard = ({ handleClick }) => {
   const { assets } = useContext(FofContext);
+
+  const handleCardClick = (e) => {
+    e.stopPropagation();
+    handleClick();
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img
@@ -18,7 +29,7 @@ const MoonInfoCard = ({ handleClick }) => {
         <IconBtn
           isInfo={false}
           activeMyth={4}
-          handleClick={handleClick}
+          handleClick={handleCardClick}
           align={1}
         />
       </div>

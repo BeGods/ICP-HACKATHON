@@ -84,9 +84,14 @@ const FoFMain = () => {
     setActiveReward,
     withdrawals,
     setWithdrawals,
+    showBack,
+    setShowBack,
+    section,
+    setSection,
+    showCard,
+    setShowCard,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [showCard, setShowCard] = useState(null);
   const [gameData, setGameData] = useState(null);
   const [questsData, setQuestsData] = useState(null);
   const [leaderboard, setLeaderboard] = useState(null);
@@ -97,7 +102,6 @@ const FoFMain = () => {
   const [showAnmt, setShowAnmt] = useState(false);
   const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
-  const [section, setSection] = useState(1);
   const [minimize, setMinimize] = useState(0);
   const refreshTimeoutRef = useRef();
 
@@ -152,6 +156,8 @@ const FoFMain = () => {
     setTokens,
     payouts,
     setPayouts,
+    showBack,
+    setShowBack,
   };
   const sections = [
     <Forges />, // 0

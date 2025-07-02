@@ -7,7 +7,7 @@ export const wheelNames = ["aether", "fire", "earth", "water", "air"];
 export const wheel = ["other", "greek", "celtic", "norse", "egyptian"];
 export const wheelMyths = ["other", "Greek", "Celtic", "Norse", "Egyptian"];
 export const boosterIcon = ["o", "j", "v", "A", "b", "S", "p", "o", "p", "xx"];
-export const footerIcons = ["z", "k", "x", "t"];
+export const footerIcons = ["z", "x", "k", "t"];
 
 export const footerArray = [
   [2, 1],

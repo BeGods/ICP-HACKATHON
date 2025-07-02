@@ -7,9 +7,6 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
   const { assets, isTelegram, isTgMobile } = useContext(FofContext);
   return (
     <div
-      onClick={() => {
-        close();
-      }}
       style={{
         backgroundImage: `url(${assets.uxui.bgInfo})`,
         backgroundRepeat: "no-repeat",

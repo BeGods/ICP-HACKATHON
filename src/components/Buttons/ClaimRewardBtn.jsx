@@ -13,7 +13,7 @@ const ClaimRewardBtn = ({ handleClick }) => {
           handleClick();
         }
       }}
-      className={`flex items-center border text-white  justify-between h-button-primary w-button-primary mt-[4px] mx-auto  bg-glass-black z-50 rounded-primary`}
+      className={`flex items-center border text-white  justify-between h-button-primary w-button-primary mt-[4px] mx-auto  bg-glass-black-lg z-50 rounded-primary`}
     >
       <div className="flex justify-center items-center w-1/4 h-full"></div>
       <div

@@ -60,6 +60,7 @@ const Quests = () => {
     enableHaptic,
     isTelegram,
     isTgMobile,
+    isBrowser,
   } = useContext(FofContext);
   const mythData = gameData.mythologies;
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
@@ -462,7 +463,11 @@ const Quests = () => {
                 setFlipped((prev) => !prev);
               }}
               className={`card  ${
-                isTgMobile ? "h-[50%] mt-[4.75rem]" : "h-[54%] mt-[3.25rem]"
+                isBrowser
+                  ? "h-[59%] -mt-1"
+                  : isTgMobile
+                  ? "h-[50%] mt-[8dvh]"
+                  : "h-[54 .5%] mt-[7dvh]"
               } card-width ${flipped ? "flipped" : ""} z-[99]`}
             >
               <div
@@ -472,6 +477,7 @@ const Quests = () => {
               >
                 <JigsawImage
                   isTelegram={isTelegram}
+                  isTgMobile={isTgMobile}
                   grid={[3, 6]}
                   handleClick={() => {}}
                   imageUrl={assets.whitelist[mythSections[activeMyth]]}

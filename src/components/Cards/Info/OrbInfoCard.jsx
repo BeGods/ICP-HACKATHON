@@ -6,7 +6,7 @@ import { countries } from "../../../utils/country";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 
 const OrbInfoCard = ({ gameData, close }) => {
-  const { assets, userData } = useContext(MainContext);
+  const { assets, userData, setShowBack, section } = useContext(MainContext);
   const countryFlag = countries.find((item) => item.code == userData.country);
   const elementalOrbs = gameData.mythologies.reduce(
     (sum, itm) => sum + itm.orbs,
@@ -28,8 +28,19 @@ const OrbInfoCard = ({ gameData, close }) => {
     return () => clearInterval(interval);
   }, [myths.length]);
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={close}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div
         className={`relative card-width rounded-lg shadow-lg card-shadow-white`}
       >

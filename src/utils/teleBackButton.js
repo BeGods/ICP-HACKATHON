@@ -1,10 +1,7 @@
-export const toggleBackButton = async (tele, handleNavigate) => {
+export const showBackButton = async (tele, handleNavigate) => {
   try {
     if (tele) {
       await tele.ready();
-      tele.setHeaderColor("#000000");
-      tele.setBackgroundColor("#000000");
-      tele.setBottomBarColor("#000000");
       tele.BackButton.show();
       tele.BackButton.onClick(handleNavigate);
     } else {

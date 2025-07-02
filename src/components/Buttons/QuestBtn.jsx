@@ -38,7 +38,7 @@ const QuestButton = ({
         isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
       }  border border-${
         mythSections[activeMyth]
-      }-primary bg-glass-black text-white rounded-primary z-10`}
+      }-primary bg-glass-black-lg text-white rounded-primary z-10`}
     >
       {/* Left Arrow */}
       <div className="flex justify-center items-center w-1/4  h-full">

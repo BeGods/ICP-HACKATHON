@@ -278,7 +278,7 @@ const Leaderboard = (props) => {
         </div>
         <div
           key={animationKey}
-          className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase"
+          className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase"
         >
           <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
           <div className={`ml-auto slide-in-out-right`}>Citadel</div>

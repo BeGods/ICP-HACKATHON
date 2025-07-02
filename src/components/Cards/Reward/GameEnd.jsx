@@ -1,12 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { FofContext } from "../../../context/context";
 import { mythSections } from "../../../utils/constants.fof";
 
 const GameEndCrd = ({ handleClick, activeMyth }) => {
-  const { assets } = useContext(FofContext);
+  const { assets, setShowBack, section, setShowCard } = useContext(FofContext);
+
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div
         className={`relative card-width rounded-lg shadow-lg card-shadow-white`}
       >

@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -38,37 +38,35 @@ export const ToggleLeft = ({
   };
 
   return (
-    <div
-      className={`flex absolute ${isShrinked ? "-left-[1.95rem]" : "left-0"} ${
-        minimize === 2 && "slide-inside-left"
-      } ${
-        minimize === 1 && "slide-away-left"
-      } absolute justify-center items-center ${
-        positionBottom ? "bottom-[3.5dvh]" : "top-1/2 -mt-4"
-      }  w-[15%] z-40`}
-    >
+    <div className="absolute flex top-1/2 -translate-y-1/2 -left-9">
       <div
-        onClick={handleButtonClick}
-        className={`bg-glass-black p-[6px] rounded-full cursor-pointer ${
-          positionBottom && "border-[0.5px] border-white"
-        } ${
-          isButtonClicked
-            ? `glow-button-${
-                mythSections[activeMyth] === "other"
-                  ? "white"
-                  : mythSections[activeMyth]
-              }`
-            : ""
-        }`}
+        className={`flex ${minimize === 2 && "slide-inside-left"} ${
+          minimize === 1 && "slide-away-left"
+        } relative justify-center items-center  z-40`}
       >
-        <ChevronsLeft color="white" className="h-[30px] w-[30px]" />
+        <div
+          onClick={handleButtonClick}
+          className={`bg-glass-black flex justify-center items-center pl-5 w-[72px] h-[72px] rounded-full cursor-pointer ${
+            positionBottom && "border-[0.5px] border-white"
+          } ${
+            isButtonClicked
+              ? `glow-button-${
+                  mythSections[activeMyth] === "other"
+                    ? "white"
+                    : mythSections[activeMyth]
+                }`
+              : ""
+          }`}
+        >
+          <ChevronLeft color="white" className="h-[30px] w-[30px]" />
+        </div>
+        <ReactHowler
+          src={assets.audio.toggle}
+          playing={false}
+          ref={howlerRef}
+          html5={true}
+        />
       </div>
-      <ReactHowler
-        src={assets.audio.toggle}
-        playing={false}
-        ref={howlerRef}
-        html5={true}
-      />
     </div>
   );
 };
@@ -103,37 +101,35 @@ export const ToggleRight = ({
   };
 
   return (
-    <div
-      className={`flex ${isShrinked ? "-right-[1.95rem]" : "right-0"}  ${
-        minimize === 2 && "slide-inside-right"
-      } ${
-        minimize === 1 && "slide-away-right"
-      }  absolute justify-center items-center ${
-        positionBottom ? "bottom-[3.5dvh]" : "top-1/2 -mt-4"
-      } w-[15%] z-40`}
-    >
+    <div className="absolute flex top-1/2 -translate-y-1/2 -right-9">
       <div
-        onClick={handleButtonClick}
-        className={`bg-glass-black p-[6px] mt-1 rounded-full cursor-pointer ${
-          positionBottom && "border-[0.5px] border-white"
-        } ${
-          isButtonClicked
-            ? `glow-button-${
-                mythSections[activeMyth] === "other"
-                  ? "white"
-                  : mythSections[activeMyth]
-              }`
-            : ""
-        }`}
+        className={`${minimize === 2 && "slide-inside-right"} ${
+          minimize === 1 && "slide-away-right"
+        } relative justify-center items-center z-40`}
       >
-        <ChevronsRight color="white" className="h-[30px] w-[30px]" />
+        <div
+          onClick={handleButtonClick}
+          className={`bg-glass-black mt-1 pr-5 flex justify-center items-center w-[72px] h-[72px] rounded-full cursor-pointer ${
+            positionBottom && "border-[0.5px] border-white"
+          } ${
+            isButtonClicked
+              ? `glow-button-${
+                  mythSections[activeMyth] === "other"
+                    ? "white"
+                    : mythSections[activeMyth]
+                }`
+              : ""
+          }`}
+        >
+          <ChevronRight color="white" className="h-[30px] w-[30px]" />
+        </div>
+        <ReactHowler
+          src={assets.audio.toggle}
+          playing={false}
+          ref={howlerRef}
+          html5={true}
+        />
       </div>
-      <ReactHowler
-        src={assets.audio.toggle}
-        playing={false}
-        ref={howlerRef}
-        html5={true}
-      />
     </div>
   );
 };

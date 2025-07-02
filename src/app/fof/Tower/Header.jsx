@@ -94,10 +94,10 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
         <div
           className={`flex relative justify-start ${
             showGlow && "glow-button-white"
-          } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div
-            className={`flex absolute text-center justify-center items-center w-[3.5rem] h-[3.5rem] -ml-[2rem] glow-orb-black rounded-full`}
+            className={`flex absolute text-center justify-center items-center w-[3.15rem] h-[3.15rem] -ml-[2rem] glow-orb-black rounded-full`}
           >
             <img
               src={`${assets.items.multiorb}`}
@@ -111,13 +111,9 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
           </div>
         </div>
         <div
-          className={`flex relative border justify-end ${
-            myth === 0 || showGlow
-              ? `glow-button-white border-white`
-              : `glow-button-${mythSections[myth - 1]} border-${
-                  mythSections[myth - 1]
-                }-primary`
-          }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex relative border justify-end ${` border-${
+            mythSections[myth - 1]
+          }-primary`}  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div
             className={`text-primary text-black-contour font-medium pr-headSides`}
@@ -146,7 +142,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
               <>
                 {" "}
                 <div
-                  className={`font-symbols  mt-0.5 text-[3.5rem] text-black-lg-contour transition-all duration-1000 text-white`}
+                  className={`font-symbols  mt-0.5 text-[3rem] text-black-lg-contour transition-all duration-1000 text-white`}
                 >
                   {mythSymbols["other"]}
                 </div>
@@ -156,12 +152,12 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
         </div>
       </div>
 
-      <div className="absolute flex text-white  px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
+      <div className="absolute flex text-white  px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left gradient-multi`}>
           {t(`keywords.orbs`)}
         </div>
-        <div className={`ml-auto slide-in-out-right text-black-contour`}>
-          {t(`elements.aether`)}
+        <div className={`ml-auto slide-in-out-right font-bold text-black`}>
+          {t(`keywords.orbs`)}
         </div>
       </div>
     </div>

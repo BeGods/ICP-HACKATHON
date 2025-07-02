@@ -13,7 +13,7 @@ const OrbCard = ({ activeMyth }) => {
       className={`flex flex-col justify-center items-center w-full absolute h-full`}
     >
       <Symbol myth={mythSections[activeMyth]} isCard={3} />
-      <div className="absolute bottom-0 text-[2.5rem] mt-4 text-gold text-black-contour">
+      <div className="absolute bottom-2 text-primary text-gold text-black-contour">
         $FAITH TOKEN
       </div>
     </div>
@@ -27,7 +27,8 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { enableSound, assets, isTgMobile } = useContext(FofContext);
+  const { enableSound, assets, isTgMobile, setShowBack, section, setShowCard } =
+    useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -46,18 +47,32 @@ const OrbClaimCard = ({
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div
         className={`relative card-width rounded-lg shadow-lg flex flex-col z-50`}
       >
         <div
           className={`card ${flipped ? "flipped" : ""} ${
             isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
-          }  text-black-contour`}
+          } text-black-contour mb-1`}
         >
           <div
             onClick={(e) => {
+              e.stopPropagation();
               setFlipped((prev) => !prev);
             }}
             className="card__face card__face--front relative card-shadow-white  flex justify-center items-center"
@@ -110,6 +125,7 @@ const OrbClaimCard = ({
           </div>
           <div
             onClick={(e) => {
+              e.stopPropagation();
               setFlipped((prev) => !prev);
             }}
             className="card__face card__face--back flex flex-col justify-center items-center"

@@ -28,7 +28,7 @@ const ProfileItem = ({ content, index, assets, userData }) => {
         content.disabled
           ? "text-gray-300 border-gray-500"
           : "text-white border-white"
-      } w-full bg-glass-black border  rounded-primary p-4 shadow-md`}
+      } w-full bg-glass-black-lg border  rounded-primary p-4 shadow-md`}
     >
       {index == 5 ? (
         <div className="flex items-center rounded-full mr-3">
@@ -77,6 +77,7 @@ const Profile = (props) => {
     isTelegram,
     enableHaptic,
     authToken,
+    setSection,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
@@ -166,14 +167,7 @@ const Profile = (props) => {
       label: "Rank",
       value: userData.orbRank ?? 0,
       handleClick: () => {
-        setShowCard(
-          <OrbInfoCard
-            gameData={gameData}
-            close={() => {
-              setShowCard(null);
-            }}
-          />
-        );
+        setSection(7);
       },
     },
     {
@@ -274,9 +268,8 @@ const Profile = (props) => {
       </div>
       {/* Header */}
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
-
       <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="font-fof absolute top-0 text-[4.5dvh] mt-[20vh] uppercase text-gold drop-shadow z-50 text-black-contour">
+        <div className="font-fof absolute top-0 text-[4.5dvh] mt-[20dvh] uppercase text-gold drop-shadow z-50 text-black-contour">
           {userData.username}
         </div>
         <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">

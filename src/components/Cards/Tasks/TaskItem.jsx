@@ -147,6 +147,9 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
             } else {
               setClaim(true);
             }
+          } else if (quest._id == "684becb3a3c5867db5a616e8") {
+            setClaim(true);
+            handleClaimTask();
           } else if (quest._id == "672b42311767ca93a22805b1") {
             if (userData.tonAddress) {
               setClaim(true);
@@ -171,7 +174,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
       className={`flex gap-1 border 
 ${
   isClicked ? `glow-button-white` : ""
-} rounded-primary h-[90px] w-full bg-glass-black p-[10px] `}
+} rounded-primary h-[90px] w-full bg-glass-black-lg p-[10px] `}
       onMouseDown={() => {
         setIsClicked(true);
       }}

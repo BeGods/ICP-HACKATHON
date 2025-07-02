@@ -2,12 +2,17 @@ import { useContext, useState } from "react";
 import { MainContext } from "../../context/context";
 
 export default function LoginModal() {
-  const { assets } = useContext(MainContext);
+  const { assets, setShowCard } = useContext(MainContext);
   const [countryCode, setCountryCode] = useState("+91");
   const [phone, setPhone] = useState("");
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
+    >
       <div className="bg-gray-900 text-white w-full max-w-sm p-6 rounded-2xl shadow-xl flex flex-col justify-center items-center gap-4">
         {/* Logo & Title */}
         <div className="flex justify-start gap-x-4 items-center w-full">

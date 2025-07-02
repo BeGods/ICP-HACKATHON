@@ -47,13 +47,7 @@ const BottomChild = ({
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full max-w-[720px] px-7">
         <div
-          className={`flex border-${
-            mythSections[activeMyth]
-          }-primary justify-start ${
-            !quest?.isQuestClaimed && currQuest < totalQuests.length
-              ? `text-${mythSections[activeMyth]}-text glow-button-${mythSections[activeMyth]}`
-              : "text-white"
-          }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex border-${mythSections[activeMyth]}-primary justify-start  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div
             className={`font-symbols absolute  -ml-[2rem] text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
@@ -66,13 +60,7 @@ const BottomChild = ({
           </div>
         </div>
         <div
-          className={`flex justify-end ${
-            quest?.isQuestClaimed || currQuest >= totalQuests.length
-              ? ` glow-button-${mythSections[activeMyth]}`
-              : "text-white"
-          }  border-${
-            mythSections[activeMyth]
-          }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex justify-end border-${mythSections[activeMyth]}-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div className="text-primary text-black-contour pr-headSides">
             {" "}
@@ -85,7 +73,10 @@ const BottomChild = ({
           </div>
         </div>
       </div>
-      <div className="flex text-white justify-between absolute w-[98%] top-0 -mt-4"></div>
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
+        <div className={`mr-auto slide-in-out-left`}>UNCLAIMED</div>
+        <div className={`ml-auto slide-in-out-right`}>CLAIMED</div>
+      </div>
     </div>
   );
 };

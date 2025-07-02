@@ -5,7 +5,7 @@ import { FofContext } from "../../../context/context";
 import ClaimRewardBtn from "../../Buttons/ClaimRewardBtn";
 
 const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
-  const { assets, setShowCard } = useContext(FofContext);
+  const { assets, setShowCard, setShowBack, section } = useContext(FofContext);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
 
@@ -26,8 +26,21 @@ const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div
         className={`relative card-width rounded-lg shadow-lg flex flex-col z-50`}
       >

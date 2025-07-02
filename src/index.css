@@ -298,7 +298,7 @@ body.iframe-mobile .browser-container-height {
 
 
 .ranker-width {
-  @apply w-[86%] tablet:w-[65%] desktop:w-[30%];
+  @apply w-[78%] tablet:w-[65%] desktop:w-[30%];
 }
 
 .leaderboard-width {
@@ -326,5 +326,5 @@ body.iframe-mobile .browser-container-height {
 }
 
 .footer-width {
-  @apply w-[92%] tablet:w-[75%] desktop:w-[50%];
+  @apply w-[82%] tablet:w-[75%] desktop:w-[50%];
 }
