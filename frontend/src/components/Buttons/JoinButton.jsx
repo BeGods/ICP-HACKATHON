@@ -13,7 +13,7 @@ const JoinButton = ({ payWithOrb, payWithCoin }) => {
         }}
         className={`flex items-center border text-white ${
           isClicked && `glow-button-white`
-        } justify-between h-button-primary w-[100px] mt-[4px] mx-auto bg-glass-black z-50 rounded-primary`}
+        } justify-between h-button-primary w-[100px] mt-[4px] mx-auto bg-glass-black-lg z-50 rounded-primary`}
       >
         <div className="flex justify-center items-center  h-full">
           <div className={`relative flex justify-center items-center`}>
@@ -30,7 +30,7 @@ const JoinButton = ({ payWithOrb, payWithCoin }) => {
         }}
         className={`flex items-center border text-white ${
           isClicked && `glow-button-white`
-        } justify-between h-button-primary w-[100px] mt-[4px] mx-auto bg-glass-black z-50 rounded-primary`}
+        } justify-between h-button-primary w-[100px] mt-[4px] mx-auto bg-glass-black-lg z-50 rounded-primary`}
       >
         <div className="flex justify-center items-center  h-full">
           <div className={`relative flex justify-center items-center`}>

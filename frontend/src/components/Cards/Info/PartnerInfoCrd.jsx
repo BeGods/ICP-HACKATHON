@@ -8,6 +8,7 @@ const PartnerCard = ({ close, reward }) => {
 
   return (
     <div
+      onClick={close}
       style={{
         backgroundImage: `url(${assets.uxui.bgInfo})`,
         backgroundRepeat: "no-repeat",

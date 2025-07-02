@@ -36,6 +36,7 @@ import { useTranslation } from "react-i18next";
 import useWalletPayment from "../../../hooks/LineWallet";
 import { getKaiaValue } from "../../../utils/line";
 import { useOpenAd } from "../../../hooks/DappAds";
+import { colorByMyth } from "../../../utils/constants.ror";
 
 const tele = window.Telegram?.WebApp;
 
@@ -101,7 +102,7 @@ const PayModal = ({
               className="flex z-50 relative flex-col justify-center items-center w-full"
             >
               <div
-                className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
+                className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black-lg text-white rounded-primary`}
               >
                 <img src={assets.misc.kaia} alt="kaia" className="w-[2.5rem]" />
                 <div className="font-medium text-[40px] text-white glow-text-black">
@@ -112,7 +113,7 @@ const PayModal = ({
             <div className="flex z-50 relative flex-col justify-center items-center w-full">
               <div
                 onClick={() => handlePayment("stripe")}
-                className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black text-white rounded-primary`}
+                className={`flex gap-x-2 justify-center items-center border border-${mythSections[activeMyth]}-primary h-button-primary w-button-primary bg-glass-black-lg text-white rounded-primary`}
               >
                 <div className="font-medium text-[40px] text-white glow-text-black">
                   $
@@ -181,6 +182,7 @@ const BoosterClaim = ({
     enableHaptic,
     isTelegram,
     isTgMobile,
+    setShowBack,
   } = useContext(FofContext);
   const { createLinePayment } = useWalletPayment();
   const { t, i18n } = useTranslation();
@@ -196,6 +198,16 @@ const BoosterClaim = ({
   const disableSoundRef = useRef();
   const [flipped, setFlipped] = useState(false);
   const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
+  let buttonColor = colorByMyth[mythSections[activeMyth]];
+  // const matchedElement =
+  //   elements.find((element) => itemId?.includes(element)) || null;
+  // const matchedMyth =
+  //   mythSections.find((element) => itemId?.includes(element)) || null;
+  // if (matchedMyth && itemId) {
+  //   buttonColor = colorByMyth[matchedMyth];
+  // } else if (matchedElement && itemId) {
+  //   buttonColor = colorByElement[matchedElement];
+  // }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -643,6 +655,14 @@ const BoosterClaim = ({
     callReward: onReward,
   });
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
     <div
       onClick={closeCard}
@@ -838,7 +858,7 @@ const BoosterClaim = ({
                   }}
                 />
                 <div
-                  className={`absolute top-0 left-3 ${
+                  className={`absolute  top-0 left-3 ${
                     isAutoPay ? "gradient-multi" : "text-white  glow-text-black"
                   } text-[2.75rem] font-symbols z-10`}
                 >
@@ -879,8 +899,23 @@ const BoosterClaim = ({
                         }`}
                       />
                       <div className="flex justify-center w-full h-full items-center glow-text-quest px-2 z-10">
-                        <div className="uppercase glow-text-quest text-white z-10">
+                        <div className="flex gap-x-2 uppercase glow-text-quest text-white z-10">
                           {t(`boosters.${booster}.title`)}
+                          <div
+                            className={`flex text-${mythSections[activeMyth]}-text gap-x-1`}
+                          >
+                            <span>Lvl</span>
+                            {!isAutoPay &&
+                              (activeCard === "automata"
+                                ? Math.min((mythData?.automatalvl ?? 0) + 2, 99)
+                                : activeCard === "minion"
+                                ? Math.min((mythData?.shardslvl ?? 1) + 2, 99)
+                                : activeCard === "burst"
+                                ? Math.min((mythData?.burstlvl ?? 0) + 2, 99)
+                                : activeCard === "moon"
+                                ? "4x"
+                                : "4x")}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -926,14 +961,37 @@ const BoosterClaim = ({
               </div>
             </div>
           </div>
-          <BoosterBtn
+          <div
+            onClick={handleButton}
+            className="flex cursor-pointer justify-center items-center relative h-fit mt-1"
+          >
+            <img
+              src={assets.buttons[buttonColor].on ?? assets.buttons.black.on}
+              alt="button"
+            />
+            <div className="absolute gap-x-2 z-50 flex items-center justify-center  text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
+              <div
+                className={`flex relative text-center justify-center max-w-xs-orb p-0.5 items-center rounded-full glow-icon-black`}
+              >
+                <img src={assets.items.multiorb} alt="orb" />
+              </div>{" "}
+              {activeCard == "burst" && isAutoPay
+                ? 9
+                : (activeCard == "burst" && !isAutoPay) ||
+                  isAutoPay ||
+                  activeCard === "moon"
+                ? 3
+                : 1}
+            </div>
+          </div>
+          {/* <BoosterBtn
             isAutoPay={isAutoPay}
             activeCard={activeCard}
             mythData={mythData}
             handleClaim={handleButton}
             activeMyth={activeMyth}
             t={t}
-          />
+          /> */}
           {section === 2 && (
             <div className="flex gap-3 absolute bottom-5">
               <div className="flex gap-1 items-center">

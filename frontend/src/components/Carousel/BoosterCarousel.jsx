@@ -243,7 +243,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
 
   return (
     <div
-      className="wrapper h-[60dvh]"
+      className="wrapper h-[66dvh] mt-[4dvh]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -258,21 +258,20 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         </div>
       ) : (
         <div
-          className={`flex absolute ${
-            showEffect && "disappear"
-          } opacity-100 text-[4.5dvh] uppercase text-white glow-icon-${
-            mythSections[activeMyth]
-          } h-fit justify-center items-start mt-[1.75vh]`}
+          className={`flex absolute disappear opacity-100 mt-[1dvh] text-[4.5dvh] uppercase text-white glow-icon-${mythSections[activeMyth]} h-fit justify-center items-start`}
         >
           {mythologies[activeMyth]}
         </div>
       )}
 
-      <div className={`carousel carousel-width`}>
-        {items.slice(currentIndex, currentIndex + 3).map((item, index) => {
+      <div className={`carousel carousel-width mt-[10dvh]`}>
+        {items.slice(currentIndex, currentIndex + 4).map((item, index) => {
           let className = "carousel__item";
-          className +=
-            index === 1 ? " active" : index === 0 ? " previous" : " next";
+
+          if (index === 2) className += " active";
+          else if (index === 1) className += " previous";
+          else if (index === 0) className += " previous2";
+          else if (index === 3) className += " next";
 
           return (
             <div className={className} key={currentIndex + index}>
@@ -281,10 +280,11 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           );
         })}
       </div>
+
       {currentIndex < items.length - 3 && (
         <div
           onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute cursor-pointer bottom-[22%] w-full"
+          className="absolute cursor-pointer bottom-[18%] w-full"
         >
           <div className="arrows-down"></div>
         </div>

@@ -1417,6 +1417,11 @@ const Forges = () => {
           mythData={mythStates[activeMyth]}
           shards={mythStates[activeMyth].shards}
         />
+        <div
+          className={`font-fof w-full text-center disappear absolute top-0 text-[4.5dvh] mt-[16dvh] glow-icon-${mythSections[activeMyth]} uppercase text-white drop-shadow z-50 text-black-contour`}
+        >
+          {t("sections.forges")}
+        </div>
         {/* Taping region */}
         <div className="flex relative flex-grow justify-center items-center">
           {/* Header Stats */}

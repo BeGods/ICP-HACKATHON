@@ -21,7 +21,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
         !hasTimeElapsed(gameData.isAutomataAutoActive) &&
         isAutoPay ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black-lg z-50 text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -34,7 +34,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           !hasTimeElapsed(mythData.automataStartTime) &&
           isAutoPay ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black-lg text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -47,7 +47,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           !hasTimeElapsed(mythData.automataStartTime) &&
           !isAutoPay ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black z-50 text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary border border-${mythSections[activeMyth]}-primary  mx-auto  bg-glass-black-lg z-50 text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -59,7 +59,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           !mythData?.isShardsClaimActive &&
           !hasTimeElapsed(mythData.shardsLastClaimedAt) ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black-lg text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -71,7 +71,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           !mythData.isEligibleForBurst &&
           mythData.isBurstActive ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black-lg text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -84,7 +84,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           !hasTimeElapsed(mythData.burstActiveAt) &&
           !isAutoPay ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black-lg text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -96,7 +96,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           !hasTimeElapsed(gameData.autoPayBurstExpiry) &&
           isAutoPay ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black-lg text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -106,7 +106,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
           </div>
         ) : activeCard === "moon" && gameData.isMoonActive ? (
           <div
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary   bg-glass-black-lg text-white  rounded-primary`}
           >
             <div className="flex justify-center items-center w-1/4 h-full"></div>
             <div className="text-primary uppercase">
@@ -125,30 +125,26 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay }) => {
                 }, 2000);
               }
             }}
-            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary  bg-glass-black z-50 text-white  rounded-primary`}
+            className={`flex items-center justify-between h-button-primary w-button-primary mx-auto border border-${mythSections[activeMyth]}-primary  bg-glass-black-lg z-50 text-white  rounded-primary`}
           >
-            <div className="flex justify-center items-center w-[30%]  h-full">
+            <div className="flex justify-center items-center w-[30%] h-full">
               <h1
-                className={`text-xl text-${mythSections[activeMyth]}-text text-button-primary rounded-full  w-full flex justify-center items-center`}
+                className={`text-xl text-${mythSections[activeMyth]}-text text-button-primary rounded-full w-full flex justify-center items-center`}
               >
-                {!isAutoPay && activeCard !== "moon" && "Lvl"}
-                {activeCard === "automata" && !isAutoPay
-                  ? mythData.automatalvl + 2 >= 99
-                    ? 99
-                    : mythData.automatalvl + 2
-                  : activeCard === "minion" && !isAutoPay
-                  ? mythData.shardslvl + 2 >= 99
-                    ? 99
-                    : mythData.shardslvl + 2
-                  : activeCard === "burst" && !isAutoPay
-                  ? mythData.burstlvl + 2 >= 99
-                    ? 99
-                    : mythData.burstlvl + 2
-                  : activeCard === "moon" && !isAutoPay
-                  ? "4x"
-                  : "4x"}
+                Lvl
+                {!isAutoPay &&
+                  (activeCard === "automata"
+                    ? Math.min((mythData?.automatalvl ?? 0) + 2, 99)
+                    : activeCard === "minion"
+                    ? Math.min((mythData?.shardslvl ?? 1) + 2, 99)
+                    : activeCard === "burst"
+                    ? Math.min((mythData?.burstlvl ?? 0) + 2, 99)
+                    : activeCard === "moon"
+                    ? "4x"
+                    : "4x")}
               </h1>
             </div>
+
             <div
               className={`flex shadow-black shadow-2xl justify-center  font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
             >

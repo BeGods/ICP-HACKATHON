@@ -7,7 +7,7 @@ const BottomChild = ({ pieces, currIndex }) => {
     <div className="flex relative justify-center px-2 -mt-3">
       <div className="flex w-full max-w-[720px] px-7">
         <div
-          className={`flex relative gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          className={`flex relative gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div
             className={`font-symbols absolute -ml-[2rem] text-iconLg text-black-lg-contour text-white`}
@@ -19,7 +19,7 @@ const BottomChild = ({ pieces, currIndex }) => {
           </div>
         </div>
         <div
-          className={`flex relative justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black w-full`}
+          className={`flex relative justify-end  border gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black-lg w-full`}
         >
           <div className="text-primary pr-headSides">
             {/* {formatTwoNums(pieces)} */}

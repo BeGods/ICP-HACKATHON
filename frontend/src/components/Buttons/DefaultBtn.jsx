@@ -1,6 +1,13 @@
 import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { BookOpenText, Handshake } from "lucide-react";
+import {
+  BookOpenText,
+  CornerUpLeft,
+  CornerUpRight,
+  Handshake,
+  Repeat2,
+  RotateCw,
+} from "lucide-react";
 import { FofContext } from "../../context/context";
 
 const DefaultBtn = ({
@@ -9,6 +16,8 @@ const DefaultBtn = ({
   activeMyth,
   isGold,
   isBooster,
+  handleNext,
+  handlePrev,
 }) => {
   const { assets } = useContext(FofContext);
   const [isClicked, setIsClicked] = useState(false);
@@ -16,7 +25,8 @@ const DefaultBtn = ({
 
   return (
     <div
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         if (disableClick.current === false) {
           disableClick.current = true;
           handleClick();
@@ -49,9 +59,17 @@ const DefaultBtn = ({
           : ` border text-white border-${mythSections[activeMyth]}-primary ${
               isClicked ? `glow-button-${mythSections[activeMyth]}` : ""
             }`
-      } justify-between h-button-primary w-button-primary mt-[4px] mx-auto  bg-glass-black z-50 rounded-primary`}
+      } justify-between h-button-primary w-button-primary mt-[4px] mx-auto  bg-glass-black-lg z-50 rounded-primary`}
     >
-      <div className="flex justify-center items-center w-1/4 h-full"></div>
+      <div className="flex justify-center items-center w-1/4 h-full">
+        {(message === 4 || message == 5) && (
+          <CornerUpLeft
+            color={"white"}
+            className="h-icon-secondary w-icon-secondary"
+            onClick={handlePrev}
+          />
+        )}
+      </div>
       <div
         className={`flex shadow-black shadow-2xl justify-center text-[1.75rem] font-symbols items-center bg-black w-[4rem] h-[4rem] border-[3px]  border-${mythSections[activeMyth]}-primary rounded-full`}
       >
@@ -63,13 +81,17 @@ const DefaultBtn = ({
           "8"
         ) : message === 3 ? (
           <BookOpenText size={"2rem"} />
+        ) : message === 4 ? (
+          <RotateCw size={"2rem"} />
+        ) : message === 5 ? (
+          <Repeat2 size={"2rem"} />
         ) : (
           ""
         )}
       </div>
 
       <div className="flex justify-center items-center w-1/4  h-full">
-        {isBooster && (
+        {isBooster ? (
           <div className="relative flex justify-center items-center">
             <img src={`${assets.items.multiorb}`} alt="orb" className="p-1.5" />
             <div className="absolute z-10">
@@ -78,6 +100,14 @@ const DefaultBtn = ({
               </div>
             </div>
           </div>
+        ) : message === 4 || message === 5 ? (
+          <CornerUpRight
+            color={"white"}
+            className="h-icon-secondary w-icon-secondary"
+            onClick={handleNext}
+          />
+        ) : (
+          <></>
         )}
       </div>
     </div>

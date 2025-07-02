@@ -19,7 +19,7 @@ const GiftItemCrd = ({ item }) => {
       className={`flex cursor-pointer gap-1 border
 ${
   isClicked ? `glow-button-white` : ""
-} rounded-primary h-[90px] w-full  bg-glass-black border text-white p-[10px]`}
+} rounded-primary h-[90px] w-full  bg-glass-black-lg border text-white p-[10px]`}
       onClick={(e) => {
         e.preventDefault();
         handleClickHaptic(tele, enableHaptic);

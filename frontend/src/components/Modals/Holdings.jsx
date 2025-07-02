@@ -17,8 +17,16 @@ import { showToast } from "../Toast/Toast";
 const tele = window.Telegram?.WebApp;
 
 const HoldingsModal = ({ handleClose }) => {
-  const { enableHaptic, userData, setUserData, assets, isTelegram, authToken } =
-    useContext(MainContext);
+  const {
+    enableHaptic,
+    userData,
+    setUserData,
+    assets,
+    isTelegram,
+    authToken,
+    setShowBack,
+    section,
+  } = useContext(MainContext);
   let disableClick = useRef(false);
   const [history, setHistory] = useState([]);
   const [isHistory, setIsHistory] = useState(false);
@@ -88,13 +96,23 @@ const HoldingsModal = ({ handleClose }) => {
     (async () => await getHistory())();
   }, []);
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
+    >
       <div
         className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
       >
         <div
-          onClick={handleClose}
           className={`absolute cursor-pointer flex w-full justify-end top-0 right-0 -mt-4 -mr-4 `}
         >
           <div className="absolute flex justify-center items-center  bg-black rounded-full w-[40px] h-[40px]">
@@ -114,7 +132,8 @@ const HoldingsModal = ({ handleClose }) => {
         </div>
 
         <div
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (userData.kaiaAddress) {
               setIsHistory((prev) => !prev);
             } else {
@@ -136,7 +155,8 @@ const HoldingsModal = ({ handleClose }) => {
           {!isHistory ? (
             <>
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if ((userData.holdings.usdt ?? 0) > 1) {
                     initateWithdraw("usdt");
                   }
@@ -162,7 +182,9 @@ const HoldingsModal = ({ handleClose }) => {
 
               {isTelegram ? (
                 <div
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
+
                     if ((userData.holdings.stars ?? 0) > 10) {
                       initateWithdraw("stars");
                     }
@@ -187,7 +209,8 @@ const HoldingsModal = ({ handleClose }) => {
                 </div>
               ) : (
                 <div
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if ((userData.holdings.kaia ?? 0) > 10) {
                       initateWithdraw("kaia");
                     }
@@ -251,7 +274,8 @@ const HoldingsModal = ({ handleClose }) => {
                       {itm.status === "success" ? (
                         <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-green-600/20 text-green-400">
                           <ExternalLink
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               window.open(
                                 `https://kaiascan.io/tx/${itm.paymentId}`,
                                 "_blank"

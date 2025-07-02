@@ -76,7 +76,7 @@ const JigsawButton = ({
         faith != 12
           ? "border-borderGray"
           : `border-${mythSections[activeMyth]}-primary`
-      } bg-glass-black  rounded-primary z-[99]  top-0 left-0 right-0`}
+      } bg-glass-black-lg  rounded-primary z-[99]  top-0 left-0 right-0`}
       style={{ top: "100%", transform: "translateY(-50%)" }}
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">

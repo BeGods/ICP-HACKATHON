@@ -48,7 +48,7 @@ const BottomChild = ({ activeMyth, gameData }) => {
           }-primary  ${
             !gameData.isShardsClaimActive &&
             `glow-button-${mythSections[activeMyth]}`
-          }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          }  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div
             className={`font-symbols absolute -ml-[2rem] text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
@@ -56,10 +56,6 @@ const BottomChild = ({ activeMyth, gameData }) => {
             9
           </div>
           <div className="flex items-center text-primary font-medium pl-headSides">
-            <span className="font-roboto text-black-contour font-normal text-[2rem] pr-1">
-              x
-            </span>
-
             {formatTwoNums(gameData.shardslvl)}
           </div>
         </div>
@@ -69,13 +65,12 @@ const BottomChild = ({ activeMyth, gameData }) => {
             `glow-button-${mythSections[activeMyth]}`
           } border-${
             mythSections[activeMyth]
-          }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          }-primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div className="flex text-black-contour items-center text-primary font-medium pr-headSides">
             {gameData?.automatalvl
               ? formatTwoNums(gameData.automatalvl + 1)
               : 1}
-            <span className="font-roboto font-normal text-[2rem] pl-1">x</span>
           </div>
 
           <div
@@ -85,7 +80,7 @@ const BottomChild = ({ activeMyth, gameData }) => {
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left`}>
           {t(`boosters.${2}.title`)}
         </div>

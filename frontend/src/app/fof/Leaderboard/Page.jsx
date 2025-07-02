@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api.fof";
-import { FofContext } from "../../../context/context";
+import { FofContext, MainContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import {
   formatRankOrbs,
@@ -59,7 +59,7 @@ const UserAvatar = ({ user, index, category }) => {
   };
 
   return (
-    <div className="absolute rounded-full min-w-[8dvh] min-h-[8dvh] bg-white top-0 -mt-[8dvh]">
+    <div className="absolute rounded-full min-w-[15dvh] min-h-[15dvh] bg-white top-0 -mt-[8dvh]">
       <div
         style={{
           boxShadow:
@@ -85,7 +85,7 @@ const UserAvatar = ({ user, index, category }) => {
           } w-full h-full rounded-full p-[5px] pointer-events-none`}
         />
         {(!user?.profileImage || error) && (
-          <div className="z-1 flex justify-center items-start text-white text-[22vw] transition-all duration-1000 text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full">
+          <div className="z-1 flex justify-center items-start text-white text-[20vw] transition-all duration-1000 text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full">
             <div className={`uppercase text-white`}>{user.username[0]}</div>
           </div>
         )}
@@ -97,7 +97,6 @@ const UserAvatar = ({ user, index, category }) => {
 const Leaderboard = (props) => {
   const { t } = useTranslation();
   const {
-    setSection,
     authToken,
     assets,
     userData,
@@ -107,6 +106,7 @@ const Leaderboard = (props) => {
     setUserData,
     isTgMobile,
   } = useContext(FofContext);
+  const { setShowBack } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
@@ -116,6 +116,7 @@ const Leaderboard = (props) => {
   const [flipped, setFlipped] = useState(false);
   const avatarColor = localStorage.getItem("avatarColor");
   const [category, setCategory] = useState(1);
+
   const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
     0: "second",
@@ -258,6 +259,14 @@ const Leaderboard = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    setShowBack(0);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
     <div
       className={`flex ${
@@ -286,47 +295,8 @@ const Leaderboard = (props) => {
         />
       </div>
 
-      {/* Toggles */}
-      <div className="flex h-button-primary mt-1 absolute z-50 text-black font-symbols justify-between w-screen">
-        <div
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            setSection(3);
-          }}
-          className="flex  p-0.5 justify-end items-center w-[19%] bg-white rounded-r-full"
-        >
-          <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
-            <User fill="white" size={30} />
-          </div>
-        </div>
-
-        <div
-          onClick={() => {
-            handleClickHaptic(tele, enableHaptic);
-            setSection(0);
-          }}
-          className="flex  p-0.5 justify-start items-center w-[19%] bg-white rounded-l-full"
-        >
-          <div className="flex justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full">
-            z
-          </div>
-        </div>
-        <div
-          key={animationKey}
-          className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase"
-        >
-          <div className={`mr-auto slide-in-out-left`}>
-            {t("sections.profile")}
-          </div>
-          <div className={`ml-auto slide-in-out-right`}>
-            {" "}
-            {t("sections.forges")}
-          </div>
-        </div>
-      </div>
-
       {/* Flipper */}
-      <div className="font-fof z-50 top-0 mt-1.5 mx-auto w-1/2">
+      <div className="font-fof z-50 top-0 mt-1.5 mx-auto max-w-[720px]  w-[80%]">
         <div
           className={`w-full flex justify-center items-center button ${
             flipped ? "flipped" : ""
@@ -369,7 +339,7 @@ const Leaderboard = (props) => {
           </div>
         </div>
 
-        <div className="w-full uppercase flex justify-center text-center text-white text-black-contour mt-2">
+        <div className="w-full uppercase flex justify-center text-center text-white leading-[4.5dvh] text-[4.5dvh] text-black-contour mt-2">
           {category == 0
             ? "Referrals"
             : category == 1
@@ -490,6 +460,11 @@ const Leaderboard = (props) => {
             <div className={`flex items-end ranker-width gap-2`}>
               {[leaderboardData[1], leaderboardData[0], leaderboardData[2]].map(
                 (item, index) => {
+                  const countryObj = countries.find(
+                    (country) => country.code === item.country
+                  );
+                  const countryFlag =
+                    countryObj?.flag !== "🌐" && countryObj?.flag;
                   return (
                     <div
                       onClick={() => {
@@ -523,8 +498,11 @@ const Leaderboard = (props) => {
                       >
                         {item.orbRank}
                       </div>
-                      <div className="absolute text-white -bottom-1 text-tertiary font-normal">
-                        {formatRankOrbs(item.totalOrbs)}
+                      <div className="absolute flex justify-center items-center gap-x-1.5 text-white bottom-0 text-tertiary font-normal">
+                        <div className="text-white text-[1.1rem] font-normal">
+                          {countryFlag}
+                        </div>
+                        <div>{formatRankOrbs(item.totalOrbs)}</div>
                       </div>
                       <UserAvatar
                         key={`category-${category}-${index}`}
@@ -546,7 +524,7 @@ const Leaderboard = (props) => {
         <div
           className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[42dvh] bg-white text-black rounded-t-primary`}
         >
-          <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-3">
+          <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-1.5">
             <h1>
               <span className="pr-12">#</span>
               {t(`profile.name`)}
@@ -620,7 +598,7 @@ const Leaderboard = (props) => {
         <div
           className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
         >
-          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
+          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-1.5">
             <h1>
               <span className="pr-12">#</span>
               {t(`profile.name`)}
@@ -747,7 +725,7 @@ const Leaderboard = (props) => {
         <div
           className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
         >
-          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-3">
+          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-1.5">
             <h1>
               <span className="pr-12">#</span>
               {t(`profile.name`)}
@@ -768,32 +746,40 @@ const Leaderboard = (props) => {
               loader={<h4>Loading...</h4>}
               scrollableTarget="scrollableDiv"
             >
-              {leaderboardData.slice(3, 333).map((item, index) => (
-                <div
-                  onClick={() => {
-                    handleClickHaptic(tele, enableHaptic);
-                    setShowCard(
-                      <UserInfoCard
-                        close={() => {
-                          setShowCard(null);
-                        }}
-                        userData={item}
-                      />
-                    );
-                  }}
-                  key={index}
-                  className=""
-                >
-                  <LeaderboardItem
+              {leaderboardData.slice(3, 333).map((item, index) => {
+                const countryObj = countries.find(
+                  (country) => country.code === item.country
+                );
+                const countryFlag =
+                  countryObj?.flag !== "🌐" && countryObj?.flag;
+
+                return (
+                  <div
+                    onClick={() => {
+                      handleClickHaptic(tele, enableHaptic);
+                      setShowCard(
+                        <UserInfoCard
+                          close={() => {
+                            setShowCard(null);
+                          }}
+                          userData={item}
+                        />
+                      );
+                    }}
                     key={index}
-                    rank={item.orbRank}
-                    name={item.username}
-                    totalOrbs={formatRankOrbs(item.totalOrbs)}
-                    imageUrl={item.profileImage}
-                    prevRank={item.prevRank}
-                  />
-                </div>
-              ))}
+                    className=""
+                  >
+                    <LeaderboardItem
+                      key={index}
+                      rank={item.orbRank}
+                      name={`${item.username} ${countryFlag}`}
+                      totalOrbs={formatRankOrbs(item.totalOrbs)}
+                      imageUrl={item.profileImage}
+                      prevRank={item.prevRank}
+                    />
+                  </div>
+                );
+              })}
             </InfiniteScroll>
           </div>
           <div

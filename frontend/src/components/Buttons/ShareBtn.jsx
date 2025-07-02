@@ -22,7 +22,8 @@ const ShareButton = ({
 
   return (
     <div
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         if (!isShared) {
           if (showRedirect) {
             window.open(link, "_blank");
@@ -134,7 +135,7 @@ const ShareButton = ({
         </div>
       ) : (
         <div
-          className={`flex items-center justify-between  h-button-primary w-button-primary mx-auto border border-cardsGray  bg-glass-black z-50 text-cardsGray
+          className={`flex items-center justify-between  h-button-primary w-button-primary mx-auto border border-cardsGray  bg-glass-black-lg z-50 text-cardsGray
             rounded-primary`}
         >
           <div className="flex justify-center items-center w-1/4 h-full"></div>

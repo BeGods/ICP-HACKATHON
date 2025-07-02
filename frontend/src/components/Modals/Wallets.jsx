@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { MainContext } from "../../context/context";
 import {
   deleteAuthCookie,
@@ -15,8 +15,14 @@ const tele = window.Telegram?.WebApp;
 const WalletsModal = ({ handleClose }) => {
   const navigate = useNavigate();
   const { fetchLinePayHistory, disconnectLineWallet } = useWalletPayment();
-  const { enableHaptic, lineWallet, isTelegram, setUserData } =
-    useContext(MainContext);
+  const {
+    enableHaptic,
+    lineWallet,
+    isTelegram,
+    setUserData,
+    setShowBack,
+    section,
+  } = useContext(MainContext);
   const userFriendlyAddress = useTonAddress();
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
@@ -27,7 +33,8 @@ const WalletsModal = ({ handleClose }) => {
       ? `${lineWallet?.slice(0, 9)}...${lineWallet.slice(-6)}`
       : "Not Connected";
 
-  const handleDisconnectWallet = async () => {
+  const handleDisconnectWallet = async (e) => {
+    e.stopPropagation();
     handleClickHaptic(tele, enableHaptic);
     try {
       if (isTelegram) {
@@ -55,7 +62,8 @@ const WalletsModal = ({ handleClose }) => {
     }
   };
 
-  const handleFetchLineHistory = async () => {
+  const handleFetchLineHistory = async (e) => {
+    e.stopPropagation();
     handleClickHaptic(tele, enableHaptic);
 
     try {
@@ -68,8 +76,19 @@ const WalletsModal = ({ handleClose }) => {
     }
   };
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
+    >
       <div
         className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
       >

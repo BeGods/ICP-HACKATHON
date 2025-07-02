@@ -10,13 +10,21 @@ import { mythSymbols } from "../../../utils/constants.fof";
 const PayoutInfoCard = ({ close, data }) => {
   const { i18n } = useTranslation();
   let disableClick = useRef(false);
-  const { assets, isTelegram, authToken, setUserData, setPayouts } =
-    useContext(MainContext);
+  const {
+    assets,
+    isTelegram,
+    authToken,
+    setUserData,
+    setPayouts,
+    setShowBack,
+    section,
+  } = useContext(MainContext);
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const [activeColor, setActiveColor] = useState(0);
   const activeColorRef = useRef(activeColor);
 
-  const handleClaimMsn = async () => {
+  const handleClaimMsn = async (e) => {
+    e.stopPropagation();
     if (disableClick.current) return;
 
     disableClick.current = true;
@@ -73,8 +81,19 @@ const PayoutInfoCard = ({ close, data }) => {
     }
   }, [myths.length]);
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
+    <div
+      onClick={close}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
+    >
       <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img

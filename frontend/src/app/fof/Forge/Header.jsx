@@ -108,7 +108,7 @@ const BottomChild = ({
             `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
           }  border-${
             mythSections[activeMyth]
-          }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div
             className={`font-symbols text-black-lg-contour absolute -ml-[2rem] text-iconLg ${
@@ -129,7 +129,7 @@ const BottomChild = ({
             `glow-button-${mythSections[activeMyth]} transition-all duration-1000`
           }  border-${
             mythSections[activeMyth]
-          }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black border w-full`}
+          }-primary gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
         >
           <div className="text-primary text-black-contour font-medium pr-headSides">
             {formatThreeNums(orbs)}
@@ -145,13 +145,13 @@ const BottomChild = ({
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-[2dvh] uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left`}>
           {t(`keywords.shards`)}
         </div>
         <div className={`ml-auto slide-in-out-right`}>
           {" "}
-          {t(`elements.${elements[activeMyth]}`)}
+          {t(`keywords.orbs`)}
         </div>
       </div>
     </div>

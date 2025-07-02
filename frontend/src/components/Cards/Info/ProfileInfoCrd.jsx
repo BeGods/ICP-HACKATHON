@@ -1,14 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 
 const ProfileInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { assets, userData } = useContext(FofContext);
+  const { assets, userData, setShowBack, section } = useContext(FofContext);
+
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={close}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
         <div className="relative w-full h-full text-card">
           <img

@@ -120,12 +120,12 @@ export default {
         primary: "20px",
       },
       fontSize: {
-        primary: "2.25rem",
+        primary: "2rem",
         "symbol-sm": "2rem",
         "symbol-xs": "1.75rem",
         secondary: "14px",
         para: "5vw",
-        tertiary: "18px",
+        tertiary: "1.1rem",
         "button-primary": "18px",
         "orb-primary": "120px",
         "orb-secondary": "45px",
@@ -138,7 +138,7 @@ export default {
         paperHead: "6.5vw",
         paperSub: "5.5vw",
         icon: "50px",
-        iconLg: "3.75rem",
+        iconLg: "3.3rem",
       },
       width: {
         "icon-primary": "55px",
@@ -146,7 +146,8 @@ export default {
         "button-primary": "12rem",
         "symbol-primary": "7.5rem",
         "symbol-secondary": "45px",
-        "item": "14rem"
+        "item": "14rem",
+        "circle-img": "3.5rem"
       },
       height: {
         tgHeight: "90vh",
@@ -156,6 +157,7 @@ export default {
         "button-secondary": "30px",
         "symbol-primary": "7.5rem",
         "symbol-secondary": "45px",
+        "circle-img": "3.5rem"
       },
       lineHeight: {
         para: "5.5vw"
@@ -169,7 +171,7 @@ export default {
         "xs-orb": "2.25rem"
       },
       padding: {
-        headSides: "5.5vw",
+        headSides: "7vw",
         headSidesMd: "2vw",
         headTop: "1.35rem"
       },

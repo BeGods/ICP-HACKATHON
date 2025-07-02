@@ -19,7 +19,7 @@ const CitadelItem = ({
           : "text-white border-white"
       }  ${
         isClicked && !disable ? `glow-button-white` : ""
-      } rounded-primary h-[90px] w-full bg-glass-black p-[15px]`}
+      } rounded-primary h-[90px] w-full bg-glass-black-lg p-[15px]`}
       onMouseDown={() => {
         setIsClicked(true);
       }}

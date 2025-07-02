@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { mythSections } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
@@ -6,12 +6,22 @@ import { useTranslation } from "react-i18next";
 
 const MythInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { activeMyth, assets } = useContext(FofContext);
+  const { activeMyth, assets, setShowBack, section } = useContext(FofContext);
+
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
 
   return (
-    <div className="fixed inset-0 cursor-pointer bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={close}
+      className="fixed inset-0 cursor-pointer bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div
-        onClick={close}
         className={`relative card-width rounded-lg shadow-lg card-shadow-white`}
       >
         <div className="relative w-full h-full text-card">

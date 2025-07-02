@@ -20,6 +20,8 @@ import { useTowerGuide } from "../../../hooks/Tutorial";
 import { getPhaseByDate } from "../../../helpers/game.helper";
 import { trackComponentView, trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import DefaultBtn from "../../../components/Buttons/DefaultBtn";
+import ConvertBtn from "../../../components/Buttons/ConvertBtn";
 
 const tele = window.Telegram?.WebApp;
 
@@ -259,7 +261,9 @@ const Tower = () => {
           );
         }}
       />
-
+      <div className="font-fof w-full text-center disappear absolute top-0 text-[4.5dvh] mt-[16dvh] uppercase text-black drop-shadow z-50 font-black">
+        {t(`elements.aether`)}
+      </div>
       <div className="absolute inset-0 flex justify-center items-center -mt-3">
         <div
           className="relative"
@@ -351,33 +355,51 @@ const Tower = () => {
       <div className="flex flex-col items-center justify-center w-full">
         <div className="absolute h-full flex justify-center items-end bottom-[15%]">
           {myth !== 0 && (
-            <div
-              onClick={triggerConvert}
-              className="text-button-primary uppercase -mb-[7px] shadow-2xl z-[99]"
-            >
-              <div
-                className={`p-[0.75rem] -mt-[9.5dvh] border flex justify-center items-center rounded-full ${
-                  myth === 0 ? "bg-black" : `bg-${wheel[myth]}-text`
-                }`}
-              >
-                <Repeat2
-                  strokeWidth={3}
-                  size={"2rem"}
-                  color={`${myth === 0 ? "white" : `white`}`}
-                />
-              </div>
-            </div>
+            <ConvertBtn
+              isConvert={true}
+              activeMyth={myth - 1}
+              handleClick={triggerConvert}
+              handlePrev={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setMyth((prev) => {
+                  const updatedVal = (prev - 1 + wheel.length) % wheel.length;
+                  return updatedVal;
+                });
+              }}
+              handleNext={() => {
+                handleClickHaptic(tele, enableHaptic);
+
+                setMyth((prev) => {
+                  const updatedVal = (prev + 1) % wheel.length;
+
+                  return updatedVal;
+                });
+              }}
+            />
           )}
           {myth == 0 && (
-            <div
-              onClick={() => {
+            <ConvertBtn
+              handleClick={() => {
                 handleClickHaptic(tele, enableHaptic);
                 setMyth(1);
               }}
-              className="text-button-primary uppercase shadow-2xl z-[99]"
-            >
-              <RotateCw size={"3rem"} strokeWidth={3} color="gold" />
-            </div>
+              handlePrev={() => {
+                handleClickHaptic(tele, enableHaptic);
+                setMyth((prev) => {
+                  const updatedVal = (prev - 1 + wheel.length) % wheel.length;
+                  return updatedVal;
+                });
+              }}
+              handleNext={() => {
+                handleClickHaptic(tele, enableHaptic);
+
+                setMyth((prev) => {
+                  const updatedVal = (prev + 1) % wheel.length;
+
+                  return updatedVal;
+                });
+              }}
+            />
           )}
         </div>
       </div>

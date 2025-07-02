@@ -14,7 +14,8 @@ function PayCard({
   handleClaimEffect,
   isBooster,
 }) {
-  const { gameData, assets } = useContext(FofContext);
+  const { gameData, assets, section, setShowBack, setShowCard } =
+    useContext(FofContext);
   const [deduct, setDeduct] = useState(false);
   const [scale, setScale] = useState(false);
   const [showNum, setShowNum] = useState(false);
@@ -73,8 +74,21 @@ function PayCard({
     return deductedValues.multiColorOrbs;
   };
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50"
+    >
       <div className="flex flex-col absolute gap-y-1 bottom-1.5">
         <div>
           <div

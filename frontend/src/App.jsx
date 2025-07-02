@@ -37,10 +37,13 @@ function usePageTracking() {
 function App() {
   const [isBrowser, setIsBrowser] = useState(false);
   const [recentToasts, setRecentToasts] = useState([]);
+  const [section, setSection] = useState(1);
   const [game, setGame] = useState("fof");
   const [tokens, setTokens] = useState(null);
   const [payouts, setPayouts] = useState([]);
+  const [showBack, setShowBack] = useState(null);
   const [lineWallet, setLineWallet] = useState(null);
+  const [showCard, setShowCard] = useState(null);
   const [globalRewards, setGlobalRewards] = useState([]);
   const [triggerConf, setTriggerConf] = useState(false);
   const [activeReward, setActiveReward] = useState(null);
@@ -100,6 +103,12 @@ function App() {
     setPayouts,
     recentToasts,
     setRecentToasts,
+    showBack,
+    setShowBack,
+    section,
+    setSection,
+    showCard,
+    setShowCard,
   };
 
   const syncAllCookies = async () => {

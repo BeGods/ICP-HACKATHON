@@ -5,39 +5,46 @@
     justify-content: center;
   }
   
-  .carousel {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-  
-  .carousel__item {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    width: 100%;
-    opacity: 0;
-    padding-top: 1.1dvh;
-    will-change: transform, opacity;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-  
-    &.active {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      z-index: 2;
-    }
-  
-    &.previous {
-      opacity: 1;
-      transform: translateY(-100%);
-      z-index: 1;
-    }
-  
-    &.next {
-      opacity: 1;
-      transform: translateY(100%);
-      z-index: 1;
-    }
-  }
+.carousel {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.carousel__item {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  padding-top: 1.1dvh;
+  will-change: transform, opacity;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.carousel__item.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  z-index: 3;
+}
+
+.carousel__item.previous {
+  opacity: 1;
+  transform: translateY(-100%);
+  z-index: 2;
+}
+
+.carousel__item.previous2 {
+  opacity: 1;
+  transform: translateY(-200%);
+  z-index: 1;
+}
+
+.carousel__item.next {
+  opacity: 1;
+  transform: translateY(100%);
+  z-index: 2;
+}
+
   

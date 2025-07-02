@@ -33,6 +33,7 @@ const Redeem = (props) => {
     isTgMobile,
     game,
     isBrowser,
+    isTelegram,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
@@ -288,8 +289,8 @@ const Redeem = (props) => {
                 isBrowser
                   ? "h-[59%] -mt-1"
                   : isTgMobile
-                  ? "h-[55%]"
-                  : "h-[60%] -mt-1"
+                  ? "h-[56%]"
+                  : "h-[61%] -mt-1"
               } ${flipped ? "flipped" : ""} card-width z-[99]`}
             >
               <div className="card__face card__face--front  relative flex justify-center items-center">
@@ -311,7 +312,6 @@ const Redeem = (props) => {
                     }
                   }}
                 />
-
                 <IconBtn
                   isJigsaw={true}
                   isInfo={true}
@@ -319,7 +319,7 @@ const Redeem = (props) => {
                   handleClick={() => {
                     setShowCard(null);
                   }}
-                  align={7}
+                  align={isTelegram ? 7 : 9}
                 />
               </div>
               <div className="card__face card__face--back flex justify-center items-center">
@@ -331,7 +331,7 @@ const Redeem = (props) => {
             userData.isPlaySuperVerified &&
             currReward.partnerType === "playsuper" ? (
               <div
-                className={`flex text-[20px] font-roboto text-white items-center justify-center h-button-primary w-button-primary mx-auto border border-white bg-glass-black  rounded-primary   top-0 left-0 right-0`}
+                className={`flex text-[20px] font-roboto text-white items-center justify-center h-button-primary w-button-primary mx-auto border border-white bg-glass-black-lg  rounded-primary   top-0 left-0 right-0`}
                 style={{ top: "100%", transform: "translateY(-50%)" }}
               >
                 {currReward.couponCode}

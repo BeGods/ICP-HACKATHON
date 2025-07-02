@@ -48,7 +48,7 @@ const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
       <img
         src={assets.uxui.corner}
         alt="cutout"
-        className="rounded-tr-primary w-[18%]"
+        className="rounded-tr-[15px] w-[18%]"
       />
       <div className="absolute flex justify-center items-center w-[2.5rem] h-[2.5rem]">
         {isInfo ? (

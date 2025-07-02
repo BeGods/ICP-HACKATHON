@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { ThumbsUp } from "lucide-react";
@@ -6,7 +6,7 @@ import { showToast } from "../../Toast/Toast";
 import { addLeaderboardBet } from "../../../utils/api.fof";
 
 const StakeCrd = ({ profileImg, username }) => {
-  const { setShowCard, authToken, setUserData, assets } =
+  const { setShowCard, authToken, setUserData, assets, setShowBack, section } =
     useContext(FofContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const firstLetter = username?.charAt(0).toUpperCase();
@@ -30,8 +30,21 @@ const StakeCrd = ({ profileImg, username }) => {
     }
   };
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50">
+    <div
+      onClick={() => {
+        setShowCard(null);
+      }}
+      className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+    >
       <div className="flex absolute flex-col items-center justify-center  pt-4 w-full z-50 top-0">
         <h1 className="uppercase text-gold text-[3rem] text-center -mt-2 text-black-contour break-words leading-[55px]">
           Stake
@@ -49,8 +62,8 @@ const StakeCrd = ({ profileImg, username }) => {
                 }}
               />
             </div>
-            <div className="relative card-width rounded-lg shadow-lg flex flex-col z-50">
-              <div className="flex justify-center items-center w-full absolute h-full">
+            <div className="relative csard-width rounded-lg shadow-lg flex flex-col z-50">
+              <div className="flex jutify-center items-center w-full absolute h-full">
                 <div className="flex justify-center items-center w-full -mt-[9.4vh] absolute h-full">
                   <img
                     src={profileImg}
@@ -73,7 +86,8 @@ const StakeCrd = ({ profileImg, username }) => {
           <div className={`w-full flex  flex-col justify-center items-center`}>
             <div className="absolute top-[20%] mr-[2vw] w-full z-50">
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setStatus(true);
                   setShowConfirm(true);
                 }}
@@ -127,7 +141,8 @@ const StakeCrd = ({ profileImg, username }) => {
             <div className="relative  rounded-lg shadow-lg flex flex-col z-50"></div>
             <div className="absolute bottom-[20%] w-full">
               <div
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   setStatus(false);
                   setShowConfirm(true);
                 }}

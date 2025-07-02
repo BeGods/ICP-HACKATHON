@@ -92,6 +92,8 @@ const SettingModal = ({ close }) => {
     setUserData,
     setSection,
     setShowCard,
+    setShowBack,
+    section,
   } = useContext(FofContext);
   const userFriendlyAddress = useTonAddress();
   const [isChanged, setIsChanged] = useState(false);
@@ -104,7 +106,8 @@ const SettingModal = ({ close }) => {
       ? `${lineWallet?.slice(0, 9)}...${lineWallet.slice(-6)}`
       : "Connect";
 
-  const handleSoundToggle = () => {
+  const handleSoundToggle = (e) => {
+    e.stopPropagation();
     setEnableSound((prev) => {
       const newValue = !prev;
       if (newValue) {
@@ -120,7 +123,8 @@ const SettingModal = ({ close }) => {
     });
   };
 
-  const handleHapticsToggle = () => {
+  const handleHapticsToggle = (e) => {
+    e.stopPropagation();
     setEnableHaptic((prev) => {
       const newValue = !prev;
       if (newValue) {
@@ -145,6 +149,7 @@ const SettingModal = ({ close }) => {
   };
 
   const handleLanguageChange = (e) => {
+    e.stopPropagation();
     const langCode = e.target.value === "" ? "en" : e.target.value;
     setIsChanged(true);
     trackEvent("misc", `language_${langCode}`, `success_${langCode}`);
@@ -153,6 +158,7 @@ const SettingModal = ({ close }) => {
   };
 
   const handleSettingChange = (e) => {
+    e.stopPropagation();
     setIsChanged(true);
     const selectedCountry = e.target.value;
 
@@ -179,7 +185,9 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  const handleConnectLineWallet = async () => {
+  const handleConnectLineWallet = async (e) => {
+    e.stopPropagation();
+
     if (isConnecting) return;
     setIsConnecting(true);
     try {
@@ -201,7 +209,8 @@ const SettingModal = ({ close }) => {
     }
   };
 
-  const handleEnableGuide = () => {
+  const handleEnableGuide = (e) => {
+    e.stopPropagation();
     clearAllGuideCookie(tele);
     close();
     setSection(0);
@@ -235,7 +244,8 @@ const SettingModal = ({ close }) => {
   //   });
   // }, [state]);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    e.stopPropagation();
     handleClickHaptic(tele, enableHaptic);
     close();
     if (isChanged) {
@@ -243,8 +253,19 @@ const SettingModal = ({ close }) => {
     }
   };
 
+  useEffect(() => {
+    setShowBack(section);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
+    >
       <div
         className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
       >
@@ -350,7 +371,8 @@ const SettingModal = ({ close }) => {
         </div>
 
         <div
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             tele.addToHomeScreen();
           }}
           className={`${
@@ -389,7 +411,9 @@ const SettingModal = ({ close }) => {
 
         {!liff.isInClient() && !isTelegram && (
           <div
-            onClick={async () => {
+            onClick={async (e) => {
+              e.stopPropagation();
+
               await deleteAuthCookie(tele);
               if (location.pathname === "/") {
                 window.location.reload();

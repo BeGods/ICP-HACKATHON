@@ -54,14 +54,14 @@ const JigsawImage = ({
       style={{
         position: "relative",
         width: "70vw",
-        height: `${isTgMobile ? "45.25vh" : "50.5dvh"}`,
+        height: `${isTgMobile ? "45.25dvh" : "50.5dvh"}`,
         overflow: "hidden",
         borderRadius: "16px",
         backgroundSize: "cover",
         backgroundPosition: "center center",
         backgroundImage: `url(${imageUrl})`,
       }}
-      className="jigsaw"
+      className="jigsaw scale-[102%]"
       onClick={handleClick}
     >
       <Stage
