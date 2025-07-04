@@ -38,7 +38,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
       )}
 
       {/* content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+      {/* <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
           <div>
             <img
@@ -75,57 +75,9 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
             </div>
           </div>
         </div>
-      </div>
-      {/* <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[3.5vh]">
-          <img
-            src={assets.logos.ror}
-            alt="dod"
-            className="purple-text-shadow"
-          />
-          <div className="flex flex-col gap-[2vh]">
-            <div
-              className={`flex ${
-                fadeout && "fade-out"
-              }   justify-center items-center z-[100]`}
-            >
-              <img
-                src={assets.logos.begodsWhite}
-                alt="logo"
-                className="w-[67px] begod-blue-shadow pointer-events-none"
-              />
-            </div>
-            <div
-              onClick={async () => {
-                handleClickHaptic(tele, true);
-                setGame("ror");
-                setShowGlow(true);
-                handleFadeout();
-                await setStorage(tele, "game", "ror");
-                setTimeout(() => {
-                  navigate("/ror");
-                }, 1000);
-              }}
-              className="relative inline-block"
-            >
-              <img
-                src={
-                  showGlow
-                    ? `${assets.buttons.blue.off}`
-                    : `${assets.buttons.blue.on}`
-                }
-                alt="Button"
-                className="h-auto"
-              />
-              <span className="absolute cursor-pointer inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
-                {showGlow ? "LOADING" : "PLAY"}
-              </span>
-            </div>
-          </div>
-        </div>
       </div> */}
 
-      {/* <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3dvh] pb-[2dvh]">
           <div>
             <img
@@ -181,7 +133,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

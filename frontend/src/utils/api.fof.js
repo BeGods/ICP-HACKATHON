@@ -17,6 +17,21 @@ export const authenticateTg = async (userData, referralCode) => {
   }
 };
 
+export const authenticateTgWeb = async (userData, referralCode) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/tele-web/auth`;
+  if (referralCode) {
+    url += `?referralCode=${referralCode}`;
+  }
+
+  try {
+    const response = await axios.post(url, userData, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const authenticateTwitter = async (userData, referralCode) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/twitter/auth`;
   if (referralCode) {

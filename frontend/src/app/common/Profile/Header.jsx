@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { Pencil } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -101,6 +102,9 @@ const CenterChild = ({ userData }) => {
             </div>
           </div>
         )}
+        <div className="absolute -bottom-1 right-0 flex justify-center items-center  rounded-full bg-black w-[35px] h-[35px]">
+          <Pencil color="white" size={18} />
+        </div>
       </div>
     </div>
   );
