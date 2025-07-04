@@ -1,20 +1,28 @@
-import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { authenticateTg, authenticateTgWeb } from "../../utils/api.fof";
+import { setAuthCookie } from "../../helpers/cookie.helper";
+import { MainContext } from "../../context/context";
+import { showToast } from "../../components/Toast/Toast";
+
+const tele = window.Telegram?.WebApp;
 
 const TelegramCallback = () => {
+  const navigate = useNavigate();
+  const { setAuthToken } = useContext(MainContext);
   const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    const data = {};
-    for (const [key, value] of searchParams.entries()) {
-      data[key] = value;
+  const telegramAuth = async (hash) => {
+    try {
+      const response = await authenticateTgWeb({ initData: hash });
+      setAuthToken(response.data.accessToken);
+      await setAuthCookie(tele, response.data.accessToken);
+      navigate(`/`);
+    } catch (error) {
+      console.error("Authentication Error: ", error);
+      navigate(`/`);
     }
-
-    console.log("✅ Telegram login data:", data);
-
-    // TODO: Send to backend for verification
-    // fetch("/api/telegram/verify", { method: "POST", body: JSON.stringify(data) })
-  }, [searchParams]);
+  };
 
   return (
     <div className="text-white p-8">
