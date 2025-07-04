@@ -139,10 +139,6 @@ function App() {
           <Routes>
             <Route path="/" element={<IntroPage />} />
             <Route path="/auth/line/callback" element={<LineCallback />} />
-            <Route
-              path="/auth/telegram/callback"
-              element={<TelegramCallback />}
-            />
             <Route path="/fof" element={<FoFMain />} />
             <Route path="/ror" element={<RoRMain />} />
           </Routes>

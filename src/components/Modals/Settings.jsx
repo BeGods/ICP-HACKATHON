@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { ToggleSwitch } from "../Common/ToggleSwitch";

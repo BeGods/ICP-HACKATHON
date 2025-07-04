@@ -1,14 +1,78 @@
+import { useContext, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { authenticateTgWeb } from "../utils/api.fof";
+import { MainContext } from "../context/context";
+import { setAuthCookie } from "../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
+
 const TelegramLogin = () => {
+  const [isTelegramReady, setIsTelegramReady] = useState(false);
+  const { setAuthToken } = useContext(MainContext);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://telegram.org/js/telegram-widget.js?7";
+    script.async = true;
+    script.onload = () => {
+      setIsTelegramReady(true);
+    };
+    document.body.appendChild(script);
+  }, []);
+
   const handleLogin = () => {
-    const encodedOrigin = encodeURIComponent(window.location.origin);
-    const encodedRedirect = encodeURIComponent(
-      "https://2r2cf484-5174.inc1.devtunnels.ms/auth/telegram/callback"
-    );
+    if (isTelegramReady && window.Telegram && window.Telegram.Login) {
+      window.Telegram.Login.auth(
+        {
+          bot_id: "7247805953",
+          request_access: true,
+        },
+        function (user) {
+          if (user) {
+            const params = new URLSearchParams();
+            params.append("id", user.id);
+            params.append("first_name", user.first_name);
+            params.append("username", user.username);
+            params.append("photo_url", user.photo_url);
+            params.append("auth_date", user.auth_date);
+            params.append("hash", user.hash);
 
-    const loginUrl = `https://oauth.telegram.org/auth?bot_id=7247805953&origin=https://dev.begods.games&request_access=true&return_to=https://dev.begods.games/auth/telegram/callback/`;
-
-    window.location.href = loginUrl;
+            window.location.href =
+              "https://2r2cf484-5174.inc1.devtunnels.ms?" + params.toString();
+          } else {
+            console.error("Telegram login failed or was cancelled.");
+          }
+        }
+      );
+    } else {
+      console.error("Telegram Login JS SDK not loaded yet.");
+    }
   };
+
+  const handleWebAuth = async (fullUrl) => {
+    try {
+      const response = await authenticateTgWeb({ fullUrl: fullUrl });
+      setAuthToken(response.data.accessToken);
+      await setAuthCookie(tele, response.data.accessToken);
+      window.location.reload();
+    } catch (error) {
+      console.error("Authentication Error: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const data = {};
+    for (const [key, value] of searchParams.entries()) {
+      data[key] = value;
+    }
+
+    const fullUrl = window.location.href;
+
+    if (data && searchParams && searchParams.get("hash")) {
+      (async () => await handleWebAuth(fullUrl))();
+    }
+  }, [searchParams]);
 
   return (
     <button
@@ -25,11 +89,3 @@ const TelegramLogin = () => {
 };
 
 export default TelegramLogin;
-
-// my url
-// https://oauth.telegram.org/auth?bot_id=7247805953&origin=https://2r2cf484-5174.inc1.devtunnels.ms&request_access=true&return_to=https://2r2cf484-5174.inc1.devtunnels.ms/auth/telegram/callback/
-// one of the app's url where auth works
-// https://oauth.telegram.org/auth?bot_id=6831383510&origin=https://totemancer.com&request_access=true&return_to=https://totemancer.com/
-// https://oauth.telegram.org/auth?bot_id=6831383510&origin=https://totemancer.com&request_access=true&return_to=https://totemancer.com/
-// https://oauth.telegram.org/auth?bot_id=7247805953&origin=https://dev.begods.games&request_access=true&return_to=https://dev.begods.games/
-// https://oauth.telegram.org/auth?bot_id=7247805953&origin=https://dev.begods.games&request_access=true&return_to=https://dev.begods.games/
