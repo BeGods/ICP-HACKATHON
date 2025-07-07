@@ -141,7 +141,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 className={`w-circle-img transition-all duration-500 ${
                   (section === redirect[icon] || section === 5) &&
                   "glow-icon-white"
-                } border border-black -mb-0.5 rounded-full pointer-events-none`}
+                } border border-black -mb-0.5 rounded-full w-14 h-14 pointer-events-none`}
               />
             </div>
           ) : (
@@ -209,6 +209,7 @@ const Footer = ({}) => {
           section === 4 ||
           section === 5 ||
           section === 6 ||
+          section === 13 ||
           section === 11
             ? mythSections[8]
             : mythSections[activeMyth]
@@ -216,7 +217,7 @@ const Footer = ({}) => {
       />
       <div className="flex justify-center px-2 -ml-1.5 bg-green-200">
         <div
-          className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-50  flex justify-between text-white ${
+          className={`transition-all footer-width absolute duration-1000 items-end h-[12%] z-40  flex justify-between text-white ${
             isTgMobile && platform === "ios"
               ? "-mt-[2dvh]"
               : isTgMobile && platform !== "ios"

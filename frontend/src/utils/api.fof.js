@@ -809,7 +809,7 @@ export const claimStreakBonus = async (accessToken, country) => {
   }
 };
 
-export const updateCountry = async (country, accessToken) => {
+export const updateProfile = async (country, username, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/user/country`;
 
   try {
@@ -817,9 +817,31 @@ export const updateCountry = async (country, accessToken) => {
       url,
       {
         country: country,
+        username: username
       },
       {
         headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const updateAvatarImage = async (formData, accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/user/avatar`;
+
+  try {
+    const response = await axios.post(
+      url,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${accessToken}`,
         },
       }

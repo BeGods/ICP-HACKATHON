@@ -261,9 +261,9 @@ const Tower = () => {
           );
         }}
       />
-      <div className="font-fof w-full text-center disappear absolute top-0 text-[4.5dvh] mt-[16dvh] uppercase text-black drop-shadow z-50 font-black">
+      {/* <div className="font-fof w-full text-center disappear absolute top-0 text-[4.5dvh] mt-[16dvh] uppercase text-black drop-shadow z-50 font-black">
         {t(`elements.aether`)}
-      </div>
+      </div> */}
       <div className="absolute inset-0 flex justify-center items-center -mt-3">
         <div
           className="relative"

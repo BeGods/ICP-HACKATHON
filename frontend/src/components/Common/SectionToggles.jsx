@@ -38,7 +38,7 @@ export const ToggleLeft = ({
   };
 
   return (
-    <div className="absolute flex top-1/2 -translate-y-1/2 -left-9">
+    <div className="absolute flex top-1/2 -translate-y-1/2  -mt-[2.5rem] -left-9">
       <div
         className={`flex ${minimize === 2 && "slide-inside-left"} ${
           minimize === 1 && "slide-away-left"
@@ -101,7 +101,7 @@ export const ToggleRight = ({
   };
 
   return (
-    <div className="absolute flex top-1/2 -translate-y-1/2 -right-9">
+    <div className="absolute flex top-1/2 -translate-y-1/2 -mt-[2.5rem] -right-9">
       <div
         className={`${minimize === 2 && "slide-inside-right"} ${
           minimize === 1 && "slide-away-right"

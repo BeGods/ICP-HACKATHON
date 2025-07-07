@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ArrowLeft, Bell, Maximize2, Minimize2, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { MainContext } from "../../context/context";
@@ -12,6 +12,21 @@ const TgHeader = ({ openSettings, hideExit, openNotifications }) => {
   const { enableHaptic, isTelegram, showBack, setShowCard, setSection } =
     useContext(MainContext);
   const navigate = useNavigate();
+  const [isFullscreen, setIsFullscreen] = useState(
+    !!document.fullscreenElement
+  );
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
+  }, []);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -105,7 +120,7 @@ const TgHeader = ({ openSettings, hideExit, openNotifications }) => {
       </div>
 
       <div className="flex gap-x-4">
-        {!hideExit && (
+        {/* {!hideExit && (
           <>
             <div className="relative mt-0.5">
               <Bell
@@ -120,10 +135,10 @@ const TgHeader = ({ openSettings, hideExit, openNotifications }) => {
               ></div>
             </div>
           </>
-        )}
+        )} */}
         {!isTelegram && !isDesktop() && (
           <>
-            {!document.fullscreenElement ? (
+            {!isFullscreen ? (
               <Maximize2
                 size={24}
                 onClick={() => {

@@ -44,6 +44,7 @@ const Quests = () => {
   const [showToggle, setShowToggles] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const {
+    showCard,
     questsData,
     setQuestsData,
     gameData,
@@ -61,8 +62,11 @@ const Quests = () => {
     isTelegram,
     isTgMobile,
     isBrowser,
+    setMinimize,
+    setShowBack,
   } = useContext(FofContext);
   const mythData = gameData.mythologies;
+
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][
     mythologies[activeMyth]
   ]?.sort((a, b) => {
@@ -120,6 +124,7 @@ const Quests = () => {
 
   // curr quest
   const [currQuest, setCurrQuest] = useState(initialQuestIndex);
+  const [buttonFlip, setButtonFlip] = useState(false);
   const quest = quests?.[currQuest];
 
   // secret quests
@@ -407,7 +412,95 @@ const Quests = () => {
         t={t}
       />
 
-      <div
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <QuestCard
+          quest={quest}
+          isGuideActive={enableGuide}
+          activeMyth={activeMyth}
+          showClaimEffect={showClaimEffect}
+          t={t}
+          InfoCard={
+            <InfoCard
+              t={t}
+              isShared={quest?.isShared}
+              quest={quest}
+              handleClaimShareReward={() => handleClaimShareReward(quest._id)}
+              handleShowInfo={() => {
+                setShowCard(null);
+              }}
+              activeMyth={activeMyth}
+            />
+          }
+        />
+        <div className="absolute flex justify-center bottom-[15%] mb-2">
+          <div className={`button ${buttonFlip ? "flipped" : ""}`}>
+            <div
+              className={`button__face button__face--front flex justify-center items-center`}
+            >
+              <QuestButton
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+                isCompleted={quest?.isQuestClaimed}
+                activeMyth={activeMyth}
+                lastQuest={quests.length - 1}
+                action={handleButtonClick}
+                currQuest={currQuest}
+                faith={mythData[activeMyth].faith}
+                t={t}
+              />
+            </div>
+            <div className="button__face button__face--back z-50 flex justify-center items-center">
+              <ShareButton
+                isOrbClaimCard={true}
+                isShared={quest?.isShared}
+                isInfo={true}
+                handleClaim={handleClaimShareReward}
+                activeMyth={activeMyth}
+                link={`https://twitter.com/intent/tweet?text=%F0%9F%8C%8D%20Check%20it%20out!%20%F0%9F%92%AF%0ADive%20into%20world%20mythologies%20and%20Play-2-Learn%20with%20Forges%20of%20Faith%20from%20the%20BeGODS%20Mythoverse!%20%F0%9F%9B%A1%F0%9F%94%A5%0A%40BattleofGods_io%0Ahttps%3A%2F%2Fx.com%2FBattleofGods_io%2Fstatus%2F${quest.link[0]}%0A%0A%F0%9F%8E%AE%20Play%20now%3A%20https%3A%2F%2Fplay.begods.games`}
+                t={t}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ReactHowler
+        src={assets.audio.forgeBg}
+        playing={enableSound}
+        loop
+        preload={true}
+        html5={true}
+      />
+
+      {/* Toggles */}
+      {showToggle && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              setCurrQuest(0);
+              setActiveMyth((prev) => (prev - 1 + 4) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              setCurrQuest(0);
+              setActiveMyth((prev) => (prev + 1) % 4);
+            }}
+            activeMyth={activeMyth}
+          />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Quests;
+
+{
+  /* <div
         className={`flex ${
           isTgMobile ? "tg-container-height" : "browser-container-height"
         } justify-center items-center w-screen absolute mx-auto`}
@@ -557,39 +650,5 @@ const Quests = () => {
             ></div>
           </div>
         )}
-      </div>
-
-      <ReactHowler
-        src={assets.audio.forgeBg}
-        playing={enableSound}
-        loop
-        preload={true}
-        html5={true}
-      />
-
-      {/* Toggles */}
-      {showToggle && (
-        <>
-          <ToggleLeft
-            minimize={2}
-            handleClick={() => {
-              setCurrQuest(0);
-              setActiveMyth((prev) => (prev - 1 + 4) % 4);
-            }}
-            activeMyth={activeMyth}
-          />
-          <ToggleRight
-            minimize={2}
-            handleClick={() => {
-              setCurrQuest(0);
-              setActiveMyth((prev) => (prev + 1) % 4);
-            }}
-            activeMyth={activeMyth}
-          />
-        </>
-      )}
-    </div>
-  );
-};
-
-export default Quests;
+      </div> */
+}

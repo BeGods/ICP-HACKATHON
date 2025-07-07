@@ -188,10 +188,8 @@ const Boosters = () => {
       />
 
       {/* BOOSTER CARDS */}
-      <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="flex w-[75%] min-h-[60dvh] flex-col">
-          <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
-        </div>
+      <div className="relative flex flex-col justify-center items-center my-auto h-1/2 w-full">
+        <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
       </div>
 
       <div className="absolute">

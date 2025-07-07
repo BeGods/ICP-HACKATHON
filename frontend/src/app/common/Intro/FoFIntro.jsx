@@ -39,27 +39,28 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full pt-[3dvh] pb-[2dvh]">
-          <img
-            draggable={false}
-            src={assets.logos.fof}
-            alt="fof"
-            className={` select-none${
-              showGlow && "fof-text-shadow"
-            } transition-all duration-300`}
-          />
+          <div
+            className={`flex flex-col ${
+              fadeout && "fade-out"
+            } justify-center items-center z-[100]`}
+          >
+            <img
+              draggable={false}
+              src={assets.logos.fof}
+              alt="fof"
+              className={` select-none ${
+                showGlow && "fof-text-shadow"
+              } transition-all duration-300`}
+            />
+            <img
+              draggable={false}
+              src={assets.logos.begodsBlack}
+              alt="logo"
+              className="w-[65px] mt-4 begod-orange-shadow pointer-events-none select-none"
+            />
+          </div>
+
           <div className={`flex flex-col gap-[2vh]`}>
-            <div
-              className={`flex ${
-                fadeout && "fade-out"
-              } justify-center items-center z-[100]`}
-            >
-              <img
-                draggable={false}
-                src={assets.logos.begodsBlack}
-                alt="logo"
-                className="w-[65px] begod-orange-shadow pointer-events-none select-none"
-              />
-            </div>
             <div
               onClick={async () => {
                 handleClickHaptic(tele, true);
@@ -71,7 +72,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
                   navigate("/fof");
                 }, 1000);
               }}
-              className={`relative fade-in inline-block transition-all duration-500`}
+              className={`relative mb-[11dvh] fade-in inline-block transition-all duration-500`}
             >
               <img
                 src={

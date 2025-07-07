@@ -144,6 +144,17 @@ function App() {
     (async () => handleCurrGame())();
   }, [location]);
 
+  useEffect(() => {
+    const setAppHeight = () => {
+      const doc = document.documentElement;
+      doc.style.setProperty("--app-height", `${window.innerHeight}px`);
+    };
+
+    setAppHeight();
+    window.addEventListener("resize", setAppHeight);
+    return () => window.removeEventListener("resize", setAppHeight);
+  }, []);
+
   return (
     <MainContext.Provider value={initalStates}>
       <WalletProvider>

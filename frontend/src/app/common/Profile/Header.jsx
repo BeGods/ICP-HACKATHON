@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { Pencil } from "lucide-react";
+import { Bell, Pencil } from "lucide-react";
+import UpdateModal from "../../../components/Modals/Update";
 
 const tele = window.Telegram?.WebApp;
 
@@ -28,7 +29,7 @@ const BottomChild = () => {
   }, []);
 
   return (
-    <div className="flex h-button-primary z-[60] -mt-3 absolute text-black font-symbols justify-between w-screen">
+    <div className="flex h-button-primary z-[60] -mt-[1.1rem] absolute text-black font-symbols justify-between w-screen">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -47,7 +48,7 @@ const BottomChild = () => {
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
-          setSection(7);
+          setSection(13);
         }}
         className="flex slide-header-right cursor-pointer p-0.5 justify-start items-center w-[32%] bg-white rounded-l-full"
       >
@@ -56,7 +57,7 @@ const BottomChild = () => {
             showEffect && "pulse-text"
           } justify-center items-center bg-black text-white w-[3rem] h-[3rem] text-symbol-sm rounded-full`}
         >
-          $
+          <Bell color="white" fill="white" size={30} />
         </div>
       </div>
       <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
@@ -68,16 +69,19 @@ const BottomChild = () => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, platform } = useContext(MainContext);
+  const { assets, authToken, setShowCard } = useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
   const [error, setError] = useState(false);
 
   return (
-    <div className="flex absolute top-0 justify-center z-50 w-full pl-1.5">
+    <div className="flex absolute top-0 justify-center  w-full  -mt-2 pl-1.5">
       <div
-        className={`z-20  flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
+        onClick={() => {
+          setShowCard(<UpdateModal close={() => setShowCard(null)} />);
+        }}
+        className={`z-[60]  flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px] outline-white transition-all duration-1000  relative`}
       >
         <img
           src={
@@ -102,7 +106,7 @@ const CenterChild = ({ userData }) => {
             </div>
           </div>
         )}
-        <div className="absolute -bottom-1 right-0 flex justify-center items-center  rounded-full bg-black w-[35px] h-[35px]">
+        <div className="absolute -bottom-1 right-0 flex justify-center items-center rounded-full bg-black w-[35px] h-[35px] overflow-hidden cursor-pointer">
           <Pencil color="white" size={18} />
         </div>
       </div>
@@ -122,6 +126,14 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-headTop">
+        <div
+          className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh] uppercase text-gold text-black-contour drop-shadow z-50`}
+        >
+          {(
+            userData.username.charAt(0).toUpperCase() +
+            userData.username.slice(1).toLowerCase()
+          ).slice(0, 12)}
+        </div>
         {/* <div
           className={`text-sectionHead -mt-2.5 text-center top-0 text-white text-black-lg-contour  absolute inset-0 w-fit h-fit z-30 mx-auto`}
         >

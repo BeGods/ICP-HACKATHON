@@ -85,7 +85,7 @@ const UserAvatar = ({ user, index, category }) => {
           } w-full h-full rounded-full p-[5px] pointer-events-none`}
         />
         {(!user?.profileImage || error) && (
-          <div className="z-1 flex justify-center items-start text-white text-[20vw] transition-all duration-1000 text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full">
+          <div className="z-1 flex justify-center items-start text-white text-[20vw] mt-2 transition-all duration-1000 text-black-contour orb-symbol-shadow absolute h-full w-full rounded-full">
             <div className={`uppercase text-white`}>{user.username[0]}</div>
           </div>
         )}
@@ -267,6 +267,12 @@ const Leaderboard = (props) => {
     };
   }, []);
 
+  const tabData = [
+    { symbol: "u", label: "User" },
+    { symbol: "$", label: "Transactions" },
+    { symbol: "%", label: "Offers" },
+  ];
+
   return (
     <div
       className={`flex ${
@@ -302,40 +308,24 @@ const Leaderboard = (props) => {
             flipped ? "flipped" : ""
           }`}
         >
-          <div className="flex items-center justify-center w-full z-50  p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
-            <div
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setCategory(0);
-              }}
-              className={`flex-1 flex items-center justify-center rounded-full ${
-                category == 0 ? "bg-black text-white " : "text-black"
-              } font-symbols py-1`}
-            >
-              u
-            </div>
-            <div
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setCategory(1);
-              }}
-              className={`flex-1 flex items-center justify-center rounded-full ${
-                category == 1 ? "bg-black text-white " : "text-black"
-              } font-symbols py-1`}
-            >
-              $
-            </div>
-            <div
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setCategory(2);
-              }}
-              className={`flex-1 flex items-center justify-center rounded-full ${
-                category == 2 ? "bg-black text-white " : "text-black"
-              } font-symbols py-1`}
-            >
-              %
-            </div>
+          <div className="flex items-center justify-center w-full z-50 p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
+            {tabData.map((tab, index) => {
+              const isActive = category === index;
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    handleClickHaptic(tele, enableHaptic);
+                    setCategory(index);
+                  }}
+                  className={`flex-1 flex items-center justify-center rounded-full font-symbols py-1 transition-all duration-200 ease-in-out cursor-pointer ${
+                    isActive ? "bg-black text-white" : "text-black"
+                  }`}
+                >
+                  {tab.symbol}
+                </div>
+              );
+            })}
           </div>
         </div>
 

@@ -63,6 +63,27 @@ const OrbClaimCard = ({
       className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
     >
       <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1,
+        }}
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
+          style={{
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+      </div>
+      <div
         className={`relative card-width rounded-lg shadow-lg flex flex-col z-50`}
       >
         <div

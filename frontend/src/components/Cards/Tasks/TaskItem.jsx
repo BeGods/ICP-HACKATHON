@@ -171,10 +171,6 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
           handleClaimTask();
         }
       }}
-      className={`flex gap-1 border 
-${
-  isClicked ? `glow-button-white` : ""
-} rounded-primary h-[90px] w-full bg-glass-black-lg p-[10px] `}
       onMouseDown={() => {
         setIsClicked(true);
       }}
@@ -193,11 +189,14 @@ ${
       onTouchCancel={() => {
         setIsClicked(false);
       }}
+      className={`flex ${
+        isClicked ? `glow-button-white` : ""
+      } bg-glass-black-lg text-white items-center gap-x-2.5 border rounded-primary w-full cursor-pointer h-[4.65rem] px-4`}
     >
-      <div className="flex cursor-pointer justify-start items-center">
-        <img src={quest.type} alt="task-icon" className=" w-[55px] grayscale" />
+      <div className="font-symbols w-[3rem]">
+        <img src={quest.type} alt="task-icon" />
       </div>
-      <div className={`flex flex-col text-white flex-grow justify-center ml-1`}>
+      <div className={`flex flex-col text-white flex-grow justify-center`}>
         <h1 className="text-tertiary uppercase">
           {quest._id == "6716097630689b65b6b384ef" &&
           country &&
@@ -209,31 +208,31 @@ ${
         </h1>
         <div>
           {game == "fof" ? (
-            <h2 className="text-tertiary">
+            <h2 className="text-tertiary flex gap-x-2">
               +{quest.requiredOrbs.multiOrbs}
-              <span className="pl-1 gradient-multi">ORB(S)</span>
+              <span className="gradient-multi">ORB(S)</span>
             </h2>
           ) : (
-            <div className="text-tertiary  flex items-center">
+            <div className="text-tertiary flex gap-x-2">
               <span className="text-[1.5rem]">
                 +{quest.requiredOrbs.multiOrbs}
               </span>
-              <span className="pl-1 font-symbols">A</span>
+              <span className="font-symbols">A</span>
             </div>
           )}
         </div>
       </div>
-      <div className="flex justify-center items-center w-[8%] pr-4">
+      <div className="flex justify-center items-center pr-1">
         {quest.isQuestClaimed ? (
-          <div className="flex justify-center items-center h-[30px] w-[30px] p-1 bg-white rounded-full">
+          <div className="flex justify-center items-center h-6 w-6 p-1 bg-white rounded-full">
             <Check strokeWidth={3} color="black" />
           </div>
         ) : (
           <>
             {!claim ? (
-              <ChevronRight className="absolute" size={"30px"} color="white" />
+              <ChevronRight className="absolute h-6 w-6" color="white" />
             ) : (
-              <div className="flex justify-center items-center h-[30px] w-[30px] p-1 border-2 rounded-full">
+              <div className="flex justify-center items-center h-6 w-6 p-1 border-2 rounded-full">
                 <Check strokeWidth={3} color="white" />
               </div>
             )}

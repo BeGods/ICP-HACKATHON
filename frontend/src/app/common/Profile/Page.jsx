@@ -78,6 +78,8 @@ const Profile = (props) => {
     enableHaptic,
     authToken,
     setSection,
+    setShowBack,
+    showCard,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
@@ -86,6 +88,8 @@ const Profile = (props) => {
   const streakBadge = determineStreakBadge(userData.streak.streakCount);
   const setShowCard =
     game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
+  const setMinimize =
+    game === "fof" ? fofContext.setMinimize : rorContext.setMinimize;
   const gameData = game === "fof" ? fofContext.gameData : rorContext.gameData;
   const { connectWallet } = useWalletPayment();
   const [isConnecting, setIsConnecting] = useState(false);
@@ -243,6 +247,16 @@ const Profile = (props) => {
     },
   ];
 
+  useEffect(() => {
+    setMinimize(1);
+    setShowBack(0);
+
+    return () => {
+      setMinimize(2);
+      setShowBack(null);
+    };
+  }, [showCard]);
+
   return (
     <div className={`flex flex-col h-full overflow-hidden`}>
       <div
@@ -268,12 +282,10 @@ const Profile = (props) => {
       </div>
       {/* Header */}
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
-      <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="font-fof absolute top-0 text-[4.5dvh] mt-[20dvh] uppercase text-gold drop-shadow z-50 text-black-contour">
-          {userData.username}
-        </div>
+
+      <div className="flex flex-col justify-center items-center h-full mx-auto w-full mt-[4.5rem] px-2.5">
         <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">
-          <div className="grid grid-cols-2 gap-x-1.5 gap-y-4 w-full h-fit place-items-center">
+          <div className="grid grid-cols-2 gap-x-1.5 gap-y-[1.1dvh] w-full h-fit place-items-center">
             {profileDetails.map((itm, idx) => (
               <ProfileItem
                 key={idx}

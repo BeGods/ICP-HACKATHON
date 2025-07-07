@@ -144,7 +144,7 @@ export default {
         "icon-primary": "55px",
         "icon-secondary": "20px",
         "button-primary": "12rem",
-        "symbol-primary": "7.5rem",
+        "symbol-primary": "7rem",
         "symbol-secondary": "45px",
         "item": "14rem",
         "circle-img": "3.5rem"
@@ -155,7 +155,7 @@ export default {
         "icon-secondary": "20px",
         "button-primary": "3.5rem",
         "button-secondary": "30px",
-        "symbol-primary": "7.5rem",
+        "symbol-primary": "7rem",
         "symbol-secondary": "45px",
         "circle-img": "3.5rem"
       },

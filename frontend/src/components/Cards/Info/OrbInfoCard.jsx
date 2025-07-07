@@ -152,73 +152,7 @@ const OrbInfoCard = ({ gameData, close }) => {
             </div>
           </div>
         </div>
-
         <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
-      </div>
-
-      <div className="absolute flex bottom-0 w-full pl-[10%] gap-x-4">
-        <div className="text-paperHead text-white flex justify-center items-center">
-          Note:{" "}
-        </div>
-        <div className="flex flex-col justify-start items-start text-white my-3">
-          <div className="flex justify-start items-center gap-x-3">
-            <div
-              className={`flex relative text-center justify-center items-end max-w-xs-orb  rounded-full glow-icon-black`}
-            >
-              <img src={assets.uxui.baseOrb} alt={`gray orb`} />
-              <span
-                className={`absolute z-1 text-[1.5rem] ml-0.5 opacity-50 orb-symbol-shadow   font-symbols text-white `}
-              >
-                g
-              </span>
-            </div>
-            <h1 className="text-primary font-semibold">=</h1>
-            <div className="text-[28px] -ml-2.5">1000</div>
-            <div className="text-[24px] font-roboto font-medium">X</div>{" "}
-            <div
-              className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
-            >
-              <img
-                src={assets.uxui.baseOrb}
-                alt={`gray orb`}
-                className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
-              />
-              <span
-                className={`absolute z-1  justify-center items-center font-symbols text-white `}
-              >
-                <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
-                  {mythSymbols[myths[activeColor]]}
-                </div>
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-start items-center gap-x-3">
-            <div
-              className={`flex relative text-center justify-center items-center max-w-[2.3rem] -mt-1 rounded-full glow-icon-black`}
-            >
-              <img src={assets.items.multiorb} alt="multi orb" />
-            </div>
-            <h1 className="text-primary font-semibold">=</h1>
-            <div className="text-[28px] -ml-2.5">2</div>
-            <div className="text-[24px] font-roboto font-medium">X</div>{" "}
-            <div
-              className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
-            >
-              <img
-                src={assets.uxui.baseOrb}
-                alt={`gray orb`}
-                className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
-              />
-              <span
-                className={`absolute z-1  justify-center items-center font-symbols text-white `}
-              >
-                <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
-                  {mythSymbols[myths[activeColor]]}
-                </div>
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

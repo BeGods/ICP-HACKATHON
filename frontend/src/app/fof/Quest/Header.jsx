@@ -21,7 +21,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
     };
   }, []);
   return (
-    <div className="flex cursor-pointer absolute  justify-center w-full top-0 z-20">
+    <div className="flex cursor-pointer absolute  justify-center w-full top-0  -mt-2 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -44,7 +44,7 @@ const BottomChild = ({
   totalQuests,
 }) => {
   return (
-    <div className="flex relative justify-center px-2 -mt-3">
+    <div className="flex relative justify-center px-2 -mt-[1.1rem]">
       <div className="flex w-full max-w-[720px] px-7">
         <div
           className={`flex border-${mythSections[activeMyth]}-primary justify-start  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}

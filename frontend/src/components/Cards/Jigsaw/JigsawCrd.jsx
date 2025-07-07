@@ -58,6 +58,7 @@ const JigsawImage = ({
         overflow: "hidden",
         borderRadius: "16px",
         backgroundSize: "cover",
+        maxHeight: "370px",
         backgroundPosition: "center center",
         backgroundImage: `url(${imageUrl})`,
       }}
