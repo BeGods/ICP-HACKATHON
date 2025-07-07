@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { ToggleSwitch } from "../Common/ToggleSwitch";
@@ -19,12 +20,11 @@ import {
 import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
 import {
-  connectLineWallet,
   connectTonWallet,
   disconnectTonWallet,
   fetchProfilePhoto,
   fetchRewards,
-  updateCountry,
+  updateProfile,
 } from "../../utils/api.fof";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
@@ -41,9 +41,6 @@ import {
 import { trackEvent } from "../../utils/ga";
 import liff from "@line/liff";
 import { useLocation, useNavigate } from "react-router-dom";
-import useWalletPayment from "../../hooks/LineWallet";
-import WalletsModal from "./Wallets";
-import { useTonWalletConnector } from "../../hooks/TonWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -82,28 +79,12 @@ const SettingModal = ({ close }) => {
     enableHaptic,
     setEnableHaptic,
     isTelegram,
-    lineWallet,
   } = useContext(MainContext);
-  const { connectWallet } = useWalletPayment();
-  const {
-    setRewards,
-    setRewardsClaimedInLastHr,
-    setUserData,
-    setSection,
-    setShowCard,
-    setShowBack,
-    section,
-  } = useContext(FofContext);
+  const { setRewards, setRewardsClaimedInLastHr, setUserData, setSection } =
+    useContext(FofContext);
+  const [tonConnectUI] = useTonConnectUI();
   const userFriendlyAddress = useTonAddress();
   const [isChanged, setIsChanged] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const { handleConnectTonWallet } = useTonWalletConnector();
-  const walletLabel =
-    isTelegram && userFriendlyAddress
-      ? `${userFriendlyAddress.slice(0, 9)}...${userFriendlyAddress.slice(-6)}`
-      : !isTelegram && lineWallet
-      ? `${lineWallet?.slice(0, 9)}...${lineWallet.slice(-6)}`
-      : "Connect";
 
   const handleSoundToggle = (e) => {
     e.stopPropagation();
@@ -173,38 +154,52 @@ const SettingModal = ({ close }) => {
 
   const handleUpdateCountry = async (updatedCountry) => {
     try {
-      await updateCountry(updatedCountry, authToken);
-
-      setUserData((prev) => ({
-        ...prev,
-        country: updateCountry,
-      }));
+      const response = await updateProfile(updatedCountry, null, authToken);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleConnectLineWallet = async (e) => {
-    e.stopPropagation();
-
-    if (isConnecting) return;
-    setIsConnecting(true);
+  const handleConnectTon = async () => {
     try {
-      if (isTelegram) {
-        handleConnectTonWallet();
-      } else {
-        const walletData = await connectWallet();
-        if (!walletData) {
-          return;
-        }
-        const { signature, message } = walletData;
-        await connectLineWallet(signature, message, authToken);
-      }
+      await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
+      trackEvent("misc", "connect_wallet", "success");
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: userFriendlyAddress,
+      }));
+
+      showToast("ton_connect_success");
     } catch (error) {
-      console.error("Wallet Connection Error:", error);
-      alert("An error occurred while connecting the wallet.");
-    } finally {
-      setIsConnecting(false);
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+
+      console.log(errorMessage);
+      showToast("ton_connect_error");
+    }
+  };
+
+  const handleDisconnectTon = async () => {
+    try {
+      await disconnectTonWallet(authToken);
+      tonConnectUI.disconnect();
+      setUserData((prev) => ({
+        ...prev,
+        tonAddress: null,
+      }));
+      showToast("ton_connect_success");
+    } catch (error) {
+      console.log(error);
+      const errorMessage =
+        error.response.data.error ||
+        error.response.data.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("ton_connect_error");
     }
   };
 
@@ -243,22 +238,13 @@ const SettingModal = ({ close }) => {
   //   });
   // }, [state]);
 
-  const handleClose = (e) => {
-    e.stopPropagation();
+  const handleClose = () => {
     handleClickHaptic(tele, enableHaptic);
     close();
     if (isChanged) {
       getPartnersData(i18n.language, country);
     }
   };
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <div
@@ -354,7 +340,7 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        <div
+        {/* <div
           onClick={updateProfilePhoto}
           className={`${
             !isTelegram ? "hidden" : "flex"
@@ -367,7 +353,7 @@ const SettingModal = ({ close }) => {
             <div className="pl-3">{t("profile.updatePhoto")}</div>
             <ChevronRight />
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={(e) => {
@@ -387,32 +373,10 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        {location.pathname !== "/" && (
-          <div
-            onClick={() => {
-              if (!lineWallet) {
-                handleConnectLineWallet();
-              } else {
-                setShowCard(<WalletsModal />);
-              }
-            }}
-            className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
-          >
-            <div className="flex justify-start -ml-3 pr-3">
-              <Wallet />
-            </div>
-            <div className="flex justify-between w-full">
-              {walletLabel}
-              <ChevronRight />
-            </div>
-          </div>
-        )}
-
         {!liff.isInClient() && !isTelegram && (
           <div
             onClick={async (e) => {
               e.stopPropagation();
-
               await deleteAuthCookie(tele);
               if (location.pathname === "/") {
                 window.location.reload();

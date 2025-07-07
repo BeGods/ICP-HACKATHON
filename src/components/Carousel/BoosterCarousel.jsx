@@ -6,13 +6,14 @@ import BoosterItem from "../Cards/Boosters/BoosterItem";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
-import { mythologies, mythSections } from "../../utils/constants.fof";
+import { mythologies } from "../../utils/constants.fof";
 
 const tele = window.Telegram?.WebApp;
 
 const BoosterCarousel = ({ enableGuide, mythData }) => {
   const { t } = useTranslation();
   const {
+    showCard,
     setShowCard,
     activeMyth,
     gameData,
@@ -36,7 +37,9 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
             currentIndex={currentIndex}
             isGuideActive={enableGuide}
             isActive={!mythData.isAutomataActive}
-            handleClick={() => handleBoosterClick("automata", 0, false)}
+            handleClick={() => {
+              handleBoosterClick("automata", 0, false);
+            }}
             activeMyth={activeMyth}
             t={t}
             booster={0}
@@ -97,22 +100,6 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           />
         ),
       },
-      // {
-      //   key: "moon",
-      //   component: (
-      //     <BoosterItem
-      //       key="moon"
-      //       index={0}
-      //       currentIndex={currentIndex}
-      //       isGuideActive={enableGuide}
-      //       isActive={gameData.isMoonActive}
-      //       handleClick={() => handleBoosterClick("moon", false)}
-      //       activeMyth={activeMyth}
-      //       t={t}
-      //       booster={9}
-      //     />
-      //   ),
-      // },
     ];
 
     // Add conditional boosters
@@ -179,16 +166,14 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     ];
 
     const sortedItems = boosters
-      .filter((item) => predefinedOrder.includes(item.key)) // Ensure only relevant keys
+      .filter((item) => predefinedOrder.includes(item.key))
       .sort((a, b) => {
         const statusA = boosterStatus[a.key] || false;
         const statusB = boosterStatus[b.key] || false;
 
-        // If status is true, prioritize it
         if (statusA && !statusB) return -1;
         if (!statusA && statusB) return 1;
 
-        // If both statuses are equal, fall back to predefined order
         const orderA = predefinedOrder.indexOf(a.key);
         const orderB = predefinedOrder.indexOf(b.key);
         return orderA - orderB;
@@ -198,6 +183,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
     setItems(sortedItems);
     setCurrentIndex(0);
   }, [activeMyth, enableGuide, mythData, gameData]);
+
   const handleBoosterClick = (activeCard, booster, isAutoPay) => {
     if (
       activeCard === "burst" &&
@@ -227,7 +213,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
 
     if (deltaY > 50 && currentIndex > 0) {
       setCurrentIndex((prevIndex) => prevIndex - 1);
-    } else if (deltaY < -50 && currentIndex < items.length - 3) {
+    } else if (deltaY < -50 && currentIndex < items.length - 4) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -242,55 +228,75 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   }, [activeMyth]);
 
   return (
-    <div
-      className="wrapper h-[66dvh] mt-[4dvh]"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {items.length > 3 && currentIndex >= 1 ? (
+    <div className="flex flex-col justify-center items-center h-full w-[78%] mt-[4.5rem]">
+      <div
+        className="wrapper"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <div
-          onClick={() => {
-            setCurrentIndex((prevIndex) => prevIndex - 1);
-          }}
-          className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
+          className={`carousel carousel-width transition-all duration-500 relative`}
         >
-          <div className="arrows-up"></div>
+          {items.slice(currentIndex, currentIndex + 4).map((item, index) => {
+            let className = "carousel__item";
+            let onClick = null;
+
+            if (index === 2) className += " active";
+            else if (index === 1) className += " previous";
+            else if (index === 0) className += " previous2";
+            else if (index === 3) className += " next";
+
+            if (currentIndex > 0 && index === 0) {
+              className += " fade-top fade-click-overlay";
+              onClick = (e) => {
+                e.stopPropagation();
+                setCurrentIndex((prev) => prev - 1);
+              };
+            }
+
+            if (currentIndex + 4 < items.length && index === 3) {
+              className += " fade-bottom fade-click-overlay";
+              onClick = (e) => {
+                e.stopPropagation();
+                setCurrentIndex((prev) => prev + 1);
+              };
+            }
+
+            return (
+              <div
+                className={className}
+                key={currentIndex + index}
+                onClick={onClick}
+              >
+                <div
+                  className={onClick ? "pointer-events-none w-full" : "w-full"}
+                >
+                  {item}
+                </div>
+              </div>
+            );
+          })}
         </div>
-      ) : (
-        <div
-          className={`flex absolute disappear opacity-100 mt-[1dvh] text-[4.5dvh] uppercase text-white glow-icon-${mythSections[activeMyth]} h-fit justify-center items-start`}
-        >
-          {mythologies[activeMyth]}
-        </div>
-      )}
-
-      <div className={`carousel carousel-width mt-[10dvh]`}>
-        {items.slice(currentIndex, currentIndex + 4).map((item, index) => {
-          let className = "carousel__item";
-
-          if (index === 2) className += " active";
-          else if (index === 1) className += " previous";
-          else if (index === 0) className += " previous2";
-          else if (index === 3) className += " next";
-
-          return (
-            <div className={className} key={currentIndex + index}>
-              {item}
-            </div>
-          );
-        })}
       </div>
-
-      {currentIndex < items.length - 3 && (
-        <div
-          onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute cursor-pointer bottom-[18%] w-full"
-        >
-          <div className="arrows-down"></div>
-        </div>
-      )}
     </div>
   );
 };
 
 export default BoosterCarousel;
+
+// {
+//   key: "moon",
+//   component: (
+//     <BoosterItem
+//       key="moon"
+//       index={0}
+//       currentIndex={currentIndex}
+//       isGuideActive={enableGuide}
+//       isActive={gameData.isMoonActive}
+//       handleClick={() => handleBoosterClick("moon", false)}
+//       activeMyth={activeMyth}
+//       t={t}
+//       booster={9}
+//     />
+//   ),
+// },

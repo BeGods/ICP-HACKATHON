@@ -45,7 +45,7 @@ import {
   isDesktop,
 } from "../../utils/device.info";
 import { useNavigate } from "react-router-dom";
-import NotificationsModal from "../../components/Modals/Notifications";
+import Notification from "../common/Notification/Notification";
 
 const tele = window.Telegram?.WebApp;
 
@@ -158,6 +158,7 @@ const FoFMain = () => {
     setPayouts,
     showBack,
     setShowBack,
+    showCard,
   };
   const sections = [
     <Forges />, // 0
@@ -173,6 +174,7 @@ const FoFMain = () => {
     <StreakBonus />, // 10
     <OnboardPage />, // 11
     <Announcement />, // 12
+    <Notification />, //13
   ];
 
   const getProfilePhoto = async (token) => {
@@ -403,18 +405,13 @@ const FoFMain = () => {
             />
           );
         }}
-        openNotifications={() => {
-          setShowCard(
-            <NotificationsModal handleClose={() => setShowCard(null)} />
-          );
-        }}
       />
 
       {!isLoading ? (
         <div
           className={`w-screen ${
             isTgMobile ? "tg-container-height" : "browser-container-height"
-          } bg-white select-none font-fof overflow-hidden`}
+          } bg-white select-none font-fof ${showCard && "overflow-hidden"} `}
         >
           <FofContext.Provider value={initalStates}>
             <div>{sections[section]}</div>
@@ -423,8 +420,9 @@ const FoFMain = () => {
               section != 9 &&
               section != 8 &&
               section != 12 &&
-              section != 13 &&
-              section != 11 && <Footer minimize={minimize} />}
+              section != 11 &&
+              section != 3 &&
+              !showCard && <Footer minimize={minimize} />}
             {showCard && (
               <div className="absolute z-[99] w-screen">{showCard}</div>
             )}

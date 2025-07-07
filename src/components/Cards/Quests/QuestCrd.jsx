@@ -8,31 +8,18 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const QuestCard = ({
-  quest,
-  activeMyth,
-  Button,
-  t,
-  ShareButton,
-  InfoCard,
-  isGuideActive,
-}) => {
-  const { assets, enableHaptic, isTgMobile } = useContext(FofContext);
+const QuestCard = ({ quest, activeMyth, t, InfoCard, isGuideActive }) => {
+  const { assets, enableHaptic } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
-  const [buttonFlip, setButtonFlip] = useState(false);
 
   return (
     <div
       style={{
         perspective: "1000px",
       }}
-      className={`card-width relative flex flex-col gap-3 justify-center items-center mx-auto`}
+      className="relative card-width -mt-[6dvh] flex flex-col justify-center items-center "
     >
-      <div
-        className={`card ${
-          isTgMobile ? "h-[45.35dvh] mt-[4.5dvh]" : "h-[50dvh] mt-[2dvh]"
-        } ${flipped ? "flipped" : ""}`}
-      >
+      <div className={`card ${flipped ? "flipped" : ""}`}>
         <div
           onClick={(e) => {
             handleClickHaptic(tele, enableHaptic);
@@ -54,9 +41,9 @@ const QuestCard = ({
             <img
               src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
               alt="card"
-              className={`w-full h-full ${
+              className={`w-full h-full object-cover rounded-[15px] ${
                 !quest.isQuestClaimed && "grayscale"
-              } rounded-[15px]`}
+              }`}
             />
             <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
               <div className="flex w-full">
@@ -65,7 +52,6 @@ const QuestCard = ({
                     <MappedOrbs quest={quest} />
                   </div>
                 </div>
-
                 <IconBtn isInfo={true} activeMyth={activeMyth} align={1} />
               </div>
               <div
@@ -103,7 +89,6 @@ const QuestCard = ({
         <div
           onClick={(e) => {
             handleClickHaptic(tele, enableHaptic);
-
             setFlipped((prev) => !prev);
             setTimeout(() => {
               setButtonFlip((prev) => !prev);
@@ -112,16 +97,6 @@ const QuestCard = ({
           className="card__face card__face--back"
         >
           {InfoCard}
-        </div>
-      </div>
-      <div className={`button ${buttonFlip ? "flipped" : ""}`}>
-        <div
-          className={`button__face button__face--front flex justify-center items-center`}
-        >
-          {Button}
-        </div>
-        <div className="button__face button__face--back z-50 flex justify-center items-center">
-          {ShareButton}
         </div>
       </div>
     </div>

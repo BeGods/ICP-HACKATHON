@@ -187,6 +187,14 @@ html, body {
   height: 94.5dvh
 }
 
+.tg-middle-position {
+  height: calc(100dvh - var(--tg-safe-area-inset-top) - 45px);
+}
+
+.browser-middle-position {
+  height: 94.5dvh
+}
+
 
 body.iframe-mobile {
   padding-bottom: 4.5vh; 
@@ -318,7 +326,7 @@ body.iframe-mobile .browser-container-height {
 }
 
 .card-width {
-  @apply w-[72%] tablet:w-[47%] desktop:w-[22%] aspect-[3/4];
+  @apply h-[52dvh] aspect-[320/448] max-h-[100vw];
 }
 
 .carousel-width {

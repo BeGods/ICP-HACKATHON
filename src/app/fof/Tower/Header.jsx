@@ -28,11 +28,11 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
 
   return (
     <div
-      className={`flex cursor-pointer absolute justify-center w-full  z-[60] top-0`}
+      className={`flex cursor-pointer absolute justify-center w-full  z-[60] -mt-2 top-0`}
     >
       {myth !== 0 ? (
         <div
-          className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
+          className={`z-20 flex text-center glow-icon-${wheel[myth]} justify-center h-symbol-primary w-symbol-primary items-center rounded-full outline outline-[0.5px]  outline-${wheel[myth]}-primary transition-all duration-1000  overflow-hidden relative`}
         >
           <img
             src={`${assets.uxui.baseOrb}`}
@@ -58,7 +58,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
           <div className={`moon-phases`}>
             <div className={`moon`}>
               <div
-                className={`absolute z-10 h-full w-full overflow-hidden rounded-full y`}
+                className={`absolute z-10 h-full w-full overflow-hidden rounded-full`}
               >
                 <div
                   style={{ height: `100%` }}
@@ -72,7 +72,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
               />
               <span
                 className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[5rem] ${
-                  platform === "ios" ? "mt-8 ml-2" : "mt-8 ml-2"
+                  platform === "ios" ? "mt-6 ml-1" : "mt-6 ml-1"
                 } orb-symbol-shadow z-50`}
               >
                 {mythSymbols["other"]}
@@ -89,7 +89,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
   const { assets, activeMyth } = useContext(FofContext);
   const { t } = useTranslation();
   return (
-    <div className="flex w-full justify-center px-2 mt-3 top-0 absolute">
+    <div className="flex w-full justify-center px-2 mt-1 top-0 absolute">
       <div className="flex relative w-full max-w-[720px] px-7">
         <div
           className={`flex relative justify-start ${
@@ -172,6 +172,7 @@ const TowerHeader = ({
   showInfo,
   handleInfoClk,
 }) => {
+  const { t } = useTranslation();
   const { platform } = useContext(FofContext);
   const [changeText, setChangeText] = useState(true);
 
@@ -194,6 +195,11 @@ const TowerHeader = ({
         >
           {changeText ? t("sections.tower") : t("mythologies.dark")}
         </div> */}
+        <div
+          className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh] uppercase text-black drop-shadow z-50`}
+        >
+          {t(`elements.aether`)}
+        </div>
         <BottomChild
           showGlow={showGlow}
           gameData={gameData}

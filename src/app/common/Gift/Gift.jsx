@@ -19,8 +19,15 @@ const Gift = () => {
     tasks,
     userData,
     isTgMobile,
+    setShowBack,
   } = useContext(MainContext);
   const [category, setCategory] = useState(1);
+  const filteredTasks = tasks.filter((itm) => !itm.isClaimed).length;
+  const filteredVouchers = globalRewards.filter((itm) => !itm.isClaimed).length;
+  const filteredPayouts = payouts.filter(
+    (itm) => !itm.isClaimed && itm.limit > 0
+  ).length;
+  const categoryCntArr = [filteredVouchers, filteredTasks, filteredPayouts];
 
   // useEffect(() => {
   //   if (!socket.connected) socket.connect();
@@ -43,6 +50,14 @@ const Gift = () => {
   //     socket.off("reward_limit_updated");
   //   };
   // }, []);
+
+  useEffect(() => {
+    setShowBack(3);
+
+    return () => {
+      setShowBack(null);
+    };
+  }, []);
 
   return (
     <div
@@ -72,17 +87,19 @@ const Gift = () => {
         />
       </div>
       {/* Header */}
-      <GiftHeader category={category} setCategory={(idx) => setCategory(idx)} />
-      <div className="flex flex-col justify-center items-center absolute h-full w-full bottom-0 px-2.5">
-        <div className="flex w-[75%] flex-col gap-y-[15px]">
-          {category == 0 ? (
-            <GiftCarousel rewards={globalRewards} />
-          ) : category == 1 ? (
-            <TaskCarousel quests={tasks} userData={userData} />
-          ) : (
-            <RewardCarousel rewards={payouts} />
-          )}
-        </div>
+      <GiftHeader
+        categoryCntArr={categoryCntArr}
+        category={category}
+        setCategory={(idx) => setCategory(idx)}
+      />
+      <div className="relative flex flex-col justify-center items-center my-auto h-1/2 w-full">
+        {category == 0 ? (
+          <GiftCarousel rewards={globalRewards} />
+        ) : category == 1 ? (
+          <TaskCarousel quests={tasks} userData={userData} />
+        ) : (
+          <RewardCarousel rewards={payouts} />
+        )}
       </div>
       <>
         <ToggleLeft

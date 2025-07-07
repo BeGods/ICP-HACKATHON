@@ -23,7 +23,7 @@ const TaskCarousel = ({ quests, userData }) => {
 
     if (deltaY > 50 && currentIndex > 0) {
       setCurrentIndex((prevIndex) => prevIndex - 1);
-    } else if (deltaY < -50 && currentIndex < quests.length - 3) {
+    } else if (deltaY < -50 && currentIndex < quests.length - 4) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -50,83 +50,92 @@ const TaskCarousel = ({ quests, userData }) => {
   }, []);
 
   return (
-    <div
-      className="wrapper h-[60vh]"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {quests.length > 3 && currentIndex >= 1 && (
-        <div
-          onClick={() => {
-            setCurrentIndex((prevIndex) => prevIndex - 1);
-          }}
-          className="absolute cursor-pointer top-[24%] mr-[2vw] w-full z-50"
-        >
-          <div className="arrows-up"></div>
+    <div className="flex flex-col justify-center items-center h-full w-[78%] -mt-3">
+      <div
+        className="wrapper"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className={`carousel carousel-width`}>
+          {quests
+            .sort((a, b) => {
+              if (a._id === "fjkddfakj138338huadla") return -1;
+              if (b._id === "fjkddfakj138338huadla") return 1;
+
+              if (a.isQuestClaimed !== b.isQuestClaimed) {
+                return a.isQuestClaimed - b.isQuestClaimed;
+              }
+
+              if (
+                a.requiredOrbs.multiOrbs === 5 &&
+                b.requiredOrbs.multiOrbs !== 5
+              )
+                return -1;
+              if (
+                a.requiredOrbs.multiOrbs !== 5 &&
+                b.requiredOrbs.multiOrbs === 5
+              )
+                return 1;
+
+              return 0;
+            })
+            .slice(currentIndex, currentIndex + 4)
+            .map((item, index) => {
+              let className = "carousel__item";
+              let onClick = null;
+
+              if (index === 2) className += " active";
+              else if (index === 1) className += " previous";
+              else if (index === 0) className += " previous2";
+              else if (index === 3) className += " next";
+
+              if (currentIndex > 0 && index === 0) {
+                className += " fade-top fade-click-overlay";
+                onClick = (e) => {
+                  e.stopPropagation();
+                  setCurrentIndex((prev) => prev - 1);
+                };
+              }
+
+              if (currentIndex + 4 < quests.length && index === 3) {
+                className += " fade-bottom fade-click-overlay";
+                onClick = (e) => {
+                  e.stopPropagation();
+                  setCurrentIndex((prev) => prev + 1);
+                };
+              }
+
+              return (
+                <div
+                  className={className}
+                  key={currentIndex + index}
+                  onClick={onClick}
+                >
+                  <div
+                    className={
+                      onClick ? "pointer-events-none w-full" : "w-full"
+                    }
+                  >
+                    <TaskItem
+                      key={item.id}
+                      showWallet={() => {}}
+                      showSetting={() => {
+                        setShowCard(
+                          <SettingModal
+                            close={() => {
+                              setShowCard(null);
+                            }}
+                          />
+                        );
+                      }}
+                      quest={item}
+                    />
+                  </div>
+                </div>
+              );
+            })}
         </div>
-      )}
-
-      <div className={`carousel carousel-width`}>
-        {quests
-          .sort((a, b) => {
-            if (a._id === "fjkddfakj138338huadla") return -1;
-            if (b._id === "fjkddfakj138338huadla") return 1;
-
-            if (a.isQuestClaimed !== b.isQuestClaimed) {
-              return a.isQuestClaimed - b.isQuestClaimed;
-            }
-
-            if (
-              a.requiredOrbs.multiOrbs === 5 &&
-              b.requiredOrbs.multiOrbs !== 5
-            )
-              return -1;
-            if (
-              a.requiredOrbs.multiOrbs !== 5 &&
-              b.requiredOrbs.multiOrbs === 5
-            )
-              return 1;
-
-            return 0;
-          })
-          .slice(currentIndex, currentIndex + 3)
-          .map((item, index) => {
-            let className = "carousel__item";
-            if (index === 0) {
-              className += " previous";
-            } else if (index === 1) {
-              className += " active";
-            } else if (index === 2) {
-              className += " next";
-            }
-
-            return (
-              <div className={className} key={currentIndex + index}>
-                <TaskItem
-                  showWallet={() => {}}
-                  showSetting={() => {
-                    setShowCard(
-                      <SettingModal
-                        close={() => {
-                          setShowCard(null);
-                        }}
-                      />
-                    );
-                  }}
-                  quest={item}
-                />
-              </div>
-            );
-          })}
       </div>
-      {currentIndex < quests.length - 3 && (
-        <div
-          onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute cursor-pointer bottom-[22%] w-full"
-        >
-          <div className="arrows-down"></div>
-        </div>
-      )}
     </div>
   );
 };

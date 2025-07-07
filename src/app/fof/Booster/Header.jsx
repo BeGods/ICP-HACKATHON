@@ -23,7 +23,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
   }, []);
 
   return (
-    <div className="flex cursor-pointer absolute justify-center w-full top-0 z-20">
+    <div className="flex cursor-pointer absolute justify-center w-full top-0 -mt-2 z-20">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -40,7 +40,7 @@ const CenterChild = ({ activeMyth, showSymbol }) => {
 const BottomChild = ({ activeMyth, gameData }) => {
   const { t } = useTranslation();
   return (
-    <div className="flex w-full justify-center px-2 mt-3 top-0 absolute">
+    <div className="flex w-full justify-center px-2 mt-1 top-0 absolute">
       <div className="flex relative w-full max-w-[720px] px-7">
         <div
           className={`flex relative border-${
@@ -106,15 +106,11 @@ const BoosterHeader = ({ activeMyth, showSymbol, gameData }) => {
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-headTop">
-        {/* <div
-          className={`text-sectionHead ${
-            changeText ? `text-white` : `text-${mythSections[activeMyth]}-text`
-          } -mt-2.5 text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit z-30 mx-auto`}
+        <div
+          className={`font-fof disappear w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh]  glow-icon-${mythSections[activeMyth]} uppercase text-white drop-shadow z-50 text-black-contour`}
         >
-          {changeText
-            ? t("sections.boosters")
-            : t(`mythologies.${mythSections[activeMyth]}`)}
-        </div> */}
+          {t(`mythologies.${mythSections[activeMyth]}`)}
+        </div>
         <BottomChild activeMyth={activeMyth} gameData={gameData} />
         <CenterChild activeMyth={activeMyth} showSymbol={showSymbol} />
       </div>

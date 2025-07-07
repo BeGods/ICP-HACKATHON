@@ -25,7 +25,7 @@ const CenterChild = ({
   const { setSection, assets, enableHaptic } = useContext(FofContext);
 
   return (
-    <div className="flex absolute justify-center w-full z-20 top-0">
+    <div className="flex absolute justify-center w-full z-20 top-0 -mt-2">
       <div
         onClick={() => {
           handleClickHaptic(tele, enableHaptic);
@@ -37,8 +37,8 @@ const CenterChild = ({
           orbGlow
             ? `glow-tap-${mythSections[activeMyth]} outline-[2px]`
             : `glow-icon-${mythSections[activeMyth]}`
-        } ${tapGlow ? "scale-[115%] outline-[2px]" : ""} ${
-          glowReward ? "scale-[115%] outline-[2px]" : ""
+        } ${tapGlow ? "scale-[110%] outline-[2px]" : ""} ${
+          glowReward ? "scale-[110%] outline-[2px]" : ""
         }`}
       >
         <div
@@ -68,7 +68,7 @@ const CenterChild = ({
           } duration-1000 myth-glow-greek text-black-icon-contour orb-symbol-shadow absolute h-full w-full rounded-full`}
         >
           <div
-            className={`${platform === "ios" ? "mt-[1rem]" : "mt-[1.25rem]"}`}
+            className={`${platform === "ios" ? "mt-[0.5rem]" : "mt-[0.75rem]"}`}
           >
             {mythSymbols[mythSections[activeMyth]]}
           </div>
@@ -100,7 +100,7 @@ const BottomChild = ({
   }, [glowShards, showEffect]);
 
   return (
-    <div className="flex relative justify-center -mt-3 px-2">
+    <div className="flex relative justify-center -mt-[1.15rem] px-2">
       <div className="flex w-full max-w-[720px] px-7">
         <div
           className={`flex  relative ${
@@ -175,6 +175,7 @@ const ForgeHeader = ({
   showTut,
   starIsHeld,
 }) => {
+  const { t } = useTranslation();
   const { assets, section } = useContext(FofContext);
   const [changeText, setChangeText] = useState(true);
   const height = Math.min(
@@ -196,12 +197,17 @@ const ForgeHeader = ({
           minimize == 1 && "rise-and-fade"
         } ${
           minimize == 2 && "drop-and-fade-in"
-        } text-center top-0 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit mx-auto`}
+        } text-center top-0 -mt-2 text-black-lg-contour uppercase absolute inset-0 w-fit h-fit mx-auto`}
       >
         <h1 className="">
           {Math.floor(mythData.energy / 10)}
           <span className="text-[16px] font-bold">%</span>
         </h1>
+      </div>
+      <div
+        className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh]  glow-icon-${mythSections[activeMyth]} uppercase text-white drop-shadow z-50 text-black-contour`}
+      >
+        {t("sections.forges")}
       </div>
       <BottomChild
         shards={shards}
