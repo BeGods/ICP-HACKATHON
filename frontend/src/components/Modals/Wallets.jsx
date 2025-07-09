@@ -34,7 +34,6 @@ const WalletsModal = ({ handleClose }) => {
       : "Not Connected";
 
   const handleDisconnectWallet = async (e) => {
-    e.stopPropagation();
     handleClickHaptic(tele, enableHaptic);
     try {
       if (isTelegram) {
@@ -63,7 +62,6 @@ const WalletsModal = ({ handleClose }) => {
   };
 
   const handleFetchLineHistory = async (e) => {
-    e.stopPropagation();
     handleClickHaptic(tele, enableHaptic);
 
     try {
@@ -90,6 +88,7 @@ const WalletsModal = ({ handleClose }) => {
       className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
     >
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
       >
         <div

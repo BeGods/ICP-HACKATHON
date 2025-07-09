@@ -60,7 +60,7 @@ const BottomChild = () => {
           <Bell color="white" fill="white" size={30} />
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left`}>{t("profile.task")}</div>
         <div className={`ml-auto slide-in-out-right`}>Ranking</div>
       </div>
@@ -127,7 +127,7 @@ const ProfileHeader = ({ userData, avatarColor, handleClick, showGuide }) => {
     <div>
       <div className="flex flex-col gap-[5px] pt-headTop">
         <div
-          className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh] uppercase text-gold text-black-contour drop-shadow z-50`}
+          className={`font-fof w-full text-center mt-[6.5rem] absolute top-0 text-[4.5dvh] uppercase text-gold text-black-contour drop-shadow z-50`}
         >
           {(
             userData.username.charAt(0).toUpperCase() +

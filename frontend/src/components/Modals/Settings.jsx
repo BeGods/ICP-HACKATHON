@@ -1,16 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import IconBtn from "../Buttons/IconBtn";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { ToggleSwitch } from "../Common/ToggleSwitch";
 import {
-  Check,
   ChevronRight,
   Globe,
   LayoutGrid,
   Map,
   SquareArrowOutUpRight,
-  UserRoundPen,
   Vibrate,
   VibrateOff,
   Volume2,
@@ -20,13 +17,10 @@ import {
 import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
 import {
-  connectTonWallet,
-  disconnectTonWallet,
   fetchProfilePhoto,
   fetchRewards,
   updateProfile,
 } from "../../utils/api.fof";
-import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import { showToast } from "../Toast/Toast";
 import {
   clearAllGuideCookie,
@@ -82,12 +76,9 @@ const SettingModal = ({ close }) => {
   } = useContext(MainContext);
   const { setRewards, setRewardsClaimedInLastHr, setUserData, setSection } =
     useContext(FofContext);
-  const [tonConnectUI] = useTonConnectUI();
-  const userFriendlyAddress = useTonAddress();
   const [isChanged, setIsChanged] = useState(false);
 
   const handleSoundToggle = (e) => {
-    e.stopPropagation();
     setEnableSound((prev) => {
       const newValue = !prev;
       if (newValue) {
@@ -104,7 +95,6 @@ const SettingModal = ({ close }) => {
   };
 
   const handleHapticsToggle = (e) => {
-    e.stopPropagation();
     setEnableHaptic((prev) => {
       const newValue = !prev;
       if (newValue) {
@@ -129,7 +119,6 @@ const SettingModal = ({ close }) => {
   };
 
   const handleLanguageChange = (e) => {
-    e.stopPropagation();
     const langCode = e.target.value === "" ? "en" : e.target.value;
     setIsChanged(true);
     trackEvent("misc", `language_${langCode}`, `success_${langCode}`);
@@ -138,7 +127,6 @@ const SettingModal = ({ close }) => {
   };
 
   const handleSettingChange = (e) => {
-    e.stopPropagation();
     setIsChanged(true);
     const selectedCountry = e.target.value;
 
@@ -154,89 +142,17 @@ const SettingModal = ({ close }) => {
 
   const handleUpdateCountry = async (updatedCountry) => {
     try {
-      const response = await updateProfile(updatedCountry, null, authToken);
+      await updateProfile(updatedCountry, null, authToken);
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const handleConnectTon = async () => {
-    try {
-      await connectTonWallet({ tonAddress: userFriendlyAddress }, authToken);
-      trackEvent("misc", "connect_wallet", "success");
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: userFriendlyAddress,
-      }));
-
-      showToast("ton_connect_success");
-    } catch (error) {
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-
-      console.log(errorMessage);
-      showToast("ton_connect_error");
-    }
-  };
-
-  const handleDisconnectTon = async () => {
-    try {
-      await disconnectTonWallet(authToken);
-      tonConnectUI.disconnect();
-      setUserData((prev) => ({
-        ...prev,
-        tonAddress: null,
-      }));
-      showToast("ton_connect_success");
-    } catch (error) {
-      console.log(error);
-      const errorMessage =
-        error.response.data.error ||
-        error.response.data.message ||
-        error.message ||
-        "An unexpected error occurred";
-      console.log(errorMessage);
-      showToast("ton_connect_error");
     }
   };
 
   const handleEnableGuide = (e) => {
-    e.stopPropagation();
     clearAllGuideCookie(tele);
     close();
     setSection(0);
   };
-
-  const updateProfilePhoto = async () => {
-    showToast("success_avatar");
-    close();
-    try {
-      const response = await fetchProfilePhoto(authToken);
-      if (response.avatarUrl) {
-        setUserData((prev) => ({
-          ...prev,
-          avatarUrl: response.avatarUrl,
-        }));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (
-  //       state.closeReason === "wallet-selected" &&
-  //       state.status === "closed" &&
-  //       (userData.tonAddress === null || !userData.tonAddress)
-  //     ) {
-  //       handleConnectTon();
-  //     }
-  //   });
-  // }, [state]);
 
   const handleClose = () => {
     handleClickHaptic(tele, enableHaptic);
@@ -252,6 +168,7 @@ const SettingModal = ({ close }) => {
       className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
     >
       <div
+        onClick={(e) => e.stopPropagation()}
         className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
       >
         <div
@@ -340,24 +257,8 @@ const SettingModal = ({ close }) => {
           </div>
         </div>
 
-        {/* <div
-          onClick={updateProfilePhoto}
-          className={`${
-            !isTelegram ? "hidden" : "flex"
-          } text-tertiary text-white text-left w-full mt-6 pl-4`}
-        >
-          <div className="flex justify-start -ml-3">
-            <UserRoundPen />
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{t("profile.updatePhoto")}</div>
-            <ChevronRight />
-          </div>
-        </div> */}
-
         <div
           onClick={(e) => {
-            e.stopPropagation();
             tele.addToHomeScreen();
           }}
           className={`${
@@ -376,7 +277,6 @@ const SettingModal = ({ close }) => {
         {!liff.isInClient() && !isTelegram && (
           <div
             onClick={async (e) => {
-              e.stopPropagation();
               await deleteAuthCookie(tele);
               if (location.pathname === "/") {
                 window.location.reload();
@@ -401,3 +301,20 @@ const SettingModal = ({ close }) => {
 };
 
 export default SettingModal;
+
+{
+  /* <div
+          onClick={updateProfilePhoto}
+          className={`${
+            !isTelegram ? "hidden" : "flex"
+          } text-tertiary text-white text-left w-full mt-6 pl-4`}
+        >
+          <div className="flex justify-start -ml-3">
+            <UserRoundPen />
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="pl-3">{t("profile.updatePhoto")}</div>
+            <ChevronRight />
+          </div>
+        </div> */
+}

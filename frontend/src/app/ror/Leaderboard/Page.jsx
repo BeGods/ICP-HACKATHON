@@ -26,7 +26,7 @@ const UserAvatar = ({ user, index }) => {
   });
 
   return (
-    <div className="absolute rounded-full min-w-[8rem] min-h-[8rem] bg-white top-0 -mt-[5rem]">
+    <div className="absolute rounded-full min-w-[8rem] min-h-[8rem] bg-white top-0 -mt-[6.5rem]">
       <div
         style={{
           boxShadow:

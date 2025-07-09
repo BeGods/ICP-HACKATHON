@@ -73,7 +73,7 @@ const BottomChild = ({
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left`}>UNCLAIMED</div>
         <div className={`ml-auto slide-in-out-right`}>CLAIMED</div>
       </div>

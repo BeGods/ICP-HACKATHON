@@ -88,7 +88,7 @@ function PayCard({
       onClick={() => {
         setShowCard(null);
       }}
-      className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex  flex-col justify-center items-center z-50"
+      className="fixed inset-0 flex  flex-col justify-center items-center z-50"
     >
       <div
         style={{
@@ -112,17 +112,15 @@ function PayCard({
         />
       </div>
       <div
-        className={`relative card-width rounded-lg shadow-lg  flex flex-col z-50`}
+        className={`relative card-width  rounded-lg shadow-lg  flex flex-col z-50`}
       >
         <div className="relative card-shadow-white">
           <div className="absolute  bg-black h-full w-full z-10 opacity-50 rounded-xl"></div>
-          {/* Card Image */}
           <img
             src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
             alt="card"
             className="w-full h-full mx-auto grayscale rounded-[15px]"
           />
-          {/* Close Button */}
           <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
             <div className="flex w-full">
               <div className="m-2 z-50">
@@ -163,7 +161,8 @@ function PayCard({
             </div>
           </div>
         </div>
-        {/* Button */}
+      </div>
+      <div className="absolute bottom-[15%]">
         <Button
           handleClick={handleOperation}
           message={0}

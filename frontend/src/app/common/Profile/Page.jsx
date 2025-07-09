@@ -248,11 +248,9 @@ const Profile = (props) => {
   ];
 
   useEffect(() => {
-    setMinimize(1);
     setShowBack(0);
 
     return () => {
-      setMinimize(2);
       setShowBack(null);
     };
   }, [showCard]);
@@ -283,7 +281,7 @@ const Profile = (props) => {
       {/* Header */}
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
 
-      <div className="flex flex-col justify-center items-center h-full mx-auto w-full mt-[4.5rem] px-2.5">
+      <div className="flex flex-col justify-center items-center h-full mx-auto w-full mt-[10dvh] px-2.5">
         <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">
           <div className="grid grid-cols-2 gap-x-1.5 gap-y-[1.1dvh] w-full h-fit place-items-center">
             {profileDetails.map((itm, idx) => (

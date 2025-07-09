@@ -20,7 +20,7 @@ const RewardCarousel = ({ rewards }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-full w-[78%] -mt-3">
+    <div className="flex flex-col justify-center items-center h-full w-[78%] mt-[2.65rem]">
       <div
         className="wrapper"
         onTouchStart={handleTouchStart}

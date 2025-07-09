@@ -6,13 +6,13 @@ const tele = window.Telegram?.WebApp;
 
 const GiftHeader = ({ category, setCategory, categoryCntArr }) => {
   const { enableHaptic } = useContext(MainContext);
+  const labels = ["Vouchers", "Tasks", "Payouts"];
 
   return (
     <div className="flex items-center max-w-[720px] justify-center w-[80%] z-50 mt-1 p-0.5 text-[24px] mx-auto bg-white border border-black rounded-full shadow">
       {[0, 1, 2].map((cat) => {
         const isActive = category === cat;
         const icons = ["1", "0", "t"];
-        const labels = ["Vouchers", "Tasks", "Payouts"];
 
         return (
           <div
@@ -35,6 +35,11 @@ const GiftHeader = ({ category, setCategory, categoryCntArr }) => {
           </div>
         );
       })}
+      <div
+        className={`font-fof w-full text-center mt-[6.2rem] absolute top-0 text-[4.5dvh] uppercase text-white text-black-contour drop-shadow z-50`}
+      >
+        {labels[category]}
+      </div>
     </div>
   );
 };

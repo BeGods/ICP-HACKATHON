@@ -60,7 +60,7 @@ const OrbClaimCard = ({
       onClick={() => {
         setShowCard(null);
       }}
-      className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
+      className="fixed inset-0  flex justify-center items-center z-50"
     >
       <div
         style={{
@@ -154,6 +154,9 @@ const OrbClaimCard = ({
             <OrbCard activeMyth={activeMyth} />
           </div>
         </div>
+      </div>
+
+      <div className="absolute bottom-[15%]">
         <ShareButton
           isShared={false}
           isInfo={false}

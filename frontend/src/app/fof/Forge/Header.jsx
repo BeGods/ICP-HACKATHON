@@ -145,7 +145,7 @@ const BottomChild = ({
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left`}>
           {t(`keywords.shards`)}
         </div>
@@ -205,7 +205,7 @@ const ForgeHeader = ({
         </h1>
       </div>
       <div
-        className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh]  glow-icon-${mythSections[activeMyth]} uppercase text-white drop-shadow z-50 text-black-contour`}
+        className={`font-fof w-full text-center mt-[6.5rem] absolute top-0 text-[4.5dvh] disappear glow-icon-${mythSections[activeMyth]} uppercase text-white drop-shadow z-50 text-black-contour`}
       >
         {t("sections.forges")}
       </div>

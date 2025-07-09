@@ -41,9 +41,7 @@ const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
   return (
     <div
       onClick={handleButtonClick}
-      className={`absolute cursor-pointer z-[60] flex w-full justify-end top-0  right-0 ${
-        isJigsaw && "mt-[1.45rem]"
-      } `}
+      className={`absolute cursor-pointer z-[60] flex w-full justify-end top-0  right-0 `}
     >
       <img
         src={assets.uxui.corner}

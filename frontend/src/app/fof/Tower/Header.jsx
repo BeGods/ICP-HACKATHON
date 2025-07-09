@@ -152,7 +152,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
         </div>
       </div>
 
-      <div className="absolute flex text-white  px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
+      <div className="absolute flex text-white  px-1 w-full mt-[4rem] font-fof text-tertiary uppercase">
         <div className={`mr-auto slide-in-out-left gradient-multi`}>
           {t(`keywords.orbs`)}
         </div>
@@ -186,17 +186,8 @@ const TowerHeader = ({
   return (
     <div>
       <div className="flex flex-col gap-[5px] pt-headTop">
-        {/* <div
-          className={`text-sectionHead ${
-            changeText
-              ? `text-white text-black-lg-contour`
-              : `text-black text-white-lg-contour`
-          } -mt-2.5 text-center top-0  uppercase absolute inset-0 z-[90] w-fit h-fit mx-auto`}
-        >
-          {changeText ? t("sections.tower") : t("mythologies.dark")}
-        </div> */}
         <div
-          className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh] uppercase text-black drop-shadow z-50`}
+          className={`font-fof w-full text-center mt-[6.5rem] disappear absolute top-0 text-[4.5dvh] uppercase text-black drop-shadow z-50`}
         >
           {t(`elements.aether`)}
         </div>
