@@ -184,7 +184,7 @@ html, body {
 }
 
 .browser-container-height {
-  height: 94.5dvh
+  height: calc(100dvh  - env(safe-area-inset-top) - 45px);
 }
 
 .tg-middle-position {
@@ -326,7 +326,7 @@ body.iframe-mobile .browser-container-height {
 }
 
 .card-width {
-  @apply h-[52dvh] aspect-[320/448] max-h-[100vw];
+  @apply h-[52dvh] aspect-[320/448] max-h-[100vw] -mt-[6dvh];
 }
 
 .carousel-width {
@@ -335,4 +335,8 @@ body.iframe-mobile .browser-container-height {
 
 .footer-width {
   @apply w-[82%] tablet:w-[75%] desktop:w-[50%];
+}
+
+.chrome-top-safe-area{
+  padding-top: env(safe-area-inset-top);
 }

@@ -8,7 +8,14 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
-const QuestCard = ({ quest, activeMyth, t, InfoCard, isGuideActive }) => {
+const QuestCard = ({
+  quest,
+  activeMyth,
+  t,
+  InfoCard,
+  isGuideActive,
+  flipButton,
+}) => {
   const { assets, enableHaptic } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
 
@@ -17,7 +24,7 @@ const QuestCard = ({ quest, activeMyth, t, InfoCard, isGuideActive }) => {
       style={{
         perspective: "1000px",
       }}
-      className="relative card-width -mt-[6dvh] flex flex-col justify-center items-center "
+      className="relative card-width flex flex-col justify-center items-center "
     >
       <div className={`card ${flipped ? "flipped" : ""}`}>
         <div
@@ -25,7 +32,7 @@ const QuestCard = ({ quest, activeMyth, t, InfoCard, isGuideActive }) => {
             handleClickHaptic(tele, enableHaptic);
             setFlipped((prev) => !prev);
             setTimeout(() => {
-              setButtonFlip((prev) => !prev);
+              flipButton();
             }, 200);
           }}
           className="card__face card__face--front relative"
@@ -91,7 +98,7 @@ const QuestCard = ({ quest, activeMyth, t, InfoCard, isGuideActive }) => {
             handleClickHaptic(tele, enableHaptic);
             setFlipped((prev) => !prev);
             setTimeout(() => {
-              setButtonFlip((prev) => !prev);
+              flipButton();
             }, 200);
           }}
           className="card__face card__face--back"

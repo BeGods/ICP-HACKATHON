@@ -421,7 +421,6 @@ const FoFMain = () => {
               section != 8 &&
               section != 12 &&
               section != 11 &&
-              section != 3 &&
               !showCard && <Footer minimize={minimize} />}
             {showCard && (
               <div className="absolute z-[99] w-screen">{showCard}</div>

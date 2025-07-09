@@ -413,65 +413,167 @@ const Quests = () => {
       />
 
       <div className="absolute inset-0 flex items-center justify-center z-10">
-        <QuestCard
-          quest={quest}
-          isGuideActive={enableGuide}
-          activeMyth={activeMyth}
-          showClaimEffect={showClaimEffect}
-          t={t}
-          InfoCard={
-            <InfoCard
-              t={t}
-              isShared={quest?.isShared}
+        {currQuest < quests.length ? (
+          <>
+            <QuestCard
               quest={quest}
-              handleClaimShareReward={() => handleClaimShareReward(quest._id)}
-              handleShowInfo={() => {
-                setShowCard(null);
+              isGuideActive={enableGuide}
+              activeMyth={activeMyth}
+              showClaimEffect={showClaimEffect}
+              flipButton={() => setButtonFlip((prev) => !prev)}
+              t={t}
+              InfoCard={
+                <InfoCard
+                  t={t}
+                  isShared={quest?.isShared}
+                  quest={quest}
+                  handleClaimShareReward={() =>
+                    handleClaimShareReward(quest._id)
+                  }
+                  handleShowInfo={() => {
+                    setShowCard(null);
+                  }}
+                  activeMyth={activeMyth}
+                />
+              }
+            />
+          </>
+        ) : (
+          <div
+            style={{
+              perspective: "1000px",
+            }}
+            className="relative card-width flex flex-col justify-center items-center"
+          >
+            <div className={`card ${flipped ? "flipped" : ""}  z-[99]`}>
+              <div
+                className={`card__face card__face--front ${
+                  showClaimEffect && "scale-reward"
+                } relative flex justify-center items-center`}
+              >
+                <JigsawImage
+                  isTelegram={isTelegram}
+                  isTgMobile={isTgMobile}
+                  grid={[3, 6]}
+                  handleClick={() => {}}
+                  imageUrl={assets.whitelist[mythSections[activeMyth]]}
+                  activeParts={handleActiveParts(
+                    gameData.mythologies[activeMyth].faith
+                  )}
+                />
+                <IconBtn
+                  isJigsaw={true}
+                  isInfo={true}
+                  activeMyth={activeMyth}
+                  handleClick={() => {
+                    setShowCard(
+                      <SecretCard
+                        t={t}
+                        isShared={secretQuests[0]?.isShared}
+                        quest={secretQuests[0]}
+                        handleClaimShareReward={() =>
+                          handleClaimShareReward(secretQuests[0]._id)
+                        }
+                        handleShowInfo={() => {
+                          setShowCard(null);
+                        }}
+                        activeMyth={activeMyth}
+                      />
+                    );
+                  }}
+                />
+              </div>
+              <div className="card__face card__face--back flex justify-center items-center">
+                <SecretCard
+                  t={t}
+                  isShared={secretQuests[0]?.isShared}
+                  quest={secretQuests[0]}
+                  handleClaimShareReward={() =>
+                    handleClaimShareReward(secretQuests[0]._id)
+                  }
+                  handleShowInfo={() => {
+                    setShowCard(null);
+                  }}
+                  activeMyth={activeMyth}
+                />
+              </div>
+            </div>
+            {currQuest === quests.length && (
+              <div
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  setFlipped((prev) => !prev);
+                }}
+                className={`absolute flex justify-end w-full h-full z-[99]`}
+              ></div>
+            )}
+          </div>
+        )}
+
+        <div className="absolute flex justify-center bottom-[15%]">
+          {currQuest < quests.length ? (
+            <div className={`button  mb-2 ${buttonFlip ? "flipped" : ""}`}>
+              <div
+                className={`button__face button__face--front flex justify-center items-center`}
+              >
+                <QuestButton
+                  handlePrev={handlePrev}
+                  handleNext={handleNext}
+                  isCompleted={quest?.isQuestClaimed}
+                  activeMyth={activeMyth}
+                  lastQuest={quests.length - 1}
+                  action={handleButtonClick}
+                  currQuest={currQuest}
+                  faith={mythData[activeMyth].faith}
+                  t={t}
+                />
+              </div>
+              <div className="button__face button__face--back z-50 flex justify-center items-center">
+                <ShareButton
+                  isOrbClaimCard={true}
+                  isShared={quest?.isShared}
+                  isInfo={true}
+                  handleClaim={handleClaimShareReward}
+                  activeMyth={activeMyth}
+                  link={`https://twitter.com/intent/tweet?text=%F0%9F%8C%8D%20Check%20it%20out!%20%F0%9F%92%AF%0ADive%20into%20world%20mythologies%20and%20Play-2-Learn%20with%20Forges%20of%20Faith%20from%20the%20BeGODS%20Mythoverse!%20%F0%9F%9B%A1%F0%9F%94%A5%0A%40BattleofGods_io%0Ahttps%3A%2F%2Fx.com%2FBattleofGods_io%2Fstatus%2F${quest.link[0]}%0A%0A%F0%9F%8E%AE%20Play%20now%3A%20https%3A%2F%2Fplay.begods.games`}
+                  t={t}
+                />
+              </div>
+            </div>
+          ) : (
+            <JigsawButton
+              limit={18}
+              handleClick={() => {
+                if (gameData.mythologies[activeMyth].faith >= 18) {
+                  setShowCard(
+                    <GameEndCrd
+                      activeMyth={activeMyth}
+                      handleClick={() => {
+                        setShowCard(null);
+                      }}
+                    />
+                  );
+                }
               }}
               activeMyth={activeMyth}
+              handleNext={handleNext}
+              handlePrev={handlePrev}
+              faith={gameData.mythologies[activeMyth].faith}
+              t={t}
             />
-          }
-        />
-        <div className="absolute flex justify-center bottom-[15%] mb-2">
-          <div className={`button ${buttonFlip ? "flipped" : ""}`}>
-            <div
-              className={`button__face button__face--front flex justify-center items-center`}
-            >
-              <QuestButton
-                handlePrev={handlePrev}
-                handleNext={handleNext}
-                isCompleted={quest?.isQuestClaimed}
-                activeMyth={activeMyth}
-                lastQuest={quests.length - 1}
-                action={handleButtonClick}
-                currQuest={currQuest}
-                faith={mythData[activeMyth].faith}
-                t={t}
-              />
-            </div>
-            <div className="button__face button__face--back z-50 flex justify-center items-center">
-              <ShareButton
-                isOrbClaimCard={true}
-                isShared={quest?.isShared}
-                isInfo={true}
-                handleClaim={handleClaimShareReward}
-                activeMyth={activeMyth}
-                link={`https://twitter.com/intent/tweet?text=%F0%9F%8C%8D%20Check%20it%20out!%20%F0%9F%92%AF%0ADive%20into%20world%20mythologies%20and%20Play-2-Learn%20with%20Forges%20of%20Faith%20from%20the%20BeGODS%20Mythoverse!%20%F0%9F%9B%A1%F0%9F%94%A5%0A%40BattleofGods_io%0Ahttps%3A%2F%2Fx.com%2FBattleofGods_io%2Fstatus%2F${quest.link[0]}%0A%0A%F0%9F%8E%AE%20Play%20now%3A%20https%3A%2F%2Fplay.begods.games`}
-                t={t}
-              />
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
-      <ReactHowler
-        src={assets.audio.forgeBg}
-        playing={enableSound}
-        loop
-        preload={true}
-        html5={true}
-      />
-
+      <div className="absolute">
+        <ReactHowler
+          src={assets.audio.forgeBg}
+          playing={enableSound}
+          loop
+          preload={true}
+          html5={true}
+        />
+      </div>
       {/* Toggles */}
       {showToggle && (
         <>

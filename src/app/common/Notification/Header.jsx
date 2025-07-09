@@ -6,9 +6,9 @@ import { Gamepad2, Mails, Megaphone } from "lucide-react";
 const tele = window.Telegram?.WebApp;
 
 const iconMap = [
-  { icon: <Gamepad2 size={28} />, label: "Vouchers" },
-  { icon: <Mails size={24} />, label: "Tasks" },
-  { icon: <Megaphone size={28} />, label: "Payouts" },
+  { icon: <Gamepad2 size={28} />, label: "IN GAME" },
+  { icon: <Mails size={24} />, label: "NOTIFICATIONS" },
+  { icon: <Megaphone size={28} />, label: "ANNOUNCEMENTS" },
 ];
 
 const NotifHeader = ({ category, setCategory }) => {
@@ -36,7 +36,9 @@ const NotifHeader = ({ category, setCategory }) => {
           );
         })}
       </div>
-      <div className="font-fof text-[2rem] mt-1 uppercase text-white drop-shadow">
+      <div
+        className={`font-fof w-full text-center mt-[6.3rem] absolute top-0 text-[4.5dvh] uppercase text-white text-black-contour drop-shadow z-50`}
+      >
         {iconMap[category].label}
       </div>
     </div>

@@ -668,36 +668,181 @@ const BoosterClaim = ({
   return (
     <div
       onClick={closeCard}
-      className=" flex flex-col justify-center items-center inset-0  z-50"
+      className="fixed flex flex-col justify-center items-center inset-0 z-50"
     >
       <div
-        onClick={() => {
-          setFlipped((prev) => !prev);
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1,
         }}
-        className={`relative card-width card-shadow-white rounded-lg shadow-lg -mt-[6dvh] flex flex-col z-50`}
+        className="background-wrapper"
       >
-        <div className={`card ${flipped ? "flipped" : ""}`}>
-          <div className="card__face card__face--front relative">
-            <div
-              className={`relative h-full card-shadow-black    $ rounded-[15px]`}
-            ></div>
-            <img
-              src={`${
-                assets.boosters[
-                  `${activeCard === "minion" ? "alchemist" : activeCard}Card`
-                ]
-              }`}
-              alt="card"
-              className={`w-full h-full object-cover rounded-[15px]`}
-            />
-          </div>
-        </div>
+        <div
+          className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
+          style={{
+            backgroundImage: `url(${assets.uxui.baseBgA})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
       </div>
-      {/* {!showPayModal ? (
-        <> */}
-      {/* <div
+      {!showPayModal ? (
+        <>
+          {/* Adsgram & OpenAds */}
+          {!isAutoPay &&
+            ((activeCard === "automata" && !boostersData?.isAutomataActive) ||
+              (activeCard === "minion" &&
+                boostersData?.isShardsClaimActive)) && (
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  handleClickHaptic(tele, enableHaptic);
+                  if (isTelegram) {
+                    showAd();
+                  } else {
+                    if (!isReady && !isClicked) {
+                      setIsClicked(true);
+                      loadAd();
+                      setTimeout(() => {
+                        setIsClicked(false);
+                      }, 9000);
+                    }
+                  }
+                }}
+                className="absolute flex items-center justify-center bottom-0 w-screen pb-2"
+              >
+                {!isTelegram && !isReady && isClicked ? (
+                  <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                    <div className="flex pt-8 relative items-center justify-center">
+                      <div className="text-white text-black-contour  text-[8vw]">
+                        <div className="w-full text-center relative font-medium text-secondary">
+                          {t("keywords.load")}
+                          <span className="absolute">{`${".".repeat(
+                            dots
+                          )}`}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                    <div className="flex relative items-center justify-center">
+                      <Clapperboard color="#ffd660" size={"7dvh"} />
+                      <div className="flex justify-center items-center rounded-full border border-black absolute bottom-0 left-0 text-black bg-white text-[1rem] w-[1.5rem] h-[1.5rem]">
+                        AD
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+          {/* Telegram Stars */}
+          {isAutoPay &&
+            !payIsActive &&
+            isTelegram &&
+            ((activeCard === "automata" &&
+              gameData?.isEligibleToAutomataAuto &&
+              gameData?.isAutomataAutoActive === -1 &&
+              !boostersData.isAutomataActive) ||
+              (activeCard === "burst" &&
+                !boostersData.isBurstActive &&
+                hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickHaptic(tele, enableHaptic);
+                  handleGenerateInvoice();
+                }}
+                className="absolute flex items-center justify-center bottom-0 w-screen pb-2"
+              >
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex relative items-center justify-center">
+                    <div className="text-white text-black-contour mt-1 z-10 absolute text-[2rem]">
+                      {activeCard === "automata" ? 1 : 3}
+                    </div>{" "}
+                    <img
+                      src={assets.misc.tgStar}
+                      alt="star"
+                      className="w-[4rem] h-[4rem]"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* Kaia */}
+          {isAutoPay &&
+            !payIsActive &&
+            !isTelegram &&
+            ((activeCard === "automata" &&
+              gameData?.isEligibleToAutomataAuto &&
+              gameData?.isAutomataAutoActive === -1 &&
+              !boostersData.isAutomataActive) ||
+              (activeCard === "burst" &&
+                !boostersData.isBurstActive &&
+                hasTimeElapsed(gameData.autoPayBurstExpiry))) && (
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickHaptic(tele, enableHaptic);
+                  // handleLinePayment();
+                  setShowPayModal(true);
+                }}
+                className="absolute flex items-center justify-center bottom-0 w-screen pb-2"
+              >
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex gap-x-1 relative items-center justify-center">
+                    <img
+                      src={assets.misc.kaia}
+                      alt="star"
+                      className="h-[2rem]"
+                    />
+
+                    <div className="text-white text-black-contour mt-1 z-10 text-[2rem] px-1">
+                      |
+                    </div>
+                    <div className="text-white text-black-contour mt-1 z-10 text-[2rem]">
+                      USD
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* Loading */}
+          {((activeCard === "automata" &&
+            !boostersData?.isAutomataActive &&
+            isAutoPay) ||
+            (activeCard === "burst" &&
+              boostersData?.isShardsClaimActive &&
+              isAutoPay)) &&
+            payIsActive && (
+              <div className="absolute flex items-center justify-center bottom-0 w-screen pb-2">
+                <div className="flex uppercase flex-col items-center gap-2 w-fit">
+                  <div className="flex pt-8 relative items-center justify-center">
+                    <div className="text-white text-black-contour  text-[8vw]">
+                      <div className="w-full text-center relative font-medium text-secondary">
+                        {t("keywords.load")}
+                        <span className="absolute">{`${".".repeat(
+                          dots
+                        )}`}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          <div
             onClick={(e) => e.stopPropagation()}
-            className={`relative card-width card-shadow-white rounded-lg shadow-lg -mt-[6dvh] flex flex-col z-50`}
+            className="relative card-width card-shadow-black flex flex-col justify-center items-center "
           >
             <div
               onClick={() => {
@@ -727,9 +872,9 @@ const BoosterClaim = ({
                   } text-[2.75rem] font-symbols z-10`}
                 >
                   {activeCard === "automata"
-                    ? "o"
+                    ? "n"
                     : activeCard === "minion"
-                    ? "v"
+                    ? "9"
                     : "s"}
                 </div>
                 <div className="relative h-full w-full flex flex-col items-center">
@@ -768,8 +913,7 @@ const BoosterClaim = ({
                           <div
                             className={`flex text-${mythSections[activeMyth]}-text gap-x-1`}
                           >
-                            {isAutoPay ? <span>4X</span> : <span>Lvl</span>}
-
+                            <span>Lvl</span>
                             {!isAutoPay &&
                               (activeCard === "automata"
                                 ? Math.min((mythData?.automatalvl ?? 0) + 2, 99)
@@ -825,9 +969,9 @@ const BoosterClaim = ({
                 />
               </div>
             </div>
-          </div> */}
+          </div>
 
-      {/* <div className="absolute bottom-[15%]">
+          <div className="absolute bottom-[15%]">
             <BoosterBtn
               isAutoPay={isAutoPay}
               activeCard={activeCard}
@@ -837,6 +981,22 @@ const BoosterClaim = ({
               t={t}
             />
           </div>
+          {section === 2 && (
+            <div className="flex gap-3 absolute top-5">
+              <div className="flex gap-1 items-center">
+                <div
+                  className={`flex relative text-center justify-center max-w-orb p-0.5 items-center rounded-full glow-icon-white`}
+                >
+                  <img src={assets.items.multiorb} alt="orb" />
+                </div>
+                <div
+                  className={`font-fof text-[2rem] font-normal text-white text-black-sm-contour transition-all duration-1000`}
+                >
+                  {gameData.multiColorOrbs}
+                </div>
+              </div>
+            </div>
+          )}
         </>
       ) : (
         <PayModal
@@ -867,9 +1027,9 @@ const BoosterClaim = ({
               disableSoundRef.current = true;
             }}
           />
-        )} */}
+        )}
 
-      {/* <div
+      <div
         onClick={(e) => e.stopPropagation()}
         className="absolute inset-0 pointer-events-none"
       >
@@ -889,7 +1049,7 @@ const BoosterClaim = ({
             activeMyth={activeMyth}
           />
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

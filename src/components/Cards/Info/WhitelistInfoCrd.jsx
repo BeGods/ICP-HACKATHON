@@ -15,9 +15,7 @@ const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
         top: 0,
         left: 0,
       }}
-      className={`flex ${
-        isTgMobile ? "h-[100%]" : "h-[100%]"
-      } flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black`}
+      className={`flex h-full flex-col w-full rounded-[15px] items-center gap-4 card-shadow-black`}
     >
       <IconBtn
         isInfo={false}

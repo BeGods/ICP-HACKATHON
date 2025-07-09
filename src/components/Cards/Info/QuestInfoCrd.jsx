@@ -22,6 +22,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
     >
       {platform === "ios" ? (
         <IconBtn
+          isFlip={true}
           isInfo={false}
           activeMyth={activeMyth}
           handleClick={handleShowInfo}
@@ -29,6 +30,7 @@ const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
         />
       ) : (
         <IconBtn
+          isFlip={true}
           isInfo={false}
           activeMyth={activeMyth}
           handleClick={handleShowInfo}

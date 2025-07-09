@@ -76,8 +76,7 @@ const JigsawButton = ({
         faith != 12
           ? "border-borderGray"
           : `border-${mythSections[activeMyth]}-primary`
-      } bg-glass-black-lg  rounded-primary z-[99]  top-0 left-0 right-0`}
-      style={{ top: "100%", transform: "translateY(-50%)" }}
+      } bg-glass-black-lg  rounded-primary z-[99] mb-[2px]`}
     >
       <div className="flex justify-center items-center w-1/4 border-r-secondary border-borderGray h-full">
         <CornerUpLeft
@@ -88,17 +87,17 @@ const JigsawButton = ({
       </div>
       {faith < limit && isPartner ? (
         <div
-          className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black text-white border-white w-[4rem] h-[4rem] border-[3px] rounded-full`}
+          className={`flex shadow-black shadow-2xl justify-center font-symbols items-center bg-black text-white border-white border-[3px] w-[4rem] h-[4rem]  rounded-full`}
         >
           <Share2 size={"1.75rem"} />
         </div>
       ) : (
         <div
-          className={`flex shadow-black shadow-2xl justify-center text-[40px] font-symbols items-center bg-black ${
+          className={`flex shadow-black shadow-2xl justify-center border-[3px] w-[4rem] h-[4rem] font-symbols items-center bg-black ${
             faith < limit
               ? "text-textGray border-borderDark"
               : "text-white border-white"
-          }  p-[1rem] border-[3px] rounded-full`}
+          } rounded-full`}
         >
           <ThumbsUp size={"1.75rem"} />
         </div>

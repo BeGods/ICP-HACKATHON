@@ -33,6 +33,7 @@ const Redeem = (props) => {
     isTgMobile,
     game,
     isBrowser,
+    enableHaptic,
     isTelegram,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
@@ -223,25 +224,6 @@ const Redeem = (props) => {
         link={() => {
           const currLink = currReward.metadata.brandRedirectionLink;
           window.open(currLink, "_blank");
-          // reward.metadata.brandRedirectionLink
-          // setShowCard(
-          //   <div
-          //     onClick={() => {
-          //       setShowCard(null);
-          //     }}
-          //     className="fixed flex flex-col justify-center items-center inset-0  bg-black backdrop-blur-[3px] bg-opacity-85 z-50"
-          //   >
-          //     <img
-          //       src={
-          //         currReward.partnerType == "playsuper"
-          //           ? `${currReward.metadata.campaignAssets.bannerView}`
-          //           : `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.campaign.png`
-          //       }
-          //       alt="campaign"
-          //       className="w-full h-4/5"
-          //     />
-          //   </div>
-          // );
         }}
         isCharity={currReward.isCharity}
         pieces={currReward.tokensCollected}
@@ -277,10 +259,8 @@ const Redeem = (props) => {
         }}
       />
       {/* Content */}
-      <div
-        className={`flex mt-7 ${
-          isTgMobile ? "tg-container-height" : "browser-container-height"
-        } justify-center items-center w-screen absolute mx-auto`}
+      {/* <div
+        className={`flex  justify-center items-center w-screen absolute mx-auto`}
       >
         <div className={`flex items-center justify-center w-full h-full`}>
           <div className="flex flex-col gap-[12px] items-center justify-center w-full h-full">
@@ -358,6 +338,81 @@ const Redeem = (props) => {
           >
             <div className="h-[60px] w-[60px] rounded-full -mt-[25px] -mr-[25px]"></div>
           </div>
+        </div>
+      </div> */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div
+          style={{
+            perspective: "1000px",
+          }}
+          className="relative card-width flex flex-col justify-center items-center"
+        >
+          <div className={`card ${flipped ? "flipped" : ""}  z-[99]`}>
+            <div
+              className={`card__face card__face--front  relative flex justify-center items-center`}
+            >
+              <JigsawImage
+                isTgMobile={isTgMobile}
+                grid={[2, 2]}
+                imageUrl={
+                  currReward.partnerType == "playsuper"
+                    ? `${currReward.metadata.campaignAssets.bannerView}`
+                    : `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.png`
+                }
+                activeParts={handleActiveParts(currReward.tokensCollected)}
+                handleClick={() => {
+                  if (currReward.tokensCollected === 4) {
+                    window.open(
+                      `https://media.publit.io/file/Partners/320px-${currReward.metadata.campaignAssets.bannerView}.png`,
+                      "_blank"
+                    );
+                  }
+                }}
+              />
+              <IconBtn
+                isJigsaw={true}
+                isInfo={true}
+                activeMyth={4}
+                handleClick={() => {
+                  setShowCard(null);
+                }}
+                align={isTelegram ? 7 : 9}
+              />
+            </div>
+            <div className="card__face card__face--back flex justify-center items-center">
+              <PartnerCard reward={currReward} close={() => {}} />
+            </div>
+          </div>
+          <div
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setFlipped((prev) => !prev);
+            }}
+            className={`absolute flex justify-end w-full h-full z-[99]`}
+          ></div>
+        </div>
+        <div className="absolute flex justify-center bottom-[15%]">
+          {currReward.isClaimed &&
+          userData.isPlaySuperVerified &&
+          currReward.partnerType === "playsuper" ? (
+            <div
+              className={`flex text-[20px] font-roboto text-white items-center justify-center h-button-primary w-button-primary mx-auto border border-white bg-glass-black-lg  rounded-primary   top-0 left-0 right-0`}
+              style={{ top: "100%", transform: "translateY(-50%)" }}
+            >
+              {currReward.couponCode}
+            </div>
+          ) : (
+            <JigsawButton
+              limit={4}
+              handleClick={handleClick}
+              activeMyth={4}
+              handleNext={() => {}}
+              handlePrev={() => {}}
+              isPartner={true}
+              faith={currReward.tokensCollected}
+              disableLeft={true}
+            />
+          )}
         </div>
       </div>
 
