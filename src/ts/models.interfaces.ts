@@ -1,5 +1,15 @@
 import mongoose, { Document } from "mongoose";
 
+export interface INotification extends Document {
+  title: string;
+  description: string;
+  category: string;
+  status: boolean;
+  redirect?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 //  milestones
 export interface IClaimedQuest {
   taskId: mongoose.Types.ObjectId;
