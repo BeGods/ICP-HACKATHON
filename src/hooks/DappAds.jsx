@@ -74,7 +74,7 @@ export const useOpenAd = ({ callReward }) => {
             isFullscreen: false,
           },
           web: {
-            api: "https://2r2cf484-3001.inc1.devtunnels.ms/api/v1/ads/id",
+            api: `${import.meta.env.VITE_API_FOF_URL}/ads/id`,
             method: "GET",
             token: "data",
             valid: 171,
