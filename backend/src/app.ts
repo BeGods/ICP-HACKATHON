@@ -120,8 +120,5 @@ app.use(morgan(loggerFormat));
 
 app.use("/api/v1", fofRoutes);
 app.use("/api/v2", rorRoutes);
-app.get("/socket.io/*", (_, res) => {
-  res.status(204).end();
-});
 
 export default app;

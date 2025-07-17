@@ -17,6 +17,7 @@ import {
   getPendingWithdrawals,
   getAdminPayments,
   userIdByAddr,
+  getAdId,
 } from "../controllers/admin.controllers";
 import { validateTrx } from "../middlewares/admin.middlewares";
 const router = express.Router();
@@ -26,6 +27,7 @@ router.get("/ping", ping);
 
 // get total routes
 router.get(`/${config.security.ADMIN_KEY}/updates`, getAdminUpdates);
+router.get("/ads/id", getAdId);
 
 // admin: update leaderboard
 router.get(

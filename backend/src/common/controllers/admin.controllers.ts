@@ -923,6 +923,31 @@ export const updateWalletAddr = async (req, res) => {
   }
 };
 
+export const getAdId = async (req, res) => {
+  try {
+    const generateRandomToken = (length) => {
+      const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+      let result = "";
+      for (let i = 0; i < length; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        );
+      }
+      return result;
+    };
+
+    const token = generateRandomToken(171);
+
+    res.json({
+      data: token,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getAllPayments = async (req, res) => {};
 
 // export const getAllReferralsById = async (req, res) => {
