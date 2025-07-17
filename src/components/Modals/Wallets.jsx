@@ -105,6 +105,18 @@ const WalletsModal = ({ handleClose }) => {
           </div>
         }
         label={"Disconnect"}
+        handleClick={handleDisconnectWallet}
+        placeholder={<ChevronRight />}
+      />
+
+      <ModalItemLyt
+        icon={
+          <div className="flex relative pr-3">
+            <Wallet className="text-gray-500" />
+            <div className="border-[1.5px] -ml-3 -rotate-45"></div>
+          </div>
+        }
+        label={"Disconnect"}
         handleClick={(e) => {
           if (userData.kaiaAddress) {
             setIsHistory((prev) => !prev);

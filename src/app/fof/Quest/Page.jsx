@@ -13,7 +13,7 @@ import InfoCard from "../../../components/Cards/Info/QuestInfoCrd";
 import PayCard from "../../../components/Cards/Quests/QuestPayCrd";
 import OrbClaimCard from "../../../components/Cards/Quests/QuestOrbCrd";
 import { useTranslation } from "react-i18next";
-import { mythologies } from "../../../utils/constants.fof";
+import { mythologies, mythSections } from "../../../utils/constants.fof";
 import {
   ToggleBack,
   ToggleLeft,
@@ -27,7 +27,6 @@ import MythInfoCard from "../../../components/Cards/Info/MythInfoCrd";
 import QuestHeader from "./Header";
 import { useQuestGuide } from "../../../hooks/Tutorial";
 import { QuestGuide } from "../../../components/Tutorials/Tutorials";
-import ShareButton from "../../../components/Buttons/ShareBtn";
 import GameEndCrd from "../../../components/Cards/Reward/GameEnd";
 import ReactHowler from "react-howler";
 import { trackComponentView, trackEvent } from "../../../utils/ga";
@@ -36,8 +35,7 @@ import BgLayout from "../../../components/Layouts/BgLayout";
 import CanvasImage from "../../../components/Cards/Canvas/CrdCanvas";
 import { CardWrap } from "../../../components/Layouts/Wrapper";
 import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
-import { Check, Share2, ThumbsUp } from "lucide-react";
-import { useAdsgram } from "../../../hooks/Adsgram";
+import { Check, ThumbsUp } from "lucide-react";
 import { useOpenAd } from "../../../hooks/DappAds";
 
 const tele = window.Telegram?.WebApp;
@@ -138,7 +136,9 @@ const Quests = () => {
 
   //* toggle handler functions
   const handlePrev = () => {
-    setCurrQuest((prev) => (prev - 1 + quests.length) % quests.length);
+    setCurrQuest(
+      (prev) => (prev - 1 + (quests.length + 1)) % (quests.length + 1)
+    );
   };
 
   const handleNext = () => {
@@ -375,17 +375,6 @@ const Quests = () => {
     }
   };
 
-  const onError = useCallback((result) => {
-    console.log(result);
-    showToast("ad_error");
-  }, []);
-
-  const showAd = useAdsgram({
-    blockId: import.meta.env.VITE_AD_BOOSTER,
-    handleCanvasClick,
-    onError,
-  });
-
   const { loadAd, isReady } = useOpenAd({
     callReward: handleCanvasClick,
   });
@@ -453,7 +442,7 @@ const Quests = () => {
                   isTgMobile={isTgMobile}
                   grid={[3, 6]}
                   handleClick={() => {}}
-                  imageUrl={`/assets/360px-fof.packet.celtic.png`}
+                  imageUrl={assets.whitelist[mythSections[activeMyth]]}
                   activeParts={handleActiveParts(
                     gameData.mythologies[activeMyth].faith
                   )}
@@ -546,14 +535,8 @@ const Quests = () => {
                 handleNext={handleNext}
                 handlePrev={handlePrev}
                 handleCenterClick={() => {
-                  if (gameData.mythologies[activeMyth].faith >= 18) {
-                    if (isTelegram) {
-                      showAd();
-                    } else {
-                      if (isReady) {
-                        loadAd();
-                      }
-                    }
+                  if (gameData.mythologies[activeMyth].faith >= 18 && isReady) {
+                    loadAd();
                   }
                 }}
               />

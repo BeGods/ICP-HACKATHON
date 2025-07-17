@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
 import { validateCountryCode } from "../../../helpers/cookie.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { useAdsgram } from "../../../hooks/Adsgram";
 import liff from "@line/liff";
 import { useOpenAd } from "../../../hooks/DappAds";
 import { useDisableWrapper } from "../../../hooks/disableWrapper";
@@ -32,21 +31,11 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
     game === "fof" ? fofContext.setGameData : rorContext.setGameData;
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
-  const adsgramId = import.meta.env.VITE_AD_TASK_CLAIM;
   const { wrapWithDisable } = useDisableWrapper();
 
   const onReward = useCallback(() => {
     setClaim(true);
   }, []);
-  const onError = useCallback((result) => {
-    showToast("ad_error");
-  }, []);
-
-  const showAd = useAdsgram({
-    blockId: adsgramId,
-    onReward,
-    onError,
-  });
 
   const { loadAd, isReady } = useOpenAd({
     callReward: onReward,
@@ -150,11 +139,7 @@ const TaskItem = ({ quest, showSetting, showWallet }) => {
           showWallet();
         }
       } else if (quest._id == "6762964c296034c3b3342548") {
-        if (isTelegram) {
-          showAd();
-        } else {
-          loadAd();
-        }
+        loadAd();
       } else {
         setClaim(true);
         window.open(quest?.link, "_blank");

@@ -489,7 +489,7 @@ export default function LoginModal() {
           )}
         </div>
         {/* Section 1: Social logins */}
-        <div
+        {/* <div
           className={`flex justify-center gap-3 mt-2 w-full ${
             showVerify && "hidden"
           }`}
@@ -519,17 +519,17 @@ export default function LoginModal() {
               <img src={item.src} alt={item.alt} className="w-6 h-6" />
             </div>
           ))}
-        </div>
+        </div> */}
         {/* Section 2: Mobile input */}
-        <OnboardOTP
+        {/* <OnboardOTP
           showVerify={showVerify}
           updateVerify={() => setShowVerify((prev) => !prev)}
           refer={referrer}
           setOtpSentOn={(val) => setOtpSentOn(val)}
-        />
+        /> */}
         {!showVerify && (
           <>
-            <div className="text-center text-sm text-gray-500">OR</div>
+            {/* <div className="text-center text-sm text-gray-500">OR</div> */}
 
             {/* Section 3: Wallet connect */}
             <button

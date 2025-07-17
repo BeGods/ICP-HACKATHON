@@ -300,10 +300,10 @@
         }
     },
     "whitelist": {
-        "greek": "/assets/320px-greek.whitelist.wood.jpg",
-        "celtic": "/assets/320px-celtic.whitelist.wood.jpg",
-        "norse": "/assets/320px-norse.whitelist.wood.jpg",
-        "egyptian": "/assets/320px-egyptian.whitelist.wood.jpg"
+        "greek": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.greek.png",
+        "celtic": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.celtic.png",
+        "norse": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.norse.png",
+        "egyptian": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.egyptian.png"
     },
     "win": {
         "greek": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.greek.png",

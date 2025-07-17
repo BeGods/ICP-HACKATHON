@@ -177,7 +177,7 @@ export default {
         "xs-multi-orb": "2.3rem"
       },
       padding: {
-        headSides: "8dvw",
+        headSides: "9dvw",
         headSidesMd: "2vw",
         headTop: "1.35rem",
         buttonBottom: "24px",

@@ -344,7 +344,7 @@ const Leaderboard = (props) => {
         {category == 2 ? (
           <div className="flex flex-grow justify-center">
             {isLoading && (
-              <div className={`flex items-end ranker-width gap-2`}>
+              <div className={`flex items-end ranker-width gap-3  `}>
                 {[hallOfFameData[1], hallOfFameData[0], hallOfFameData[2]].map(
                   (item, index) => {
                     const countryFlag =
@@ -395,7 +395,7 @@ const Leaderboard = (props) => {
         ) : category == 0 ? (
           <div className="flex flex-grow justify-center">
             {isLoading && (
-              <div className={`flex items-end ranker-width gap-2`}>
+              <div className={`flex items-end ranker-width gap-3`}>
                 {[ReferData[1], ReferData[0], ReferData[2]].map(
                   (item, index) => {
                     return (
@@ -451,7 +451,7 @@ const Leaderboard = (props) => {
         ) : (
           <div className="flex flex-grow justify-center">
             {isLoading && (
-              <div className={`flex items-end ranker-width gap-2`}>
+              <div className={`flex items-end ranker-width gap-3`}>
                 {[
                   leaderboardData[1],
                   leaderboardData[0],
@@ -571,20 +571,21 @@ const Leaderboard = (props) => {
               className="pb-[9vh] overflow-auto disable-scroll-bar"
             >
               {paddedReferData.slice(3).map((item, index) => {
-                const { username, profileImage, id, isEmpty } = item;
+                const { profileImage, id, isEmpty } = item;
+                const countryObj = countries.find(
+                  (country) => country.code === item.country
+                );
 
                 const countryFlag =
-                  countries.find((country) => country.code == item.country)
-                    .flag || "🌐";
+                  countryObj?.flag !== "🌐" ? countryObj?.flag : "";
 
                 return (
                   <div key={id || index} className="leaderboard-item">
                     <LeaderboardItem
                       colorType={determineFinalLevel(index + 1)}
-                      isKOL={false}
                       isEmpty={isEmpty || false}
                       rank={index + 4}
-                      name={username}
+                      name={`${item.username} ${countryFlag}`}
                       totalOrbs={item.directReferralCount}
                       imageUrl={profileImage}
                     />
@@ -623,7 +624,7 @@ const Leaderboard = (props) => {
                     (country) => country.code === item.country
                   );
                   const countryFlag =
-                    countryObj?.flag !== "🌐" && countryObj?.flag;
+                    countryObj?.flag !== "🌐" ? countryObj?.flag : "";
 
                   return (
                     <div
