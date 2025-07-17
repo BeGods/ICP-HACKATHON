@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { ChevronLeft, ChevronRight, CornerUpLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, CornerUpLeft, LogOut } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -166,7 +166,7 @@ export const ToggleBack = ({ handleClick, lightMode }) => {
             <div
               className={`flex font-symbols justify-center items-center bg-${secondaryColor} text-${primaryColor} w-[3rem] h-[90%] text-symbol-sm rounded-primary`}
             >
-              <CornerUpLeft color={primaryColor} size={30} />
+              <LogOut color={primaryColor} size={30} />
             </div>
           </div>
         </div>

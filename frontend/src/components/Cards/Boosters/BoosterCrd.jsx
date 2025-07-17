@@ -30,7 +30,6 @@ import {
 import { trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { Clapperboard, X } from "lucide-react";
-import { useAdsgram } from "../../../hooks/Adsgram";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
 import { getKaiaValue } from "../../../utils/line";
@@ -590,10 +589,6 @@ const BoosterClaim = ({
     }
   }, []);
 
-  const onError = useCallback((result) => {
-    showToast("ad_error");
-  }, []);
-
   const handleGenerateInvoice = async () => {
     setPayIsActive(true);
     try {
@@ -645,12 +640,6 @@ const BoosterClaim = ({
     }
   };
 
-  const showAd = useAdsgram({
-    blockId: import.meta.env.VITE_AD_BOOSTER,
-    onReward,
-    onError,
-  });
-
   const { loadAd, isReady } = useOpenAd({
     callReward: onReward,
   });
@@ -666,24 +655,31 @@ const BoosterClaim = ({
           (activeCard === "minion" && boostersData?.isShardsClaimActive)),
       handleClick: () => {
         handleClickHaptic(tele, enableHaptic);
-        if (isTelegram) {
-          if (!isClicked) {
-            setIsClicked(true);
-            showAd();
-            setTimeout(() => {
-              setIsClicked(false);
-            }, 9000);
-          }
-          showAd();
-        } else {
-          if (!isReady && !isClicked) {
-            setIsClicked(true);
-            loadAd();
-            setTimeout(() => {
-              setIsClicked(false);
-            }, 9000);
-          }
+        if (!isReady && !isClicked) {
+          setIsClicked(true);
+          loadAd();
+          setTimeout(() => {
+            setIsClicked(false);
+          }, 9000);
         }
+        // if (isTelegram) {
+        //   if (!isClicked) {
+        //     setIsClicked(true);
+        //     showAd();
+        //     setTimeout(() => {
+        //       setIsClicked(false);
+        //     }, 9000);
+        //   }
+        //   showAd();
+        // } else {
+        //   if (!isReady && !isClicked) {
+        //     setIsClicked(true);
+        //     loadAd();
+        //     setTimeout(() => {
+        //       setIsClicked(false);
+        //     }, 9000);
+        //   }
+        // }
       },
     },
     tgStars: {

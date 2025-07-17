@@ -22,7 +22,6 @@ import CanvasImage from "../../../components/Cards/Canvas/CrdCanvas";
 import { CardWrap } from "../../../components/Layouts/Wrapper";
 import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
 import { ThumbsUp } from "lucide-react";
-import { useAdsgram } from "../../../hooks/Adsgram";
 import { useOpenAd } from "../../../hooks/DappAds";
 
 const tele = window.Telegram?.WebApp;
@@ -200,17 +199,6 @@ const Redeem = (props) => {
     };
   }, []);
 
-  const onError = useCallback((result) => {
-    console.log(result);
-    showToast("ad_error");
-  }, []);
-
-  const showAd = useAdsgram({
-    blockId: import.meta.env.VITE_AD_BOOSTER,
-    handleClick,
-    onError,
-  });
-
   const { loadAd, isReady } = useOpenAd({
     callReward: handleClick,
   });
@@ -320,14 +308,8 @@ const Redeem = (props) => {
             handlePrev={() => {}}
             customMyth={8}
             handleCenterClick={() => {
-              if (currReward.tokensCollected < 4) {
-                if (isTelegram) {
-                  showAd();
-                } else {
-                  if (isReady) {
-                    loadAd();
-                  }
-                }
+              if (currReward.tokensCollected < 4 && isReady) {
+                loadAd();
               }
             }}
           />

@@ -132,7 +132,7 @@ export const HeadbarLayout = ({ activeMyth, data }) => {
           </div>
         </div>
       </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full pt-[1px] mt-[3.5rem] font-fof text-secondary uppercase">
+      <div className="absolute flex text-white text-black-contour px-1 mt-[60px] w-full font-fof text-secondary uppercase">
         <div className={`mr-auto slide-in-out-left`}>{data[0].label}</div>
         <div className={`ml-auto slide-in-out-right`}>{data[1].label}</div>
       </div>
@@ -146,7 +146,6 @@ const HeaderLayout = ({
   titleColor,
   CenterChild,
   BottomChild,
-  hideBg,
   hideContour,
 }) => {
   const { assets } = useContext(MainContext);
@@ -165,7 +164,7 @@ const HeaderLayout = ({
       /> */}
       <div className="flex relative flex-col  gap-[5px] pt-headTop mt-10">
         <div
-          className={`font-fof w-full text-[4.5dvh] disappear text-center absolute top-0 pt-[7rem] -mt-2 glow-icon-${
+          className={`font-fof w-full text-[4.5dvh] disappear text-center absolute top-0 pt-[7rem] -mt-[12px] glow-icon-${
             mythSections[activeMyth]
           } uppercase text-${titleColor ?? "white"} drop-shadow z-50 ${
             !hideContour && "text-black-contour"

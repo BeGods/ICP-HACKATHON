@@ -19,7 +19,7 @@ import { useDisableWrapper } from "../../../hooks/disableWrapper";
 
 const tele = window.Telegram?.WebApp;
 
-const ProfileItem = ({ content, index, assets, userData }) => {
+const ProfileItem = ({ content }) => {
   const { wrapWithDisable } = useDisableWrapper();
 
   return (
@@ -31,37 +31,14 @@ const ProfileItem = ({ content, index, assets, userData }) => {
         content.disabled
           ? "text-gray-300 border-gray-500"
           : "text-white border-white"
-      } w-full bg-glass-black-lg border gap-x-1.25 rounded-primary p-4 shadow-md`}
+      } w-full bg-glass-black-lg border gap-x-1.25 rounded-primary px-4 shadow-md`}
     >
-      {index == 5 ? (
-        <div className="flex items-center  rounded-full mr-3">
-          <div className="z-20">{content.icon}</div>
-          <div className="z-10 -ml-3">
-            {" "}
-            <img
-              src={assets.misc.usdt}
-              alt="earn"
-              className="w-[2rem] h-[2rem]"
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="rounded-full mr-3">{content.icon}</div>
-      )}
+      <div className="rounded-full mr-3">{content.icon}</div>
       <div>
         <div className="text-tertiary text-gray-300 uppercase">
           {content.label}
         </div>
-        <div className={`text-tertiary font-semibold`}>
-          {index == 5 ? (
-            <div className="flex justify-between w-full">
-              <span>{content.value}</span> <span>|</span>{" "}
-              <span>{userData.holdings.usdt}</span>
-            </div>
-          ) : (
-            content.value
-          )}
-        </div>
+        <div className={`text-tertiary font-semibold`}>{content.value}</div>
       </div>
     </div>
   );
@@ -161,7 +138,7 @@ const Profile = (props) => {
     },
     {
       icon: <Sigma size={"1.8rem"} />,
-      label: "Total Orbs",
+      label: "ORB(S)",
       value:
         formatRankOrbs(
           1000 * gameData.blackOrbs +
@@ -181,7 +158,7 @@ const Profile = (props) => {
     },
     {
       icon: <div className="font-symbols text-[1.8rem]">u</div>,
-      label: "Referrals",
+      label: "INVITES",
       value: userData.directReferralCount ?? 0,
       handleClick: () => {
         (async () => await handleCopyLink())();
@@ -189,7 +166,7 @@ const Profile = (props) => {
     },
     {
       icon: <CalendarCheck size={"1.8rem"} />,
-      label: "Streak Day",
+      label: "Streak",
       value: userData.streak.streakCount ?? 0,
       handleClick: () => {},
     },
@@ -215,17 +192,9 @@ const Profile = (props) => {
       },
     },
     {
-      icon: (
-        <img
-          src={isTelegram ? assets.misc.tgStar : assets.misc.kaia}
-          alt="earn"
-          className="w-[2.2rem] h-[2.2rem]"
-        />
-      ),
-      label: "Holdings",
-      value: isTelegram
-        ? userData.holdings.stars ?? 0
-        : userData.holdings.kaia ?? 0,
+      icon: <div className="font-symbols text-[1.8 rem]">A</div>,
+      label: "FUNDS",
+      value: "USDT | KAIA",
       handleClick: () => {
         setShowCard(<HoldingsModal handleClose={() => setShowCard(null)} />);
       },

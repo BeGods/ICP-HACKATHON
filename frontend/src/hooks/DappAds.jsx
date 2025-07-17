@@ -1,22 +1,17 @@
 import { useCallback, useState } from "react";
-import liff from "@line/liff";
 import { showToast } from "../components/Toast/Toast";
 
 export const useOpenAd = ({ callReward }) => {
-  const zoneId = liff.isInClient()
-    ? import.meta.env.VITE_OPENAD_LMA_ZONE
-    : import.meta.env.VITE_OPENAD_WEB_ZONE;
+  const zoneId = import.meta.env.VITE_OPENAD_LMA_ZONE;
   const publisherId = import.meta.env.VITE_OPENAD_PUBLISHER_ID;
   const [isReady, setIsReady] = useState(false);
   const [adStatus, setAdStatus] = useState("idle");
-  let type = liff.isInClient() ? "LMA" : "WEB";
+  const liffId = import.meta.env.VITE_LINE_ID;
 
   const loadAd = useCallback(async () => {
     setAdStatus("loading");
 
-    const liffId = import.meta.env.VITE_LINE_ID;
-
-    if (!window.OpenADLineJsSDK || !window.liff) {
+    if (!window.OpenADLineJsSDK) {
       console.warn("❌ Missing OpenAD SDK or LIFF");
 
       showToast("ad_error");
@@ -25,28 +20,54 @@ export const useOpenAd = ({ callReward }) => {
     }
 
     try {
+      let userInfo;
+      let adParams;
       const profile = await window.liff.getProfile();
-      const userInfo = {
-        userId: profile.userId,
-        displayName: profile.displayName,
-      };
-
-      const adInfo = { zoneId, publisherId, eventId: 0 };
-      const adParams = {
-        line: {
-          type: type,
-          liffId,
-          prototype: window.liff,
-          isFullscreen: true,
-        },
-        wallet: {
-          type: "eth",
-          provider: null,
-          components: "",
-        },
-      };
-
       const sdk = window.OpenADLineJsSDK;
+      const adInfo = {
+        zoneId,
+        publisherId,
+        eventId: 0,
+      };
+
+      if (liff.isInClient()) {
+        userInfo = {
+          userId: profile.userId,
+          displayName: profile.displayName,
+        };
+
+        adParams = {
+          line: {
+            type: "LMA",
+            liffId,
+            prototype: window.liff,
+            isFullscreen: true,
+          },
+          wallet: {
+            type: "eth",
+            provider: null,
+            components: "",
+          },
+        };
+      } else {
+        userInfo = {
+          userId: "user",
+          displayName: "user",
+        };
+
+        adParams = {
+          line: {
+            type: "WEB",
+          },
+          web: {
+            api: `${import.meta.env.VITE_API_FOF_URL}/ads/id`,
+            method: "GET",
+            token: "data",
+            valid: 171,
+          },
+        };
+      }
+
       const result = await sdk.interactive.init({ adInfo, adParams, userInfo });
 
       if (!result || result.code !== 0) {

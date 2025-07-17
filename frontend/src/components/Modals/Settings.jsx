@@ -11,10 +11,15 @@ import {
   VibrateOff,
   Volume2,
   VolumeX,
+  Wallet,
 } from "lucide-react";
 import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
-import { fetchRewards, updateProfile } from "../../utils/api.fof";
+import {
+  connectLineWallet,
+  connectTonWallet,
+  updateProfile,
+} from "../../utils/api.fof";
 import {
   clearAllGuideCookie,
   deleteAuthCookie,
@@ -32,6 +37,8 @@ import ModalLayout, {
   ModalSelectLyt,
   ModalSwitchLyt,
 } from "../Layouts/ModalLayout";
+import { useTonAddress } from "@tonconnect/ui-react";
+import { useTonWalletConnector } from "../../hooks/TonWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -70,8 +77,25 @@ const SettingModal = () => {
     enableHaptic,
     setEnableHaptic,
     isTelegram,
+    lineWallet,
   } = useContext(MainContext);
-  const [isChanged, setIsChanged] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { handleConnectTonWallet } = useTonWalletConnector();
+  const userFriendlyAddress = useTonAddress();
+
+  const handleConnectLineWallet = async () => {
+    if (isConnecting) return;
+    setIsConnecting(true);
+    try {
+      const { signature, message } = await connectTonWallet();
+
+      await connectLineWallet(signature, message, authToken);
+    } catch (error) {
+      console.error("Wallet Connection Error:", error);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
 
   const handleSoundToggle = (e) => {
     setEnableSound((prev) => {
@@ -115,14 +139,14 @@ const SettingModal = () => {
 
   const handleLanguageChange = (e) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
-    setIsChanged(true);
+    // setIsChanged(true);
     trackEvent("misc", `language_${langCode}`, `success_${langCode}`);
     i18next.changeLanguage(langCode);
     setLangCookie(tele, langCode);
   };
 
   const handleSettingChange = (e) => {
-    setIsChanged(true);
+    // setIsChanged(true);
     const selectedCountry = e.target.value;
 
     setCountry(selectedCountry);
@@ -191,6 +215,30 @@ const SettingModal = () => {
           placeholder={<ChevronRight />}
         />
       )}
+      <ModalItemLyt
+        icon={<Wallet />}
+        label={
+          isTelegram && userFriendlyAddress
+            ? `${userFriendlyAddress.slice(0, 9)}...${userFriendlyAddress.slice(
+                -6
+              )}`
+            : !isTelegram && lineWallet
+            ? `${lineWallet.slice(0, 9)}...${lineWallet.slice(-6)}`
+            : t("profile.wallet")
+        }
+        handleClick={() => {
+          if (!isTelegram) {
+            if (!lineWallet) {
+              (async () => await handleConnectLineWallet())();
+            }
+          } else {
+            if (!userFriendlyAddress) {
+              handleConnectTonWallet();
+            }
+          }
+        }}
+        placeholder={<ChevronRight />}
+      />
 
       {!liff.isInClient() && !isTelegram && (
         <ModalItemLyt

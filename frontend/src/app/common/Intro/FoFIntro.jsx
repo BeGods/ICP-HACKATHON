@@ -54,7 +54,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
       </div>
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
-        <div className="flex flex-col  justify-between items-center h-full mt-gamePanelTop pt-1 mb-buttonBottom">
+        <div className="flex flex-col  justify-between items-center h-full mt-gamePanelTop mb-buttonBottom">
           <div className={`flex flex-col  justify-center items-center z-[100]`}>
             <img
               draggable={false}

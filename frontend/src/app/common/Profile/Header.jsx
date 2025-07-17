@@ -42,9 +42,9 @@ const CenterChild = ({ userData }) => {
   return (
     <div className="flex absolute top-0 z-50 justify-center  w-full -mt-2 pl-1.5">
       <div
-        onClick={() => {
-          setShowCard(<UpdateModal close={() => setShowCard(null)} />);
-        }}
+        // onClick={() => {
+        //   setShowCard(<UpdateModal close={() => setShowCard(null)} />);
+        // }}
         className={` flex text-center overflow-hidden justify-center h-symbol-primary w-symbol-primary mt-0.5 items-center rounded-full border border-white outline-white transition-all duration-1000  relative`}
       >
         <img

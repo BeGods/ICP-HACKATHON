@@ -68,7 +68,7 @@ const FoFLoader = (props) => {
         />
       </div>
       {/* content */}
-      <div className="absolute inset-0 flex flex-col items-center w-full mt-gamePanelTop pt-1 justify-center z-20">
+      <div className="absolute inset-0 flex flex-col items-center w-full mt-gamePanelTop justify-center z-20">
         <div className="flex flex-col justify-between items-center h-full w-full mb-buttonBottom">
           <img src={assets.logos.fof} alt="fof" className="fof-text-shadow" />
           <div className="flex flex-col justify-center items-center w-full">

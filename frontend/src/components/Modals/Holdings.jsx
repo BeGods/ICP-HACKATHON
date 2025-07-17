@@ -19,15 +19,8 @@ import ModalLayout, {
 const tele = window.Telegram?.WebApp;
 
 const HoldingsModal = ({ handleClose }) => {
-  const {
-    enableHaptic,
-    userData,
-    setUserData,
-    assets,
-    isTelegram,
-    authToken,
-    setShowCard,
-  } = useContext(MainContext);
+  const { enableHaptic, userData, setUserData, assets, isTelegram, authToken } =
+    useContext(MainContext);
   let disableClick = useRef(false);
   const [history, setHistory] = useState([]);
   const [isHistory, setIsHistory] = useState(false);

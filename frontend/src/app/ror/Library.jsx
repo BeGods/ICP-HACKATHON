@@ -263,34 +263,32 @@ const Library = () => {
   });
 
   useEffect(() => {
-    if (enableGuide) {
-      setShowCard(
-        <LibraryGuide
-          currTut={0}
-          handleClick={() => {
-            setCurrItems(1);
-            setShowCard(
-              <LibraryGuide
-                currTut={1}
-                handleClick={() => {
-                  setCurrItems(2);
-                  setShowCard(
-                    <LibraryGuide
-                      currTut={2}
-                      handleClick={() => {
-                        setCurrItems(0);
-                        setEnableGuide(false);
-                        setShowCard(null);
-                      }}
-                    />
-                  );
-                }}
-              />
-            );
-          }}
-        />
-      );
-    }
+    setShowCard(
+      <LibraryGuide
+        currTut={0}
+        handleClick={() => {
+          setCurrItems(1);
+          setShowCard(
+            <LibraryGuide
+              currTut={1}
+              handleClick={() => {
+                setCurrItems(2);
+                setShowCard(
+                  <LibraryGuide
+                    currTut={2}
+                    handleClick={() => {
+                      setCurrItems(0);
+                      setEnableGuide(false);
+                      setShowCard(null);
+                    }}
+                  />
+                );
+              }}
+            />
+          );
+        }}
+      />
+    );
   }, [enableGuide]);
 
   return (

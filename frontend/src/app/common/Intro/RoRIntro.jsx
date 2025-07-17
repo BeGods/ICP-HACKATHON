@@ -1,10 +1,15 @@
 import React, { useContext, useState } from "react";
 import assets from "../../../assets/assets.json";
+import { handleClickHaptic, setStorage } from "../../../helpers/cookie.helper";
+import { MainContext } from "../../../context/context";
+import { useNavigate } from "react-router-dom";
 
 const tele = window.Telegram?.WebApp;
 
-const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
+const RoRIntro = ({ handleFadeout, fadeout }) => {
   const [showGlow, setShowGlow] = useState(false);
+  const { setGame } = useContext(MainContext);
+  const navigate = useNavigate();
 
   return (
     <div
@@ -49,7 +54,7 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
       </div>
       {/* content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
-        <div className="flex flex-col  justify-between items-center h-full mt-gamePanelTop pt-1 mb-buttonBottom">
+        <div className="flex flex-col  justify-between items-center h-full mt-gamePanelTop mb-buttonBottom">
           <div>
             <img
               draggable={false}
@@ -76,46 +81,10 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
                 className="w-[67px] begod-blue-shadow pointer-events-none"
               />
             </div>
-            <div onClick={() => {}} className="relative inline-block">
-              <div className="relative inline-block">
-                <h1 className="text-white font-fof text-[1.75rem] text-black-contour">
-                  COMING SOON
-                </h1>
-              </div>
+            <div className="relative inline-block text-white font-fof text-[1.75rem] text-black-contour">
+              COMING SOON
             </div>
-          </div>
-        </div>
-      </div>
-      {/* 
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[3dvh] pb-[2dvh]">
-          <div>
-            <img
-              draggable={false}
-              src={assets.logos.ror}
-              alt="dod"
-              className={`${
-                showGlow && "ror-text-shadow"
-              } transition-all duration-300`}
-            />
-            <div className="flex justify-center text-white font-fof text-[2rem] glow-text-norse">
-              BETA
-            </div>
-          </div>
-          <div className="flex flex-col gap-[2vh]">
-            <div
-              className={`flex ${
-                fadeout && "fade-out"
-              }   justify-center items-center z-[100]`}
-            >
-              <img
-                draggable={false}
-                src={assets.logos.begodsWhite}
-                alt="logo"
-                className="w-[67px] begod-blue-shadow pointer-events-none"
-              />
-            </div>
-            <div
+            {/* <div
               onClick={async () => {
                 handleClickHaptic(tele, true);
                 setGame("ror");
@@ -140,10 +109,10 @@ const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
               <span className="absolute cursor-pointer inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
                 {showGlow ? "LOADING" : "PLAY"}
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
