@@ -2,52 +2,80 @@ import React, { useContext } from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
 import { MainContext } from "../../context/context";
+import CustomBtn from "../Buttons/CustomButton";
 
 const FoFLoader = (props) => {
-  const { isBrowser, isTgMobile } = useContext(MainContext);
+  const { isTgMobile } = useContext(MainContext);
 
   return (
     <div
-      className={`w-[100vw] relative ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      }
-          `}
+      style={{
+        top: 0,
+        left: 0,
+        width: "100vw",
+      }}
+      className={`flex h-full flex-col m-0`}
     >
-      {/* img 1 */}
       <div
-        className="absolute inset-0 w-full h-full z-0"
         style={{
-          background: `url(${assets.locations.fof}) no-repeat center / cover`,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: "100%",
+          width: "100%",
+          zIndex: -1,
         }}
-      ></div>
-      {/* img 2 */}
-      <div
-        className="absolute inset-0 w-full h-full z-10"
-        style={{
-          background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
-        }}
-      ></div>
-      <div className="absolute inset-0 flex z-[20] -mt-[8vh] fade-in justify-center items-center">
-        <img src={assets.uxui.towerOn} alt="tower" className={`w-[45dvh]`} />
+        className="background-wrapper"
+      >
+        <div
+          className={`absolute top-0 left-0 h-full w-full`}
+          style={{
+            backgroundImage: `url(${assets.locations.fof})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+          }}
+        />
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
+          }}
+        ></div>
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute top-0 rotate-180 left-0 z-[30] select-none h-[120px]"
+        />
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute bottom-0 left-0 z-[1] select-none h-[120px]"
+        />
+      </div>
+
+      <div className="center-section">
+        <img
+          src={assets.uxui.towerOn}
+          alt="tower"
+          style={{
+            width: `${
+              !!document.fullscreenElement || isTgMobile ? "82dvw" : "45dvh"
+            }`,
+          }}
+        />
       </div>
       {/* content */}
-      <div className="absolute inset-0 flex flex-col items-center w-full justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full w-full pt-[3vh] pb-[2vh]">
+      <div className="absolute inset-0 flex flex-col items-center w-full mt-gamePanelTop pt-1 justify-center z-20">
+        <div className="flex flex-col justify-between items-center h-full w-full mb-buttonBottom">
           <img src={assets.logos.fof} alt="fof" className="fof-text-shadow" />
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col justify-center items-center w-full">
             <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />
             </div>
-            <div className="relative inline-block mx-auto">
-              <img
-                src={`${assets.buttons.orange.off}`}
-                alt="Button"
-                className="h-auto"
-              />
-              <span className="absolute inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
-                LOADING
-              </span>
-            </div>
+            <CustomBtn buttonColor={"orange"} message={"LOADING"} />
           </div>
         </div>
       </div>

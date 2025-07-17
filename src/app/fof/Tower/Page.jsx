@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { convertOrbs } from "../../../utils/api.fof";
 import { FofContext } from "../../../context/context";
-import ConvertInfo from "../../../components/Cards/Info/ConvertInfoCrd";
 import { useTranslation } from "react-i18next";
 import {
   mythologies,
@@ -12,16 +11,21 @@ import {
 } from "../../../utils/constants.fof";
 import { showToast } from "../../../components/Toast/Toast";
 import ReactHowler from "react-howler";
-import { Repeat2, RotateCw } from "lucide-react";
-import ConvertClaimCard from "./ClaimTune";
 import TowerHeader from "./Header";
-import { TowerGuide } from "../../../components/Common/Tutorials";
+import { TowerGuide } from "../../../components/Tutorials/Tutorials";
 import { useTowerGuide } from "../../../hooks/Tutorial";
 import { getPhaseByDate } from "../../../helpers/game.helper";
 import { trackComponentView, trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import DefaultBtn from "../../../components/Buttons/DefaultBtn";
-import ConvertBtn from "../../../components/Buttons/ConvertBtn";
+import {
+  ToggleBack,
+  ToggleLeft,
+  ToggleRight,
+} from "../../../components/Common/SectionToggles";
+import BgLayout from "../../../components/Layouts/BgLayout";
+import { Repeat2 } from "lucide-react";
+import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { useDisableWrapper } from "../../../hooks/disableWrapper";
 
 const tele = window.Telegram?.WebApp;
 
@@ -49,29 +53,23 @@ const Tower = () => {
     assets,
     enableHaptic,
     isTgMobile,
-    isBrowser,
+    setMinimize,
   } = useContext(FofContext);
   const [myth, setMyth] = useState(0);
   const [showClaim, setShowClaim] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
+  const [showScale, setShowScale] = useState(false);
   const [scaleOrb, setScaleOrb] = useState(null);
+  const [showToggle, setShowToggles] = useState(false);
   const mythData = gameData.mythologies.filter(
     (item) => item.name?.toLowerCase() === wheel[myth]
   )[0];
   const [enableGuide, setEnableGuide] = useTowerGuide("tutorial02");
   const [showHand, setShowHand] = useState(false);
-  const [disappearEffect, setDisappearEffect] = useState(false);
+  const [enableTower, setEnableTower] = useState(false);
+  const { wrapWithDisable } = useDisableWrapper();
 
   const handTimeoutRef = useRef(false);
-
-  useEffect(() => {
-    setDisappearEffect(false);
-    const resetTimeout = setTimeout(() => {
-      setDisappearEffect(true);
-    }, 500);
-
-    return () => clearTimeout(resetTimeout);
-  }, []);
 
   const handleOrbsConversion = async (key) => {
     if (!keysData.includes(key) && key) {
@@ -182,7 +180,13 @@ const Tower = () => {
   }, [enableGuide]);
 
   useEffect(() => {
+    // ga
     trackComponentView("tower");
+
+    // toggle effect
+    setTimeout(() => {
+      setShowToggles(true);
+    }, 300);
   }, []);
 
   const triggerConvert = () => {
@@ -212,33 +216,27 @@ const Tower = () => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (enableTower) {
+        setMinimize(2);
+        setEnableTower(false);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (enableTower) {
+      setShowScale(true);
+
+      setTimeout(() => {
+        setShowScale(true);
+      }, 1200);
+    }
+  }, [enableTower]);
+
   return (
-    <div
-      className={`flex flex-col ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } overflow-hidden m-0`}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className="background-wrapper"
-      >
-        <div
-          className={`absolute top-0 left-0 w-full h-full pointer-events-none`}
-          style={{
-            backgroundImage: `url(${assets.locations.fof})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "50% 0%",
-          }}
-        />
-      </div>
+    <BgLayout>
       {/* Header */}
       <TowerHeader
         showGlow={showGlow}
@@ -248,27 +246,24 @@ const Tower = () => {
         mythData={mythData}
         sessionOrbs={sessionOrbs}
         showInfo={showInfo}
-        handleInfoClk={() => {
-          setShowInfo(true);
-          setShowCard(
-            <ConvertInfo
-              t={t}
-              handleClick={() => {
-                setShowCard(null);
-                setShowInfo(false);
-              }}
-            />
-          );
-        }}
       />
-      {/* <div className="font-fof w-full text-center disappear absolute top-0 text-[4.5dvh] mt-[16dvh] uppercase text-black drop-shadow z-50 font-black">
-        {t(`elements.aether`)}
-      </div> */}
-      <div className="absolute inset-0 flex justify-center items-center -mt-3">
+
+      <div
+        onClick={() => {
+          if (!enableTower) {
+            handleClickHaptic(tele, enableHaptic);
+            setMinimize(1);
+            setEnableTower(true);
+          }
+        }}
+        className="center-section"
+      >
         <div
-          className="relative"
+          className={`relative ${showScale && "scale-tower"}`}
           style={{
-            width: "45dvh",
+            width: `${
+              !!document.fullscreenElement || isTgMobile ? "82dvw" : "45dvh"
+            }`,
             aspectRatio: "1 / 1.4",
             backgroundImage: `url(${assets.uxui.towerOn})`,
             backgroundSize: "contain",
@@ -279,7 +274,11 @@ const Tower = () => {
           <img
             src={assets.uxui[`pointer-${wheelNames[myth]}`]}
             alt="pointer"
-            className="absolute cursor-pointer w-full mt-[8.1dvh] z-50"
+            className={`absolute cursor-pointer w-full ${
+              !!document.fullscreenElement || isTgMobile
+                ? "mt-[7dvh]"
+                : "mt-[8dvh]"
+            }  z-40`}
           />
 
           {sessionOrbs !== 0 && (
@@ -290,21 +289,14 @@ const Tower = () => {
                   clearTimeout(handTimeoutRef.current);
                   handTimeoutRef.current = null;
                 }
-                // setShowClaim(true);
-                handleOrbsConversion();
 
-                // setShowCard(
-                //   <ConvertClaimCard
-                //     keysData={keysData}
-                //     handleClose={() => {
-                //       setShowClaim(false);
-                //       setShowCard(null);
-                //     }}
-                //     handleSubmit={handleOrbsConversion}
-                //   />
-                // );
+                wrapWithDisable(handleOrbsConversion);
               }}
-              className="absolute z-[55] pointer-events-auto cursor-pointer w-[7.5dvh] h-[7.5dvh] rounded-full flex mt-[28dvh] ml-[19dvh] flex-col justify-center items-center"
+              className={`absolute z-[55] pointer-events-auto cursor-pointer w-[7.5dvh] h-[7.5dvh] rounded-full flex ${
+                !!document.fullscreenElement || isTgMobile
+                  ? "mt-[23.1dvh] ml-[15.5dvh]"
+                  : "mt-[28dvh] ml-[19dvh]"
+              }  flex-col justify-center items-center`}
             >
               <div
                 className={`font-medium cursor-pointer ${
@@ -341,9 +333,19 @@ const Tower = () => {
                 <img
                   src={`${assets.uxui.baseOrb}`}
                   alt="orb"
-                  className={`w-[5.5dvh] filter-orbs-${item.toLowerCase()}`}
+                  className={`${
+                    !!document.fullscreenElement || isTgMobile
+                      ? "w-[10dvw]"
+                      : "w-[5.5dvh]"
+                  } filter-orbs-${item.toLowerCase()}`}
                 />
-                <span className="absolute font-symbols text-white opacity-50 text-[4dvh]">
+                <span
+                  className={`absolute font-symbols text-white opacity-50 ${
+                    !!document.fullscreenElement || isTgMobile
+                      ? "text-[8dvw]"
+                      : "text-[4dvh]"
+                  }`}
+                >
                   {mythSymbols[item.toLowerCase()]}
                 </span>
               </div>
@@ -352,57 +354,31 @@ const Tower = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center w-full">
-        <div className="absolute h-full flex justify-center items-end bottom-[15%]">
-          {myth !== 0 && (
-            <ConvertBtn
-              isConvert={true}
-              activeMyth={myth - 1}
-              handleClick={triggerConvert}
-              handlePrev={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setMyth((prev) => {
-                  const updatedVal = (prev - 1 + wheel.length) % wheel.length;
-                  return updatedVal;
-                });
+      {enableTower && (
+        <div className="flex flex-col items-center justify-center w-full">
+          <div className="absolute h-full flex justify-center items-end bottom-0 mb-safeBottom">
+            <ButtonLayout
+              mode="default"
+              onClick={() => {
+                if (myth !== 0) {
+                  triggerConvert();
+                } else {
+                  handleClickHaptic(tele, enableHaptic);
+                  setMyth(1);
+                }
               }}
-              handleNext={() => {
-                handleClickHaptic(tele, enableHaptic);
-
-                setMyth((prev) => {
-                  const updatedVal = (prev + 1) % wheel.length;
-
-                  return updatedVal;
-                });
-              }}
+              customMyth={myth - 1}
+              centerContent={
+                myth !== 0 ? (
+                  <div className="font-symbols">{mythSymbols[wheel[myth]]}</div>
+                ) : (
+                  <Repeat2 size={"2rem"} />
+                )
+              }
             />
-          )}
-          {myth == 0 && (
-            <ConvertBtn
-              handleClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setMyth(1);
-              }}
-              handlePrev={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setMyth((prev) => {
-                  const updatedVal = (prev - 1 + wheel.length) % wheel.length;
-                  return updatedVal;
-                });
-              }}
-              handleNext={() => {
-                handleClickHaptic(tele, enableHaptic);
-
-                setMyth((prev) => {
-                  const updatedVal = (prev + 1) % wheel.length;
-
-                  return updatedVal;
-                });
-              }}
-            />
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="absolute">
         <ReactHowler
@@ -412,24 +388,74 @@ const Tower = () => {
           loop
         />
       </div>
-    </div>
+
+      {enableTower && (
+        <>
+          <ToggleBack
+            minimize={2}
+            handleClick={() => {
+              setMinimize(2);
+              setEnableTower(false);
+              setMyth(0);
+              setSessionOrbs(0);
+            }}
+            activeMyth={8}
+          />
+        </>
+      )}
+      {showToggle && (
+        <>
+          <ToggleLeft
+            minimize={2}
+            handleClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setSessionOrbs(0);
+
+              if (!enableTower) {
+                setMinimize(1);
+                setEnableTower(true);
+              }
+              setMyth((prev) => {
+                const updatedVal = (prev - 1 + wheel.length) % wheel.length;
+                return updatedVal;
+              });
+            }}
+            activeMyth={8}
+          />
+          <ToggleRight
+            minimize={2}
+            handleClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setSessionOrbs(0);
+              if (!enableTower) {
+                setMinimize(1);
+                setEnableTower(true);
+              }
+              setMyth((prev) => {
+                const updatedVal = (prev + 1) % wheel.length;
+
+                return updatedVal;
+              });
+            }}
+            activeMyth={8}
+          />
+        </>
+      )}
+    </BgLayout>
   );
 };
 
 export default Tower;
 
-{
-  /* <div
-        className={`flex w-full ${
-          disappearEffect && "disappear"
-        } absolute text-[2.5rem] uppercase text-gold text-black-contour h-fit justify-center items-start ${
-          isBrowser ? "mt-[16vh]" : isTgMobile ? "mt-[16vh]" : "mt-[17vh]"
-        } `}
-      >
-        DOME
-      </div> */
-}
+// setShowClaim(true);
 
-{
-  /* Wheel */
-}
+// setShowCard(
+//   <ConvertClaimCard
+//     keysData={keysData}
+//     handleClose={() => {
+//       setShowClaim(false);
+//       setShowCard(null);
+//     }}
+//     handleSubmit={handleOrbsConversion}
+//   />
+// );

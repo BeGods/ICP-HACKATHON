@@ -21,7 +21,7 @@ import { countries } from "../../utils/country";
 import confetti from "canvas-confetti";
 import StakeCrd from "../../components/Cards/Reward/StakeCrd";
 import { showToast } from "../../components/Toast/Toast";
-import BlackOrbRewardCrd from "../../components/Cards/Reward/BlackOrbCrd";
+import BlackOrbRewardCrd from "../../components/Cards/Reward/OrbCrd";
 
 const tele = window.Telegram?.WebApp;
 

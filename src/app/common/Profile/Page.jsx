@@ -1,37 +1,40 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FofContext, MainContext, RorContext } from "../../../context/context";
-import { useProfileGuide } from "../../../hooks/Tutorial";
 import ProfileHeader from "./Header";
-import { determineStreakBadge } from "../../../helpers/streak.helper";
-import { hideBackButton } from "../../../utils/teleBackButton";
 import { trackComponentView } from "../../../utils/ga";
 import { CalendarCheck, Sigma, Wallet } from "lucide-react";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { connectLineWallet, connectTonWallet } from "../../../utils/api.fof";
+import { connectLineWallet } from "../../../utils/api.fof";
 import useWalletPayment from "../../../hooks/LineWallet";
 import { showToast } from "../../../components/Toast/Toast";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
 import HoldingsModal from "../../../components/Modals/Holdings";
 import liff from "@line/liff";
 import WalletsModal from "../../../components/Modals/Wallets";
-import { useTonAddress, useTonConnectModal } from "@tonconnect/ui-react";
+import { useTonAddress } from "@tonconnect/ui-react";
 import { useTonWalletConnector } from "../../../hooks/TonWallet";
+import BgLayout from "../../../components/Layouts/BgLayout";
+import { useDisableWrapper } from "../../../hooks/disableWrapper";
 
 const tele = window.Telegram?.WebApp;
 
 const ProfileItem = ({ content, index, assets, userData }) => {
+  const { wrapWithDisable } = useDisableWrapper();
+
   return (
     <div
-      onClick={content.handleClick}
-      className={`flex items-center max-h-[70px] ${
+      onClick={() => {
+        wrapWithDisable(content.handleClick);
+      }}
+      className={`flex items-center h-[4.65rem] ${
         content.disabled
           ? "text-gray-300 border-gray-500"
           : "text-white border-white"
-      } w-full bg-glass-black-lg border  rounded-primary p-4 shadow-md`}
+      } w-full bg-glass-black-lg border gap-x-1.25 rounded-primary p-4 shadow-md`}
     >
       {index == 5 ? (
-        <div className="flex items-center rounded-full mr-3">
+        <div className="flex items-center  rounded-full mr-3">
           <div className="z-20">{content.icon}</div>
           <div className="z-10 -ml-3">
             {" "}
@@ -46,14 +49,10 @@ const ProfileItem = ({ content, index, assets, userData }) => {
         <div className="rounded-full mr-3">{content.icon}</div>
       )}
       <div>
-        <div className="text-[0.8rem] text-gray-300 uppercase">
+        <div className="text-tertiary text-gray-300 uppercase">
           {content.label}
         </div>
-        <div
-          className={`${
-            index == 4 ? "text-[1rem]" : "text-[1.25rem]"
-          }  font-semibold`}
-        >
+        <div className={`text-tertiary font-semibold`}>
           {index == 5 ? (
             <div className="flex justify-between w-full">
               <span>{content.value}</span> <span>|</span>{" "}
@@ -78,18 +77,11 @@ const Profile = (props) => {
     enableHaptic,
     authToken,
     setSection,
-    setShowBack,
-    showCard,
+    setShowCard,
   } = useContext(MainContext);
   const fofContext = useContext(FofContext);
   const rorContext = useContext(RorContext);
   const avatarColor = localStorage.getItem("avatarColor");
-  const [showToggles, setShowToggles] = useState(false);
-  const streakBadge = determineStreakBadge(userData.streak.streakCount);
-  const setShowCard =
-    game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
-  const setMinimize =
-    game === "fof" ? fofContext.setMinimize : rorContext.setMinimize;
   const gameData = game === "fof" ? fofContext.gameData : rorContext.gameData;
   const { connectWallet } = useWalletPayment();
   const [isConnecting, setIsConnecting] = useState(false);
@@ -105,13 +97,6 @@ const Profile = (props) => {
   useEffect(() => {
     // ga
     trackComponentView("profile");
-
-    // disable backbutton
-    hideBackButton(tele);
-
-    setTimeout(() => {
-      setShowToggles(true);
-    }, 300);
   }, []);
 
   const handleCopyLink = async () => {
@@ -153,7 +138,7 @@ const Profile = (props) => {
     if (isConnecting) return;
     setIsConnecting(true);
     try {
-      const { accountAddress, signature, message } = await connectWallet();
+      const { signature, message } = await connectWallet();
 
       await connectLineWallet(signature, message, authToken);
     } catch (error) {
@@ -247,56 +232,24 @@ const Profile = (props) => {
     },
   ];
 
-  useEffect(() => {
-    setShowBack(0);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, [showCard]);
-
   return (
-    <div className={`flex flex-col h-full overflow-hidden`}>
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className="background-wrapper"
-      >
-        <div
-          className={`absolute top-0 left-0 h-full w-full filter-other`}
-          style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-          }}
-        />
-      </div>
-      {/* Header */}
+    <BgLayout>
       <ProfileHeader userData={userData} avatarColor={avatarColor} />
 
-      <div className="flex flex-col justify-center items-center h-full mx-auto w-full mt-[10dvh] px-2.5">
-        <div className="flex w-full min-h-[60dvh] max-w-[720px] justify-center items-center flex-col">
-          <div className="grid grid-cols-2 gap-x-1.5 gap-y-[1.1dvh] w-full h-fit place-items-center">
-            {profileDetails.map((itm, idx) => (
-              <ProfileItem
-                key={idx}
-                assets={assets}
-                index={idx}
-                content={itm}
-                userData={userData}
-              />
-            ))}
-          </div>
+      <div className="absolute inset-x-0 flex top-gameMargins bottom-gameMargins justify-center items-center z-10 mx-auto max-w-[720px] px-[6px]">
+        <div className="grid grid-cols-2 gap-item w-full h-fit place-items-center">
+          {profileDetails.map((itm, idx) => (
+            <ProfileItem
+              key={idx}
+              assets={assets}
+              index={idx}
+              content={itm}
+              userData={userData}
+            />
+          ))}
         </div>
       </div>
-    </div>
+    </BgLayout>
   );
 };
 

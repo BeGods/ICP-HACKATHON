@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { FofContext } from "../../../context/context";
 import { mythSections } from "../../../utils/constants.fof";
+import OverlayLayout from "../../Layouts/OverlayLayout";
 
 const GameEndCrd = ({ handleClick, activeMyth }) => {
   const { assets, setShowBack, section, setShowCard } = useContext(FofContext);
@@ -14,31 +15,19 @@ const GameEndCrd = ({ handleClick, activeMyth }) => {
     };
   }, []);
   return (
-    <div
-      onClick={() => {
-        setShowCard(null);
-      }}
-      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
-    >
-      <div
-        className={`relative card-width rounded-lg shadow-lg card-shadow-white`}
-      >
-        <div className="relative w-full h-full text-card">
-          <img
-            src={assets.win[mythSections[activeMyth]]}
-            alt="info card background"
-            className="w-full h-full object-cover rounded-primary z-10"
-          />
+    <OverlayLayout>
+      <div className="center-section">
+        <div className={`relative packet-width rounded-lg shadow-lg`}>
+          <div className="relative w-full h-full text-card">
+            <img
+              src={assets.win[mythSections[activeMyth]]}
+              alt="info card background"
+              className="w-full h-full object-cover rounded-primary z-10"
+            />
+          </div>
         </div>
-
-        <IconBtn
-          isInfo={false}
-          activeMyth={4}
-          handleClick={handleClick}
-          align={1}
-        />
       </div>
-    </div>
+    </OverlayLayout>
   );
 };
 

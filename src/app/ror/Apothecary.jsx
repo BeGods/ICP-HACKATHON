@@ -15,7 +15,7 @@ import MiscCard from "../../components/Cards/Citadel/MiscCard";
 import RoRBtn from "../../components/Buttons/RoRBtn";
 import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
 import { useRoRGuide } from "../../hooks/Tutorial";
-import { ApothecaryGuide } from "../../components/Common/RorTutorial.";
+import { ApothecaryGuide } from "../../components/Tutorials/RorTutorial";
 import PotionBtn from "../../components/Buttons/PotionBtn";
 
 const tele = window.Telegram?.WebApp;

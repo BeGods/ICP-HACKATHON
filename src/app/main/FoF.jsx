@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   claimStreakBonus,
   fetchGameStats,
@@ -12,14 +12,12 @@ import Profile from "../common/Profile/Page";
 import Boosters from "../fof/Booster/Page";
 import Leaderboard from "../fof/Leaderboard/Page";
 import Forges from "../fof/Forge/Page";
-import Gacha from "../fof/Gacha/Page";
 import Tower from "../fof/Tower/Page";
-import JoinBonus from "../fof/JoinBonus/Page";
-import Redeem from "../common/Redeem/Redeem";
+import JoinBonus from "../fof/Bonus/Join/Page";
+import Redeem from "../common/Vouchers/Page";
 import Footer from "../../components/Layouts/FoFFooter";
-import Gift from "../common/Gift/Gift";
+import Gift from "../common/Missions/Page";
 import { showToast } from "../../components/Toast/Toast";
-import StreakBonus from "../fof/Streak/StreakBonus";
 import {
   deleteAuthCookie,
   fetchHapticStatus,
@@ -29,14 +27,10 @@ import {
   validateCountryCode,
   validateLang,
   validateSoundCookie,
-  validateTutCookie,
 } from "../../helpers/cookie.helper";
-import OnboardPage from "../fof/Onboard/Page";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
-import Announcement from "../fof/Announcement/Page";
+import Announcement from "../common/Announcement/Page";
 import FoFLoader from "../../components/Loaders/FoFLoader";
-import SettingModal from "../../components/Modals/Settings";
-import TgHeader from "../../components/Layouts/TgHeader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import {
@@ -45,7 +39,10 @@ import {
   isDesktop,
 } from "../../utils/device.info";
 import { useNavigate } from "react-router-dom";
-import Notification from "../common/Notification/Notification";
+import Notification from "../common/Notification/Page";
+import AppLayout from "../../components/Layouts/AppLayout";
+import StreakBonus from "../fof/Bonus/Streak/Page";
+import Gacha from "../fof/Bonus/Daily/Page";
 
 const tele = window.Telegram?.WebApp;
 
@@ -82,8 +79,6 @@ const FoFMain = () => {
     setPayouts,
     activeReward,
     setActiveReward,
-    withdrawals,
-    setWithdrawals,
     showBack,
     setShowBack,
     section,
@@ -135,7 +130,7 @@ const FoFMain = () => {
     minimize,
     setMinimize,
     setShowCard,
-    assets, // .
+    assets,
     country,
     setCountry,
     triggerConf,
@@ -172,9 +167,8 @@ const FoFMain = () => {
     <Gacha />, // 8
     <JoinBonus />, // 9
     <StreakBonus />, // 10
-    <OnboardPage />, // 11
-    <Announcement />, // 12
-    <Notification />, //13
+    <Announcement />, // 11
+    <Notification />, //12
   ];
 
   const getProfilePhoto = async (token) => {
@@ -372,13 +366,6 @@ const FoFMain = () => {
   }, []);
 
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--card-height",
-      isTelegram ? "45.35vh" : "90vh"
-    );
-  }, [isTelegram]);
-
-  useEffect(() => {
     if (platform === "ios") {
       document.body.style.position = "fixed";
       document.body.style.top = `calc(var(--tg-safe-area-inset-top) + 45px)`;
@@ -393,44 +380,25 @@ const FoFMain = () => {
   }, [platform]);
 
   return (
-    <div>
-      <TgHeader
-        isLoaded={!isLoading}
-        openSettings={() => {
-          setShowCard(
-            <SettingModal
-              close={() => {
-                setShowCard(null);
-              }}
-            />
-          );
-        }}
-      />
-
+    <AppLayout>
       {!isLoading ? (
-        <div
-          className={`w-screen ${
-            isTgMobile ? "tg-container-height" : "browser-container-height"
-          } bg-white select-none font-fof ${showCard && "overflow-hidden"} `}
-        >
+        <div className={`w-screen h-full select-none font-fof`}>
           <FofContext.Provider value={initalStates}>
             <div>{sections[section]}</div>
             {section != 7 &&
               section != 10 &&
               section != 9 &&
               section != 8 &&
-              section != 12 &&
               section != 11 &&
+              section != 1 &&
               !showCard && <Footer minimize={minimize} />}
-            {showCard && (
-              <div className="absolute z-[99] w-screen">{showCard}</div>
-            )}
+            {showCard && showCard}
           </FofContext.Provider>
         </div>
       ) : (
         <FoFLoader />
       )}
-    </div>
+    </AppLayout>
   );
 };
 

@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import { ToggleSwitch } from "../Common/ToggleSwitch";
 import {
   ChevronRight,
   Globe,
@@ -12,21 +11,14 @@ import {
   VibrateOff,
   Volume2,
   VolumeX,
-  Wallet,
 } from "lucide-react";
 import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
-import {
-  fetchProfilePhoto,
-  fetchRewards,
-  updateProfile,
-} from "../../utils/api.fof";
-import { showToast } from "../Toast/Toast";
+import { fetchRewards, updateProfile } from "../../utils/api.fof";
 import {
   clearAllGuideCookie,
   deleteAuthCookie,
   deleteHapticCookie,
-  handleClickHaptic,
   setCountryCookie,
   setHapticCookie,
   setLangCookie,
@@ -35,6 +27,11 @@ import {
 import { trackEvent } from "../../utils/ga";
 import liff from "@line/liff";
 import { useLocation, useNavigate } from "react-router-dom";
+import ModalLayout, {
+  ModalItemLyt,
+  ModalSelectLyt,
+  ModalSwitchLyt,
+} from "../Layouts/ModalLayout";
 
 const tele = window.Telegram?.WebApp;
 
@@ -60,7 +57,7 @@ const languages = [
   { name: "한국어", code: "ko" },
 ];
 
-const SettingModal = ({ close }) => {
+const SettingModal = () => {
   const { i18n, t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,8 +71,6 @@ const SettingModal = ({ close }) => {
     setEnableHaptic,
     isTelegram,
   } = useContext(MainContext);
-  const { setRewards, setRewardsClaimedInLastHr, setUserData, setSection } =
-    useContext(FofContext);
   const [isChanged, setIsChanged] = useState(false);
 
   const handleSoundToggle = (e) => {
@@ -107,16 +102,16 @@ const SettingModal = ({ close }) => {
     });
   };
 
-  const getPartnersData = async (lang, country) => {
-    try {
-      const rewardsData = await fetchRewards(lang, country, authToken);
-      setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
-      setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
-      localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getPartnersData = async (lang, country) => {
+  //   try {
+  //     const rewardsData = await fetchRewards(lang, country, authToken);
+  //     setRewards([...rewardsData?.rewards, ...rewardsData?.claimedRewards]);
+  //     setRewardsClaimedInLastHr(rewardsData?.rewardsClaimedInLastHr);
+  //     localStorage.setItem("bubbleLastClaimed", rewardsData?.bubbleLastClaimed);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleLanguageChange = (e) => {
     const langCode = e.target.value === "" ? "en" : e.target.value;
@@ -150,153 +145,69 @@ const SettingModal = ({ close }) => {
 
   const handleEnableGuide = (e) => {
     clearAllGuideCookie(tele);
-    close();
-    setSection(0);
-  };
-
-  const handleClose = () => {
-    handleClickHaptic(tele, enableHaptic);
-    close();
-    if (isChanged) {
-      getPartnersData(i18n.language, country);
-    }
+    window.location.reload();
   };
 
   return (
-    <div
-      onClick={handleClose}
-      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
-      >
-        <div
-          onClick={handleClose}
-          className={`absolute cursor-pointer flex w-full justify-end top-0 right-0 -mt-4 -mr-4 `}
-        >
-          <div className="absolute flex justify-center items-center  bg-black rounded-full w-[40px] h-[40px]">
-            <div className="text-white font-roboto text-black-contour text-[1.25rem]">
-              {"\u2715"}
-            </div>
-          </div>
-        </div>
-        <div className="flex w-full">
-          <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
-            <Globe />
-          </div>
-          <div className="w-full">
-            <select
-              value={country}
-              onChange={handleSettingChange}
-              className="bg-black text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
-            >
-              {countries.map((ctx) => (
-                <option key={ctx.code} value={ctx.code}>
-                  {ctx.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="flex w-full">
-          <div className="flex justify-start pt-3 font-roboto items-center font-bold text-white w-[15%]">
-            文A
-          </div>
-          <div className="w-full">
-            <select
-              value={i18n.language}
-              onChange={handleLanguageChange}
-              className="bg-black font-medium text-white p-2 mt-4 rounded w-full h-[40px] text-tertiary"
-            >
-              {languages.map((language) => (
-                <option key={language.code} value={language.code}>
-                  {language.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+    <ModalLayout>
+      <ModalSelectLyt
+        icon={<Globe />}
+        value={country}
+        handleOnChange={handleSettingChange}
+        options={countries}
+      />
+      <ModalSelectLyt
+        icon={"文A"}
+        value={i18n.language}
+        handleOnChange={handleLanguageChange}
+        options={languages}
+      />
+      <ModalSwitchLyt
+        icon={enableSound ? <Volume2 /> : <VolumeX />}
+        label={t("profile.music")}
+        handleToggle={handleSoundToggle}
+        isActive={enableSound}
+      />
+      <ModalSwitchLyt
+        icon={enableHaptic ? <Vibrate /> : <VibrateOff />}
+        label={t("misc.haptic")}
+        handleToggle={handleHapticsToggle}
+        isActive={enableHaptic}
+      />
+      <ModalItemLyt
+        icon={<Map />}
+        label={t("profile.guide")}
+        handleClick={handleEnableGuide}
+        placeholder={<ChevronRight />}
+      />
 
-        <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
-          <div className="flex justify-start -ml-3">
-            {enableSound ? <Volume2 /> : <VolumeX />}
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{t("profile.music")}</div>
-            <ToggleSwitch
-              handleToggle={handleSoundToggle}
-              isActive={enableSound}
-            />
-          </div>
-        </div>
-
-        <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
-          <div className="flex justify-start -ml-3">
-            {enableHaptic ? <Vibrate /> : <VibrateOff />}
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{t("misc.haptic")}</div>
-            <ToggleSwitch
-              handleToggle={handleHapticsToggle}
-              isActive={enableHaptic}
-            />
-          </div>
-        </div>
-
-        <div
-          onClick={handleEnableGuide}
-          className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
-        >
-          <div className="flex justify-start -ml-3">
-            <Map />
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{t("profile.guide")}</div>
-            <ChevronRight />
-          </div>
-        </div>
-
-        <div
-          onClick={(e) => {
+      {isTelegram && (
+        <ModalItemLyt
+          icon={<LayoutGrid />}
+          label={t("profile.addToHome")}
+          handleClick={(e) => {
             tele.addToHomeScreen();
           }}
-          className={`${
-            !isTelegram ? "hidden" : "flex"
-          } text-tertiary text-white text-left w-full mt-6 pl-4`}
-        >
-          <div className="flex justify-start -ml-3">
-            <LayoutGrid />
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{t("profile.addToHome")}</div>
-            <ChevronRight />
-          </div>
-        </div>
+          placeholder={<ChevronRight />}
+        />
+      )}
 
-        {!liff.isInClient() && !isTelegram && (
-          <div
-            onClick={async (e) => {
-              await deleteAuthCookie(tele);
-              if (location.pathname === "/") {
-                window.location.reload();
-              } else {
-                navigate("/");
-              }
-            }}
-            className={`flex text-tertiary text-white text-left w-full mt-6 pl-4`}
-          >
-            <div className="flex justify-start -ml-3">
-              <SquareArrowOutUpRight />
-            </div>
-            <div className="flex justify-between w-full">
-              <div className="pl-3">Logout</div>
-              <ChevronRight />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      {!liff.isInClient() && !isTelegram && (
+        <ModalItemLyt
+          icon={<SquareArrowOutUpRight />}
+          label={"Logout"}
+          handleClick={async (e) => {
+            await deleteAuthCookie(tele);
+            if (location.pathname === "/") {
+              window.location.reload();
+            } else {
+              navigate("/");
+            }
+          }}
+          placeholder={<ChevronRight />}
+        />
+      )}
+    </ModalLayout>
   );
 };
 

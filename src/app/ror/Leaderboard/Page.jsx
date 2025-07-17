@@ -7,7 +7,7 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import UserInfoCard from "../../../components/Cards/Info/UserInfoCrd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../../utils/country";
-import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
+import BlackOrbRewardCrd from "../../../components/Cards/Reward/OrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { rankPositions } from "../../../utils/constants.fof";
 import { fetchLeaderboard } from "../../../utils/api.ror";

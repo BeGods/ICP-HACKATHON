@@ -115,7 +115,7 @@ const StakeCrd = ({ profileImg, username }) => {
                     />
                   </div>
                   <span
-                    className={`absolute inset-0 flex justify-center items-center text-[180px] text-white opacity-50 orb-symbol-shadow`}
+                    className={`absolute inset-0 flex justify-center items-center text-element-lg text-white opacity-50 orb-symbol-shadow`}
                   >
                     {firstLetter}
                   </span>

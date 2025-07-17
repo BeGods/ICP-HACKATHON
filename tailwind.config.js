@@ -121,11 +121,16 @@ export default {
       },
       fontSize: {
         primary: "2rem",
+        secondary: "1rem",
+        tertiary: "1.1rem",
+        "element-lg": "11rem",
+        "element-md": "5rem",
         "symbol-sm": "2rem",
         "symbol-xs": "1.75rem",
-        secondary: "14px",
+        "bonus-title-lg": "6rem",
+        "bonus-title": "4rem",
+        "bonus-desc": "3rem",
         para: "5vw",
-        tertiary: "1.1rem",
         "button-primary": "18px",
         "orb-primary": "120px",
         "orb-secondary": "45px",
@@ -153,7 +158,7 @@ export default {
         tgHeight: "90vh",
         "icon-primary": "55px",
         "icon-secondary": "20px",
-        "button-primary": "3.5rem",
+        "button-primary": "3.125rem",
         "button-secondary": "30px",
         "symbol-primary": "7rem",
         "symbol-secondary": "45px",
@@ -168,12 +173,28 @@ export default {
       },
       maxWidth: {
         orb: "2.6rem",
-        "xs-orb": "2.25rem"
+        "xs-orb": "2.25rem",
+        "xs-multi-orb": "2.3rem"
       },
       padding: {
-        headSides: "7vw",
+        headSides: "8dvw",
         headSidesMd: "2vw",
-        headTop: "1.35rem"
+        headTop: "1.35rem",
+        buttonBottom: "24px",
+        safeBottom: "30px",
+        gamePanelTop: "2.8125rem"
+      },
+      margin: {
+        buttonBottom: "24px",
+        safeBottom: "30px",
+        gamePanelTop: "2.8125rem"
+      },
+      gap: {
+        item: "1.1dvh"
+      },
+      spacing: {
+        gameMargins: '5.625rem',
+        gamePanelTop: "2.8125rem"
       },
       keyframes: {
         shimmer: {},

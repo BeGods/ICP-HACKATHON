@@ -1,0 +1,196 @@
+import { useContext, useEffect, useState } from "react";
+import { FofContext } from "../../context/context";
+import { CornerUpLeft, CornerUpRight, Share2, ThumbsUp } from "lucide-react";
+import { mythSections } from "../../utils/constants.fof";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { useDisableWrapper } from "../../hooks/disableWrapper";
+
+const tele = window.Telegram?.WebApp;
+
+export const OrbBtnAddOn = ({ content, assets }) => {
+  return (
+    <div className="relative flex justify-center items-center w-full h-full pr-1.5">
+      <div
+        className={`flex relative text-center justify-center max-w-xs-multi-orb items-center rounded-full glow-icon-black`}
+      >
+        <img src={assets.items.multiorb} alt="orb" />
+      </div>
+      <div className="absolute text-[1.75rem] text-white text-black-contour">
+        {content}
+      </div>
+    </div>
+  );
+};
+
+export const SocialAddOn = ({ assets }) => {
+  return (
+    <div className="relative flex justify-center items-center w-full h-full pl-1.5">
+      <div
+        className={`flex relative text-center justify-center w-[1.75rem] items-center rounded-full glow-icon-black`}
+      >
+        <img src={assets.misc.x} alt="x" />
+      </div>
+    </div>
+  );
+};
+
+// 'default' | 'action' | 'info'
+export const ButtonLayout = ({
+  mode = "default",
+  handlePrev,
+  handleNext,
+  handleCenterClick,
+  onClick,
+  leftContent,
+  rightContent,
+  centerContent,
+  customMyth,
+  isOrb,
+  isFlagged,
+  link,
+  disable,
+}) => {
+  const { assets, activeMyth, enableHaptic } = useContext(FofContext);
+  const [showRedirect, setShowRedirect] = useState(true);
+  const myth = customMyth ?? activeMyth;
+  const mythColor = `${mythSections[myth]}-primary`;
+  const { wrapWithDisable } = useDisableWrapper();
+  const centerIcon =
+    mode === "share" ? (
+      showRedirect ? (
+        <Share2 size={"1.75rem"} color={disable ? "gray" : "white"} />
+      ) : (
+        <ThumbsUp size={"1.75rem"} color={disable ? "gray" : "white"} />
+      )
+    ) : (
+      centerContent ?? "V"
+    );
+
+  const handleShareClick = () => {
+    if (showRedirect) {
+      window.open(link, "_blank");
+      setShowRedirect(false);
+    } else {
+      onClick();
+    }
+  };
+
+  const handleOnClick = () => {
+    handleClickHaptic(tele, enableHaptic);
+
+    mode === "share"
+      ? wrapWithDisable(handleShareClick)
+      : mode === "default"
+      ? wrapWithDisable(onClick)
+      : undefined;
+  };
+
+  const handleMiddleClick = () => {
+    handleClickHaptic(tele, enableHaptic);
+
+    mode === "action" ? wrapWithDisable(handleCenterClick) : undefined;
+  };
+
+  const handlePrevClick = () => {
+    handleClickHaptic(tele, enableHaptic);
+
+    mode === "action" ? wrapWithDisable(handlePrev) : undefined;
+  };
+
+  const handleNextClick = () => {
+    handleClickHaptic(tele, enableHaptic);
+
+    mode === "action" ? wrapWithDisable(handleNext) : undefined;
+  };
+
+  useEffect(() => {
+    setShowRedirect(true);
+  }, [link]);
+
+  return (
+    <div
+      onClick={handleOnClick}
+      className={`flex ${
+        disable && "grayscale"
+      } justify-between items-center relative ${
+        mode === "share" ? `bg-${mythColor}` : "bg-glass-black-lg"
+      } h-button-primary w-button-primary rounded-primary border border-${mythColor} ${
+        mode === "default" || "share" ? "cursor-pointer" : "cursor-default"
+      }`}
+    >
+      {/* left */}
+      {mode !== "info" && (
+        <div
+          className={`flex justify-center items-center w-1/4 h-full ${
+            mode === "action" ? "cursor-pointer" : ""
+          }`}
+          onClick={handlePrevClick}
+        >
+          {mode === "action" ? (
+            <CornerUpLeft
+              color={"white"}
+              className="h-icon-secondary w-icon-secondary"
+            />
+          ) : mode === "share" ? (
+            <SocialAddOn assets={assets} />
+          ) : (
+            <div
+              className={`relative flex justify-center items-center w-full h-full text-${mythColor} text-[1.35rem] pl-1.5`}
+            >
+              <div className="w-full">{leftContent}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* center */}
+      {mode !== "info" ? (
+        <div
+          className={`flex shadow-black text-white shadow-2xl justify-center text-[1.75rem] font-symbols items-center ${
+            isFlagged ? `bg-${mythColor}` : "bg-black"
+          } w-[4rem] h-[4rem] border-2 border-${mythColor} rounded-full ${
+            mode === "action" ? "cursor-pointer" : ""
+          }`}
+          onClick={handleMiddleClick}
+        >
+          {centerIcon}
+        </div>
+      ) : (
+        <div
+          className={`flex w-full shadow-black text-white shadow-2xl justify-center text-[1.75rem] font-fof items-center  rounded-full`}
+        >
+          {centerIcon}
+        </div>
+      )}
+
+      {/* right */}
+      {mode !== "info" && (
+        <div
+          className={`flex justify-center items-center w-1/4 h-full ${
+            mode === "action" ? "cursor-pointer" : ""
+          }`}
+          onClick={handleNextClick}
+        >
+          {mode === "action" ? (
+            <CornerUpRight
+              color={"white"}
+              className="h-icon-secondary w-icon-secondary"
+            />
+          ) : (
+            <>
+              {isOrb || mode === "share" ? (
+                <OrbBtnAddOn assets={assets} content={rightContent} />
+              ) : (
+                <div
+                  className={`relative flex justify-center items-center w-full h-full text-${mythColor} text-[1.35rem] pl-1.5`}
+                >
+                  <div className="w-full">{rightContent}</div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

@@ -16,7 +16,7 @@ import i18next from "i18next";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import RoRLoader from "../../components/Loaders/RoRLoader";
 import Footer from "../../components/Layouts/RoRFooter";
-import Citadel from "../ror/Citadel";
+import Citadel from "../ror/Citadel/Citadel";
 import Explore from "../ror/Explore";
 import Leaderboard from "../ror/Leaderboard/Page";
 import Bag from "../ror/Bag";
@@ -30,7 +30,6 @@ import {
   refreshAuthToken,
 } from "../../utils/api.fof";
 import Profile from "../common/Profile/Page";
-import Gift from "../common/Gift/Gift";
 import Gacha from "../ror/Gacha";
 import {
   determineIsTelegram,
@@ -40,12 +39,12 @@ import {
 import JoinBonus from "../ror/JoinBonus";
 import Library from "../ror/Library";
 import Tavern from "../ror/Tavern";
-import Redeem from "../common/Redeem/Redeem";
-import OnboardPage from "../fof/Onboard/Page";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../../components/Toast/Toast";
 import Apothecary from "../ror/Apothecary";
 import Bank from "../ror/Bank";
+import Gift from "../common/Missions/Page";
+import Redeem from "../common/Vouchers/Page";
 
 const tele = window.Telegram?.WebApp;
 
@@ -358,7 +357,6 @@ const RoRMain = () => {
     <Library />, // 12,
     <Tavern />, // 13
     <Redeem />, //  14
-    <OnboardPage />, // 15
   ];
 
   const bgs = {

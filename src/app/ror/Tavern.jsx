@@ -9,7 +9,7 @@ import { activateRest, claimArtifact } from "../../utils/api.ror";
 import { showToast } from "../../components/Toast/Toast";
 import { useNavigate } from "react-router-dom";
 import { useRoRGuide } from "../../hooks/Tutorial";
-import { TavernGuide } from "../../components/Common/RorTutorial.";
+import { TavernGuide } from "../../components/Tutorials/RorTutorial";
 import { colorByMyth } from "../../utils/constants.ror";
 import {
   ToggleLeft,

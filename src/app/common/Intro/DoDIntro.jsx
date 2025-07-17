@@ -13,7 +13,7 @@ const DoDIntro = (props) => {
       <div
         className={`flex  flex-col h-full items-center justify-center z-[100]`}
       >
-        <div className="absolute flex flex-col justify-between items-center h-full pt-[0.5dvh] pb-[3.5dvh]">
+        <div className="absolute flex flex-col justify-between items-center h-full pt-[0.5dvh] pb-[25px]">
           <img
             draggable={false}
             src={assets.logos.dod}

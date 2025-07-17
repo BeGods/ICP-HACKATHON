@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { mythSections, mythSymbols } from "../../utils/constants.fof";
 import { Share2, ThumbsUp } from "lucide-react";
 import { MainContext } from "../../context/context";

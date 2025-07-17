@@ -18,7 +18,6 @@ import {
 import gsap from "gsap";
 import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import ShareButton from "../../components/Buttons/ShareBtn";
-import DefaultBtn from "../../components/Buttons/DefaultBtn";
 import {
   bgLabel,
   colorByMyth,
@@ -31,7 +30,7 @@ import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
 import { showToast } from "../../components/Toast/Toast";
 import ReactHowler from "react-howler";
 import { useRoRGuide } from "../../hooks/Tutorial";
-import { ExploreGuide } from "../../components/Common/RorTutorial.";
+import { ExploreGuide } from "../../components/Tutorials/RorTutorial";
 import { isCoin } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;
