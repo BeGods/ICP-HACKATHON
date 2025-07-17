@@ -9,6 +9,7 @@ import { ChevronRight, History, Wallet } from "lucide-react";
 import liff from "@line/liff";
 import { useNavigate } from "react-router-dom";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
+import ModalLayout, { ModalItemLyt } from "../Layouts/ModalLayout";
 
 const tele = window.Telegram?.WebApp;
 
@@ -83,65 +84,46 @@ const WalletsModal = ({ handleClose }) => {
   }, []);
 
   return (
-    <div
-      onClick={handleClose}
-      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={`flex relative modal-width w-fit -mt-[2.5rem] bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
-      >
-        <div
-          onClick={handleClose}
-          className={`absolute cursor-pointer flex w-full justify-end top-0 right-0 -mt-4 -mr-4 `}
-        >
-          <div className="absolute flex justify-center items-center  bg-black rounded-full w-[40px] h-[40px]">
-            <div className="text-white font-roboto text-black-contour text-[1.25rem]">
-              {"\u2715"}
-            </div>
-          </div>
-        </div>
+    <ModalLayout>
+      <ModalItemLyt
+        icon={<Wallet />}
+        label={walletLabel}
+        handleClick={(e) => {
+          if (userData.kaiaAddress) {
+            setIsHistory((prev) => !prev);
+          } else {
+            showToast("wallet_unlinked");
+          }
+        }}
+      />
 
-        <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
-          <div className="flex justify-start -ml-3">
-            <Wallet />
-          </div>
-          <div className="flex justify-between w-full">
-            <div className="pl-3">{walletLabel}</div>
-          </div>
-        </div>
-
-        <div className="flex text-tertiary text-white text-left w-full mt-6 pl-4">
-          <div className="flex justify-start relative -ml-3">
+      <ModalItemLyt
+        icon={
+          <div className="flex relative pr-3">
             <Wallet className="text-gray-500" />
             <div className="border-[1.5px] -ml-3 -rotate-45"></div>
           </div>
-          <div
-            onClick={handleDisconnectWallet}
-            className="flex justify-between w-full"
-          >
-            <div className="pl-6">Disconnect</div>
-            <ChevronRight />
-          </div>
-        </div>
+        }
+        label={"Disconnect"}
+        handleClick={(e) => {
+          if (userData.kaiaAddress) {
+            setIsHistory((prev) => !prev);
+          } else {
+            showToast("wallet_unlinked");
+          }
+        }}
+        placeholder={<ChevronRight />}
+      />
 
-        {!isTelegram && (
-          <div
-            onClick={handleFetchLineHistory}
-            className="flex text-tertiary text-white text-left w-full mt-6 pl-4"
-          >
-            <div className="flex justify-start -ml-3">
-              <History />
-            </div>
-            <div className="flex justify-between w-full">
-              <div className="pl-3">Dapp History</div>
-
-              <ChevronRight />
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+      {!isTelegram && (
+        <ModalItemLyt
+          icon={<History />}
+          label={"Dapp History"}
+          handleClick={handleFetchLineHistory}
+          placeholder={<ChevronRight />}
+        />
+      )}
+    </ModalLayout>
   );
 };
 

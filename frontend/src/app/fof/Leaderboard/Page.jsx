@@ -13,14 +13,16 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../../utils/country";
 import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
 import { showToast } from "../../../components/Toast/Toast";
-import BlackOrbRewardCrd from "../../../components/Cards/Reward/BlackOrbCrd";
+import BlackOrbRewardCrd from "../../../components/Cards/Reward/OrbCrd";
 import Avatar from "../../../components/Common/Avatar";
 import { mythSections, rankPositions } from "../../../utils/constants.fof";
-import { User, UserPen } from "lucide-react";
 import {
+  ToggleBack,
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
+import LeaderboardHeader from "./Header";
+import BgLayout from "../../../components/Layouts/BgLayout";
 
 const tele = window.Telegram?.WebApp;
 
@@ -94,6 +96,68 @@ const UserAvatar = ({ user, index, category }) => {
   );
 };
 
+const LeaderboardFooter = ({ category }) => {
+  const { userData, gameData, setShowCard, setSection } =
+    useContext(FofContext);
+  return (
+    <div className="w-full absolute bottom-0 mb-[2dvh]">
+      <div
+        className={`flex h-button-primary justify-start pl-2 leaderboard-width`}
+      >
+        <div
+          onClick={() => {
+            if (gameData.blackOrbs < 1) {
+              showToast("stake_error");
+            } else if (
+              category === 1 &&
+              userData.orbRank !== 0 &&
+              !userData.stakeOn
+            ) {
+              setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
+            }
+          }}
+          className="flex border border-gray-400 rounded-primary bg-black justify-center  w-[80%]"
+        >
+          <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
+            <h1>{category == 0 ? userData.referRank : userData.orbRank}</h1>
+            <div>
+              {userData.stakeOn == "+" && (
+                <h1 className="text-green-500 text-[18px]">▲</h1>
+              )}
+              {userData.stakeOn == "-" && (
+                <h1 className="text-red-500 text-[18px]">▼</h1>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-3 items-center w-full">
+            <div className="h-[35px] w-[35px]">
+              {userData.avatarUrl ? (
+                <img
+                  src={userData.avatarUrl}
+                  alt="profile-image"
+                  className="rounded-full"
+                />
+              ) : (
+                <Avatar
+                  name={userData.username.charAt(0).toUpperCase()}
+                  className="h-full w-full"
+                  profile={0}
+                  color={avatarColor}
+                />
+              )}
+            </div>
+            <h1 className="text-white text-tertiary">
+              {userData.username.length > 20
+                ? userData.username.slice(0, 20)
+                : userData.username}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Leaderboard = (props) => {
   const { t } = useTranslation();
   const {
@@ -104,7 +168,7 @@ const Leaderboard = (props) => {
     gameData,
     setShowCard,
     setUserData,
-    isTgMobile,
+    setSection,
   } = useContext(FofContext);
   const { setShowBack } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -267,155 +331,94 @@ const Leaderboard = (props) => {
     };
   }, []);
 
-  const tabData = [
-    { symbol: "u", label: "User" },
-    { symbol: "$", label: "Transactions" },
-    { symbol: "%", label: "Offers" },
-  ];
-
   return (
-    <div
-      className={`flex ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } flex-col overflow-hidden m-0`}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className="background-wrapper"
-      >
-        <div
-          className={`absolute top-0 left-0 h-full w-full blur-[3px]`}
-          style={{
-            backgroundImage: `url(${assets.locations.fof})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-          }}
-        />
-      </div>
-
+    <BgLayout>
       {/* Flipper */}
-      <div className="font-fof z-50 top-0 mt-1.5 mx-auto max-w-[720px]  w-[80%]">
-        <div
-          className={`w-full flex justify-center items-center button ${
-            flipped ? "flipped" : ""
-          }`}
-        >
-          <div className="flex items-center justify-center w-full z-50 p-0.5 text-[24px] bg-white border border-black rounded-full shadow">
-            {tabData.map((tab, index) => {
-              const isActive = category === index;
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    handleClickHaptic(tele, enableHaptic);
-                    setCategory(index);
-                  }}
-                  className={`flex-1 flex items-center justify-center rounded-full font-symbols py-1 transition-all duration-200 ease-in-out cursor-pointer ${
-                    isActive ? "bg-black text-white" : "text-black"
-                  }`}
-                >
-                  {tab.symbol}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      <LeaderboardHeader
+        category={category}
+        setCategory={(idx) => setCategory(idx)}
+      />
 
-        <div className="w-full uppercase flex justify-center text-center text-white leading-[4.5dvh] text-[4.5dvh] text-black-contour mt-2">
-          {category == 0
-            ? "Referrals"
-            : category == 1
-            ? "Leaderboard"
-            : "Hall Of Fame"}
-        </div>
-      </div>
+      <div className="absolute bottom-1 w-full">
+        {/* Rankers */}
+        {category == 2 ? (
+          <div className="flex flex-grow justify-center">
+            {isLoading && (
+              <div className={`flex items-end ranker-width gap-2`}>
+                {[hallOfFameData[1], hallOfFameData[0], hallOfFameData[2]].map(
+                  (item, index) => {
+                    const countryFlag =
+                      countries.find((country) => country.code == item.country)
+                        .flag || "🌐";
 
-      {/* Rankers */}
-      {category == 2 ? (
-        <div className="flex flex-grow justify-center">
-          {isLoading && (
-            <div className={`flex items-end ranker-width gap-2`}>
-              {[hallOfFameData[1], hallOfFameData[0], hallOfFameData[2]].map(
-                (item, index) => {
-                  const countryFlag =
-                    countries.find((country) => country.code == item.country)
-                      .flag || "🌐";
-
-                  return (
-                    <div
-                      onClick={() => {
-                        handleClickHaptic(tele, enableHaptic);
-                        setShowCard(
-                          <UserInfoCard
-                            close={() => {
-                              setShowCard(null);
-                            }}
-                            userData={item}
-                          />
-                        );
-                      }}
-                      key={index}
-                      style={{
-                        boxShadow:
-                          "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
-                      }}
-                      className={`flex bg-[#b9f2ff] relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
-                    >
+                    return (
                       <div
-                        className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
+                        onClick={() => {
+                          handleClickHaptic(tele, enableHaptic);
+                          setShowCard(
+                            <UserInfoCard
+                              close={() => {
+                                setShowCard(null);
+                              }}
+                              userData={item}
+                            />
+                          );
+                        }}
+                        key={index}
+                        style={{
+                          boxShadow:
+                            "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
+                        }}
+                        className={`flex bg-[#b9f2ff] relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
                       >
-                        {rankPositions[index].pos}
-                      </div>
-                      <div className="absolute text-white -bottom-1 text-[1.25rem] font-normal">
-                        {countryFlag}
-                      </div>
-                      <UserAvatar
-                        key={`category-${category}-${index}`}
-                        user={item}
-                        index={index}
-                        category={category}
-                      />
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          )}
-        </div>
-      ) : category == 0 ? (
-        <div className="flex flex-grow justify-center">
-          {isLoading && (
-            <div className={`flex items-end ranker-width gap-2`}>
-              {[ReferData[1], ReferData[0], ReferData[2]].map((item, index) => {
-                return (
-                  <div
-                    onClick={() => {
-                      handleClickHaptic(tele, enableHaptic);
-                      setShowCard(
-                        <UserInfoCard
-                          close={() => {
-                            setShowCard(null);
-                          }}
-                          userData={item}
+                        <div
+                          className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
+                        >
+                          {rankPositions[index].pos}
+                        </div>
+                        <div className="absolute text-white -bottom-1 text-[1.25rem] font-normal">
+                          {countryFlag}
+                        </div>
+                        <UserAvatar
+                          key={`category-${category}-${index}`}
+                          user={item}
+                          index={index}
+                          category={category}
                         />
-                      );
-                    }}
-                    key={index}
-                    style={{
-                      boxShadow:
-                        "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
-                    }}
-                    className={`flex bg-darker border-l border-r border-white/50 relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
-                  >
-                    {/* <div
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            )}
+          </div>
+        ) : category == 0 ? (
+          <div className="flex flex-grow justify-center">
+            {isLoading && (
+              <div className={`flex items-end ranker-width gap-2`}>
+                {[ReferData[1], ReferData[0], ReferData[2]].map(
+                  (item, index) => {
+                    return (
+                      <div
+                        onClick={() => {
+                          handleClickHaptic(tele, enableHaptic);
+                          setShowCard(
+                            <UserInfoCard
+                              close={() => {
+                                setShowCard(null);
+                              }}
+                              userData={item}
+                            />
+                          );
+                        }}
+                        key={index}
+                        style={{
+                          boxShadow:
+                            "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
+                        }}
+                        className={`flex bg-darker border-l border-r border-white/50 relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
+                      >
+                        {/* <div
                         className={`absolute text-black-contour font-symbols text-${determineLevel(
                           item.orbRank
                         )} text-[1.75rem] z-[50] w-[40%] ${
@@ -424,32 +427,36 @@ const Leaderboard = (props) => {
                       >
                         {userData.orbRank > 333 ? "&" : "$"}
                       </div> */}
-                    <div
-                      className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
-                    >
-                      {item.referRank}
-                    </div>
-                    <div className="absolute text-white -bottom-1 text-tertiary font-normal">
-                      {item.directReferralCount}
-                    </div>
-                    <UserAvatar
-                      key={`category-${category}-${index}`}
-                      user={item}
-                      index={index}
-                      category={category}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="flex flex-grow justify-center">
-          {isLoading && (
-            <div className={`flex items-end ranker-width gap-2`}>
-              {[leaderboardData[1], leaderboardData[0], leaderboardData[2]].map(
-                (item, index) => {
+                        <div
+                          className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
+                        >
+                          {item.referRank}
+                        </div>
+                        <div className="absolute text-white -bottom-1 text-tertiary font-normal">
+                          {item.directReferralCount}
+                        </div>
+                        <UserAvatar
+                          key={`category-${category}-${index}`}
+                          user={item}
+                          index={index}
+                          category={category}
+                        />
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-grow justify-center">
+            {isLoading && (
+              <div className={`flex items-end ranker-width gap-2`}>
+                {[
+                  leaderboardData[1],
+                  leaderboardData[0],
+                  leaderboardData[2],
+                ].map((item, index) => {
                   const countryObj = countries.find(
                     (country) => country.code === item.country
                   );
@@ -502,336 +509,166 @@ const Leaderboard = (props) => {
                       />
                     </div>
                   );
-                }
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Leaderboard list */}
-      {category == 2 ? (
-        <div
-          className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[42dvh] bg-white text-black rounded-t-primary`}
-        >
-          <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-1.5">
-            <h1>
-              <span className="pr-12">#</span>
-              {t(`profile.name`)}
-            </h1>
-
-            <h1>{t(`profile.country`)}</h1>
+                })}
+              </div>
+            )}
           </div>
+        )}
+
+        {/* Leaderboard list */}
+        {category == 2 ? (
           <div
-            id="scrollableDiv"
-            className="pb-[9vh] overflow-auto disable-scroll-bar"
+            className={`flex z-50 flex-col mx-auto leaderboard-width text-medium h-[42dvh] bg-white text-black rounded-t-primary`}
           >
-            {paddedHallOfFameData.slice(3).map((item, index) => {
-              const { username, profileImage, id, isEmpty } = item;
+            <div className="flex justify-between text-secondary uppercase text-black-contour text-gold items-center w-[90%] mx-auto py-1.5">
+              <h1>
+                <span className="pr-12">#</span>
+                {t(`profile.name`)}
+              </h1>
 
-              const countryFlag =
-                countries.find((country) => country.code == item.country)
-                  .flag || "🌐";
-
-              return (
-                <div key={id || index} className="leaderboard-item">
-                  <LeaderboardItem
-                    colorType={determineFinalLevel(index + 1)}
-                    isKOL={true}
-                    isEmpty={isEmpty || false}
-                    rank={index + 4}
-                    name={username}
-                    totalOrbs={countryFlag}
-                    imageUrl={profileImage}
-                  />
-                </div>
-              );
-            })}
-          </div>
-          <div className="flex px-1 pb-1 justify-center absolute bottom-0 w-full h-[4rem]">
+              <h1>{t(`profile.country`)}</h1>
+            </div>
             <div
-              className={`flex border border-gray-400 rounded-primary bg-white justify-center leaderboard-width`}
+              id="scrollableDiv"
+              className="pb-[9vh] overflow-auto disable-scroll-bar"
             >
-              <div className="flex text-black justify-center items-center w-[20%] h-full">
-                {userData.orbRank}
-              </div>
-              <div className="flex gap-3 items-center  w-full">
-                <div className="h-[35px] w-[35px]">
-                  {userData.avatarUrl ? (
-                    <img
-                      src={userData.avatarUrl}
-                      alt="profile-image"
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <Avatar
-                      name={userData.username.charAt(0).toUpperCase()}
-                      className="h-full w-full"
-                      profile={0}
-                      color={avatarColor}
-                    />
-                  )}
-                </div>
-                <h1 className="text-black">
-                  {userData.username.length > 20
-                    ? userData.username.slice(0, 20)
-                    : userData.username}
-                </h1>
-              </div>
-              <div className="flex flex-col text-black justify-center items-end text-tertiary w-[30%] mr-4 h-full">
-                <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : category == 0 ? (
-        <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
-        >
-          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-1.5">
-            <h1>
-              <span className="pr-12">#</span>
-              {t(`profile.name`)}
-            </h1>
-            <h1>{t(`profile.referrals`)}</h1>
-          </div>
-          <div
-            id="scrollableDiv"
-            className="pb-[9vh] overflow-auto disable-scroll-bar"
-          >
-            {paddedReferData.slice(3).map((item, index) => {
-              const { username, profileImage, id, isEmpty } = item;
+              {paddedHallOfFameData.slice(3).map((item, index) => {
+                const { username, profileImage, id, isEmpty } = item;
 
-              const countryFlag =
-                countries.find((country) => country.code == item.country)
-                  .flag || "🌐";
-
-              return (
-                <div key={id || index} className="leaderboard-item">
-                  <LeaderboardItem
-                    colorType={determineFinalLevel(index + 1)}
-                    isKOL={false}
-                    isEmpty={isEmpty || false}
-                    rank={index + 4}
-                    name={username}
-                    totalOrbs={item.directReferralCount}
-                    imageUrl={profileImage}
-                  />
-                </div>
-              );
-            })}
-          </div>
-          {/* <div
-            id="scrollableDiv"
-            className="pb-[9vh] overflow-auto disable-scroll-bar"
-          >
-            <InfiniteScroll
-              dataLength={ReferData.length}
-              next={() => {
-                page < 4 && loadMoreData();
-              }}
-              hasMore={hasMore}
-              loader={<h4>Loading...</h4>}
-              scrollableTarget="scrollableDiv"
-            >
-              {ReferData.slice(3, 111).map((item, index) => (
-                <div
-                  onClick={() => {
-                    handleClickHaptic(tele, enableHaptic);
-                    setShowCard(
-                      <UserInfoCard
-                        close={() => {
-                          setShowCard(null);
-                        }}
-                        userData={item}
-                      />
-                    );
-                  }}
-                  key={index}
-                  className=""
-                >
-                  <LeaderboardItem
-                    key={index}
-                    rank={item.referRank}
-                    name={item.username}
-                    totalOrbs={item.directReferralCount}
-                    imageUrl={item.profileImage}
-                    prevRank={null}
-                  />
-                </div>
-              ))}
-            </InfiniteScroll>
-          </div> */}
-          <div
-            className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[4rem]`}
-          >
-            <div
-              onClick={() => {
-                if (gameData.blackOrbs < 1) {
-                  showToast("stake_error");
-                } else if (
-                  category == 1 &&
-                  userData.orbRank !== 0 &&
-                  !userData.stakeOn
-                ) {
-                  setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
-                }
-              }}
-              className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
-            >
-              <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
-                <h1>{userData.referRank}</h1>
-              </div>
-              <div className="flex gap-3 items-center w-full">
-                <div className="h-[35px] w-[35px]">
-                  {userData.avatarUrl ? (
-                    <img
-                      src={userData.avatarUrl}
-                      alt="profile-image"
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <Avatar
-                      name={userData.username.charAt(0).toUpperCase()}
-                      className="h-full w-full"
-                      profile={0}
-                      color={avatarColor}
-                    />
-                  )}
-                </div>
-                <h1 className="text-white text-tertiary">
-                  {userData.username.length > 20
-                    ? userData.username.slice(0, 20)
-                    : userData.username}
-                </h1>
-              </div>
-              <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">
-                <h1>{formatRankOrbs(userData.directReferralCount)}</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div
-          className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
-        >
-          <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-1.5">
-            <h1>
-              <span className="pr-12">#</span>
-              {t(`profile.name`)}
-            </h1>
-
-            <h1>{t(`keywords.orbs`)}</h1>
-          </div>
-          <div
-            id="scrollableDiv"
-            className="pb-[9vh] overflow-auto disable-scroll-bar"
-          >
-            <InfiniteScroll
-              dataLength={leaderboardData.length}
-              next={() => {
-                page < 4 && loadMoreData();
-              }}
-              hasMore={hasMore}
-              loader={<h4>Loading...</h4>}
-              scrollableTarget="scrollableDiv"
-            >
-              {leaderboardData.slice(3, 333).map((item, index) => {
-                const countryObj = countries.find(
-                  (country) => country.code === item.country
-                );
                 const countryFlag =
-                  countryObj?.flag !== "🌐" && countryObj?.flag;
+                  countries.find((country) => country.code == item.country)
+                    .flag || "🌐";
 
                 return (
-                  <div
-                    onClick={() => {
-                      handleClickHaptic(tele, enableHaptic);
-                      setShowCard(
-                        <UserInfoCard
-                          close={() => {
-                            setShowCard(null);
-                          }}
-                          userData={item}
-                        />
-                      );
-                    }}
-                    key={index}
-                    className=""
-                  >
+                  <div key={id || index} className="leaderboard-item">
                     <LeaderboardItem
-                      key={index}
-                      rank={item.orbRank}
-                      name={`${item.username} ${countryFlag}`}
-                      totalOrbs={formatRankOrbs(item.totalOrbs)}
-                      imageUrl={item.profileImage}
-                      prevRank={item.prevRank}
+                      colorType={determineFinalLevel(index + 1)}
+                      isKOL={true}
+                      isEmpty={isEmpty || false}
+                      rank={index + 4}
+                      name={username}
+                      totalOrbs={countryFlag}
+                      imageUrl={profileImage}
                     />
                   </div>
                 );
               })}
-            </InfiniteScroll>
-          </div>
-          <div
-            className={`flex px-1 pb-1 justify-center absolute bottom-1 leaderboard-width h-[4rem]`}
-          >
-            <div
-              onClick={() => {
-                if (gameData.blackOrbs < 1) {
-                  showToast("stake_error");
-                } else if (
-                  category === 1 &&
-                  userData.orbRank !== 0 &&
-                  !userData.stakeOn
-                ) {
-                  setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
-                }
-              }}
-              className="flex border border-gray-400 rounded-primary bg-black justify-center w-full"
-            >
-              <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
-                <h1>{userData.orbRank}</h1>
-                <div>
-                  {userData.stakeOn == "+" && (
-                    <h1 className="text-green-500 text-[18px]">▲</h1>
-                  )}
-                  {userData.stakeOn == "-" && (
-                    <h1 className="text-red-500 text-[18px]">▼</h1>
-                  )}
-                </div>
-              </div>
-              <div className="flex gap-3 items-center w-full">
-                <div className="h-[35px] w-[35px]">
-                  {userData.avatarUrl ? (
-                    <img
-                      src={userData.avatarUrl}
-                      alt="profile-image"
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <Avatar
-                      name={userData.username.charAt(0).toUpperCase()}
-                      className="h-full w-full"
-                      profile={0}
-                      color={avatarColor}
-                    />
-                  )}
-                </div>
-                <h1 className="text-white text-tertiary">
-                  {userData.username.length > 20
-                    ? userData.username.slice(0, 20)
-                    : userData.username}
-                </h1>
-              </div>
-              <div className="flex flex-col text-white justify-center items-end text-tertiary w-[30%] mr-4 h-full">
-                <h1>{formatRankOrbs(userData.totalOrbs)}</h1>
-              </div>
             </div>
           </div>
-        </div>
-      )}
+        ) : category == 0 ? (
+          <div
+            className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
+          >
+            <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-1.5">
+              <h1>
+                <span className="pr-12">#</span>
+                {t(`profile.name`)}
+              </h1>
+              <h1>{t(`profile.referrals`)}</h1>
+            </div>
+            <div
+              id="scrollableDiv"
+              className="pb-[9vh] overflow-auto disable-scroll-bar"
+            >
+              {paddedReferData.slice(3).map((item, index) => {
+                const { username, profileImage, id, isEmpty } = item;
 
+                const countryFlag =
+                  countries.find((country) => country.code == item.country)
+                    .flag || "🌐";
+
+                return (
+                  <div key={id || index} className="leaderboard-item">
+                    <LeaderboardItem
+                      colorType={determineFinalLevel(index + 1)}
+                      isKOL={false}
+                      isEmpty={isEmpty || false}
+                      rank={index + 4}
+                      name={username}
+                      totalOrbs={item.directReferralCount}
+                      imageUrl={profileImage}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div
+            className={`flex z-50 flex-col leaderboard-width mx-auto text-medium h-[42dvh] bg-black text-black rounded-t-primary`}
+          >
+            <div className="flex justify-between text-secondary uppercase text-cardsGray items-center w-[90%] mx-auto py-1.5">
+              <h1>
+                <span className="pr-12">#</span>
+                {t(`profile.name`)}
+              </h1>
+
+              <h1>{t(`keywords.orbs`)}</h1>
+            </div>
+            <div
+              id="scrollableDiv"
+              className="pb-[9vh] overflow-auto disable-scroll-bar"
+            >
+              <InfiniteScroll
+                dataLength={leaderboardData.length}
+                next={() => {
+                  page < 4 && loadMoreData();
+                }}
+                hasMore={hasMore}
+                loader={<h4>Loading...</h4>}
+                scrollableTarget="scrollableDiv"
+              >
+                {leaderboardData.slice(3, 333).map((item, index) => {
+                  const countryObj = countries.find(
+                    (country) => country.code === item.country
+                  );
+                  const countryFlag =
+                    countryObj?.flag !== "🌐" && countryObj?.flag;
+
+                  return (
+                    <div
+                      onClick={() => {
+                        handleClickHaptic(tele, enableHaptic);
+                        setShowCard(
+                          <UserInfoCard
+                            close={() => {
+                              setShowCard(null);
+                            }}
+                            userData={item}
+                          />
+                        );
+                      }}
+                      key={index}
+                      className=""
+                    >
+                      <LeaderboardItem
+                        key={index}
+                        rank={item.orbRank}
+                        name={`${item.username} ${countryFlag}`}
+                        totalOrbs={formatRankOrbs(item.totalOrbs)}
+                        imageUrl={item.profileImage}
+                        prevRank={item.prevRank}
+                      />
+                    </div>
+                  );
+                })}
+              </InfiniteScroll>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* <>
+        <LeaderboardFooter category={category} />
+      </> */}
       <>
+        <ToggleBack
+          minimize={2}
+          handleClick={() => {
+            setSection(0);
+          }}
+          lightMode={category == 2 ? true : false}
+          activeMyth={8}
+        />
         <ToggleLeft
           minimize={2}
           handleClick={() => {
@@ -849,7 +686,7 @@ const Leaderboard = (props) => {
           isShrinked={true}
         />
       </>
-    </div>
+    </BgLayout>
   );
 };
 

@@ -15,13 +15,12 @@ import {
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
-import Button from "../../../components/Buttons/DefaultBtn";
 import GameHeader from "./BoosterBar";
 import ReactHowler from "react-howler";
 import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
-import BoosterButtom from "../../../components/Buttons/BoosterBtn";
+import BoosterButtom from "../Booster/Button";
 import { showToast } from "../../../components/Toast/Toast";
-import { ForgesGuide } from "../../../components/Common/Tutorials";
+import { ForgesGuide } from "../../../components/Tutorials/Tutorials";
 import { useForgeGuide } from "../../../hooks/Tutorial";
 import {
   getPhaseByDate,
@@ -36,6 +35,9 @@ import {
 } from "../../../helpers/cookie.helper";
 import confetti from "canvas-confetti";
 import { getStreakMultipier } from "../../../helpers/streak.helper";
+import BgLayout from "../../../components/Layouts/BgLayout";
+import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { Handshake } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
 
@@ -65,7 +67,6 @@ const Forges = () => {
     enableHaptic,
     userData,
     setUserData,
-    isTgMobile,
   } = useContext(FofContext);
   const streakMultpier = (boosterName) => {
     if (userData.streak?.streakCount && userData.streak?.lastMythClaimed) {
@@ -1368,381 +1369,152 @@ const Forges = () => {
   }, [activeMyth]);
 
   return (
-    <>
-      <div
-        style={{
-          top: 0,
-          left: 0,
-          width: "100vw",
-        }}
-        className={`flex ${
-          isTgMobile ? "tg-container-height" : "browser-container-height"
-        } flex-col overflow-hidden m-0`}
-      >
+    <BgLayout>
+      <ForgeHeader
+        activeMyth={activeMyth}
+        t={t}
+        starIsHeld={isStarHolding === 1}
+        minimize={minimize}
+        platform={platform}
+        orbGlow={orbGlow}
+        tapGlow={tapGlow}
+        showBlackOrb={showBlackOrb}
+        glowBooster={glowBooster}
+        glowShards={glowShards}
+        glowReward={glowReward}
+        glowSymbol={glowSymbol}
+        orbs={orbs}
+        mythData={mythStates[activeMyth]}
+        shards={mythStates[activeMyth].shards}
+        gameData={gameData}
+      />
+
+      {/* Taping region */}
+      <div className="flex relative flex-grow justify-center items-center">
+        {/* TapArea */}
         <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            height: "100%",
-            width: "100%",
-            zIndex: -1,
+          onMouseDown={handleStartSession}
+          onTouchStart={handleStartSession}
+          onTouchEnd={(e) => {
+            handleTap(e);
           }}
-          className="background-wrapper transition-all duration-500"
+          className="flex flex-col items-center justify-center  w-full h-full"
         >
-          <div
-            className={`absolute top-0 left-0 h-full w-full filter-orbs-${mythSections[activeMyth]}`}
-            style={{
-              backgroundImage: `url(${assets.uxui.baseBgForge})`,
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-              backgroundPosition: "44% 50%",
-            }}
-          />
-        </div>
-        <ForgeHeader
-          activeMyth={activeMyth}
-          t={t}
-          starIsHeld={isStarHolding === 1}
-          minimize={minimize}
-          platform={platform}
-          orbGlow={orbGlow}
-          tapGlow={tapGlow}
-          showBlackOrb={showBlackOrb}
-          glowBooster={glowBooster}
-          glowShards={glowShards}
-          glowReward={glowReward}
-          glowSymbol={glowSymbol}
-          orbs={orbs}
-          mythData={mythStates[activeMyth]}
-          shards={mythStates[activeMyth].shards}
-        />
+          {plusOnes.map((plusOne) => (
+            <span
+              key={plusOne.id}
+              className={`plus-one glow-text-${mythSections[activeMyth]} `}
+              style={{
+                top: `${plusOne.y}px`,
+                left: `${plusOne.x}px`,
 
-        {/* Taping region */}
-        <div className="flex relative flex-grow justify-center items-center">
-          {/* Header Stats */}
-          <GameHeader
-            orbs={orbs}
-            shards={shards}
+                zIndex: 99,
+              }}
+            >
+              +
+              {mythStates[activeMyth].shardslvl *
+                (isHolding && activeCard === "minion" ? 2 : 1)}
+            </span>
+          ))}
+          <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
+        </div>
+        {showPartner && (
+          <div className="h-[155vw] -mt-8 w-full absolute">
+            <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
+              <div className="bubble-spin-effect">
+                <img
+                  src={
+                    randomReward.partnerType == "playsuper"
+                      ? `${randomReward.metadata.campaignCoverImage}`
+                      : `https://media.publit.io/file/Partners/160px-${randomReward.metadata.campaignCoverImage}.bubble.png`
+                  }
+                  alt="icon"
+                  className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* Toggles */}
+      {showToggles && (
+        <>
+          <ToggleRight
+            handleClick={() => {
+              setActiveMyth((prev) => (prev + 1) % 4);
+            }}
             activeMyth={activeMyth}
-            mythStates={mythStates}
-            minimize={activeCard === "minion"}
-            maximize={activeCard === "minion-down"}
-            glowBooster={glowBooster}
+            minimize={minimize === 0 && minimizeToggle ? 2 : minimize}
           />
-          {/* TapArea */}
-          <div
-            onMouseDown={handleStartSession}
-            onTouchStart={handleStartSession}
-            onTouchEnd={(e) => {
-              handleTap(e);
+          <ToggleLeft
+            handleClick={() => {
+              setActiveMyth((prev) => (prev - 1 + 4) % 4);
             }}
-            className="flex flex-col items-center justify-center  w-full h-full"
-          >
-            {plusOnes.map((plusOne) => (
-              <span
-                key={plusOne.id}
-                className={`plus-one glow-text-${mythSections[activeMyth]} `}
-                style={{
-                  top: `${plusOne.y}px`,
-                  left: `${plusOne.x}px`,
+            activeMyth={activeMyth}
+            minimize={minimize === 0 && minimizeToggle ? 2 : minimize}
+          />
+        </>
+      )}
 
-                  zIndex: 99,
-                }}
-              >
-                +
-                {mythStates[activeMyth].shardslvl *
-                  (isHolding && activeCard === "minion" ? 2 : 1)}
-              </span>
-            ))}
-            <div className="flex justify-center items-center h-[450px] w-full rounded-full"></div>
-          </div>
-          {showPartner && (
-            <div className="h-[155vw] -mt-8 w-full absolute">
-              <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
-                <div className="bubble-spin-effect">
-                  <img
-                    src={
-                      randomReward.partnerType == "playsuper"
-                        ? `${randomReward.metadata.campaignCoverImage}`
-                        : `https://media.publit.io/file/Partners/160px-${randomReward.metadata.campaignCoverImage}.bubble.png`
-                    }
-                    alt="icon"
-                    className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        {/* Toggles */}
-        {showToggles && (
-          <>
-            <ToggleRight
-              handleClick={() => {
-                setActiveMyth((prev) => (prev + 1) % 4);
-              }}
-              activeMyth={activeMyth}
-              minimize={minimize === 0 && minimizeToggle ? 2 : minimize}
-            />
-            <ToggleLeft
-              handleClick={() => {
-                setActiveMyth((prev) => (prev - 1 + 4) % 4);
-              }}
-              activeMyth={activeMyth}
-              minimize={minimize === 0 && minimizeToggle ? 2 : minimize}
-            />
-          </>
-        )}
-
-        {showBlackOrb > 0 && (
-          <div className="flex flex-col bottom-[12dvh] w-full justify-center items-center absolute z-10">
-            <div
-              className={`bg-white  ${
-                isStarHolding ? "w-[5rem]" : "w-[5rem]"
-              } glow-box-${mythSections[activeMyth]}  ${
-                isStarHolding === 1 && "star-beam-active"
-              } ${isStarHolding === 2 && "star-beam-inactive"} -mb-8`}
-            ></div>
-            <div
-              onTouchStart={() => {
-                setMinimize(1);
-                setIsStarHolding(1);
-                isStarHold.current = true;
-                setshowStarBoosters(1);
-                setOrbGlow(true);
-                setTapGlow(true);
-              }}
-              onTouchEnd={() => {
-                setIsStarHolding(2);
-                isStarHold.current = false;
-                setshowStarBoosters(2);
-              }}
-              className="flex justify-center cursor-pointer items-center relative"
-            >
-              <div
-                fill={"white"}
-                color={"white"}
-                className={`font-symbols text-[4.25rem] text-white glow-star-${
-                  mythSections[activeMyth]
-                } duration-500 transition-all ${
-                  showBlackOrb === 1 && "maximize-star"
-                } ${showBlackOrb === 2 && "minimize-star"} ${
-                  isStarHolding === 1 ? "scale-150" : "scale-100"
-                }`}
-              >
-                s
-              </div>
-              <div
-                className={`z-10 absolute text-center mx-auto my-auto mt-3 ml-1 text-white ${
-                  showBlackOrb === 1 && "maximize-star"
-                } ${showBlackOrb === 2 && "minimize-star"} ${
-                  isStarHolding === 1 ? "scale-150" : "scale-100"
-                } text-[2rem] text-black-contour`}
-              >
-                {mythStates[activeMyth].burstlvl}
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Star */}
-        {showStarBoosters != 0 && (
-          <div>
-            <div
-              className={`absolute  ${showStarBoosters === 2 && "popdown"} ${
-                showStarBoosters === 1 && "popup"
-              } bottom-0 select-none left-0 -mb-2.5 minion-button`}
-            >
-              <div className="relative -scale-x-100">
-                <img
-                  src={`${assets.boosters.alchemistPop}`}
-                  alt="dwarf"
-                  className="w-full h-full select-none pointer-events-none z-50"
-                />
-              </div>
-            </div>
-            {plusMinion.map((plusOne) => (
-              <span
-                key={plusOne.id}
-                className={`plus-one glow-text-${mythSections[activeMyth]}`}
-                style={{
-                  bottom: `-12vh`,
-                  left: `2rem`,
-                  zIndex: 99,
-                }}
-              >
-                +{mythStates[activeMyth].shardslvl * (isStarHolding ? 2 : 1)}
-              </span>
-            ))}
-            <div
-              className={`absolute  ${showStarBoosters === 2 && "popdown"} ${
-                showStarBoosters === 1 && "popup"
-              } bottom-0 select-none right-0 -mb-2.5 minion-button`}
-            >
-              <div className="relative">
-                <img
-                  src={`${assets.boosters.automataPop}`}
-                  alt="dwarf"
-                  className="w-full h-full select-none pointer-events-none "
-                />
-              </div>
-            </div>
-            {plusAutomata.map((plusOne) => (
-              <span
-                key={plusOne.id}
-                className={`plus-one glow-text-${mythSections[activeMyth]}`}
-                style={{
-                  bottom: `-12vh`,
-                  right: `8vw`,
-                  zIndex: 99,
-                }}
-              >
-                +
-                {mythStates[activeMyth].automatalvl === 0
-                  ? 1
-                  : mythStates[activeMyth].automatalvl *
-                    (isStarHolding ? 2 : 1)}
-              </span>
-            ))}
-          </div>
-        )}
-        {/* Rat */}
-        {(activeCard === "rat" || activeCard === "rat-down") && (
+      {showBlackOrb > 0 && (
+        <div className="flex flex-col bottom-[12dvh] w-full justify-center items-center absolute z-10">
+          <div
+            className={`bg-white  ${
+              isStarHolding ? "w-[5rem]" : "w-[5rem]"
+            } glow-box-${mythSections[activeMyth]}  ${
+              isStarHolding === 1 && "star-beam-active"
+            } ${isStarHolding === 2 && "star-beam-inactive"} -mb-8`}
+          ></div>
           <div
             onTouchStart={() => {
-              if (activeCard === "rat") {
-                setIsHolding(true);
-                handleTapHaptic(tele, platform, enableHaptic, 1000);
-              }
+              setMinimize(1);
+              setIsStarHolding(1);
+              isStarHold.current = true;
+              setshowStarBoosters(1);
+              setOrbGlow(true);
+              setTapGlow(true);
             }}
             onTouchEnd={() => {
-              if (isHolding) {
-                closeRat(true);
-              }
+              setIsStarHolding(2);
+              isStarHold.current = false;
+              setshowStarBoosters(2);
             }}
-            className={`absolute  ${activeCard === "rat-down" && "popdown"} ${
-              activeCard === "rat" && "popup"
+            className="flex justify-center cursor-pointer items-center relative"
+          >
+            <div
+              fill={"white"}
+              color={"white"}
+              className={`font-symbols text-[4.25rem] text-white glow-star-${
+                mythSections[activeMyth]
+              } duration-500 transition-all ${
+                showBlackOrb === 1 && "maximize-star"
+              } ${showBlackOrb === 2 && "minimize-star"} ${
+                isStarHolding === 1 ? "scale-150" : "scale-100"
+              }`}
+            >
+              s
+            </div>
+            <div
+              className={`z-10 absolute text-center mx-auto my-auto mt-3 ml-1 text-white ${
+                showBlackOrb === 1 && "maximize-star"
+              } ${showBlackOrb === 2 && "minimize-star"} ${
+                isStarHolding === 1 ? "scale-150" : "scale-100"
+              } text-[2rem] text-black-contour`}
+            >
+              {mythStates[activeMyth].burstlvl}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Star */}
+      {showStarBoosters != 0 && (
+        <div>
+          <div
+            className={`absolute  ${showStarBoosters === 2 && "popdown"} ${
+              showStarBoosters === 1 && "popup"
             } bottom-0 select-none left-0 -mb-2.5 minion-button`}
           >
-            <div className={`relative`}>
-              <img
-                src={`${assets.boosters.ratPop}`}
-                alt="rat"
-                className="w-full select-none pointer-events-none z-50"
-              />
-            </div>
-          </div>
-        )}
-        {/* Rat - Deduct */}
-        {showRatEffect !== 0 && (
-          <div
-            className={`flex  ${showRatEffect === 2 && "popdown"} ${
-              showRatEffect === 1 && "popup"
-            }`}
-          >
-            <div
-              className={`absolute bottom-0 select-none left-0 -mb-2.5 minion-button`}
-            >
-              <div className={`relative pop-shake`}>
-                <img
-                  src={`${assets.boosters.ratPop}`}
-                  alt="rat"
-                  className={`w-full select-none pointer-events-none filter-orbs-${mythSections[activeMyth]} z-50`}
-                />
-              </div>
-            </div>
-            <div
-              className={`absolute bottom-0 select-none right-0 -mb-2.5 minion-button`}
-            >
-              <div className="relative pop-scale">
-                <img
-                  src={`${assets.boosters.automataPop}`}
-                  alt="automata"
-                  className={`w-full h-full select-none pointer-events-none ${
-                    ratEffectToggle
-                      ? `filter-orbs-${mythSections[activeMyth]}`
-                      : "grayscale"
-                  } `}
-                />
-              </div>
-            </div>
-            {plusAutomata.map((plusOne) => (
-              <span
-                key={plusOne.id}
-                className={`minus-one glow-text-${mythSections[activeMyth]}`}
-                style={{
-                  bottom: `-12vh`,
-                  right: `8vw`,
-                  zIndex: 99,
-                }}
-              >
-                -x1
-              </span>
-            ))}
-          </div>
-        )}
-        {/* Minion */}
-        {(activeCard === "minion" || activeCard === "minion-down") && (
-          <div
-            onTouchStart={() => {
-              if (mythStates[activeMyth].isShardsClaimActive) {
-                setShowCard(
-                  <BoosterClaim
-                    activeCard={"minion"}
-                    activeMyth={activeMyth}
-                    mythData={mythStates[activeMyth]}
-                    disableIcon={false}
-                    closeCard={() => setShowCard(null)}
-                    Button={
-                      showBooster ? (
-                        <Button
-                          message={1}
-                          handleClick={() => {
-                            handleClickHaptic(tele, enableHaptic);
-                            setGlowBooster(1);
-                            setTimeout(() => {
-                              setGlowBooster(0);
-                            }, 500);
-                            setShowCard(null);
-                            setShowBooster(null);
-                          }}
-                          activeMyth={activeMyth}
-                        />
-                      ) : (
-                        <BoosterButtom
-                          activeCard={"minion"}
-                          mythData={mythStates[activeMyth]}
-                          handleClaim={handleClaimShards}
-                          activeMyth={activeMyth}
-                          t={t}
-                        />
-                      )
-                    }
-                  />
-                );
-                handleTapHaptic(tele, platform, enableHaptic, 500);
-              } else {
-                if (activeCard === "minion") {
-                  isMinionHold.current = true;
-                  setIsHolding(true);
-                  handleTapHaptic(tele, platform, enableHaptic, 1000);
-                }
-              }
-            }}
-            onTouchEnd={() => {
-              setIsHolding(false);
-
-              isMinionHold.current = false;
-            }}
-            className={`absolute  ${
-              activeCard === "minion-down" && "popdown"
-            } ${activeCard === "minion" && "popup"} bottom-0 ${
-              mythStates[activeMyth].isShardsClaimActive && "grayscale"
-            } select-none ${
-              minionPosition ? "left-0" : "right-0"
-            } -mb-2.5 minion-button`}
-          >
-            <div className={`relative ${minionPosition && "-scale-x-100"}`}>
+            <div className="relative -scale-x-100">
               <img
                 src={`${assets.boosters.alchemistPop}`}
                 alt="dwarf"
@@ -1750,41 +1522,242 @@ const Forges = () => {
               />
             </div>
           </div>
-        )}
-        <div className="absolute">
-          <ReactHowler
-            src={`${assets.audio.forgeBg}`}
-            playing={enableSound && activeMyth < 4}
-            preload={true}
-            loop
-          />
-          {isMinionHold.current === true && (
-            <ReactHowler
-              src={`${assets.audio.alchemist}`}
-              playing={enableSound && isMinionHold.current === true}
-              preload={true}
-              html5={true}
-            />
-          )}
-          {isStarHold.current === true && (
-            <ReactHowler
-              src={`${assets.audio.star}`}
-              playing={enableSound && isStarHold.current === true}
-              preload={true}
-              html5={true}
-            />
-          )}
-          {(showRat === true || showRatEffect === 1) && (
-            <ReactHowler
-              src={`${assets.audio.rat}`}
-              playing={enableSound && (showRat === true || showRatEffect === 1)}
-              preload={true}
-              html5={true}
-            />
-          )}
+          {plusMinion.map((plusOne) => (
+            <span
+              key={plusOne.id}
+              className={`plus-one glow-text-${mythSections[activeMyth]}`}
+              style={{
+                bottom: `-12vh`,
+                left: `2rem`,
+                zIndex: 99,
+              }}
+            >
+              +{mythStates[activeMyth].shardslvl * (isStarHolding ? 2 : 1)}
+            </span>
+          ))}
+          <div
+            className={`absolute  ${showStarBoosters === 2 && "popdown"} ${
+              showStarBoosters === 1 && "popup"
+            } bottom-0 select-none right-0 -mb-2.5 minion-button`}
+          >
+            <div className="relative">
+              <img
+                src={`${assets.boosters.automataPop}`}
+                alt="dwarf"
+                className="w-full h-full select-none pointer-events-none "
+              />
+            </div>
+          </div>
+          {plusAutomata.map((plusOne) => (
+            <span
+              key={plusOne.id}
+              className={`plus-one glow-text-${mythSections[activeMyth]}`}
+              style={{
+                bottom: `-12vh`,
+                right: `8vw`,
+                zIndex: 99,
+              }}
+            >
+              +
+              {mythStates[activeMyth].automatalvl === 0
+                ? 1
+                : mythStates[activeMyth].automatalvl * (isStarHolding ? 2 : 1)}
+            </span>
+          ))}
         </div>
+      )}
+      {/* Rat */}
+      {(activeCard === "rat" || activeCard === "rat-down") && (
+        <div
+          onTouchStart={() => {
+            if (activeCard === "rat") {
+              setIsHolding(true);
+              handleTapHaptic(tele, platform, enableHaptic, 1000);
+            }
+          }}
+          onTouchEnd={() => {
+            if (isHolding) {
+              closeRat(true);
+            }
+          }}
+          className={`absolute  ${activeCard === "rat-down" && "popdown"} ${
+            activeCard === "rat" && "popup"
+          } bottom-0 select-none left-0 -mb-2.5 minion-button`}
+        >
+          <div className={`relative`}>
+            <img
+              src={`${assets.boosters.ratPop}`}
+              alt="rat"
+              className="w-full select-none pointer-events-none z-50"
+            />
+          </div>
+        </div>
+      )}
+      {/* Rat - Deduct */}
+      {showRatEffect !== 0 && (
+        <div
+          className={`flex  ${showRatEffect === 2 && "popdown"} ${
+            showRatEffect === 1 && "popup"
+          }`}
+        >
+          <div
+            className={`absolute bottom-0 select-none left-0 -mb-2.5 minion-button`}
+          >
+            <div className={`relative pop-shake`}>
+              <img
+                src={`${assets.boosters.ratPop}`}
+                alt="rat"
+                className={`w-full select-none pointer-events-none filter-orbs-${mythSections[activeMyth]} z-50`}
+              />
+            </div>
+          </div>
+          <div
+            className={`absolute bottom-0 select-none right-0 -mb-2.5 minion-button`}
+          >
+            <div className="relative pop-scale">
+              <img
+                src={`${assets.boosters.automataPop}`}
+                alt="automata"
+                className={`w-full h-full select-none pointer-events-none ${
+                  ratEffectToggle
+                    ? `filter-orbs-${mythSections[activeMyth]}`
+                    : "grayscale"
+                } `}
+              />
+            </div>
+          </div>
+          {plusAutomata.map((plusOne) => (
+            <span
+              key={plusOne.id}
+              className={`minus-one glow-text-${mythSections[activeMyth]}`}
+              style={{
+                bottom: `-12vh`,
+                right: `8vw`,
+                zIndex: 99,
+              }}
+            >
+              -x1
+            </span>
+          ))}
+        </div>
+      )}
+      {/* Minion */}
+      {(activeCard === "minion" || activeCard === "minion-down") && (
+        <div
+          onTouchStart={() => {
+            if (mythStates[activeMyth].isShardsClaimActive) {
+              setShowCard(
+                <BoosterClaim
+                  activeCard={"minion"}
+                  activeMyth={activeMyth}
+                  mythData={mythStates[activeMyth]}
+                  disableIcon={false}
+                  closeCard={() => setShowCard(null)}
+                  Button={
+                    showBooster ? (
+                      <ButtonLayout
+                        mode="default"
+                        onClick={() => {
+                          handleClickHaptic(tele, enableHaptic);
+                          setGlowBooster(1);
+                          setTimeout(() => {
+                            setGlowBooster(0);
+                          }, 500);
+                          setShowCard(null);
+                          setShowBooster(null);
+                        }}
+                        centerContent={<Handshake size={"2rem"} />}
+                      />
+                    ) : (
+                      <BoosterButtom
+                        activeCard={"minion"}
+                        mythData={mythStates[activeMyth]}
+                        handleClaim={handleClaimShards}
+                        activeMyth={activeMyth}
+                        boosterLvl={Math.min(
+                          (mythStates[activeMyth]?.automatalvl ?? 0) + 2,
+                          99
+                        )}
+                        t={t}
+                      />
+                    )
+                  }
+                />
+              );
+              handleTapHaptic(tele, platform, enableHaptic, 500);
+            } else {
+              if (activeCard === "minion") {
+                isMinionHold.current = true;
+                setIsHolding(true);
+                handleTapHaptic(tele, platform, enableHaptic, 1000);
+              }
+            }
+          }}
+          onTouchEnd={() => {
+            setIsHolding(false);
+
+            isMinionHold.current = false;
+          }}
+          className={`absolute  ${activeCard === "minion-down" && "popdown"} ${
+            activeCard === "minion" && "popup"
+          } bottom-0 ${
+            mythStates[activeMyth].isShardsClaimActive && "grayscale"
+          } select-none ${
+            minionPosition ? "left-0" : "right-0"
+          } -mb-2.5 minion-button`}
+        >
+          <div className={`relative ${minionPosition && "-scale-x-100"}`}>
+            <img
+              src={`${assets.boosters.alchemistPop}`}
+              alt="dwarf"
+              className="w-full h-full select-none pointer-events-none z-50"
+            />
+          </div>
+        </div>
+      )}
+      {/* Header Stats */}
+      <GameHeader
+        orbs={orbs}
+        shards={shards}
+        activeMyth={activeMyth}
+        mythStates={mythStates}
+        minimize={activeCard === "minion"}
+        maximize={activeCard === "minion-down"}
+        glowBooster={glowBooster}
+      />
+      <div className="absolute">
+        <ReactHowler
+          src={`${assets.audio.forgeBg}`}
+          playing={enableSound && activeMyth < 4}
+          preload={true}
+          loop
+        />
+        {isMinionHold.current === true && (
+          <ReactHowler
+            src={`${assets.audio.alchemist}`}
+            playing={enableSound && isMinionHold.current === true}
+            preload={true}
+            html5={true}
+          />
+        )}
+        {isStarHold.current === true && (
+          <ReactHowler
+            src={`${assets.audio.star}`}
+            playing={enableSound && isStarHold.current === true}
+            preload={true}
+            html5={true}
+          />
+        )}
+        {(showRat === true || showRatEffect === 1) && (
+          <ReactHowler
+            src={`${assets.audio.rat}`}
+            playing={enableSound && (showRat === true || showRatEffect === 1)}
+            preload={true}
+            html5={true}
+          />
+        )}
       </div>
-    </>
+    </BgLayout>
   );
 };
 

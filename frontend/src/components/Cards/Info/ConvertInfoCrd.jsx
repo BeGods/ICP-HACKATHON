@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import { mythSymbols } from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import { FofContext } from "../../../context/context";
+import OverlayLayout from "../../Layouts/OverlayLayout";
+import { CardWrap } from "../../Layouts/Wrapper";
+import { useTranslation } from "react-i18next";
 
 const ConvertCard = ({ t, assets, myths, activeColor }) => {
   return (
@@ -101,11 +104,11 @@ const ConvertCard = ({ t, assets, myths, activeColor }) => {
   );
 };
 
-const ConvertInfo = ({ t, handleClick }) => {
+const ConvertInfo = ({ handleClick }) => {
+  const { t } = useTranslation();
   const { assets, isTgMobile, section, setShowBack, setShowCard } =
     useContext(FofContext);
   const [activeColor, setActiveColor] = useState(0);
-  const [flipped, setFlipped] = useState(false);
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const activeColorRef = useRef(activeColor);
 
@@ -119,18 +122,6 @@ const ConvertInfo = ({ t, handleClick }) => {
     return () => clearInterval(interval);
   }, [myths.length]);
 
-  const handleCardClick = (e) => {
-    e.stopPropagation();
-    handleClick();
-  };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setFlipped((prev) => !prev);
-  //   }, 2500);
-  //   return () => clearInterval(interval);
-  // }, []);
-
   useEffect(() => {
     setShowBack(section);
 
@@ -140,58 +131,34 @@ const ConvertInfo = ({ t, handleClick }) => {
   }, []);
 
   return (
-    <div
-      onClick={() => {
-        setShowCard(null);
-      }}
-      className="fixed inset-0  bg-black bg-opacity-85 backdrop-blur-[3px] flex justify-center items-center z-50"
-    >
-      <div
-        onClick={handleCardClick}
-        className={`relative card-width rounded-lg shadow-lg -mt-[30px] flex flex-col z-50`}
-      >
-        <div
-          className={`card ${
-            isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
-          } ${flipped ? "flipped" : ""}`}
-        >
-          <div
-            onClick={(e) => {
-              setFlipped((prev) => !prev);
-            }}
-            className="card__face card__face--front relative card-shadow-white  flex justify-center items-center"
-          >
-            <ConvertCard
-              assets={assets}
-              myths={myths}
-              t={t}
-              handleClick={handleCardClick}
-              activeColor={activeColor}
-            />
-            <IconBtn
-              isInfo={false}
-              activeMyth={4}
-              handleClick={handleCardClick}
-              align={8}
-            />
-          </div>
-          <div
-            onClick={(e) => {
-              setFlipped((prev) => !prev);
-            }}
-            className="card__face card__face--back flex flex-col justify-center items-center"
-          >
-            <div className="relative w-full h-full text-card">
-              <img
-                src={assets.uxui.bgInfoMoon}
-                alt="info card background"
-                className="w-full h-full object-cover rounded-primary z-10"
+    <OverlayLayout>
+      <div className="center-section">
+        <CardWrap
+          Front={
+            <div className="w-full h-full relative card-shadow-white  flex justify-center items-center">
+              <ConvertCard
+                assets={assets}
+                myths={myths}
+                t={t}
+                handleClick={handleClick}
+                activeColor={activeColor}
               />
             </div>
-          </div>
-        </div>
+          }
+          Back={
+            <div className="w-full h-full flex flex-col justify-center items-center">
+              <div className="relative w-full h-full text-card">
+                <img
+                  src={assets.uxui.bgInfoMoon}
+                  alt="info card background"
+                  className="w-full h-full object-cover rounded-primary z-10"
+                />
+              </div>
+            </div>
+          }
+        />
       </div>
-    </div>
+    </OverlayLayout>
   );
 };
 

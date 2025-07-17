@@ -20,54 +20,54 @@ const GameHeader = ({
   const [toggleValue, setToggleValue] = useState(true);
 
   return (
-    <div
-      className={`flex ${minimize && "minimize"} ${
-        maximize && "maximize"
-      } footer-width justify-between absolute bottom-1.5 z-0 transition-all duration-250`}
-    >
-      <div>
-        {!mythStates[activeMyth].isShardsClaimActive &&
-          !hasTimeElapsed(mythStates[activeMyth].shardsLastClaimedAt) && (
-            <div className="flex items-center leading-tight flex-col relative h-fit shake-booster">
-              <div
-                onClick={() => {
-                  handleClickHaptic(tele, enableHaptic);
+    <div className="w-full flex justify-center">
+      <div
+        className={`flex ${minimize && "minimize"} ${
+          maximize && "maximize"
+        } footer-width justify-between absolute bottom-1.5 z-0 transition-all duration-250`}
+      >
+        <div>
+          {!mythStates[activeMyth].isShardsClaimActive &&
+            !hasTimeElapsed(mythStates[activeMyth].shardsLastClaimedAt) && (
+              <div className="flex items-center leading-tight flex-col relative h-fit shake-booster">
+                <div
+                  onClick={() => {
+                    handleClickHaptic(tele, enableHaptic);
 
-                  setToggleValue((prev) => !prev);
-                }}
-                className={`font-symbols glow-icon-${
-                  mythSections[activeMyth]
-                } transition-all duration-500 ${
-                  glowBooster === 1
-                    ? `scale-150 text-${mythSections[activeMyth]}-text`
-                    : "text-white"
-                }  text-iconLg p-0 ml-2`}
-              >
-                9
+                    setToggleValue((prev) => !prev);
+                  }}
+                  className={`font-symbols glow-icon-${
+                    mythSections[activeMyth]
+                  } transition-all duration-500 ${
+                    glowBooster === 1
+                      ? `scale-150 text-${mythSections[activeMyth]}-text`
+                      : "text-white"
+                  }  text-iconLg p-0 ml-2`}
+                >
+                  9
+                </div>
+                <div
+                  className={`text-white ml-2  flex justify-center items-center text-center text-black-contour bottom-0 right-0 -mt-1.5 w-full text-[1rem] `}
+                >
+                  {!toggleValue ? (
+                    <>
+                      {" "}
+                      <div className="text-tertiary">
+                        x{mythStates[activeMyth].shardslvl}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      -
+                      {calculateRemainingTime(
+                        mythStates[activeMyth].shardsLastClaimedAt
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
-              <div
-                className={`text-white ml-2  flex justify-center items-center text-center text-black-contour bottom-0 right-0 -mt-1.5 w-full text-[1rem] `}
-              >
-                {!toggleValue ? (
-                  <>
-                    {" "}
-                    <div className="text-tertiary">
-                      x{mythStates[activeMyth].shardslvl}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    -
-                    {calculateRemainingTime(
-                      mythStates[activeMyth].shardsLastClaimedAt
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-      </div>
-      <div>
+            )}
+        </div>
         <div>
           {mythStates[activeMyth].isAutomataActive &&
             !hasTimeElapsed(mythStates[activeMyth].automataStartTime) && (

@@ -1,19 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
 import MappedOrbs from "../../Common/MappedOrbs";
-import IconBtn from "../../Buttons/IconBtn";
 import { mythSections, mythSymbols } from "../../../utils/constants.fof";
-import Button from "../../Buttons/DefaultBtn";
 import { FofContext } from "../../../context/context";
+import OverlayLayout from "../../Layouts/OverlayLayout";
+import { ButtonLayout } from "../../Layouts/ButtonLayout";
 
-function PayCard({
-  quest,
-  handleShowPay,
-  handlePay,
-  activeMyth,
-  handleClaimEffect,
-  isBooster,
-}) {
+function PayCard({ quest, handlePay, activeMyth, handleClaimEffect }) {
   const { gameData, assets, section, setShowBack, setShowCard } =
     useContext(FofContext);
   const [deduct, setDeduct] = useState(false);
@@ -84,93 +77,8 @@ function PayCard({
   }, []);
 
   return (
-    <div
-      onClick={() => {
-        setShowCard(null);
-      }}
-      className="fixed inset-0 flex  flex-col justify-center items-center z-50"
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className="background-wrapper"
-      >
-        <div
-          className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
-          style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-          }}
-        />
-      </div>
-      <div
-        className={`relative card-width  rounded-lg shadow-lg  flex flex-col z-50`}
-      >
-        <div className="relative card-shadow-white">
-          <div className="absolute  bg-black h-full w-full z-10 opacity-50 rounded-xl"></div>
-          <img
-            src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
-            alt="card"
-            className="w-full h-full mx-auto grayscale rounded-[15px]"
-          />
-          <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
-            <div className="flex w-full">
-              <div className="m-2 z-50">
-                <MappedOrbs quest={quest} showNum={scale} />
-              </div>
-              <IconBtn
-                isInfo={false}
-                activeMyth={activeMyth}
-                handleClick={handleShowPay}
-                align={1}
-              />
-            </div>
-            <div
-              className={`flex relative items-center h-[19%] uppercase card-shadow-white-${mythSections[activeMyth]} text-white grayscale`}
-            >
-              <div
-                style={{
-                  backgroundImage: `url(${assets.uxui.footer})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center center",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  height: "100%",
-                  width: "100%",
-                }}
-                className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
-              />
-              <div
-                className={`flex justify-between w-full h-full items-center glow-text-quest px-3 z-10`}
-              >
-                <div>{quest?.questName}</div>
-                <div className="">
-                  <Symbol myth={mythSections[activeMyth]} isCard={1} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="absolute bottom-[15%]">
-        <Button
-          handleClick={handleOperation}
-          message={0}
-          activeMyth={activeMyth}
-          isBooster={isBooster}
-        />
-      </div>
-      <div className="flex flex-col absolute gap-y-1 top-4">
+    <OverlayLayout>
+      <div className="flex flex-col absolute pt-gamePanelTop">
         <div className="flex gap-3">
           {filteredOrbsBal.includes("MultiOrb") && (
             <div>
@@ -228,7 +136,58 @@ function PayCard({
             ))}
         </div>
       </div>
-    </div>
+      <div className="center-section">
+        <div
+          className={`relative card-width  rounded-lg shadow-lg  flex flex-col z-50`}
+        >
+          <div className="relative">
+            <div className="absolute  bg-black h-full w-full z-10 opacity-50 rounded-xl"></div>
+            <img
+              src={assets.questCards?.[mythSections[activeMyth]]?.[quest?.type]}
+              alt="card"
+              className="w-full h-full mx-auto grayscale rounded-[15px]"
+            />
+            <div className="absolute top-0 right-0 h-full w-full cursor-pointer flex flex-col justify-between">
+              <div className="flex w-full">
+                <div className="m-2 z-50">
+                  <MappedOrbs quest={quest} showNum={scale} />
+                </div>
+              </div>
+              <div
+                className={`flex relative items-center h-[19%] uppercase card-shadow-white-${mythSections[activeMyth]} text-white grayscale`}
+              >
+                <div
+                  style={{
+                    backgroundImage: `url(${assets.uxui.footer})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center center",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    height: "100%",
+                    width: "100%",
+                  }}
+                  className={`filter-paper-${mythSections[activeMyth]} rounded-b-[15px]`}
+                />
+                <div
+                  className={`flex justify-between w-full h-full items-center glow-text-quest px-3 z-10`}
+                >
+                  <div>{quest?.questName}</div>
+                  <div className="">
+                    <Symbol myth={mythSections[activeMyth]} isCard={1} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute flex justify-center w-full bottom-0 mb-safeBottom">
+        <ButtonLayout mode="default" onClick={handleOperation} />
+      </div>
+    </OverlayLayout>
   );
 }
 

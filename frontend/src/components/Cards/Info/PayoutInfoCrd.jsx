@@ -3,9 +3,11 @@ import { MainContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import { updateMsnStatus } from "../../../utils/api.fof";
-import { Lock } from "lucide-react";
+import { Lock, ThumbsUp } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { mythSymbols } from "../../../utils/constants.fof";
+import OverlayLayout from "../../Layouts/OverlayLayout";
+import { ButtonLayout } from "../../Layouts/ButtonLayout";
 
 const PayoutInfoCard = ({ close, data }) => {
   const { i18n } = useTranslation();
@@ -23,8 +25,7 @@ const PayoutInfoCard = ({ close, data }) => {
   const [activeColor, setActiveColor] = useState(0);
   const activeColorRef = useRef(activeColor);
 
-  const handleClaimMsn = async (e) => {
-    e.stopPropagation();
+  const handleClaimMsn = async () => {
     if (disableClick.current) return;
 
     disableClick.current = true;
@@ -90,149 +91,139 @@ const PayoutInfoCard = ({ close, data }) => {
   }, []);
 
   return (
-    <div
-      onClick={close}
-      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-50"
-    >
-      <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
-        <div className="relative w-full h-full text-card">
-          <img
-            src={assets.uxui.bgInfo}
-            alt="info card background"
-            className="w-full h-full object-cover rounded-primary z-10"
-          />
-        </div>
-
-        <div className="absolute top-0 w-full flex flex-col justify-center leading-8 items-center text-center text-card font-bold mt-2 uppercase z-30">
-          <div className="w-3/4 text-paperHead">{data?.title}</div>
-          <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
-            {data?.amount}{" "}
-            <span>
-              {" "}
-              {data.paymentType?.includes("USDT")
-                ? "USDT"
-                : isTelegram
-                ? "STAR"
-                : "KAIA"}
-            </span>
-          </h2>
-        </div>
-
-        <div
-          className={`absolute leading-[3dvh]  text-card inset-0 w-[85%] mx-auto flex flex-col justify-center font-[550] z-30 ${
-            (i18n.language === "hi" ||
-              i18n.language === "th" ||
-              i18n.language === "ru") &&
-            "font-normal"
-          }`}
-        >
-          <div className="flex flex-col text-para gap-y-4">
-            {data?.description}
+    <OverlayLayout>
+      <div className="center-section">
+        <div className="relative card-width rounded-lg shadow-lg card-shadow-white">
+          <div className="relative w-full h-full text-card">
+            <img
+              src={assets.uxui.bgInfo}
+              alt="info card background"
+              className="w-full h-full object-cover rounded-primary z-10"
+            />
           </div>
-          {data.id == "685d8eb394c823384381ede1" && (
-            <div className="flex flex-col justify-center items-start gap-y-3 my-3">
-              <div className="flex justify-start items-center gap-x-3">
-                <div
-                  className={`flex relative text-center justify-center items-end max-w-xs-orb  rounded-full glow-icon-black`}
-                >
-                  <img src={assets.uxui.baseOrb} alt={`gray orb`} />
-                  <span
-                    className={`absolute z-1 text-[1.5rem] ml-0.5 opacity-50 orb-symbol-shadow mb-1  font-symbols text-white `}
+
+          <div className="absolute top-0 w-full flex flex-col justify-center leading-8 items-center text-center text-card font-bold mt-2 uppercase z-30">
+            <div className="w-3/4 text-paperHead">{data?.title}</div>
+            <h2 className={`-mt-1 text-paperSub font-medium uppercase`}>
+              {data?.amount}{" "}
+              <span>
+                {" "}
+                {data.paymentType?.includes("USDT")
+                  ? "USDT"
+                  : isTelegram
+                  ? "STAR"
+                  : "KAIA"}
+              </span>
+            </h2>
+          </div>
+
+          <div
+            className={`absolute leading-[3dvh]  text-card inset-0 w-[85%] mx-auto flex flex-col justify-center font-[550] z-30 ${
+              (i18n.language === "hi" ||
+                i18n.language === "th" ||
+                i18n.language === "ru") &&
+              "font-normal"
+            }`}
+          >
+            <div className="flex flex-col text-para gap-y-4">
+              {data?.description}
+            </div>
+            {data.id == "685d8eb394c823384381ede1" && (
+              <div className="flex flex-col justify-center items-start gap-y-3 my-3">
+                <div className="flex justify-start items-center gap-x-3">
+                  <div
+                    className={`flex relative text-center justify-center items-end max-w-xs-orb  rounded-full glow-icon-black`}
                   >
-                    g
-                  </span>
+                    <img src={assets.uxui.baseOrb} alt={`gray orb`} />
+                    <span
+                      className={`absolute z-1 text-[1.5rem] ml-0.5 opacity-50 orb-symbol-shadow mb-1  font-symbols text-white `}
+                    >
+                      g
+                    </span>
+                  </div>
+                  <h1 className="text-primary font-semibold">=</h1>
+                  <div className="text-[28px] -ml-2.5">1000</div>
+                  <div className="text-[24px] font-roboto font-medium">
+                    X
+                  </div>{" "}
+                  <div
+                    className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
+                  >
+                    <img
+                      src={assets.uxui.baseOrb}
+                      alt={`gray orb`}
+                      className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
+                    />
+                    <span
+                      className={`absolute z-1  justify-center items-center font-symbols text-white `}
+                    >
+                      <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                        {mythSymbols[myths[activeColor]]}
+                      </div>
+                    </span>
+                  </div>
                 </div>
-                <h1 className="text-primary font-semibold">=</h1>
-                <div className="text-[28px] -ml-2.5">1000</div>
-                <div className="text-[24px] font-roboto font-medium">
-                  X
-                </div>{" "}
-                <div
-                  className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
-                >
-                  <img
-                    src={assets.uxui.baseOrb}
-                    alt={`gray orb`}
-                    className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
-                  />
-                  <span
-                    className={`absolute z-1  justify-center items-center font-symbols text-white `}
+                <div className="flex justify-start items-center gap-x-3">
+                  <div
+                    className={`flex relative text-center justify-center items-center max-w-xs-multi-orb -mt-1 rounded-full glow-icon-black`}
                   >
-                    <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
-                      {mythSymbols[myths[activeColor]]}
-                    </div>
-                  </span>
+                    <img src={assets.items.multiorb} alt="multi orb" />
+                  </div>
+                  <h1 className="text-primary font-semibold">=</h1>
+                  <div className="text-[28px] -ml-2.5">2</div>
+                  <div className="text-[24px] font-roboto font-medium">
+                    X
+                  </div>{" "}
+                  <div
+                    className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
+                  >
+                    <img
+                      src={assets.uxui.baseOrb}
+                      alt={`gray orb`}
+                      className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
+                    />
+                    <span
+                      className={`absolute z-1  justify-center items-center font-symbols text-white `}
+                    >
+                      <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
+                        {mythSymbols[myths[activeColor]]}
+                      </div>
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="flex justify-start items-center gap-x-3">
-                <div
-                  className={`flex relative text-center justify-center items-center max-w-[2.3rem] -mt-1 rounded-full glow-icon-black`}
-                >
-                  <img src={assets.items.multiorb} alt="multi orb" />
-                </div>
-                <h1 className="text-primary font-semibold">=</h1>
-                <div className="text-[28px] -ml-2.5">2</div>
-                <div className="text-[24px] font-roboto font-medium">
-                  X
-                </div>{" "}
-                <div
-                  className={`flex relative text-center justify-center items-center max-w-xs-orb rounded-full glow-icon-black`}
-                >
-                  <img
-                    src={assets.uxui.baseOrb}
-                    alt={`gray orb`}
-                    className={`filter-orbs-${myths[activeColor]} transition-all duration-1000`}
-                  />
-                  <span
-                    className={`absolute z-1  justify-center items-center font-symbols text-white `}
-                  >
-                    <div className="text-symbol-xs transition-all duration-1000  opacity-50 orb-symbol-shadow  mt-1 justify-center items-center font-symbols text-white">
-                      {mythSymbols[myths[activeColor]]}
-                    </div>
-                  </span>
-                </div>
-              </div>
+            )}
+          </div>
+
+          {data?.limit > 0 ? (
+            <div className="absolute w-full uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
+              {data.isClaimed ? (
+                "CLAIMED"
+              ) : (
+                <>
+                  {data.limit} <span>Slots Left</span>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="absolute w-full text-center uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-red-500 text-black-contour">
+              {data?.limit + "  "} Slots Exhausted
             </div>
           )}
         </div>
-
-        {data?.limit > 0 ? (
-          <div className="absolute w-full uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-card">
-            {data.isClaimed ? (
-              "CLAIMED"
-            ) : (
-              <>
-                {data.limit} <span>Slots Left</span>
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="absolute w-full text-center uppercase flex justify-center items-center bottom-0 gap-2 text-para mx-auto px-2 py-1 text-red-500 text-black-contour">
-            {data?.limit + "  "} Slots Exhausted
-          </div>
-        )}
-
-        <IconBtn isInfo={false} activeMyth={4} handleClick={close} align={1} />
       </div>
 
-      {!data.isClaimed && data.limit > 0 && (
-        <div
-          onClick={handleClaimMsn}
-          className="flex cursor-pointer justify-center items-center relative h-fit mt-1"
-        >
-          <img src={assets.buttons.black.off} alt="button" />
-          <div className="absolute z-50 flex items-center justify-center  text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
-            <h1 className="uppercase">
-              {data.id == "684882aa7c77e14a7262bbcc" ? (
-                <Lock strokeWidth={3} />
-              ) : (
-                "Verify"
-              )}{" "}
-            </h1>
-          </div>
-        </div>
-      )}
-    </div>
+      <div className="absolute flex justify-center w-full bottom-0 mb-safeBottom">
+        {!data.isClaimed && data.limit > 0 && (
+          <ButtonLayout
+            mode="default"
+            onClick={handleClaimMsn}
+            centerContent={<ThumbsUp size={"1.75rem"} color={"white"} />}
+            customMyth={8}
+          />
+        )}
+      </div>
+    </OverlayLayout>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FofContext } from "../../../context/context";
 import { claimAutomataBooster } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
@@ -6,17 +6,16 @@ import {
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
-import { mythologies, mythSections } from "../../../utils/constants.fof";
-import BoosterBtn from "../../../components/Buttons/BoosterBtn";
+import { mythologies } from "../../../utils/constants.fof";
 import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 import { showToast } from "../../../components/Toast/Toast";
-import { BoosterGuide } from "../../../components/Common/Tutorials";
-import MythInfoCard from "../../../components/Cards/Info/MythInfoCrd";
+import { BoosterGuide } from "../../../components/Tutorials/Tutorials";
 import BoosterHeader from "./Header";
 import { useBoosterGuide } from "../../../hooks/Tutorial";
-import BoosterCarousel from "../../../components/Carousel/BoosterCarousel";
 import ReactHowler from "react-howler";
 import { trackComponentView, trackEvent } from "../../../utils/ga";
+import BgLayout from "../../../components/Layouts/BgLayout";
+import BoosterCarousel from "./Carousel";
 
 const Boosters = () => {
   const { t } = useTranslation();
@@ -33,55 +32,48 @@ const Boosters = () => {
     enableSound,
     showAnmt,
     setShowAnmt,
-    isTgMobile,
   } = useContext(FofContext);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
   const [showToggles, setShowToggles] = useState(false);
   let guideTimeoutId = useRef(null);
-  const disableRef = useRef(false);
 
   const handleClaimAutomata = async () => {
-    if (disableRef.current === false) {
-      disableRef.current = true;
-      const mythologyName = {
-        mythologyName: mythologies[activeMyth],
-      };
-      try {
-        const response = await claimAutomataBooster(mythologyName, authToken);
-        trackEvent("purchase", "claim_automata", "success");
+    const mythologyName = {
+      mythologyName: mythologies[activeMyth],
+    };
+    try {
+      const response = await claimAutomataBooster(mythologyName, authToken);
+      trackEvent("purchase", "claim_automata", "success");
 
-        setGameData((prevData) => {
-          const updatedData = {
-            ...prevData,
-            multiColorOrbs: prevData.multiColorOrbs - 1,
-            mythologies: prevData.mythologies.map((item) =>
-              item.name === mythologies[activeMyth]
-                ? {
-                    ...item,
-                    boosters: response.updatedBooster,
-                  }
-                : item
-            ),
-          };
+      setGameData((prevData) => {
+        const updatedData = {
+          ...prevData,
+          multiColorOrbs: prevData.multiColorOrbs - 1,
+          mythologies: prevData.mythologies.map((item) =>
+            item.name === mythologies[activeMyth]
+              ? {
+                  ...item,
+                  boosters: response.updatedBooster,
+                }
+              : item
+          ),
+        };
 
-          return updatedData;
-        });
-        setShowCard(null);
-        disableRef.current = false;
-        showToast("booster_success");
-        setShowBooster("automata");
-        setSection(0);
-      } catch (error) {
-        disableRef.current = false;
-        setShowCard(null);
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          "An unexpected error occurred";
-        console.log(errorMessage);
-        showToast("booster_error");
-      }
+        return updatedData;
+      });
+      setShowCard(null);
+      showToast("booster_success");
+      setShowBooster("automata");
+      setSection(0);
+    } catch (error) {
+      setShowCard(null);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(errorMessage);
+      showToast("booster_error");
     }
   };
 
@@ -96,14 +88,6 @@ const Boosters = () => {
           setShowCard(null);
           setShowAnmt(false);
         }}
-        Button={
-          <BoosterBtn
-            activeCard={"automata"}
-            mythData={mythData}
-            handleClaim={() => {}}
-            t={t}
-          />
-        }
       />
     );
   };
@@ -143,54 +127,18 @@ const Boosters = () => {
   }, []);
 
   return (
-    <div
-      className={`flex flex-col ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } overflow-hidden m-0`}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: "100%",
-          width: "100%",
-          zIndex: -1,
-        }}
-        className="background-wrapper"
-      >
-        <div
-          className={`absolute top-0 left-0 h-full w-full filter-${mythSections[activeMyth]}`}
-          style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-          }}
-        />
-      </div>
-
+    <BgLayout>
       {/* Header */}
       <BoosterHeader
         activeMyth={activeMyth}
         gameData={mythData}
         t={t}
         multiColorOrbs={multiColorOrbs}
-        showSymbol={() => {
-          setShowCard(
-            <MythInfoCard
-              close={() => {
-                setShowCard(false);
-              }}
-            />
-          );
-        }}
+        mythData={mythData}
       />
 
       {/* BOOSTER CARDS */}
-      <div className="relative flex flex-col justify-center items-center my-auto h-1/2 w-full">
-        <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
-      </div>
+      <BoosterCarousel mythData={mythData} enableGuide={enableGuide} />
 
       <div className="absolute">
         <ReactHowler
@@ -225,7 +173,7 @@ const Boosters = () => {
           />
         </>
       )}
-    </div>
+    </BgLayout>
   );
 };
 

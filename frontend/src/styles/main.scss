@@ -2,6 +2,17 @@
 
 $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
 
+.bottom-safe-area{
+ @apply absolute w-full flex flex-col justify-center items-center bottom-0 pb-safeBottom;
+}
+.bottom-base-area{
+ @apply absolute w-full flex flex-col justify-center items-center bottom-0 pb-buttonBottom;
+}
+.bonus-heading-text {
+  @apply uppercase text-gold text-bonus-title text-black-contour text-center break-words leading-[55px];
+}
+
+
 @each $myth in $myths {
   // Filters
   .filter-#{$myth} {
@@ -151,6 +162,11 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
 .bg-glass-black-lg {
   background: rgba(0, 0, 0, 0.8); /* 50% transparency */
 }
+
+.bg-glass-black-sm {
+  background: rgba(0, 0, 0, 0.5); /* 50% transparency */
+}
+
 
 
 .bg-glass-white {

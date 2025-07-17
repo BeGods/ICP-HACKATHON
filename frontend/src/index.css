@@ -183,8 +183,16 @@ html, body {
   height: calc(100dvh - var(--tg-safe-area-inset-top) - 45px);
 }
 
+.mobile-safe-height {
+  height: calc(100dvh  - env(safe-area-inset-top));
+}
+
+.tg-safe-height {
+  height: calc(100dvh - var(--tg-safe-area-inset-top));
+}
+
 .browser-container-height {
-  height: calc(100dvh  - env(safe-area-inset-top) - 45px);
+  height: 100dvh;
 }
 
 .tg-middle-position {
@@ -314,7 +322,7 @@ body.iframe-mobile .browser-container-height {
 }
 
 .modal-width {
-  @apply w-[72%] tablet:w-[47%] desktop:w-[22%];
+  @apply w-[87%] tablet:w-[67%] desktop:w-[42%];
 }
 
 .notif-width {
@@ -326,7 +334,11 @@ body.iframe-mobile .browser-container-height {
 }
 
 .card-width {
-  @apply h-[52dvh] aspect-[320/448] max-h-[100vw] -mt-[6dvh];
+  @apply h-[52dvh] aspect-[360/504] max-h-[100vw];
+}
+
+.packet-width {
+  @apply h-[64dvh]  max-h-[120vw] aspect-[360/610] mt-[4rem];
 }
 
 .carousel-width {
@@ -340,3 +352,9 @@ body.iframe-mobile .browser-container-height {
 .chrome-top-safe-area{
   padding-top: env(safe-area-inset-top);
 }
+
+.center-section {
+  @apply absolute inset-x-0 flex flex-col top-gameMargins bottom-gameMargins justify-center items-center z-10 mx-auto max-w-[720px];
+  width: calc(100% - 60px);
+}
+

@@ -1,34 +1,26 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { mythSections, mythSymbols, wheel } from "../../../utils/constants.fof";
-import { FofContext } from "../../../context/context";
-import MoonInfoCard from "../../../components/Cards/Info/MoonInfoCrd";
+import { useContext, useRef } from "react";
+import { mythSymbols, wheel } from "../../../utils/constants.fof";
+import { FofContext, MainContext } from "../../../context/context";
 import { getPhaseByDate } from "../../../helpers/game.helper";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import IconBtn from "../../../components/Buttons/IconBtn";
+import HeaderLayout, {
+  HeadbarLayout,
+} from "../../../components/Layouts/HeaderLayout";
+import ConvertInfo from "../../../components/Cards/Info/ConvertInfoCrd";
+import MoonInfoCard from "../../../components/Cards/Info/MoonInfoCrd";
 
 const tele = window.Telegram?.WebApp;
 
-const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
-  const { setShowCard, assets, enableHaptic } = useContext(FofContext);
+const CenterChild = ({ platform, myth }) => {
+  const { assets, enableHaptic, setShowCard } = useContext(FofContext);
   const currPhase = getPhaseByDate(new Date());
   const moonPhase = useRef(currPhase);
-  const [showEffect, setShowEffect] = useState(true);
-
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      setShowEffect(false);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
 
   return (
     <div
-      className={`flex cursor-pointer absolute justify-center w-full  z-[60] -mt-2 top-0`}
+      className={`flex cursor-pointer absolute justify-center mx-auto top-0 w-full -mt-2 z-50`}
     >
       {myth !== 0 ? (
         <div
@@ -40,8 +32,8 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
             className={`filter-orbs-${wheel[myth]} w-full h-full`}
           />
           <span
-            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-[5rem] ${
-              platform === "ios" ? "mt-14" : "mt-9"
+            className={`absolute text-black-icon-contour font-symbols opacity-100 text-white text-element-md ${
+              platform === "ios" ? "mt-13" : "mt-8"
             } opacity-70  orb-symbol-shadow`}
           >
             {mythSymbols[wheel[myth]]}
@@ -51,7 +43,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
         <div
           onClick={() => {
             handleClickHaptic(tele, enableHaptic);
-            handleInfoClk();
+            setShowCard(<MoonInfoCard />);
           }}
           className={`z-20 glow-icon-white transition-all duration-500`}
         >
@@ -71,9 +63,7 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
                 className={`moon-base`}
               />
               <span
-                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-[5rem] ${
-                  platform === "ios" ? "mt-6 ml-1" : "mt-6 ml-1"
-                } orb-symbol-shadow z-50`}
+                className={`absolute z-1 font-symbols text-white-icon-contour  text-black/90 text-element-md mt-5 ml-1 orb-symbol-shadow z-50`}
               >
                 {mythSymbols["other"]}
               </span>
@@ -85,126 +75,94 @@ const CenterChild = ({ platform, myth, showInfo, handleInfoClk }) => {
   );
 };
 
-const BottomChild = ({ gameData, sessionOrbs, myth, showGlow }) => {
-  const { assets, activeMyth } = useContext(FofContext);
+const BottomChild = ({ gameData, sessionOrbs, myth }) => {
+  const { assets, setSection, setShowCard } = useContext(MainContext);
   const { t } = useTranslation();
-  return (
-    <div className="flex w-full justify-center px-2 mt-1 top-0 absolute">
-      <div className="flex relative w-full max-w-[720px] px-7">
-        <div
-          className={`flex relative justify-start ${
-            showGlow && "glow-button-white"
-          } primary gap-3  items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
-        >
-          <div
-            className={`flex absolute text-center justify-center items-center w-[3.15rem] h-[3.15rem] -ml-[2rem] glow-orb-black rounded-full`}
-          >
-            <img
-              src={`${assets.items.multiorb}`}
-              alt="multiOrb"
-              className="w-full h-full"
-            />
-          </div>
-          <div className="text-primary text-black-contour font-medium pl-headSides">
-            {" "}
-            {formatThreeNums(gameData.multiColorOrbs)}
-          </div>
-        </div>
-        <div
-          className={`flex relative border justify-end ${` border-${
-            mythSections[myth - 1]
-          }-primary`}  gap-3 items-center rounded-primary h-button-primary text-white bg-glass-black-lg border w-full`}
-        >
-          <div
-            className={`text-primary text-black-contour font-medium pr-headSides`}
-          >
-            {" "}
-            {myth !== 0 ? (
-              <>
-                {formatThreeNums(
-                  gameData?.mythologies[myth - 1]?.orbs - sessionOrbs * 2
-                )}
-              </>
-            ) : (
-              <>{formatThreeNums(gameData.blackOrbs)}</>
-            )}
-          </div>
-          <div className="absolute -mr-[2rem]">
-            {myth !== 0 ? (
-              <>
-                <div
-                  className={`font-symbols  text-iconLg mt-0.5  text-black-lg-contour transition-all duration-1000 text-${wheel[myth]}-text`}
-                >
-                  {mythSymbols[wheel[myth]]}
-                </div>
-              </>
-            ) : (
-              <>
-                {" "}
-                <div
-                  className={`font-symbols  mt-0.5 text-[3rem] text-black-lg-contour transition-all duration-1000 text-white`}
-                >
-                  {mythSymbols["other"]}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
 
-      <div className="absolute flex text-white  px-1 w-full mt-[4rem] font-fof text-tertiary uppercase">
-        <div className={`mr-auto slide-in-out-left gradient-multi`}>
-          {t(`keywords.orbs`)}
-        </div>
-        <div className={`ml-auto slide-in-out-right font-bold text-black`}>
-          {t(`keywords.orbs`)}
-        </div>
-      </div>
-    </div>
-  );
+  const data = [
+    {
+      icon: (
+        <img
+          src={`${assets.items.multiorb}`}
+          alt="multiOrb"
+          className="w-[3.15rem] h-[3.15rem]  glow-orb-black rounded-full"
+        />
+      ),
+      value: formatThreeNums(gameData.multiColorOrbs),
+      label: t(`keywords.orbs`),
+      borderColor: "white",
+      handleClick: () => {
+        setSection(2);
+      },
+    },
+    {
+      icon:
+        myth !== 0 ? (
+          <>
+            <div
+              className={`font-symbols  text-iconLg mt-0.5  text-black-lg-contour transition-all duration-1000 text-${wheel[myth]}-text`}
+            >
+              {mythSymbols[wheel[myth]]}
+            </div>
+          </>
+        ) : (
+          <>
+            {" "}
+            <div
+              className={`font-symbols  mt-0.5 text-[3rem] text-black-lg-contour transition-all duration-1000 text-white`}
+            >
+              {mythSymbols["other"]}
+            </div>
+          </>
+        ),
+      value:
+        myth !== 0 ? (
+          <>
+            {formatThreeNums(
+              gameData?.mythologies[myth - 1]?.orbs - sessionOrbs * 2
+            )}
+          </>
+        ) : (
+          <>{formatThreeNums(gameData.blackOrbs)}</>
+        ),
+      label: t(`keywords.orbs`),
+      handleClick: () => {
+        setShowCard(
+          <ConvertInfo
+            handleClick={() => {
+              setShowCard(null);
+            }}
+          />
+        );
+      },
+    },
+  ];
+
+  return <HeadbarLayout activeMyth={myth - 1} data={data} />;
 };
 
-const TowerHeader = ({
-  gameData,
-  myth,
-  sessionOrbs,
-  showGlow,
-  showInfo,
-  handleInfoClk,
-}) => {
+const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow, showInfo }) => {
   const { t } = useTranslation();
   const { platform } = useContext(FofContext);
-  const [changeText, setChangeText] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setChangeText((prevText) => !prevText);
-    }, 1500);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
-    <div>
-      <div className="flex flex-col gap-[5px] pt-headTop">
-        <div
-          className={`font-fof w-full text-center mt-[6.5rem] disappear absolute top-0 text-[4.5dvh] uppercase text-black drop-shadow z-50`}
-        >
-          {t(`elements.aether`)}
-        </div>
+    <HeaderLayout
+      activeMyth={8}
+      titleColor="black"
+      hideContour={true}
+      title={t(`elements.aether`)}
+      BottomChild={
         <BottomChild
           showGlow={showGlow}
           gameData={gameData}
           myth={myth}
           sessionOrbs={sessionOrbs}
         />
-        <CenterChild
-          platform={platform}
-          myth={myth}
-          showInfo={showInfo}
-          handleInfoClk={handleInfoClk}
-        />
-      </div>
-    </div>
+      }
+      CenterChild={
+        <CenterChild platform={platform} myth={myth} showInfo={showInfo} />
+      }
+    />
   );
 };
 

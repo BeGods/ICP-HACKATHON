@@ -1,16 +1,11 @@
 import React, { useContext, useState } from "react";
-import { Check, ChevronRight } from "lucide-react";
-import { FofContext, MainContext, RorContext } from "../../../context/context";
+import { MainContext } from "../../../context/context";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 
 const tele = window.Telegram?.WebApp;
 
 const NotifItem = ({ item }) => {
-  const { enableHaptic, game, assets, isTelegram } = useContext(MainContext);
-  const fofContext = useContext(FofContext);
-  const rorContext = useContext(RorContext);
-  const setShowCard =
-    game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
+  const { enableHaptic, game, setShowCard } = useContext(MainContext);
   const [isClicked, setIsClicked] = useState(false);
 
   return (

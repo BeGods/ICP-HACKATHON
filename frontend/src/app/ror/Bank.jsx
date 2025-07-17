@@ -20,7 +20,7 @@ import {
 import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
 import { showToast } from "../../components/Toast/Toast";
 import { useRoRGuide } from "../../hooks/Tutorial";
-import { BankGuide } from "../../components/Common/RorTutorial.";
+import { BankGuide } from "../../components/Tutorials/RorTutorial";
 import { isCoin } from "../../helpers/game.helper";
 
 const tele = window.Telegram?.WebApp;

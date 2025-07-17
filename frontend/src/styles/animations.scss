@@ -243,14 +243,10 @@
 // White Flash Animation
 
 .flash-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  z-index: 1000;
 }
 
 .flash-overlay.show {
@@ -345,11 +341,8 @@
 
 @mixin slideHeader($name, $initial, $final, $after) {
   @keyframes #{$name} {
-    0%{
+    0% {
       transform: translateX($initial);
-    }
-    50% {
-      transform: translateX($final);
     }
     100% {
       transform: translateX($after);
@@ -357,9 +350,10 @@
   }
 
   & {
-    animation: #{$name} 1.5s  ease-in-out forwards;
+    animation: #{$name}  0.25s ease-in-out forwards;
   }
 }
+
 
 @mixin slide-in-out($name, $initial, $final) {
   @keyframes #{$name} {
@@ -468,11 +462,11 @@
 // ==============================================
 
 .slide-header-left{
-  @include slideHeader(slide-header-left-animation, -100%, 0%, -42%);
+  @include slideHeader(slide-header-left-animation, -100%, -50%, -7.9375rem);
 }
 
 .slide-header-right{
-  @include slideHeader(slide-header-right-animation, 100%, 0%, 42%);
+  @include slideHeader(slide-header-right-animation, 100%, 50%, 7.9375rem);
   }
 
 .slide-ror-header-left{
@@ -523,12 +517,20 @@
 @include slide(slide-inside-right-animation, 100%, 0%);
 }
 
+.slide-toggle-inside-right{
+@include slide(slide-toggle-inside-right-animation, 100%, 70%);
+}
+
+.slide-toggle-inside-left{
+@include slide(slide-toggle-inside-left-animation, -100%, -70%);
+}
+
 .slide-in-out-left{
-  @include slide-in-out(slide-insout-left-animation, 0px, 20px);
+  @include slide-in-out(slide-insout-left-animation, 0px, 15px);
 }
 
 .slide-in-out-right{
-  @include slide-in-out(slide-insout-right-animation, 0px, -20px);
+  @include slide-in-out(slide-insout-right-animation, 0px, -15px);
 }
 
 
@@ -1004,4 +1006,41 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
 
 .drop-and-fade-in {
   animation: dropAndFadeIn 0.4s ease-out forwards;
+}
+
+
+@keyframes overlay-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.overlay-fade-in {
+  animation: overlay-fade-in 200ms ease-out forwards;
+}
+
+
+@keyframes overlay-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+.overlay-fade-out {
+  animation: overlay-fade-out 200ms ease-in forwards;
+}
+
+
+.scale-tower{
+  @include scale-in-out(scale-hand-animation, 1, 1.1, 0.75s, ease-in, 1, 0);
 }

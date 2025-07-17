@@ -9,7 +9,6 @@ import ReactGA from "react-ga4";
 import { useEffect, useState } from "react";
 import IntroPage from "./app/common/Intro/Page";
 import FoFMain from "./app/main/FoF";
-import RoRMain from "./app/main/RoR";
 import { MainContext } from "./context/context";
 import assets from "./assets/assets.json";
 import {
@@ -18,9 +17,9 @@ import {
   setStorage,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
-import LineCallback from "./app/common/LineCallback";
 import { WalletProvider } from "./context/wallet";
-import TelegramCallback from "./app/common/TelegramCallback";
+import RoRMain from "./app/main/RoR";
+import LineCallback from "./app/common/Auth/LineCallback";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 

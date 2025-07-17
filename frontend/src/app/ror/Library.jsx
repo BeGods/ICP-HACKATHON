@@ -32,7 +32,7 @@ import { Clapperboard } from "lucide-react";
 import { trackEvent } from "../../utils/ga";
 import { useAdsgram } from "../../hooks/Adsgram";
 import { useRoRGuide } from "../../hooks/Tutorial";
-import { LibraryGuide } from "../../components/Common/RorTutorial.";
+import { LibraryGuide } from "../../components/Tutorials/RorTutorial";
 
 const tele = window.Telegram?.WebApp;
 

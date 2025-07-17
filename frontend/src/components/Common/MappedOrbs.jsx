@@ -18,7 +18,7 @@ const MappedOrbs = ({ quest, showNum }) => {
                     <img
                       src={assets.items.multiorb}
                       alt="orb"
-                      className={`filter-orbs-${key.toLowerCase()} max-w-[2.3rem]`}
+                      className={`filter-orbs-${key.toLowerCase()} max-w-xs-multi-orb`}
                     />
                   </div>
                 </div>

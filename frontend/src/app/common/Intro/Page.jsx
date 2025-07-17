@@ -7,7 +7,6 @@ import {
 } from "../../../utils/api.fof";
 import {
   deleteAuthCookie,
-  deleteExpCookie,
   fetchHapticStatus,
   getExpCookie,
   setAuthCookie,
@@ -30,12 +29,12 @@ import { showToast } from "../../../components/Toast/Toast";
 import {
   determineIsTelegram,
   determineIsTgDesktop,
-  isDesktop,
 } from "../../../utils/device.info";
 import { useLocation } from "react-router-dom";
 import liff from "@line/liff";
 import { validate as isValidUUID } from "uuid";
-import OnboardPage from "../../fof/Onboard/Page";
+import AppLayout from "../../../components/Layouts/AppLayout";
+import OnboardPage from "../Auth/Page";
 
 const tele = window.Telegram?.WebApp;
 
@@ -354,28 +353,26 @@ const IntroPage = (props) => {
   }, []);
 
   return (
-    <div
-      className={` ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } ${activeIndex == 2 ? "bg-white" : "bg-black"}`}
-    >
-      {isBrowser && tokenExpired ? (
-        <OnboardPage
-          handleTokenUpdated={() => {
-            setTokenExpired(false);
-          }}
-          refer={refer || null}
-        />
-      ) : (
-        <Launcher
-          isLoading={isLoading}
-          enableSound={enableSound}
-          isTgMobile={isTgMobile}
-          handleUpdateIdx={handleUpdateIdx}
-          activeIndex={activeIndex}
-        />
-      )}
-    </div>
+    <AppLayout>
+      <div className={`h-full  ${activeIndex == 2 ? "bg-white" : "bg-black"}`}>
+        {isBrowser && tokenExpired ? (
+          <OnboardPage
+            handleTokenUpdated={() => {
+              setTokenExpired(false);
+            }}
+            refer={refer || null}
+          />
+        ) : (
+          <Launcher
+            isLoading={isLoading}
+            enableSound={enableSound}
+            isTgMobile={isTgMobile}
+            handleUpdateIdx={handleUpdateIdx}
+            activeIndex={activeIndex}
+          />
+        )}
+      </div>
+    </AppLayout>
   );
 };
 

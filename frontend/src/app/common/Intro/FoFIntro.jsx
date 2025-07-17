@@ -13,37 +13,49 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
 
   return (
     <div
-      className={`w-[200vw] ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } relative`}
+      style={{
+        top: 0,
+        left: 0,
+        width: "100vw",
+      }}
+      className={`flex h-full flex-col m-0`}
     >
-      {/* img 1 */}
-      <div
-        className="absolute inset-0 w-full h-full z-0 select-none"
-        style={{
-          background: `url(${assets.locations.fof}) no-repeat center / cover`,
-        }}
-        draggable={false}
-      ></div>
-      {/* img 2  */}
-      {showGlow && (
+      <div className="h-full">
         <div
-          className="absolute inset-0 w-full h-full z-10 select-none"
+          className={`absolute top-0 left-0 h-full w-full`}
           style={{
-            background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
+            backgroundImage: `url(${assets.locations.fof})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
           }}
-          draggable={false}
-        ></div>
-      )}
-
-      {/* content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[3dvh] pb-[2dvh]">
+        />
+        {showGlow && (
           <div
-            className={`flex flex-col ${
-              fadeout && "fade-out"
-            } justify-center items-center z-[100]`}
-          >
+            className="absolute inset-0 w-full h-full z-10 select-none"
+            style={{
+              background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
+            }}
+            draggable={false}
+          ></div>
+        )}
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute top-0 rotate-180 left-0 z-[30] select-none h-[120px]"
+        />
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute bottom-0 left-0 z-[1] select-none h-[120px]"
+        />
+      </div>
+      {/* content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
+        <div className="flex flex-col  justify-between items-center h-full mt-gamePanelTop pt-1 mb-buttonBottom">
+          <div className={`flex flex-col  justify-center items-center z-[100]`}>
             <img
               draggable={false}
               src={assets.logos.fof}
@@ -52,15 +64,15 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
                 showGlow && "fof-text-shadow"
               } transition-all duration-300`}
             />
+          </div>
+
+          <div className={`flex flex-col gap-[2vh]`}>
             <img
               draggable={false}
               src={assets.logos.begodsBlack}
               alt="logo"
-              className="w-[65px] mt-4 begod-orange-shadow pointer-events-none select-none"
+              className="w-[65px] mx-auto begod-orange-shadow pointer-events-none select-none"
             />
-          </div>
-
-          <div className={`flex flex-col gap-[2vh]`}>
             <div
               onClick={async () => {
                 handleClickHaptic(tele, true);
@@ -72,7 +84,7 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
                   navigate("/fof");
                 }, 1000);
               }}
-              className={`relative mb-[11dvh] fade-in inline-block transition-all duration-500`}
+              className={`relative fade-in inline-block transition-all duration-500`}
             >
               <img
                 src={
@@ -95,3 +107,20 @@ const FoFIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
 };
 
 export default FoFIntro;
+
+// <div
+//   className="absolute inset-0 w-full h-full z-0 select-none"
+//   style={{
+//     background: `url(${assets.locations.fof}) no-repeat center / cover`,
+//   }}
+//   draggable={false}
+// ></div>
+// {showGlow && (
+//   <div
+//     className="absolute inset-0 w-full h-full z-10 select-none"
+//     style={{
+//       background: `url(${assets.uxui.fofSplash}) no-repeat center / cover`,
+//     }}
+//     draggable={false}
+//   ></div>
+// )}

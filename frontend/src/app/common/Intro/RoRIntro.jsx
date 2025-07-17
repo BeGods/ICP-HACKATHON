@@ -1,45 +1,55 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import assets from "../../../assets/assets.json";
-import { handleClickHaptic, setStorage } from "../../../helpers/cookie.helper";
-import { MainContext } from "../../../context/context";
 
 const tele = window.Telegram?.WebApp;
 
 const RoRIntro = ({ handleFadeout, fadeout, isTgMobile }) => {
-  const navigate = useNavigate();
   const [showGlow, setShowGlow] = useState(false);
-  const { setGame } = useContext(MainContext);
 
   return (
     <div
-      className={`w-[200vw] ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } relative`}
+      style={{
+        top: 0,
+        left: 0,
+        width: "100vw",
+      }}
+      className={`flex h-full flex-col m-0`}
     >
-      {/* img 1 */}
-      <div
-        className="absolute inset-0 w-full h-full z-0"
-        style={{
-          background: `url(${assets.locations.ror}) no-repeat center / cover`,
-        }}
-        draggable={false}
-      ></div>
-
-      {/* img 2 */}
-      {showGlow && (
+      <div className="h-full">
         <div
-          className="absolute inset-0 w-full h-full z-10"
+          className={`absolute top-0 left-0 h-full w-full`}
           style={{
-            background: `url(${assets.uxui.rorSplash}) no-repeat center / cover`,
+            backgroundImage: `url(${assets.locations.ror})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
           }}
+        />
+        {showGlow && (
+          <div
+            className="absolute inset-0 w-full h-full z-10 select-none"
+            style={{
+              background: `url(${assets.uxui.rorSplash}) no-repeat center / cover`,
+            }}
+            draggable={false}
+          ></div>
+        )}
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
           draggable={false}
-        ></div>
-      )}
-
+          className="w-full absolute top-0 rotate-180 left-0 z-[30] select-none h-[120px]"
+        />
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute bottom-0 left-0 z-[1] select-none h-[120px]"
+        />
+      </div>
       {/* content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="flex flex-col justify-between items-center h-full pt-[3vh] pb-[2vh]">
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-30">
+        <div className="flex flex-col  justify-between items-center h-full mt-gamePanelTop pt-1 mb-buttonBottom">
           <div>
             <img
               draggable={false}

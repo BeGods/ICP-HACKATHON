@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../../context/context";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { Gamepad2, Mails, Megaphone } from "lucide-react";
+import HeaderLayout from "../../../components/Layouts/HeaderLayout";
 
 const tele = window.Telegram?.WebApp;
 
@@ -11,37 +12,59 @@ const iconMap = [
   { icon: <Megaphone size={28} />, label: "ANNOUNCEMENTS" },
 ];
 
-const NotifHeader = ({ category, setCategory }) => {
+const BottomChild = ({ category, setCategory }) => {
   const { enableHaptic } = useContext(MainContext);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    setFadeOut(false);
+    const timer = setTimeout(() => {
+      setFadeOut(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [category]);
 
   return (
-    <div className="relative w-full flex flex-col items-center">
-      <div className="flex items-center max-w-[720px] justify-center w-[80%] z-50 mt-1  text-[24px] bg-white border border-black rounded-full shadow">
-        {iconMap.map((item, idx) => {
-          const isActive = category === idx;
+    <div className="flex transition-all duration-500 -mt-[1.3rem] items-center justify-center max-w-[720px] w-[85%] z-50 mx-auto h-button-primary p-0.5 rounded-primary bg-white border border-black shadow">
+      {iconMap.map((item, idx) => {
+        const isActive = category === idx;
 
-          return (
-            <div
-              key={idx}
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                setCategory(idx);
-              }}
-              className={`flex-1 relative flex items-center justify-center rounded-full py-2.5 cursor-pointer transition-colors duration-200 ease-in-out ${
-                isActive ? "bg-black text-white" : "text-black"
-              }`}
-            >
-              {item.icon}
-            </div>
-          );
-        })}
-      </div>
+        return (
+          <div
+            key={idx}
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setCategory(idx);
+            }}
+            className={`flex-1 relative flex items-center justify-center rounded-primary gap-x-2 h-full transition-all duration-200 ease-in-out cursor-pointer ${
+              isActive ? "bg-black text-white" : "text-black"
+            } font-symbols`}
+          >
+            {item.icon}
+          </div>
+        );
+      })}
       <div
-        className={`font-fof w-full text-center mt-[6.3rem] absolute top-0 text-[4.5dvh] uppercase text-white text-black-contour drop-shadow z-50`}
+        className={`font-fof w-full text-center mt-[7rem] absolute top-0 text-[4.5dvh] uppercase text-white text-black-contour drop-shadow z-50 ${
+          fadeOut ? "disappear" : ""
+        }`}
       >
         {iconMap[category].label}
       </div>
     </div>
+  );
+};
+
+const NotifHeader = ({ category, setCategory }) => {
+  return (
+    <HeaderLayout
+      activeMyth={8}
+      title={""}
+      BottomChild={<></>}
+      CenterChild={
+        <BottomChild category={category} setCategory={setCategory} />
+      }
+    />
   );
 };
 
