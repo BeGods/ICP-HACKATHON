@@ -22,7 +22,6 @@ export const useOpenAd = ({ callReward }) => {
     try {
       let userInfo;
       let adParams;
-      const profile = await window.liff.getProfile();
       const sdk = window.OpenADLineJsSDK;
       const adInfo = {
         zoneId,
@@ -30,7 +29,9 @@ export const useOpenAd = ({ callReward }) => {
         eventId: 0,
       };
 
-      if (liff.isInClient()) {
+      if (window.liff.isInClient()) {
+        const profile = await window.liff.getProfile();
+
         userInfo = {
           userId: profile.userId,
           displayName: profile.displayName,
@@ -51,16 +52,29 @@ export const useOpenAd = ({ callReward }) => {
         };
       } else {
         userInfo = {
-          userId: "user",
+          userId: "user122",
           displayName: "user",
         };
+
+        // adParams = {
+        //   line: {
+        //     type: "WEB",
+        //   },
+        //   web: {
+        //     api: `${import.meta.env.VITE_API_FOF_URL}/ads/id`,
+        //     method: "GET",
+        //     token: "data",
+        //     valid: 171,
+        //   },
+        // };
 
         adParams = {
           line: {
             type: "WEB",
+            isFullscreen: false,
           },
           web: {
-            api: `${import.meta.env.VITE_API_FOF_URL}/ads/id`,
+            api: "https://2r2cf484-3001.inc1.devtunnels.ms/api/v1/ads/id",
             method: "GET",
             token: "data",
             valid: 171,
