@@ -162,10 +162,8 @@ const Leaderboard = (props) => {
   const { t } = useTranslation();
   const {
     authToken,
-    assets,
     userData,
     enableHaptic,
-    gameData,
     setShowCard,
     setUserData,
     setSection,
@@ -665,7 +663,7 @@ const Leaderboard = (props) => {
         <ToggleBack
           minimize={2}
           handleClick={() => {
-            setSection(0);
+            setSection(3);
           }}
           lightMode={category == 2 ? true : false}
           activeMyth={8}

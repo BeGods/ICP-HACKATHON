@@ -7,7 +7,6 @@ import HeaderLayout, {
 } from "../../../components/Layouts/HeaderLayout";
 import { useContext } from "react";
 import { MainContext } from "../../../context/context";
-import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
 import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 
 const BottomChild = ({ activeMyth, gameData, mythData }) => {

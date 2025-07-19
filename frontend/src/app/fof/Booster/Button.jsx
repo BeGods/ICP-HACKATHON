@@ -2,6 +2,7 @@ import { useContext, useRef } from "react";
 import {
   calculateMoonRemainingTime,
   calculateRemainingTime,
+  getTimerContent,
   hasTimeElapsed,
 } from "../../../helpers/booster.helper";
 import { FofContext } from "../../../context/context";
@@ -39,66 +40,6 @@ export const checkBoosterIsInfoMode = ({
   );
 };
 
-const getTimerContent = ({ activeCard, gameData, mythData, isAutoPay }) => {
-  if (
-    activeCard === "automata" &&
-    gameData?.isAutomataAutoActive !== -1 &&
-    !hasTimeElapsed(gameData.isAutomataAutoActive) &&
-    isAutoPay
-  ) {
-    return `-${calculateRemainingTime(gameData.isAutomataAutoActive)}`;
-  }
-  if (
-    activeCard === "automata" &&
-    mythData?.isAutomataActive &&
-    !hasTimeElapsed(mythData.automataStartTime) &&
-    isAutoPay
-  ) {
-    return <Lock />;
-  }
-  if (
-    activeCard === "automata" &&
-    mythData?.isAutomataActive &&
-    !hasTimeElapsed(mythData.automataStartTime) &&
-    !isAutoPay
-  ) {
-    return `-${calculateRemainingTime(mythData.automataStartTime)}`;
-  }
-  if (
-    activeCard === "minion" &&
-    !mythData?.isShardsClaimActive &&
-    !hasTimeElapsed(mythData.shardsLastClaimedAt)
-  ) {
-    return `-${calculateRemainingTime(mythData.shardsLastClaimedAt)}`;
-  }
-  if (
-    activeCard === "burst" &&
-    !mythData.isEligibleForBurst &&
-    mythData.isBurstActive
-  ) {
-    return <Lock />;
-  }
-  if (
-    activeCard === "burst" &&
-    !mythData?.isBurstActiveToClaim &&
-    !hasTimeElapsed(mythData.burstActiveAt) &&
-    !isAutoPay
-  ) {
-    return `-${calculateRemainingTime(mythData.burstActiveAt)}`;
-  }
-  if (
-    activeCard === "burst" &&
-    !hasTimeElapsed(gameData.autoPayBurstExpiry) &&
-    isAutoPay
-  ) {
-    return `-${calculateRemainingTime(gameData.autoPayBurstExpiry)}`;
-  }
-  if (activeCard === "moon" && gameData.isMoonActive) {
-    return `-${calculateMoonRemainingTime(gameData.moonExpiresAt)}`;
-  }
-  return null;
-};
-
 const BoosterBtn = ({ activeCard, handleClaim, isAutoPay, boosterLvl }) => {
   const disableClick = useRef(false);
   const { activeMyth, gameData } = useContext(FofContext);
@@ -112,7 +53,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay, boosterLvl }) => {
   });
 
   const centerContent = isInfoMode ? (
-    getTimerContent({ activeCard, gameData, mythData, isAutoPay })
+    getTimerContent(activeCard, gameData, mythData, isAutoPay)
   ) : (
     <div>V</div>
   );
@@ -131,6 +72,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay, boosterLvl }) => {
 
   return (
     <ButtonLayout
+      showGlow={isInfoMode}
       mode={isInfoMode ? "info" : "default"}
       leftContent={
         <div className="w-full flex gap-x-1">

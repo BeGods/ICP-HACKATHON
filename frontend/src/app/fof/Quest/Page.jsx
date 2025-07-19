@@ -497,6 +497,7 @@ const Quests = () => {
               className={`button__face button__face--front flex justify-center items-center`}
             >
               <ButtonLayout
+                showGlow={quest?.isQuestClaimed}
                 mode="action"
                 centerContent={<Check size={"1.75rem"} strokeWidth={5} />}
                 handleCenterClick={handleButtonClick}
@@ -508,7 +509,11 @@ const Quests = () => {
             <div className="button__face button__face--back z-50 flex justify-center items-center">
               <ButtonLayout
                 mode="share"
-                onClick={handleClaimShareReward}
+                onClick={() => {
+                  if (!quest?.isShared) {
+                    handleClaimShareReward();
+                  }
+                }}
                 rightContent={1}
                 disable={quest?.isShared}
                 link={`https://twitter.com/intent/tweet?text=%F0%9F%8C%8D%20Check%20it%20out!%20%F0%9F%92%AF%0ADive%20into%20world%20mythologies%20and%20Play-2-Learn%20with%20Forges%20of%20Faith%20from%20the%20BeGODS%20Mythoverse!%20%F0%9F%9B%A1%F0%9F%94%A5%0A%40BattleofGods_io%0Ahttps%3A%2F%2Fx.com%2FBattleofGods_io%2Fstatus%2F${quest.link[0]}%0A%0A%F0%9F%8E%AE%20Play%20now%3A%20https%3A%2F%2Fplay.begods.games`}

@@ -81,21 +81,6 @@ const BottomChild = ({ gameData, sessionOrbs, myth }) => {
 
   const data = [
     {
-      icon: (
-        <img
-          src={`${assets.items.multiorb}`}
-          alt="multiOrb"
-          className="w-[3.15rem] h-[3.15rem]  glow-orb-black rounded-full"
-        />
-      ),
-      value: formatThreeNums(gameData.multiColorOrbs),
-      label: t(`keywords.orbs`),
-      borderColor: "white",
-      handleClick: () => {
-        setSection(2);
-      },
-    },
-    {
       icon:
         myth !== 0 ? (
           <>
@@ -134,6 +119,21 @@ const BottomChild = ({ gameData, sessionOrbs, myth }) => {
             }}
           />
         );
+      },
+    },
+    {
+      icon: (
+        <img
+          src={`${assets.items.multiorb}`}
+          alt="multiOrb"
+          className="w-[3.15rem] h-[3.15rem]  glow-orb-black rounded-full"
+        />
+      ),
+      value: formatThreeNums(gameData.multiColorOrbs),
+      label: t(`keywords.orbs`),
+      borderColor: "white",
+      handleClick: () => {
+        setSection(2);
       },
     },
   ];

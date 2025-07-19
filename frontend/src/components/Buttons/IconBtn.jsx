@@ -1,28 +1,9 @@
 import React, { useContext, useState } from "react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { MainContext } from "../../context/context";
-import { Undo2 } from "lucide-react";
-
-// mr-[55px] mt-7 - convert info
-// -mt-6 ml-6 - jigsaw info
-// -mt-7 ml-7 - quest and jigsaw info
-// -mt-[28px] ml-[52px] - infoncard close
 
 const tele = window.Telegram?.WebApp;
 
-const alignBasedOnCard = [
-  "-mt-[3vh] ml-[10vw]",
-  "-mt-[3vh] ml-[5vw]",
-  "mt-[9.5vh] mr-[60px]",
-  "-mt-[5px] ml-[90px]",
-  "mr-[60px] -mt-8",
-  "mt-[18vh] -ml-[12vw]",
-  "-mt-[4vh] ml-[14vw]",
-  "-mt-[0.5vh] ml-[10vw]",
-  "-mt-[1vh] ml-[5vw]",
-  "mt-[0.7vh] ml-[10vw]",
-  "-mt-[2.5vh] ml-[10vw]",
-];
 const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const { enableHaptic, assets } = useContext(MainContext);
@@ -51,7 +32,7 @@ const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
       <div className="absolute flex justify-center items-center w-[2.5rem] h-[2.5rem]">
         {isInfo ? (
           <div
-            className={`text-white italic text-black-contour -mt-1 -mr-1 text-[1.7rem]`}
+            className={`text-white italic text-black-contour -mt-1 -mr-1 text-[3dvh]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊

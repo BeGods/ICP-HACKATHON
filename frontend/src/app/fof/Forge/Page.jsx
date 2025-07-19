@@ -1518,7 +1518,7 @@ const Forges = () => {
               <img
                 src={`${assets.boosters.alchemistPop}`}
                 alt="dwarf"
-                className="w-full h-full select-none pointer-events-none z-50"
+                className="w-full h-full select-none pointer-events-none z-[60]"
               />
             </div>
           </div>
@@ -1544,7 +1544,7 @@ const Forges = () => {
               <img
                 src={`${assets.boosters.automataPop}`}
                 alt="dwarf"
-                className="w-full h-full select-none pointer-events-none "
+                className="w-full h-full select-none pointer-events-none z-[60]"
               />
             </div>
           </div>
@@ -1607,12 +1607,12 @@ const Forges = () => {
               <img
                 src={`${assets.boosters.ratPop}`}
                 alt="rat"
-                className={`w-full select-none pointer-events-none filter-orbs-${mythSections[activeMyth]} z-50`}
+                className={`w-full select-none pointer-events-none filter-orbs-${mythSections[activeMyth]} z-[60]`}
               />
             </div>
           </div>
           <div
-            className={`absolute bottom-0 select-none right-0 -mb-2.5 minion-button`}
+            className={`absolute bottom-0 select-none right-0 -mb-2.5 minion-button z-[60]`}
           >
             <div className="relative pop-scale">
               <img
@@ -1710,7 +1710,7 @@ const Forges = () => {
             <img
               src={`${assets.boosters.alchemistPop}`}
               alt="dwarf"
-              className="w-full h-full select-none pointer-events-none z-50"
+              className="w-full h-full select-none pointer-events-none z-[60]"
             />
           </div>
         </div>

@@ -248,7 +248,6 @@ const Redeem = (props) => {
 
       <div className="center-section">
         <CardWrap
-          isPacket={true}
           Front={
             <div
               className={`w-full h-full relative flex justify-center items-center`}
