@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../../context/context";
 import GiftHeader from "./Header";
 import {
+  ToggleBack,
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
@@ -9,7 +10,7 @@ import BgLayout from "../../../components/Layouts/BgLayout";
 import { PayoutCrsl, TaskCrsl, VoucherCrsl } from "./Carousels";
 
 const Missions = () => {
-  const { globalRewards, payouts, tasks, userData, setShowBack } =
+  const { globalRewards, payouts, tasks, userData, setShowBack, setSection } =
     useContext(MainContext);
   const [category, setCategory] = useState(1);
   const filteredTasks = tasks.filter((itm) => !itm.isClaimed).length;
@@ -46,6 +47,13 @@ const Missions = () => {
       </>
 
       <>
+        <ToggleBack
+          minimize={2}
+          handleClick={() => {
+            setSection(3);
+          }}
+          activeMyth={8}
+        />
         <ToggleLeft
           minimize={2}
           handleClick={() => {

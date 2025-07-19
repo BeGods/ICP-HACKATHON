@@ -175,7 +175,6 @@ const BoosterClaim = ({
     setShowCard,
     enableHaptic,
     isTelegram,
-    setShowBack,
   } = useContext(FofContext);
   const { createLinePayment } = useWalletPayment();
   const { t, i18n } = useTranslation();
@@ -197,8 +196,8 @@ const BoosterClaim = ({
       : !isAutoPay && activeCard === "burst"
       ? Math.min((mythData?.burstlvl ?? 0) + 2, 99)
       : !isAutoPay && activeCard === "moon"
-      ? "4x"
-      : "4x";
+      ? ""
+      : "";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -687,13 +686,13 @@ const BoosterClaim = ({
       isDisabled: false,
       src: (
         <div className="flex relative items-center justify-center">
-          <div className="text-white text-black-contour mt-1 z-10 absolute text-[2rem]">
+          <div className="text-white font-fof text-black-contour mt-1 z-10 absolute text-[2rem]">
             {activeCard === "automata" ? 1 : 3}
           </div>{" "}
           <img
             src={assets?.misc.tgStar}
             alt="star"
-            className="w-[4rem] h-[4rem]"
+            className="w-full h-full p-1"
           />
         </div>
       ),
@@ -826,16 +825,20 @@ const BoosterClaim = ({
                             mythSections[activeMyth]
                           }`}
                         />
-                        <div className="flex justify-center w-full h-full items-center glow-text-quest px-2 z-10">
+                        <div className="flex justify-center w-full h-full items-center px-2 z-10">
                           <div className="flex gap-x-2 uppercase glow-text-quest text-white z-10">
                             {t(`boosters.${booster}.title`)}
                             <div
                               className={`flex text-${mythSections[activeMyth]}-text gap-x-1`}
                             >
                               <span>{!isAutoPay && "Lvl"}</span>
-                              {boosterLvl}
                             </div>
                           </div>
+                          <span
+                            className={`glow-icon-${mythSections[activeMyth]} text-tertiary pl-1`}
+                          >
+                            {boosterLvl}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -901,6 +904,7 @@ const BoosterClaim = ({
               </div>
             ) : (
               <BoosterBtn
+                timer={timer}
                 isAutoPay={isAutoPay}
                 activeCard={activeCard}
                 mythData={mythData}
@@ -917,7 +921,7 @@ const BoosterClaim = ({
                 <CustomToggleLeft
                   minimize={2}
                   label={"Close"}
-                  src={<X color="white" size={"2rem"} />}
+                  src={<X coxlor="white" size={"2rem"} />}
                   handleClick={() => {
                     setShowPayModal(false);
                   }}

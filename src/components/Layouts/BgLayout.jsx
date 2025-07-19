@@ -2,7 +2,7 @@ import { useContext, useMemo } from "react";
 import { FofContext, MainContext } from "../../context/context";
 import { mythSections } from "../../utils/constants.fof";
 
-const backgroundFoFSections = new Set([4, 7, 8, 9, 10, 11, 12]);
+const backgroundFoFSections = new Set([4, 7, 8, 9, 10, 11]);
 const orbsFilterSections = new Set([0, 1, 2]);
 
 const BgLayout = ({ children, isLoading }) => {

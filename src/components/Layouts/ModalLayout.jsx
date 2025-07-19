@@ -3,6 +3,7 @@ import { MainContext } from "../../context/context";
 import { ExternalLink, Loader, X } from "lucide-react";
 import { ToggleSwitch } from "../Common/ToggleSwitch";
 import { useDisableWrapper } from "../../hooks/disableWrapper";
+import { ToggleBack } from "../Common/SectionToggles";
 
 export const ModelListLyt = ({ itm, assets }) => (
   <div className="flex flex-col gap-1 bg-black/30 rounded-xl px-3 py-2 shadow-md">
@@ -134,7 +135,7 @@ const ModalLayout = ({ children, note }) => {
           className={`flex relative modal-width bg-[#1D1D1D] rounded-primary justify-center items-center flex-col card-shadow-white p-4`}
         >
           {children}
-          <div
+          {/* <div
             onClick={() => {
               setShowCard(null);
             }}
@@ -145,9 +146,18 @@ const ModalLayout = ({ children, note }) => {
                 {"\u2715"}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         {note}
+      </div>
+      <div className="absolute flex flex-col justify-center items-center w-full bottom-0 mb-safeBottom pb-1">
+        <ToggleBack
+          minimize={2}
+          handleClick={() => {
+            setShowCard(null);
+          }}
+          activeMyth={8}
+        />
       </div>
     </div>
   );

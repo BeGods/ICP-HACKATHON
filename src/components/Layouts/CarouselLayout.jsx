@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CarouselLayout = ({ items, extraPadd }) => {
+const CarouselLayout = ({ items }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startY, setStartY] = useState(0);
 

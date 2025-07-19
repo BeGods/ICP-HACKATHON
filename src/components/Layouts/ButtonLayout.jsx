@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FofContext } from "../../context/context";
-import { CornerUpLeft, CornerUpRight, Share2, ThumbsUp } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, Share2, ThumbsUp } from "lucide-react";
 import { mythSections } from "../../utils/constants.fof";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { useDisableWrapper } from "../../hooks/disableWrapper";
@@ -49,6 +49,7 @@ export const ButtonLayout = ({
   isFlagged,
   link,
   disable,
+  showGlow,
 }) => {
   const { assets, activeMyth, enableHaptic } = useContext(FofContext);
   const [showRedirect, setShowRedirect] = useState(true);
@@ -111,8 +112,8 @@ export const ButtonLayout = ({
     <div
       onClick={handleOnClick}
       className={`flex ${
-        disable && "grayscale"
-      } justify-between items-center relative ${
+        showGlow && `glow-button-${mythSections[activeMyth]}`
+      }  ${disable && "grayscale"} justify-between items-center relative ${
         mode === "share" ? `bg-${mythColor}` : "bg-glass-black-lg"
       } h-button-primary w-button-primary rounded-primary border border-${mythColor} ${
         mode === "default" || "share" ? "cursor-pointer" : "cursor-default"
@@ -127,7 +128,7 @@ export const ButtonLayout = ({
           onClick={handlePrevClick}
         >
           {mode === "action" ? (
-            <CornerUpLeft
+            <ChevronsLeft
               color={"white"}
               className="h-icon-secondary w-icon-secondary"
             />
@@ -172,7 +173,7 @@ export const ButtonLayout = ({
           onClick={handleNextClick}
         >
           {mode === "action" ? (
-            <CornerUpRight
+            <ChevronsRight
               color={"white"}
               className="h-icon-secondary w-icon-secondary"
             />

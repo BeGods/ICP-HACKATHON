@@ -390,6 +390,8 @@ const FoFMain = () => {
               section != 9 &&
               section != 8 &&
               section != 11 &&
+              section != 5 &&
+              section != 12 &&
               section != 1 &&
               !showCard && <Footer minimize={minimize} />}
             {showCard && showCard}

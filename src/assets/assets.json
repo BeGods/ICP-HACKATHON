@@ -300,10 +300,10 @@
         }
     },
     "whitelist": {
-        "greek": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.greek.png",
-        "celtic": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.celtic.png",
-        "norse": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.norse.png",
-        "egyptian": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.egyptian.png"
+        "greek": "https://media.publit.io/file/BeGods/nft/360px-fof.packet.greek.png",
+        "celtic": "https://media.publit.io/file/BeGods/nft/360px-fof.packet.celtic.png",
+        "norse": "https://media.publit.io/file/BeGods/nft/360px-fof.packet.norse.png",
+        "egyptian": "https://media.publit.io/file/BeGods/nft/360px-fof.packet.egyptian.png"
     },
     "win": {
         "greek": "https://media.publit.io/file/BeGods/nft/360px-ror.packet.greek.png",

@@ -31,6 +31,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         component: (
           <BoosterItem
             key="automata"
+            activeCard="automata"
             index={0}
             isGuideActive={enableGuide}
             isActive={!mythData.isAutomataActive}
@@ -40,6 +41,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
             activeMyth={activeMyth}
             t={t}
             booster={0}
+            mythData={mythData}
           />
         ),
       },
@@ -48,12 +50,14 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         component: (
           <BoosterItem
             key="minion"
+            activeCard="minion"
             index={1}
             isActive={mythData.isShardsClaimActive}
             handleClick={() => handleBoosterClick("minion", 2, false)}
             activeMyth={activeMyth}
             t={t}
             booster={2}
+            mythData={mythData}
           />
         ),
       },
@@ -73,6 +77,7 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
             activeMyth={activeMyth}
             t={t}
             booster={1}
+            mythData={mythData}
           />
         ),
       },
@@ -82,16 +87,17 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           <BoosterItem
             key="burst"
             index={3}
+            activeCard="burst"
             isActive={
               !gameData.mythologies[activeMyth].boosters.isBurstActive ||
               gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
             }
             handleClick={() => handleBoosterClick("burst", 6, false)}
-            mythData={mythData}
             isGuideActive={enableGuide}
             activeMyth={activeMyth}
             t={t}
             booster={6}
+            mythData={mythData}
           />
         ),
       },
@@ -105,12 +111,14 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           <BoosterItem
             key="multiBurst"
             index={0}
+            activeCard="burst"
             isGuideActive={enableGuide}
             isActive={true}
             handleClick={() => handleBoosterClick("burst", 8, true)}
             activeMyth={activeMyth}
             t={t}
             booster={8}
+            mythData={mythData}
           />
         ),
       });
@@ -123,12 +131,14 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           <BoosterItem
             key="multiAutomata"
             index={0}
+            activeCard="automata"
             isGuideActive={enableGuide}
             isActive={true}
             handleClick={() => handleBoosterClick("automata", 7, true)}
             activeMyth={activeMyth}
             t={t}
             booster={7}
+            mythData={mythData}
           />
         ),
       });

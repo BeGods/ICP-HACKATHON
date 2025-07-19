@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MainContext } from "../../../context/context";
 import {
+  ToggleBack,
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
@@ -9,7 +10,7 @@ import BgLayout from "../../../components/Layouts/BgLayout";
 import CarouselLayout from "../../../components/Layouts/CarouselLayout";
 
 const Notification = () => {
-  const { setShowBack } = useContext(MainContext);
+  const { setShowBack, setSection } = useContext(MainContext);
   const [category, setCategory] = useState(1);
   const notifs = [];
   const [items, setItems] = useState([]);
@@ -39,6 +40,13 @@ const Notification = () => {
       />
       <CarouselLayout items={items} />
       <>
+        <ToggleBack
+          minimize={2}
+          handleClick={() => {
+            setSection(3);
+          }}
+          activeMyth={8}
+        />
         <ToggleLeft
           minimize={2}
           handleClick={() => {
