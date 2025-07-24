@@ -20,10 +20,16 @@ export const decryptHash = (hashedInput) => {
   try {
     const secretKey = config.security.HASH_KEY;
 
-    const decryptedData = CryptoJs.AES.decrypt(hashedInput, secretKey);
-    return JSON.parse(decryptedData.toString(CryptoJs.enc.Utf8));
+    const bytes = CryptoJs.AES.decrypt(hashedInput, secretKey);
+    const decryptedString = bytes.toString(CryptoJs.enc.Utf8);
+
+    if (!decryptedString) {
+      throw new Error("Decryption failed or empty string returned.");
+    }
+
+    return JSON.parse(decryptedString);
   } catch (error) {
-    throw Error("Failed to decrupt hash.");
+    throw new Error("Failed to decrypt hash.");
   }
 };
 

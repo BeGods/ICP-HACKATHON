@@ -239,12 +239,15 @@ export const updateMythologies = (mythologies, user) => {
         mythology.boosters.isBurstActive = true;
       }
 
+      mythology.shards = Math.round(mythology.shards);
+      mythology.orbs = Math.round(mythology.orbs);
+
       return mythology;
     });
 
     return {
       data: updatedMythologyData,
-      updatedBlackOrb: updatedBlackOrb,
+      updatedBlackOrb: Math.round(updatedBlackOrb),
     };
   } catch (error) {
     console.log(error);
@@ -470,14 +473,14 @@ export const updateSessionData = async (
     // define flags
     let blackOrbs = 0;
     let blackOrbPhaseBonus = 1;
-    const currPhase = getPhaseByDate(new Date());
+    // const currPhase = getPhaseByDate(new Date());
 
-    if (
-      currPhase === 4 &&
-      hasBeenFourDaysSinceClaimedUTC(userMythology.lastMoonClaimAt)
-    ) {
-      blackOrbPhaseBonus = 2;
-    }
+    // if (
+    //   currPhase === 4 &&
+    //   hasBeenFourDaysSinceClaimedUTC(userMythology.lastMoonClaimAt)
+    // ) {
+    //   blackOrbPhaseBonus = 2;
+    // }
 
     // update shards
     if (mythData.shards >= 1000) {

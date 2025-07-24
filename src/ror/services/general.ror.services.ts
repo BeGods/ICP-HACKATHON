@@ -286,10 +286,6 @@ export const getLeaderboardRanks = async (
     matchStage = { ...matchStage, coinRank: { $gte: 334, $lte: 999 } }; // Wood
   }
 
-  // else if (userRank <= 666) {
-  //   matchStage = { ...matchStage, orbRank: { $gte: 334, $lte: 666 } }; // Bronze
-  // }
-
   if (fetchAll) skip = 0;
 
   try {
@@ -311,10 +307,15 @@ export const getLeaderboardRanks = async (
 
     let pipelineObj = {
       $facet: {
-        active: ranksFilter,
+        refer: [{ $sort: { directReferralCount: -1 as -1 } }, { $limit: 111 }],
+        active: [
+          { $match: { isArchived: { $exists: false } } },
+          ...ranksFilter,
+        ],
         finished: [
           { $match: { totalGobcoin: { $gte: 999 } } },
           { $sort: { rorCompletedAt: 1 as 1 } },
+          { $limit: 111 },
           {
             $project: {
               __v: 0,

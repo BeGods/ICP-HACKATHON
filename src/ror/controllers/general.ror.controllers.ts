@@ -43,8 +43,7 @@ export const claimDailyBonus = async (req, res) => {
 
 export const getLeaderboard = async (req, res) => {
   const { page, userRank } = req.query;
-
-  // const user = req.user;
+  const user = req.user;
   const requestPage = parseInt(page, 10) || 0;
 
   try {
@@ -55,9 +54,13 @@ export const getLeaderboard = async (req, res) => {
     );
 
     res.status(200).json({
+      // leaderboard: overallLeaderboard[0]?.active || [],
+      // hallOfFame: overallLeaderboard[0]?.finished || [],
+      // stakeOn: user.userBetAt ? user.userBetAt[0] : null,
+      refer: overallLeaderboard[0]?.refer || [],
       leaderboard: overallLeaderboard[0]?.active || [],
       hallOfFame: overallLeaderboard[0]?.finished || [],
-      // stakeOn: user.userBetAt ? user.userBetAt[0] : null,
+      stakeOn: user.userBetAt ? user.userBetAt[0] : null,
     });
   } catch (error) {
     console.error("Error fetching leaderboard:", error);

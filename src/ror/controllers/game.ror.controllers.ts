@@ -6,21 +6,19 @@ import {
   filterFetchedItem,
   genRandomMythItem,
   genRandomUNDWItem,
-  removeRandomItemFrmBag,
   updateDailySession,
   updateDigSessionData,
   updatePotionTrade,
 } from "../services/game.ror.services";
 import userMythologies from "../../common/models/mythologies.models";
 import {
-  defaultMythologies,
   defaultVault,
   mythElementNamesLowerCase,
+  myths,
 } from "../../utils/constants/variables";
 import { isVaultActive } from "../../helpers/general.helpers";
 import {
   checkIsUnderworldActive,
-  combineVaultItems,
   hasTwelveHoursElapsed,
 } from "../../helpers/game.helpers";
 import {
@@ -94,9 +92,12 @@ export const getGameStats = async (req, res) => {
       const totalUsers = await Stats.findOne({ statId: "ror" });
       userRank = { coinRank: totalUsers?.totalUsers && 0 } as any;
     }
+
     const memberData = {
       coinRank: userRank?.coinRank ?? 0,
       gobcoin: userRank?.totalGobcoin ?? 0,
+      referRank: userRank?.referRank ?? 0,
+      countryRank: userRank?.countryRank ?? 0,
     };
 
     // tasks
@@ -257,9 +258,10 @@ export const generateSessionReward = async (req, res) => {
     }
 
     // cal. shards
-    let updatedShards = (3 - noOfWinsFromBattle) * 100;
+    const shardUpdateVal = isUnderworld ? 1 : 100;
+    let updatedShards = (3 - noOfWinsFromBattle) * shardUpdateVal;
     if (!rewardItem) {
-      updatedShards += noOfWinsFromBattle * 100;
+      updatedShards += noOfWinsFromBattle * shardUpdateVal;
     }
     const randomShard = Math.floor(Math.random() * 2);
 
@@ -728,6 +730,47 @@ export const tradeShardsToPotion = async (req, res) => {
     await newItemTransaction.save();
 
     res.status(200).json({ message: "Potion addded to your bag." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: error.message,
+    });
+  }
+};
+
+export const tradeShardsToCoin = async (req, res) => {
+  try {
+    const { type } = req.body;
+    const userMythology = req.userMythology;
+
+    if (type == "black") {
+      await userMythology.updateOne({
+        $inc: {
+          blackShards: -1,
+          gobcoin: 1,
+        },
+      });
+    } else if (type == "white") {
+      await userMythology.updateOne({
+        $inc: {
+          whiteShards: -1,
+          gobcoin: 1,
+        },
+      });
+    } else if (myths.includes(type)) {
+      await userMythology.updateOne(
+        { "mythologies.name": type },
+        {
+          $inc: {
+            "mythologies.$.shards": -100,
+            gobcoin: 1,
+          },
+        }
+      );
+    }
+
+    res.status(200).json({ message: "Shards converted successfully." });
   } catch (error) {
     console.log(error);
     res.status(500).json({

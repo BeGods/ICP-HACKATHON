@@ -30,7 +30,6 @@ import {
 } from "../../helpers/booster.helpers";
 import { IMyth, IUserMyths } from "../../ts/models.interfaces";
 import { validStreakReward } from "../../helpers/streak.helpers";
-import { fetchKaiaValue } from "../../common/services/redis.services";
 import { IUserData } from "../../ts/objects.interfaces";
 
 // start tap session
