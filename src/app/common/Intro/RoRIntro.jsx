@@ -81,10 +81,10 @@ const RoRIntro = ({ handleFadeout, fadeout }) => {
                 className="w-[67px] begod-blue-shadow pointer-events-none"
               />
             </div>
-            <div className="relative inline-block text-white font-fof text-[1.75rem] text-black-contour">
+            {/* <div className="relative inline-block text-white font-fof text-[1.75rem] text-black-contour">
               COMING SOON
-            </div>
-            {/* <div
+            </div> */}
+            <div
               onClick={async () => {
                 handleClickHaptic(tele, true);
                 setGame("ror");
@@ -109,7 +109,7 @@ const RoRIntro = ({ handleFadeout, fadeout }) => {
               <span className="absolute cursor-pointer inset-0 flex text-black-contour items-center justify-center text-white opacity-80 font-fof font-semibold mt-[2px] text-[1.75rem]">
                 {showGlow ? "LOADING" : "PLAY"}
               </span>
-            </div> */}
+            </div>
           </div>
         </div>
       </div>
