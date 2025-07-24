@@ -85,7 +85,7 @@ export const HeaderMythSymbol = () => {
   );
 };
 
-export const HeadbarLayout = ({ activeMyth, data }) => {
+export const HeadbarLayout = ({ activeMyth, data, addOnEffect }) => {
   const { enableHaptic } = useContext(MainContext);
 
   return (
@@ -103,7 +103,7 @@ export const HeadbarLayout = ({ activeMyth, data }) => {
               handleClickHaptic(tele, enableHaptic);
               data[0].handleClick();
             }}
-            className={`font-symbols absolute -ml-[1.5rem] z-50 text-iconLg text-black-lg-contour text-${mythSections[activeMyth]}-text`}
+            className={`font-symbols absolute -ml-[1.5rem] z-50 text-iconLg text-black-lg-contour  text-${mythSections[activeMyth]}-text`}
           >
             {data[0].icon}
           </div>

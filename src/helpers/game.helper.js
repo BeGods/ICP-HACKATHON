@@ -1,3 +1,5 @@
+
+
 const handleGenerateCoolDown = (counter) => {
   if (counter === 0) {
     return 5000;
@@ -83,3 +85,4 @@ export const isCoin = (itemId) => {
 
   return false;
 };
+

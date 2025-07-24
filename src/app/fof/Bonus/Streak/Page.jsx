@@ -3,7 +3,6 @@ import { t } from "i18next";
 import { FofContext } from "../../../../context/context";
 import { handleClickHaptic } from "../../../../helpers/cookie.helper";
 import { determineStreak } from "../../../../helpers/streak.helper";
-import BgLayout from "../../../../components/Layouts/BgLayout";
 import BasicLayout from "../../../../components/Layouts/BasicLayout";
 
 const tele = window.Telegram?.WebApp;

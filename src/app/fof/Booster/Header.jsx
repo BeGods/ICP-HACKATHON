@@ -11,7 +11,7 @@ import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 
 const BottomChild = ({ activeMyth, gameData, mythData }) => {
   const { t } = useTranslation();
-  const { setShowCard, setSection } = useContext(MainContext);
+  const { setShowCard } = useContext(MainContext);
 
   const data = [
     {

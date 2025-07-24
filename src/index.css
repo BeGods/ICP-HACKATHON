@@ -355,6 +355,32 @@ body.iframe-mobile .browser-container-height {
 
 .center-section {
   @apply absolute inset-x-0 flex flex-col top-gameMargins bottom-gameMargins justify-center items-center z-10 mx-auto max-w-[720px];
-  width: calc(100% - 60px);
+  width: calc(100% - 84px);
 }
+
+.center-section-grid {
+  @apply absolute inset-x-0 flex flex-col top-gameMargins pt-[6rem] bottom-[9.375rem] justify-center items-center z-10 mx-auto max-w-[720px];
+  width: calc(100% - 84px);
+}
+
+.bottom-section-grid {
+  @apply absolute inset-x-0 flex flex-col h-fit bottom-0 justify-center -mb-[4px] items-center z-10 mx-auto max-w-[720px];
+  width: calc(100% - 84px);
+}
+
+.grid-section {
+  @apply grid grid-cols-3 gap-x-[0.5rem] w-full place-items-center place-content-between relative z-50 rounded-md;
+  position: relative;
+  background-color: transparent;
+}
+
+.grid-section-expanded {
+  @apply grid grid-cols-3 gap-x-[0.5rem] w-full place-items-center place-content-between relative z-10 rounded-md;
+  position: relative;
+  background-color: transparent;
+}
+
+
+
+
 

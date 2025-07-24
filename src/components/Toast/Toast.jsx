@@ -499,6 +499,7 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+      break;
     case "ad_error":
       toast.error(
         <ToastMesg
@@ -575,7 +576,6 @@ export const showToast = (type) => {
         }
       );
       break;
-
     case "item_success_bag":
       toast.success(
         <ToastMesg
@@ -632,6 +632,7 @@ export const showToast = (type) => {
           theme: "colored",
         }
       );
+      break;
     case "join_success":
       toast.success(
         <ToastMesg

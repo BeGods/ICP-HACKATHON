@@ -1,14 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../../context/context";
 import { mythSymbols } from "../../../utils/constants.fof";
-import IconBtn from "../../Buttons/IconBtn";
 import { countries } from "../../../utils/country";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 
 const OrbInfoCard = ({ gameData, close }) => {
-  const { assets, userData, setShowBack, section } = useContext(MainContext);
-  const countryFlag = countries.find((item) => item.code == userData.country);
+  const { assets, setShowBack, section } = useContext(MainContext);
   const elementalOrbs = gameData.mythologies.reduce(
     (sum, itm) => sum + itm.orbs,
     0

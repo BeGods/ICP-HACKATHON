@@ -647,13 +647,12 @@ const BoosterClaim = ({
     ads: {
       label: "Free via Ad",
       src: <Clapperboard color="white" size={"2rem"} />,
-      isDisabled: !isTelegram && !isReady && !isClicked,
+      isDisabled: !isReady && !isClicked,
       condition:
         !isAutoPay &&
         ((activeCard === "automata" && !boostersData?.isAutomataActive) ||
           (activeCard === "minion" && boostersData?.isShardsClaimActive)),
       handleClick: () => {
-        handleClickHaptic(tele, enableHaptic);
         if (!isReady && !isClicked) {
           setIsClicked(true);
           loadAd();
@@ -708,7 +707,6 @@ const BoosterClaim = ({
             !boostersData.isBurstActive &&
             hasTimeElapsed(gameData.autoPayBurstExpiry))),
       handleClick: () => {
-        handleClickHaptic(tele, enableHaptic);
         handleGenerateInvoice();
       },
     },
@@ -734,7 +732,6 @@ const BoosterClaim = ({
             !boostersData.isBurstActive &&
             hasTimeElapsed(gameData.autoPayBurstExpiry))),
       handleClick: () => {
-        handleClickHaptic(tele, enableHaptic);
         setShowPayModal(true);
       },
     },
@@ -904,7 +901,6 @@ const BoosterClaim = ({
               </div>
             ) : (
               <BoosterBtn
-                timer={timer}
                 isAutoPay={isAutoPay}
                 activeCard={activeCard}
                 mythData={mythData}

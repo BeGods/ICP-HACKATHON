@@ -1,196 +1,40 @@
-import { useContext, useEffect, useState } from "react";
-import { RorContext } from "../../context/context";
-import ArtifactCrd from "../Cards/Relics/ArtiFactCrd";
+import { useContext, useEffect } from "react";
+import { MainContext, RorContext } from "../../context/context";
 import { gameItems } from "../../utils/gameItems";
-import { LogOut, X } from "lucide-react";
 import { mythSections } from "../../utils/constants.ror";
+import HeaderLayout, { HeadbarLayout } from "./HeaderLayout";
+import MiscCard from "../Cards/Citadel/MiscCard";
+import ShardInfoCrd from "../Cards/Info/ShardInfoCrd";
 
-const getSectionDetails = (
-  gobcoin,
-  totalShards,
-  showShards,
-  showGobCoins,
-  goBack,
-  swipes,
-  isFurnaceBuild
-) => {
-  return [
-    {
-      label: "",
-      left: gobcoin,
-      right: totalShards,
-      hLeft: "Coins",
-      hRight: "Shards",
-      lIcon: "A",
-      rIcon: "l",
-      handleLeft: () => {},
-      handleRight: showShards,
-    }, // 0
-    {
-      label: "",
-      left: 0,
-      right: swipes ?? 0,
-      hleft: "Shards",
-      hRight: "Swipes",
-      lIcon: "l",
-      rIcon: "b",
-      handleLeft: () => {},
-      handleRight: () => {},
-    }, // 1
-    {
-      label: "",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Shards",
-      lIcon: "A",
-      rIcon: <LogOut />,
-      handleLeft: () => {},
-      handleRight: goBack,
-    }, // 2
-    {
-      label: "blacksmith",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Shards",
-      lIcon: "A",
-      rIcon: isFurnaceBuild ? <X /> : <LogOut />,
-      handleLeft: () => {},
-      handleRight: goBack,
-    }, // 3
-    {
-      label: "banker",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Shards",
-      lIcon: "A",
-      rIcon: <LogOut />,
-      handleLeft: () => {},
-      handleRight: goBack,
-    }, // 4
-    {
-      label: "vault",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Back",
-      lIcon: "A",
-      rIcon: <LogOut />,
-      handleLeft: () => {},
-      handleRight: goBack,
-    }, // 5
-    {}, // 6,
-    {}, // 7,
-    {}, // 8,
-    {}, // 9,
-    {}, // 10,
-    {
-      label: "alchemist",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Back",
-      lIcon: "A",
-      rIcon: <LogOut />,
-      handleLeft: showGobCoins,
-      handleRight: goBack,
-    }, // 11
-    {
-      label: "librarian",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Back",
-      lIcon: "A",
-      rIcon: <LogOut />,
-      handleLeft: () => {},
-      handleRight: goBack,
-    }, // 12
-    {
-      label: "tavernist",
-      left: gobcoin,
-      right: "",
-      hLeft: "Coins",
-      hRight: "Shards",
-      lIcon: "A",
-      rIcon: <LogOut />,
-      handleLeft: () => {},
-      handleRight: goBack,
-    }, // 13
-  ];
-};
+const RoRHeader = ({ isOpenVault, isFurnaceBuild, handleClick }) => {
+  const { section, setSection, setShowCard, setMinimize } =
+    useContext(MainContext);
+  const { gameData, swipes, assets, shardReward, isSwiping } =
+    useContext(RorContext);
 
-const BottomChild = ({ isGuide, isOpenVault, isFurnaceBuild, handleClick }) => {
-  const {
-    gameData,
-    section,
-    setSection,
-    setShowCard,
-    shardReward,
-    swipes,
-    isSwiping,
-    setMinimize,
-  } = useContext(RorContext);
-  const [showEffect, setShowEffect] = useState(true);
-
-  const getMythOrder = (itemId) => {
-    const myth = itemId.split(".")[0];
-    return mythSections.indexOf(myth);
-  };
-
-  const mythShards = gameData.stats.mythologies.map((myth) => myth.shards ?? 0);
   const shardMap = [
-    ...mythShards,
-    gameData?.stats?.blackShards ?? 0,
-    gameData?.stats?.whiteShards ?? 0,
+    ...gameData.stats.mythologies.map((myth) => myth.shards ?? 0),
+    gameData.stats.blackShards ?? 0,
+    gameData.stats.whiteShards ?? 0,
   ];
-  const shards = [
-    { path: "shard.fire", element: "fire" },
-    { path: "shard.earth", element: "earth" },
-    { path: "shard.water", element: "water" },
-    { path: "shard.air", element: "air" },
-    { path: "shard.blackShards", element: "black" },
-    { path: "shard.whiteShards", element: "white" },
-  ].map((item, idx) => ({
-    id: item.path,
-    count: shardMap[idx],
-    element: item.element,
-    name: `${item.element} shards`,
-    fragmentId: 0,
-    isComplete: true,
-  }));
 
-  const coins = gameItems
-    .filter((itm) => /common01/.test(itm.id) || /starter0[5-9]/.test(itm.id))
-    .sort((a, b) => getMythOrder(a.id) - getMythOrder(b.id))
-    .map((item) => ({
-      ...item,
+  const shards = ["fire", "earth", "water", "air", "black", "white"].map(
+    (element, idx) => ({
+      id: `shard.${element}`,
+      count: shardMap[idx],
+      element,
+      name: `${element} shards`,
       fragmentId: 0,
       isComplete: true,
-    }));
+    })
+  );
 
-  const sumAllShards = () => {
-    const mythShards = gameData.stats.mythologies.reduce(
-      (sum, myth) => sum + (myth.shards || 0),
-      0
-    );
-
-    const totalShards =
-      mythShards +
-      (gameData.stats.whiteShards ?? 0) +
-      (gameData.stats.blackShards ?? 0);
-
-    return totalShards;
-  };
+  const totalShards = shardMap.reduce((acc, val) => acc + val, 0);
 
   const goBack = () => {
-    if (isOpenVault) {
+    if (isOpenVault || isFurnaceBuild) {
       handleClick();
-    } else if (isFurnaceBuild) {
-      handleClick();
-    } else if (section == 5) {
+    } else if (section === 5) {
       setSection(4);
     } else {
       setSection(0);
@@ -199,144 +43,235 @@ const BottomChild = ({ isGuide, isOpenVault, isFurnaceBuild, handleClick }) => {
   };
 
   const showShards = () => {
-    setShowCard(
-      <ArtifactCrd
-        isPay={false}
-        category={0}
-        isCurrency={true}
-        items={shards}
-        initalIdx={0}
-        handleClick={() => setShowCard(null)}
-      />
-    );
-  };
-  const totalShards = sumAllShards();
-
-  const showGobCoins = () => {
-    setShowCard(
-      <ArtifactCrd
-        isPay={false}
-        isCurrency={false}
-        category={0}
-        items={coins}
-        initalIdx={0}
-        handleClick={() => setShowCard(null)}
-      />
-    );
+    setShowCard(<ShardInfoCrd gameData={gameData} />);
   };
 
-  const sections = getSectionDetails(
-    gameData.stats.gobcoin,
-    totalShards,
-    showShards,
-    showGobCoins,
-    goBack,
-    swipes,
-    isFurnaceBuild
-  );
+  const getSections = () => [
+    {
+      label: "Turns",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () => {},
+    },
+    {
+      label: "Turns",
+      left: 0,
+      right: swipes ?? 0,
+      labelLeft: "Shards",
+      labelRight: "Swipes",
+      iconLeft: "l",
+      iconRight: <div className={isSwiping && "tut-shake"}>b</div>,
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () => {},
+    },
+    {
+      label: "Turns",
+      left: 0,
+      right: swipes ?? 0,
+      labelLeft: "Shards",
+      labelRight: "Swipes",
+      iconLeft: "l",
+      iconRight: "b",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () => {},
+    },
+    {
+      label: "blacksmith",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () =>
+        setShowCard(
+          <MiscCard id="blacksmith" handleClick={() => setShowCard(null)} />
+        ),
+    },
+    {
+      label: "banker",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () =>
+        setShowCard(
+          <MiscCard id="banker" handleClick={() => setShowCard(null)} />
+        ),
+    },
+    {
+      label: "vault",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () =>
+        setShowCard(
+          <MiscCard id="banker" handleClick={() => setShowCard(null)} />
+        ),
+    },
+    {
+      label: "alchemist",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () =>
+        setShowCard(
+          <MiscCard id="apothecary" handleClick={() => setShowCard(null)} />
+        ),
+    },
+    {
+      label: "librarian",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () =>
+        setShowCard(
+          <MiscCard id="librarian" handleClick={() => setShowCard(null)} />
+        ),
+    },
+    {
+      label: "tavernist",
+      left: totalShards,
+      right: gameData.stats.gobcoin,
+      labelLeft: "Shards",
+      labelRight: "Coins",
+      iconLeft: "l",
+      iconRight: "A",
+      handleLeft: showShards,
+      handleRight: () => {},
+      handleCenter: () =>
+        setShowCard(
+          <MiscCard id="tavernist" handleClick={() => setShowCard(null)} />
+        ),
+    },
+  ];
 
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      setShowEffect(false);
-    }, 3000);
+  const sections = getSections();
+  const current = sections[section] || {};
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+  useEffect(() => {}, [shardReward]);
 
   return (
-    <div className="flex h-button-primary mt-[1.5dvh] absolute z-20 text-black font-symbols justify-between w-screen">
-      <div
-        onClick={() => sections[section].handleLeft()}
-        className={`flex cursor-pointer slide-ror-header-left  header-shadow-black p-0.5 justify-end items-center w-[32%] ${
-          shardReward && mythSections?.includes(shardReward?.myth)
-            ? `bg-${shardReward?.myth}-primary`
-            : `bg-white`
-        }  rounded-r-full`}
-      >
-        <div>
-          {shardReward ? (
-            <div className="text-[2rem] flex items-center font-medium text-white px-1 font-fof">
-              <span className="text-[1rem] font-bold">+</span>
-              {shardReward?.count}
-            </div>
+    <HeaderLayout
+      title={current.label || ""}
+      BottomChild={
+        <HeadbarLayout
+          data={[
+            {
+              icon: (
+                <div
+                  className={`font-symbols  ${
+                    shardReward?.myth &&
+                    `tut-shake text-${shardReward?.myth}-primary`
+                  } transition-all duration-500`}
+                >
+                  l
+                </div>
+              ),
+              value: shardReward?.count ? `+${shardReward?.count}` : 0,
+              label: current.labelLeft,
+              handleClick: current.handleLeft,
+            },
+            {
+              icon: current.iconRight,
+              value: current.right,
+              label: current.labelRight,
+              handleClick: current.handleRight,
+            },
+          ]}
+        />
+      }
+      CenterChild={
+        <div
+          onClick={() => {
+            current.handleCenter?.();
+          }}
+          className="flex cursor-pointer absolute justify-center w-full top-0 -mt-2 z-50"
+        >
+          {section === 0 || section === 1 ? (
+            <SundialHeader gameData={gameData} assets={assets} />
           ) : (
-            <div className={`text-[2rem] font-medium font-fof px-1`}>
-              {sections[section].left}
-            </div>
+            <div
+              style={{
+                backgroundImage: `url(${
+                  section == 2
+                    ? assets.items.bag
+                    : assets.boosters[
+                        [
+                          "",
+                          "",
+                          "",
+                          "minionHead",
+                          "bankerHead",
+                          "bankerHead",
+                          "gemologistHead",
+                          "libHead",
+                          "tavernHead",
+                        ][section]
+                      ]
+                })`,
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+              }}
+              className="flex justify-center items-center absolute h-symbol-primary w-symbol-primary rounded-full bg-black border border-white text-white top-0 left-1/2 -translate-x-1/2"
+            ></div>
           )}
         </div>
-        <div
-          className={`flex ${
-            showEffect && "pulse-text"
-          } justify-center items-center bg-black  text-white w-[3rem] h-[3rem] aspect-square text-symbol-sm rounded-full`}
-        >
-          <div className={`${shardReward && "tut-shake"}`}>
-            {sections[section].lIcon}
-          </div>
-        </div>
-      </div>
-      <div
-        onClick={() => sections[section].handleRight()}
-        className={`flex cursor-pointer transition-all duration-500 slide-ror-header-right header-shadow-black p-0.5 justify-start items-center w-[32%] bg-white rounded-l-full`}
-      >
-        <div
-          className={`flex font-symbols ${
-            showEffect && "pulse-text"
-          } justify-center items-center  bg-black text-white w-[3rem] h-[3rem] aspect-square text-symbol-sm rounded-full`}
-        >
-          <div className={`${(isSwiping || isGuide) && "tut-shake"}`}>
-            {sections[section].rIcon}
-          </div>
-        </div>
-        <div className={`text-[2rem] font-medium px-1 font-fof`}>
-          {sections[section].right}
-        </div>
-      </div>
-      <div className="absolute flex text-white text-black-contour px-1 w-full mt-[4.5rem] font-fof text-tertiary uppercase">
-        <div className={`mr-auto slide-in-out-left`}>
-          {sections[section].hLeft}
-        </div>
-        <div className={`ml-auto slide-in-out-right`}>
-          {sections[section].hRight}
-        </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 
-const RoRHeader = ({
-  CenterChild,
-  isGuide,
-  isOpenVault,
-  isFurnaceBuild,
-  handleClick,
-}) => {
-  const { section } = useContext(RorContext);
-  const sections = getSectionDetails(
-    0,
-    0,
-    () => {},
-    () => {},
-    () => {},
-    0
-  );
-
-  return (
-    <div className="z-50">
-      <div className="absolute mt-[7rem] w-full flex justify-center z-[70] text-[1.25rem] uppercase glow-text-black font-bold text-white">
-        {sections[section].label}
-      </div>
-      {CenterChild}
-      <BottomChild
-        handleClick={handleClick}
-        isOpenVault={isOpenVault}
-        isGuide={isGuide}
-        isFurnaceBuild={isFurnaceBuild}
-      />
+const SundialHeader = ({ gameData, assets }) => (
+  <div className="relative h-symbol-primary w-symbol-primary">
+    <img
+      src={assets.uxui.sundial}
+      alt="sundial"
+      className={`absolute ${
+        gameData.stats.dailyQuota < 4 ? "grayscale" : ""
+      } z-30 w-auto h-auto max-w-full max-h-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none`}
+    />
+    <img
+      src={
+        assets.items[`amulet.${gameData.stats.dailyQuota < 4 ? "moon" : "sun"}`]
+      }
+      alt="amulet"
+      className="w-full h-full rounded-full shadow-2xl pointer-events-none z-40 relative"
+    />
+    <div className="absolute z-40 flex justify-center items-center inset-0 text-[5rem] text-white text-black-contour">
+      {gameData.stats.dailyQuota}
     </div>
-  );
-};
+  </div>
+);
 
 export default RoRHeader;

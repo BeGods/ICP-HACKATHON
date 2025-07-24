@@ -280,6 +280,8 @@ export const claimArtifact = async (accessToken, itemId, adId) => {
     itemId: itemId,
     adId: adId,
   };
+
+
   const secretKey = import.meta.env.VITE_HASH_KEY;
   const hashedData = CryptoJS.AES.encrypt(
     JSON.stringify(gameData),
@@ -320,6 +322,26 @@ export const claimPotion = async (accessToken, type) => {
   }
 }
 
+export const updateShardsToCoins = async (accessToken, type) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/shards/convert`;
+
+  try {
+    const response = await axios.post(
+      url,
+      { type: type },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+}
+
 export const fetchLeaderboard = async (accessToken, userRank, pageNum) => {
   let url = `${import.meta.env.VITE_API_ROR_URL}/leaderboard`;
 
@@ -327,6 +349,22 @@ export const fetchLeaderboard = async (accessToken, userRank, pageNum) => {
   if (pageNum != 0) {
     url += `&page=${pageNum}`;
   }
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
+export const updateRewardStatus = async (accessToken) => {
+  let url = `${import.meta.env.VITE_API_ROR_URL}/update/reward`;
 
   try {
     const response = await axios.get(url, {

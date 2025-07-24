@@ -1,107 +1,124 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
 import { RorContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import ReactHowler from "react-howler";
-import { X } from "lucide-react";
+import { CardWrap } from "../../Layouts/Wrapper";
+import OverlayLayout from "../../Layouts/OverlayLayout";
+import CustomBtn from "../../Buttons/CustomButton";
 
-const MiscCard = ({
-  Button,
-  img,
-  icon,
-  showInfo,
-  hideClose,
-  onlyBack,
-  sound,
-}) => {
-  const { assets, setShowCard, setSection, enableSound } =
-    useContext(RorContext);
+const MiscCard = ({ id, handleClick, handleButtonClick, message, isPay }) => {
+  const { assets, enableSound } = useContext(RorContext);
   const { i18n } = useTranslation();
-  const [flipped, setFlipped] = useState(false);
-
-  const isTgMobile = typeof Telegram !== "undefined"; // If not defined elsewhere
-  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
-
-  const handleFlip = () => {
-    setFlipped((prev) => !prev);
+  const charMap = {
+    apothecary: {
+      icon: "v",
+      src: assets.boosters.gemologistCard,
+      label: "apothecary",
+      sound: "apothecary",
+    },
+    banker: {
+      icon: "A",
+      src: assets.boosters.bankerCard,
+      label: "banker",
+      sound: null,
+    },
+    blacksmith: {
+      icon: "h",
+      src: assets.boosters.minionCard,
+      label: "blacksmith",
+      sound: "furnace",
+    },
+    tavernist: {
+      icon: "7",
+      src: assets.boosters.tavernCard,
+      label: "tavernist",
+      sound: "tavernist",
+    },
+    librarian: {
+      icon: "+",
+      src: assets.boosters.libCard,
+      label: "librarian",
+      sound: "librarian",
+    },
   };
+  const selectedChar = charMap[id];
 
   return (
-    <div
-      onClick={() => setShowCard(null)}
-      className="fixed inset-0 bg-black bg-opacity-85 backdrop-blur-[3px] flex flex-col justify-center items-center z-[99]"
-    >
-      {showInfo && !hideClose && (
-        <div className="absolute top-0 right-0 p-6">
-          <X color="white" size={"2rem"} />
-        </div>
-      )}
-      {/* card */}
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className={`relative card-width card-shadow-white rounded-lg shadow-lg flex flex-col z-50`}
-      >
-        <div className={`card ${cardHeight} ${flipped ? "flipped" : ""}`}>
-          <div
-            onClick={handleFlip}
-            className="card__face card__face--front relative flex justify-center items-center"
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center rounded-primary z-0"
-              style={{
-                backgroundImage: `url(${img ?? assets.items.cardBurst})`,
-              }}
-            />
-            <div className="relative z-20 flex flex-col items-center justify-center w-full h-full">
-              <div className="relative w-full h-[19%] mt-auto card-shadow-white-celtic z-10">
-                <div
-                  className={`absolute inset-0 bg-cover bg-center bg-no-repeat rounded-b-primary`}
-                  style={{ backgroundImage: `url(${assets.uxui.footer})` }}
-                />
-                <div className="absolute font-symbols text-[3.5rem] text-black-contour flex justify-center items-center w-full h-full">
-                  {icon ?? "a"}
+    <OverlayLayout>
+      <div className="pointer-events-auto center-section">
+        <CardWrap
+          Front={
+            <div className="w-full h-full relative flex justify-center items-center">
+              <div
+                className={`absolute inset-0 rounded-primary`}
+                style={{
+                  backgroundImage: `url(${selectedChar.src})`,
+
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center center ",
+                }}
+              />
+              <div
+                className={`absolute top-0 left-3 text-[2.75rem] font-symbols z-10`}
+              >
+                {selectedChar.icon}
+              </div>
+              <div className="relative h-full w-full flex flex-col items-center">
+                <div className="flex z-50 relative flex-col justify-center items-center h-full w-full">
+                  <IconBtn isInfo={true} align={0} />
+                  <div
+                    className={`flex relative  mt-auto items-center h-[19%] w-full card-shadow-white-celtic `}
+                  >
+                    <div
+                      style={{
+                        backgroundImage: `url(${assets?.uxui.footer})`,
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center center",
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        height: "100%",
+                        width: "100%",
+                      }}
+                      className={`rounded-b-primary`}
+                    />
+                    <div className="flex justify-center w-full h-full items-center px-2 z-10">
+                      <div className="flex gap-x-2 uppercase glow-text-quest text-white z-10">
+                        {selectedChar.label}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <IconBtn
-              isInfo={showInfo}
-              activeMyth={4}
-              handleClick={() => {
-                if (showInfo) {
-                  setFlipped(true);
-                } else {
-                  if (!onlyBack) {
-                    setSection(0);
-                  }
-                  setShowCard(null);
-                }
-              }}
-              align={0}
-            />
-          </div>
-
-          <div
-            onClick={handleFlip}
-            className="card__face card__face--back relative flex justify-center items-center"
-          >
-            <div className="relative w-full h-full text-card">
-              <img
-                src={assets.uxui.bgInfo}
-                alt="info background"
-                className="w-full h-full object-cover rounded-primary z-10"
-              />
-            </div>
-            <div className="absolute flex flex-col top-0 z-20">
-              <div className="flex w-full">
-                <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[10px]">
+          }
+          Back={
+            <div className={`flex select-none justify-center items-center`}>
+              <div className="relative w-full h-full text-card">
+                <img
+                  src={assets?.uxui.bgInfo}
+                  alt="info background"
+                  className="w-full h-full object-cover rounded-primary z-10"
+                />
+              </div>
+              <div className="absolute flex flex-col top-0 z-20 w-full">
+                <div className="flex flex-col leading-tight justify-center items-center flex-grow  text-card pt-[0.5dvh]">
                   <div className="text-left">
-                    <h1 className="text-paperHead font-bold">{icon ?? "a"}</h1>
+                    <h1 className="text-paperHead font-bold uppercase">
+                      {selectedChar.label}
+                    </h1>
                   </div>
                 </div>
               </div>
               <div
-                className={`leading-para text-para mt-[14px] text-justify mx-auto w-[85%] text-card font-[550] ${
-                  ["hi", "th", "ru"].includes(i18n.language) && "font-normal"
+                className={`absolute h-full pt-[35%] leading-para text-para -mt-[5px] text-center mx-auto w-[93%] text-card font-[550] ${
+                  (i18n.language === "hi" ||
+                    i18n.language === "th" ||
+                    i18n.language === "ru") &&
+                  "font-normal"
                 } ${i18n.language === "ru" && "leading-[2dvh]"}`}
               >
                 Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -111,31 +128,33 @@ const MiscCard = ({
                 survived not only five centuries, but also the leap into
                 electronic typesetting, remaining essentially unchanged
               </div>
+              <IconBtn isFlip={true} isInfo={false} activeMyth={5} align={10} />
             </div>
-            <IconBtn isInfo={false} activeMyth={5} align={10} />
-          </div>
-        </div>
+          }
+          handleClick={handleClick}
+        />
       </div>
+      {typeof handleButtonClick == "function" && (
+        <div className="absolute flex flex-col justify-center bottom-0 mb-safeBottom">
+          <CustomBtn
+            buttonColor={"black"}
+            handleClick={handleButtonClick}
+            message={message}
+            isPay={isPay}
+          />
+        </div>
+      )}
 
-      {/* Button */}
-      <div className={`button z-50 ${flipped ? "flipped mt-3" : "mt-2"}`}>
-        <div className="button__face button__face--front flex justify-center items-center">
-          {Button}
-        </div>
-        <div className="button__face button__face--back z-50 mt-0.5 flex justify-center items-center">
-          {Button}
-        </div>
-      </div>
-      {sound && (
+      {selectedChar.sound && (
         <ReactHowler
-          src={assets.audio[sound]}
+          src={assets.audio[selectedChar.sound]}
           playing={enableSound}
           loop
           preload={true}
           html5={true}
         />
       )}
-    </div>
+    </OverlayLayout>
   );
 };
 

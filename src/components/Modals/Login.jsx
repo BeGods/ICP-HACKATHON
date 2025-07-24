@@ -276,7 +276,7 @@ const OnboardOTP = ({ showVerify, updateVerify, refer, setOtpSentOn }) => {
           </button>
           {showCount && (
             <div
-              className="text-sm cursor-pointer underline text-gray-400 hover:text-gray-200 transition"
+              className="text-secondary cursor-pointer underline text-gray-400 hover:text-gray-200 transition"
               onClick={countDown === 0 ? handleResendOtp : null}
             >
               {countDown > 0 ? `${countDown}s` : t("misc.resendOTP")}
@@ -358,7 +358,7 @@ const OnboardOTP = ({ showVerify, updateVerify, refer, setOtpSentOn }) => {
             {t("misc.getOTP")}
           </button>
 
-          <p className="text-center cursor-pointer text-sm text-gray-400">
+          <p className="text-center cursor-pointer text-secondary text-gray-400">
             {createAcnt ? "Already have an account?" : "Don't have an account?"}
             <span
               onClick={() => {
@@ -467,7 +467,7 @@ export default function LoginModal() {
           {showVerify ? (
             <div className="relative w-full">
               <h1 className="text-xl font-semibold">{t("misc.enterOTP")}</h1>
-              <h2 className="text-sm text-gray-400">
+              <h2 className="text-secondary text-gray-400">
                 OTP sent to {otpSentOn.slice(0, 6)}******{otpSentOn.slice(-2)}
               </h2>
               <X
@@ -482,7 +482,7 @@ export default function LoginModal() {
             <div>
               <h1 className="font-semibold text-xl">Sign in</h1>
 
-              <h2 className="text-sm text-gray-400">
+              <h2 className="text-secondary text-gray-400">
                 Explore the world's largest mythoverse!
               </h2>
             </div>
@@ -529,7 +529,7 @@ export default function LoginModal() {
         /> */}
         {!showVerify && (
           <>
-            {/* <div className="text-center text-sm text-gray-500">OR</div> */}
+            {/* <div className="text-center text-secondary text-gray-500">OR</div> */}
 
             {/* Section 3: Wallet connect */}
             <button

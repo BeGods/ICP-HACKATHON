@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { MainContext } from "../../../context/context";
 import GiftHeader from "./Header";
 import {
@@ -10,7 +10,7 @@ import BgLayout from "../../../components/Layouts/BgLayout";
 import { PayoutCrsl, TaskCrsl, VoucherCrsl } from "./Carousels";
 
 const Missions = () => {
-  const { globalRewards, payouts, tasks, userData, setShowBack, setSection } =
+  const { globalRewards, payouts, tasks, userData, setSection, game } =
     useContext(MainContext);
   const [category, setCategory] = useState(1);
   const filteredTasks = tasks.filter((itm) => !itm.isClaimed).length;
@@ -19,14 +19,7 @@ const Missions = () => {
     (itm) => !itm.isClaimed && itm.limit > 0
   ).length;
   const categoryCntArr = [filteredVouchers, filteredTasks, filteredPayouts];
-
-  useEffect(() => {
-    setShowBack(3);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
+  const profileIdx = game == "fof" ? 3 : 8;
 
   return (
     <BgLayout>
@@ -50,7 +43,7 @@ const Missions = () => {
         <ToggleBack
           minimize={2}
           handleClick={() => {
-            setSection(3);
+            setSection(profileIdx);
           }}
           activeMyth={8}
         />

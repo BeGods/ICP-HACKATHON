@@ -5,69 +5,28 @@ import {
   startSession,
 } from "../../utils/api.ror";
 import SwipeArena from "../../components/Common/SwipeArena";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import RoRHeader from "../../components/Layouts/Header";
 import {
   timeLeftUntil12Hours,
   checkIsUnderworldActive,
 } from "../../helpers/ror.timers.helper";
-import {
-  getBubbleLastClaimedTime,
-  handleClickHaptic,
-} from "../../helpers/cookie.helper";
-import gsap from "gsap";
-import RelicRwrdCrd from "../../components/Cards/Relics/RelicRwrdCrd";
-import ShareButton from "../../components/Buttons/ShareBtn";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
 import {
   bgLabel,
-  colorByMyth,
-  elementFileType,
   mythElementNamesLowerCase,
   mythSections,
 } from "../../utils/constants.ror";
-import RoRBtn from "../../components/Buttons/RoRBtn";
-import CurrencyCrd from "../../components/Cards/Relics/CurrencyCrd";
 import { showToast } from "../../components/Toast/Toast";
 import ReactHowler from "react-howler";
 import { useRoRGuide } from "../../hooks/Tutorial";
 import { ExploreGuide } from "../../components/Tutorials/RorTutorial";
 import { isCoin } from "../../helpers/game.helper";
+import BgLayout from "../../components/Layouts/BgLayout";
+import { ToggleBack } from "../../components/Common/SectionToggles";
+import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
 
 const tele = window.Telegram?.WebApp;
-
-const CenterChild = ({ assets, content, mythology, location, gameData }) => {
-  return (
-    <div className="flex cursor-pointer justify-center items-center absolute w-[8rem] h-[8rem] shadow-lg rounded-full text-white text-[5rem] top-0 z-20 left-1/2 -translate-x-1/2">
-      <div className="relative w-full h-full">
-        <img
-          src={assets.uxui.sundial}
-          alt="sundial"
-          className={`absolute ${
-            gameData.stats.dailyQuota < 4 && "grayscale"
-          } z-30 w-auto h-auto max-w-full max-h-full left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none`}
-        />
-
-        <img
-          src={
-            assets.items[
-              `amulet.${gameData.stats.dailyQuota < 4 ? "moon" : "sun"}`
-            ]
-          }
-          alt="amulet"
-          className="w-full h-full rounded-full shadow-2xl pointer-events-none z-40 relative"
-        />
-
-        <div className="absolute z-40 flex justify-center items-center inset-0 text-[5rem] text-black-contour">
-          {content}
-        </div>
-      </div>
-
-      <div className="absolute top-0 w-full flex text-center leading-6 mt-[7rem] justify-center z-[60] text-[1.5rem] uppercase glow-text-black font-bold text-white">
-        TURNS
-      </div>
-    </div>
-  );
-};
 
 const Explore = () => {
   const {
@@ -82,10 +41,11 @@ const Explore = () => {
     enableHaptic,
     setSection,
     setShowCard,
-    isTgMobile,
     assets,
     setShardReward,
     setIsSwiping,
+    mythBg,
+    setMythBg,
     rewards,
     setRewards,
     setActiveReward,
@@ -93,11 +53,11 @@ const Explore = () => {
     rewardsClaimedInLastHr,
     enableSound,
   } = useContext(RorContext);
+  const [showBack, setShowBack] = useState(false);
   const [currStage, setCurrStage] = useState(0);
   const [countDown, setCountDown] = useState(3);
   const [showItem, setShowItem] = useState(false);
   const [startPlay, setStartPlay] = useState(false);
-  const [mythBg, setMythBg] = useState(null);
   const [roundTimeElapsed, setRoundTimeElapsed] = useState(9);
   const [digMyth, setDigMyth] = useState(null);
   const [isInside, setIsInside] = useState(false);
@@ -116,7 +76,6 @@ const Explore = () => {
     holdStartTime: 0,
     holdEndTime: 0,
   });
-  const cardHeight = isTgMobile ? "h-[47vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]";
 
   const images = [
     "celtic.earth01",
@@ -225,48 +184,48 @@ const Explore = () => {
 
     const randomImage =
       matchingImages[Math.floor(Math.random() * matchingImages.length)];
-
     setMinimize(1);
     setMythBg(randomImage);
     setDigMyth(randomMyth);
     setPlaySound(1);
     setStartPlay(true);
+    setShowBack(true);
   };
 
-  useEffect(() => {
-    if (enableGuide) {
-      setShowCard(
-        <ExploreGuide
-          currTut={0}
-          handleClick={() => {
-            setShowCard(
-              <ExploreGuide
-                currTut={1}
-                handleClick={() => {
-                  setShowCard(
-                    <ExploreGuide
-                      currTut={2}
-                      handleClick={() => {
-                        setEnableGuide(false);
-                        setShowCard(null);
-                      }}
-                    />
-                  );
-                }}
-              />
-            );
-          }}
-        />
-      );
-    }
-  }, [enableGuide]);
+  // useEffect(() => {
+  //   if (enableGuide) {
+  //     setShowCard(
+  //       <ExploreGuide
+  //         currTut={0}
+  //         handleClick={() => {
+  //           setShowCard(
+  //             <ExploreGuide
+  //               currTut={1}
+  //               handleClick={() => {
+  //                 setShowCard(
+  //                   <ExploreGuide
+  //                     currTut={2}
+  //                     handleClick={() => {
+  //                       setEnableGuide(false);
+  //                       setShowCard(null);
+  //                     }}
+  //                   />
+  //                 );
+  //               }}
+  //             />
+  //           );
+  //         }}
+  //       />
+  //     );
+  //   }
+  // }, [enableGuide]);
 
   const renderStageContent = () => {
     if (!startPlay) {
       return (
         <div
           onPointerDown={handlePlay}
-          className="flex justify-center items-center text-center h-full w-full relative cursor-pointer font-medium uppercase text-black-contour text-white text-[3rem]"
+          className="flex justify-centerc items-center text-center h-full w-full relative cursor-pointer font-medium uppercase text-black-contour text-white text-[3rem]"
         >
           {!enableGuide && (
             <span className="font-symbols lowercase text-[6rem] swipe-dig-hand absolute text-black-contour mb-[18vh] mr-[18vw]">
@@ -323,7 +282,7 @@ const Explore = () => {
                       `${digMyth?.toLowerCase()}.artifact.starter02`
                     )
                   }
-                  className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
+                  className={`text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
                 >
                   *
                 </div>
@@ -338,7 +297,7 @@ const Explore = () => {
                       `${digMyth?.toLowerCase()}.artifact.starter01`
                     )
                   }
-                  className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
+                  className={`text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
                 >
                   Y
                 </div>
@@ -374,6 +333,7 @@ const Explore = () => {
       });
       setIsSwiping(true);
       setShowItem(true);
+      setShowBack(false);
     } catch (error) {
       console.log(error);
     }
@@ -444,8 +404,6 @@ const Explore = () => {
           }
         }
 
-        alert(parsedReward?.shards);
-
         setShowCard(null);
         setTimeout(() => {
           setShardReward({
@@ -462,8 +420,45 @@ const Explore = () => {
 
       if (showRelic) {
         setShowCard(
-          <RelicRwrdCrd
-            claimBoots={async () => {
+          <ItemCrd
+            mode={
+              parsedReward?.fragment?.isChar
+                ? "character-claim"
+                : "artifact-claim"
+            }
+            src={id}
+            fragmentId={parsedReward?.fragment?.fragmentId}
+            isComplete={parsedReward?.fragment?.isComplete}
+            showAdOn={
+              isInside &&
+              hasItemInBag(`${digMyth?.toLowerCase()}.artifact.starter02`)
+            }
+            handleClick={() => {
+              // if outside and encounter then show char after it
+              if (!isInside && parsedReward?.fragment?.isChar) {
+                <ItemCrd
+                  mode={"artifact-claim"}
+                  src={id}
+                  fragmentId={parsedReward?.fragment?.fragmentId}
+                  isComplete={parsedReward?.fragment?.isComplete}
+                  handleClick={() => {
+                    setShowCard(null);
+                    if (showCurrency) {
+                      setTimeout(() => {
+                        handleShowCurrencyCard();
+                      }, 300);
+                    }
+                  }}
+                />;
+              } else {
+                if (showCurrency) {
+                  setTimeout(() => {
+                    handleShowCurrencyCard();
+                  }, 300);
+                }
+              }
+            }}
+            handleAdOn={async () => {
               await handleClaimItem(
                 `${digMyth?.toLowerCase()}.artifact.starter02`
               );
@@ -475,84 +470,6 @@ const Explore = () => {
                 }, 100);
               }
             }}
-            showBoots={
-              isInside &&
-              hasItemInBag(`${digMyth?.toLowerCase()}.artifact.starter02`)
-            }
-            itemId={id}
-            isChar={parsedReward?.fragment?.isChar}
-            fragmentId={parsedReward?.fragment?.fragmentId}
-            isComplete={parsedReward?.fragment?.isComplete}
-            hasShards={parsedReward?.shards ?? 0}
-            mythology={parsedReward?.shardType ?? digMyth}
-            ButtonBack={
-              <ShareButton
-                isShared={false}
-                isInfo={false}
-                handleClaim={() => {}}
-                activeMyth={1}
-                isCoin={true}
-                link={"sdjkfds"}
-              />
-            }
-            ButtonFront={
-              <RoRBtn
-                isNotPay={true}
-                message={"claim"}
-                itemId={id}
-                disable={false}
-                handleClick={() => {
-                  setShowCard(null);
-
-                  // if outside and encounter then show char after it
-                  if (!isInside && parsedReward?.fragment?.isChar) {
-                    <RelicRwrdCrd
-                      claimBoots={async () => {}}
-                      showBoots={false}
-                      itemId={id}
-                      isChar={false}
-                      fragmentId={parsedReward?.fragment?.fragmentId}
-                      isComplete={parsedReward?.fragment?.isComplete}
-                      hasShards={parsedReward?.shards ?? 0}
-                      mythology={parsedReward?.shardType ?? digMyth}
-                      ButtonBack={
-                        <ShareButton
-                          isShared={false}
-                          isInfo={false}
-                          handleClaim={() => {}}
-                          activeMyth={1}
-                          isCoin={true}
-                          link={"sdjkfds"}
-                        />
-                      }
-                      ButtonFront={
-                        <RoRBtn
-                          isNotPay={true}
-                          message={"claim"}
-                          itemId={id}
-                          disable={false}
-                          handleClick={() => {
-                            setShowCard(null);
-
-                            if (showCurrency) {
-                              setTimeout(() => {
-                                handleShowCurrencyCard();
-                              }, 300);
-                            }
-                          }}
-                        />
-                      }
-                    />;
-                  } else {
-                    if (showCurrency) {
-                      setTimeout(() => {
-                        handleShowCurrencyCard();
-                      }, 300);
-                    }
-                  }
-                }}
-              />
-            }
           />
         );
       } else if (showCurrency) {
@@ -654,17 +571,6 @@ const Explore = () => {
       showToast("item_error");
     }
   };
-
-  // toast.success(`You earned ${parsedReward?.shards} shards`);
-
-  // setShardReward({
-  //   myth:
-  //     parsedReward?.shardType?.toLowerCase() ?? digMyth?.toLowerCase(),
-  //   count: parsedReward?.shards,
-  // });
-  // setTimeout(() => {
-  //   setShardReward(null);
-  // }, 2000);
 
   const handleUpdateRoundData = async () => {
     const result = swipes >= gameData.stats.competelvl ? 1 : 0;
@@ -775,16 +681,7 @@ const Explore = () => {
   }, [currentIndex, digMyth]);
 
   return (
-    <div
-      style={{
-        top: 0,
-        left: 0,
-        width: "100vw",
-      }}
-      className={`flex ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } flex-col overflow-hidden m-0 relative`}
-    >
+    <BgLayout>
       <div
         style={{
           position: "absolute",
@@ -794,8 +691,20 @@ const Explore = () => {
           width: "100%",
           zIndex: -1,
         }}
-        className="background-wrapper transition-all duration-100"
+        className="transition-all duration-100"
       >
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute top-0 rotate-180 left-0 z-[1] select-none h-[120px]"
+        />
+        <img
+          src={assets.uxui.shadow}
+          alt="paper"
+          draggable={false}
+          className="w-full absolute bottom-0 left-0 z-[1] select-none h-[120px]"
+        />
         {!mythBg ? (
           <div className="background-container transition-all duration-300 blur-[2px]">
             <img
@@ -821,111 +730,101 @@ const Explore = () => {
           </div>
         )}
       </div>
-      <RoRHeader
-        CenterChild={
-          <CenterChild
-            gameData={gameData}
-            assets={assets}
-            location={mythBg?.split(".")[1] ?? "Explore"}
-            mythology={digMyth?.toLowerCase()}
-            content={gameData.stats.dailyQuota}
+
+      <RoRHeader />
+
+      <div className="flex relative text-white justify-center items-center center-section mt-[4.5rem] w-full z-50">
+        <div className="absolute flex top-0 px-5 justify-between w-full">
+          {/* keys // demoncoin */}
+          <div>
+            {currStage === 0 &&
+              !isInside &&
+              startPlay &&
+              digMyth &&
+              checkIsUnderworldActive(gameData.stats, digMyth, gameData.pouch) >
+                0 && (
+                <div
+                  onClick={() => {
+                    handleClickHaptic(tele, enableHaptic);
+                    setIsInside(true);
+                    const underworldLocs = images.filter((itm) =>
+                      itm.includes("underworld")
+                    );
+                    const randomIdx = Math.floor(
+                      Math.random() * underworldLocs.length
+                    );
+                    setMythBg(underworldLocs[randomIdx]);
+                    setGameData((prev) => {
+                      return {
+                        ...prev,
+                        stats: {
+                          ...prev.stats,
+                          dailyQuota: prev.stats.dailyQuota - 1,
+                        },
+                      };
+                    });
+
+                    // claim key
+                    if (
+                      checkIsUnderworldActive(
+                        gameData.stats,
+                        digMyth,
+                        gameData.pouch
+                      ) == 2
+                    ) {
+                      handleClaimItem(
+                        `${digMyth?.toLowerCase()}.artifact.common02`
+                      );
+                    }
+                  }}
+                  className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
+                >
+                  {checkIsUnderworldActive(
+                    gameData.stats,
+                    digMyth,
+                    gameData.pouch
+                  ) == 1
+                    ? "a"
+                    : "Z"}
+                </div>
+              )}
+          </div>
+        </div>
+        <>
+          {gameData.stats.dailyQuota == 0 && !startPlay ? (
+            <div className="text-[2rem] text-center">
+              Daily Turns Exhausted <br />
+              {timeLeftUntil12Hours(gameData.stats.sessionStartAt).countdown}
+            </div>
+          ) : gameData.bag.length >= 12 && !startPlay ? (
+            <div className="text-[2rem]">Your Bag is Full</div>
+          ) : (
+            <>{renderStageContent()}</>
+          )}
+        </>
+      </div>
+
+      <div className="z-[99]">
+        {showBack && (
+          <ToggleBack
+            minimize={2}
+            handleClick={() => {
+              setShowBack(false);
+              setCurrStage(0);
+              setStartPlay(false);
+              setCountDown(3);
+              setDigMyth(null);
+              setMythBg(null);
+              setIsInside(false);
+              setMinimize(2);
+              setPlaySound(0);
+            }}
+            activeMyth={8}
           />
-        }
-      />
+        )}
+      </div>
 
-      {showPartner ? (
-        <div className="h-[155dvw] mt-[18dvw] w-full absolute">
-          <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
-            <div className="bubble-spin-effect">
-              <img
-                src={
-                  randomReward?.partnerType == "playsuper"
-                    ? `${randomReward?.metadata?.campaignCoverImage}`
-                    : `https://media.publit.io/file/Partners/160px-${randomReward?.metadata?.campaignCoverImage}.bubble.png`
-                }
-                alt="icon"
-                className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
-              />
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="flex relative text-white justify-center items-center mt-[14vh] h-[65vh] w-full z-50">
-          <div className="absolute flex top-0 px-5 justify-between w-full">
-            {/* keys // demoncoin */}
-            <div>
-              {currStage === 0 &&
-                !isInside &&
-                startPlay &&
-                digMyth &&
-                checkIsUnderworldActive(
-                  gameData.stats,
-                  digMyth,
-                  gameData.pouch
-                ) > 0 && (
-                  <div
-                    onClick={() => {
-                      handleClickHaptic(tele, enableHaptic);
-                      setIsInside(true);
-                      const underworldLocs = images.filter((itm) =>
-                        itm.includes("underworld")
-                      );
-                      const randomIdx = Math.floor(
-                        Math.random() * underworldLocs.length
-                      );
-                      setMythBg(underworldLocs[randomIdx]);
-                      setGameData((prev) => {
-                        return {
-                          ...prev,
-                          stats: {
-                            ...prev.stats,
-                            dailyQuota: prev.stats.dailyQuota - 1,
-                          },
-                        };
-                      });
-
-                      // claim key
-                      if (
-                        checkIsUnderworldActive(
-                          gameData.stats,
-                          digMyth,
-                          gameData.pouch
-                        ) == 2
-                      ) {
-                        handleClaimItem(
-                          `${digMyth?.toLowerCase()}.artifact.common02`
-                        );
-                      }
-                    }}
-                    className={`mt-4 text-[50px] text-${digMyth?.toLowerCase()}-primary font-symbols text-black-contour scale-point`}
-                  >
-                    {checkIsUnderworldActive(
-                      gameData.stats,
-                      digMyth,
-                      gameData.pouch
-                    ) == 1
-                      ? "a"
-                      : "Z"}
-                  </div>
-                )}
-            </div>
-          </div>
-          <>
-            {gameData.stats.dailyQuota == 0 && !startPlay ? (
-              <div className="text-[2rem] text-center">
-                Daily Turns Exhausted <br />
-                {timeLeftUntil12Hours(gameData.stats.sessionStartAt).countdown}
-              </div>
-            ) : gameData.bag.length >= 12 && !startPlay ? (
-              <div className="text-[2rem]">Your Bag is Full</div>
-            ) : (
-              <>{renderStageContent()}</>
-            )}
-          </>
-        </div>
-      )}
-
-      <div className="absolute">
+      <div className="absolute z-0">
         {playSound != 0 && (
           <>
             <ReactHowler
@@ -954,10 +853,65 @@ const Explore = () => {
           </>
         )}
       </div>
-    </div>
+    </BgLayout>
   );
 };
 
 export default Explore;
 
+// toast.success(`You earned ${parsedReward?.shards} shards`);
+
+// setShardReward({
+//   myth:
+//     parsedReward?.shardType?.toLowerCase() ?? digMyth?.toLowerCase(),
+//   count: parsedReward?.shards,
+// });
+// setTimeout(() => {
+//   setShardReward(null);
+// }, 2000);
+
+//   hasShards={parsedReward?.shards ?? 0}
+//   mythology={parsedReward?.shardType ?? digMyth}
+// />;
+
 // reward-pop-in
+// {!mythBg ? (
+//   <div className="background-container transition-all duration-300 blur-[2px]">
+//     <img
+//       src={`https://media.publit.io/file/BeGods/locations/1280px-ror.${images[prevIndex]}-wide.jpg`}
+//       key={images[prevIndex]}
+//       className="bg-image bg-image--prev"
+//       alt="background previous"
+//     />
+//     <img
+//       src={`https://media.publit.io/file/BeGods/locations/1280px-ror.${images[currentIndex]}-wide.jpg`}
+//       key={images[currentIndex]}
+//       className="bg-image bg-image--current"
+//       alt="background current"
+//     />
+//   </div>
+// ) : (
+//   <div className="background-container transition-all duration-300">
+//     <img
+//       src={`https://media.publit.io/file/BeGods/locations/1280px-ror.${mythBg}-wide.jpg`}
+//       className="bg-image bg-image--current"
+//       alt="background current"
+//     />
+//   </div>
+// )}
+
+// <div className="h-[155dvw] mt-[18dvw] w-full absolute">
+//   <div ref={ballRef} className="h-20 w-20 shadow-2xl rounded-full">
+//     <div className="bubble-spin-effect">
+//       <img
+//         src={
+//           randomReward?.partnerType == "playsuper"
+//             ? `${randomReward?.metadata?.campaignCoverImage}`
+//             : `https://media.publit.io/file/Partners/160px-${randomReward?.metadata?.campaignCoverImage}.bubble.png`
+//         }
+//         alt="icon"
+//         className="pointer-events-none h-20 w-20 rounded-full bg-white z-50"
+//       />
+//     </div>
+//   </div>
+// </div>

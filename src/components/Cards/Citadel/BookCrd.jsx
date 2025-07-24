@@ -1,12 +1,12 @@
-import React, { use, useContext, useEffect, useState } from "react";
+import React, { use, useContext, useEffect, useRef, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
 import { gameItems } from "../../../utils/gameItems";
 import { useTranslation } from "react-i18next";
-import { X } from "lucide-react";
-import { RorContext } from "../../../context/context";
+import OverlayLayout from "../../Layouts/OverlayLayout";
+import { ToggleLeft, ToggleRight } from "../../Common/SectionToggles";
 
-const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
-  const { setShowCard } = useContext(RorContext);
+const BookCrd = ({ myth, assets }) => {
+  const flipBookRef = useRef(null);
   const [showHand, setShowHand] = useState(true);
   const { t } = useTranslation();
   let relicItems = gameItems.filter(
@@ -24,18 +24,13 @@ const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
   }, []);
 
   return (
-    <div
-      onClick={() => setShowCard(null)}
-      className="fixed inset-0 z-50 flex flex-col gap-y-2 justify-center items-center bg-black bg-opacity-85 backdrop-blur-[3px]"
-    >
-      <div className="absolute top-0 right-0 p-6">
-        <X color="white" size={"2rem"} />
-      </div>
+    <OverlayLayout customMyth={myth}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[95%] aspect-[4/5]"
+        className="aspect-[4/5] mx-auto my-auto"
       >
         <HTMLFlipBook
+          ref={flipBookRef}
           width={300}
           height={500}
           size="stretch"
@@ -100,18 +95,25 @@ const BookCrd = ({ buttonColor, myth, assets, handleClose }) => {
           </div>
         )}
       </div>
-    </div>
+
+      <>
+        <ToggleLeft
+          positionBottom
+          activeMyth={4}
+          handleClick={() => {
+            flipBookRef.current?.pageFlip().flipPrev();
+          }}
+        />
+        <ToggleRight
+          positionBottom
+          activeMyth={4}
+          handleClick={() => {
+            flipBookRef.current?.pageFlip().flipNext();
+          }}
+        />
+      </>
+    </OverlayLayout>
   );
 };
 
 export default BookCrd;
-
-// <div
-//   onClick={handleClose}
-//   className="flex justify-center items-center relative h-fit"
-// >
-//   <img src={assets.buttons[buttonColor]?.on} alt="button" />
-//   <div className="absolute z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
-//     Close
-//   </div>
-// </div>
