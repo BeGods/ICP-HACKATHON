@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FofContext, MainContext } from "../../context/context";
+import { MainContext } from "../../context/context";
 import { mythSections } from "../../utils/constants.fof";
 import { ToggleBack } from "../Common/SectionToggles";
 
-const OverlayLayout = ({ children }) => {
-  const { assets, setShowCard, section } = useContext(MainContext);
-  const { activeMyth } = useContext(FofContext);
+const OverlayLayout = ({ children, customMyth }) => {
+  const { assets, setShowCard, section, activeMyth } = useContext(MainContext);
   const [animateClass, setAnimateClass] = useState("overlay-fade-in");
+  const myth = customMyth ? customMyth : activeMyth;
   const filter =
-    section === 0 || section === 1 || section === 2
-      ? `orbs-${mythSections[activeMyth]}`
+    typeof customMyth == "string"
+      ? `orbs-${customMyth}`
+      : typeof customMyth == "number" ||
+        section === 0 ||
+        section === 1 ||
+        section === 2
+      ? `orbs-${mythSections[myth]}`
       : "other";
 
   const handleClose = () => {
@@ -60,7 +65,6 @@ const OverlayLayout = ({ children }) => {
         className="relative w-full flex flex-col items-center h-full"
       >
         {children}
-
         <ToggleBack minimize={2} handleClick={handleClose} activeMyth={8} />
       </div>
     </div>

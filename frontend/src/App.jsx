@@ -38,6 +38,8 @@ function App() {
   const [isBrowser, setIsBrowser] = useState(false);
   const [recentToasts, setRecentToasts] = useState([]);
   const [section, setSection] = useState(1);
+  const [minimize, setMinimize] = useState(0);
+  const [activeMyth, setActiveMyth] = useState(0);
   const [game, setGame] = useState("fof");
   const [tokens, setTokens] = useState(null);
   const [payouts, setPayouts] = useState([]);
@@ -109,6 +111,10 @@ function App() {
     setSection,
     showCard,
     setShowCard,
+    minimize,
+    setMinimize,
+    activeMyth,
+    setActiveMyth,
   };
 
   const syncAllCookies = async () => {

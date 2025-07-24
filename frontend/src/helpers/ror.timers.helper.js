@@ -51,3 +51,9 @@ export const calculateRemainingTime = (ms) => {
 
     return `${paddedHours}:${paddedMinutes}`;
 };
+
+export const isItemInInventory = (gameData, itemId) => {
+    const isItemInBag = gameData.bag.find(itm => itm.itemId == itemId)
+    const isItemInPouch = gameData.pouch.includes(itemId)
+    return isItemInBag || isItemInPouch;
+}

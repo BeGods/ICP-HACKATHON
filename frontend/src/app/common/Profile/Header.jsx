@@ -2,7 +2,6 @@ import { useContext, useState } from "react";
 import { MainContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { Bell, Pencil } from "lucide-react";
-import UpdateModal from "../../../components/Modals/Update";
 import HeaderLayout, {
   HeadbarToggleLayout,
 } from "../../../components/Layouts/HeaderLayout";
@@ -10,7 +9,8 @@ import HeaderLayout, {
 const BottomChild = () => {
   const { game, setSection } = useContext(MainContext);
   const { t } = useTranslation();
-  const giftIdx = game === "fof" ? 5 : 8;
+  const giftIdx = game === "fof" ? 5 : 10;
+  const notifIdx = game === "fof" ? 5 : 14;
 
   const data = [
     {
@@ -24,7 +24,7 @@ const BottomChild = () => {
       icon: <Bell color="white" fill="white" size={30} />,
       label: "Ranking",
       handleClick: () => {
-        setSection(12);
+        setSection(notifIdx);
       },
     },
   ];
@@ -33,7 +33,7 @@ const BottomChild = () => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets, authToken, setShowCard } = useContext(MainContext);
+  const { assets } = useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });

@@ -32,7 +32,7 @@ const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
       <div className="absolute flex justify-center items-center w-[2.5rem] h-[2.5rem]">
         {isInfo ? (
           <div
-            className={`text-white italic text-black-contour -mt-1 -mr-1 text-[3dvh]`}
+            className={`text-white italic text-black-contour -mt-[1dvh] -mr-[1dvh] text-[3dvh]`}
             style={{ transform: "rotate(-10deg)" }}
           >
             𝒊
@@ -41,13 +41,13 @@ const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
           <>
             {isFlip ? (
               <div
-                className="text-white -mr-1 text-black-contour text-[2.25rem]"
+                className="text-white -mr-[1dvh] text-black-contour text-[2.25rem]"
                 style={{ transform: "rotate(-180deg) scaleX(-1)" }}
               >
                 {"\u2936"}
               </div>
             ) : (
-              <div className="text-white font-roboto -mt-2 -mr-2 text-black-contour text-[1.25rem]">
+              <div className="text-white font-roboto -mt-[1dvh] -mr-[1dvh] text-black-contour text-[1.25rem]">
                 {"\u2715"}
               </div>
             )}

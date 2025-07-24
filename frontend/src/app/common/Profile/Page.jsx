@@ -16,6 +16,7 @@ import { useTonAddress } from "@tonconnect/ui-react";
 import { useTonWalletConnector } from "../../../hooks/TonWallet";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import { useDisableWrapper } from "../../../hooks/disableWrapper";
+import { ItemLayout } from "../../../components/Layouts/CarouselLayout";
 
 const tele = window.Telegram?.WebApp;
 
@@ -23,24 +24,18 @@ const ProfileItem = ({ content }) => {
   const { wrapWithDisable } = useDisableWrapper();
 
   return (
-    <div
-      onClick={() => {
+    <ItemLayout
+      handleClick={() => {
         wrapWithDisable(content.handleClick);
       }}
-      className={`flex items-center h-[4.65rem] ${
-        content.disabled
-          ? "text-gray-300 border-gray-500"
-          : "text-white border-white"
-      } w-full bg-glass-black-lg border gap-x-1.25 rounded-primary px-4 shadow-md`}
-    >
-      <div className="rounded-full mr-3">{content.icon}</div>
-      <div>
-        <div className="text-tertiary text-gray-300 uppercase">
-          {content.label}
-        </div>
-        <div className={`text-tertiary font-semibold`}>{content.value}</div>
-      </div>
-    </div>
+      item={{
+        icon: content.icon,
+        title: content.label,
+        desc: [content.value, ""],
+        disable: content.disabled,
+      }}
+      isSmall={true}
+    />
   );
 };
 
@@ -133,18 +128,24 @@ const Profile = (props) => {
       label: "Rank",
       value: userData.orbRank ?? 0,
       handleClick: () => {
-        setSection(7);
+        if (game == "fof") {
+          setSection(7);
+        } else {
+          setSection(10);
+        }
       },
     },
     {
       icon: <Sigma size={"1.8rem"} />,
-      label: "ORB(S)",
+      label: game == "fof" ? "ORB(S)" : "COIN(S)",
       value:
-        formatRankOrbs(
-          1000 * gameData.blackOrbs +
-            2 * gameData.multiColorOrbs +
-            gameData.mythologies.reduce((sum, itm) => sum + itm.orbs, 0)
-        ) ?? 0,
+        (game == "fof"
+          ? formatRankOrbs(
+              1000 * gameData?.blackOrbs +
+                2 * gameData?.multiColorOrbs +
+                gameData.mythologies.reduce((sum, itm) => sum + itm.orbs, 0)
+            )
+          : formatRankOrbs(gameData.stats.gobcoin)) ?? 0,
       handleClick: () => {
         setShowCard(
           <OrbInfoCard
@@ -192,7 +193,7 @@ const Profile = (props) => {
       },
     },
     {
-      icon: <div className="font-symbols text-[1.8 rem]">A</div>,
+      icon: <div className="font-symbols text-[1.8rem]">A</div>,
       label: "FUNDS",
       value: "USDT | KAIA",
       handleClick: () => {

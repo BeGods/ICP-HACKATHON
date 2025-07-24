@@ -15,28 +15,24 @@ import {
 import i18next from "i18next";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import RoRLoader from "../../components/Loaders/RoRLoader";
-import Footer from "../../components/Layouts/RoRFooter";
 import Citadel from "../ror/Citadel/Citadel";
 import Explore from "../ror/Explore";
 import Leaderboard from "../ror/Leaderboard/Page";
-import Bag from "../ror/Bag";
-import Vault from "../ror/Vault";
-import Blacksmith from "../ror/Blacksmith";
-import SettingModal from "../../components/Modals/Settings";
-import TgHeader from "../../components/Layouts/TgHeader";
+import Inventory from "../ror/Inventory";
+import Furnace from "../ror/Furnace";
 import {
   fetchProfilePhoto,
   fetchRewards,
   refreshAuthToken,
 } from "../../utils/api.fof";
 import Profile from "../common/Profile/Page";
-import Gacha from "../ror/Gacha";
+import Gacha from "../ror/Bonus/Daily";
 import {
   determineIsTelegram,
   determineIsTgDesktop,
   isDesktop,
 } from "../../utils/device.info";
-import JoinBonus from "../ror/JoinBonus";
+import JoinBonus from "../ror/Bonus/Join";
 import Library from "../ror/Library";
 import Tavern from "../ror/Tavern";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +41,9 @@ import Apothecary from "../ror/Apothecary";
 import Bank from "../ror/Bank";
 import Gift from "../common/Missions/Page";
 import Redeem from "../common/Vouchers/Page";
+import AppLayout from "../../components/Layouts/AppLayout";
+import Footer from "../../components/Layouts/Footer";
+import Notification from "../common/Notification/Page";
 
 const tele = window.Telegram?.WebApp;
 
@@ -82,12 +81,17 @@ const RoRMain = () => {
     setIsTgMobile,
     payouts,
     setPayouts,
+    minimize,
+    setMinimize,
+    activeMyth,
+    setActiveMyth,
+    section,
+    setSection,
+    showCard,
+    setShowCard,
   } = useContext(MainContext);
+  const [mythBg, setMythBg] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [showCard, setShowCard] = useState(null);
-  const [activeMyth, setActiveMyth] = useState(0);
-  const [section, setSection] = useState(7);
-  const [minimize, setMinimize] = useState(0);
   const [rewards, setRewards] = useState([]);
   const [swipes, setSwipes] = useState(0);
   const [shiftBg, setShiftBg] = useState(50);
@@ -154,6 +158,8 @@ const RoRMain = () => {
     setIsTgMobile,
     payouts,
     setPayouts,
+    mythBg,
+    setMythBg,
   };
   const refreshTimeoutRef = useRef();
 
@@ -187,7 +193,7 @@ const RoRMain = () => {
     setSwipes(response?.stats?.digLvl ?? 1 ?? 1);
 
     if (!response.user?.joiningBonus) {
-      setSection(10);
+      setSection(12);
       setTimeout(() => {
         setIsLoading(false);
       }, 1000);
@@ -198,12 +204,12 @@ const RoRMain = () => {
       }
     } else if (response.user.isEligibleToClaim) {
       setTimeout(() => {
-        setSection(9);
+        setSection(11);
         setIsLoading(false);
       }, 1000);
     } else {
       setTimeout(() => {
-        setSection(1);
+        setSection(0);
         setIsLoading(false);
       }, 1000);
     }
@@ -344,81 +350,44 @@ const RoRMain = () => {
   const sections = [
     <Citadel />, // 0
     <Explore />, // 1
-    <Bag />, // 2
-    <Blacksmith />, //  3
+    <Inventory />, // 2
+    <Furnace />, //  3
     <Bank />, // 4
-    <Vault />, // 5
-    <Profile />, // 6
-    <Leaderboard />, // 7
-    <Gift />, // 8
-    <Gacha />, // 9
-    <JoinBonus />, // 10
-    <Apothecary />, // 11
-    <Library />, // 12,
-    <Tavern />, // 13
-    <Redeem />, //  14
+    <Apothecary />, // 5
+    <Library />, // 6
+    <Tavern />, // 7
+    <Profile />, // 8
+    <Leaderboard />, // 9
+    <Gift />, // 10
+    <Gacha />, // 11
+    <JoinBonus />, // 12
+    <Redeem />, //  13
+    <Notification />, //14
   ];
-
-  const bgs = {
-    0: assets.locations.citadel,
-    1: assets.uxui.baseBgA,
-    2: assets.uxui.baseBgA,
-    3: assets.locations.foundry,
-    4: assets.locations.bank,
-    5: assets.locations.bank,
-    6: assets.uxui.baseBgA,
-    7: assets.uxui.baseBgA,
-    8: assets.uxui.baseBgA,
-    9: assets.uxui.baseBgA,
-    10: assets.uxui.baseBgA,
-    10: assets.uxui.baseBgA,
-    11: assets.locations.apothecary,
-    12: assets.locations.library,
-    13: assets.locations.tavern,
-  };
 
   useEffect(() => {
     setShiftBg(50);
   }, [section]);
 
   return (
-    <div>
-      <TgHeader
-        openSettings={() => {
-          setShowCard(
-            <SettingModal
-              close={() => {
-                setShowCard(null);
-              }}
-            />
-          );
-        }}
-      />
-
+    <AppLayout>
       {!isLoading ? (
-        <div
-          style={{
-            backgroundImage: `url(${bgs[section]})`,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-            backgroundPosition: `${shiftBg}%`,
-          }}
-          className={`w-screen transition-all duration-75 ${
-            isTgMobile ? "tg-container-height" : "browser-container-height"
-          } bg-white select-none font-fof overflow-hidden`}
-        >
+        <div className={`w-screen h-full select-none font-fof`}>
           <RorContext.Provider value={contextValues}>
-            <div className={`flex-grow flex`}>{sections[section]}</div>
-            {section !== 7 && section !== 9 && section !== 10 && <Footer />}
-            {showCard && (
-              <div className="absolute z-[99] w-screen">{showCard}</div>
-            )}
+            <div>{sections[section]}</div>
+            {section !== 14 &&
+              section !== 13 &&
+              section !== 12 &&
+              section !== 11 &&
+              section !== 15 &&
+              section !== 10 && <Footer />}
+            {showCard && showCard}
           </RorContext.Provider>
         </div>
       ) : (
         <RoRLoader />
       )}
-    </div>
+    </AppLayout>
   );
 };
 

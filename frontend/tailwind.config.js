@@ -122,7 +122,7 @@ export default {
       fontSize: {
         primary: "2rem",
         secondary: "1rem",
-        tertiary: "1.1rem",
+        tertiary: "1rem",
         "element-lg": "11rem",
         "element-md": "5rem",
         "symbol-sm": "2rem",
@@ -143,7 +143,7 @@ export default {
         paperHead: "6.5vw",
         paperSub: "5.5vw",
         icon: "50px",
-        iconLg: "3.3rem",
+        iconLg: "3rem",
       },
       width: {
         "icon-primary": "55px",

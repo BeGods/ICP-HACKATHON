@@ -75,7 +75,11 @@ const FoFLoader = (props) => {
             <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />
             </div>
-            <CustomBtn buttonColor={"orange"} message={"LOADING"} />
+            <CustomBtn
+              buttonColor={"orange"}
+              message={"LOADING"}
+              isDefaultOff={true}
+            />
           </div>
         </div>
       </div>

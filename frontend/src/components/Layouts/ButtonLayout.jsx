@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { FofContext } from "../../context/context";
+import { MainContext } from "../../context/context";
 import { ChevronsLeft, ChevronsRight, Share2, ThumbsUp } from "lucide-react";
 import { mythSections } from "../../utils/constants.fof";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -7,7 +7,28 @@ import { useDisableWrapper } from "../../hooks/disableWrapper";
 
 const tele = window.Telegram?.WebApp;
 
-export const OrbBtnAddOn = ({ content, assets }) => {
+export const CoinBtnAddOn = ({ content, type = "default" }) => {
+  const { assets } = useContext(MainContext);
+
+  return (
+    <div className="relative flex justify-center items-center w-full h-full pr-1.5">
+      <div
+        className={`flex relative text-center justify-center ${
+          type == "default" ? "max-w-xs-multi-orb" : "max-w-orb"
+        } items-center rounded-full glow-icon-black`}
+      >
+        <img src={assets.uxui.gobcoin} alt="coin" />
+      </div>
+      <div className="absolute text-[1.75rem] text-white text-black-contour">
+        {content}
+      </div>
+    </div>
+  );
+};
+
+export const OrbBtnAddOn = ({ content }) => {
+  const { assets } = useContext(MainContext);
+
   return (
     <div className="relative flex justify-center items-center w-full h-full pr-1.5">
       <div
@@ -22,7 +43,9 @@ export const OrbBtnAddOn = ({ content, assets }) => {
   );
 };
 
-export const SocialAddOn = ({ assets }) => {
+export const SocialAddOn = () => {
+  const { assets } = useContext(MainContext);
+
   return (
     <div className="relative flex justify-center items-center w-full h-full pl-1.5">
       <div
@@ -50,11 +73,18 @@ export const ButtonLayout = ({
   link,
   disable,
   showGlow,
+  isCoin,
 }) => {
-  const { assets, activeMyth, enableHaptic } = useContext(FofContext);
+  const { assets, activeMyth, enableHaptic } = useContext(MainContext);
   const [showRedirect, setShowRedirect] = useState(true);
   const myth = customMyth ?? activeMyth;
-  const mythColor = `${mythSections[myth]}-primary`;
+  const currMyth =
+    typeof customMyth === "string"
+      ? customMyth
+      : typeof customMyth === "number"
+      ? mythSections[customMyth]
+      : mythSections[myth];
+  const mythColor = `${currMyth}-primary`;
   const { wrapWithDisable } = useDisableWrapper();
   const centerIcon =
     mode === "share" ? (
@@ -111,9 +141,9 @@ export const ButtonLayout = ({
   return (
     <div
       onClick={handleOnClick}
-      className={`flex ${
-        showGlow && `glow-button-${mythSections[activeMyth]}`
-      }  ${disable && "grayscale"} justify-between items-center relative ${
+      className={`flex ${showGlow && `glow-button-${currMyth}`}  ${
+        disable && "grayscale"
+      } justify-between items-center relative ${
         mode === "share" ? `bg-${mythColor}` : "bg-glass-black-lg"
       } h-button-primary w-button-primary rounded-primary border border-${mythColor} ${
         mode === "default" || "share" ? "cursor-pointer" : "cursor-default"
@@ -180,7 +210,9 @@ export const ButtonLayout = ({
           ) : (
             <>
               {isOrb || mode === "share" ? (
-                <OrbBtnAddOn assets={assets} content={rightContent} />
+                <OrbBtnAddOn content={rightContent} />
+              ) : isCoin ? (
+                <CoinBtnAddOn content={rightContent} />
               ) : (
                 <div
                   className={`relative flex justify-center items-center w-full h-full text-${mythColor} text-[1.35rem] pl-1.5`}

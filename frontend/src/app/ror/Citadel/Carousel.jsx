@@ -1,22 +1,33 @@
 import React, { useContext, useEffect, useState } from "react";
 import "../../../styles/carousel.scss";
 import { RorContext } from "../../../context/context";
-import CitadelItem from "../../../components/Cards/Citadel/CitadelItem";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import CarouselLayout, {
+  ItemLayout,
+} from "../../../components/Layouts/CarouselLayout";
 
 const tele = window.Telegram?.WebApp;
 
+const CitadelItem = ({ icon, itemKey, handleClick, desc, disable }) => {
+  return (
+    <ItemLayout
+      handleClick={() => {
+        if (!disable) {
+          handleClick();
+        }
+      }}
+      item={{
+        icon: icon,
+        title: itemKey,
+        desc: [desc, ""],
+      }}
+    />
+  );
+};
+
 const CitadelCarousel = ({ enableGuide, mythData }) => {
-  const {
-    activeMyth,
-    gameData,
-    setSection,
-    enableHaptic,
-    minimize,
-    setMinimize,
-  } = useContext(RorContext);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [startY, setStartY] = useState(0);
+  const { activeMyth, gameData, setSection, enableHaptic, setMinimize } =
+    useContext(RorContext);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -38,7 +49,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
         ),
       },
       {
-        key: "vault",
+        key: "bank",
         component: (
           <CitadelItem
             icon="A"
@@ -64,7 +75,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             handleClick={async () => {
               handleClickHaptic(tele, enableHaptic);
               setMinimize(1);
-              setSection(12);
+              setSection(6);
             }}
           />
         ),
@@ -81,7 +92,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             handleClick={() => {
               handleClickHaptic(tele, enableHaptic);
               setMinimize(1);
-              setSection(13);
+              setSection(7);
             }}
           />
         ),
@@ -98,7 +109,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
             handleClick={async () => {
               handleClickHaptic(tele, enableHaptic);
               setMinimize(1);
-              setSection(11);
+              setSection(5);
             }}
           />
         ),
@@ -128,7 +139,7 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
     };
 
     const predefinedOrder = [
-      "vault",
+      "bank",
       "blacksmith",
       "library",
       "rest",
@@ -152,67 +163,9 @@ const CitadelCarousel = ({ enableGuide, mythData }) => {
       .map((item) => item.component);
 
     setItems(sortedItems);
-    setCurrentIndex(0);
   }, [activeMyth, enableGuide, mythData, gameData]);
 
-  useEffect(() => {
-    if (minimize == 1) {
-      setMinimize(2);
-    }
-  }, []);
-
-  const handleTouchStart = (e) => setStartY(e.touches[0].clientY);
-
-  const handleTouchEnd = (e) => {
-    const endY = e.changedTouches[0].clientY;
-    const deltaY = endY - startY;
-
-    if (deltaY > 50 && currentIndex > 0) {
-      setCurrentIndex((prevIndex) => prevIndex - 1);
-    } else if (deltaY < -50 && currentIndex < items.length - 3) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-    }
-  };
-
-  return (
-    <div
-      className="wrapper h-[60vh]"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {items.length > 3 && currentIndex >= 1 && (
-        <div
-          onClick={() => {
-            setCurrentIndex((prevIndex) => prevIndex - 1);
-          }}
-          className="absolute top-[24%] cursor-pointer mr-[2vw] w-full z-50"
-        >
-          <div className="arrows-up"></div>
-        </div>
-      )}
-      <div className={`carousel carousel-width`}>
-        {items.slice(currentIndex, currentIndex + 3).map((item, index) => {
-          let className = "carousel__item";
-          className +=
-            index === 1 ? " active" : index === 0 ? " previous" : " next";
-
-          return (
-            <div className={className} key={currentIndex + index}>
-              {item}
-            </div>
-          );
-        })}
-      </div>
-      {currentIndex < items.length - 3 && (
-        <div
-          onClick={() => setCurrentIndex((prevIndex) => prevIndex + 1)}
-          className="absolute cursor-pointer  bottom-[22%] w-full"
-        >
-          <div className="arrows-down"></div>
-        </div>
-      )}
-    </div>
-  );
+  return <CarouselLayout items={items} />;
 };
 
 export default CitadelCarousel;

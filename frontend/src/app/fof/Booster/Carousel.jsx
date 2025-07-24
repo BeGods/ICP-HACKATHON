@@ -1,15 +1,96 @@
 import { useContext, useEffect, useState } from "react";
-import "../../../styles/carousel.scss";
-import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
-import BoosterItem from "./Item";
-import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { hasTimeElapsed } from "../../../helpers/booster.helper";
-import { mythologies } from "../../../utils/constants.fof";
-import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
-import CarouselLayout from "../../../components/Layouts/CarouselLayout";
+import { FofContext } from "../../../context/context";
+import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
+import CarouselLayout, {
+  ItemLayout,
+} from "../../../components/Layouts/CarouselLayout";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import {
+  getTimerContent,
+  hasTimeElapsed,
+} from "../../../helpers/booster.helper";
+import {
+  boosterIcon,
+  mythologies,
+  mythSections,
+} from "../../../utils/constants.fof";
+import "../../../styles/carousel.scss";
 
 const tele = window.Telegram?.WebApp;
+
+const descAddOn = [
+  "Max. 99",
+  "+20%",
+  "Max. 99",
+  "Max. 99",
+  "Max. 99",
+  "Max. 99",
+  "1000*n",
+  "",
+  "",
+];
+
+const BoosterItem = ({
+  activeCard,
+  isActive,
+  handleClick,
+  activeMyth,
+  t,
+  booster,
+  myth,
+  isAutoPay,
+  gameData,
+}) => {
+  const boosterTextColor = `text-${mythSections[activeMyth]}-text`;
+  const isBurstDisabled = booster === 6 && !myth?.isEligibleForBurst;
+  const showTimer = getTimerContent(activeCard, gameData, myth, isAutoPay);
+
+  return (
+    <ItemLayout
+      handleClick={handleClick}
+      item={{
+        icon: (
+          <div
+            className={`
+              font-symbols text-iconLg
+              ${
+                !isActive && booster < 6
+                  ? `glow-icon-${mythSections[activeMyth]}`
+                  : ""
+              }
+              ${
+                booster === 6 && !myth?.isEligibleForBurst
+                  ? "text-gray-400"
+                  : ""
+              }
+              ${booster === 7 || booster === 8 ? "gradient-multi" : ""}
+              ${
+                booster === 6 && myth?.isEligibleForBurst && !isActive
+                  ? `glow-icon-${mythSections[activeMyth]}`
+                  : ""
+              }
+            `}
+          >
+            {boosterIcon[booster]}
+          </div>
+        ),
+        title: t(`boosters.${booster}.title`),
+        desc: showTimer
+          ? ["", t(`boosters.${booster}.desc`)]
+          : [
+              t(`boosters.${booster}.desc`),
+              descAddOn[booster],
+              boosterTextColor,
+            ],
+        disable: isBurstDisabled,
+        borderStyle: isAutoPay
+          ? "border-multiColor"
+          : `border-${mythSections[activeMyth]}-primary`,
+      }}
+    />
+  );
+};
 
 const BoosterCarousel = ({ enableGuide, mythData }) => {
   const { t } = useTranslation();
@@ -24,6 +105,26 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
   } = useContext(FofContext);
   const [items, setItems] = useState([]);
 
+  const handleBoosterClick = (activeCard, booster, isAutoPay) => {
+    if (
+      activeCard === "burst" &&
+      !isAutoPay &&
+      !gameData.mythologies[activeMyth].isEligibleForBurst
+    )
+      return;
+    setShowCard(
+      <BoosterClaim
+        booster={booster}
+        isAutoPay={isAutoPay}
+        activeCard={activeCard}
+        activeMyth={activeMyth}
+        mythData={mythData}
+        closeCard={() => setShowCard(null)}
+        t={t}
+      />
+    );
+  };
+
   useEffect(() => {
     const boosters = [
       {
@@ -32,16 +133,13 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           <BoosterItem
             key="automata"
             activeCard="automata"
-            index={0}
-            isGuideActive={enableGuide}
             isActive={!mythData.isAutomataActive}
-            handleClick={() => {
-              handleBoosterClick("automata", 0, false);
-            }}
+            handleClick={() => handleBoosterClick("automata", 0, false)}
             activeMyth={activeMyth}
             t={t}
             booster={0}
-            mythData={mythData}
+            myth={mythData}
+            gameData={gameData}
           />
         ),
       },
@@ -51,13 +149,13 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
           <BoosterItem
             key="minion"
             activeCard="minion"
-            index={1}
             isActive={mythData.isShardsClaimActive}
             handleClick={() => handleBoosterClick("minion", 2, false)}
             activeMyth={activeMyth}
             t={t}
             booster={2}
-            mythData={mythData}
+            myth={mythData}
+            gameData={gameData}
           />
         ),
       },
@@ -66,8 +164,6 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         component: (
           <BoosterItem
             key="quests"
-            index={2}
-            isGuideActive={enableGuide}
             isActive={true}
             handleClick={() => {
               handleClickHaptic(tele, enableHaptic);
@@ -77,7 +173,8 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
             activeMyth={activeMyth}
             t={t}
             booster={1}
-            mythData={mythData}
+            myth={mythData}
+            gameData={gameData}
           />
         ),
       },
@@ -86,39 +183,37 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         component: (
           <BoosterItem
             key="burst"
-            index={3}
             activeCard="burst"
             isActive={
               !gameData.mythologies[activeMyth].boosters.isBurstActive ||
               gameData.mythologies[activeMyth].boosters.isBurstActiveToClaim
             }
             handleClick={() => handleBoosterClick("burst", 6, false)}
-            isGuideActive={enableGuide}
             activeMyth={activeMyth}
             t={t}
             booster={6}
-            mythData={mythData}
+            myth={mythData}
+            gameData={gameData}
           />
         ),
       },
     ];
 
-    // Add conditional boosters
     if (gameData.isBurstAutoPayActive) {
       boosters.push({
         key: "multiBurst",
         component: (
           <BoosterItem
             key="multiBurst"
-            index={0}
             activeCard="burst"
-            isGuideActive={enableGuide}
             isActive={true}
             handleClick={() => handleBoosterClick("burst", 8, true)}
             activeMyth={activeMyth}
             t={t}
             booster={8}
-            mythData={mythData}
+            myth={mythData}
+            isAutoPay={true}
+            gameData={gameData}
           />
         ),
       });
@@ -130,21 +225,21 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
         component: (
           <BoosterItem
             key="multiAutomata"
-            index={0}
             activeCard="automata"
-            isGuideActive={enableGuide}
             isActive={true}
             handleClick={() => handleBoosterClick("automata", 7, true)}
             activeMyth={activeMyth}
             t={t}
             booster={7}
-            mythData={mythData}
+            myth={mythData}
+            isAutoPay={true}
+            gameData={gameData}
           />
         ),
       });
     }
 
-    const dailyQuest = questsData.find((quest) => quest.status === "Active");
+    const dailyQuest = questsData.find((q) => q.status === "Active");
     const boosterStatus = {
       quests:
         dailyQuest &&
@@ -173,39 +268,14 @@ const BoosterCarousel = ({ enableGuide, mythData }) => {
       .sort((a, b) => {
         const statusA = boosterStatus[a.key] || false;
         const statusB = boosterStatus[b.key] || false;
-
         if (statusA && !statusB) return -1;
         if (!statusA && statusB) return 1;
-
-        const orderA = predefinedOrder.indexOf(a.key);
-        const orderB = predefinedOrder.indexOf(b.key);
-        return orderA - orderB;
+        return predefinedOrder.indexOf(a.key) - predefinedOrder.indexOf(b.key);
       })
       .map((item) => item.component);
 
     setItems(sortedItems);
   }, [activeMyth, enableGuide, mythData, gameData]);
-
-  const handleBoosterClick = (activeCard, booster, isAutoPay) => {
-    if (
-      activeCard === "burst" &&
-      !isAutoPay &&
-      !gameData.mythologies[activeMyth].isEligibleForBurst
-    ) {
-    } else {
-      setShowCard(
-        <BoosterClaim
-          booster={booster}
-          isAutoPay={isAutoPay}
-          activeCard={activeCard}
-          activeMyth={activeMyth}
-          mythData={mythData}
-          closeCard={() => setShowCard(null)}
-          t={t}
-        />
-      );
-    }
-  };
 
   return <CarouselLayout items={items} extraPadd={true} />;
 };

@@ -4,11 +4,11 @@ import { elementMythNames } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
 import { claimPotion } from "../../utils/api.ror";
 import MiscCard from "../Cards/Citadel/MiscCard";
+import { ButtonLayout } from "../Layouts/ButtonLayout";
 
-const PotionBtn = ({ currSection, buttonColor, potion }) => {
+const PotionBtn = ({ myth, potion, isClaimed }) => {
   const { gameData, setGameData, setShowCard, authToken, setSection, assets } =
     useContext(RorContext);
-  const [isClicked, setIsClicked] = useState(false);
   const regex = /potion\.(\w+)\.(A|B)\d{2}$/;
   const match = potion.match(regex);
   const element = match[1];
@@ -16,7 +16,7 @@ const PotionBtn = ({ currSection, buttonColor, potion }) => {
   const mythology = elementMythNames[element];
 
   const validateShards = () => {
-    const typeA = typeCode === "A" ? "whiteShards" : "blackShards";
+    const typeA = typeCode === "A" ? "whiteShards" : "blac-kShards";
     const typeB = typeCode === "B" ? "blackShards" : "whiteShards";
 
     if (element === "aether") {
@@ -175,44 +175,12 @@ const PotionBtn = ({ currSection, buttonColor, potion }) => {
   };
 
   return (
-    <div
-      onClick={validateShards}
-      onMouseDown={() => {
-        setIsClicked(true);
-      }}
-      onMouseUp={() => {
-        setIsClicked(false);
-      }}
-      onMouseLeave={() => {
-        setIsClicked(false);
-      }}
-      onTouchStart={() => {
-        setIsClicked(true);
-      }}
-      onTouchEnd={() => {
-        setIsClicked(false);
-      }}
-      onTouchCancel={() => {
-        setIsClicked(false);
-      }}
-      className="flex justify-center items-center relative h-fit"
-    >
-      <img
-        src={
-          currSection === 1
-            ? isClicked
-              ? assets.buttons[buttonColor]?.off
-              : assets.buttons[buttonColor]?.on
-            : isClicked
-            ? assets.buttons.black.off
-            : assets.buttons.black.on
-        }
-        alt="button"
-      />
-      <div className="absolute z-50 uppercase text-white opacity-80 text-black-contour font-fof font-semibold text-[1.75rem] mt-[2px]">
-        pay
-      </div>
-    </div>
+    <ButtonLayout
+      centerContent={isClaimed ? "CLAIMED" : "V"}
+      mode={isClaimed ? "info" : "default"}
+      onClick={!isClaimed && validateShards}
+      customMyth={myth}
+    />
   );
 };
 

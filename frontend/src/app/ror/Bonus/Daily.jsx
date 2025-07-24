@@ -1,28 +1,20 @@
-import { Crown, ThumbsUp } from "lucide-react";
-import { use, useContext, useEffect, useState } from "react";
-import Scratch from "../../components/Common/ScratchCrd";
-import { RorContext } from "../../context/context";
-import { fetchDailyBonus } from "../../utils/api.ror";
-import { mythologies } from "../../utils/constants.ror";
+import { useContext, useEffect, useState } from "react";
+import { RorContext } from "../../../context/context";
+import { fetchDailyBonus } from "../../../utils/api.ror";
+import { mythologies } from "../../../utils/constants.ror";
 import ReactHowler from "react-howler";
 import confetti from "canvas-confetti";
 import { useTranslation } from "react-i18next";
+import BasicLayout from "../../../components/Layouts/BasicLayout";
 
 const Gacha = () => {
-  const {
-    setSection,
-    setGameData,
-    isTgMobile,
-    assets,
-    authToken,
-    enableSound,
-  } = useContext(RorContext);
+  const { setSection, setGameData, assets, authToken, enableSound } =
+    useContext(RorContext);
   const { t } = useTranslation();
   const [changeText, setChangeText] = useState("SCRATCH");
   const [showScale, setShowScale] = useState(0);
   const [showYouScale, setShowYouScale] = useState(0);
   const [showWon, setShowWon] = useState(false);
-  const [item, setItem] = useState(null);
   const [itemSrc, setItemSrc] = useState(null);
   const [play, setPlay] = useState(false);
   const shards = [
@@ -38,8 +30,6 @@ const Gacha = () => {
     try {
       const response = await fetchDailyBonus(authToken);
       const itemId = response.reward;
-
-      setItem(itemId);
 
       if (response && itemId) {
         if (itemId === "coin 2") {
@@ -147,15 +137,7 @@ const Gacha = () => {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setChangeText((prevText) =>
-        prevText === "SCRATCH" ? "BONUS" : "SCRATCH"
-      );
-    }, 1500);
-
     (async () => await claimDailyBonus())();
-
-    return () => clearInterval(interval);
   }, []);
 
   const playConfetti = () => {
@@ -216,73 +198,64 @@ const Gacha = () => {
   }, [showWon]);
 
   return (
-    <div
-      className={`w-screen ${
-        isTgMobile ? "tg-container-height" : "browser-container-height"
-      } relative`}
-    >
-      <div
-        className="absolute inset-0 w-full h-full opacity-80 z-0"
-        style={{
-          background: `url(${assets.locations.ror}) no-repeat center / cover`,
-        }}
-      ></div>
-      <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[65px] text-gold text-center text-black-contour  uppercase z-20">
-        {t("bonus.youwon")
-          .split(" ")
-          .map((word, index) => (
-            <div key={index}>
-              {index === 0 ? (
-                <h1
-                  className={`scale-[${showYouScale}%] text-[6rem] mt-7 text-center transition-transform duration-500`}
-                >
-                  {word}
-                </h1>
-              ) : (
-                <>
-                  {showWon && (
-                    <h1 className="text-[4rem] text-center transition-opacity duration-250">
+    <>
+      <BasicLayout
+        TopChild={
+          <h1 className="bonus-heading-text">
+            {t("bonus.youwon")
+              .split(" ")
+              .map((word, index) => (
+                <div key={index}>
+                  {index === 0 ? (
+                    <h1
+                      className={`scale-[${showYouScale}%] text-bonus-title-lg mb-1 text-center transition-transform duration-500`}
+                    >
                       {word}
                     </h1>
+                  ) : (
+                    <>
+                      {showWon && (
+                        <h1 className="text-bonus-title text-center transition-opacity duration-250">
+                          {word}
+                        </h1>
+                      )}
+                    </>
                   )}
-                </>
-              )}
-            </div>
-          ))}
-      </div>
-      <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
-        <div
-          className={`flex relative flex-col items-center cursor-pointer z-50 card`}
-        >
-          <div className="card__face card__face--front flex justify-center items-center">
-            <div
-              onClick={() => {
-                handleClickHaptic(tele, enableHaptic);
-                handleClick();
-              }}
-              className={` transition-all duration-500 font-symbols scale-${showScale} ${
-                itemSrc?.myth
-                  ? `text-${itemSrc?.myth?.toLowerCase()}-primary`
-                  : "text-white"
-              } text-[15rem] mx-auto icon-black-contour`}
-            >
-              {itemSrc?.icon ?? ""}
-            </div>
-          </div>
+                </div>
+              ))}
+          </h1>
+        }
+        CenterChild={
           <div
-            className={`card__face card__face--back flex justify-center items-center`}
+            className={`flex relative flex-col items-center cursor-pointer z-50 card`}
           >
-            {itemSrc?.title ?? ""}
+            <div className="card__face card__face--front flex justify-center items-center">
+              <div
+                onClick={() => {
+                  handleClickHaptic(tele, enableHaptic);
+                  handleClick();
+                }}
+                className={`text-white transition-all duration-500 font-symbols scale-${showScale} ${
+                  itemSrc?.myth
+                    ? `text-${itemSrc?.myth?.toLowerCase()}-primary`
+                    : "text-white"
+                } text-[15rem] mx-auto icon-black-contour`}
+              >
+                {itemSrc?.icon ?? ""}
+              </div>
+            </div>
+
+            <div
+              className={`card__face card__face--back flex justify-center items-center`}
+            ></div>
           </div>
-        </div>
-      </div>
-      <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0 text-gold uppercase z-20">
-        <h1
-          className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} text-[2rem] transition-all duration-1000`}
-        >
-          {itemSrc?.title ?? ""}
-        </h1>
-      </div>
+        }
+        BottomChild={
+          <div className="text-gold w-full uppercase flex justify-center items-center text-bonus-desc -mb-[1.1rem]">
+            <h1> {itemSrc?.title ?? ""}</h1>
+          </div>
+        }
+      />
 
       {/* Audios */}
       <ReactHowler
@@ -293,8 +266,79 @@ const Gacha = () => {
           setPlay(false);
         }}
       />
-    </div>
+    </>
   );
 };
 
 export default Gacha;
+
+{
+  /* <div
+  className={`w-screen ${
+    isTgMobile ? "tg-container-height" : "browser-container-height"
+  } relative`}
+>
+  <div
+    className="absolute inset-0 w-full h-full opacity-80 z-0"
+    style={{
+      background: `url(${assets.locations.ror}) no-repeat center / cover`,
+    }}
+  ></div>
+  <div className="flex flex-col justify-center items-center  w-full absolute top-0 leading-[65px] text-gold text-center text-black-contour  uppercase z-20">
+    {t("bonus.youwon")
+      .split(" ")
+      .map((word, index) => (
+        <div key={index}>
+          {index === 0 ? (
+            <h1
+              className={`scale-[${showYouScale}%] text-[6rem] mt-7 text-center transition-transform duration-500`}
+            >
+              {word}
+            </h1>
+          ) : (
+            <>
+              {showWon && (
+                <h1 className="text-[4rem] text-center transition-opacity duration-250">
+                  {word}
+                </h1>
+              )}
+            </>
+          )}
+        </div>
+      ))}
+  </div>
+  <div className="absolute z-20 w-full h-full flex items-center justify-center text-white text-4xl ">
+    <div
+      className={`flex relative flex-col items-center cursor-pointer z-50 card`}
+    >
+      <div className="card__face card__face--front flex justify-center items-center">
+        <div
+          onClick={() => {
+            handleClickHaptic(tele, enableHaptic);
+            handleClick();
+          }}
+          className={` transition-all duration-500 font-symbols scale-${showScale} ${
+            itemSrc?.myth
+              ? `text-${itemSrc?.myth?.toLowerCase()}-primary`
+              : "text-white"
+          } text-[15rem] mx-auto icon-black-contour`}
+        >
+          {itemSrc?.icon ?? ""}
+        </div>
+      </div>
+      <div
+        className={`card__face card__face--back flex justify-center items-center`}
+      >
+        {itemSrc?.title ?? ""}
+      </div>
+    </div>
+  </div>
+  <div className="flex flex-col items-center w-full h-1/4 absolute bottom-0 text-gold uppercase z-20">
+    <h1
+      className={`text-black-contour uppercase mt-auto pb-8 scale-${showScale} text-[2rem] transition-all duration-1000`}
+    >
+      {itemSrc?.title ?? ""}
+    </h1>
+  </div>
+</div>; */
+}

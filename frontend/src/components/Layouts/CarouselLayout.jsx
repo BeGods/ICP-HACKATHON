@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import { useContext, useState } from "react";
+import { Check, ChevronRight } from "lucide-react";
+import { MainContext } from "../../context/context";
+import { handleClickHaptic } from "../../helpers/cookie.helper";
+
+const tele = window.Telegram?.WebApp;
 
 const CarouselLayout = ({ items }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -20,7 +25,7 @@ const CarouselLayout = ({ items }) => {
   return (
     <div className={`center-section`}>
       <div
-        className="wrapper  pt-[4.5rem] px-2"
+        className="wrapper  pt-[4.5rem]"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -73,3 +78,78 @@ const CarouselLayout = ({ items }) => {
 };
 
 export default CarouselLayout;
+
+export const ItemLayout = ({ item, handleClick, isSmall }) => {
+  const { enableHaptic } = useContext(MainContext);
+  const [isClicked, setIsClicked] = useState(false);
+
+  return (
+    <div
+      onClick={(e) => {
+        e.preventDefault();
+        handleClickHaptic(tele, enableHaptic);
+        handleClick();
+      }}
+      onMouseDown={() => {
+        setIsClicked(true);
+      }}
+      onMouseUp={() => {
+        setIsClicked(false);
+      }}
+      onMouseLeave={() => {
+        setIsClicked(false);
+      }}
+      onTouchStart={() => {
+        setIsClicked(true);
+      }}
+      onTouchEnd={() => {
+        setIsClicked(false);
+      }}
+      onTouchCancel={() => {
+        setIsClicked(false);
+      }}
+      className={`flex ${isClicked ? `glow-button-white` : ""} ${
+        item.disable && "grayscale"
+      } bg-glass-black-lg ${
+        item.disable ? "text-gray-400" : "text-white"
+      } items-center gap-x-2.5 border ${
+        item.borderStyle && item.borderStyle
+      } rounded-primary w-full cursor-pointer h-[4.65rem] px-4`}
+    >
+      <div
+        className={`font-symbols text-iconLg ${
+          isSmall ? "w-[2rem]" : "w-[3rem]"
+        }`}
+      >
+        {item.icon}
+      </div>
+      <div className={`flex flex-col text-white flex-grow justify-center`}>
+        <div className="text-tertiary uppercase">{item.title}</div>
+        <div className="text-tertiary flex gap-x-2 -mt-1">
+          <span className="text-tertiary">{item.desc[0]}</span>
+          <span
+            className={`text-tertiary ${
+              item.desc[2] == "icon" ? "font-symbols" : item.desc[2]
+            }`}
+          >
+            {item.desc[1]}
+          </span>
+        </div>
+      </div>
+      {item.showStatus && (
+        <div className="flex justify-center items-center pr-1">
+          {item.status === "claimed" && (
+            <div className="flex justify-center items-center h-6 w-6 p-1 bg-white rounded-full">
+              <Check strokeWidth={3} color="black" />
+            </div>
+          )}
+          {item.status === "completed" && (
+            <div className="flex justify-center items-center h-6 w-6 p-1 border-2 rounded-full">
+              <Check strokeWidth={3} color="white" />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

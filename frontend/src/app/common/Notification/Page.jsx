@@ -10,10 +10,11 @@ import BgLayout from "../../../components/Layouts/BgLayout";
 import CarouselLayout from "../../../components/Layouts/CarouselLayout";
 
 const Notification = () => {
-  const { setShowBack, setSection } = useContext(MainContext);
+  const { setShowBack, setSection, game } = useContext(MainContext);
   const [category, setCategory] = useState(1);
   const notifs = [];
   const [items, setItems] = useState([]);
+  const profileIdx = game == "fof" ? 3 : 8;
 
   useEffect(() => {
     const itemsDataMapped = notifs.map((item, idx) => (
@@ -43,7 +44,7 @@ const Notification = () => {
         <ToggleBack
           minimize={2}
           handleClick={() => {
-            setSection(3);
+            setSection(profileIdx);
           }}
           activeMyth={8}
         />

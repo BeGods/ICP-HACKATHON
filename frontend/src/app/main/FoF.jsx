@@ -15,7 +15,7 @@ import Forges from "../fof/Forge/Page";
 import Tower from "../fof/Tower/Page";
 import JoinBonus from "../fof/Bonus/Join/Page";
 import Redeem from "../common/Vouchers/Page";
-import Footer from "../../components/Layouts/FoFFooter";
+import Footer from "../../components/Layouts/Footer";
 import Gift from "../common/Missions/Page";
 import { showToast } from "../../components/Toast/Toast";
 import {
@@ -85,6 +85,10 @@ const FoFMain = () => {
     setSection,
     showCard,
     setShowCard,
+    minimize,
+    setMinimize,
+    activeMyth,
+    setActiveMyth,
   } = useContext(MainContext);
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState(null);
@@ -95,9 +99,7 @@ const FoFMain = () => {
   const [rewards, setRewards] = useState([]);
   const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
   const [showAnmt, setShowAnmt] = useState(false);
-  const [activeMyth, setActiveMyth] = useState(0);
   const [showBooster, setShowBooster] = useState(null);
-  const [minimize, setMinimize] = useState(0);
   const refreshTimeoutRef = useRef();
 
   const initalStates = {
@@ -393,7 +395,7 @@ const FoFMain = () => {
               section != 5 &&
               section != 12 &&
               section != 1 &&
-              !showCard && <Footer minimize={minimize} />}
+              !showCard && <Footer />}
             {showCard && showCard}
           </FofContext.Provider>
         </div>

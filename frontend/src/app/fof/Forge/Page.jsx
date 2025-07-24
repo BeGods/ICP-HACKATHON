@@ -83,8 +83,8 @@ const Forges = () => {
 
   const initialState = gameData.mythologies.map((myth) => {
     return {
-      orbs: myth.orbs,
-      shards: myth.shards,
+      orbs: Math.round(myth.orbs),
+      shards: Math.round(myth.shards),
       minionTaps: 0,
       energy: myth.energy,
       energyLimit: myth.energyLimit,
@@ -237,8 +237,8 @@ const Forges = () => {
     const sessionShards =
       mythStates[activeMyth].shards === 999 ||
       mythStates[activeMyth].shards === 998
-        ? mythStates[activeMyth].currShards + 1
-        : mythStates[activeMyth].currShards;
+        ? Math.round(mythStates[activeMyth].currShards + 1)
+        : Math.round(mythStates[activeMyth].currShards);
     let bubbleSession = null;
 
     if (holdDuration) {
@@ -430,7 +430,7 @@ const Forges = () => {
     }
     setGameData((prev) => ({
       ...prev,
-      blackOrbs: prev.blackOrbs + blackOrbPhaseBonus,
+      blackOrbs: Math.round(prev.blackOrbs + blackOrbPhaseBonus),
     }));
   };
 
@@ -612,10 +612,10 @@ const Forges = () => {
           return {
             ...myth,
             energy: Math.max(0, myth.energy - (isHolding ? 2 : 1)),
-            shards: newShards,
+            shards: Math.round(newShards),
             minionTaps: newMinionTaps,
             currShards: myth.currShards + 1,
-            orbs: newOrbs,
+            orbs: Math.round(newOrbs),
           };
         }
         return myth;
@@ -861,8 +861,8 @@ const Forges = () => {
 
             newState[index] = {
               ...newState[index],
-              shards: newShards,
-              orbs: newOrbs,
+              shards: Math.round(newShards),
+              orbs: Math.round(newOrbs),
               isBurstActive: burstActive,
             };
 
@@ -886,8 +886,8 @@ const Forges = () => {
 
             newState[index] = {
               ...newState[index],
-              shards: newShards,
-              orbs: newOrbs,
+              shards: Math.round(newShards),
+              orbs: Math.round(newOrbs),
             };
 
             return newState;
@@ -1012,8 +1012,8 @@ const Forges = () => {
       setGameData((prevData) => {
         const newMythologies = prevData.mythologies.map((myth, index) => ({
           ...myth,
-          orbs: mythStatesRef.current[index].orbs,
-          shards: mythStatesRef.current[index].shards,
+          orbs: Math.round(mythStatesRef.current[index].orbs),
+          shards: Math.round(mythStatesRef.current[index].shards),
           energy: mythStatesRef.current[index].energy,
           boosters: {
             ...myth.boosters,
@@ -1062,7 +1062,9 @@ const Forges = () => {
             if (index === activeMyth) {
               return {
                 ...item,
-                orbs: item.orbs + mythStates[activeMyth].burstlvl + 1,
+                orbs: Math.round(
+                  item.orbs + mythStates[activeMyth].burstlvl + 1
+                ),
               };
             }
             return item;

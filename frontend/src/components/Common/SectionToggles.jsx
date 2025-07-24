@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { ChevronLeft, ChevronRight, CornerUpLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight, CornerUpLeft, LogOut } from "lucide-react";
 import ReactHowler from "react-howler";
 import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -123,7 +123,7 @@ export const ToggleRight = ({
   );
 };
 
-export const ToggleBack = ({ handleClick }) => {
+export const ToggleBack = ({ handleClick, isClose }) => {
   const howlerRef = useRef(null);
   const { enableSound, enableHaptic } = useContext(MainContext);
 
@@ -151,7 +151,11 @@ export const ToggleBack = ({ handleClick }) => {
           onClick={handleButtonClick}
           className={`bg-glass-black pr-6 border border-white/60 flex justify-center items-center w-[60px] h-[60px] rounded-primary cursor-pointer `}
         >
-          <CornerUpLeft color="white" className="h-[24px] w-[24px]" />
+          {isClose ? (
+            <CornerUpLeft color="white" className="h-[24px] w-[24px]" />
+          ) : (
+            <LogOut color="white" className="h-[24px] w-[24px]" />
+          )}
         </div>
       </div>
     </div>
@@ -187,7 +191,7 @@ export const CustomToggleLeft = ({ handleClick, lightMode, label, src }) => {
       >
         <div className="w-full relative ">
           <div
-            className={`flex  cursor-pointer pr-0.5 justify-end items-center h-button-primary bg-${primaryColor} w-full rounded-r-full border border-${secondaryColor}`}
+            className={`flex  cursor-pointer pr-0.5 justify-end items-center h-button-primary bg-${primaryColor} w-full rounded-r-primary border border-${secondaryColor}`}
           >
             <div
               className={`flex font-symbols justify-center items-center bg-${secondaryColor} text-${primaryColor} w-[3rem] h-[90%] text-symbol-sm rounded-primary`}

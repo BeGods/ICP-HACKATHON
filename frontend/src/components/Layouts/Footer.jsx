@@ -1,32 +1,16 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { FofContext } from "../../context/context";
-import { footerIcons, mythSections } from "../../utils/constants.fof";
+import { useContext, useRef, useState } from "react";
+import { FofContext, MainContext } from "../../context/context";
+import { mythSections } from "../../utils/constants.fof";
 import ReactHowler from "react-howler";
-import "../../styles/flip.scss";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import { useTranslation } from "react-i18next";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
-
-const redirect = [0, 4, 2, 3];
-const sectionTitles = ["forges", "tower", "boosters", "profile"];
+import { useTranslation } from "react-i18next";
+import "../../styles/flip.scss";
 
 const tele = window.Telegram?.WebApp;
 
-const FooterItem = ({ enableSound, icon, avatarColor }) => {
-  const howlerRef = useRef(null);
-  const { t } = useTranslation();
-  const {
-    section,
-    setSection,
-    activeMyth,
-    setActiveMyth,
-    assets,
-    userData,
-    enableHaptic,
-    gameData,
-  } = useContext(FofContext);
-  const [clickEffect, setClickEffect] = useState(false);
-  const [showEffect, setShowEffect] = useState(true);
+const BoosterAlert = () => {
+  const { gameData, activeMyth } = useContext(FofContext);
 
   const boosterStatus = {
     automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
@@ -39,6 +23,29 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
 
   const boostersActiveCnt = Object.values(boosterStatus).filter(Boolean).length;
 
+  return (
+    <div
+      className={`absolute gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-tertiary font-medium bg-${mythSections[activeMyth]}-text w-[1.3rem] h-[1.3rem] text-white text-black-sm-contour mt-[0.5rem] z-50 mr-[0.25rem] rounded-full shadow-[0px_4px_15px_rgba(0,0,0,1)]`}
+    >
+      {boostersActiveCnt}
+    </div>
+  );
+};
+
+const FooterItem = ({ idx, avatarColor, itm, myth }) => {
+  const howlerRef = useRef(null);
+  const {
+    section,
+    setSection,
+    setActiveMyth,
+    assets,
+    userData,
+    enableHaptic,
+    enableSound,
+    game,
+  } = useContext(MainContext);
+  const [clickEffect, setClickEffect] = useState(false);
+
   const playAudio = () => {
     handleClickHaptic(tele, enableHaptic);
 
@@ -50,32 +57,22 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
 
   const handleSectionChange = (curr) => {
     setSection(curr);
-    if (activeMyth >= 4) {
+    if (myth >= 4) {
       setActiveMyth(0);
     }
   };
 
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      setShowEffect(false);
-    }, 4000);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-
   return (
     <>
-      {icon < 3 ? (
+      {idx < 3 ? (
         <div
           className={`flex ${
             clickEffect && "click-effect"
-          }  relative -mb-[0.375rem] flex-col items-center cursor-pointer `}
+          }  relative -mb-[0.375rem] flex-col items-center cursor-pointer`}
           onClick={(e) => {
             e.preventDefault();
             playAudio();
-            handleSectionChange(redirect[icon]);
+            handleSectionChange(itm.redirect);
             setClickEffect(true);
             setTimeout(() => {
               setClickEffect(false);
@@ -85,31 +82,21 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
         >
           <h1
             className={`font-symbols  text-iconLg  ${
-              section === redirect[icon]
+              section === itm.redirect
                 ? `${
-                    activeMyth < 4 && section !== 4
-                      ? `glow-icon-${mythSections[activeMyth]}`
+                    myth < 4 && section !== 4
+                      ? `glow-icon-${mythSections[myth]}`
                       : `glow-icon-white text-black-contour`
                   }`
                 : `text-black-contour`
             }`}
           >
-            {footerIcons[icon]}
+            {itm.icon}
           </h1>
           <h1 className="flex text-secondary justify-center -mt-[12px] pb-[6px] uppercase">
-            {t(`sections.${sectionTitles[icon]}`)}
+            {itm.label}
           </h1>
-          {icon === 2 && (
-            <div
-              className={`absolute ${
-                showEffect && "pulse-text"
-              } gelatine right-0 flex justify-center items-center border-[1.5px] font-roboto text-tertiary font-medium bg-${
-                mythSections[activeMyth]
-              }-text w-[1.3rem] h-[1.3rem] text-white text-black-sm-contour mt-[0.5rem] z-50 mr-[0.25rem] rounded-full shadow-[0px_4px_15px_rgba(0,0,0,1)]`}
-            >
-              {boostersActiveCnt}
-            </div>
-          )}
+          {game == "fof" && idx === 2 && <BoosterAlert />}
         </div>
       ) : (
         <div
@@ -120,7 +107,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             setTimeout(() => {
               setClickEffect(false);
             }, 500);
-            handleSectionChange(icon);
+            handleSectionChange(itm.redirect);
           }}
           className={`flex cursor-pointer relative ${
             clickEffect && "click-effect"
@@ -135,8 +122,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
                 src={userData.avatarUrl}
                 alt="profile-image"
                 className={`w-circle-img transition-all duration-500 ${
-                  (section === redirect[icon] || section === 5) &&
-                  "glow-icon-white"
+                  section === itm.redirect && "glow-icon-white"
                 } border border-black rounded-full w-[3.75rem] h-[3.75rem] pointer-events-none`}
               />
             </div>
@@ -159,7 +145,7 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
             </>
           )}
           <h1 className="flex text-secondary  justify-center -mb-0.5 uppercase">
-            {t(`sections.profile`)}
+            {itm.label}
           </h1>
         </div>
       )}
@@ -176,12 +162,63 @@ const FooterItem = ({ enableSound, icon, avatarColor }) => {
     </>
   );
 };
-const Footer = ({}) => {
-  const { section, activeMyth, enableSound, minimize, assets } =
-    useContext(FofContext);
+const Footer = () => {
+  const { t } = useTranslation();
+  const { section, activeMyth, enableSound, minimize, assets, game } =
+    useContext(MainContext);
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });
+
+  const fofFooterMap = [
+    {
+      icon: "z",
+      redirect: 0,
+      label: t(`sections.forges`),
+    },
+    {
+      icon: "x",
+      redirect: 4,
+      label: t(`sections.tower`),
+    },
+    {
+      icon: "k",
+      redirect: 2,
+      label: t(`sections.boosters`),
+    },
+    {
+      icon: "t",
+      redirect: 3,
+      label: t(`sections.profile`),
+    },
+  ];
+
+  const rorFooterMap = [
+    {
+      icon: "5",
+      redirect: 1,
+      label: "explore",
+    },
+    {
+      icon: `"`,
+      redirect: 0,
+      label: "citadel",
+    },
+    {
+      icon: "8",
+      redirect: 2,
+      label: "bag",
+    },
+    {
+      icon: "t",
+      redirect: 8,
+      label: t(`sections.profile`),
+    },
+  ];
+
+  const isFoFFilteredSectn = section === 0 || section === 1 || section === 2;
+  const footerMap = game === "fof" ? fofFooterMap : rorFooterMap;
+  const myth = game === "fof" ? activeMyth : 5;
 
   return (
     <div
@@ -194,22 +231,17 @@ const Footer = ({}) => {
         alt="paper"
         draggable={false}
         className={`w-full select-none h-[6rem] absolute bottom-0 filter-paper-${
-          section === 3 ||
-          section === 4 ||
-          section === 5 ||
-          section === 6 ||
-          section === 12 ||
-          section === 11
-            ? mythSections[8]
-            : mythSections[activeMyth]
+          isFoFFilteredSectn ? mythSections[myth] : null
         }`}
       />
       <div className="absolute footer-width flex justify-between items-end h-full text-white  w-full">
-        {footerIcons.map((item, index) => (
+        {footerMap.map((item, index) => (
           <FooterItem
             key={index}
             enableSound={enableSound}
-            icon={index}
+            idx={index}
+            myth={myth}
+            itm={item}
             avatarColor={avatarColor}
           />
         ))}

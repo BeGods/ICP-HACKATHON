@@ -1,7 +1,5 @@
 import { useContext, useRef } from "react";
 import {
-  calculateMoonRemainingTime,
-  calculateRemainingTime,
   getTimerContent,
   hasTimeElapsed,
 } from "../../../helpers/booster.helper";
@@ -53,7 +51,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay, boosterLvl }) => {
   });
 
   const centerContent = isInfoMode ? (
-    getTimerContent(activeCard, gameData, mythData, isAutoPay)
+    getTimerContent(activeCard, gameData, mythData, isAutoPay) ?? <Lock />
   ) : (
     <div>V</div>
   );

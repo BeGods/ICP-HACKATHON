@@ -24,7 +24,7 @@ export const ModelListLyt = ({ itm, assets }) => (
           <div className="text-white font-semibold">
             {itm.amount} {itm.currency}
           </div>
-          <div className="text-sm text-gray-400">
+          <div className="text-secondary text-gray-400">
             {itm.walletAddress.slice(0, 12)}...
             {itm.walletAddress.slice(-6)}
           </div>
@@ -32,7 +32,7 @@ export const ModelListLyt = ({ itm, assets }) => (
       </div>
 
       {itm.status === "success" ? (
-        <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-green-600/20 text-green-400">
+        <span className="flex items-center gap-1 text-secondary px-2 py-2 rounded-full bg-green-600/20 text-green-400">
           <ExternalLink
             onClick={(e) => {
               window.open(`https://kaiascan.io/tx/${itm.paymentId}`, "_blank");
@@ -41,11 +41,11 @@ export const ModelListLyt = ({ itm, assets }) => (
           />
         </span>
       ) : itm.status === "failed" ? (
-        <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-red-600/20 text-red-400">
+        <span className="flex items-center gap-1 text-secondary px-2 py-2 rounded-full bg-red-600/20 text-red-400">
           <X className="w-4 h-4" />
         </span>
       ) : (
-        <span className="flex items-center gap-1 text-sm px-2 py-2 rounded-full bg-yellow-600/20 text-yellow-400">
+        <span className="flex items-center gap-1 text-secondary px-2 py-2 rounded-full bg-yellow-600/20 text-yellow-400">
           <Loader className="w-4 h-4 animate-spin" />
         </span>
       )}
