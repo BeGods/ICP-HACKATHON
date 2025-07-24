@@ -13,6 +13,7 @@ import {
   claimCompleteRelic,
   claimArtifact,
   activateMeal,
+  tradeShardsToCoin,
 } from "../controllers/game.ror.controllers";
 import express from "express";
 import {
@@ -23,6 +24,7 @@ import {
   validateJoinFrgmnt,
   validateSessionReward,
   validateSessionsStart,
+  validateShardConv,
   validateTradeFragment,
   validateTradePotion,
   validItemAbility,
@@ -90,6 +92,14 @@ router.get("/vault/activate", authMiddleware, isValidVaultReq, activateVault);
 router.get("/meal/activate", authMiddleware, isValidMealReq, activateMeal);
 
 // potion
+router.post(
+  "/shards/convert",
+  authMiddleware,
+  validateShardConv,
+  tradeShardsToCoin
+);
+
+// shard conversion
 router.post(
   "/trade/potion",
   authMiddleware,

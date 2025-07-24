@@ -3,41 +3,41 @@ type StreakResult = {
   multiplier: number;
   reward: "alchemist" | "automata" | "burst";
 };
-//                   A   B   C
+//   A   B   C
 //  Bronze:  2.0x = 03  05  07
-//           2.5x = 12  15  18
-//           3.0x = 24  28  32
-//  Silver:  3.5x = 39  41  43
-//           4.0x = 48  51  54
-//           4.5x = 60  64  68
-//  Gold:    5.0x = 75  77  79
-//           5.5x = 84  87  90
-//           6.0x = 96  100 104
+//           2.1x = 12  15  18
+//           2.2x = 24  28  32
+//  Silver:  3.1x = 39  41  43
+//           3.2x = 48  51  54
+//           3.3x = 60  64  68
+//  Gold:    4.1x = 75  77  79
+//           4.2x = 84  87  90
+//           4.3x = 96  100 104
 
 export const determineStreak = (day: number): StreakResult | null => {
   const streakData = [
     {
       level: "Bronze",
       ranges: [
-        [3, 5, 7, 2.0],
-        [12, 15, 18, 2.5],
-        [24, 28, 32, 3.0],
+        [3, 5, 7, 2.0], // star superstar champion
+        [12, 15, 18, 2.1], // icon hallOfFame invincible
+        [24, 28, 32, 2.2], // legend golden supreme
       ],
     },
     {
       level: "Silver",
       ranges: [
-        [39, 41, 43, 3.5],
-        [48, 51, 54, 4.0],
-        [60, 64, 68, 4.5],
+        [39, 41, 43, 3.1], // star superstar champion
+        [48, 51, 54, 3.2], // icon hallOfFame invincible
+        [60, 64, 68, 3.3], // legend golden supreme
       ],
     },
     {
       level: "Gold",
       ranges: [
-        [75, 77, 79, 5.0],
-        [84, 87, 90, 5.5],
-        [96, 100, 104, 6.0],
+        [75, 77, 79, 4.1], // star superstar champion
+        [84, 87, 90, 4.2], // icon hallOfFame invincible
+        [96, 100, 104, 4.3], // legend golden supreme
       ],
     },
   ];

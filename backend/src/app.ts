@@ -40,6 +40,7 @@ const getRealClientIP = (req) => {
 const allowedUserAgents = new Set([
   "telegram-browser",
   "line-browser",
+  // "chrome",
   "android-browser",
   "ios-browser",
   "PostmanRuntime/7.44.1",

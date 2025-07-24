@@ -7,7 +7,10 @@ import {
   parsePotionType,
   validatePotionType,
 } from "../services/game.ror.services";
-import { mythElementNamesLowerCase } from "../../utils/constants/variables";
+import {
+  mythElementNamesLowerCase,
+  myths,
+} from "../../utils/constants/variables";
 import { decryptHash } from "../../helpers/crypt.helpers";
 import config from "../../config/config";
 import { combineVaultItems } from "../../helpers/game.helpers";
@@ -454,6 +457,52 @@ export const validateTradePotion = async (req, res, next) => {
   }
 };
 
+export const validateShardConv = async (req, res, next) => {
+  try {
+    const userId = req.user._id;
+    const { type } = req.body;
+
+    // user myth data
+    const userMythology = (await userMythologies.findOne({
+      userId: userId,
+    })) as IUserMyths;
+
+    if (userMythology?.gobcoin < 1) {
+      throw new Error("Insufficient gobcoins to complete this transaction.");
+    }
+
+    if (!userMythology) {
+      throw Error("Invalid game data. Mythologies data not found.");
+    }
+
+    if (type == "black") {
+      if (userMythology.blackShards < 1) {
+        throw Error("Insufficient shards for this conversion.");
+      }
+    } else if (type == "white") {
+      if (userMythology.whiteShards < 1) {
+        throw Error("Insufficient shards for this conversion.");
+      }
+    } else if (myths.includes(type)) {
+      const currMyth = userMythology.mythologies.find(
+        (itm) => itm.name?.toLowerCase() == type
+      );
+
+      if (currMyth.shards < 1000) {
+        throw Error("Insufficient shards for this conversion.");
+      }
+    } else {
+      throw Error("Invalid shard conversion type.");
+    }
+
+    req.userMythology = userMythology;
+    next();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const validItemAbility = async (req, res, next) => {
   const { itemId } = req.body;
   const { user } = req;
@@ -551,6 +600,7 @@ export const validLibrnReq = async (req, res, next) => {
 
 export const validArtifactClaim = async (req, res, next) => {
   const { user } = req;
+
   const { adId, itemId } = await decryptHash(req.body.data);
 
   const artifactType = [
@@ -587,7 +637,7 @@ export const validArtifactClaim = async (req, res, next) => {
     const itemInBag = userMilestones?.pouch?.includes(itemId);
 
     if (itemInBag) {
-      return res.status(404).json({ message: "Artifact is already claimed." });
+      return res.status(400).json({ message: "Artifact is already claimed." });
     }
 
     if (userMythData.gobcoin < 1) {
