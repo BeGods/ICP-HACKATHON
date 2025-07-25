@@ -1,0 +1,84 @@
+version: "3.3"
+
+services:
+  # =======================
+  # Shared Services
+  # =======================
+
+  redis:
+    container_name: redis-container
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+
+  # Shared MongoDB (optional)
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+  # =======================
+  # Development Services
+  # =======================
+
+  api-dev:
+    container_name: api-dev
+    restart: unless-stopped
+    build: ../../dev/backend
+    ports:
+      - 5000:5000
+    env_file: .env.dev
+    depends_on:
+      - redis
+      - mongo
+
+  web-dev:
+    container_name: web-dev
+    restart: unless-stopped
+    build:
+      context: ../../dev/frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - 5001:8084
+    env_file: .env.dev
+    volumes:
+      - ../../dev/frontend:/src
+
+  # =======================
+  # Production Services
+  # =======================
+
+  api:
+    container_name: api
+    restart: unless-stopped
+    build: .
+    ports:
+      - 4000:3000
+    env_file: .env.prod
+    depends_on:
+      - redis
+      - mongo
+
+  web:
+    container_name: web
+    restart: unless-stopped
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - 4001:8083
+    env_file: .env.prod
+    volumes:
+      - ../frontend:/src
+
+volumes:
+  mongo_data:
+  redis-data:
