@@ -1,0 +1,58 @@
+{
+    "connectWallet": "Connecter le Portefeuille",
+    "collectionNavItem": "Collection",
+    "buyNow": "Acheter Maintenant",
+    "langText": "français",
+    "landingPage": {
+        "mainHeading": "BATAILLE DES DIEUX",
+        "description": "Libérez le Divin : Collectionnez et Possédez les Cartes NFT des Dieux !",
+        "button": "Explorer la Collection"
+    },
+    "collectionText": "Collection",
+    "collection": {
+        "celtic": {
+            "collectionName": "Celtique",
+            "collectionDescription": "Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        },
+        "norse": {
+            "collectionName": "Nordique",
+            "collectionDescription": "Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        },
+        "greek": {
+            "collectionName": "Grec",
+            "collectionDescription": "Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        },
+        "egyption": {
+            "collectionName": "Égyptien",
+            "collectionDescription": "Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        }
+    },
+    
+    "buyNowDetails": {
+            "detailsText": "Détails",
+            "contactAddress": "Adresse de Contact",
+            "token": "Jeton",
+            "tokenStandard": "Standard de Jeton",
+            "chain": "Chaîne",
+            "lastUpdated": "Dernière mise à jour",
+            "buyNow" : "Acheter Maintenant",
+            "artistName": "Artiste",
+            "nftType": "Type",
+            "nftSeason": "Saison"
+        },
+        "myProfile": "Mon Profil",
+        "myCollection": "Ma Collection",
+        "myOrders" : "Mes Commandes",
+        "favorite": "Favori",
+        "footerDescription": "Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.",
+        "home": "Accueil",
+        "collectionFooterText": "Ma Collection",
+        "categoriesText": "Catégories",
+        "categories": {
+            "horseCollection": "Cheval",
+            "greeceCollection": "Grèce",
+            "celticCollection": "Celtique",
+            "egyptanCollection": "Égyptien"
+        }
+    
+}

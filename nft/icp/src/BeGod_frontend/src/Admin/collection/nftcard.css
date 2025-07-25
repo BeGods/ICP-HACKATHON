@@ -1,0 +1,84 @@
+/* Main container for the card */
+.nftcard-container {
+  position: relative;
+  margin: 20px auto;
+  perspective: 1000px; /* Enables 3D effect */
+  width: 300px; /* Fixed width for larger screens */
+  height: 400px; /* Fixed height for larger screens */
+}
+
+/* Inner card */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease;
+}
+
+/* Front and back faces of the card */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+/* Back face rotated */
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Hover effect to flip card */
+.nftcard-container:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Image styles */
+.flip-card-front img,
+.flip-card-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Styles for the front face */
+.flip-card-front {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Styles for the back face */
+.flip-card-back {
+  background: #fafafa; /* Background color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .nftcard-container {
+    width: 100%; /* Full width on smaller screens */
+    height: auto; /* Adjust height based on content */
+    margin: 10px; /* Reduce margin */
+  }
+
+  .flip-card-inner {
+    height: 250px; /* Set a fixed height for smaller screens */
+  }
+}
+
+@media (min-width: 769px) {
+  .nftcard-container {
+    width: 300px; /* Fixed width for larger screens */
+    height: 400px; /* Fixed height for larger screens */
+  }
+}

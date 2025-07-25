@@ -1,0 +1,14 @@
+{
+    "bg1":"#181D2A",
+    "bg2":"#101729",
+    "logo":"/Norse/logo1.png",
+    "title":"Norse",
+    "decription":"Lorem ipsum dolor sit amet consectetur. Habitant sit pharetra cras purus in lectus cursus rhoncus. Sit hac imperdiet a rutrum eget velit amet est. Et diam posuere urna velit quis eget. Cursus bibendum rhoncus egestas diam leo.Lorem ipsum dolor sit amet consectetur. Habitant sit phareus rhoncus. Sit hac imperdiet a rutrum eget velit amet est. Et diam posuere urna velit quis eget. Cursus bibendum rhoncus egestas diam leo.",
+    "images":[
+        "/Norse/img1.png",
+        "/Norse/img2.png",
+        "/Norse/img3.png",
+        "/Norse/img4.png"
+    ],
+    "base":"/Norse/base.png"
+}

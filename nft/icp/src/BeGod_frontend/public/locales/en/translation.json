@@ -1,0 +1,56 @@
+{
+    "connectWallet" : "Connect Wallet",
+    "collectionNavItem" : "Collection",
+    "buyNow" : "Buy Now",
+    "langText": "English",
+    "landingPage" : {
+        "mainHeading" :"BATTLE OF GODS",
+        "description" : "Unleash the Divine: Collect and Own NFT Cards of the Gods!",
+        "button" : "Explore Collection"
+    },
+    "collectionText" : "Collection",
+    "collection" : {
+        "celtic" : {
+            "collectionName" : "Celtic",
+            "collectionDescription" : "Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        },
+        "norse" : {
+            "collectionName" : "Norse",
+            "collectionDescription" : "Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        },
+        "greek" : {
+            "collectionName" : "Greek",
+            "collectionDescription" :"Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        },
+        "egyption" : {
+            "collectionName" : "Egyption",
+            "collectionDescription" :"Lorem ipsum dolor sit amet consectetur. Aliquam tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+        }
+    },
+    "buyNowDetails" : {
+        "detailsText" : "Details",
+        "contactAddress" : "Contact Address",
+        "token" : "Token",
+        "tokenStandard" : "Token Standard",
+        "chain" : "Chain",
+        "lastUpdated" : "Last Updated",
+        "buyNow" : "Buy Now",
+        "artistName":"Artist",
+        "nftType" : "Type",
+        "nftSeason":"Season"
+    },
+    "myProfile" : "MY PROFILE",
+    "myCollection" : "My Collection",
+    "myOrders" : "My Orders",
+    "favorite" : "Favorite",
+    "footerDescription" : "Lorem ipsum dolor sit amet consectetur. Ac at adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.",
+    "home" : "Home",
+    "collectionFooterText" : "My Collection",
+    "categoriesText" : "Categories",
+    "categories" : {
+        "horseCollection" : "Horse",
+        "greeceCollection" : "Greece",
+        "celticCollection" : "Celtic",
+        "egyptanCollection" : "Egyptian"
+    }
+}

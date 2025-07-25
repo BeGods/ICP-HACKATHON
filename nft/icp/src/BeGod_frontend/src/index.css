@@ -1,0 +1,604 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-color: #161618;
+}
+@font-face {
+  font-family: "MyCustomFont";
+  src: url("./assets/begods-forges.of.faith.otf") format("opentype"); /* Change format to "opentype" for .otf */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "CaslonAntique";
+  src: url("./assets/OPTICaslon-Antique.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  background-color: var(--background-color) !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "CaslonAntique" !important;
+}
+
+.big-heading {
+  font-family: "MyCustomFont" !important;
+}
+
+.big-heading-text {
+  font-size: 70px !important;
+  font-family: "MyCustomFont" !important;
+}
+
+.normal-heading {
+  font-family: "CaslonAntique" !important;
+}
+
+/* Swiper Slider */
+.swiper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.custome_max_width {
+  max-width: 1280px;
+}
+.custom-text-border {
+  -webkit-text-stroke: 1px black; /* Adds a black border of 1px width */
+  text-stroke: 1px black; /* Fallback for other browsers */
+}
+
+/* NFT Gallery fade in up animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 1s ease-out;
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+/* Add this to your CSS file or inside a <style> tag in your component */
+
+.maincontainer {
+  position: relative;
+  width: 250px;
+  height: 320px;
+  background: none;
+  margin: 20px auto;
+}
+
+.thecard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  transform-style: preserve-3d;
+  transition: all 0.8s ease;
+}
+
+.thefront,
+.theback {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.theback {
+  transform: rotateY(180deg);
+}
+/* Global stylesheet or inline style */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* collection animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 1s ease-out;
+}
+
+/* Flipping card css in homepage */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 1s ease-out;
+}
+
+/* Flipping card css in homepage */
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+  width: 190px; /* Width for desktop */
+  height: 280px; /* Height for desktop */
+  flex-shrink: 0;
+  margin-bottom: 30px;
+  margin-right: 30px;
+}
+.buy-nft-card {
+  width: 250px; /* Width for desktop */
+  height: 330px; /* Height for desktop */
+}
+@media screen and (min-width: 1000px) and (max-width: 1100px) {
+  .flip-card {
+    width: 170px;
+    height: 210px;
+    margin-bottom: 30x;
+    margin-right: 30px;
+  }
+  .buy-nft-card {
+    width: 280px; /* Width for desktop */
+    height: 330px; /* Height for desktop */
+  }
+}
+.flip-card-inner {
+  /* position: relative; */
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-style: none;
+  border-width: 0px;
+  background-color: transparent;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 640px) {
+  /* Mobile screen size */
+  .flip-card {
+    width: 47vw; /* Reduced width for mobile */
+    min-height: 350px; /* Reduced height for mobile */
+    margin-bottom: 10px;
+    margin-right: 0px;
+  }
+  .buy-nft-card {
+    width: 250px; /* Width for desktop */
+    height: 330px; /* Height for desktop */
+  }
+  .flip-card-inner {
+    min-height: 100%;
+  }
+
+  .flip-card-back .absolute {
+    font-size: 14px; /* Adjust button font size for mobile */
+  }
+}
+
+@media (max-width: 450px) {
+  .flip-card {
+    min-height: 230px;
+  }
+}
+
+/* Image stacking of hero section */
+
+.stacked-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+  transform-origin: bottom left;
+}
+
+.stacked-image:nth-child(1) {
+  z-index: 4;
+}
+.stacked-image:nth-child(2) {
+  z-index: 3;
+}
+.stacked-image:nth-child(3) {
+  z-index: 2;
+}
+.stacked-image:nth-child(4) {
+  z-index: 1;
+}
+
+.image-stack:hover .stacked-image:nth-child(1) {
+  transform: rotate(30deg) translateX(15%) translateY(-20%);
+}
+.image-stack:hover .stacked-image:nth-child(2) {
+  transform: rotate(20deg) translateX(10%) translateY(-15%);
+}
+.image-stack:hover .stacked-image:nth-child(3) {
+  transform: rotate(15deg) translateX(5%) translateY(-10%);
+}
+/* .image-stack:hover .stacked-image:nth-child(4) {
+  transform: rotate(10deg) translateX(-20%) translateY(-20%);
+} */
+
+/* Background image on button background */
+.explore-button {
+  position: relative;
+  overflow: hidden;
+  /* Ensure the text color contrasts with the background */
+  transition: background-color 0.3s ease;
+}
+
+.explore-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/image/BGRoadmapTwo (1).png");
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: -1; /* Ensure the background is behind the text */
+}
+
+.explore-button:hover::before {
+  opacity: 1;
+  z-index: 1; /* Bring the background image into view */
+}
+
+.explore-button:hover {
+  background-color: rgba(
+    252,
+    211,
+    123,
+    0.8
+  ); /* Adjust background color if needed */
+}
+
+.explore-button span {
+  position: relative;
+  z-index: 2; /* Ensure the text is always on top */
+}
+
+/* svg rotation */
+.rotate-svg {
+  animation: rotate-animation 5s infinite linear; /* Continuous rotation */
+}
+
+@keyframes rotate-animation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* animate collection */
+@keyframes smokeMove {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -60%) scale(1.5);
+    opacity: 0.1;
+  }
+  100% {
+    transform: translate(-50%, -70%) scale(2);
+    opacity: 0;
+  }
+}
+
+.smoke {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transform: translate(-50%, -50%);
+  opacity: 0; /* Initially hidden */
+  pointer-events: none; /* Doesn't interfere with user interaction */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.group:hover .smoke {
+  opacity: 1; /* Show smoke on hover */
+  animation: smokeMove 6s infinite ease-in-out;
+}
+
+/* spreading the cards in collection details page */
+
+/* Effect on collection card */
+/* Add this to your CSS file or in a <style> block in your component */
+
+/* Initial shift from the top left corner */
+.smoke-shift {
+  top: -5px; /* Shift slightly upwards */
+  left: -5px; /* Shift slightly to the left */
+  transition: all 1s ease-in-out; /* Smooth transition on hover */
+  z-index: 0;
+  /* Initial state without animation */
+}
+
+@keyframes smoke {
+  0% {
+    transform: translate(-10%, -10%); /* Start slightly up and left */
+  }
+  25% {
+    transform: translate(20%, 0); /* Move right */
+  }
+  50% {
+    transform: translate(20%, 30%); /* Move down */
+  }
+  75% {
+    transform: translate(-5%, 20%); /* Move left */
+  }
+  100% {
+    transform: translate(-5%, -5%); /* Move up */
+  }
+}
+
+.smoke-shift.animated {
+  animation: smoke 4s infinite alternate;
+}
+
+/* This apply blur effect to a image in NftCardItem Component */
+
+.add_new_nft_popup_bg_container {
+  height: 80vh;
+  width: 35vw;
+  background-color: #161618;
+  border-radius: 5px;
+  padding: 32px 42px 36px 42px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+@media screen and (max-width: 1200px) {
+  .add_new_nft_popup_bg_container {
+    width: 40vw;
+    height: 50vh;
+  }
+}
+@media screen and (max-width: 950px) {
+  .add_new_nft_popup_bg_container {
+    height: 50vh;
+    overflow-y: auto;
+  }
+}
+@media screen and (max-width: 768px) {
+  .add_new_nft_popup_bg_container {
+    width: 80vw;
+    padding: 16px 22px 16px 22px;
+    height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+.nft_card_image {
+  transition: filter 0.3s ease-in-out;
+}
+.nft_card_image:hover {
+  filter: blur(2px);
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background-color: black;
+}
+::-webkit-scrollbar-thumb {
+  background: #fcd378;
+  border-radius: 100px;
+}
+
+/* for spinner */
+
+/* Spinner styling */
+.spinner {
+  border: 8px solid rgba(0, 0, 0, 0.1); /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Center spinner */
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional background */
+}
+
+.admin-control-font {
+  font-family: sans-serif !important;
+}
+
+.border-golden {
+  border: 5px solid goldenrod;
+  border-radius: 10px;
+}
+
+.border-silver {
+  border: 5px solid silver;
+  border-radius: 10px;
+}
+
+.border-bronze {
+  border: 5px solid #cd7f32;
+  border-radius: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Rotating Circle Animation */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Circular Text Animation */
+.circular-text {
+  position: absolute;
+  animation: rotateText 1s linear infinite;
+}
+
+/* Keyframes */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateText {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}

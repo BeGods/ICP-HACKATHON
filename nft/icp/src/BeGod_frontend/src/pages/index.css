@@ -1,0 +1,45 @@
+.paymentbutton{
+    background: repeating-conic-gradient(from var(--a), #28a745 0%, #28a745 5%, transparent 5%, transparent 40%, #28a745 50%);
+    animation: animate 4s linear infinite;
+    border-radius: 20px;
+    height: 40px;  
+    width: 80%;
+}
+
+@property --a
+{
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes animate
+{
+    0%
+    {
+        --a:0deg;
+    }
+    100%
+    {
+        --a:360deg;
+    }
+}
+
+.paymentbutton::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: repeating-conic-gradient(from var(--a),#45f3ff 0%, #45f3ff 5% , transparent 5%,);
+    animation: animate 4s linear infinite;
+    animation-delay: -1s;
+    border-radius: 20px;
+}
+.paymentbutton::after{
+    content: '';
+    position:absolute;
+    inset: 4px;
+    background: #2d2d39;
+    border-radius: 15px;
+    border: 4px solid #25252b;
+}

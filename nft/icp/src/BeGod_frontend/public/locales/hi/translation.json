@@ -1,0 +1,58 @@
+{
+    "connectWallet": "वॉलेट कनेक्ट करें",
+    "collectionNavItem": "संग्रह",
+    "buyNow": "अभी खरीदें",
+    "langText": "हिन्दी",
+    "landingPage": {
+       "mainHeading": "देवताओं का युद्ध",
+       "description": "दैविक शक्ति को मुक्त करें: देवताओं के NFT कार्ड एकत्र करें और स्वामित्व लें!",
+       "button": "संग्रह का अन्वेषण करें"
+   },
+   "collectionText": "संग्रह",
+   "collection": {
+       "celtic": {
+           "collectionName": "सेल्टिक",
+           "collectionDescription": "Lorem ipsum dolor sit amet consectetur. अलीक्वम tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+       },
+       "norse": {
+           "collectionName": "नॉर्स",
+           "collectionDescription": "Lorem ipsum dolor sit amet consectetur. अलीक्वम tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+       },
+       "greek": {
+           "collectionName": "यूनानी",
+           "collectionDescription": "Lorem ipsum dolor sit amet consectetur. अलीक्वम tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+       },
+       "egyption": {
+           "collectionName": "मिस्र",
+           "collectionDescription": "Lorem ipsum dolor sit amet consectetur. अलीक्वम tortor rhoncus tristique facilisi imperdiet interdum elementum. Lectus posuere tempor sed purus enim tristique nulla. Adipiscing proin ut et pellentesque dui bibendum ut sapien. Laoreet risus feugiat sed viverra dolor cum lacinia duis volutpat."
+       }
+   },
+   "buyNowDetails": {
+    "detailsText": "विवरण",
+    "contactAddress": "संपर्क पता",
+    "token": "टोकन",
+    "tokenStandard": "टोकन मानक",
+    "chain": "श्रृंखला",
+    "lastUpdated": "अंतिम अपडेट",
+    "buyNow": "अभी खरीदें",
+    "artistName": "कलाकार",
+    "nftType": "प्रकार",
+    "nftSeason": "ऋतु"
+    },
+    "myProfile": "मेरा प्रोफ़ाइल",
+    "myCollection": "मेरा संग्रह",
+    "favorite": "पसंदीदा",
+    "myOrders":"मेरे आदेश",
+    "footerDescription": "Lorem ipsum dolor sit amet consectetur. एसी एट adipiscing volutpat mi. Mauris faucibus sed justo aenean urna varius mauris magna ut. Donec sit sed nisi sed adipiscing dictum. Vel vel scelerisque diam eget netus aliquam cursus nunc.",
+    "home": "मुखपृष्ठ",
+    "collectionFooterText": "मेरा संग्रह",
+    "categoriesText": "श्रेणियाँ",
+    "categories": {
+        "horseCollection": "घोड़ा",
+        "greeceCollection": "यूनान",
+        "celticCollection": "सेल्टिक",
+        "egyptanCollection": "मिस्री"
+    }
+
+
+}
