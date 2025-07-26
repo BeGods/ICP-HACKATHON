@@ -90,14 +90,14 @@ export const transferApprove = async (
       console.log(
         "ledger if condition start",
         metaData?.["icrc1:fee"],
-        process.env.CANISTER_ID_nft_backend
+        process.env.CANISTER_ID_NFT_BACKEND
       );
       const totatSendBalance = Number(amnt);
       const transaction = {
         amount: Number(amnt) + Number(metaData?.["icrc1:fee"]),
         from_subaccount: [],
         spender: {
-          owner: Principal.fromText(process.env.CANISTER_ID_nft_backend),
+          owner: Principal.fromText(process.env.CANISTER_ID_NFT_BACKEND),
           subaccount: [],
         },
         fee: [metaData?.["icrc1:fee"]],

@@ -44,8 +44,8 @@ export const useAuthClient = () => {
     }
   }, [authClient]);
 
-  const backend_id = process.env.CANISTER_ID_nft_backend;
-  const frontend_id = process.env.CANISTER_ID_nft_frontend;
+  const backend_id = process.env.CANISTER_ID_NFT_BACKEND;
+  const frontend_id = process.env.CANISTER_ID_NFT_FRONTEND;
 
   // testnet
   const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
@@ -82,7 +82,7 @@ export const useAuthClient = () => {
           targets: whitelist,
         });
 
-        const actor = await createActor(process.env.CANISTER_ID_nft_backend, {
+        const actor = await createActor(process.env.CANISTER_ID_NFT_BACKEND, {
           agent,
         });
         console.log(actor, "mobile actor");
@@ -93,7 +93,7 @@ export const useAuthClient = () => {
         const user_uuid = uuidv4();
         // // Create actor for the backend
         // const userActor = await window.ic.plug.createActor({
-        //   canisterId: process.env.CANISTER_ID_nft_backend,
+        //   canisterId: process.env.CANISTER_ID_NFT_BACKEND,
         //   interfaceFactory: idlFactory,
         // });
 
@@ -118,7 +118,7 @@ export const useAuthClient = () => {
         // If not a mobile device, fallback to desktop Plug connection
         const pubKey = await window.ic.plug.requestConnect({ whitelist });
         const actor = await window.ic.plug.createActor({
-          canisterId: process.env.CANISTER_ID_nft_backend,
+          canisterId: process.env.CANISTER_ID_NFT_BACKEND,
           interfaceFactory: idlFactory,
         });
         console.log("plug desk actor created", actor);
@@ -189,7 +189,7 @@ export const useAuthClient = () => {
 
             // Create actor for the backend
             const userActor = await window.ic.plug.createActor({
-              canisterId: process.env.CANISTER_ID_nft_backend,
+              canisterId: process.env.CANISTER_ID_NFT_BACKEND,
               interfaceFactory: idlFactory,
             });
 
@@ -230,7 +230,7 @@ export const useAuthClient = () => {
             const agent = new HttpAgent({ identity });
 
             const backendActor = createActor(
-              process.env.CANISTER_ID_nft_backend,
+              process.env.CANISTER_ID_NFT_BACKEND,
               { agentOptions: { identity, verifyQuerySignatures: false } }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
@@ -299,7 +299,7 @@ export const useAuthClient = () => {
             });
             if (isConnected) {
               const userActor = await window.ic.plug.createActor({
-                canisterId: process.env.CANISTER_ID_nft_backend,
+                canisterId: process.env.CANISTER_ID_NFT_BACKEND,
                 interfaceFactory: idlFactory,
               });
               const EXTActor = await window.ic.plug.createActor({
@@ -316,7 +316,7 @@ export const useAuthClient = () => {
             const agent = new HttpAgent({ identity });
 
             const backendActor = createActor(
-              process.env.CANISTER_ID_nft_backend,
+              process.env.CANISTER_ID_NFT_BACKEND,
               { agentOptions: { identity, verifyQuerySignatures: false } }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
@@ -387,7 +387,7 @@ export const useAuthClient = () => {
 
       const agent = new HttpAgent({ identity });
 
-      const backendActor = createActor(process.env.CANISTER_ID_nft_backend, {
+      const backendActor = createActor(process.env.CANISTER_ID_NFT_BACKEND, {
         agentOptions: { identity, verifyQuerySignatures: false },
       });
       const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });

@@ -40,7 +40,7 @@ export const useAuthClient = (options = defaultOptions) => {
       setAuthClient(client);
     });
   }, [dispatch]);
-  const backendCanisterId = process.env.CANISTER_ID_nft_backend;
+  const backendCanisterId = process.env.CANISTER_ID_NFT_BACKEND;
 
   const login = (val) => {
     return new Promise(async (resolve, reject) => {

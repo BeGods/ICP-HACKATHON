@@ -76,52 +76,92 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 
 ## Usage Guide
 
-Follow the steps below to run the project locally on ICP network:
+<details>
+
+<summary> Follow the steps below to run the project locally on ICP network:</summary>
 
 ```bash
 
 # clone repository
+
 git clone https://github.com/BeGods/ICP-HACKATHON.git
 cd ICP-HACKATHON
 
 # stop any existing local IC replicas
+
 dfx stop
 
 # start a fresh local replica
+
 dfx start --clean --background
 
 # install mokoto dependencies
+
 mops install
 
 # install npm dependencies
+
 npm i
 
 # run the script to deploy the ICP ledger canister (includes init args)
-./icp-ledgers.sh
+
+./scripts/icp-ledgers.sh
 
 # run the script to deploy the ICP token canister (includes init args)
-./icp-token.sh
+
+./scripts/icp-token.sh
 
 # deploy backend
+
 dfx deploy nft_backend
 
 # deploy frontend
+
 dfx deploy nft_frontend
 
-```
+# to re-delpoy the canister after any change in directoyr
 
-Follow the steps after making changes in any canister:
-
-```
-
-# re-delpoy teh canister after change
-dfx deploy <caniter-name>
+dfx deploy <canister-name>
 
 # eg. dfx deploy nft_frontend
 
 ```
 
-To log in as an admin and perform administrative actions, you must first whitelist your wallet's `Principal` in the controllers. Use the command below to do so:
+</details>
+
+<details>
+
+<summary> After deploying your app, you'll get URLs for both the frontend and backend canisters. You can use these URLs in your local browsers to test your application locally.
+
+> Users can log in using **Plug**, **Internet Identity**, or **Stoic Wallet** (recommended for local test).
+
+</summary>
+
+```bash
+
+# Expected Output
+
+Deployed canisters.
+URLs:
+Frontend canister via browser:
+nft_frontend: - http://<frontend-canister-id>.localhost:4943/ (Recommended) - http://127.0.0.1:4943/?canisterId=<frontend-canister-id> (Legacy)
+Backend canister via Candid interface:
+icp_ledger_canister: http://127.0.0.1:4943/?canisterId=<icp-ledger-canister-id>
+icrc2_token_canister: http://127.0.0.1:4943/?canisterId=<icp-token-canister-id>
+nft_backend: http://127.0.0.1:4943/?canisterId=<backend-canister-id>&id=<canister-id>
+
+```
+
+</details>
+
+<details>
+
+<summary> To access the admin panel, navigate to:
+`http://<frontend-canister-id>.localhost:4943/admin/login`
+
+To log in as an admin and perform administrative actions, you must first whitelist your wallet's **Principal** in the list of canister controllers. Use the following command to do so:
+
+</summary>
 
 ```bash
 
@@ -132,6 +172,8 @@ dfx canister update-settings <canister_name> --add-controller <principal_id>
 dfx canister info <canister_name>
 
 ```
+
+</details>
 
 ## ICP Integration
 
