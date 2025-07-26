@@ -1,59 +1,133 @@
-# `BeGod`
+# BEGODS Games
 
-Welcome to your new `BeGod` project and to the Internet Computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+BeGods is the ultimate mythological universe — the largest mythoverse ever created. It brings together over 18 mythologies and more than 999 gods that stays true to ancient source material, all illustrated by real human artists.
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+Blending physical and digital play, BeGods offers a groundbreaking phygital experience — a board game enhanced by Web2, Web3, and augmented reality.
 
-To learn more before you start working with `BeGod`, see the following documentation available online:
+## Table of Contents
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Motoko Programming Language Guide](https://internetcomputer.org/docs/current/motoko/main/motoko)
-- [Motoko Language Quick Reference](https://internetcomputer.org/docs/current/motoko/main/language-manual)
+1. [Overview](#overview)
+2. [System Architecture](#system-architecture)
+3. [Usage Guide](#usage-guide)
+4. [ICP Integration](#icp-integration)
+5. [Future Scope](#icp-integration)
+6. [Important Links](#important-links)
 
-If you want to start working on your project right away, you might want to try the following commands:
+## Overview
 
-```bash
-cd BeGod/
-dfx help
-dfx canister --help
+This mono repository contains the **BeGods Game Launcher** and the **NFT Booster System**, both under active development with plans to move fully on-chain using the Internet Computer Protocol (ICP).
+
+The **BeGods Game Launcher** includes 3 games — currently, **Game I** and **Game II** are integrated. These games are currently off-chain but support wallet connections to enable future on-chain interactions. The repository includes both the frontend and backend code for the games.
+
+The **NFT Booster System** allows users to mint and upgrade NFTs. It also includes an admin panel to manage NFT logic. This system can already be tested locally in the ICP playground on the ICP testnet and serves as our first fully on-chain feature.
+
+> **Note:** This mono repo was made by merging the separate game frontend, game backend, and NFT system repositories, which were originally hosted under our [GitHub organization](https://github.com/BeGods).
+
+## System Architecture
+
+```
+├── .env.example               # Environment variables template
+├── .gitignore                 # Git ignore rules
+├── dfx.json                   # ICP canister configuration
+├── mops.toml                  # ICP Motoko packages
+├── package.json               # Root-level dependencies (used across the project)
+├── README.md
+├── scripts/                   # scripts to deploy project
+│   ├── setup.sh
+│   └── icp-ledgers.sh
+├── src/
+│   ├── declarations           # Auto generated files for ICP canisters
+│   ├── game/                  # Game I and II ( OFF CHAIN )
+│   │   ├── frontend/          # React + Vite app
+│   │   └── backend/           # Node.js backend with MongoDB & Redis
+│   └── nft/                   # NFT Booster System ( ON CHAIN )
+│       ├── nft_frontend/      # React + Vite app
+│       └── nft_backend/       # Motoko backend fully on-chain (ICP)
 ```
 
-## Running the project locally
+### `src/game/`
 
-If you want to test your project locally, you can use the following commands:
+- Includes the code for **Game I** and **Game II** , organized with reusable components for better structure and maintainability
+- `frontend/`: Built with **React + Vite** using reusable components.
+- `backend/`: Built with **Node.js**, uses **MongoDB** and **Redis** for data storage and caching.
 
-```bash
-# Starts the replica, running in the background
-dfx start --background
+### `src/nft/`
 
-# Deploys your canisters to the replica and generates your candid interface
-dfx deploy
+- Contains code of **NFT Booster System**.
+- `nft_frontend/`: **React + Vite** frontend with both **admin panel** and **client panel**.
+- `nft_backend/`: Built using **Motoko**, and runs fully **on-chain** with ICP.
+- `nft_backend/main.mo`: Contains all controller functions for both user and admin NFT operations.
+
+### `src/declarations/`
+
+- Contains **auto-generated files** by `dfx` for interacting with ICP canisters from the frontend.
+
+### `dfx.json`
+
+- Configuration file for **managing all ICP canister settings** (currently used only for the NFT system).
+
+### `package.json` (root)
+
+- Contains **common dependencies** shared across all parts of the project.
+
+### `mops.toml`
+
+- Used to **manage Motoko dependencies** for building and deploying ICP canisters.
+
+## Usage Guide
+
 ```
 
-Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
-
-If you have made changes to your backend canister, you can generate a new candid interface with
-
-```bash
-npm run generate
 ```
 
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
+## ICP Integration
 
-If you are making frontend changes, you can start a development server with
+### 1. Authentication & Identity
 
-```bash
-npm start
-```
+- Integrated **`Internet Identity`**, **`Stoic`**, and **`Plug`** wallets for secure, decentralized login and user verification.
 
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
+### 2. NFT & Asset Storage
 
-### Note on frontend environment variables
+- Game assets and NFTs are stored on the **ICP network** using decentralized storage for permanence and reliability.
 
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
+### 3. NFT Minting & Management
 
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+- Uses **`EXT-based token standards`** for minting, tracking ownership, and managing NFTs fully on-chain.
+
+### 4. ICP Deployment
+
+- Frontend and backend of the **NFT Booster system** are deployed as **ICP canisters**, enabling a fully decentralized stack.
+
+### 5. Cycle Management
+
+- Utilizes `ExperimentalCycles` to manage computation cycles and ensure efficient resource usage.
+
+### 6. Principal-Based Access
+
+- Uses **role-based access control** for users and admins based on their ICP wallet `Principal`.
+
+## Future Scope
+
+### 1. Seasonal NFTs
+
+- NFTs will be tied to specific **seasons**, each with custom rules like start/end dates and rarity eligibility.
+- Supports seamless transitions between seasons (e.g., _Season 1 → Season 2_) with progressive rarity adjustments.
+
+### 2. NFT Burning System
+
+- Users can **burn 3 low-rarity NFTs** to mint **1 higher-rarity NFT**, encouraging crafting and rarity upgrading.
+
+### 3. Game Hosting on ICP
+
+- APIs with core mechanics and game-state rules will be **deployed as canisters** for greater transparency and immutability.
+
+### 4. AI-Powered Interaction
+
+- Personalized interactions and game mechanics will be powered by our **AI models**, deployed directly on the **ICP**.
+
+## Important Links
+
+- 🎮 [Play on Line](https://www.dappportal.io/dapps/N67d3fe6a2da7d7180c987b0f) | [Play on Telegram](https://t.me/BeGods_bot/games)
+- 📄 [Pitch Deck & Tokenomics](https://drive.google.com/drive/folders/1k2VxC3KxC9VDfZ_hym7dy3RtVzUG5T1A?usp=sharing)
+- 🌍 [Official Website](https://begods.games/) | 🐙 [GitHub](https://github.com/BeGods)
+- 🐦 [X (formerly Twitter)](https://x.com/BattleofGods_io)
