@@ -21,7 +21,7 @@ The **BeGods Game Launcher** includes 3 games — currently, **Game I** and **Ga
 
 The **NFT Booster System** allows users to mint and upgrade NFTs. It also includes an admin panel to manage NFT logic. This system can already be tested locally in the ICP playground on the ICP testnet and serves as our first fully on-chain feature.
 
-> **Note:** This mono repo was made by merging the separate game frontend, game backend, and NFT system repositories, which were originally hosted under our [GitHub organization](https://github.com/BeGods).
+> **Note:** This mono repo was made by merging the separate game frontend, game backend, and NFT system **private** repositories, which were originally hosted under our [GitHub organization](https://github.com/BeGods).
 
 ## System Architecture
 
