@@ -82,19 +82,42 @@ Follow the steps below to run the project locally on ICP network:
 
 # clone repository
 git clone https://github.com/BeGods/ICP-HACKATHON.git
-cd begods-games
+cd ICP-HACKATHON
 
-# install necessary packages
-npm install
+# stop any existing local IC replicas
+dfx stop
 
-# start dfx in background
-dfx start --background
+# start a fresh local replica
+dfx start --clean --background
 
-# sets up and deploys the ICP ledger canister with the necessary initialization parameters
-./scripts/icp-ledgers.sh
+# install mokoto dependencies
+mops install
 
-# deploy on ICP
-dfx deploy
+# install npm dependencies
+npm i
+
+# run the script to deploy the ICP ledger canister (includes init args)
+./icp-ledgers.sh
+
+# run the script to deploy the ICP token canister (includes init args)
+./icp-token.sh
+
+# deploy backend
+dfx deploy nft_backend
+
+# deploy frontend
+dfx deploy nft_frontend
+
+```
+
+Follow the steps after making changes in any canister:
+
+```
+
+# re-delpoy teh canister after change
+dfx deploy <caniter-name>
+
+# eg. dfx deploy nft_frontend
 
 ```
 
