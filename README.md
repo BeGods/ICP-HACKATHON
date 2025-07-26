@@ -87,6 +87,9 @@ cd begods-games
 # install necessary packages
 npm install
 
+# start dfx in background
+dfx start --background
+
 # sets up and deploys the ICP ledger canister with the necessary initialization parameters
 ./scripts/icp-ledgers.sh
 
