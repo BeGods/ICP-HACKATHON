@@ -76,7 +76,34 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 
 ## Usage Guide
 
+Follow the steps below to run the project locally on ICP network:
+
+```bash
+
+# clone repository
+git clone https://github.com/BeGods/ICP-HACKATHON.git
+cd begods-games
+
+# install necessary packages
+npm install
+
+# sets up and deploys the ICP ledger canister with the necessary initialization parameters
+./scripts/icp-ledgers.sh
+
+# deploy on ICP
+dfx deploy
+
 ```
+
+To log in as an admin and perform administrative actions, you must first whitelist your wallet's `Principal` in the controllers. Use the command below to do so:
+
+```bash
+
+# add principal of your wallet to canister controllers
+dfx canister update-settings <canister_name> --add-controller <principal_id>
+
+# check canisters settings
+dfx canister info <canister_name>
 
 ```
 

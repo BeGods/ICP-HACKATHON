@@ -1,4 +1,8 @@
-#!/bin/bash
+
+dfx stop
+
+dfx start --clean --background
+
 set -e
 
 # Step 2: Create a new identity for the minter account
@@ -48,3 +52,5 @@ echo "ICRC2 token canister deployed and token name retrieved"
 # Step 7: Check balance of the default account
 balance=$(dfx canister call icrc2_token_canister account_balance_dfx "(record {account = \"$DEFAULT_ACCOUNT_ID\";})")
 echo "Balance of the default account: $balance"
+
+dfx deploy
