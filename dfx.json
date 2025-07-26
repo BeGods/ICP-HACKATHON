@@ -5,20 +5,21 @@
       "candid": "https://raw.githubusercontent.com/dfinity/ic/d87954601e4b22972899e9957e800406a0a6b929/rs/rosetta-api/icp_ledger/ledger.did",
       "wasm": "https://download.dfinity.systems/ic/d87954601e4b22972899e9957e800406a0a6b929/canisters/ledger-canister.wasm.gz"
     },
+    "icp_ledger_canister": {
+      "type": "custom",
+      "candid": "https://raw.githubusercontent.com/dfinity/ic/d87954601e4b22972899e9957e800406a0a6b929/rs/rosetta-api/icp_ledger/ledger.did",
+      "wasm": "https://download.dfinity.systems/ic/d87954601e4b22972899e9957e800406a0a6b929/canisters/ledger-canister.wasm.gz"
+    },
     "nft_backend": {
-      "main": "nft/nft_backend/main.mo",
+      "main": "src/nft/nft_backend/main.mo",
       "type": "motoko"
     },
-    "nft_frontend": {
-      "dependencies": [
-        "nft_backend"
-      ],
-      "source": [
-        "nft/nft_frontend/dist"
-      ],
-      "type": "assets",
-      "workspace": "nft_frontend"
-    }
+"nft_frontend": {
+  "type": "assets",
+  "source": ["src/nft/nft_frontend/dist"],
+  "dependencies": ["nft_backend"],
+  "workspace": "nft_frontend"
+}
   },
   "defaults": {
     "build": {
