@@ -83,47 +83,35 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 ```bash
 
 # clone repository
-
 git clone https://github.com/BeGods/ICP-HACKATHON.git
 cd ICP-HACKATHON
 
 # stop any existing local IC replicas
-
 dfx stop
 
 # start a fresh local replica
-
 dfx start --clean --background
 
 # install mokoto dependencies
-
 mops install
 
 # install npm dependencies
-
 npm i
 
-# run the script to deploy the ICP ledger canister (includes init args)
-
-./scripts/icp-ledgers.sh
-
 # run the script to deploy the ICP token canister (includes init args)
-
 ./scripts/icp-token.sh
 
-# deploy backend
+# run the script to deploy the ICP ledger canister (includes init args)
+./scripts/icp-ledgers.sh
 
-dfx deploy nft_backend
+# deploy internet identity locally
+dfx deploy internet_identity
 
 # deploy frontend
-
 dfx deploy nft_frontend
 
 # to re-delpoy the canister after any change in directoyr
-
-dfx deploy <canister-name>
-
-# eg. dfx deploy nft_frontend
+dfx deploy <canister-name>  # eg. dfx deploy nft_frontend
 
 ```
 
@@ -133,7 +121,7 @@ dfx deploy <canister-name>
 
 <summary> After deploying your app, you'll get URLs for both the frontend and backend canisters. You can use these URLs in your local browsers to test your application locally.
 
-> Users can log in using **Plug**, **Internet Identity**, or **Stoic Wallet** (recommended for local test).
+> Users can log in using **Plug**, **Stoic Wallet**, or **Internet Identity** (recommended for local test).
 
 </summary>
 
@@ -166,10 +154,10 @@ To log in as an admin and perform administrative actions, you must first whiteli
 ```bash
 
 # add principal of your wallet to canister controllers
-dfx canister update-settings <canister_name> --add-controller <principal_id>
+dfx canister update-settings nft_backend --add-controller <principal_id>
 
 # check canisters settings
-dfx canister info <canister_name>
+dfx canister info nft_backend
 
 ```
 

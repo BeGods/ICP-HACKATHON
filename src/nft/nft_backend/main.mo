@@ -275,6 +275,11 @@ actor Main {
     };
   };
 
+  public shared func ping(name : Text) : async Text {
+    Debug.print("📡 Ping received from frontend with name: " # name);
+    return "Pong to " # name;
+  };
+
   public shared (msg) func isController(canister_id : Principal, principal_id : Principal) : async Bool {
     let status = await IC.canister_status({ canister_id = canister_id });
     return contains(status.settings.controllers, principal_id);

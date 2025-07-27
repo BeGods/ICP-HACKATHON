@@ -11,13 +11,13 @@ mops install
 npm i
 
 # run the script to deploy the ICP ledger canister (includes init args)
-./icp-ledgers.sh
+./scripts/icp-ledgers.sh
 
 # run the script to deploy the ICP token canister (includes init args)
-./icp-token.sh
+./scripts/icp-token.sh
 
-# deploy backend
-dfx deploy nft_backend
+# deploy internet identity locally
+dfx deploy internet_identity
 
 # deploy frontend
 dfx deploy nft_frontend

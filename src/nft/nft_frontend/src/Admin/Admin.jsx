@@ -13,6 +13,7 @@ import PageNotFound from "./PageNotFound";
 import Useractivity from "./Useractivity";
 import Allorder from "./Allorder";
 import AllorderDetails from "./AllorderDetails";
+import { idlFactory } from "../../../../declarations/nft_backend/index";
 
 import { canisterId } from "../../../../declarations/nft_backend";
 import { Principal } from "@dfinity/principal";
@@ -91,6 +92,7 @@ function Admin() {
       }
     }
   };
+
   useEffect(() => {
     // Prevent duplicate calls in development mode
     if (isInitialRender) {

@@ -2,7 +2,7 @@ import { AuthClient } from "@dfinity/auth-client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { HttpAgent } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
-import { createActor, nft_backend } from "../../../../declarations/nft_backend";
+import { createActor } from "../../../../declarations/nft_backend";
 import { createActor as createLedgerActor } from "../../../../declarations/icp_ledger_canister/index";
 import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from "ic-auth";
 import { idlFactory } from "../../../../declarations/nft_backend/index";
@@ -282,10 +282,17 @@ export const useAuthClient = () => {
           } else if (provider === "nfid") {
             userObject = await NFIDLogin();
           } else if (provider === "ii") {
-            userObject = await IdentityLogin();
+            const identityProvider =
+              process.env.DFX_NETWORK === "local"
+                ? `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:4943` // Local
+                : "https://identity.ic0.app"; // Mainnet
+            userObject = await IdentityLogin({
+              identityProvider: identityProvider,
+            });
           }
 
-          const identity = await userObject.agent._identity;
+          const identity =
+            userObject.identity || userObject.agent?.getIdentity?.();
           const principal = Principal.fromText(userObject.principal);
 
           if (provider === "plug") {
@@ -313,11 +320,18 @@ export const useAuthClient = () => {
               throw new Error("Plug connection refused");
             }
           } else {
-            const agent = new HttpAgent({ identity });
+            const agent = new HttpAgent({
+              identity,
+              host:
+                process.env.DFX_NETWORK === "local"
+                  ? "http://127.0.0.1:4943"
+                  : undefined,
+            });
+            await agent.fetchRootKey();
 
             const backendActor = createActor(
               process.env.CANISTER_ID_NFT_BACKEND,
-              { agentOptions: { identity, verifyQuerySignatures: false } }
+              { agent }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
             setLedgerActor(ledgerActor1);
