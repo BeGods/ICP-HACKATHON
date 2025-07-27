@@ -87,8 +87,15 @@ const CreateCollection = () => {
 
   const handleLogoChange = (file) => setLogo(file);
 
-  const createActor = () => {
-    const agent = new HttpAgent();
+  const createActor = async () => {
+    const agent = new HttpAgent({
+      identity,
+      host:
+        process.env.DFX_NETWORK === "local"
+          ? "http://127.0.0.1:4943"
+          : undefined,
+    });
+    await agent.fetchRootKey();
     return Actor.createActor(idlFactory, { agent, canisterId });
   };
 

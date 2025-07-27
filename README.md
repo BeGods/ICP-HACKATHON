@@ -157,7 +157,7 @@ To log in as an admin and perform administrative actions, you must first whiteli
 dfx canister update-settings nft_backend --add-controller <principal_id>
 
 # check canisters settings
-dfx canister info nft_backend
+dfx canister status nft_backend
 
 ```
 
