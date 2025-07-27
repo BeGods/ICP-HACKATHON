@@ -107,7 +107,7 @@ npm i
 # deploy internet identity locally
 dfx deploy internet_identity
 
-# deploy frontend
+# deploy frontend (also deploys nft_backend)
 dfx deploy nft_frontend
 
 # to re-delpoy the canister after any change in directoyr
@@ -136,6 +136,7 @@ nft_frontend: - http://<frontend-canister-id>.localhost:4943/ (Recommended) - ht
 Backend canister via Candid interface:
 icp_ledger_canister: http://127.0.0.1:4943/?canisterId=<icp-ledger-canister-id>
 icrc2_token_canister: http://127.0.0.1:4943/?canisterId=<icp-token-canister-id>
+internet_identity: http://127.0.0.1:4943/?canisterId=<canister-id>id=<ii-canister-id>
 nft_backend: http://127.0.0.1:4943/?canisterId=<backend-canister-id>&id=<canister-id>
 
 ```
@@ -144,7 +145,7 @@ nft_backend: http://127.0.0.1:4943/?canisterId=<backend-canister-id>&id=<caniste
 
 <details>
 
-<summary> To access the admin panel, navigate to:
+<summary> To access the admin panel and add NFT collections, navigate to:
 `http://<frontend-canister-id>.localhost:4943/admin/login`
 
 To log in as an admin and perform administrative actions, you must first whitelist your wallet's **Principal** in the list of canister controllers. Use the following command to do so:
@@ -162,6 +163,8 @@ dfx canister status nft_backend
 ```
 
 </details>
+
+Once NFT collections are added, they will be reflected at `http://<frontend-canister-id>.localhost:4943/`. Users can connect their wallet and mint the NFTs.
 
 ## ICP Integration
 

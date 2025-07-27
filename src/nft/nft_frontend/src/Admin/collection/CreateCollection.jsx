@@ -167,6 +167,8 @@ const CreateCollection = () => {
     try {
       const metadata = JSON.stringify({ description, collColor });
       // console.log(name, metadata);
+      console.log(backendActor);
+
       const report = await backendActor?.createExtCollection(
         name,
         base64String,

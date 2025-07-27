@@ -227,11 +227,20 @@ export const useAuthClient = () => {
             const identity = await userObject.agent._identity;
             const principal = Principal.fromText(userObject.principal);
 
-            const agent = new HttpAgent({ identity });
+            const agent = new HttpAgent({
+              identity,
+              host:
+                process.env.DFX_NETWORK === "local"
+                  ? "http://127.0.0.1:4943"
+                  : undefined,
+            });
+            await agent.fetchRootKey();
 
             const backendActor = createActor(
               process.env.CANISTER_ID_NFT_BACKEND,
-              { agentOptions: { identity, verifyQuerySignatures: false } }
+              {
+                agent,
+              }
             );
             const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
 
@@ -399,10 +408,17 @@ export const useAuthClient = () => {
       const principal = identity.getPrincipal();
       setPrincipal(principal.toString());
 
-      const agent = new HttpAgent({ identity });
+      const agent = new HttpAgent({
+        identity,
+        host:
+          process.env.DFX_NETWORK === "local"
+            ? "http://127.0.0.1:4943"
+            : undefined,
+      });
+      await agent.fetchRootKey();
 
       const backendActor = createActor(process.env.CANISTER_ID_NFT_BACKEND, {
-        agentOptions: { identity, verifyQuerySignatures: false },
+        agent,
       });
       const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
       setLedgerActor(ledgerActor1);
