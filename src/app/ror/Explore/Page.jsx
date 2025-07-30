@@ -1,30 +1,29 @@
-import { RorContext } from "../../context/context";
+import { RorContext } from "../../../context/context";
 import {
   claimItemAbility,
   claimSessionReward,
   startSession,
-} from "../../utils/api.ror";
-import SwipeArena from "../../components/Common/SwipeArena";
+} from "../../../utils/api.ror";
+import SwipeArena from "./SwipeArena";
 import { useContext, useEffect, useRef, useState } from "react";
-import RoRHeader from "../../components/Layouts/Header";
+import RoRHeader from "../../../components/Layouts/Header";
 import {
   timeLeftUntil12Hours,
   checkIsUnderworldActive,
-} from "../../helpers/ror.timers.helper";
-import { handleClickHaptic } from "../../helpers/cookie.helper";
+} from "../../../helpers/ror.timers.helper";
+import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import {
   bgLabel,
   mythElementNamesLowerCase,
   mythSections,
-} from "../../utils/constants.ror";
-import { showToast } from "../../components/Toast/Toast";
+} from "../../../utils/constants.ror";
+import { showToast } from "../../../components/Toast/Toast";
 import ReactHowler from "react-howler";
-import { useRoRGuide } from "../../hooks/Tutorial";
-import { ExploreGuide } from "../../components/Tutorials/RorTutorial";
-import { isCoin } from "../../helpers/game.helper";
-import BgLayout from "../../components/Layouts/BgLayout";
-import { ToggleBack } from "../../components/Common/SectionToggles";
-import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
+import { useRoRGuide } from "../../../hooks/Tutorial";
+import { isCoin } from "../../../helpers/game.helper";
+import BgLayout from "../../../components/Layouts/BgLayout";
+import { ToggleBack } from "../../../components/Common/SectionToggles";
+import ItemCrd from "../../../components/Cards/Relics/ItemsCrd";
 
 const tele = window.Telegram?.WebApp;
 

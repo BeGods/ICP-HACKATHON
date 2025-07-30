@@ -1,19 +1,11 @@
-import React, { useContext, useEffect } from "react";
-import IconBtn from "../../Buttons/IconBtn";
+import React, { useContext } from "react";
 import { FofContext } from "../../../context/context";
 import { mythSections } from "../../../utils/constants.fof";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 
-const GameEndCrd = ({ handleClick, activeMyth }) => {
-  const { assets, setShowBack, section, setShowCard } = useContext(FofContext);
+const GameEndCrd = ({ activeMyth }) => {
+  const { assets } = useContext(FofContext);
 
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
   return (
     <OverlayLayout>
       <div className="center-section">

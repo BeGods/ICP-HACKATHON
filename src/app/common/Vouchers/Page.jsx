@@ -20,7 +20,7 @@ import BlackOrbRewardCrd from "../../../components/Cards/Reward/OrbCrd";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import CanvasImage from "../../../components/Cards/Canvas/CrdCanvas";
 import { CardWrap } from "../../../components/Layouts/Wrapper";
-import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 import { ThumbsUp } from "lucide-react";
 import { useOpenAd } from "../../../hooks/DappAds";
 
@@ -293,9 +293,9 @@ const Redeem = (props) => {
         {currReward.isClaimed &&
         userData.isPlaySuperVerified &&
         currReward.partnerType === "playsuper" ? (
-          <ButtonLayout mode="info" centerContent={currReward.couponCode} />
+          <PrimaryBtn mode="info" centerContent={currReward.couponCode} />
         ) : (
-          <ButtonLayout
+          <PrimaryBtn
             mode="default"
             centerContent={
               <ThumbsUp

@@ -79,8 +79,6 @@ const FoFMain = () => {
     setPayouts,
     activeReward,
     setActiveReward,
-    showBack,
-    setShowBack,
     section,
     setSection,
     showCard,
@@ -153,8 +151,6 @@ const FoFMain = () => {
     setTokens,
     payouts,
     setPayouts,
-    showBack,
-    setShowBack,
     showCard,
   };
   const sections = [

@@ -19,7 +19,7 @@ import { ApothecaryGuide } from "../../components/Tutorials/RorTutorial";
 import PotionBtn from "../../components/Buttons/PotionBtn";
 import { SecondaryFooter } from "../../components/Layouts/Wrapper";
 import BgLayout from "../../components/Layouts/BgLayout";
-import { ButtonLayout } from "../../components/Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../components/Buttons/PrimaryBtn";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
 import { updateShardsToCoins } from "../../utils/api.ror";
 import { mythSections } from "../../utils/constants.fof";

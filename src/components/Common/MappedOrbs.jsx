@@ -18,7 +18,7 @@ const MappedOrbs = ({ quest, showNum }) => {
                     <img
                       src={assets.items.multiorb}
                       alt="orb"
-                      className={`filter-orbs-${key.toLowerCase()} max-w-xs-multi-orb`}
+                      className={`filter-orbs-${key.toLowerCase()} w-xs-multi-orb max-w-xs-multi-orb`}
                     />
                   </div>
                 </div>
@@ -34,7 +34,7 @@ const MappedOrbs = ({ quest, showNum }) => {
                     <img
                       src={assets.uxui.baseOrb}
                       alt="orb"
-                      className={`filter-orbs-${key.toLowerCase()} overflow-hidden max-w-xs-orb`}
+                      className={`filter-orbs-${key.toLowerCase()} overflow-hidden w-xs-orb max-w-xs-orb`}
                     />
                     <span
                       className={`absolute z-1  text-black-sm-contour transition-all duration-1000 ${

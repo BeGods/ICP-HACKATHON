@@ -4,11 +4,10 @@ import MappedOrbs from "../../Common/MappedOrbs";
 import { mythSections, mythSymbols } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 import OverlayLayout from "../../Layouts/OverlayLayout";
-import { ButtonLayout } from "../../Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
 
 function PayCard({ quest, handlePay, activeMyth, handleClaimEffect }) {
-  const { gameData, assets, section, setShowBack, setShowCard } =
-    useContext(FofContext);
+  const { gameData, assets } = useContext(FofContext);
   const [deduct, setDeduct] = useState(false);
   const [scale, setScale] = useState(false);
   const [showNum, setShowNum] = useState(false);
@@ -67,14 +66,6 @@ function PayCard({ quest, handlePay, activeMyth, handleClaimEffect }) {
   const getMultiOrbsDisplayValue = () => {
     return deductedValues.multiColorOrbs;
   };
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <OverlayLayout>
@@ -185,7 +176,7 @@ function PayCard({ quest, handlePay, activeMyth, handleClaimEffect }) {
       </div>
 
       <div className="absolute flex justify-center w-full bottom-0 mb-safeBottom">
-        <ButtonLayout mode="default" onClick={handleOperation} />
+        <PrimaryBtn mode="default" onClick={handleOperation} />
       </div>
     </OverlayLayout>
   );

@@ -10,7 +10,10 @@ const BookCrd = ({ myth, assets }) => {
   const [showHand, setShowHand] = useState(true);
   const { t } = useTranslation();
   let relicItems = gameItems.filter(
-    (itm) => itm.id?.includes("relic") && itm.id?.includes(myth)
+    (itm) =>
+      itm.id?.includes("relic") &&
+      itm.id?.includes(myth) &&
+      !itm.id?.includes("C09")
   );
   relicItems = [
     { id: "", name: "", coins: " ", fragments: [], orbs: "celtc" },
@@ -25,11 +28,9 @@ const BookCrd = ({ myth, assets }) => {
 
   return (
     <OverlayLayout customMyth={myth}>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="aspect-[4/5] mx-auto my-auto"
-      >
+      <div className="aspect-[4/5] w-full mt-2 h-full">
         <HTMLFlipBook
+          key={myth}
           ref={flipBookRef}
           width={300}
           height={500}
@@ -51,7 +52,7 @@ const BookCrd = ({ myth, assets }) => {
               <div className="w-full h-full">
                 {idx == 0 ? (
                   <div
-                    key={0}
+                    key={idx}
                     className="relative w-full h-full text-white rounded-2xl"
                   >
                     <img
@@ -79,8 +80,11 @@ const BookCrd = ({ myth, assets }) => {
                       className="rounded-2xl h-full w-full object-cover"
                     />
 
-                    <div className="absolute inset-0 leading-para flex flex-col items-center justify-end p-4 text-para font-medium text-card">
+                    <div className="absolute inset-0 leading-para flex flex-col items-center justify-end px-4 mb-[10dvh] text-para font-medium text-card">
                       {t(`characters.${mythology}.${id}.desc`)}
+                    </div>
+                    <div className="absolute inset-0 leading-para flex flex-col items-center justify-end p-4 text-para font-medium text-card">
+                      {t(`characters.${mythology}.${id}.char`)}
                     </div>
                   </div>
                 )}

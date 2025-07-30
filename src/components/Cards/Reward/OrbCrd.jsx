@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { FofContext } from "../../../context/context";
-
 import OverlayLayout from "../../Layouts/OverlayLayout";
-import { ButtonLayout } from "../../Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
 import { ThumbsUp } from "lucide-react";
 
 const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
-  const { assets, setShowCard, setShowBack, section } = useContext(FofContext);
+  const { assets, setShowCard } = useContext(FofContext);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
 
@@ -26,14 +25,6 @@ const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
       setFlipped((prev) => !prev);
     }, 1500);
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
   }, []);
 
   return (
@@ -80,7 +71,7 @@ const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
       </div>
 
       <div className="flex absolute items-start bottom-0 mb-safeBottom justify-center w-full">
-        <ButtonLayout
+        <PrimaryBtn
           mode="default"
           onClick={() => {
             handAction();

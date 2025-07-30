@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
 import { FofContext, MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
@@ -135,6 +135,60 @@ export const HeadbarLayout = ({ activeMyth, data, addOnEffect }) => {
       <div className="absolute flex text-white text-black-contour px-1 mt-[60px] w-full font-fof text-secondary uppercase">
         <div className={`mr-auto slide-in-out-left`}>{data[0].label}</div>
         <div className={`ml-auto slide-in-out-right`}>{data[1].label}</div>
+      </div>
+    </div>
+  );
+};
+
+export const HeaderCategoryLayout = ({
+  category,
+  setCategory,
+  iconMap,
+  categoryCntArr,
+}) => {
+  const { enableHaptic } = useContext(MainContext);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    setFadeOut(false);
+    const timer = setTimeout(() => {
+      setFadeOut(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [category]);
+
+  return (
+    <div className="flex transition-all duration-500 -mt-[1.3rem] items-center justify-center max-w-[720px] w-[85%] z-50 mx-auto h-button-primary p-0.5 rounded-primary bg-white border border-black shadow">
+      {iconMap.map((item, idx) => {
+        const isActive = category === idx;
+
+        return (
+          <div
+            key={idx}
+            onClick={() => {
+              handleClickHaptic(tele, enableHaptic);
+              setCategory(idx);
+            }}
+            className={`flex-1 relative flex items-center justify-center rounded-primary gap-x-2 h-full transition-all duration-200 ease-in-out cursor-pointer ${
+              isActive ? "bg-black text-white" : "text-black"
+            } font-symbols`}
+          >
+            {item.icon}
+
+            {isActive && (
+              <span className="absolute -top-1 -right-1 font-roboto text-[1rem] border border-black font-bold bg-white text-black w-6 h-6 flex items-center justify-center rounded-full shadow-md">
+                {categoryCntArr[idx]}
+              </span>
+            )}
+          </div>
+        );
+      })}
+      <div
+        className={`font-fof w-full text-center mt-[6.25rem] absolute top-0 text-[4.5dvh] uppercase text-white text-black-contour drop-shadow z-50 ${
+          fadeOut ? "disappear" : ""
+        }`}
+      >
+        {iconMap[category].label}
       </div>
     </div>
   );

@@ -826,13 +826,13 @@ const BoosterClaim = ({
                           <div className="flex gap-x-2 uppercase glow-text-quest text-white z-10">
                             {t(`boosters.${booster}.title`)}
                             <div
-                              className={`flex text-${mythSections[activeMyth]}-text gap-x-1`}
+                              className={`flex glow-icon-${mythSections[activeMyth]}  gap-x-1`}
                             >
                               <span>{!isAutoPay && "Lvl"}</span>
                             </div>
                           </div>
                           <span
-                            className={`glow-icon-${mythSections[activeMyth]} text-tertiary pl-1`}
+                            className={`glow-icon-${mythSections[activeMyth]} text-[1.1rem] pl-1`}
                           >
                             {boosterLvl}
                           </span>

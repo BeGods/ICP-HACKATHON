@@ -23,6 +23,7 @@ import {
 } from "../../../components/Common/SectionToggles";
 import LeaderboardHeader from "./Header";
 import BgLayout from "../../../components/Layouts/BgLayout";
+import ReactHowler from "react-howler";
 
 const tele = window.Telegram?.WebApp;
 
@@ -167,25 +168,22 @@ const Leaderboard = (props) => {
     setShowCard,
     setUserData,
     setSection,
+    enableSound,
+    assets,
   } = useContext(FofContext);
-  const { setShowBack } = useContext(MainContext);
+  const [showEffect, setShowEffect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [hallOfFameData, sethallOfFameData] = useState([]);
   const [ReferData, setReferData] = useState([]);
-  const [flipped, setFlipped] = useState(false);
-  const avatarColor = localStorage.getItem("avatarColor");
   const [category, setCategory] = useState(1);
-
-  const updateTimeLeft = timeRemainingForHourToFinishUTC();
   const util = {
     0: "second",
     1: "first",
     2: "third",
   };
-  const [animationKey, setAnimationKey] = useState(0);
 
   const determineLevel = () => {
     switch (true) {
@@ -299,7 +297,10 @@ const Leaderboard = (props) => {
   ];
 
   useEffect(() => {
-    setAnimationKey((prevKey) => prevKey + 1);
+    setShowEffect(false);
+    setTimeout(() => {
+      setShowEffect(true);
+    }, 50);
   }, [category]);
 
   useEffect(() => {
@@ -319,14 +320,6 @@ const Leaderboard = (props) => {
     } else if (userData.stakeReward === "-1") {
       handleClaimReward();
     }
-  }, []);
-
-  useEffect(() => {
-    setShowBack(0);
-
-    return () => {
-      setShowBack(null);
-    };
   }, []);
 
   return (
@@ -367,7 +360,9 @@ const Leaderboard = (props) => {
                           boxShadow:
                             "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
                         }}
-                        className={`flex bg-[#b9f2ff] relative justify-center items-center rise-up-${util[index]} w-full uppercase`}
+                        className={`flex bg-[#b9f2ff] relative justify-center items-center ${
+                          showEffect && `rise-up-${util[index]}`
+                        } w-full uppercase`}
                       >
                         <div
                           className={`flex text-[${rankPositions[index].size}] ${rankPositions[index].size} mt-12 h-fit text-white font-mono font-bold text-black-contour`}
@@ -414,7 +409,9 @@ const Leaderboard = (props) => {
                           boxShadow:
                             "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px, rgba(0, 0, 0, 0.55) 0px -50px 36px -28px inset",
                         }}
-                        className={`flex bg-darker border-l border-r border-white/50 relative justify-center items-center h-[0] rise-up-${util[index]} w-full uppercase`}
+                        className={`flex bg-darker border-l border-r border-white/50 relative justify-center items-center h-[0] ${
+                          showEffect && `rise-up-${util[index]}`
+                        } w-full uppercase`}
                       >
                         {/* <div
                         className={`absolute text-black-contour font-symbols text-${determineLevel(
@@ -484,8 +481,8 @@ const Leaderboard = (props) => {
                           : "border-black"
                       } bg-${determineLevel(
                         item.orbRank
-                      )} relative justify-center items-center h-[0] rise-up-${
-                        util[index]
+                      )} relative justify-center items-center h-[0] ${
+                        showEffect && `rise-up-${util[index]}`
                       } w-full uppercase`}
                     >
                       <div
@@ -659,6 +656,15 @@ const Leaderboard = (props) => {
       {/* <>
         <LeaderboardFooter category={category} />
       </> */}
+
+      <div className="absolute z-0">
+        <ReactHowler
+          src={assets.audio.fofIntro}
+          playing={enableSound}
+          preload={true}
+          loop
+        />
+      </div>
       <>
         <ToggleBack
           minimize={2}

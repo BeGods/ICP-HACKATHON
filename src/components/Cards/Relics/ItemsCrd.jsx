@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { CardWrap } from "../../Layouts/Wrapper";
 import { RorContext } from "../../../context/context";
-import { ButtonLayout, CoinBtnAddOn } from "../../Layouts/ButtonLayout";
+import { PrimaryBtn, CoinBtnAddOn } from "../../Buttons/PrimaryBtn";
 import {
   elementMythNames,
   elementOrder,
@@ -327,7 +327,7 @@ const ItemCrd = ({
       {!mode.includes("show") && (
         <div className="absolute flex flex-col justify-center bottom-0 mb-safeBottom">
           {label == "book" && isItemClaimed ? (
-            <ButtonLayout
+            <PrimaryBtn
               mode={"default"}
               centerContent={<BookOpenText size={"1.75rem"} />}
               showGlow={isItemClaimed}
@@ -337,7 +337,7 @@ const ItemCrd = ({
               }}
             />
           ) : mode?.includes("claim") ? (
-            <ButtonLayout
+            <PrimaryBtn
               mode={"default"}
               centerContent={<Check size={"1.75rem"} strokeWidth={5} />}
               customMyth={currMyth}
@@ -347,7 +347,7 @@ const ItemCrd = ({
               }}
             />
           ) : mode?.includes("sell") ? (
-            <ButtonLayout
+            <PrimaryBtn
               mode={"default"}
               centerContent={"V"}
               customMyth={currMyth}
@@ -357,7 +357,7 @@ const ItemCrd = ({
               }}
             />
           ) : (
-            <ButtonLayout
+            <PrimaryBtn
               mode={isItemClaimed ? "info" : "default"}
               centerContent={isItemClaimed ? "CLAIMED" : "V"}
               showGlow={isItemClaimed}
@@ -433,7 +433,7 @@ export default ItemCrd;
 //     isClaimed={isItemClaimed}
 //   />
 // ) : customItem ? (
-//   <ButtonLayout
+//   <PrimaryBtn
 //     mode="default"
 //     centerContent="V"
 //     customMyth={customMyth}
@@ -442,7 +442,7 @@ export default ItemCrd;
 //     rightContent={1}
 //   />
 // ) : isItemClaimed ? (
-//   <ButtonLayout
+//   <PrimaryBtn
 //     mode="info"
 //     centerContent={
 //       <div className="uppercase">
@@ -463,7 +463,7 @@ export default ItemCrd;
 //     }}
 //   />
 // ) : (
-//   <ButtonLayout
+//   <PrimaryBtn
 //     mode="default"
 //     centerContent="V"
 //     customMyth={customMyth}

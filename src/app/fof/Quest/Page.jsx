@@ -34,7 +34,7 @@ import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import CanvasImage from "../../../components/Cards/Canvas/CrdCanvas";
 import { CardWrap } from "../../../components/Layouts/Wrapper";
-import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 import { Check, ThumbsUp } from "lucide-react";
 import { useOpenAd } from "../../../hooks/DappAds";
 
@@ -496,7 +496,7 @@ const Quests = () => {
             <div
               className={`button__face button__face--front flex justify-center items-center`}
             >
-              <ButtonLayout
+              <PrimaryBtn
                 showGlow={quest?.isQuestClaimed}
                 mode="action"
                 centerContent={<Check size={"1.75rem"} strokeWidth={5} />}
@@ -507,10 +507,11 @@ const Quests = () => {
               />
             </div>
             <div className="button__face button__face--back z-50 flex justify-center items-center">
-              <ButtonLayout
+              <PrimaryBtn
                 mode="share"
                 onClick={() => {
-                  if (!quest?.isShared) {
+                  if (quest?.isShared) {
+                  } else {
                     handleClaimShareReward();
                   }
                 }}
@@ -525,7 +526,7 @@ const Quests = () => {
             <div
               className={`button__face button__face--front flex justify-center items-center`}
             >
-              <ButtonLayout
+              <PrimaryBtn
                 mode="action"
                 centerContent={
                   <ThumbsUp

@@ -1,12 +1,11 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../../context/context";
 import { mythSymbols } from "../../../utils/constants.fof";
-import { countries } from "../../../utils/country";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 
-const OrbInfoCard = ({ gameData, close }) => {
-  const { assets, setShowBack, section } = useContext(MainContext);
+const OrbInfoCard = ({ gameData }) => {
+  const { assets } = useContext(MainContext);
   const elementalOrbs = gameData.mythologies.reduce(
     (sum, itm) => sum + itm.orbs,
     0
@@ -26,14 +25,6 @@ const OrbInfoCard = ({ gameData, close }) => {
 
     return () => clearInterval(interval);
   }, [myths.length]);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <OverlayLayout>

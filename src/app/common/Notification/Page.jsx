@@ -10,7 +10,7 @@ import BgLayout from "../../../components/Layouts/BgLayout";
 import CarouselLayout from "../../../components/Layouts/CarouselLayout";
 
 const Notification = () => {
-  const { setShowBack, setSection, game } = useContext(MainContext);
+  const { setSection, game } = useContext(MainContext);
   const [category, setCategory] = useState(1);
   const notifs = [];
   const [items, setItems] = useState([]);
@@ -23,14 +23,6 @@ const Notification = () => {
 
     setItems(itemsDataMapped);
   }, [notifs]);
-
-  useEffect(() => {
-    setShowBack(3);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <BgLayout>

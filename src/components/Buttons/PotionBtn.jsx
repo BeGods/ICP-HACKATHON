@@ -1,10 +1,10 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext } from "react";
 import { RorContext } from "../../context/context";
 import { elementMythNames } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
 import { claimPotion } from "../../utils/api.ror";
 import MiscCard from "../Cards/Citadel/MiscCard";
-import { ButtonLayout } from "../Layouts/ButtonLayout";
+import { PrimaryBtn } from "./PrimaryBtn";
 
 const PotionBtn = ({ myth, potion, isClaimed }) => {
   const { gameData, setGameData, setShowCard, authToken, setSection, assets } =
@@ -175,7 +175,7 @@ const PotionBtn = ({ myth, potion, isClaimed }) => {
   };
 
   return (
-    <ButtonLayout
+    <PrimaryBtn
       centerContent={isClaimed ? "CLAIMED" : "V"}
       mode={isClaimed ? "info" : "default"}
       onClick={!isClaimed && validateShards}

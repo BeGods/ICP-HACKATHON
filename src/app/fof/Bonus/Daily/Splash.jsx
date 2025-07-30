@@ -199,7 +199,7 @@ const SplashScreen = ({ reward, exploitReward }) => {
         }
         BottomChild={
           <div
-            className={`text-gold leading-[3rem] text-bonus-desc text-center -mb-2  pb-safeBottom  uppercase transition-all duration-500 scale-${showScale} w-full flex justify-center items-center`}
+            className={`text-gold text-black-contour leading-[3rem] text-bonus-desc text-center -mb-2  pb-safeBottom  uppercase transition-all duration-500 scale-${showScale} w-full flex justify-center items-center`}
           >
             {currReward?.type === "mythOrb"
               ? `${

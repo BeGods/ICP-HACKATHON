@@ -1,22 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { FofContext } from "../../../context/context";
-import IconBtn from "../../Buttons/IconBtn";
 import { mythSymbols } from "../../../utils/constants.fof";
 import { countries } from "../../../utils/country";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 
 const UserInfoCard = ({ close, userData }) => {
-  const { assets, setShowBack, section } = useContext(FofContext);
+  const { assets } = useContext(FofContext);
   const countryFlag = countries.find((item) => item.code == userData.country);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <OverlayLayout>
@@ -33,8 +24,8 @@ const UserInfoCard = ({ close, userData }) => {
           </div>
           <div className="absolute top-0 w-full text-center text-card text-paperHead font-bold mt-2 uppercase z-30">
             <h1>{userData.username.toUpperCase().slice(0, 11)}</h1>
-            <h2 className={`-mt-[2vh] text-paperSub font-medium uppercase`}>
-              {userData.country != "NA" && `| ${countryFlag.flag}`}
+            <h2 className={`-mt-[1dvh] text-paperSub font-medium uppercase`}>
+              {countryFlag.flag}
             </h2>
           </div>
           <div

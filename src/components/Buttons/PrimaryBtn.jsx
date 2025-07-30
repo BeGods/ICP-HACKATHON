@@ -58,7 +58,7 @@ export const SocialAddOn = () => {
 };
 
 // 'default' | 'action' | 'info'
-export const ButtonLayout = ({
+export const PrimaryBtn = ({
   mode = "default",
   handlePrev,
   handleNext,
@@ -107,6 +107,7 @@ export const ButtonLayout = ({
   };
 
   const handleOnClick = () => {
+    if (disable) return;
     handleClickHaptic(tele, enableHaptic);
 
     mode === "share"
@@ -117,12 +118,15 @@ export const ButtonLayout = ({
   };
 
   const handleMiddleClick = () => {
+    if (disable) return;
     handleClickHaptic(tele, enableHaptic);
 
     mode === "action" ? wrapWithDisable(handleCenterClick) : undefined;
   };
 
   const handlePrevClick = () => {
+    if (disable) return;
+
     handleClickHaptic(tele, enableHaptic);
 
     mode === "action" ? wrapWithDisable(handlePrev) : undefined;

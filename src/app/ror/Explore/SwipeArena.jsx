@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { RorContext } from "../../context/context";
+import { RorContext } from "../../../context/context";
 
 const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
   const { battleData, setSwipes, swipes, gameData } = useContext(RorContext);

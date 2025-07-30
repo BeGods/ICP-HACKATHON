@@ -16,7 +16,7 @@ import i18next from "i18next";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
 import RoRLoader from "../../components/Loaders/RoRLoader";
 import Citadel from "../ror/Citadel/Citadel";
-import Explore from "../ror/Explore";
+import Explore from "../ror/Explore/Page";
 import Leaderboard from "../ror/Leaderboard/Page";
 import Inventory from "../ror/Inventory";
 import Furnace from "../ror/Furnace";

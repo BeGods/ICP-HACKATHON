@@ -24,7 +24,7 @@ import {
 } from "../../../components/Common/SectionToggles";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import { Repeat2 } from "lucide-react";
-import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 import { useDisableWrapper } from "../../../hooks/disableWrapper";
 
 const tele = window.Telegram?.WebApp;
@@ -357,7 +357,7 @@ const Tower = () => {
       {enableTower && (
         <div className="flex flex-col items-center justify-center w-full">
           <div className="absolute h-full flex justify-center items-end bottom-0 mb-safeBottom">
-            <ButtonLayout
+            <PrimaryBtn
               mode="default"
               onClick={() => {
                 if (myth !== 0) {

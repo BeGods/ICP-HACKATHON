@@ -5,6 +5,7 @@ import { mythSections } from "../../utils/constants.ror";
 import HeaderLayout, { HeadbarLayout } from "./HeaderLayout";
 import MiscCard from "../Cards/Citadel/MiscCard";
 import ShardInfoCrd from "../Cards/Info/ShardInfoCrd";
+import { formatThreeNums } from "../../helpers/leaderboard.helper";
 
 const RoRHeader = ({ isOpenVault, isFurnaceBuild, handleClick }) => {
   const { section, setSection, setShowCard, setMinimize } =
@@ -197,13 +198,15 @@ const RoRHeader = ({ isOpenVault, isFurnaceBuild, handleClick }) => {
                   l
                 </div>
               ),
-              value: shardReward?.count ? `+${shardReward?.count}` : 0,
+              value: shardReward?.count
+                ? `+${formatThreeNums(shardReward?.count)}`
+                : formatThreeNums(0),
               label: current.labelLeft,
               handleClick: current.handleLeft,
             },
             {
               icon: current.iconRight,
-              value: current.right,
+              value: formatThreeNums(current.right),
               label: current.labelRight,
               handleClick: current.handleRight,
             },

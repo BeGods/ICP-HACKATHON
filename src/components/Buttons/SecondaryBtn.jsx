@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import { MainContext } from "../../context/context";
 
-const CustomBtn = ({
+const SecondaryBtn = ({
   handleClick,
   buttonColor,
   message,
@@ -66,4 +66,4 @@ const CustomBtn = ({
   );
 };
 
-export default CustomBtn;
+export default SecondaryBtn;

@@ -125,7 +125,7 @@ export const ItemLayout = ({ item, handleClick, isSmall }) => {
       </div>
       <div className={`flex flex-col text-white flex-grow justify-center`}>
         <div className="text-tertiary uppercase">{item.title}</div>
-        <div className="text-tertiary flex gap-x-2 -mt-1">
+        <div className="text-tertiary flex gap-x-2 -mt-1.5">
           <span className="text-tertiary">{item.desc[0]}</span>
           <span
             className={`text-tertiary ${

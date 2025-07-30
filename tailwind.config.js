@@ -126,7 +126,7 @@ export default {
         "element-lg": "11rem",
         "element-md": "5rem",
         "symbol-sm": "2rem",
-        "symbol-xs": "1.75rem",
+        "symbol-xs": "1.5rem",
         "bonus-title-lg": "6rem",
         "bonus-title": "4rem",
         "bonus-desc": "3rem",
@@ -152,7 +152,9 @@ export default {
         "symbol-primary": "7rem",
         "symbol-secondary": "45px",
         "item": "14rem",
-        "circle-img": "3.5rem"
+        "circle-img": "3.5rem",
+        "xs-orb": "8.3vw",
+        "xs-multi-orb": "8.3vw"
       },
       height: {
         tgHeight: "90vh",
@@ -173,8 +175,8 @@ export default {
       },
       maxWidth: {
         orb: "2.6rem",
-        "xs-orb": "2.25rem",
-        "xs-multi-orb": "2.3rem"
+        "xs-orb": "2.5rem",
+        "xs-multi-orb": "2.5rem"
       },
       padding: {
         headSides: "9dvw",

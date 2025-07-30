@@ -20,6 +20,7 @@ import {
 import { WalletProvider } from "./context/wallet";
 import RoRMain from "./app/main/RoR";
 import LineCallback from "./app/common/Auth/LineCallback";
+import { useTranslation } from "react-i18next";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -35,6 +36,7 @@ function usePageTracking() {
 }
 
 function App() {
+  const { t } = useTranslation();
   const [isBrowser, setIsBrowser] = useState(false);
   const [recentToasts, setRecentToasts] = useState([]);
   const [section, setSection] = useState(1);
@@ -43,7 +45,6 @@ function App() {
   const [game, setGame] = useState("fof");
   const [tokens, setTokens] = useState(null);
   const [payouts, setPayouts] = useState([]);
-  const [showBack, setShowBack] = useState(null);
   const [lineWallet, setLineWallet] = useState(null);
   const [showCard, setShowCard] = useState(null);
   const [globalRewards, setGlobalRewards] = useState([]);
@@ -105,8 +106,6 @@ function App() {
     setPayouts,
     recentToasts,
     setRecentToasts,
-    showBack,
-    setShowBack,
     section,
     setSection,
     showCard,
@@ -115,6 +114,8 @@ function App() {
     setMinimize,
     activeMyth,
     setActiveMyth,
+    tele,
+    t,
   };
 
   const syncAllCookies = async () => {

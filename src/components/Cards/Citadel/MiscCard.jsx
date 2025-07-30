@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import ReactHowler from "react-howler";
 import { CardWrap } from "../../Layouts/Wrapper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
-import CustomBtn from "../../Buttons/CustomButton";
+import SecondaryBtn from "../../Buttons/SecondaryBtn";
 
 const MiscCard = ({ id, handleClick, handleButtonClick, message, isPay }) => {
   const { assets, enableSound } = useContext(RorContext);
@@ -136,7 +136,7 @@ const MiscCard = ({ id, handleClick, handleButtonClick, message, isPay }) => {
       </div>
       {typeof handleButtonClick == "function" && (
         <div className="absolute flex flex-col justify-center bottom-0 mb-safeBottom">
-          <CustomBtn
+          <SecondaryBtn
             buttonColor={"black"}
             handleClick={handleButtonClick}
             message={message}

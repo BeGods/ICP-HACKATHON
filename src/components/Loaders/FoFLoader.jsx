@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
 import { MainContext } from "../../context/context";
-import CustomBtn from "../Buttons/CustomButton";
+import SecondaryBtn from "../Buttons/SecondaryBtn";
 
 const FoFLoader = (props) => {
   const { isTgMobile } = useContext(MainContext);
@@ -75,7 +75,7 @@ const FoFLoader = (props) => {
             <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />
             </div>
-            <CustomBtn
+            <SecondaryBtn
               buttonColor={"orange"}
               message={"LOADING"}
               isDefaultOff={true}

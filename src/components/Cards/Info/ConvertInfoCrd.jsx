@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { mythSymbols } from "../../../utils/constants.fof";
-import IconBtn from "../../Buttons/IconBtn";
-import { FofContext } from "../../../context/context";
+import { MainContext } from "../../../context/context";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { CardWrap } from "../../Layouts/Wrapper";
 import { useTranslation } from "react-i18next";
@@ -106,8 +105,7 @@ const ConvertCard = ({ t, assets, myths, activeColor }) => {
 
 const ConvertInfo = ({ handleClick }) => {
   const { t } = useTranslation();
-  const { assets, isTgMobile, section, setShowBack, setShowCard } =
-    useContext(FofContext);
+  const { assets } = useContext(MainContext);
   const [activeColor, setActiveColor] = useState(0);
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const activeColorRef = useRef(activeColor);
@@ -121,14 +119,6 @@ const ConvertInfo = ({ handleClick }) => {
 
     return () => clearInterval(interval);
   }, [myths.length]);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <OverlayLayout>

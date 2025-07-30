@@ -1,6 +1,6 @@
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
-import CustomBtn from "../Buttons/CustomButton";
+import SecondaryBtn from "../Buttons/SecondaryBtn";
 
 const RoRLoader = (props) => {
   return (
@@ -60,7 +60,7 @@ const RoRLoader = (props) => {
             <div className="flex justify-center fade-in items-center w-full -mb-[1.55vh]">
               <LoadRoll />
             </div>
-            <CustomBtn
+            <SecondaryBtn
               buttonColor={"blue"}
               message={"LOADING"}
               isDefaultOff={true}

@@ -5,7 +5,7 @@ import {
 } from "../../../helpers/booster.helper";
 import { FofContext } from "../../../context/context";
 import { Lock } from "lucide-react";
-import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 
 export const checkBoosterIsInfoMode = ({
   activeCard,
@@ -69,7 +69,7 @@ const BoosterBtn = ({ activeCard, handleClaim, isAutoPay, boosterLvl }) => {
       };
 
   return (
-    <ButtonLayout
+    <PrimaryBtn
       showGlow={isInfoMode}
       mode={isInfoMode ? "info" : "default"}
       leftContent={

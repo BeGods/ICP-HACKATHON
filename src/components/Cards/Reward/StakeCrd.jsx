@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { FofContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { ThumbsUp } from "lucide-react";
@@ -6,7 +6,7 @@ import { showToast } from "../../Toast/Toast";
 import { addLeaderboardBet } from "../../../utils/api.fof";
 
 const StakeCrd = ({ profileImg, username }) => {
-  const { setShowCard, authToken, setUserData, assets, setShowBack, section } =
+  const { setShowCard, authToken, setUserData, assets } =
     useContext(FofContext);
   const avatarColor = localStorage.getItem("avatarColor");
   const firstLetter = username?.charAt(0).toUpperCase();
@@ -29,14 +29,6 @@ const StakeCrd = ({ profileImg, username }) => {
       showToast("default");
     }
   };
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <div

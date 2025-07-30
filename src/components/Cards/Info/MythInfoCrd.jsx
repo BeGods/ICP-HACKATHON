@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { mythSections } from "../../../utils/constants.fof";
 import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
@@ -6,15 +6,7 @@ import OverlayLayout from "../../Layouts/OverlayLayout";
 
 const MythInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { activeMyth, assets, setShowBack, section } = useContext(FofContext);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
+  const { activeMyth, assets } = useContext(FofContext);
 
   return (
     <OverlayLayout>

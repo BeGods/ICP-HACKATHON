@@ -6,7 +6,7 @@ import MappedOrbs from "../../Common/MappedOrbs";
 import { FofContext } from "../../../context/context";
 import Confetti from "react-confetti";
 import OverlayLayout from "../../Layouts/OverlayLayout";
-import { ButtonLayout } from "../../Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
 
 const OrbCard = ({ activeMyth }) => {
   return (
@@ -28,8 +28,7 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { enableSound, assets, isTgMobile, setShowBack, section, setShowCard } =
-    useContext(FofContext);
+  const { assets, isTgMobile } = useContext(FofContext);
   const [flipped, setFlipped] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -46,14 +45,6 @@ const OrbClaimCard = ({
       setFlipped((prev) => !prev);
     }, 2500);
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
   }, []);
 
   return (
@@ -136,7 +127,7 @@ const OrbClaimCard = ({
       </div>
 
       <div className="absolute flex justify-center w-full bottom-0 mb-safeBottom">
-        <ButtonLayout
+        <PrimaryBtn
           mode="share"
           onClick={handleOrbClaimReward}
           rightContent={1}

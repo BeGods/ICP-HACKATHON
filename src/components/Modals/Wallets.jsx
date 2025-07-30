@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { MainContext } from "../../context/context";
 import {
   deleteAuthCookie,
@@ -16,14 +16,8 @@ const tele = window.Telegram?.WebApp;
 const WalletsModal = ({ handleClose }) => {
   const navigate = useNavigate();
   const { fetchLinePayHistory, disconnectLineWallet } = useWalletPayment();
-  const {
-    enableHaptic,
-    lineWallet,
-    isTelegram,
-    setUserData,
-    setShowBack,
-    section,
-  } = useContext(MainContext);
+  const { enableHaptic, lineWallet, isTelegram, setUserData } =
+    useContext(MainContext);
   const userFriendlyAddress = useTonAddress();
   const [tonConnectUI, setOptions] = useTonConnectUI();
 
@@ -74,14 +68,6 @@ const WalletsModal = ({ handleClose }) => {
       handleClose();
     }
   };
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <ModalLayout>

@@ -36,7 +36,7 @@ import {
 import confetti from "canvas-confetti";
 import { getStreakMultipier } from "../../../helpers/streak.helper";
 import BgLayout from "../../../components/Layouts/BgLayout";
-import { ButtonLayout } from "../../../components/Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 import { Handshake } from "lucide-react";
 
 const tele = window.Telegram?.WebApp;
@@ -1657,7 +1657,7 @@ const Forges = () => {
                   closeCard={() => setShowCard(null)}
                   Button={
                     showBooster ? (
-                      <ButtonLayout
+                      <PrimaryBtn
                         mode="default"
                         onClick={() => {
                           handleClickHaptic(tele, enableHaptic);

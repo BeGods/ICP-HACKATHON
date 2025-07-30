@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Confetti from "react-confetti";
-import { ThumbsUp } from "lucide-react";
 import { RorContext } from "../../../context/context";
 import { trackEvent } from "../../../utils/ga";
 import { fetchJoiningBonus } from "../../../utils/api.ror";
@@ -12,14 +11,8 @@ const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const {
-    setSection,
-    authToken,
-    setGameData,
-    enableHaptic,
-    isTgMobile,
-    assets,
-  } = useContext(RorContext);
+  const { setSection, authToken, setGameData, enableHaptic, assets } =
+    useContext(RorContext);
   const [changeText, setChangeText] = useState(true);
   const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);

@@ -1,26 +1,18 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { MainContext } from "../../../context/context";
-import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import { updateMsnStatus } from "../../../utils/api.fof";
-import { Lock, ThumbsUp } from "lucide-react";
+import { ThumbsUp } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { mythSymbols } from "../../../utils/constants.fof";
 import OverlayLayout from "../../Layouts/OverlayLayout";
-import { ButtonLayout } from "../../Layouts/ButtonLayout";
+import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
 
 const PayoutInfoCard = ({ close, data }) => {
   const { i18n } = useTranslation();
   let disableClick = useRef(false);
-  const {
-    assets,
-    isTelegram,
-    authToken,
-    setUserData,
-    setPayouts,
-    setShowBack,
-    section,
-  } = useContext(MainContext);
+  const { assets, isTelegram, authToken, setUserData, setPayouts } =
+    useContext(MainContext);
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const [activeColor, setActiveColor] = useState(0);
   const activeColorRef = useRef(activeColor);
@@ -81,14 +73,6 @@ const PayoutInfoCard = ({ close, data }) => {
       return () => clearInterval(interval);
     }
   }, [myths.length]);
-
-  useEffect(() => {
-    setShowBack(section);
-
-    return () => {
-      setShowBack(null);
-    };
-  }, []);
 
   return (
     <OverlayLayout>
@@ -215,7 +199,7 @@ const PayoutInfoCard = ({ close, data }) => {
 
       <div className="absolute flex justify-center w-full bottom-0 mb-safeBottom">
         {!data.isClaimed && data.limit > 0 && (
-          <ButtonLayout
+          <PrimaryBtn
             mode="default"
             onClick={handleClaimMsn}
             centerContent={<ThumbsUp size={"1.75rem"} color={"white"} />}
