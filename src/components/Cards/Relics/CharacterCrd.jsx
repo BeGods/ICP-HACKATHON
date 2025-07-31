@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import { RorContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import IconBtn from "../../Buttons/IconBtn";
 import { CardWrap } from "../../Layouts/Wrapper";
+import { useStore } from "../../../store/useStore";
 
 const CharacterCrd = ({ id }) => {
-  const { assets } = useContext(RorContext);
+  const assets = useStore((s) => s.assets);
+
   const { i18n } = useTranslation();
   const charMap = {
     apothecary: {

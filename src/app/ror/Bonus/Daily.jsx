@@ -1,15 +1,19 @@
-import { useContext, useEffect, useState } from "react";
-import { RorContext } from "../../../context/context";
+import { useEffect, useState } from "react";
 import { fetchDailyBonus } from "../../../utils/api.ror";
 import { mythologies } from "../../../utils/constants.ror";
 import ReactHowler from "react-howler";
 import confetti from "canvas-confetti";
 import { useTranslation } from "react-i18next";
 import BasicLayout from "../../../components/Layouts/BasicLayout";
+import { useStore } from "../../../store/useStore";
 
 const Gacha = () => {
-  const { setSection, setGameData, assets, authToken, enableSound } =
-    useContext(RorContext);
+  const setSection = useStore((s) => s.setSection);
+  const setGameData = useStore((s) => s.setGameData);
+  const assets = useStore((s) => s.assets);
+  const authToken = useStore((s) => s.authToken);
+  const enableSound = useStore((s) => s.enableSound);
+
   const { t } = useTranslation();
   const [showScale, setShowScale] = useState(0);
   const [showYouScale, setShowYouScale] = useState(0);

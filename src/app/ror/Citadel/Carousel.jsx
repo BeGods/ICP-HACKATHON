@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../../styles/carousel.scss";
-import { RorContext } from "../../../context/context";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import CarouselLayout, {
   ItemLayout,
 } from "../../../components/Layouts/CarouselLayout";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -26,8 +26,12 @@ const CitadelItem = ({ icon, itemKey, handleClick, desc, disable }) => {
 };
 
 const CitadelCarousel = ({ enableGuide, mythData }) => {
-  const { activeMyth, gameData, setSection, enableHaptic, setMinimize } =
-    useContext(RorContext);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const gameData = useStore((s) => s.gameData);
+  const setSection = useStore((s) => s.setSection);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setMinimize = useStore((s) => s.setMinimize);
+
   const [items, setItems] = useState([]);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   claimStreakBonus,
   fetchGameStats,
@@ -6,7 +6,6 @@ import {
   fetchRewards,
   refreshAuthToken,
 } from "../../utils/api.fof";
-import { FofContext, MainContext } from "../../context/context";
 import Quests from "../fof/Quest/Page";
 import Profile from "../common/Profile/Page";
 import Boosters from "../fof/Booster/Page";
@@ -14,7 +13,7 @@ import Leaderboard from "../fof/Leaderboard/Page";
 import Forges from "../fof/Forge/Page";
 import Tower from "../fof/Tower/Page";
 import JoinBonus from "../fof/Bonus/Join/Page";
-import Redeem from "../common/Vouchers/Page";
+import Redeem from "../common/Vouchers";
 import Footer from "../../components/Layouts/Footer";
 import Gift from "../common/Missions/Page";
 import { showToast } from "../../components/Toast/Toast";
@@ -29,7 +28,7 @@ import {
   validateSoundCookie,
 } from "../../helpers/cookie.helper";
 import { getDeviceAndOS, trackEvent } from "../../utils/ga";
-import Announcement from "../common/Announcement/Page";
+import Announcement from "../common/Announcement";
 import FoFLoader from "../../components/Loaders/FoFLoader";
 import i18next from "i18next";
 import { getRandomColor } from "../../helpers/randomColor.helper";
@@ -39,120 +38,46 @@ import {
   isDesktop,
 } from "../../utils/device.info";
 import { useNavigate } from "react-router-dom";
-import Notification from "../common/Notification/Page";
+import Notification from "../common/Notification";
 import AppLayout from "../../components/Layouts/AppLayout";
 import StreakBonus from "../fof/Bonus/Streak/Page";
 import Gacha from "../fof/Bonus/Daily/Page";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const FoFMain = () => {
   const navigate = useNavigate();
-  const {
-    assets,
-    enableHaptic,
-    setEnableHaptic,
-    enableSound,
-    setEnableSound,
-    userData,
-    setUserData,
-    platform,
-    authToken,
-    setAuthToken,
-    country,
-    setCountry,
-    lang,
-    tasks,
-    setTasks,
-    isTelegram,
-    setLineWallet,
-    setPlatform,
-    setIsTelegram,
-    setGlobalRewards,
-    setIsBrowser,
-    isBrowser,
-    isTgMobile,
-    setIsTgMobile,
-    tokens,
-    setTokens,
-    payouts,
-    setPayouts,
-    activeReward,
-    setActiveReward,
-    section,
-    setSection,
-    showCard,
-    setShowCard,
-    minimize,
-    setMinimize,
-    activeMyth,
-    setActiveMyth,
-  } = useContext(MainContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [gameData, setGameData] = useState(null);
-  const [questsData, setQuestsData] = useState(null);
-  const [leaderboard, setLeaderboard] = useState(null);
-  const [triggerConf, setTriggerConf] = useState(false);
-  const [keysData, setKeysData] = useState(null);
-  const [rewards, setRewards] = useState([]);
-  const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
-  const [showAnmt, setShowAnmt] = useState(false);
-  const [showBooster, setShowBooster] = useState(null);
   const refreshTimeoutRef = useRef();
+  const setEnableHaptic = useStore((s) => s.setEnableHaptic);
+  const setEnableSound = useStore((s) => s.setEnableSound);
+  const setUserData = useStore((s) => s.setUserData);
+  const platform = useStore((s) => s.platform);
+  const setPlatform = useStore((s) => s.setPlatform);
+  const setAuthToken = useStore((s) => s.setAuthToken);
+  const country = useStore((s) => s.country);
+  const setCountry = useStore((s) => s.setCountry);
+  const lang = useStore((s) => s.lang);
+  const setTasks = useStore((s) => s.setTasks);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const setIsTelegram = useStore((s) => s.setIsTelegram);
+  const setGlobalRewards = useStore((s) => s.setGlobalRewards);
+  const setIsBrowser = useStore((s) => s.setIsBrowser);
+  const setIsTgMobile = useStore((s) => s.setIsTgMobile);
+  const setTokens = useStore((s) => s.setTokens);
+  const setPayouts = useStore((s) => s.setPayouts);
+  const section = useStore((s) => s.section);
+  const setSection = useStore((s) => s.setSection);
+  const showCard = useStore((s) => s.showCard);
+  const setGameData = useStore((s) => s.setGameData);
+  const setQuestsData = useStore((s) => s.setQuestsData);
+  const setKeysData = useStore((s) => s.setKeysData);
+  const setRewards = useStore((s) => s.setRewards);
+  const setRewardsClaimedInLastHr = useStore(
+    (s) => s.setRewardsClaimedInLastHr
+  );
+  const [isLoading, setIsLoading] = useState(true);
 
-  const initalStates = {
-    gameData,
-    setGameData,
-    questsData,
-    setQuestsData,
-    userData,
-    setUserData,
-    section,
-    setSection,
-    activeMyth,
-    setActiveMyth,
-    showBooster,
-    setShowBooster,
-    platform,
-    authToken,
-    keysData,
-    setKeysData,
-    tasks,
-    setTasks,
-    rewards,
-    setRewards,
-    activeReward,
-    setActiveReward,
-    setRewardsClaimedInLastHr,
-    rewardsClaimedInLastHr,
-    enableSound,
-    setEnableSound,
-    minimize,
-    setMinimize,
-    setShowCard,
-    assets,
-    country,
-    setCountry,
-    triggerConf,
-    setTriggerConf,
-    enableHaptic,
-    setEnableHaptic,
-    setShowAnmt,
-    showAnmt,
-    leaderboard,
-    setLeaderboard,
-    isTelegram,
-    setLineWallet,
-    setIsBrowser,
-    isBrowser,
-    isTgMobile,
-    setIsTgMobile,
-    tokens,
-    setTokens,
-    payouts,
-    setPayouts,
-    showCard,
-  };
   const sections = [
     <Forges />, // 0
     <Quests />, // 1
@@ -381,19 +306,17 @@ const FoFMain = () => {
     <AppLayout>
       {!isLoading ? (
         <div className={`w-screen h-full select-none font-fof`}>
-          <FofContext.Provider value={initalStates}>
-            <div>{sections[section]}</div>
-            {section != 7 &&
-              section != 10 &&
-              section != 9 &&
-              section != 8 &&
-              section != 11 &&
-              section != 5 &&
-              section != 12 &&
-              section != 1 &&
-              !showCard && <Footer />}
-            {showCard && showCard}
-          </FofContext.Provider>
+          <div>{sections[section]}</div>
+          {section != 7 &&
+            section != 10 &&
+            section != 9 &&
+            section != 8 &&
+            section != 11 &&
+            section != 5 &&
+            section != 12 &&
+            section != 1 &&
+            !showCard && <Footer />}
+          {showCard && showCard}
         </div>
       ) : (
         <FoFLoader />

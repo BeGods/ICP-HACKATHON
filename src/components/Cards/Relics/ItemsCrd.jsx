@@ -1,7 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { CardWrap } from "../../Layouts/Wrapper";
-import { RorContext } from "../../../context/context";
 import { PrimaryBtn, CoinBtnAddOn } from "../../Buttons/PrimaryBtn";
 import {
   elementMythNames,
@@ -16,10 +15,11 @@ import {
 import { gameItems } from "../../../utils/gameItems";
 import { mythSections } from "../../../utils/constants.fof";
 import { BookOpenText, Check, Clapperboard } from "lucide-react";
-import { useOpenAd } from "../../../hooks/DappAds";
+import { useOpenAd } from "../../../hooks/useGameAds";
 import { isItemInInventory } from "../../../helpers/ror.timers.helper";
 import BookCrd from "../Citadel/BookCrd";
-import { useMaskStyle } from "../../../hooks/MaskStyle";
+import { useMaskStyle } from "../../../hooks/useMaskStyle";
+import { useStore } from "../../../store/useStore";
 
 const loadPotionDetails = (gameData, mythIndex, potionFilter) => {
   const potions = gameItems
@@ -161,7 +161,10 @@ const ItemCrd = ({
   handleClick,
   handleAdOn,
 }) => {
-  const { assets, gameData, setShowCard } = useContext(RorContext);
+  const assets = useStore((s) => s.assets);
+  const gameData = useStore((s) => s.gameData);
+  const setShowCard = useStore((s) => s.setShowCard);
+
   const [myth, setMyth] = useState(
     mode?.includes("non-item") || src?.includes("aether") ? null : 0
   );
@@ -425,52 +428,3 @@ const ItemCrd = ({
 };
 
 export default ItemCrd;
-
-// {isPotion ? (
-//   <PotionBtn
-//     potion={itemId}
-//     myth={currMyth}
-//     isClaimed={isItemClaimed}
-//   />
-// ) : customItem ? (
-//   <PrimaryBtn
-//     mode="default"
-//     centerContent="V"
-//     customMyth={customMyth}
-//     onClick={handleClick}
-//     isCoin={true}
-//     rightContent={1}
-//   />
-// ) : isItemClaimed ? (
-//   <PrimaryBtn
-//     mode="info"
-//     centerContent={
-//       <div className="uppercase">
-//         {label == "book" ? "read" : "CLAIMED"}
-//       </div>
-//     }
-//     customMyth={customMyth}
-//     onClick={() => {
-//       if (label === "book") {
-// setShowCard(
-//   <BookCrd
-//     handleClose={() => setShowCard(null)}
-//     assets={assets}
-//     myth={currMyth}
-//   />
-// );
-//       }
-//     }}
-//   />
-// ) : (
-//   <PrimaryBtn
-//     mode="default"
-//     centerContent="V"
-//     customMyth={customMyth}
-//     onClick={() => {
-//       handleClick(itemId);
-//     }}
-//     isCoin={true}
-//     rightContent={1}
-//   />
-// )}

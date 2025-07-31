@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import GridItem, {
   GridItemCopy,
   GridItemEmpty,
 } from "../../components/Layouts/GridItem";
-import { RorContext } from "../../context/context";
 import { completeItem, joinItem } from "../../utils/api.ror";
 import { gameItems } from "../../utils/gameItems";
 import RoRHeader from "../../components/Layouts/Header";
@@ -14,18 +13,21 @@ import {
 } from "../../components/Common/SectionToggles";
 import { calculateRemainingTime } from "../../helpers/ror.timers.helper";
 import { showToast } from "../../components/Toast/Toast";
-import { useRoRGuide } from "../../hooks/Tutorial";
+import { useRoRGuide } from "../../hooks/useTutorial";
 import BgLayout from "../../components/Layouts/BgLayout";
 import { GridWrap, SecondaryFooter } from "../../components/Layouts/Wrapper";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
 import { Download } from "lucide-react";
-import useDragAndDrop from "../../hooks/DragDrop";
-
-const tele = window.Telegram?.WebApp;
+import useDragAndDrop from "../../hooks/useDragDrop";
+import { useStore } from "../../store/useStore";
 
 const Furnace = () => {
-  const { gameData, setGameData, authToken, setShowCard, setSection } =
-    useContext(RorContext);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const authToken = useStore((s) => s.authToken);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const setSection = useStore((s) => s.setSection);
+
   const [activeItems, setActiveItems] = useState([]);
   const [arbitaryBag, setArbitaryBag] = useState(gameData.bag);
   const [selectedItem, setSelectedItem] = useState(null);

@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
 import { mythSections } from "../../../utils/constants.fof";
-import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const MythInfoCard = ({ close }) => {
   const { t, i18n } = useTranslation();
-  const { activeMyth, assets } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const activeMyth = useStore((s) => s.activeMyth);
 
   return (
     <OverlayLayout>

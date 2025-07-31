@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import GridItem, {
   GridItemCopy,
   GridItemEmpty,
@@ -8,7 +8,6 @@ import {
   ToggleLeft,
   ToggleRight,
 } from "../../components/Common/SectionToggles";
-import { RorContext } from "../../context/context";
 import {
   activateVault,
   tradeItem,
@@ -24,14 +23,19 @@ import { showToast } from "../../components/Toast/Toast";
 import { isCoin } from "../../helpers/game.helper";
 import BgLayout from "../../components/Layouts/BgLayout";
 import { GridWrap, SecondaryFooter } from "../../components/Layouts/Wrapper";
-import useDragAndDrop from "../../hooks/DragDrop";
+import useDragAndDrop from "../../hooks/useDragDrop";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
+import { useStore } from "../../store/useStore";
 
 //const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial01");
 
 const Bank = (props) => {
-  const { gameData, setGameData, authToken, setSection, setShowCard } =
-    useContext(RorContext);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const authToken = useStore((s) => s.authToken);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.setShowCard);
+
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [showGrid, setShowGrid] = useState(0);

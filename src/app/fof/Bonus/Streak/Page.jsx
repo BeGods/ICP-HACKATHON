@@ -1,14 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { t } from "i18next";
-import { FofContext } from "../../../../context/context";
 import { handleClickHaptic } from "../../../../helpers/cookie.helper";
 import { determineStreak } from "../../../../helpers/streak.helper";
 import BasicLayout from "../../../../components/Layouts/BasicLayout";
+import { useStore } from "../../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const StreakBonus = () => {
-  const { assets, setSection, userData, enableHaptic } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const setSection = useStore((s) => s.setSection);
+  const userData = useStore((s) => s.userData);
+  const enableHaptic = useStore((s) => s.enableHaptic);
   const [changeText, setChangeText] = useState(true);
   const reward = determineStreak(userData.streak.streakCount);
 

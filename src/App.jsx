@@ -6,21 +6,19 @@ import {
 } from "react-router-dom";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import ReactGA from "react-ga4";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import IntroPage from "./app/common/Intro/Page";
 import FoFMain from "./app/main/FoF";
-import { MainContext } from "./context/context";
-import assets from "./assets/assets.json";
 import {
   fetchHapticStatus,
   getStorage,
   setStorage,
   validateSoundCookie,
 } from "./helpers/cookie.helper";
-import { WalletProvider } from "./context/wallet";
+import { DappWalletProvider } from "./context/DappWallet";
 import RoRMain from "./app/main/RoR";
 import LineCallback from "./app/common/Auth/LineCallback";
-import { useTranslation } from "react-i18next";
+import { useStore } from "./store/useStore";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -36,87 +34,11 @@ function usePageTracking() {
 }
 
 function App() {
-  const { t } = useTranslation();
-  const [isBrowser, setIsBrowser] = useState(false);
-  const [recentToasts, setRecentToasts] = useState([]);
-  const [section, setSection] = useState(1);
-  const [minimize, setMinimize] = useState(0);
-  const [activeMyth, setActiveMyth] = useState(0);
-  const [game, setGame] = useState("fof");
-  const [tokens, setTokens] = useState(null);
-  const [payouts, setPayouts] = useState([]);
-  const [lineWallet, setLineWallet] = useState(null);
-  const [showCard, setShowCard] = useState(null);
-  const [globalRewards, setGlobalRewards] = useState([]);
-  const [triggerConf, setTriggerConf] = useState(false);
-  const [activeReward, setActiveReward] = useState(null);
-  const [enableHaptic, setEnableHaptic] = useState(true);
-  const [isTelegram, setIsTelegram] = useState(false);
-  const [isTgDesktop, setIsTgDesktop] = useState(false);
-  const [isTgMobile, setIsTgMobile] = useState(false);
-  const [enableSound, setEnableSound] = useState(true);
-  const [userData, setUserData] = useState(null);
-  const [platform, setPlatform] = useState(null);
-  const [authToken, setAuthToken] = useState(null);
-  const [country, setCountry] = useState("NA");
-  const [lang, setLang] = useState(null);
-  const [tasks, setTasks] = useState([]);
   const location = useLocation();
+  const setGame = useStore((s) => s.setGame);
+  const setEnableHaptic = useStore((s) => s.setEnableHaptic);
+  const setEnableSound = useStore((s) => s.setEnableSound);
   usePageTracking();
-
-  const initalStates = {
-    assets,
-    enableHaptic, //.
-    setEnableHaptic,
-    enableSound, //.
-    setEnableSound,
-    userData,
-    setUserData,
-    platform, //.
-    setPlatform,
-    authToken, //.
-    setAuthToken,
-    country, //.
-    setCountry,
-    lang, //.
-    setLang,
-    tasks,
-    setTasks,
-    isTelegram,
-    setIsTelegram,
-    game,
-    setGame,
-    setLineWallet,
-    lineWallet,
-    globalRewards,
-    setGlobalRewards,
-    triggerConf,
-    setTriggerConf,
-    activeReward,
-    setActiveReward,
-    setIsBrowser,
-    isBrowser,
-    isTgDesktop,
-    setIsTgDesktop,
-    isTgMobile,
-    setIsTgMobile,
-    tokens,
-    setTokens,
-    payouts,
-    setPayouts,
-    recentToasts,
-    setRecentToasts,
-    section,
-    setSection,
-    showCard,
-    setShowCard,
-    minimize,
-    setMinimize,
-    activeMyth,
-    setActiveMyth,
-    tele,
-    t,
-  };
 
   const syncAllCookies = async () => {
     const isSoundActive = await validateSoundCookie(tele);
@@ -162,18 +84,16 @@ function App() {
   }, []);
 
   return (
-    <MainContext.Provider value={initalStates}>
-      <WalletProvider>
-        <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
-          <Routes>
-            <Route path="/" element={<IntroPage />} />
-            <Route path="/auth/line/callback" element={<LineCallback />} />
-            <Route path="/fof" element={<FoFMain />} />
-            <Route path="/ror" element={<RoRMain />} />
-          </Routes>
-        </TonConnectUIProvider>
-      </WalletProvider>
-    </MainContext.Provider>
+    <DappWalletProvider>
+      <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/BOG-Game/frogdoggames-manifesto/main/ton-connect.manifest.json">
+        <Routes>
+          <Route path="/" element={<IntroPage />} />
+          <Route path="/auth/line/callback" element={<LineCallback />} />
+          <Route path="/fof" element={<FoFMain />} />
+          <Route path="/ror" element={<RoRMain />} />
+        </Routes>
+      </TonConnectUIProvider>
+    </DappWalletProvider>
   );
 }
 

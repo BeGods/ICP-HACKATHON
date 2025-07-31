@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { MainContext } from "../../../context/context";
 import { extractBotName, formatDate } from "../../../helpers/game.helper";
+import { useStore } from "../../../store/useStore";
 
 const PartnerCard = ({ close, reward }) => {
-  const { assets, platform, isTgMobile } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const isTgMobile = useStore((s) => s.isTgMobile);
 
   return (
     <div

@@ -1,7 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { MainContext } from "../../context/context";
-import { useTwitterAuth } from "../../hooks/TwitterLogin";
-import useWalletPayment from "../../hooks/LineWallet";
+import { useEffect, useRef, useState } from "react";
+import useDappWallet from "../../hooks/useDappWallet";
 import { useLocation } from "react-router-dom";
 import { handleClickHaptic, setAuthCookie } from "../../helpers/cookie.helper";
 import {
@@ -18,7 +16,8 @@ import { trackComponentView, trackEvent } from "../../utils/ga";
 import { X } from "lucide-react";
 import { countries } from "../../utils/country";
 import { showToast } from "../Toast/Toast";
-import TelegramLogin from "../../hooks/TelegramLogin";
+import { useStore } from "../../store/useStore";
+import { TelegramLogin, useTwitterAuth } from "../../hooks/useSocialLogin";
 
 const tele = window.Telegram?.WebApp;
 
@@ -36,7 +35,9 @@ const OnboardOTP = ({ showVerify, updateVerify, refer, setOtpSentOn }) => {
   const [showCount, setShowCount] = useState(false);
   const [countDown, setCountDown] = useState(0);
   const [createAcnt, setCreateAcnt] = useState(false);
-  const { authToken, setAuthToken } = useContext(MainContext);
+  const authToken = useStore((s) => s.authToken);
+  const setAuthToken = useStore((s) => s.setAuthToken);
+
   const [otp, setOTP] = useState(new Array(4).fill(""));
   const dropdownRef = useRef(null);
   const firstInputRef = useRef(null);
@@ -386,11 +387,13 @@ const OnboardOTP = ({ showVerify, updateVerify, refer, setOtpSentOn }) => {
 
 export default function LoginModal() {
   const { t } = useTranslation();
-  const { setAuthToken, assets } = useContext(MainContext);
+  const setAuthToken = useStore((s) => s.setAuthToken);
+  const assets = useStore((s) => s.assets);
+
   const [otpSentOn, setOtpSentOn] = useState("");
   const [showVerify, setShowVerify] = useState(false);
   const { loginWithTwitter } = useTwitterAuth();
-  const { connectWallet } = useWalletPayment();
+  const { connectWallet } = useDappWallet();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const refer = queryParams.get("refer");

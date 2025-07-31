@@ -1,15 +1,17 @@
-import React, { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
 import { ChevronLeft, ChevronRight, CornerUpLeft, LogOut } from "lucide-react";
 import ReactHowler from "react-howler";
-import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 export const ToggleLeft = ({ handleClick, activeMyth, minimize }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets, enableHaptic } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -70,7 +72,9 @@ export const ToggleRight = ({
   positionBottom,
 }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets, enableHaptic } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -125,7 +129,8 @@ export const ToggleRight = ({
 
 export const ToggleBack = ({ handleClick, isClose }) => {
   const howlerRef = useRef(null);
-  const { enableSound, enableHaptic } = useContext(MainContext);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   const handleButtonClick = () => {
     handleClickHaptic(tele, enableHaptic);
@@ -164,7 +169,8 @@ export const ToggleBack = ({ handleClick, isClose }) => {
 
 export const CustomToggleLeft = ({ handleClick, lightMode, label, src }) => {
   const howlerRef = useRef(null);
-  const { enableSound, assets, enableHaptic } = useContext(MainContext);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
   const primaryColor = lightMode ? "black" : "white";
   const secondaryColor = lightMode ? "white" : "black";
 
@@ -212,7 +218,8 @@ export const CustomToggleLeft = ({ handleClick, lightMode, label, src }) => {
 
 export const CustomToggleRight = ({ handleClick, lightMode, label, src }) => {
   const howlerRef = useRef(null);
-  const { enableSound, enableHaptic } = useContext(MainContext);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
   const primaryColor = lightMode ? "black" : "white";
   const secondaryColor = lightMode ? "white" : "black";
 

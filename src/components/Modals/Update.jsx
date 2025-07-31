@@ -1,12 +1,13 @@
-import { useContext } from "react";
-import { FofContext } from "../../context/context";
 import { Camera, Pencil } from "lucide-react";
 import { updateAvatarImage } from "../../utils/api.fof";
 import ModalLayout from "../Layouts/ModalLayout";
 import { useDisableWrapper } from "../../hooks/disableWrapper";
+import { useStore } from "../../store/useStore";
 
 const UpdateModal = () => {
-  const { userData, authToken } = useContext(FofContext);
+  const authToken = useStore((s) => s.authToken);
+  const userData = useStore((s) => s.userData);
+
   const { wrapWithDisable } = useDisableWrapper();
 
   const handleImageUpload = async (file) => {

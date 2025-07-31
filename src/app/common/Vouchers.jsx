@@ -1,56 +1,61 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { FofContext, MainContext, RorContext } from "../../../context/context";
+import { useEffect, useState } from "react";
 import {
   ToggleBack,
   ToggleLeft,
   ToggleRight,
-} from "../../../components/Common/SectionToggles";
-import { handleActiveParts } from "../../../helpers/quests.helper";
-import {
-  claimCustomReward,
-  claimPlaysuperReward,
-} from "../../../utils/api.fof";
-import IconBtn from "../../../components/Buttons/IconBtn";
-import PartnerCard from "../../../components/Cards/Info/PartnerInfoCrd";
-import RedeemHeader from "./Header";
+} from "../../components/Common/SectionToggles";
+import { handleActiveParts } from "../../helpers/quests.helper";
+import { claimCustomReward, claimPlaysuperReward } from "../../utils/api.fof";
+import IconBtn from "../../components/Buttons/IconBtn";
+import PartnerCard from "../../components/Cards/Info/PartnerInfoCrd";
 import confetti from "canvas-confetti";
-import { showToast } from "../../../components/Toast/Toast";
-import { trackComponentView } from "../../../utils/ga";
-import BlackOrbRewardCrd from "../../../components/Cards/Reward/OrbCrd";
-import BgLayout from "../../../components/Layouts/BgLayout";
-import CanvasImage from "../../../components/Cards/Canvas/CrdCanvas";
-import { CardWrap } from "../../../components/Layouts/Wrapper";
-import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
+import { showToast } from "../../components/Toast/Toast";
+import { trackComponentView } from "../../utils/ga";
+import BlackOrbRewardCrd from "../../components/Cards/Reward/OrbCrd";
+import BgLayout from "../../components/Layouts/BgLayout";
+import CanvasImage from "../../components/Cards/Canvas/CrdCanvas";
+import { CardWrap } from "../../components/Layouts/Wrapper";
+import { PrimaryBtn } from "../../components/Buttons/PrimaryBtn";
 import { ThumbsUp } from "lucide-react";
-import { useOpenAd } from "../../../hooks/DappAds";
+import { useOpenAd } from "../../hooks/useGameAds";
+import { useStore } from "../../store/useStore";
+import HeaderLayout, {
+  HeadbarToggleLayout,
+} from "../../components/Layouts/HeaderLayout";
 
-const tele = window.Telegram?.WebApp;
+const data = [
+  {
+    icon: "1",
+    label: "UNCLAIMED",
+    handleClick: () => {},
+  },
+  {
+    icon: "4",
+    label: "CLAIMED",
+    handleClick: () => {},
+  },
+];
+
 const Redeem = (props) => {
-  const {
-    activeReward,
-    userData,
-    authToken,
-    triggerConf,
-    setTriggerConf,
-    isTgMobile,
-    game,
-    isTelegram,
-    setSection,
-  } = useContext(MainContext);
-  const fofContext = useContext(FofContext);
-  const rorContext = useContext(RorContext);
-  const setGameData =
-    game === "fof" ? fofContext.setGameData : rorContext.setGameData;
-  const setShowCard =
-    game === "fof" ? fofContext.setShowCard : rorContext.setShowCard;
-  const setRewards =
-    game === "fof" ? fofContext.setRewards : rorContext.setRewards;
-  const rewards = game === "fof" ? fofContext.rewards : rorContext.rewards;
-  const setMinimize =
-    game === "fof" ? fofContext.setMinimize : rorContext.setMinimize;
+  const activeReward = useStore((s) => s.activeReward);
+  const userData = useStore((s) => s.userData);
+  const authToken = useStore((s) => s.authToken);
+  const triggerConf = useStore((s) => s.triggerConf);
+  const setTriggerConf = useStore((s) => s.setTriggerConf);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+  const game = useStore((s) => s.game);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const setSection = useStore((s) => s.setSection);
+  const setGameData = useStore((s) => s.setGameData);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const setRewards = useStore((s) => s.setRewards);
+  const rewards = useStore((s) => s.rewards);
+  const setMinimize = useStore((s) => s.setMinimize);
+
   const onboardIdx = game === "fof" ? 11 : 15;
   const [showToggles, setShowToggles] = useState(false);
   const index = rewards.findIndex((item) => item.id === activeReward.id);
+
   const [currIndex, setCurrIndex] = useState(index);
   const currReward = rewards[currIndex];
 
@@ -206,44 +211,31 @@ const Redeem = (props) => {
   return (
     <BgLayout>
       {/* Header */}
-      <RedeemHeader
-        currIndex={currIndex}
-        link={() => {
-          const currLink = currReward.metadata.brandRedirectionLink;
-          window.open(currLink, "_blank");
-        }}
-        isCharity={currReward.isCharity}
-        pieces={currReward.tokensCollected}
-        name={currReward.metadata.brandName}
-        bubble={
-          currReward.partnerType == "playsuper"
-            ? `${currReward.metadata.campaignCoverImage}`
-            : `https://media.publit.io/file/Partners/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
-        }
-        action={() => {
-          setShowCard(
-            <div className="fixed inset-0  bg-black bg-opacity-85  backdrop-blur-[3px] flex justify-center items-center z-50">
-              <div className="relative w-full  shadow-lg card-shadow-white">
-                <img
-                  src={`https://media.publit.io/file/Partners/320px-${currReward.category}.png`}
-                  alt="campaign"
-                  className="w-full h-full rounded-primary"
-                  onClick={() => {
-                    setShowCard(null);
-                  }}
-                />
-                <IconBtn
-                  isInfo={false}
-                  activeMyth={4}
-                  handleClick={() => {
-                    setShowCard(null);
-                  }}
-                  align={4}
-                />
-              </div>
+      <HeaderLayout
+        activeMyth={8}
+        title={""}
+        BottomChild={<HeadbarToggleLayout data={data} />}
+        CenterChild={
+          <div className="flex absolute justify-center w-full top-0  z-20">
+            <div
+              onClick={() => {
+                const currLink = currReward.metadata.brandRedirectionLink;
+                window.open(currLink, "_blank");
+              }}
+              className={`z-20 bg-white flex text-center glow-icon-white justify-center h-symbol-primary w-symbol-primary mt-1 items-center rounded-full border border-white outline-white transition-all duration-1000  overflow-hidden relative`}
+            >
+              <img
+                src={
+                  currReward.partnerType == "playsuper"
+                    ? `${currReward.metadata.campaignCoverImage}`
+                    : `https://media.publit.io/file/Partners/160px-${currReward.metadata.campaignCoverImage}.bubble.png`
+                }
+                alt="base-orb"
+                className={`filter-orbs-black w-full pointer-events-none`}
+              />
             </div>
-          );
-        }}
+          </div>
+        }
       />
 
       <div className="center-section">

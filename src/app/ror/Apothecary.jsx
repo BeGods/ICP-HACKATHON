@@ -1,42 +1,24 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import RoRHeader from "../../components/Layouts/Header";
-import { gameItems } from "../../utils/gameItems";
-import { RorContext } from "../../context/context";
-import {
-  ToggleBack,
-  ToggleLeft,
-  ToggleRight,
-} from "../../components/Common/SectionToggles";
-import {
-  colorByMyth,
-  elementMythNames,
-  elementOrder,
-} from "../../utils/constants.ror";
-import MiscCard from "../../components/Cards/Citadel/MiscCard";
-import { getActiveFeature, setStorage } from "../../helpers/cookie.helper";
-import { useRoRGuide } from "../../hooks/Tutorial";
-import { ApothecaryGuide } from "../../components/Tutorials/RorTutorial";
-import PotionBtn from "../../components/Buttons/PotionBtn";
+import { ToggleBack } from "../../components/Common/SectionToggles";
+import { setStorage } from "../../helpers/cookie.helper";
+import { useRoRGuide } from "../../hooks/useTutorial";
 import { SecondaryFooter } from "../../components/Layouts/Wrapper";
 import BgLayout from "../../components/Layouts/BgLayout";
-import { PrimaryBtn } from "../../components/Buttons/PrimaryBtn";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
 import { updateShardsToCoins } from "../../utils/api.ror";
 import { mythSections } from "../../utils/constants.fof";
 import { toast } from "react-toastify";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const Apothecary = (props) => {
-  const {
-    assets,
-    setSection,
-    setShowCard,
-    setMinimize,
-    gameData,
-    authToken,
-    setGameData,
-  } = useContext(RorContext);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const authToken = useStore((s) => s.authToken);
+  const setGameData = useStore((s) => s.setGameData);
+
   const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial04");
   const [activeColor, setActiveColor] = useState(0);
   const myths = ["greek", "celtic", "norse", "egyptian"];

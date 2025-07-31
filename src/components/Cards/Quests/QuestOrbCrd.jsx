@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
 import { mythSections } from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import MappedOrbs from "../../Common/MappedOrbs";
-import { FofContext } from "../../../context/context";
 import Confetti from "react-confetti";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
+import { useStore } from "../../../store/useStore";
 
 const OrbCard = ({ activeMyth }) => {
   return (
@@ -28,7 +28,9 @@ const OrbClaimCard = ({
   handleShowClaim,
   activeMyth,
 }) => {
-  const { assets, isTgMobile } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+
   const [flipped, setFlipped] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 

@@ -1,11 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import { MainContext } from "../../context/context";
+import { useEffect, useState } from "react";
 import TgHeader from "./TgHeader";
 import { isDesktop } from "../../utils/device.info";
 import SettingModal from "../Modals/Settings";
+import { useStore } from "../../store/useStore";
 
 const AppLayout = ({ children }) => {
-  const { isTgMobile, setShowCard, showCard } = useContext(MainContext);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+  const setShowCard = useStore((s) => s.setShowCard);
+
   const [isFullscreen, setIsFullscreen] = useState(
     !!document.fullscreenElement
   );

@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { mythSections, mythSymbols } from "../../../utils/constants.fof";
-import { FofContext, MainContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
@@ -8,6 +7,7 @@ import HeaderLayout, {
   HeadbarLayout,
 } from "../../../components/Layouts/HeaderLayout";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -23,7 +23,9 @@ const CenterChild = ({
   starIsHeld,
   minimize,
 }) => {
-  const { setSection, assets, enableHaptic } = useContext(FofContext);
+  const setSection = useStore((s) => s.setSection);
+  const assets = useStore((s) => s.assets);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   return (
     <div className="flex cursor-pointer absolute justify-center w-full top-0 -mt-2 z-50">
@@ -101,7 +103,9 @@ const BottomChild = ({
   showTut,
   gameData,
 }) => {
-  const { setSection, setShowCard } = useContext(MainContext);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.setShowCard);
+
   const [showEffect, setShowEffect] = useState(false);
   const { t } = useTranslation();
 

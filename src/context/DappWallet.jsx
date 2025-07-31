@@ -1,17 +1,14 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import liff from "@line/liff";
 import DappPortalSDK from "@linenext/dapp-portal-sdk";
-import { MainContext } from "./context";
-import { deleteAuthCookie } from "../helpers/cookie.helper";
-import { useNavigate } from "react-router-dom";
+import { useStore } from "../store/useStore";
 
 export const WalletContext = createContext(null);
-const tele = window.Telegram?.WebApp;
 
-export const WalletProvider = ({ children }) => {
-  const { lineWallet, setLineWallet, authToken, isTelegram, userData } =
-    useContext(MainContext);
-  const navigate = useNavigate();
+export const DappWalletProvider = ({ children }) => {
+  const lineWallet = useStore((s) => s.lineWallet);
+  const setLineWallet = useStore((s) => s.setLineWallet);
+  const authToken = useStore((s) => s.authToken);
   const [lineProvider, setLineProvider] = useState(null);
   const [dappSdk, setDappSdk] = useState(null);
   const [isInitializing, setIsInitializing] = useState(true);

@@ -1,13 +1,16 @@
-import React, { useContext, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { useState } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { ThumbsUp } from "lucide-react";
 import { showToast } from "../../Toast/Toast";
 import { addLeaderboardBet } from "../../../utils/api.fof";
+import { useStore } from "../../../store/useStore";
 
 const StakeCrd = ({ profileImg, username }) => {
-  const { setShowCard, authToken, setUserData, assets } =
-    useContext(FofContext);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const authToken = useStore((s) => s.authToken);
+  const setUserData = useStore((s) => s.setUserData);
+  const assets = useStore((s) => s.assets);
+
   const avatarColor = localStorage.getItem("avatarColor");
   const firstLetter = username?.charAt(0).toUpperCase();
 

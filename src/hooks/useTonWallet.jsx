@@ -1,12 +1,13 @@
 import { toUserFriendlyAddress, useTonConnectUI } from "@tonconnect/ui-react";
-import { useContext, useRef } from "react";
-import { MainContext } from "../context/context";
+import { useRef } from "react";
 import { showToast } from "../components/Toast/Toast";
 import { connectTonWallet } from "../utils/api.fof";
+import { useStore } from "../store/useStore";
 
-export const useTonWalletConnector = () => {
+export const useTonWallet = () => {
   const [tonConnectUI] = useTonConnectUI();
-  const { authToken, setUserData } = useContext(MainContext);
+  const authToken = useStore((s) => s.authToken);
+  const setUserData = useStore((s) => s.setUserData);
 
   const isSubscribedRef = useRef(false);
 

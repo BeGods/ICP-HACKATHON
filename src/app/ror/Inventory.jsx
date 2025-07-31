@@ -1,6 +1,5 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import GridItem, { GridItemEmpty } from "../../components/Layouts/GridItem";
-import { RorContext } from "../../context/context";
 import { updateVaultData } from "../../utils/api.ror";
 import RoRHeader from "../../components/Layouts/Header";
 import {
@@ -14,8 +13,12 @@ import { GridWrap, SecondaryFooter } from "../../components/Layouts/Wrapper";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
 
 const Bag = () => {
-  const { gameData, authToken, setShowCard, setSection, setMinimize } =
-    useContext(RorContext);
+  const gameData = useStore((s) => s.gameData);
+  const authToken = useStore((s) => s.authToken);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const setSection = useStore((s) => s.setSection);
+  const setMinimize = useStore((s) => s.setMinimize);
+
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [showGrid, setShowGrid] = useState(1);
 

@@ -1,10 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { MainContext } from "../../context/context";
+import { useEffect, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
 import { ToggleBack } from "../Common/SectionToggles";
+import { useStore } from "../../store/useStore";
 
 const OverlayLayout = ({ children, customMyth }) => {
-  const { assets, setShowCard, section, activeMyth } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const section = useStore((s) => s.section);
+  const activeMyth = useStore((s) => s.activeMyth);
+
   const [animateClass, setAnimateClass] = useState("overlay-fade-in");
   const myth = customMyth ? customMyth : activeMyth;
   const filter =

@@ -1,19 +1,22 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { fetchJoiningBonus } from "../../../../utils/api.fof";
-import { FofContext } from "../../../../context/context";
 import Confetti from "react-confetti";
 import { trackEvent } from "../../../../utils/ga";
 import { handleClickHaptic } from "../../../../helpers/cookie.helper";
-import BgLayout from "../../../../components/Layouts/BgLayout";
 import BasicLayout from "../../../../components/Layouts/BasicLayout";
+import { useStore } from "../../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setGameData, setSection, authToken, assets, enableHaptic } =
-    useContext(FofContext);
+  const setGameData = useStore((s) => s.setGameData);
+  const setSection = useStore((s) => s.setSection);
+  const authToken = useStore((s) => s.authToken);
+  const assets = useStore((s) => s.assets);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+
   const [changeText, setChangeText] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);

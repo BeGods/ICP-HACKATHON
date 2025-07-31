@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import { MainContext } from "../../context/context";
 import CharacterCrd from "../Cards/Relics/CharacterCrd";
 import { GridItemEmpty } from "./GridItem";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -13,7 +13,8 @@ export const CardWrap = ({
   isPacket,
   disableFlip,
 }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+
   const [flipped, setFlipped] = useState(false);
 
   return (
@@ -69,7 +70,7 @@ export const GridOpenItem = ({ src }) => {
 };
 
 export const GridWrap = ({ children }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <div className="center-section-grid z-50">

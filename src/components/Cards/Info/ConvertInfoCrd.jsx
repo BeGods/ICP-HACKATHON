@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { mythSymbols } from "../../../utils/constants.fof";
-import { MainContext } from "../../../context/context";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { CardWrap } from "../../Layouts/Wrapper";
 import { useTranslation } from "react-i18next";
+import { useStore } from "../../../store/useStore";
 
 const ConvertCard = ({ t, assets, myths, activeColor }) => {
   return (
@@ -105,7 +105,8 @@ const ConvertCard = ({ t, assets, myths, activeColor }) => {
 
 const ConvertInfo = ({ handleClick }) => {
   const { t } = useTranslation();
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+
   const [activeColor, setActiveColor] = useState(0);
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const activeColorRef = useRef(activeColor);

@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import { MainContext } from "../../context/context";
+import { useEffect, useState } from "react";
 import { ExternalLink, Loader, X } from "lucide-react";
 import { ToggleSwitch } from "../Common/ToggleSwitch";
-import { useDisableWrapper } from "../../hooks/disableWrapper";
+import { useDisableWrapper } from "../../hooks/useDisableClick";
 import { ToggleBack } from "../Common/SectionToggles";
+import { useStore } from "../../store/useStore";
 
 export const ModelListLyt = ({ itm, assets }) => (
   <div className="flex flex-col gap-1 bg-black/30 rounded-xl px-3 py-2 shadow-md">
@@ -110,7 +110,8 @@ export const ModalSwitchLyt = ({ label, icon, handleToggle, isActive }) => {
 };
 
 const ModalLayout = ({ children, note }) => {
-  const { setShowCard } = useContext(MainContext);
+  const setShowCard = useStore((s) => s.setShowCard);
+
   const [animateClass, setAnimateClass] = useState("overlay-fade-in");
 
   const handleClose = () => {

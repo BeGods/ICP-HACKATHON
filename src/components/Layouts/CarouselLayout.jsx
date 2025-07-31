@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
-import { Check, ChevronRight } from "lucide-react";
-import { MainContext } from "../../context/context";
+import { useState } from "react";
+import { Check } from "lucide-react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -80,7 +80,8 @@ const CarouselLayout = ({ items }) => {
 export default CarouselLayout;
 
 export const ItemLayout = ({ item, handleClick, isSmall }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+
   const [isClicked, setIsClicked] = useState(false);
 
   return (

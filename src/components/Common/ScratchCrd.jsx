@@ -1,6 +1,5 @@
 import confetti from "canvas-confetti";
-import React, { useEffect, useRef, useState } from "react";
-import ScratchCard from "react-scratchcard-v2";
+import { useEffect, useState } from "react";
 
 const Scratch = ({ handleComplete, item, image, src }) => {
   const [showEffect, setShowEffect] = useState(false);

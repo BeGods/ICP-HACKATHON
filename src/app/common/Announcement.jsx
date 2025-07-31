@@ -1,20 +1,18 @@
-import { Megaphone, ThumbsUp } from "lucide-react";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { FofContext } from "../../../context/context";
-
-import { handleClickHaptic, setTutKey } from "../../../helpers/cookie.helper";
-import { trackEvent } from "../../../utils/ga";
-import { showToast } from "../../../components/Toast/Toast";
+import { useEffect, useRef, useState } from "react";
+import { handleClickHaptic, setTutKey } from "../../helpers/cookie.helper";
+import { showToast } from "../../components/Toast/Toast";
 import Confetti from "react-confetti";
-import BasicLayout from "../../../components/Layouts/BasicLayout";
+import BasicLayout from "../../components/Layouts/BasicLayout";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const Announcement = (props) => {
-  const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const { setSection, setShowAnmt, enableHaptic, isTgMobile } =
-    useContext(FofContext);
+  const setSection = useStore((s) => s.setSection);
+  const setShowAnmt = useStore((s) => s.setShowAnmt);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+
   let disableRef = useRef(false);
 
   const playConfetti = () => {
@@ -26,9 +24,6 @@ const Announcement = (props) => {
 
   useEffect(() => {
     playConfetti();
-    setTimeout(() => {
-      setDisableHand(false);
-    }, 2000);
 
     setTimeout(() => {
       getAnmntReward();

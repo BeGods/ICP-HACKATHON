@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
-import { MainContext } from "../../../context/context";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const MoonInfoCard = () => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <OverlayLayout>

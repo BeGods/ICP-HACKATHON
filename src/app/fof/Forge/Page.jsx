@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { useEffect, useRef, useState } from "react";
 import {
   claimBurst,
   claimRatUpdate,
@@ -21,7 +20,7 @@ import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 import BoosterButtom from "../Booster/Button";
 import { showToast } from "../../../components/Toast/Toast";
 import { ForgesGuide } from "../../../components/Tutorials/Tutorials";
-import { useForgeGuide } from "../../../hooks/Tutorial";
+import { useForgeGuide } from "../../../hooks/useTutorial";
 import {
   getPhaseByDate,
   handleGeneratePopTime,
@@ -38,36 +37,38 @@ import { getStreakMultipier } from "../../../helpers/streak.helper";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 import { Handshake } from "lucide-react";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const Forges = () => {
   const { t } = useTranslation();
-  const {
-    activeMyth,
-    setActiveMyth,
-    gameData,
-    setGameData,
-    showBooster,
-    setShowBooster,
-    platform,
-    authToken,
-    setSection,
-    rewards,
-    setRewards,
-    setActiveReward,
-    setRewardsClaimedInLastHr,
-    rewardsClaimedInLastHr,
-    enableSound,
-    minimize,
-    setMinimize,
-    setShowCard,
-    assets,
-    setTriggerConf,
-    enableHaptic,
-    userData,
-    setUserData,
-  } = useContext(FofContext);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const setActiveMyth = useStore((s) => s.setActiveMyth);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const showBooster = useStore((s) => s.showBooster);
+  const setShowBooster = useStore((s) => s.setShowBooster);
+  const platform = useStore((s) => s.platform);
+  const authToken = useStore((s) => s.authToken);
+  const setSection = useStore((s) => s.setSection);
+  const rewards = useStore((s) => s.rewards);
+  const setRewards = useStore((s) => s.setRewards);
+  const setActiveReward = useStore((s) => s.setActiveReward);
+  const rewardsClaimedInLastHr = useStore((s) => s.rewardsClaimedInLastHr);
+  const enableSound = useStore((s) => s.enableSound);
+  const minimize = useStore((s) => s.minimize);
+  const setMinimize = useStore((s) => s.setMinimize);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const assets = useStore((s) => s.assets);
+  const setTriggerConf = useStore((s) => s.setTriggerConf);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const userData = useStore((s) => s.userData);
+  const setUserData = useStore((s) => s.setUserData);
+  const setRewardsClaimedInLastHr = useStore(
+    (s) => s.setRewardsClaimedInLastHr
+  );
+
   const streakMultpier = (boosterName) => {
     if (userData.streak?.streakCount && userData.streak?.lastMythClaimed) {
       const multiplier = getStreakMultipier(

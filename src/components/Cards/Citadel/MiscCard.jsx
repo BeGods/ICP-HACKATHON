@@ -1,14 +1,15 @@
-import { useContext } from "react";
-import { RorContext } from "../../../context/context";
 import IconBtn from "../../Buttons/IconBtn";
 import { useTranslation } from "react-i18next";
 import ReactHowler from "react-howler";
 import { CardWrap } from "../../Layouts/Wrapper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import SecondaryBtn from "../../Buttons/SecondaryBtn";
+import { useStore } from "../../../store/useStore";
 
 const MiscCard = ({ id, handleClick, handleButtonClick, message, isPay }) => {
-  const { assets, enableSound } = useContext(RorContext);
+  const assets = useStore((s) => s.assets);
+  const enableSound = useStore((s) => s.enableSound);
+
   const { i18n } = useTranslation();
   const charMap = {
     apothecary: {

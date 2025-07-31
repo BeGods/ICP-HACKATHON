@@ -1,15 +1,14 @@
-import React, { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   elements,
-  mythSections,
   mythSymbols,
   mythologies,
 } from "../../../utils/constants.fof";
 import { CircleCheck, CircleX } from "lucide-react";
 import ReactHowler from "react-howler";
-import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -22,8 +21,9 @@ const orbPos = [
 
 const ConvertClaimCard = ({ handleClose, handleSubmit }) => {
   const { t } = useTranslation();
-  const { enableSound, assets, enableHaptic, isBrowser } =
-    useContext(FofContext);
+  const enableSound = useStore((s) => s.enableSound);
+  const assets = useStore((s) => s.assets);
+  const enableHaptic = useStore((s) => s.enableHaptic);
   const [clickedOrbs, setClickedOrbs] = useState([]);
   const [showPlay, setShowPlay] = useState(false);
   const [showEffect, setShowEffect] = useState(null);

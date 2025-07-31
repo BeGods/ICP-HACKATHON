@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Avatar from "../../../components/Common/Avatar";
-import { FofContext, MainContext } from "../../../context/context";
+import { useStore } from "../../../store/useStore";
 
 const LeaderboardItem = ({
   rank,
@@ -12,7 +12,7 @@ const LeaderboardItem = ({
   isKOL,
   colorType,
 }) => {
-  const { userData, assets } = useContext(MainContext);
+  const userData = useStore((s) => s.userData);
   const [avatarColor, setAvatarColor] = useState(null);
   const [error, setError] = useState(false);
 

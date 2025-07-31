@@ -1,16 +1,17 @@
-import { useContext, useState } from "react";
-import { MainContext } from "../../../context/context";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Bell, Pencil } from "lucide-react";
 import HeaderLayout, {
   HeadbarToggleLayout,
 } from "../../../components/Layouts/HeaderLayout";
+import { useStore } from "../../../store/useStore";
 
 const BottomChild = () => {
-  const { game, setSection } = useContext(MainContext);
+  const game = useStore((s) => s.game);
+  const setSection = useStore((s) => s.setSection);
   const { t } = useTranslation();
   const giftIdx = game === "fof" ? 5 : 10;
-  const notifIdx = game === "fof" ? 5 : 14;
+  const notifIdx = game === "fof" ? 12 : 14;
 
   const data = [
     {
@@ -33,7 +34,8 @@ const BottomChild = () => {
 };
 
 const CenterChild = ({ userData }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });

@@ -1,19 +1,17 @@
-import { useEffect, useState, useContext, useCallback, useRef } from "react";
+import { useEffect, useState } from "react";
 import SettingModal from "../../../components/Modals/Settings";
 import CarouselLayout, {
   ItemLayout,
 } from "../../../components/Layouts/CarouselLayout";
-import { FofContext, MainContext, RorContext } from "../../../context/context";
 import PayoutInfoCard from "../../../components/Cards/Info/PayoutInfoCrd";
-import { useDisableWrapper } from "../../../hooks/disableWrapper";
-import { useTranslation } from "react-i18next";
-import { useOpenAd } from "../../../hooks/DappAds";
-import { showToast } from "../../../components/Toast/Toast";
 import TaskItem from "./TaskItem";
+import { useStore } from "../../../store/useStore";
 
 export const VoucherCrsl = ({ rewards }) => {
   const [items, setItems] = useState([]);
-  const { setActiveReward, game, setSection } = useContext(MainContext);
+  const setActiveReward = useStore((s) => s.setActiveReward);
+  const game = useStore((s) => s.game);
+  const setSection = useStore((s) => s.setSection);
   const redeemIdx = game === "fof" ? 6 : 14;
 
   useEffect(() => {
@@ -54,7 +52,9 @@ export const VoucherCrsl = ({ rewards }) => {
 };
 
 export const PayoutCrsl = ({ rewards }) => {
-  const { setShowCard, assets, isTelegram } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const isTelegram = useStore((s) => s.isTelegram);
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export const PayoutCrsl = ({ rewards }) => {
 };
 
 export const TaskCrsl = ({ quests }) => {
-  const { setShowCard } = useContext(MainContext);
+  const setShowCard = useStore((s) => s.setShowCard);
   const [items, setItems] = useState([]);
 
   useEffect(() => {

@@ -1,11 +1,12 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { MainContext } from "../../../context/context";
+import { useEffect, useRef, useState } from "react";
 import { mythSymbols } from "../../../utils/constants.fof";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const OrbInfoCard = ({ gameData }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+
   const elementalOrbs = gameData.mythologies.reduce(
     (sum, itm) => sum + itm.orbs,
     0

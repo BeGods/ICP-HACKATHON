@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { MainContext } from "../../../context/context";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { updateMsnStatus } from "../../../utils/api.fof";
 import { ThumbsUp } from "lucide-react";
@@ -7,12 +6,17 @@ import { showToast } from "../../Toast/Toast";
 import { mythSymbols } from "../../../utils/constants.fof";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
+import { useStore } from "../../../store/useStore";
 
 const PayoutInfoCard = ({ close, data }) => {
   const { i18n } = useTranslation();
   let disableClick = useRef(false);
-  const { assets, isTelegram, authToken, setUserData, setPayouts } =
-    useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const authToken = useStore((s) => s.authToken);
+  const setUserData = useStore((s) => s.setUserData);
+  const setPayouts = useStore((s) => s.setPayouts);
+
   const myths = ["greek", "celtic", "norse", "egyptian"];
   const [activeColor, setActiveColor] = useState(0);
   const activeColorRef = useRef(activeColor);

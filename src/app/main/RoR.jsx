@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { MainContext, RorContext } from "../../context/context";
+import { useEffect, useRef, useState } from "react";
 import { fetchGameStats } from "../../utils/api.ror";
 import { getRandomColor } from "../../helpers/randomColor.helper";
 import {
@@ -40,127 +39,45 @@ import { showToast } from "../../components/Toast/Toast";
 import Apothecary from "../ror/Apothecary";
 import Bank from "../ror/Bank";
 import Gift from "../common/Missions/Page";
-import Redeem from "../common/Vouchers/Page";
+import Redeem from "../common/Vouchers";
 import AppLayout from "../../components/Layouts/AppLayout";
 import Footer from "../../components/Layouts/Footer";
-import Notification from "../common/Notification/Page";
+import Notification from "../common/Notification";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const RoRMain = () => {
   const navigate = useNavigate();
-  const {
-    assets,
-    enableHaptic,
-    setEnableHaptic,
-    enableSound,
-    setEnableSound,
-    userData,
-    setUserData,
-    platform,
-    authToken,
-    setAuthToken,
-    country,
-    setCountry,
-    lang,
-    tasks,
-    setTasks,
-    isTelegram,
-    game,
-    globalRewards,
-    setGlobalRewards,
-    setIsTelegram,
-    setPlatform,
-    triggerConf,
-    setTriggerConf,
-    activeReward,
-    setActiveReward,
-    isBrowser,
-    setIsBrowser,
-    isTgMobile,
-    setIsTgMobile,
-    payouts,
-    setPayouts,
-    minimize,
-    setMinimize,
-    activeMyth,
-    setActiveMyth,
-    section,
-    setSection,
-    showCard,
-    setShowCard,
-  } = useContext(MainContext);
-  const [mythBg, setMythBg] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [rewards, setRewards] = useState([]);
-  const [swipes, setSwipes] = useState(0);
-  const [shiftBg, setShiftBg] = useState(50);
-  const [isSwiping, setIsSwiping] = useState(false);
-  const [shardReward, setShardReward] = useState(null);
-  const [rewardsClaimedInLastHr, setRewardsClaimedInLastHr] = useState(null);
-  const [battleData, setBattleData] = useState({
-    currentRound: 1,
-    roundData: [],
-  });
-  const [gameData, setGameData] = useState({
-    stats: null,
-    bag: null,
-    bank: null,
-    pouch: null,
-    claimedItems: null,
-    builder: null,
-  });
-  const contextValues = {
-    enableHaptic,
-    lang,
-    country,
-    section,
-    setSection,
-    activeMyth,
-    setActiveMyth,
-    assets,
-    platform,
-    authToken,
-    enableSound,
-    userData,
-    gameData,
-    setGameData,
-    showCard,
-    setShowCard,
-    minimize,
-    setMinimize,
-    battleData,
-    setBattleData,
-    swipes,
-    rewards,
-    setRewards,
-    setRewardsClaimedInLastHr,
-    rewardsClaimedInLastHr,
-    setSwipes,
-    tasks,
-    setTasks,
-    isTelegram,
-    game,
-    globalRewards,
-    setGlobalRewards,
-    setShiftBg,
-    shardReward,
-    setShardReward,
-    triggerConf,
-    setTriggerConf,
-    activeReward,
-    setActiveReward,
-    isSwiping,
-    setIsSwiping,
-    isBrowser,
-    setIsBrowser,
-    isTgMobile,
-    setIsTgMobile,
-    payouts,
-    setPayouts,
-    mythBg,
-    setMythBg,
-  };
+  const setEnableHaptic = useStore((s) => s.setEnableHaptic);
+  const setEnableSound = useStore((s) => s.setEnableSound);
+  const setUserData = useStore((s) => s.setUserData);
+  const platform = useStore((s) => s.platform);
+  const setAuthToken = useStore((s) => s.setAuthToken);
+  const country = useStore((s) => s.country);
+  const setCountry = useStore((s) => s.setCountry);
+  const lang = useStore((s) => s.lang);
+  const setTasks = useStore((s) => s.setTasks);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const setGlobalRewards = useStore((s) => s.setGlobalRewards);
+  const setIsTelegram = useStore((s) => s.setIsTelegram);
+  const setPlatform = useStore((s) => s.setPlatform);
+  const setIsBrowser = useStore((s) => s.setIsBrowser);
+  const setIsTgMobile = useStore((s) => s.setIsTgMobile);
+  const setPayouts = useStore((s) => s.setPayouts);
+  const section = useStore((s) => s.section);
+  const setSection = useStore((s) => s.setSection);
+  const showCard = useStore((s) => s.showCard);
+
+  const setRewards = useStore((s) => s.setRewards);
+  const setSwipes = useStore((s) => s.setSwipes);
+  const setShiftBg = useStore((s) => s.setShiftBg);
+  const setGameData = useStore((s) => s.setGameData);
+  const setRewardsClaimedInLastHr = useStore(
+    (s) => s.setRewardsClaimedInLastHr
+  );
+
   const refreshTimeoutRef = useRef();
 
   const getProfilePhoto = async (token) => {
@@ -373,16 +290,14 @@ const RoRMain = () => {
     <AppLayout>
       {!isLoading ? (
         <div className={`w-screen h-full select-none font-fof`}>
-          <RorContext.Provider value={contextValues}>
-            <div>{sections[section]}</div>
-            {section !== 14 &&
-              section !== 13 &&
-              section !== 12 &&
-              section !== 11 &&
-              section !== 15 &&
-              section !== 10 && <Footer />}
-            {showCard && showCard}
-          </RorContext.Provider>
+          <div>{sections[section]}</div>
+          {section !== 14 &&
+            section !== 13 &&
+            section !== 12 &&
+            section !== 11 &&
+            section !== 15 &&
+            section !== 10 && <Footer />}
+          {showCard && showCard}
         </div>
       ) : (
         <RoRLoader />

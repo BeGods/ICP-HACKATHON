@@ -1,21 +1,21 @@
-import React, { useContext, useState } from "react";
 import RoRHeader from "../../components/Layouts/Header";
-import { RorContext } from "../../context/context";
-import { setStorage } from "../../helpers/cookie.helper";
 import { activateRest, claimArtifact } from "../../utils/api.ror";
 import { showToast } from "../../components/Toast/Toast";
-import { useNavigate } from "react-router-dom";
-import { useRoRGuide } from "../../hooks/Tutorial";
-import { TavernGuide } from "../../components/Tutorials/RorTutorial";
-import { colorByMyth } from "../../utils/constants.ror";
+import { useRoRGuide } from "../../hooks/useTutorial";
 import { ToggleBack } from "../../components/Common/SectionToggles";
 import BgLayout from "../../components/Layouts/BgLayout";
 import { SecondaryFooter } from "../../components/Layouts/Wrapper";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
+import { useStore } from "../../store/useStore";
 
 const Tavern = () => {
-  const { gameData, setGameData, setShowCard, assets, authToken, setSection } =
-    useContext(RorContext);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const assets = useStore((s) => s.assets);
+  const authToken = useStore((s) => s.authToken);
+  const setSection = useStore((s) => s.setSection);
+
   const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial05");
 
   const handleActivateRest = async (itemId, adId) => {

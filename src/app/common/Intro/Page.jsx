@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   authenticateLine,
   authenticateOneWave,
@@ -22,7 +22,6 @@ import {
   trackEvent,
 } from "../../../utils/ga";
 import Launcher from "./Launcher";
-import { MainContext } from "../../../context/context";
 import i18next from "i18next";
 import { getRandomColor } from "../../../helpers/randomColor.helper";
 import { showToast } from "../../../components/Toast/Toast";
@@ -34,26 +33,26 @@ import { useLocation } from "react-router-dom";
 import liff from "@line/liff";
 import { validate as isValidUUID } from "uuid";
 import AppLayout from "../../../components/Layouts/AppLayout";
-import OnboardPage from "../Auth/Page";
+import OnboardPage from "../Auth/Onboard";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const IntroPage = (props) => {
-  const {
-    setEnableHaptic,
-    enableSound,
-    setEnableSound,
-    platform,
-    setPlatform,
-    setAuthToken,
-    setCountry,
-    isTelegram,
-    setIsTelegram,
-    setIsBrowser,
-    isBrowser,
-    isTgMobile,
-    setIsTgMobile,
-  } = useContext(MainContext);
+  const platform = useStore((s) => s.platform);
+  const setPlatform = useStore((s) => s.setPlatform);
+  const setEnableHaptic = useStore((s) => s.setEnableHaptic);
+  const setEnableSound = useStore((s) => s.setEnableSound);
+  const enableSound = useStore((s) => s.enableSound);
+  const setAuthToken = useStore((s) => s.setAuthToken);
+  const setCountry = useStore((s) => s.setCountry);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const setIsTelegram = useStore((s) => s.setIsTelegram);
+  const setIsBrowser = useStore((s) => s.setIsBrowser);
+  const isBrowser = useStore((s) => s.isBrowser);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+  const setIsTgMobile = useStore((s) => s.setIsTgMobile);
+
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const oneWaveParam =

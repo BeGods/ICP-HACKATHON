@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { MainContext } from "../../context/context";
+import { useStore } from "../../store/useStore";
 
 const colors = [
   "bg-red-500",
@@ -16,7 +15,8 @@ const getRandomColor = () => {
 };
 
 const Avatar = ({ name, color }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+
   const firstLetter = name.charAt(0).toUpperCase();
   const avatarColor = color ? color : getRandomColor();
 

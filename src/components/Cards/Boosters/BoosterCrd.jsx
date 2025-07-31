@@ -1,15 +1,7 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { mythologies, mythSections } from "../../../utils/constants.fof";
 import IconBtn from "../../Buttons/IconBtn";
 import ReactHowler from "react-howler";
-import { FofContext } from "../../../context/context";
 import {
   CustomToggleLeft,
   ToggleLeft,
@@ -33,11 +25,12 @@ import { Clapperboard, X } from "lucide-react";
 import { hasTimeElapsed } from "../../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
 import { getKaiaValue } from "../../../utils/line";
-import { useOpenAd } from "../../../hooks/DappAds";
+import { useOpenAd } from "../../../hooks/useGameAds";
 import { CardWrap } from "../../Layouts/Wrapper";
-import { useDisableWrapper } from "../../../hooks/disableWrapper";
-import useWalletPayment from "../../../hooks/LineWallet";
+import { useDisableWrapper } from "../../../hooks/useDisableClick";
+import useDappWallet from "../../../hooks/useDappWallet";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -161,22 +154,21 @@ const BoosterClaim = ({
   isAutoPay,
   booster,
 }) => {
-  const {
-    gameData,
-    section,
-    setSection,
-    setGameData,
-    setShowBooster,
-    enableSound,
-    assets,
-    setActiveMyth,
-    activeMyth,
-    authToken,
-    setShowCard,
-    enableHaptic,
-    isTelegram,
-  } = useContext(FofContext);
-  const { createLinePayment } = useWalletPayment();
+  const gameData = useStore((s) => s.gameData);
+  const section = useStore((s) => s.section);
+  const setSection = useStore((s) => s.setSection);
+  const setGameData = useStore((s) => s.setGameData);
+  const setShowBooster = useStore((s) => s.setShowBooster);
+  const enableSound = useStore((s) => s.enableSound);
+  const assets = useStore((s) => s.assets);
+  const setActiveMyth = useStore((s) => s.setActiveMyth);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const authToken = useStore((s) => s.authToken);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const isTelegram = useStore((s) => s.isTelegram);
+
+  const { createLinePayment } = useDappWallet();
   const { t, i18n } = useTranslation();
   const disableRef = useRef(false);
   const [payIsActive, setPayIsActive] = useState(false);

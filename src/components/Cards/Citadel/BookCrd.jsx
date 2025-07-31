@@ -1,4 +1,4 @@
-import React, { use, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HTMLFlipBook from "react-pageflip";
 import { gameItems } from "../../../utils/gameItems";
 import { useTranslation } from "react-i18next";

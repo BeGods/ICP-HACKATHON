@@ -1,20 +1,16 @@
-import React, { useContext, useState } from "react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import { MainContext } from "../../context/context";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const IconBtn = ({ isInfo, isFlip, handleClick, align, isJigsaw }) => {
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const { enableHaptic, assets } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const assets = useStore((s) => s.assets);
 
   const handleButtonClick = () => {
     handleClickHaptic(tele, enableHaptic);
 
-    setIsButtonClicked(true);
-
     setTimeout(() => {
-      setIsButtonClicked(false);
       handleClick();
     }, 100);
   };

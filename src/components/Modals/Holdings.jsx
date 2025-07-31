@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { MainContext } from "../../context/context";
+import { useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,12 +14,18 @@ import ModalLayout, {
   ModalItemLyt,
   ModelListLyt,
 } from "../Layouts/ModalLayout";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const HoldingsModal = ({ handleClose }) => {
-  const { enableHaptic, userData, setUserData, assets, isTelegram, authToken } =
-    useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const userData = useStore((s) => s.userData);
+  const setUserData = useStore((s) => s.setUserData);
+  const assets = useStore((s) => s.assets);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const authToken = useStore((s) => s.authToken);
+
   let disableClick = useRef(false);
   const [history, setHistory] = useState([]);
   const [isHistory, setIsHistory] = useState(false);

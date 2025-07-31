@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FofContext } from "../../../context/context";
 import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 import CarouselLayout, {
   ItemLayout,
@@ -16,6 +15,7 @@ import {
   mythSections,
 } from "../../../utils/constants.fof";
 import "../../../styles/carousel.scss";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -94,15 +94,14 @@ const BoosterItem = ({
 
 const BoosterCarousel = ({ enableGuide, mythData }) => {
   const { t } = useTranslation();
-  const {
-    setShowCard,
-    activeMyth,
-    gameData,
-    setSection,
-    enableHaptic,
-    questsData,
-    setMinimize,
-  } = useContext(FofContext);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const setSection = useStore((s) => s.setSection);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const questsData = useStore((s) => s.questsData);
+  const setMinimize = useStore((s) => s.setMinimize);
+  const gameData = useStore((s) => s.gameData);
+
   const [items, setItems] = useState([]);
 
   const handleBoosterClick = (activeCard, booster, isAutoPay) => {

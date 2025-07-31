@@ -3398,11 +3398,6 @@
   resolved "https://registry.yarnpkg.com/@telegram-apps/types/-/types-2.0.1.tgz#4846de852260d4fcd97d0e076fc882e6a6ee4d44"
   integrity sha512-l9BSXPEhtZG6q6MCa30p5/x0XWwG4ymEOrLD8YN9TEAil6qjYwDJea9R3gUjxsadsJW7XtaZkg2UD6k7owfqjw==
 
-"@telegram-auth/react@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@telegram-auth/react/-/react-1.0.4.tgz#4b44dfbd92ca646dde2cbb4352fd85bd959ef52c"
-  integrity sha512-VPCIrA6h5+w69S1QvB/k2PphmAA9E8BSqEX4WMSE1P7KxexKl/VRdoTRKSsSx1/In94S+R7FufbjLrRMnEGEKg==
-
 "@tokenizer/token@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@tokenizer/token/-/token-0.3.0.tgz#fe98a93fe789247e998c75e74e9c7c63217aa276"
@@ -7319,7 +7314,7 @@ process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
-prop-types@^15.5.6, prop-types@^15.6.2:
+prop-types@^15.5.6:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -7566,28 +7561,12 @@ react-scratchcard-v2@^1.1.1:
   resolved "https://registry.yarnpkg.com/react-scratchcard-v2/-/react-scratchcard-v2-1.1.1.tgz#a1bfe1503b416a59b905c21b61dfa3a7ecfade6b"
   integrity sha512-2yzLLOqJBthSIxeN7JViDqzRX/OBR8tLVPxe408AL3aWi/V1nVvUvOwU7aY+1/oAR/uuVTK3DC46unv4LzTKeg==
 
-react-telegram-login@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/react-telegram-login/-/react-telegram-login-1.1.2.tgz#28b9bdd68bb2710afca19354ac1f9428092836f0"
-  integrity sha512-pDP+bvfaklWgnK5O6yvZnIwgky0nnYUU6Zhk0EjdMSkPsLQoOzZRsXIoZnbxyBXhi7346bsxMH+EwwJPTxClDw==
-  dependencies:
-    react "^16.13.1"
-
 react-toastify@^10.0.5:
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-10.0.6.tgz#19c364b1150f495522c738d592d1dcc93879ade1"
   integrity sha512-yYjp+omCDf9lhZcrZHKbSq7YMuK0zcYkDFTzfRFgTXkTFHZ1ToxwAonzA4JI5CxA91JpjFLmwEsZEgfYfOqI1A==
   dependencies:
     clsx "^2.1.0"
-
-react@^16.13.1:
-  version "16.14.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
-  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
 
 react@^18.3.1:
   version "18.3.1"
@@ -9062,3 +9041,8 @@ zustand@5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.0.tgz#71f8aaecf185592a3ba2743d7516607361899da9"
   integrity sha512-LE+VcmbartOPM+auOjCCLQOsQ05zUTp8RkgwRzefUk+2jISdMMFnxvyTjA4YNWr5ZGXYbVsEMZosttuxUBkojQ==
+
+zustand@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.6.tgz#a2da43d8dc3d31e314279e5baec06297bea70a5c"
+  integrity sha512-ihAqNeUVhe0MAD+X8M5UzqyZ9k3FFZLBTtqo6JLPwV53cbRB/mJwBI0PxcIgqhBBHlEs8G45OTDTMq3gNcLq3A==

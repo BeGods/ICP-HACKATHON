@@ -1,4 +1,3 @@
-import React from "react";
 import BgLayout from "./BgLayout";
 
 const BasicLayout = ({ TopChild, CenterChild, BottomChild }) => {

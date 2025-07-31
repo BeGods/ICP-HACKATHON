@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
-import { RorContext } from "../../../context/context";
+import { useState } from "react";
+import { useStore } from "../../../store/useStore";
 
 const SwipeArena = ({ roundTimeElapsed, digMyth }) => {
-  const { battleData, setSwipes, swipes, gameData } = useContext(RorContext);
+  const battleData = useStore((s) => s.battleData);
+  const setSwipes = useStore((s) => s.setSwipes);
   const [swipeCount, setSwipeCount] = useState({ left: 0, right: 0 });
   const [touchStartX, setTouchStartX] = useState(null);
   const [lastDirection, setLastDirection] = useState(null);

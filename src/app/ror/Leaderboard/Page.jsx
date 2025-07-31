@@ -1,17 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api.ror";
-import { FofContext, MainContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import UserInfoCard from "../../../components/Cards/Info/UserInfoCrd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../../utils/country";
-import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
-import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/OrbCrd";
-import Avatar from "../../../components/Common/Avatar";
 import { mythSections, rankPositions } from "../../../utils/constants.fof";
 import {
   ToggleBack,
@@ -21,6 +17,7 @@ import {
 import LeaderboardHeader from "./Header";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import ReactHowler from "react-howler";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -29,7 +26,8 @@ const getRandomColor = () => {
 };
 
 const UserAvatar = ({ user, index, category }) => {
-  const { assets, userData } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const userData = useStore((s) => s.userData);
 
   const avatarColor = getRandomColor();
   const [image, setImage] = useState(() => {
@@ -90,16 +88,15 @@ const UserAvatar = ({ user, index, category }) => {
 
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const {
-    authToken,
-    userData,
-    enableHaptic,
-    setShowCard,
-    setUserData,
-    setSection,
-    enableSound,
-    assets,
-  } = useContext(MainContext);
+  const authToken = useStore((s) => s.authToken);
+  const userData = useStore((s) => s.userData);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const setUserData = useStore((s) => s.setUserData);
+  const setSection = useStore((s) => s.setSection);
+  const enableSound = useStore((s) => s.enableSound);
+  const assets = useStore((s) => s.assets);
+
   const [showEffect, setShowEffect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);

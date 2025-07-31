@@ -5,13 +5,12 @@ import HeaderLayout, {
   HeadbarLayout,
   HeaderMythSymbol,
 } from "../../../components/Layouts/HeaderLayout";
-import { useContext } from "react";
-import { MainContext } from "../../../context/context";
 import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
+import { useStore } from "../../../store/useStore";
 
 const BottomChild = ({ activeMyth, gameData, mythData }) => {
   const { t } = useTranslation();
-  const { setShowCard } = useContext(MainContext);
+  const setShowCard = useStore((s) => s.setShowCard);
 
   const data = [
     {

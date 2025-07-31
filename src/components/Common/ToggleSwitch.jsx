@@ -1,5 +1,3 @@
-import React from "react";
-
 export const ToggleSwitch = ({ handleToggle, isActive }) => {
   return (
     <div className="flex gap-2 justify-center items-center">

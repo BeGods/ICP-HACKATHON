@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   fetchDailyBonus,
   fetchExploitDailyBonus,
 } from "../../../../utils/api.fof";
 import { LoaderPinwheel } from "lucide-react";
-import { FofContext } from "../../../../context/context";
 import ReactHowler from "react-howler";
 import SplashScreen from "./Splash";
 import { useTranslation } from "react-i18next";
@@ -13,25 +12,23 @@ import { trackEvent } from "../../../../utils/ga";
 import { handleClickHaptic } from "../../../../helpers/cookie.helper";
 import BgLayout from "../../../../components/Layouts/BgLayout";
 import BasicLayout from "../../../../components/Layouts/BasicLayout";
+import { useStore } from "../../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const Gacha = (props) => {
   const { t } = useTranslation();
-  const {
-    gameData,
-    setQuestsData,
-    questsData,
-    setGameData,
-    setShowBooster,
-    authToken,
-    enableSound,
-    enableHaptic,
-    assets,
-    platform,
-    showAnmt,
-    isTgMobile,
-  } = useContext(FofContext);
+  const gameData = useStore((s) => s.gameData);
+  const setQuestsData = useStore((s) => s.setQuestsData);
+  const questsData = useStore((s) => s.questsData);
+  const setGameData = useStore((s) => s.setGameData);
+  const setShowBooster = useStore((s) => s.setShowBooster);
+  const authToken = useStore((s) => s.authToken);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const assets = useStore((s) => s.assets);
+  const platform = useStore((s) => s.platform);
+
   const [reward, setReward] = useState(null);
   const [exploitReward, setExploitReward] = useState([]);
   const [showSpin, setShowSpin] = useState(false);

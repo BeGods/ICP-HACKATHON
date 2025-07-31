@@ -1,23 +1,25 @@
-import React, { useContext } from "react";
-import { MainContext } from "../../context/context";
 import {
   deleteAuthCookie,
   handleClickHaptic,
 } from "../../helpers/cookie.helper";
-import useWalletPayment from "../../hooks/LineWallet";
+import useDappWallet from "../../hooks/useDappWallet";
 import { ChevronRight, History, Wallet } from "lucide-react";
 import liff from "@line/liff";
 import { useNavigate } from "react-router-dom";
 import { useTonAddress, useTonConnectUI } from "@tonconnect/ui-react";
 import ModalLayout, { ModalItemLyt } from "../Layouts/ModalLayout";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const WalletsModal = ({ handleClose }) => {
   const navigate = useNavigate();
-  const { fetchLinePayHistory, disconnectLineWallet } = useWalletPayment();
-  const { enableHaptic, lineWallet, isTelegram, setUserData } =
-    useContext(MainContext);
+  const { fetchLinePayHistory, disconnectLineWallet } = useDappWallet();
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const lineWallet = useStore((s) => s.lineWallet);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const setUserData = useStore((s) => s.setUserData);
+
   const userFriendlyAddress = useTonAddress();
   const [tonConnectUI, setOptions] = useTonConnectUI();
 

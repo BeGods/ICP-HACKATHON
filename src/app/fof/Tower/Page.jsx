@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { convertOrbs } from "../../../utils/api.fof";
-import { FofContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
 import {
   mythologies,
@@ -13,7 +12,7 @@ import { showToast } from "../../../components/Toast/Toast";
 import ReactHowler from "react-howler";
 import TowerHeader from "./Header";
 import { TowerGuide } from "../../../components/Tutorials/Tutorials";
-import { useTowerGuide } from "../../../hooks/Tutorial";
+import { useTowerGuide } from "../../../hooks/useTutorial";
 import { getPhaseByDate } from "../../../helpers/game.helper";
 import { trackComponentView, trackEvent } from "../../../utils/ga";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
@@ -25,7 +24,8 @@ import {
 import BgLayout from "../../../components/Layouts/BgLayout";
 import { Repeat2 } from "lucide-react";
 import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
-import { useDisableWrapper } from "../../../hooks/disableWrapper";
+import { useDisableWrapper } from "../../../hooks/useDisableClick";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -39,28 +39,26 @@ const orbPos = [
 
 const Tower = () => {
   const { t } = useTranslation();
-  const [showInfo, setShowInfo] = useState(false);
+  const setGameData = useStore((s) => s.setGameData);
+  const gameData = useStore((s) => s.gameData);
+  const authToken = useStore((s) => s.authToken);
+  const keysData = useStore((s) => s.keysData);
+  const setKeysData = useStore((s) => s.setKeysData);
+  const enableSound = useStore((s) => s.enableSound);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const assets = useStore((s) => s.assets);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+  const setMinimize = useStore((s) => s.setMinimize);
   const [showGlow, setShowGlow] = useState(false);
   const [sessionOrbs, setSessionOrbs] = useState(0);
-  const {
-    setGameData,
-    gameData,
-    authToken,
-    keysData,
-    setKeysData,
-    enableSound,
-    setShowCard,
-    assets,
-    enableHaptic,
-    isTgMobile,
-    setMinimize,
-  } = useContext(FofContext);
   const [myth, setMyth] = useState(0);
   const [showClaim, setShowClaim] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
   const [showScale, setShowScale] = useState(false);
   const [scaleOrb, setScaleOrb] = useState(null);
   const [showToggle, setShowToggles] = useState(false);
+
   const mythData = gameData.mythologies.filter(
     (item) => item.name?.toLowerCase() === wheel[myth]
   )[0];
@@ -245,7 +243,6 @@ const Tower = () => {
         gameData={gameData}
         mythData={mythData}
         sessionOrbs={sessionOrbs}
-        showInfo={showInfo}
       />
 
       <div

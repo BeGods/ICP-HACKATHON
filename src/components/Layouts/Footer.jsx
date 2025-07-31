@@ -1,16 +1,17 @@
-import { useContext, useRef, useState } from "react";
-import { FofContext, MainContext } from "../../context/context";
+import { useRef, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
 import ReactHowler from "react-howler";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { hasTimeElapsed } from "../../helpers/booster.helper";
 import { useTranslation } from "react-i18next";
 import "../../styles/flip.scss";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const BoosterAlert = () => {
-  const { gameData, activeMyth } = useContext(FofContext);
+  const gameData = useStore((s) => s.gameData);
+  const activeMyth = useStore((s) => s.activeMyth);
 
   const boosterStatus = {
     automata: !gameData.mythologies[activeMyth].boosters.isAutomataActive,
@@ -34,16 +35,15 @@ const BoosterAlert = () => {
 
 const FooterItem = ({ idx, avatarColor, itm, myth }) => {
   const howlerRef = useRef(null);
-  const {
-    section,
-    setSection,
-    setActiveMyth,
-    assets,
-    userData,
-    enableHaptic,
-    enableSound,
-    game,
-  } = useContext(MainContext);
+  const section = useStore((s) => s.section);
+  const setSection = useStore((s) => s.setSection);
+  const setActiveMyth = useStore((s) => s.setActiveMyth);
+  const assets = useStore((s) => s.assets);
+  const userData = useStore((s) => s.userData);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const enableSound = useStore((s) => s.enableSound);
+  const game = useStore((s) => s.game);
+
   const [clickEffect, setClickEffect] = useState(false);
 
   const playAudio = () => {
@@ -164,8 +164,13 @@ const FooterItem = ({ idx, avatarColor, itm, myth }) => {
 };
 const Footer = () => {
   const { t } = useTranslation();
-  const { section, activeMyth, enableSound, minimize, assets, game } =
-    useContext(MainContext);
+  const section = useStore((s) => s.section);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const enableSound = useStore((s) => s.enableSound);
+  const minimize = useStore((s) => s.minimize);
+  const assets = useStore((s) => s.assets);
+  const game = useStore((s) => s.game);
+
   const [avatarColor, setAvatarColor] = useState(() => {
     return localStorage.getItem("avatarColor");
   });

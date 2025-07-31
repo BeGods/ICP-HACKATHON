@@ -1,17 +1,20 @@
-import { useContext, useEffect } from "react";
-import { MainContext, RorContext } from "../../context/context";
-import { gameItems } from "../../utils/gameItems";
-import { mythSections } from "../../utils/constants.ror";
+import { useEffect } from "react";
 import HeaderLayout, { HeadbarLayout } from "./HeaderLayout";
 import MiscCard from "../Cards/Citadel/MiscCard";
 import ShardInfoCrd from "../Cards/Info/ShardInfoCrd";
 import { formatThreeNums } from "../../helpers/leaderboard.helper";
+import { useStore } from "../../store/useStore";
 
 const RoRHeader = ({ isOpenVault, isFurnaceBuild, handleClick }) => {
-  const { section, setSection, setShowCard, setMinimize } =
-    useContext(MainContext);
-  const { gameData, swipes, assets, shardReward, isSwiping } =
-    useContext(RorContext);
+  const section = useStore((s) => s.section);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const setMinimize = useStore((s) => s.setMinimize);
+  const gameData = useStore((s) => s.gameData);
+  const swipes = useStore((s) => s.swipes);
+  const assets = useStore((s) => s.assets);
+  const shardReward = useStore((s) => s.shardReward);
+  const isSwiping = useStore((s) => s.isSwiping);
 
   const shardMap = [
     ...gameData.stats.mythologies.map((myth) => myth.shards ?? 0),

@@ -1,11 +1,11 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import { mythSections } from "../../../utils/constants.fof";
 import {
   calculateRemainingTime,
   hasTimeElapsed,
 } from "../../../helpers/booster.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
-import { FofContext } from "../../../context/context";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -16,7 +16,7 @@ const GameHeader = ({
   minimize,
   maximize,
 }) => {
-  const { enableHaptic } = useContext(FofContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
   const [toggleValue, setToggleValue] = useState(true);
 
   return (

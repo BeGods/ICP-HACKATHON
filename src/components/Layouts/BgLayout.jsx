@@ -1,13 +1,15 @@
-import { useContext, useMemo } from "react";
-import { FofContext, MainContext } from "../../context/context";
+import { useMemo } from "react";
 import { mythSections } from "../../utils/constants.fof";
+import { useStore } from "../../store/useStore";
 
 const backgroundFoFSections = new Set([4, 7, 8, 9, 10, 11]);
 const orbsFilterSections = new Set([0, 1, 2]);
 
 const BgLayout = ({ children, isLoading }) => {
-  const { assets, section, game } = useContext(MainContext);
-  const { activeMyth } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const section = useStore((s) => s.section);
+  const game = useStore((s) => s.game);
+  const activeMyth = useStore((s) => s.activeMyth);
 
   const FoFbgImage = useMemo(() => {
     if (section === 4 || (section >= 7 && section < 12) || isLoading)

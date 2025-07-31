@@ -1,14 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import { MainContext } from "../../context/context";
+import { useEffect, useState } from "react";
 import { ChevronsLeft, ChevronsRight, Share2, ThumbsUp } from "lucide-react";
 import { mythSections } from "../../utils/constants.fof";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
-import { useDisableWrapper } from "../../hooks/disableWrapper";
+import { useDisableWrapper } from "../../hooks/useDisableClick";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 export const CoinBtnAddOn = ({ content, type = "default" }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <div className="relative flex justify-center items-center w-full h-full pr-1.5">
@@ -27,7 +27,7 @@ export const CoinBtnAddOn = ({ content, type = "default" }) => {
 };
 
 export const OrbBtnAddOn = ({ content }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <div className="relative flex justify-center items-center w-full h-full pr-1.5">
@@ -44,7 +44,7 @@ export const OrbBtnAddOn = ({ content }) => {
 };
 
 export const SocialAddOn = () => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <div className="relative flex justify-center items-center w-full h-full pl-1.5">
@@ -75,7 +75,10 @@ export const PrimaryBtn = ({
   showGlow,
   isCoin,
 }) => {
-  const { assets, activeMyth, enableHaptic } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+
   const [showRedirect, setShowRedirect] = useState(true);
   const myth = customMyth ?? activeMyth;
   const currMyth =

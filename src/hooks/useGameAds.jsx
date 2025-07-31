@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { showToast } from "../components/Toast/Toast";
 
 export const useOpenAd = ({ callReward }) => {
@@ -55,18 +55,6 @@ export const useOpenAd = ({ callReward }) => {
           userId: "user122",
           displayName: "user",
         };
-
-        // adParams = {
-        //   line: {
-        //     type: "WEB",
-        //   },
-        //   web: {
-        //     api: `${import.meta.env.VITE_API_FOF_URL}/ads/id`,
-        //     method: "GET",
-        //     token: "data",
-        //     valid: 171,
-        //   },
-        // };
 
         adParams = {
           line: {
@@ -129,3 +117,31 @@ export const useOpenAd = ({ callReward }) => {
 
   return { loadAd, isReady, adStatus };
 };
+
+export function useAdsgram({ blockId, onReward, onError }) {
+  const AdControllerRef = useRef(undefined);
+
+  useEffect(() => {
+    AdControllerRef.current = window.Adsgram?.init({ blockId });
+  }, [blockId]);
+
+  return useCallback(async () => {
+    if (AdControllerRef.current) {
+      AdControllerRef.current
+        .show()
+        .then(() => {
+          onReward();
+        })
+        .catch((result) => {
+          onError?.(result);
+        });
+    } else {
+      onError?.({
+        error: true,
+        done: false,
+        state: "load",
+        description: "Adsgram script not loaded",
+      });
+    }
+  }, [onError, onReward]);
+}

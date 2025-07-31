@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
 import IconBtn from "../../Buttons/IconBtn";
-import { mythSections } from "../../../utils/constants.fof";
-import { FofContext } from "../../../context/context";
+import { useStore } from "../../../store/useStore";
 
 const SecretCard = ({ t, handleShowInfo, activeMyth }) => {
-  const { assets, isTelegram, isTgMobile } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const isTelegram = useStore((s) => s.isTelegram);
+
   return (
     <div
       style={{

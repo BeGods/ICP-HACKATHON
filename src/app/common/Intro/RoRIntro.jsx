@@ -1,14 +1,14 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import assets from "../../../assets/assets.json";
 import { handleClickHaptic, setStorage } from "../../../helpers/cookie.helper";
-import { MainContext } from "../../../context/context";
 import { useNavigate } from "react-router-dom";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const RoRIntro = ({ handleFadeout, fadeout }) => {
   const [showGlow, setShowGlow] = useState(false);
-  const { setGame } = useContext(MainContext);
+  const setGame = useStore((s) => s.setGame);
   const navigate = useNavigate();
 
   return (

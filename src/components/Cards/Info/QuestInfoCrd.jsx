@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
 import IconBtn from "../../Buttons/IconBtn";
 import { mythSections } from "../../../utils/constants.fof";
 import { useTranslation } from "react-i18next";
-import { FofContext } from "../../../context/context";
+import { useStore } from "../../../store/useStore";
 
 const InfoCard = ({ t, quest, handleShowInfo, activeMyth }) => {
   const { i18n } = useTranslation();
-  const { assets, platform } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const platform = useStore((s) => s.platform);
 
   return (
     <div

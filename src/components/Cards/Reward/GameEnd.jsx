@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
-import { FofContext } from "../../../context/context";
 import { mythSections } from "../../../utils/constants.fof";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const GameEndCrd = ({ activeMyth }) => {
-  const { assets } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <OverlayLayout>

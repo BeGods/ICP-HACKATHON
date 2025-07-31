@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
 import assets from "../../assets/assets.json";
 import LoadRoll from "../Fx/LoadRoll";
-import { MainContext } from "../../context/context";
 import SecondaryBtn from "../Buttons/SecondaryBtn";
+import { useStore } from "../../store/useStore";
 
 const FoFLoader = (props) => {
-  const { isTgMobile } = useContext(MainContext);
+  const isTgMobile = useStore((s) => s.enableHaptic);
 
   return (
     <div

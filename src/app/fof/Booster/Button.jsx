@@ -1,11 +1,11 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import {
   getTimerContent,
   hasTimeElapsed,
 } from "../../../helpers/booster.helper";
-import { FofContext } from "../../../context/context";
 import { Lock } from "lucide-react";
 import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
+import { useStore } from "../../../store/useStore";
 
 export const checkBoosterIsInfoMode = ({
   activeCard,
@@ -40,7 +40,8 @@ export const checkBoosterIsInfoMode = ({
 
 const BoosterBtn = ({ activeCard, handleClaim, isAutoPay, boosterLvl }) => {
   const disableClick = useRef(false);
-  const { activeMyth, gameData } = useContext(FofContext);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const gameData = useStore((s) => s.gameData);
   const mythData = gameData.mythologies[activeMyth].boosters;
 
   const isInfoMode = checkBoosterIsInfoMode({

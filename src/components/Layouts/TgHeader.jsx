@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Maximize2, Minimize2, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import { isDesktop } from "../../utils/device.info";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -13,7 +13,9 @@ const TgHeader = ({
   isFullscreen,
   setIsFullscreen,
 }) => {
-  const { enableHaptic, isTelegram } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const isTelegram = useStore((s) => s.isTelegram);
+
   const navigate = useNavigate();
 
   useEffect(() => {

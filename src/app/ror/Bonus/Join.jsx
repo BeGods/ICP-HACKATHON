@@ -1,22 +1,25 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Confetti from "react-confetti";
-import { RorContext } from "../../../context/context";
 import { trackEvent } from "../../../utils/ga";
 import { fetchJoiningBonus } from "../../../utils/api.ror";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import BasicLayout from "../../../components/Layouts/BasicLayout";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const JoinBonus = (props) => {
   const { t } = useTranslation();
-  const { setSection, authToken, setGameData, enableHaptic, assets } =
-    useContext(RorContext);
+
+  const setSection = useStore((s) => s.setSection);
+  const authToken = useStore((s) => s.authToken);
+  const setGameData = useStore((s) => s.setGameData);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const assets = useStore((s) => s.assets);
+
   const [changeText, setChangeText] = useState(true);
-  const [disableHand, setDisableHand] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [flipped, setFlipped] = useState(false);
   const bonusText = t("bonus.join").split(" ");
   let disableRef = useRef(false);
 
@@ -56,22 +59,18 @@ const JoinBonus = (props) => {
 
   useEffect(() => {
     playConfetti();
-    setTimeout(() => {
-      setDisableHand(false);
-    }, 2000);
 
     setTimeout(() => {
       handleClaimBonus();
     }, 4000);
   }, []);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setChangeText((prevText) => !prevText);
-  //     setFlipped((prev) => !prev);
-  //   }, 1500);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChangeText((prevText) => !prevText);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -82,7 +81,7 @@ const JoinBonus = (props) => {
           </h1>
         }
         CenterChild={
-          <div className={`orb ${flipped ? "flipped" : ""}`}>
+          <div className={`orb`}>
             <div className="orb__face orb__face--front  flex justify-center items-center">
               <div className="flex justify-center items-center w-full relative  h-full">
                 <img
@@ -113,7 +112,7 @@ const JoinBonus = (props) => {
         }
         BottomChild={
           <div className="text-gold w-full uppercase flex justify-center items-center text-bonus-desc -mb-[1.1rem]">
-            <h1> {flipped ? "BAG" : "9 GOBCOINS"}</h1>
+            BAG
           </div>
         }
       />

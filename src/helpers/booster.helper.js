@@ -1,4 +1,3 @@
-import { Lock } from "lucide-react";
 
 export const calculateRemainingTime = (card) => {
   const hoursInMs = 24 * 60 * 60 * 1000;

@@ -1,16 +1,15 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import assets from "../../../assets/assets.json";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import FoFIntro from "./FoFIntro";
 import RoRIntro from "./RoRIntro";
 import ReactHowler from "react-howler";
 import SettingModal from "../../../components/Modals/Settings";
 import { validateSoundCookie } from "../../../helpers/cookie.helper";
-import { MainContext } from "../../../context/context";
 import {
   ToggleLeft,
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -20,7 +19,8 @@ export default function Launcher({
   isTgMobile,
   isLoading,
 }) {
-  const { showCard, setShowCard } = useContext(MainContext);
+  const showCard = useStore((s) => s.showCard);
+  const setShowCard = useStore((s) => s.setShowCard);
   const menuRef = useRef(null);
   const bgRef = useRef(null);
   const [fadeout, setFadeout] = useState(false);

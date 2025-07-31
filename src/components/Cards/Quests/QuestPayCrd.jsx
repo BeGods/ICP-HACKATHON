@@ -1,13 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Symbol from "../../Common/Symbol";
 import MappedOrbs from "../../Common/MappedOrbs";
 import { mythSections, mythSymbols } from "../../../utils/constants.fof";
-import { FofContext } from "../../../context/context";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
+import { useStore } from "../../../store/useStore";
 
 function PayCard({ quest, handlePay, activeMyth, handleClaimEffect }) {
-  const { gameData, assets } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const gameData = useStore((s) => s.gameData);
+
   const [deduct, setDeduct] = useState(false);
   const [scale, setScale] = useState(false);
   const [showNum, setShowNum] = useState(false);

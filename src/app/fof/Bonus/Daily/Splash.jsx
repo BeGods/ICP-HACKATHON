@@ -6,21 +6,25 @@ import {
 } from "../../../../utils/constants.fof";
 import confetti from "canvas-confetti";
 import { useTranslation } from "react-i18next";
-import { useContext, useEffect, useRef, useState } from "react";
-import { FofContext } from "../../../../context/context";
+import { useEffect, useRef, useState } from "react";
 import ReactHowler from "react-howler";
 import MappedOrbs from "../../../../components/Common/MappedOrbs";
 import Symbol from "../../../../components/Common/Symbol";
 import assets from "../../../../assets/assets.json";
 import { handleClickHaptic } from "../../../../helpers/cookie.helper";
 import BasicLayout from "../../../../components/Layouts/BasicLayout";
+import { useStore } from "../../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const SplashScreen = ({ reward, exploitReward }) => {
   const { t } = useTranslation();
-  const { setSection, setActiveMyth, enableSound, enableHaptic, isTgMobile } =
-    useContext(FofContext);
+  const setSection = useStore((s) => s.setSection);
+  const setActiveMyth = useStore((s) => s.setActiveMyth);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+
   const [currReward, setCurrReward] = useState(reward);
   const [showScale, setShowScale] = useState(0);
   const [showYouScale, setShowYouScale] = useState(0);

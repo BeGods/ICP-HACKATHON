@@ -1,9 +1,8 @@
-import React, { forwardRef, useContext } from "react";
 import { gameItems } from "../../utils/gameItems";
-import { useMaskStyle } from "../../hooks/MaskStyle";
-import { MainContext, RorContext } from "../../context/context";
+import { useMaskStyle } from "../../hooks/useMaskStyle";
 import { reformatPotion } from "../../helpers/game.helper";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -17,7 +16,7 @@ export const GridItemEmpty = ({
   isHighlighted,
   dropRef,
 }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   const handleClickWrapper = () => {
     if (disable) return;
@@ -91,7 +90,8 @@ const GridItem = ({
   showLabel,
   customLabel,
 }) => {
-  const { assets } = useContext(RorContext);
+  const assets = useStore((s) => s.assets);
+
   const itemDetails = gameItems.find((item) => item?.id === itemObj?.itemId);
 
   const mask = useMaskStyle(

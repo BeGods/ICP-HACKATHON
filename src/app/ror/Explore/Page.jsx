@@ -1,11 +1,10 @@
-import { RorContext } from "../../../context/context";
 import {
   claimItemAbility,
   claimSessionReward,
   startSession,
 } from "../../../utils/api.ror";
 import SwipeArena from "./SwipeArena";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RoRHeader from "../../../components/Layouts/Header";
 import {
   timeLeftUntil12Hours,
@@ -19,39 +18,41 @@ import {
 } from "../../../utils/constants.ror";
 import { showToast } from "../../../components/Toast/Toast";
 import ReactHowler from "react-howler";
-import { useRoRGuide } from "../../../hooks/Tutorial";
+import { useRoRGuide } from "../../../hooks/useTutorial";
 import { isCoin } from "../../../helpers/game.helper";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import { ToggleBack } from "../../../components/Common/SectionToggles";
 import ItemCrd from "../../../components/Cards/Relics/ItemsCrd";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const Explore = () => {
-  const {
-    battleData,
-    setBattleData,
-    gameData,
-    setGameData,
-    setSwipes,
-    swipes,
-    setMinimize,
-    authToken,
-    enableHaptic,
-    setSection,
-    setShowCard,
-    assets,
-    setShardReward,
-    setIsSwiping,
-    mythBg,
-    setMythBg,
-    rewards,
-    setRewards,
-    setActiveReward,
-    setRewardsClaimedInLastHr,
-    rewardsClaimedInLastHr,
-    enableSound,
-  } = useContext(RorContext);
+  const battleData = useStore((s) => s.battleData);
+  const setBattleData = useStore((s) => s.setBattleData);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const setSwipes = useStore((s) => s.setSwipes);
+  const swipes = useStore((s) => s.swipes);
+  const setMinimize = useStore((s) => s.setMinimize);
+  const authToken = useStore((s) => s.authToken);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const assets = useStore((s) => s.assets);
+  const setShardReward = useStore((s) => s.setShardReward);
+  const setIsSwiping = useStore((s) => s.setIsSwiping);
+  const mythBg = useStore((s) => s.mythBg);
+  const setMythBg = useStore((s) => s.setMythBg);
+  const rewards = useStore((s) => s.rewards);
+  const setRewards = useStore((s) => s.setRewards);
+  const setActiveReward = useStore((s) => s.setActiveReward);
+  const setRewardsClaimedInLastHr = useStore(
+    (s) => s.setRewardsClaimedInLastHr
+  );
+  const rewardsClaimedInLastHr = useStore((s) => s.rewardsClaimedInLastHr);
+  const enableSound = useStore((s) => s.enableSound);
+
   const [showBack, setShowBack] = useState(false);
   const [currStage, setCurrStage] = useState(0);
   const [countDown, setCountDown] = useState(3);

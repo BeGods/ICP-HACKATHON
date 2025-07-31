@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import assets from "../../assets/assets.json";
 
 const LoadRoll = () => {

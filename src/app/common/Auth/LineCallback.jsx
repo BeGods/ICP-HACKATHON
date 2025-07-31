@@ -1,13 +1,13 @@
-import React, { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MainContext } from "../../../context/context";
 import { authenticateLine } from "../../../utils/api.fof";
 import { setAuthCookie } from "../../../helpers/cookie.helper";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const LineCallback = () => {
-  const { setAuthToken } = useContext(MainContext);
+  const setAuthToken = useStore((s) => s.setAuthToken);
   const navigate = useNavigate();
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);

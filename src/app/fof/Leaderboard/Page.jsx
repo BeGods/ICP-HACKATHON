@@ -1,20 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LeaderboardItem from "./LeaderboardItem";
 import { fetchLeaderboard, updateRewardStatus } from "../../../utils/api.fof";
-import { FofContext, MainContext } from "../../../context/context";
 import { useTranslation } from "react-i18next";
-import {
-  formatRankOrbs,
-  timeRemainingForHourToFinishUTC,
-} from "../../../helpers/leaderboard.helper";
+import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import UserInfoCard from "../../../components/Cards/Info/UserInfoCrd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { countries } from "../../../utils/country";
-import StakeCrd from "../../../components/Cards/Reward/StakeCrd";
-import { showToast } from "../../../components/Toast/Toast";
 import BlackOrbRewardCrd from "../../../components/Cards/Reward/OrbCrd";
-import Avatar from "../../../components/Common/Avatar";
 import { mythSections, rankPositions } from "../../../utils/constants.fof";
 import {
   ToggleBack,
@@ -24,6 +17,7 @@ import {
 import LeaderboardHeader from "./Header";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import ReactHowler from "react-howler";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -31,8 +25,9 @@ const getRandomColor = () => {
   return mythSections[Math.floor(Math.random() * mythSections.length)];
 };
 
-const UserAvatar = ({ user, index, category }) => {
-  const { assets, platform, userData } = useContext(FofContext);
+const UserAvatar = ({ user, category }) => {
+  const userData = useStore((s) => s.userData);
+  const assets = useStore((s) => s.assets);
 
   const util = {
     0: "second",
@@ -97,80 +92,16 @@ const UserAvatar = ({ user, index, category }) => {
   );
 };
 
-const LeaderboardFooter = ({ category }) => {
-  const { userData, gameData, setShowCard, setSection } =
-    useContext(FofContext);
-  return (
-    <div className="w-full absolute bottom-0 mb-[2dvh]">
-      <div
-        className={`flex h-button-primary justify-start pl-2 leaderboard-width`}
-      >
-        <div
-          onClick={() => {
-            if (gameData.blackOrbs < 1) {
-              showToast("stake_error");
-            } else if (
-              category === 1 &&
-              userData.orbRank !== 0 &&
-              !userData.stakeOn
-            ) {
-              setShowCard(<StakeCrd profileImg={userData.avatarUrl} />);
-            }
-          }}
-          className="flex border border-gray-400 rounded-primary bg-black justify-center  w-[80%]"
-        >
-          <div className="flex relative text-tertiary text-white justify-start pl-5 items-center w-[25%] h-full">
-            <h1>{category == 0 ? userData.referRank : userData.orbRank}</h1>
-            <div>
-              {userData.stakeOn == "+" && (
-                <h1 className="text-green-500 text-[18px]">▲</h1>
-              )}
-              {userData.stakeOn == "-" && (
-                <h1 className="text-red-500 text-[18px]">▼</h1>
-              )}
-            </div>
-          </div>
-          <div className="flex gap-3 items-center w-full">
-            <div className="h-[35px] w-[35px]">
-              {userData.avatarUrl ? (
-                <img
-                  src={userData.avatarUrl}
-                  alt="profile-image"
-                  className="rounded-full"
-                />
-              ) : (
-                <Avatar
-                  name={userData.username.charAt(0).toUpperCase()}
-                  className="h-full w-full"
-                  profile={0}
-                  color={avatarColor}
-                />
-              )}
-            </div>
-            <h1 className="text-white text-tertiary">
-              {userData.username.length > 20
-                ? userData.username.slice(0, 20)
-                : userData.username}
-            </h1>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Leaderboard = (props) => {
   const { t } = useTranslation();
-  const {
-    authToken,
-    userData,
-    enableHaptic,
-    setShowCard,
-    setUserData,
-    setSection,
-    enableSound,
-    assets,
-  } = useContext(FofContext);
+  const authToken = useStore((s) => s.authToken);
+  const userData = useStore((s) => s.userData);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const setUserData = useStore((s) => s.setUserData);
+  const setSection = useStore((s) => s.setSection);
+  const enableSound = useStore((s) => s.enableSound);
+  const assets = useStore((s) => s.assets);
   const [showEffect, setShowEffect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const GachaRoll = ({ showSpin }) => {
   const itemArr = ["c", "g", 9, "n", "j", "f", "d", "e"];

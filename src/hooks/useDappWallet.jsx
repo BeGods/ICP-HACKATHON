@@ -1,10 +1,9 @@
-import { useContext } from "react";
-import { useWallet } from "../context/wallet";
+import { useWallet } from "../context/DappWallet";
 import { getPaymentId } from "../utils/api.fof";
 import { v4 as uuidv4 } from "uuid";
-import { MainContext } from "../context/context";
+import { useStore } from "../store/useStore";
 
-const useWalletPayment = () => {
+const useDappWallet = () => {
   const {
     isInitializing,
     lineProvider,
@@ -14,7 +13,8 @@ const useWalletPayment = () => {
     setPaymentProvider,
     setLineWallet,
   } = useWallet();
-  const { authToken, setUserData } = useContext(MainContext);
+  const authToken = useStore((s) => s.authToken);
+  const setUserData = useStore((s) => s.setUserData);
 
   const connectWallet = async () => {
     if (!lineProvider) {
@@ -195,4 +195,4 @@ const useWalletPayment = () => {
   };
 };
 
-export default useWalletPayment;
+export default useDappWallet;

@@ -1,10 +1,10 @@
-import { useState, useContext } from "react";
-import { MainContext } from "../../../context/context";
+import { useState } from "react";
 import SettingModal from "../../../components/Modals/Settings";
 import LoginModal from "../../../components/Modals/Login";
+import { useStore } from "../../../store/useStore";
 
 const OnboardPage = () => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
   const [showSetting, setShowSetting] = useState(false);
 
   return (

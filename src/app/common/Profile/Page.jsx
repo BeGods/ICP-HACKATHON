@@ -1,22 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FofContext, MainContext, RorContext } from "../../../context/context";
+import { useEffect, useState } from "react";
 import ProfileHeader from "./Header";
 import { trackComponentView } from "../../../utils/ga";
 import { CalendarCheck, Sigma, Wallet } from "lucide-react";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import { connectLineWallet } from "../../../utils/api.fof";
-import useWalletPayment from "../../../hooks/LineWallet";
+import useDappWallet from "../../../hooks/useDappWallet";
 import { showToast } from "../../../components/Toast/Toast";
 import OrbInfoCard from "../../../components/Cards/Info/OrbInfoCard";
 import HoldingsModal from "../../../components/Modals/Holdings";
 import liff from "@line/liff";
 import WalletsModal from "../../../components/Modals/Wallets";
 import { useTonAddress } from "@tonconnect/ui-react";
-import { useTonWalletConnector } from "../../../hooks/TonWallet";
+import { useTonWallet } from "../../../hooks/useTonWallet";
 import BgLayout from "../../../components/Layouts/BgLayout";
-import { useDisableWrapper } from "../../../hooks/disableWrapper";
+import { useDisableWrapper } from "../../../hooks/useDisableClick";
 import { ItemLayout } from "../../../components/Layouts/CarouselLayout";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -40,25 +40,26 @@ const ProfileItem = ({ content }) => {
 };
 
 const Profile = (props) => {
-  const {
-    userData,
-    assets,
-    game,
-    lineWallet,
-    isTelegram,
-    enableHaptic,
-    authToken,
-    setSection,
-    setShowCard,
-  } = useContext(MainContext);
-  const fofContext = useContext(FofContext);
-  const rorContext = useContext(RorContext);
+  const userData = useStore((s) => s.userData);
+  const assets = useStore((s) => s.assets);
+  const game = useStore((s) => s.game);
+  const lineWallet = useStore((s) => s.lineWallet);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const authToken = useStore((s) => s.authToken);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const gameData = useStore((s) => s.gameData);
+
+  // const fofContext = useContext(FofContext);
+  // const rorContext = useContext(RorContext);
+  // const gameData = game === "fof" ? fofContext.gameData : rorContext.gameData;
+
   const avatarColor = localStorage.getItem("avatarColor");
-  const gameData = game === "fof" ? fofContext.gameData : rorContext.gameData;
-  const { connectWallet } = useWalletPayment();
+  const { connectWallet } = useDappWallet();
   const [isConnecting, setIsConnecting] = useState(false);
   const userFriendlyAddress = useTonAddress();
-  const { handleConnectTonWallet } = useTonWalletConnector();
+  const { handleConnectTonWallet } = useTonWallet();
   const walletLabel =
     isTelegram && userFriendlyAddress
       ? `${userFriendlyAddress.slice(0, 4)}...${userFriendlyAddress.slice(-4)}`

@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { RorContext } from "../../context/context";
+import { useStore } from "../../store/useStore";
 
 export const CitadelGuide = ({ handleClick }) => {
   return (
@@ -231,7 +230,8 @@ export const TavernGuide = ({ handleClick, currTut }) => {
 };
 
 export const ExploreGuide = ({ handleClick, currTut, Header }) => {
-  const { isTgMobile, assets } = useContext(RorContext);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+
   return (
     <>
       {currTut == 0 ? (

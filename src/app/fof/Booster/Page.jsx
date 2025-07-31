@@ -1,5 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { useEffect, useRef, useState } from "react";
 import { claimAutomataBooster } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,28 +10,28 @@ import BoosterClaim from "../../../components/Cards/Boosters/BoosterCrd";
 import { showToast } from "../../../components/Toast/Toast";
 import { BoosterGuide } from "../../../components/Tutorials/Tutorials";
 import BoosterHeader from "./Header";
-import { useBoosterGuide } from "../../../hooks/Tutorial";
+import { useBoosterGuide } from "../../../hooks/useTutorial";
 import ReactHowler from "react-howler";
 import { trackComponentView, trackEvent } from "../../../utils/ga";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import BoosterCarousel from "./Carousel";
+import { useStore } from "../../../store/useStore";
 
 const Boosters = () => {
   const { t } = useTranslation();
-  const {
-    gameData,
-    setGameData,
-    setSection,
-    activeMyth,
-    setActiveMyth,
-    authToken,
-    setShowCard,
-    setShowBooster,
-    assets,
-    enableSound,
-    showAnmt,
-    setShowAnmt,
-  } = useContext(FofContext);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const setSection = useStore((s) => s.setSection);
+  const activeMyth = useStore((s) => s.activeMyth);
+
+  const setActiveMyth = useStore((s) => s.setActiveMyth);
+  const authToken = useStore((s) => s.authToken);
+  const setShowBooster = useStore((s) => s.setShowBooster);
+  const assets = useStore((s) => s.assets);
+  const enableSound = useStore((s) => s.enableSound);
+  const showAnmt = useStore((s) => s.showAnmt);
+  const setShowAnmt = useStore((s) => s.setShowAnmt);
+  const setShowCard = useStore((s) => s.setShowCard);
   const multiColorOrbs = gameData.multiColorOrbs;
   const mythData = gameData.mythologies[activeMyth].boosters;
   const [showToggles, setShowToggles] = useState(false);

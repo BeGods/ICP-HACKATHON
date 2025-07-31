@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { MainContext } from "../../../context/context";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const ShardInfoCrd = ({ gameData }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+
   const elementalOrbs = gameData.stats.mythologies.reduce(
     (sum, itm) => sum + itm.shards,
     0

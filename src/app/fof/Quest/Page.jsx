@@ -1,5 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { FofContext } from "../../../context/context";
+import { useEffect, useState } from "react";
 import {
   categorizeQuestsByMythology,
   handleActiveParts,
@@ -25,7 +24,7 @@ import SecretCard from "../../../components/Cards/Info/WhitelistInfoCrd";
 import { showToast } from "../../../components/Toast/Toast";
 import MythInfoCard from "../../../components/Cards/Info/MythInfoCrd";
 import QuestHeader from "./Header";
-import { useQuestGuide } from "../../../hooks/Tutorial";
+import { useQuestGuide } from "../../../hooks/useTutorial";
 import { QuestGuide } from "../../../components/Tutorials/Tutorials";
 import GameEndCrd from "../../../components/Cards/Reward/GameEnd";
 import ReactHowler from "react-howler";
@@ -36,7 +35,8 @@ import CanvasImage from "../../../components/Cards/Canvas/CrdCanvas";
 import { CardWrap } from "../../../components/Layouts/Wrapper";
 import { PrimaryBtn } from "../../../components/Buttons/PrimaryBtn";
 import { Check, ThumbsUp } from "lucide-react";
-import { useOpenAd } from "../../../hooks/DappAds";
+import { useOpenAd } from "../../../hooks/useGameAds";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -45,28 +45,25 @@ const Quests = () => {
   const [showClaimEffect, setShowClaimEffect] = useState(false);
   const [enableGuide, setEnableGuide] = useQuestGuide("tutorial05");
   const [showToggle, setShowToggles] = useState(false);
-  const {
-    showCard,
-    questsData,
-    setQuestsData,
-    gameData,
-    setGameData,
-    activeMyth,
-    setActiveMyth,
-    authToken,
-    setKeysData,
-    setShowCard,
-    showBooster,
-    setShowBooster,
-    assets,
-    enableSound,
-    enableHaptic,
-    isTelegram,
-    isTgMobile,
-    isBrowser,
-    setMinimize,
-    setSection,
-  } = useContext(FofContext);
+  const questsData = useStore((s) => s.questsData);
+  const setQuestsData = useStore((s) => s.setQuestsData);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const activeMyth = useStore((s) => s.activeMyth);
+  const setActiveMyth = useStore((s) => s.setActiveMyth);
+  const authToken = useStore((s) => s.authToken);
+  const setKeysData = useStore((s) => s.setKeysData);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const showBooster = useStore((s) => s.showBooster);
+  const setShowBooster = useStore((s) => s.setShowBooster);
+  const assets = useStore((s) => s.assets);
+  const enableSound = useStore((s) => s.enableSound);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const isTgMobile = useStore((s) => s.isTgMobile);
+  const setMinimize = useStore((s) => s.setMinimize);
+  const setSection = useStore((s) => s.setSection);
+
   const mythData = gameData.mythologies;
 
   const quests = categorizeQuestsByMythology(questsData)[activeMyth][

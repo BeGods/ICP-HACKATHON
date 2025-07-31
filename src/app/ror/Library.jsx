@@ -1,30 +1,24 @@
-import React, { useState, useContext, useMemo, useCallback } from "react";
 import RoRHeader from "../../components/Layouts/Header";
-import { gameItems } from "../../utils/gameItems";
 import { ToggleBack } from "../../components/Common/SectionToggles";
-import { RorContext } from "../../context/context";
 import { mythSections } from "../../utils/constants.ror";
 import { claimArtifact } from "../../utils/api.ror";
 import { setStorage } from "../../helpers/cookie.helper";
 import { showToast } from "../../components/Toast/Toast";
 import { trackEvent } from "../../utils/ga";
-import { useRoRGuide } from "../../hooks/Tutorial";
+import { useRoRGuide } from "../../hooks/useTutorial";
 import BgLayout from "../../components/Layouts/BgLayout";
 import { SecondaryFooter } from "../../components/Layouts/Wrapper";
 import ItemCrd from "../../components/Cards/Relics/ItemsCrd";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const Library = () => {
-  const {
-    gameData,
-    setGameData,
-    setShowCard,
-    assets,
-    authToken,
-    setSection,
-    setMinimize,
-  } = useContext(RorContext);
+  const setGameData = useStore((s) => s.setGameData);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const authToken = useStore((s) => s.authToken);
+  const setSection = useStore((s) => s.setSection);
+
   const [enableGuide, setEnableGuide] = useRoRGuide("ror-tutorial03");
   const getMythOrder = (itemId) => {
     const myth = itemId.split(".")[0];

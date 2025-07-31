@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import {
@@ -13,7 +13,6 @@ import {
   VolumeX,
   Wallet,
 } from "lucide-react";
-import { FofContext, MainContext } from "../../context/context";
 import { countries } from "../../utils/country";
 import {
   connectLineWallet,
@@ -38,7 +37,8 @@ import ModalLayout, {
   ModalSwitchLyt,
 } from "../Layouts/ModalLayout";
 import { useTonAddress } from "@tonconnect/ui-react";
-import { useTonWalletConnector } from "../../hooks/TonWallet";
+import { useTonWallet } from "../../hooks/useTonWallet";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
@@ -68,19 +68,18 @@ const SettingModal = () => {
   const { i18n, t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    authToken,
-    enableSound,
-    setEnableSound,
-    country,
-    setCountry,
-    enableHaptic,
-    setEnableHaptic,
-    isTelegram,
-    lineWallet,
-  } = useContext(MainContext);
+  const authToken = useStore((s) => s.authToken);
+  const enableSound = useStore((s) => s.enableSound);
+  const setEnableSound = useStore((s) => s.setEnableSound);
+  const country = useStore((s) => s.country);
+  const setCountry = useStore((s) => s.setCountry);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setEnableHaptic = useStore((s) => s.setEnableHaptic);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const lineWallet = useStore((s) => s.lineWallet);
+
   const [isConnecting, setIsConnecting] = useState(false);
-  const { handleConnectTonWallet } = useTonWalletConnector();
+  const { handleConnectTonWallet } = useTonWallet();
   const userFriendlyAddress = useTonAddress();
 
   const handleConnectLineWallet = async () => {

@@ -1,37 +1,37 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { Check, ChevronRight } from "lucide-react";
 import { showToast } from "../../../components/Toast/Toast";
-import { FofContext, MainContext, RorContext } from "../../../context/context";
 import { claimSocialTask } from "../../../utils/api.fof";
 import { useTranslation } from "react-i18next";
 import { countries } from "../../../utils/country";
 import { validateCountryCode } from "../../../helpers/cookie.helper";
 import { handleClickHaptic } from "../../../helpers/cookie.helper";
 import liff from "@line/liff";
-import { useOpenAd } from "../../../hooks/DappAds";
-import { useDisableWrapper } from "../../../hooks/disableWrapper";
+import { useOpenAd } from "../../../hooks/useGameAds";
+import { useDisableWrapper } from "../../../hooks/useDisableClick";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const TaskItem = ({ quest, showSetting, showWallet }) => {
   const [isClicked, setIsClicked] = useState(false);
-  const {
-    authToken,
-    userData,
-    country,
-    enableHaptic,
-    tasks,
-    setTasks,
-    isTelegram,
-    game,
-  } = useContext(MainContext);
-  const fofContext = useContext(FofContext);
-  const rorContext = useContext(RorContext);
-  const setGameData =
-    game === "fof" ? fofContext.setGameData : rorContext.setGameData;
+  const authToken = useStore((s) => s.authToken);
+  const userData = useStore((s) => s.userData);
+  const country = useStore((s) => s.country);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const tasks = useStore((s) => s.tasks);
+  const setTasks = useStore((s) => s.setTasks);
+  const isTelegram = useStore((s) => s.isTelegram);
+  const game = useStore((s) => s.game);
+  const setGameData = useStore((s) => s.setGameData);
   const [claim, setClaim] = useState(false);
   const { t } = useTranslation();
   const { wrapWithDisable } = useDisableWrapper();
+
+  // const fofContext = useContext(FofContext);
+  // const rorContext = useContext(RorContext);
+  // const setGameData =
+  //   game === "fof" ? fofContext.setGameData : rorContext.setGameData;
 
   const onReward = useCallback(() => {
     setClaim(true);

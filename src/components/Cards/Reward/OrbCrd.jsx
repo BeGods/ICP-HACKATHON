@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Confetti from "react-confetti";
-import { FofContext } from "../../../context/context";
 import OverlayLayout from "../../Layouts/OverlayLayout";
 import { PrimaryBtn } from "../../Buttons/PrimaryBtn";
 import { ThumbsUp } from "lucide-react";
+import { useStore } from "../../../store/useStore";
 
 const BlackOrbRewardCrd = ({ reward, blackorbs, value, handAction }) => {
-  const { assets, setShowCard } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const setShowCard = useStore((s) => s.setShowCard);
+
   const [showConfetti, setShowConfetti] = useState(false);
   const [flipped, setFlipped] = useState(false);
 

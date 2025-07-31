@@ -1,12 +1,12 @@
-import React, { useContext, useEffect } from "react";
-import { FofContext } from "../../../context/context";
 import { mythSymbols } from "../../../utils/constants.fof";
 import { countries } from "../../../utils/country";
 import { formatRankOrbs } from "../../../helpers/leaderboard.helper";
 import OverlayLayout from "../../Layouts/OverlayLayout";
+import { useStore } from "../../../store/useStore";
 
 const UserInfoCard = ({ close, userData }) => {
-  const { assets } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+
   const countryFlag = countries.find((item) => item.code == userData.country);
 
   return (

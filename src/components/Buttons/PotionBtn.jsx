@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
-import { RorContext } from "../../context/context";
 import { elementMythNames } from "../../utils/constants.ror";
 import { toast } from "react-toastify";
 import { claimPotion } from "../../utils/api.ror";
 import MiscCard from "../Cards/Citadel/MiscCard";
 import { PrimaryBtn } from "./PrimaryBtn";
+import { useStore } from "../../store/useStore";
 
 const PotionBtn = ({ myth, potion, isClaimed }) => {
-  const { gameData, setGameData, setShowCard, authToken, setSection, assets } =
-    useContext(RorContext);
+  const gameData = useStore((s) => s.gameData);
+  const setGameData = useStore((s) => s.setGameData);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const authToken = useStore((s) => s.authToken);
+  const setSection = useStore((s) => s.setSection);
+  const assets = useStore((s) => s.assets);
+
   const regex = /potion\.(\w+)\.(A|B)\d{2}$/;
   const match = potion.match(regex);
   const element = match[1];

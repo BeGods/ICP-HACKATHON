@@ -1,14 +1,16 @@
-import React, { useContext, useEffect } from "react";
-import { RorContext } from "../../../context/context";
+import { useEffect } from "react";
 import CitadelCarousel from "./Carousel";
 import ReactHowler from "react-howler";
-import { useProfileGuide } from "../../../hooks/Tutorial";
+import { useProfileGuide } from "../../../hooks/useTutorial";
 import BgLayout from "../../../components/Layouts/BgLayout";
 import RoRHeader from "../../../components/Layouts/Header";
+import { useStore } from "../../../store/useStore";
 
 const Citadel = (props) => {
-  const { assets, enableSound, setMinimize, section, setShowCard } =
-    useContext(RorContext);
+  const assets = useStore((s) => s.assets);
+  const enableSound = useStore((s) => s.enableSound);
+  const setMinimize = useStore((s) => s.setMinimize);
+
   const [enableGuide, setEnableGuide] = useProfileGuide("ror-tutorial01");
 
   useEffect(() => {

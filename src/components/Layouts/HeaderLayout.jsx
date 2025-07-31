@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { mythSections } from "../../utils/constants.fof";
-import { FofContext, MainContext } from "../../context/context";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import MythInfoCard from "../Cards/Info/MythInfoCrd";
 import Symbol from "../Common/Symbol";
+import { useStore } from "../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 export const HeadbarToggleLayout = ({ data }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   return (
     <>
@@ -59,8 +59,9 @@ export const HeadbarToggleLayout = ({ data }) => {
 };
 
 export const HeaderMythSymbol = () => {
-  const { setShowCard, enableHaptic } = useContext(MainContext);
-  const { activeMyth } = useContext(FofContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setShowCard = useStore((s) => s.setShowCard);
+  const activeMyth = useStore((s) => s.activeMyth);
 
   return (
     <div
@@ -86,7 +87,7 @@ export const HeaderMythSymbol = () => {
 };
 
 export const HeadbarLayout = ({ activeMyth, data, addOnEffect }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
 
   return (
     <div className="flex w-full justify-center px-2 top-0 absolute">
@@ -146,7 +147,7 @@ export const HeaderCategoryLayout = ({
   iconMap,
   categoryCntArr,
 }) => {
-  const { enableHaptic } = useContext(MainContext);
+  const enableHaptic = useStore((s) => s.enableHaptic);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
@@ -175,7 +176,7 @@ export const HeaderCategoryLayout = ({
           >
             {item.icon}
 
-            {isActive && (
+            {isActive && categoryCntArr && (
               <span className="absolute -top-1 -right-1 font-roboto text-[1rem] border border-black font-bold bg-white text-black w-6 h-6 flex items-center justify-center rounded-full shadow-md">
                 {categoryCntArr[idx]}
               </span>
@@ -202,8 +203,6 @@ const HeaderLayout = ({
   BottomChild,
   hideContour,
 }) => {
-  const { assets } = useContext(MainContext);
-
   return (
     <div className={`absolute w-screen top-0`}>
       {/* <img

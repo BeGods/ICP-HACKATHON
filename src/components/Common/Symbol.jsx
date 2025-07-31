@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { MainContext } from "../../context/context";
+import { useStore } from "../../store/useStore";
 
 const Symbol = ({ myth, isCard, showClaimEffect }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+
   return (
     <div
       className={`relative  select-none pointer-events-none  flex justify-center items-center ${

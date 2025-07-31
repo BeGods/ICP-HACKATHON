@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
 import { mythSections } from "../../../utils/constants.fof";
 import MappedOrbs from "../../Common/MappedOrbs";
 import Symbol from "../../Common/Symbol";
 import IconBtn from "../../Buttons/IconBtn";
-import { FofContext } from "../../../context/context";
 import { CardWrap } from "../../Layouts/Wrapper";
+import { useStore } from "../../../store/useStore";
 
 const QuestCard = ({
   quest,
@@ -14,7 +13,7 @@ const QuestCard = ({
   isGuideActive,
   flipButton,
 }) => {
-  const { assets } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
 
   return (
     <CardWrap

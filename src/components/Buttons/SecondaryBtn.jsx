@@ -1,5 +1,5 @@
-import React, { useContext, useRef, useState } from "react";
-import { MainContext } from "../../context/context";
+import { useRef, useState } from "react";
+import { useStore } from "../../store/useStore";
 
 const SecondaryBtn = ({
   handleClick,
@@ -8,7 +8,7 @@ const SecondaryBtn = ({
   isDefaultOff,
   isPay,
 }) => {
-  const { assets } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
   const [isClicked, setIsClicked] = useState(false);
   let disableClick = useRef(false);
 

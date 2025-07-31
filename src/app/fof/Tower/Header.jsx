@@ -1,6 +1,5 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import { mythSymbols, wheel } from "../../../utils/constants.fof";
-import { FofContext, MainContext } from "../../../context/context";
 import { getPhaseByDate } from "../../../helpers/game.helper";
 import { useTranslation } from "react-i18next";
 import { formatThreeNums } from "../../../helpers/leaderboard.helper";
@@ -10,11 +9,15 @@ import HeaderLayout, {
 } from "../../../components/Layouts/HeaderLayout";
 import ConvertInfo from "../../../components/Cards/Info/ConvertInfoCrd";
 import MoonInfoCard from "../../../components/Cards/Info/MoonInfoCrd";
+import { useStore } from "../../../store/useStore";
 
 const tele = window.Telegram?.WebApp;
 
 const CenterChild = ({ platform, myth }) => {
-  const { assets, enableHaptic, setShowCard } = useContext(FofContext);
+  const assets = useStore((s) => s.assets);
+  const enableHaptic = useStore((s) => s.enableHaptic);
+  const setShowCard = useStore((s) => s.enableSound);
+
   const currPhase = getPhaseByDate(new Date());
   const moonPhase = useRef(currPhase);
 
@@ -76,7 +79,9 @@ const CenterChild = ({ platform, myth }) => {
 };
 
 const BottomChild = ({ gameData, sessionOrbs, myth }) => {
-  const { assets, setSection, setShowCard } = useContext(MainContext);
+  const assets = useStore((s) => s.assets);
+  const setSection = useStore((s) => s.setSection);
+  const setShowCard = useStore((s) => s.enableSound);
   const { t } = useTranslation();
 
   const data = [
@@ -143,7 +148,7 @@ const BottomChild = ({ gameData, sessionOrbs, myth }) => {
 
 const TowerHeader = ({ gameData, myth, sessionOrbs, showGlow, showInfo }) => {
   const { t } = useTranslation();
-  const { platform } = useContext(FofContext);
+  const platform = useStore((s) => s.platform);
 
   return (
     <HeaderLayout
