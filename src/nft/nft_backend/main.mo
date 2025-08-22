@@ -315,6 +315,47 @@ actor Main {
     };
   };
 
+  /* -------------------------------------------------------------------------- */
+  /*                         GAME                                 */
+  /* -------------------------------------------------------------------------- */
+
+  type CompletionRecord = {
+    completedAt : Time.Time;
+    minted : Bool;
+  };
+
+  // Fix 1: Explicitly type the TrieMap initialization
+  private var questCompletions : TrieMap.TrieMap<Principal, CompletionRecord> = TrieMap.TrieMap<Principal, CompletionRecord>(
+    Principal.equal,
+    Principal.hash,
+  );
+
+  // Fix 2: Proper public function declaration with return type
+  public shared ({ caller }) func registerQuestCompletion(principal_id : Principal) : async Bool {
+    Debug.print("Caller principal: " # Principal.toText(caller));
+
+    // Check if user already completed the quest
+    switch (questCompletions.get(principal_id)) {
+      case (?_) {
+        Debug.print("FALSE - User already registered");
+        return false;
+      };
+      case null {
+        let completionRecord : CompletionRecord = {
+          completedAt = Time.now();
+          minted = false;
+        };
+        questCompletions.put(principal_id, completionRecord);
+        Debug.print("Quest completion registered successfully");
+        return true;
+      };
+    };
+  };
+
+  public query func getAllQuestCompletionsTuple() : async [(Principal, CompletionRecord)] {
+    Iter.toArray(questCompletions.entries());
+  };
+
   func contains(arr : [Principal], value : Principal) : Bool {
     var found = false;
     for (item in arr.vals()) {
