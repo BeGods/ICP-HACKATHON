@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  authenticateICP,
   authenticateKaiaAddr,
   authenticateLine,
   authenticateOneWave,
@@ -20,6 +21,7 @@ authRouter.post("/auth/otp", generateOtp);
 authRouter.get("/auth/logout", logoutUser);
 authRouter.post("/auth/verify", authenticateOTP);
 authRouter.post("/tele/auth", authenticateTg);
+authRouter.post("/icp/auth", authenticateICP);
 authRouter.post("/twitter/auth", authenticateTwitter);
 authRouter.post("/line/auth", authenticateLine);
 authRouter.post("/wallet/auth", authLimiter, authenticateKaiaAddr);

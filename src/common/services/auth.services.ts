@@ -6,6 +6,7 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 import User from "../models/user.models";
 import qs from "qs";
 import { getTokenExpiryMs, parseTimeToMs } from "../../helpers/auth.helpers";
+import { Principal } from "@dfinity/principal";
 
 export const generateAuthToken = async (user: any, res) => {
   try {
@@ -247,3 +248,34 @@ export const getLineIdToken = async (code) => {
     }`
   );
 };
+
+export async function verifyICPPayload(payload) {
+  try {
+    const { principal, message, signature } = payload;
+    // Verify that the principal format is valid
+    const principalObj = Principal.fromText(principal);
+
+    // Get the public key from the Internet Computer
+    // This would typically involve querying the IC for the public key
+    // associated with the principal
+    const agent = new (require("@dfinity/agent").HttpAgent)({
+      host: "https://identity.ic0.app",
+    });
+
+    if (process.env.NODE_ENV !== "production") {
+      await agent.fetchRootKey();
+    }
+
+    // Verify signature using IC's verification
+    // Note: This is a simplified example. In practice, you'd need to:
+    // 1. Get the delegation chain from the frontend
+    // 2. Verify the delegation chain
+    // 3. Extract the session public key
+    // 4. Verify the signature against the session public key
+
+    return true;
+  } catch (error) {
+    console.error("Signature verification failed:", error);
+    return false;
+  }
+}

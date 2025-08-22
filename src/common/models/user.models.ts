@@ -8,6 +8,7 @@ const userSchema = new Schema<IUser>(
     lineId: { type: String, unique: true, sparse: true },
     oneWaveId: { type: String, unique: true, sparse: true },
     stanId: { type: String, unique: true, sparse: true },
+    principalId: { type: String, unique: true, sparse: true },
     telegramUsername: { type: String, sparse: true },
     isPremium: { type: Boolean },
     holdings: {

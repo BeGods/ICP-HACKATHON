@@ -6,6 +6,7 @@ import {
   generateAuthToken,
   getLineIdToken,
   validateRefreshToken,
+  verifyICPPayload,
 } from "../services/auth.services";
 import {
   addTeamMember,
@@ -371,6 +372,69 @@ export const authenticateKaiaAddr = async (
       }
       // create new  user
       existingUser = await addNewUser(newUser, "DP", "dapp");
+      await addTeamMember(existingUser, existingReferrer, referralCode);
+      await createDefaultUserMyth(existingUser);
+    }
+
+    // response token
+    const { accessToken } = await generateAuthToken(existingUser, res);
+    res.status(200).json({
+      message: "User authenticated successfully.",
+      data: {
+        accessToken: accessToken,
+        // refreshToken: refreshToken
+      },
+    });
+  } catch (error: any) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to authenticate user.",
+      error: error.message,
+    });
+  }
+};
+
+// icp
+export const authenticateICP = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { principalId } = req.body;
+    const { referralCode } = req.query as { referralCode?: string | null };
+
+    const recoveredAddress = principalId;
+
+    if (!recoveredAddress) {
+      res.status(400).json({
+        message: "Invalid address.",
+      });
+      return;
+    }
+
+    let existingUser: IUser | null = await User.findOne({
+      principalId: recoveredAddress,
+    });
+
+    if (existingUser) {
+    } else {
+      let newUser: Partial<IUser> = {
+        principalId: recoveredAddress,
+      };
+
+      let existingReferrer: IUser;
+      if (referralCode) {
+        existingReferrer = await User.findOne({ referralCode });
+
+        if (!existingReferrer) {
+          res.status(404).json({ message: "Invalid referral code." });
+        }
+
+        newUser.parentReferrerId = existingReferrer._id as ObjectId;
+      }
+      // create new  user
+      existingUser = await addNewUser(newUser, "ICP", "icp");
       await addTeamMember(existingUser, existingReferrer, referralCode);
       await createDefaultUserMyth(existingUser);
     }
