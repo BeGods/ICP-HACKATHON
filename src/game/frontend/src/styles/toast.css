@@ -1,0 +1,16 @@
+/* Toasts */
+.custom-toast {
+  border-radius: 8px !important;
+  background-color: white !important;
+  color: black !important;
+  width: 95%;
+  margin: 20px auto;
+  margin-top: calc(var(--tg-safe-area-inset-top) + 40px) !important; /* Increased by 20px */
+}
+
+.ToastContainer--top-center {
+  width: 100%;
+  display: flex;
+  justify-content: center !important;
+  padding: 0;
+}

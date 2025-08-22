@@ -1,0 +1,1327 @@
+{
+  "main": {
+    "fdg": "FrogdogGames",
+    "fof": "Forges of faith"
+  },
+  "descriptions": {
+    "celtic": "Celtic mythology unfolds a fantastical tapestry of magic and mystery, where shimmering Otherworlds exist alongside our own. Enchanted forests teem with mystical creatures, and heroes embark on epic quests filled with battles, prophecies, and transformation. Nature breathes life into every tale, as rivers flow with ancient wisdom and mountains guard timeless secrets. Rich symbolism weaves through enchanting narratives, celebrating the profound connection between humanity and the ethereal realm.",
+    "egyptian": "Egyptian mythology is a mesmerizing realm where gods and goddesses weave the fabric of existence, each embodying powerful forces of nature and cosmic balance. Epic tales of creation, divine battles, and the afterlife unfold in vivid landscapes, from the sun's radiant journey across the sky to the enchanting depths of the underworld. Mystical rituals and grand temples serve as gateways to the divine, guiding souls through the celestial realms in a quest for immortality and enlightenment.",
+    "greek": "Greek mythology is a thrilling saga of epic quests and heart-wrenching struggles, where heroes rise and fall against overwhelming odds. It brims with dramatic confrontations, treacherous betrayals, and passionate romances, each tale echoing the tumult of human emotion. Mortal souls clash with fate, battling monstrous foes and navigating labyrinthine challenges, as the fabric of destiny intertwines with the divine. This grand narrative captures the essence of triumph, loss, and the relentless pursuit of glory.",
+    "norse": "Norse mythology unveils a fantastical realm of swirling realms and legendary beasts, where valiant heroes embark on daring quests against looming shadows. Epic sagas brim with magical artifacts and cosmic trees that bridge worlds, while fierce battles echo through the ages. Enigmatic creatures roam the landscapes, and the air crackles with ancient magic. Themes of bravery, sacrifice, and the inexorable dance of fate intertwine, creating a vivid tapestry of wonder and peril that captivates the imagination."
+  },
+  "mythologies": {
+    "celtic": "Céltico",
+    "egyptian": "Egipcio",
+    "greek": "Griego",
+    "norse": "Nórdico",
+    "dark": "Obscura"
+  },
+  "keywords": {
+    "orb": "Orbe",
+    "orbs": "ORB(S)",
+    "conversion": "Conversión",
+    "discover": "Descubrir",
+    "whitelist": "Whitelist",
+    "load": "Cargando",
+    "shards": "fragmentos"
+  },
+  "buttons": {
+    "buy": "Comprar",
+    "hire": "Contratar",
+    "redeem": "Redimir",
+    "pay": "Pagar",
+    "share": "Compartir",
+    "shared": "Compartido"
+  },
+  "sections": {
+    "forges": "Forjas",
+    "boosters": "Potenciadores",
+    "quests": "Misiones",
+    "leaderboard": "Tabla de clasificación",
+    "tower": "Torre",
+    "brand": "Marca",
+    "profile": "Perfil",
+    "gifts": "Regalos",
+    "voucher": "Vales"
+  },
+  "boosters": [
+    { "title": "Autómata", "desc": "Toca automáticamente" },
+    { "title": "Misiones", "desc": "Energía 200%" },
+    { "title": "Alquimista", "desc": "Doble toque" },
+    {},
+    {},
+    {},
+    { "title": "Explosión", "desc": "Presión de Apretar" },
+    { "title": "Paquete de Autómatas", "desc": "Autómatas 4X" },
+    { "title": "Paquete de Explosión", "desc": "4X Explosión" },
+    { "título": "Amuleto de la Luna", "desc": "Conversión 2X" }
+  ],
+  "profile": {
+    "premium": "Premium",
+    "invite": "Invitar",
+    "squad": "Escuadrón",
+    "player": "Jugador",
+    "name": "Nombre",
+    "apply": "Aplicar",
+    "referrals": "Referencias",
+    "team": "Equipo",
+    "guide": "GUÍA",
+    "causes": "Causas",
+    "partners": "Parceiros",
+    "partner": "Parceiros",
+    "charity": "Caridad",
+    "rewards": "RECOMPENSAS",
+    "task": "Tareas",
+    "connect": "Conectar",
+    "follow": "Seguir",
+    "select": "Seleccionar",
+    "music": "Música",
+    "wallet": "Billetera",
+    "watch": "Watch",
+    "country": "País",
+    "updatePhoto": "Actualizar foto",
+    "addToHome": "Agregar acceso directo"
+  },
+  "tower": {
+    "tune": "¿Conoces la ♪ melodía ♪?",
+    "play": "¡Tócalo en el orden correcto!"
+  },
+  "elements": {
+    "earth": "Tierra",
+    "air": "Aire",
+    "fire": "Fuego",
+    "water": "Agua",
+    "aether": "Éter"
+  },
+  "misc": {
+    "name": "Nombre",
+    "enterOTP": "Ingrese OTP",
+    "phone": "Número de teléfono",
+    "day": "Dia",
+    "verify": "Verificar",
+    "resendOTP": "Reenviar OTP",
+    "getOTP": "Obtener OTP",
+    "terms": "Aceptar Términos y Condiciones",
+    "policy": "Política de Privacidad",
+    "haptic": "Hápticos",
+    "flag": "Flag"
+  },
+  "note": {
+    "text": "Actualización de la tabla de clasificación en",
+    "tower": "Toca ORBS para convertir",
+    "bonus": "Para ver promociones activas",
+    "ad": "¡Para obtener el refuerzo!",
+    "whitelist": {
+      "QuestName": "Whitelist",
+      "desc": "Una lista blanca de NFT es una colección seleccionada de direcciones de billeteras criptográficas con acceso anticipado al ecosistema BeGODS. Este NFT permite al propietario comprar 30 USD de nuestro Token BGODS, después de que se liste."
+    }
+  },
+  "bonus": {
+    "join": "BONO BIENVENIDO",
+    "box": "CAJA",
+    "youwon": "¡GANASTE!",
+    "win": "Ganar"
+  },
+  "tutorial": {
+    "forgeShard": { "title": "Toca para ganar fragmentos", "desc": "" },
+    "forgeOrbs": { "title": "1 Orb = 1,000 Fragmentos", "desc": "" },
+    "forgeBubble": {
+      "title": "Estallar burbuja para ganar Regalos",
+      "desc": ""
+    },
+    "forgeMinion": { "title": "Atrapar y mantener 2x fragmentos", "desc": "" },
+    "forgeExplore": { "title": "Explorar +más", "desc": "" },
+    "quests": { "title": "Completar Misiones", "desc": "Ganar $faith" },
+    "boosters": {
+      "title": "ADQUIRIR BOOSTERS",
+      "desc": "Ganar $fe"
+    },
+    "profileTask": {
+      "title": "Completar Tareas",
+      "desc": "Por recompensas dentro del juego"
+    },
+    "gift": { "title": "Ver Socios", "desc": "" },
+    "tower": { "title": "Convertir Orbes", "desc": "" }
+  },
+  "quests": {
+    "celtic": {
+      "A01": {
+        "artist": "John Duncan, 1909",
+        "QuestName": "Escape de Heptu",
+        "desc": "'Heptu despidiéndose de la ciudad de Obb', ca 1909, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en Whitehouse Terrace, Edimburgo - Escocia."
+      },
+      "B01": {
+        "artist": "Jose de Madrazo y Agudo, 1807",
+        "QuestName": "La Traición de Viriato",
+        "desc": "'La muerte de Viriato, jefe de los lusitanos', ca 1807, es una pintura de José de Madrazo y Agudo, un pintor neoclásico español. Visita el original en el Museo del Prado, Madrid - España."
+      },
+      "A02": {
+        "artist": "John Duncan, 1912",
+        "QuestName": "Tristán e Isolda",
+        "desc": "'Tristán e Isolda', ca 1912, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en Whitehouse Terrace, Edimburgo - Escocia."
+      },
+      "B02": {
+        "artist": "Gaston Bussiere, 1912",
+        "QuestName": "La Princesa Triste",
+        "desc": "'Isolda: La Princesa Celta', ca 1912, es una pintura de Gaston Bussière, un pintor simbolista francés. Visita el original en el Museo de las Ursulinas, Macon - Francia."
+      },
+      "A03": {
+        "artist": "John Duncan, 1913",
+        "QuestName": "Imbolc de Brigid",
+        "desc": "'La Santa Novia', ca 1913, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en la Galería Nacional, Edimburgo - Escocia."
+      },
+      "B03": {
+        "artist": "Edward Robert Hughes, 1911",
+        "QuestName": "Fantasía de Verano",
+        "desc": "'Fantasía en Crepúsculo', ca 1911, es una pintura de Edward Robert Hughes, un pintor simbolista británico. Visita el original en la Galería Artchiv, Praga - República Checa."
+      },
+      "A04": {
+        "artist": "John Duncan, 1924",
+        "QuestName": "Clann de Lir",
+        "desc": "'Los Hijos de Lir', ca 1924, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en las Galerías de Arte de Dundee, Edimburgo - Escocia."
+      },
+      "B04": {
+        "artist": "Jan Asselijn, 1650",
+        "QuestName": "El Amante de Aengus",
+        "desc": "'El Cisne Amenazado', ca 1650, es una pintura de Jan Asselijn, un pintor del Siglo de Oro holandés. Visita el original en el Rijksmuseum de Ámsterdam, Ámsterdam - Países Bajos."
+      },
+      "A05": {
+        "artist": "John Duncan, 1924",
+        "QuestName": "La Bella Durmiente",
+        "desc": "'La Princesa Durmiente', ca 1924, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en la Galería de Arte de Perth, Perth - Escocia."
+      },
+      "B05": {
+        "artist": "Frank Bernard Dicksee, 1913",
+        "QuestName": "Leanan Sidhe",
+        "desc": "'La Bella Dame sans Merci', ca 1913, es una pintura de Frank Bernard Dicksee, un pintor victoriano británico. Visita el original en el Museo de la Ciudad de Bristol, Bristol - Inglaterra."
+      },
+      "A06": {
+        "artist": "John Duncan, 1911",
+        "QuestName": "Jinetes Sidhe",
+        "desc": "'Jinetes de la Sidhe', ca 1911, es una pintura de John Duncan, un pintor simbolista escocés. Visita el original en las Galerías de Arte de Dundee, Edimburgo - Escocia."
+      },
+      "B06": {
+        "artist": "Lionel Royer, 1899",
+        "QuestName": "Vercingetórix",
+        "desc": "'Vercingetórix ante César', ca 1899, es una pintura de Lionel Royer, un pintor histórico francés. Visita el original en el Museo Crozatier, Auvernia - Francia."
+      },
+      "C01": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann I",
+        "desc": "`La disputa de Oberón y Titania,` ca. 1849, es una pintura de Joseph Noel Paton, un pintor histórico escocés. Visita la obra original en la Galería Nacional, Edimburgo - Escocia."
+      },
+      "C02": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG I",
+        "desc": "`Crepúsculo,` ca. 1890, es una pintura de Ulpiano Checa, un pintor histórico español. Visita la obra original en el Museo Ulpiano Checa, Madrid - España."
+      },
+      "C03": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann II",
+        "desc": "`La disputa de Oberón y Titania,` ca. 1849, es una pintura de Joseph Noel Paton, un pintor histórico escocés. Visita la obra original en la Galería Nacional, Edimburgo - Escocia."
+      },
+      "C04": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG II",
+        "desc": "`Crepúsculo,` ca. 1890, es una pintura de Ulpiano Checa, un pintor histórico español. Visita la obra original en el Museo Ulpiano Checa, Madrid - España."
+      },
+      "C05": {
+        "artist": "Joseph Noel Pato, 1849",
+        "QuestName": "Tuath Danann III",
+        "desc": "`La disputa de Oberón y Titania,` ca. 1849, es una pintura de Joseph Noel Paton, un pintor histórico escocés. Visita la obra original en la Galería Nacional, Edimburgo - Escocia."
+      },
+      "C06": {
+        "artist": "Ulpiano Checa,1890",
+        "QuestName": "TIR NA NOG III",
+        "desc": "`Crepúsculo,` ca. 1890, es una pintura de Ulpiano Checa, un pintor histórico español. Visita la obra original en el Museo Ulpiano Checa, Madrid - España."
+      }
+    },
+    "egyptian": {
+      "A01": {
+        "artist": "Eugene Pierre Francois Giraud, 1864",
+        "QuestName": "Susurrador de Aves",
+        "desc": "“El Vendedor de Palomas Egipcio”, ca 1864, es una pintura de Eugène Pierre François Giraud, un pintor francés. Visita el original en el Museo de Bellas Artes, Valencia - España."
+      },
+      "B01": {
+        "artist": "Arthur Drummond, 1890",
+        "QuestName": "El Encanto de Hathor",
+        "desc": "“El Arpista”, ca 1890, es una pintura de Arthur Drummond, un pintor británico. Visita el original en Sotheby’s, Londres - Inglaterra."
+      },
+      "A02": {
+        "artist": "Lawrence Alma-Tadema, 1904",
+        "QuestName": "El Milagro del Nilo",
+        "desc": "“El Encuentro de Moisés”, ca 1904, es una pintura de Lawrence Alma-Tadema, un pintor victoriano neerlandés. Visita el original en Sotheby’s, Londres - Inglaterra."
+      },
+      "B02": {
+        "artist": "Edwin Longsden Long, 1883",
+        "QuestName": "Procesión de Isis",
+        "desc": "“La Huida a Egipto”, ca 1883, es una pintura de Edwin Longsden Long, un pintor bíblico británico. Visita el original en el Museo Russell-Cotes, Bournemouth - Inglaterra."
+      },
+      "A03": {
+        "artist": "Alexandre Cabanel, 1887",
+        "QuestName": "Perfume de Shezmus I",
+        "desc": "“Cleopatra probando venenos en prisioneros condenados”, ca 1887, es una pintura de Alexandre Cabanel, un pintor clásico francés. Visita el original en el Museo Real, Amberes - Bélgica."
+      },
+      "B03": {
+        "artist": "John Collier, 1890",
+        "QuestName": "Tumba de Cleopatra",
+        "desc": "“La Muerte de Cleopatra”, ca 1890, es una pintura de John Collier, un pintor prerrafaelita británico. Visita el original en la Galería de Arte de Oldham - Inglaterra."
+      },
+      "A04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Perfume de Shezmus II",
+        "desc": "“Cleopatra probando venenos en prisioneros condenados”, ca 1887, es una pintura de Alexandre Cabanel, un pintor clásico francés. Visita el original en el Museo Real, Amberes - Bélgica."
+      },
+      "B04": {
+        "artist": "Edwin Long, 1878",
+        "QuestName": "Culto de Bastet",
+        "desc": "“Los Dioses y Sus Creadores”, ca 1878, es una pintura del pintor bíblico inglés Edwin Long. Visita el original en la Galería de Arte Towneley Hall, Burnley - Inglaterra."
+      },
+      "A05": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sueño del Faraón I",
+        "desc": "“José interpretando el sueño del Faraón”, ca 1894, es una pintura de Reginald Arthur, un pintor histórico británico. Visita el original en Sotheby’s, Londres - Inglaterra.."
+      },
+      "B05": {
+        "artist": "John Weguelin, 1886",
+        "QuestName": "Culto de Maahes",
+        "desc": "“La Obsequias de un Gato Egipcio”, ca 1886, es una pintura de John Weguelin, un pintor clásico británico. Visita el original en la Galería de Arte de Auckland, Auckland - Nueva Zelanda."
+      },
+      "A06": {
+        "artist": "Reginald Arthur, 1894",
+        "QuestName": "Sueño del Faraón II",
+        "desc": "'J“José interpretando el sueño del Faraón”, ca 1894, es una pintura de Reginald Arthur, un pintor histórico británico. Visita el original en Sotheby’s, Londres - Inglaterra."
+      },
+      "B06": {
+        "artist": "Lawrence Alma-Tadema, 1855",
+        "QuestName": "Amenaza Extranjera",
+        "desc": "“El Encuentro de Antonio y Cleopatra”, ca 1885, es una pintura de Lawrence Alma-Tadema, un pintor victoriano neerlandés. Visita el original en Sotheby’s, Londres - Inglaterra."
+      },
+      "C01": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Culto del Toro Apis I",
+        "desc": "`La Procesión del Toro Apis,` ca. 1879, es una pintura de Frederick Arthur Bridgman, un pintor orientalista estadounidense. Visita la obra original en una Colección Privada EE. UU."
+      },
+      "C02": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sangre de Sekhmet I",
+        "desc": "“Israel en Egipto”, ca 1867, es una pintura de Edward Poynter, un pintor histórico británico. Visita el original en la Galería de Arte Guildhall, Londres - Inglaterra."
+      },
+      "C03": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Culto del Toro Apis II",
+        "desc": "`La Procesión del Toro Apis,` ca. 1879, es una pintura de Frederick Arthur Bridgman, un pintor orientalista estadounidense. Visita la obra original en una Colección Privada EE. UU."
+      },
+      "C04": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sangre de Sekhmet II",
+        "desc": "“Israel en Egipto”, ca 1867, es una pintura de Edward Poynter, un pintor histórico británico. Visita el original en la Galería de Arte Guildhall, Londres - Inglaterra."
+      },
+      "C05": {
+        "artist": "Frederick Arthur Bridgman, 1879",
+        "QuestName": "Culto del Toro Apis III",
+        "desc": "`La Procesión del Toro Apis,` ca. 1879, es una pintura de Frederick Arthur Bridgman, un pintor orientalista estadounidense. Visita la obra original en una Colección Privada EE. UU."
+      },
+      "C06": {
+        "artist": "Edward Poynter, 1867",
+        "QuestName": "Sangre de Sekhmet III",
+        "desc": "“Israel en Egipto”, ca 1867, es una pintura de Edward Poynter, un pintor histórico británico. Visita el original en la Galería de Arte Guildhall, Londres - Inglaterra."
+      }
+    },
+    "greek": {
+      "A01": {
+        "artist": "Frederick Arthur Bridgman, 1903",
+        "QuestName": "Narcyssus y Eco",
+        "desc": "'Eco y Narciso', ca 1903, es una pintura de John William Waterhouse, un pintor clásico británico. Visita el original en la Galería de Arte Walker, Liverpool - Inglaterra."
+      },
+      "B01": {
+        "artist": "Henrietta Rae, 1909",
+        "QuestName": "Ninfas de Agua",
+        "desc": "'Hylas y las Ninfas de Agua', ca 1909, es una pintura de Henrietta Rae, una pintora clásica británica. Visita el original en la Galería de Arte Walker, Liverpool - Inglaterra."
+      },
+      "A02": {
+        "artist": "Charles-Antoine Coypel, 1737",
+        "QuestName": "La Ira de Aquiles",
+        "desc": "'La Ira de Aquiles', ca 1737, es una pintura de Charles-Antoine Coypel, un pintor clásico francés. Visita el original en la Galería de Arte Walker, San Petersburgo - Rusia."
+      },
+      "B02": {
+        "artist": "Carlo Perugini, 1893",
+        "QuestName": "El Caja de Pandora",
+        "desc": "`El Caja de Pandora`, alrededor de 1893, es una pintura de Carlo Perugini, un pintor neoclásico victoriano italiano. Colección privada, Londres - Inglaterra."
+      },
+      "A03": {
+        "artist": "Merry Joseph Blondel, 1819",
+        "QuestName": "Ícaro y Dédalo",
+        "desc": "'El Sol o la Caída de Ícaro', ca 1819, es una pintura de Merry Joseph Blondel, un pintor neoclásico francés. Visita el original en el Museo del Louvre, París - Francia."
+      },
+      "B03": {
+        "artist": "Theodoor Rombouts, 1620",
+        "QuestName": "El Regalo de Prometeo",
+        "desc": "'Prometeo', ca 1620, es una pintura de Theodoor Rombouts, un pintor caravaggista flamenco. Visita el original en los Museos Reales de Bellas Artes, Amberes - Bélgica."
+      },
+      "A04": {
+        "artist": "Camillo Miola, 1880",
+        "QuestName": "Oráculo de Delfos",
+        "desc": "'Pitia: Oráculo y Alta Sacerdotisa de Delfos', ca 1880, es una pintura de Camillo Miola, un pintor histórico italiano. Visita el original en el Centro J. Paul Getty, Los Ángeles - EE. UU."
+      },
+      "B04": {
+        "artist": "Karl Pavlovich Bryullov, 1833",
+        "QuestName": "El Destino de Hefesto",
+        "desc": "'El Último Día de Pompeya', ca 1833, es una pintura de Karl Pavlovich Bryullov, un pintor neoclásico ruso. Visita el original en el Museo Ruso Estatal, San Petersburgo - Rusia."
+      },
+      "A05": {
+        "artist": "Herbert James Draper, 1904",
+        "QuestName": "Vellocino de Oro",
+        "desc": "'El Vellocino de Oro', ca 1904, es una pintura de Herbert James Draper, un pintor neoclásico británico. Visita el original en Cartwright Hall, Bradford - Inglaterra."
+      },
+      "B05": {
+        "artist": "Herbert James Draper, 1909",
+        "QuestName": "Las Sirenas de Odiseo",
+        "desc": "'Ulises y las Sirenas', ca 1909, es una pintura de Herbert James Draper, un pintor neoclásico británico. Visita el original en la Galería de Arte Ferens, Hull - Inglaterra."
+      },
+      "A06": {
+        "artist": "Cole Thomas, 1836",
+        "QuestName": "El Auge del Imperio",
+        "desc": "'La Consumación del Curso del Imperio', ca 1836, es una pintura de Cole Thomas, un pintor paisajista americano. Visita el original en la Sociedad Histórica, Nueva York - EE. UU."
+      },
+      "B06": {
+        "artist": "Cole Thomas, 1836",
+        "QuestName": "La Caída del Imperio",
+        "desc": "'La Destrucción del Curso del Imperio', ca 1836, es una pintura de Cole Thomas, un pintor paisajista americano. Visita el original en la Sociedad Histórica, Nueva York - EE. UU."
+      },
+      "C01": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomaquia I",
+        "desc": "'Olímpico: La Caída de los Gigantes', ca 1764, es una pintura de Francisco Bayeu y Subías, un pintor neoclásico español. Visita el original en el Museo del Prado, Madrid - España."
+      },
+      "C02": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "La Caída de Phaeton I",
+        "desc": "“La Caída de Phaeton”, ca 1604, es una pintura de Peter Paul Rubens, un pintor barroco flamenco. Visita el original en la Galería Nacional de Arte, Washington D.C. - Estados Unidos."
+      },
+      "C03": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomaquia II",
+        "desc": "'Olímpico: La Caída de los Gigantes', ca 1764, es una pintura de Francisco Bayeu y Subías, un pintor neoclásico español. Visita el original en el Museo del Prado, Madrid - España."
+      },
+      "C04": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "La Caída de Phaeton II",
+        "desc": "“La Caída de Phaeton”, ca 1604, es una pintura de Peter Paul Rubens, un pintor barroco flamenco. Visita el original en la Galería Nacional de Arte, Washington D.C. - Estados Unidos."
+      },
+      "C05": {
+        "artist": "Francisco Bayeu y Subías, 1764",
+        "QuestName": "Titanomaquia III",
+        "desc": "'Olímpico: La Caída de los Gigantes', ca 1764, es una pintura de Francisco Bayeu y Subías, un pintor neoclásico español. Visita el original en el Museo del Prado, Madrid - España."
+      },
+      "C06": {
+        "artist": "Peter Paul Rubens, 1604",
+        "QuestName": "La Caída de Phaeton III",
+        "desc": "“La Caída de Phaeton”, ca 1604, es una pintura de Peter Paul Rubens, un pintor barroco flamenco. Visita el original en la Galería Nacional de Arte, Washington D.C. - Estados Unidos."
+      }
+    },
+    "norse": {
+      "A01": {
+        "artist": "Peter Nicolai Arbo, 1874",
+        "QuestName": "Un Nuevo Amanecer",
+        "desc": "'Dagr (Día)', ca 1874, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
+      },
+      "B01": {
+        "artist": "Peter Nicolai Arbo, 1887",
+        "QuestName": "Crepúsculo",
+        "desc": "'Nott (Noche)', ca 1887, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
+      },
+      "A02": {
+        "artist": "Edward Robert Hughes, 1915",
+        "QuestName": "Una Prisión Valkiria",
+        "desc": "'La Vigilancia de la Valkiria', ca 1915, es una pintura de Edward Robert Hughes, un pintor británico de acuarelas. Visita el original en el Museo y Galería de Arte, Birmingham - Inglaterra."
+      },
+      "B02": {
+        "artist": "Peter Nicolai Arbo, 1892",
+        "QuestName": "El Toque de las Valkirias",
+        "desc": "'La Muerte de Hervor', ca 1892, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
+      },
+      "A03": {
+        "artist": "Christian Krohg, 1893",
+        "QuestName": "Vinland (América)",
+        "desc": "'Leiv Eirikson descubriendo América', ca 1893, es una pintura de Christian Krohg, un pintor naturalista noruego. Visita el original en el Museo Nacional, Oslo - Noruega."
+      },
+      "B03": {
+        "artist": "Oscar Arnold Wergeland, 1877",
+        "QuestName": "Descubrimiento de Islandia",
+        "desc": "'El Noruego desembarca en Islandia', ca 1877, es una pintura de Oscar Arnold Wergeland, un pintor histórico noruego. Visita el original en el Museo Nacional, Oslo - Noruega."
+      },
+      "A04": {
+        "artist": "Ferdinand Leek, 1901",
+        "QuestName": "Una Incursión Vikinga",
+        "desc": "'Una Incursión Vikinga', ca 1901, es una pintura de Ferdinand Leek, un pintor modernista alemán. Visita el original en la Galería de Arte Schloss, Ahlden - Alemania."
+      },
+      "B04": {
+        "artist": "Frank Bernard Dicksee, 1893",
+        "QuestName": "Funeral Vikingo",
+        "desc": "'El Funeral de un Vikingo', ca 1893, es una pintura de Frank Bernard Dicksee, un pintor victoriano británico. Visita el original en la Galería de Arte de Manchester - Inglaterra."
+      },
+      "A05": {
+        "artist": "Peter Nicolai Arbo, 1876",
+        "QuestName": "La Campanada del Rey",
+        "desc": "'Hakon el Bueno', ca 1876, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo Nacional, Estocolmo - Suecia."
+      },
+      "B05": {
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "Batalla de Svold I",
+        "desc": "'Batalla de Svolder', ca 1883, es una pintura de Peter Otto Sinding, un pintor histórico noruego. Visita el original en una colección privada, Estocolmo - Suecia."
+      },
+      "A06": {
+        "artist": "Peter Nicolai Arbo, 1883",
+        "QuestName": "Vikingos vs Celtas",
+        "desc": "'Batalla de Stamford Bridge', ca 1870, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita el original en el Museo de Arte Nordnorsk, Tromsø - Noruega."
+      },
+      "B06": {
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "Batalla de Svold II",
+        "desc": "'Batalla de Svolder', ca 1883, es una pintura del pintor histórico noruego Peter Otto Sinding. Visita el original en una colección privada, Estocolmo - Suecia."
+      },
+      "C01": {
+        "artist": "Peter Otto Sinding, 1870",
+        "QuestName": "La Manzana de la Vida de Idun I",
+        "desc": "`Idun y las Manzanas,` ca. 1890, es una pintura de James Doyle Penrose, un pintor histórico noruego. Colección Privada, Londres - Inglaterra."
+      },
+      "C02": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok I",
+        "desc": "`Asgardsreien,` ca. 1872, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita la obra original en la Galería Nacional, Oslo - Noruega."
+      },
+      "C03": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "La Manzana de la Vida de Idun II",
+        "desc": "`Idun y las Manzanas,` ca. 1890, es una pintura de James Doyle Penrose, un pintor histórico noruego. Colección Privada, Londres - Inglaterra."
+      },
+      "C04": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok II",
+        "desc": "`Asgardsreien,` ca. 1872, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita la obra original en la Galería Nacional, Oslo - Noruega."
+      },
+      "C05": {
+        "artist": "James Doyle Penrose, 1890",
+        "QuestName": "La Manzana de la Vida de Idun III",
+        "desc": "`Idun y las Manzanas,` ca. 1890, es una pintura de James Doyle Penrose, un pintor histórico noruego. Colección Privada, Londres - Inglaterra."
+      },
+      "C06": {
+        "artist": "Peter Nicolai Arbo, 1872",
+        "QuestName": "Ragnarok III",
+        "desc": "`Asgardsreien,` ca. 1872, es una pintura de Peter Nicolai Arbo, un pintor histórico noruego. Visita la obra original en la Galería Nacional, Oslo - Noruega."
+      }
+    }
+  },
+  "toasts": {
+    "default": {
+      "error": {
+        "title": "No se puede conectar al servidor",
+        "desc": "Algo salió mal. Por favor, actualiza o inténtalo de nuevo en unos momentos."
+      }
+    },
+    "Convert": {
+      "success": {
+        "title": "¡Orbes convertidos con éxito!",
+        "desc": "¡Bien hecho! ¡Sigue con el impulso!"
+      },
+      "error": {
+        "title": "Orbes insuficientes",
+        "desc": "Necesitas más orbes para completar esta transacción."
+      }
+    },
+    "Booster_Claim": {
+      "success": {
+        "title": "¡Potenciador Logrado!",
+        "desc": "For I walk by faith, not by sight!"
+      },
+      "error": {
+        "title": "¡Error al Reclamar el Potenciador!",
+        "desc": "¡Ups! Algo salió mal al reclamar tu potenciador. ¡Por favor, inténtalo de nuevo!"
+      }
+    },
+    "Conversion_Multiplier": {
+      "success": {
+        "title": "¡Melodía Coincidente!",
+        "desc": "¡Lo lograste! La clave es correcta y se ha aplicado el multiplicador!"
+      },
+      "error": {
+        "title": "Desajuste de Melodía!",
+        "desc": "La clave que ingresaste es incorrecta. Desafortunadamente, no se ha aplicado ningún multiplicador."
+      }
+    },
+    "Tasks": {
+      "success": {
+        "title": "¡Tarea Completada con Éxito!",
+        "desc": "Bien hecho! Has ganado 3 MultiOrbes."
+      },
+      "error": {
+        "title": "Tarea Incompleta!",
+        "desc": "La tarea no pudo completarse. Por favor, intenta de nuevo para ganar tus recompensas."
+      }
+    },
+    "Booster_Lost_Not_Available": {
+      "error": {
+        "title": "Misión no disponible",
+        "desc": "¡Regresa mañana!"
+      }
+    },
+    "Quest_complete": {
+      "success": {
+        "title": "¡Felicidades! Misión completada!",
+        "desc": "¡Felicidades! Has completado la misión."
+      },
+      "error": {
+        "title": "Error en la finalización de la misión",
+        "desc": "Hubo un problema al completar la misión. Por favor, asegúrate de que la misión esté completamente completada e intenta de nuevo más tarde."
+      }
+    },
+    "Quest_claim": {
+      "success": {
+        "title": "¡Misión reclamada con éxito!",
+        "desc": "Has reclamado la misión con éxito. ¡Sigue avanzando para desbloquear más recompensas!"
+      },
+      "error": {
+        "title": "Orbes insuficientes para reclamar la misión",
+        "desc": "No tienes suficientes orbes para reclamar esta misión. Por favor, recoge más y vuelve a intentarlo."
+      }
+    },
+    "Quest_claim_InsufficientOrbs": {
+      "error": {
+        "title": "Orbes insuficientes para reclamar la misión",
+        "desc": "No tienes suficientes orbes para reclamar esta misión. Por favor, recoge más y vuelve a intentarlo."
+      }
+    },
+    "Quest_claim_AlreadyClaimed": {
+      "error": {
+        "title": "Misión ya reclamada",
+        "desc": "Ya has reclamado esta misión. Consulta tus misiones activas para más detalles."
+      }
+    },
+    "Quest_orb_claim": {
+      "success": {
+        "title": "¡Orbes reclamados con éxito!",
+        "desc": "Has reclamado tus orbes con éxito. ¡Disfruta de tus recompensas y sigue progresando!"
+      },
+      "error": {
+        "title": "Error en la reclamación de orbes",
+        "desc": "Hubo un problema al reclamar tus orbes. Por favor, intenta de nuevo más tarde."
+      }
+    },
+    "Quest_share": {
+      "success": {
+        "title": "¡Misión compartida con éxito!",
+        "desc": "¡Felicidades! Has compartido tu misión con éxito y ganado un orbe extra."
+      },
+      "error": {
+        "title": "Error en la compartición de la misión",
+        "desc": "Hubo un problema al compartir tu misión. Por favor, intenta de nuevo más tarde."
+      }
+    },
+    "ReferralCopy": {
+      "sucess": {
+        "title": "¡Enlace de referencia copiado!",
+        "desc": "¡Compártelo con tus amigos para reclamar 3 ORBs multicolores!"
+      }
+    },
+    "TonConnect": {
+      "success": {
+        "title": "¡Billetera conectada con éxito!",
+        "desc": "Tu billetera TON ha sido conectada."
+      },
+      "error": {
+        "title": "Error en la conexión de la billetera",
+        "desc": "Hubo un problema al conectar con tu billetera TON. Por favor, intenta de nuevo más tarde."
+      },
+      "notConnected": {
+        "title": "Wallet Not Connected",
+        "desc": "Please connect your wallet to perform this action."
+      }
+    },
+    "Payout": {
+      "success": {
+        "title": "Mission Completed",
+        "desc": "Reward has been credited to your holdings."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "desc": "Please complete the mission to claim your reward."
+      }
+    },
+    "InputValidate": {
+      "success": {
+        "title": "¡OTP Enviado!",
+        "desc": "OTP enviado con éxito."
+      },
+      "error": {
+        "title": "¡Entrada no válida!",
+        "desc": "Por favor, complete correctamente todos los campos obligatorios."
+      }
+    },
+    "OnboardSuccess": {
+      "success": {
+        "title": "¡OTP Verificado!",
+        "desc": "¡Gracias por conectarte con FrogDog Games!"
+      },
+      "error": {
+        "title": "¡OTP inválido!",
+        "desc": "Por favor ingrese el OTP correcto."
+      }
+    },
+    "Voucher": {
+      "success": {
+        "title": "¡Felicitationes! Regalo desbloqueado",
+        "desc": "Tu cupón ha sido reclamado con éxito."
+      },
+      "error": {
+        "title": "Reclamación fallida: Piezas incompletas",
+        "desc": "Termina las 12 piezas para desbloquear tu cupón."
+      }
+    },
+    "Stake": {
+      "success": {
+        "title": "Apuesta Exitosa",
+        "desc": "Has apostado con éxito 1 Black Orb. ¡Buena suerte!"
+      },
+      "error": {
+        "title": "No se puede apostar",
+        "desc": "Necesitas tener al menos 1 Black Orb para apostar."
+      }
+    },
+    "Profile": {
+      "success": {
+        "title": "Actualización Iniciada",
+        "desc": "¡Tu avatar de perfil se actualizará en breve!"
+      }
+    },
+    "RoRItem": {
+      "success-bag": {
+        "title": "Success!",
+        "desc": "Item added to your bag."
+      },
+      "success-pouch": {
+        "title": "Success!",
+        "desc": "Item added to your pouch."
+      },
+      "error": {
+        "title": "Failed to Claim",
+        "desc": "There was a problem claiming the item. Please try again."
+      }
+    },
+    "Meal": {
+      "success": {
+        "title": "Meal Eaten",
+        "desc": "Digging power has been boosted."
+      },
+      "error": {
+        "title": "Meal Failed",
+        "desc": "Couldn’t eat the meal. Please try again."
+      }
+    },
+    "JoinItem": {
+      "success": {
+        "title": "Item Added to Build",
+        "desc": "It will take 1 hour to complete. Please check back later."
+      },
+      "error": {
+        "title": "Build Failed",
+        "desc": "Unable to add the item to build. Please try again."
+      }
+    },
+    "SellItem": {
+      "success": {
+        "title": "Trade Successful",
+        "desc": "Item sold! Gobcoins credited."
+      },
+      "error": {
+        "title": "Trade Failed",
+        "desc": "Failed to sell the item. Please try again."
+      }
+    },
+    "Vault": {
+      "success": {
+        "title": "Vault Activated",
+        "desc": "Add items to keep them safe from theft."
+      },
+      "error": {
+        "title": "Vault Activation Failed",
+        "desc": "Unable to activate the vault. Please try again."
+      },
+      "pouch_error": {
+        "title": "Drop Failed",
+        "desc": "Pouch Items cannot be added to vault."
+      }
+    }
+  },
+  "characters": {
+    "celtic": {
+      "A01": {
+        "item": "SKEAN",
+        "char": "DANU",
+        "desc": "DANU, the revered mother goddess, wields SKEAN, her magical dagger that uncovers hidden paths to the otherworld. Cloaked in green, she protects nature’s balance, her presence felt in whispering leaves."
+      },
+      "A02": {
+        "item": "LORG MOR",
+        "char": "DAGHDA",
+        "desc": "DAGHDA, the mighty giant, wields the legendary LORG MOR, embodying strength and fertility. He also carries the COIRE ANSIC, a cauldron that endlessly provides for the needy and protects the land."
+      },
+      "A03": {
+        "item": "GAE BULG",
+        "char": "LUGH",
+        "desc": "LUGH, God of Justice, wields the fabled GAE BULG. Son of CIAN and ETHNIU, he fulfils prophecy by slaying his tyrant grandfather BALOR, the evil-eyed king of the Fomorians, at Mag Tuired, bringing light to the gods."
+      },
+      "A04": {
+        "item": "CLIABH SOLAIS",
+        "char": "NUADA",
+        "desc": "NUADA, known for his silver hand and the legendary Sword of Light (CLIAB SOLAIS), regains kingship of the Tuatha De Danann after his lost hand is magically restored, proving his rightful rule."
+      },
+      "A05": {
+        "item": "FIDBAC",
+        "char": "BELISAMA",
+        "desc": "BELISAMA, a goddess linked to rivers, seas, and war, wields the FIDBAK—a magical bow with exceptional accuracy and power. This weapon symbolizes her divine strength and status as the \"Queen of Heaven.\""
+      },
+      "A06": {
+        "item": "ORDUS",
+        "char": "GOIBNIU",
+        "desc": "GOIBNIU, master-smith, forges weapons worthy of gods. His legendary hammer, ORDUS, forged in celestial flames, strikes with the force of thunder, shaping tools of war that alter the fate of battles."
+      },
+      "A07": {
+        "item": "GAE BULG",
+        "char": "CU CHULAINN",
+        "desc": "CU CHULAINN, demigod son of LUGH, is a legendary warrior known for his unmatched skill and berserk fury, drawn from his Fomorian heritage. In battle, he wields the deadly GAE BULG, a cursed spear that kills with a single strike."
+      },
+      "A08": {
+        "item": "FUIP",
+        "char": "EPONA",
+        "desc": "EPONA, bringer of fertility and the eternal horse goddess, rides at dawn and dusk — where realms meet and roads end. Her whip, FUIP, is woven with ancient magic, bending wild spirits and untamed beasts to her will."
+      },
+      "A09": {
+        "item": "UAITHNE",
+        "char": "ERIU",
+        "desc": "In the Otherworld, ERIU goddess of sovereignty, sang, and from her voice, UAITHNE, the Harp of the DAGDA, was born—its strings wielding the power of emotion, order, and chaos, commanding joy, sorrow, and sleep!"
+      },
+      "B01": {
+        "item": "GAE DEARG",
+        "char": "DONN",
+        "desc": "DONN, god of Death and the Afterlife, wields the dread GAE DEARG spear and a shadowed scythe, striking at the essence of life itself. With each stroke, he ushers souls to TECH DUINN, the eternal, mist-wrapped domain of the Otherworld."
+      },
+      "B02": {
+        "item": "SHILLELAGH",
+        "char": "KARNAYANA",
+        "desc": "KARNAYANA, the horned god of nature, wields the SHILLELAGH, a powerful staff forged from sacred oak. This ancient weapon, infused with the wild's essence, symbolizes dominion over earth and serves as both protection and power."
+      },
+      "B03": {
+        "item": "CRUIAIDIN",
+        "char": "BADB",
+        "desc": "BADB, goddess of war and death, appears as a crow to foretell doom. Her sword, CRUIAIDIN, forged in shadowed prophecy, whistles with a death-screech—an omen as chilling as the battlefield she haunts."
+      },
+      "B04": {
+        "item": "TUAGH",
+        "char": "CAINTE",
+        "desc": "Dian Cecht, also known as CAINTE, is the god of healing. Wielding the TUAGH, his mythical axe represents the delicate balance between life and death, and his mastery of spiritual and magical arts. He restored king NUADA's silver arm."
+      },
+      "B05": {
+        "item": "MUIRGHA",
+        "char": "LIR",
+        "desc": "LIR god of the oceans, tides, deep waters, and the mysteries beneath. His weapon MUIRGHA aka Harpoon of the Abyss can summon storms, fog when thrown into the sea and deals damage to sea beasts, spirits, and unnatural creatures."
+      },
+      "B06": {
+        "item": "CRUACH",
+        "char": "CROM",
+        "desc": "CROM is a primordial and shadowed deity, linked to sacrifice, death, and fear. Wielding his magical staff, CRUACH, he channels the life force of sacrifices, transforming death into fertile bounty for the land."
+      },
+      "B07": {
+        "item": "GAE DEARG",
+        "char": "DIARMUID",
+        "desc": "DIARMUID, famed for beauty and courage, bears a dark legacy. His grandfather Donn, god of the dead and ruler of the Underworld, binds his fate through the cursed spear GAE DEARG—a weapon of blood and inevitable death."
+      },
+      "B08": {
+        "item": "SAMHAIN",
+        "char": "CAILLEACH",
+        "desc": "CAILLEACH, the Veiled One, goddess of winter, storms and time, roams with her Lantern of SAMHAIN, a spectral light that captures wandering souls when the living world and the Otherworld draw close, once each year."
+      },
+      "B09": {
+        "item": "CLAIRSEACH",
+        "char": "OGMA",
+        "desc": "OGMA, the god of language, wisdom, and eloquence, is intricately linked to the CLAIREACH, a magical harp infused with his divine power. When strummed, it invokes eloquent speech, enchants allies, and can bend the will of enemies."
+      },
+      "C00": {
+        "item": "TECH DUINN",
+        "char": "TECH DUINN",
+        "desc": "The Earth Dragon, PEIST, is a colossal, wingless serpent-like creature that slithers through the depths of the Underworld. It can be tamed—yet those who choose defeat it are rewarded with the Soul Sword – TECH DUINN."
+      },
+      "C01": {
+        "item": "LAMHAINN",
+        "char": "BALOR",
+        "desc": "BALOR the giant Fomorian king, had a gaze that could kill and magic gloves (LAMHAINN). To escape a prophecy of death by his grandson, he imprisoned his daughter ETHNIU—but she secretly bore LUGH, raised by the Tuatha De Danann."
+      },
+      "C02": {
+        "item": "SLABHRA",
+        "char": "CI-DONN",
+        "desc": "The CI-DONN are supernatural hounds, guardians of the entrance to the Otherworld and the realm of the dead. They guide souls to the afterlife, protect its gates, and are bound by the spectral chains known as LABHRA."
+      },
+      "C03": {
+        "item": "COIRE ANSIC",
+        "char": "MORRIGAN",
+        "desc": "The MORRIGAN is a complex and powerful triple goddess (Badb, Macha, Nemain) linked to death and battle. Her cauldron, COIRE ANSIC, symbolizes life and renewal, reflecting the Celtic belief in cyclical balance."
+      },
+      "C04": {
+        "item": "SAFACH",
+        "char": "SLUAGH ",
+        "desc": "SLUAGH are restless souls—those who died and were not allowed into the Otherworld, so they roam in a cursed, spectral state. SAFACH is their ghostly axe that can cut through any material, even through spirit and soul."
+      },
+      "C05": {
+        "item": "COIL",
+        "char": "KELPIES",
+        "desc": "KELPIES are shape-shifting water spirits that haunt rivers and lakes. Taking the form of horses, they lure victims into the depths to drown and devour them. Yet with a magical COIL, these deadly creatures can be bound and tamed."
+      },
+      "C06": {
+        "item": "FEALDOG",
+        "char": "PUCK",
+        "desc": "The PUCK and his magical flute, FEALDOG, are both tied to the fae and nature spirits, both drawing power from music and enchantment. With his trickster nature, he constantly manipulates and misleads those around him."
+      },
+      "C07": {
+        "item": "ADHARC",
+        "char": "UNICORN",
+        "desc": "The UNICORN is a horse-like creature with a spiralling horn (ALICORN) on its forehead. Connected to the Otherworld, it acts as a conduit for divine energy serving as both a messenger and a protector of sacred realms."
+      },
+      "C08": {
+        "item": "COGAR",
+        "char": "TITANIA",
+        "desc": "TITANIA , queen of the fairies from the Tuatha Dé Danann, wields her enchanted flute COGAR to command the elements, commune with the fae, and guard TIR NA NOG, preserving the balance of nature and magic."
+      },
+      "C09": {
+        "item": "EDIGH",
+        "char": "AVATAR",
+        "desc": "As an avatar in CELTIC mythology, you rise as a force of courage and destiny, part warrior, part divine. Will you claim godhood through battle, quest, or by facing the ultimate monster to secure your legacy?"
+      }
+    },
+    "egyptian": {
+      "A01": {
+        "item": "KERAVNOS",
+        "char": "ZEUS",
+        "desc": "ZEUS, youngest son of the Titans CRONUS and Rhea, God of the sky, thunder, and kingship. He reigns at Mount Olympus and intervenes in mortal and divine realms. With the mighty KERAUNUS (Thunderbolt) can summon storms and uphold justice."
+      },
+      "A02": {
+        "item": "ROPALON",
+        "char": "HERACLES",
+        "desc": "HERACLES, son of Zeus and a mortal, is a divine hero known for his strength and courage. Wielding ROPALON, the Club of Nemean Might, he completed twelve epic labors. Affiliated with Olympus and mortal heroes, he bridges gods and men."
+      },
+      "A03": {
+        "item": "AEGIS",
+        "char": "ATHENA",
+        "desc": "ATHENA, the goddess of wisdom, warfare, and strategy, is the daughter of ZEUS (born fully grown from his head). She holds the AEGIS, a magical shield with a spear, and gives it to PERSEUS to help slay MEDUSA, whom she cursed before."
+      },
+      "A04": {
+        "item": "DJED",
+        "char": "PTAH",
+        "desc": "PTAH, god of creation, craftsmanship, and knowledge, wields the DJED sceptre—symbol of the universe’s backbone and cosmic stability. Through speech and intellect, he shapes existence. His wife, SEKHMET, embodies destruction."
+      },
+      "A05": {
+        "item": "TJESEPH",
+        "char": "KHNUM",
+        "desc": "KHNUM, ancient god of creation and water, wields TJESEPH , a divine blade that carves life from Nile clay. He forms humans on his potter’s wheel and is allied with PTAH , another primordial creator and master of divine order."
+      },
+      "A06": {
+        "item": "KHET-GEB",
+        "char": "GEB",
+        "desc": "GEB, god of the earth, rules over physical world with his KHET-GEB, a belt that binds the forces of growth, stone, and quake. He is father to OSIRIS, ISIS, SET, and NEPHTHYS, and consort to sky goddess NUT."
+      },
+      "A07": {
+          "item": "KOPESH",
+        "char": "SOBEK",
+        "desc": "SOBEK, son of ATUM-RA, is the divine protector of the Nile and its crocodiles. His KOPESH swords, embody both earthly and divine strength. The Nile’s flooding, a symbol of creation, reflects his role in preserving life and cosmic order."
+      },
+      "A08": {
+        "item": " HEKA-ITERU",
+        "char": "TAWARET",
+        "desc": "TAWARET, the goddess of childbirth and protection, uses the HEKA-ITERU sceptre to shield mothers and children. Like hippopotamus she has a nature—both ferocious and nurturing. She is the sister of Anubis and a protector of the Nile."
+      },
+      "A09": {
+        "item": "DJERET-DJAT",
+        "char": "SHU",
+        "desc": "SHU, god of air, born from ATUM through sneezing, wields the Feather of Ma’at and the DJERET-DJAT shield. Twin brother of TEFNUT, he upholds cosmic order by keeping NUT and GEB apart—thus creating space for life to exist."
+      },
+      "B01": {
+        "item": "KOPESH",
+        "char": "ATUM",
+        "desc": "ATUM, the primordial creator god was born from the primeval waters of Nun, he then created SHU and TEFNUT, starting the divine cycle. Armed with his KOPESH sword, ATUM upholds divine balance, order, and protection."
+      },
+      "B02": {
+        "item": "WAS",
+        "char": "SET",
+        "desc": "SET, god of chaos and storms, is wild and disruptive. He kills his brother OSIRIS, yet aids RA by slaying the serpent APEP during the sun god’s journey through the underworld. SET uses the Was sceptre to command Deshret (red desert)."
+      },
+      "B03": {
+        "item": "MATEH",
+        "char": "NEPHTHYS",
+        "desc": "NEPHTHYS, goddess of night, mourning, and protection is a sister to ISIS, OSIRIS, and SET. With her sceptre MATEH, she shields souls in death and aids ISIS in rites, guiding their passage to the afterlife. She is the mother of ANUBIS."
+      },
+      "B04": {
+        "item": "HEKA",
+        "char": "OSIRIS",
+        "desc": "OSIRIS, god of the afterlife and resurrection, was brought back to life by his wife ISIS, goddess of magic. Using the divine power of HEKA, she gathered his dismembered body and performed sacred rites to restore him."
+      },
+      "B05": {
+        "item": " IAH-TEKET",
+        "char": "KHONSHU",
+        "desc": "KHONSHU, lunar god and divine healer and protector of night travellers, he his the son of Amun and Mut,  Wielding the IAH-TEKET (\"Moon Blade\"), he channels lunar power to ward off evil and guide lost souls under the moon's glow."
+      },
+      "B06": {
+        "item": "SAWLAJAN",
+        "char": "NUT",
+        "desc": "NUT, goddess of the sky, stars, and cosmic rebirth, swallows the sun each night and births it anew each morning. Mother of OSIRIS, ISIS, SET, and NEPHTHYS, she wields the SAWJALAN staff to command the stars and shroud the heavens."
+      },
+      "B07": {
+         "item": "ANKH & WAS",
+        "char": "ANUBIS",
+        "desc": "ANUBIS, god of mummification and the afterlife, is the protector of the dead. Holding ANKH (life) and the WAS sceptre (power), he guides souls to the underworld. Son of NEPHTHYS and SET, shares an antagonistic relationship with his father."
+     
+      },
+      "B08": {
+        "item": "NEHASI",
+        "char": "SEKHMET",
+        "desc": "SEKHMET, lioness goddess of war, wields NEHASI, the sacred Solar Bow forged in the sands. Sent by her father RA to punish humanity, her wrath nearly destroyed all life until HATHOR—her peaceful counterpart—restored her gentler nature."
+      },
+      "B09": {
+        "item": "URAEUS",
+        "char": "TEFNUT",
+        "desc": "TEFNUT, goddess of moisture and rain, was born from Atum through his spit. She wears the URAEUS crown, to protect herself from enemies. With her twin brother SHU, keeps cosmic balance by separating her children, NUT (sky) and GEB (earth)."
+      },
+      "C00": {
+        "item": "DUAT",
+        "char": "APEP",
+        "desc": "APEP, the serpent of chaos, emerged from Nun, the primordial waters of disorder. As RA’s eternal enemy, it strives to undo the cosmic order, opposing Ma'at, the force of balance. Its defeat grants the Soul Sword — DUAT."
+      },
+      "C01": {
+        "item": "MEHEN",
+        "char": "AMMIT",
+        "desc": "AMMIT, the Devourer of Souls, is part crocodile, lion, and hippopotamus. With her divine blade MEHEN, she cleaves through souls, consuming the unworthy and enforcing balance by devouring those who fail the judgment of the afterlife."
+      },
+      "C02": {
+        "item": "KHEDET",
+        "char": "WEPWAWET",
+        "desc": "WEPWAWET, the Wolf God, is a guide to the underworld and protector. He clears paths and aids in the passage through darkness, while ANUBIS oversees the judgment of the soul. His duties are bound by the magical chains of KHEDET."
+      },
+      "C03": {
+        "item": "NEME",
+        "char": "SPHINX",
+        "desc": "The SPHINX, guardian of wisdom and secrets, protects sacred knowledge and significant places—such as tombs or the gates to the afterlife. With its Claws of Truth and golden NEME, it tests the worthiness of those who seek enlightenment."
+      },
+      "C04": {
+        "item": "SEKHET",
+        "char": "SERPOPARD",
+        "desc": "SERPOPARD, blends the traits of a serpent and a leopard. Known for its agility and strength, it can be tamed only using his SEKHET (whip). Aligned with SET, it embodies the forces of chaos and untamed nature."
+      },
+      "C05": {
+        "item": "NEY",
+        "char": "BABI",
+        "desc": "BABI, is a fierce baboon god of the Egyptian underworld. Known as the “Bull of the Baboons,” he devours the wicked and guards the gates of the DUAT. A symbol of raw strength and harsh judgment, he is calmed only by the magical NEY flute."
+      },
+      "C06": {
+        "item": "NEKHAKHA",
+        "char": "HIERACOS",
+        "desc": "HIERACOS, the hawk-eyed sentinel, soars above battle as a divine enforcer of celestial law. Bound by HORUS through the sacred whip NEKHAKA, he upholds Ma’at, striking with swift judgment and guarding the skies with unwavering vigilance."
+      },
+      "C07": {
+        "item": "WAHAT",
+        "char": "BENNU",
+        "desc": "BENNU, a primordial bird linked to the sun and rebirth. Just like how his cosmic egg, (WAHAT) cracks to give birth to new life, his cycle entails burning the old, to then rise once more from the ashes the eternal cycle of life."
+      },
+      "C08": {
+        "item": "SISTRUM",
+        "char": "BASTET",
+        "desc": "BASTET, goddess of home, fertility, carries the SISTRUM—a sacred rattle used in rituals. Originally a lioness warrior, she later became a gentler cat goddess who protects the pharaoh and maintains balance. BASTET’s main rival is SEKHMET."
+      },
+      "C09": {
+        "item": "KHUDHA",
+        "char": "AVATAR",
+        "desc": "As an avatar in EGYPTIAN mythology, you rise as a force of courage and destiny, part warrior, part divine. Will you claim godhood through battle, quest, or by facing the ultimate monster to secure your legacy?"
+      }
+    },
+    "greek": {
+      "A01": {
+        "item": "KERAVNOS",
+        "char": "ZEUS",
+        "desc": "ZEUS, youngest son of the Titans CRONUS and Rhea, God of the sky, thunder, and kingship. He reigns at Mount Olympus and intervenes in mortal and divine realms. With the mighty KERAUNUS (Thunderbolt) can summon storms and uphold justice."
+      },
+      "A02": {
+        "item": "ROPALON",
+        "char": "HERACLES",
+        "desc": "HERACLES, son of Zeus and a mortal, is a divine hero known for his strength and courage. Wielding ROPALON, the Club of Nemean Might, he completed twelve epic labors. Affiliated with Olympus and mortal heroes, he bridges gods and men."
+      },
+      "A03": {
+        "item": "AEGIS",
+        "char": "ATHENA",
+        "desc": "ATHENA, the goddess of wisdom, warfare, and strategy, is the daughter of ZEUS (born fully grown from his head). She holds the AEGIS, a magical shield with a spear, and gives it to PERSEUS to help slay MEDUSA, whom she cursed before."
+      },
+      "A04": {
+        "item": "LYRA",
+        "char": "APOLLON",
+        "desc": "APOLLON, son of ZEUS and Leto, is the god of the sun, music, prophecy, and healing. His LYRA, crafted by HERMES, was later claimed by APOLLO, who mastered it to bring harmony to gods and mortals. ARTEMIS is his twin sister."
+      },
+      "A05": {
+        "item": "PHOTOMASTIX",
+        "char": "HELIOS",
+        "desc": "HELIOS, the Titan god of the sun, drives his flaming chariot pulled by fiery horses, guiding the sun across the sky. PHOTOMASTIX is his solar whip that commands fire and light, and sees all from his radiant path."
+      },
+      "A06": {
+        "item": "CHRYSELAKATOS",
+        "char": "ARTEMIS",
+        "desc": "ARTEMIS, goddess of the hunt, wilderness, and the moon, owns a powerful Golden Bow, CHRYSELAKATOS, never misses its mark. Her twin brother, APOLLON, is both an ally and occasional rival. Her chastity often clashes with APHRODITE's lust."
+      },
+      "A07": {
+        "item": "AEGIS",
+        "char": "PERSEUS",
+        "desc": "PERSEUS, a heroic demigod and son of ZEUS, wields a spear and AEGIS shield. Aided by ATHENA and HERMES, he slew MEDUSA and saved Andromeda from a sea monster sent by POSEIDON, blending divine favor with mortal courage."
+      },
+      "A08": {
+        "item": "CHITON",
+        "char": "DEMETER ",
+        "desc": "DEMETER , goddess of agriculture and harvest, wears a glowing CHITON symbolizing her nurturing nature. Her main conflict is with HADES, who abducted Persephone, causing earth’s decay until a yearly compromise restored the seasons."
+      },
+      "A09": {
+        "item": "SKIPTRON",
+        "char": "HESTIA",
+        "desc": "HESTIA, eldest daughter of CRONUS, escaped the violent power struggles of the gods by embodying peace and stability. She uses a SKIPTRON, to guard the hearth fire. She rarely appears in conflicts—her power is quiet but essential."
+      },
+      "B01": {
+        "item": "DREPANON",
+        "char": "CRONUS",
+        "desc": "CRONUS, god of time and harvest, used his sickle DREPANON, with Gaia’s help, to castrate Uranus and become Titan leader. Fearing a prophecy, he swallowed his children, but Rhea hid ZEUS, who later freed them and led the Titanomachy war."
+      },
+      "B02": {
+        "item": "BIDENT",
+        "char": "HADES",
+        "desc": "HADES, god of the underworld, wields the BIDENT with authority. He clashed often with ZEUS and POSEIDON. Feared yet fair, he guides souls to their final rest. His main rival was DEMETER, grieving her daughter Persephone’s abduction."
+      },
+      "B03": {
+        "item": "TRIDENT",
+        "char": "POSEIDON",
+        "desc": "POSEIDON, god of the sea and horses, wields the mighty TRIDENT. Brother to ZEUS and HADES, he commands the oceans, able to calm seas or unleash storms. His rivalry with ATHENA peaked after losing the patronage of Athens."
+      },
+      "B04": {
+        "item": "XIPHOS",
+        "char": "ARES",
+        "desc": "ARES, god of war, wields the deadly duo XIPHOS. Fierce and impulsive, he embodies battle’s chaos. His violent nature isolates him, but he’s a fearsome warrior. His secret affair with APHRODITE, HEPHAESTUS’s wife, sparked great jealousy."
+      },
+      "B05": {
+        "item": "CADUCEUS",
+        "char": "HERMES",
+        "desc": "HERMES, son of ZEUS and Maia, is the god of messengers, travellers, and thieves. Wielding the CADUCEUS, a staff with entwined snakes, he guides souls and brings messages between gods and mortals. He is known to be a trickster with no loyalty."
+      },
+      "B06": {
+        "item": "KESTOS",
+        "char": "APHRODITE",
+        "desc": "APHRODITE, born from sea foam, is the goddess of love, beauty, desire, and passion. Wielding KESTOS, a magical girdle that sparks desire, she is known for her jealousy, manipulation, and the Trojan War conflict, opposing ATHENA."
+      },
+      "B07": {
+        "item": "XIPHOS",
+        "char": "ACHILLES",
+        "desc": "ACHILLES, greatest Greek warrior of the Trojan War, was dipped in the Styx by his mother Thetis—only his heel stayed vulnerable. When wielding XIPHOS, sword/shield, he echoes ARES in battle, a mortal channel of divine fury."
+      },
+      "B08": {
+        "item": "BASILEIA",
+        "char": "HERA",
+        "desc": "HERA, goddess of marriage and queen of the gods, wields her sceptre BASILEIA, a symbol of her sovereignty. Known for jealousy over ZEUS’s affairs, she hated HERACLES—sending snakes to his crib and later driving him mad."
+      },
+      "B09": {
+        "item": "SFYROPYROS",
+        "char": "HEPHAESTUS",
+        "desc": "HEPHAESTUS, god of fire and forge, wields SFYROPYROS, his fire hammer. Cast from Olympus by HERA, he remains loyal, forging divine weapons for the gods with the help of the CYCLOPES. A master craftsman, fire is his art and ally."
+      },
+      "C00": {
+        "item": "TARTARUS",
+        "char": "TYPHON",
+        "desc": "TYPHON, the fearsome giant born of Gaia wields devastating claws and breathes fire and venom. As the father of monsters, he challenges Zeus and the Olympians. Embodying chaos, its defeat delivers the Soul Sword – TARTARUS."
+      },
+      "C01": {
+        "item": "CHRYSOKLON",
+        "char": "POLYPHEMUS ",
+        "desc": "POLYPHEMUS is a Cyclops, a giant, one-eyed being. Unlike the others, who forge weapons and aid ZEUS, he is set apart by his immense strength and monstrous appearance. POLYPHEMUS strikes fear into all with his golden club, CHRYSOKLON."
+      },
+      "C02": {
+        "item": "ALYSIDA",
+        "char": "CERBERUS",
+        "desc": "CERBERUS, the three-headed dog, guards the gates of the Underworld, so that the dead cannot escape and the living cannot enter without HADES' permission. Bound by ALYSIDA, unbreakable threads of fate, he is the offspring of Echidna and TYPHON."
+      },
+      "C03": {
+        "item": "NIMATA",
+        "char": "MOIRAI",
+        "desc": "Born of cosmic darkness, daughters of Nyx (Night), the MOIRAI —Clotho, Lachesis, and Atropos—spin, measure, and cut the threads of life (NIMATA). This divine trinity embodies the inescapable, impartial force of fate in Greek mythos."
+      },
+      "C04": {
+        "item": "LABRYS",
+        "char": "MINOTAUR ",
+        "desc": "The MINOTAUR is a tragic, fearsome half-man, half-bull creature, born of Pasiphae and a bull. Wielding a LABRYS (double-headed axe), his violent nature arises from hunger and his imprisonment in the Labyrinth, built to contain him."
+      },
+      "C05": {
+        "item": "KATHREFTIS",
+        "char": "MEDUSA",
+        "desc": "MEDUSA, once a priestess of ATHENA, was cursed after POSEIDON violated her in own temple. Her gaze turned victims to stone. She was slain by PERSEUS, who used a mirror (KATHREFTIS); her severed head became a weapon feared by all."
+      },
+      "C06": {
+        "item": "KENTRAIOS",
+        "char": "CHIRON",
+        "desc": "CHIRON, son of CRONUS, stood apart from his wild kin—wise, kind, and skilled in hunting and prophecy. Holding KENTRAIOS, he was wounded by a poisoned arrow. He gave up immortality to free PROMETHEUS, punished for giving fire to mankind."
+      },
+      "C07": {
+        "item": "MASTIGIO",
+        "char": "PEGASUS",
+        "desc": "PEGASUS, the winged divine stallion born from MEDUSAS’s blood, when the hero PERSEUS beheaded her. He serves Bellerophon who holds MASTIGIO — Pegasus’s divine whip, and both defeated the monstrous Chimera."
+      },
+      "C08": {
+        "item": "KOCHYLI",
+        "char": "TYCHE",
+        "desc": "TYCHE, the blind goddess of fortune and fate, carries KOCHYLI, a mystical shell that spins the tides of luck and destiny, and sea’s hidden treasures. Her father is Oceanus (the Titan god of the ocean) and mother is Themis."
+      },
+      "C09": {
+        "item": "KRANOS",
+        "char": "AVATAR",
+        "desc": "As an avatar in GREEK mythology, you rise as a force of courage and destiny, part warrior, part divine. Will you claim godhood through battle, quest, or by facing the ultimate monster to secure your legacy?"
+      }
+    },
+    "norse": {
+      "A01": {
+        "item": "GUNGNIR",
+        "char": "ODIN",
+        "desc": "ODIN is leader of the Aesir and reigns over Asgard. He sacrificed an eye for cosmic wisdom and magic, with his mighty spear GUNGNIR and SKJOLD shield, and with his two ravens, leads Valkyries to prepare the gods for Ragnarok."
+      },
+      "A02": {
+        "item": "MJOLNIR",
+        "char": "THOR",
+        "desc": "THOR, the thunder god and son of ODIN, wields the magical hammer MJOLNKR and defends Asgard by battling giants and enemies. He embodies strength, courage, and protection, riding a flying chariot pulled by his two goats."
+      },
+      "A03": {
+        "item": "HOFUD",
+        "char": "HEIMDALLR",
+        "desc": "HEIMDALLR, ever-watchful guardian, wields the golden axe HOFUD and stands guard at Bifrost, the rainbow bridge to Asgard. He detects all threats and will sound the Gjallarhorn to mark the beginning of Ragnarok."
+      },
+      "A04": {
+        "item": "KONA",
+        "char": "VIDAR",
+        "desc": "VIDAR, the silent god, wields the mighty KONA. With enchanted leather boots and unmatched strength, he will crush FENRIR's jaws, avenging the death of his father, ODIN. Destined to survive Ragnarok and rebuild a new world."
+      },
+      "A05": {
+        "item": "HAMMAR",
+        "char": "VALI",
+        "desc": "VALI, son of ODIN, wields his mighty HAMMAR. As the god of vengeance, he was born to avenge the death of his brother BALDR, slain through the blind god HODR, under LOKI's deceit. He is also fated to survive Ragnarok."
+      },
+      "A06": {
+        "item": "ELDRSKJOLD",
+        "char": "TYR",
+        "desc": "TYR, the former god of war and justice, is revered for his courage and self-sacrifice. To bind the monstrous wolf FENRIR, he offered his hand and sword, TYSVER. Now, he stands armed with the shield ELDRSKJOLD and a formidable axe."
+      },
+      "A07": {
+        "item": "GUNGNIR",
+        "char": "BRYNHILDR",
+        "desc": "BRYNHILDR embodies courage, and the fierce spirit of the Valkyries. As ODIN's personal battle maiden she carries his shield and spear GUNGNIR. Known for her valor in battle, helps take those who died in battle to Valhalla."
+      },
+      "A08": {
+        "item": "HUNBOGI",
+        "char": "ULLR",
+        "desc": "ULLR, god of hunting and winter, wields the legendary bow HUNBOGI —a gift from the huntress SKADI. Born of the earth goddess SIF, he is a master of archery and skiing, and represents the untamed spirit of the wild."
+      },
+      "A09": {
+        "item": "SKOLDR",
+        "char": "SIF",
+        "desc": "SIF is the goddess of earth, fertility and abundance of land. She is a figure of grace and strength. Her weapon, the enchanted shield SKOLDR, reflects her protective nature and she is renowned for her beauty and loyalty to THOR."
+      },
+      "B01": {
+        "item": "STRIDCLUB",
+        "char": "BORR",
+        "desc": "BORR, father of ODIN, VILI and VE, is a powerful and wise old god. Wielding the thunderous STRIDCLUB, he embodies strength, leadership, and the ancestral lineage of the JOTUNN from the first giant BURI: his father."
+      },
+      "B02": {
+        "item": "LAEVATEINN",
+        "char": "LOKI",
+        "desc": "LOKI, the god of misunderstood pain. He is also renowned for his cunning and mischief. He wields LAEVATEINN, a magic mythical item associated with chaos and destruction. LOKI's complex nature often blurring the lines between friend and foe."
+      },
+      "B03": {
+        "item": "SVALLIN-VONDR",
+        "char": "FREYJA",
+        "desc": "FREYJA, Vanir goddess of war and magic, joined the Aesir with her brother FREYR and father NJORDR after the truce. She rules Folkvangr, guides the fallen in battle, and crosses realms with her cloak and enchanted SVALLIN-VOLDR."
+      },
+      "B04": {
+        "item": "LAEVATEINN",
+        "char": "HEL",
+        "desc": "HEL, LOKI’s daughter, rules Niflheim, the realm of the dead, holding LAEVATEINN as her symbol of power. Half-decayed, half-beautiful, she oversees souls and plays a key role in BALDR's resurrection and Ragnarok."
+      },
+      "B05": {
+        "item": "ATGEAR",
+        "char": "NJORDR",
+        "desc": "NJORDR, the Vanir god of the sea, wind, and wealth, wields ATGEAR, a powerful speared staff forged with the ocean's might. He commands storms, guides sailors with wisdom, and blesses voyages. Father of FREYR and FREYJA."
+      },
+      "B06": {
+        "item": "SKADEJARN",
+        "char": "SKADI",
+        "desc": "SKADI, frost giantess and goddess of winter, wields SKADEJARN, a powerful bow made of ice and snow. Skilled in hunting, she roams the mountains and, despite her giantess origins, marries the Vanir sea god NJORDR for short time."
+      },
+      "B07": {
+        "item": "SVALLIN-VONDR",
+        "char": "GULLVEIG",
+        "desc": "GULLVEIG, a Vanir seeress, carried SVALLIN a shield made of gold. Her prophecies stirred greed in ODIN’s hall, leading the Aesir to burn her thrice. She magically rose each time, took the name Heidr, and sparked the Aesir-Vanir War."
+      },
+      "B08": {
+        "item": "EIKTHYRNIR",
+        "char": "FREYR",
+        "desc": "FREYR is the Vanir god of peace and FREIJA's twin. His sword, Sumarbrander, could fight on its own, and was given to win GERDR’s hand. Armed with only an antler (EIKTHYRNIR), against SURTR, sacrifices himself and seals his tragic fate."
+      },
+      "B09": {
+        "item": "FLENGJA",
+        "char": "GEFJON",
+        "desc": "GEFJON, is and independent figure and the Vanir goddess of Agriculture associated with ploughing. Her whip named FLENGJA, symbolizes her resolute power in shaping fates and she uses it to tame and ride her four oxen."
+      },
+      "C00": {
+        "item": "RAGNAROK",
+        "char": "MIDGARD",
+        "desc": "MIDGARD, also known as JORMUNGANDR, is a colossal sea serpent capable of encircling the Earth. Born of LOKI and ANDRBODA, it shares siblings with FENRIR and HEL. Embodying chaos, its defeat delivers the Soul Sword – RAGNAROK."
+      },
+      "C01": {
+        "item": "ANGURVADAL",
+        "char": "SURTUR",
+        "desc": "SURTUR, the fire giant of Norse lore, wields the powerful sword ANGURVADAL (\"Stream of Anguish\"). He is the harbinger of Ragnarok, bringing Muspelheim's fire to YGGDRASIL and the Nine Realms, slaying most of the cosmos."
+      },
+      "C02": {
+        "item": "GLEIPNIR",
+        "char": "FENRIR",
+        "desc": "FENRIR, the monstrous wolf of Norse legend, bound by the mystical chains of GLEIPNIR and impaled by TYR's sword, embodies chaos. With jaws that could devour the heavens, he awaits Ragnarok, where his fury will reshape the world."
+      },
+      "C03": {
+        "item": "SEIDRKISTA",
+        "char": "NORNIR",
+        "desc": "The NORNIR, masters of fate, hold the SEIDRKISTA. They weave destiny’s threads, shaping past, present, and future. Their silent whispers guide all beings through life’s tapestry beneath YGGDRASIL, the tree of life."
+      },
+      "C04": {
+        "item": "TAUG",
+        "char": "BRIMIR",
+        "desc": "BRIMIR and his wife, BLAINN, are JOTNAR (giants) who dwell in the hall Eljudnir. Both are tied to TAUG—a mythical chain of runes and frost that binds primal forces beneath YGGDRASIL, mirroring Niflheim’s ancient stillness."
+      },
+      "C05": {
+        "item": "POTTR",
+        "char": "BERGELMIR",
+        "desc": "BERGELMIR, the \"mountain-yeller,\" is a powerful Jotunn tied to nature’s raw force. He owns the mystical POTTR that makes him greedy and fiercely guards Niflheim, holding deep hatred for intruders—especially those from Asgard."
+      },
+      "C06": {
+        "item": "BJALLA",
+        "char": "TANNGIOST",
+        "desc": "TANNGIOST aka Tanngnjostr and Tanngrisnir are THOR’s mighty goats, pull his chariot through the skies. When his bell BJALLA tolls, it echoes with thunder, marking the god’s path in sound and fury across the realms."
+      },
+      "C07": {
+        "item": "KEYRA",
+        "char": "SLEIPNIR",
+        "desc": "SLEIPNIR, the legendary eight-legged steed born of LOKI's trickery, moves with unmatched speed, bridging realms. Loyal to ODIN, his thunderous gallop, guided by the whip KEYRA, leads through fate’s twists with unwavering devotion."
+      },
+      "C08": {
+        "item": "KRAVIKLYRA",
+        "char": "ALFIVA",
+        "desc": "ALFIVA, meaning \"gift from the elves,\" is one of many daughters of BRAGI, the Norse god of music. With her KRAVIKLYRA, she unveils fate’s secrets. Adorned in rune-etched robes, she is revered as a seeress of great wisdom."
+      },
+      "C09": {
+        "item": "HJELM",
+        "char": "AVATAR",
+        "desc": "As an avatar in NORSE mythology, you rise as a force of courage and destiny, part warrior, part divine. Will you claim godhood through battle, quest, or by facing the ultimate monster to secure your legacy?"
+      }
+    }
+  }
+}

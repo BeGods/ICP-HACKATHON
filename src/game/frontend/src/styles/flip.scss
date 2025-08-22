@@ -1,0 +1,166 @@
+.ficon {
+  position: relative;
+  width: 70px;
+  height: 90px;
+  color: white;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
+  transform: rotateY(0);
+
+  &.flipped {
+    transform: rotateY(0.5turn);
+    -webkit-transform: rotateY(-0.5turn); /* Add webkit prefix */
+  }
+
+  .ficon__face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transition: 0.5s ease-in-out;
+    -webkit-backface-visibility: hidden; /* Add webkit prefix */
+
+    &--back {
+      transform: rotateY(0.5turn);
+      -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
+    }
+  }
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: white;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
+  transform: rotateY(0);
+
+  &.flipped {
+    transform: rotateY(0.5turn);
+    -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
+  }
+
+  .card__face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transition: 0.5s ease-in-out;
+
+    &--back {
+      z-index: 100;
+      transform: rotateY(0.5turn);
+      -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
+    }
+  }
+}
+
+.button {
+  position: relative;
+  width: 280px;
+  height: 45px;
+  color: white;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  transform: rotateX(0turn);
+  -webkit-transform: rotateX(0turn);
+  will-change: transform;
+
+  &.flipped {
+    transform: rotateX(0.5turn);
+    -webkit-transform: rotateX(0.5turn);
+  }
+
+  .button__face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    justify-content: center;
+    align-items: center;
+
+    &--front {
+      transform: rotateX(0turn);
+      -webkit-transform: rotateX(0turn);
+      z-index: 0;
+    }
+
+    &--back {
+      transform: rotateX(0.5turn);
+      -webkit-transform: rotateX(0.5turn);
+      z-index: 100;
+    }
+  }
+}
+
+
+
+.orb {
+  position: relative;
+  width:  70vw;
+  height: 40vh;
+  color: white;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d; /* Add webkit prefix */
+  -webkit-transform: rotateY(0); /* Add webkit prefix */
+  transform: rotateY(0);
+
+  &.flipped {
+    -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
+    transform: rotateY(0.5turn);
+  }
+
+  .orb__face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+   -webkit-backface-visibility: hidden; /* Add webkit prefix */
+    backface-visibility: hidden;
+    transition: 0.5s ease-in-out;
+
+    &--back {
+      z-index: 100;
+      transform: rotateY(0.5turn);
+      -webkit-transform: rotateY(0.5turn); /* Add webkit prefix */
+    }
+  }
+}
+
+
+
+.bar-flipped {
+  animation: flip-animation 1s ease-in-out forwards;
+}
+
+@keyframes flip-animation {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(-75deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}

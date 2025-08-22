@@ -1,0 +1,198 @@
+:root {
+  --card-width: 12rem;
+}
+
+
+.card-draw {
+  position: absolute;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  width: var(--card-width);
+  aspect-ratio: 360/504;
+  top: calc(50% - (var(--card-width) * 1.5 / 2));
+  right: calc(50% - (var(--card-width) / 1.3));
+  transform-origin: 10% 90%;
+  border: 2px solid #e5e7eb;
+
+  &.selected {
+    border-color: #787878;
+  }
+
+  &.viewed {
+    opacity: 0;
+    transform: translateY(100vh) scale(0.5) rotate(180deg) !important;
+    pointer-events: none;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  &.viewed-active {
+    opacity: 0;
+    transform: translateY(calc(100vh + 200px)) scale(0.3) rotate(90deg) !important;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  &.zoomed {
+    z-index: 1000;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: scale(1.5) rotate(0deg) !important;
+    transform-origin: center center !important;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+    border-color: #fbbf24;
+    border-width: 3px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  }
+
+  // Individual card positioning and animations
+  &:nth-of-type(1) {
+    rotate: -45deg;
+    animation: slide-down 1s ease-in-out backwards;
+
+    &:hover:not(.zoomed):not(.viewed):not(.viewed-active) {
+      transform: translate(-1.3rem, -1.53rem) rotate(-10deg);
+    }
+  }
+
+  &:nth-of-type(2) {
+    rotate: -30deg;
+    animation: slide-down 1s ease-in-out backwards 0.2s;
+
+    &:hover:not(.zoomed):not(.viewed):not(.viewed-active) {
+      transform: translate(-1.15rem, -1.64rem) rotate(-5deg);
+    }
+  }
+
+  &:nth-of-type(3) {
+    rotate: -15deg;
+    animation: slide-down 1s ease-in-out backwards 0.4s;
+
+    &:hover:not(.zoomed):not(.viewed):not(.viewed-active) {
+      transform: translate(-0.68rem, -1.88rem) rotate(-5deg);
+    }
+  }
+
+  &:nth-of-type(4) {
+    animation: slide-down 1s ease-in-out backwards 0.6s;
+
+    &:hover:not(.zoomed):not(.viewed):not(.viewed-active) {
+      transform: translate(-0.17rem, -1.99rem) rotate(-5deg);
+    }
+  }
+
+  &:nth-of-type(5) {
+    rotate: 15deg;
+    animation: slide-down 1s ease-in-out backwards 0.8s;
+
+    &:hover:not(.zoomed):not(.viewed):not(.viewed-active) {
+      transform: translate(-1.04rem, -2.95rem) rotate(-5deg);
+    }
+  }
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+.active-indicator {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #4ade80;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+// Active Cards Grid
+
+.active-card-slot {
+  width: 80px;
+  height: 112px;
+  // border: 1px dashed white;
+  border-radius: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+
+  .slot-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .empty-slot {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+
+    .slot-number {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Animations
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateX(50vw) translateY(-50vh) rotate(45deg);
+  }
+  40% {
+    opacity: 1;
+  }
+  75% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+// Control buttons
+.controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &.btn-reset {
+      background-color: #2563eb;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
+    }
+
+    &.btn-dismiss {
+      background-color: #dc2626;
+
+      &:hover {
+        background-color: #b91c1c;
+      }
+    }
+  }
+}
+

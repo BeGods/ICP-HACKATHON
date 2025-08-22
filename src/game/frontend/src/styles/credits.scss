@@ -1,0 +1,13 @@
+.animate-scroll {
+    animation: scroll 60s linear forwards;
+  }
+  @keyframes scroll {
+    from {
+      top: 0;
+      transform: translateZ(0) rotateX(20deg);
+    }
+    to {
+      top: -7500px;
+      transform: translateZ(-2500px) rotateX(21deg);
+    }
+  }

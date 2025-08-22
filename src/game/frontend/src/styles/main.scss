@@ -1,0 +1,367 @@
+@import "./animations.scss";
+
+$myths: "greek", "celtic", "norse", "egyptian", "other", "white";
+
+.bottom-safe-area{
+ @apply absolute w-full flex flex-col justify-center items-center bottom-0 pb-safeBottom;
+}
+.bottom-base-area{
+ @apply absolute w-full flex flex-col justify-center items-center bottom-0 pb-buttonBottom;
+}
+.bonus-heading-text {
+  @apply uppercase text-gold text-bonus-title text-black-contour text-center break-words leading-[55px];
+}
+
+
+@each $myth in $myths {
+  // Filters
+  .filter-#{$myth} {
+    filter: var(--filter-#{$myth}-background);
+  }
+  .filter-orbs-#{$myth} {
+    filter: var(--filter-#{$myth}-orb);
+  }
+  .filter-fx-#{$myth} {
+    filter: var(--filter-#{$myth}-fx);
+  }
+  .filter-paper-#{$myth} {
+    filter: var(--filter-#{$myth}-paper);
+  }
+
+  // Glow
+  .glow-symbol-#{$myth} {
+    filter: drop-shadow(0 0 6px var(--#{$myth}-light));
+  }
+  .glow-hexagon-#{$myth} {
+    filter: drop-shadow(0 0 2px var(--#{$myth}-color))
+            drop-shadow(0 0 2px var(--#{$myth}-color))
+            drop-shadow(0 0 2px var(--#{$myth}-color));
+  }
+  .glow-icon-#{$myth} {
+    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 5px var(--#{$myth}-color));
+  }
+  .glow-icon-lg-#{$myth} {
+    text-shadow: 0 0 8px var(--#{$myth}-color), 0 0 8px var(--#{$myth}-color),
+      0 0 8px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 8px var(--#{$myth}-color));
+  }
+  .glow-star-#{$myth} {
+    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 5px var(--#{$myth}-color)) drop-shadow(0 0 5px var(--#{$myth}-color)) drop-shadow(0 0 5px var(--#{$myth}-color)) drop-shadow(0 0 5px var(--#{$myth}-color));
+  }
+  .glow-shard-#{$myth} {
+    filter: drop-shadow(0 0 20px var(--#{$myth}-color));
+  }
+  .glow-tap-#{$myth} {
+    filter: drop-shadow(0 0 40px var(--#{$myth}-color));
+  }
+  .glow-myth-#{$myth} {
+    text-shadow: 0 0 10px var(--#{$myth}-color), 0 0 10px var(--#{$myth}-color),
+      0 0 10px var(--#{$myth}-color);
+  }
+  .glow-box-#{$myth} {
+    box-shadow: 0 0 10px var(--#{$myth}-color), 0 0 10px var(--#{$myth}-color),
+      0 0 10px var(--#{$myth}-color);
+  }
+  .glow-myth-lg-#{$myth} {
+      text-shadow: 0 0 15px var(--#{$myth}-color), 0 0 15px var(--#{$myth}-color),
+      0 0 15px var(--#{$myth}-color);
+  }
+  .glow-text-#{$myth} {
+    text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color);
+  }
+  .card-shadow-#{$myth}{
+    filter: drop-shadow(0px 0px 8px var(--#{$myth}-color));
+  }
+  
+  // Button Effects
+  .glow-button-#{$myth} {
+    box-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
+      0 0 5px var(--#{$myth}-color), 0 0 10px var(--#{$myth}-color);
+    filter: drop-shadow(0 0 5px var(--#{$myth}-color));
+    opacity: 0.9;
+  }
+
+  .glow-inset-button-#{$myth} {
+    box-shadow:
+      inset 0 0 5px var(--#{$myth}-color),
+      inset 0 0 15px var(--#{$myth}-color);
+    background-color: rgba(var(--#{$myth}-color-rgb), 0.1); 
+    opacity: 0.95;
+    color: var(--#{$myth}-color);
+  
+    text-shadow:
+      0 0 2px var(--#{$myth}-color),
+      0 0 3px var(--#{$myth}-color);
+  }
+  
+  
+  // Button color
+  .bg-#{$myth} {
+    background: var(--#{$myth}-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .scale-orb-#{$myth} {
+    @include scale-and-glow(scale-orb-glow-#{$myth}, var(--#{$myth}-color), 2px, 10px);
+  }
+}
+
+  .glow-orb-black {
+    filter: drop-shadow(0 0 5px black);
+  }
+
+
+
+// Milestone Card
+.filter-card {
+  filter: brightness(66%) contrast(172%) grayscale(100%) saturate(151%);
+}
+
+// Frame Shadow
+// .card-shadow-black{
+//   filter: drop-shadow(0px 0px 8px black);
+// }
+
+// .card-shadow-white {
+//   filter: drop-shadow(0 0 8px white);
+// }
+
+// Text Shadow
+.glow-text-black {
+  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black;
+}
+.glow-text-white {
+  text-shadow: 
+  0 0 1px white,
+  0 0 1px white,
+  0 0 1px white;
+  filter: drop-shadow(0 0 5px white);
+}
+
+// Orb Symbol Shadow
+.orb-symbol-shadow{
+  text-shadow: 
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black;
+  filter: drop-shadow(0 0 1px black);
+}
+
+
+// Glow Quest Text
+.glow-text-quest {
+  font-family: "FOF";
+  font-size: 1.1rem;
+  text-shadow: 0 0 5px black, 0 0 5px black, 0 0 5px black;
+}
+
+/* Button Black Glass Effect */
+.bg-glass-black {
+  background: rgba(0, 0, 0, 0.6); /* 50% transparency */
+}
+
+.bg-glass-black-lg {
+  background: rgba(0, 0, 0, 0.8); /* 50% transparency */
+}
+
+.bg-glass-black-sm {
+  background: rgba(0, 0, 0, 0.5); /* 50% transparency */
+}
+
+
+
+.bg-glass-white {
+  background: rgba(255, 255, 255, 0.8); /* 50% transparency */
+}
+
+.bg-glass-gold {
+  background: rgba(228, 92, 29, 0.7); /* 50% transparency */
+}
+
+.crd-shadow-black{
+  filter: drop-shadow(0px 0px 8px black);
+}
+
+.header-shadow-black{
+  filter: drop-shadow(0px 0px 4px black);
+}
+
+/* Contours */
+.icon-black-contour{
+  text-shadow: 
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black,
+  0 0 5px black
+}
+
+.text-black-md-contour{
+text-shadow: 
+0 0 6px black,
+0 0 6px black,
+0 0 6px black,
+0 0 6px black,
+0 0 6px black
+}
+
+.text-black-icon-contour{
+  text-shadow: 
+  0 0 4px black,
+  0 0 4px black,
+  0 0 4px black,
+  0 0 4px black,
+  0 0 4px black
+  }
+
+.text-white-icon-contour{
+  text-shadow: 
+  0 0 4px white,
+  0 0 4px white,
+  0 0 4px white,
+  0 0 4px white,
+  0 0 4px white
+  }
+
+.text-black-contour{
+  text-shadow: 
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black,
+  0 0 3px black;
+  
+  }
+
+.text-black-lg-contour{
+  text-shadow: 
+  0 0 10px black,
+  0 0 10px black,
+  0 0 10px black,
+  0 0 10px black,
+  0 0 10px black
+  }
+
+.text-black-sm-contour{
+  text-shadow: 
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black,
+  0 0 1px black
+  }
+
+.text-white-contour{
+text-shadow: 
+0 0 1px white,
+0 0 1px white,
+0 0 1px white,
+0 0 1px white,
+0 0 1px white
+}
+
+.text-white-lg-contour{
+  text-shadow: 
+  0 0 3px white,
+  0 0 3px white,
+  0 0 3px white,
+  0 0 3px white,
+  0 0 3px white
+  }
+
+/* Gacha Glowing Box */
+.glow-box {
+  filter: drop-shadow(0 0 10px #FFD660)
+          drop-shadow(0 0 70px #FFD660);
+}
+
+.glow-thief {
+  filter: drop-shadow(0 0 10px #fe0000)
+          drop-shadow(0 0 70px #fe0000);
+}
+
+.glow-box-scale {
+  filter: drop-shadow(0 0 10px #FFD660)
+          drop-shadow(0 0 30px #FFD660)
+          drop-shadow(0 0 80px #FFD660);
+}
+
+.fof-text-shadow{
+  filter: drop-shadow(0 0 2px #FFD660)
+          drop-shadow(0 0 2px #FFD660);
+}
+
+.fof-text-shadow-after{
+  filter: drop-shadow(0 0 2px #EB5B00)
+          drop-shadow(0 0 2px #FFD660);
+}
+
+.ror-text-shadow{
+  filter: drop-shadow(0 0 2px #3ABEF9)
+          drop-shadow(0 0 2px #A7E6FF);
+}
+
+.purple-text-shadow{
+  filter: drop-shadow(0 0 2px #210A79)
+          drop-shadow(0 0 3px #210A79)
+}
+
+.dod-text-shadow{
+  filter: drop-shadow(0 0 2px #0000007e)
+          drop-shadow(0 0 1px #0000007e)
+          drop-shadow(0 0 2px #0000007e)
+          drop-shadow(0 0 2px #0000007e);
+}
+
+
+.begod-text-shadow{
+  filter: drop-shadow(0 0 2px #FFD660)
+          drop-shadow(0 0 2px #FFD660);
+}
+
+.begod-blue-shadow{
+  filter: drop-shadow(0 0 4px #3ABEF9)
+          drop-shadow(0 0 3px #A7E6FF);
+}
+
+.begod-orange-shadow{
+  filter: drop-shadow(0 0 4px #EB5B00)
+          drop-shadow(0 0 3px #FFD660);
+}
+
+.hexagon{
+  aspect-ratio: 1/cos(30deg);
+  clip-path: polygon(50% -50%, 100% 50%, 50% 150%, 0 50%);
+}
+
+.symbol-svg{
+  fill: red;
+}
+
+.leaderboard-first{
+background-color: #fed700;
+}
+
+.leaderboard-second{
+  background-color: #808080;
+}
+
+.leaderboard-third{
+  background-color:  #9b5e20;
+}
+
+.glow-text-gold {
+  text-shadow: 0 0 5px #FFD660, 0 0 10px #FFD660, 0 0 15px #FFD660;
+}
+
+.glow-hexagon-gold {
+    filter: drop-shadow(0 0 2px #FFD660)
+            drop-shadow(0 0 2px #FFD660)
+            drop-shadow(0 0 2px #FFD660);
+}

@@ -1,0 +1,386 @@
+@import url("https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300&family=Martel:wght@700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Root Variables */
+:root {
+  /* Basic */
+  --gold-primary: #ffd660;
+  --gold-secondary: #ffff00;
+  --dark: #1d1d1d;
+  --brown-primary: #53371e;
+
+  /* Basic Gray Colors */
+  --gray-primary: #414141;
+  --gray-text: #707579;
+  --gray-border-primary: #ffffff33;
+
+  /* Forges Of Faith */
+  --game-text-color: #f09a43;
+  --black-color: rgba(0, 0, 0, 0.637);
+  --white-color: white;
+
+  /* Celtic */
+  --celtic-color: #06b225;
+  --celtic-text: #01ff29;
+  --celtic-dark: #1a642f;
+  --celtic-medium: #1bd243;
+  --celtic-light: #00ff29;
+
+  /* Egyptian */
+  --egyptian-color: #ceba02;
+  --egyptian-text: #feea4b;
+  --egyptian-dark: #9a9523;
+  --egyptian-medium: #d2cb1b;
+  --egyptian-light: #ebff00;
+
+  /* Greek */
+  --greek-color: #ce0202;
+  --greek-text: #ff0000;
+  --greek-dark: #641a1a;
+  --greek-medium: #d21b1b;
+  --greek-light: #ff0000;
+
+  /* Norse */
+  --norse-color: #179fd1;
+  --norse-text: #007aff;
+  --norse-dark: #1a4064;
+  --norse-medium: #1b85d2;
+  --norse-light: #0094ff;
+
+  /* Linear Gradients */
+  --celtic-linear-gradient: linear-gradient(
+    90deg,
+    var(--celtic-dark),
+    var(--celtic-medium),
+    var(--celtic-light)
+  );
+  --egyptian-linear-gradient: linear-gradient(
+    90deg,
+    var(--egyptian-dark),
+    var(--egyptian-medium),
+    var(--egyptian-light)
+  );
+  --greek-linear-gradient: linear-gradient(
+    90deg,
+    var(--greek-dark),
+    var(--greek-medium),
+    var(--greek-light)
+  );
+  --norse-linear-gradient: linear-gradient(
+    90deg,
+    var(--norse-dark),
+    var(--norse-medium),
+    var(--norse-light)
+  );
+  --multi-linear-gradient: linear-gradient(
+    90deg,
+    #001aff 18%,
+    #16ffd5 32%,
+    #42ff00 48%,
+    #ccff00 62%,
+    #ffb800 78%,
+    #ff0000 100%
+  );
+  --multi-linear-icon-gradient: linear-gradient(
+    90deg,
+    #001aff 0%,
+    #42ff00 25%,
+    #ffb800 50%,
+    #ff0000 75%
+  );
+
+  /* Filters for Backgrounds */
+  --filter-celtic-background: brightness(100%) invert(5%) sepia(12%)
+    saturate(1500%) hue-rotate(48deg) brightness(90%) contrast(104%);
+  --filter-norse-background: brightness(100%) invert(10%) sepia(15%)
+    saturate(1237%) hue-rotate(171deg) brightness(90%) contrast(104%);
+  --filter-egyptian-background: brightness(100%) invert(5%) sepia(22%)
+    saturate(1000%) hue-rotate(6deg) brightness(125%) contrast(90%);
+  --filter-greek-background: brightness(90%) invert(15%) sepia(23%)
+    saturate(1200%) hue-rotate(-40deg) brightness(90%) contrast(120%);
+  --filter-other-background: brightness(110%) invert(5%) sepia(6%)
+    saturate(800%) hue-rotate(319deg) brightness(90%) contrast(104%);
+
+  /* Filters for Orbs */
+  --filter-celtic-orb: brightness(90%) invert(3%) sepia(27%) saturate(1237%)
+    hue-rotate(48deg) brightness(90%) contrast(104%);
+  --filter-egyptian-orb: brightness(140%) invert(5%) sepia(36%) saturate(1000%)
+    hue-rotate(16deg) contrast(104%);
+  --filter-greek-orb: brightness(80%) invert(3%) sepia(27) saturate(360%)
+    hue-rotate(-50deg) brightness(90%) contrast(104%);
+  --filter-norse-orb: brightness(80%) invert(3%) sepia(27%) saturate(1237%)
+    hue-rotate(171deg) brightness(90%) contrast(104%);
+  --filter-white-orb: brightness(90%) invert(5%) saturate(137%) brightness(220%)
+    contrast(104%);
+
+  /* Filters for fx */
+  --filter-celtic-fx: brightness(100%) invert(5%) sepia(36%) saturate(1237%)
+    hue-rotate(48deg) brightness(90%) contrast(104%);
+  --filter-egyptian-fx: brightness(150%) invert(20%) sepia(36%) saturate(2000%)
+    hue-rotate(16deg) contrast(104%);
+  --filter-greek-fx: brightness(100%) invert(5%) sepia(36%) saturate(1537%)
+    hue-rotate(-65deg) brightness(90%) contrast(104%);
+  --filter-norse-fx: brightness(100%) invert(10%) sepia(36%) saturate(1237%)
+    hue-rotate(171deg) brightness(90%) contrast(104%);
+  --filter-white-fx: brightness(100%) invert(5%) saturate(137%) brightness(220%)
+    contrast(104%);
+
+  /* Filters for Paper */
+  --filter-celtic-paper: brightness(100%) invert(5%) sepia(12%) saturate(1237%)
+    hue-rotate(48deg) brightness(90%) contrast(104%);
+  --filter-egyptian-paper: brightness(100%) invert(5%) sepia(22%) saturate(600%)
+    hue-rotate(6deg) brightness(90%) contrast(104%);
+  --filter-norse-paper: brightness(60%) invert(10%) sepia(15%) saturate(1037%)
+    hue-rotate(171deg) brightness(90%) contrast(104%);
+  --filter-greek-paper: brightness(100%) invert(5%) sepia(20%) saturate(700%)
+    hue-rotate(-50deg) brightness(90%) contrast(104%);
+  --filter-other-paper: brightness(75%) invert(5%) sepia(6%) saturate(800%)
+    hue-rotate(319deg) brightness(90%) contrast(104%);
+}
+
+/* Fonts */
+@font-face {
+  font-family: "Symbols";
+  src: url("/assets/fonts/begods-dingbats.woff2") format("woff2"),
+    url("/assets/fonts/begods-dingbats.woff2") format("woff2");
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "FOF";
+  src: url("/assets/fonts/begods-forges.of.faith.woff2") format("woff2"),
+    url("/assets/fonts/begods-forges.of.faith.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}
+
+img {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+html, body {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  background-color: black;
+}
+
+.desktop-height {
+  height: 95dvh;
+}
+
+
+.tg-container-height {
+  height: calc(100dvh - var(--tg-safe-area-inset-top) - 45px);
+}
+
+.mobile-safe-height {
+  height: calc(100dvh  - env(safe-area-inset-top));
+}
+
+.tg-safe-height {
+  height: calc(100dvh - var(--tg-safe-area-inset-top));
+}
+
+.browser-container-height {
+  height: 100dvh;
+}
+
+.tg-middle-position {
+  height: calc(100dvh - var(--tg-safe-area-inset-top) - 45px);
+}
+
+.browser-middle-position {
+  height: 94.5dvh
+}
+
+
+body.iframe-mobile {
+  padding-bottom: 4.5vh; 
+}
+
+body.iframe-mobile .browser-container-height {
+  height: calc(94.5dvh - 4.5vh);
+}
+
+.jigsaw::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.5)
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Multicolor Gradient */
+.gradient-multi {
+  background: var(--multi-linear-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-icon-multi {
+  background: var(--multi-linear-icon-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  background-size: 200%;
+}
+
+.border-multiColor {
+  position: relative;
+  border-radius: 15px; 
+  padding: 16px;
+  overflow: hidden; 
+}
+
+.border-multiColor::before {
+  content: "";
+  position: absolute; 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid transparent; 
+  border-image: linear-gradient(
+    90deg,
+    #001aff 18%,
+    #16ffd5 32%,
+    #42ff00 48%,
+    #ccff00 62%,
+    #ffb800 78%,
+    #ff0000 100%
+  );
+  border-image-slice: 1; 
+  pointer-events: none; 
+}
+/* .fof-text-shadow {
+  -webkit-text-stroke: 1px black; 
+  color: var(--game-text-color); 
+  text-shadow: 
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000; 
+  } */
+
+.bouncing-ball {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.custom-skew {
+  -moz-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  -webkit-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  -o-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  -ms-transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+  transform: scale(1) rotate(0deg) translate(0px, 0px) skew(30deg, 0deg);
+}
+
+.react-phone-input-container .country-list .country {
+  color: black; 
+}
+
+.disable-scroll-bar::-webkit-scrollbar {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 0;
+  height: 0;
+}
+
+
+.ranker-width {
+  @apply w-[80%] tablet:w-[65%] desktop:w-[30%];
+}
+
+.leaderboard-width {
+  @apply w-[100%] tablet:w-[100%] desktop:w-[50%];
+}
+
+.modal-width {
+  @apply w-[87%] tablet:w-[67%] desktop:w-[42%];
+}
+
+.notif-width {
+  @apply w-[90%] tablet:w-[80%] desktop:w-[50%];
+}
+
+.grid-width {
+  @apply w-[90%] tablet:w-[50%] desktop:w-[50%];
+}
+
+.card-width {
+  @apply h-[52dvh] aspect-[360/504] max-h-[100vw];
+}
+
+.packet-width {
+  @apply h-[64dvh]  max-h-[120vw] aspect-[360/610] mt-[4rem];
+}
+
+.carousel-width {
+  @apply w-[100%] tablet:w-[75%] desktop:w-[50%];
+}
+
+.footer-width {
+  @apply w-[82%] tablet:w-[75%] desktop:w-[50%];
+}
+
+.chrome-top-safe-area{
+  padding-top: env(safe-area-inset-top);
+}
+
+.center-section {
+  @apply absolute inset-x-0 flex flex-col top-gameMargins bottom-gameMargins justify-center items-center z-10 mx-auto max-w-[720px];
+  width: calc(100% - 84px);
+}
+
+.center-section-grid {
+  @apply absolute inset-x-0 flex flex-col top-gameMargins pt-[6rem] bottom-[9.375rem] justify-center items-center z-10 mx-auto max-w-[720px];
+  width: calc(100% - 84px);
+}
+
+.bottom-section-grid {
+  @apply absolute inset-x-0 flex flex-col h-fit bottom-0 justify-center -mb-[4px] items-center z-10 mx-auto max-w-[720px];
+  width: calc(100% - 84px);
+}
+
+.grid-section {
+  @apply grid grid-cols-3 gap-x-[0.5rem] w-full place-items-center place-content-between relative z-50 rounded-md;
+  position: relative;
+  background-color: transparent;
+}
+
+.grid-section-expanded {
+  @apply grid grid-cols-3 gap-x-[0.5rem] w-full place-items-center place-content-between relative z-10 rounded-md;
+  position: relative;
+  background-color: transparent;
+}
+
+
+
+
+
