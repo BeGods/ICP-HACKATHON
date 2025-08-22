@@ -248,6 +248,7 @@ export interface IUser extends Document {
   telegramId?: string;
   stanId?: string;
   lineId?: string;
+  principalId?: string;
   oneWaveId?: string;
   telegramUsername?: string;
   name: string;
