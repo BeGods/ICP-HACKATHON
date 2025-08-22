@@ -86,7 +86,7 @@ export const HeaderMythSymbol = () => {
   );
 };
 
-export const HeadbarLayout = ({ activeMyth, data, addOnEffect }) => {
+export const HeadbarLayout = ({ activeMyth, data }) => {
   const enableHaptic = useStore((s) => s.enableHaptic);
 
   return (

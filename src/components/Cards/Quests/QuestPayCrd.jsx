@@ -76,7 +76,7 @@ function PayCard({ quest, handlePay, activeMyth, handleClaimEffect }) {
           {filteredOrbsBal.includes("MultiOrb") && (
             <div>
               <div
-                className={`flex relative text-center justify-center text-black-sm-contour items-center glow-icon-white} `}
+                className={`flex relative text-center justify-center text-black-sm-contour items-center `}
               >
                 <img
                   src={assets.items.multiorb}

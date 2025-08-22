@@ -104,62 +104,60 @@ const Furnace = () => {
   };
 
   const handleDropAction = (itemBoxIndex) => {
-    if (itemBoxIndex !== -1) {
-      setBoxItems((prevBoxes) => {
-        const newBoxes = [...prevBoxes];
-        const fragmentData = {
-          _id: draggedItem._id,
-          fragmentId: draggedItem.fragmentId,
-        };
+    setBoxItems((prevBoxes) => {
+      const newBoxes = [...prevBoxes];
+      const fragmentData = {
+        _id: draggedItem._id,
+        fragmentId: draggedItem.fragmentId,
+      };
 
-        let itemInserted = false;
+      let itemInserted = false;
 
-        // case1: check if exists in one of the boxes
+      // case1: check if exists in one of the boxes
+      for (let i = 0; i < newBoxes.length; i++) {
+        const box = newBoxes[i];
+        if (box[draggedItem.itemId]) {
+          const alreadyExists = box[draggedItem.itemId].some(
+            (frag) => frag._id === draggedItem._id
+          );
+
+          if (!alreadyExists) {
+            box[draggedItem.itemId].push(fragmentData);
+          }
+
+          itemInserted = true;
+          break;
+        }
+      }
+
+      // case2: if not then insert in the first empty box
+      if (!itemInserted) {
+        let insertedInEmptyBox = false;
+
         for (let i = 0; i < newBoxes.length; i++) {
           const box = newBoxes[i];
-          if (box[draggedItem.itemId]) {
-            const alreadyExists = box[draggedItem.itemId].some(
-              (frag) => frag._id === draggedItem._id
-            );
+          const isEmpty = Object.keys(box).length === 0;
 
-            if (!alreadyExists) {
-              box[draggedItem.itemId].push(fragmentData);
-            }
-
-            itemInserted = true;
+          if (isEmpty) {
+            const newBox = { ...box };
+            newBox[draggedItem.itemId] = [fragmentData];
+            newBoxes[i] = newBox;
+            insertedInEmptyBox = true;
             break;
           }
         }
 
-        // case2: if not then insert in the first empty box
-        if (!itemInserted) {
-          let insertedInEmptyBox = false;
-
-          for (let i = 0; i < newBoxes.length; i++) {
-            const box = newBoxes[i];
-            const isEmpty = Object.keys(box).length === 0;
-
-            if (isEmpty) {
-              const newBox = { ...box };
-              newBox[draggedItem.itemId] = [fragmentData];
-              newBoxes[i] = newBox;
-              insertedInEmptyBox = true;
-              break;
-            }
-          }
-
-          if (!insertedInEmptyBox) {
-            alert("No empty box available to insert the item.");
-            return prevBoxes;
-          }
+        if (!insertedInEmptyBox) {
+          alert("No empty box available to insert the item.");
+          return prevBoxes;
         }
+      }
 
-        return newBoxes;
-      });
-      const updatedBag = arbitaryBag.filter((i) => i._id !== draggedItem._id);
-      setArbitaryBag(updatedBag);
-      setSelectedItem(draggedItem.itemId);
-    }
+      return newBoxes;
+    });
+    const updatedBag = arbitaryBag.filter((i) => i._id !== draggedItem._id);
+    setArbitaryBag(updatedBag);
+    setSelectedItem(draggedItem.itemId);
   };
 
   const dropDisableCondn = (item) => !activeItems.includes(item.itemId);

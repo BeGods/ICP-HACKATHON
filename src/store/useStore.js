@@ -100,12 +100,21 @@ const createRoRSlice = (set) => ({
     setBattleData: setWithPrev(set, "battleData"),
 });
 
+// RoR slice
+const createDoDSlice = (set) => ({
+    gameStats: null,
+    showEffect: false,
+    setGameStats: setWithPrev(set, "gameStats"),
+    setShowEffect: setWithPrev(set, "showEffect"),
+});
+
 // Store
 export const useStore = create(
     devtools((set) => ({
         ...createGlobalSlice(set),
         ...createFoFSlice(set),
         ...createRoRSlice(set),
+        ...createDoDSlice(set)
     }))
 );
 

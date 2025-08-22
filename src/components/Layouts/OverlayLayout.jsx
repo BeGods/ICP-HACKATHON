@@ -3,7 +3,7 @@ import { mythSections } from "../../utils/constants.fof";
 import { ToggleBack } from "../Common/SectionToggles";
 import { useStore } from "../../store/useStore";
 
-const OverlayLayout = ({ children, customMyth }) => {
+const OverlayLayout = ({ children, customMyth, customBg, handleBack }) => {
   const assets = useStore((s) => s.assets);
   const setShowCard = useStore((s) => s.setShowCard);
   const section = useStore((s) => s.section);
@@ -24,7 +24,11 @@ const OverlayLayout = ({ children, customMyth }) => {
   const handleClose = () => {
     setAnimateClass("overlay-fade-out");
     setTimeout(() => {
-      setShowCard(null);
+      if (typeof handleBack == "function") {
+        handleBack();
+      } else {
+        setShowCard(null);
+      }
     }, 200);
   };
 
@@ -51,9 +55,9 @@ const OverlayLayout = ({ children, customMyth }) => {
           className="w-full absolute bottom-0 left-0 select-none h-[120px] z-[1]"
         />
         <div
-          className={`absolute inset-0 filter-${filter}`}
+          className={`absolute inset-0 filter-${!customBg && filter}`}
           style={{
-            backgroundImage: `url(${assets.uxui.baseBgA})`,
+            backgroundImage: `url(${customBg ?? assets.uxui.baseBgA})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",

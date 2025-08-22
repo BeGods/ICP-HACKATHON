@@ -29,8 +29,8 @@ const useDragAndDrop = ({ handleDropAction, dropDisableCondn }) => {
 
     const touch = e;
     setCopyPosition({
-      x: touch.clientX - 100,
-      y: touch.clientY - 250,
+      x: touch.clientX - 80,
+      y: touch.clientY - 150,
     });
   };
 
@@ -83,7 +83,11 @@ const useDragAndDrop = ({ handleDropAction, dropDisableCondn }) => {
       return overlapPercentage >= 20;
     });
 
-    handleDropAction(itemBoxIndex);
+    console.log(itemBoxIndex);
+
+    if (itemBoxIndex !== -1) {
+      handleDropAction(itemBoxIndex);
+    }
     setDraggedItem(null);
   };
 

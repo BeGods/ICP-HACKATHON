@@ -1,0 +1,1054 @@
+{
+  "celtic": {
+    "C09_male": {
+      "name": "avatar - male",
+      "weaponName": "khudha",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black aether",
+      "orbAmt": "BLACK ORB"
+    },
+    "C09_female": {
+      "name": "avatar - female",
+      "weaponName": "edigh",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black aether",
+      "orbAmt": 1
+    },
+    "A01": {
+      "name": "danu",
+      "weaponName": "skean",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "celtic",
+      "orbAmt": 5
+    },
+    "B01": {
+      "name": "donn",
+      "weaponName": "gae dearg",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "celtic",
+      "orbAmt": 5
+    },
+    "A02": {
+      "name": "daghda",
+      "weaponName": "lorg mor",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "celtic",
+      "orbAmt": 4
+    },
+    "B02": {
+      "name": "karnayna",
+      "weaponName": "shillelagh",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "celtic",
+      "orbAmt": 4
+    },
+    "A03": {
+      "name": "lugh",
+      "weaponName": "gae bulg",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "celtic",
+      "orbAmt": 4
+    },
+    "B03": {
+      "name": "badb",
+      "weaponName": "cruaidin",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "celtic",
+      "orbAmt": 4
+    },
+    "A04": {
+      "name": "nuada",
+      "weaponName": "cliabh solais",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "B04": {
+      "name": "cainte",
+      "weaponName": "tuagh",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "A05": {
+      "name": "belisama",
+      "weaponName": "fidbac",
+      "atk": 8,
+      "def": 7,
+      "coins": 5,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "B05": {
+      "name": "lir",
+      "weaponName": "muirgha",
+      "atk": 7,
+      "def": 8,
+      "coins": 5,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "A06": {
+      "name": "goibniu",
+      "weaponName": "ordus",
+      "atk": 6,
+      "def": 7,
+      "coins": 5,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "B06": {
+      "name": "crom",
+      "weaponName": "cruach",
+      "atk": 7,
+      "def": 6,
+      "coins": 5,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "A07": {
+      "name": "setanta",
+      "weaponName": "gae bulg",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "B07": {
+      "name": "diarmuid",
+      "weaponName": "gae dearg",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "A08": {
+      "name": "epona",
+      "weaponName": "fuip",
+      "atk": 6,
+      "def": 5,
+      "coins": 3,
+      "orbType": "celtic",
+      "orbAmt": 2
+    },
+    "B08": {
+      "name": "cailleach",
+      "weaponName": "samhain",
+      "atk": 5,
+      "def": 6,
+      "coins": 3,
+      "orbType": "celtic",
+      "orbAmt": 2
+    },
+    "A09": {
+      "name": "eriu",
+      "weaponName": "uaithne",
+      "atk": 4,
+      "def": 5,
+      "coins": 3,
+      "orbType": "celtic",
+      "orbAmt": 2
+    },
+    "B09": {
+      "name": "ogma",
+      "weaponName": "clairseach",
+      "atk": 5,
+      "def": 4,
+      "coins": 3,
+      "orbType": "celtic",
+      "orbAmt": 2
+    },
+    "C00": {
+      "name": "peist",
+      "weaponName": "tech duinn",
+      "atk": 13,
+      "def": 13,
+      "coins": 0,
+      "orbType": "dragon token",
+      "orbAmt": 1
+    },
+    "C01": {
+      "name": "balor",
+      "weaponName": "lamhainn",
+      "atk": 11,
+      "def": 11,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 5
+    },
+    "C02": {
+      "name": "ci-donn",
+      "weaponName": "slabhra",
+      "atk": 9,
+      "def": 8,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 4
+    },
+    "C03": {
+      "name": "morrigan",
+      "weaponName": "coire ansic",
+      "atk": 8,
+      "def": 9,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 4
+    },
+    "C04": {
+      "name": "sluagh",
+      "weaponName": "safach",
+      "atk": 8,
+      "def": 7,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "C05": {
+      "name": "kelpie",
+      "weaponName": "coil",
+      "atk": 7,
+      "def": 6,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 3
+    },
+    "C06": {
+      "name": "puck",
+      "weaponName": "fealdog",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 1
+    },
+    "C07": {
+      "name": "unicorn",
+      "weaponName": "alicorn",
+      "atk": 4,
+      "def": 3,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 1
+    },
+    "C08": {
+      "name": "titania",
+      "weaponName": "cogar",
+      "atk": 3,
+      "def": 4,
+      "coins": 0,
+      "orbType": "celtic",
+      "orbAmt": 1
+    }
+  },
+  "egyptian": {
+    "C09_male": {
+      "name": "avatar - male",
+      "weaponName": "khudha",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black aether",
+      "orbAmt": "BLACK ORB"
+    },
+    "C09_female": {
+      "name": "avatar - female",
+      "weaponName": "khudha",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black aether",
+      "orbAmt": "BLACK ORB"
+    },
+    "A01": {
+      "name": "ra",
+      "weaponName": "ankh",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "egyptian",
+      "orbAmt": 5
+    },
+    "B01": {
+      "name": "atum",
+      "weaponName": "kopesh",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "egyptian",
+      "orbAmt": 5
+    },
+    "A02": {
+      "name": "horus",
+      "weaponName": "djefa-maat",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "egyptian",
+      "orbAmt": 4
+    },
+    "B02": {
+      "name": "set",
+      "weaponName": "was",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "egyptian",
+      "orbAmt": 4
+    },
+    "A03": {
+      "name": "isis",
+      "weaponName": "harpa",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "egyptian",
+      "orbAmt": 4
+    },
+    "B03": {
+      "name": "nephthys",
+      "weaponName": "mateh",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "egyptian",
+      "orbAmt": 4
+    },
+    "A04": {
+      "name": "ptah",
+      "weaponName": "djed",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "B04": {
+      "name": "osiris",
+      "weaponName": "heka",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "A05": {
+      "name": "khnum",
+      "weaponName": "tjeseph",
+      "atk": 8,
+      "def": 7,
+      "coins": 5,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "B05": {
+      "name": "khonshu",
+      "weaponName": "iah-teket",
+      "atk": 7,
+      "def": 8,
+      "coins": 5,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "A06": {
+      "name": "geb",
+      "weaponName": "khet-geb",
+      "atk": 6,
+      "def": 7,
+      "coins": 5,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "B06": {
+      "name": "nut",
+      "weaponName": "sawjalan",
+      "atk": 7,
+      "def": 6,
+      "coins": 5,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "A07": {
+      "name": "sobek",
+      "weaponName": "ankh",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "B07": {
+      "name": "anubis",
+      "weaponName": "was",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "A08": {
+      "name": "tawaret",
+      "weaponName": "heka-iteru",
+      "atk": 6,
+      "def": 5,
+      "coins": 3,
+      "orbType": "egyptian",
+      "orbAmt": 2
+    },
+    "B08": {
+      "name": "sekhmet",
+      "weaponName": "nehasi",
+      "atk": 5,
+      "def": 6,
+      "coins": 3,
+      "orbType": "egyptian",
+      "orbAmt": 2
+    },
+    "A09": {
+      "name": "shu",
+      "weaponName": "djeret-djat",
+      "atk": 4,
+      "def": 5,
+      "coins": 3,
+      "orbType": "egyptian",
+      "orbAmt": 2
+    },
+    "B09": {
+      "name": "tefnut",
+      "weaponName": "uraeus",
+      "atk": 5,
+      "def": 4,
+      "coins": 3,
+      "orbType": "egyptian",
+      "orbAmt": 2
+    },
+    "C00": {
+      "name": "apep",
+      "weaponName": "duat",
+      "atk": 13,
+      "def": 13,
+      "coins": 0,
+      "orbType": "dragon token",
+      "orbAmt": 1
+    },
+    "C01": {
+      "name": "ammit",
+      "weaponName": "mehen",
+      "atk": 11,
+      "def": 11,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 5
+    },
+    "C02": {
+      "name": "wepwawet",
+      "weaponName": "khedet",
+      "atk": 9,
+      "def": 8,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 4
+    },
+    "C03": {
+      "name": "sphynx",
+      "weaponName": "nemes",
+      "atk": 8,
+      "def": 9,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 4
+    },
+    "C04": {
+      "name": "serpopard",
+      "weaponName": "sawt",
+      "atk": 8,
+      "def": 7,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "C05": {
+      "name": "babi",
+      "weaponName": "ney",
+      "atk": 7,
+      "def": 6,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 3
+    },
+    "C06": {
+      "name": "hieracos",
+      "weaponName": "nekhakha",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 1
+    },
+    "C07": {
+      "name": "bennu",
+      "weaponName": "wahat",
+      "atk": 4,
+      "def": 3,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 1
+    },
+    "C08": {
+      "name": "bastet",
+      "weaponName": "sistrum",
+      "atk": 3,
+      "def": 4,
+      "coins": 0,
+      "orbType": "egyptian",
+      "orbAmt": 1
+    }
+  },
+  "greek": {
+    "C09_male": {
+      "name": "avatar - male",
+      "weaponName": "kranos",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black aether",
+      "orbAmt": "BLACK ORB"
+    },
+    "C09_female": {
+      "name": "avatar - female",
+      "weaponName": "kranos",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black aether",
+      "orbAmt": "BLACK ORB"
+    },
+    "A01": {
+      "name": "zeus",
+      "weaponName": "keraunos",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "greek",
+      "orbAmt": 5
+    },
+    "B01": {
+      "name": "cronus",
+      "weaponName": "drepanon",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "greek",
+      "orbAmt": 5
+    },
+    "A02": {
+      "name": "heracles",
+      "weaponName": "ropalon",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "greek",
+      "orbAmt": 4
+    },
+    "B02": {
+      "name": "hades",
+      "weaponName": "bident",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "greek",
+      "orbAmt": 4
+    },
+    "A03": {
+      "name": "athena",
+      "weaponName": "aegis",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "greek",
+      "orbAmt": 4
+    },
+    "B03": {
+      "name": "poseidon",
+      "weaponName": "trident",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "greek",
+      "orbAmt": 4
+    },
+    "A04": {
+      "name": "apollon",
+      "weaponName": "lyra",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "B04": {
+      "name": "ares",
+      "weaponName": "xiphos",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "A05": {
+      "name": "helios",
+      "weaponName": "photomastix",
+      "atk": 8,
+      "def": 7,
+      "coins": 5,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "B05": {
+      "name": "hermes",
+      "weaponName": "caduceus",
+      "atk": 7,
+      "def": 8,
+      "coins": 5,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "A06": {
+      "name": "artemis",
+      "weaponName": "argyrotoxos",
+      "atk": 6,
+      "def": 7,
+      "coins": 5,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "B06": {
+      "name": "aphrodite",
+      "weaponName": "kestos",
+      "atk": 7,
+      "def": 6,
+      "coins": 5,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "A07": {
+      "name": "perseus",
+      "weaponName": "aegis",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "B07": {
+      "name": "achilles",
+      "weaponName": "xiphos",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "A08": {
+      "name": "demeter",
+      "weaponName": "chiton",
+      "atk": 6,
+      "def": 5,
+      "coins": 3,
+      "orbType": "greek",
+      "orbAmt": 2
+    },
+    "B08": {
+      "name": "hera",
+      "weaponName": "basileia",
+      "atk": 5,
+      "def": 6,
+      "coins": 3,
+      "orbType": "greek",
+      "orbAmt": 2
+    },
+    "A09": {
+      "name": "hestia",
+      "weaponName": "skiptron",
+      "atk": 4,
+      "def": 5,
+      "coins": 3,
+      "orbType": "greek",
+      "orbAmt": 2
+    },
+    "B09": {
+      "name": "hephaestus",
+      "weaponName": "sfyropyros",
+      "atk": 5,
+      "def": 4,
+      "coins": 3,
+      "orbType": "greek",
+      "orbAmt": 2
+    },
+    "C00": {
+      "name": "typhon",
+      "weaponName": "tartarus",
+      "atk": 13,
+      "def": 13,
+      "coins": 0,
+      "orbType": "dragon token",
+      "orbAmt": 1
+    },
+    "C01": {
+      "name": "polyphemus",
+      "weaponName": "chrysoklon",
+      "atk": 11,
+      "def": 11,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 5
+    },
+    "C02": {
+      "name": "cerberus",
+      "weaponName": "alysida",
+      "atk": 9,
+      "def": 8,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 4
+    },
+    "C03": {
+      "name": "moirai",
+      "weaponName": "nimata",
+      "atk": 8,
+      "def": 9,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 4
+    },
+    "C04": {
+      "name": "minotaur",
+      "weaponName": "labrys",
+      "atk": 8,
+      "def": 7,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "C05": {
+      "name": "medusa",
+      "weaponName": "kathreftis",
+      "atk": 7,
+      "def": 6,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 3
+    },
+    "C06": {
+      "name": "chiron",
+      "weaponName": "kentraios",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 1
+    },
+    "C07": {
+      "name": "pegasus",
+      "weaponName": "mastigio",
+      "atk": 4,
+      "def": 3,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 1
+    },
+    "C08": {
+      "name": "tyche",
+      "weaponName": "kochyli",
+      "atk": 3,
+      "def": 4,
+      "coins": 0,
+      "orbType": "greek",
+      "orbAmt": 1
+    }
+  },
+  "norse": {
+    "C09_male": {
+      "name": "avatar - male",
+      "weaponName": "hjelm",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black orb",
+      "orbAmt": "BLACK ORB"
+    },
+    "C09_female": {
+      "name": "avatar - female",
+      "weaponName": "hjelm",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "black orb",
+      "orbAmt": "BLACK ORB"
+    },
+    "A01": {
+      "name": "odin",
+      "weaponName": "gungnir",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "norse",
+      "orbAmt": 5
+    },
+    "B01": {
+      "name": "borr",
+      "weaponName": "stridclub",
+      "atk": 9,
+      "def": 9,
+      "coins": 8,
+      "orbType": "norse",
+      "orbAmt": 5
+    },
+    "A02": {
+      "name": "thor",
+      "weaponName": "mjolnir",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "norse",
+      "orbAmt": 4
+    },
+    "B02": {
+      "name": "loki",
+      "weaponName": "laevateinn",
+      "atk": 9,
+      "def": 8,
+      "coins": 7,
+      "orbType": "norse",
+      "orbAmt": 4
+    },
+    "A03": {
+      "name": "heimdallr",
+      "weaponName": "hofud",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "norse",
+      "orbAmt": 4
+    },
+    "B03": {
+      "name": "freyja",
+      "weaponName": "svallin",
+      "atk": 8,
+      "def": 9,
+      "coins": 7,
+      "orbType": "norse",
+      "orbAmt": 4
+    },
+    "A04": {
+      "name": "vidar",
+      "weaponName": "kona",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "B04": {
+      "name": "hel",
+      "weaponName": "laevateinn",
+      "atk": 8,
+      "def": 8,
+      "coins": 6,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "A05": {
+      "name": "vali",
+      "weaponName": "hammar",
+      "atk": 8,
+      "def": 7,
+      "coins": 5,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "B05": {
+      "name": "njordr",
+      "weaponName": "atgear",
+      "atk": 7,
+      "def": 8,
+      "coins": 5,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "A06": {
+      "name": "tyr",
+      "weaponName": "eldrskjold",
+      "atk": 6,
+      "def": 7,
+      "coins": 5,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "B06": {
+      "name": "skadi",
+      "weaponName": "skadejarn",
+      "atk": 7,
+      "def": 6,
+      "coins": 5,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "A07": {
+      "name": "brynhild",
+      "weaponName": "gungnir",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "B07": {
+      "name": "gullveig",
+      "weaponName": "svallin",
+      "atk": 6,
+      "def": 6,
+      "coins": 4,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "A08": {
+      "name": "ullr",
+      "weaponName": "hunbogi",
+      "atk": 6,
+      "def": 5,
+      "coins": 3,
+      "orbType": "norse",
+      "orbAmt": 2
+    },
+    "B08": {
+      "name": "freyr",
+      "weaponName": "eikthyrnir",
+      "atk": 5,
+      "def": 6,
+      "coins": 3,
+      "orbType": "norse",
+      "orbAmt": 2
+    },
+    "A09": {
+      "name": "sif",
+      "weaponName": "skoldr",
+      "atk": 4,
+      "def": 5,
+      "coins": 3,
+      "orbType": "norse",
+      "orbAmt": 2
+    },
+    "B09": {
+      "name": "gefjon",
+      "weaponName": "flengja",
+      "atk": 5,
+      "def": 4,
+      "coins": 3,
+      "orbType": "norse",
+      "orbAmt": 2
+    },
+    "C00": {
+      "name": "midgard",
+      "weaponName": "ragnarok",
+      "atk": 13,
+      "def": 13,
+      "coins": 0,
+      "orbType": "dragon token",
+      "orbAmt": 1
+    },
+    "C01": {
+      "name": "surtur",
+      "weaponName": "angurvadal",
+      "atk": 11,
+      "def": 11,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 5
+    },
+    "C02": {
+      "name": "fenrir",
+      "weaponName": "gleipnir",
+      "atk": 9,
+      "def": 8,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 4
+    },
+    "C03": {
+      "name": "nornir",
+      "weaponName": "seidrkista",
+      "atk": 8,
+      "def": 9,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 4
+    },
+    "C04": {
+      "name": "brimir",
+      "weaponName": "taug",
+      "atk": 8,
+      "def": 7,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "C05": {
+      "name": "bergelmir",
+      "weaponName": "pottr",
+      "atk": 7,
+      "def": 6,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 3
+    },
+    "C06": {
+      "name": "tanngiost",
+      "weaponName": "bjalla",
+      "atk": 4,
+      "def": 4,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 1
+    },
+    "C07": {
+      "name": "sleipnir",
+      "weaponName": "keyra",
+      "atk": 4,
+      "def": 3,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 1
+    },
+    "C08": {
+      "name": "alfiva",
+      "weaponName": "kraviklyra",
+      "atk": 3,
+      "def": 4,
+      "coins": 0,
+      "orbType": "norse",
+      "orbAmt": 1
+    }
+  }
+}

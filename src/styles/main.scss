@@ -32,6 +32,11 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
   .glow-symbol-#{$myth} {
     filter: drop-shadow(0 0 6px var(--#{$myth}-light));
   }
+  .glow-hexagon-#{$myth} {
+    filter: drop-shadow(0 0 2px var(--#{$myth}-color))
+            drop-shadow(0 0 2px var(--#{$myth}-color))
+            drop-shadow(0 0 2px var(--#{$myth}-color));
+  }
   .glow-icon-#{$myth} {
     text-shadow: 0 0 5px var(--#{$myth}-color), 0 0 5px var(--#{$myth}-color),
       0 0 5px var(--#{$myth}-color);
@@ -110,6 +115,8 @@ $myths: "greek", "celtic", "norse", "egyptian", "other", "white";
   .glow-orb-black {
     filter: drop-shadow(0 0 5px black);
   }
+
+
 
 // Milestone Card
 .filter-card {
@@ -351,4 +358,10 @@ background-color: #fed700;
 
 .glow-text-gold {
   text-shadow: 0 0 5px #FFD660, 0 0 10px #FFD660, 0 0 15px #FFD660;
+}
+
+.glow-hexagon-gold {
+    filter: drop-shadow(0 0 2px #FFD660)
+            drop-shadow(0 0 2px #FFD660)
+            drop-shadow(0 0 2px #FFD660);
 }

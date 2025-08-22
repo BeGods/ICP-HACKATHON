@@ -56,9 +56,9 @@ const OrbClaimCard = ({
           className={`relative card-width rounded-lg shadow-lg flex flex-col z-50`}
         >
           <div
-            className={`card ${flipped ? "flipped" : ""} ${
-              isTgMobile ? "h-[45.35vh] mt-[4.5vh]" : "h-[50dvh] mt-[2vh]"
-            } text-black-contour mb-1`}
+            className={`card ${
+              flipped ? "flipped" : ""
+            }  text-black-contour mb-1`}
           >
             <div
               onClick={(e) => {

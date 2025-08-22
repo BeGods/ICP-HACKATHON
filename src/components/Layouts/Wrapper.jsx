@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { handleClickHaptic } from "../../helpers/cookie.helper";
 import CharacterCrd from "../Cards/Relics/CharacterCrd";
 import { GridItemEmpty } from "./GridItem";
@@ -12,10 +12,17 @@ export const CardWrap = ({
   handleClick,
   isPacket,
   disableFlip,
+  onFlipChange,
 }) => {
   const enableHaptic = useStore((s) => s.enableHaptic);
 
   const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    if (typeof onFlipChange === "function") {
+      onFlipChange(flipped);
+    }
+  }, [flipped, onFlipChange]);
 
   return (
     <div

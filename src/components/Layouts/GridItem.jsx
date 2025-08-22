@@ -167,4 +167,51 @@ const GridItem = ({
   );
 };
 
+export const GridChar = ({ charId }) => {
+  return (
+    <div
+      className={`relative cursor-pointer  
+    w-full h-auto max-w-[120px] flex flex-col items-center 
+    shadow-2xl rounded-md overflow-hidden`}
+    >
+      <div
+        className={`flex flex-col border border-white/50 rounded-md  items-center w-full`}
+      >
+        <div className="relative w-full border-b border-white/50  aspect-[360/504] max-w-[120px] overflow-hidden rounded-t-md">
+          <div className="absolute bg-white/5 inset-0 z-10 border-white/50 rounded-t-md overflow-hidden">
+            <span className="text-[2rem] uppercase text-white/20">
+              {charId.split(".")[0][0]}-{charId.split(".")[2]}
+            </span>
+
+            {/* <div
+              className={`w-full h-full flex justify-center items-end select-none`}
+              style={{
+                backgroundImage: `url(/assets/chars/240px-${charId}.png)`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            /> */}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const GridCharEmpty = ({ idx, icon }) => {
+  return (
+    <div
+      key={`placeholder-${idx}`}
+      className={`relative w-full max-w-[120px] flex flex-col border items-center rounded-md  overflow-hidden shadow-2xl cursor-pointer`}
+    >
+      <div
+        className={`w-full border-b aspect-[360/504] bg-white/20 flex justify-center items-center`}
+      >
+        <span className="text-iconLg font-symbols text-white/20">-</span>
+      </div>
+    </div>
+  );
+};
+
 export default GridItem;

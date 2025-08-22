@@ -19,6 +19,7 @@ import { DappWalletProvider } from "./context/DappWallet";
 import RoRMain from "./app/main/RoR";
 import LineCallback from "./app/common/Auth/LineCallback";
 import { useStore } from "./store/useStore";
+import DoDMain from "./app/main/DoD";
 
 ReactGA.initialize(import.meta.env.VITE_GA_ID, { debug: true });
 
@@ -91,6 +92,7 @@ function App() {
           <Route path="/auth/line/callback" element={<LineCallback />} />
           <Route path="/fof" element={<FoFMain />} />
           <Route path="/ror" element={<RoRMain />} />
+          <Route path="/dod" element={<DoDMain />} />
         </Routes>
       </TonConnectUIProvider>
     </DappWalletProvider>

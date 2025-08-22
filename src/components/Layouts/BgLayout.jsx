@@ -7,6 +7,7 @@ const orbsFilterSections = new Set([0, 1, 2]);
 
 const BgLayout = ({ children, isLoading }) => {
   const assets = useStore((s) => s.assets);
+  const gameData = useStore((s) => s.gameData);
   const section = useStore((s) => s.section);
   const game = useStore((s) => s.game);
   const activeMyth = useStore((s) => s.activeMyth);
@@ -15,6 +16,13 @@ const BgLayout = ({ children, isLoading }) => {
     if (section === 4 || (section >= 7 && section < 12) || isLoading)
       return assets.locations.fof;
     if (section === 0) return assets.uxui.baseBgForge;
+    return assets.uxui.baseBgA;
+  }, [section, isLoading, assets]);
+
+  const DoDbgImage = useMemo(() => {
+    if (gameData.gamePhase !== "idle") {
+      return `https://media.publit.io/file/BeGods/locations/1280px-ror.${gameData.location}-wide.jpg`;
+    }
     return assets.uxui.baseBgA;
   }, [section, isLoading, assets]);
 
@@ -62,8 +70,14 @@ const BgLayout = ({ children, isLoading }) => {
       : "44% 50%";
   }, [section, isLoading]);
 
-  const backgroundImage = game == "fof" ? FoFbgImage : RoRbgImage;
-  const filter = game == "fof" ? FoFfilter : null;
+  const backgroundImage =
+    game == "fof" ? FoFbgImage : game == "ror" ? RoRbgImage : DoDbgImage;
+  const filter =
+    game == "fof"
+      ? FoFfilter
+      : game == "dod" && gameData.gamePhase == "idle"
+      ? `orbs-${mythSections[activeMyth]}`
+      : null;
 
   return (
     <div

@@ -87,6 +87,8 @@ const IntroPage = (props) => {
           const userDataObj = {
             initData: tele?.initData,
           };
+          console.log("userDataObj", userDataObj.initData);
+
           const param = tele.initDataUnsafe?.start_param ?? null;
 
           setTgUserData(userDataObj);
@@ -264,7 +266,9 @@ const IntroPage = (props) => {
 
   const handleAuth = async (isTg) => {
     if (isTg) {
-      await telegramAuth();
+      setTimeout(async () => {
+        await telegramAuth();
+      }, 1000);
     } else if (liff.isInClient()) {
       setPlatform("line");
       await initalizeLine();

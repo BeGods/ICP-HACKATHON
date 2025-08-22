@@ -35,7 +35,6 @@ const Bank = (props) => {
   const authToken = useStore((s) => s.authToken);
   const setSection = useStore((s) => s.setSection);
   const setShowCard = useStore((s) => s.setShowCard);
-
   const [itemToTransfer, setItemsToTransfer] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [showGrid, setShowGrid] = useState(0);
@@ -78,99 +77,93 @@ const Bank = (props) => {
     showGrid === 1 || showGrid == 2 || (showGrid == 3 && showVaultItems);
 
   const handleDropAction = (itemBoxIndex) => {
-    if (itemBoxIndex !== -1) {
-      if (itemBoxIndex == 0) {
+    if (itemBoxIndex == 0) {
+      setShowCard(
+        <ItemCrd
+          mode={"artifact-sell"}
+          src={draggedItem?.itemId}
+          isComplete={draggedItem?.isComplete}
+          fragmentId={draggedItem?.fragmentId}
+          handleClick={() => {
+            handleItemToTrade(draggedItem);
+          }}
+        />
+      );
+    } else if (itemBoxIndex == 1) {
+      setGameData((prevItems) => {
+        let updatedVaultItems = prevItems.bank.vault.map((group) => {
+          if (group.name === draggedItem.itemId.split(".")[0]) {
+            return {
+              ...group,
+              items: group.items.filter((item) => item._id !== draggedItem._id),
+            };
+          }
+          return group;
+        });
+
+        // Check bag space
+        if (prevItems.bag.length < 9) {
+          let updatedBagItems = [...prevItems.bag, draggedItem];
+          itemToTransfer.push(draggedItem._id);
+          return {
+            ...prevItems,
+            bag: updatedBagItems,
+            bank: {
+              ...prevItems.bank,
+              vault: updatedVaultItems,
+            },
+          };
+        } else {
+          console.log("❌ Error: Insufficient space in the bag");
+          return prevItems;
+        }
+      });
+    } else if (itemBoxIndex == 2) {
+      if (draggedItem.isPouch) {
+        showToast("pouch_error");
+      } else if (!gameData.bank.isVaultActive) {
         setShowCard(
-          <ItemCrd
-            mode={"artifact-sell"}
-            src={draggedItem?.itemId}
-            isComplete={draggedItem?.isComplete}
-            fragmentId={draggedItem?.fragmentId}
-            handleClick={() => {
-              handleItemToTrade(draggedItem);
-            }}
+          <MiscCard
+            id={"banker"}
+            isPay={4}
+            handleClick={handleActivateBank}
+            handleButtonClick={handleActivateBank}
           />
         );
-      } else if (itemBoxIndex == 1) {
+      } else {
         setGameData((prevItems) => {
-          let updatedVaultItems = prevItems.bank.vault.map((group) => {
-            if (group.name === draggedItem.itemId.split(".")[0]) {
-              return {
-                ...group,
-                items: group.items.filter(
-                  (item) => item._id !== draggedItem._id
-                ),
-              };
-            }
-            return group;
-          });
-
-          // Check bag space
-          if (prevItems.bag.length < 9) {
-            let updatedBagItems = [...prevItems.bag, draggedItem];
-            itemToTransfer.push(draggedItem._id);
-            return {
-              ...prevItems,
-              bag: updatedBagItems,
-              bank: {
-                ...prevItems.bank,
-                vault: updatedVaultItems,
-              },
-            };
-          } else {
-            console.log("❌ Error: Insufficient space in the bag");
-            return prevItems;
-          }
-        });
-      } else if (itemBoxIndex == 2) {
-        if (draggedItem.isPouch) {
-          showToast("pouch_error");
-        } else if (!gameData.bank.isVaultActive) {
-          setShowCard(
-            <MiscCard
-              id={"banker"}
-              isPay={4}
-              handleClick={handleActivateBank}
-              handleButtonClick={handleActivateBank}
-            />
+          let updatedBagItems = prevItems.bag.filter(
+            (i) => i._id !== draggedItem._id
           );
-        } else {
-          setGameData((prevItems) => {
-            let updatedBagItems = prevItems.bag.filter(
-              (i) => i._id !== draggedItem._id
-            );
 
-            const mythology = draggedItem.itemId.includes("potion")
-              ? elementMythNames[
-                  draggedItem.itemId?.split(".")[1]
-                ]?.toLowerCase()
-              : draggedItem.itemId?.split(".")[0];
+          const mythology = draggedItem.itemId.includes("potion")
+            ? elementMythNames[draggedItem.itemId?.split(".")[1]]?.toLowerCase()
+            : draggedItem.itemId?.split(".")[0];
 
-            let updatedVault = prevItems.bank.vault.map((vaultGroup) => {
-              if (vaultGroup.name === mythology) {
-                if (vaultGroup.items.length < 27) {
-                  itemToTransfer.push(draggedItem._id);
-                  return {
-                    ...vaultGroup,
-                    items: [...vaultGroup.items, draggedItem],
-                  };
-                } else {
-                  toast.error("Error: Insufficient space in vault");
-                }
+          let updatedVault = prevItems.bank.vault.map((vaultGroup) => {
+            if (vaultGroup.name === mythology) {
+              if (vaultGroup.items.length < 27) {
+                itemToTransfer.push(draggedItem._id);
+                return {
+                  ...vaultGroup,
+                  items: [...vaultGroup.items, draggedItem],
+                };
+              } else {
+                toast.error("Error: Insufficient space in vault");
               }
-              return vaultGroup;
-            });
-
-            return {
-              ...prevItems,
-              bag: updatedBagItems,
-              bank: {
-                ...prevItems.bank,
-                vault: updatedVault,
-              },
-            };
+            }
+            return vaultGroup;
           });
-        }
+
+          return {
+            ...prevItems,
+            bag: updatedBagItems,
+            bank: {
+              ...prevItems.bank,
+              vault: updatedVault,
+            },
+          };
+        });
       }
     }
   };

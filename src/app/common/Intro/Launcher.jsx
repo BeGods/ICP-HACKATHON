@@ -10,6 +10,7 @@ import {
   ToggleRight,
 } from "../../../components/Common/SectionToggles";
 import { useStore } from "../../../store/useStore";
+import DoDIntro from "./DoDIntro";
 
 const tele = window.Telegram?.WebApp;
 
@@ -24,7 +25,7 @@ export default function Launcher({
   const menuRef = useRef(null);
   const bgRef = useRef(null);
   const [fadeout, setFadeout] = useState(false);
-  const bgAudios = ["fofIntro", "", "rorIntro"];
+  const bgAudios = ["fofIntro", "dodIntro", "rorIntro"];
 
   const playMenuAudio = async () => {
     const isSoundActive = await validateSoundCookie(tele);
@@ -47,7 +48,7 @@ export default function Launcher({
   }, [activeIndex]);
 
   const nextSlide = () => {
-    if (activeIndex < 1) {
+    if (activeIndex < 2) {
       playMenuAudio();
       handleUpdateIdx(activeIndex + 1);
     }
@@ -66,6 +67,13 @@ export default function Launcher({
     >
       {activeIndex == 0 ? (
         <FoFIntro
+          isLoading={isLoading}
+          isTgMobile={isTgMobile}
+          handleFadeout={() => setFadeout(true)}
+          fadeout={fadeout}
+        />
+      ) : activeIndex == 1 ? (
+        <DoDIntro
           isLoading={isLoading}
           isTgMobile={isTgMobile}
           handleFadeout={() => setFadeout(true)}
@@ -108,10 +116,10 @@ export default function Launcher({
       </div>
 
       <div className="z-50">
-        {activeIndex == 0 && (
+        {(activeIndex == 0 || activeIndex == 1) && (
           <ToggleRight activeMyth={8} handleClick={nextSlide} minimize={2} />
         )}
-        {activeIndex == 1 && (
+        {(activeIndex == 2 || activeIndex == 1) && (
           <ToggleLeft activeMyth={8} handleClick={prevSlide} minimize={2} />
         )}
       </div>
