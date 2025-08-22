@@ -1,7 +1,6 @@
 import User from "../../common/models/user.models";
 import ranks from "../../common/models/ranks.models";
 import {
-  bulkUpdateBetResult,
   bulkUpdateFoFComplete,
   claimBonusBooster,
   claimBonusOrb,
@@ -15,6 +14,7 @@ import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import { determineStreak } from "../../helpers/streak.helpers";
 import mongoose from "mongoose";
+import { fofGameData } from "../../common/models/game.model";
 
 export const validateUserPlayed = async (req, res) => {
   try {
@@ -241,11 +241,16 @@ export const updateBetRwrdStatus = async (req, res) => {
     });
     await newOrbsTransaction.save();
 
-    await user.updateOne({
-      $set: {
-        "bonus.fof.extraBlackOrb": null,
+    await fofGameData.findOneAndUpdate(
+      {
+        userId: user._id,
       },
-    });
+      {
+        $set: {
+          extraBlackOrb: null,
+        },
+      }
+    );
 
     res.status(200).json({ message: "Reward updated." });
   } catch (error) {
@@ -262,6 +267,7 @@ export const updateBetRwrdStatus = async (req, res) => {
 export const claimDailyBonus = async (req, res) => {
   try {
     const user = req.user;
+    const userGameData = req.userGameData;
     const isNotClaimedToday = req.isNotClaimedToday;
 
     const result = getRandomValue();
@@ -269,25 +275,19 @@ export const claimDailyBonus = async (req, res) => {
     let bonusReward;
 
     if (isNotClaimedToday) {
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          $set: {
-            "bonus.fof.dailyBonusClaimedAt": currTimeInUTC,
-            "bonus.fof.exploitCount": 0,
-          },
-        }
-      );
+      await userGameData.updateOne({
+        $set: {
+          dailyBonusClaimedAt: currTimeInUTC,
+          exploitCount: 0,
+        },
+      });
     } else {
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          $set: {
-            "bonus.fof.dailyBonusClaimedAt": currTimeInUTC,
-          },
-          $inc: { "bonus.fof.exploitCount": 1 },
-        }
-      );
+      await userGameData.updateOne({
+        $set: {
+          dailyBonusClaimedAt: currTimeInUTC,
+        },
+        $inc: { exploitCount: 1 },
+      });
     }
 
     if (result === "blackOrb") {
@@ -303,7 +303,6 @@ export const claimDailyBonus = async (req, res) => {
     res.status(200).json({ reward: bonusReward });
   } catch (error) {
     console.log(error);
-
     res.status(500).json({
       message: "Failed to update daily bonus.",
       error: error.message,
@@ -316,8 +315,9 @@ export const claimJoinBonus = async (req, res) => {
   try {
     const user = req.user;
     const userId = req.user._id;
+    const userGameData = req.userGameData;
 
-    await user.updateOne({ "bonus.fof.joiningBonus": true });
+    await userGameData.updateOne({ joiningBonus: true });
 
     if (user.parentReferrerId) {
       await User.findOneAndUpdate(
@@ -364,12 +364,12 @@ export const claimJoinBonus = async (req, res) => {
 export const claimStreakBonus = async (req, res) => {
   try {
     const userId = req.user._id;
-    const user = req.user;
+    const userGameData = req.userGameData;
 
     // randomize myth
     const mythologies = ["Greek", "Celtic", "Norse", "Egyptian"];
     const randomMyth = mythologies[Math.floor(Math.random() * 4)];
-    const streakReward = determineStreak(user.bonus.fof.streak.count);
+    const streakReward = determineStreak(userGameData.streak.count);
     let boosterUpdatedData;
 
     if (streakReward && streakReward.reward === "alchemist") {
@@ -419,8 +419,12 @@ export const claimStreakBonus = async (req, res) => {
       )[0].boosters;
     }
 
-    user.bonus.fof.streak.lastMythClaimed = randomMyth;
-    await user.save();
+    userGameData.updateOne({
+      $set: {
+        "streak.claimedAt": new Date(),
+        "streak.lastMythClaimed": randomMyth,
+      },
+    });
     await res
       .status(200)
       .json({ boosterUpdatedData: boosterUpdatedData, mythology: randomMyth });

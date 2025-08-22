@@ -103,8 +103,8 @@
     "status": "Active",
     "requiredOrbs": {
       "Norse": 2,
-      "Greek": 2,
-      "MultiOrb": 2
+      "Greek": 1,
+      "MultiOrb": 1
     }
   },
   "26-12-24": {

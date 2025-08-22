@@ -1,18 +1,14 @@
 import { IClaimedReward } from "../../ts/models.interfaces";
 import milestones from "../../common/models/milestones.models";
 import userMythologies from "../../common/models/mythologies.models";
-import mongoose from "mongoose";
-import rewards from "../../common/models/rewards.models";
-import {
-  validateBurstReward,
-  validateInviteReward,
-  validateMultiOrbReward,
-} from "../../common/services/missions.services";
+import { fofGameData } from "../../common/models/game.model";
 
 export const validDailyBonusReq = async (req, res, next) => {
   try {
     const user = req.user;
-    const dailyBonusClaimed = user.bonus.fof.dailyBonusClaimedAt;
+    const userGameData = await fofGameData.findOne({ userId: user._id });
+
+    const dailyBonusClaimed = userGameData.dailyBonusClaimedAt;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -43,6 +39,7 @@ export const validDailyBonusReq = async (req, res, next) => {
     if (validClaim) {
       throw Error("You have already claimed today's daily bonus!");
     } else {
+      req.userGameData = userGameData;
       next();
     }
   } catch (error) {
@@ -53,8 +50,9 @@ export const validDailyBonusReq = async (req, res, next) => {
 export const validDailyHackBonus = async (req, res, next) => {
   try {
     const user = req.user;
-    const dailyBonusClaimed = user.bonus.fof.dailyBonusClaimedAt;
-    const exploitCount = user.bonus.fof.exploitCount;
+    const userGameData = await fofGameData.findOne({ userId: user._id });
+    const dailyBonusClaimed = userGameData.dailyBonusClaimedAt;
+    const exploitCount = userGameData.exploitCount;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -90,6 +88,7 @@ export const validDailyHackBonus = async (req, res, next) => {
     if (validClaim && exploitCount >= 7) {
       throw Error("You have already claimed today's daily bonus!");
     } else {
+      req.userGameData = userGameData;
       next();
     }
   } catch (error) {
@@ -100,10 +99,12 @@ export const validDailyHackBonus = async (req, res, next) => {
 export const validJoinBonusReq = async (req, res, next) => {
   try {
     const user = req.user;
+    const userGameData = await fofGameData.findOne({ userId: user._id });
 
-    if (user.bonus.fof.joiningBonus) {
+    if (userGameData.joiningBonus) {
       throw Error("You have already claimed joining bonus!");
     } else {
+      req.userGameData = userGameData;
       next();
     }
   } catch (error) {
@@ -114,11 +115,13 @@ export const validJoinBonusReq = async (req, res, next) => {
 export const validateStreakBonus = async (req, res, next) => {
   try {
     const user = req.user;
-    const { bonus } = user;
     const now = new Date();
     now.setUTCHours(0, 0, 0, 0);
 
-    const lastClaimedDate = new Date(bonus.fof.streak.claimedAt ?? new Date(0));
+    const userGameData = await fofGameData.findOne({ userId: user._id });
+    const lastClaimedDate = new Date(
+      userGameData.streak.claimedAt ?? new Date(0)
+    );
     lastClaimedDate.setUTCHours(0, 0, 0, 0);
 
     // already claimed today
@@ -127,7 +130,7 @@ export const validateStreakBonus = async (req, res, next) => {
     }
 
     // if not
-    bonus.fof.streak.claimedAt = new Date().toISOString();
+    req.userGameData = userGameData;
     next();
   } catch (error) {
     console.error("Error in validateStreakBonus:", error.message);

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
+    "types": ["jest"],
     "lib": [
       "es6"
     ],
@@ -35,5 +36,6 @@
       ]
     }
   },
-  "include": ["src/**/*", "src/scripts"]
+  "include": ["src/**/*", "src/scripts"],
+
 }

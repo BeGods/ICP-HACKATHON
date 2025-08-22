@@ -1,7 +1,10 @@
+import { rorGameData } from "../../common/models/game.model";
+
 export const validDailyBonusReq = async (req, res, next) => {
   try {
     const user = req.user;
-    const dailyBonusClaimed = user.bonus.ror.dailyBonusClaimedAt;
+    const userGameData = await rorGameData.findOne({ userId: user._id });
+    const dailyBonusClaimed = userGameData.dailyBonusClaimedAt;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -32,6 +35,7 @@ export const validDailyBonusReq = async (req, res, next) => {
     if (validClaim) {
       throw Error("You have already claimed today's daily bonus!");
     } else {
+      req.userGameData = userGameData;
       next();
     }
   } catch (error) {
@@ -42,10 +46,12 @@ export const validDailyBonusReq = async (req, res, next) => {
 export const validJoinBonusReq = async (req, res, next) => {
   try {
     const user = req.user;
+    const userGameData = await rorGameData.findOne({ userId: user._id });
 
-    if (user.bonus.ror.joiningBonus) {
+    if (userGameData.joiningBonus) {
       throw Error("You have already claimed joining bonus!");
     } else {
+      req.userGameData = userGameData;
       next();
     }
   } catch (error) {

@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-import { fofRoutes, rorRoutes } from "./router";
+import { dodRoutes, fofRoutes, rorRoutes } from "./router";
 import helmet from "helmet";
 import xss from "xss-clean";
 import hpp from "hpp";
@@ -44,24 +44,25 @@ const allowedUserAgents = new Set([
   "android-browser",
   "ios-browser",
   "PostmanRuntime/7.44.1",
+  "PostmanRuntime/7.45.0",
   "axios/1.7.7",
 ]);
 
-app.use((req, res, next) => {
-  const uaType = normalizeUserAgent(req.headers["user-agent"] || "");
+// app.use((req, res, next) => {
+//   const uaType = normalizeUserAgent(req.headers["user-agent"] || "");
 
-  if (!allowedUserAgents.has(uaType)) {
-    console.warn(
-      `Blocked User-Agent: ${uaType} from IP: ${getRealClientIP(req)}`
-    );
-    return res.status(403).json({
-      success: false,
-      message: "Access denied: Unsupported device or browser.",
-    });
-  }
+//   if (!allowedUserAgents.has(uaType)) {
+//     console.warn(
+//       `Blocked User-Agent: ${uaType} from IP: ${getRealClientIP(req)}`
+//     );
+//     return res.status(403).json({
+//       success: false,
+//       message: "Access denied: Unsupported device or browser.",
+//     });
+//   }
 
-  next();
-});
+//   next();
+// });
 
 const blockedIPs = new Set(config.server.BLOCKED_IPS);
 app.use((req, res, next) => {
@@ -121,5 +122,6 @@ app.use(morgan(loggerFormat));
 
 app.use("/api/v1", fofRoutes);
 app.use("/api/v2", rorRoutes);
+app.use("/api/v3", dodRoutes);
 
 export default app;

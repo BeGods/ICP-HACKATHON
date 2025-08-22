@@ -51,13 +51,13 @@ export const validateBooster = (boosters) => {
   }
 };
 
-export const checkAutomataStatus = (gameData, user) => {
+export const checkAutomataStatus = (gameData, userGameData) => {
   try {
     const streakMultipier = validStreakReward(
       "automata",
-      user.bonus.fof.streak.count,
-      user.bonus.fof.streak.claimedAt,
-      user.bonus.fof.streak.lastMythClaimed === gameData.name
+      userGameData.streak.count,
+      userGameData.streak.claimedAt,
+      userGameData.streak.lastMythClaimed === gameData.name
     );
 
     const timeLapsed = Date.now() - gameData.boosters.automataStartTime;
@@ -85,6 +85,8 @@ export const checkAutomataStatus = (gameData, user) => {
 
     return gameData.boosters;
   } catch (error) {
+    console.log(error);
+
     throw new Error("Error in validating booster.");
   }
 };

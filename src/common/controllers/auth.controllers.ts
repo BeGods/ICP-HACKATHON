@@ -114,6 +114,8 @@ export const authenticateTg = async (
 ): Promise<void> => {
   try {
     const { initData } = req.body;
+    console.log(initData);
+
     const { referralCode } = req.query as { referralCode?: string | null };
     let isUpdated = false;
 

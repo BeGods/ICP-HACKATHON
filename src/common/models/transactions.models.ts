@@ -43,6 +43,7 @@ const orbsTransactionsSchema = new Schema<IOrbsTransactions>(
         "multiBurst",
         "join",
         "stake",
+        "battle",
       ],
       required: true,
     },

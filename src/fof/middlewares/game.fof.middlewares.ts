@@ -12,6 +12,7 @@ import {
 } from "../services/game.fof.services";
 import { decryptHash } from "../../helpers/crypt.helpers";
 import { IMyth, IUserMyths } from "../../ts/models.interfaces";
+import { fofGameData } from "../../common/models/game.model";
 
 export const validateAlchemist = async (req, res, next) => {
   try {
@@ -64,6 +65,7 @@ export const validateAutomata = async (req, res, next) => {
     const userId = req.user._id;
     const user = req.user;
     const { mythologyName, adId } = await decryptHash(req.body.data);
+    const userGameData = await fofGameData.findOne({ userId: user._id });
 
     const { mythData, userMythology } = await filterDataByMyth(
       mythologyName,
@@ -71,7 +73,7 @@ export const validateAutomata = async (req, res, next) => {
     );
 
     if (mythData.boosters.isAutomataActive) {
-      mythData.boosters = checkAutomataStatus(mythData, user);
+      mythData.boosters = checkAutomataStatus(mythData, userGameData);
 
       if (mythData.boosters.isAutomataActive) {
         throw new Error("Automata is already active. Try again later.");
@@ -92,6 +94,8 @@ export const validateAutomata = async (req, res, next) => {
     } else {
       req.deductValue = -1;
     }
+
+    req.userGameData = userGameData;
     req.userMyth = mythData;
     req.mythData = userMythology;
     next();
@@ -105,8 +109,9 @@ export const validateAutomata = async (req, res, next) => {
 export const validAutoAutomataReq = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName, adId } = await decryptHash(req.body.data);
+    const { adId } = await decryptHash(req.body.data);
 
+    const userGameData = await fofGameData.findOne({ userId: userId });
     const userMythologiesData = (await userMythologies.findOne({
       userId,
     })) as IUserMyths;
@@ -115,7 +120,7 @@ export const validAutoAutomataReq = async (req, res, next) => {
       throw new Error("Mythology data not found");
     }
 
-    if (!userMythologiesData.autoPay.isAutomataAutoPayEnabled) {
+    if (!userGameData.isAutomataAutoPayEnabled) {
       return res
         .status(404)
         .json({ message: `You are not eligible for auto pay.` });
@@ -136,6 +141,7 @@ export const validAutoAutomataReq = async (req, res, next) => {
       req.deductValue = -3;
     }
 
+    req.userGameData = userGameData;
     req.mythData = userMythologiesData;
     next();
   } catch (error) {
@@ -148,8 +154,9 @@ export const validAutoAutomataReq = async (req, res, next) => {
 export const validateMultiBurst = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName, adId } = await decryptHash(req.body.data);
+    const { adId } = await decryptHash(req.body.data);
 
+    const userGameData = await fofGameData.findOne({ userId: userId });
     const userMythologiesData = (await userMythologies.findOne({
       userId,
     })) as IUserMyths;
@@ -158,7 +165,7 @@ export const validateMultiBurst = async (req, res, next) => {
       throw new Error("Game data not found.");
     }
 
-    if (!userMythologiesData.autoPay.isBurstAutoPayEnabled) {
+    if (!userGameData.isBurstAutoPayEnabled) {
       return res
         .status(400)
         .json({ message: `You are not eligible for auto pay.` });
@@ -176,7 +183,7 @@ export const validateMultiBurst = async (req, res, next) => {
     const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
 
     if (
-      userMythologiesData.autoPay.burstAutoPayExpiration - Date.now() >
+      userGameData.burstAutoPayExpiration - Date.now() >
       millisecondsIn24Hours
     ) {
       throw new Error(
@@ -189,6 +196,8 @@ export const validateMultiBurst = async (req, res, next) => {
     } else {
       req.deductValue = -9;
     }
+
+    req.userGameData = userGameData;
     req.mythData = userMythologiesData;
 
     next();
@@ -208,6 +217,7 @@ export const validateBurst = async (req, res, next) => {
       throw new Error("Mythology name is required.");
     }
 
+    const userGameData = await fofGameData.findOne({ userId: userId });
     const { mythData, userMythology } = await filterDataByMyth(
       mythologyName,
       userId
@@ -229,6 +239,7 @@ export const validateBurst = async (req, res, next) => {
       throw new Error("Insufficient multiColorOrbs to claim this burst.");
     }
 
+    req.userGameData = userGameData;
     req.userMyth = mythData;
     req.mythData = userMythology;
 
@@ -300,13 +311,13 @@ export const validateOrbsConversion = async (req, res, next) => {
 export const validateClaimMoon = async (req, res, next) => {
   try {
     const userId = req.user;
-    const { mythologyName, adId } = await decryptHash(req.body.data);
-
+    const { adId } = await decryptHash(req.body.data);
+    const userGameData = await fofGameData.findOne({ userId: userId });
     const userMythologiesData = (await userMythologies.findOne({
       userId,
     })) as IUserMyths;
 
-    if (hasBeenFourDaysSinceClaimedUTC(userMythologiesData.lastMoonClaimAt)) {
+    if (hasBeenFourDaysSinceClaimedUTC(userGameData.lastMoonClaimAt)) {
       throw new Error(
         "Your previous boost has not expired yet. Please try again later."
       );
@@ -326,6 +337,7 @@ export const validateClaimMoon = async (req, res, next) => {
     } else {
       req.deductValue = -3;
     }
+    req.userGameData = userGameData;
     next();
   } catch (error) {
     console.log(error);

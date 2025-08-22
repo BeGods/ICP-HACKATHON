@@ -14,6 +14,8 @@ import {
   RewardsTransactions,
 } from "../models/transactions.models";
 import milestones from "../models/milestones.models";
+import { fofGameData, rorGameData } from "../models/game.model";
+import userMythologies from "../models/mythologies.models";
 
 // get
 // test server
@@ -948,8 +950,201 @@ export const getAdId = async (req, res) => {
   }
 };
 
-export const getAllPayments = async (req, res) => {};
+export const migrateDb = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const users = await User.find({}, "_id bonus");
+    const userMilestones = await milestones.find(
+      {},
+      "userId buildStage pouch appearedUnderworldChars claimedRoRItems  bank.vault bank.vaultExpiryAt bag"
+    );
+    const userMythologyData = await userMythologies.find(
+      {},
+      "userId rorStats lastMoonClaimAt autoPay"
+    );
 
+    const mythologyDataMap = new Map(
+      userMythologyData.map((doc) => [doc.userId.toString(), doc])
+    );
+
+    const milestoneDataMap = new Map(
+      userMilestones.map((doc) => [doc.userId.toString(), doc])
+    );
+
+    for (const user of users) {
+      const userId = user._id;
+      const userIdStr = userId.toString();
+      const fofBonus = user.bonus?.fof;
+      const rorBonus = user.bonus?.ror;
+
+      const mythologyEntry = mythologyDataMap.get(userIdStr);
+      const milestoneEntry = milestoneDataMap.get(userIdStr);
+
+      const updateFofFields: any = {};
+      const updateRorFields: any = {};
+
+      // Bonus -> fofGameData
+      if (fofBonus) {
+        updateFofFields.extraBlackOrb = fofBonus.extraBlackOrb;
+        updateFofFields.exploitCount = fofBonus.exploitCount;
+        updateFofFields.joiningBonus = fofBonus.joiningBonus;
+        updateFofFields.streak = fofBonus.streak;
+        updateFofFields.dailyBonusClaimedAt = fofBonus.dailyBonusClaimedAt;
+      }
+
+      // Add userMythologies fields if available
+      if (mythologyEntry) {
+        updateFofFields.isAutomataAutoPayEnabled =
+          mythologyEntry.autoPay.isAutomataAutoPayEnabled ?? false;
+        updateFofFields.isBurstAutoPayEnabled =
+          mythologyEntry.autoPay.isBurstAutoPayEnabled ?? false;
+        updateFofFields.burstAutoPayExpiration =
+          mythologyEntry.autoPay.burstAutoPayExpiration ?? 0;
+        updateFofFields.lastMoonClaimAt = mythologyEntry.lastMoonClaimAt ?? 0;
+      }
+
+      if (Object.keys(updateFofFields).length > 0) {
+        await fofGameData.findOneAndUpdate(
+          { userId },
+          { $set: updateFofFields },
+          { upsert: true, new: true }
+        );
+      }
+
+      // rorStats - only proceed if mythologyEntry exists
+      if (mythologyEntry) {
+        updateRorFields.gameHrStartAt = mythologyEntry.rorStats.gameHrStartAt;
+        updateRorFields.dailyGameQuota = mythologyEntry.rorStats.dailyGameQuota;
+        updateRorFields.lastSessionStartTime =
+          mythologyEntry.rorStats.lastSessionStartTime;
+        updateRorFields.competelvl = mythologyEntry.rorStats.competelvl;
+        updateRorFields.restExpiresAt = mythologyEntry.rorStats.restExpiresAt;
+        updateRorFields.isThiefActive = mythologyEntry.rorStats.isThiefActive;
+        updateRorFields.lastPenaltyAt = mythologyEntry.rorStats.lastPenaltyAt;
+        updateRorFields.digLvl = mythologyEntry.rorStats.digLvl;
+      }
+
+      // collections - get from milestoneEntry for current user
+      if (milestoneEntry) {
+        updateRorFields.appearedUnderworldChars =
+          milestoneEntry.appearedUnderworldChars;
+        updateRorFields.pouch = milestoneEntry.pouch;
+        updateRorFields.buildStage = milestoneEntry.buildStage;
+        updateRorFields.bag = milestoneEntry.bag;
+        updateRorFields.vault = milestoneEntry.bank.vault;
+        updateRorFields.vaultExpiryAt = milestoneEntry.bank.vaultExpiryAt;
+        updateRorFields.claimedRoRItems = milestoneEntry.claimedRoRItems;
+      }
+
+      // Bonus -> rorGameData
+      if (rorBonus) {
+        updateRorFields.joiningBonus = rorBonus.joiningBonus;
+        updateRorFields.dailyBonusClaimedAt = rorBonus.dailyBonusClaimedAt;
+      }
+
+      // Only update if we have fields to update
+      if (Object.keys(updateRorFields).length > 0) {
+        await rorGameData.findOneAndUpdate(
+          { userId },
+          { $set: updateRorFields },
+          { upsert: true, new: true }
+        );
+      }
+    }
+
+    res.status(200).json({ data: "Migration complete." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: (error as Error).message,
+    });
+  }
+};
+
+export const migrateQuests = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const taskIdsToMigrate = [
+      "671d4480c3c9444deb2ce1bd",
+      "671d4493c3c9444deb2ce1c0",
+      "671d449cc3c9444deb2ce1c3",
+      "6721cdd6a2f07ee139913725",
+      "6721cef4a2f07ee139913727",
+      "6721cf63a2f07ee139913729",
+      "6721cfbda2f07ee13991372b",
+      "6729126dd4a7fff45706413d",
+      "6762964c296034c3b3342548",
+      "684bec8aa3c5867db5a616a2",
+      "684becb3a3c5867db5a616e8",
+      "688e2f15d1b4e3a3cdba571b",
+    ];
+    const taskIdSet = new Set(taskIdsToMigrate.map((id) => id.toString()));
+
+    const users = await User.find({}, "_id bonus");
+    const userMilestones = await milestones.find(
+      {},
+      "userId claimedQuests sharedQuests"
+    );
+
+    const milestoneDataMap = new Map(
+      userMilestones.map((doc) => [doc.userId.toString(), doc])
+    );
+
+    for (const user of users) {
+      const userId = user._id;
+      const userIdStr = userId.toString();
+
+      const milestoneEntry = milestoneDataMap.get(userIdStr);
+
+      const updateFofFields: any = {};
+      const updateMilestoneFields: any = {};
+
+      if (milestoneEntry) {
+        const claimedQuests = milestoneEntry.claimedQuests || [];
+        const sharedQuests = milestoneEntry.sharedQuests || [];
+
+        const toMigrateClaimed = claimedQuests.filter((quest: any) =>
+          taskIdSet.has(quest.taskId?.toString())
+        );
+
+        const remainingClaimed = claimedQuests.filter(
+          (quest: any) => !taskIdSet.has(quest.taskId?.toString())
+        );
+
+        updateFofFields.claimedQuests = remainingClaimed;
+        updateFofFields.sharedQuests = sharedQuests;
+
+        updateMilestoneFields.claimedQuests = toMigrateClaimed;
+        updateMilestoneFields.sharedQuests = [];
+      }
+
+      if (Object.keys(updateFofFields).length > 0) {
+        await fofGameData.findOneAndUpdate(
+          { userId },
+          { $set: updateFofFields },
+          { upsert: true, new: true }
+        );
+      }
+
+      if (Object.keys(updateMilestoneFields).length > 0) {
+        await milestones.findOneAndUpdate(
+          { userId },
+          { $set: updateMilestoneFields }
+        );
+      }
+    }
+
+    res.status(200).json({ data: "Migration complete." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error.",
+      error: (error as Error).message,
+    });
+  }
+};
 // export const getAllReferralsById = async (req, res) => {
 //   try {
 //     const userIds = [
@@ -1112,13 +1307,10 @@ export const getAllPayments = async (req, res) => {};
 //         $set: {
 //           bonus: {
 //             fof: {
+//               extraBlackOrb: "$exploitCount",
 //               exploitCount: "$exploitCount",
 //               joiningBonus: "$joiningBonus",
-//               streakBonus: {
-//                 isActive: false,
-//                 claimedAt: 0,
-//                 streakCount: 0,
-//               },
+//               streakBonus: "$streakBonus",
 //               dailyBonusClaimedAt: "$dailyBonusClaimedAt",
 //             },
 //           },

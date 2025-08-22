@@ -5,6 +5,7 @@ import { Team, Referral } from "../models/referral.models";
 import Stats from "../models/Stats.models";
 import User from "../models/user.models";
 import { generateNanoId } from "../../utils/nanoId";
+import { dodGameData, fofGameData, rorGameData } from "../models/game.model";
 
 export const addNewUser = async (userData, prefix, key) => {
   try {
@@ -79,8 +80,23 @@ export const createDefaultUserMyth = async (user) => {
       userId: user._id,
     });
 
+    const newFoFGameData = new fofGameData({
+      userId: user._id,
+    });
+
+    const newRoRGameData = new rorGameData({
+      userId: user._id,
+    });
+
+    const newDoDGameData = new dodGameData({
+      userId: user._id,
+    });
+
     await newUserMyth.save();
     await newMilestone.save();
+    await newFoFGameData.save();
+    await newRoRGameData.save();
+    await newDoDGameData.save();
   } catch (error) {
     console.log(error);
 

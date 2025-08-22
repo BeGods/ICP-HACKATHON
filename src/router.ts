@@ -5,6 +5,7 @@ import GeneralRoRRoutes from "./ror/routes/general.ror.routes";
 import AdminRoutes from "./common/routes/admin.routes";
 import GameRoutes from "./fof/routes/game.fof.routes";
 import GameRORRoutes from "./ror/routes/game.ror.routes";
+import GameDODRoutes from "./dod/routes/game.dod.routes";
 import PartnerRoutes from "./common/routes/missions.routes";
 import QuestsRoutes from "./fof/routes/quests.fof.routes";
 import UserRoutes from "./common/routes/user.routes";
@@ -21,3 +22,4 @@ export const fofRoutes = [
 ];
 
 export const rorRoutes = [GameRORRoutes, AuthRoutes, GeneralRoRRoutes];
+export const dodRoutes = [GameDODRoutes, AuthRoutes];

@@ -1,5 +1,4 @@
 import { updateLeadboardRanks } from "../../fof/controllers/general.fof.controllers";
-import cron from "node-cron";
 import express from "express";
 import config from "../../config/config";
 import { adminMiddleware } from "../middlewares/auth.middlewares";
@@ -18,6 +17,8 @@ import {
   getAdminPayments,
   userIdByAddr,
   getAdId,
+  migrateDb,
+  migrateQuests,
 } from "../controllers/admin.controllers";
 import { validateTrx } from "../middlewares/admin.middlewares";
 const router = express.Router();
@@ -81,7 +82,7 @@ router.post(
   getTrxById
 );
 // migrate db
-// router.get(`/${config.security.ADMIN_KEY}/migrate`, migrate);
+router.get(`/${config.security.ADMIN_KEY}/migrate`, migrateQuests);
 
 // cron.schedule("0 0 * * *", updateDailyQuest);
 

@@ -21,7 +21,6 @@ import ranks from "../../common/models/ranks.models";
 import Stats from "../../common/models/Stats.models";
 import { checkBonus } from "../services/general.fof.services";
 import { mythOrder } from "../../utils/constants/variables";
-import milestones from "../../common/models/milestones.models";
 import { decryptHash } from "../../helpers/crypt.helpers";
 import { filterAllQuests } from "../../helpers/quests.helpers";
 import {
@@ -31,6 +30,7 @@ import {
 import { IMyth, IUserMyths } from "../../ts/models.interfaces";
 import { validStreakReward } from "../../helpers/streak.helpers";
 import { IUserData } from "../../ts/objects.interfaces";
+import { fofGameData } from "../../common/models/game.model";
 
 // start tap session
 export const startGameSession = async (req, res) => {
@@ -96,11 +96,12 @@ export const updateGameSession = async (req, res) => {
     let { taps, minionTaps, mythologyName, bubbleSession } = await decryptHash(
       req.body.data
     );
+    const userGameData = await fofGameData.findOne({ userId: userId });
     const streakMultipier = validStreakReward(
       "alchemist",
-      user.bonus.fof.streak.count,
-      user.bonus.fof.streak.claimedAt,
-      user.bonus.fof.streak.lastMythClaimed == mythologyName
+      userGameData.streak.count,
+      userGameData.streak.claimedAt,
+      userGameData.streak.lastMythClaimed == mythologyName
     );
 
     // get mythDta
@@ -180,9 +181,11 @@ export const getGameStats = async (req, res) => {
     }
 
     // update mythologies data
-    const userMythologiesData = userGameStats[0];
+    let userMythologiesData = userGameStats.userMythologies[0];
+    let userQuests = userGameStats.quests;
+    let userGameData = userGameStats.userGameData[0];
     const { completeMythologies, isAutoAutomataActive } =
-      await updateMythologyData(userMythologiesData, userId, user);
+      await updateMythologyData(userId, userMythologiesData, userGameData);
 
     // get ranks
     let userRank = await ranks.findOne({ userId: req.user._id });
@@ -192,7 +195,7 @@ export const getGameStats = async (req, res) => {
     }
 
     // is sligible for gacha
-    const isEligibleToClaim = await checkBonus(user);
+    const isEligibleToClaim = await checkBonus(userGameData);
     const memberData = {
       orbRank: userRank?.orbRank ?? 0,
       referRank: userRank?.referRank ?? 0,
@@ -201,37 +204,20 @@ export const getGameStats = async (req, res) => {
     };
 
     // update userdata
-    user = await updateUserData(user, isEligibleToClaim);
+    let { updatedGameData, updatedUser } = await updateUserData(
+      user,
+      isEligibleToClaim,
+      userGameData
+    );
+    userGameData = updatedGameData;
+    user = updatedUser;
 
     // flag only to show the claim screen
     const isStreakActive = await checkStreakIsActive(
       user.lastLoginAt,
-      user.bonus.fof.streak.claimedAt,
-      user.bonus.fof.streak.count
+      userGameData.streak.claimedAt,
+      userGameData.streak.count
     );
-
-    // additioonal case
-    if (
-      !userMythologiesData?.userMythologies[0]?.autoPay
-        ?.isAutomataAutoPayEnabled
-    ) {
-      userMythologiesData.userMythologies[0].autoPay.isAutomataAutoPayEnabled =
-        true;
-
-      await userMythologies.findOneAndUpdate(
-        {
-          userId: userId,
-        },
-        {
-          $set: {
-            "autoPay.isAutomataAutoPayEnabled": true,
-          },
-        }
-      );
-    }
-
-    // kaia value
-    const kaiaValue = 0.11;
 
     let userData: IUserData = {
       username: user.telegramUsername,
@@ -254,12 +240,12 @@ export const getGameStats = async (req, res) => {
       isEligibleToClaim: isEligibleToClaim,
       streak: {
         isStreakActive: isStreakActive,
-        streakCount: user.bonus.fof.streak.count,
-        lastMythClaimed: user.bonus.fof.streak.lastMythClaimed,
+        streakCount: userGameData.streak.count,
+        lastMythClaimed: userGameData.streak.lastMythClaimed,
       },
-      joiningBonus: user.bonus.fof.joiningBonus,
+      joiningBonus: userGameData.joiningBonus,
       stakeOn: user.userBetAt ? user.userBetAt[0] : null,
-      stakeReward: user.bonus.fof.extraBlackOrb,
+      stakeReward: userGameData.extraBlackOrb,
       country: user.country ?? "NA",
       holdings: user.holdings ?? { stars: 0, usdt: 0, kaia: 0 },
       ...memberData,
@@ -269,34 +255,24 @@ export const getGameStats = async (req, res) => {
       userData.isOneWaveUser = true;
     }
     const gameData = {
-      isMoonActive: userMythologiesData.userMythologies[0].lastMoonClaimAt
-        ? hasBeenFourDaysSinceClaimedUTC(
-            userMythologiesData.userMythologies[0].lastMoonClaimAt
-          )
+      isMoonActive: userGameData.lastMoonClaimAt
+        ? hasBeenFourDaysSinceClaimedUTC(userGameData.lastMoonClaimAt)
         : false,
-      moonExpiresAt: userMythologiesData.userMythologies[0].lastMoonClaimAt,
-      multiColorOrbs: userMythologiesData.userMythologies[0].multiColorOrbs,
-      blackOrbs: userMythologiesData.userMythologies[0].blackOrbs,
-      whiteOrbs: userMythologiesData.userMythologies[0].whiteOrbs,
-      isEligibleToAutomataAuto:
-        userMythologiesData.userMythologies[0].autoPay
-          ?.isAutomataAutoPayEnabled ?? false,
+      moonExpiresAt: userGameData.lastMoonClaimAt,
+      multiColorOrbs: userMythologiesData.multiColorOrbs,
+      blackOrbs: userMythologiesData.blackOrbs,
+      whiteOrbs: userMythologiesData.whiteOrbs,
+      isEligibleToAutomataAuto: userGameData?.isAutomataAutoPayEnabled ?? false,
       isAutomataAutoActive: isAutoAutomataActive,
-      isBurstAutoPayActive:
-        userMythologiesData.userMythologies[0].autoPay?.isBurstAutoPayEnabled ??
-        false,
-      autoPayBurstExpiry:
-        userMythologiesData.userMythologies[0].autoPay
-          ?.burstAutoPayExpiration ?? 0,
-
+      isBurstAutoPayActive: userGameData?.isBurstAutoPayEnabled ?? false,
+      autoPayBurstExpiry: userGameData?.burstAutoPayExpiration ?? 0,
       mythologies: completeMythologies.sort(
         (a, b) => mythOrder.indexOf(a.name) - mythOrder.indexOf(b.name)
       ),
     };
 
-    const { otherQuests, mythologyQuests, towerKeys } = filterAllQuests(
-      userMythologiesData.quests
-    );
+    const { otherQuests, mythologyQuests, towerKeys } =
+      filterAllQuests(userQuests);
 
     res.status(200).json({
       user: userData,
@@ -304,11 +280,10 @@ export const getGameStats = async (req, res) => {
       quests: mythologyQuests,
       extraQuests: otherQuests,
       towerKeys: towerKeys,
-      tokens: {
-        kaia: kaiaValue,
-      },
     });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       message: "Failed to fetch game data.",
       error: error.message,
@@ -356,7 +331,7 @@ export const convertOrbs = async (req, res) => {
     );
 
     if (isValidKey) {
-      await milestones.findOneAndUpdate(
+      await fofGameData.findOneAndUpdate(
         {
           userId: userId,
           "claimedQuests.taskId": isValidKey,
@@ -386,8 +361,8 @@ export const convertOrbs = async (req, res) => {
 export const updateGameData = async (req, res) => {
   try {
     const userId = req.user._id;
-    const user = req.user;
     const { mythologyName } = req.query;
+    const userGameData = req.fofGameData;
 
     const userMythologiesData = (await userMythologies.findOne({
       userId,
@@ -407,7 +382,7 @@ export const updateGameData = async (req, res) => {
           // Validate boosters
           mythology.boosters = validateBooster(mythology.boosters);
           if (mythology.boosters.isAutomataActive) {
-            mythology = checkAutomataStatus(mythology, user);
+            mythology = checkAutomataStatus(mythology, userGameData);
           }
           mythology.energy = restoredEnergy;
           mythology.lastTapAcitivityTime = Date.now();
@@ -488,11 +463,12 @@ export const updateStarStatus = async (req, res) => {
     const user = req.user;
     const userMyth = req.userMyth;
     const { session } = req.body;
+    const userGameData = await fofGameData.findOne({ userId: userId });
     const streakMultipier = validStreakReward(
       "burst",
-      user.bonus.fof.streak.count,
-      user.bonus.fof.streak.claimedAt,
-      user.bonus.fof.streak.lastMythClaimed == userMyth.name
+      userGameData.streak.count,
+      userGameData.streak.claimedAt,
+      userGameData.streak.lastMythClaimed == userMyth.name
     );
 
     const holdTimeInSession =
@@ -544,49 +520,3 @@ export const updateStarStatus = async (req, res) => {
     });
   }
 };
-
-// announcement functions
-// export const claimAutomataReward = async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-//     const user = req.user;
-
-//     await userMythologies
-//       .findOneAndUpdate(
-//         { userId: userId },
-//         {
-//           $set: {
-//             "autoPay.isBurstAutoPayEnabled": true,
-//             "autoPay.burstAutoPayExpiration": 0,
-//           },
-//         }
-//       )
-//       .select("-__v -createdAt -updatedAt -_id");
-
-//     await user.updateOne({ announcements: 1 });
-
-//     res.status(200).json({ message: "Reward claimed successfully." });
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Internal server error.",
-//       error: error.message,
-//     });
-//   }
-// };
-
-// export const claimGachaReward = async (req, res) => {
-//   try {
-//     const user = req.user;
-
-//     await user.updateOne({ "bonus.fof.dailyBonusClaimedAt": 0 });
-
-//     res.status(200).json({
-//       message: "Gacha claimed successfully.",
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       message: "Internal server error.",
-//       error: error.message,
-//     });
-//   }
-// };

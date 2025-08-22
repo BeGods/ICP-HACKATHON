@@ -3,6 +3,7 @@ import userMythologies from "../../common/models/mythologies.models";
 import { areObjectsEqual } from "../../helpers/general.helpers";
 import { aggregateQuests } from "../services/quest.fof.services";
 import milestones from "../../common/models/milestones.models";
+import { fofGameData } from "../../common/models/game.model";
 
 export const verifyValidQuest = async (req, res, next) => {
   try {
@@ -83,7 +84,7 @@ export const verifyValidShareClaim = async (req, res, next) => {
     const userId = req.user._id;
     const { questId } = req.body;
 
-    const validShareReq = await milestones.findOne({ userId: userId });
+    const validShareReq = await fofGameData.findOne({ userId: userId });
 
     // Check if task is not completed
     if (validShareReq) {

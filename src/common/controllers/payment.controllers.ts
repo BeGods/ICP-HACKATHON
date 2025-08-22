@@ -11,6 +11,7 @@ import axios from "axios";
 import config from "../../config/config";
 import { fetchKaiaValue } from "../services/redis.services";
 import { getKaiaValue } from "../../helpers/crypt.helpers";
+import { fofGameData } from "../models/game.model";
 
 // tg star - create session
 export const genStarInvoice = async (req, res) => {
@@ -73,6 +74,7 @@ export const verifyStarPayment = async (req, res) => {
     const reward = paymentId.split(".")[1];
     const userId = user._id;
 
+    const userGameData = await fofGameData.findOne({ userId });
     const userMythologiesData = await userMythologies.findOne({ userId });
     if (!userMythologiesData) {
       return res.status(404).json({ message: "Game data not found." });
@@ -81,7 +83,7 @@ export const verifyStarPayment = async (req, res) => {
     let updateSuccess = false;
 
     if (reward === "automata") {
-      if (!userMythologiesData.autoPay.isAutomataAutoPayEnabled) {
+      if (!userGameData.isAutomataAutoPayEnabled) {
         return res
           .status(403)
           .json({ message: "You are not eligible for auto pay." });
@@ -94,7 +96,7 @@ export const verifyStarPayment = async (req, res) => {
         userId
       );
     } else if (reward === "burst") {
-      if (!userMythologiesData.autoPay.isBurstAutoPayEnabled) {
+      if (!userGameData.isBurstAutoPayEnabled) {
         return res
           .status(403)
           .json({ message: "You are not eligible for auto pay." });
@@ -102,7 +104,7 @@ export const verifyStarPayment = async (req, res) => {
 
       const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
       if (
-        userMythologiesData.autoPay.burstAutoPayExpiration - Date.now() >
+        userGameData.burstAutoPayExpiration - Date.now() >
         millisecondsIn24Hours
       ) {
         return res.status(400).json({
@@ -110,7 +112,12 @@ export const verifyStarPayment = async (req, res) => {
         });
       }
 
-      updateSuccess = await updateMultiBurst(userMythologiesData, 0, userId);
+      updateSuccess = await updateMultiBurst(
+        userMythologiesData,
+        0,
+        userId,
+        userGameData
+      );
     } else {
       return res.status(400).json({ message: "Invalid reward type." });
     }
@@ -284,6 +291,7 @@ export const verifyDappPayment = async (req, res) => {
     const reward = transaction.reward;
     const userId = transaction.userId;
 
+    const userGameData = await fofGameData.findOne({ userId });
     const userMythologiesData = await userMythologies.findOne({ userId });
     if (!userMythologiesData) {
       console.error(`Game data not found.`);
@@ -293,7 +301,7 @@ export const verifyDappPayment = async (req, res) => {
     let updateSuccess = false;
 
     if (reward === "automata-pack") {
-      if (!userMythologiesData.autoPay.isAutomataAutoPayEnabled) {
+      if (!userGameData.isAutomataAutoPayEnabled) {
         console.error(`Not eligible for automata auto-pay.`);
         return res
           .status(400)
@@ -307,7 +315,7 @@ export const verifyDappPayment = async (req, res) => {
         userId
       );
     } else if (reward === "burst-pack") {
-      if (!userMythologiesData.autoPay.isBurstAutoPayEnabled) {
+      if (!userGameData.isBurstAutoPayEnabled) {
         console.error(`Not eligible for burst auto-pay.`);
         return res
           .status(400)
@@ -316,7 +324,7 @@ export const verifyDappPayment = async (req, res) => {
 
       const millisecondsIn24Hours = 24 * 60 * 60 * 1000;
       if (
-        userMythologiesData.autoPay.burstAutoPayExpiration - Date.now() >
+        userGameData.burstAutoPayExpiration - Date.now() >
         millisecondsIn24Hours
       ) {
         console.error(`Previous burst has not expired yet.`);
@@ -325,7 +333,12 @@ export const verifyDappPayment = async (req, res) => {
           .json({ message: "Previous burst not expired yet" });
       }
 
-      updateSuccess = await updateMultiBurst(userMythologiesData, 0, userId);
+      updateSuccess = await updateMultiBurst(
+        userMythologiesData,
+        0,
+        userId,
+        userGameData
+      );
     } else {
       console.error(`Invalid reward type.`);
       return res.status(400).json({ message: "Invalid reward type" });

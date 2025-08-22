@@ -1,14 +1,8 @@
 import mongoose from "mongoose";
-import {
-  calculateEnergy,
-  getPhaseByDate,
-  hasBeenFourDaysSinceClaimedUTC,
-} from "../../helpers/game.helpers";
+import { calculateEnergy, getPhaseByDate } from "../../helpers/game.helpers";
 import userMythologies from "../../common/models/mythologies.models";
 import milestones from "../../common/models/milestones.models";
 import { defaultMythologies } from "../../utils/constants/variables";
-import User from "../../common/models/user.models";
-import { checkPlaysuperExpiry } from "../../common/services/playsuper.services";
 import {
   getAutomataStartTimes,
   getShortestStartTime,
@@ -16,11 +10,9 @@ import {
   validateBooster,
   validateBurst,
 } from "../../helpers/booster.helpers";
-import { IMyth, IUser, IUserMyths } from "../../ts/models.interfaces";
-import {
-  determineStreak,
-  validStreakReward,
-} from "../../helpers/streak.helpers";
+import { IMyth, IUserMyths } from "../../ts/models.interfaces";
+import { determineStreak } from "../../helpers/streak.helpers";
+import { fofGameData } from "../../common/models/game.model";
 
 export const aggregateGameStats = async (userId) => {
   try {
@@ -33,6 +25,14 @@ export const aggregateGameStats = async (userId) => {
           localField: "userId",
           foreignField: "userId",
           as: "userMythologies",
+        },
+      },
+      {
+        $lookup: {
+          from: "fofgamedatas",
+          localField: "userId",
+          foreignField: "userId",
+          as: "userGameData",
         },
       },
       {
@@ -60,10 +60,34 @@ export const aggregateGameStats = async (userId) => {
               },
             },
             {
+              $lookup: {
+                from: "fofgamedatas",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $in: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                ],
+                as: "gameData",
+              },
+            },
+            {
               $addFields: {
                 isQuestClaimed: {
                   $cond: {
-                    if: { $gt: [{ $size: "$milestones" }, 0] },
+                    if: {
+                      $or: [
+                        { $gt: [{ $size: "$milestones" }, 0] },
+                        { $gt: [{ $size: "$gameData" }, 0] },
+                      ],
+                    },
                     then: true,
                     else: false,
                   },
@@ -72,7 +96,7 @@ export const aggregateGameStats = async (userId) => {
             },
             {
               $lookup: {
-                from: "milestones",
+                from: "fofgamedatas",
                 let: { questId: "$_id", userId: "$$userId" },
                 pipeline: [
                   {
@@ -86,14 +110,14 @@ export const aggregateGameStats = async (userId) => {
                     },
                   },
                 ],
-                as: "sharedMilestones",
+                as: "sharedGameData",
               },
             },
             {
               $addFields: {
                 isShared: {
                   $cond: {
-                    if: { $gt: [{ $size: "$sharedMilestones" }, 0] },
+                    if: { $gt: [{ $size: "$sharedGameData" }, 0] },
                     then: true,
                     else: false,
                   },
@@ -126,16 +150,77 @@ export const aggregateGameStats = async (userId) => {
                     },
                   },
                 ],
-                as: "claimedQuestData",
+                as: "claimedQuestDataFromMilestones",
+              },
+            },
+            {
+              $lookup: {
+                from: "fofgamedatas",
+                let: { questId: "$_id", userId: "$$userId" },
+                pipeline: [
+                  {
+                    $unwind: "$claimedQuests",
+                  },
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$userId", "$$userId"] },
+                          { $eq: ["$$questId", "$claimedQuests.taskId"] },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      orbClaimed: "$claimedQuests.orbClaimed",
+                      questClaimed: "$claimedQuests.questClaimed",
+                      isKeyClaimed: "$claimedQuests.isKeyClaimed",
+                    },
+                  },
+                ],
+                as: "claimedQuestDataFromGameData",
               },
             },
             {
               $addFields: {
                 isOrbClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.orbClaimed", 0],
+                  $cond: {
+                    if: {
+                      $gt: [{ $size: "$claimedQuestDataFromMilestones" }, 0],
+                    },
+                    then: {
+                      $arrayElemAt: [
+                        "$claimedQuestDataFromMilestones.orbClaimed",
+                        0,
+                      ],
+                    },
+                    else: {
+                      $arrayElemAt: [
+                        "$claimedQuestDataFromGameData.orbClaimed",
+                        0,
+                      ],
+                    },
+                  },
                 },
                 isKeyClaimed: {
-                  $arrayElemAt: ["$claimedQuestData.isKeyClaimed", 0],
+                  $cond: {
+                    if: {
+                      $gt: [{ $size: "$claimedQuestDataFromMilestones" }, 0],
+                    },
+                    then: {
+                      $arrayElemAt: [
+                        "$claimedQuestDataFromMilestones.isKeyClaimed",
+                        0,
+                      ],
+                    },
+                    else: {
+                      $arrayElemAt: [
+                        "$claimedQuestDataFromGameData.isKeyClaimed",
+                        0,
+                      ],
+                    },
+                  },
                 },
               },
             },
@@ -143,8 +228,10 @@ export const aggregateGameStats = async (userId) => {
             {
               $project: {
                 milestones: 0,
-                sharedMilestones: 0,
-                claimedQuestData: 0,
+                gameData: 0,
+                sharedGameData: 0,
+                claimedQuestDataFromMilestones: 0,
+                claimedQuestDataFromGameData: 0,
                 updatedAt: 0,
                 __v: 0,
               },
@@ -161,10 +248,9 @@ export const aggregateGameStats = async (userId) => {
       { $project: { allQuests: 0 } },
     ];
 
-    // Execute the aggregation pipeline
     const result = await userMythologies.aggregate(pipeline);
 
-    return result;
+    return result[0];
   } catch (error) {
     throw new Error("There was a problem fetching user data.");
   }
@@ -193,7 +279,7 @@ export const validateRatValues = (boosterData) => {
   }
 };
 
-export const updateMythologies = (mythologies, user) => {
+export const updateMythologies = (mythologies, userGameData) => {
   try {
     let updatedBlackOrb = 0;
 
@@ -214,7 +300,7 @@ export const updateMythologies = (mythologies, user) => {
 
       // Validate boosters
       mythology.boosters = validateBooster(mythology.boosters);
-      mythology.boosters = checkAutomataStatus(mythology, user);
+      mythology.boosters = checkAutomataStatus(mythology, userGameData);
       mythology.boosters = validateRatValues(mythology.boosters);
 
       if (
@@ -564,14 +650,14 @@ export const updateBubbleData = async (userId, bubbleSession) => {
 };
 
 export const updateMythologyData = async (
-  userMythologiesData,
   userId,
-  user
+  userMythologiesData,
+  userGameData
 ) => {
   try {
     const updatedData = updateMythologies(
-      userMythologiesData.userMythologies[0].mythologies,
-      user
+      userMythologiesData.mythologies,
+      userGameData
     );
     const updatedMythologies = updatedData.data;
     let blackOrbs = updatedData.updatedBlackOrb;
@@ -592,8 +678,8 @@ export const updateMythologyData = async (
     const isAutoAutomataActive = getShortestStartTime(automataStateTimes);
 
     // update latest data
-    await userMythologies.updateOne(
-      { userId },
+    await userMythologies.findOneAndUpdate(
+      { userId: userId },
       {
         $inc: { blackOrbs: blackOrbs },
         $set: { mythologies: completeMythologies },
@@ -606,21 +692,22 @@ export const updateMythologyData = async (
   }
 };
 
-export const updateUserData = async (user, isEligibleToClaim) => {
+export const updateUserData = async (user, isEligibleToClaim, userGameData) => {
   try {
-    const hasPlaysuperExpired = await checkPlaysuperExpiry(user.playsuper);
-
+    // const hasPlaysuperExpired = await checkPlaysuperExpiry(user.playsuper);
     const updates: any = {};
+    let updatedGameData = userGameData;
+    let updatedUser = user;
 
     if (isEligibleToClaim) {
-      updates["bonus.fof.exploitCount"] = 0;
+      updates["exploitCount"] = 0;
     }
 
-    if (!user.partOfGames || !Array.isArray(user.partOfGames)) {
-      updates["partOfGames"] = ["fof"];
-    } else if (!user.partOfGames.includes("fof")) {
-      updates["partOfGames"] = [...user.partOfGames, "fof"];
-    }
+    // if (!user.partOfGames || !Array.isArray(user.partOfGames)) {
+    //   updates["partOfGames"] = ["fof"];
+    // } else if (!user.partOfGames.includes("fof")) {
+    //   updates["partOfGames"] = [...user.partOfGames, "fof"];
+    // }
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -638,13 +725,18 @@ export const updateUserData = async (user, isEligibleToClaim) => {
 
       // update streak count
       if (isConsecutiveDay) {
-        updates["bonus.fof.streak.count"] =
-          (user.bonus?.fof?.streak?.count ?? 0) + 1;
+        updates["streak.count"] = (userGameData?.streak?.count ?? 0) + 1;
       } else {
-        updates["bonus.fof.streak.count"] = 1;
+        updates["streak.count"] = 1;
       }
 
-      updates["lastLoginAt"] = new Date();
+      await user.updateOne({
+        $set: {
+          lastLoginAt: new Date(),
+        },
+      });
+
+      updatedUser.lastLoginAt = new Date();
     }
 
     // if (user.playsuper?.isVerified && hasPlaysuperExpired) {
@@ -653,16 +745,20 @@ export const updateUserData = async (user, isEligibleToClaim) => {
     //   // updates["playsuper.createdAt"] = null;
     // }
 
-    let updatedUser;
+    // additioonal case
+    if (!userGameData?.isAutomataAutoPayEnabled) {
+      updates["isAutomataAutoPayEnabled"] = true;
+    }
+
     if (Object.keys(updates).length > 0) {
-      updatedUser = await User.findOneAndUpdate(
-        { _id: user._id },
+      updatedGameData = await fofGameData.findOneAndUpdate(
+        { userId: user._id },
         { $set: updates },
         { new: true }
       );
     }
 
-    return updatedUser ?? user;
+    return { updatedUser: updatedUser, updatedGameData: updatedGameData };
   } catch (error) {
     console.error(error);
     throw new Error("Failed to update user data.");

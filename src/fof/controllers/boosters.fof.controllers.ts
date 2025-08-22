@@ -57,9 +57,9 @@ export const claimAlchemist = async (req, res) => {
 // automata booster
 export const claimAutomata = async (req, res) => {
   try {
-    const { user, userMyth, mythData, deductValue } = req;
+    const { user, userMyth, mythData, deductValue, userGameData } = req;
     const now = Date.now();
-    let enableAutoPay = mythData.autoPay;
+
     let autoPayLock = -1;
 
     userMyth.boosters.automatalvl = Math.min(
@@ -73,9 +73,9 @@ export const claimAutomata = async (req, res) => {
     automataStartTimes.push(now);
 
     // activate when claimed in
-    if (!mythData.autoPay.isAutomataAutoPayEnabled) {
+    if (!userGameData.isAutomataAutoPayEnabled) {
       if (isWithinOneMinute(automataStartTimes)) {
-        enableAutoPay.isAutomataAutoPayEnabled = true;
+        userGameData.isAutomataAutoPayEnabled = true;
       }
     }
 
@@ -90,13 +90,17 @@ export const claimAutomata = async (req, res) => {
           $inc: { multiColorOrbs: deductValue },
           $set: {
             "mythologies.$": userMyth,
-            "autoPay.isAutomataAutoPayEnabled":
-              enableAutoPay.isAutomataAutoPayEnabled,
           },
         },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt -_id");
+
+    await userGameData.updateOne({
+      $set: {
+        isAutomataAutoPayEnabled: userGameData.isAutomataAutoPayEnabled,
+      },
+    });
 
     const updatedBoosterData = updatedMythData.mythologies.find(
       (item) => item.name === userMyth.name
@@ -129,7 +133,7 @@ export const claimBurst = async (req, res) => {
     const userMyth = req.userMyth;
     const mythData = req.mythData;
     const now = Date.now();
-    let enableAutoPay = mythData.autoPay;
+    let userGameData = req.userGameData;
 
     userMyth.boosters.burstlvl = Math.min(userMyth.boosters.burstlvl + 2, 99);
     userMyth.boosters.isBurstActive = true;
@@ -140,9 +144,9 @@ export const claimBurst = async (req, res) => {
     burstStartTimes.push(now);
 
     // activate when claimed in
-    if (!enableAutoPay.isBurstAutoPayEnabled) {
+    if (!userGameData.isBurstAutoPayEnabled) {
       if (isWithinOneMinute(burstStartTimes)) {
-        enableAutoPay.isBurstAutoPayEnabled = true;
+        userGameData.isBurstAutoPayEnabled = true;
       }
     }
 
@@ -153,13 +157,17 @@ export const claimBurst = async (req, res) => {
           $inc: { multiColorOrbs: -3 },
           $set: {
             "mythologies.$": userMyth,
-            "autoPay.isBurstAutoPayEnabled":
-              enableAutoPay.isBurstAutoPayEnabled ?? false,
           },
         },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt _id")) as Document;
+
+    await userGameData.updateOne({
+      $set: {
+        isBurstAutoPayEnabled: userGameData.isBurstAutoPayEnabled ?? false,
+      },
+    });
 
     const updatedBoosterData = updatedMythData.mythologies.filter(
       (item) => item.name === userMyth.name
@@ -191,7 +199,7 @@ export const claimBurst = async (req, res) => {
 export const claimMultiBurst = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { deductValue } = req;
+    const { deductValue, userGameData } = req;
 
     const userMyth = await userMythologies.findOne({ userId: userId });
 
@@ -205,13 +213,18 @@ export const claimMultiBurst = async (req, res) => {
         {
           $inc: { multiColorOrbs: deductValue },
           $set: {
-            "autoPay.burstAutoPayExpiration": Date.now(),
             mythologies: userMyth.mythologies,
           },
         },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt -_id");
+
+    await userGameData.updateOne({
+      $set: {
+        burstAutoPayExpiration: Date.now(),
+      },
+    });
 
     // maintain transaction
     const newOrbsTransaction = new OrbsTransactions({
@@ -283,19 +296,15 @@ export const claimMultiAutomata = async (req, res) => {
 // moon booster
 export const claimMoon = async (req, res) => {
   try {
-    const { user, deductValue } = req;
+    const { user, deductValue, userGameData } = req;
     const now = Date.now();
 
-    await userMythologies
-      .findOneAndUpdate(
-        { userId: user._id },
-        {
-          $set: {
-            lastMoonClaimAt: now,
-          },
+    await userGameData
+      .updateOne({
+        $set: {
+          lastMoonClaimAt: now,
         },
-        { new: true }
-      )
+      })
       .select("-__v -createdAt -updatedAt -_id");
 
     await new OrbsTransactions({

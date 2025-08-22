@@ -9,17 +9,18 @@ import Stats from "../../common/models/Stats.models";
 
 export const claimDailyBonus = async (req, res) => {
   const userId = req.user._id;
-  const user = req.user;
+  const userGameData = req.userGameData;
+
   try {
     const currTimeInUTC = new Date();
 
-    await user.updateOne({
+    await userGameData.updateOne({
       $set: {
-        "bonus.ror.dailyBonusClaimedAt": currTimeInUTC,
+        dailyBonusClaimedAt: currTimeInUTC,
       },
     });
 
-    let bonusReward = await generateDailyRwrd(user, userId);
+    let bonusReward = await generateDailyRwrd(userGameData, userId);
 
     if (!bonusReward) {
       bonusReward = "shards.aether02";
@@ -75,11 +76,9 @@ export const getLeaderboard = async (req, res) => {
 export const claimJoinBonus = async (req, res) => {
   try {
     const userId = req.user._id;
+    const userGameData = req.userGameData;
 
-    await User.findOneAndUpdate(
-      { _id: userId },
-      { "bonus.ror.joiningBonus": true }
-    );
+    await userGameData.updateOne({ joiningBonus: true });
 
     await userMythologies.findOneAndUpdate(
       { userId: userId },

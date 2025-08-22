@@ -4,6 +4,7 @@ import userMythologies from "../../common/models/mythologies.models";
 import { OrbsTransactions } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
 import User from "../../common/models/user.models";
+import { fofGameData } from "../../common/models/game.model";
 
 export const getLeaderboardSnapshot = async () => {
   try {
@@ -481,9 +482,9 @@ export const claimBonusQuest = async (userId) => {
   }
 };
 
-export const checkBonus = async (user) => {
+export const checkBonus = async (userGameData) => {
   try {
-    const dailyBonusClaimed = user.bonus.fof.dailyBonusClaimedAt;
+    const dailyBonusClaimed = userGameData.dailyBonusClaimedAt;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(
@@ -611,11 +612,11 @@ export const bulkUpdateBetResult = async (users) => {
 
       return {
         updateOne: {
-          filter: { _id: user.userId },
+          filter: { userId: user.userId },
           update: {
             $set: {
               userBetAt: null,
-              "bonus.fof.extraBlackOrb": updateValue,
+              extraBlackOrb: updateValue,
             },
           },
           upsert: true,
@@ -623,7 +624,7 @@ export const bulkUpdateBetResult = async (users) => {
       };
     });
 
-    await User.bulkWrite([...betResetUsers]);
+    await fofGameData.bulkWrite([...betResetUsers]);
 
     const rewardedUsers = users.map((user) => {
       const prediction = user.userBetAt[0];

@@ -1,8 +1,7 @@
 import { gameItems } from "../../utils/constants/gameItems";
 import userMythologies from "../../common/models/mythologies.models";
 import mongoose from "mongoose";
-import milestones from "../../common/models/milestones.models";
-import { IMyth, itemInterface } from "../../ts/models.interfaces";
+import { IMyth } from "../../ts/models.interfaces";
 import {
   defaultMythologies,
   defaultVault,
@@ -10,6 +9,7 @@ import {
   underworldItemsList,
 } from "../../utils/constants/variables";
 import { combineVaultItems, isCoin } from "../../helpers/game.helpers";
+import { rorGameData } from "../../common/models/game.model";
 
 export const fetchGameData = async (userId, includeQuests) => {
   try {
@@ -30,7 +30,6 @@ export const fetchGameData = async (userId, includeQuests) => {
                 whiteShards: 1,
                 blackShards: 1,
                 gobcoin: 1,
-                rorStats: 1,
                 mythologies: {
                   $map: {
                     input: "$mythologies",
@@ -51,10 +50,10 @@ export const fetchGameData = async (userId, includeQuests) => {
       },
       {
         $lookup: {
-          from: "milestones",
+          from: "rorgamedatas",
           localField: "userId",
           foreignField: "userId",
-          as: "userMilestones",
+          as: "userGameData",
         },
       },
     ];
@@ -127,6 +126,7 @@ export const fetchGameData = async (userId, includeQuests) => {
         $project: {
           userMythologies: 1,
           userMilestones: 1,
+          userGameData: 1,
           quests: 1,
         },
       });
@@ -135,6 +135,7 @@ export const fetchGameData = async (userId, includeQuests) => {
         $project: {
           userMythologies: 1,
           userMilestones: 1,
+          userGameData: 1,
         },
       });
     }
@@ -149,7 +150,7 @@ export const fetchGameData = async (userId, includeQuests) => {
   }
 };
 
-export const removeRandomItemFrmBag = async (userId, bagData) => {
+export const removeRandomItemFrmBag = async (bagData, updatedRoRGameData) => {
   try {
     if (!Array.isArray(bagData) || bagData.length === 0) {
       console.log("Bag is empty or not a valid array.");
@@ -159,14 +160,11 @@ export const removeRandomItemFrmBag = async (userId, bagData) => {
     const randomIdx = Math.floor(Math.random() * bagData.length);
     const randomItem = bagData[randomIdx];
 
-    await milestones.findOneAndUpdate(
-      { userId },
-      {
-        $pull: {
-          bag: { itemId: randomItem.itemId },
-        },
-      }
-    );
+    await updatedRoRGameData.updateOne({
+      $pull: {
+        bag: { itemId: randomItem.itemId },
+      },
+    });
 
     bagData.splice(randomIdx, 1);
 
@@ -267,17 +265,15 @@ export const updatePotionTrade = async (
 };
 
 export const genRandomMythItem = async (
-  userId,
   filteredNotClaimedItems,
   claimedItems,
-  alreadyAppearChar
+  userGameData
 ) => {
   try {
     const outsideItems = filteredNotClaimedItems.filter((item) =>
       underworldItemsList.every((uwId) => !item.id.endsWith(uwId))
     );
 
-    // rnadom item
     const randomGenItem =
       outsideItems[Math.floor(Math.random() * filteredNotClaimedItems.length)];
 
@@ -288,9 +284,8 @@ export const genRandomMythItem = async (
       isChar: false,
     };
 
-    let itemAddedToBag: itemInterface = genRewardObj;
+    let itemAddedToBag: any = { ...genRewardObj };
 
-    // if random item exists
     if (randomGenItem) {
       const alreadyClaimedItem = claimedItems.find(
         (item) => item.itemId === randomGenItem.id
@@ -298,41 +293,33 @@ export const genRandomMythItem = async (
 
       let randomGenFragntIdx;
 
-      // coins || keys
+      // Handle coins or keys
       if (
         /common02/?.test(randomGenItem.id) ||
         isCoin(randomGenItem.id, false)
       ) {
-        await milestones.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: { pouch: randomGenItem.id },
-          },
-          { new: true }
-        );
+        if (!userGameData.pouch.includes(randomGenItem.id)) {
+          userGameData.pouch.push(randomGenItem.id);
+          await userGameData.save();
+        }
 
         itemAddedToBag = genRewardObj;
-      } else if (/relic.C0[6-8]/?.test(randomGenItem.id)) {
-        // encounters
-        let updatedBag = await milestones.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: { bag: genRewardObj },
-          },
-          { new: true }
-        );
+      }
 
-        itemAddedToBag = updatedBag.bag?.find(
-          (item) => item.itemId === genRewardObj.itemId && item.fragmentId === 0
-        );
+      // Handle encounters
+      else if (/relic.C0[6-8]/?.test(randomGenItem.id)) {
+        userGameData.bag.push(genRewardObj);
+        await userGameData.save();
 
+        itemAddedToBag = genRewardObj;
         itemAddedToBag.isChar = true;
-      } else {
-        // relics
+      }
+
+      // Handle relics
+      else {
         if (alreadyClaimedItem) {
-          // missing frags
           const missingFragments = randomGenItem.fragments.filter(
-            (item) => !alreadyClaimedItem.fragments.includes(item)
+            (frag) => !alreadyClaimedItem.fragments.includes(frag)
           );
 
           randomGenFragntIdx =
@@ -348,20 +335,10 @@ export const genRandomMythItem = async (
         genRewardObj.fragmentId = randomGenFragntIdx;
         genRewardObj.isComplete = randomGenItem.fragments.length === 1;
 
-        // update bag
-        let updatedBag = await milestones.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: { bag: genRewardObj },
-          },
-          { new: true }
-        );
+        userGameData.bag.push(genRewardObj);
+        await userGameData.save();
 
-        itemAddedToBag = updatedBag.bag?.find(
-          (item) =>
-            item.itemId === genRewardObj.itemId &&
-            item.fragmentId === genRewardObj.fragmentId
-        );
+        itemAddedToBag = genRewardObj;
       }
     }
 
@@ -371,22 +348,22 @@ export const genRandomMythItem = async (
 
     return { randomGenItem, itemAddedToBag };
   } catch (error) {
-    console.log(error);
+    console.error("Error in genRandomMythItem:", error);
+    return { randomGenItem: null, itemAddedToBag: {} };
   }
 };
 
 export const genRandomUNDWItem = async (
-  userId,
+  userGameData,
   filteredNotClaimedItems,
-  alreadyAppearChar
+  alreadyAppearChar: string[]
 ) => {
   try {
     const underWorldItems = filteredNotClaimedItems.filter((item) =>
       underworldItemsList.some((uwId) => item.id.endsWith(uwId))
     );
 
-    // rnadom item
-    let randomGenItem =
+    const randomGenItem =
       underWorldItems[Math.floor(Math.random() * underWorldItems.length)];
 
     let genRewardObj = {
@@ -396,82 +373,67 @@ export const genRandomUNDWItem = async (
       isChar: false,
     };
 
-    let itemAddedToBag: itemInterface = genRewardObj;
+    let itemAddedToBag: any = genRewardObj;
 
     const ignoredItems = [
-      // "starter00",
       "underworld.artifact.treasure01",
       "underworld.artifact.treasure02",
       "artifact.treasure01",
     ];
 
-    // if random item exists
     if (randomGenItem) {
-      // check char has appeared before
       const alreadyClaimedItem = alreadyAppearChar.includes(randomGenItem.id);
 
-      // if char has appeared already
-      // if (ignoredItems.some((ignore) => genRewardObj.itemId.includes(ignore))) {
-      //   await milestones.findOneAndUpdate(
-      //     { userId: userId },
-      //     {
-      //       $push: { pouch: genRewardObj.itemId },
-      //     },
-      //     { new: true }
-      //   );
-      // } else
-      if (ignoredItems.some((ignore) => genRewardObj.itemId.includes(ignore))) {
-        let updatedBag = await milestones.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: { bag: genRewardObj },
-          },
-          { new: true }
-        );
+      const isIgnored = ignoredItems.some((ignore) =>
+        genRewardObj.itemId.includes(ignore)
+      );
 
-        itemAddedToBag = updatedBag.bag?.find(
-          (item) => item.itemId === genRewardObj.itemId && item.fragmentId === 0
-        );
+      const isDuplicate = userGameData.bag.some(
+        (item) =>
+          item.itemId === genRewardObj.itemId &&
+          item.fragmentId === genRewardObj.fragmentId
+      );
+
+      if (isIgnored) {
+        if (!isDuplicate) {
+          userGameData.bag.push(genRewardObj);
+          await userGameData.save();
+        }
+        itemAddedToBag = genRewardObj;
       } else if (alreadyClaimedItem) {
-        let updatedBag = await milestones.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: { bag: genRewardObj },
-            $pull: { appearedUnderworldChars: genRewardObj.itemId },
-          },
-          { new: true }
-        );
-
-        itemAddedToBag = updatedBag.bag?.find(
-          (item) => item.itemId === genRewardObj.itemId && item.fragmentId === 0
-        );
+        if (!isDuplicate) {
+          userGameData.bag.push(genRewardObj);
+        }
+        userGameData.appearedUnderworldChars =
+          userGameData.appearedUnderworldChars.filter(
+            (charId) => charId !== genRewardObj.itemId
+          );
+        await userGameData.save();
+        itemAddedToBag = genRewardObj;
       } else {
         if (alreadyAppearChar.includes(genRewardObj.itemId)) {
-          throw Error("Invalid item.");
+          throw new Error("Invalid item.");
         }
         genRewardObj.isChar = true;
-        await milestones.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: { appearedUnderworldChars: genRewardObj.itemId },
-          },
-          { new: true }
-        );
+        if (
+          !userGameData.appearedUnderworldChars.includes(genRewardObj.itemId)
+        ) {
+          userGameData.appearedUnderworldChars.push(genRewardObj.itemId);
+          await userGameData.save();
+        }
+        itemAddedToBag = {};
       }
-    }
-
-    if (!itemAddedToBag.itemId) {
-      itemAddedToBag = {};
     }
 
     return { randomGenItem, itemAddedToBag };
   } catch (error) {
-    console.log(error);
+    console.error("Error in genRandomUNDWItem:", error);
+    return { randomGenItem: null, itemAddedToBag: null };
   }
 };
 
 export const filterFetchedItem = (
-  userClaimedRewards,
+  userGameData,
   mythology,
   rewardlvl,
   isUnderworld
@@ -479,9 +441,9 @@ export const filterFetchedItem = (
   try {
     // combine bag and vault items
     const claimedItems = [
-      ...(combineVaultItems(userClaimedRewards?.bank?.vault) ?? []),
-      ...(userClaimedRewards?.bag ?? []),
-      ...(userClaimedRewards?.pouch ?? []),
+      ...(combineVaultItems(userGameData?.vault) ?? []),
+      ...(userGameData?.bag ?? []),
+      ...(userGameData?.pouch ?? []),
     ].reduce((acc, item) => {
       const existingItem = acc.find((obj) => obj?.itemId === item?.itemId);
       if (existingItem) {
@@ -539,7 +501,7 @@ export const filterFetchedItem = (
             isTreasureFromMythology ||
             isCoinFromMythology ||
             isKeyFromMythology) &&
-          !userClaimedRewards?.claimedRoRItems?.includes(id) &&
+          !userGameData?.claimedRoRItems?.includes(id) &&
           !completedItemIds?.includes(id)
         );
       }) ?? [];
@@ -580,29 +542,28 @@ export const updateDigSessionData = async (
   isUnderworld,
   updatedShards,
   mythology,
-  userMythlogyData,
   user,
-  rorStats
+  userGameData
 ) => {
   const userId = user._id;
+  const userMythlogyData = await userMythologies.findOne({ userId });
+
   try {
     // user session update
     const updateData = {
-      "rorStats.lastSessionStartTime": 0,
-      "rorStats.competelvl": competelvl,
+      lastSessionStartTime: 0,
+      competelvl: competelvl,
     };
 
     if (isUnderworld) {
-      updateData["rorStats.isUnderworldActive"] = 1;
-      updateData["rorStats.dailyGameQuota"] = rorStats.dailyGameQuota - 1;
-      updateData["rorStats.undeworldLostCount"] =
-        rorStats.undeworldLostCount + totalUNWLoss;
+      updateData["isUnderworldActive"] = 1;
+      updateData["dailyGameQuota"] = userGameData.dailyGameQuota - 1;
+      updateData["undeworldLostCount"] =
+        userGameData.undeworldLostCount + totalUNWLoss;
     }
 
-    await userMythologies.findOneAndUpdate(
-      { userId: userId },
-      { $set: updateData }
-    );
+    // stats update
+    await userGameData.updateOne({ $set: updateData });
 
     // shards update
     if (isUnderworld) {
@@ -619,15 +580,12 @@ export const updateDigSessionData = async (
         userMythlogyData.whiteShards = remainingShards;
         userMythlogyData.whiteOrbs = currentWhiteOrbs + gainedOrbs;
 
-        await userMythologies.updateOne(
-          { userId },
-          {
-            $set: {
-              whiteShards: userMythlogyData.whiteShards,
-              whiteOrbs: userMythlogyData.whiteOrbs,
-            },
-          }
-        );
+        await userMythologies.updateOne({
+          $set: {
+            whiteShards: userMythlogyData.whiteShards,
+            whiteOrbs: userMythlogyData.whiteOrbs,
+          },
+        });
       } else {
         // black
         const currentBlackShards = Number(userMythlogyData.blackShards) || 0;
@@ -641,15 +599,12 @@ export const updateDigSessionData = async (
         userMythlogyData.blackShards = remainingBlackShards;
         userMythlogyData.blackOrbs = currentBlackOrbs + gainedBlackOrbs;
 
-        await userMythologies.updateOne(
-          { userId },
-          {
-            $set: {
-              blackShards: userMythlogyData.blackShards,
-              blackOrbs: userMythlogyData.blackOrbs,
-            },
-          }
-        );
+        await userMythologies.updateOne({
+          $set: {
+            blackShards: userMythlogyData.blackShards,
+            blackOrbs: userMythlogyData.blackOrbs,
+          },
+        });
       }
     } else {
       // mythology
@@ -668,15 +623,17 @@ export const updateDigSessionData = async (
       mythData.shards = remainingShards;
       mythData.orbs = currentOrbs + gainedOrbs;
 
-      await userMythologies.updateOne(
-        { userId, "mythologies.name": mythology },
-        {
-          $set: {
-            "mythologies.$.shards": mythData.shards,
-            "mythologies.$.orbs": mythData.orbs,
-          },
-        }
+      // update myth data
+      const targetMyth = userMythlogyData.mythologies.find(
+        (m) => m.name === mythology
       );
+
+      if (targetMyth) {
+        targetMyth.shards = mythData.shards;
+        targetMyth.orbs = mythData.orbs;
+
+        await userMythlogyData.save();
+      }
     }
   } catch (error) {
     console.log(error);
@@ -684,32 +641,25 @@ export const updateDigSessionData = async (
   }
 };
 
-export const claimDragon = async (user, competelvl, bag) => {
+export const claimDragon = async (user, competelvl, userGameData) => {
   try {
     const filteredPouch =
-      bag?.filter((item) => item.includes("artifact.treasure")) || [];
+      userGameData.bag?.filter((item) => item.includes("artifact.treasure")) ||
+      [];
 
     // empty the bnag except special coin
-    await milestones.findOneAndUpdate(
-      { userId: user._id },
-      {
-        $set: {
-          bag: [],
-          pouch: filteredPouch,
-        },
-      }
-    );
-
     // reset count
-    await userMythologies.findOneAndUpdate({
+    await userGameData.updateOne({
       $set: {
-        "rorStats.undeworldLostCount": 0,
-        "rorStats.lastSessionStartTime": 0,
-        "rorStats.competelvl": competelvl,
-        "rorStats.isUnderworldActive": 1,
+        undeworldLostCount: 0,
+        lastSessionStartTime: 0,
+        competelvl: competelvl,
+        isUnderworldActive: 1,
+        bag: [],
+        pouch: filteredPouch,
       },
       $inc: {
-        "rorStats.dailyGameQuota": -1,
+        dailyGameQuota: -1,
       },
     });
   } catch (error) {
@@ -718,12 +668,12 @@ export const claimDragon = async (user, competelvl, bag) => {
   }
 };
 
-export const checkIfMealSkipped = async (userId, rorStats) => {
+export const checkIfMealSkipped = async (userId, userGameData) => {
   try {
     const now = Date.now();
-    const lastRest = rorStats.restExpiresAt || 0;
-    const lastPenalty = rorStats.lastMealPenaltyAt || 0;
-    const currentSwipePower = rorStats.digLvl || 1;
+    const lastRest = userGameData.restExpiresAt || 0;
+    const lastPenalty = userGameData.lastMealPenaltyAt || 0;
+    const currentSwipePower = userGameData.digLvl || 1;
     const expiryMs = 24 * 60 * 60 * 1000;
 
     let updatedSwipePower = currentSwipePower;
@@ -740,15 +690,12 @@ export const checkIfMealSkipped = async (userId, rorStats) => {
 
       updatedSwipePower = Math.max(updatedSwipePower - 1, 1);
 
-      rorStats.digLvl = updatedSwipePower;
-      rorStats.lastMealPenaltyAt = now;
-
-      await userMythologies.findOneAndUpdate(
+      await rorGameData.findOneAndUpdate(
         { userId: userId },
         {
           $set: {
-            "rorStats.digLvl": updatedSwipePower,
-            "rorStats.lastMealPenaltyAt": now,
+            digLvl: updatedSwipePower,
+            lastMealPenaltyAt: now,
           },
         }
       );
@@ -761,10 +708,15 @@ export const checkIfMealSkipped = async (userId, rorStats) => {
   }
 };
 
-export const fillDefaultMythAndVault = async (userId, userMyth, userVault) => {
+export const fillDefaultMythAndVault = async (
+  userId,
+  userMyth,
+  userGameData
+) => {
   try {
     const isMythAbsent = userMyth?.length === 0;
-    const isVaultAbsent = userVault?.length === 0;
+    const isVaultAbsent = userGameData?.vault?.length === 0;
+    let updatedVault = userGameData.vault;
 
     // new user
     if (isMythAbsent) {
@@ -777,14 +729,14 @@ export const fillDefaultMythAndVault = async (userId, userMyth, userVault) => {
 
     // default vault
     if (isVaultAbsent) {
-      userVault = defaultVault;
-      await milestones.findOneAndUpdate(
+      updatedVault = defaultVault;
+      await rorGameData.findOneAndUpdate(
         { userId: userId },
-        { $set: { "bank.vault": defaultVault } }
+        { $set: { vault: defaultVault } }
       );
     }
 
-    return { userMyth, userVault };
+    return { userMyth, updatedVault };
   } catch (error) {
     console.log(error);
     throw Error(error);
@@ -793,36 +745,36 @@ export const fillDefaultMythAndVault = async (userId, userMyth, userVault) => {
 
 export const updateDailySession = async (
   userId,
-  rorStats,
+  userGameData,
   isRestActive,
   bagData
 ) => {
   let thiefStole = false;
   try {
+    const updatedRoRGameData = rorGameData.findOne({
+      userId: userId,
+    });
     // thief: steal item
-    if (rorStats.isThiefActive && !isRestActive) {
+    if (userGameData.isThiefActive && !isRestActive) {
       thiefStole = true;
 
-      bagData = await removeRandomItemFrmBag(userId, bagData);
+      bagData = await removeRandomItemFrmBag(bagData, updatedRoRGameData);
     }
 
     // update session details
-    await userMythologies.findOneAndUpdate(
-      {
-        userId: userId,
-      },
+    await updatedRoRGameData.updateOne(
       {
         $set: {
-          "rorStats.dailyGameQuota": 12,
-          "rorStats.gameHrStartAt": Date.now(),
+          dailyGameQuota: 12,
+          gameHrStartAt: Date.now(),
         },
       },
       { new: true }
     );
-    rorStats.dailyGameQuota = 12;
-    rorStats.gameHrStartAt = Date.now();
+    userGameData.dailyGameQuota = 12;
+    userGameData.gameHrStartAt = Date.now();
 
-    const updatedStats = rorStats;
+    const updatedStats = userGameData;
 
     return { updatedStats, thiefStole };
   } catch (error) {

@@ -6,6 +6,7 @@ import {
   OrbsTransactions,
 } from "../../common/models/transactions.models";
 import mongoose from "mongoose";
+import { fofGameData } from "../../common/models/game.model";
 
 export const claimQuest = async (req, res) => {
   try {
@@ -14,7 +15,7 @@ export const claimQuest = async (req, res) => {
     const requiredOrbs = quest.requiredOrbs;
 
     // Add to claimed quests
-    await milestones.findOneAndUpdate(
+    await fofGameData.findOneAndUpdate(
       { userId: userId },
       {
         $push: {
@@ -165,7 +166,7 @@ export const claimQuestRwrd = async (req, res) => {
     );
 
     // update claim status
-    await milestones.findOneAndUpdate(
+    await fofGameData.findOneAndUpdate(
       {
         userId: userId,
         "claimedQuests.taskId": questId,
@@ -209,8 +210,7 @@ export const claimQuestInfoRwrd = async (req, res) => {
     );
 
     // update claim status
-    await milestones.updateOne(
-      { userId: userId },
+    await fofGameData.updateOne(
       {
         $push: { sharedQuests: questId },
       },

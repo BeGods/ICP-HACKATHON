@@ -1,6 +1,4 @@
 import { gameItems } from "../../utils/constants/gameItems";
-import milestones from "../../common/models/milestones.models";
-import mongoose from "mongoose";
 import ranks from "../../common/models/ranks.models";
 import userMythologies from "../../common/models/mythologies.models";
 import {
@@ -42,10 +40,9 @@ import {
 //   ]);
 // }
 
-export const generateDailyRwrd = async (user, userId) => {
+export const generateDailyRwrd = async (userGameData, userId) => {
   try {
-    const userMilestones = await milestones.findOne({ userId });
-    const pouchItems = userMilestones?.pouch ?? [];
+    const pouchItems = userGameData?.pouch ?? [];
 
     const includeItems = [
       "coin 1",
@@ -81,11 +78,9 @@ export const generateDailyRwrd = async (user, userId) => {
 
       reward = selectedArtifact;
 
-      await milestones.findOneAndUpdate(
-        { userId },
-        { $push: { pouch: reward } },
-        { new: true }
-      );
+      await userGameData.updateOne({
+        $push: { pouch: reward },
+      });
 
       const newItemTransaction = new ItemsTransactions({
         userId,
@@ -113,17 +108,14 @@ export const generateDailyRwrd = async (user, userId) => {
         { $inc: { gobcoin: coin } }
       );
     } else if (reward === "meal") {
-      await userMythologies.updateOne(
-        { userId: userId },
-        {
-          $set: {
-            "rorStats.restExpiresAt": Date.now() + 1 * 24 * 60 * 60 * 1000,
-          },
-          $inc: {
-            "rorStats.digLvl": 1,
-          },
-        }
-      );
+      await userGameData.updateOne({
+        $set: {
+          restExpiresAt: Date.now() + 1 * 24 * 60 * 60 * 1000,
+        },
+        $inc: {
+          digLvl: 1,
+        },
+      });
     } else if (reward.startsWith("shard.")) {
       const shardType = reward.split(".")[1];
 
@@ -339,9 +331,9 @@ export const getLeaderboardRanks = async (
   }
 };
 
-export const checkBonus = async (user) => {
+export const checkBonus = async (userGameData) => {
   try {
-    const dailyBonusClaimed = user.bonus?.ror.dailyBonusClaimedAt;
+    const dailyBonusClaimed = userGameData.dailyBonusClaimedAt;
     const nowUtc = new Date();
 
     const startOfTodayUtc = new Date(

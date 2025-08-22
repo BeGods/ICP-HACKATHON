@@ -36,7 +36,12 @@ export const updateMultiAutomata = async (
   }
 };
 
-export const updateMultiBurst = async (userMyth, deductValue, userId) => {
+export const updateMultiBurst = async (
+  userMyth,
+  deductValue,
+  userId,
+  userGameData
+) => {
   try {
     userMyth.mythologies.forEach((mythology) => {
       mythology.boosters.isBurstActive = true;
@@ -48,13 +53,18 @@ export const updateMultiBurst = async (userMyth, deductValue, userId) => {
         {
           $inc: { multiColorOrbs: deductValue },
           $set: {
-            "autoPay.burstAutoPayExpiration": Date.now(),
             mythologies: userMyth.mythologies,
           },
         },
         { new: true }
       )
       .select("-__v -createdAt -updatedAt -_id");
+
+    await userGameData.updateOne({
+      $set: {
+        burstAutoPayExpiration: Date.now(),
+      },
+    });
 
     return userMyth;
   } catch (error) {
