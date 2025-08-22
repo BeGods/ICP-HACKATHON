@@ -37,7 +37,7 @@ const CreateCollection = () => {
   const [nftRows, setNftRows] = useState([{ id: "", description: "" }]); // Initial row
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
-  const { backendActor, canisterId } = useAuth();
+  const { backendActor, canisterId, identity, principal } = useAuth();
   const [Ufile, setUFile] = useState([]);
   const [base64String, setBase64String] = useState("");
   const [nftType, setnfttype] = useState("");
@@ -61,6 +61,8 @@ const CreateCollection = () => {
   const [totalnft, settotalnft] = useState();
 
   const { user } = useSelector((state) => state.auth);
+  console.log("user", user);
+
   const principal_id = user;
 
   // backendActor?.CanisterActor?.createExtCollection;
@@ -164,16 +166,22 @@ const CreateCollection = () => {
   const createExtData = async (name, base64String, description, collColor) => {
     let n = nftCardsList.length;
     settotalnft(n);
+
+    console.log("identity", identity);
+    console.log("principal", principal);
+    console.log("backendActor", backendActor);
+
     try {
       const metadata = JSON.stringify({ description, collColor });
-      // console.log(name, metadata);
-      console.log(backendActor);
+      console.log("name-meta", name, metadata);
 
       const report = await backendActor?.createExtCollection(
         name,
         base64String,
         metadata
       );
+
+      console.log("report", report);
 
       if (report && Array.isArray(report)) {
         const data = await extractPrincipals(report);

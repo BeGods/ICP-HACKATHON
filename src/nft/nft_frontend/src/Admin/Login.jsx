@@ -17,8 +17,12 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
+    console.log("isAuthenticated", isAuthenticated);
+
     if (isLoading) {
-      setTimeout(() => setIsLoading(false), 1000);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     }
     if (!isLoading) {
       if (isAuthenticated) {
@@ -27,7 +31,7 @@ const Login = () => {
         navigate("/admin/login");
       }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, isLoading]);
 
   const buttonDataArray = [
     {

@@ -100,7 +100,9 @@ function SidebarContent({ onClose, ...rest }) {
   const [hovered, setHovered] = useState(false);
   const [Copied, setCopied] = useState(false);
   const dispatch = useDispatch();
+
   const user = useSelector((state) => state.auth.user);
+  console.log(user);
 
   const logoutHandler = () => {
     dispatch(logoutUserAndClear());
@@ -165,7 +167,7 @@ function SidebarContent({ onClose, ...rest }) {
                 <input
                   value={
                     user
-                      ? `${user.slice(0, 5)}......${user.slice(-6)}`
+                      ? `${user?.slice(0, 5)}......${user?.slice(-6)}`
                       : "No User"
                   }
                   readOnly

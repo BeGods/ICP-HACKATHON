@@ -10,15 +10,16 @@ import { canisterId } from "../../../../declarations/nft_backend";
 import { Principal } from "@dfinity/principal";
 
 function DashBoard() {
-  const { backendActor } = useAuth();
+  const { backendActor, isAuthenticated } = useAuth();
   const [user, setUser] = useState();
   const [nfts, setnfts] = useState();
   const [collections, setcollections] = useState();
   const navigate = useNavigate();
   const [loading, setloading] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    console.log(isAuthenticated);
+
     if (!isAuthenticated) {
       navigate("/login");
     } else {
@@ -33,7 +34,7 @@ function DashBoard() {
       };
       fetching();
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
 
   const getTotalNFT = async () => {
     setloading(true);

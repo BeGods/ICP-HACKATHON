@@ -146,7 +146,6 @@ nft_backend: http://127.0.0.1:4943/?canisterId=<backend-canister-id>&id=<caniste
 <details>
 
 <summary> To access the admin panel and add NFT collections, navigate to:
-`http://<frontend-canister-id>.localhost:4943/admin/login`
 
 To log in as an admin and perform administrative actions, you must first whitelist your wallet's **Principal** in the list of canister controllers. Use the following command to do so:
 

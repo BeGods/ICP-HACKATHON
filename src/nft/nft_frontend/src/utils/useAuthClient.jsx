@@ -1,8 +1,12 @@
 import { AuthClient } from "@dfinity/auth-client";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { HttpAgent } from "@dfinity/agent";
+import { Actor, HttpAgent } from "@dfinity/agent";
 import { Principal } from "@dfinity/principal";
-import { createActor } from "../../../../declarations/nft_backend";
+import {
+  createActor,
+  idlFactory as backend_idl,
+  canisterId,
+} from "../../../../declarations/nft_backend";
 import { createActor as createLedgerActor } from "../../../../declarations/icp_ledger_canister/index";
 import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from "ic-auth";
 import { idlFactory } from "../../../../declarations/nft_backend/index";
@@ -17,6 +21,11 @@ import MobileProvider from "@funded-labs/plug-mobile-sdk/dist/src/MobileProvider
 
 // Create a React context for authentication state
 const AuthContext = createContext();
+
+const iiUrl =
+  process.env.DFX_NETWORK === "local"
+    ? `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:4943`
+    : "https://identity.ic0.app";
 
 // Custom hook to manage authentication with Internet Identity
 export const useAuthClient = () => {
@@ -46,9 +55,9 @@ export const useAuthClient = () => {
 
   const backend_id = process.env.CANISTER_ID_NFT_BACKEND;
   const frontend_id = process.env.CANISTER_ID_NFT_FRONTEND;
+  const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
 
   // testnet
-  const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
   // mainnet
   // const ledgerCanId = "ryjl3-tyaaa-aaaaa-aaaba-cai";
 
@@ -139,131 +148,133 @@ export const useAuthClient = () => {
     return new Promise(async (resolve, reject) => {
       setShowButtonLoading(true);
       try {
+        const authClient = await AuthClient.create();
+        const canister = Principal.fromText(backend_id);
+
+        // --- If already logged in with II ---
         if (
           (await authClient.isAuthenticated()) &&
-          !(await authClient.getIdentity().getPrincipal().isAnonymous())
+          !authClient.getIdentity().getPrincipal().isAnonymous()
         ) {
-          updateClient(authClient);
+          await updateClient(authClient, canister);
           resolve(authClient);
-        } else {
-          let userObject = {
-            principal: "Not Connected.",
-            agent: undefined,
-            provider: "",
-          };
-
-          if (provider === "plug") {
-            console.log(window, "windows");
-            // Ensure Plug is installed
-            if (!window.ic?.plug)
-              throw new Error("Plug extension not installed");
-
-            const host =
-              process.env.DFX_NETWORK === "ic"
-                ? "https://icp-api.io"
-                : "http://127.0.0.1:4943";
-
-            // Check if Plug is connected
-            // const isPlugConnected = await window.ic.plug.isConnected({
-            //   whitelist,
-            //   host,
-            // });
-
-            // if (!isPlugConnected) {
-            // Request connection if not already connected
-            const isConnected = await window.ic.plug.requestConnect({
-              whitelist,
-              host,
-            });
-
-            if (!isConnected) {
-              throw new Error("Plug connection refused");
-            }
-            // }
-
-            // Now that we are connected, fetch the identity and principal
-            const principal = await window.ic.plug.agent.getPrincipal();
-            console.log(principal, "principal");
-
-            const user_uuid = uuidv4();
-
-            // Create actor for the backend
-            const userActor = await window.ic.plug.createActor({
-              canisterId: process.env.CANISTER_ID_NFT_BACKEND,
-              interfaceFactory: idlFactory,
-            });
-
-            // Create actor for the ledger
-            const EXTActor = await window.ic.plug.createActor({
-              canisterId: ledgerCanId,
-              interfaceFactory: ledgerIdlFactory,
-            });
-
-            userObject.principal = principal.toText();
-            userObject.agent = window.ic.plug.agent;
-
-            console.log(userActor, "userActor");
-
-            // Create user with the principal and user UUID
-            const userdetails = await userActor.create_user(
-              principal,
-              user_uuid
-            );
-            console.log(userdetails, "userdetails");
-
-            // Update the actors and state
-            setBackendActor(userActor);
-            setLedgerActor(EXTActor);
-          } else {
-            // Handle other providers (stoic, nfid, ii) as before
-            if (provider === "stoic") {
-              userObject = await StoicLogin();
-            } else if (provider === "nfid") {
-              userObject = await NFIDLogin();
-            } else if (provider === "ii") {
-              userObject = await IdentityLogin();
-            }
-
-            const identity = await userObject.agent._identity;
-            const principal = Principal.fromText(userObject.principal);
-
-            const agent = new HttpAgent({
-              identity,
-              host:
-                process.env.DFX_NETWORK === "local"
-                  ? "http://127.0.0.1:4943"
-                  : undefined,
-            });
-            await agent.fetchRootKey();
-
-            const backendActor = createActor(
-              process.env.CANISTER_ID_NFT_BACKEND,
-              {
-                agent,
-              }
-            );
-            const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
-
-            setLedgerActor(ledgerActor1);
-            setBackendActor(backendActor);
-          }
-
-          setPrincipal(userObject.principal);
-          setIdentity(userObject.agent?._identity);
-          setIsAuthenticated(true);
-          dispatch(setUser(userObject.principal));
-          dispatch(updateDisplayWalletOptionsStatus(false));
-
-          if (navigatingPath === "/profile") {
-            navigate(navigatingPath);
-          }
+          return;
         }
+
+        let identity;
+        let agent;
+        let backendActor;
+        let ledgerActor1;
+        let principal;
+
+        // --- Handle Plug ---
+        if (provider === "plug") {
+          if (!window.ic?.plug) throw new Error("Plug extension not installed");
+
+          const host =
+            process.env.DFX_NETWORK === "ic"
+              ? "https://icp-api.io"
+              : "http://127.0.0.1:4943";
+
+          const isConnected = await window.ic.plug.requestConnect({
+            whitelist,
+            host,
+          });
+          if (!isConnected) throw new Error("Plug connection refused");
+
+          identity = await window.ic.plug.agent.getIdentity();
+          principal = identity.getPrincipal();
+
+          backendActor = await window.ic.plug.createActor({
+            canisterId: process.env.CANISTER_ID_NFT_BACKEND,
+            interfaceFactory: idlFactory,
+          });
+
+          ledgerActor1 = await window.ic.plug.createActor({
+            canisterId: ledgerCanId,
+            interfaceFactory: ledgerIdlFactory,
+          });
+
+          // Create user on backend
+          const user_uuid = uuidv4();
+          await backendActor.create_user(principal, user_uuid);
+        }
+
+        // --- Handle Stoic ---
+        else if (provider === "stoic") {
+          identity = await StoicLogin();
+          principal = identity.getPrincipal();
+
+          agent = new HttpAgent({ identity });
+          if (process.env.DFX_NETWORK !== "ic") agent.fetchRootKey();
+
+          backendActor = Actor.createActor(backend_idl, {
+            agent,
+            canisterId: backend_id,
+          });
+          ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+        }
+
+        // --- Handle NFID ---
+        else if (provider === "nfid") {
+          identity = await NFIDLogin({ identityProvider: nfidUrl });
+          principal = identity.getPrincipal();
+
+          agent = new HttpAgent({ identity });
+          if (process.env.DFX_NETWORK !== "ic") agent.fetchRootKey();
+
+          backendActor = Actor.createActor(backend_idl, {
+            agent,
+            canisterId: backend_id,
+          });
+          ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+        }
+
+        // --- Handle Internet Identity ---
+        else if (provider === "ii") {
+          await new Promise((resolveLogin, rejectLogin) => {
+            authClient.login({
+              identityProvider: iiUrl,
+              onSuccess: resolveLogin,
+              onError: rejectLogin,
+            });
+          });
+
+          identity = authClient.getIdentity();
+          principal = identity.getPrincipal();
+
+          agent = new HttpAgent({ identity });
+          if (process.env.DFX_NETWORK !== "ic") agent.fetchRootKey();
+
+          backendActor = Actor.createActor(backend_idl, {
+            agent,
+            canisterId: backend_id,
+          });
+          ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+        } else {
+          throw new Error("Unsupported provider");
+        }
+
+        if (!identity) throw new Error("No identity returned from provider");
+
+        console.log("✅ User Logged in as", principal.toText());
+
+        setLedgerActor(ledgerActor1);
+        setBackendActor(backendActor);
+        setPrincipal(principal.toString());
+        setIdentity(identity);
+        setIsAuthenticated(true);
+        dispatch(setUser(principal.toString()));
+        dispatch(updateDisplayWalletOptionsStatus(false));
+
+        if (navigatingPath === "/profile") navigate(navigatingPath);
+
+        resolve({ identity, principal, backendActor, ledgerActor1 });
       } catch (error) {
         console.error("Login error:", error);
-        setShowButtonLoading(false); // Update loading state on error
         reject(error);
       } finally {
-        setShowButtonLoading(false); // Ensure button loading state is cleared
+        setShowButtonLoading(false);
       }
     });
   };
@@ -271,95 +282,120 @@ export const useAuthClient = () => {
   const adminlogin = async (provider) => {
     return new Promise(async (resolve, reject) => {
       try {
+        const authClient = await AuthClient.create();
+        const canister = Principal.fromText(backend_id);
+
+        // --- If already logged in with II ---
         if (
           (await authClient.isAuthenticated()) &&
-          !(await authClient.getIdentity().getPrincipal().isAnonymous())
+          !authClient.getIdentity().getPrincipal().isAnonymous()
         ) {
-          updateClient(authClient);
+          await updateClient(authClient, canister);
           resolve(authClient);
-        } else {
-          let userObject = {
-            principal: "Not Connected.",
-            agent: undefined,
-            provider: "",
-          };
-          if (provider === "plug") {
-            userObject = await PlugLogin();
-            console.log("plug provider", userObject);
-          } else if (provider === "stoic") {
-            userObject = await StoicLogin();
-          } else if (provider === "nfid") {
-            userObject = await NFIDLogin();
-          } else if (provider === "ii") {
-            const identityProvider =
-              process.env.DFX_NETWORK === "local"
-                ? `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:4943` // Local
-                : "https://identity.ic0.app"; // Mainnet
-            userObject = await IdentityLogin({
-              identityProvider: identityProvider,
-            });
-          }
-
-          const identity =
-            userObject.identity || userObject.agent?.getIdentity?.();
-          const principal = Principal.fromText(userObject.principal);
-
-          if (provider === "plug") {
-            const host =
-              process.env.DFX_NETWORK === "ic"
-                ? userObject.agent._host
-                : "http://127.0.0.1:4943";
-            const isConnected = await window.ic.plug.requestConnect({
-              whitelist,
-              host,
-            });
-            if (isConnected) {
-              const userActor = await window.ic.plug.createActor({
-                canisterId: process.env.CANISTER_ID_NFT_BACKEND,
-                interfaceFactory: idlFactory,
-              });
-              const EXTActor = await window.ic.plug.createActor({
-                canisterId: ledgerCanId,
-                interfaceFactory: ledgerIdlFactory,
-              });
-              console.log("in use auth", userActor);
-              setBackendActor(userActor);
-              setLedgerActor(EXTActor);
-            } else {
-              throw new Error("Plug connection refused");
-            }
-          } else {
-            const agent = new HttpAgent({
-              identity,
-              host:
-                process.env.DFX_NETWORK === "local"
-                  ? "http://127.0.0.1:4943"
-                  : undefined,
-            });
-            await agent.fetchRootKey();
-
-            const backendActor = createActor(
-              process.env.CANISTER_ID_NFT_BACKEND,
-              { agent }
-            );
-            const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
-            setLedgerActor(ledgerActor1);
-            setBackendActor(backendActor);
-          }
-
-          console.log(principal.toString());
-          setPrincipal(principal.toString());
-          setIdentity(identity);
-          setIsAuthenticated(true);
-          const authData = {
-            isAuthenticated: true,
-            user: userObject.principal,
-            identity: userObject.identity,
-          };
-
-          dispatch(setUser(userObject.principal));
-          // navigate("/admin/dashboard");
         }
+
+        let identity;
+        let agent;
+        let backendActor;
+        let ledgerActor1;
+
+        // --- Handle Plug ---
+        if (provider === "plug") {
+          const host =
+            process.env.DFX_NETWORK === "ic"
+              ? userObject.agent._host
+              : "http://127.0.0.1:4943";
+
+          const isConnected = await window.ic.plug.requestConnect({
+            whitelist,
+            host,
+          });
+
+          if (!isConnected) throw new Error("Plug connection refused");
+
+          backendActor = await window.ic.plug.createActor({
+            canisterId: process.env.CANISTER_ID_NFT_BACKEND,
+            interfaceFactory: idlFactory,
+          });
+          ledgerActor1 = await window.ic.plug.createActor({
+            canisterId: ledgerCanId,
+            interfaceFactory: ledgerIdlFactory,
+          });
+
+          identity = await window.ic.plug.agent.getIdentity();
+        }
+
+        // --- Handle Stoic ---
+        else if (provider === "stoic") {
+          const stoicIdentity = await StoicLogin();
+          identity = stoicIdentity;
+
+          agent = new HttpAgent({ identity });
+          if (process.env.DFX_NETWORK !== "ic") {
+            agent.fetchRootKey();
+          }
+
+          backendActor = Actor.createActor(backend_idl, {
+            agent,
+            canisterId: backend_id,
+          });
+          ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+        }
+
+        // --- Handle NFID ---
+        else if (provider === "nfid") {
+          const nfidIdentity = await NFIDLogin({ identityProvider: nfidUrl });
+          identity = nfidIdentity;
+
+          agent = new HttpAgent({ identity });
+          if (process.env.DFX_NETWORK !== "ic") {
+            agent.fetchRootKey();
+          }
+
+          backendActor = Actor.createActor(backend_idl, {
+            agent,
+            canisterId: backend_id,
+          });
+          ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+        }
+
+        // --- Handle Internet Identity (fallback) ---
+        else if (provider === "ii") {
+          await new Promise((resolveLogin, rejectLogin) => {
+            authClient.login({
+              identityProvider: iiUrl,
+              onSuccess: resolveLogin,
+              onError: rejectLogin,
+            });
+          });
+
+          identity = authClient.getIdentity();
+          agent = new HttpAgent({ identity });
+          if (process.env.DFX_NETWORK !== "ic") {
+            agent.fetchRootKey();
+          }
+
+          backendActor = Actor.createActor(backend_idl, {
+            agent,
+            canisterId: backend_id,
+          });
+          ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
+        }
+
+        if (!identity) throw new Error("No identity returned from provider");
+
+        const principal = identity.getPrincipal();
+        console.log("✅ Logged in as", principal.toText());
+
+        // await backendActor.checkController(canister, principal);
+        // await backendActor.whoAmI();
+
+        setLedgerActor(ledgerActor1);
+        setBackendActor(backendActor);
+        setPrincipal(principal.toString());
+        setIdentity(identity);
+        setIsAuthenticated(true);
+        dispatch(setUser(principal));
       } catch (error) {
         console.error("Login error:", error);
         reject(error);
@@ -400,27 +436,39 @@ export const useAuthClient = () => {
   // Update client state after authentication
   const updateClient = async (client) => {
     try {
-      const isAuthenticated = await client.isAuthenticated();
-      setIsAuthenticated(isAuthenticated);
+      const isConnected = await client.isAuthenticated();
+      console.log("isConnected", isConnected);
+
       const identity = client.getIdentity();
-      setIdentity(identity);
+      const agent = new HttpAgent({ identity });
+
+      if (process.env.DFX_NETWORK !== "ic") {
+        agent.fetchRootKey();
+      }
+
+      const backendActor = Actor.createActor(backend_idl, {
+        agent,
+        canisterId: backend_id, // string from .env
+      });
+
+      const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
 
       const principal = identity.getPrincipal();
+      console.log("✅ Logged in as", principal.toText());
+
+      // Make sure backend_id is not undefined
+      if (!backend_id)
+        throw new Error("backend_id is undefined. Check your .env setup!");
+
+      const canisterIdPrincipal = Principal.fromText(backend_id);
+
+      // test all good
+      // await backendActor.checkController(canisterIdPrincipal, principal);
+      // await backendActor.whoAmI();
+
+      setIsAuthenticated(isConnected);
+      setIdentity(identity);
       setPrincipal(principal.toString());
-
-      const agent = new HttpAgent({
-        identity,
-        host:
-          process.env.DFX_NETWORK === "local"
-            ? "http://127.0.0.1:4943"
-            : undefined,
-      });
-      await agent.fetchRootKey();
-
-      const backendActor = createActor(process.env.CANISTER_ID_NFT_BACKEND, {
-        agent,
-      });
-      const ledgerActor1 = createLedgerActor(ledgerCanId, { agent });
       setLedgerActor(ledgerActor1);
       setBackendActor(backendActor);
       setShowButtonLoading(false);

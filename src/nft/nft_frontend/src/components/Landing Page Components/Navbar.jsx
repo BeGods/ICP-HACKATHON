@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
@@ -9,11 +9,10 @@ import { FaUserLarge } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { updateDisplayWalletOptionsStatus } from "../../redux/infoSlice";
 import { FiActivity } from "react-icons/fi";
-const Navbar = ({ mobileView,landingPage  }) => {
+const Navbar = ({ mobileView, landingPage }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropDown, setProfileDropDown] = useState(false);
-  
 
   const location = useLocation();
   const currentPath = location.pathname;
@@ -33,7 +32,8 @@ const Navbar = ({ mobileView,landingPage  }) => {
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const { logout, login, principal, showButtonLoading,plugConnectMobile } = useAuth();
+  const { logout, login, principal, showButtonLoading, plugConnectMobile } =
+    useAuth();
 
   const [currentLanguage, setLanguage] = useState(t("langText"));
 
@@ -63,54 +63,54 @@ const Navbar = ({ mobileView,landingPage  }) => {
 
   useEffect(() => {
     if (isOpen) {
-      
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
-    
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [isOpen]);
 
-
-
-const onClickCollections = () => {
-  if (landingPage) {
-    // If you're already on the landing page, just scroll to the section
-    navigate("/#collections");
-    window.scrollBy({ top: 800, behavior: 'smooth' });
-  } else {
-    // If you're not on the landing page, navigate first
-    navigate("/#collections");
-  }
-};
-
-const ScrollToCollections = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.hash === '#collections') {
-      // Wait until the page has loaded, then scroll to the section
-      window.scrollTo({ top: document.querySelector('#collections').offsetTop, behavior: 'smooth' });
+  const onClickCollections = () => {
+    if (landingPage) {
+      // If you're already on the landing page, just scroll to the section
+      navigate("/#collections");
+      window.scrollBy({ top: 800, behavior: "smooth" });
+    } else {
+      // If you're not on the landing page, navigate first
+      navigate("/#collections");
     }
-  }, [location]);
+  };
 
-  return null;
-};
+  const ScrollToCollections = () => {
+    const location = useLocation();
 
-ScrollToCollections();
- const onClickClearDropDowns = ()=>{
-  setDropdownOpen(false);
-  setProfileDropDown(false);
- }
+    useEffect(() => {
+      if (location.hash === "#collections") {
+        // Wait until the page has loaded, then scroll to the section
+        window.scrollTo({
+          top: document.querySelector("#collections").offsetTop,
+          behavior: "smooth",
+        });
+      }
+    }, [location]);
 
+    return null;
+  };
+
+  ScrollToCollections();
+  const onClickClearDropDowns = () => {
+    setDropdownOpen(false);
+    setProfileDropDown(false);
+  };
 
   return (
-    <div className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`} onClick={onClickClearDropDowns}>
+    <div
+      className={`max-w-[1920px] mx-auto w-full h-[10vh] flex items-center justify-between text-white relative`}
+      onClick={onClickClearDropDowns}
+    >
       {/* Mobile View */}
       <div className="relative flex items-center justify-between w-full gap-4 md:hidden">
         <Link to="/" className="flex pt-7">
@@ -119,7 +119,10 @@ ScrollToCollections();
         <div className="flex items-center justify-between">
           <div className="relative w-[130px] flex justify-center">
             <button
-              onClick={(e) => {e.stopPropagation();setDropdownOpen(!dropdownOpen)}}
+              onClick={(e) => {
+                e.stopPropagation();
+                setDropdownOpen(!dropdownOpen);
+              }}
               aria-expanded={dropdownOpen}
               className="text-[20px] font-[500] leading-[28.92px] text-[#FCD37B] flex justify-center items-center"
             >
@@ -166,7 +169,7 @@ ScrollToCollections();
           </button>
           {/* Language Dropdown */}
           <div className="relative w-[130px] flex justify-center">
-          <button
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 setDropdownOpen((prevState) => !prevState);
@@ -182,9 +185,7 @@ ScrollToCollections();
               className="text-[20px] font-[500] text-[#FCD37B] flex justify-center items-center"
             >
               {currentLanguage}
-              <span className="ml-2 text-sm">
-                {dropdownOpen ? "▲" : "▼"}
-              </span>
+              <span className="ml-2 text-sm">{dropdownOpen ? "▲" : "▼"}</span>
             </button>
 
             {dropdownOpen && (
@@ -208,7 +209,10 @@ ScrollToCollections();
           {isAuthenticated ? (
             <div className="relative w-[180px] flex justify-center z-20">
               <button
-                onClick={(e) => {e.stopPropagation(),setProfileDropDown(!profileDropDown);setDropdownOpen(false)}}
+                onClick={(e) => {
+                  e.stopPropagation(), setProfileDropDown(!profileDropDown);
+                  setDropdownOpen(false);
+                }}
                 aria-expanded={profileDropDown}
                 className="rounded-md flex justify-center items-center gap-1 w-full h-full p-2 bg-[#000] text-white border border-gray-500"
               >
@@ -228,7 +232,10 @@ ScrollToCollections();
                     Profile
                   </li>
                   <hr className="my-0 border-t border-[#FCD378]" />
-                  <li className="px-4 py-2 cursor-pointer hover:bg-purple-900" onClick={()=>navigate('/activity')}>
+                  <li
+                    className="px-4 py-2 cursor-pointer hover:bg-purple-900"
+                    onClick={() => navigate("/activity")}
+                  >
                     Activity
                   </li>
                   <hr className="my-0 border-t border-[#FCD378]" />
@@ -275,14 +282,15 @@ ScrollToCollections();
               ) : (
                 <>
                   <button
-                    onClick={() =>
-                    {dispatch(
-                      updateDisplayWalletOptionsStatus({
-                        status: !iswalletOptionsOpen.status,
-                        path: navigatingPath,
-                      })
-                    );setDropdownOpen(false)}
-                    }
+                    onClick={() => {
+                      dispatch(
+                        updateDisplayWalletOptionsStatus({
+                          status: !iswalletOptionsOpen.status,
+                          path: navigatingPath,
+                        })
+                      );
+                      setDropdownOpen(false);
+                    }}
                     className="bg-[#FCD37B] font-bold text-black w-full h-full rounded-sm p-2 text-md hover:bg-[#000] hover:text-[#FCD37B]"
                   >
                     {t("connectWallet")}
@@ -291,7 +299,7 @@ ScrollToCollections();
                     <ul className="absolute top-10 right-0 mt-1 bg-black text-[#FCD378] rounded shadow-lg w-[180px] p-0 list-none">
                       <li
                         className="flex items-center p-3 cursor-pointer hover:bg-purple-900"
-                        onClick={() => login("ic", navigatingPath)}
+                        onClick={() => login("ii", navigatingPath)}
                       >
                         <img
                           src="Hero/icp_logo.png"
@@ -347,119 +355,113 @@ ScrollToCollections();
 
       {/* Mobile Menu */}
       {isOpen && (
-  <div className="fixed top-0 bottom-0 left-0 z-20 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique">
-    {landingPage ? (
-      <Link
-      to="/"
-      className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
-      onClick={()=>toggleMenu()} 
-    >
-      Home
-    </Link>
-    ):(
-      <Link
-      to="/"
-      className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
-    >
-      Home
-    </Link>
-    )}
-    {landingPage ? (
-      <button
-     
-     className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
-     onClick={()=>{
-       toggleMenu();
-       onClickCollections();
-     }} 
-     
-   >
-     {t("collectionNavItem")}
+        <div className="fixed top-0 bottom-0 left-0 z-20 flex flex-col items-center w-full h-screen gap-8 py-8 pt-24 bg-black bg-opacity-70 backdrop-blur-lg md:hidden font-caslonAntique">
+          {landingPage ? (
+            <Link
+              to="/"
+              className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+              onClick={() => toggleMenu()}
+            >
+              Home
+            </Link>
+          ) : (
+            <Link
+              to="/"
+              className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+            >
+              Home
+            </Link>
+          )}
+          {landingPage ? (
+            <button
+              className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+              onClick={() => {
+                toggleMenu();
+                onClickCollections();
+              }}
+            >
+              {t("collectionNavItem")}
+            </button>
+          ) : (
+            <Link
+              to="/#collections"
+              className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
+            >
+              {t("collectionNavItem")}
+            </Link>
+          )}
 
-   </button>
-    ):(
-<Link
-     to="/#collections"
-     className="text-[20px] font-[400] leading-[30px] text-[#FCD378]"
-     
-   >
-     {t("collectionNavItem")}
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/profile"
+                className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
+              >
+                <FaUserLarge size={15} className="mr-1" />
+                {/* {principal ? `${principal.slice(0, 4)}...${principal.slice(principal.length - 5)}` : "loading..."} */}
+                <span className="mr-3">Profile</span>
+              </Link>
+              <Link
+                to="/activity"
+                className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
+              >
+                <FiActivity size={15} className="mr-1" />
 
-   </Link>
-    )}
-
-    {isAuthenticated ? (
-      <>
-        <Link
-          to="/profile"
-          className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
-        >
-          <FaUserLarge size={15} className="mr-1" />
-          {/* {principal ? `${principal.slice(0, 4)}...${principal.slice(principal.length - 5)}` : "loading..."} */}
-          <span className="mr-3">Profile</span>
-        </Link>
-        <Link
-          to="/activity"
-          className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
-        >
-          <FiActivity size={15} className="mr-1" />
-
-          <span className="mr-3">Activity</span>
-        </Link>
-        <div
-          onClick={onClickLogout}
-          className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
-        >
-          Logout
+                <span className="mr-3">Activity</span>
+              </Link>
+              <div
+                onClick={onClickLogout}
+                className="flex items-center justify-center text-lg border-[2px] border-[#FCD378] w-[60vw] h-[4vh] rounded-md text-[#FCD378]"
+              >
+                Logout
+              </div>
+            </>
+          ) : showButtonLoading ? (
+            <button
+              type="button"
+              className="flex items-center justify-center w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px]"
+              disabled
+            >
+              <svg
+                className="w-5 h-5 mr-3 text-black animate-spin"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+              Processing...
+            </button>
+          ) : (
+            <div
+              onClick={() =>
+                dispatch(
+                  updateDisplayWalletOptionsStatus({
+                    status: !iswalletOptionsOpen.status,
+                    path: navigatingPath,
+                  })
+                )
+              }
+              className="flex items-center justify-center w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px]"
+            >
+              {t("connectWallet")}
+            </div>
+          )}
         </div>
-      </>
-    ) : showButtonLoading ? (
-      <button
-        type="button"
-        className="flex items-center justify-center w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px]"
-        disabled
-      >
-        <svg
-          className="w-5 h-5 mr-3 text-black animate-spin"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-          ></path>
-        </svg>
-        Processing...
-      </button>
-    ) : (
-      <div
-        onClick={() =>
-          dispatch(
-            updateDisplayWalletOptionsStatus({
-              status: !iswalletOptionsOpen.status,
-              path: navigatingPath,
-            })
-          )
-        }
-        className="flex items-center justify-center w-[60vw] h-[4vh] rounded-md bg-[#FCD378] text-black text-[20px]"
-      >
-        {t("connectWallet")}
-      </div>
-    )}
-  </div>
-)}
-
+      )}
 
       {/* Modal */}
       {iswalletOptionsOpen.status && (

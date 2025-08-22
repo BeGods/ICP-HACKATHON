@@ -291,9 +291,27 @@ actor Main {
     try {
       let status = await IC.canister_status({ canister_id = canister_id });
       let isCtrl = contains(status.settings.controllers, principal_id);
+      Debug.print("Caller principal: " # Principal.toText(principal_id));
       return #ok(isCtrl);
     } catch (err) {
       return #err("Failed to fetch canister status");
+    };
+  };
+
+  public shared ({ caller }) func whoAmI() : async Text {
+    let principalText = Principal.toText(caller);
+
+    Debug.print("📢 Caller principal: " # principalText);
+
+    if (Principal.isAnonymous(caller)) {
+      Debug.print("❌ You are anonymous (principal: " # principalText # ")");
+
+      return "❌ You are anonymous (principal: " # principalText # ")";
+    } else {
+
+      Debug.print("✅ You are authenticated as principal: " # principalText);
+
+      return "✅ You are authenticated as principal: " # principalText;
     };
   };
 
@@ -423,9 +441,12 @@ actor Main {
 
   // Collection creation
   public shared ({ caller = user }) func createExtCollection(_title : Text, _symbol : Text, _metadata : Text) : async (Principal, Principal) {
+    Debug.print("Caller principal: " # Principal.toText(user));
+
     if (Principal.isAnonymous(user)) {
       throw Error.reject("User is not authenticated");
     };
+
     let canisterId = Principal.fromActor(Main);
     // Check if the caller is one of the controllers
     let controllerResult = await isController(canisterId, user);
@@ -434,7 +455,7 @@ actor Main {
       throw Error.reject("Unauthorized: Only admins can create a new collection.");
     };
 
-    Cycles.add<system>(500_500_000_000);
+    Cycles.add<system>(900_000_000_000);
     let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
     let extCollectionCanisterId = await extToken.getCanisterId();
     let collectionCanisterActor = actor (Principal.toText(extCollectionCanisterId)) : actor {

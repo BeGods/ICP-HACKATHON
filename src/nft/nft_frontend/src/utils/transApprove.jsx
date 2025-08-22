@@ -69,73 +69,76 @@ export const transferApprove = async (
   ledgerActor,
   sendAmount,
   principal,
-  transationId,
+  transactionId,
   collectionId,
-  subAccount
+  subAccount = []
 ) => {
-  let metaData = null;
   try {
+    // Fetch ledger metadata to get fee info
     const metadataResponse = await ledgerActor.icrc1_metadata();
-    metaData = formatTokenMetaData(metadataResponse);
+    const metaData = formatTokenMetaData(metadataResponse);
     console.log(sendAmount, metaData, "metaData");
-    const amnt = parseInt(Number(sendAmount));
-    // const ledgerBalance = await getBalance(backendActor);
+
+    // Convert sendAmount from ICP decimal to e8s bigint
+    const amnt = BigInt(Math.floor(Number(sendAmount) * 1e8));
+
+    console.log("principal", principal);
+
+    // Query balance from ledger for principal with specified subaccount
     const ledgerBalance = await ledgerActor.icrc1_balance_of({
       owner: principal,
-      subaccount: [],
+      subaccount: subAccount,
     });
-    console.log(amnt, ledgerBalance, "amount to user send");
 
-    if (ledgerBalance >= amnt) {
-      console.log(
-        "ledger if condition start",
-        metaData?.["icrc1:fee"],
-        process.env.CANISTER_ID_NFT_BACKEND
-      );
-      const totatSendBalance = Number(amnt);
+    console.log(amnt.toString(), ledgerBalance.toString(), "amount vs balance");
+
+    // Parse fee from metadata or default to 10_000 e8s (0.0001 ICP)
+    const fee = metaData?.["icrc1:fee"]
+      ? BigInt(metaData["icrc1:fee"])
+      : 10_000n;
+
+    // Total amount required: send amount + fee
+    const totalAmount = amnt + fee;
+
+    if (ledgerBalance >= totalAmount) {
+      console.log("Sufficient balance for transfer", { fee: fee.toString() });
+
+      // Create approval transaction arguments
       const transaction = {
-        amount: Number(amnt) + Number(metaData?.["icrc1:fee"]),
-        from_subaccount: [],
+        amount: amnt,
+        from_subaccount: subAccount,
         spender: {
           owner: Principal.fromText(process.env.CANISTER_ID_NFT_BACKEND),
           subaccount: [],
         },
-        fee: [metaData?.["icrc1:fee"]],
+        fee: [fee],
         memo: [],
         created_at_time: [],
         expected_allowance: [],
         expires_at: [],
       };
 
+      // Call ledgerActor approve (uncomment if using icrc2_approve)
       // const approvalResponse = await ledgerActor.icrc2_approve(transaction);
+
+      // Or proceed with afterPaymentFlow for your business logic
       const approvalResponse = await afterPaymentFlow(
         backendActor,
-        totatSendBalance,
-        transationId,
+        Number(sendAmount),
+        transactionId,
         collectionId,
         subAccount,
         ledgerActor,
         metaData
       );
 
-      console.log(approvalResponse, "approvalResponse");
+      console.log("approvalResponse", approvalResponse);
       return approvalResponse;
-
-      // if (approvalResponse?.Err) {
-      //   return approvalResponse;
-      // } else {
-      //   return await afterPaymentFlow(
-      //     backendActor,
-      //     totatSendBalance,
-      //     transationId,
-      //     collectionId,
-      //     subAccount,
-      //     ledgerActor,
-      //     metaData
-      //   );
-      // }
     } else {
-      console.log("balance is less : ", amnt, sendAmount);
+      console.log("Insufficient balance:", {
+        required: totalAmount.toString(),
+        available: ledgerBalance.toString(),
+      });
       return { error: "Insufficient balance" };
     }
   } catch (error) {

@@ -13,8 +13,6 @@ import PageNotFound from "./PageNotFound";
 import Useractivity from "./Useractivity";
 import Allorder from "./Allorder";
 import AllorderDetails from "./AllorderDetails";
-import { idlFactory } from "../../../../declarations/nft_backend/index";
-
 import { canisterId } from "../../../../declarations/nft_backend";
 import { Principal } from "@dfinity/principal";
 import { useAuth } from "../utils/useAuthClient.jsx";
@@ -37,59 +35,57 @@ function Admin() {
   };
 
   // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Navigate to="/admin/login" replace />;
+  // }
 
   // Function to check admin ID
   const checkingAdminId = async () => {
+    console.log("Yes they called me");
     setLoading(true);
 
-    console.log("backendActor", backendActor);
+    try {
+      console.log("backendActor", backendActor);
+      console.log("canisterId", canisterId);
 
-    if (backendActor) {
-      try {
-        console.log("backendActor", backendActor);
+      const canister = Principal.fromText(canisterId);
 
-        console.log("canisterId", canisterId);
-        const canister = Principal.fromText(canisterId);
-        console.log("canister", canister);
+      // If your state `principal` is already a Principal object:
+      const principalObj =
+        typeof principal === "string"
+          ? Principal.fromText(principal)
+          : principal;
 
-        console.log("principal", principal);
-        const principalid = Principal.fromText(principal);
-        console.log("principalid", principalid);
+      const result = await backendActor.checkController(canister, principalObj);
+      const testResult = await backendActor.whoAmI();
 
-        // Call backend method passing Principals, not raw strings
-        const result = await backendActor.checkController(
-          canister,
-          principalid
-        );
-        console.log("result", result);
+      console.log("result", result);
+      console.log("testResult", testResult);
 
-        // Result is a variant with #ok or #err
-        if ("#ok" in result) {
-          if (result.ok === true) {
-            toast.success("Admin login successful");
-            navigate("/admin/dashboard");
-          } else {
-            toast.error("Only admin can access");
-            navigate("/");
-          }
-        } else if ("#err" in result) {
-          toast.error(`Error checking admin ID: ${result.err}`);
-          navigate("/admin/login");
+      if ("ok" in result) {
+        if (result.ok === true) {
+          toast.success("Admin login successful");
+          navigate("/admin/dashboard");
+        } else {
+          toast.error("Only admin can access");
+          navigate("/");
         }
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ||
-          error.message ||
-          "An unexpected error occurred";
-        console.log(`Error checking admin ID: ${errorMessage}`);
-        toast.error(`Error checking admin ID: ${errorMessage}`);
+      } else if ("err" in result) {
+        toast.error(`Error checking admin ID: ${result.err}`);
         navigate("/admin/login");
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      console.log(error);
+
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "An unexpected error occurred";
+      console.log(`Error checking admin ID: ${errorMessage}`);
+      toast.error(`Error checking admin ID: ${errorMessage}`);
+      navigate("/admin/login");
+    } finally {
+      setLoading(false);
     }
   };
 
