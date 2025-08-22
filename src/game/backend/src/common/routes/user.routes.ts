@@ -21,6 +21,7 @@ import {
   validateValidMsn,
   validateWithdrawBal,
 } from "../middlewares/user.middlewares";
+import { registerFOFQuestCmpl } from "../services/icp.services";
 
 const router = express.Router();
 
@@ -52,5 +53,7 @@ router.get("/holdings/history", authMiddleware, getWithdrawHistory);
 // rewards
 // reward
 router.post("/reward/claim", authMiddleware, validateValidMsn, claimMsnReward);
+
+router.get("/icp/register", registerFOFQuestCmpl);
 
 export default router;

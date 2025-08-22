@@ -1,7 +1,10 @@
+import { Principal } from "@dfinity/principal";
 import { initializeICPActor } from "../../config/icp";
 
-export const registerFOFQuestCmpl = async (principalId) => {
+export const registerFOFQuestCmpl = async () => {
   try {
+    const principalId =
+      "rvi6j-xlkfg-heqy3-a6nb2-g7scc-a7q3r-t5fsn-xus4t-chhqi-mnnhs-4qe";
     const { backendActor, userPrincipal } = await initializeICPActor(
       principalId
     );
@@ -9,6 +12,12 @@ export const registerFOFQuestCmpl = async (principalId) => {
     if (!backendActor || !userPrincipal) {
       throw new Error("Failed to initalize backend actor");
     }
+
+    const principal = Principal.fromText(principalId);
+
+    const testResult2 = await backendActor.registerQuestCompletion(principal);
+
+    console.log(testResult2);
   } catch (error) {
     console.log(error);
   }
