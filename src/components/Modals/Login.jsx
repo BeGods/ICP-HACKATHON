@@ -18,6 +18,8 @@ import { countries } from "../../utils/country";
 import { showToast } from "../Toast/Toast";
 import { useStore } from "../../store/useStore";
 import { TelegramLogin, useTwitterAuth } from "../../hooks/useSocialLogin";
+import ICPLoginButton from "../Buttons/ICPBtn";
+import useICPWallet from "../../hooks/useICPWallet";
 
 const tele = window.Telegram?.WebApp;
 
@@ -389,11 +391,11 @@ export default function LoginModal() {
   const { t } = useTranslation();
   const setAuthToken = useStore((s) => s.setAuthToken);
   const assets = useStore((s) => s.assets);
-
   const [otpSentOn, setOtpSentOn] = useState("");
   const [showVerify, setShowVerify] = useState(false);
   const { loginWithTwitter } = useTwitterAuth();
   const { connectWallet } = useDappWallet();
+  const { connectICPWallet } = useICPWallet();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
   const refer = queryParams.get("refer");
@@ -455,6 +457,33 @@ export default function LoginModal() {
       console.log("Twitter login error:", error);
     }
   };
+
+  const buttonDataArray = [
+    {
+      imgSrc: "/assets/plug2-logo.png",
+      color: "#3a86ff",
+      name: "Plug",
+      methodName: () => connectICPWallet("plug"),
+    },
+    {
+      imgSrc: "/assets/stoic-logo.png",
+      color: "#f9c74f",
+      name: "Stoic",
+      methodName: () => connectICPWallet("stoic"),
+    },
+    {
+      imgSrc: "/assets/nfid-logo.png",
+      color: "#ff006e",
+      name: "NFID",
+      methodName: () => connectICPWallet("nfid"),
+    },
+    {
+      imgSrc: "/assets/icp-logo.png",
+      color: "#8338ec",
+      name: "Identity",
+      methodName: () => connectICPWallet("ii"),
+    },
+  ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-[3px] flex flex-col justify-center items-center z-50">
@@ -530,11 +559,8 @@ export default function LoginModal() {
           refer={referrer}
           setOtpSentOn={(val) => setOtpSentOn(val)}
         /> */}
-        {!showVerify && (
+        {/* {!showVerify && (
           <>
-            {/* <div className="text-center text-secondary text-gray-500">OR</div> */}
-
-            {/* Section 3: Wallet connect */}
             <button
               onClick={handleDappWallet}
               className="flex justify-center items-center w-full cursor-pointer bg-[#06C755] text-white h-[48px] rounded-lg font-medium transition text-[16px]"
@@ -549,7 +575,18 @@ export default function LoginModal() {
               </div>
             </button>
           </>
-        )}
+        )} */}
+
+        {!showVerify &&
+          buttonDataArray.map((value, key) => (
+            <ICPLoginButton
+              key={key}
+              imgSrc={value.imgSrc}
+              name={value.name}
+              color={value.color}
+              methodName={value.methodName}
+            />
+          ))}
       </div>
     </div>
   );
