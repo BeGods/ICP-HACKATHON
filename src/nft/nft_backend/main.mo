@@ -287,6 +287,267 @@ actor Main {
 
   public type Result = { #ok : Bool } or { #err : Text };
 
+  /* -------------------------------------------------------------------------- */
+  /*                         GAME                                 */
+  /* -------------------------------------------------------------------------- */
+
+  type CompletionRecord = {
+    completedAt : Time.Time;
+    mythology : Text;
+    minted : Bool;
+  };
+
+  // Fix 1: Explicitly type the TrieMap initialization
+  private var questCompletions : TrieMap.TrieMap<Principal, CompletionRecord> = TrieMap.TrieMap<Principal, CompletionRecord>(
+    Principal.equal,
+    Principal.hash,
+  );
+
+  // Fix 2: Proper public function declaration with return type
+  public shared ({ caller }) func registerQuestCompletion(principal_id : Principal, mythologyText : Text) : async Bool {
+    Debug.print("Caller principal: " # Principal.toText(caller));
+
+    // Check if user already completed the quest
+    switch (questCompletions.get(principal_id)) {
+      case (?_) {
+        Debug.print("FALSE - User already registered");
+        return false;
+      };
+      case null {
+        let completionRecord : CompletionRecord = {
+          completedAt = Time.now();
+          mythology = mythologyText;
+          minted = false;
+        };
+        questCompletions.put(principal_id, completionRecord);
+        Debug.print("Quest completion registered successfully");
+        return true;
+      };
+    };
+  };
+
+  public query func getAllQuestCompletionsTuple() : async [(Principal, CompletionRecord)] {
+    Iter.toArray(questCompletions.entries());
+  };
+
+  /* -------------------------------------------------------------------------- */
+  /*                         PAKCETS                                            */
+  /* -------------------------------------------------------------------------- */
+  type PacketMetadata = {
+    name : Text;
+    description : Text;
+    image : Text;
+    attributes : [{ trait_type : Text; value : Text }];
+  };
+
+  // EXT standard types
+  type PacketUser = {
+    #address : Text;
+    #principal : Principal;
+  };
+
+  // EXT Packet Canister interface
+  type ExtPacketCanister = actor {
+    ext_mint : (request : [(AccountIdentifier, Metadata)]) -> async [TokenIndex];
+    setMinter : (minter : Principal) -> async ();
+    ext_setCollectionMetadata : (name : Text, symbol : Text, metadata : Text) -> async ();
+  };
+
+  type PacketCanister = actor {
+    mint : ({
+      to : Principal;
+      token_id : Nat;
+      metadata : PacketMetadata;
+    }) -> async Result.Result<Nat, Text>;
+  };
+
+  // Intermediate type for conversion
+  type PacketEXTMetadata = {
+    #fungible : {
+      name : Text;
+      symbol : Text;
+      decimals : Nat8;
+      metadata : ?[Nat8];
+    };
+    #nonfungible : {
+      name : Text;
+      description : ?Text;
+      image : ?Text;
+      thumbnail : ?Text;
+      asset : Text;
+      attributes : ?[(Text, Text)];
+    };
+  };
+
+  private stable var nextTokenId : Nat = 1;
+
+  public query func getNextTokenId() : async Nat {
+    nextTokenId;
+  };
+
+  public query func getTotalMintedPackets() : async Nat {
+    nextTokenId - 1;
+  };
+
+  public shared ({ caller }) func mintPacketToUser(recipient : Principal) : async Result.Result<TokenIndex, Text> {
+    let tokenId = nextTokenId;
+    nextTokenId += 1;
+
+    let metadata = generateQuestPacketMetadata(recipient, Time.now(), tokenId);
+
+    try {
+      // Add cycles for canister creation
+      Cycles.add<system>(900_000_000_000);
+
+      // Create EXT Packet Canister
+      let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
+      let extPacketCanisterId = await extToken.getCanisterId();
+
+      // Cast to interface
+      let extPacketCanister = actor (Principal.toText(extPacketCanisterId)) : ExtPacketCanister;
+
+      // Debug logs for confirmation (removed problematic actor reference logging)
+      Debug.print("✅ New EXT Packet Canister created:");
+      Debug.print("   Canister ID: " # Principal.toText(extPacketCanisterId));
+
+      // Set this canister as minter
+      await extPacketCanister.setMinter(Principal.fromActor(Main));
+
+      // Set collection metadata
+      await extPacketCanister.ext_setCollectionMetadata(
+        "Quest Completion Collection",
+        "QUEST",
+        "A collection of Packets awarded for completing quests",
+      );
+
+      // Convert to EXT format and prepare for minting
+      let extMetadata = convertToExtMetadata(metadata);
+
+      // Convert PacketEXTMetadata to Metadata format expected by ext_mint
+      let metadataForMint : Metadata = switch (extMetadata) {
+        case (#nonfungible(nft)) {
+          let description = switch (nft.description) {
+            case (?desc) { desc };
+            case null { "" }; // Provide default empty string since description is required
+          };
+          let thumbnail = switch (nft.thumbnail) {
+            case (?thumb) { thumb };
+            case null {
+              switch (nft.image) {
+                case (?img) { img };
+                case null { "" };
+              };
+            }; // Use image as fallback since thumbnail is required
+          };
+
+          // Create base metadata container with NFT attributes
+          let baseMetadataValues : [MetadataValue] = [
+            ("name", #text(nft.name)),
+            ("description", #text(description)),
+            ("image", #text(switch (nft.image) { case (?img) { img }; case null { "" } })),
+            ("thumbnail", #text(thumbnail)),
+            ("asset", #text(nft.asset)),
+          ];
+
+          // Add attributes if they exist
+          let attributeValues : [MetadataValue] = switch (nft.attributes) {
+            case (?attrs) {
+              Array.map<(Text, Text), MetadataValue>(
+                attrs,
+                func((key, value)) = (key, #text(value)),
+              );
+            };
+            case null { [] };
+          };
+
+          // Combine base metadata with attributes using Array.append
+          let allMetadataValues = Array.append(baseMetadataValues, attributeValues);
+
+          #nonfungible({
+            name = nft.name;
+            description = description;
+            thumbnail = thumbnail;
+            asset = nft.asset;
+            metadata = ?#data(allMetadataValues);
+          });
+        };
+        case (#fungible(_)) {
+          return #err("Fungible tokens not supported for quest packets");
+        };
+      };
+
+      // Convert recipient to AccountIdentifier
+      let recipientAccountId : AccountIdentifier = switch (#principal(recipient)) {
+        case (#principal(p)) {
+          Principal.toText(p);
+        };
+        case (#address(addr)) { addr };
+      };
+
+      // Mint Packet
+      let tokenIndices = await extPacketCanister.ext_mint([(recipientAccountId, metadataForMint)]);
+
+      switch (tokenIndices.size()) {
+        case (0) {
+          nextTokenId -= 1;
+          #err("No tokens were minted");
+        };
+        case (_) {
+          let tokenIndex = tokenIndices[0];
+          Debug.print("✅ EXT Packet minted successfully with TokenIndex: " # Nat32.toText(tokenIndex));
+          #ok(tokenIndex);
+        };
+      };
+
+    } catch (error) {
+      nextTokenId -= 1;
+      Debug.print("❌ EXT Packet minting failed: " # Error.message(error));
+      #err("EXT Packet minting failed: " # Error.message(error));
+    };
+  };
+
+  private func convertToExtMetadata(packetMeta : PacketMetadata) : PacketEXTMetadata {
+    // Convert attributes to EXT format
+    let extAttributes : [(Text, Text)] = Array.map<{ trait_type : Text; value : Text }, (Text, Text)>(
+      packetMeta.attributes,
+      func(attr) = (attr.trait_type, attr.value),
+    );
+
+    #nonfungible({
+      name = packetMeta.name;
+      description = ?packetMeta.description;
+      image = ?packetMeta.image;
+      thumbnail = ?packetMeta.image; // Use same image as thumbnail
+      asset = packetMeta.name; // Asset name
+      attributes = ?extAttributes;
+    });
+  };
+
+  private func generateQuestPacketMetadata(recipient : Principal, completedAt : Time.Time, tokenId : Nat) : PacketMetadata {
+    let completionDate = Int.toText(completedAt);
+
+    {
+      name = "Quest Completion Packet #" # Nat.toText(tokenId);
+      description = "Awarded for completing the Main Quest. This Packet certifies that " #
+      Principal.toText(recipient) # " successfully completed all quest requirements.";
+      image = "https://media.publit.io/file/BeGods/nft/360px-fof.packet.egyptian.png";
+      attributes = [
+        { trait_type = "Quest Type"; value = "Main Quest" },
+        { trait_type = "Completion Date"; value = completionDate },
+        { trait_type = "Token ID"; value = Nat.toText(tokenId) },
+        { trait_type = "Rarity"; value = "Common" },
+        { trait_type = "Network"; value = "Internet Computer" },
+      ];
+    };
+  };
+
+  type UserPacket = {
+    tokenId : TokenIndex;
+    metadata : PacketMetadata;
+  };
+
+  // =============================================================================================================================
+
   public shared (msg) func checkController(canister_id : Principal, principal_id : Principal) : async Result {
     try {
       let status = await IC.canister_status({ canister_id = canister_id });
@@ -313,47 +574,6 @@ actor Main {
 
       return "✅ You are authenticated as principal: " # principalText;
     };
-  };
-
-  /* -------------------------------------------------------------------------- */
-  /*                         GAME                                 */
-  /* -------------------------------------------------------------------------- */
-
-  type CompletionRecord = {
-    completedAt : Time.Time;
-    minted : Bool;
-  };
-
-  // Fix 1: Explicitly type the TrieMap initialization
-  private var questCompletions : TrieMap.TrieMap<Principal, CompletionRecord> = TrieMap.TrieMap<Principal, CompletionRecord>(
-    Principal.equal,
-    Principal.hash,
-  );
-
-  // Fix 2: Proper public function declaration with return type
-  public shared ({ caller }) func registerQuestCompletion(principal_id : Principal) : async Bool {
-    Debug.print("Caller principal: " # Principal.toText(caller));
-
-    // Check if user already completed the quest
-    switch (questCompletions.get(principal_id)) {
-      case (?_) {
-        Debug.print("FALSE - User already registered");
-        return false;
-      };
-      case null {
-        let completionRecord : CompletionRecord = {
-          completedAt = Time.now();
-          minted = false;
-        };
-        questCompletions.put(principal_id, completionRecord);
-        Debug.print("Quest completion registered successfully");
-        return true;
-      };
-    };
-  };
-
-  public query func getAllQuestCompletionsTuple() : async [(Principal, CompletionRecord)] {
-    Iter.toArray(questCompletions.entries());
   };
 
   func contains(arr : [Principal], value : Principal) : Bool {
@@ -407,36 +627,6 @@ actor Main {
       };
     };
   };
-
-  //remove any collection from collection map
-  // public shared ({ caller = user }) func remove_collection_to_map(collection_id : Principal) : async Text {
-  //     if (Principal.isAnonymous(user)) {
-  //         throw Error.reject("User is not authenticated");
-  //     };
-  //     let canisterId = Principal.fromActor(Main);
-  //     // Check if the caller is one of the controllers
-  //     let controllerResult = await isController(canisterId,user);
-
-  //     if (controllerResult == false) {
-  //     return ("Unauthorized: Only admins can delete a collection.");
-  //     };
-
-  //     let userCollections = usersCollectionMap.get(user);
-  //     switch (userCollections) {
-  //         case null {
-  //             return "There are no collections added yet!";
-  //         };
-  //         case (?collections) {
-  //             // Convert the array to a list for easier manipulation
-  //             let collectionsList = List.fromArray(collections);
-  //             // Filter out the collection to be removed
-  //             let newList = List.filter<(Time.Time, Principal)>(collectionsList, func((_, collId)) { collId != collection_id });
-  //             // Convert the updated list back to an array and update the map
-  //             usersCollectionMap.put(user, List.toArray(newList));
-  //             return "Collection removed";
-  //         };
-  //     };
-  // };
 
   public shared ({ caller = user }) func removeCollection(collection_id : Principal) : async Text {
     if (Principal.isAnonymous(user)) {
