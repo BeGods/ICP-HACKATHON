@@ -76,6 +76,8 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 
 ## Usage Guide
 
+### 🔹 Project Setup
+
 <details>
 
 <summary> Follow the steps below to run the project locally on ICP network:</summary>
@@ -143,6 +145,8 @@ nft_backend: http://127.0.0.1:4943/?canisterId=<backend-canister-id>&id=<caniste
 
 </details>
 
+### 🔹 NFT Marketplace
+
 <details>
 
 <summary> To access the admin panel and add NFT collections, navigate to:
@@ -163,7 +167,57 @@ dfx canister status nft_backend
 
 </details>
 
-Once NFT collections are added, they will be reflected at `http://<frontend-canister-id>.localhost:4943/`. Users can connect their wallet and mint the NFTs.
+<details>
+
+<summary> To mint NFT on client side you need to add some ICP tokens to you wallet principal from local ledger canister: 
+</summary>
+
+```bash
+
+# get account_id for wallet principal
+dfx ledger account-id --of-principal <principal_id>
+
+# check canisters settings
+dfx ledger transfer --amount <amount> --memo 0 <account_id>
+# eg. dfx ledger transfer --amount 10 --memo 0 <account_id>
+
+# confirm wallet balance
+dfx ledger balance <account_id>
+
+```
+
+</details>
+
+> Once NFT collections are added, they will be reflected at `http://<frontend-canister-id>.localhost:4943/`. Users can connect their wallet and mint the NFTs.
+
+### 🔹 Game Launcher
+
+<details>
+
+<summary> Install packages for frontend and backend: 
+</summary>
+
+```bash
+
+# install backend packages
+cd src/game/backend
+npm i
+npm run dev
+
+# open new terminal
+
+# install frontend packages
+cd src/game/frontend
+npm i
+npm run dev
+
+```
+
+</details>
+
+> **Backend Requirement**: Install MongoDB on your system.
+
+> **Environment Setup**: Configure environment variables (see .env.example in each folder for reference).
 
 ## ICP Integration
 
@@ -213,6 +267,7 @@ Once NFT collections are added, they will be reflected at `http://<frontend-cani
 ## Important Links
 
 - 🎮 [Play on Line](https://www.dappportal.io/dapps/N67d3fe6a2da7d7180c987b0f) | [Play on Telegram](https://t.me/BeGods_bot/games)
+- ▶️ [Watch ICP Pitch Demo](https://www.youtube.com/watch?v=49O1Ha0cXic)
 - 📄 [Pitch Deck & Tokenomics](https://drive.google.com/drive/folders/1k2VxC3KxC9VDfZ_hym7dy3RtVzUG5T1A?usp=sharing)
 - 🌍 [Official Website](https://begods.games/) | 🐙 [GitHub](https://github.com/BeGods)
 - 🐦 [X (formerly Twitter)](https://x.com/BattleofGods_io)
