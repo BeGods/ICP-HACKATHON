@@ -28,6 +28,7 @@ export interface IFOFData extends IBaseGameData {
   isAutomataAutoPayEnabled: boolean; // rename field
   isBurstAutoPayEnabled: boolean; // rename field
   burstAutoPayExpiration: number; // rename field
+  mintedPackets: string[];
   claimedQuests: IClaimedQuest[];
   sharedQuests: mongoose.Types.ObjectId[];
 }

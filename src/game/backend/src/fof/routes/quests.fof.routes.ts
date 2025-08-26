@@ -5,9 +5,11 @@ import {
   claimQuest,
   claimQuestInfoRwrd,
   claimTask,
+  claimQuestPacket,
 } from "../controllers/quests.fof.controllers";
 import {
   verifyCompletedQuest,
+  verifyPakcetClaim,
   verifyValidQuest,
   verifyValidShareClaim,
 } from "../middlewares/quests.fof.middlewares";
@@ -18,6 +20,13 @@ router.post("/quests/claim", authMiddleware, verifyValidQuest, claimQuest);
 
 // other social quests
 router.post("/quests/social", authMiddleware, verifyValidQuest, claimTask);
+
+router.post(
+  "/packet/claim",
+  authMiddleware,
+  verifyPakcetClaim,
+  claimQuestPacket
+);
 
 // extra orb reward
 router.post(

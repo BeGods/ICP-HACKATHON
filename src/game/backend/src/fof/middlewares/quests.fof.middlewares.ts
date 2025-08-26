@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import userMythologies from "../../common/models/mythologies.models";
 import { areObjectsEqual } from "../../helpers/general.helpers";
 import { aggregateQuests } from "../services/quest.fof.services";
-import milestones from "../../common/models/milestones.models";
 import { fofGameData } from "../../common/models/game.model";
+import { mythOrder } from "../../utils/constants/variables";
 
 export const verifyValidQuest = async (req, res, next) => {
   try {
@@ -30,9 +30,9 @@ export const verifyValidQuest = async (req, res, next) => {
     // Check if user has enough orbs
     const orbValues = {};
 
-    const userOrbsData = await userMythologies.findOne({ userId: userId });
+    const userMythData = await userMythologies.findOne({ userId: userId });
 
-    userOrbsData.mythologies.forEach((mythology) => {
+    userMythData.mythologies.forEach((mythology) => {
       orbValues[mythology.name] = mythology.orbs;
     });
 
@@ -41,12 +41,12 @@ export const verifyValidQuest = async (req, res, next) => {
       throw new Error("Insufficient orbs to claim this quest.");
     }
 
-    const currMyth = userOrbsData.mythologies.filter(
+    const currMyth = userMythData.mythologies.filter(
       (item) => item.name === validQuest.mythology
     );
 
     req.quest = validQuest;
-    req.mythData = currMyth;
+    req.mythData = currMyth[0];
 
     next();
   } catch (error) {
@@ -98,6 +98,45 @@ export const verifyValidShareClaim = async (req, res, next) => {
 
     next();
   } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const verifyPakcetClaim = async (req, res, next) => {
+  try {
+    const { mythologyName } = req.body;
+    const userId = req.user._id;
+
+    const userGameData = await fofGameData.findOne({ userId: userId });
+    const userMythData = await userMythologies.findOne({ userId: userId });
+
+    // error if not match
+    const currMyth = userMythData.mythologies.filter(
+      (item) => item.name === mythologyName
+    )[0];
+
+    console.log(mythologyName);
+
+    if (!mythOrder.includes(mythologyName)) {
+      throw new Error("Invalid mythology name");
+    }
+
+    if (userGameData.mintedPackets.includes(mythologyName)) {
+      throw new Error("Packet already claimed");
+    }
+
+    if (currMyth.faith < 12) {
+      throw new Error(
+        "Invlaid request you dont have enough faith to claim packet."
+      );
+    }
+
+    req.mythData = currMyth;
+    req.userGameData = userGameData;
+    next();
+  } catch (error) {
+    console.log(error);
+
     res.status(400).json({ error: error.message });
   }
 };

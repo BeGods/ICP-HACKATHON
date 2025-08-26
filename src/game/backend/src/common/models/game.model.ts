@@ -56,6 +56,10 @@ const fofGameDataSchema = new Schema<IFOFData>(
       type: Number,
       default: 0,
     },
+    mintedPackets: {
+      type: [String],
+      default: [],
+    },
     claimedQuests: [
       {
         taskId: {

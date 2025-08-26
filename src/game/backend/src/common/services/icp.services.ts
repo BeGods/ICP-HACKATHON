@@ -1,10 +1,9 @@
 import { Principal } from "@dfinity/principal";
 import { initializeICPActor } from "../../config/icp";
 
-export const registerFOFQuestCmpl = async () => {
+export const registerFOFQuestCmpl = async (user, mythologyName) => {
   try {
-    const principalId =
-      "rvi6j-xlkfg-heqy3-a6nb2-g7scc-a7q3r-t5fsn-xus4t-chhqi-mnnhs-4qe";
+    const principalId = user.principalId;
     const { backendActor, userPrincipal } = await initializeICPActor(
       principalId
     );
@@ -15,18 +14,23 @@ export const registerFOFQuestCmpl = async () => {
 
     const principal = Principal.fromText(principalId);
 
-    const testResult2 = await backendActor.registerQuestCompletion(principal);
+    console.log(principal, mythologyName);
+
+    const testResult2 = await backendActor.registerQuestCompletion(
+      principal,
+      mythologyName
+    );
 
     console.log(testResult2);
+    return testResult2;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const mintQuestPackets = async () => {
+export const mintQuestPackets = async (user, mythology) => {
   try {
-    const principalId =
-      "rvi6j-xlkfg-heqy3-a6nb2-g7scc-a7q3r-t5fsn-xus4t-chhqi-mnnhs-4qe";
+    const principalId = user.principalId;
     const { backendActor, userPrincipal } = await initializeICPActor(
       principalId
     );
@@ -37,11 +41,13 @@ export const mintQuestPackets = async () => {
 
     const principal = Principal.fromText(principalId);
 
-    const time = BigInt(Date.now());
-
-    const testResult2 = await backendActor.mintNFTToUser(principal, time);
+    const testResult2 = await backendActor.mintPacketToUser(
+      principal,
+      mythology
+    );
 
     console.log(testResult2);
+    return testResult2;
   } catch (error) {
     console.log(error);
   }
