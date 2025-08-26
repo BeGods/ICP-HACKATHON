@@ -48,14 +48,14 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 ### `src/game/`
 
 - Includes the code for **Game I** and **Game II** , organized with reusable components for better structure and maintainability
-- `frontend/`: Built with **React + Vite** using reusable components.
-- `backend/`: Built with **Node.js**, uses **MongoDB** and **Redis** for data storage and caching.
+- [`frontend/`](./src/game/frontend): Built with **React + Vite** using reusable components.
+- [`backend/`](./src/game/backend): Built with **Node.js**, uses **MongoDB** and **Redis** for data storage and caching.
 
 ### `src/nft/`
 
 - Contains code of **NFT Booster System**.
-- `nft_frontend/`: **React + Vite** frontend with both **admin panel** and **client panel**.
-- `nft_backend/`: Built using **Motoko**, and runs fully **on-chain** with ICP.
+- [`nft_frontend/`](./src/nft/nft_frontend): **React + Vite** frontend with both **admin panel** and **client panel**.
+- [`nft_backend/`](./src/nft/nft_backend): Built using **Motoko**, and runs fully **on-chain** with ICP.
 - `nft_backend/main.mo`: Contains all controller functions for both user and admin NFT operations.
 
 ### `src/declarations/`
