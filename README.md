@@ -249,9 +249,9 @@ npm run dev
 
 - Frontend and backend of the **NFT Booster system** are deployed as **ICP canisters**, enabling a fully decentralized stack.
 
-### 5. Cycle Management
+### 5. Game Quest Packets
 
-- Utilizes `ExperimentalCycles` to manage computation cycles and ensure efficient resource usage.
+- Integrated NFT packet minting within the game launcher — players mint NFT packets upon completing quests, with quest completion and minting **records maintained on-chain**.
 
 ### 6. Principal-Based Access
 
@@ -279,7 +279,7 @@ npm run dev
 ## Important Links
 
 - 🎮 [Play on Line](https://www.dappportal.io/dapps/N67d3fe6a2da7d7180c987b0f) | [Play on Telegram](https://t.me/BeGods_bot/games)
-- ▶️ [Watch ICP Pitch Demo](https://www.youtube.com/watch?v=49O1Ha0cXic)
+- ▶️ [Watch ICP Pitch + Demo](https://www.youtube.com/watch?v=49O1Ha0cXic)
 - 📄 [Pitch Deck & Tokenomics](https://drive.google.com/drive/folders/1k2VxC3KxC9VDfZ_hym7dy3RtVzUG5T1A?usp=sharing)
 - 🌍 [Official Website](https://begods.games/) | 🐙 [GitHub](https://github.com/BeGods)
 - 🐦 [X (formerly Twitter)](https://x.com/BattleofGods_io)
