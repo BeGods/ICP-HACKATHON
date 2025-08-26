@@ -48,7 +48,7 @@ export const ForgesGuide = ({ handleClick, Header, Toggles, currTut }) => {
               b
             </div>
           </div>
-          <div className="h-[5.625rem] leading-8 maximize flex flex-col justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
+          <div className="h-[5.625rem] text-primary leading-8 maximize flex flex-col justify-center items-center  bottom-0 px-10 w-screen bg-black  text-white text-center uppercase">
             {i18n.language === "en" ? (
               <div className="flex flex-col justify-center items-center break-words">
                 <div>
