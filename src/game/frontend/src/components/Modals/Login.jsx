@@ -577,16 +577,18 @@ export default function LoginModal() {
           </>
         )} */}
 
-        {!showVerify &&
-          buttonDataArray.map((value, key) => (
-            <ICPLoginButton
-              key={key}
-              imgSrc={value.imgSrc}
-              name={value.name}
-              color={value.color}
-              methodName={value.methodName}
-            />
-          ))}
+        <div className="w-full">
+          {!showVerify &&
+            buttonDataArray.map((value, key) => (
+              <ICPLoginButton
+                key={key}
+                imgSrc={value.imgSrc}
+                name={value.name}
+                color={value.color}
+                methodName={value.methodName}
+              />
+            ))}
+        </div>
       </div>
     </div>
   );

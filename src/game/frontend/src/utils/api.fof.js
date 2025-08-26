@@ -286,6 +286,22 @@ export const claimQuest = async (questData, accessToken) => {
   }
 };
 
+export const claimPacket = async (mythology, accessToken) => {
+  let url = `${import.meta.env.VITE_API_FOF_URL}/packet/claim`;
+
+  try {
+    const response = await axios.post(url, { mythologyName: mythology }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(`Error: ${error.message}`);
+    throw error;
+  }
+};
+
 export const completeQuest = async (questData, accessToken) => {
   let url = `${import.meta.env.VITE_API_FOF_URL}/quests/complete`;
 
