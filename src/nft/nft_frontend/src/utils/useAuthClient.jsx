@@ -49,13 +49,15 @@ export const useAuthClient = () => {
 
   useEffect(() => {
     if (authClient) {
+      console.log("authclient trigger was called");
+
       updateClient(authClient);
     }
   }, [authClient]);
 
   const backend_id = process.env.CANISTER_ID_NFT_BACKEND;
   const frontend_id = process.env.CANISTER_ID_NFT_FRONTEND;
-  const ledgerCanId = process.env.CANISTER_ID_ICRC2_TOKEN_CANISTER;
+  const ledgerCanId = process.env.CANISTER_ID_ICP_LEDGER_CANISTER;
 
   // testnet
   // mainnet
@@ -264,7 +266,7 @@ export const useAuthClient = () => {
         setPrincipal(principal.toString());
         setIdentity(identity);
         setIsAuthenticated(true);
-        dispatch(setUser(principal.toString()));
+        dispatch(setUser(principal.toText()));
         dispatch(updateDisplayWalletOptionsStatus(false));
 
         if (navigatingPath === "/profile") navigate(navigatingPath);
@@ -395,7 +397,8 @@ export const useAuthClient = () => {
         setPrincipal(principal.toString());
         setIdentity(identity);
         setIsAuthenticated(true);
-        dispatch(setUser(principal));
+        console.log("dispatch-user", principal.toText());
+        dispatch(setUser(principal.toText()));
       } catch (error) {
         console.error("Login error:", error);
         reject(error);
@@ -411,6 +414,7 @@ export const useAuthClient = () => {
       setPrincipal(null);
       setBackendActor(null);
       setAccountId(null);
+      dispatch(setUser(null));
       localStorage.removeItem("auth");
       window.location.reload();
     } catch (error) {
@@ -437,6 +441,7 @@ export const useAuthClient = () => {
   const updateClient = async (client) => {
     try {
       const isConnected = await client.isAuthenticated();
+
       console.log("isConnected", isConnected);
 
       const identity = client.getIdentity();
@@ -460,8 +465,6 @@ export const useAuthClient = () => {
       if (!backend_id)
         throw new Error("backend_id is undefined. Check your .env setup!");
 
-      const canisterIdPrincipal = Principal.fromText(backend_id);
-
       // test all good
       // await backendActor.checkController(canisterIdPrincipal, principal);
       // await backendActor.whoAmI();
@@ -472,6 +475,13 @@ export const useAuthClient = () => {
       setLedgerActor(ledgerActor1);
       setBackendActor(backendActor);
       setShowButtonLoading(false);
+      console.log("dispatch-user", principal.toText());
+
+      const isAnonymous = await principal.isAnonymous();
+
+      if (!isAnonymous) {
+        dispatch(setUser(principal.toText()));
+      }
     } catch (error) {
       console.error("Authentication update error:", error);
     }
@@ -479,10 +489,14 @@ export const useAuthClient = () => {
 
   const reloadLogin = async () => {
     try {
-      if (
-        authClient.isAuthenticated() &&
-        !(await authClient.getIdentity().getPrincipal().isAnonymous())
-      ) {
+      console.log("reload login was called");
+
+      const isAnonymous = await authClient
+        .getIdentity()
+        .getPrincipal()
+        .isAnonymous();
+
+      if (authClient.isAuthenticated() && !isAnonymous) {
         console.log("Called");
         updateClient(authClient);
       }

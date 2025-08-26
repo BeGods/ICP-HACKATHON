@@ -190,7 +190,7 @@ actor Main {
     created_at_time : ?Time;
   };
 
-  let ExternalService_ICPLedger = actor "bkyz2-fmaaa-aaaaa-qaaaq-cai" : actor {
+  let ExternalService_ICPLedger = actor "ryjl3-tyaaa-aaaaa-aaaba-cai" : actor {
     send_dfx : shared SendArgs -> async Nat64;
     account_balance_dfx : shared query AccountBalanceArgs -> async ICPTs;
   };
@@ -389,13 +389,33 @@ actor Main {
     nextTokenId - 1;
   };
 
-  public shared ({ caller }) func mintPacketToUser(recipient : Principal) : async Result.Result<TokenIndex, Text> {
-    let tokenId = nextTokenId;
-    nextTokenId += 1;
-
-    let metadata = generateQuestPacketMetadata(recipient, Time.now(), tokenId);
+  public shared ({ caller }) func mintPacketToUser(recipient : Principal, mythologyText : Text) : async Result.Result<TokenIndex, Text> {
 
     try {
+      // --- PRE-CHECK ---
+
+      // --- allowed mythology ---
+      switch (questCompletions.get(recipient)) {
+        case (?record) {
+          if (record.mythology != mythologyText) {
+            return #err("Quest completion exists but for a different mythology");
+          };
+          if (record.minted) {
+            return #err("Quest Packet already minted for this user");
+          };
+        };
+        case null {
+          return #err("No quest completion record found for this user");
+        };
+      };
+
+      let tokenId = nextTokenId;
+      nextTokenId += 1;
+
+      let metadata = generateQuestPacketMetadata(recipient, Time.now(), tokenId, mythologyText);
+
+      // --- MINTING ---
+
       // Add cycles for canister creation
       Cycles.add<system>(900_000_000_000);
 
@@ -494,6 +514,20 @@ actor Main {
         };
         case (_) {
           let tokenIndex = tokenIndices[0];
+          // --- UPDATE QUEST RECORD ---
+          switch (questCompletions.get(recipient)) {
+            case (?rec) {
+              let updatedRecord : CompletionRecord = {
+                completedAt = rec.completedAt;
+                mythology = rec.mythology;
+                minted = true;
+              };
+              questCompletions.put(recipient, updatedRecord);
+            };
+            case null {
+              Debug.trap("Unexpected: Quest record missing after pre-check");
+            };
+          };
           Debug.print("✅ EXT Packet minted successfully with TokenIndex: " # Nat32.toText(tokenIndex));
           #ok(tokenIndex);
         };
@@ -523,16 +557,16 @@ actor Main {
     });
   };
 
-  private func generateQuestPacketMetadata(recipient : Principal, completedAt : Time.Time, tokenId : Nat) : PacketMetadata {
+  private func generateQuestPacketMetadata(recipient : Principal, completedAt : Time.Time, tokenId : Nat, questType : Text) : PacketMetadata {
     let completionDate = Int.toText(completedAt);
 
     {
-      name = "Quest Completion Packet #" # Nat.toText(tokenId);
+      name = questType # " Quest Completion Packet #" # Nat.toText(tokenId);
       description = "Awarded for completing the Main Quest. This Packet certifies that " #
       Principal.toText(recipient) # " successfully completed all quest requirements.";
-      image = "https://media.publit.io/file/BeGods/nft/360px-fof.packet.egyptian.png";
+      image = "https://media.publit.io/file/BeGods/nft/360px-fof.packet." # Text.toLowercase(questType) # ".png";
       attributes = [
-        { trait_type = "Quest Type"; value = "Main Quest" },
+        { trait_type = "Quest Type"; value = questType },
         { trait_type = "Completion Date"; value = completionDate },
         { trait_type = "Token ID"; value = Nat.toText(tokenId) },
         { trait_type = "Rarity"; value = "Common" },

@@ -1,3 +1,4 @@
+import { AccountIdentifier } from "@dfinity/ledger-icp";
 import { Principal } from "@dfinity/principal";
 
 const afterPaymentFlow = async (
@@ -74,57 +75,67 @@ export const transferApprove = async (
   subAccount = []
 ) => {
   try {
-    // Fetch ledger metadata to get fee info
+    // Debug the input
+    console.log("Raw sendAmount input:", sendAmount, typeof sendAmount);
+
+    // Convert sendAmount to proper decimal number first
+    const sendAmountDecimal =
+      typeof sendAmount === "string"
+        ? parseFloat(sendAmount)
+        : Number(sendAmount);
+
+    console.log("Parsed sendAmount as decimal:", sendAmountDecimal);
+
+    // Convert to e8s (multiply by 100,000,000) and ensure it's BigInt
+    const amnt = BigInt(Math.round(sendAmountDecimal));
+
+    console.log("Amount in e8s:", amnt.toString());
+
+    const accountIdentifier = AccountIdentifier.fromPrincipal({
+      principal: principal,
+    });
+
+    const balance = await ledgerActor.account_balance({
+      account: accountIdentifier.bytes,
+    });
+    console.log("acnt-idf-balance", balance);
+
     const metadataResponse = await ledgerActor.icrc1_metadata();
     const metaData = formatTokenMetaData(metadataResponse);
-    console.log(sendAmount, metaData, "metaData");
 
-    // Convert sendAmount from ICP decimal to e8s bigint
-    const amnt = BigInt(Math.floor(Number(sendAmount) * 1e8));
-
-    console.log("principal", principal);
-
-    // Query balance from ledger for principal with specified subaccount
     const ledgerBalance = await ledgerActor.icrc1_balance_of({
       owner: principal,
       subaccount: subAccount,
     });
 
-    console.log(amnt.toString(), ledgerBalance.toString(), "amount vs balance");
+    console.log("ledgerBalance", ledgerBalance);
+    console.log("Comparison:", {
+      amountToSend: amnt.toString(),
+      availableBalance: ledgerBalance.toString(),
+      amountInICP: sendAmountDecimal,
+      balanceInICP: Number(ledgerBalance) / 100_000_000,
+    });
 
-    // Parse fee from metadata or default to 10_000 e8s (0.0001 ICP)
+    // Ensure fee is BigInt
     const fee = metaData?.["icrc1:fee"]
       ? BigInt(metaData["icrc1:fee"])
       : 10_000n;
 
-    // Total amount required: send amount + fee
+    // Now both amnt and fee are BigInt, so addition works
     const totalAmount = amnt + fee;
 
+    // Both ledgerBalance and totalAmount are now BigInt
     if (ledgerBalance >= totalAmount) {
-      console.log("Sufficient balance for transfer", { fee: fee.toString() });
+      console.log("Sufficient balance for transfer", {
+        fee: fee.toString(),
+        totalNeeded: totalAmount.toString(),
+        available: ledgerBalance.toString(),
+      });
 
-      // Create approval transaction arguments
-      const transaction = {
-        amount: amnt,
-        from_subaccount: subAccount,
-        spender: {
-          owner: Principal.fromText(process.env.CANISTER_ID_NFT_BACKEND),
-          subaccount: [],
-        },
-        fee: [fee],
-        memo: [],
-        created_at_time: [],
-        expected_allowance: [],
-        expires_at: [],
-      };
-
-      // Call ledgerActor approve (uncomment if using icrc2_approve)
-      // const approvalResponse = await ledgerActor.icrc2_approve(transaction);
-
-      // Or proceed with afterPaymentFlow for your business logic
+      // Your transaction logic here...
       const approvalResponse = await afterPaymentFlow(
         backendActor,
-        Number(sendAmount),
+        sendAmountDecimal, // Pass the decimal amount
         transactionId,
         collectionId,
         subAccount,
@@ -132,12 +143,13 @@ export const transferApprove = async (
         metaData
       );
 
-      console.log("approvalResponse", approvalResponse);
       return approvalResponse;
     } else {
       console.log("Insufficient balance:", {
         required: totalAmount.toString(),
         available: ledgerBalance.toString(),
+        requiredICP: Number(totalAmount) / 100_000_000,
+        availableICP: Number(ledgerBalance) / 100_000_000,
       });
       return { error: "Insufficient balance" };
     }

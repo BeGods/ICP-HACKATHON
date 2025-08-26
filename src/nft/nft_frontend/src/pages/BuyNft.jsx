@@ -19,7 +19,7 @@ import { FaLock } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { transferApprove } from "../utils/transApprove";
 import { ToastContainer, toast } from "react-toastify";
-import ReactTimeAgo from 'react-time-ago'
+import ReactTimeAgo from "react-time-ago";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
@@ -28,9 +28,7 @@ const buyingStatus = {
   success: "SUCCESS",
 };
 
-
 import shareOptions from "./shareOptions.jsx";
-
 
 const BuyNft = () => {
   const [buyPopup, setbuyPopup] = useState(false);
@@ -38,37 +36,36 @@ const BuyNft = () => {
   const [cardDetails, setCardDetails] = useState({});
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const location = useLocation();
-  console.log("url",location)
-  console.log("url_i",window.location.host)
+  console.log("url", location);
+  console.log("url_i", window.location.host);
   const params = new URLSearchParams(location.search);
   const collectionId = params.get("collectionId");
   let collectionColor = params.get("type");
-  if(collectionColor === 'Golden'){
+  if (collectionColor === "Golden") {
     collectionColor = "gold";
   }
   const index = params.get("index");
   const { backendActor, ledgerActor, principal } = useAuth({});
   const [nftCardLoading, setNftCardLoading] = useState(true);
-  const [isDisplayBuyNow,updateIsDisplayBuyNow] = useState(true);
+  const [isDisplayBuyNow, updateIsDisplayBuyNow] = useState(true);
 
   const [collectionDetails, setCollectionDetails] = useState({});
   const [collectionDetailsLoading, setCollectionDetailsLoading] =
     useState(true);
-    const [showError,setShowError]=useState({
-      show:false,
-      msg:""
-    });
+  const [showError, setShowError] = useState({
+    show: false,
+    msg: "",
+  });
 
   const [tokenId, setTokenId] = useState("");
 
-  const [isOwned,updateIsOwnedStatus] = useState(true)
+  const [isOwned, updateIsOwnedStatus] = useState(true);
 
   let [popUpFirstLoading, setLoadingFirst] = useState(true);
   let [popUpSecondLoading, setLoadingSecond] = useState(false);
   let [color, setColor] = useState("#ffffff");
 
-
-  const [sharePopup,updateSharePopup] = useState(false);
+  const [sharePopup, updateSharePopup] = useState(false);
   const toggleBuyPopup = () => {
     setbuyPopup(!buyPopup);
     setBuyingStatus(buyingStatus.payment);
@@ -104,7 +101,7 @@ const BuyNft = () => {
   };
 
   const onClickBuyButton = async () => {
-    setShowError({show:false,msg:""});
+    setShowError({ show: false, msg: "" });
     setLoadingFirst(true);
     setLoadingSecond(false);
     setBuyingStatus(buyingStatus.payment);
@@ -133,10 +130,12 @@ const BuyNft = () => {
       const transationId = result1.ok[0];
       const subAccount = [];
       console.log("principal", principal);
+      console.log(cardDetails.cardPrice);
+
       const resultTxn = await transferApprove(
         backendActor,
         ledgerActor,
-        parseInt(cardDetails.cardPrice),
+        parseFloat(cardDetails.cardPrice),
         Principal.fromText(principal),
         transationId,
         collectionId,
@@ -145,7 +144,7 @@ const BuyNft = () => {
       console.log(resultTxn, "this is the finale result");
       if (resultTxn === true) {
         setLoadingSecond(false);
-        updateIsOwnedStatus(true)
+        updateIsOwnedStatus(true);
         setBuyingStatus(buyingStatus.success);
         toast.success("Payment Success!", {
           position: "top-center",
@@ -168,7 +167,7 @@ const BuyNft = () => {
           progress: undefined,
           theme: "light",
         });
-        setShowError({show:true,msg:resultTxn.error});
+        setShowError({ show: true, msg: resultTxn.error });
         setLoadingFirst(false);
         setLoadingSecond(false);
         setBuyingStatus(buyingStatus.payment);
@@ -201,12 +200,12 @@ const BuyNft = () => {
     buyNow,
     artistName,
     nftType,
-    nftSeason
+    nftSeason,
   } = t("buyNowDetails");
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  },[]);
+  }, []);
 
   const fetchCardDetails = async () => {
     console.log(collectionId, index);
@@ -216,7 +215,7 @@ const BuyNft = () => {
       principal
     );
     updateIsOwnedStatus(result[0][3].length === 0);
-     console.log("buying nft details" , result);
+    console.log("buying nft details", result);
     // console.log("buying nft details 0 1" , result[0][1]);
     // console.log("buying nft details 0 2" , result[0][2].nonfungible.metadata[0]);
     // console.log("buying nft details 2" , result[2]);
@@ -230,7 +229,7 @@ const BuyNft = () => {
     const cardDetails = result[0][2].nonfungible;
     // const metadata = JSON.parse(cardDetails.metadata[0].json);
     const cardPrice = parseInt(result[0][3]);
-    let date,artist,type,season,fullImg;
+    let date, artist, type, season, fullImg;
     cardDetails?.metadata.forEach((item) => {
       const parsedData = JSON.parse(item.json);
       console.log(parsedData);
@@ -243,7 +242,7 @@ const BuyNft = () => {
       season = parsedData.nftSeason;
       fullImg = parsedData.nftFullImage;
     });
-console.log("full img",fullImg)
+    console.log("full img", fullImg);
     const updatedCardDetails = {
       cardName: cardDetails?.name,
       cardType: parsedMetadata?.nftTypes,
@@ -252,14 +251,14 @@ console.log("full img",fullImg)
       cardPrice: cardPrice,
       standards: parsedMetadata.standards,
       chains: parsedMetadata.chains,
-      date : date,
-      contactAddress:principal,
+      date: date,
+      contactAddress: principal,
       artist,
       type,
       season,
-      fullImg
+      fullImg,
     };
-    console.log("updated Card Details", updatedCardDetails)
+    console.log("updated Card Details", updatedCardDetails);
     setCardDetails(updatedCardDetails);
     setNftCardLoading(false);
   };
@@ -303,16 +302,15 @@ console.log("full img",fullImg)
 
   useEffect(() => {
     fetchCollectionDetails();
-    
   }, []);
 
-  if(buyPopup){
-    document.body.style.overflow="hidden"
-  }else{
-    document.body.style.overflow = "auto"
+  if (buyPopup) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
   }
 
- const [isDisplayFullImage,updateDisplayFullImage] = useState(false);
+  const [isDisplayFullImage, updateDisplayFullImage] = useState(false);
 
   return (
     <div className={`font-caslon}`}>
@@ -333,7 +331,6 @@ console.log("full img",fullImg)
         {/* for mobile screen */}
         <div className="max-w-[1920px] mx-auto mt-8 flex flex-col xl:hidden items-center justify-center overflow-hidden ">
           <div className="w-[80%] flex text-white justify-center items-center">
-           
             {nftCardLoading ? (
               <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                 <div className="flex flex-col items-center justify-center">
@@ -351,14 +348,10 @@ console.log("full img",fullImg)
                 </h2>
               </div>
             )}
-            
           </div>
           <div className="flex items-center mt-16">
             <div>
-              <div
-                className="w-full h-full rounded-lg shadow-lg"
-               
-              >
+              <div className="w-full h-full rounded-lg shadow-lg">
                 {nftCardLoading ? (
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <div className="w-full h-full">
@@ -366,36 +359,48 @@ console.log("full img",fullImg)
                     </div>
                   </SkeletonTheme>
                 ) : (
-               
-                    <div className="buy-nft-card"  style={{ boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}` }}>
-                  <img
-                    src={cardDetails?.cardImageUrl}
-                    alt=""
-                    className="object-cover w-full h-full rounded-lg shadow-lg"
-                    style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
-                    
-                  />
-                  
+                  <div
+                    className="buy-nft-card"
+                    style={{
+                      boxShadow: `0px 0px 400px 16px ${collectionColor.toLowerCase()}`,
+                    }}
+                  >
+                    <img
+                      src={cardDetails?.cardImageUrl}
+                      alt=""
+                      className="object-cover w-full h-full rounded-lg shadow-lg"
+                      style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
+                    />
                   </div>
-                 
                 )}
                 <div className="flex justify-center items-center mt-4 ">
-                <button onClick={()=>updateDisplayFullImage(true)} className="h-35px px-3 bg-transparent border border-[#ffffff] text-[#ffffff] rounded">view image</button>
+                  <button
+                    onClick={() => updateDisplayFullImage(true)}
+                    className="h-35px px-3 bg-transparent border border-[#ffffff] text-[#ffffff] rounded"
+                  >
+                    view image
+                  </button>
                 </div>
-                <div className="h-[20px]  mt-4" onClick={()=>updateSharePopup(!sharePopup)}>
-                  <CiShare2 className="object-cover w-full h-full cursor-pointer" color="white" />
+                <div
+                  className="h-[20px]  mt-4"
+                  onClick={() => updateSharePopup(!sharePopup)}
+                >
+                  <CiShare2
+                    className="object-cover w-full h-full cursor-pointer"
+                    color="white"
+                  />
                 </div>
               </div>
               {!isOwned && (
                 <div className="mt-8 mx-8 w-[195px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
-                <button
-                  className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                  disabled={nftCardLoading}
-                  onClick={onClickBuyButton}
-                >
-                  Buy for {cardDetails.cardPrice / 100000000} ICP
-                </button>
-              </div>
+                  <button
+                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                    disabled={nftCardLoading}
+                    onClick={onClickBuyButton}
+                  >
+                    Buy for {cardDetails.cardPrice / 100000000} ICP
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -419,7 +424,7 @@ console.log("full img",fullImg)
               </SkeletonTheme>
             ) : (
               <>
-              <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{artistName}</h1>
                   <h1>{cardDetails?.artist}</h1>
                 </div>
@@ -433,11 +438,16 @@ console.log("full img",fullImg)
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{contactAddress}</h1>
-                  <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
+                  <h1>
+                    {cardDetails.contactAddress.slice(0, 4)}...
+                    {cardDetails.contactAddress.slice(-4)}
+                  </h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{token}</h1>
-                  <h1>{tokenId.slice(0,4)}...{tokenId.slice(-4)}</h1>
+                  <h1>
+                    {tokenId.slice(0, 4)}...{tokenId.slice(-4)}
+                  </h1>
                 </div>
                 <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
                   <h1>{tokenStandard}</h1>
@@ -447,15 +457,14 @@ console.log("full img",fullImg)
                   <h1>{chain}</h1>
                   <h1>{cardDetails?.chains[0]}</h1>
                 </div>
-                {
-                  cardDetails && cardDetails?.date && (
-                    <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
-                  <h1>{lastUpdated}</h1>
-                  <h1><ReactTimeAgo date={cardDetails.date} locale="en" /></h1>
-                </div>
-                  )
-                }
-                
+                {cardDetails && cardDetails?.date && (
+                  <div className="flex items-center justify-between text-[16px] font-[500] leading-[20px] text-[#FFFFFF]">
+                    <h1>{lastUpdated}</h1>
+                    <h1>
+                      <ReactTimeAgo date={cardDetails.date} locale="en" />
+                    </h1>
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -475,8 +484,6 @@ console.log("full img",fullImg)
           <div className="hidden w-full sm:flex">
             <div className="mt-8 w-[50%] flex flex-col space-y-8 ml-[10%]">
               <div className="flex justify-center w-full text-white ">
-                
-
                 {nftCardLoading ? (
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <div className="flex flex-col items-center justify-center">
@@ -494,7 +501,6 @@ console.log("full img",fullImg)
                     </h2>
                   </div>
                 )}
-                
               </div>
               {nftCardLoading ? (
                 <SkeletonTheme baseColor="#161616" highlightColor="#202020">
@@ -560,7 +566,10 @@ console.log("full img",fullImg)
                   ) : (
                     <>
                       <h1>{contactAddress}</h1>
-                      <h1>{cardDetails.contactAddress.slice(0,4)}...{cardDetails.contactAddress.slice(-4)}</h1>
+                      <h1>
+                        {cardDetails.contactAddress.slice(0, 4)}...
+                        {cardDetails.contactAddress.slice(-4)}
+                      </h1>
                     </>
                   )}
                 </div>
@@ -573,7 +582,9 @@ console.log("full img",fullImg)
                   ) : (
                     <>
                       <h1>{token}</h1>
-                      <h1>{tokenId.slice(0,4)}...{tokenId.slice(-4)}</h1>
+                      <h1>
+                        {tokenId.slice(0, 4)}...{tokenId.slice(-4)}
+                      </h1>
                     </>
                   )}
                 </div>
@@ -612,29 +623,31 @@ console.log("full img",fullImg)
                   ) : (
                     <>
                       <h1>{lastUpdated}</h1>
-                      <h1><ReactTimeAgo date={cardDetails?.date || 0} locale="en" /></h1>
+                      <h1>
+                        <ReactTimeAgo
+                          date={cardDetails?.date || 0}
+                          locale="en"
+                        />
+                      </h1>
                     </>
                   )}
                 </div>
               </div>
               {!isOwned && (
                 <div className="ml-[40%]  w-[190px] lg:w-[195px] p-2 border-[1px] border-[#FCD37B]">
-                <button
-                  className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
-                  disabled={nftCardLoading}
-                  onClick={onClickBuyButton}
-                >
-                  Buy for {cardDetails.cardPrice / 100000000} ICP
-                </button>
-                
-              </div>
+                  <button
+                    className="w-full bg-[#FCD37B] border border-[#FCD37B] rounded-[3px] hover:bg-[#D4A849] hover:border-[#D4A849] h-[35px] font-caslon font-semibold "
+                    disabled={nftCardLoading}
+                    onClick={onClickBuyButton}
+                  >
+                    Buy for {cardDetails.cardPrice / 100000000} ICP
+                  </button>
+                </div>
               )}
-              
             </div>
             <div className="flex w-[40%] ml-[20%] ">
               {nftCardLoading ? (
-                <div className="mt-[30%] shadow-lg rounded-lg mb-5"
-                >
+                <div className="mt-[30%] shadow-lg rounded-lg mb-5">
                   <SkeletonTheme baseColor="#161616" highlightColor="#202020">
                     <Skeleton
                       count={1}
@@ -646,30 +659,39 @@ console.log("full img",fullImg)
                 </div>
               ) : (
                 <>
-                <div className="flex flex-col">
-                <div
-                    className=" mt-[40%] shadow-lg rounded-lg buy-nft-card"
-                    style={{ boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}` }}
-
-                  >
-
-                  <img
-                    src={cardDetails?.cardImageUrl}
-                    alt=""
-                    className="object-cover w-full h-full rounded-lg shadow-lg"
-                    style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
-                  />
-                  
-                </div >
-                <div className="flex justify-center items-center  mt-8">
-                <button onClick={()=>updateDisplayFullImage(true)} className="h-35px px-3 bg-transparent border border-[#ffffff] text-[#ffffff] mr-2 rounded">view image</button>
-                <div className="h-[20px]" onClick={()=>updateSharePopup(!sharePopup)}>
-                <CiShare2 className="object-cover w-full h-full cursor-pointer" color="white" />
-              </div>
-                </div>
-                </div>
-                
-              </>
+                  <div className="flex flex-col">
+                    <div
+                      className=" mt-[40%] shadow-lg rounded-lg buy-nft-card"
+                      style={{
+                        boxShadow: `0px 0px 800px 0px ${collectionColor.toLowerCase()}`,
+                      }}
+                    >
+                      <img
+                        src={cardDetails?.cardImageUrl}
+                        alt=""
+                        className="object-cover w-full h-full rounded-lg shadow-lg"
+                        style={{ boxShadow: "0px 0px 20.8px 5px #000000" }}
+                      />
+                    </div>
+                    <div className="flex justify-center items-center  mt-8">
+                      <button
+                        onClick={() => updateDisplayFullImage(true)}
+                        className="h-35px px-3 bg-transparent border border-[#ffffff] text-[#ffffff] mr-2 rounded"
+                      >
+                        view image
+                      </button>
+                      <div
+                        className="h-[20px]"
+                        onClick={() => updateSharePopup(!sharePopup)}
+                      >
+                        <CiShare2
+                          className="object-cover w-full h-full cursor-pointer"
+                          color="white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -678,9 +700,7 @@ console.log("full img",fullImg)
           <div className="flex items-center justify-center xl:hidden  w-[100%] xl:w-[130%] lg:pl-[3%]">
             <img src="/Hero/celtic_hero.png" alt="" />
           </div>
-          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]"
-          
-          >
+          <div className="hidden xl:flex w-[100%] xl:w-[130%] lg:pl-[3%]">
             <img src="/Hero/Mask group.png" alt="" />
           </div>
 
@@ -740,104 +760,102 @@ console.log("full img",fullImg)
                     <RxCross2 size={20} />
                   </button>
                 </div>
-                  {
-                    (showError.show) && (
-                    <div className=" flex flex-col items-center justify-center">
-                        <h1 className="text-3xl text-red-500">Error !</h1>
-                        <p className="my-2 text-xl">{showError.msg}</p>
-                    </div>
-                    )
-                  }
-               
+                {showError.show && (
+                  <div className=" flex flex-col items-center justify-center">
+                    <h1 className="text-3xl text-red-500">Error !</h1>
+                    <p className="my-2 text-xl">{showError.msg}</p>
+                  </div>
+                )}
 
-                {!showError.show && currentBuyingStatus === buyingStatus.payment && (
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="flex items-center w-[90%]">
-                      {popUpFirstLoading ? (
-                        <div className="relative flex items-center justify-center ">
-                          <MoonLoader
-                            color={color}
-                            loading={popUpFirstLoading}
-                            size={26}
-                            aria-label="Loading Spinner"
-                            data-testid="loader"
-                            className="mr-2"
+                {!showError.show &&
+                  currentBuyingStatus === buyingStatus.payment && (
+                    <div className="flex flex-col items-center justify-center">
+                      <div className="flex items-center w-[90%]">
+                        {popUpFirstLoading ? (
+                          <div className="relative flex items-center justify-center ">
+                            <MoonLoader
+                              color={color}
+                              loading={popUpFirstLoading}
+                              size={26}
+                              aria-label="Loading Spinner"
+                              data-testid="loader"
+                              className="mr-2"
+                            />
+                            <FaLock
+                              className="absolute left-2.5 bottom-2.5 opacity-50"
+                              size={15}
+                              color="#ffffff"
+                            />
+                          </div>
+                        ) : (
+                          <IoMdCheckmarkCircle
+                            color="green"
+                            size={30}
+                            className="mt-0 mr-3"
                           />
-                          <FaLock
-                            className="absolute left-2.5 bottom-2.5 opacity-50"
-                            size={15}
-                            color="#ffffff"
+                        )}
+                        {popUpFirstLoading ? (
+                          <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10">
+                            <h1 className="absolute z-10">
+                              Payment is initiated....
+                            </h1>
+                          </div>
+                        ) : (
+                          <div className="w-[80%] h-[40px] bg-green-900 border-none border-slate-400 flex pl-5 items-center rounded-md">
+                            <h1 className="absolute z-10">
+                              Payment is initiated....
+                            </h1>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center w-[90%]">
+                        {!popUpFirstLoading && popUpSecondLoading && (
+                          <div className="relative flex items-center justify-center mt-3 ">
+                            <MoonLoader
+                              color={color}
+                              loading={popUpSecondLoading}
+                              size={26}
+                              aria-label="Loading Spinner"
+                              data-testid="loader"
+                              className="mr-2"
+                            />
+                            <FaLock
+                              className="absolute left-2.5 bottom-2.5 opacity-50"
+                              size={15}
+                              color="#ffffff"
+                            />
+                          </div>
+                        )}
+                        {!popUpFirstLoading && !popUpSecondLoading && (
+                          <IoMdCheckmarkCircle
+                            color="green"
+                            size={30}
+                            className="mt-2 mr-3"
                           />
-                        </div>
-                      ) : (
-                        <IoMdCheckmarkCircle
-                          color="green"
-                          size={30}
-                          className="mt-0 mr-3"
-                        />
-                      )}
-                      {popUpFirstLoading ? (
-                        <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10">
-                          <h1 className="absolute z-10">
-                            Payment is initiated....
-                          </h1>
-                        </div>
-                      ) : (
-                        <div className="w-[80%] h-[40px] bg-green-900 border-none border-slate-400 flex pl-5 items-center rounded-md">
-                          <h1 className="absolute z-10">
-                            Payment is initiated....
-                          </h1>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center w-[90%]">
-                      {!popUpFirstLoading && popUpSecondLoading && (
-                        <div className="relative flex items-center justify-center mt-3 ">
-                          <MoonLoader
-                            color={color}
-                            loading={popUpSecondLoading}
-                            size={26}
-                            aria-label="Loading Spinner"
-                            data-testid="loader"
-                            className="mr-2"
-                          />
-                          <FaLock
-                            className="absolute left-2.5 bottom-2.5 opacity-50"
-                            size={15}
-                            color="#ffffff"
-                          />
-                        </div>
-                      )}
-                      {!popUpFirstLoading && !popUpSecondLoading && (
-                        <IoMdCheckmarkCircle
-                          color="green"
-                          size={30}
-                          className="mt-2 mr-3"
-                        />
-                      )}
-                      {popUpSecondLoading ? (
-                        <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10 mt-3">
-                          <h1 className="absolute z-10">
-                            Buying in Progress....
-                          </h1>
-                        </div>
-                      ) : (
-                        <div
-                          className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
+                        )}
+                        {popUpSecondLoading ? (
+                          <div className="w-[80%] h-[40px]  rounded-md relative paymentbutton flex items-center pl-10 mt-3">
+                            <h1 className="absolute z-10">
+                              Buying in Progress....
+                            </h1>
+                          </div>
+                        ) : (
+                          <div
+                            className={`w-[80%] h-[40px] border-none border-slate-400 flex items-center mt-3 pl-5 rounded-md
                                        ${
                                          popUpFirstLoading
                                            ? "bg-[rgba(49,49,49,0.8)] text-gray-500 opacity-30 pointer-events-none ml-11"
                                            : "bg-green-900 text-white"
                                        }`}
-                        >
-                          <h1 className="absolute z-10">
-                            Buying in Progress....
-                          </h1>
-                        </div>
-                      )}
+                          >
+                            <h1 className="absolute z-10">
+                              Buying in Progress....
+                            </h1>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
                 {currentBuyingStatus === buyingStatus.success &&
                   !popUpSecondLoading && (
@@ -872,28 +890,30 @@ console.log("full img",fullImg)
       )}
       {sharePopup && (
         <div className="fixed top-0 bottom-0 left-0 right-0 z-50 w-screen h-screen">
-        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
-          <div className="flex items-center justify-center h-screen">
-            <div
-              className=" w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 pb-8 rounded-md  drop-shadow-lg "
-            >
-              <div className=" flex items-center justify-end">
-                <button
-                  className="text-[#ffffff]  bottom-1 top-1 z-10"
-                  onClick={() => updateSharePopup(!sharePopup)}
-                >
-                  <RxCross2 size={20} />
-                </button>
-              </div>
-              
-                  
+          <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+            <div className="flex items-center justify-center h-screen">
+              <div className=" w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 pb-8 rounded-md  drop-shadow-lg ">
+                <div className=" flex items-center justify-end">
+                  <button
+                    className="text-[#ffffff]  bottom-1 top-1 z-10"
+                    onClick={() => updateSharePopup(!sharePopup)}
+                  >
+                    <RxCross2 size={20} />
+                  </button>
+                </div>
 
                 <div className="flex flex-wrap items-center">
-                {shareOptions.map((option, index) => {
+                  {shareOptions.map((option, index) => {
                     const Button = option.button;
                     return (
-                      <div key={index} className="h-[60px] w-[65px] md:w-[80px] lg:w-[65px] lx:w-[80px] flex justify-center items-center">
-                        <Button url={`https://${window.location.host}/${location.pathname}?${params}`} className="flex flex-col items-center justify-center">
+                      <div
+                        key={index}
+                        className="h-[60px] w-[65px] md:w-[80px] lg:w-[65px] lx:w-[80px] flex justify-center items-center"
+                      >
+                        <Button
+                          url={`https://${window.location.host}/${location.pathname}?${params}`}
+                          className="flex flex-col items-center justify-center"
+                        >
                           {option.icon}
                           <span className="text-xs">{option.displayText}</span>
                         </Button>
@@ -901,42 +921,36 @@ console.log("full img",fullImg)
                     );
                   })}
                 </div>
-            
-          </div> 
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-  </div>
-        
       )}
       {isDisplayFullImage && (
         <div className="fixed top-0 bottom-0 left-0 right-0 z-50 w-screen h-screen">
-        <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
-          <div className="flex items-center justify-center h-screen">
-            <div
-              className=" w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 pb-8 rounded-md  drop-shadow-lg "
-            >
-              <div className=" flex items-center justify-end">
-                <button
-                  className="text-[#ffffff]  bottom-1 top-1 z-10"
-                  onClick={() => updateDisplayFullImage(false)}
-                >
-                  <RxCross2 size={20} />
-                </button>
-                
-              </div>
+          <div className="w-screen h-screen top-0 bottom-0 right-0 left-0 fixed bg-[rgba(49,49,49,0.8)]">
+            <div className="flex items-center justify-center h-screen">
+              <div className=" w-[90vw] lg:w-[30vw] bg-[#111] text-white font-caslon p-5 pb-8 rounded-md  drop-shadow-lg ">
+                <div className=" flex items-center justify-end">
+                  <button
+                    className="text-[#ffffff]  bottom-1 top-1 z-10"
+                    onClick={() => updateDisplayFullImage(false)}
+                  >
+                    <RxCross2 size={20} />
+                  </button>
+                </div>
 
-             <div className="flex justify-center items-center">
-             <img src={cardDetails?.fullImg} />
-             </div>
-            
-          </div> 
+                <div className="flex justify-center items-center">
+                  <img src={cardDetails?.fullImg} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-  </div>
       )}
       <ToastContainer />
     </div>
   );
 };
 
-export default BuyNft
+export default BuyNft;

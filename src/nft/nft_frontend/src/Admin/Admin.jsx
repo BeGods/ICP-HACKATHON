@@ -36,7 +36,7 @@ function Admin() {
 
   // Redirect to login if not authenticated
   // if (!isAuthenticated) {
-  //   return <Navigate to="/admin/login" replace />;
+  //   return <Navigate to="/admin/login"  />;
   // }
 
   // Function to check admin ID

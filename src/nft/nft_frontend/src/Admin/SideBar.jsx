@@ -102,7 +102,6 @@ function SidebarContent({ onClose, ...rest }) {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
 
   const logoutHandler = () => {
     dispatch(logoutUserAndClear());
