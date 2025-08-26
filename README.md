@@ -7,7 +7,7 @@ Blending physical and digital play, BeGods offers a groundbreaking phygital expe
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [System Architecture](#system-architecture)
+2. [Project Architecture](#project-architecture)
 3. [Usage Guide](#usage-guide)
 4. [ICP Integration](#icp-integration)
 5. [Future Scope](#icp-integration)
@@ -23,7 +23,7 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 
 > **Note:** This mono repo was made by merging the separate game frontend, game backend, and NFT system **private** repositories, which were originally hosted under our [GitHub organization](https://github.com/BeGods).
 
-## System Architecture
+## Project Architecture
 
 ```
 ├── .env.example               # Environment variables template
@@ -85,6 +85,19 @@ nft_frontend → # Static asset canister serving the NFT dApp frontend
 ### `mops.toml`
 
 - Used to **manage Motoko dependencies** for building and deploying ICP canisters.
+
+### `nft structure`
+
+```bash
+- Name → eg: `ODIN`, `DANU`, `THOR`
+- IMG01 → Higher resolution image
+- IMG02 → Lower resolution image
+- Artist → Creator of the artwork (e.g., Mitchelle Nolte, Peter Rubens)
+- Rarity → (D) Divine, (M) Mythical, (R) Rare, (U) Uncommon, (C) Common, (P) Promo, (Mi) Misc
+- Collection → Greek, Celtic, Norse, Egyptian
+- Season → (O) Origins/Stone Age, (G) Golden Age, (S) Silver Age, (B) Bronze Age
+- Type → Quest, Character, Item, Assets...
+```
 
 ## Usage Guide
 
