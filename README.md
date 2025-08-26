@@ -66,6 +66,18 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 
 - Configuration file for **managing all ICP canister settings** (currently used only for the NFT system).
 
+```bash
+icrc2_token_canister → # Custom ICP token canister for handling fungible token operations (ICRC-2 standard).
+
+icp_ledger_canister → # Official ICP ledger canister to manage ICP transfers and balances.
+
+internet_identity → # Authentication canister for login with Internet Identity.
+
+nft_backend → # Motoko backend canister for NFT logic (minting, managing) & game interactions.
+
+nft_frontend → # Static asset canister serving the NFT dApp frontend
+```
+
 ### `package.json` (root)
 
 - Contains **common dependencies** shared across all parts of the project.
