@@ -1,0 +1,118 @@
+FrogDogGames Public License
+Version 1.0, 2025
+https://frogdog.games/license/LICENSE-1.0.txt
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+  "License" shall mean the terms and conditions for use, reproduction,
+  and distribution as defined by Sections 1 through 9 of this document.
+
+  "Licensor" shall mean FrogDogGames Studio, the copyright owner or
+  entity authorized by the copyright owner that is granting the License.
+
+  "You" (or "Your") shall mean an individual or Legal Entity
+  exercising permissions granted by this License.
+
+  "Software" shall mean the source code distributed under this License.
+  This License applies only to Software and expressly excludes non-code
+  assets such as art, graphics, music, sound effects, characters, lore,
+  trademarks, and logos.
+
+  "Derivative Works" shall mean any work, whether in Source or Object
+  form, that is based on (or derived from) the Software and for which
+  modifications, adaptations, or elaborations represent, as a whole,
+  an original work of authorship.
+
+2. Grant of License.
+
+  Subject to the terms and conditions of this License, Licensor hereby
+  grants to You a worldwide, royalty-free, non-sublicensable,
+  non-exclusive license to use, copy, modify, and distribute the
+  Software solely for non-commercial, educational, research, or
+  personal purposes.
+
+3. Prohibition on Commercial Use.
+
+  The Software may not be used, in whole or in part, for any
+  commercial purpose without the prior express written consent of
+  Licensor. "Commercial purpose" includes, but is not limited to:
+  selling, licensing, leasing, providing as a service, incorporating
+  into a for-profit product, or using the Software to generate
+  advertising or subscription revenue.
+
+4. Patent Protection.
+
+  This License does not grant any patent rights. You are expressly
+  prohibited from applying for or asserting patents that read on or
+  otherwise cover the Software.
+
+5. Share-Alike Requirement.
+
+  Any modifications, adaptations, or derivative works of the Software
+  must be released under this same License (FDGPL v1.0). Closed-source
+  versions or sublicenses under more permissive or commercial licenses
+  are expressly forbidden.
+
+6. Attribution.
+
+  You must provide clear and visible attribution to "FrogDogGames
+  Studio" and the project name "BeGods Games" in any use, modification,
+  or redistribution of the Software.
+
+7. Prohibition on Asset Redistribution.
+
+  This License applies only to Software. Non-code assets, including
+  but not limited to art, graphics, music, sound effects, characters,
+  lore, trademarks, and logos, are excluded from this License and may
+  not be copied, distributed, or used in any form without a separate
+  written agreement from Licensor.
+
+8. Hackathon & Competition Restrictions.
+
+  The Software may not be used in hackathons, competitions, grants, or
+  contests of any kind without prior written approval from Licensor.
+
+9. Disclaimer of Warranty.
+
+  Unless required by applicable law or agreed to in writing, Licensor
+  provides the Software on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+  CONDITIONS OF ANY KIND, either express or implied, including, without
+  limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT,
+  MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely
+  responsible for determining the appropriateness of using or
+  redistributing the Software and assume any risks associated with Your
+  exercise of permissions under this License.
+
+10. Limitation of Liability.
+
+  In no event and under no legal theory, whether in tort (including
+  negligence), contract, or otherwise, unless required by applicable
+  law, shall Licensor be liable to You for damages, including any
+  direct, indirect, special, incidental, or consequential damages of
+  any character arising as a result of this License or out of the use
+  or inability to use the Software, even if Licensor has been advised
+  of the possibility of such damages.
+
+END OF TERMS AND CONDITIONS
+
+APPENDIX: How to apply the FrogDogGames Public License to your work.
+
+  To apply the FDGPL to your work, attach the following boilerplate
+  notice, with the fields enclosed by brackets "[]" replaced with your
+  own identifying information. (Don't include the brackets!)
+
+  Copyright 2025 FrogDogGames Studio
+
+  Licensed under the FrogDogGames Public License, Version 1.0
+  (the "License"); you may not use this file except in compliance with
+  the License. You may obtain a copy of the License at
+
+    https://frogdog.games/license/LICENSE-1.0.txt
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  implied. See the License for the specific language governing
+  permissions and limitations under the License.

@@ -1,0 +1,5 @@
+FrogDogGames Public License
+Copyright 2025 FrogDogGames Studio
+
+This product includes software for the "BeGods Games" project,
+developed by FrogDogGames Studio.

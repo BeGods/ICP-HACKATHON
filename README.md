@@ -12,6 +12,7 @@ Blending physical and digital play, BeGods offers a groundbreaking phygital expe
 4. [ICP Integration](#icp-integration)
 5. [Future Scope](#icp-integration)
 6. [Important Links](#important-links)
+7. [LICENSE](#license)
 
 ## Overview
 
@@ -296,3 +297,10 @@ npm run dev
 - 📄 [Pitch Deck & Tokenomics](https://drive.google.com/drive/folders/1k2VxC3KxC9VDfZ_hym7dy3RtVzUG5T1A?usp=sharing)
 - 🌍 [Official Website](https://begods.games/) | 🐙 [GitHub](https://github.com/BeGods)
 - 🐦 [X (formerly Twitter)](https://x.com/BattleofGods_io)
+- 🌐 [FrogDog Games Studio](https://frogdog.games)
+
+---
+
+## License
+
+This project's software is licensed under the **FrogDogGames Public License (FDGPL) v1.0**. You can find the full terms and conditions in [`LICENSE.txt`](./LICENSE.txt).
