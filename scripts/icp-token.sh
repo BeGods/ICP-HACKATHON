@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+
+
 # Step 2: Create a new identity for the minter account
 dfx identity use minter
 export MINTER_ACCOUNT_ID=$(dfx ledger account-id)

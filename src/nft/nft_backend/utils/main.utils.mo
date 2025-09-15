@@ -5,6 +5,7 @@ import Time "mo:base/Time";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
+import TrieMap "mo:base/TrieMap";
 import ExtCore "../../EXT-V2/motoko/ext/Core";
 
 module {
@@ -67,4 +68,11 @@ module {
     return tokenIdentifier;
   };
 
+  public func getAllCollectionCanisterIds(NFTcollections : TrieMap.TrieMap<Text, Principal>) : async [Principal] {
+    var canisterList : [Principal] = [];
+    for ((_, value) in NFTcollections.entries()) {
+      canisterList := Array.append(canisterList, [value]);
+    };
+    return canisterList;
+  };
 };

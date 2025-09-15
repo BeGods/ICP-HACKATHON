@@ -148,4 +148,18 @@ module {
       #err("EXT Packet minting failed: " # Error.message(error));
     };
   };
+
+  // public shared (msg) func burnBoosterNFT(tokenId : Nat) : async Result.Result<(), Text> {
+  //   // Check if caller owns the NFT
+  //   if (nftOwners.contains(tokenId) and nftOwners[tokenId] == msg.caller) {
+  //     // Fetch/Log NFT metadata before burning
+  //     let metadata = nftMetadata[tokenId];
+  //     Debug.print(debug_show (metadata)); // log metadata for debugging
+
+  //     return #ok();
+  //   } else {
+  //     return #err("Not authorized or NFT does not exist");
+  //   };
+  // }
+
 };

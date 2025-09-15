@@ -12,6 +12,7 @@ import MainTypes "../types/main.types";
 import CollectionServices "collection.services";
 import Pagin "../utils/pagin.utils";
 import MarketplaceServices "marketplace.services";
+import MainUtils "../utils/main.utils";
 
 module {
   public func create_user(
@@ -431,4 +432,42 @@ module {
       };
     };
   };
+
+  public func userNFTsAllCollections(
+    user : MainTypes.AccountIdentifier,
+    chunkSize : Nat,
+    pageNo : Nat,
+    NFTcollections : TrieMap.TrieMap<Text, Principal>,
+  ) : async Result.Result<{ boughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)]; current_page : Nat }, MainTypes.CommonError> {
+
+    let allCollections : [Principal] = await MainUtils.getAllCollectionCanisterIds(NFTcollections);
+
+    var allBoughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)] = [];
+
+    for (collectionCanisterId in allCollections.vals()) {
+      let result = await userNFTcollection(collectionCanisterId, user, chunkSize, pageNo);
+      switch (result) {
+        case (#ok(data)) {
+          allBoughtNFTs := Array.append(allBoughtNFTs, data.boughtNFTs);
+        };
+        case (#err(_)) {
+          ();
+        };
+      };
+    };
+
+    let boughtNFTsPaginated = Pagin.paginate(allBoughtNFTs, chunkSize);
+
+    if (boughtNFTsPaginated.size() <= pageNo) {
+      return #err(#Other("Page not found"));
+    };
+
+    let boughtNFTsPage = boughtNFTsPaginated[pageNo];
+
+    return #ok({
+      boughtNFTs = boughtNFTsPage;
+      current_page = pageNo + 1;
+    });
+  }
+
 };

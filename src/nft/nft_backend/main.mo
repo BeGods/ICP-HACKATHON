@@ -50,6 +50,7 @@ import UserServices "services/user.services";
 import FavoriteServices "services/favorite.services";
 import OrderServices "services/order.services";
 import MarketplaceServices "services/marketplace.services";
+import Blob "mo:base/Blob";
 
 actor Main {
 
@@ -67,8 +68,10 @@ actor Main {
   /* -------------------------------------------------------------------------- */
   /*                               GLOBAL - DATA MAPS                           */
   /* -------------------------------------------------------------------------- */
-
   // marketplace:  map to track users nft collections
+  stable var mapEntries : [(Text, Principal)] = [];
+  var NFTcollections : TrieMap.TrieMap<Text, Principal> = TrieMap.TrieMap<Text, Principal>(Text.equal, Text.hash);
+  private let BURN_ADDRESS : MainTypes.AccountIdentifier = "7w5cw-rbxf2-lvbl7-iumn4-2ckjk-luseg-7wqzi-tulm7-ghmmf-lezhi-2qe";
   private var usersCollectionMap = TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>(Principal.equal, Principal.hash);
   private stable var stableusersCollectionMap : [(Principal, [(Time.Time, Principal)])] = [];
 
@@ -97,17 +100,25 @@ actor Main {
     Principal.hash,
   );
 
+  private var BoosterRecord : TrieMap.TrieMap<Principal, MainTypes.BoosterInfo> = TrieMap.TrieMap<Principal, MainTypes.BoosterInfo>(Principal.equal, Principal.hash);
+
   /* -------------------------------------------------------------------------- */
   /*                         GLOBAL - SYSTEM FUNCTIONS                          */
   /* -------------------------------------------------------------------------- */
 
   system func preupgrade() {
     stableusersCollectionMap := Iter.toArray(usersCollectionMap.entries());
+    mapEntries := Iter.toArray(NFTcollections.entries());
     stableFavorites := Iter.toArray(_favorites.entries());
   };
 
   system func postupgrade() {
     usersCollectionMap := TrieMap.fromEntries(stableusersCollectionMap.vals(), Principal.equal, Principal.hash);
+    NFTcollections := TrieMap.fromEntries(
+      mapEntries.vals(),
+      Text.equal,
+      Text.hash,
+    );
     _favorites := HashMap.fromIter<MainTypes.AccountIdentifier, [(MainTypes.TokenIdentifier)]>(
       stableFavorites.vals(),
       10,
@@ -258,8 +269,7 @@ actor Main {
     };
 
     let selfPrincipal = Principal.fromActor(Main);
-
-    return await CollectionService.createExtCollection(
+    let result = await CollectionService.createExtCollection(
       usersCollectionMap,
       selfPrincipal,
       user,
@@ -267,6 +277,19 @@ actor Main {
       _symbol,
       _metadata,
     );
+
+    // add canister id to collections
+    NFTcollections.put(_title, result.1);
+
+    return result;
+  };
+
+  public query func getAllCollectionCanisterIds() : async [Principal] {
+    var canisterList : [Principal] = [];
+    for ((_, value) in NFTcollections.entries()) {
+      canisterList := Array.append(canisterList, [value]);
+    };
+    return canisterList;
   };
 
   // Getting Collection Metadata
@@ -403,6 +426,139 @@ actor Main {
   /* -------------------------------------------------------------------------- */
   /*                      NFT MARKETPLACE - USER CONTROLLERS                    */
   /* -------------------------------------------------------------------------- */
+
+  // Token will be transfered to this Vault and gives you req details to construct a link out of it, which you can share
+  public shared ({ caller = user }) func getNftTokenId(
+    _collectionCanisterId : Principal,
+    _tokenId : MainTypes.TokenIndex,
+  ) : async MainTypes.TokenIdentifier {
+    return await MainUtils.getNftTokenId(_collectionCanisterId, _tokenId);
+  };
+
+  public shared func userNFTsAllCollections(
+    user : MainTypes.AccountIdentifier,
+    chunkSize : Nat,
+    pageNo : Nat,
+  ) : async Result.Result<{ boughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)]; current_page : Nat }, MainTypes.CommonError> {
+    let result = await UserServices.userNFTsAllCollections(user, chunkSize, pageNo, NFTcollections);
+    return result;
+  };
+
+  public shared ({ caller = user }) func claimBoosterNFT(
+    collectionCanister : Principal,
+    tokenId : MainTypes.TokenIdentifier,
+    tokenIndex : MainTypes.TokenIndex,
+  ) : async Text {
+    if (Principal.isAnonymous(user)) {
+      Debug.print("User is anonymous. Authentication required.");
+      return "User must be authenticated";
+    };
+
+    Debug.print("=== Burn Initiation ===");
+    Debug.print("User: " # Principal.toText(user));
+    Debug.print("Collection: " # Principal.toText(collectionCanister));
+    Debug.print("Token ID: " # tokenId);
+
+    let userAccountId = Principal.toText(user);
+    let nftActor = actor (Principal.toText(collectionCanister)) : actor {
+      getSingleNonFungibleTokenData : (MainTypes.TokenIndex) -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
+      ext_bearer : (tokenId : MainTypes.TokenIdentifier) -> async Result.Result<MainTypes.AccountIdentifier, MainTypes.CommonError>;
+      ext_transfer : (request : MainTypes.TransferRequest) -> async Result.Result<Nat, MainTypes.CommonError>;
+    };
+
+    let bearerResult = await nftActor.ext_bearer(tokenId);
+    switch (bearerResult) {
+      case (#err(error)) {
+        Debug.print("Failed to get NFT owner: " # debug_show (error));
+        return "Failed to get NFT owner: " # debug_show (error);
+      };
+      case (#ok(owner)) {
+        Debug.print("NFT Owner Account ID: " # owner);
+        Debug.print("User Account ID: " # userAccountId);
+        if (owner != userAccountId) {
+          Debug.print("Ownership verified: NO");
+          return "User does not own this NFT";
+        };
+        Debug.print("Ownership verified: YES");
+      };
+    };
+
+    let tokenData = await nftActor.getSingleNonFungibleTokenData(tokenIndex);
+    if (tokenData.size() > 0) {
+      let (index, nftOwner, metadata, price) = tokenData[0];
+      switch (metadata) {
+        case (#fungible(fung)) {
+          Debug.print("Fungible Token detected, not supported for burn");
+          return "Token is not an NFT.";
+        };
+        case (#nonfungible(nfung)) {
+          Debug.print("Nonfungible NFT Name: " # nfung.name);
+          BoosterRecord.put(
+            user,
+            {
+              NftTokeId = tokenId;
+              boosterType = nfung.name;
+              timestamp = Time.now();
+              claimed = false;
+            },
+          );
+        };
+        case (_) {
+          Debug.print("Unknown metadata variant");
+          return "Unknown metadata variant.";
+        };
+      };
+    } else {
+      Debug.print("No token data found for tokenIndex " # Nat.toText(Nat32.toNat(tokenIndex)));
+      return "No token data found";
+    };
+
+    // Transfer to burn address as an effective burn
+    let transferRequest : MainTypes.TransferRequest = {
+      from = #address(userAccountId);
+      to = #address(BURN_ADDRESS);
+      token = tokenId;
+      amount = 1; // For NFTs, amount is always 1
+      memo = Blob.fromArray([]);
+      notify = false;
+      subaccount = null;
+    };
+
+    let transferResult = await nftActor.ext_transfer(transferRequest);
+    switch (transferResult) {
+      case (#ok(balance)) {
+        Debug.print("NFT transferred to burn address successfully. New balance: " # Nat.toText(balance));
+      };
+      case (#err(e)) {
+        Debug.print("NFT transfer to burn address failed: " # debug_show (e));
+        return "Failed to burn NFT: " # debug_show (e);
+      };
+    };
+
+    return "Ownership verified, metadata logged, and NFT burned";
+  };
+
+  public shared func getBoostersForUser(user : Principal) : async ?MainTypes.BoosterInfo {
+    return BoosterRecord.get(user);
+  };
+
+  public shared func updateBoosterRecordClaimed(user : Principal) : async () {
+    switch (BoosterRecord.get(user)) {
+      case (?booster) {
+        let updatedBooster = {
+          claimed = false;
+          timestamp = booster.timestamp;
+          boosterType = booster.boosterType;
+          NftTokeId = booster.NftTokeId;
+        };
+        BoosterRecord.put(user, updatedBooster);
+        Debug.print("Booster record updated for user");
+      };
+      case null {
+        Debug.print("No booster record found for user");
+      };
+    };
+  };
 
   // Get user details (for admin and user side both)
   public shared query ({ caller = user }) func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {

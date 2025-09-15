@@ -161,4 +161,12 @@ module {
       metadata : PacketMetadata;
     }) -> async Result.Result<Nat, Text>;
   };
+
+  public type BoosterInfo = {
+    NftTokeId : TokenIdentifier;
+    boosterType : Text;
+    timestamp : Time.Time;
+    claimed : Bool;
+  };
+
 };

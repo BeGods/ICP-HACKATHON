@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+# Step 1: Create a new identity for the burner account
+dfx identity new burner --storage-mode plaintext || true
+dfx identity use burner
+export BURNER_ACCOUNT_ID=$(dfx ledger account-id)
+echo "BURNER_ACCOUNT_ID: $BURNER_ACCOUNT_ID"
+
 # Step 2: Create a new identity for the minter account
 dfx identity new minter --storage-mode plaintext || true
 dfx identity use minter

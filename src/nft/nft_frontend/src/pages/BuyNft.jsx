@@ -110,6 +110,8 @@ const BuyNft = () => {
       setbuyPopup(true);
       setBuyingStatus(buyingStatus.payment);
 
+      console.log("tokenId:", tokenId);
+
       const result1 = await backendActor?.purchaseNft(
         Principal.fromText(collectionId),
         tokenId,
@@ -268,11 +270,14 @@ const BuyNft = () => {
   }, []);
 
   const fetchTokenId = async () => {
+    console.log("call fetch tokenId");
+
     const tokenId = await backendActor?.getNftTokenId(
       Principal.fromText(collectionId),
       parseInt(index)
     );
 
+    console.log("call fetch tokenId - tokenId", tokenId);
     setTokenId(tokenId);
   };
   useEffect(() => {
