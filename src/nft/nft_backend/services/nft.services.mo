@@ -1,3 +1,10 @@
+import ExtTokenClass "../../EXT-V2/ext_v2/v2";
+import ExtCore "../../EXT-V2/motoko/ext/Core";
+import Queue "../../EXT-V2/motoko/util/Queue";
+import Types "../../EXT-V2/Types";
+import V2 "../../EXT-V2/ext_v2/v2";
+import _owners "../../EXT-V2/ext_v2/v2";
+import ExtCommon "../../EXT-V2/motoko/ext/Common";
 import Principal "mo:base/Principal";
 import TrieMap "mo:base/TrieMap";
 import Nat "mo:base/Nat";
@@ -7,7 +14,6 @@ import Text "mo:base/Text";
 import Time "mo:base/Time";
 import AID "../../EXT-V2/motoko/util/AccountIdentifier";
 import List "mo:base/List";
-import Types "../../EXT-V2/Types";
 import MainTypes "../types/main.types";
 import MainUtils "../utils/main.utils";
 

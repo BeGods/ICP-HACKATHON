@@ -20,37 +20,37 @@ import { Box, Button } from "@chakra-ui/react";
 
 const cardTypeList = [
   {
-      cardId: "ALL",
-      displayText: "All"
+    cardId: "ALL",
+    displayText: "All",
   },
   {
-      cardId: "DIVINE",
-      displayText: "Divine"
+    cardId: "DIVINE",
+    displayText: "Divine",
   },
   {
-      cardId: "MYTHICAL",
-      displayText: "Mythical"
+    cardId: "MYTHICAL",
+    displayText: "Mythical",
   },
   {
-      cardId: "RARE",
-      displayText: "Rare"
+    cardId: "RARE",
+    displayText: "Rare",
   },
   {
-      cardId: "UNCOMMON",
-      displayText: "Uncommon"
+    cardId: "UNCOMMON",
+    displayText: "Uncommon",
   },
   {
-      cardId: "COMMON",
-      displayText: "Common"
+    cardId: "COMMON",
+    displayText: "Common",
   },
   {
-      cardId: "PROMO",
-      displayText: "Promo"
+    cardId: "PROMO",
+    displayText: "Promo",
   },
   {
-      cardId: "MISC",
-      displayText: "Misc"
-  }
+    cardId: "MISC",
+    displayText: "Misc",
+  },
 ];
 
 const dropdownItems = {
@@ -406,9 +406,22 @@ function CollectionDetails() {
   useEffect(() => {
     let updatedList = [...nftList];
 
+    // Helper function to check if NFT is listed
+    const isNFTListed = (nftItem) => {
+      const priceBigInt = nftItem[0][3]?.[0]?.toString();
+      return priceBigInt && priceBigInt !== "0";
+    };
+
+    // Helper function to safely get price
+    const getNFTPrice = (nftItem) => {
+      const priceBigInt = nftItem[0][3]?.[0]?.toString();
+      if (!priceBigInt || priceBigInt === "0") return 0;
+      return Number(priceBigInt) / 100000000;
+    };
+
+    // Filter by card type
     if (currentCardType !== cardTypeList[0].cardId) {
       updatedList = updatedList.filter((eachItem) => {
-        // console.log("each item", eachItem[0]);
         const metadataJson = eachItem[0][2]?.nonfungible?.metadata?.[0]?.json;
         const metadata = JSON.parse(metadataJson);
         const nftType = metadata?.nftType;
@@ -416,51 +429,66 @@ function CollectionDetails() {
       });
     }
 
+    // ADMIN VIEW: Show both listed and unlisted NFTs
     if (applyPriceRange.isApply) {
       updatedList = updatedList.filter((eachItem) => {
-        const priceBigInt =
-          eachItem[0][3]?.[0]?.toString() ?? "Price not found";
-        const price = Number(priceBigInt) / 100000000;
-        // console.log(
-        //   "From price:",
-        //   applyPriceRange.from,
-        //   "Card price:",
-        //   price,
-        //   "To price:",
-        //   applyPriceRange.to
-        // );
-        return applyPriceRange.from <= price && price <= applyPriceRange.to;
+        const price = getNFTPrice(eachItem);
+        const listed = isNFTListed(eachItem);
+
+        // If price range starts from 0, include unlisted NFTs
+        if (applyPriceRange.from === 0 && !listed) {
+          return true; // Include unlisted NFTs when range starts from 0
+        }
+
+        // For listed NFTs, apply normal price filtering
+        if (listed) {
+          return applyPriceRange.from <= price && price <= applyPriceRange.to;
+        }
+
+        return false; // Exclude unlisted NFTs if range doesn't start from 0
       });
     }
 
+    // Sorting with proper handling of unlisted NFTs
     if (currentFilterOption !== filterListOptions[0].optionId) {
       if (currentFilterOption === filterListOptions[1].optionId) {
         updatedList = updatedList.reverse();
       } else if (currentFilterOption === filterListOptions[2].optionId) {
+        // Sort by price: Low to High (unlisted first)
         updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceA = Number(priceBigIntA) / 100000000;
-          ``;
-          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceB = Number(priceBigIntB) / 100000000;
+          const listedA = isNFTListed(a);
+          const listedB = isNFTListed(b);
+
+          // Put unlisted NFTs first
+          if (!listedA && listedB) return -1;
+          if (listedA && !listedB) return 1;
+
+          // Both have same listing status, sort by price
+          const priceA = getNFTPrice(a);
+          const priceB = getNFTPrice(b);
           return priceA - priceB;
         });
       } else if (currentFilterOption === filterListOptions[3].optionId) {
+        // Sort by price: High to Low (unlisted last)
         updatedList = updatedList.sort((a, b) => {
-          const priceBigIntA = a[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceA = Number(priceBigIntA) / 100000000;
+          const listedA = isNFTListed(a);
+          const listedB = isNFTListed(b);
 
-          const priceBigIntB = b[0][3]?.[0]?.toString() ?? "Price not found";
-          const priceB = Number(priceBigIntB) / 100000000;
+          // Put listed NFTs first for high to low sorting
+          if (listedA && !listedB) return -1;
+          if (!listedA && listedB) return 1;
+
+          // Both have same listing status, sort by price
+          const priceA = getNFTPrice(a);
+          const priceB = getNFTPrice(b);
           return priceB - priceA;
         });
       }
     }
 
-    // console.log("Updated list after all filters:", updatedList);
+    console.log("Updated list after all filters:", updatedList);
     updateFilteredList(updatedList);
   }, [nftList, currentCardType, applyPriceRange, currentFilterOption]);
-
   // console.log("filtered list after applying filters", filteredList);
   let count = 0;
   if (currentCardType !== cardTypeList[0].cardId) {

@@ -71,35 +71,6 @@ const BuyNft = () => {
     setBuyingStatus(buyingStatus.payment);
   };
 
-  const sendBalance = async (purchaseTxnId, UserAccountId, Price) => {
-    const transactionArg = {
-      to: { owner: Principal.fromText(purchaseTxnId), subaccount: [] },
-      from_subaccount: [], // Optional: set subaccount if needed
-      amount: { e8s: Price },
-      fee: { e8s: 10000 },
-      memo: 0,
-      created_at_time: null,
-    };
-    console.log(transactionArg, "transationarg");
-    const result = await ledgerActor?.icrc1_transfer(transactionArg);
-    console.log("final result", result);
-    // console.log(result.ok);
-    // console.log("result type", typeof result.ok);
-  };
-
-  const encodeIcrcAccount = (principalText) => {
-    const principal = Principal.fromText(principalText);
-    const subAccount = null; // Use null for default subaccount
-
-    // Convert Principal to AccountIdentifier
-    const accountIdentifier = AccountIdentifier.fromPrincipal(
-      principal,
-      subAccount
-    );
-
-    return accountIdentifier.toHex(); // This returns the account ID in hex format
-  };
-
   const onClickBuyButton = async () => {
     setShowError({ show: false, msg: "" });
     setLoadingFirst(true);

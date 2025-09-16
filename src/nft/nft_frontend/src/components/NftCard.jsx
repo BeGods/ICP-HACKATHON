@@ -37,8 +37,7 @@ const NftCard = ({
 
     const result = await backendActor?.claimBoosterNFT(
       img.collectionId,
-      img.tokenId,
-      img.index
+      img.tokenId
     );
 
     console.log(result);

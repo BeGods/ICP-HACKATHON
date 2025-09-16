@@ -1,7 +1,6 @@
 // Downgrade http request
 
 import Cycles "mo:base/ExperimentalCycles";
-import HashMap "mo:base/HashMap";
 import Nat64 "mo:base/Nat64";
 import Char "mo:base/Char";
 import Nat32 "mo:base/Nat32";
@@ -35,6 +34,7 @@ import Encoding "mo:encoding/Binary";
 import Cap "mo:cap/Cap";
 import Queue "../motoko/util/Queue";
 import EXTAsset "extAsset";
+import HashMap "mo:base/HashMap";
 
 actor class EXTNFT(init_owner : Principal) = this {
 
@@ -304,7 +304,6 @@ actor class EXTNFT(init_owner : Principal) = this {
   private stable var config_collection_symbol : Text = "[PLEASE CHANGE]";
   private stable var config_collection_data : Text = "{}";
   private stable var config_marketplace_open : Time = 0;
-
   private stable var config_canCreateAssetCanister : Bool = true;
 
   //Non-stable
@@ -321,6 +320,9 @@ actor class EXTNFT(init_owner : Principal) = this {
   var _tokenListing : HashMap.HashMap<TokenIndex, Listing> = HashMap.fromIter(data_tokenListingTableState.vals(), 0, ExtCore.TokenIndex.equal, ExtCore.TokenIndex.hash);
   var _paymentSettlements : HashMap.HashMap<AccountIdentifier, Payment> = HashMap.fromIter(data_paymentSettlementsTableState.vals(), 0, AID.equal, AID.hash);
   var _saleGroups : HashMap.HashMap<AccountIdentifier, Nat> = HashMap.fromIter(data_saleGroupsTableState.vals(), 0, AID.equal, AID.hash);
+  var _nextAvailableIndex : TokenIndex = 0;
+  var _tokenIndexMapping : HashMap.HashMap<TokenIndex, [TokenIndex]> = HashMap.HashMap(0, ExtCore.TokenIndex.equal, ExtCore.TokenIndex.hash);
+
   // var _allowances : HashMap.HashMap<ExtCore.TokenIdentifier, (Principal,[ExtCore.TokenAllowance])> = HashMap.HashMap<ExtCore.TokenIdentifier, (Principal,[ExtCore.TokenAllowance])>(0,ExtCore.TokenIdentifier.equal,ExtCore.TokenIdentifier.hash);
   //Variables
   let ASSET_CANISTER_CYCLES_TOPUP : Nat = 5_000_000_000_000;
@@ -403,12 +405,11 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   public shared (msg) func heartbeat_myself() : async () {
-      try {
-        await heartbeat_paymentSettlements();
-        await heartbeat_disbursements();
-      }catch e {};
+    try {
+      await heartbeat_paymentSettlements();
+      await heartbeat_disbursements();
+    } catch e {};
   };
-
 
   public shared (msg) func heartbeat_assetCanisters() : async () {
     if (Cycles.balance() < ASSET_CANISTER_CYCLES_TOPUP) return ();
@@ -490,7 +491,7 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
   public query func ext_assetFits(internal : Bool, size : Nat) : async Bool {
     if (internal) {
-      if ((data_storedChunkSize +size) < MAX_CHUNK_STORAGE) {
+      if ((data_storedChunkSize + size) < MAX_CHUNK_STORAGE) {
         return true;
       } else {
         return false;
@@ -512,7 +513,7 @@ actor class EXTNFT(init_owner : Principal) = this {
       case (?asset) {
         switch (asset.atype) {
           case (#direct existingChunks) {
-            assert ((data_storedChunkSize +size) < MAX_CHUNK_STORAGE);
+            assert ((data_storedChunkSize + size) < MAX_CHUNK_STORAGE);
             let chunkId = data_internalNextChunkId;
             data_internalNextChunkId += 1;
             _chunks.put(chunkId, chunk);
@@ -537,7 +538,7 @@ actor class EXTNFT(init_owner : Principal) = this {
             switch (_assetCanisters.get(Principal.fromText(d.canister))) {
               case (?currentSize) {
                 let acService : EXTAssetService = actor (d.canister);
-                _assetCanisters.put(Principal.fromText(d.canister), currentSize +size);
+                _assetCanisters.put(Principal.fromText(d.canister), currentSize + size);
                 return await acService.streamAsset(d.id, chunk, first);
               };
               case (_) {};
@@ -584,7 +585,7 @@ actor class EXTNFT(init_owner : Principal) = this {
         },
       ),
       func(a : (Principal, Nat)) : Bool {
-        return (a.1 +size) < MAX_CHUNK_STORAGE;
+        return (a.1 + size) < MAX_CHUNK_STORAGE;
       },
     );
   };
@@ -707,72 +708,294 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   public shared (msg) func ext_marketplacePurchase(tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
+    Debug.print("=== PURCHASE STARTED ===");
+    Debug.print("Input TokenIdentifier: " # tokenid);
+    Debug.print("Requested Price: " # Nat64.toText(price));
+    Debug.print("Buyer Account: " # buyer);
+
+    // STEP 1: Validate that the token belongs to this canister
+    // This prevents users from trying to buy tokens from other collections
     if (ExtCore.TokenIdentifier.isPrincipal(tokenid, Principal.fromActor(this)) == false) {
+      Debug.print("ERROR: Token does not belong to this canister");
+      Debug.print("Expected Principal: " # Principal.toText(Principal.fromActor(this)));
       return #err(#InvalidToken(tokenid));
     };
+    Debug.print("✓ Token validated - belongs to this canister");
+
+    // STEP 2: Convert TokenIdentifier to TokenIndex for internal lookup
+    // THIS IS WHERE THE COLLISION PROBLEM HAPPENS - multiple TokenIdentifiers can map to same TokenIndex
     let token = ExtCore.TokenIdentifier.getIndex(tokenid);
+    Debug.print("Converted to TokenIndex: " # Nat32.toText(token));
+    Debug.print("⚠️  COLLISION RISK: Multiple NFTs might have same TokenIndex");
+
+    // STEP 3: Look up the listing using TokenIndex
+    // If collision exists, this might find the wrong NFT's listing or no listing at all
     switch (_tokenListing.get(token)) {
       case (?listing) {
+        Debug.print("✓ Found listing in _tokenListing");
+        Debug.print("Listed Price: " # Nat64.toText(listing.price));
+        Debug.print("Listing Owner: " # debug_show (listing)); // Shows full listing details
+
+        // STEP 4: Verify the price hasn't changed since user saw it
         if (listing.price != price) {
+          Debug.print("ERROR: Price mismatch!");
+          Debug.print("Expected: " # Nat64.toText(price) # " vs Listed: " # Nat64.toText(listing.price));
           return #err(#Other("Price has changed!"));
         } else {
-          return #ok(ext_addPayment(#nft(token), price, buyer), price);
+          Debug.print("✓ Price matches - creating payment entry");
+
+          // STEP 5: Create payment entry and return payment address
+          // ext_addPayment creates a unique payment address for this purchase
+          let paymentAddress = ext_addPayment(#nft(token), price, buyer);
+          Debug.print("Payment address generated: " # paymentAddress);
+          Debug.print("✓ Purchase approved - user must send ICP to this address");
+          Debug.print("=== PURCHASE SUCCESS ===");
+
+          return #ok(paymentAddress, price);
         };
       };
-      case (_) {
+      case null {
+        // This is where collision problems manifest - the NFT exists but listing not found
+        Debug.print("ERROR: No listing found for TokenIndex " # Nat32.toText(token));
+        Debug.print("Possible causes:");
+        Debug.print("1. NFT is not listed for sale");
+        Debug.print("2. TokenIndex collision - looking up wrong mapping");
+        Debug.print("3. Listing was removed/sold already");
+
+        // Check if token exists in registry at all
+        switch (_registry.get(token)) {
+          case (?owner) {
+            Debug.print("Token exists in registry, owned by: " # owner);
+            Debug.print("But no listing found - likely not for sale");
+          };
+          case null {
+            Debug.print("Token not found in registry - may not exist");
+          };
+        };
+
         return #err(#Other("No listing!"));
       };
     };
   };
 
+  func _getNextUniqueTokenIndex() : TokenIndex {
+    while (_registry.get(_nextAvailableIndex) != null) {
+      _nextAvailableIndex += 1;
+    };
+    let result = _nextAvailableIndex;
+    _nextAvailableIndex += 1;
+    result;
+  };
+
+  // Helper function to resolve colliding token index
+  func _resolveTokenIndex(originalToken : TokenIndex, owner : AccountIdentifier) : ?TokenIndex {
+    // Check if this is a collision case
+    switch (_tokenIndexMapping.get(originalToken)) {
+      case (?indexList) {
+        // Find the correct index for this owner
+        for (idx in indexList.vals()) {
+          switch (_registry.get(idx)) {
+            case (?currentOwner) {
+              if (currentOwner == owner) {
+                return ?idx;
+              };
+            };
+            case null {};
+          };
+        };
+        return null;
+      };
+      case null {
+        // No collision, use original token
+        return ?originalToken;
+      };
+    };
+  };
+
   public shared (msg) func ext_marketplaceSettle(paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+    Debug.print("=== SETTLEMENT STARTED ===");
+    Debug.print("Payment Address: " # paymentaddress);
+
+    // STEP 1: Check if payment was received and verified
+    Debug.print("Checking payment status...");
     switch (await ext_checkPayment(paymentaddress)) {
       case (?(settlement, response)) {
+        Debug.print("✓ Payment entry found");
+        Debug.print("Settlement amount: " # Nat64.toText(settlement.amount));
+        Debug.print("Settlement payer: " # settlement.payer);
+        Debug.print("Purchase type: " # debug_show (settlement.purchase));
+
+        // STEP 2: Verify ledger confirmed the ICP transfer
         switch (response) {
           case (#ok ledgerResponse) {
+            Debug.print("✓ Ledger confirmed payment received");
+            Debug.print("Ledger response: " # debug_show (ledgerResponse));
+
+            // STEP 3: Extract the NFT token from settlement
             switch (settlement.purchase) {
               case (#nft token) {
+                Debug.print("Processing NFT settlement for TokenIndex: " # Nat32.toText(token));
+                Debug.print("⚠️  This token comes from original purchase - may have collision issues");
+
+                // COLLISION RESOLUTION LOGIC STARTS HERE
+                var resolvedToken : ?TokenIndex = null;
+                var listing : ?Listing = null;
+                var token_owner : ?AccountIdentifier = null;
+
+                // STEP 4A: Try direct lookup first (works if no collision)
+                Debug.print("Attempting direct token lookup...");
                 switch (_tokenListing.get(token)) {
-                  case (?listing) {
-                    if (settlement.amount >= listing.price) {
-                      switch (_registry.get(token)) {
-                        case (?token_owner) {
-                          var bal : Nat64 = settlement.amount - (10000 * Nat64.fromNat(_marketplaceFees().size() + 1));
-                          var rem = bal;
-                          for (f in _marketplaceFees().vals()) {
-                            var _fee : Nat64 = bal * f.1 / 100000;
-                            _addDisbursement((token, f.0, settlement.subaccount, _fee));
-                            rem := rem - _fee : Nat64;
+                  case (?l) {
+                    Debug.print("✓ Direct lookup successful");
+                    resolvedToken := ?token;
+                    listing := ?l;
+                    token_owner := _registry.get(token);
+                    Debug.print("Found listing with price: " # Nat64.toText(l.price));
+                  };
+                  case null {
+                    Debug.print("Direct lookup failed - checking collision mappings...");
+
+                    // STEP 4B: Handle collision case - search alternative TokenIndexes
+                    switch (_tokenIndexMapping.get(token)) {
+                      case (?indexList) {
+                        Debug.print("Found collision mapping with " # Nat.toText(indexList.size()) # " alternatives");
+                        var found = false;
+
+                        // Search through collision alternatives to find the listed one
+                        for (idx in indexList.vals()) {
+                          if (not found) {
+                            Debug.print("Checking alternative TokenIndex: " # Nat32.toText(idx));
+                            switch (_tokenListing.get(idx)) {
+                              case (?l) {
+                                Debug.print("✓ Found listing in collision alternative!");
+                                resolvedToken := ?idx;
+                                listing := ?l;
+                                token_owner := _registry.get(idx);
+                                found := true;
+                                Debug.print("Resolved to TokenIndex: " # Nat32.toText(idx));
+                              };
+                              case null {
+                                Debug.print("No listing for this alternative");
+                              };
+                            };
                           };
-                          _addDisbursement((token, token_owner, settlement.subaccount, rem));
-                          _capAddSale(token, token_owner, settlement.payer, settlement.amount);
-                          _transferTokenToUser(token, settlement.payer);
-                          data_transactions := Array.append(data_transactions, [{ token = token; seller = token_owner; price = settlement.amount; buyer = settlement.payer; time = Time.now() }]);
-                          _tokenListing.delete(token);
-                          _paymentSettlements.delete(paymentaddress);
-                          return #ok();
                         };
-                        case (_) {};
+
+                        if (not found) {
+                          Debug.print("ERROR: No listing found in any collision alternatives");
+                        };
+                      };
+                      case null {
+                        Debug.print("ERROR: No collision mapping found - token may not exist");
                       };
                     };
                   };
-                  case (_) {};
                 };
-                //If we are here, that means we need to refund the payment
-                //No listing, refund (to slow)
-                _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s -10000)));
+
+                // STEP 5: Execute the sale if everything resolved correctly
+                Debug.print("Final resolution check...");
+                switch (resolvedToken, listing, token_owner) {
+                  case (?actualToken, ?actualListing, ?owner) {
+                    Debug.print("✓ Successfully resolved all required data:");
+                    Debug.print("  Actual TokenIndex: " # Nat32.toText(actualToken));
+                    Debug.print("  Current Owner: " # owner);
+                    Debug.print("  Listing Price: " # Nat64.toText(actualListing.price));
+
+                    // STEP 6: Verify sufficient payment
+                    if (settlement.amount >= actualListing.price) {
+                      Debug.print("✓ Payment sufficient - executing sale");
+                      Debug.print("Payment: " # Nat64.toText(settlement.amount) # " >= Required: " # Nat64.toText(actualListing.price));
+
+                      // STEP 7: Calculate fees and disbursements
+                      let feeCount = _marketplaceFees().size() + 1; // +1 for base fee
+                      let totalFees = 10000 * Nat64.fromNat(feeCount); // 10000 e8s per fee
+                      var bal : Nat64 = settlement.amount - totalFees;
+                      var rem = bal; // Remaining amount after fees
+
+                      Debug.print("Fee calculation:");
+                      Debug.print("  Total fees: " # Nat64.toText(totalFees));
+                      Debug.print("  Amount after fees: " # Nat64.toText(bal));
+
+                      // STEP 8: Process marketplace fees
+                      Debug.print("Processing marketplace fees...");
+                      for (f in _marketplaceFees().vals()) {
+                        var _fee : Nat64 = bal * f.1 / 100000; // Calculate percentage fee
+                        Debug.print("  Fee to " # f.0 # ": " # Nat64.toText(_fee));
+                        _addDisbursement((actualToken, f.0, settlement.subaccount, _fee));
+                        rem := rem - _fee : Nat64;
+                      };
+
+                      // STEP 9: Pay the seller
+                      Debug.print("Paying seller: " # Nat64.toText(rem) # " e8s to " # owner);
+                      Debug.print("actualToken being processed: " # Nat32.toText(actualToken));
+                      _addDisbursement((actualToken, owner, settlement.subaccount, rem));
+                      _capAddSale(actualToken, owner, settlement.payer, settlement.amount);
+
+                      // STEP 10: Transfer NFT ownership
+                      Debug.print("Transferring NFT ownership from " # owner # " to " # settlement.payer);
+                      _transferTokenToUser(actualToken, settlement.payer);
+
+                      // STEP 11: Record transaction history
+                      Debug.print("Recording transaction in history");
+                      data_transactions := Array.append(data_transactions, [{ token = actualToken; seller = owner; price = settlement.amount; buyer = settlement.payer; time = Time.now() }]);
+
+                      // STEP 12: Clean up listings and payments
+                      Debug.print("Cleaning up - removing listing and payment entry");
+                      _tokenListing.delete(actualToken);
+                      _paymentSettlements.delete(paymentaddress);
+
+                      Debug.print("✓ Sale completed successfully!");
+                      Debug.print("=== SETTLEMENT SUCCESS ===");
+                      return #ok();
+                    } else {
+                      Debug.print("ERROR: Insufficient payment");
+                      Debug.print("Received: " # Nat64.toText(settlement.amount) # " < Required: " # Nat64.toText(actualListing.price));
+                    };
+                  };
+                  case (_, _, _) {
+                    Debug.print("ERROR: Could not resolve token, listing, or owner");
+                    Debug.print("resolvedToken: " # debug_show (resolvedToken));
+                    Debug.print("listing: " # debug_show (listing != null));
+                    Debug.print("token_owner: " # debug_show (token_owner));
+                  };
+                };
+
+                // REFUND LOGIC - Executed if sale couldn't complete
+                Debug.print("Sale failed - processing refund");
+                let refundAmount = ledgerResponse.e8s - 10000; // Subtract transaction fee
+                Debug.print("Refunding " # Nat64.toText(refundAmount) # " e8s to " # settlement.payer);
+                _addDisbursement((0, settlement.payer, settlement.subaccount, refundAmount));
                 _paymentSettlements.delete(paymentaddress);
+                Debug.print("=== SETTLEMENT FAILED - REFUND ISSUED ===");
                 return #err(#Other("NFT not for sale"));
               };
-              case (_) return #err(#Other("Not a payment for a single NFT"));
+              case (_) {
+                Debug.print("ERROR: Payment is not for a single NFT");
+                return #err(#Other("Not a payment for a single NFT"));
+              };
             };
           };
-          case (#err e) return #err(#Other(e));
+          case (#err e) {
+            Debug.print("ERROR: Ledger payment verification failed: " # e);
+            return #err(#Other(e));
+          };
         };
       };
-      case (_) return #err(#Other("Nothing to settle"));
+      case null {
+        Debug.print("ERROR: No payment found for address: " # paymentaddress);
+        Debug.print("Possible causes:");
+        Debug.print("1. Invalid payment address");
+        Debug.print("2. Payment already settled");
+        Debug.print("3. Payment expired or cancelled");
+        return #err(#Other("Nothing to settle"));
+      };
     };
   };
+
+  public func debug_getTokenIndexMapping() : async [(TokenIndex, [TokenIndex])] {
+    Iter.toArray(_tokenIndexMapping.entries());
+  };
+
   public query func ext_marketplaceListings() : async [(TokenIndex, Listing, Metadata)] {
     _ext_internalMarketplaceListings();
   };
@@ -1006,13 +1229,13 @@ actor class EXTNFT(init_owner : Principal) = this {
                     switch (_saleGroups.get(paymentaddress)) {
                       case (?groupId) {
                         if (groupId >= currentSale.groups.size()) {
-                          _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s -10000)));
+                          _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s - 10000)));
                           _paymentSettlements.delete(paymentaddress);
                           return #err("The sale group is unavailable");
                         };
                         let group = currentSale.groups[groupId];
                         if (_checkSaleLimits(groupId, paymentaddress, quantity, group.limit) == false) {
-                          _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s -10000)));
+                          _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s - 10000)));
                           _paymentSettlements.delete(paymentaddress);
                           return #err("Exceeded group limits");
                         };
@@ -1023,7 +1246,7 @@ actor class EXTNFT(init_owner : Principal) = this {
                   case (_) {};
                 };
                 if (Nat64.toNat(quantity) > availableTokens()) {
-                  _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s -10000)));
+                  _addDisbursement((0, settlement.payer, settlement.subaccount, (ledgerResponse.e8s - 10000)));
                   _paymentSettlements.delete(paymentaddress);
                   return #err("Not enough NFTs - a refund will be sent automatically very soon");
                 } else {
@@ -1485,7 +1708,7 @@ actor class EXTNFT(init_owner : Principal) = this {
         status_code = 200;
         headers = [("Content-Type", asset.ctype), ("cache-control", "public, max-age=15552000")];
         body = payload;
-        streaming_strategy = ? #Callback({
+        streaming_strategy = ?#Callback({
           token = Option.unwrap(token);
           callback = http_request_streaming_callback;
         });
@@ -1616,7 +1839,7 @@ actor class EXTNFT(init_owner : Principal) = this {
   func _getNextSubAccount() : SubAccount {
     var _saOffset = 4294967296;
     data_internalNextSubAccount += 1;
-    return _natToSubAccount(_saOffset +data_internalNextSubAccount);
+    return _natToSubAccount(_saOffset + data_internalNextSubAccount);
   };
   func _addDisbursement(d : (TokenIndex, AccountIdentifier, SubAccount, Nat64)) : () {
     _disbursements := Queue.add(d, _disbursements);
@@ -1748,13 +1971,53 @@ actor class EXTNFT(init_owner : Principal) = this {
     };
   };
   func _transferTokenToUser(tindex : TokenIndex, receiver : AccountIdentifier) : () {
+    Debug.print("=== Transfer Token Debug ===");
+    Debug.print("Token Index: " # Nat32.toText(tindex));
+    Debug.print("New Receiver: " # receiver);
+
     let owner : ?AccountIdentifier = _getBearer(tindex);
-    _registry.put(tindex, receiver);
+
     switch (owner) {
-      case (?o) _removeFromUserTokens(tindex, o);
-      case (_) {};
+      case (?o) {
+        Debug.print("Previous Owner: " # o);
+      };
+      case null {
+        Debug.print("Previous Owner: NONE");
+      };
     };
+
+    // Update registry
+    _registry.put(tindex, receiver);
+    Debug.print("Registry updated - new owner set");
+
+    // Verify the registry entry
+    switch (_registry.get(tindex)) {
+      case (?currentOwner) {
+        Debug.print("Registry verification - Current owner: " # currentOwner);
+      };
+      case null {
+        Debug.print("Registry verification - ERROR: No owner found!");
+      };
+    };
+
+    switch (owner) {
+      case (?o) {
+        Debug.print("Removing token from old owner's list");
+        _removeFromUserTokens(tindex, o);
+      };
+      case (_) {
+        Debug.print("No old owner to remove from");
+      };
+    };
+
+    Debug.print("Adding token to new owner's list");
     _addToUserTokens(tindex, receiver);
+
+    Debug.print("Registry size after transfer: " # Nat.toText(_registry.size()));
+    Debug.print("=== Transfer Complete ===");
+    _printRegistry();
+    _printOwners();
+
   };
   func _removeFromUserTokens(tindex : TokenIndex, owner : AccountIdentifier) : () {
     switch (_owners.get(owner)) {
@@ -1769,6 +2032,19 @@ actor class EXTNFT(init_owner : Principal) = this {
     };
     _owners.put(receiver, ownersTokensNew);
   };
+  func _printRegistry() : () {
+    let entries = Iter.toArray(_registry.entries());
+    Debug.print("=== Full Registry Dump Begin ===");
+    Debug.print(debug_show (entries));
+    Debug.print("=== Full Registry Dump End ===");
+  };
+  func _printOwners() : () {
+    let entries = Iter.toArray(_owners.entries());
+    Debug.print("=== Owners Table Dump Begin ===");
+    Debug.print(debug_show (entries));
+    Debug.print("=== Owners Table Dump End ===");
+  };
+
   func _getBearer(tindex : TokenIndex) : ?AccountIdentifier {
     _registry.get(tindex);
   };
@@ -1782,7 +2058,7 @@ actor class EXTNFT(init_owner : Principal) = this {
       0,
       func(u8, accum) {
         index += 1;
-        accum + Nat32.fromNat(Nat8.toNat(u8)) << ((index -1) * 8);
+        accum + Nat32.fromNat(Nat8.toNat(u8)) << ((index - 1) * 8);
       },
     );
   };
@@ -1835,7 +2111,7 @@ actor class EXTNFT(init_owner : Principal) = this {
       let metadata = Option.unwrap(_extGetTokenMetadata(a.0));
 
       // Only proceed if the token is non-fungible
-      switch(metadata) {
+      switch (metadata) {
         case (#nonfungible(nftData)) {
           let nameExists = Array.find<((TokenIndex, Listing, Metadata))>(
             results,
@@ -1847,8 +2123,8 @@ actor class EXTNFT(init_owner : Principal) = this {
                 case (_) {
                   return false;
                 };
-              }
-            }
+              };
+            },
           );
 
           // If name doesn't exist, append the current listing
@@ -1863,10 +2139,10 @@ actor class EXTNFT(init_owner : Principal) = this {
         };
       };
     };
-    
+
     results;
-};
-  
+  };
+
   func _ext_internalMetadata(token : TokenIdentifier) : Result.Result<Metadata, CommonError> {
     if (ExtCore.TokenIdentifier.isPrincipal(token, Principal.fromActor(this)) == false) {
       return #err(#InvalidToken(token));
@@ -2239,112 +2515,95 @@ actor class EXTNFT(init_owner : Principal) = this {
   // };
 
   public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
+    Debug.print("getAllNonFungibleTokenData called");
+
     if (_tokenMetadata.size() == 0) {
-        return [];
+      return [];
     };
 
     let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata, ?Nat64)>(_tokenMetadata.size());
 
     for ((tokenIndex, metadata) in _tokenMetadata.entries()) {
-        switch (metadata) {
-            case (#nonfungible(nftData)) {
-                // Check if a token with the same name already exists in the buffer
-                let nameExists = Array.find<((TokenIndex, AccountIdentifier, Metadata, ?Nat64))>(
-                    Buffer.toArray(nonFungibleTokenData),
-                    func(entry) {
-                        switch (entry.2) {
-                            case (#nonfungible(existingNftData)) {
-                                return existingNftData.name == nftData.name;
-                            };
-                            case (_) {
-                                return false;
-                            };
-                        }
-                    }
-                );
+      switch (metadata) {
+        case (#nonfungible(_)) {
+          // Fetch the owner of the token
+          let owner = switch (_registry.get(tokenIndex)) {
+            case (?owner) owner;
+            case null AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+          };
 
-                // Only add the token if its name is not already in the buffer
-                if (nameExists == null) {
-                    // Fetch the owner of the token
-                    let owner = switch (_registry.get(tokenIndex)) {
-                        case (?owner) owner;
-                        case null AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-                    };
+          // Fetch the price if the token is listed in the marketplace
+          let listing = _tokenListing.get(tokenIndex);
+          let price = switch (listing) {
+            case (?l) ?l.price;
+            case (_) null;
+          };
 
-                    // Fetch the price if the token is listed in the marketplace
-                    let listing = _tokenListing.get(tokenIndex);
-                    let price = switch (listing) {
-                        case (?l) ?l.price;
-                        case (_) null;
-                    };
-
-                    // Add token details to the buffer
-                    nonFungibleTokenData.add((tokenIndex, owner, metadata, price));
-                };
-            };
-            case (#fungible(_)) {
-                // Skip fungible tokens
-            };
+          // Add token details to the buffer unconditionally
+          nonFungibleTokenData.add((tokenIndex, owner, metadata, price));
         };
+        case (#fungible(_)) {
+          // Skip fungible tokens
+        };
+      };
     };
 
-    // Return the buffer array without reversing
     return Buffer.toArray(nonFungibleTokenData);
-};
+  };
 
-//   public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
-//     if (_tokenMetadata.size() == 0) {
-//         return [];
-//     };
+  //   public query func getAllNonFungibleTokenData() : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
+  //     if (_tokenMetadata.size() == 0) {
+  //         return [];
+  //     };
 
-//     let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata, ?Nat64)>(_tokenMetadata.size());
+  //     let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata, ?Nat64)>(_tokenMetadata.size());
 
-//     for ((tokenIndex, metadata) in _tokenMetadata.entries()) {
-//         switch (metadata) {
-//             case (#nonfungible(nftData)) {
-//                 // Check if a token with the same name already exists in the buffer
-//                 let nameExists = Array.find<((TokenIndex, AccountIdentifier, Metadata, ?Nat64))>(
-//                     Buffer.toArray(nonFungibleTokenData),
-//                     func(entry) {
-//                         switch (entry.2) {
-//                             case (#nonfungible(existingNftData)) {
-//                                 return existingNftData.name == nftData.name;
-//                             };
-//                             case (_) {
-//                                 return false;
-//                             };
-//                         }
-//                     }
-//                 );
+  //     for ((tokenIndex, metadata) in _tokenMetadata.entries()) {
+  //         switch (metadata) {
+  //             case (#nonfungible(nftData)) {
+  //                 // Check if a token with the same name already exists in the buffer
+  //                 let nameExists = Array.find<((TokenIndex, AccountIdentifier, Metadata, ?Nat64))>(
+  //                     Buffer.toArray(nonFungibleTokenData),
+  //                     func(entry) {
+  //                         switch (entry.2) {
+  //                             case (#nonfungible(existingNftData)) {
+  //                                 return existingNftData.name == nftData.name;
+  //                             };
+  //                             case (_) {
+  //                                 return false;
+  //                             };
+  //                         }
+  //                     }
+  //                 );
 
-//                 // Only add the token if its name is not already in the buffer
-//                 if (nameExists == null) {
-//                     // Fetch the owner of the token
-//                     let owner = switch (_registry.get(tokenIndex)) {
-//                         case (?owner) owner;
-//                         case null AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-//                     };
+  //                 // Only add the token if its name is not already in the buffer
+  //                 if (nameExists == null) {
+  //                     // Fetch the owner of the token
+  //                     let owner = switch (_registry.get(tokenIndex)) {
+  //                         case (?owner) owner;
+  //                         case null AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
+  //                     };
 
-//                     // Fetch the price if the token is listed in the marketplace
-//                     let listing = _tokenListing.get(tokenIndex);
-//                     let price = switch (listing) {
-//                         case (?l) ?l.price;
-//                         case (_) null;
-//                     };
+  //                     // Fetch the price if the token is listed in the marketplace
+  //                     let listing = _tokenListing.get(tokenIndex);
+  //                     let price = switch (listing) {
+  //                         case (?l) ?l.price;
+  //                         case (_) null;
+  //                     };
 
-//                     // Add token details to the buffer
-//                     nonFungibleTokenData.add((tokenIndex, owner, metadata, price));
-//                 };
-//             };
-//             case (#fungible(_)) {
-//                 // Skip fungible tokens
-//             };
-//         };
-//     };
+  //                     // Add token details to the buffer
+  //                     nonFungibleTokenData.add((tokenIndex, owner, metadata, price));
+  //                 };
+  //             };
+  //             case (#fungible(_)) {
+  //                 // Skip fungible tokens
+  //             };
+  //         };
+  //     };
 
-//     // Return the buffer array in reverse order
-//     return Array.reverse(Buffer.toArray(nonFungibleTokenData));
-// };
+  //     // Return the buffer array in reverse order
+  //     return Array.reverse(Buffer.toArray(nonFungibleTokenData));
+  // };
 
   public query func getTokens() : async [(TokenIndex, MetadataLegacy)] {
     Iter.toArray(
@@ -2437,58 +2696,58 @@ actor class EXTNFT(init_owner : Principal) = this {
   };
 
   //singleNFTData
-  public query func getSingleNonFungibleTokenData(tokenid: TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
+  public query func getSingleNonFungibleTokenData(tokenid : TokenIndex) : async [(TokenIndex, AccountIdentifier, Metadata, ?Nat64)] {
     if (_tokenMetadata.size() == 0) {
-        return [];
+      return [];
     };
 
     let nonFungibleTokenData = Buffer.Buffer<(TokenIndex, AccountIdentifier, Metadata, ?Nat64)>(1);
 
     // Fetch the metadata for the token
     switch (_tokenMetadata.get(tokenid)) {
-        case (?metadata) {
-            switch (metadata) {
-                case (#nonfungible(_)) {
-                    // Fetch the owner of the token
-                    let owner = switch (_registry.get(tokenid)) {
-                        case (?owner) owner;
-                        case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
-                    };
-
-                    // Check if the token is listed in the marketplace and retrieve its price if it is
-                    let listing = _tokenListing.get(tokenid);
-                    let price = switch (listing) {
-                        case (?l) ?l.price;  // If listed, return the price
-                        case (_) null;  // If not listed, return null for price
-                    };
-
-                    // Add the token details (including price) to the buffer
-                    nonFungibleTokenData.add((tokenid, owner, metadata, price));
-                };
-                case (#fungible(_)) {
-                    // Return empty if the token is fungible
-                    return [];
-                };
+      case (?metadata) {
+        switch (metadata) {
+          case (#nonfungible(_)) {
+            // Fetch the owner of the token
+            let owner = switch (_registry.get(tokenid)) {
+              case (?owner) owner;
+              case (null) AID.fromPrincipal(Principal.fromText("aaaaa-aa"), null);
             };
-        };
-        case (null) {
-            // Return empty if no metadata found
+
+            // Check if the token is listed in the marketplace and retrieve its price if it is
+            let listing = _tokenListing.get(tokenid);
+            let price = switch (listing) {
+              case (?l) ?l.price; // If listed, return the price
+              case (_) null; // If not listed, return null for price
+            };
+
+            // Add the token details (including price) to the buffer
+            nonFungibleTokenData.add((tokenid, owner, metadata, price));
+          };
+          case (#fungible(_)) {
+            // Return empty if the token is fungible
             return [];
+          };
         };
+      };
+      case (null) {
+        // Return empty if no metadata found
+        return [];
+      };
     };
 
     // Return the array of token data, owner, metadata, and price (if listed)
     return Buffer.toArray(nonFungibleTokenData);
-};
+  };
 
-//mycollection
-  public query func myCollection(_collectionCanisterId: Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
+  //mycollection
+  public query func myCollection(_collectionCanisterId : Principal, user : AccountIdentifier) : async Result.Result<[(TokenIdentifier, Metadata)], CommonError> {
     // Get all tokens owned by the user from the _owners map
     switch (_owners.get(user)) {
       case (?tokens) {
         // Prepare an array to hold all metadata information along with their token identifiers
         var tokenDetails : [(TokenIdentifier, Metadata)] = [];
-        
+
         // Iterate through the tokens owned by the user
         for (token in tokens.vals()) {
           // Fetch metadata for each token
@@ -2504,7 +2763,7 @@ actor class EXTNFT(init_owner : Principal) = this {
             };
           };
         };
-        
+
         // Return the array of token identifiers and metadata details
         return #ok(tokenDetails);
       };
@@ -2513,7 +2772,6 @@ actor class EXTNFT(init_owner : Principal) = this {
         return #err(#Other("No tokens owned by this user"));
       };
     };
-};
-
+  };
 
 };

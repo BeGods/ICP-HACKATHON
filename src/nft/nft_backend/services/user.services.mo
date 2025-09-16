@@ -1,4 +1,10 @@
+import ExtTokenClass "../../EXT-V2/ext_v2/v2";
 import ExtCore "../../EXT-V2/motoko/ext/Core";
+import Queue "../../EXT-V2/motoko/util/Queue";
+import Types "../../EXT-V2/Types";
+import V2 "../../EXT-V2/ext_v2/v2";
+import _owners "../../EXT-V2/ext_v2/v2";
+import ExtCommon "../../EXT-V2/motoko/ext/Common";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
@@ -13,6 +19,7 @@ import CollectionServices "collection.services";
 import Pagin "../utils/pagin.utils";
 import MarketplaceServices "marketplace.services";
 import MainUtils "../utils/main.utils";
+import Buffer "mo:base/Buffer";
 
 module {
   public func create_user(
@@ -21,66 +28,90 @@ module {
     usersArray : [MainTypes.User],
     userIdCounter : Nat,
   ) : async Result.Result<(MainTypes.User, Nat), Text> {
+    Debug.print("Creating user - Account: " # Principal.toText(accountIdentifier));
 
-    // Check if user already exists
-    let existingUser = Array.find<MainTypes.User>(
-      usersArray,
-      func(u : MainTypes.User) : Bool {
-        u.accountIdentifier == accountIdentifier;
-      },
-    );
+    try {
+      let existingUser = Array.find<MainTypes.User>(
+        usersArray,
+        func(u : MainTypes.User) : Bool {
+          u.accountIdentifier == accountIdentifier;
+        },
+      );
 
-    switch (existingUser) {
-      case (?_) { return #err("User already exists.") };
-      case (null) {
-        let newUserId = userIdCounter + 1;
-        let currentTime = Time.now();
-
-        let newUser : MainTypes.User = {
-          uid = uid;
-          id = newUserId;
-          accountIdentifier = accountIdentifier;
-          createdAt = currentTime;
+      switch (existingUser) {
+        case (?_) {
+          Debug.print("User already exists");
+          return #err("User already exists.");
         };
+        case (null) {
+          let newUserId = userIdCounter + 1;
+          let currentTime = Time.now();
 
-        return #ok((newUser, newUserId));
+          let newUser : MainTypes.User = {
+            uid = uid;
+            id = newUserId;
+            accountIdentifier = accountIdentifier;
+            createdAt = currentTime;
+          };
+
+          Debug.print("User created successfully - ID: " # Nat.toText(newUserId));
+          return #ok((newUser, newUserId));
+        };
       };
+    } catch (e) {
+      return #err("Failed to create user");
     };
   };
 
-  public func updateUserDetails(accountIdentifier : Principal, name : Text, email : Text, telegram : Text, profilePic : ?Blob, userDetailsMap : TrieMap.TrieMap<Principal, MainTypes.UserDetails>, usersArray : [MainTypes.User]) : async Result.Result<Text, Text> {
-    // Check if the user exists in the usersArray created by the `create_user` function
-    let existingUser = Array.find<MainTypes.User>(
-      usersArray,
-      func(u : MainTypes.User) : Bool {
-        u.accountIdentifier == accountIdentifier;
-      },
-    );
+  public func updateUserDetails(
+    accountIdentifier : Principal,
+    name : Text,
+    email : Text,
+    telegram : Text,
+    profilePic : ?Blob,
+    userDetailsMap : TrieMap.TrieMap<Principal, MainTypes.UserDetails>,
+    usersArray : [MainTypes.User],
+  ) : async Result.Result<Text, Text> {
+    Debug.print("Updating user details - Account: " # Principal.toText(accountIdentifier));
 
-    // If the user does not exist, return an error
-    switch (existingUser) {
-      case (null) {
-        return #err("User not found. Please create a user before setting details.");
-      };
-      case (?_) {
-        // If the user exists, proceed to store or update the user's name, email, telegram, and profile picture
-        let userDetails : MainTypes.UserDetails = {
-          name = name;
-          email = email;
-          telegram = telegram;
-          profilepic = profilePic; // Use the renamed parameter
+    try {
+      let existingUser = Array.find<MainTypes.User>(
+        usersArray,
+        func(u : MainTypes.User) : Bool {
+          u.accountIdentifier == accountIdentifier;
+        },
+      );
+
+      switch (existingUser) {
+        case (null) {
+          Debug.print("User not found for update");
+          return #err("User not found. Please create a user before setting details.");
         };
+        case (?_) {
+          let userDetails : MainTypes.UserDetails = {
+            name = name;
+            email = email;
+            telegram = telegram;
+            profilepic = profilePic;
+          };
 
-        // Add or update user details in the userDetailsMap
-        userDetailsMap.put(accountIdentifier, userDetails);
-
-        return #ok("User details updated successfully.");
+          userDetailsMap.put(accountIdentifier, userDetails);
+          Debug.print("User details updated successfully");
+          return #ok("User details updated successfully.");
+        };
       };
+    } catch (e) {
+      return #err("Failed to update user details");
     };
   };
 
-  public func getUserDetails(accountIdentifier : Principal, userDetailsMap : TrieMap.TrieMap<Principal, MainTypes.UserDetails>, usersArray : [MainTypes.User]) : Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
-    // Check if the user exists in the usersArray (created by the create_user function)
+  public func getUserDetails(
+    accountIdentifier : Principal,
+    userDetailsMap : TrieMap.TrieMap<Principal, MainTypes.UserDetails>,
+    usersArray : [MainTypes.User],
+  ) : Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
+    Debug.print("Getting user details - Account: " # Principal.toText(accountIdentifier));
+
     let existingUser = Array.find<MainTypes.User>(
       usersArray,
       func(u : MainTypes.User) : Bool {
@@ -88,81 +119,83 @@ module {
       },
     );
 
-    // If the user does not exist, return an error
     switch (existingUser) {
       case (null) {
+        Debug.print("User not found");
         return #err("User not found.");
       };
       case (?foundUser) {
-        // Fetch the user's details from the userDetailsMap
         let userDetails = userDetailsMap.get(accountIdentifier);
 
         switch (userDetails) {
           case (null) {
-            // Return basic user information if additional details are not found
+            Debug.print("Basic user info returned - no additional details");
             return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, "No Name", "No Email", "No Telegram", null));
           };
           case (?details) {
-            // Return the user's account identifier, uid, id, name, email, telegram, and profile picture
+            Debug.print("Full user details returned");
             return #ok((foundUser.accountIdentifier, foundUser.uid, foundUser.id, details.name, details.email, details.telegram, details.profilepic));
           };
         };
       };
     };
+
   };
 
-  public func getAllUsers(chunkSize : Nat, pageNo : Nat, userDetailsMap : TrieMap.TrieMap<Principal, MainTypes.UserDetails>, usersArray : [MainTypes.User]) : Result.Result<{ data : [(Principal, Nat, Time.Time, Text, Text, ?Blob)]; current_page : Nat; total_pages : Nat }, Text> {
+  public func getAllUsers(
+    chunkSize : Nat,
+    pageNo : Nat,
+    userDetailsMap : TrieMap.TrieMap<Principal, MainTypes.UserDetails>,
+    usersArray : [MainTypes.User],
+  ) : Result.Result<{ data : [(Principal, Nat, Time.Time, Text, Text, ?Blob)]; current_page : Nat; total_pages : Nat }, Text> {
+    Debug.print("Getting all users - Chunk: " # Nat.toText(chunkSize) # ", Page: " # Nat.toText(pageNo));
 
-    // Map over the usersArray and extract the relevant fields
     let allUsersDetails = Array.map<MainTypes.User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
       usersArray,
       func(u : MainTypes.User) : (Principal, Nat, Time.Time, Text, Text, ?Blob) {
-        // Fetch user details from the userDetailsMap
         let userDetails = userDetailsMap.get(u.accountIdentifier);
 
-        // Determine the name to return (if not found, return "No Name")
         let name = switch (userDetails) {
-          case (null) "No Name"; // Default to "No Name" if details are not found
-          case (?details) details.name; // Return the user's name if available
+          case (null) "No Name";
+          case (?details) details.name;
         };
 
-        // Determine the email to return (if not found, return "No Email")
         let email = switch (userDetails) {
-          case (null) "No Email"; // Default to "No Email" if details are not found
-          case (?details) details.email; // Return the user's email if available
+          case (null) "No Email";
+          case (?details) details.email;
         };
 
-        // Get the profile picture, if available
         let profilePic = switch (userDetails) {
-          case (null) null; // No details found
-          case (?details) details.profilepic; // Return the profile picture if available
+          case (null) null;
+          case (?details) details.profilepic;
         };
 
-        // Return the user details including the profile picture
         return (u.accountIdentifier, u.id, u.createdAt, name, email, profilePic);
       },
     );
 
-    // Paginate the results
     let index_pages = Pagin.paginate<(Principal, Nat, Time.Time, Text, Text, ?Blob)>(allUsersDetails, chunkSize);
+    Debug.print("Total users: " # Nat.toText(allUsersDetails.size()) # ", Pages: " # Nat.toText(index_pages.size()));
 
-    // Error handling for invalid page numbers or empty data
     if (index_pages.size() < pageNo) {
+      Debug.print("Page not found");
       return #err("Page not found");
     };
 
     if (index_pages.size() == 0) {
+      Debug.print("No users found");
       return #err("No users found");
     };
 
     let users_page = index_pages[pageNo];
+    Debug.print("Returning " # Nat.toText(users_page.size()) # " users for page " # Nat.toText(pageNo));
 
-    // Return the paginated result
     return #ok({
       data = users_page;
       current_page = pageNo + 1;
       total_pages = index_pages.size();
     });
+
   };
 
   public func userNFTcollection(
@@ -171,199 +204,181 @@ module {
     chunkSize : Nat,
     pageNo : Nat,
   ) : async Result.Result<{ boughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)]; unboughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)]; current_page : Nat }, MainTypes.CommonError> {
+    Debug.print("Getting NFTs for user: " # user # " in collection: " # Principal.toText(_collectionCanisterId));
 
-    // Define the canister actor interface
-    let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-      getAllNonFungibleTokenData : () -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
-      getCollectionDetails : () -> async (Text, Text, Text);
-    };
+    try {
+      let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        getAllNonFungibleTokenData : () -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
+        getCollectionDetails : () -> async (Text, Text, Text);
+      };
 
-    // Fetch the collection name and details
-    let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+      let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+      Debug.print("Collection name: " # collectionName);
 
-    // Fetch all NFTs in the collection
-    let allNFTs = await collectionCanisterActor.getAllNonFungibleTokenData();
+      let allNFTs = await collectionCanisterActor.getAllNonFungibleTokenData();
+      Debug.print("Total NFTs in collection: " # Nat.toText(allNFTs.size()));
 
-    // Fetch the listings (unbought NFTs)
-    let marketplaceListings = await MarketplaceServices.listings(_collectionCanisterId);
+      let marketplaceListings = await MarketplaceServices.listings(_collectionCanisterId);
+      Debug.print("Total listings: " # Nat.toText(marketplaceListings.size()));
 
-    var boughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)] = [];
-    var unboughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)] = [];
+      var boughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)] = [];
+      var unboughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)] = [];
 
-    // Iterate through all NFTs in the collection
-    for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
-      let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+      for ((tokenIndex, nftOwner, metadata, price) in allNFTs.vals()) {
+        let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
 
-      // Check if the NFT is listed in the marketplace (unbought)
-      let isListed = Array.find<(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)>(
-        marketplaceListings,
-        func((listedIndex, _, _, _)) {
-          listedIndex == tokenIndex;
-        },
-      );
-
-      if (nftOwner == user) {
-        // If the user owns the NFT, add it to the boughtNFTs list with its price
-        boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
-      } else if (isListed != null) {
-        // Check if an NFT with the same name already exists in boughtNFTs or unboughtNFTs
-        let nameExistsInBoughtNFTs = Array.find<((MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64))>(
-          boughtNFTs,
-          func((_, _, existingMetadata, _, _, _)) {
-            switch (existingMetadata) {
-              case (#nonfungible(existingNftData)) {
-                switch (metadata) {
-                  case (#nonfungible(nftData)) {
-                    return existingNftData.name == nftData.name;
-                  };
-                  case (_) { return false };
-                };
-              };
-              case (_) { return false };
-            };
+        let isListed = Array.find<(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)>(
+          marketplaceListings,
+          func((listedIndex, _, _, _)) {
+            listedIndex == tokenIndex;
           },
         );
 
-        let nameExistsInUnboughtNFTs = Array.find<((MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64))>(
-          unboughtNFTs,
-          func((_, _, existingMetadata, _, _, _)) {
-            switch (existingMetadata) {
-              case (#nonfungible(existingNftData)) {
-                switch (metadata) {
-                  case (#nonfungible(nftData)) {
-                    return existingNftData.name == nftData.name;
-                  };
-                  case (_) { return false };
-                };
-              };
-              case (_) { return false };
-            };
-          },
-        );
-
-        // If the name doesn't exist in either list, add the NFT to the unboughtNFTs list
-        if (nameExistsInBoughtNFTs == null and nameExistsInUnboughtNFTs == null) {
+        if (nftOwner == user) {
+          // Append every bought NFT without deduplication by name
+          boughtNFTs := Array.append(boughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
+        } else if (isListed != null) {
+          // Append every unbought NFT listed, no deduplication by name
           unboughtNFTs := Array.append(unboughtNFTs, [(tokenIdentifier, tokenIndex, metadata, collectionName, _collectionCanisterId, price)]);
         };
       };
+
+      Debug.print("Bought NFTs: " # Nat.toText(boughtNFTs.size()) # ", Unbought NFTs: " # Nat.toText(unboughtNFTs.size()));
+
+      let boughtNFTsPaginated = Pagin.paginate<(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)>(boughtNFTs, chunkSize);
+      let unboughtNFTsPaginated = Pagin.paginate<(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)>(unboughtNFTs, chunkSize);
+
+      if (boughtNFTsPaginated.size() <= pageNo and unboughtNFTsPaginated.size() <= pageNo) {
+        Debug.print("Page not found");
+        return #err(#Other("Page not found"));
+      };
+
+      let boughtNFTsPage = if (pageNo < boughtNFTsPaginated.size()) {
+        boughtNFTsPaginated[pageNo];
+      } else { [] };
+      let unboughtNFTsPage = if (pageNo < unboughtNFTsPaginated.size()) {
+        unboughtNFTsPaginated[pageNo];
+      } else { [] };
+
+      return #ok({
+        boughtNFTs = boughtNFTsPage;
+        unboughtNFTs = unboughtNFTsPage;
+        current_page = pageNo + 1;
+      });
+
+    } catch (e) {
+      return #err(#Other("Failed to get user NFTs"));
     };
-
-    // Paginate both boughtNFTs and unboughtNFTs
-    let boughtNFTsPaginated = Pagin.paginate<(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)>(boughtNFTs, chunkSize);
-    let unboughtNFTsPaginated = Pagin.paginate<(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)>(unboughtNFTs, chunkSize);
-
-    // Check page availability for both lists
-    if (boughtNFTsPaginated.size() <= pageNo and unboughtNFTsPaginated.size() <= pageNo) {
-      return #err(#Other("Page not found"));
-    };
-
-    // Get the pages for both lists
-    let boughtNFTsPage = if (pageNo < boughtNFTsPaginated.size()) {
-      boughtNFTsPaginated[pageNo];
-    } else { [] };
-    let unboughtNFTsPage = if (pageNo < unboughtNFTsPaginated.size()) {
-      unboughtNFTsPaginated[pageNo];
-    } else { [] };
-
-    // Return paginated boughtNFTs and unboughtNFTs
-    return #ok({
-      boughtNFTs = boughtNFTsPage;
-      unboughtNFTs = unboughtNFTsPage;
-      current_page = pageNo + 1;
-      // total_pages = boughtNFTsPage.size();
-      // total_pages_unbought = unboughtNFTsPage.size();
-    });
   };
 
   public func useractivity(_collectionCanisterId : Principal, buyerId : MainTypes.AccountIdentifier) : async [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)] {
-    let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-      ext_marketplaceTransactions : () -> async [MainTypes.Transaction];
-    };
+    Debug.print("Getting user activity for: " # buyerId # " in collection: " # Principal.toText(_collectionCanisterId));
 
-    // Retrieve transactions from the collection canister
-    let transactions = await transactionActor.ext_marketplaceTransactions();
-
-    var transformedTransactions : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)] = [];
-
-    // Iterate through each transaction
-    for (transaction in transactions.vals()) {
-      if (transaction.buyer == buyerId) {
-        let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
-
-        // Fetch the collection details to get the name
-        let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-          getCollectionDetails : () -> async (Text, Text, Text);
-        };
-
-        let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
-
-        // Append the transformed transaction data
-        transformedTransactions := Array.append(
-          transformedTransactions,
-          [(transaction.token, tokenIdentifier, transaction, collectionName)],
-        );
+    try {
+      let transactionActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceTransactions : () -> async [MainTypes.Transaction];
       };
-    };
 
-    return transformedTransactions;
-  };
+      let transactions = await transactionActor.ext_marketplaceTransactions();
+      Debug.print("Total transactions: " # Nat.toText(transactions.size()));
 
-  public func alluseractivity(buyerId : MainTypes.AccountIdentifier, chunkSize : Nat, pageNo : Nat, usersCollectionMap : TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>) : async Result.Result<{ data : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)]; current_page : Nat; total_pages : Nat }, Text> {
+      var transformedTransactions : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)] = [];
+      var userTransactionCount = 0;
 
-    var allUserActivities : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)] = [];
+      for (transaction in transactions.vals()) {
+        if (transaction.buyer == buyerId) {
+          userTransactionCount += 1;
+          let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, transaction.token);
 
-    // Call getAllCollections to get all collections in the system
-    let allCollections = await CollectionServices.getAllCollections(usersCollectionMap);
-
-    // Iterate through each collection's details
-    for ((_, collections) in allCollections.vals()) {
-      for ((_, collectionCanisterId, collectionName, _, _) in collections.vals()) {
-        let transactionActor = actor (Principal.toText(collectionCanisterId)) : actor {
-          ext_marketplaceTransactions : () -> async [MainTypes.Transaction];
-        };
-
-        // Retrieve transactions from the collection canister
-        try {
-          let transactions = await transactionActor.ext_marketplaceTransactions();
-
-          // Iterate through each transaction
-          for (transaction in transactions.vals()) {
-            if (transaction.buyer == buyerId) {
-              let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, transaction.token);
-
-              // Append the transformed transaction data
-              allUserActivities := Array.append(
-                allUserActivities,
-                [(transaction.token, tokenIdentifier, transaction, collectionName)],
-              );
-            };
+          let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+            getCollectionDetails : () -> async (Text, Text, Text);
           };
 
-        } catch (e) {
-          // Handle potential errors, but continue to the next collection
-          Debug.print(Text.concat("Error fetching transactions from canister: ", Principal.toText(collectionCanisterId)));
+          let (collectionName, _, _) = await collectionCanisterActor.getCollectionDetails();
+
+          transformedTransactions := Array.append(
+            transformedTransactions,
+            [(transaction.token, tokenIdentifier, transaction, collectionName)],
+          );
         };
       };
+
+      Debug.print("User transactions found: " # Nat.toText(userTransactionCount));
+      return transformedTransactions;
+
+    } catch (e) {
+      return [];
     };
+  };
 
-    // Apply pagination using the chunkSize and pageNo
-    let index_pages = Pagin.paginate<(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)>(allUserActivities, chunkSize);
+  public func alluseractivity(
+    buyerId : MainTypes.AccountIdentifier,
+    chunkSize : Nat,
+    pageNo : Nat,
+    usersCollectionMap : TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>,
+  ) : async Result.Result<{ data : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)]; current_page : Nat; total_pages : Nat }, Text> {
+    Debug.print("Getting all user activity for: " # buyerId);
 
-    if (index_pages.size() < pageNo) {
-      return #err("Page not found");
+    try {
+      var allUserActivities : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)] = [];
+
+      let allCollections = await CollectionServices.getAllCollections(usersCollectionMap);
+      Debug.print("Total collection groups: " # Nat.toText(allCollections.size()));
+
+      for ((_, collections) in allCollections.vals()) {
+        for ((_, collectionCanisterId, collectionName, _, _) in collections.vals()) {
+          Debug.print("Checking collection: " # Principal.toText(collectionCanisterId));
+
+          let transactionActor = actor (Principal.toText(collectionCanisterId)) : actor {
+            ext_marketplaceTransactions : () -> async [MainTypes.Transaction];
+          };
+
+          try {
+            let transactions = await transactionActor.ext_marketplaceTransactions();
+
+            for (transaction in transactions.vals()) {
+              if (transaction.buyer == buyerId) {
+                let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, transaction.token);
+
+                allUserActivities := Array.append(
+                  allUserActivities,
+                  [(transaction.token, tokenIdentifier, transaction, collectionName)],
+                );
+              };
+            };
+
+          } catch (e) {
+            Debug.print("Error fetching from collection " # Principal.toText(collectionCanisterId));
+          };
+        };
+      };
+
+      Debug.print("Total user activities found: " # Nat.toText(allUserActivities.size()));
+
+      let index_pages = Pagin.paginate<(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Transaction, Text)>(allUserActivities, chunkSize);
+
+      if (index_pages.size() < pageNo) {
+        Debug.print("Page not found");
+        return #err("Page not found");
+      };
+
+      if (index_pages.size() == 0) {
+        Debug.print("No user activities found");
+        return #err("No user activities found");
+      };
+
+      let userActivitiesPage = index_pages[pageNo];
+      Debug.print("Returning " # Nat.toText(userActivitiesPage.size()) # " activities for page " # Nat.toText(pageNo));
+
+      return #ok({
+        data = userActivitiesPage;
+        current_page = pageNo + 1;
+        total_pages = index_pages.size();
+      });
+
+    } catch (e) {
+      return #err("Failed to get user activity");
     };
-
-    if (index_pages.size() == 0) {
-      return #err("No user activities found");
-    };
-
-    let userActivitiesPage = index_pages[pageNo];
-
-    return #ok({
-      data = userActivitiesPage;
-      current_page = pageNo + 1;
-      total_pages = index_pages.size();
-    });
   };
 
   public func gethardcopy(
@@ -381,15 +396,29 @@ module {
     orders : [MainTypes.Order],
     orderIdCounter : Nat,
   ) : (Result.Result<Text, Text>, [MainTypes.Order], Nat) {
+    Debug.print("Processing hard copy order for user: " # Principal.toText(accountIdentifier));
 
-    // Validate required fields
-    if (phone == "") return (#err("Phone number is required."), orders, orderIdCounter);
-    if (address == "") return (#err("Address is required."), orders, orderIdCounter);
-    if (city == "") return (#err("City is required."), orders, orderIdCounter);
-    if (country == "") return (#err("Country is required."), orders, orderIdCounter);
-    if (pincode == "") return (#err("Pincode is required."), orders, orderIdCounter);
+    if (phone == "") {
+      Debug.print("Phone number missing");
+      return (#err("Phone number is required."), orders, orderIdCounter);
+    };
+    if (address == "") {
+      Debug.print("Address missing");
+      return (#err("Address is required."), orders, orderIdCounter);
+    };
+    if (city == "") {
+      Debug.print("City missing");
+      return (#err("City is required."), orders, orderIdCounter);
+    };
+    if (country == "") {
+      Debug.print("Country missing");
+      return (#err("Country is required."), orders, orderIdCounter);
+    };
+    if (pincode == "") {
+      Debug.print("Pincode missing");
+      return (#err("Pincode is required."), orders, orderIdCounter);
+    };
 
-    // Find the user
     let existingUser = Array.find<MainTypes.User>(
       usersArray,
       func(u : MainTypes.User) : Bool {
@@ -399,6 +428,7 @@ module {
 
     switch (existingUser) {
       case (null) {
+        Debug.print("User not found for order");
         return (#err("User not found. Please create a user before placing an order."), orders, orderIdCounter);
       };
       case (?foundUser) {
@@ -420,12 +450,10 @@ module {
         };
 
         let updatedOrders = Array.append(orders, [newOrder]);
+        Debug.print("Order created successfully - ID: " # Nat.toText(newOrderId));
 
         return (
-          #ok(
-            "Order placed successfully for user with UUID: " # uuid #
-            ". Order ID: " # Nat.toText(newOrderId)
-          ),
+          #ok("Order placed successfully for user with UUID: " # uuid # ". Order ID: " # Nat.toText(newOrderId)),
           updatedOrders,
           newOrderId,
         );
@@ -439,35 +467,55 @@ module {
     pageNo : Nat,
     NFTcollections : TrieMap.TrieMap<Text, Principal>,
   ) : async Result.Result<{ boughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)]; current_page : Nat }, MainTypes.CommonError> {
+    Debug.print("Getting all NFTs for user: " # user);
 
-    let allCollections : [Principal] = await MainUtils.getAllCollectionCanisterIds(NFTcollections);
+    try {
+      let allCollections : [Principal] = await MainUtils.getAllCollectionCanisterIds(NFTcollections);
+      Debug.print("Total collections to check: " # Nat.toText(allCollections.size()));
 
-    var allBoughtNFTs : [(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)] = [];
+      let allBoughtNFTsBuffer = Buffer.Buffer<(MainTypes.TokenIdentifier, MainTypes.TokenIndex, MainTypes.Metadata, Text, Principal, ?Nat64)>(0);
 
-    for (collectionCanisterId in allCollections.vals()) {
-      let result = await userNFTcollection(collectionCanisterId, user, chunkSize, pageNo);
-      switch (result) {
-        case (#ok(data)) {
-          allBoughtNFTs := Array.append(allBoughtNFTs, data.boughtNFTs);
-        };
-        case (#err(_)) {
-          ();
+      for (collectionCanisterId in allCollections.vals()) {
+        Debug.print("Checking collection: " # Principal.toText(collectionCanisterId));
+
+        let result = await userNFTcollection(collectionCanisterId, user, 1000, 0);
+
+        switch (result) {
+          case (#ok(data)) {
+            Debug.print("Found " # Nat.toText(data.boughtNFTs.size()) # " NFTs in collection");
+
+            for (nft in data.boughtNFTs.vals()) {
+              allBoughtNFTsBuffer.add(nft);
+            };
+          };
+          case (#err(error)) {
+            Debug.print("Error fetching from collection: " # debug_show (error));
+          };
         };
       };
+
+      let allBoughtNFTs = Buffer.toArray(allBoughtNFTsBuffer);
+      Debug.print("Total NFTs found: " # Nat.toText(allBoughtNFTs.size()));
+
+      let boughtNFTsPaginated = Pagin.paginate(allBoughtNFTs, chunkSize);
+      Debug.print("Total pages: " # Nat.toText(boughtNFTsPaginated.size()));
+
+      if (boughtNFTsPaginated.size() <= pageNo) {
+        Debug.print("Page not found - Available pages: " # Nat.toText(boughtNFTsPaginated.size()));
+        return #err(#Other("Page not found"));
+      };
+
+      let boughtNFTsPage = boughtNFTsPaginated[pageNo];
+      Debug.print("Returning " # Nat.toText(boughtNFTsPage.size()) # " NFTs for page " # Nat.toText(pageNo));
+
+      return #ok({
+        boughtNFTs = boughtNFTsPage;
+        current_page = pageNo + 1;
+      });
+
+    } catch (e) {
+      return #err(#Other("Failed to get user NFTs"));
     };
-
-    let boughtNFTsPaginated = Pagin.paginate(allBoughtNFTs, chunkSize);
-
-    if (boughtNFTsPaginated.size() <= pageNo) {
-      return #err(#Other("Page not found"));
-    };
-
-    let boughtNFTsPage = boughtNFTsPaginated[pageNo];
-
-    return #ok({
-      boughtNFTs = boughtNFTsPage;
-      current_page = pageNo + 1;
-    });
-  }
+  };
 
 };

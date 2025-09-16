@@ -79,6 +79,10 @@ nft_backend → # Motoko backend canister for NFT logic (minting, managing) & ga
 nft_frontend → # Static asset canister serving the NFT dApp frontend
 ```
 
+tokenIdentifer | collection canister Id | tokenIndex
+57eim-bykor-uwj77-77777-7eaaa-uaqca-aaaaa-a | principal "ulvla-h7777-77774-qaacq-cai"| 0
+57eim-bykor-uwj77-77777-7eaaa-uaqca-aaaaa-a | principal "ulvla-h7777-77774-qaacq-cai" | 0
+
 ### `package.json` (root)
 
 - Contains **common dependencies** shared across all parts of the project.

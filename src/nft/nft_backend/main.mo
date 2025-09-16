@@ -15,6 +15,12 @@
 */
 
 import ExtTokenClass "../EXT-V2/ext_v2/v2";
+import ExtCore "../EXT-V2/motoko/ext/Core";
+import Queue "../EXT-V2/motoko/util/Queue";
+import Types "../EXT-V2/Types";
+import V2 "../EXT-V2/ext_v2/v2";
+import _owners "../EXT-V2/ext_v2/v2";
+import ExtCommon "../EXT-V2/motoko/ext/Common";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
@@ -30,16 +36,11 @@ import Error "mo:base/Error";
 import Nat32 "mo:base/Nat32";
 import Result "mo:base/Result";
 import Nat64 "mo:base/Nat64";
+import Nat8 "mo:base/Nat8";
 import AID "../EXT-V2/motoko/util/AccountIdentifier";
-import ExtCore "../EXT-V2/motoko/ext/Core";
-import Types "../EXT-V2/Types";
-import V2 "../EXT-V2/ext_v2/v2";
 import HashMap "mo:base/HashMap";
 import Hash "mo:base/Hash";
 import Option "mo:base/Option";
-import Queue "../EXT-V2/motoko/util/Queue";
-import ExtCommon "../EXT-V2/motoko/ext/Common";
-import _owners "../EXT-V2/ext_v2/v2";
 import Pagin "utils/pagin.utils";
 import MainTypes "types/main.types";
 import MainUtils "utils/main.utils";
@@ -51,6 +52,7 @@ import FavoriteServices "services/favorite.services";
 import OrderServices "services/order.services";
 import MarketplaceServices "services/marketplace.services";
 import Blob "mo:base/Blob";
+import Buffer "mo:base/Buffer";
 
 actor Main {
 
@@ -167,6 +169,13 @@ actor Main {
     };
   };
 
+  // Add this function to expose the EXT Core debug function
+  public shared func debug_getTokenIndexMapping(_collectionCanisterId : Principal) : async [(MainTypes.TokenIndex, [MainTypes.TokenIndex])] {
+    let nftCanister = actor (Principal.toText(_collectionCanisterId)) : actor {
+      debug_getTokenIndexMapping : () -> async [(MainTypes.TokenIndex, [MainTypes.TokenIndex])];
+    };
+    return await nftCanister.debug_getTokenIndexMapping();
+  };
   /* -------------------------------------------------------------------------- */
   /*                     GAME -  QUEST PACKET CONTROLLERS                       */
   /* -------------------------------------------------------------------------- */
@@ -447,18 +456,13 @@ actor Main {
   public shared ({ caller = user }) func claimBoosterNFT(
     collectionCanister : Principal,
     tokenId : MainTypes.TokenIdentifier,
-    tokenIndex : MainTypes.TokenIndex,
   ) : async Text {
     if (Principal.isAnonymous(user)) {
       Debug.print("User is anonymous. Authentication required.");
       return "User must be authenticated";
     };
 
-    Debug.print("=== Burn Initiation ===");
-    Debug.print("User: " # Principal.toText(user));
-    Debug.print("Collection: " # Principal.toText(collectionCanister));
-    Debug.print("Token ID: " # tokenId);
-
+    let tokenIndex = ExtCore.TokenIdentifier.getIndex(tokenId);
     let userAccountId = Principal.toText(user);
     let nftActor = actor (Principal.toText(collectionCanister)) : actor {
       getSingleNonFungibleTokenData : (MainTypes.TokenIndex) -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
@@ -493,15 +497,23 @@ actor Main {
         };
         case (#nonfungible(nfung)) {
           Debug.print("Nonfungible NFT Name: " # nfung.name);
-          BoosterRecord.put(
-            user,
-            {
-              NftTokeId = tokenId;
-              boosterType = nfung.name;
-              timestamp = Time.now();
-              claimed = false;
-            },
-          );
+
+          // Check if valid booster NFT
+          if (nfung.name == "Automata" or nfung.name == "Burst") {
+            BoosterRecord.put(
+              user,
+              {
+                NftTokeId = tokenId;
+                boosterType = nfung.name;
+                timestamp = Time.now();
+                claimed = false;
+              },
+            );
+          } else {
+            Debug.print("NFT type not supported for burning: " # nfung.name);
+            return "This NFT type is not eligible for burning. Only 'Automata' and 'Burst' NFTs can be burned.";
+          };
+
         };
         case (_) {
           Debug.print("Unknown metadata variant");
@@ -536,6 +548,117 @@ actor Main {
     };
 
     return "Ownership verified, metadata logged, and NFT burned";
+  };
+
+  public shared ({ caller = user }) func upgradeNFTRarity(
+    collectionCanister : Principal,
+    tokenIds : [MainTypes.TokenIdentifier],
+  ) : async Text {
+    if (tokenIds.size() != 3) {
+      return "Exactly 3 NFTs must be provided.";
+    };
+
+    // if (Principal.isAnonymous(user)) {
+    //   Debug.print("User is anonymous. Authentication required.");
+    //   return "User must be authenticated.";
+    // };
+
+    let userAccountId = "g7lup-jtz4h-636bc-ogwao-dxpyx-t2dg6-wr3ny-veqdq-xyze4-pmomi-3qe";
+    let nftActor = actor (Principal.toText(collectionCanister)) : actor {
+      getSingleNonFungibleTokenData : (MainTypes.TokenIndex) -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
+      ext_bearer : (tokenId : MainTypes.TokenIdentifier) -> async Result.Result<MainTypes.AccountIdentifier, Text>;
+    };
+
+    var nftMetadatas : [MainTypes.Metadata] = [];
+
+    func extractRarity(meta : ?MainTypes.MetadataContainer) : Text {
+      switch (meta) {
+        case (null) { return "Unknown" };
+        case (?m) {
+          switch (m) {
+            case (#data(values)) {
+              for ((key, val) in values.vals()) {
+                if (key == "rarity") {
+                  switch (val) {
+                    case (#text(t)) return t;
+                    case (#nat(n)) return Nat.toText(n);
+                    case (#nat8(n8)) return Nat8.toText(n8);
+                    case (#blob(_)) return "Blob rarity";
+                  };
+                };
+              };
+              return "Unknown";
+            };
+            case (#json(j)) {
+              return "JSON metadata (parse needed): " # j;
+            };
+            case (#blob(_)) {
+              return "Blob metadata (parse needed)";
+            };
+          };
+        };
+      };
+    };
+
+    for (tokenId in tokenIds.vals()) {
+      let tokenIndex = ExtCore.TokenIdentifier.getIndex(tokenId);
+
+      let bearerResult = await nftActor.ext_bearer(tokenId);
+      switch (bearerResult) {
+        case (#err(error)) {
+          Debug.print("Failed to get NFT owner: " # error);
+          return "Failed to get NFT owner: " # error;
+        };
+        case (#ok(owner)) {
+          if (owner != userAccountId) {
+            Debug.print("Ownership verified: NO");
+            return "User does not own this NFT";
+          };
+          Debug.print("Ownership verified: YES for " # tokenId);
+        };
+      };
+
+      let tokenData = await nftActor.getSingleNonFungibleTokenData(tokenIndex);
+      if (tokenData.size() == 0) {
+        return "No token data found for tokenIndex " # Nat.toText(Nat32.toNat(tokenIndex));
+      };
+
+      let (_, _, metadata, _) = tokenData[0];
+      switch (metadata) {
+        case (#fungible(_)) {
+          return "Fungible Token detected, not supported.";
+        };
+        case (#nonfungible(nfung)) {
+          Debug.print("Fetched Nonfungible NFT: " # nfung.name);
+          nftMetadatas := Array.append(nftMetadatas, [metadata]);
+        };
+        case (_) {
+          return "Unknown metadata variant.";
+        };
+      };
+    };
+
+    // Step 5: Verify all 3 NFTs are identical metadata
+    if (nftMetadatas.size() != 3) {
+      return "Error: could not fetch all NFT metadata.";
+    };
+
+    let firstMeta = nftMetadatas[0];
+    for (meta in nftMetadatas.vals()) {
+      if (meta != firstMeta) {
+        return "NFT metadata mismatch: All 3 NFTs must be identical.";
+      };
+    };
+
+    switch (firstMeta) {
+      case (#nonfungible(nfung)) {
+        let rarityText = extractRarity(nfung.metadata);
+        return "NFT Upgrade Validated. Name: " # nfung.name # ", Rarity: " # rarityText;
+      };
+      case (_) {
+        return "Unexpected metadata type.";
+      };
+    };
   };
 
   public shared func getBoostersForUser(user : Principal) : async ?MainTypes.BoosterInfo {
@@ -868,7 +991,6 @@ actor Main {
     return await MarketplaceServices.plistings(_collectionCanisterId, chunkSize, pageNo);
   };
 
-  //purchase nft
   public shared ({ caller = user }) func purchaseNft(_collectionCanisterId : Principal, tokenid : MainTypes.TokenIdentifier, price : Nat64, buyer : MainTypes.AccountIdentifier) : async Result.Result<(MainTypes.AccountIdentifier, Nat64), MainTypes.CommonError> {
     if (Principal.isAnonymous(user)) {
       throw Error.reject("User is not authenticated");
