@@ -249,50 +249,15 @@ npm run dev
 
 > **Environment Setup**: Configure environment variables (see .env.example in each folder for reference).
 
-## ICP Integration
+## ⚙️ Features Built on ICP So Far
 
-### 1. Authentication & Identity
-
-- Integrated **`Internet Identity`**, **`Stoic`**, and **`Plug`** wallets for secure, decentralized login and user verification.
-
-### 2. NFT & Asset Storage
-
-- Game assets and NFTs are stored on the **ICP network** using decentralized storage for permanence and reliability.
-
-### 3. NFT Minting & Management
-
-- Uses **`EXT-based token standards`** for minting, tracking ownership, and managing NFTs fully on-chain.
-
-### 4. ICP Deployment
-
-- Frontend and backend of the **NFT Booster system** are deployed as **ICP canisters**, enabling a fully decentralized stack.
-
-### 5. Game Quest Packets
-
-- Integrated NFT packet minting within the game launcher — players mint NFT packets upon completing quests, with quest completion and minting **records maintained on-chain**.
-
-### 6. Principal-Based Access
-
-- Uses **role-based access control** for users and admins based on their ICP wallet `Principal`.
-
-## Future Scope
-
-### 1. Seasonal NFTs
-
-- NFTs will be tied to specific **seasons**, each with custom rules like start/end dates and rarity eligibility.
-- Supports seamless transitions between seasons (e.g., _Season 1 → Season 2_) with progressive rarity adjustments.
-
-### 2. NFT Burning System
-
-- Users can **burn 3 low-rarity NFTs** to mint **1 higher-rarity NFT**, encouraging crafting and rarity upgrading.
-
-### 3. Game Hosting on ICP
-
-- APIs with core mechanics and game-state rules will be **deployed as canisters** for greater transparency and immutability.
-
-### 4. AI-Powered Interaction
-
-- Personalized interactions and game mechanics will be powered by our **AI models**, deployed directly on the **ICP**.
+- **On-Chain NFT Marketplace** – Deployed marketplace frontend as a canister, enabling gaming projects to list and trade NFT collections fully on-chain.
+- **Fully On-Chain Architecture** – Developed around a ICP-based framework powering the NFT marketplace, game launcher, gaming agents, and multi-chain operations, seamlessly connecting them together.
+- **Seasonal Listings** – Introduced structured, season-based NFT drops with batch minting.
+- **NFT Upgrade Mechanism** – Burn 3 lower-rarity NFTs to mint 1 higher-rarity NFT.
+- **Contextual Bandit Gaming Agent** – Built in Rust and deployed on ICP for *Requiem of Relics*, adding transparent and interactive swiping gameplay.
+- **Quest Packets** – On-chain quest packet minting, allowing players to earn rewards by completing quests, usable in future titles like *Dawn of Duels*.
+- **Booster NFTs** – Purchase on the marketplace and burn in the game launcher to activate weekly boosters, multiplying rewards and helping players reach the Hall of Fame.
 
 ## Important Links
 
