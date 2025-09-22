@@ -1,0 +1,26 @@
+type Cluster = variant { Skilled; Newbie; Intermediate; Expert };
+type DifficultyResponse = record {
+  difficulty_index : nat64;
+  difficulty : nat32;
+  cluster : Cluster;
+};
+type RewardResponse = record { reward : float32; updated : bool };
+service : () -> {
+  apply_periodic_decay : (nat64, float32) -> (bool);
+  compute_difficulty : (text, float32, float32, float32, float32, float32) -> (
+      DifficultyResponse,
+    );
+  get_user_cluster : (text, float32, float32) -> (Cluster) query;
+  update_model_with_reward : (
+      text,
+      bool,
+      float32,
+      float32,
+      float32,
+      float32,
+      float32,
+      float32,
+      float32,
+      nat64,
+    ) -> (RewardResponse);
+}

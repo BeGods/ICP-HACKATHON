@@ -36,6 +36,13 @@
       "source": ["src/nft/nft_frontend/dist"],
       "dependencies": ["nft_backend"],
       "workspace": "nft_frontend"
+    },
+    "game_agent": {
+     "main": "src/game_agent/src/lib.rs",
+     "type": "rust",
+     "candid": "src/game_agent/game_agent.did",
+     "package": "game_agent",
+     "workspace": "src/game_agent"
     }
   },
   "defaults": {
