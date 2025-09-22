@@ -36,6 +36,10 @@ module {
     unlisted : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier)];
   } {
 
+    // Add debug logging
+    Debug.print("Minting with metadata: " # debug_show (metadata));
+    Debug.print("Name: " # name # ", Rarity: " # rarity);
+
     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
       ext_mint : (
         request : [(MainTypes.AccountIdentifier, Types.Metadata)]
@@ -51,10 +55,12 @@ module {
       metadata = metadata;
     };
 
+    Debug.print("Minted for principa" # Principal.toText(user));
     let receiver = AID.fromPrincipal(user, null);
+    Debug.print("Minted for accountid" # receiver);
 
     // Calculate total amount to mint (listed + unlisted)
-    let totalAmount = amount + 9;
+    let totalAmount = amount + 3;
 
     // Prepare request for total minting
     var request : [(MainTypes.AccountIdentifier, Types.Metadata)] = [];
@@ -78,10 +84,10 @@ module {
 
     // Split tokens into listed and unlisted
     let listedTokens = Array.subArray(allMintedTokens, 0, amount);
-    let unlistedTokensArray = Array.subArray(allMintedTokens, amount, 9);
+    let unlistedTokensArray = Array.subArray(allMintedTokens, amount, 3);
 
     // Store unlisted tokens in the map if any were minted
-    if (9 > 0) {
+    if (3 > 0) {
       let key = (name, Text.toLowercase(rarity));
 
       let unlistedTokenIds = Array.map<(MainTypes.TokenIndex, MainTypes.TokenIdentifier), MainTypes.TokenIdentifier>(

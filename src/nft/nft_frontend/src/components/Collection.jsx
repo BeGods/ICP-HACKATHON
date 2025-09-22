@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Grid3X3, CircleFadingArrowUp, Gamepad2, Star } from "lucide-react";
+import {
+  Grid3X3,
+  CircleFadingArrowUp,
+  Gamepad2,
+  Star,
+  Grid3x3,
+  Filter,
+  Search,
+} from "lucide-react";
 import NFTModal from "./NFT/NFTModal";
 import NFTCard from "./NFT/NFTCard";
 import NFTUpgradeModal from "./NFT/NFTUpgrade";
@@ -17,6 +25,7 @@ const Collection = () => {
   const [noCollectionStatus, setNoCollectionStatus] = useState(false);
   const [collectionNFTData, setCollectionNFTData] = useState({});
   const { backendActor, principal, isAuthenticated } = useAuth({});
+  const [changed, setChanged] = useState(true);
   const itemsPerPage = 30;
 
   // modal
@@ -361,8 +370,11 @@ const Collection = () => {
   };
 
   useEffect(() => {
-    (async () => await getCollections())();
-  }, []);
+    if (changed) {
+      (async () => await getCollections())();
+      setChanged(false);
+    }
+  }, [changed]);
 
   // loading
   if (loading) {
@@ -535,22 +547,40 @@ const Collection = () => {
               `${collections[activeCollection].name}`}{" "}
             NFTs
           </h2>
-          <div className="text-sm text-gray-400">
+          {/* <div className="text-sm text-gray-400">
             Page {paginationInfo.currentPage} of {paginationInfo.totalPages}
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          {/* <Filter /> */}
+          <div className="flex">
+            <div className="flex items-center border border-gray-700 px-2 rounded-lg overflow-x-auto sm:overflow-visible">
+              <Search className="w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="ml-2 px-3 py-1 bg-transparent text-sm border-l border-gray-700 focus:outline-none"
+              />
+            </div>
+            <button className="p-2 hover:bg-gray-700">
+              <Filter className="w-5 h-5" />
+            </button>
+          </div>
+
           <div className="flex items-center border border-gray-700 rounded-lg overflow-x-auto sm:overflow-visible">
             <button
-              className={`p-2 ${viewMode === "grid" ? "bg-gray-700" : ""}`}
+              className={`p-2 ${
+                viewMode === "grid" ? "bg-gray-700 rounded-lg" : ""
+              }`}
               onClick={() => setViewMode("grid")}
             >
-              <Grid3X3 className="w-5 h-5" />
+              <Grid3x3 className="w-5 h-5" />
             </button>
+
             <button
-              className={`p-2 ${viewMode === "large" ? "bg-gray-700" : ""}`}
+              className={`p-2 ${
+                viewMode === "large" ? "bg-gray-700 rounded-lg" : ""
+              }`}
               onClick={() => setViewMode("large")}
             >
               <div className="w-4 h-4 grid grid-cols-2 gap-1">
@@ -590,7 +620,7 @@ const Collection = () => {
         )}
 
         {/* Pagination Controls */}
-        {paginationInfo.totalPages > 1 && (
+        {!paginationInfo.loading && currentNFTData.length === 0 && (
           <div className="flex justify-center items-center gap-4 mt-8">
             <button
               onClick={goToPrevPage}
@@ -619,7 +649,6 @@ const Collection = () => {
           </div>
         )}
 
-        {/* Load More Button (Alternative to pagination) */}
         {paginationInfo.currentPage < paginationInfo.totalPages && (
           <div className="flex justify-center mt-6">
             <button
@@ -633,11 +662,11 @@ const Collection = () => {
         )}
       </div>
 
-      {/* Modals */}
       <NFTModal
         nft={selectedNFT}
         isOpen={isModalOpen}
         onClose={closeModal}
+        triggerChange={() => setChanged(true)}
         updateNFTFavorite={(collectionId, tokenId, isFav) =>
           updateNFTFavorite(collectionId, tokenId, isFav)
         }

@@ -4,10 +4,18 @@ import { useAuth } from "../../utils/useAuthClient";
 import NFTBtn from "./NFTBtn";
 import NFTReveal from "./NFTReveal";
 
-const NFTModal = ({ nft, isOpen, onClose, updateNFTFavorite }) => {
+const NFTModal = ({
+  nft,
+  isOpen,
+  onClose,
+  updateNFTFavorite,
+  triggerChange,
+}) => {
   const { backendActor, principal } = useAuth();
   const [showNFTReveal, setShowNFTReveal] = useState(false);
   const [localFav, setLocalFav] = useState(false);
+
+  console.log(nft);
 
   useEffect(() => {
     if (nft) {
@@ -63,7 +71,11 @@ const NFTModal = ({ nft, isOpen, onClose, updateNFTFavorite }) => {
         <NFTReveal
           cardImg={nft.cardImg}
           tokenId={nft.tokenId}
-          handleClose={onClose}
+          handleClose={() => {
+            onClose();
+            setShowNFTReveal(false);
+            triggerChange();
+          }}
         />
       ) : (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[99] flex items-center justify-center p-4 no-scrollbar">
@@ -110,7 +122,9 @@ const NFTModal = ({ nft, isOpen, onClose, updateNFTFavorite }) => {
                     amount={nft.amount}
                     tokenId={nft.tokenId}
                     collectionId={nft.collectionId}
-                    handleRevealNFT={() => setShowNFTReveal(true)}
+                    handleRevealNFT={() => {
+                      setShowNFTReveal(true);
+                    }}
                   />
                 </div>
 

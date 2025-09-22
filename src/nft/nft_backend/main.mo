@@ -616,25 +616,18 @@ actor Main {
   ) : async Text {
     // STEP 1: Validate inputs
     if (tokenIds.size() != 3) {
-      return "Exactly 3 NFTs must be provided.";
+      throw Error.reject("Exactly 3 NFTs must be provided.");
     };
 
     if (Principal.isAnonymous(user)) {
       Debug.print("❌ User is anonymous. Authentication required.");
-      return "User must be authenticated.";
+      throw Error.reject("User must be authenticated.");
     };
 
     let userAccountId = Principal.toText(user);
     Debug.print("✅ User authenticated: " # userAccountId);
 
-    // OPTION 1: Use the actual owner we discovered from the logs
     let MINTER_ADDRESS = "1dd23e19e800d9f243bc7900d50dcf8d63706a5caf392a9b373e3e9b0e1a5051";
-
-    // OPTION 2: Or if you have the minter principal, convert it properly
-    // let MINTER_PRINCIPAL = Principal.fromText("your-minter-principal-here");
-    // let MINTER_ADDRESS = AccountIdentifier.fromPrincipal(MINTER_PRINCIPAL, null);
-
-    Debug.print("🏭 Minter Address: " # MINTER_ADDRESS);
 
     let nftActor = actor (Principal.toText(collectionCanister)) : actor {
       getSingleNonFungibleTokenData : (MainTypes.TokenIndex) -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
@@ -652,25 +645,25 @@ actor Main {
       let bearerResult = await nftActor.ext_bearer(tokenId);
       switch (bearerResult) {
         case (#err(#InvalidToken(msg))) {
-          return "Failed to get NFT owner - InvalidToken: " # msg;
+          throw Error.reject("Failed to get NFT owner - InvalidToken: " # msg);
         };
         case (#err(#Other(msg))) {
-          return "Failed to get NFT owner - Other: " # msg;
+          throw Error.reject("Failed to get NFT owner - Other: " # msg);
         };
         case (#err(#Unauthorized(msg))) {
-          return "Failed to get NFT owner - Unauthorized: " # msg;
+          throw Error.reject("Failed to get NFT owner - Unauthorized: " # msg);
         };
         case (#err(#Rejected)) {
-          return "Failed to get NFT owner - Rejected";
+          throw Error.reject("Failed to get NFT owner - Rejected");
         };
         case (#err(#CannotNotify(msg))) {
-          return "Failed to get NFT owner - CannotNotify: " # msg;
+          throw Error.reject("Failed to get NFT owner - CannotNotify: " # msg);
         };
         case (#ok(owner)) {
           Debug.print("NFT Owner Account ID: " # owner);
           Debug.print("User Account ID: " # userAccountId);
           if (owner != userAccountId) {
-            return "User does not own this NFT";
+            throw Error.reject("User does not own this NFT");
           };
           Debug.print("✅ Ownership verified");
         };
@@ -685,71 +678,63 @@ actor Main {
             nftMetadatas := Array.append(nftMetadatas, [metadata]);
           };
           case (_) {
-            return "Token is not an NFT";
+            throw Error.reject("Token is not an NFT");
           };
         };
       } else {
-        return "No token data found";
+        throw Error.reject("No token data found");
       };
     };
 
     if (nftMetadatas.size() != 3) {
-      return "Error: could not fetch all NFT metadata.";
+      throw Error.reject("Error: could not fetch all NFT metadata.");
     };
 
-    // STEP 3: Check all 3 NFTs identical
+    // check all 3 NFTs identical
     let firstMeta = nftMetadatas[0];
     for (meta in nftMetadatas.vals()) {
       if (meta != firstMeta) {
-        return "NFT metadata mismatch: All 3 NFTs must be identical.";
+        throw Error.reject("NFT metadata mismatch: All 3 NFTs must be identical.");
       };
     };
     Debug.print("✅ All 3 NFTs have identical metadata.");
 
-    // STEP 4: Process upgrade
+    // upgrade
     switch (firstMeta) {
       case (#nonfungible(nfung)) {
         let upgradedRarity = getUpgradedRarity(nfung.rarity);
         switch (upgradedRarity) {
           case null {
-            return "Cannot upgrade rarity: " # nfung.rarity;
+            throw Error.reject("Cannot upgrade rarity: " # nfung.rarity);
           };
           case (?newRarity) {
-            let unlistedTokensResult = await getUnlistedTokens(nfung.name, newRarity);
+            let cleanedName : Text = Text.replace(nfung.name, #char ' ', "");
+            let unlistedTokensResult = await getUnlistedTokens(cleanedName, newRarity);
 
             switch (unlistedTokensResult) {
               case null {
-                return "No unlisted tokens found for " # nfung.name # " with rarity " # newRarity;
+                throw Error.reject("No unlisted tokens found for " # nfung.name # " with rarity " # newRarity);
               };
               case (?tokens) {
                 if (tokens.size() == 0) {
-                  return "No available tokens for upgrade";
+                  throw Error.reject("No available tokens for upgrade");
                 };
 
                 let upgradedTokenId = tokens[0];
                 Debug.print("🎯 Selected upgrade token ID: " # upgradedTokenId);
 
-                // Verify the minter owns the upgrade token
                 let upgradeBearerResult = await nftActor.ext_bearer(upgradedTokenId);
                 switch (upgradeBearerResult) {
                   case (#ok(upgradeOwner)) {
                     Debug.print("Upgrade token owner: " # upgradeOwner);
                     Debug.print("Expected minter: " # MINTER_ADDRESS);
 
-                    // FIXED: More flexible ownership check or use actual owner
-                    // Option 1: Use the actual owner we found
                     let actualMinterAddress = upgradeOwner;
-
-                    // Option 2: Keep strict check but with correct address
-                    // if (upgradeOwner != MINTER_ADDRESS) {
-                    //   return "❌ Minter doesn't own upgrade token. Owner: " # upgradeOwner # ", Expected: " # MINTER_ADDRESS;
-                    // };
-
                     Debug.print("✅ Using actual token owner: " # actualMinterAddress);
 
-                    // Transfer upgraded NFT using the actual owner address
+                    // transfer upgraded NFT
                     let transferToUserRequest : MainTypes.TransferRequest = {
-                      from = #address(actualMinterAddress); // Use actual owner
+                      from = #address(actualMinterAddress);
                       to = #address(userAccountId);
                       token = upgradedTokenId;
                       amount = 1;
@@ -765,13 +750,13 @@ actor Main {
                       case (#ok(balance)) {
                         Debug.print("✅ Upgraded NFT transferred successfully!");
 
-                        // Remove used token from unlisted
+                        // remove used token from unlisted
                         let removeSuccess = await removeUnlistedTokens(nfung.name, newRarity, [upgradedTokenId]);
                         if (not removeSuccess) {
                           Debug.print("⚠️ Warning: Failed to remove token from unlisted pool");
                         };
 
-                        // Burn all 3 old NFTs
+                        // burn all 3 old NFTs
                         for (tokenId in tokenIds.vals()) {
                           Debug.print("🔥 Burning NFT: " # tokenId);
 
@@ -792,33 +777,33 @@ actor Main {
                             };
                             case (#err(error)) {
                               Debug.print("⚠️ Failed to burn " # tokenId);
-                              // Continue with other burns even if one fails
                             };
                           };
                         };
-                        Debug.print("🎉 NFT upgrade successful! Upgraded to " # newRarity # " rarity. Token ID: " # upgradedTokenId);
 
-                        return "🎉 NFT upgrade successful! Upgraded to " # newRarity # " rarity. Token ID: " # upgradedTokenId;
+                        Debug.print("🎉 UPGRADE SUCCESSFUL! User " # userAccountId # " upgraded 3x " # nfung.name # " (" # nfung.rarity # ") to 1x " # nfung.name # " (" # newRarity # "). New Token ID: " # upgradedTokenId);
+
+                        return upgradedTokenId;
                       };
                       case (#err(#Unauthorized(addr))) {
-                        return "❌ Unauthorized: " # addr # " - Check if your canister has permission to transfer from this address";
+                        throw Error.reject("Unauthorized: " # addr # " - Check if your canister has permission to transfer from this address");
                       };
                       case (#err(#InvalidToken(msg))) {
-                        return "❌ InvalidToken: " # msg;
+                        throw Error.reject("InvalidToken: " # msg);
                       };
                       case (#err(#Other(msg))) {
-                        return "❌ Other error: " # msg;
+                        throw Error.reject("Other error: " # msg);
                       };
                       case (#err(#Rejected)) {
-                        return "❌ Transfer rejected";
+                        throw Error.reject("Transfer rejected");
                       };
                       case (#err(#CannotNotify(msg))) {
-                        return "❌ CannotNotify: " # msg;
+                        throw Error.reject("CannotNotify: " # msg);
                       };
                     };
                   };
                   case (#err(_)) {
-                    return "Could not verify upgrade token ownership";
+                    throw Error.reject("Could not verify upgrade token ownership");
                   };
                 };
               };
@@ -827,7 +812,7 @@ actor Main {
         };
       };
       case (_) {
-        return "Unexpected metadata type.";
+        throw Error.reject("Unexpected metadata type.");
       };
     };
   };
@@ -854,7 +839,6 @@ actor Main {
     };
   };
 
-  // Get user details (for admin and user side both)
   public shared query ({ caller = user }) func getUserDetails(accountIdentifier : Principal) : async Result.Result<(Principal, Text, Nat, Text, Text, Text, ?Blob), Text> {
     if (Principal.isAnonymous(user)) {
       throw Error.reject("User is not authenticated");
