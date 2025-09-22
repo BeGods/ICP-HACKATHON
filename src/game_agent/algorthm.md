@@ -1,180 +1,205 @@
-# Final Memory-Efficient Personalized Contextual Bandit Algorithm
+# Personalized Contextual Bandit Algorithm for Gaming
 
-## Core Architecture
+## Abstract
 
-### **1. Two-Layer Matrix System**
+This document presents a memory-efficient contextual bandit algorithm designed for real-time game difficulty adjustment in "Requiem of Relics" - a competitive swiping game deployed on ICP using Rust. The algorithm uses a two-layer approach: cluster-based matrices for general skill patterns and personal adjustment vectors for individual preferences. This design achieves true personalization for millions of users while maintaining low memory footprint (32MB vs 500MB+ for individual matrices) and preventing bias accumulation through confidence decay mechanisms.
 
-- **Layer 1**: 4 Cluster-Based Matrices (160 total weights)
-  - Newbie Cluster (0-20% win rate)
-  - Intermediate Cluster (20-60% win rate)
-  - Skilled Cluster (60-80% win rate)
-  - Expert Cluster (80%+ win rate)
-- **Layer 2**: User-Specific Adjustment Vectors (8 scalars per user)
-  - One adjustment value per difficulty level
-  - Captures individual preferences beyond cluster behavior
+## Algorithm Overview
 
-### **2. Memory Footprint**
+### Core Architecture
 
-- Cluster matrices: 640 bytes total
-- User adjustments: 32MB for 1M users
-- **Total: ~32MB (vs 500MB+ for individual matrices)**
+The system operates through a **two-layer matrix approach**:
 
-## Algorithm Flow
+1. **Layer 1: Cluster Matrices** - 4 skill-based groups sharing learned patterns
+2. **Layer 2: Personal Adjustments** - Individual preference vectors per user
 
-### **Phase 1: User Classification & Context Building**
+**Memory Footprint:**
 
-1. **Fetch User Stats from MongoDB**
-   - Recent win rate, streak days, average swipe speed, session frequency
-2. **Classify User into Cluster**
-   - Calculate cluster based on performance metrics
-   - Assign to appropriate skill-level cluster
-3. **Build Context Vector**
-   - Normalize all features to 0.0-1.0 range
-   - Create vector: X = [1, win_rate, streak, speed, frequency]
+- Cluster matrices: 640 bytes total (4 clusters × 5 features × 8 difficulties × 4 bytes)
+- User adjustments: 32MB for 1M users (8 adjustments × 4 bytes per user)
+- **Total: ~32MB** (highly scalable)
 
-### **Phase 2: Difficulty Prediction**
+### Player Classification System
 
-4. **Calculate Cluster Predictions**
-
-   - For each difficulty level (5,10,15,20,25,30,35,40):
-   - Score = Context_Vector · Cluster_Matrix_Column
-   - Get 8 cluster-based scores
-
-5. **Add Personal Adjustments**
-
-   - Retrieve user's 8 personal adjustment values
-   - Final_Score[i] = Cluster_Score[i] + Personal_Adjustment[i]
-
-6. **Select Optimal Difficulty**
-   - Choose difficulty with highest final score
-   - Return actual difficulty value (not the score)
-
-### **Phase 3: Gameplay & Reward Calculation**
-
-7. **User Plays Round**
-
-   - Present selected difficulty to user
-   - Track performance: swipes achieved, win/loss
-
-8. **Calculate Multi-Factor Reward**
-   - Base reward: 1.0 for win, 0.0 for loss
-   - Engagement bonus: based on swipes vs difficulty ratio
-   - Appropriateness bonus: extra reward for optimal challenge level
-   - Cap total reward at reasonable maximum (e.g., 2.0)
-
-### **Phase 4: Learning & Updates**
-
-9. **Calculate Prediction Errors**
-
-   - Cluster error = reward - cluster_prediction
-   - Personal error = reward - total_prediction
-
-10. **Update Cluster Matrix (Slow Learning)**
-
-    - Use confidence-based learning rate that decreases with update count
-    - Learning_Rate = base_rate × (1 / (1 + updates/1000))
-    - Update only the selected difficulty's weights
-    - Queue update to avoid concurrency issues
-
-11. **Update Personal Adjustments (Fast Learning)**
-    - Use fixed higher learning rate (e.g., 0.1)
-    - Directly adjust user's preference for selected difficulty
-    - Update immediately in user's adjustment vector
-
-### **Phase 5: Bias Prevention & Maintenance**
-
-12. **Confidence Decay System**
-
-    - Track update counts per cluster and difficulty
-    - Reduce learning rate as matrices stabilize
-    - Prevent over-saturation from excessive updates
-
-13. **Periodic Matrix Reset**
-
-    - Every 50,000 updates, apply gentle decay (multiply by 0.95)
-    - Reset update counts to allow renewed learning
-    - Maintain learned patterns while preventing rigid bias
-
-14. **Concurrency Handling**
-    - Use read-only matrices for predictions (no locking needed)
-    - Queue all updates for batch processing
-    - Process updates asynchronously every 1-2 seconds
-    - Maintain eventual consistency across concurrent users
-
-## Mathematical Formulas
-
-### **Cluster Classification**
+Players are automatically classified into skill clusters based on recent performance:
 
 ```
-IF win_rate < 0.2 OR streak < 3 THEN cluster = "newbie"
-ELSE IF win_rate < 0.6 THEN cluster = "intermediate"
-ELSE IF win_rate < 0.8 THEN cluster = "skilled"
-ELSE cluster = "expert"
+IF win_rate < 20% OR streak < 3 days → Newbie
+ELSE IF win_rate < 60% → Intermediate
+ELSE IF win_rate < 80% → Skilled
+ELSE → Expert
 ```
 
-### **Final Difficulty Selection**
+## Algorithm Flow with Examples
+
+### Phase 1: Context Building
+
+**Example: Alex (New Player)**
 
 ```
-FOR each difficulty_level i:
-    cluster_score[i] = context_vector · cluster_matrix[:, i]
-    final_score[i] = cluster_score[i] + user_adjustments[i]
-
-selected_difficulty = difficulty_levels[argmax(final_scores)]
+Raw Stats: 25% win rate, 1-day streak, 15 swipes/9sec, plays 2 days/week
+Context Vector: [1.0, 0.25, 0.1, 0.43, 0.29]
+Assigned Cluster: Newbie
 ```
 
-### **Reward Calculation**
+### Phase 2: Difficulty Prediction
+
+**Step 1: Cluster-Based Scoring**
+
+The system multiplies Alex's context vector with the Newbie cluster matrix:
 
 ```
-base_reward = 1.0 if won else 0.0
-performance_ratio = user_swipes / difficulty_level
-engagement_bonus = min(0.3, performance_ratio × 0.2)
-appropriateness_bonus = 0.2 if 0.8 ≤ performance_ratio ≤ 1.2 else 0.0
-total_reward = min(2.0, base_reward + engagement_bonus + appropriateness_bonus)
+Newbie Cluster Matrix:
+        [Diff5] [Diff10] [Diff15] [Diff20] [Diff25] [Diff30] [Diff35] [Diff40]
+[Bias]   [ 3.8]  [ 4.2]   [ 2.1]   [ 1.5]   [ 1.0]   [ 0.8]   [ 0.6]   [ 0.4]
+[WinRate][ 0.6]  [ 0.8]   [ 0.4]   [ 0.2]   [ 0.1]   [ 0.1]   [ 0.0]   [ 0.0]
+[Streak] [ 0.4]  [ 0.5]   [ 0.2]   [ 0.1]   [ 0.0]   [ 0.0]   [ 0.0]   [ 0.0]
+[Speed]  [ 0.3]  [ 0.4]   [ 0.3]   [ 0.1]   [ 0.0]   [ 0.0]   [ 0.0]   [ 0.0]
+[Freq]   [ 0.2]  [ 0.3]   [ 0.1]   [ 0.0]   [ 0.0]   [ 0.0]   [ 0.0]   [ 0.0]
+
+Cluster Scores:
+Diff5:  1×3.8 + 0.25×0.6 + 0.1×0.4 + 0.43×0.3 + 0.29×0.2 = 4.177
+Diff10: 1×4.2 + 0.25×0.8 + 0.1×0.5 + 0.43×0.4 + 0.29×0.3 = 4.509
+Diff15: 1×2.1 + 0.25×0.4 + 0.1×0.2 + 0.43×0.3 + 0.29×0.1 = 2.278
 ```
 
-### **Learning Rate with Confidence Decay**
+**Step 2: Personal Adjustment**
+
+Alex's personal adjustments (new user starts with zeros):
 
 ```
-base_learning_rate = 0.01
-update_count = total_updates_for_this_action
-confidence_factor = 1.0 / (1.0 + update_count / 1000.0)
-actual_learning_rate = base_learning_rate × confidence_factor
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+Final Scores:
+Diff5:  4.177 + 0.0 = 4.177
+Diff10: 4.509 + 0.0 = 4.509 ← Highest Score
+Diff15: 2.278 + 0.0 = 2.278
+
+Selected Difficulty: 10
 ```
 
-### **Matrix Updates**
+### Phase 3: Gameplay & Reward
+
+**Alex's Game Result:**
+
+- Required: 10 swipes to win
+- Alex's Performance: 12 swipes, wins the round
+- Performance Ratio: 12/10 = 1.2
+
+**Reward Calculation:**
 
 ```
-Cluster Update:
-new_weight = old_weight + learning_rate × error × context_feature
-
-Personal Update:
-new_adjustment = old_adjustment + 0.1 × personal_error
+Base reward: 1.0 (win)
+Performance ratio: 1.2
+Engagement bonus: min(0.3, 1.2 × 0.2) = 0.24
+Appropriateness bonus: 0.2 (perfect challenge)
+Total Reward: 1.44
 ```
 
-## Key Benefits
+### Phase 4: Learning Updates
 
-### **Personalization**
+**Error Calculation:**
 
-- Each user gets truly customized difficulty based on cluster + personal preferences
-- Fast adaptation to individual playing patterns
-- Maintains good predictions for new users through cluster baseline
+```
+Predicted Score: 4.509
+Actual Reward: 1.44
+Error: 1.44 - 4.509 = -3.069
+```
 
-### **Scalability**
+**Cluster Matrix Update (Learning Rate = 0.01):**
 
-- Handles millions of concurrent users with minimal memory
-- Async update system prevents performance bottlenecks
-- Read-heavy workload optimized for gaming scenarios
+```
+Updated Diff10 column in Newbie matrix:
+Bias: 4.2 + (0.01 × -3.069 × 1.0) = 4.169
+WinRate: 0.8 + (0.01 × -3.069 × 0.25) = 0.792
+Streak: 0.5 + (0.01 × -3.069 × 0.1) = 0.497
+```
 
-### **Stability**
+**Personal Adjustment Update (Learning Rate = 0.1):**
 
-- Confidence decay prevents over-learning and bias accumulation
-- Periodic resets maintain adaptability over time
-- Separate learning rates for cluster vs personal adjustments
+```
+Alex's new adjustments: [0.0, -0.307, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+```
 
-### **Intelligence**
+_Alex's system learns he found Diff10 slightly too easy_
 
-- Balances exploration vs exploitation through uncertainty bonuses
-- Learns both general skill-level patterns and individual quirks
-- Adapts to changing user behavior and game meta evolution
+## Evolution Over Time
 
-This algorithm provides true personalization with enterprise-grade scalability while avoiding the bias accumulation problems of simpler approaches.
+### Alex After 30 Games (2 Weeks)
+
+**Updated Profile:**
+
+```
+Stats: 65% win rate, 14-day streak, 22 swipes/9sec, plays 5 days/week
+Cluster: Intermediate (promoted)
+Context Vector: [1, 0.65, 0.7, 0.63, 0.71]
+Personal Adjustments: [+0.1, -0.2, +0.3, +0.6, +0.4, -0.1, -0.3, -0.2]
+```
+
+**New Prediction (Round 31):**
+
+```
+Intermediate cluster prefers higher difficulties
+Alex's personal pattern: Loves Diff20 and Diff25
+
+Cluster Scores:
+Diff20: 7.238
+Diff25: 7.370
+
+Final Scores:
+Diff20: 7.238 + 0.6 = 7.838 ← Selected
+Diff25: 7.370 + 0.4 = 7.770
+
+Selected Difficulty: 20 (Alex's sweet spot!)
+```
+
+### Maya - Expert Player Journey
+
+**Initial State:**
+
+```
+Expert Player: 85% win rate, 30-day streak, 32 swipes/9sec
+First Prediction: Difficulty 35 (challenging but appropriate)
+Game Result: 38 swipes, wins → Total Reward: 1.417
+```
+
+**After 50 Games:**
+
+```
+Slightly declined performance: 78% win rate
+Personal Adjustments: [+0.2, +0.1, -0.1, -0.3, -0.5, +0.2, +0.7, +0.3]
+System learned: Maya strongly prefers Diff35, dislikes mid-range
+
+On a challenging day:
+- Maya struggles: 31 swipes, loses at Diff35
+- System adapts: Personal adjustment for Diff35 drops from +0.7 to -0.4
+- Next prediction: Will suggest Diff30 when Maya shows similar struggle patterns
+```
+
+## Key Algorithm Features
+
+### Confidence Decay System
+
+```
+Learning Rate = base_rate × (1 / (1 + updates/1000))
+```
+
+As more data is collected, learning rate decreases, preventing over-saturation and maintaining stability.
+
+### Multi-Factor Rewards
+
+The system considers multiple aspects of player engagement:
+
+- **Win/Loss**: Basic success metric
+- **Effort Level**: How much the player tried (swipe count)
+- **Appropriateness**: Bonus for optimal challenge level
+
+### Bias Prevention
+
+- Periodic matrix resets (every 50,000 updates)
+- Separate learning rates for cluster vs personal learning
+- Confidence-based weight decay
+
+## Conclusion
+
+This two-layer contextual bandit algorithm achieves true personalization while maintaining efficiency - scaling to millions of users with just 32MB memory overhead. By combining cluster-based learning with individual adjustments, the system adapts to both general skill patterns and personal preferences. Confidence decay mechanisms ensure long-term stability, while real-time learning keeps players in their optimal challenge zone for maximum engagement and retention.

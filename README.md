@@ -4,6 +4,8 @@ BeGods is the ultimate mythological universe — the largest mythoverse ever cre
 
 Blending physical and digital play, BeGods offers a groundbreaking phygital experience — a board game enhanced by Web2, Web3, and augmented reality.
 
+**[Checkout Pitch →](https://youtu.be/jMWeBn-D4LA)**
+
 ## Table of Contents
 
 1. [Overview](#overview)
@@ -41,6 +43,9 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 │   ├── game/                  # Game I and II ( OFF CHAIN )
 │   │   ├── frontend/          # React + Vite app
 │   │   └── backend/           # Node.js backend with MongoDB & Redis
+│   ├── game-agent/            # Contextual Bandit Game Agent
+│   │   ├── src/lib.rs         # Rust file with agent code
+│   │   └── Cargo.toml         # Dependecies for rust project
 │   └── nft/                   # NFT Booster System ( ON CHAIN )
 │       ├── nft_frontend/      # React + Vite app
 │       └── nft_backend/       # Motoko backend fully on-chain (ICP)
@@ -51,6 +56,11 @@ The **NFT Booster System** allows users to mint and upgrade NFTs. It also includ
 - Includes the code for **Game I** and **Game II** , organized with reusable components for better structure and maintainability
 - [`frontend/`](./src/game/frontend): Built with **React + Vite** using reusable components.
 - [`backend/`](./src/game/backend): Built with **Node.js**, uses **MongoDB** and **Redis** for data storage and caching.
+
+### `src/game-agent/`
+
+- An adaptive Rust-based game agent on ICP that uses contextual bandit models to match players with personalized, dynamic difficulty.
+- To understand the model working better, check out [`ALGORITHM`](./src/game_agent/algorthm.md)
 
 ### `src/nft/`
 
@@ -77,11 +87,9 @@ internet_identity → # Authentication canister for login with Internet Identity
 nft_backend → # Motoko backend canister for NFT logic (minting, managing) & game interactions.
 
 nft_frontend → # Static asset canister serving the NFT dApp frontend
-```
 
-tokenIdentifer | collection canister Id | tokenIndex
-57eim-bykor-uwj77-77777-7eaaa-uaqca-aaaaa-a | principal "ulvla-h7777-77774-qaacq-cai"| 0
-57eim-bykor-uwj77-77777-7eaaa-uaqca-aaaaa-a | principal "ulvla-h7777-77774-qaacq-cai" | 0
+game_agent → # Rust based contextual bandit canister that personalizes player interactions in-game.
+```
 
 ### `package.json` (root)
 
@@ -95,13 +103,13 @@ tokenIdentifer | collection canister Id | tokenIndex
 
 ```bash
 - Name → eg: `ODIN`, `DANU`, `THOR`
-- IMG01 → Higher resolution image
-- IMG02 → Lower resolution image
+- Face IMG → Character Face Image
+- Card IMG → Character Card Image
 - Artist → Creator of the artwork (e.g., Mitchelle Nolte, Peter Rubens)
 - Rarity → (D) Divine, (M) Mythical, (R) Rare, (U) Uncommon, (C) Common, (P) Promo, (Mi) Misc
 - Collection → Greek, Celtic, Norse, Egyptian
 - Season → (O) Origins/Stone Age, (G) Golden Age, (S) Silver Age, (B) Bronze Age
-- Type → Quest, Character, Item, Assets...
+- Type → Quest, Character, Item, Boosters, Assets...
 ```
 
 ## Usage Guide
@@ -249,20 +257,37 @@ npm run dev
 
 > **Environment Setup**: Configure environment variables (see .env.example in each folder for reference).
 
+### 🔹 Game Agent
+
+<details>
+
+<summary> To generate candid file for game agent before deploy: 
+</summary>
+
+```bash
+cargo install candid-extractor
+cargo install generate-did
+cd game_agent
+generate-did game_agent
+```
+
+</details>
+
 ## ⚙️ Features Built on ICP So Far
 
 - **On-Chain NFT Marketplace** – Deployed marketplace frontend as a canister, enabling gaming projects to list and trade NFT collections fully on-chain.
 - **Fully On-Chain Architecture** – Developed around a ICP-based framework powering the NFT marketplace, game launcher, gaming agents, and multi-chain operations, seamlessly connecting them together.
 - **Seasonal Listings** – Introduced structured, season-based NFT drops with batch minting.
 - **NFT Upgrade Mechanism** – Burn 3 lower-rarity NFTs to mint 1 higher-rarity NFT.
-- **Contextual Bandit Gaming Agent** – Built in Rust and deployed on ICP for *Requiem of Relics*, adding transparent and interactive swiping gameplay.
-- **Quest Packets** – On-chain quest packet minting, allowing players to earn rewards by completing quests, usable in future titles like *Dawn of Duels*.
+- **Contextual Bandit Gaming Agent** – Built in Rust and deployed on ICP for _Requiem of Relics_, adding transparent and interactive swiping gameplay.
+- **Quest Packets** – On-chain quest packet minting, allowing players to earn rewards by completing quests, usable in future titles like _Dawn of Duels_.
 - **Booster NFTs** – Purchase on the marketplace and burn in the game launcher to activate weekly boosters, multiplying rewards and helping players reach the Hall of Fame.
 
 ## Important Links
 
 - 🎮 [Play on Line](https://www.dappportal.io/dapps/N67d3fe6a2da7d7180c987b0f) | [Play on Telegram](https://t.me/BeGods_bot/games)
-- ▶️ [Watch ICP Pitch + Demo](https://www.youtube.com/watch?v=49O1Ha0cXic)
+- ▶️ [Watch ICP Pitch](https://youtu.be/jMWeBn-D4LA)
+- ▶️ [Watch Regional Round Demo](https://youtu.be/RBL1dbRz3o4)
 - 📄 [Pitch Deck & Tokenomics](https://drive.google.com/drive/folders/1k2VxC3KxC9VDfZ_hym7dy3RtVzUG5T1A?usp=sharing)
 - 🌍 [Official Website](https://begods.games/) | 🐙 [GitHub](https://github.com/BeGods)
 - 🐦 [X (formerly Twitter)](https://x.com/BattleofGods_io)
