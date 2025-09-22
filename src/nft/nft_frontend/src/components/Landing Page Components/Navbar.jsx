@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../utils/useAuthClient";
@@ -26,8 +26,6 @@ const Navbar = ({ mobileView, landingPage }) => {
     iswalletOptionsOpen.path === "/profile"
       ? iswalletOptionsOpen.path
       : currentPath;
-
-  const [modal, setModal] = useState(false);
 
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "./button.css";
 import { ThemeToggle } from "./ThemeToggle";
 import "./i18n.js";
 import { Toaster } from "react-hot-toast";

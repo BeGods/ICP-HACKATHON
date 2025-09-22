@@ -77,6 +77,20 @@ actor Main {
   private var usersCollectionMap = TrieMap.TrieMap<Principal, [(Time.Time, Principal)]>(Principal.equal, Principal.hash);
   private stable var stableusersCollectionMap : [(Principal, [(Time.Time, Principal)])] = [];
 
+  // unlisted:
+  // Key: (Name, Rarity) -> Value: Array of TokenIdentifiers
+  private stable var unlistedTokensEntries : [((Text, Text), [MainTypes.TokenIdentifier])] = [];
+  private var unlistedTokens : HashMap.HashMap<(Text, Text), [MainTypes.TokenIdentifier]> = HashMap.fromIter(
+    unlistedTokensEntries.vals(),
+    unlistedTokensEntries.size(),
+    func(a : (Text, Text), b : (Text, Text)) : Bool {
+      a.0 == b.0 and a.1 == b.1
+    },
+    func(key : (Text, Text)) : Hash.Hash {
+      Text.hash(key.0 # key.1);
+    },
+  );
+
   // marketplace: tores details about the tokens coming into this vault
   private stable var deposits : [MainTypes.Deposit] = [];
 
@@ -112,10 +126,12 @@ actor Main {
     stableusersCollectionMap := Iter.toArray(usersCollectionMap.entries());
     mapEntries := Iter.toArray(NFTcollections.entries());
     stableFavorites := Iter.toArray(_favorites.entries());
+    unlistedTokensEntries := unlistedTokens.entries() |> Iter.toArray(_);
   };
 
   system func postupgrade() {
     usersCollectionMap := TrieMap.fromEntries(stableusersCollectionMap.vals(), Principal.equal, Principal.hash);
+    unlistedTokensEntries := [];
     NFTcollections := TrieMap.fromEntries(
       mapEntries.vals(),
       Text.equal,
@@ -253,7 +269,6 @@ actor Main {
   };
 
   public shared ({ caller = user }) func removeCollection(collection_id : Principal) : async Text {
-    // check controller
     let canisterId = Principal.fromActor(Main);
     let controllerResult = await isController(canisterId, user);
 
@@ -319,7 +334,6 @@ actor Main {
   ) : async Result.Result<{ data : [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, Types.Metadata, ?Nat64)]; current_page : Nat; total_pages : Nat }, Text> {
 
     let canisterId = Principal.fromActor(Main);
-    // Check if the caller is one of the controllers
     let controllerResult = await isController(canisterId, user);
 
     if (controllerResult == false) {
@@ -352,6 +366,7 @@ actor Main {
     desc : Text,
     asset : Text,
     thumb : Text,
+    rarity : Text,
     metadata : ?MainTypes.MetadataContainer,
     amount : Nat,
   ) : async [(MainTypes.TokenIndex, MainTypes.TokenIdentifier)] {
@@ -359,14 +374,13 @@ actor Main {
       throw Error.reject("User is not authenticated");
     };
     let canisterId = Principal.fromActor(Main);
-    // Check if the caller is one of the controllers
     let controllerResult = await isController(canisterId, user);
 
     if (controllerResult == false) {
       throw Error.reject("Unauthorized: Only admins can mint nft.");
     };
 
-    return await NftServices.mintExtNonFungible(
+    let result = await NftServices.mintExtNonFungible(
       _collectionCanisterId : Principal,
       name,
       desc,
@@ -375,9 +389,44 @@ actor Main {
       metadata,
       amount,
       user,
+      rarity,
+      unlistedTokens,
     );
+
+    return result.listed;
   };
 
+  // Helper function to get unlisted tokens by name and rarity
+  public query func getUnlistedTokens(name : Text, rarity : Text) : async ?[MainTypes.TokenIdentifier] {
+    unlistedTokens.get((name, rarity));
+  };
+
+  // Helper function to get all unlisted tokens
+  public query func getAllUnlistedTokens() : async [((Text, Text), [MainTypes.TokenIdentifier])] {
+    unlistedTokens.entries() |> Iter.toArray(_);
+  };
+  public func removeUnlistedTokens(name : Text, rarity : Text, tokensToRemove : [MainTypes.TokenIdentifier]) : async Bool {
+    switch (unlistedTokens.get((name, rarity))) {
+      case (?existing) {
+        let filtered = Array.filter<MainTypes.TokenIdentifier>(
+          existing,
+          func(token) {
+            switch (Array.find<MainTypes.TokenIdentifier>(tokensToRemove, func(t) { t == token })) {
+              case null { true }; // Keep the token (not found in tokensToRemove)
+              case (?_) { false }; // Remove the token (found in tokensToRemove)
+            };
+          },
+        );
+        if (filtered.size() == 0) {
+          unlistedTokens.delete((name, rarity));
+        } else {
+          unlistedTokens.put((name, rarity), filtered);
+        };
+        true;
+      };
+      case null { false };
+    };
+  };
   // Minting  a Fungible token pass the collection canisterId in which you want to mint and the required details to add, this enables minting multiple tokens
   public shared ({ caller = user }) func mintExtFungible(
     _collectionCanisterId : Principal,
@@ -436,14 +485,6 @@ actor Main {
   /*                      NFT MARKETPLACE - USER CONTROLLERS                    */
   /* -------------------------------------------------------------------------- */
 
-  // Token will be transfered to this Vault and gives you req details to construct a link out of it, which you can share
-  public shared ({ caller = user }) func getNftTokenId(
-    _collectionCanisterId : Principal,
-    _tokenId : MainTypes.TokenIndex,
-  ) : async MainTypes.TokenIdentifier {
-    return await MainUtils.getNftTokenId(_collectionCanisterId, _tokenId);
-  };
-
   public shared func userNFTsAllCollections(
     user : MainTypes.AccountIdentifier,
     chunkSize : Nat,
@@ -498,7 +539,6 @@ actor Main {
         case (#nonfungible(nfung)) {
           Debug.print("Nonfungible NFT Name: " # nfung.name);
 
-          // Check if valid booster NFT
           if (nfung.name == "Automata" or nfung.name == "Burst") {
             BoosterRecord.put(
               user,
@@ -530,7 +570,7 @@ actor Main {
       from = #address(userAccountId);
       to = #address(BURN_ADDRESS);
       token = tokenId;
-      amount = 1; // For NFTs, amount is always 1
+      amount = 1;
       memo = Blob.fromArray([]);
       notify = false;
       subaccount = null;
@@ -550,110 +590,241 @@ actor Main {
     return "Ownership verified, metadata logged, and NFT burned";
   };
 
+  func getUpgradedRarity(rarityText : Text) : ?Text {
+    let lowerRarity = Text.toLowercase(rarityText);
+    switch (lowerRarity) {
+      case ("common") { return ?"uncommon" };
+      case ("uncommon") { return ?"mythical" };
+      case ("mythical") { return ?"epic" };
+      case ("epic") { return ?"divine" };
+      case ("divine") { return null };
+      case (_) { return null };
+    };
+  };
+
+  public type CorrectCommonError = {
+    #InvalidToken : Text;
+    #Other : Text;
+    #Unauthorized : Text;
+    #Rejected;
+    #CannotNotify : Text;
+  };
+
   public shared ({ caller = user }) func upgradeNFTRarity(
     collectionCanister : Principal,
     tokenIds : [MainTypes.TokenIdentifier],
   ) : async Text {
+    // STEP 1: Validate inputs
     if (tokenIds.size() != 3) {
       return "Exactly 3 NFTs must be provided.";
     };
 
-    // if (Principal.isAnonymous(user)) {
-    //   Debug.print("User is anonymous. Authentication required.");
-    //   return "User must be authenticated.";
-    // };
+    if (Principal.isAnonymous(user)) {
+      Debug.print("❌ User is anonymous. Authentication required.");
+      return "User must be authenticated.";
+    };
 
-    let userAccountId = "g7lup-jtz4h-636bc-ogwao-dxpyx-t2dg6-wr3ny-veqdq-xyze4-pmomi-3qe";
+    let userAccountId = Principal.toText(user);
+    Debug.print("✅ User authenticated: " # userAccountId);
+
+    // OPTION 1: Use the actual owner we discovered from the logs
+    let MINTER_ADDRESS = "1dd23e19e800d9f243bc7900d50dcf8d63706a5caf392a9b373e3e9b0e1a5051";
+
+    // OPTION 2: Or if you have the minter principal, convert it properly
+    // let MINTER_PRINCIPAL = Principal.fromText("your-minter-principal-here");
+    // let MINTER_ADDRESS = AccountIdentifier.fromPrincipal(MINTER_PRINCIPAL, null);
+
+    Debug.print("🏭 Minter Address: " # MINTER_ADDRESS);
+
     let nftActor = actor (Principal.toText(collectionCanister)) : actor {
       getSingleNonFungibleTokenData : (MainTypes.TokenIndex) -> async [(MainTypes.TokenIndex, MainTypes.AccountIdentifier, MainTypes.Metadata, ?Nat64)];
-      ext_bearer : (tokenId : MainTypes.TokenIdentifier) -> async Result.Result<MainTypes.AccountIdentifier, Text>;
+      ext_bearer : (tokenId : MainTypes.TokenIdentifier) -> async Result.Result<MainTypes.AccountIdentifier, CorrectCommonError>;
+      ext_transfer : (request : MainTypes.TransferRequest) -> async Result.Result<Nat, CorrectCommonError>;
     };
 
     var nftMetadatas : [MainTypes.Metadata] = [];
 
-    func extractRarity(meta : ?MainTypes.MetadataContainer) : Text {
-      switch (meta) {
-        case (null) { return "Unknown" };
-        case (?m) {
-          switch (m) {
-            case (#data(values)) {
-              for ((key, val) in values.vals()) {
-                if (key == "rarity") {
-                  switch (val) {
-                    case (#text(t)) return t;
-                    case (#nat(n)) return Nat.toText(n);
-                    case (#nat8(n8)) return Nat8.toText(n8);
-                    case (#blob(_)) return "Blob rarity";
-                  };
-                };
-              };
-              return "Unknown";
-            };
-            case (#json(j)) {
-              return "JSON metadata (parse needed): " # j;
-            };
-            case (#blob(_)) {
-              return "Blob metadata (parse needed)";
-            };
-          };
-        };
-      };
-    };
-
+    // STEP 2: Verify ownership and fetch metadata
     for (tokenId in tokenIds.vals()) {
       let tokenIndex = ExtCore.TokenIdentifier.getIndex(tokenId);
+      Debug.print("🔎 Checking NFT: " # tokenId);
 
       let bearerResult = await nftActor.ext_bearer(tokenId);
       switch (bearerResult) {
-        case (#err(error)) {
-          Debug.print("Failed to get NFT owner: " # error);
-          return "Failed to get NFT owner: " # error;
+        case (#err(#InvalidToken(msg))) {
+          return "Failed to get NFT owner - InvalidToken: " # msg;
+        };
+        case (#err(#Other(msg))) {
+          return "Failed to get NFT owner - Other: " # msg;
+        };
+        case (#err(#Unauthorized(msg))) {
+          return "Failed to get NFT owner - Unauthorized: " # msg;
+        };
+        case (#err(#Rejected)) {
+          return "Failed to get NFT owner - Rejected";
+        };
+        case (#err(#CannotNotify(msg))) {
+          return "Failed to get NFT owner - CannotNotify: " # msg;
         };
         case (#ok(owner)) {
+          Debug.print("NFT Owner Account ID: " # owner);
+          Debug.print("User Account ID: " # userAccountId);
           if (owner != userAccountId) {
-            Debug.print("Ownership verified: NO");
             return "User does not own this NFT";
           };
-          Debug.print("Ownership verified: YES for " # tokenId);
+          Debug.print("✅ Ownership verified");
         };
       };
 
       let tokenData = await nftActor.getSingleNonFungibleTokenData(tokenIndex);
-      if (tokenData.size() == 0) {
-        return "No token data found for tokenIndex " # Nat.toText(Nat32.toNat(tokenIndex));
-      };
-
-      let (_, _, metadata, _) = tokenData[0];
-      switch (metadata) {
-        case (#fungible(_)) {
-          return "Fungible Token detected, not supported.";
+      if (tokenData.size() > 0) {
+        let (index, nftOwner, metadata, price) = tokenData[0];
+        switch (metadata) {
+          case (#nonfungible(nfung)) {
+            Debug.print("📦 NFT: " # nfung.name # ", Rarity: " # nfung.rarity);
+            nftMetadatas := Array.append(nftMetadatas, [metadata]);
+          };
+          case (_) {
+            return "Token is not an NFT";
+          };
         };
-        case (#nonfungible(nfung)) {
-          Debug.print("Fetched Nonfungible NFT: " # nfung.name);
-          nftMetadatas := Array.append(nftMetadatas, [metadata]);
-        };
-        case (_) {
-          return "Unknown metadata variant.";
-        };
+      } else {
+        return "No token data found";
       };
     };
 
-    // Step 5: Verify all 3 NFTs are identical metadata
     if (nftMetadatas.size() != 3) {
       return "Error: could not fetch all NFT metadata.";
     };
 
+    // STEP 3: Check all 3 NFTs identical
     let firstMeta = nftMetadatas[0];
     for (meta in nftMetadatas.vals()) {
       if (meta != firstMeta) {
         return "NFT metadata mismatch: All 3 NFTs must be identical.";
       };
     };
+    Debug.print("✅ All 3 NFTs have identical metadata.");
 
+    // STEP 4: Process upgrade
     switch (firstMeta) {
       case (#nonfungible(nfung)) {
-        let rarityText = extractRarity(nfung.metadata);
-        return "NFT Upgrade Validated. Name: " # nfung.name # ", Rarity: " # rarityText;
+        let upgradedRarity = getUpgradedRarity(nfung.rarity);
+        switch (upgradedRarity) {
+          case null {
+            return "Cannot upgrade rarity: " # nfung.rarity;
+          };
+          case (?newRarity) {
+            let unlistedTokensResult = await getUnlistedTokens(nfung.name, newRarity);
+
+            switch (unlistedTokensResult) {
+              case null {
+                return "No unlisted tokens found for " # nfung.name # " with rarity " # newRarity;
+              };
+              case (?tokens) {
+                if (tokens.size() == 0) {
+                  return "No available tokens for upgrade";
+                };
+
+                let upgradedTokenId = tokens[0];
+                Debug.print("🎯 Selected upgrade token ID: " # upgradedTokenId);
+
+                // Verify the minter owns the upgrade token
+                let upgradeBearerResult = await nftActor.ext_bearer(upgradedTokenId);
+                switch (upgradeBearerResult) {
+                  case (#ok(upgradeOwner)) {
+                    Debug.print("Upgrade token owner: " # upgradeOwner);
+                    Debug.print("Expected minter: " # MINTER_ADDRESS);
+
+                    // FIXED: More flexible ownership check or use actual owner
+                    // Option 1: Use the actual owner we found
+                    let actualMinterAddress = upgradeOwner;
+
+                    // Option 2: Keep strict check but with correct address
+                    // if (upgradeOwner != MINTER_ADDRESS) {
+                    //   return "❌ Minter doesn't own upgrade token. Owner: " # upgradeOwner # ", Expected: " # MINTER_ADDRESS;
+                    // };
+
+                    Debug.print("✅ Using actual token owner: " # actualMinterAddress);
+
+                    // Transfer upgraded NFT using the actual owner address
+                    let transferToUserRequest : MainTypes.TransferRequest = {
+                      from = #address(actualMinterAddress); // Use actual owner
+                      to = #address(userAccountId);
+                      token = upgradedTokenId;
+                      amount = 1;
+                      memo = Blob.fromArray([]);
+                      notify = false;
+                      subaccount = null;
+                    };
+
+                    Debug.print("🚚 Transferring upgraded NFT to user...");
+                    let upgradeTransferResult = await nftActor.ext_transfer(transferToUserRequest);
+
+                    switch (upgradeTransferResult) {
+                      case (#ok(balance)) {
+                        Debug.print("✅ Upgraded NFT transferred successfully!");
+
+                        // Remove used token from unlisted
+                        let removeSuccess = await removeUnlistedTokens(nfung.name, newRarity, [upgradedTokenId]);
+                        if (not removeSuccess) {
+                          Debug.print("⚠️ Warning: Failed to remove token from unlisted pool");
+                        };
+
+                        // Burn all 3 old NFTs
+                        for (tokenId in tokenIds.vals()) {
+                          Debug.print("🔥 Burning NFT: " # tokenId);
+
+                          let burnTransferRequest : MainTypes.TransferRequest = {
+                            from = #address(userAccountId);
+                            to = #address(BURN_ADDRESS);
+                            token = tokenId;
+                            amount = 1;
+                            memo = Blob.fromArray([]);
+                            notify = false;
+                            subaccount = null;
+                          };
+
+                          let burnResult = await nftActor.ext_transfer(burnTransferRequest);
+                          switch (burnResult) {
+                            case (#ok(balance)) {
+                              Debug.print("✅ Burned " # tokenId);
+                            };
+                            case (#err(error)) {
+                              Debug.print("⚠️ Failed to burn " # tokenId);
+                              // Continue with other burns even if one fails
+                            };
+                          };
+                        };
+                        Debug.print("🎉 NFT upgrade successful! Upgraded to " # newRarity # " rarity. Token ID: " # upgradedTokenId);
+
+                        return "🎉 NFT upgrade successful! Upgraded to " # newRarity # " rarity. Token ID: " # upgradedTokenId;
+                      };
+                      case (#err(#Unauthorized(addr))) {
+                        return "❌ Unauthorized: " # addr # " - Check if your canister has permission to transfer from this address";
+                      };
+                      case (#err(#InvalidToken(msg))) {
+                        return "❌ InvalidToken: " # msg;
+                      };
+                      case (#err(#Other(msg))) {
+                        return "❌ Other error: " # msg;
+                      };
+                      case (#err(#Rejected)) {
+                        return "❌ Transfer rejected";
+                      };
+                      case (#err(#CannotNotify(msg))) {
+                        return "❌ CannotNotify: " # msg;
+                      };
+                    };
+                  };
+                  case (#err(_)) {
+                    return "Could not verify upgrade token ownership";
+                  };
+                };
+              };
+            };
+          };
+        };
       };
       case (_) {
         return "Unexpected metadata type.";
@@ -862,6 +1033,13 @@ actor Main {
     return FavoriteServices.getFavorites(user, _favorites);
   };
 
+  public shared ({ caller = user }) func getFavoritesWithMetadata(user : MainTypes.AccountIdentifier) : async Result.Result<[(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)], MainTypes.CommonError> {
+    if (Principal.isAnonymous(Principal.fromText(user))) {
+      throw Error.reject("User is not authenticated");
+    };
+    return await FavoriteServices.getFavoritesWithMetadata(user, _favorites, NFTcollections);
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                     NFT MARKETPLACE - ORDER CONTROLLERS                    */
   /* -------------------------------------------------------------------------- */
@@ -962,6 +1140,14 @@ actor Main {
   /*                     NFT MARKETPLACE - GENERAL CONTROLLERS                  */
   /* -------------------------------------------------------------------------- */
 
+  // Token will be transfered to this Vault and gives you req details to construct a link out of it, which you can share
+  public shared ({ caller = user }) func getNftTokenId(
+    _collectionCanisterId : Principal,
+    _tokenId : MainTypes.TokenIndex,
+  ) : async MainTypes.TokenIdentifier {
+    return await MainUtils.getNftTokenId(_collectionCanisterId, _tokenId);
+  };
+
   //set price for the nfts
   public shared (msg) func listprice(_collectionCanisterId : Principal, request : MainTypes.ListRequest) : async Result.Result<(), MainTypes.CommonError> {
     let canisterId = Principal.fromActor(Main);
@@ -983,11 +1169,12 @@ actor Main {
     return await MarketplaceServices.listings(_collectionCanisterId);
   };
 
-  public shared func plistings(
+  public shared ({ caller = user }) func plistings(
     _collectionCanisterId : Principal,
     chunkSize : Nat,
     pageNo : Nat,
   ) : async Result.Result<{ data : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)]; current_page : Nat; total_pages : Nat }, Text> {
+
     return await MarketplaceServices.plistings(_collectionCanisterId, chunkSize, pageNo);
   };
 

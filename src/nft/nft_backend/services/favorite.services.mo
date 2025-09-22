@@ -9,6 +9,14 @@ import MainTypes "../types/main.types";
 import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Array "mo:base/Array";
+import TrieMap "mo:base/TrieMap";
+import Debug "mo:base/Debug";
+import Nat "mo:base/Nat";
+import Buffer "mo:base/Buffer";
+import MainUtils "../utils/main.utils";
+import Error "mo:base/Error";
+import UserServices "user.services";
+import Principal "mo:base/Principal";
 
 module {
 
@@ -92,17 +100,86 @@ module {
     _favorites : HashMap.HashMap<MainTypes.AccountIdentifier, [(MainTypes.TokenIdentifier)]>,
   ) : Result.Result<[(MainTypes.TokenIdentifier)], MainTypes.CommonError> {
 
-    // Check if the user has any favorites
     switch (_favorites.get(user)) {
       case (?favorites) {
-        // Return the user's favorites if found
         return #ok(favorites);
       };
       case (_) {
-        // Return an error if no favorites are found for the user
         return #err(#Other("No favorites found for this user"));
       };
     };
   };
 
+  public func getFavoritesWithMetadata(
+    user : MainTypes.AccountIdentifier,
+    _favorites : HashMap.HashMap<MainTypes.AccountIdentifier, [(MainTypes.TokenIdentifier)]>,
+    NFTcollections : TrieMap.TrieMap<Text, Principal>,
+  ) : async Result.Result<[(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)], MainTypes.CommonError> {
+
+    Debug.print("Getting favorites with metadata for user: " # user);
+
+    let favoriteTokensResult = getFavorites(user, _favorites);
+
+    switch (favoriteTokensResult) {
+      case (#err(error)) {
+        return #err(error);
+      };
+      case (#ok(favoriteTokens)) {
+        Debug.print("Found " # Nat.toText(favoriteTokens.size()) # " favorite tokens");
+
+        try {
+          let allCollections : [Principal] = await MainUtils.getAllCollectionCanisterIds(NFTcollections);
+          Debug.print("Total collections to check: " # Nat.toText(allCollections.size()));
+
+          let favoritesWithMetadataBuffer = Buffer.Buffer<(MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)>(0);
+
+          for (collectionCanisterId in allCollections.vals()) {
+            Debug.print("Checking collection: " # Principal.toText(collectionCanisterId));
+
+            let priceListings = actor (Principal.toText(collectionCanisterId)) : actor {
+              ext_marketplaceListings : () -> async [(MainTypes.TokenIndex, MainTypes.Listing, MainTypes.Metadata)];
+            };
+
+            let listingData = await priceListings.ext_marketplaceListings();
+            Debug.print("Retrieved " # Nat.toText(listingData.size()) # " listings");
+
+            for ((tokenIndex, listing, metadata) in listingData.vals()) {
+              let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(collectionCanisterId, tokenIndex);
+
+              let isFavorite = Array.find<MainTypes.TokenIdentifier>(
+                favoriteTokens,
+                func(favTokenId : MainTypes.TokenIdentifier) : Bool {
+                  favTokenId == tokenIdentifier;
+                },
+              );
+
+              switch (isFavorite) {
+                case (?_) {
+                  let transformedNFT = (
+                    tokenIndex,
+                    tokenIdentifier,
+                    listing,
+                    metadata,
+                  );
+
+                  favoritesWithMetadataBuffer.add(transformedNFT);
+                  Debug.print("Found favorite NFT: " # tokenIdentifier);
+                };
+                case (_) {};
+              };
+            };
+          };
+
+          let favoritesWithMetadata = Buffer.toArray(favoritesWithMetadataBuffer);
+          Debug.print("Total favorite NFTs with metadata: " # Nat.toText(favoritesWithMetadata.size()));
+
+          return #ok(favoritesWithMetadata);
+
+        } catch (e) {
+          Debug.print("Error fetching favorites metadata: " # Error.message(e));
+          return #err(#Other("Failed to get favorites metadata"));
+        };
+      };
+    };
+  };
 };

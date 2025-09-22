@@ -89,6 +89,7 @@ actor class EXTNFT(init_owner : Principal) = this {
       description : Text;
       asset : Text;
       thumbnail : Text;
+      rarity : Text;
       metadata : ?MetadataContainer;
     };
   };
@@ -2113,12 +2114,14 @@ actor class EXTNFT(init_owner : Principal) = this {
       // Only proceed if the token is non-fungible
       switch (metadata) {
         case (#nonfungible(nftData)) {
+          Debug.print("Current NFT name: " # nftData.name # ", rarity: " # nftData.rarity);
           let nameExists = Array.find<((TokenIndex, Listing, Metadata))>(
             results,
             func(entry) {
               switch (entry.2) {
                 case (#nonfungible(existingNftData)) {
-                  return existingNftData.name == nftData.name;
+                  Debug.print("Comparing with existing NFT rarity: " # existingNftData.rarity);
+                  return existingNftData.name == nftData.name and existingNftData.rarity == nftData.rarity;
                 };
                 case (_) {
                   return false;

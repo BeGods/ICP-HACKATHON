@@ -233,6 +233,7 @@ function CollectionDetails() {
         nftdescription,
         "thumbnail",
         nftimage,
+        nftType,
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );

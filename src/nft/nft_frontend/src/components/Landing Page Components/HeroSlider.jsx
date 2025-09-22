@@ -52,7 +52,7 @@ export default function HeroSlider() {
   };
 
   return (
-    <>
+    <div className="w-full">
       <Swiper
         slidesPerView={1}
         spaceBetween={0}
@@ -62,7 +62,7 @@ export default function HeroSlider() {
           disableOnInteraction: false,
         }}
         modules={[Pagination, Autoplay]}
-        className="relative mySwiper"
+        className="relative "
       >
         {Array.from({ length: totalSets }).map((_, setIndex) => (
           <SwiperSlide key={setIndex}>
@@ -72,7 +72,7 @@ export default function HeroSlider() {
                 return (
                   <div
                     key={index}
-                    className={`w-full h-[100vh] ${
+                    className={`h-[40rem] ${
                       imagesPerSet === 4
                         ? "xl:w-1/4"
                         : imagesPerSet === 2
@@ -100,7 +100,6 @@ export default function HeroSlider() {
           </SwiperSlide>
         ))}
       </Swiper>
-    </>
+    </div>
   );
 }
-  

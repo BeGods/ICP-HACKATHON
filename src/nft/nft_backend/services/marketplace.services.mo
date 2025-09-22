@@ -13,6 +13,7 @@ import TrieMap "mo:base/TrieMap";
 import Time "mo:base/Time";
 import Nat "mo:base/Nat";
 import Nat32 "mo:base/Nat32";
+import HashMap "mo:base/HashMap";
 
 module {
   // EXT_ICP_LEDGER interface
@@ -74,11 +75,11 @@ module {
       let listingData = await priceListings.ext_marketplaceListings();
       Debug.print("Retrieved " # Nat.toText(listingData.size()) # " listings");
 
-      // Transform listingData to include TokenIdentifier
       let transformedListingData = Array.map<(MainTypes.TokenIndex, MainTypes.Listing, MainTypes.Metadata), (MainTypes.TokenIndex, MainTypes.TokenIdentifier, MainTypes.Listing, MainTypes.Metadata)>(
         listingData,
         func((tokenIndex, listing, metadata)) {
           let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+
           return (tokenIndex, tokenIdentifier, listing, metadata);
         },
       );

@@ -23,14 +23,14 @@ const afterPaymentFlow = async (
     const sendBalanceResult = await ledgerActor.send_dfx(transactionArg);
     if (BigInt(sendBalanceResult) > 0) {
       const response = await backendActor.settlepurchase(
-        Principal.fromText(collectionId),
+        collectionId,
         transationId
       );
 
       console.log(response, "success1");
       if ("ok" in response && response.ok === null) {
         const finalResult = await backendActor.balance_nft_settelment(
-          Principal.fromText(collectionId)
+          collectionId
         );
         if (finalResult === undefined) {
           console.log("congratutation");

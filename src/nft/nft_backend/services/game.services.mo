@@ -113,6 +113,7 @@ module {
             description = description;
             thumbnail = thumbnail;
             asset = nft.asset;
+            rarity = "Misc";
             metadata = ?#data(allMetadataValues);
           });
         };

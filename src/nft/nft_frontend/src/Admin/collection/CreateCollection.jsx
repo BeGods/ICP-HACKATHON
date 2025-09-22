@@ -249,6 +249,7 @@ const CreateCollection = () => {
         nftdescription,
         "thumbnail",
         nftimage,
+        nftType,
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );

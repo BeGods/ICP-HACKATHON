@@ -65,6 +65,7 @@ module {
       description : Text;
       asset : Text;
       thumbnail : Text;
+      rarity : Text;
       metadata : ?MetadataContainer;
     };
   };

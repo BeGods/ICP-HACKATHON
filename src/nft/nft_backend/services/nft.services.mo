@@ -16,8 +16,10 @@ import AID "../../EXT-V2/motoko/util/AccountIdentifier";
 import List "mo:base/List";
 import MainTypes "../types/main.types";
 import MainUtils "../utils/main.utils";
+import HashMap "mo:base/HashMap";
 
 module {
+
   public func mintExtNonFungible(
     _collectionCanisterId : Principal,
     name : Text,
@@ -27,34 +29,80 @@ module {
     metadata : ?MainTypes.MetadataContainer,
     amount : Nat,
     user : Principal,
-  ) : async [(MainTypes.TokenIndex, MainTypes.TokenIdentifier)] {
+    rarity : Text,
+    unlistedTokens : HashMap.HashMap<(Text, Text), [MainTypes.TokenIdentifier]>,
+  ) : async {
+    listed : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier)];
+    unlisted : [(MainTypes.TokenIndex, MainTypes.TokenIdentifier)];
+  } {
+
     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
       ext_mint : (
         request : [(MainTypes.AccountIdentifier, Types.Metadata)]
       ) -> async [MainTypes.TokenIndex];
     };
+
     let metadataNonFungible : Types.Metadata = #nonfungible {
       name = name;
       description = desc;
       asset = asset;
       thumbnail = thumb;
+      rarity = rarity;
       metadata = metadata;
     };
 
     let receiver = AID.fromPrincipal(user, null);
+
+    // Calculate total amount to mint (listed + unlisted)
+    let totalAmount = amount + 9;
+
+    // Prepare request for total minting
     var request : [(MainTypes.AccountIdentifier, Types.Metadata)] = [];
     var i : Nat = 0;
-    while (i < amount) {
+    while (i < totalAmount) {
       request := Array.append(request, [(receiver, metadataNonFungible)]);
       i := i + 1;
     };
+
+    // Mint all tokens at once
     let extMint = await collectionCanisterActor.ext_mint(request);
+
+    // Process minted tokens
     var result_list = List.nil<(MainTypes.TokenIndex, MainTypes.TokenIdentifier)>();
-    for (i in extMint.vals()) {
-      let _tokenIdentifier = await MainUtils.getNftTokenId(_collectionCanisterId, i);
-      result_list := List.push((i, _tokenIdentifier), result_list);
+    for (tokenIndex in extMint.vals()) {
+      let tokenIdentifier = await MainUtils.getNftTokenId(_collectionCanisterId, tokenIndex);
+      result_list := List.push((tokenIndex, tokenIdentifier), result_list);
     };
-    List.toArray(result_list);
+
+    let allMintedTokens = List.toArray(result_list);
+
+    // Split tokens into listed and unlisted
+    let listedTokens = Array.subArray(allMintedTokens, 0, amount);
+    let unlistedTokensArray = Array.subArray(allMintedTokens, amount, 9);
+
+    // Store unlisted tokens in the map if any were minted
+    if (9 > 0) {
+      let key = (name, Text.toLowercase(rarity));
+
+      let unlistedTokenIds = Array.map<(MainTypes.TokenIndex, MainTypes.TokenIdentifier), MainTypes.TokenIdentifier>(
+        unlistedTokensArray,
+        func(t) { t.1 },
+      );
+
+      switch (unlistedTokens.get(key)) {
+        case (?existing) {
+          unlistedTokens.put(key, Array.append(existing, unlistedTokenIds));
+        };
+        case null {
+          unlistedTokens.put(key, unlistedTokenIds);
+        };
+      };
+    };
+
+    return {
+      listed = listedTokens;
+      unlisted = unlistedTokensArray;
+    };
   };
 
   public func mintExtFungible(
