@@ -13,6 +13,7 @@ import NFTCard from "./NFT/NFTCard";
 import NFTUpgradeModal from "./NFT/NFTUpgrade";
 import { useAuth } from "../utils/useAuthClient";
 import DotGrid from "./DotGrid/DotGrid";
+import FilterModal from "./Filter";
 
 const Collection = () => {
   const [collections, setCollections] = useState([]);
@@ -26,6 +27,14 @@ const Collection = () => {
   const [collectionNFTData, setCollectionNFTData] = useState({});
   const { backendActor, principal, isAuthenticated } = useAuth({});
   const [changed, setChanged] = useState(true);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState({
+    sortBy: "",
+    sortOrder: "asc",
+    rarities: [],
+    artists: [],
+  });
+  const [filteredNFTData, setFilteredNFTData] = useState([]);
   const itemsPerPage = 30;
 
   // modal
@@ -338,7 +347,19 @@ const Collection = () => {
   const getCurrentNFTData = () => {
     if (activeCollection >= collections.length) return [];
     const selectedCollection = collections[activeCollection];
-    return collectionNFTData[selectedCollection.collectionId]?.nfts || [];
+    const rawData =
+      collectionNFTData[selectedCollection.collectionId]?.nfts || [];
+
+    const hasActiveFilters =
+      appliedFilters.sortBy ||
+      appliedFilters.rarities.length > 0 ||
+      appliedFilters.artists.length > 0;
+
+    if (hasActiveFilters) {
+      return applyFiltersAndSort(rawData, appliedFilters);
+    }
+
+    return rawData;
   };
 
   // pagination info
@@ -367,6 +388,68 @@ const Collection = () => {
       default:
         return "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5";
     }
+  };
+
+  const applyFiltersAndSort = (nftData, filters) => {
+    let filtered = [...nftData];
+
+    // Apply rarity filter
+    if (filters.rarities.length > 0) {
+      filtered = filtered.filter((nft) =>
+        filters.rarities.includes(nft.rarity)
+      );
+    }
+
+    // Apply artist filter
+    if (filters.artists.length > 0) {
+      filtered = filtered.filter((nft) =>
+        filters.artists.includes(nft.arstistname)
+      );
+    }
+
+    // Apply sorting
+    if (filters.sortBy) {
+      filtered.sort((a, b) => {
+        let aValue, bValue;
+
+        switch (filters.sortBy) {
+          case "price":
+            aValue = parseFloat(a.price) || 0;
+            bValue = parseFloat(b.price) || 0;
+            break;
+          case "rarity":
+            // Define rarity order (customize as needed)
+            const rarityOrder = [
+              "Common",
+              "Uncommon",
+              "Rare",
+              "Epic",
+              "Legendary",
+            ];
+            aValue = rarityOrder.indexOf(a.rarity);
+            bValue = rarityOrder.indexOf(b.rarity);
+            break;
+          default:
+            return 0;
+        }
+
+        if (filters.sortOrder === "asc") {
+          return aValue - bValue;
+        } else {
+          return bValue - aValue;
+        }
+      });
+    }
+
+    return filtered;
+  };
+
+  // Add this function to handle filter application
+  const handleApplyFilters = (filters) => {
+    setAppliedFilters(filters);
+    const currentData = getCurrentNFTData();
+    const filtered = applyFiltersAndSort(currentData, filters);
+    setFilteredNFTData(filtered);
   };
 
   useEffect(() => {
@@ -547,13 +630,10 @@ const Collection = () => {
               `${collections[activeCollection].name}`}{" "}
             NFTs
           </h2>
-          {/* <div className="text-sm text-gray-400">
-            Page {paginationInfo.currentPage} of {paginationInfo.totalPages}
-          </div> */}
         </div>
 
         <div className="flex flex-row items-start sm:items-center justify-between gap-4 mb-6">
-          <div className="flex">
+          <div className="flex gap-x-4">
             <div className="flex items-center border border-gray-700 px-2 rounded-lg overflow-x-auto sm:overflow-visible">
               <Search className="w-5 h-5" />
               <input
@@ -562,8 +642,16 @@ const Collection = () => {
                 className="ml-2 px-3 py-1 bg-transparent text-sm border-l border-gray-700 focus:outline-none"
               />
             </div>
-            <button className="p-2 hover:bg-gray-700">
-              <Filter className="w-5 h-5" />
+            <button
+              className="p-2 relative"
+              onClick={() => setIsFilterModalOpen(true)}
+            >
+              <Filter className="w-5 h-5 text-white hover:text-gray-400" />
+              {(appliedFilters.sortBy ||
+                appliedFilters.rarities.length > 0 ||
+                appliedFilters.artists.length > 0) && (
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-indigo-500 rounded-full"></div>
+              )}
             </button>
           </div>
 
@@ -583,7 +671,7 @@ const Collection = () => {
               }`}
               onClick={() => setViewMode("large")}
             >
-              <div className="w-4 h-4 grid grid-cols-2 gap-1">
+              <div className="w-5 h-5 grid grid-cols-2 gap-1">
                 <div className="bg-current rounded-sm"></div>
                 <div className="bg-current rounded-sm"></div>
                 <div className="bg-current rounded-sm"></div>
@@ -674,6 +762,15 @@ const Collection = () => {
       {showNFTUpgrade && (
         <NFTUpgradeModal onClose={() => setShowNFTUpgrade(false)} />
       )}
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        onApplyFilters={handleApplyFilters}
+        currentNFTData={
+          collectionNFTData[collections[activeCollection]?.collectionId]
+            ?.nfts || []
+        }
+      />
     </div>
   );
 };
