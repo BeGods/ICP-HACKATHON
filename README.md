@@ -10,9 +10,9 @@ Blending physical and digital play, BeGods offers a groundbreaking phygital expe
 
 1. [Overview](#overview)
 2. [Project Architecture](#project-architecture)
-3. [Usage Guide](#usage-guide)
-4. [ICP Integration](#icp-integration)
-5. [Future Scope](#icp-integration)
+3. [User Flow](#user-flow)
+4. [Usage Guide](#usage-guide)
+5. [Features on ICP](#features-built-on-icp-so-far)
 6. [Important Links](#important-links)
 7. [LICENSE](#license)
 
@@ -111,6 +111,9 @@ game_agent → # Rust based contextual bandit canister that personalizes player 
 - Season → (O) Origins/Stone Age, (G) Golden Age, (S) Silver Age, (B) Bronze Age
 - Type → Quest, Character, Item, Boosters, Assets...
 ```
+
+## User Flow
+<img width="2026" height="1670" alt="Capture-2025-09-23-025055" src="https://github.com/user-attachments/assets/cb41570f-92bf-4f84-b6e2-778213c60697" />
 
 ## Usage Guide
 
@@ -273,7 +276,7 @@ generate-did game_agent
 
 </details>
 
-## ⚙️ Features Built on ICP So Far
+## Features Built on ICP So Far
 
 - **On-Chain NFT Marketplace** – Deployed marketplace frontend as a canister, enabling gaming projects to list and trade NFT collections fully on-chain.
 - **Fully On-Chain Architecture** – Developed around a ICP-based framework powering the NFT marketplace, game launcher, gaming agents, and multi-chain operations, seamlessly connecting them together.
